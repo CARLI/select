@@ -1,0 +1,2 @@
+/* The 'concat' task wraps our app code in an IIFE, defined here */
+(function ( window, angular, undefined ) {

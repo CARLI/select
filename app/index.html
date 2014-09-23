@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html ng-app="carli.app">
+    <head>
+        <title>CARLI Select</title>
+        <base href=''>
+    </head>
+    <body>
+        <nav>
+            <ul>
+                <li><a href=".">Home</a></li>
+                <li><a href="section1">Section1</a></li>
+                <li><a href="section2">Section2</a></li>
+                <li><a href="section3">Section3</a></li>
+            </ul>
+        </nav>
+        <main ng-view></main>
+
+        <!-- compiled JavaScript -->
+        <% scripts.forEach( function ( file ) { %>
+            <script type="text/javascript" src="<%= file %>"></script>
+        <% }); %>
+    </body>
+</html>
