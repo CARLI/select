@@ -151,9 +151,10 @@ module.exports = function ( grunt ) {
                 configFile: 'karma.conf.js',
                 files: [
                     '<%= vendor_files.js %>',
-                    '<%= test_files.js %>', 
-                    '<%= build_dir %>/**/*.js',
-                    '<%= app_files.jsUnit %>',
+                    '<%= test_files.js %>',
+                    '<%= build_dir %>/*.js',
+                    '<%= build_dir %>/app/**/*.js',
+                    '<%= app_files.jsUnit %>'
                 ]
             },
             unit: {
