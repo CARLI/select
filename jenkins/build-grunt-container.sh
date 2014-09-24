@@ -4,7 +4,7 @@
 cd `git rev-parse --show-toplevel`
 
 # Copy Dockerfile to root, because Docker doesn't allow ../../
-cp docker/run-tests/Dockerfile .
+cp docker/grunt/Dockerfile .
 
 docker build -t carli-grunt .
 
