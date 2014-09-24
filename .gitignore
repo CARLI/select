@@ -6,6 +6,7 @@ node_modules/
 vendor
 
 #Builds
+artifacts
 build
 dist
 
@@ -25,4 +26,4 @@ Desktop.ini
 *.swo
 *~
 *.bat
-
+.idea

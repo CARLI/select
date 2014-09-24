@@ -160,6 +160,14 @@ module.exports = function ( grunt ) {
             unit: {
                 singleRun: true,
                 reporters: 'dots'
+            },
+            continuous: {
+                singleRun: true,
+                browsers: [ 'PhantomJS' ],
+                reporters: [ 'dots', 'junit' ],
+                junitReporter: {
+                    outputFile: 'artifacts/test-results/karma.xml'
+                }
             }
         },
 
@@ -374,6 +382,8 @@ module.exports = function ( grunt ) {
      * minifying your code.
      */
     grunt.registerTask( 'compile', [
+        'clean',
+        'build',
         'ngAnnotate',
         'concat:compile_js',
         'uglify',
