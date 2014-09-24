@@ -151,14 +151,23 @@ module.exports = function ( grunt ) {
                 configFile: 'karma.conf.js',
                 files: [
                     '<%= vendor_files.js %>',
-                    '<%= test_files.js %>', 
-                    '<%= build_dir %>/**/*.js',
-                    '<%= app_files.jsUnit %>',
+                    '<%= test_files.js %>',
+                    '<%= build_dir %>/*.js',
+                    '<%= build_dir %>/app/**/*.js',
+                    '<%= app_files.jsUnit %>'
                 ]
             },
             unit: {
                 singleRun: true,
                 reporters: 'dots'
+            },
+            continuous: {
+                singleRun: true,
+                browsers: [ 'PhantomJS' ],
+                reporters: [ 'dots', 'junit' ],
+                junitReporter: {
+                    outputFile: 'artifacts/test-results/karma.xml'
+                }
             }
         },
 
@@ -355,7 +364,7 @@ module.exports = function ( grunt ) {
     grunt.registerTask( 'test', [
         'clean',
         'build',
-        'karma'
+        'karma:continuous'
     ]);    
 
 
@@ -373,6 +382,8 @@ module.exports = function ( grunt ) {
      * minifying your code.
      */
     grunt.registerTask( 'compile', [
+        'clean',
+        'build',
         'ngAnnotate',
         'concat:compile_js',
         'uglify',
