@@ -1,3 +1,3 @@
 #!/bin/sh
 
-docker run --rm carli-grunt serve
+docker run --rm --workdir=/carli-select carli-grunt grunt serve
