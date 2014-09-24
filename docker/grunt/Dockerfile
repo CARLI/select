@@ -22,5 +22,3 @@ COPY . /carli-select
 # Install project dependencies
 RUN cd /carli-select && npm install && bower --allow-root install
 
-# By default, run grunt tests.
-CMD cd /carli-select && grunt

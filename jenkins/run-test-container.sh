@@ -1,3 +1,3 @@
 #!/bin/sh
 
-docker run --rm carli-grunt test
+docker run --rm --workdir=/carli-select carli-grunt grunt test
