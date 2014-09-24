@@ -23,4 +23,4 @@ COPY . /carli-select
 RUN cd /carli-select && npm install && bower --allow-root install
 
 # By default, run grunt tests.
-CMD cd /carli-select && grunt test
+CMD cd /carli-select && grunt
