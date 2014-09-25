@@ -7,6 +7,7 @@ SCRIPTS=./jenkins/scripts
 
 $SCRIPTS/build-container.sh grunt
 $SCRIPTS/run-test-container.sh
+$SCRIPTS/tag-container.sh grunt $BUILD_NUMBER
 
 # It isn't necessary to export the image right now, because we 
 # are serving both carli.dev and carli.qa directly from the same
