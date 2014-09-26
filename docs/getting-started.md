@@ -1,31 +1,36 @@
 # Getting Started #
 
+These instructions will get you started working on the browser client (Front End).
+
+
 ## Install Node ##
 The development environment depends heavily on Node and npm.
 Visit the [Node Web Site](http://nodejs.org/) for installation instructions.
 
 
-### In the root of the project run: ###
-* `sudo npm install`
-* `sudo npm install -g grunt-cli`
-* `sudo npm install -g bower`
+## Install Dependencies ##
+In the browserClient/ directory, run:
+* `npm install`
+* `npm install -g grunt-cli`
+* `npm install -g bower`
 * `bower install`
 
 
-### To build the project and start a local development server: ###
+## Start Local Dev Server ##
+To build the project and start a local development server:
 * `grunt serve`
 
 This will auto-refresh when pertinent project files are changed. Keep an eye on the terminal window to see unit test
-results, which are run automatically when .spec files change.
+results, which are run automatically when JavaScript files change.
 
 
-### Grunt Tasks ###
+## Other Grunt Tasks ##
 The following shortcut tasks are defined. See the [Gruntfile](../Gruntfile.js) for more details.
 
-* build - generates a clean build of the project. Files are copied to the __build/__ directory.
-* test - does a clean build then runs the tests. Outputs a junit XML file of the results.
-* serve - builds and starts a live-reloading server. Opens index.html in a browser window.
-* compile - does a clean build and packages the app for deployment. Files are copied into the __dist/__ directory.
+* `grunt build` - generates a clean build of the project. Files are copied to the __build/__ directory.
+* `grunt test` - does a clean build then runs the tests. Outputs a junit XML file of the results.
+* `grunt serve` - builds and starts a live-reloading server. Opens index.html in a browser window.
+* `grunt compile` - does a clean build and packages the app for deployment. Files are copied into the __dist/__ directory.
 
 
 ### Notes for Linux Users ###
