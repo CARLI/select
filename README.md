@@ -7,8 +7,8 @@ Instances:
 * [Development]
 
 
-### Setup ###
-See [Getting Started] for instructions to setup the project and start working.
+### Front-End Setup ###
+See [Getting Started] for instructions to setup the project and start working on the browser client.
 
 
 ### Organization ###
@@ -21,5 +21,5 @@ See [Getting Started] for instructions to setup the project and start working.
 [Jenkins]: https://jenkins.pixotech.com/job/view/CARLI
 [Development]: http://carli.dev.pixotech.com
 [QA]: http://carli.qa.pixotech.com
-[Getting Started]: docs/getting-started.md
+[Getting Started]: src/develop/docs/getting-started-browser-client.md
 
