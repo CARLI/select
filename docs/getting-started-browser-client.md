@@ -10,6 +10,7 @@ Visit the [Node Web Site](http://nodejs.org/) for installation instructions.
 
 ## Install Dependencies ##
 In the browserClient/ directory, run:
+
 * `npm install`
 * `npm install -g grunt-cli`
 * `npm install -g bower`
