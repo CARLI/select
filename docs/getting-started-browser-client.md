@@ -21,8 +21,18 @@ In the browserClient/ directory, run:
 To build the project and start a local development server:
 * `grunt serve`
 
-This will auto-refresh when pertinent project files are changed. Keep an eye on the terminal window to see unit test
-results, which are run automatically when JavaScript files change.
+This should open in a new browser window / tab.  
+ 
+
+## Live Reloading ##
+The development server will auto-refresh when pertinent project files are changed.
+Keep an eye on the terminal window to see what happens. Different tasks are run depending on which type of file changed:
+
+* Gruntfile.js - the Gruntfile is reloaded
+* Any .js file in carliApp/ - the file will be linted and karma tests will run, then the server will reload.
+* If any .js file is added or removed from carliApps/ then the server will reload with an updated index.html containing the correct script tags. (This may not be 100% working).
+* If index.html changes the server reloads with the new index.html
+* If any .spec.js (test files) change, they are linted and then karma will re-run the tests.
 
 
 ## Other Grunt Tasks ##
