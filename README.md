@@ -7,11 +7,11 @@ Instances:
 * [Development]
 
 
-### Front-End Setup ###
+## Front-End Setup ##
 See [Getting Started] for instructions to setup the project and start working on the browser client.
 
 
-### Organization ###
+## Organization ##
 * __CARLI/__ directory contains models and tests. Code there can use Node-style requires and exports. It is all packaged up by **Browserify**.
 * __browserClient/__ directory contains all the setup and code for the front end.
 * __docker/__ directory contains scripts for building docker containers for deployment.
@@ -24,5 +24,5 @@ See [Getting Started] for instructions to setup the project and start working on
 [Jenkins]: https://jenkins.pixotech.com/job/view/CARLI
 [Development]: http://carli.dev.pixotech.com
 [QA]: http://carli.qa.pixotech.com
-[Getting Started]: src/develop/docs/getting-started-browser-client.md
+[Getting Started]: carli-select/src/develop/docs/getting-started-browser-client.md
 
