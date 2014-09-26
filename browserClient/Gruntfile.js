@@ -198,7 +198,7 @@ module.exports = function ( grunt ) {
                 title: "CARLI Angular Docs",
                 image: "https://bitbucket-assetroot.s3.amazonaws.com/c/photos/2014/Sep/22/carli-select-logo-2067750528-2_avatar.png",
                 imageLink: "https://jira.pixotech.com/browse/CARLI/",
-                titleLink: "/api",
+                titleLink: "https://jira.pixotech.com/browse/CARLI/", 
                 bestMatch: true,
             },
             api: {
@@ -405,6 +405,7 @@ module.exports = function ( grunt ) {
         'clean',
         'build',
         'ngAnnotate',
+        'ngdocs',
         'concat:compile_js',
         'uglify',
         'index:compile'
