@@ -33,6 +33,32 @@ The following shortcut tasks are defined. See the [Gruntfile](../Gruntfile.js) f
 * `grunt compile` - does a clean build and packages the app for deployment. Files are copied into the __dist/__ directory.
 
 
+## Technology Used ##
+The following applications and projects are used to build the front-end, and to aid in development.
+
+* Node - the JavaScript runtime that powers many of the rest of the tools and provides a local development server.
+* Grunt - the task runner that automates building the project.
+* Bower - a package manager for front-end libraries (Angular, Bootstrap, etc.)
+* Karma - a test runner for JavaScript.
+* Mocha and Chai - libraries for writing tests.
+* PhantomJS - a headless WebKit browser environment in which to run tests.
+* Angular - Superheroic JavaScript MVW Framework.
+* Browserify - packages code using Node-style `requires` for the browser.
+
+_See [package.json](package.json) and [bower.json](bower.json) for detailed dependency information_
+
+
+### Code Style ###
+The Angular application should follow the [Angular Style Guide] as closely as possible.
+
+### Organization ###
+* The client application is organized according to the [Google Best Practices Doc]
+  * The __carliApp/__ directory contains index.html and main app config.
+  * __carliApp/sections/__ contains a directory for each main section of the app and routing configuration for the sections.
+  * __carliApp/components/__ contains a directory for each UI component (re-usable and otherwise).
+  * Test files for all of the above live alongside the code they test, and end with .spec.js.
+
+
 ### Notes for Linux Users ###
 * PhantomJS requires a freetype shared library to run.
 Install if you get an error like "Can't start PhantomJS":
@@ -42,3 +68,5 @@ Install if you get an error like "Can't start PhantomJS":
 ### Note for Debian and Ubuntu users installing Node via apt-get ###
 See [this article](https://github.com/joyent/node/wiki/installing-node.js-via-package-manager) for special installation steps.
 
+[Google Best Practices Doc]: https://docs.google.com/a/pixotech.com/document/d/1XXMvReO8-Awi1EZXAXS4PzDzdNvV6pGcuaF4Q9821Es/mobilebasic?pli=1
+[Angular Style Guide]: https://github.com/toddmotto/angularjs-styleguide 
