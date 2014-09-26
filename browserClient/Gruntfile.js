@@ -188,6 +188,26 @@ module.exports = function ( grunt ) {
         },
 
         /**
+         * Generate docs for our Angular components
+         */
+        ngdocs: {
+            options: {
+                dest: '../artifacts/docs',
+                html5Mode: true,
+                startPage: '/api',
+                title: "CARLI Angular Docs",
+                image: "https://bitbucket-assetroot.s3.amazonaws.com/c/photos/2014/Sep/22/carli-select-logo-2067750528-2_avatar.png",
+                imageLink: "https://jira.pixotech.com/browse/CARLI/",
+                titleLink: "/api",
+                bestMatch: true,
+            },
+            api: {
+                src: '<%= carliApp_files.js %>', 
+                title: 'API Documentation'
+            }
+        },
+
+        /**
          * Minify the sources!
          */
         uglify: {
@@ -273,7 +293,7 @@ module.exports = function ( grunt ) {
                 src: [
                     '<%= vendor_files.js %>',
                     '<%= build_dir %>/<%= logic_files.build %>',
-                    '<%= build_dir %>/app/**/*.js',
+                    '<%= build_dir %>/carliApp/**/*.js',
                     '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css'
                 ]
             },
