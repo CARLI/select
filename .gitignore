@@ -3,7 +3,7 @@ npm-debug.log
 node_modules/
 
 #Bower
-vendor
+bower_modules
 
 #Builds
 artifacts
