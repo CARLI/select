@@ -2,7 +2,7 @@
 
 host_port=$1
 
-docker rm carli-serve-$host_port 2> /dev/null
+docker rm -f carli-serve-$host_port 2> /dev/null
 docker run \
     --name="carli-serve-$host_port" \
     --detach=true \
