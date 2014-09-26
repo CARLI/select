@@ -13,8 +13,8 @@ RUN apt-get -qq install nodejs build-essential
 RUN apt-get -qq install libfreetype6 libfontconfig
 
 # Install convenient global npm packages
-RUN npm install -g grunt-cli
-RUN npm install -g bower
+RUN cd browserClient && npm install -g grunt-cli
+RUN cd browserClient && npm install -g bower
 
 # Copy in project files
 COPY . /carli-select
