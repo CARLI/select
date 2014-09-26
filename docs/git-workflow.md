@@ -2,25 +2,23 @@
 
 ## Branches
 
-* **`master`**: Released to production *merged by Jenkins*
-* **`qa`**: Currently on QA server *merged by Jenkins* (Is this necessary?)
+* **`master`**: Deployed to production
+* **`qa`**: Deployed to QA server
 * **`develop`**: Mainline development branch
     * All commits to `develop` are merges of topic branches.
 
 ## Topic branches
 
 * All work is done in topic branches, branched off of develop.
-* Topic branches should be named for the ticket being worked on.  (`CARLI-123`)
+* Topic branches should be named for the ticket being worked on.  (`CARLI-123`, or `CARLI-123/something if desired)
 * Topic branches must be merged by pairs.
-* Work done outside of a pair should have a pull request submitted, which ill then be reviewed and merged by a pair.
+* Work done outside of a pair should have a pull request submitted, which will then be reviewed and merged by a pair.
 
 ## Commit messages
 
 * Commit messages contain the ticket being worked on (`CARLI-123`)
 * The first line should be a short descriptive one-line summary of changes made, (preferably 50 characters or less)
 * If further elaboration is needed, a blank line should separate the subject line from the rest of the message.
-* [JIRA](https://jira.pixotech.com/browse/CARLI) will recognize the following verbs in commit messages and update tickets accordingly:
-    * **`Closes CARLI-123`** Changes the status of the ticket to "Needs Testing"
 
 ## Pairing
 
@@ -28,4 +26,3 @@
     * `git config user.name "Link and Zelda"`
 
 
-[JIRA]: https://jira.pixotech.com/browse/CARLI
