@@ -7,5 +7,5 @@ docker run \
     --name="carli-serve-$host_port" \
     --detach=true \
     --workdir=/carli-select \
-    -p $host_port:8000
+    -p $host_port:8000 \
     carli-grunt grunt serve
