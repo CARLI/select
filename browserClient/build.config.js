@@ -4,7 +4,7 @@
 module.exports = {
     /**
      * The `build_dir` folder is where our projects are compiled during
-     * development and the `compile_dir` folder is where our app resides once it's
+     * development and the `compile_dir` folder is where our carliApp resides once it's
      * completely built.
      */
     build_dir: 'build',
@@ -13,12 +13,12 @@ module.exports = {
     /**
      * Convenient groups of files used for copying, building, etc.
      */
-    app_files: {
-        js: [ 'app/**/*.js', '!app/**/*.spec.js' ],
-        jsUnit: ['app/**/*.spec.js'],
-        jsAll: ['app/**/*.js'],
-        index: ['app/index.html'],
-        html: ['app/**/*.html', '!app/index.html']
+    carliApp_files: {
+        js: [ 'carliApp/**/*.js', '!app/**/*.spec.js' ],
+        jsUnit: ['carliApp/**/*.spec.js'],
+        jsAll: ['carliApp/**/*.js'],
+        index: ['carliApp/index.html'],
+        html: ['carliApp/**/*.html', '!app/index.html']
     },
 
     /**
@@ -27,7 +27,7 @@ module.exports = {
      */
     logic_files: {
         global_var: 'Carli',
-        js: 'CARLI/CARLI.js',
+        js: '../CARLI/CARLI.js',
         build: 'CARLI.js'
     },
 
@@ -35,16 +35,16 @@ module.exports = {
      * This is a collection of files used during testing only.
      */
     test_files: {
-        js: ['vendor/angular-mocks/angular-mocks.js']
+        js: ['bower_modules/angular-mocks/angular-mocks.js']
     },
 
     /**
-     * This is the same as `app_files`, except it contains patterns that
-     * reference vendor code (`vendor/`) that we need to place into the build
-     * process somewhere. While the `app_files` property ensures all
+     * This is the same as `carliApp_files`, except it contains patterns that
+     * reference vendor code (`bower_modules/`) that we need to place into the build
+     * process somewhere. While the `carliApp_files` property ensures all
      * standardized files are collected for compilation, it is the user's job
      * to ensure non-standardized (i.e. vendor-related) files are handled
-     * appropriately in `vendor_files.js`.
+     * carliAppropriately in `vendor_files.js`.
      *
      * The `vendor_files.js` property holds files to be automatically
      * concatenated and minified with our project source files.
@@ -52,8 +52,8 @@ module.exports = {
      */
     vendor_files: {
         js: [
-            'vendor/angular/angular.js',
-            'vendor/angular-route/angular-route.js'
+            'bower_modules/angular/angular.js',
+            'bower_modules/angular-route/angular-route.js'
         ]
     }
 };

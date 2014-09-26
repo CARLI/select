@@ -58,7 +58,7 @@ module.exports = function ( grunt ) {
         copy: {
             build_appjs: {
                 files: [{
-                    src: [ '<%= app_files.js %>' ],
+                    src: [ '<%= carliApp_files.js %>' ],
                     dest: '<%= build_dir %>/',
                     expand: true
               }]
@@ -73,7 +73,7 @@ module.exports = function ( grunt ) {
             /* TODO: use Browserify to inline the HTML templates */
             build_html: {
                 files: [{
-                    src: ['<%= app_files.html %>'],
+                    src: ['<%= carliApp_files.html %>'],
                     dest: '<%= build_dir %>/',
                     expand: true
                 }]
@@ -94,7 +94,7 @@ module.exports = function ( grunt ) {
                     '<%= vendor_files.js %>',
                     '<%= build_dir %>/<%= logic_files.build %>',
                     'module.prefix',
-                    '<%= build_dir %>/app/**/*.js',
+                    '<%= build_dir %>/carliApp/**/*.js',
                     'module.suffix'
                 ],
                 dest: '<%= compile_dir %>/<%= pkg.name %>-<%= pkg.version %>.js'
@@ -124,10 +124,10 @@ module.exports = function ( grunt ) {
          */
         jshint: {
             src: [
-                '<%= app_files.js %>'
+                '<%= carliApp_files.js %>'
             ],
             test: [
-                '<%= app_files.jsUnit %>'
+                '<%= carliApp_files.jsUnit %>'
             ],
             gruntfile: [
                 'Gruntfile.js'
@@ -153,8 +153,8 @@ module.exports = function ( grunt ) {
                     '<%= vendor_files.js %>',
                     '<%= test_files.js %>',
                     '<%= build_dir %>/*.js',
-                    '<%= build_dir %>/app/**/*.js',
-                    '<%= app_files.jsUnit %>'
+                    '<%= build_dir %>/carliApp/**/*.js',
+                    '<%= carliApp_files.jsUnit %>'
                 ]
             },
             unit: {
@@ -179,7 +179,7 @@ module.exports = function ( grunt ) {
         ngAnnotate: {
             compile: {
                 files: [{
-                    src: [ '<%= app_files.js %>' ],
+                    src: [ '<%= carliApp_files.js %>' ],
                     cwd: '<%= build_dir %>',
                     dest: '<%= build_dir %>',
                     expand: true
@@ -216,7 +216,7 @@ module.exports = function ( grunt ) {
             * run our unit tests.
             */
             jssrc: {
-                files: ['<%= app_files.js %>'],
+                files: ['<%= carliApp_files.js %>'],
                 tasks: [ 'jshint:src', 'karma:unit:run', 'copy:build_appjs' ]
             },
 
@@ -224,7 +224,7 @@ module.exports = function ( grunt ) {
             * If JavaScript files are added or removed, process index.html to update the loaded scripts.
             */
             jssrcfiles: {
-                files: ['<%= app_files.js %>'],
+                files: ['<%= carliApp_files.js %>'],
                 tasks: [ 'copy:build_appjs', 'index:build' ], 
                 options: {
                     event: ['added', 'deleted']
@@ -235,7 +235,7 @@ module.exports = function ( grunt ) {
             * When index.html changes, we need to compile it.
             */
             index: {
-                files: [ '<%= app_files.index %>' ],
+                files: [ '<%= carliApp_files.index %>' ],
                 tasks: [ 'index:build' ]
             },
 
@@ -244,7 +244,7 @@ module.exports = function ( grunt ) {
             * run the unit tests. We don't want to do any live reloading.
             */
             jsunit: {
-                files: ['<%= app_files.jsUnit %>'],
+                files: ['<%= carliApp_files.jsUnit %>'],
                 tasks: [ 'jshint:test', 'karma:unit' ],
                 options: {
                     livereload: false
@@ -332,7 +332,7 @@ module.exports = function ( grunt ) {
             return file.replace( dirRE, '' );
         });
 
-        grunt.file.copy('app/index.html', this.data.dir + '/index.html', {
+        grunt.file.copy('carliApp/index.html', this.data.dir + '/index.html', {
             process: function ( contents, path ) {
                 return grunt.template.process( contents, {
                     data: {
