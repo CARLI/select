@@ -166,7 +166,7 @@ module.exports = function ( grunt ) {
                 browsers: [ 'PhantomJS' ],
                 reporters: [ 'dots', 'junit' ],
                 junitReporter: {
-                    outputFile: 'artifacts/test-results/karma.xml'
+                    outputFile: '../artifacts/test-results/karma.xml'
                 }
             }
         },
