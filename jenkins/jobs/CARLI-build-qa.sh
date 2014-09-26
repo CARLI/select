@@ -5,6 +5,7 @@ cd `git rev-parse --show-toplevel`
 
 SCRIPTS=./jenkins/scripts
 
+$SCRIPTS/add-build-number.sh qa
 $SCRIPTS/build-container.sh grunt
 $SCRIPTS/run-test-container.sh
 $SCRIPTS/tag-container.sh grunt "qa-$BUILD_NUMBER"
