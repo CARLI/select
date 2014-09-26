@@ -19,6 +19,8 @@ RUN npm install -g bower
 # Copy in project files
 COPY . /carli-select
 
+EXPOSE 8000
+
 # Install project dependencies
 RUN cd /carli-select && npm install && bower --allow-root install
 
