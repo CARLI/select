@@ -4,7 +4,7 @@ host_port=$1
 
 docker rm carli-serve-$host_port 2> /dev/null
 docker run \
-    --name="carli-serve-$host_port"
+    --name="carli-serve-$host_port" \
     --detach=true \
     --workdir=/carli-select \
     -p $host_port:8000
