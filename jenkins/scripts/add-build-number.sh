@@ -2,5 +2,5 @@
 
 job=$1
 
-mkdir -p browserClien/build
+mkdir -p browserClient/build
 echo $job-$BUILD_NUMBER > browserClient/build/version.txt
