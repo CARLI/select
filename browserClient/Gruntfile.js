@@ -199,7 +199,7 @@ module.exports = function ( grunt ) {
                 image: "https://bitbucket-assetroot.s3.amazonaws.com/c/photos/2014/Sep/22/carli-select-logo-2067750528-2_avatar.png",
                 imageLink: "https://jira.pixotech.com/browse/CARLI/",
                 titleLink: "https://jira.pixotech.com/browse/CARLI/", 
-                bestMatch: true,
+                bestMatch: true
             },
             api: {
                 src: '<%= carliApp_files.js %>', 
