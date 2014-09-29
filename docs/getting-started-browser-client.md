@@ -42,6 +42,7 @@ The following shortcut tasks are defined. See the [Gruntfile](../Gruntfile.js) f
 * `grunt test` - does a clean build then runs the tests. Outputs a junit XML file of the results.
 * `grunt serve` - builds and starts a live-reloading server. Opens index.html in a browser window.
 * `grunt compile` - does a clean build and packages the app for deployment. Files are copied into the __dist/__ directory.
+* `grunt ngdoc` - build Angular JS documentaion for the application.
 
 
 ## Technology Used ##
@@ -60,7 +61,8 @@ _See [package.json](package.json) and [bower.json](bower.json) for detailed depe
 
 
 ### Code Style ###
-The Angular application should follow the [Angular Style Guide] as closely as possible.
+* The Angular application should follow the [Angular Style Guide] as closely as possible.
+* JSDoc style documentation is built using ngdoc.  For details of how to write documentation comments, see [Writing AngularJS Documentation].
 
 ### Organization ###
 * The client application is organized according to the [Google Best Practices Doc]
@@ -81,3 +83,4 @@ See [this article](https://github.com/joyent/node/wiki/installing-node.js-via-pa
 
 [Google Best Practices Doc]: https://docs.google.com/a/pixotech.com/document/d/1XXMvReO8-Awi1EZXAXS4PzDzdNvV6pGcuaF4Q9821Es/mobilebasic?pli=1
 [Angular Style Guide]: https://github.com/toddmotto/angularjs-styleguide 
+[Writing AngularJS Documentation]: https://github.com/angular/angular.js/wiki/Writing-AngularJS-Documentation
