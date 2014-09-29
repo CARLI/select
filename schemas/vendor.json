@@ -1,0 +1,43 @@
+{
+    "title": "Vendor",
+    "type": "object",
+    "properties": {
+        "Name": {
+            "description": "Name of Vendor",
+            "type": "string"
+        },
+        "Website URL": {
+            "description": "Vendor's Website",
+            "type": "string",
+            "pattern": "(\b(https?)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]"
+        },
+        "Contacts": {
+            "description": "List of vendor contacts",
+            "type": "array",
+            "items": { "type": "Contact" }
+        },
+        "Comments": { 
+            "description": "Vendor comments",
+            "type": "string"
+        },
+        "Admin Module": { 
+            "description": "No idea.  Cate?",
+            "type": "string"
+        },
+        "isActive": { 
+            "description": "Is this vendor active?",
+            "type": "boolean"
+        },
+        "Products": { 
+            "description": "Products offered by this vendor",
+            "type": "array",
+            "items": { "type": "Product" }
+        },
+        "License Agreements": { 
+            "description": "License agreements used by this vendor",
+            "type": "array",
+            "items": { "type": "License Agreement" }
+        },
+        "required": [ "Name" ]
+    }
+}
