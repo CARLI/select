@@ -1,6 +1,11 @@
 # Getting Started #
 
 These instructions will get you started working on the browser client (Front End).
+All of the instructions in this document, and all front-end work in general is done in
+the browserClient/ directory. (It is called browser client because it is the part of the
+app that runs in the browser. And it is a client of the API).
+
+At present the project does not use a VM, so all development is done directly in your main OS.
 
 
 ## Install Node ##
@@ -38,10 +43,10 @@ Keep an eye on the terminal window to see what happens. Different tasks are run 
 ## Other Grunt Tasks ##
 The following shortcut tasks are defined. See the [Gruntfile](../Gruntfile.js) for more details.
 
-* `grunt build` - generates a clean build of the project. Files are copied to the __build/__ directory.
+* `grunt build` - generates a clean build of the project for the dev server. Files are copied to the __build/__ directory.
 * `grunt test` - does a clean build then runs the tests. Outputs a junit XML file of the results.
 * `grunt serve` - builds and starts a live-reloading server. Opens index.html in a browser window.
-* `grunt compile` - does a clean build and packages the app for deployment. Files are copied into the __dist/__ directory.
+* `grunt compile` - packages and minifies the app for deployment. Files are copied into the __dist/__ directory.
 * `grunt ngdoc` - build Angular JS documentaion for the application.
 
 
@@ -60,16 +65,30 @@ The following applications and projects are used to build the front-end, and to 
 _See [package.json](package.json) and [bower.json](bower.json) for detailed dependency information_
 
 
+## How to Add a New Front-End Third Party Dependency (Bower Module) ##
+Since Bower is used to handle front end dependencies, it must be used when adding new ones. Follow these steps to do so:
+
+* `bower install <package name>` - this will download the package and put it in bower_modules/
+* If you are sure you will be using the package, use `bower install --save <package name>` instead. That will save it in bower.json
+* Add the path to the file that should be included in the project to the 'vendor_files' section of build.config.js, inside the 'js' array.
+
+If you want to update an existing dependency to a newer version, edit bower.json and increase the number next to the package name.
+
+
 ### Code Style ###
 * The Angular application should follow the [Angular Style Guide] as closely as possible.
 * JSDoc style documentation is built using ngdoc.  For details of how to write documentation comments, see [Writing AngularJS Documentation].
 
 ### Organization ###
-* The client application is organized according to the [Google Best Practices Doc]
-  * The __carliApp/__ directory contains index.html and main app config.
-  * __carliApp/sections/__ contains a directory for each main section of the app and routing configuration for the sections.
-  * __carliApp/components/__ contains a directory for each UI component (re-usable and otherwise).
-  * Test files for all of the above live alongside the code they test, and end with .spec.js.
+The client application is organized according to the [Google Best Practices Doc].
+Test files for all of the above live alongside the code they test, and end with .spec.js.
+
+* The __carliApp/__ directory contains index.html and main app config.
+* __carliApp/sections/__ contains a directory for each main section of the app and routing configuration for the sections.
+    * These directories map to the top-level navigation of the site. They contain the minimal controller and template code to show the section. 
+    * There are subdirectories for subsections.
+* __carliApp/components/__ contains a directory for each UI component (re-usable and otherwise).
+    * There is a directory for each component, which contain controllers, directives, services, and filters. Each in its own file.
 
 
 ### Notes for Linux Users ###

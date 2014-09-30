@@ -14,11 +14,11 @@ module.exports = {
      * Convenient groups of files used for copying, building, etc.
      */
     carliApp_files: {
-        js: [ 'carliApp/**/*.js', '!app/**/*.spec.js' ],
+        js: [ 'carliApp/**/*.js', '!carliApp/**/*.spec.js' ],
         jsUnit: ['carliApp/**/*.spec.js'],
         jsAll: ['carliApp/**/*.js'],
         index: ['carliApp/index.html'],
-        html: ['carliApp/**/*.html', '!app/index.html']
+        html: ['carliApp/**/*.html', '!carliApp/index.html']
     },
 
     /**
