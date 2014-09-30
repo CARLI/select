@@ -37,7 +37,22 @@ module.exports = function ( grunt ) {
             
                 options: {
                     browserifyOptions: {
-                        standalone : '<%= logic_files.global_var %>'
+                        standalone: '<%= logic_files.global_var %>',
+                        debug: true
+                    }
+                }
+            },
+
+            /* TODO: make the 'compile' task use this target to skip building maps */
+            compile: {
+                files: [{
+                    src: ['<%= logic_files.js %>'],
+                    dest: '<%= build_dir %>/<%= logic_files.build %>'
+                }],
+
+                options: {
+                    browserifyOptions: {
+                        standalone: '<%= logic_files.global_var %>',
                     }
                 }
             }
@@ -374,7 +389,7 @@ module.exports = function ( grunt ) {
         'copy:build_appjs', 
         'copy:build_vendorjs', 
         'copy:build_html',
-        'browserify',
+        'browserify:build',
         'index:build' 
     ]);
 
