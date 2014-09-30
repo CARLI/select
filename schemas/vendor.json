@@ -14,29 +14,29 @@
         "Contacts": {
             "description": "List of vendor contacts",
             "type": "array",
-            "items": { "type": "Contact" }
+            "items": { "$ref": "schemas/contact.json" }
         },
-        "Comments": { 
+        "Comments": {
             "description": "Vendor comments",
             "type": "string"
         },
-        "Admin Module": { 
-            "description": "No idea.  Cate?",
+        "Admin Module": {
+            "description": "Free field text to keep track of CARLI troubleshooting with vendor",
             "type": "string"
         },
-        "isActive": { 
+        "isActive": {
             "description": "Is this vendor active?",
             "type": "boolean"
         },
-        "Products": { 
+        "Products": {
             "description": "Products offered by this vendor",
             "type": "array",
-            "items": { "type": "Product" }
+            "items": { "$ref": "schemas/product.json" }
         },
-        "License Agreements": { 
+        "License Agreements": {
             "description": "License agreements used by this vendor",
             "type": "array",
-            "items": { "type": "License Agreement" }
+            "items": { "$ref": "schemas/license-agreement.json" }
         },
         "required": [ "Name" ]
     }
