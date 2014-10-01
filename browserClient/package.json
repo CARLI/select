@@ -27,6 +27,7 @@
     "karma-mocha": "^0.1.9",
     "karma-chai": "^0.1.0",
     "karma-phantomjs-launcher": "^0.1.4",
-    "karma-junit-reporter": "^0.2.2"
+    "karma-junit-reporter": "^0.2.2",
+    "connect-modrewrite": "^0.7.9"
   }
 }
