@@ -2,7 +2,6 @@
 <html ng-app="carli.app">
     <head>
         <title>CARLI Select</title>
-        <base href=''>
     </head>
     <body>
         <nav>
@@ -17,7 +16,7 @@
 
         <!-- compiled JavaScript -->
         <% scripts.forEach( function ( file ) { %>
-            <script type="text/javascript" src="<%= file %>"></script>
+            <script type="text/javascript" src="/<%= file %>"></script>
         <% }); %>
     </body>
 </html>

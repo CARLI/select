@@ -85,7 +85,6 @@ module.exports = function ( grunt ) {
                     expand: true
                 }]
             },
-            /* TODO: use Browserify to inline the HTML templates */
             build_html: {
                 files: [{
                     src: ['<%= carliApp_files.html %>'],
@@ -122,7 +121,12 @@ module.exports = function ( grunt ) {
                 port: 8000,
                 base: 'build',
                 open: true,
-                livereload: 35729
+                livereload: 35729,
+                middleware: function (connect, options) {
+                    var optBase = (typeof options.base === 'string') ? [options.base] : options.base;
+                    return [require('connect-modrewrite')(['!(\\..+)$ / [L]'])].concat(
+                        optBase.map(function(path){ return connect.static(path); }));
+                }
             },
 
             serve: {
@@ -284,6 +288,14 @@ module.exports = function ( grunt ) {
                 options: {
                     livereload: false
                 }
+            },
+
+            /**
+             *
+             */
+            html: {
+                files: ['<%= carliApp_files.html %>'],
+                tasks: ['copy:build_html'],
             },
 
             buildindex: {
