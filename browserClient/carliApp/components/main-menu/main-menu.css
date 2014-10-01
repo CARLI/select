@@ -1,0 +1,7 @@
+nav.main {
+    border: 1px solid black;
+}
+
+nav.main > ul {
+    list-style: outside none none;
+}
