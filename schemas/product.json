@@ -1,0 +1,67 @@
+{
+    "title": "Product",
+    "type": "object",
+    "properties": {
+        "Name": {
+            "description": "Name of the product",
+            "type": "string"
+        },
+        "Cycle Type": {
+            "$ref": "./cycle-type.json"
+        },
+        "Vendor": {
+            "$ref": "./vendor.json"
+        },
+        "Product URL": {
+            "$ref": "./url.json"
+        },
+        "Description": {
+            "type": "string"
+        },
+        "Comments": {
+            "type": "string"
+        },
+        "Price List": {
+            "type": "array",
+            "items:": {
+                "$ref": "./price.json"
+            }
+        },
+        "Last Years Price List": {
+            "type": "array",
+            "items:": {
+                "$ref": "./price.json"
+            }
+        },
+        "Fundings": {
+            "type": "array",
+            "items:": {
+                "$ref": "./funding.json"
+            }
+        },
+        "Is Active": {
+            "type": "boolean"
+        },
+        "License Agreement": {
+            "$ref": "./funding.json"
+        },
+        "Price Cap": {
+            "$ref": "./price-cap.json"
+        },
+        "Detail Code": {
+            "$ref": "./product-detail-code.json"
+        },
+        "Is Third Party Product": {
+            "type": "boolean"
+        },
+        "Has Archive Capital Fee": {
+            "type": "boolean"
+        },
+        "Libraries that have paid ACF": {
+            "type": "array",
+            "items:": {
+                "$ref": "./library.json"
+            }
+        }
+    }
+}

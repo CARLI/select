@@ -1,0 +1,27 @@
+{
+    "title": "Contact",
+    "type": "object",
+    "properties": {
+        "First name": {
+            "type": "string"
+        },
+        "Last name": {
+            "type": "string"
+        },
+        "Email": {
+            "type": "string"
+        },
+        "Phone number": {
+            "type": "string"
+        }
+        "Contact Type": {
+            "type": "string",
+            "oneOf": [
+                "Billing",
+                "Sales",
+                "Technical"
+            ]
+        }
+    },
+    "required": [ "First Name", "Last Name", "Email", "Contact Type" ]
+}

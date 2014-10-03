@@ -6,15 +6,18 @@
             "description": "Name of Vendor",
             "type": "string"
         },
+        "Previous Name": {
+            "description": "Previous Name of Vendor",
+            "type": "string"
+        },
         "Website URL": {
             "description": "Vendor's Website",
-            "type": "string",
-            "pattern": "(\b(https?)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]"
+            "$ref": "./url.json"
         },
         "Contacts": {
             "description": "List of vendor contacts",
             "type": "array",
-            "items": { "$ref": "schemas/contact.json" }
+            "items": { "$ref": "./contact.json" }
         },
         "Comments": {
             "description": "Vendor comments",
@@ -31,13 +34,13 @@
         "Products": {
             "description": "Products offered by this vendor",
             "type": "array",
-            "items": { "$ref": "schemas/product.json" }
+            "items": { "$ref": "./product.json" }
         },
         "License Agreements": {
             "description": "License agreements used by this vendor",
             "type": "array",
-            "items": { "$ref": "schemas/license-agreement.json" }
-        },
-        "required": [ "Name" ]
-    }
+            "items": { "$ref": "./license-agreement.json" }
+        }
+    },
+    "required": [ "Name" ]
 }
