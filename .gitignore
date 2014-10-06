@@ -4,6 +4,7 @@ node_modules/
 
 #Bower
 bower_modules
+bower_components
 
 #Builds
 artifacts
