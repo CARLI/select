@@ -2,19 +2,19 @@
     "title": "Contact",
     "type": "object",
     "properties": {
-        "First name": {
+        "firstName": {
             "type": "string"
         },
-        "Last name": {
+        "lastName": {
             "type": "string"
         },
-        "Email": {
+        "email": {
             "type": "string"
         },
-        "Phone number": {
+        "phoneNumber": {
             "type": "string"
         },
-        "Contact Type": {
+        "contactType": {
             "type": "string",
             "oneOf": [
                 "Billing",
@@ -23,5 +23,5 @@
             ]
         }
     },
-    "required": [ "First Name", "Last Name", "Email", "Contact Type" ]
+    "required": [ "firstName", "lastName", "email", "contactType" ]
 }

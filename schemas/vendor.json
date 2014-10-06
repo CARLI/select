@@ -3,28 +3,28 @@
     "title": "Vendor",
     "type": "object",
     "properties": {
-        "Name": {
+        "name": {
             "description": "Name of Vendor",
             "type": "string"
         },
-        "Previous Name": {
+        "previousName": {
             "description": "Previous Name of Vendor",
             "type": "string"
         },
-        "Website URL": {
+        "websiteUrl": {
             "description": "Vendor's Website",
             "$ref": "./url.json"
         },
-        "Contacts": {
+        "contacts": {
             "description": "List of vendor contacts",
             "type": "array",
             "items": { "$ref": "./contact.json" }
         },
-        "Comments": {
+        "comments": {
             "description": "Vendor comments",
             "type": "string"
         },
-        "Admin Module": {
+        "adminModule": {
             "description": "Free field text to keep track of CARLI troubleshooting with vendor",
             "type": "string"
         },
@@ -32,16 +32,16 @@
             "description": "Is this vendor active?",
             "type": "boolean"
         },
-        "Products": {
+        "products": {
             "description": "Products offered by this vendor",
             "type": "array",
             "items": { "$ref": "./product.json" }
         },
-        "License Agreements": {
+        "licenseAgreements": {
             "description": "License agreements used by this vendor",
             "type": "array",
             "items": { "$ref": "./license-agreement.json" }
         }
     },
-    "required": [ "Name" ]
+    "required": [ "name" ]
 }
