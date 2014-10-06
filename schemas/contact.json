@@ -13,7 +13,7 @@
         },
         "Phone number": {
             "type": "string"
-        }
+        },
         "Contact Type": {
             "type": "string",
             "oneOf": [

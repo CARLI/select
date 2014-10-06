@@ -1,6 +1,0 @@
-{
-    "$schema": "json-schema.org/draft-04/schema",
-    "title": "CARLI Schema",
-    "vendor": { "$ref": "http://localhost:8000/vendor.json" },
-    "contact": { "$ref": "http://localhost:8000/contact.json" }
-}
