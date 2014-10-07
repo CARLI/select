@@ -53,7 +53,8 @@ module.exports = {
     vendor_files: {
         js: [
             'bower_modules/angular/angular.js',
-            'bower_modules/angular-route/angular-route.js'
+            'bower_modules/angular-route/angular-route.js',
+            'bower_modules/angular-resource/angular-resource.js'
         ]
     }
 };
