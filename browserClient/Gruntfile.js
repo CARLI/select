@@ -226,6 +226,17 @@ module.exports = function ( grunt ) {
             }
         },
 
+        sass: {
+            build: {
+                files: [{
+                    src: ['<%= carliApp_files.css %>'], 
+                    dest: '<%= build_dir %>/css/',
+                    expand: true,
+                    flatten: true
+                }]
+            }
+        },
+
         /**
          * Minify the sources!
          */
@@ -321,7 +332,7 @@ module.exports = function ( grunt ) {
                     '<%= vendor_files.js %>',
                     '<%= build_dir %>/<%= logic_files.build %>',
                     '<%= build_dir %>/carliApp/**/*.js',
-                    '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css'
+                    '<%= build_dir %>/css/*.css'
                 ]
             },
 
@@ -396,12 +407,13 @@ module.exports = function ( grunt ) {
      * The `build` task gets your app ready to run for development and testing.
      */
     grunt.registerTask( 'build', [
-        'clean', 
-        'jshint', 
+        'clean',
+        'jshint',
         'copy:build_appjs', 
         'copy:build_vendorjs', 
         'copy:build_html',
         'browserify:build',
+        'sass:build',
         'index:build' 
     ]);
 

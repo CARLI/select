@@ -2,6 +2,9 @@
 <html ng-app="carli.app">
     <head>
         <title>CARLI Select</title>
+        <% styles.forEach( function ( file ) { %>
+            <link rel="stylesheet" href="/<%= file %>"></script>
+        <% }); %>
     </head>
     <body>
         <nav>
