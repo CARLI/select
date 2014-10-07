@@ -1,7 +1,9 @@
 angular.module('carli.vendorService')
-    .service('vendorService', function ($resource) {
-        var vendorService = {};
-        var vendorResource = $resource('/resources/vendor.json');
-        vendorService.getVendors = vendorResource.query;
-        return vendorService;
-    });
+    .service('vendorService', vendorService);
+
+function vendorService($resource) {
+    var service = {};
+    var vendorResource = $resource('/resources/vendor.json');
+    service.getVendors = vendorResource.query;
+    return service;
+}
