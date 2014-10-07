@@ -1,0 +1,14 @@
+{
+  "name": "carli-schema",
+  "version": "0.0.0",
+  "authors": [
+    "carli@pixotech.com"
+  ],
+  "description": "CARLI Schema Browser",
+  "main": "index.html",
+  "license": "BSD",
+  "private": true,
+  "dependencies": {
+    "docson": "*"
+  }
+}
