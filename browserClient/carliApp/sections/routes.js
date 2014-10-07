@@ -1,31 +1,34 @@
 angular.module('carli.routes',[
-    'carli.sections.home',
-    'carli.sections.section1',
-    'carli.sections.section2',
-    'carli.sections.section3',
+    'carli.sections.dashboard',
+    'carli.sections.subscriptions',
+    'carli.sections.vendors',
     'carli.sections.styleGuide'
 ])
 .config(function ($routeProvider) {
     $routeProvider
     .when('/', {
-        templateUrl: 'carliApp/sections/home/home.html',
-        controller: 'homeController'
+        templateUrl: 'carliApp/sections/dashboard/dashboard.html',
+        controller:  'dashboardController',
+        controllerAs:'dashboardController'
     })
-    .when('/section1', {
-        templateUrl: 'carliApp/sections/section1/section1.html',
-        controller: 'section1Controller'
+    .when('/dashboard', {
+        templateUrl: 'carliApp/sections/dashboard/dashboard.html',
+        controller:  'dashboardController',
+        controllerAs:'dashboardController'
     })
-    .when('/section2', {
-        templateUrl: 'carliApp/sections/section2/section2.html',
-        controller: 'section2Controller'
+    .when('/subscriptions', {
+        templateUrl: 'carliApp/sections/subscriptions/subscriptions.html',
+        controller:  'subscriptionsController',
+        controllerAs:'subscriptionsController' 
     })
-    .when('/section3', {
-        templateUrl: 'carliApp/sections/section3/section3.html',
-        controller: 'section1Controller'
+    .when('/vendors', {
+        templateUrl: 'carliApp/sections/vendors/vendors.html',
+        controller:  'vendorsController',
+        controllerAs:'vendorsController'
     })
     .when('/styleGuide', {
         templateUrl: 'carliApp/sections/styleGuide/styleGuide.html',
-        controller: 'styleGuideController',
-        controllerAs: 'styleGuideController'
+        controller:  'styleGuideController',
+        controllerAs:'styleGuideController'
     });
 });
