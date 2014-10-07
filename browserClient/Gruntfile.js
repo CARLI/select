@@ -309,9 +309,10 @@ module.exports = function ( grunt ) {
                 tasks: ['copy:build_html'],
             },
 
-            buildindex: {
-                files: ['<%= build_dir %>/index.html']
-            } 
+            css: {
+                files: ['<%= carliApp_files.css %>'],
+                tasks: ['sass:build']
+            }
         },
 
         /**
