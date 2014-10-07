@@ -18,7 +18,8 @@ module.exports = {
         jsUnit: ['carliApp/**/*.spec.js'],
         jsAll: ['carliApp/**/*.js'],
         index: ['carliApp/index.html'],
-        html: ['carliApp/**/*.html', '!carliApp/index.html']
+        html: ['carliApp/**/*.html', '!carliApp/index.html'],
+        css: ['carliApp/**/*.scss', 'carliApp/**/*.css']
     },
 
     /**

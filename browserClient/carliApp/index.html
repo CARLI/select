@@ -2,16 +2,12 @@
 <html ng-app="carli.app">
     <head>
         <title>CARLI Select</title>
+        <% styles.forEach( function ( file ) { %>
+            <link rel="stylesheet" href="/<%= file %>"></script>
+        <% }); %>
     </head>
     <body>
-        <nav>
-            <ul>
-                <li><a href=".">Home</a></li>
-                <li><a href="section1">Section1</a></li>
-                <li><a href="section2">Section2</a></li>
-                <li><a href="section3">Section3</a></li>
-            </ul>
-        </nav>
+        <nav main-menu></nav>
         <main ng-view></main>
 
         <!-- compiled JavaScript -->
