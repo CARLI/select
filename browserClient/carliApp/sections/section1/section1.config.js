@@ -1,3 +1,4 @@
 angular.module('carli.sections.section1',[
-    'carli.service'
+    'carli.service',
+    'carli.vendorService'
 ]);
