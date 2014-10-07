@@ -3,7 +3,7 @@ angular.module('carli.routes',[
     'carli.sections.section1',
     'carli.sections.section2',
     'carli.sections.section3',
-    'carli.sections.style-guide'
+    'carli.sections.styleGuide'
 ])
 .config(function ($routeProvider) {
     $routeProvider
@@ -23,8 +23,8 @@ angular.module('carli.routes',[
         templateUrl: 'carliApp/sections/section3/section3.html',
         controller: 'section1Controller'
     })
-    .when('/style-guide', {
-        templateUrl: 'carliApp/sections/style-guide/index.html',
+    .when('/styleGuide', {
+        templateUrl: 'carliApp/sections/styleGuide/styleGuide.html',
         controller: 'styleGuideController'
     });
 });

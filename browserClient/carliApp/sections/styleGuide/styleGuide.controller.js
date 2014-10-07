@@ -1,3 +1,3 @@
-angular.module('carli.sections.style-guide')
+angular.module('carli.sections.styleGuide')
 .controller('styleGuideController', function(){
 });
