@@ -1,0 +1,67 @@
+{
+    "title": "Product",
+    "type": "object",
+    "properties": {
+        "name": {
+            "description": "Name of the product",
+            "type": "string"
+        },
+        "cycleType": {
+            "$ref": "./cycle-type.json"
+        },
+        "vendor": {
+            "$ref": "./vendor.json"
+        },
+        "productUrl": {
+            "$ref": "./url.json"
+        },
+        "description": {
+            "type": "string"
+        },
+        "comments": {
+            "type": "string"
+        },
+        "priceList": {
+            "type": "array",
+            "items:": {
+                "$ref": "./price.json"
+            }
+        },
+        "lastYearsPriceList": {
+            "type": "array",
+            "items:": {
+                "$ref": "./price.json"
+            }
+        },
+        "fundings": {
+            "type": "array",
+            "items:": {
+                "$ref": "./funding.json"
+            }
+        },
+        "isActive": {
+            "type": "boolean"
+        },
+        "licenseAgreement": {
+            "$ref": "./license-agreement.json"
+        },
+        "priceCap": {
+            "$ref": "./price-cap.json"
+        },
+        "detailCode": {
+            "$ref": "./product-detail-code.json"
+        },
+        "isThirdPartyProduct": {
+            "type": "boolean"
+        },
+        "hasArchiveCapitalFee": {
+            "type": "boolean"
+        },
+        "librariesThatHavePaidAcf": {
+            "type": "array",
+            "items:": {
+                "$ref": "./library.json"
+            }
+        }
+    }
+}

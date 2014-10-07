@@ -1,0 +1,47 @@
+{
+    "$schema": "json-schema.org/draft-04/schema",
+    "title": "Vendor",
+    "type": "object",
+    "properties": {
+        "name": {
+            "description": "Name of Vendor",
+            "type": "string"
+        },
+        "previousName": {
+            "description": "Previous Name of Vendor",
+            "type": "string"
+        },
+        "websiteUrl": {
+            "description": "Vendor's Website",
+            "$ref": "./web-address.json"
+        },
+        "contacts": {
+            "description": "List of vendor contacts",
+            "type": "array",
+            "items": { "$ref": "./contact.json" }
+        },
+        "comments": {
+            "description": "Vendor comments",
+            "type": "string"
+        },
+        "adminModule": {
+            "description": "Free field text to keep track of CARLI troubleshooting with vendor",
+            "type": "string"
+        },
+        "isActive": {
+            "description": "Is this vendor active?",
+            "type": "boolean"
+        },
+        "products": {
+            "description": "Products offered by this vendor",
+            "type": "array",
+            "items": { "$ref": "./product.json" }
+        },
+        "licenseAgreements": {
+            "description": "License agreements used by this vendor",
+            "type": "array",
+            "items": { "$ref": "./license-agreement.json" }
+        }
+    },
+    "required": [ "name" ]
+}
