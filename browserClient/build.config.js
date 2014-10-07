@@ -14,7 +14,7 @@ module.exports = {
      * Convenient groups of files used for copying, building, etc.
      */
     carliApp_files: {
-        js: [ 'carliApp/**/*.js', '!carliApp/**/*.spec.js' ],
+        js: [ 'carliApp/**/*.js', '!carliApp/**/*.spec.js', 'resources/*.json' ],
         jsUnit: ['carliApp/**/*.spec.js'],
         jsAll: ['carliApp/**/*.js'],
         index: ['carliApp/index.html'],
@@ -53,7 +53,8 @@ module.exports = {
     vendor_files: {
         js: [
             'bower_modules/angular/angular.js',
-            'bower_modules/angular-route/angular-route.js'
+            'bower_modules/angular-route/angular-route.js',
+            'bower_modules/angular-resource/angular-resource.js'
         ]
     }
 };
