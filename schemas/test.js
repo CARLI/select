@@ -16,8 +16,8 @@ var urlSchema = addSchema('web-address.json');
 var vendorSchema = addSchema('vendor.json');
 
 var data = {
-    'Name': 'Acme',
-    'Website URL': 'http://acme.com'
+    'name': 'Acme',
+    'websiteUrl': 'http://acme.com'
 };
 
 var result = tv4.validateResult(data, vendorSchema);
