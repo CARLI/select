@@ -231,6 +231,7 @@ module.exports = function ( grunt ) {
                 files: [{
                     src: ['<%= carliApp_files.css %>'], 
                     dest: '<%= build_dir %>/css/',
+                    ext: '.css',
                     expand: true,
                     flatten: true
                 }]
