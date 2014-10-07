@@ -9,6 +9,7 @@ bower_modules
 artifacts
 build
 dist
+.sass-cache
 
 # Windows junk
 Thumbs.db
