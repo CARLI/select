@@ -1,5 +1,5 @@
 {
-    "title": "URL",
+    "title": "Web Address (URL)",
     "type": "string",
     "pattern": "^https?://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]"
 }

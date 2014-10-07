@@ -13,7 +13,7 @@
         },
         "websiteUrl": {
             "description": "Vendor's Website",
-            "$ref": "./url.json"
+            "$ref": "./web-address.json"
         },
         "contacts": {
             "description": "List of vendor contacts",

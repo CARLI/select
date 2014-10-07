@@ -2,62 +2,62 @@
     "title": "Product",
     "type": "object",
     "properties": {
-        "Name": {
+        "name": {
             "description": "Name of the product",
             "type": "string"
         },
-        "Cycle Type": {
+        "cycleType": {
             "$ref": "./cycle-type.json"
         },
-        "Vendor": {
+        "vendor": {
             "$ref": "./vendor.json"
         },
-        "Product URL": {
+        "productUrl": {
             "$ref": "./url.json"
         },
-        "Description": {
+        "description": {
             "type": "string"
         },
-        "Comments": {
+        "comments": {
             "type": "string"
         },
-        "Price List": {
+        "priceList": {
             "type": "array",
             "items:": {
                 "$ref": "./price.json"
             }
         },
-        "Last Years Price List": {
+        "lastYearsPriceList": {
             "type": "array",
             "items:": {
                 "$ref": "./price.json"
             }
         },
-        "Fundings": {
+        "fundings": {
             "type": "array",
             "items:": {
                 "$ref": "./funding.json"
             }
         },
-        "Is Active": {
+        "isActive": {
             "type": "boolean"
         },
-        "License Agreement": {
-            "$ref": "./funding.json"
+        "licenseAgreement": {
+            "$ref": "./license-agreement.json"
         },
-        "Price Cap": {
+        "priceCap": {
             "$ref": "./price-cap.json"
         },
-        "Detail Code": {
+        "detailCode": {
             "$ref": "./product-detail-code.json"
         },
-        "Is Third Party Product": {
+        "isThirdPartyProduct": {
             "type": "boolean"
         },
-        "Has Archive Capital Fee": {
+        "hasArchiveCapitalFee": {
             "type": "boolean"
         },
-        "Libraries that have paid ACF": {
+        "librariesThatHavePaidAcf": {
             "type": "array",
             "items:": {
                 "$ref": "./library.json"
