@@ -20,7 +20,7 @@ In the browserClient/ directory, run:
 * `npm install -g grunt-cli`
 * `npm install -g bower`
 * `bower install`
-
+* `gem install sass`
 
 ## Start Local Dev Server ##
 To build the project and start a local development server:
