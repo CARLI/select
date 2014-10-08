@@ -85,6 +85,14 @@ module.exports = function ( grunt ) {
                     expand: true
                 }]
             },
+            build_vendorfonts: {
+                files: [{
+                    src: [ '<%= vendor_files.fonts %>' ],
+                    dest: '<%= build_dir %>/fonts',
+                    expand: true,
+                    flatten: true
+                }]
+            },
             build_html: {
                 files: [{
                     src: ['<%= carliApp_files.html %>'],
@@ -229,7 +237,7 @@ module.exports = function ( grunt ) {
         sass: {
             build: {
                 files: [{
-                    src: ['<%= carliApp_files.css %>'], 
+                    src: ['<%= carliApp_files.css %>', '<%= vendor_files.css %>'],
                     dest: '<%= build_dir %>/css/',
                     ext: '.css',
                     expand: true,
@@ -411,7 +419,8 @@ module.exports = function ( grunt ) {
         'clean',
         'jshint',
         'copy:build_appjs', 
-        'copy:build_vendorjs', 
+        'copy:build_vendorjs',
+        'copy:build_vendorfonts',
         'copy:build_html',
         'browserify:build',
         'sass:build',
