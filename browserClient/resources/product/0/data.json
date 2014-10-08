@@ -1,0 +1,35 @@
+{
+    "id": "0",
+    "name": "product0",
+    "previousNames": [
+        {
+            "year": 2013,
+            "name": "2013 name"
+        }
+    ],
+    "cycleType": "Fiscal Year",
+    "webSite": "url: 0",
+    "description": "Description for product 0",
+    "comment" : "Product price comment",
+    "fundings" : [
+        {
+            "fundedFor" :"Affiliate",
+            "fundingLevel": "5 percent"
+        },
+        {
+            "fundedFor" :"Governing",
+            "fundingLevel": "$50"
+        },
+        {
+            "fundedFor" :"Abe Lincoln",
+            "fundingLevel": "35 percent"
+        }
+    ],
+    "history" :
+    [
+        {
+            "year" : 2014,
+            "subscribers" : 2
+        }
+    ]
+}
