@@ -3,7 +3,8 @@
   "dependencies": {
     "angular": "~1.2.23",
     "angular-route": "~1.2.25",
-    "angular-resource": "~1.2.26"
+    "angular-resource": "~1.2.26",
+    "angular-fontawesome": "~0.2.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.2"
