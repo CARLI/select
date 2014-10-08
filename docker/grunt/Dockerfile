@@ -15,6 +15,7 @@ RUN apt-get -qq install libfreetype6 libfontconfig
 # Install convenient global npm packages
 RUN npm install -g grunt-cli
 RUN npm install -g bower
+RUN gem install sass
 
 # Copy in project files
 COPY . /carli-select
@@ -22,6 +23,5 @@ COPY . /carli-select
 EXPOSE 8000
 
 # Install project dependencies
-RUN gem install sass
 RUN cd /carli-select/browserClient && npm install && bower --allow-root install
 
