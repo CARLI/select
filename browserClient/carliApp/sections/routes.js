@@ -29,6 +29,6 @@ angular.module('carli.routes',[
     .when('/styleGuide', {
         templateUrl: '/carliApp/sections/styleGuide/styleGuide.html',
         controller:  'styleGuideController',
-        controllerAs:'styleGuideController'
+        controllerAs:'vm'
     });
 });
