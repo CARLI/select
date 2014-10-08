@@ -1,0 +1,18 @@
+[
+    {
+        "id" : "0",
+        "name": "vendor0"
+    },
+    {
+        "id" : "1",
+        "name": "vendor1"
+    },
+    {
+        "id" : "2",
+        "name": "vendor2"
+    },
+    {
+        "id" : "3",
+        "name": "vendor3"
+    }
+]
