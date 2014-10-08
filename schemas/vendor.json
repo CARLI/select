@@ -3,6 +3,10 @@
     "title": "Vendor",
     "type": "object",
     "properties": {
+        "id": {
+            "description": "Unique identifier for the Vendor record",
+            "type": "string"
+        },
         "name": {
             "description": "Name of Vendor",
             "type": "string"
