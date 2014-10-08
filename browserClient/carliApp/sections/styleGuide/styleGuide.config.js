@@ -1,4 +1,10 @@
 angular.module('carli.sections.styleGuide',
-    ['carli.mainMenu',
-     'carli.cycleStatus']
-);
+    [
+        'carli.componentGatherer',
+        'carli.mainMenu',
+        'carli.cycleStatus'
+    ]
+)
+    .value('componentExamples', {
+        'Cycle Status': 'cycle-status.html'
+    });

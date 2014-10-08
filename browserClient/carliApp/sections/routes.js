@@ -8,17 +8,17 @@ angular.module('carli.routes',[
 .config(function ($routeProvider) {
     $routeProvider
     .when('/', {
-        templateUrl: 'carliApp/sections/dashboard/dashboard.html',
+        templateUrl: '/carliApp/sections/dashboard/dashboard.html',
         controller:  'dashboardController',
         controllerAs:'dashboardController'
     })
     .when('/dashboard', {
-        templateUrl: 'carliApp/sections/dashboard/dashboard.html',
+        templateUrl: '/carliApp/sections/dashboard/dashboard.html',
         controller:  'dashboardController',
         controllerAs:'dashboardController'
     })
     .when('/subscriptions', {
-        templateUrl: 'carliApp/sections/subscriptions/subscriptions.html',
+        templateUrl: '/carliApp/sections/subscriptions/subscriptions.html',
         controller:  'subscriptionsController',
         controllerAs:'subscriptionsController' 
     })
@@ -43,8 +43,8 @@ angular.module('carli.routes',[
         controllerAs:'editProductController'
     })
     .when('/styleGuide', {
-        templateUrl: 'carliApp/sections/styleGuide/styleGuide.html',
+        templateUrl: '/carliApp/sections/styleGuide/styleGuide.html',
         controller:  'styleGuideController',
-        controllerAs:'styleGuideController'
+        controllerAs:'vm'
     });
 });
