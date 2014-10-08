@@ -1,3 +1,5 @@
 angular.module('carli.sections.vendors')
-.controller('vendorsController', function(){
+.controller('vendorsController', function( vendorService ){
+
+        this.vendorList = vendorService.getVendors();
 });

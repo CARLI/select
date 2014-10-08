@@ -1,4 +1,7 @@
 <section id="vendors">
     <h1>Vendors</h1>
 
+    <div ng-repeat="vendor in vendorsController.vendorList">
+        <a href="vendors/{{ vendor.id }}">{{ vendor.name }}</a>
+    </div>
 </section>

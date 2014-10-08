@@ -3,7 +3,7 @@ angular.module('carli.vendorService')
 
 function vendorService($resource) {
     var service = {};
-    var vendorResource = $resource('/resources/vendor.json');
+    var vendorResource = $resource('/resources/vendorList.json');
     service.getVendors = vendorResource.query;
     return service;
 }
