@@ -2,6 +2,7 @@ angular.module('carli.routes',[
     'carli.sections.dashboard',
     'carli.sections.subscriptions',
     'carli.sections.vendors',
+    'carli.sections.products',
     'carli.sections.styleGuide'
 ])
 .config(function ($routeProvider) {
@@ -22,9 +23,24 @@ angular.module('carli.routes',[
         controllerAs:'subscriptionsController' 
     })
     .when('/vendors', {
-        templateUrl: 'carliApp/sections/vendors/vendors.html',
+        templateUrl: '/carliApp/sections/vendors/vendors.html',
         controller:  'vendorsController',
         controllerAs:'vendorsController'
+    })
+    .when('/vendors/:id', {
+        templateUrl: '/carliApp/sections/vendors/editVendor/editVendor.html',
+        controller:  'editVendorController',
+        controllerAs:'editVendorController'
+    })
+    .when('/products', {
+        templateUrl: '/carliApp/sections/products/products.html',
+        controller:  'productsController',
+        controllerAs:'productsController'
+    })
+    .when('/products/:id', {
+        templateUrl: '/carliApp/sections/products/editProduct/editProduct.html',
+        controller:  'editProductController',
+        controllerAs:'editProductController'
     })
     .when('/styleGuide', {
         templateUrl: 'carliApp/sections/styleGuide/styleGuide.html',

@@ -5,12 +5,15 @@ describe('The vendor provider service', function() {
         expect(vendorService).to.be.an('object');
     }));
 
-    it('should have a method called getVendors', inject(function(vendorService) {
-        expect(vendorService.getVendors).to.be.a('function');
+    it('vendorService.getVendorList should return an array', inject(function(vendorService) {
+        var vendors = vendorService.getVendorList();
+        expect(vendors).to.be.a('array');
+        expect(vendors).to.not.be.empty();
     }));
 
-    it('vendorService.getVendors should return an array', inject(function(vendorService) {
-        var vendors = vendorService.getVendors();
-        expect(vendors).to.be.a('array');
+    it('vendorService.getVendor(0) should return an object', inject(function(vendorService) {
+        var vendor = vendorService.getVendor(0);
+        expect(vendor).to.be.an('object');
+        expect(vendor).to.have.property('id');
     }));
 });

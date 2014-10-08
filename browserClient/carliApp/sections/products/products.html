@@ -1,0 +1,7 @@
+<section id="products">
+    <h1>Products</h1>
+
+    <div ng-repeat="product in productsController.productList">
+        <a href="products/{{ product.id }}">{{ product.name }}</a>
+    </div>
+</section>

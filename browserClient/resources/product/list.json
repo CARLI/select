@@ -1,0 +1,42 @@
+[
+    {
+        "id" : "0",
+        "name": "product0",
+        "cycleType" : "Fiscal Year",
+        "vendor" : {
+            "id" : 0,
+            "name" : "Vendor 0"
+        },
+        "isActive" : true
+    },
+    {
+        "id" : "1",
+        "name": "product1",
+        "cycleType" : "Fiscal Year",
+        "vendor" : {
+            "id" : 0,
+            "name" : "Vendor 0"
+        },
+        "isActive" : true
+    },
+    {
+        "id" : "2",
+        "name": "product2",
+        "cycleType" : "Fiscal Year",
+        "vendor" : {
+            "id" : 1,
+            "name" : "Vendor 1"
+        },
+        "isActive" : false
+    },
+    {
+        "id" : "3",
+        "name": "product3",
+        "cycleType" : "Fiscal Year",
+        "vendor" : {
+            "id" : 1,
+            "name" : "Vendor 1"
+        },
+        "isActive" : true
+    }
+]
