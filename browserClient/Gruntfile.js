@@ -52,7 +52,7 @@ module.exports = function ( grunt ) {
 
                 options: {
                     browserifyOptions: {
-                        standalone: '<%= logic_files.global_var %>',
+                        standalone: '<%= logic_files.global_var %>'
                     }
                 }
             }
@@ -83,6 +83,14 @@ module.exports = function ( grunt ) {
                     src: [ '<%= vendor_files.js %>' ],
                     dest: '<%= build_dir %>/',
                     expand: true
+                }]
+            },
+            build_vendorfonts: {
+                files: [{
+                    src: [ '<%= vendor_files.fonts %>' ],
+                    dest: '<%= build_dir %>/fonts',
+                    expand: true,
+                    flatten: true
                 }]
             },
             build_html: {
@@ -229,7 +237,7 @@ module.exports = function ( grunt ) {
         sass: {
             build: {
                 files: [{
-                    src: ['<%= carliApp_files.css %>'], 
+                    src: ['<%= carliApp_files.css %>', '<%= vendor_files.css %>'],
                     dest: '<%= build_dir %>/css/',
                     ext: '.css',
                     expand: true,
@@ -247,7 +255,6 @@ module.exports = function ( grunt ) {
             }
         },
 
-       /**/
         watch: {
             options: {
                 livereload: true
@@ -307,7 +314,7 @@ module.exports = function ( grunt ) {
              */
             html: {
                 files: ['<%= carliApp_files.html %>'],
-                tasks: ['copy:build_html'],
+                tasks: ['copy:build_html']
             },
 
             css: {
@@ -412,7 +419,8 @@ module.exports = function ( grunt ) {
         'clean',
         'jshint',
         'copy:build_appjs', 
-        'copy:build_vendorjs', 
+        'copy:build_vendorjs',
+        'copy:build_vendorfonts',
         'copy:build_html',
         'browserify:build',
         'sass:build',

@@ -55,7 +55,14 @@ module.exports = {
         js: [
             'bower_modules/angular/angular.js',
             'bower_modules/angular-route/angular-route.js',
-            'bower_modules/angular-resource/angular-resource.js'
+            'bower_modules/angular-resource/angular-resource.js',
+            'bower_modules/angular-fontawesome/dist/angular-fontawesome.js'
+        ],
+        css: [
+            'bower_modules/font-awesome/css/font-awesome.min.css'
+        ],
+        fonts: [
+            'bower_modules/font-awesome/fonts/fontawesome-webfont.*'
         ]
     }
 };
