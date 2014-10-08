@@ -52,7 +52,7 @@ module.exports = function ( grunt ) {
 
                 options: {
                     browserifyOptions: {
-                        standalone: '<%= logic_files.global_var %>',
+                        standalone: '<%= logic_files.global_var %>'
                     }
                 }
             }
@@ -247,7 +247,6 @@ module.exports = function ( grunt ) {
             }
         },
 
-       /**/
         watch: {
             options: {
                 livereload: true
@@ -307,7 +306,7 @@ module.exports = function ( grunt ) {
              */
             html: {
                 files: ['<%= carliApp_files.html %>'],
-                tasks: ['copy:build_html'],
+                tasks: ['copy:build_html']
             },
 
             css: {
