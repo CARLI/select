@@ -22,9 +22,14 @@ angular.module('carli.routes',[
         controllerAs:'subscriptionsController' 
     })
     .when('/vendors', {
-        templateUrl: 'carliApp/sections/vendors/vendors.html',
+        templateUrl: '/carliApp/sections/vendors/vendors.html',
         controller:  'vendorsController',
         controllerAs:'vendorsController'
+    })
+    .when('/vendors/:id', {
+        templateUrl: '/carliApp/sections/vendors/editVendor/editVendor.html',
+        controller:  'editVendorController',
+        controllerAs:'editVendorController'
     })
     .when('/styleGuide', {
         templateUrl: 'carliApp/sections/styleGuide/styleGuide.html',
