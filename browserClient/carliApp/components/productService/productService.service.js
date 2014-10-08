@@ -1,14 +1,14 @@
-angular.module('carli.vendorService')
-    .service('vendorService', vendorService);
+angular.module('carli.productService')
+    .service('productService', productService);
 
-function vendorService($resource) {
+function productService($resource) {
     var service = {};
-    var vendorListResource = $resource('/resources/vendorList.json');
+    var productListResource = $resource('/resources/product/list.json');
 
-    service.getVendorList = vendorListResource.query;
-    service.getVendor = function( vendorId ){
-        var vendorResource = $resource('/resources/vendors/'+vendorId+'/vendor.json');
-        return vendorResource.get();
+    service.getProductList = productListResource.query;
+    service.getProduct = function( productId ){
+        var productResource = $resource('/resources/product/'+productId+'/data.json');
+        return productResource.get();
     };
 
     return service;

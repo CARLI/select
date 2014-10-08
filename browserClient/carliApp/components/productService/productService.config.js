@@ -1,1 +1,1 @@
-angular.module('carli.vendorService',[ 'ngResource' ]);
+angular.module('carli.productService',[ 'ngResource' ]);
