@@ -5,10 +5,10 @@ cd `git rev-parse --show-toplevel`
 
 SCRIPTS=./jenkins/scripts
 
-$SCRIPTS/add-build-number.sh qa
-$SCRIPTS/build-container.sh grunt
-$SCRIPTS/run-test-container.sh
-$SCRIPTS/tag-container.sh grunt "qa-$BUILD_NUMBER"
+$SCRIPTS/add-build-number.sh qa &&
+$SCRIPTS/build-container.sh grunt &&
+$SCRIPTS/run-test-container.sh &&
+$SCRIPTS/tag-container.sh grunt "qa-$BUILD_NUMBER" &&
 $SCRIPTS/run-serve-container.sh 9080
  
 # It isn't necessary to export the image right now, because we 
