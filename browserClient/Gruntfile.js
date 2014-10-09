@@ -123,7 +123,7 @@ module.exports = function ( grunt ) {
                     '<%= vendor_files.js %>',
                     '<%= build_dir %>/<%= logic_files.build %>',
                     'module.prefix',
-                    '<%= build_dir %>/carliApp/**/*.js',
+                    '<%= build_dir %>/<%= carliApp_files.jsAll %>',
                     'module.suffix'
                 ],
                 dest: '<%= compile_dir %>/<%= pkg.name %>-<%= pkg.version %>.js'
@@ -187,7 +187,7 @@ module.exports = function ( grunt ) {
                     '<%= vendor_files.js %>',
                     '<%= test_files.js %>',
                     '<%= build_dir %>/*.js',
-                    '<%= build_dir %>/carliApp/**/*.js',
+                    '<%= build_dir %>/<%= carliApp_files.jsAll %>',
                     '<%= carliApp_files.jsUnit %>'
                 ]
             },
@@ -347,7 +347,7 @@ module.exports = function ( grunt ) {
                 src: [
                     '<%= vendor_files.js %>',
                     '<%= build_dir %>/<%= logic_files.build %>',
-                    '<%= build_dir %>/carliApp/**/*.js',
+                    '<%= build_dir %>/<%= carliApp_files.jsAll %>',
                     '<%= build_dir %>/css/*.css'
                 ]
             },
