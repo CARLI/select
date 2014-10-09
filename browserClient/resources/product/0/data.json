@@ -8,13 +8,17 @@
         }
     ],
     "cycleType": "Fiscal Year",
+    "vendor": {
+        "id": "0",
+        "name": "vendor0"
+    },
     "webSite": "url: 0",
     "description": "Description for product 0",
     "comment" : "Product price comment",
     "fundings" : [
         {
             "fundedFor" :"Affiliate",
-            "fundingLevel": "5 percent"
+            "fundingLevel": "5%"
         },
         {
             "fundedFor" :"Governing",
@@ -22,7 +26,7 @@
         },
         {
             "fundedFor" :"Abe Lincoln",
-            "fundingLevel": "35 percent"
+            "fundingLevel": "35%"
         }
     ],
     "history" :
@@ -31,5 +35,27 @@
             "year" : 2014,
             "subscribers" : 2
         }
-    ]
+    ],
+    "displayPreviousName": true,
+    "isActive": true,
+    "licenseAgreement": {
+        "id": "0",
+        "name": "Create Commons 2.0",
+        "downloadTerms": "yes",
+        "useInCoursePacksTerms": "no",
+        "interLibraryLoanTerms" : "yes",
+        "printTerms": "no",
+        "limitedScholarlySharingTerms": "Some other thing",
+        "walkinTerms": "Another other thing",
+        "eReservesTerms": "Yes",
+        "hasConfidentiallyLanguage": "Dude"
+    },
+    "priceCap": "7%",
+    "detailCode": {
+        "id": 0,
+        "label": "USIA - Membership"
+    },
+    "isThirdPartyProduct": false,
+    "hasArchiveCapitalFee": false
 }
+
