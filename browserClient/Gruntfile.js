@@ -282,7 +282,7 @@ module.exports = function ( grunt ) {
             */
             jssrc: {
                 files: ['<%= carliApp_files.js %>'],
-                tasks: [ 'jshint:src', 'karma:unit', 'copy:build_appjs' ]
+                tasks: [ 'newer:jshint:src', 'karma:unit', 'newer:copy:build_appjs' ]
             },
 
            /**
@@ -290,7 +290,7 @@ module.exports = function ( grunt ) {
             */
             jssrcfiles: {
                 files: ['<%= carliApp_files.js %>'],
-                tasks: [ 'copy:build_appjs', 'index:build' ], 
+                tasks: [ 'newer:copy:build_appjs', 'index:build' ], 
                 options: {
                     event: ['added', 'deleted']
                 }
@@ -310,7 +310,7 @@ module.exports = function ( grunt ) {
             */
             jsunit: {
                 files: ['<%= carliApp_files.jsUnit %>'],
-                tasks: [ 'jshint:test', 'karma:unit' ],
+                tasks: [ 'newer:jshint:test', 'karma:unit' ],
                 options: {
                     livereload: false
                 }
@@ -321,12 +321,12 @@ module.exports = function ( grunt ) {
              */
             html: {
                 files: ['<%= carliApp_files.html %>'],
-                tasks: ['copy:build_html']
+                tasks: ['newer:copy:build_html']
             },
 
             css: {
                 files: ['<%= carliApp_files.css %>'],
-                tasks: ['sass:build']
+                tasks: ['newer:sass:build']
             }
         },
 
@@ -424,12 +424,12 @@ module.exports = function ( grunt ) {
      */
     grunt.registerTask( 'build', [
         'clean',
-        'jshint',
-        'copy:build_appjs', 
-        'copy:build_vendorjs',
-        'copy:build_vendorfonts',
-        'copy:build_html',
-        'copy:build_json',
+        'newer:jshint',
+        'newer:copy:build_appjs', 
+        'newer:copy:build_vendorjs',
+        'newer:copy:build_vendorfonts',
+        'newer:copy:build_html',
+        'newer:copy:build_json',
         'browserify:build',
         'sass:build',
         'index:build' 

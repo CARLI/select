@@ -16,6 +16,8 @@
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-uglify": "^0.5.1",
     "grunt-contrib-watch": "^0.6.1",
+    "grunt-contrib-sass": "^0.8.1",
+    "grunt-newer": "^0.7.0",
     "grunt-ng-annotate": "^0.4.0",
     "grunt-ngdocs": "^0.2.5",
     "lodash": "^2.4.1",
@@ -28,7 +30,6 @@
     "karma-chai": "^0.1.0",
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-junit-reporter": "^0.2.2",
-    "connect-modrewrite": "^0.7.9",
-    "grunt-contrib-sass": "^0.8.1"
+    "connect-modrewrite": "^0.7.9"
   }
 }
