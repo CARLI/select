@@ -15,9 +15,5 @@ describe('The component gatherer', function () {
             expect(componentGatherer.gather()).to.be.an('array');
         }));
 
-        it('should fail', function() {
-            var fail = true;
-            expect(fail).to.be(false);
-        });
     });
 });
