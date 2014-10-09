@@ -4,7 +4,8 @@
   "description": "To browse the schema, install a local static webserver and Docson:",
   "main": "test.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "node test.js",
+    "start": "node index.js"
   },
   "author": "",
   "license": "BSD",
