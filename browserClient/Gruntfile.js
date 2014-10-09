@@ -275,7 +275,7 @@ module.exports = function ( grunt ) {
             */
             jssrc: {
                 files: ['<%= carliApp_files.js %>'],
-                tasks: [ 'jshint:src', 'karma:unit:run', 'copy:build_appjs' ]
+                tasks: [ 'jshint:src', 'karma:unit', 'copy:build_appjs' ]
             },
 
            /**
