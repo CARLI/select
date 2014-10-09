@@ -99,6 +99,13 @@ module.exports = function ( grunt ) {
                     dest: '<%= build_dir %>/',
                     expand: true
                 }]
+            },
+            build_json: {
+                files: [{
+                    src: ['<%= carliApp_files.json %>'],
+                    dest: '<%= build_dir %>/',
+                    expand: true
+                }]
             }
         },
 
@@ -422,6 +429,7 @@ module.exports = function ( grunt ) {
         'copy:build_vendorjs',
         'copy:build_vendorfonts',
         'copy:build_html',
+        'copy:build_json',
         'browserify:build',
         'sass:build',
         'index:build' 
