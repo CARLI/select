@@ -1,5 +1,6 @@
 {
     "name": "carli-schema",
+    "private": true,
     "version": "0.0.0",
     "description": "To browse the schema, install a local static webserver and Docson:",
     "main": "test.js",

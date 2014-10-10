@@ -1,3 +1,9 @@
+
+# Ignore Schema Browser build products
+/schemas/browser/*.json
+!/schemas/browser/package.json
+!/schemas/browser/bower.json
+
 #Node
 npm-debug.log
 node_modules/
