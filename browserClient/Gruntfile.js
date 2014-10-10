@@ -99,6 +99,13 @@ module.exports = function ( grunt ) {
                     dest: '<%= build_dir %>/',
                     expand: true
                 }]
+            },
+            build_json: {
+                files: [{
+                    src: ['<%= carliApp_files.json %>'],
+                    dest: '<%= build_dir %>/',
+                    expand: true
+                }]
             }
         },
 
@@ -116,7 +123,7 @@ module.exports = function ( grunt ) {
                     '<%= vendor_files.js %>',
                     '<%= build_dir %>/<%= logic_files.build %>',
                     'module.prefix',
-                    '<%= build_dir %>/carliApp/**/*.js',
+                    '<%= build_dir %>/<%= carliApp_files.jsAll %>',
                     'module.suffix'
                 ],
                 dest: '<%= compile_dir %>/<%= pkg.name %>-<%= pkg.version %>.js'
@@ -180,7 +187,7 @@ module.exports = function ( grunt ) {
                     '<%= vendor_files.js %>',
                     '<%= test_files.js %>',
                     '<%= build_dir %>/*.js',
-                    '<%= build_dir %>/carliApp/**/*.js',
+                    '<%= build_dir %>/<%= carliApp_files.jsAll %>',
                     '<%= carliApp_files.jsUnit %>'
                 ]
             },
@@ -275,7 +282,7 @@ module.exports = function ( grunt ) {
             */
             jssrc: {
                 files: ['<%= carliApp_files.js %>'],
-                tasks: [ 'jshint:src', 'karma:unit', 'copy:build_appjs' ]
+                tasks: [ 'newer:jshint:src', 'karma:unit', 'newer:copy:build_appjs' ]
             },
 
            /**
@@ -283,7 +290,7 @@ module.exports = function ( grunt ) {
             */
             jssrcfiles: {
                 files: ['<%= carliApp_files.js %>'],
-                tasks: [ 'copy:build_appjs', 'index:build' ], 
+                tasks: [ 'newer:copy:build_appjs', 'index:build' ], 
                 options: {
                     event: ['added', 'deleted']
                 }
@@ -303,7 +310,7 @@ module.exports = function ( grunt ) {
             */
             jsunit: {
                 files: ['<%= carliApp_files.jsUnit %>'],
-                tasks: [ 'jshint:test', 'karma:unit' ],
+                tasks: [ 'newer:jshint:test', 'karma:unit' ],
                 options: {
                     livereload: false
                 }
@@ -314,12 +321,12 @@ module.exports = function ( grunt ) {
              */
             html: {
                 files: ['<%= carliApp_files.html %>'],
-                tasks: ['copy:build_html']
+                tasks: ['newer:copy:build_html']
             },
 
             css: {
                 files: ['<%= carliApp_files.css %>'],
-                tasks: ['sass:build']
+                tasks: ['newer:sass:build']
             }
         },
 
@@ -340,7 +347,7 @@ module.exports = function ( grunt ) {
                 src: [
                     '<%= vendor_files.js %>',
                     '<%= build_dir %>/<%= logic_files.build %>',
-                    '<%= build_dir %>/carliApp/**/*.js',
+                    '<%= build_dir %>/<%= carliApp_files.jsAll %>',
                     '<%= build_dir %>/css/*.css'
                 ]
             },
@@ -417,11 +424,12 @@ module.exports = function ( grunt ) {
      */
     grunt.registerTask( 'build', [
         'clean',
-        'jshint',
-        'copy:build_appjs', 
-        'copy:build_vendorjs',
-        'copy:build_vendorfonts',
-        'copy:build_html',
+        'newer:jshint',
+        'newer:copy:build_appjs', 
+        'newer:copy:build_vendorjs',
+        'newer:copy:build_vendorfonts',
+        'newer:copy:build_html',
+        'newer:copy:build_json',
         'browserify:build',
         'sass:build',
         'index:build' 
