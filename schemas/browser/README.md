@@ -5,4 +5,4 @@ This is a web app for viewing the CARLI schema.
   * npm install
   * bower install
 * Then run the webserver: `npm start`
-* Then, enter the relative path to the schema in order to view. For example `../../vendor.json`.
+* Navigate to the URL it gives you.

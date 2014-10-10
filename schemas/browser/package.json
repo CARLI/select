@@ -1,0 +1,17 @@
+{
+    "name": "carli-schema",
+    "private": true,
+    "version": "0.0.0",
+    "description": "To browse the schema, install a local static webserver and Docson:",
+    "main": "test.js",
+    "scripts": {
+        "test": "node test.js",
+        "start": "node index.js"
+    },
+    "author": "",
+    "license": "BSD",
+    "dependencies": {
+        "tv4": "^1.1.4",
+        "node-static": "^0.7.6"
+    }
+}
