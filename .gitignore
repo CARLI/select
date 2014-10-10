@@ -3,6 +3,7 @@
 /schemas/browser/*.json
 !/schemas/browser/package.json
 !/schemas/browser/bower.json
+/schemas/browser/index.json.html
 
 #Node
 npm-debug.log
