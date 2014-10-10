@@ -15,11 +15,20 @@ function processJsonFile( fileName ) {
 }
 
 var fileList = fs.readdirSync('../');
-for ( var i = 0 ; i < fileList.length ; i++ ) {
-    if ( fileList[i].slice(-5) == '.json' ) {
-        processJsonFile( fileList[i] );
-    }
-}
+fileList = fileList.filter(function (file) {
+    return ( file.slice(-5) == '.json' );
+});
+
+fileList.map( function(file){
+    processJsonFile( file );
+});
+
+indexList = fileList.map( function(file){
+    var entityName = file.slice(0,-5);
+    return '<a href="#'+file+'">'+entityName+'</a>';
+});
+fs.writeFileSync('index.json.html', indexList.join(''));
+
 
 require('http').createServer(function (request, response) {
     request.addListener('end', function () {
@@ -27,4 +36,4 @@ require('http').createServer(function (request, response) {
     }).resume();
 }).listen(port);
 
-console.log("Listening on http://localhost:" + port + "/bower_components/docson/index.html");
+console.log("Listening on http://localhost:" + port + "/");
