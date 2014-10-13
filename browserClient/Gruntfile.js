@@ -202,6 +202,16 @@ module.exports = function ( grunt ) {
                 junitReporter: {
                     outputFile: '../artifacts/test-results/karma.xml'
                 }
+            },
+            configTemplate: {
+                basePath: '.',
+                frameworks: ['mocha', 'chai'],
+                reporters: ['progress'],
+                port: 9876,
+                colors: true,
+                autoWatch: false,
+                singleRun: false,
+                browsers: ['PhantomJS']
             }
         },
 
@@ -471,8 +481,15 @@ module.exports = function ( grunt ) {
     /**
      * Generate a karma.conf.js file suitable for running Karma tests standalone.
      */
-    grunt.registerTask( 'generate-karmaconf', [
-    ]);
+    grunt.registerTask( 'generate-karmaconf', 'Generate Karma configuration for executing tests outside of Grunt', function () {
+        var config = grunt.config('karma.configTemplate');
+        // Flatten the files array into a single 1-dimensional array
+        config.files = grunt.config('karma.options.files').reduce(function(a, b) {
+              return a.concat(b);
+        });
+        var configString = 'module.exports = function(config) { config.set(' + JSON.stringify(config, null, '    ') + '); };';
+        grunt.file.write(grunt.config('karma.options.configFile'), configString);
+    });
 
 
     /**

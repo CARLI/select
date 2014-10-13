@@ -5,6 +5,10 @@
 !/schemas/browser/bower.json
 /schemas/browser/index.json.html
 
+# Ignore browserClient's karma config.
+# Run `grunt generate-karmaconf` to generate it.
+/browserClient/karma.conf.js
+
 #Node
 npm-debug.log
 node_modules/
