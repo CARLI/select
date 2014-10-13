@@ -468,6 +468,12 @@ module.exports = function ( grunt ) {
         'index:compile'
     ]);
 
+    /**
+     * Generate a karma.conf.js file suitable for running Karma tests standalone.
+     */
+    grunt.registerTask( 'generate-karmaconf', [
+    ]);
+
 
     /**
      * The default task is to build and compile.
