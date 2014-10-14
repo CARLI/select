@@ -2,6 +2,7 @@ angular.module('carli.filterByActive')
     .directive('filterByActive', function() {
         return {
             restrict: 'E',
+            transclude: true,
             templateUrl: 'carliApp/components/filterByActive/filterByActive.html',
             scope: { entityLabel: '=' },
             controllerAs: 'filter',

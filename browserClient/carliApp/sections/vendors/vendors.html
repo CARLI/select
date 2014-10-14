@@ -1,9 +1,10 @@
 <section id="vendors">
     <h1>Vendors</h1>
 
-    <input type="text" ng-model="vendorsController.filterText"><br/>
-    <filter-by-active entity-label="'vendors'"></filter-by-active>
-    <div ng-repeat="vendor in vendorsController.vendorList | filter:filterByActive | filter:vendorsController.filterText">
-        <a href="vendors/{{ vendor.id }}">{{ vendor.name }}</a>
-    </div>
+    <input type="text" ng-model="filterText"><br/>
+    <filter-by-active entity-label="'vendors'">
+        <div ng-repeat="vendor in vendorsController.vendorList | filter:filterByActive | filter:filterText">
+            <a href="vendors/{{ vendor.id }}">{{ vendor.name }}</a>
+        </div>
+    </filter-by-active>
 </section>
