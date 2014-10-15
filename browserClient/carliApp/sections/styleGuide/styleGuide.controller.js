@@ -17,4 +17,20 @@ angular.module('carli.sections.styleGuide')
             }
         ];
 
+        this.exampleVendors = [
+            {
+                name: "Active Vendor 1",
+                isActive: true
+            },
+            {
+                name: "Active Vendor 2",
+                isActive: true
+            },
+            {
+                name: "Inactive Vendor 3",
+                isActive: false
+            }
+        ];
+
+        this.activeFilterState = "All";
     });

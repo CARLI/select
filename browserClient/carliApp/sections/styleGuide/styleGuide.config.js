@@ -6,5 +6,6 @@ angular.module('carli.sections.styleGuide',
     ]
 )
     .value('componentExamples', {
-        'Cycle Status': 'cycle-status.html'
+        'Cycle Status': 'cycle-status.html',
+        'Filter by Active': 'filter-active.html'
     });
