@@ -208,7 +208,7 @@ module.exports = function ( grunt ) {
             unit: {
                 singleRun: false,
                 background: true,
-                reporters: ['progress']
+                reporters: ['mocha']
             },
             continuous: {
                 singleRun: true,
