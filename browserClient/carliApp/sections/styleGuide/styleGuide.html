@@ -9,7 +9,7 @@
 <fa name="birthday-cake"></fa> Happy Birthday Marty!
 
 <h2>Components</h2>
-<div ng-repeat="component in vm.components">
+<div ng-repeat="component in styleGuideController.components">
     <h3>{{ component.title }}</h3>
     <div class="pull-left" ng-include="component.templateUrl"></div>
     <div class="pull-right"><pre>{{ component.source }}</pre></div>
