@@ -45,10 +45,10 @@ function createJsonFiles(vendors) {
 }
 
 function createVendorJsonFile(v) {
-    vendorFilePath = 'data/vendor/' + v.id;
-    mkdirp(vendorFilePath);
+    var vendorFilePath = 'data/vendor/' + v.id + '/';
+    mkdirp.sync(vendorFilePath);
 
-    vendorData = {
+    var vendorData = {
         id: v.id,
         name: v.name,
         previousName: "",
@@ -59,7 +59,7 @@ function createVendorJsonFile(v) {
         isActive: true,
         licenseAgreements: extractVendorLicenseAgreements(v),
         products: extractVendorProducts(v)
-    }
+    };
 
     fs.writeFileSync(vendorFilePath + "/data.json", JSON.stringify(vendorData, null, 2));
 
