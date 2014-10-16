@@ -169,7 +169,8 @@ module.exports = function ( grunt ) {
                 '<%= carliApp_files.js %>'
             ],
             test: [
-                '<%= carliApp_files.jsUnit %>'
+                '<%= carliApp_files.jsUnit %>',
+                '<%= carliApp_files.jsE2e %>'
             ],
             gruntfile: [
                 'Gruntfile.js'
