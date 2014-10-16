@@ -1,1 +1,3 @@
-angular.module("carli.mainMenu", []);
+angular.module("carli.mainMenu", [
+    'carli.activeTab'
+]);

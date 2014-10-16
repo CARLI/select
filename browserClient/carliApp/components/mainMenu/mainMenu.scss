@@ -41,9 +41,9 @@ nav[main-menu] {
             color: $inactive_fg_color;
             text-decoration: none;
         }
-        a.active {
-            color: $active_fg_color;
+        &.active {
             border-top: solid $active_fg_color 3px;
+            a { color: $active_fg_color; }
         }
     }
 }
