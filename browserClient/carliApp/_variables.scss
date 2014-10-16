@@ -1,0 +1,21 @@
+@import url(http://fonts.googleapis.com/css?family=Dosis:700|Merriweather:400,700,400italic);
+
+/* Shades of Gray */
+$white: #ffffff;
+$light_gray: #d6d6d6;
+$very_dark_gray: #242424;
+
+/* Roy G Biv */
+$orange: #f57300;
+$magenta: #723983;
+$dark_magenta: #52275f;
+$soft_magenta: #e0b4ed;
+$violet: #663284;
+$dark_violet: #834ba2;
+$very_dark_violet: #411a57;
+
+/** TODO: These definitions should be moved to the header component and user menu components .scss files */
+$header_bg_color: $magenta;
+$header_fg_color: $white;
+$user_menu_bg_color: $dark_magenta;
+$user_menu_fg_color: $soft_magenta;
