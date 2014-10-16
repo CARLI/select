@@ -1,14 +1,49 @@
-nav[main-menu] {
-    border: 1px solid black;
-}
+@import "../../variables";
+
+$border_color: $light_gray;
+$active_fg_color: $orange;
+$inactive_fg_color: $very_dark_gray;
+$bg_color: $white;
+
+$height: 54px;
+$border: 1px solid $border_color;
 
 nav[main-menu] {
+    border: $border;
+    font-family: 'Dosis', sans-serif;
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 18px;
+    text-transform: uppercase;
+    height: $height;
+    background-attachment: $bg_color;
+
     ul {
         list-style: outside none none;
+        margin: 0;
+        display: table;
     }
 
+    li:first-child {
+        border-left: $border;
+    }
     li {
-        display: inline-block;
-        padding: 0 5px;
+        display: table-cell;
+        vertical-align: middle;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        height: $height;
+        width: 138px;
+        border-right: $border;
+
+        a {
+            color: $inactive_fg_color;
+            text-decoration: none;
+        }
+        a.active {
+            color: $active_fg_color;
+            border-top: solid $active_fg_color 3px;
+        }
     }
 }
