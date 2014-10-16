@@ -10,6 +10,7 @@ describe( 'FixtureStore', function() {
         expect(FixtureStore).to.be.an('object');
     } );
 
+
     it( 'should have a save function', function() {
         expect(FixtureStore.save).to.be.a('function');        
     } );
@@ -20,20 +21,40 @@ describe( 'FixtureStore', function() {
             expect( FixtureStore.save ).to.throw( /Requires Data/ );
         } );
 
+        function saveMissingTypeProperty() {
+            FixtureStore.save( {} );
+        }
+        it( 'should fail without a type property in the data', function() {
+            expect( saveMissingTypeProperty ).to.throw( /Requires type property/ );
+        } );
+
         it( 'should save data and return id', function() {
-            expect( FixtureStore.save( {} ) ).to.be.a('string');
+            expect( FixtureStore.save( { type: 'testy' } ) ).to.be.a('string');
         } );
 
     } );
+
 
     it( 'should have a get function', function() {
         expect(FixtureStore.get).to.be.a('function');        
     } );
 
     describe( 'FixtureStore.get', function() {
-        var emptyObjectSaveId = FixtureStore.save( {} );
-        var simpleObjectSaveId = FixtureStore.save( {foo:'bar'} );
-        var objectWithIdSaveId = FixtureStore.save( { id: uuid.v4(), foo: 'baz' } );
+
+        function makeValidObject() {
+            return {
+                type: 'testy'
+            }
+        };
+
+        var simpleObject = makeValidObject();
+        simpleObject.foo = 'bar';
+        var simpleObjectSaveId  = FixtureStore.save( simpleObject );
+
+        var objectWithId = makeValidObject();
+        objectWithId.id = uuid.v4();
+        objectWithId.foo = 'baz';
+        var objectWithIdSaveId  = FixtureStore.save( objectWithId );
 
         it( 'should fail without an id', function() {
             expect( FixtureStore.get ).to.throw( /Requires an id/ );
@@ -47,24 +68,19 @@ describe( 'FixtureStore', function() {
             expect( badGet ).to.throw( /Id not found/ );
         } );
 
-        it( 'should return previously stored data', function() {
-            expect( FixtureStore.get( emptyObjectSaveId ) ).to.be.an('object');
-        } );
-
-        it( 'should return specific data for id2', function() {
-            expect( FixtureStore.get( simpleObjectSaveId ) ).to.deep.equal( {foo:'bar'} );
+        it( 'should return stored data for id', function() { 
+            expect( FixtureStore.get( simpleObjectSaveId ) ).to.deep.equal( simpleObject );
         } );
 
         it( 'should save the data under id if id property is set', function() {
-            expect( FixtureStore.get( objectWithIdSaveId ) ).to.deep.equal( { id: objectWithIdSaveId,foo: 'baz' } );
+            expect( FixtureStore.get( objectWithIdSaveId ) ).to.deep.equal( objectWithId );
         } );
 
         it( 'should update the store if called with the same id', function(){
-            var newObj = { id: objectWithIdSaveId, foo: 'somejunk' };
-            FixtureStore.save( newObj );
-            expect( FixtureStore.get( objectWithIdSaveId ) ).to.deep.equal( newObj );
+            objectWithId.foo = 'new value';
+            FixtureStore.save( objectWithId );
+            expect( FixtureStore.get( objectWithIdSaveId ) ).to.deep.equal( objectWithId );
         } );
-
 
     } );
 } );

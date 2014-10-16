@@ -21,6 +21,10 @@ module.exports = {
             throw new Error( 'Requires Data' );  
         };
 
+        if ( !data.type ){
+            throw new Error( 'Requires type property' );
+        }
+
         var id = data.id || uuid.v4();
         store[ id ] = data;
 
