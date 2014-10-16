@@ -15,6 +15,12 @@ function ensureGetOptionsHastype( options ){
     }
 }
 
+function ensureGetOptionsAreValid( options ){
+    ensureGetOptionsExist( options );
+    ensureGetOptionsHastype( options );
+}
+
+
 function ensureStoreTypeExists( type ){
     store[type] = store[type] || {};
 }
@@ -47,17 +53,11 @@ function ensureSaveDataIsValid( data ) {
 module.exports = {
 
     get: function( options ) {
-        var id, type;
+        ensureGetOptionsAreValid( options );
 
-        ensureGetOptionsExist( options );
-        id = options.id;
-
-        ensureGetOptionsHastype( options );
-        type = options.type;
-
-        if ( store[type] ){
-            if ( store[type][id] ){
-                return store[type][id];
+        if ( store[options.type] ){
+            if ( store[options.type][options.id] ){
+                return store[options.type][options.id];
             }
 
             throw new Error( 'Id not found' );
