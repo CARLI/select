@@ -46,7 +46,9 @@ You can just run `grunt test` to build the project and run the tests once. This 
 
 If you have not yet run `grunt serve` you will need to run `grunt generate-karmaconf` to set up the stand-alone Karma configuration file.
 
-To run the Component unit tests in a JetBrains IDE you must first install the  
+To run the Component unit tests in a JetBrains IDE you must first install the Karma plugin.
+
+Follow the directions from [the JetBrains docs](https://www.jetbrains.com/idea/webhelp/running-unit-tests-on-karma.html). The important configurations are the location of your Node executable and the Karma installed in the project.  
 
 ## Browser Client - Section End-To-End Tests
 
