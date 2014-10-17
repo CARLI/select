@@ -3,10 +3,11 @@
     <head>
         <title>CARLI Select</title>
         <% styles.forEach( function ( file ) { %>
-            <link rel="stylesheet" href="/<%= file %>"></script>
+            <link rel="stylesheet" href="/<%= file %>">
         <% }); %>
     </head>
     <body>
+        <header carli-header></header>
         <nav nav-bar></nav>
         <main ng-view></main>
 
