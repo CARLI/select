@@ -9,7 +9,8 @@ $height: 54px;
 $border: 1px solid $border_color;
 
 nav[nav-bar] {
-    border: $border;
+    border: 0;
+    border-bottom: $border;
     font-family: 'Dosis', sans-serif;
     font-weight: 600;
     font-size: 15px;
