@@ -105,7 +105,7 @@ describe( 'Vendor', function() {
             }
             expect( badSaveNoId ).to.throw( 'Id Required' );
         } ); 
-/*
+
         it('should update properties of a previously saved object', function(){
             var vendor = Vendor.create({ foo: 'bar' });
 
@@ -121,6 +121,6 @@ describe( 'Vendor', function() {
 
             expect( Vendor.load( vendor.id ) ).to.deep.equal( copyOfVendor );
         } );
-*/
+
     } );
 } );
