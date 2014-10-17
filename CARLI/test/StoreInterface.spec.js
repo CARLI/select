@@ -13,7 +13,7 @@ function test( storeType ) {
     
     
         it( 'should have a save function', function() {
-            expect(FixtureStore.save).to.be.a('function');        
+            expect(FixtureStore.save).to.be.a('function'); 
         } );
     
         describe( storeType + '.save', function() {
@@ -69,14 +69,21 @@ function test( storeType ) {
             it( 'should fail without an id', function() {
                 expect( FixtureStore.get ).to.throw( /Requires an id/ );
             } );
-    
+ 
             function badGetNoType(){
                 FixtureStore.get({ id: 'foo' });
             }
             it( 'should fail without a type argument', function(){
-               expect( badGetNoType ).to.throw( /Requires a type/ ); 
+               expect( badGetNoType ).to.throw( /Requires a type/ );
             } );
-    
+   
+            function badGetTypeNotInStore(){
+                FixtureStore.get({ id: uuid.v4(), type: uuid.v4() });
+            }
+            it( 'should fail when the type is not in the store', function() {
+                expect( badGetTypeNotInStore ).to.throw( /Type not found/ );
+            } ); 
+
             function badGetIdNotFound() {
                 FixtureStore.get( { id: uuid.v4(), type: 'testy' } );
             };
