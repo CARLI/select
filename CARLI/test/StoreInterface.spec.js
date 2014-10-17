@@ -22,17 +22,17 @@ function test( storeType ) {
                 expect( DataStore.save ).to.throw( /Requires Data/ );
             } );
     
-            function saveMissingIdProperty() {
-                DataStore.save( { type: 'test'} );
-            }
             it( 'should fail without an id property in the data', function() {
+                function saveMissingIdProperty() {
+                    DataStore.save( { type: 'test'} );
+                }
                 expect( saveMissingIdProperty ).to.throw( /Requires id property/ );
             } );
     
-            function saveMissingTypeProperty() {
-                DataStore.save( { id: '0' } );
-            }
             it( 'should fail without a type property in the data', function() {
+                function saveMissingTypeProperty() {
+                    DataStore.save( { id: '0' } );
+                }
                 expect( saveMissingTypeProperty ).to.throw( /Requires type property/ );
             } );
  
