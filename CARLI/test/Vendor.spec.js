@@ -23,6 +23,13 @@ describe( 'Vendor', function() {
   
     describe( 'Vendor.create', function() {
 
+        it( 'should fail without data', function() {
+            function badSaveNoData(){
+                Vendor.create();
+            }
+            expect( badSaveNoData ).to.throw( 'Data Required' );
+        } );
+
         function createEmptyVendor(data) {
             return Vendor.create(data);
         };
@@ -84,6 +91,36 @@ describe( 'Vendor', function() {
         expect(Vendor.update).to.be.a('function');
     } );
 
+    describe( 'Vendor.update', function(){
+        it( 'should fail without data', function(){
+            function badSaveNoData(){
+                Vendor.update();
+            }
+            expect( badSaveNoData ).to.throw( 'Data Required' );
+        } );
 
+        it( 'should fail without an id in data', function(){
+            function badSaveNoId(){
+                Vendor.update({});
+            }
+            expect( badSaveNoId ).to.throw( 'Id Required' );
+        } ); 
+/*
+        it('should update properties of a previously saved object', function(){
+            var vendor = Vendor.create({ foo: 'bar' });
+
+            //This is because FixtureStore saves a reference so if we modify vendor here it modifies it there too
+            var copyOfVendor = {
+                id: vendor.id,
+                type: vendor.type,
+                foo: vendor.foo
+            };
+
+            vendor.foo = 'new value';
+            Vendor.update( vendor );
+
+            expect( Vendor.load( vendor.id ) ).to.deep.equal( copyOfVendor );
+        } );
+*/
+    } );
 } );
-
