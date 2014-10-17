@@ -3,8 +3,26 @@ var memoryStore = {}
   , uuid = require( 'node-uuid' )
 ;
 
-function ensureStoreTypeExists( type ){
+function typeExistsInStore( type ) {
+    return memoryStore[type] ? true : false;
+}
+
+function idForTypeExistsInStore( type, id ) {
+    return memoryStore[type][id] ? true : false;
+}
+
+function getDataFor( type, id ) {
+    return memoryStore[type][id];
+}
+
+
+function ensureStoreTypeExists( type ) {
     memoryStore[type] = memoryStore[type] || {};
+}
+
+function storeData( data ) {
+    memoryStore[ data.type ][ data.id ] = data;
+    return data.id;
 }
 
 module.exports = {
@@ -12,9 +30,9 @@ module.exports = {
     get: function( options ) {
         store.ensureGetOptionsAreValid( options );
 
-        if ( memoryStore[options.type] ){
-            if ( memoryStore[options.type][options.id] ){
-                return memoryStore[options.type][options.id];
+        if ( typeExistsInStore( options.type ) ) {
+            if ( idForTypeExistsInStore( options.type, options.id ) ){
+                return getDataFor( options.type, options.id );
             }
 
             throw new Error( 'Id not found' );
@@ -26,7 +44,6 @@ module.exports = {
     save: function( data ) {
         store.ensureSaveDataIsValid( data );
         ensureStoreTypeExists( data.type );
-        memoryStore[ data.type ][ data.id ] = data;
-        return data.id; 
+        return storeData( data );
     }
 };
