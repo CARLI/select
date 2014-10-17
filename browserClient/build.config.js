@@ -20,6 +20,7 @@ module.exports = {
         index: ['carliApp/index.html'],
         html: ['carliApp/**/*.html', '!carliApp/index.html'],
         css: ['carliApp/**/*.scss', 'carliApp/**/*.css'],
+        images: ['carliApp/**/*.png'],
         json: ['resources/**/*.json']
     },
 

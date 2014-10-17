@@ -100,6 +100,14 @@ module.exports = function ( grunt ) {
                     expand: true
                 }]
             },
+            build_images: {
+                files: [{
+                    src: [ '<%= carliApp_files.images %>' ],
+                    dest: '<%= build_dir %>/images',
+                    expand: true,
+                    flatten: true
+                }]
+            },
             build_json: {
                 files: [{
                     src: ['<%= carliApp_files.json %>'],
@@ -438,6 +446,7 @@ module.exports = function ( grunt ) {
         'newer:copy:build_appjs', 
         'newer:copy:build_vendorjs',
         'newer:copy:build_vendorfonts',
+        'newer:copy:build_images',
         'newer:copy:build_html',
         'newer:copy:build_json',
         'browserify:build',

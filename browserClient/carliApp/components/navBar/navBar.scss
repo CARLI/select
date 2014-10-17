@@ -1,0 +1,50 @@
+@import "../../variables";
+
+$border_color: $light_gray;
+$active_fg_color: $orange;
+$inactive_fg_color: $very_dark_gray;
+$bg_color: $white;
+
+$height: 54px;
+$border: 1px solid $border_color;
+
+nav[nav-bar] {
+    border: $border;
+    font-family: 'Dosis', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 18px;
+    text-transform: uppercase;
+    height: $height;
+    background-attachment: $bg_color;
+
+    ul {
+        list-style: outside none none;
+        margin: 0;
+        margin-left: $header_background_margin_left;
+        display: table;
+    }
+
+    li:first-child {
+        border-left: $border;
+    }
+    li {
+        display: table-cell;
+        vertical-align: middle;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        height: $height - 2; /* account for borders */
+        width: 138px;
+        border-right: $border;
+
+        a {
+            color: $inactive_fg_color;
+            text-decoration: none;
+        }
+        &.active {
+            border-top: solid $active_fg_color 3px;
+            a { color: $active_fg_color; }
+        }
+    }
+}
