@@ -20,7 +20,7 @@ nav[nav-bar] {
 
     ul {
         list-style: outside none none;
-        margin: 0;
+        margin: 0 0 0 82px;
         display: table;
     }
 
@@ -33,7 +33,7 @@ nav[nav-bar] {
         margin: 0;
         padding: 0;
         text-align: center;
-        height: $height;
+        height: $height - 2; /* account for borders */
         width: 138px;
         border-right: $border;
 

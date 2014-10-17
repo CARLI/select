@@ -3,7 +3,31 @@
 $bg_color: $moderate_magenta;
 
 $height: 110px;
+$logo_width: 243px;
+$logo_height: 59px;
 
 header.carli-header {
-    background-image: url('images/header-background.png');
+    color: $white;
+    background-color: $moderate_magenta;
+    background-image: url('/images/header-background.png');
+    background-repeat: no-repeat;
+    height: 110px;
+
+    .carli-logo {
+        margin: 20px 0 0 124px;
+        width: $logo_width;
+        height: $logo_height;
+        background-image: url('/images/carli-logo.png');
+        background-repeat: no-repeat;
+        float: left;
+    }
+    .app-name {
+        float: left;
+        margin-top: 37px;
+        margin-left: 18px;
+        font-family: 'Merriweather', serif;
+        font-weight: 300;
+        font-size: 16px;
+        line-height: 20px;
+    }
 }
