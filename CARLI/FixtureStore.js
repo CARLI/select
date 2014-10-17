@@ -1,63 +1,20 @@
-var store = {}
+var memoryStore = {}
+  ,store = require( './_Store' )
   , uuid = require( 'node-uuid' )
 ;
 
-
-function ensureGetOptionsExist( options ){
-    if( !options || !options.id ) {
-            throw new Error( 'Requires an id' );
-    };
-}
-
-function ensureGetOptionsHastype( options ){
-    if ( !options.type ){
-            throw new Error( 'Requires a type' );
-    }
-}
-
-function ensureGetOptionsAreValid( options ){
-    ensureGetOptionsExist( options );
-    ensureGetOptionsHastype( options );
-}
-
-
 function ensureStoreTypeExists( type ){
-    store[type] = store[type] || {};
-}
-
-function ensureSaveDataArgumentExists( data ) {
-    if ( !data ) {
-        throw new Error( 'Requires Data' );  
-    };
-}
-
-function ensureSaveDataHasId( data ) {
-    if ( !data.id ){
-        throw new Error( 'Requires id property' );
-    }
-};
-
-function ensureSaveDataHasType( data ) {
-    if ( !data.type ){
-        throw new Error( 'Requires type property' );
-    }
-}
-
-function ensureSaveDataIsValid( data ) {
-    ensureSaveDataArgumentExists( data );
-    ensureSaveDataHasId( data );
-    ensureSaveDataHasType( data );
-    ensureStoreTypeExists( data.type );
+    memoryStore[type] = memoryStore[type] || {};
 }
 
 module.exports = {
 
     get: function( options ) {
-        ensureGetOptionsAreValid( options );
+        store.ensureGetOptionsAreValid( options );
 
-        if ( store[options.type] ){
-            if ( store[options.type][options.id] ){
-                return store[options.type][options.id];
+        if ( memoryStore[options.type] ){
+            if ( memoryStore[options.type][options.id] ){
+                return memoryStore[options.type][options.id];
             }
 
             throw new Error( 'Id not found' );
@@ -67,8 +24,9 @@ module.exports = {
     },
 
     save: function( data ) {
-        ensureSaveDataIsValid( data );
-        store[ data.type ][ data.id ] = data;
+        store.ensureSaveDataIsValid( data );
+        ensureStoreTypeExists( data.type );
+        memoryStore[ data.type ][ data.id ] = data;
         return data.id; 
     }
 };
