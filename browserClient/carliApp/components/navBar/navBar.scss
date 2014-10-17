@@ -20,7 +20,8 @@ nav[nav-bar] {
 
     ul {
         list-style: outside none none;
-        margin: 0 0 0 82px;
+        margin: 0;
+        margin-left: $header_background_margin_left;
         display: table;
     }
 

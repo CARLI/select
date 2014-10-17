@@ -14,8 +14,9 @@ $violet: #663284;
 $dark_violet: #834ba2;
 $very_dark_violet: #411a57;
 
+$header_background_margin_left: 82px;
+
 /** TODO: These definitions should be moved to the header component and user menu components .scss files */
-$header_bg_color: $magenta;
-$header_fg_color: $white;
+
 $user_menu_bg_color: $dark_magenta;
 $user_menu_fg_color: $soft_magenta;
