@@ -9,6 +9,7 @@
 ## Documentation
 * [Getting Started](getting-started-browser-client.md)
 * [Git Workflow](git-workflow.md)
+* [Test Workflow](test-workflow.md)
 * [Deployment](deployment.md)
 
 
