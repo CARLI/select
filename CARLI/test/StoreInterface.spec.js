@@ -5,7 +5,7 @@ var chai   = require( 'chai' )
 
 function test( storeType ) {
     describe( storeType, function() {
-        var FixtureStore = require( './' + storeType );
+        var FixtureStore = require( '../' + storeType );
     
         it( 'should be a module', function() {
             expect(FixtureStore).to.be.an('object');
@@ -16,7 +16,7 @@ function test( storeType ) {
             expect(FixtureStore.save).to.be.a('function');        
         } );
     
-        describe( 'FixtureStore.save', function() {
+        describe( storeType + '.save', function() {
     
             it( 'should fail without data', function() {
                 expect( FixtureStore.save ).to.throw( /Requires Data/ );
@@ -48,7 +48,7 @@ function test( storeType ) {
             expect(FixtureStore.get).to.be.a('function');        
         } );
     
-        describe( 'FixtureStore.get', function() {
+        describe( storeType + '.get', function() {
     
             function makeValidObject() {
                 return {
