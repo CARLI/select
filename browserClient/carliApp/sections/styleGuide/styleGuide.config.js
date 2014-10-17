@@ -1,7 +1,6 @@
 angular.module('carli.sections.styleGuide',
     [
         'carli.componentGatherer',
-        'carli.mainMenu',
         'carli.cycleStatus'
     ]
 )

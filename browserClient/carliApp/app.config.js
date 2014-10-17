@@ -1,5 +1,6 @@
 angular.module('carli.app', [
     'ngRoute',
+    'carli.navBar',
     'carli.routes',
     'picardy.fontawesome'
 ])
