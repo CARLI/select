@@ -4,4 +4,4 @@ var chai   = require( 'chai' )
   , test   = require( './StoreInterface.spec' )
 ;
 
-test.test( 'FixtureStore' );
+test.run( 'FixtureStore' );

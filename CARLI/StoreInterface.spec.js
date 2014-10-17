@@ -3,7 +3,7 @@ var chai   = require( 'chai' )
   , uuid   = require( 'node-uuid' )
 ;
 
-function testy( storeType ) {
+function test( storeType ) {
     describe( storeType, function() {
         var FixtureStore = require( './' + storeType );
     
@@ -119,5 +119,5 @@ function testy( storeType ) {
 }
 
 module.exports = {
-    test: testy
+    run: test
 }
