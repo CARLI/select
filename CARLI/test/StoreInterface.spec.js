@@ -5,47 +5,47 @@ var chai   = require( 'chai' )
 
 function test( storeType ) {
     describe( storeType, function() {
-        var FixtureStore = require( '../' + storeType );
+        var DataStore = require( '../' + storeType );
     
         it( 'should be a module', function() {
-            expect(FixtureStore).to.be.an('object');
+            expect(DataStore).to.be.an('object');
         } );
     
     
         it( 'should have a save function', function() {
-            expect(FixtureStore.save).to.be.a('function'); 
+            expect(DataStore.save).to.be.a('function'); 
         } );
     
         describe( storeType + '.save', function() {
     
             it( 'should fail without data', function() {
-                expect( FixtureStore.save ).to.throw( /Requires Data/ );
+                expect( DataStore.save ).to.throw( /Requires Data/ );
             } );
     
             function saveMissingIdProperty() {
-                FixtureStore.save( { type: 'test'} );
+                DataStore.save( { type: 'test'} );
             }
             it( 'should fail without an id property in the data', function() {
                 expect( saveMissingIdProperty ).to.throw( /Requires id property/ );
             } );
     
             function saveMissingTypeProperty() {
-                FixtureStore.save( { id: '0' } );
+                DataStore.save( { id: '0' } );
             }
             it( 'should fail without a type property in the data', function() {
                 expect( saveMissingTypeProperty ).to.throw( /Requires type property/ );
             } );
-    
+ 
             it( 'should save data and return id', function() {
                 var id = uuid.v4();
-                expect( FixtureStore.save( { id: id, type: 'testy' } ) ).to.equal( id );
+                expect( DataStore.save( { id: id, type: 'testy' } ) ).to.equal( id );
             } );
-    
+ 
         } );
     
     
         it( 'should have a get function', function() {
-            expect(FixtureStore.get).to.be.a('function');        
+            expect(DataStore.get).to.be.a('function');        
         } );
     
         describe( storeType + '.get', function() {
@@ -59,52 +59,52 @@ function test( storeType ) {
     
             var simpleObject = makeValidObject();
             simpleObject.foo = 'bar';
-            var simpleObjectSaveId  = FixtureStore.save( simpleObject );
+            var simpleObjectSaveId  = DataStore.save( simpleObject );
     
             var objectWithId = makeValidObject();
             objectWithId.id = uuid.v4();
             objectWithId.foo = 'baz';
-            var objectWithIdSaveId  = FixtureStore.save( objectWithId );
+            var objectWithIdSaveId  = DataStore.save( objectWithId );
     
             it( 'should fail without an id', function() {
-                expect( FixtureStore.get ).to.throw( /Requires an id/ );
+                expect( DataStore.get ).to.throw( /Requires an id/ );
             } );
  
             function badGetNoType(){
-                FixtureStore.get({ id: 'foo' });
+                DataStore.get({ id: 'foo' });
             }
             it( 'should fail without a type argument', function(){
                expect( badGetNoType ).to.throw( /Requires a type/ );
             } );
    
             function badGetTypeNotInStore(){
-                FixtureStore.get({ id: uuid.v4(), type: uuid.v4() });
+                DataStore.get({ id: uuid.v4(), type: uuid.v4() });
             }
             it( 'should fail when the type is not in the store', function() {
                 expect( badGetTypeNotInStore ).to.throw( /Type not found/ );
             } ); 
 
             function badGetIdNotFound() {
-                FixtureStore.get( { id: uuid.v4(), type: 'testy' } );
+                DataStore.get( { id: uuid.v4(), type: 'testy' } );
             };
             it( 'should fail when an id not found', function() {
                 expect( badGetIdNotFound ).to.throw( /Id not found/ );
             } );
     
             it( 'should return stored data for id', function() { 
-                expect( FixtureStore.get( { id: simpleObjectSaveId, type: simpleObject.type } ) ).to.deep.equal( simpleObject );
+                expect( DataStore.get( { id: simpleObjectSaveId, type: simpleObject.type } ) ).to.deep.equal( simpleObject );
             } );
-    
+ 
             it( 'should save the data under id if id property is set', function() {
-                expect( FixtureStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.deep.equal( objectWithId );
+                expect( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.deep.equal( objectWithId );
             } );
-    
+
             it( 'should update the store if called with the same id', function(){
                 objectWithId.foo = 'new value';
-                FixtureStore.save( objectWithId );
-                expect( FixtureStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.deep.equal( objectWithId );
+                DataStore.save( objectWithId );
+                expect( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.deep.equal( objectWithId );
             } );
-    
+
             it('should save objects with differing types and same id separately', function(){
                 var sharedId = uuid.v4();
     
@@ -115,11 +115,11 @@ function test( storeType ) {
                 objectWithNewType.type = 'new_type';
                 objectWithNewType.id = sharedId;
     
-                FixtureStore.save( objectWithType );
-                FixtureStore.save( objectWithNewType );
+                DataStore.save( objectWithType );
+                DataStore.save( objectWithNewType );
     
-                expect( FixtureStore.get( { id: sharedId, type: objectWithType.type } ) ).to.deep.equal( objectWithType );
-                expect( FixtureStore.get( { id: sharedId, type: objectWithNewType.type } ) ).to.deep.equal( objectWithNewType );
+                expect( DataStore.get( { id: sharedId, type: objectWithType.type } ) ).to.deep.equal( objectWithType );
+                expect( DataStore.get( { id: sharedId, type: objectWithNewType.type } ) ).to.deep.equal( objectWithNewType );
             } );
         } );
     } );
