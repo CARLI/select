@@ -112,7 +112,7 @@ function test( storeType ) {
                 objectWithType.id = sharedId;
     
                 var objectWithNewType = makeValidObject();
-                objectWithNewType.type = 'new type';
+                objectWithNewType.type = 'new_type';
                 objectWithNewType.id = sharedId;
     
                 FixtureStore.save( objectWithType );
