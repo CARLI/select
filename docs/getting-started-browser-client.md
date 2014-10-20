@@ -19,6 +19,7 @@ In the browserClient/ directory, run:
 * `npm install`
 * `npm install -g grunt-cli`
 * `npm install -g bower`
+* `npm install -g protractor`
 * `bower install`
 * `gem install sass`
 
@@ -56,8 +57,9 @@ The following applications and projects are used to build the front-end, and to 
 * Node - the JavaScript runtime that powers many of the rest of the tools and provides a local development server.
 * Grunt - the task runner that automates building the project.
 * Bower - a package manager for front-end libraries (Angular, Bootstrap, etc.)
-* Karma - a test runner for JavaScript.
+* Karma - a unit test runner for JavaScript.
 * Mocha and Chai - libraries for writing tests.
+* Protractor - an end-to-end test runner for JavaScript.
 * PhantomJS - a headless WebKit browser environment in which to run tests.
 * Angular - Superheroic JavaScript MVW Framework.
 * Browserify - packages code using Node-style `requires` for the browser.
