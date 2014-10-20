@@ -20,6 +20,8 @@ To run the tests, invoke the `mocha` command with the list of test files to run.
 
 ## Browser Client - Component Unit Tests
 
+* To run all unit tests once: `grunt test:unit`
+
 When working on components in the __browserClient/__ directory, there are several options for running tests. Grunt will automatically run tests while the development server is running. 
 For running these tests, Karma is used to set up an environment that mimics running the code and tests in a web browser. 
 PhantomJS is a headless web browser that loads the environment set up by Karma and runs the tests in a WebKit environment. Karma can be configured to stay running for repeated tests or it do a single run.  
@@ -39,7 +41,7 @@ First run `grunt karma:unit` which will start the Karma server and leave it runn
 
 ### Single Run
 
-You can just run `grunt test` to build the project and run the tests once. This builds everything needed to run the tests. Once built, `grunt karma:continuous` 
+You can just run `grunt test:unit` to build the project and run the tests once. This builds everything needed to run the tests.
 
 
 ### JetBrains IDE Setup 
@@ -50,8 +52,17 @@ To run the Component unit tests in a JetBrains IDE you must first install the Ka
 
 Follow the directions from [the JetBrains docs](https://www.jetbrains.com/idea/webhelp/running-unit-tests-on-karma.html). The important configurations are the location of your Node executable and the Karma installed in the project.  
 
+
 ## Browser Client - Section End-To-End Tests
 
+* To run all end-to-end tests once: `grunt test:e2e`
+* To run end-to-end tests against an already running server: `grunt protractor`
+
+### Grunt Serve
+The `grunt serve` command automatically starts a background Protractor (webdriver-manager) server. To run end-to-end tests once, run `grunt protractor` in a different terminal.
+
+### Single Run
+You can just run `grunt test:e2e` to build the project and run the end-to-end tests once.
 
 
 
