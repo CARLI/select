@@ -39,7 +39,6 @@ function ensureSaveDataIsValid( data ) {
     ensureSaveDataHasType( data );
 }
 
-
 module.exports = {
     ensureGetOptionsAreValid: ensureGetOptionsAreValid,
     ensureSaveDataIsValid: ensureSaveDataIsValid 

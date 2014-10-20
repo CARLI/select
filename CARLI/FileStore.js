@@ -1,5 +1,5 @@
 var memoryStore = {}
-  ,store = require( './_Store' )
+  , store = require( './_Store' )
   , uuid = require( 'node-uuid' )
   , fs   = require( 'fs' )
   , resourcePath = '../Resources'
