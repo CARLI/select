@@ -108,18 +108,10 @@ describe( 'Vendor', function() {
 
         it('should update properties of a previously saved object', function(){
             var vendor = Vendor.create({ foo: 'bar' });
-
-            //This is because FixtureStore saves a reference so if we modify vendor here it modifies it there too
-            var copyOfVendor = {
-                id: vendor.id,
-                type: vendor.type,
-                foo: vendor.foo
-            };
-
             vendor.foo = 'new value';
             Vendor.update( vendor );
 
-            expect( Vendor.load( vendor.id ) ).to.deep.equal( copyOfVendor );
+            expect( Vendor.load( vendor.id ) ).to.deep.equal( vendor );
         } );
 
     } );
