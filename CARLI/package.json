@@ -8,7 +8,9 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "tv4": "^1.1.4"
+  },
   "devDependencies": {
     "chai": "^1.9.2",
     "mocha": "^1.21.5",

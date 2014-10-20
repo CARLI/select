@@ -1,12 +1,17 @@
-var uuid = require('node-uuid')
+var uuid = require( 'node-uuid' )
+  , tv4  = require( 'tv4' )
+  , fs   = require( 'fs' )
+  , schemaFile = '../schemas/vendor.json'
 ;
 
 var dataStore;
 
 function validateCreateData( data ){
-    if ( !data ){
-        throw new Error( 'Data Required' );
-    }
+    var schema = JSON.parse( fs.readFileSync( schemaFile ) );
+    var valid = tv4.validate( data, schema );
+    if ( ! valid ) {
+        throw new Error( tv4.error.message );
+    };
 }
 
 function validateUpdateData( data ){
@@ -27,10 +32,14 @@ module.exports = {
     },
 
     create: function( data ){
-        validateCreateData( data );
-
+        if ( !data ){
+            throw new Error( 'Data Required' );
+        }
         data.id = data.id || uuid.v4(),
         data.type = 'vendor';
+
+        validateCreateData( data );
+
         dataStore.save( data );
         return data;
     },
