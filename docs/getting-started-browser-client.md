@@ -20,6 +20,7 @@ In the browserClient/ directory, run:
 * `npm install -g grunt-cli`
 * `npm install -g bower`
 * `npm install -g protractor`
+* `webdriver-manager update --standalone`
 * `bower install`
 * `gem install sass`
 

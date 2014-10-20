@@ -1,7 +1,13 @@
 angular.module('carli.sections.vendors.edit')
-.controller('editVendorController', function( $routeParams, vendorService ){
+.controller('editVendorController', editVendorController);
 
-        var vendorId = $routeParams.id;
+function editVendorController( $routeParams, vendorService ){
 
+    this.vendor = {};
+
+    var vendorId = $routeParams.id;
+
+    if ( vendorId !== 'new' ) {
         this.vendor = vendorService.getVendor(vendorId);
-});
+    }
+}
