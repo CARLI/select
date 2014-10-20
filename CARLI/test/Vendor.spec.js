@@ -7,6 +7,10 @@ var chai   = require( 'chai' )
 
 describe( 'Vendor', function() {
 
+    function validVendorData() {
+      return { name: 'foo' };
+    };
+
     it( 'should be a module', function() {
         expect(Vendor).to.be.an('Object');
     } );
@@ -30,27 +34,24 @@ describe( 'Vendor', function() {
             expect( badSaveNoData ).to.throw( 'Data Required' );
         } );
 
-        function createEmptyVendor(data) {
-            data.name = 'foo';
-            return Vendor.create(data);
-        };
-
         it( 'should return an object with an id', function() {
-            expect(createEmptyVendor({})).to.be.an('object').and.have.property('id');
+            expect( Vendor.create( validVendorData() ) ).to.be.an('object').and.have.property('id');
         } );
 
         it( 'should return an object with type of "vendor"', function() {
-            expect(createEmptyVendor({})).to.have.property('type').to.equal('vendor');
+            expect( Vendor.create( validVendorData() ) ).to.have.property('type').to.equal('vendor');
         } );
 
         it( 'should use a new id for new objects', function() {
-            var vendor1 = Vendor.create({ name: 'foo' });
-            var vendor2 = Vendor.create({ name: 'foo' });
+            var vendor1 = Vendor.create( validVendorData() );
+            var vendor2 = Vendor.create( validVendorData() );
             expect( vendor1.id ).to.not.equal( vendor2.id );;
         } );
 
         it( 'should use an id if provided', function() {
-            var vendor = Vendor.create( {id: 'foo', name: 'foo'} );
+            var vendorData = validVendorData();
+            vendorData.id = 'foo';
+            var vendor = Vendor.create( vendorData );
             expect( vendor.id ).to.equal('foo');
         } );
 
@@ -80,17 +81,18 @@ describe( 'Vendor', function() {
         } );
 
         it( 'should return an object', function() {
-            var vendor = Vendor.create({ name: 'foo' });
+            var vendor = Vendor.create( validVendorData() );
             expect( Vendor.load( vendor.id ) ).to.be.an('object');
         } );
 
         it( 'should return the object that was created', function() {
-            var vendor_data = { id: 'thingy', foo: 'bar', name: 'foo' };
+            var vendor_data = validVendorData();
+            vendor_data.id = 'thingy';
+            vendor_data.foo = 'bar'; 
             var vendor = Vendor.create( vendor_data );
             vendor_data.type = 'vendor';
             expect( Vendor.load( 'thingy' ) ).deep.equal( vendor_data );
         } );
-
 
     } );
 
@@ -115,7 +117,9 @@ describe( 'Vendor', function() {
         } );
 
         it('should update properties of a previously saved object', function(){
-            var vendor = Vendor.create({ foo: 'bar', name: 'foo' });
+            var vendor_data = validVendorData();
+            vendor_data.foo = 'bar';
+            var vendor = Vendor.create( vendor_data );
             vendor.foo = 'new value';
             Vendor.update( vendor );
 
