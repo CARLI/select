@@ -199,9 +199,16 @@ module.exports = function ( grunt ) {
                     '<%= carliApp_files.jsUnit %>'
                 ]
             },
+            /**
+             * 'grunt serve' includes 'karma:unit' which starts up the background karma server.
+             * 'karma:unit:run' runs the tests against the already-running server, which is quite 
+             * a bit faster than 'karma:continuous'. 
+             * The 'watch' tasks run 'karma:unit:run' whenever test files change.
+             */
             unit: {
-                singleRun: true,
-                reporters: 'dots'
+                singleRun: false,
+                background: true,
+                reporters: ['mocha']
             },
             continuous: {
                 singleRun: true,
@@ -300,7 +307,7 @@ module.exports = function ( grunt ) {
             */
             jssrc: {
                 files: ['<%= carliApp_files.js %>'],
-                tasks: [ 'newer:jshint:src', 'karma:unit', 'newer:copy:build_appjs' ]
+                tasks: [ 'newer:jshint:src', 'newer:copy:build_appjs' ]
             },
 
            /**
@@ -328,7 +335,7 @@ module.exports = function ( grunt ) {
             */
             jsunit: {
                 files: ['<%= carliApp_files.jsUnit %>'],
-                tasks: [ 'newer:jshint:test', 'karma:unit' ],
+                tasks: [ 'newer:jshint:test', 'karma:unit:run' ],
                 options: {
                     livereload: false
                 }
@@ -470,6 +477,7 @@ module.exports = function ( grunt ) {
      */
     grunt.registerTask( 'serve', [
         'build',
+        'karma:unit',
         'connect',
         'watch'
     ]);
