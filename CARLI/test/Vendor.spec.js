@@ -116,7 +116,7 @@ describe( 'Vendor', function() {
             expect( badSaveNoId ).to.throw( 'Id Required' );
         } );
 
-        it('should update properties of a previously saved object', function(){
+        it( 'should update properties of a previously saved object', function(){
             var vendor_data = validVendorData();
             vendor_data.foo = 'bar';
             var vendor = Vendor.create( vendor_data );
@@ -124,6 +124,18 @@ describe( 'Vendor', function() {
             Vendor.update( vendor );
 
             expect( Vendor.load( vendor.id ) ).to.deep.equal( vendor );
+        } );
+
+        it( 'should fail on update with invalid schema', function(){
+            var vendor_data = validVendorData();
+            vendor_data.foo = 'bar';
+            var vendor = Vendor.create( vendor_data );
+            vendor.foo = 'new value';
+            delete vendor.name;
+            function updateBadVendor() {
+              Vendor.update( vendor );
+            }
+            expect( updateBadVendor ).to.throw( 'Missing required property: name' );
         } );
 
     } );

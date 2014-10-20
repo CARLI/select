@@ -5,8 +5,14 @@ var uuid = require( 'node-uuid' )
 ;
 
 var dataStore;
+function throwIfDataIsEmpty ( data ) {
+    if ( !data ){
+        throw new Error( 'Data Required' );
+    }
+}
 
 function validateCreateData( data ){
+    throwIfDataIsEmpty( data );
     var schema = JSON.parse( fs.readFileSync( schemaFile ) );
     var valid = tv4.validate( data, schema );
     if ( ! valid ) {
@@ -15,13 +21,11 @@ function validateCreateData( data ){
 }
 
 function validateUpdateData( data ){
-    if ( !data ){
-        throw new Error( 'Data Required' );
-    }
-
+    throwIfDataIsEmpty( data );
     if ( !data.id ){
         throw new Error( 'Id Required' );
     }
+    validateCreateData( data );
 }
 
 
@@ -32,13 +36,10 @@ module.exports = {
     },
 
     create: function( data ){
-        if ( !data ){
-            throw new Error( 'Data Required' );
-        }
+        validateCreateData( data );
+
         data.id = data.id || uuid.v4(),
         data.type = 'vendor';
-
-        validateCreateData( data );
 
         dataStore.save( data );
         return data;
