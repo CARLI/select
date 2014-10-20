@@ -2,10 +2,7 @@
     "title": "Contact",
     "type": "object",
     "properties": {
-        "firstName": {
-            "type": "string"
-        },
-        "lastName": {
+        "name": {
             "type": "string"
         },
         "email": {
@@ -23,5 +20,5 @@
             ]
         }
     },
-    "required": [ "firstName", "lastName", "email", "contactType" ]
+    "required": [ "name", "email", "contactType" ]
 }

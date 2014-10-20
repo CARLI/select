@@ -143,7 +143,6 @@ module.exports = function ( grunt ) {
                 hostname: '0.0.0.0',
                 port: 8000,
                 base: 'build',
-                open: true,
                 livereload: 35729,
                 middleware: function (connect, options) {
                     var optBase = (typeof options.base === 'string') ? [options.base] : options.base;
@@ -153,6 +152,15 @@ module.exports = function ( grunt ) {
             },
 
             serve: {
+                options: {
+                    open: true
+                }
+            },
+
+            tests: {
+                options: {
+                    open: false
+                }
             }
         },
 
@@ -169,7 +177,8 @@ module.exports = function ( grunt ) {
                 '<%= carliApp_files.js %>'
             ],
             test: [
-                '<%= carliApp_files.jsUnit %>'
+                '<%= carliApp_files.jsUnit %>',
+                '<%= carliApp_files.jsE2e %>'
             ],
             gruntfile: [
                 'Gruntfile.js'
@@ -230,6 +239,20 @@ module.exports = function ( grunt ) {
             }
         },
 
+        protractor_webdriver: {
+            options: {},
+            all: {}
+        },
+
+        protractor: {
+            options: {
+                configFile: "protractor.conf.js",
+                keepAlive: true,
+                noColor: false,
+                args: {}
+            },
+            all: {}
+        },
 
         /**
          * Annotates the sources before minifying. That is, it allows us
@@ -462,14 +485,30 @@ module.exports = function ( grunt ) {
     ]);
 
     /**
-     * Use `grunt test` to run the Karma unit tests once
+     * Use `grunt test` to run ALL tests once
      */
     grunt.registerTask( 'test', [
+        'test:unit',
+        'test:e2e'
+    ]);
+
+    /**
+     * This does not require the dev server to be running
+     */
+    grunt.registerTask( 'test:unit', [
         'clean',
         'generate-karmaconf',
         'build',
         'karma:continuous'
-    ]);    
+    ]);
+
+    grunt.registerTask( 'test:e2e', [
+        'clean',
+        'build',
+        'protractor_webdriver',
+        'connect:tests',
+        'protractor'
+    ]);
 
 
     /*
@@ -478,7 +517,8 @@ module.exports = function ( grunt ) {
     grunt.registerTask( 'serve', [
         'build',
         'karma:unit',
-        'connect',
+        'protractor_webdriver',
+        'connect:serve',
         'watch'
     ]);
 
