@@ -17,27 +17,27 @@ angular.module('carli.routes',[
         controller:  'dashboardController',
         controllerAs:'dashboardController'
     })
-    .when('/subscriptions', {
+    .when('/subscription', {
         templateUrl: '/carliApp/sections/subscriptions/subscriptions.html',
         controller:  'subscriptionsController',
         controllerAs:'subscriptionsController' 
     })
-    .when('/vendors', {
+    .when('/vendor', {
         templateUrl: '/carliApp/sections/vendors/vendors.html',
         controller:  'vendorsController',
         controllerAs:'vendorsController'
     })
-    .when('/vendors/:id', {
+    .when('/vendor/:id', {
         templateUrl: '/carliApp/sections/vendors/editVendor/editVendor.html',
         controller:  'editVendorController',
         controllerAs:'editVendorController'
     })
-    .when('/products', {
+    .when('/product', {
         templateUrl: '/carliApp/sections/products/products.html',
         controller:  'productsController',
         controllerAs:'productsController'
     })
-    .when('/products/:id', {
+    .when('/product/:id', {
         templateUrl: '/carliApp/sections/products/editProduct/editProduct.html',
         controller:  'editProductController',
         controllerAs:'editProductController'

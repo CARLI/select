@@ -6,7 +6,7 @@ var NewVendorPage = function () {
     this.statusInputs = element.all(by.model('editVendorController.vendor.isActive'));
 
     this.get = function () {
-        browser.get('http://0.0.0.0:8000/vendors/new');
+        browser.get('http://0.0.0.0:8000/vendor/new');
     };
 };
 

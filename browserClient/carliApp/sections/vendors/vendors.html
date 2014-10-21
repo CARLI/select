@@ -2,12 +2,12 @@
     <h1>Vendors</h1>
 
     <div class="pull-right">
-        <a href="/vendors/new" class="btn">New Vendor</a>
+        <a href="/vendor/new" class="btn">New Vendor</a>
     </div>
     <input type="text" ng-model="filterText"><br/>
     <filter-by-active-toggle entity-label="'vendors'" active-filter-state="vendorsController.activeFilterState">
         <div ng-repeat="vendor in vendorsController.vendorList | filterByActive:vendorsController.activeFilterState | filter:filterText">
-            <a href="vendors/{{ vendor.id }}">{{ vendor.name }}</a>
+            <a href="vendor/{{ vendor.id }}">{{ vendor.name }}</a>
         </div>
     </filter-by-active-toggle>
 </section>
