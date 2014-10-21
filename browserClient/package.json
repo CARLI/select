@@ -25,6 +25,7 @@
     "grunt-ngdocs": "^0.2.5",
     "grunt-protractor-runner": "^1.1.4",
     "grunt-protractor-webdriver": "^0.1.9",
+    "ip": "^0.3.2",
     "karma": "^0.12.23",
     "karma-chai": "^0.1.0",
     "karma-junit-reporter": "^0.2.2",
