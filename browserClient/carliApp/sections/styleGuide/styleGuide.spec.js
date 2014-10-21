@@ -8,10 +8,11 @@ var StyleGuidePage = function () {
 };
 
 describe('CARLI Style Guide', function () {
-    it ('should have a title', function () {
-        var styleGuidePage = new StyleGuidePage();
-        styleGuidePage.get();
 
+    var styleGuidePage = new StyleGuidePage();
+    styleGuidePage.get();
+
+    it('should have a title', function () {
         expect(browser.getTitle()).toEqual('CARLI Select');
     });
 });

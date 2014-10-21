@@ -1,5 +1,28 @@
 <section id="vendors">
     <h1>{{ editVendorController.vendor.name }}</h1>
 
-    {{ editVendorController.vendor }}
+    <form name="vendorForm">
+
+        <label for="vendorName">Name</label>
+        <input type="text" name="vendorName" ng-model="editVendorController.vendor.name">
+
+        <label for="vendorWebsite">Website</label>
+        <input type="text" name="vendorWebsite" ng-model="editVendorController.vendor.websiteUrl">
+
+        <label for="vendorComments">Comments</label>
+        <textarea name="vendorComments" ng-model="editVendorController.vendor.comments"></textarea>
+
+        <label for="vendorAdminModule">Admin Module</label>
+        <textarea name="vendorAdminModule" ng-model="editVendorController.vendor.adminModule"></textarea>
+
+        <label for="vendorStatus">Admin Module</label>
+        <input type="radio" name="vendorStatus" ng-value="true" ng-model="editVendorController.vendor.isActive"> Active
+        <input type="radio" name="vendorStatus" ng-value="false" ng-model="editVendorController.vendor.isActive"> Inactive
+
+        <a href="/vendors">Cancel</a>
+        <input type="submit">
+    </form>
+
+
+    <hr><pre>{{ editVendorController.vendor }}</pre>
 </section>
