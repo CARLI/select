@@ -1,7 +1,6 @@
-var uuid = require( 'node-uuid' )
-  , tv4  = require( 'tv4' )
-  , fs   = require( 'fs' )
-  , schemaFile = '../schemas/vendor.json'
+var uuid  = require( 'node-uuid' )
+  , tv4   = require( 'tv4' )
+  , schema = require( '../schemas/vendor.json' )
 ;
 
 var dataStore;
@@ -13,7 +12,6 @@ function throwIfDataIsEmpty ( data ) {
 
 function validateCreateData( data ){
     throwIfDataIsEmpty( data );
-    var schema = JSON.parse( fs.readFileSync( schemaFile ) );
     var valid = tv4.validate( data, schema );
     if ( ! valid ) {
         throw new Error( tv4.error.message );
