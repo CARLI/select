@@ -1,8 +1,10 @@
 angular.module('carli.sections.styleGuide')
     .controller('styleGuideController', function (componentExamples, componentGatherer) {
+        var vm = this;
         var basePath = '/carliApp/sections/styleGuide/examples/';
-        this.components = componentGatherer.gather(componentExamples, basePath);
-        this.exampleCycleList = [
+
+        vm.components = componentGatherer.gather(componentExamples, basePath);
+        vm.exampleCycleList = [
             {
                 name: "Example Cycle 1",
                 status: "Pending"
@@ -17,7 +19,7 @@ angular.module('carli.sections.styleGuide')
             }
         ];
 
-        this.exampleVendors = [
+        vm.exampleVendors = [
             {
                 name: "Active Vendor 1",
                 isActive: true
@@ -32,5 +34,5 @@ angular.module('carli.sections.styleGuide')
             }
         ];
 
-        this.activeFilterState = "All";
+        vm.activeFilterState = "All";
     });
