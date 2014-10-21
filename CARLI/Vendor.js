@@ -47,6 +47,13 @@ module.exports = {
 
     update: function( data ){
         validateUpdateData( data );
+        if ( dataStore.save( data ) ) {
+            return data;
+        };
+    },
+    
+    list: function() {
+      return dataStore.list( 'vendor' );
     },
 
     load: function( id ){

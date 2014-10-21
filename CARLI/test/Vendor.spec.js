@@ -98,7 +98,7 @@ describe( 'Vendor', function() {
     } );
 
 
-    it( 'should have a update function', function() {
+    it( 'should have an update function', function() {
         expect(Vendor.update).to.be.a('function');
     } );
 
@@ -140,4 +140,21 @@ describe( 'Vendor', function() {
         } );
 
     } );
+
+    it( 'should have a list function', function() {
+        expect(Vendor.list).to.be.a('function');
+    } );
+
+    describe( 'Vendor.list', function(){
+        it( 'should return an array', function() {
+            expect( Vendor.list() ).to.be.an('Array'); 
+        } );
+
+        // KLUDGE:  We really need to destroy all items and start over in each test
+        //          group once we have a destroy();  THis is the number of items up to this point
+        it( 'should return an array with 9 elements', function() {
+            expect( Vendor.list() ).to.be.an('Array').of.length( 9 );
+        } );
+    } );
+
 } );
