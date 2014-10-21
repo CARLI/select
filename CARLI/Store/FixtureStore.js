@@ -1,14 +1,6 @@
 var memoryStore = {}
 ;
 
-function _getListOf( type ) {
-      var objects = [];
-      for( id in memoryStore[ type ] ) {
-        objects.push( memoryStore[ type ][ id ] );
-      };
-      return objects;
-}
-
 function typeExistsInStore( type ) {
     return memoryStore[type] ? true : false;
 }
@@ -32,10 +24,11 @@ function storeData( data ) {
 }
 
 function listDataFor( type ) {
-    if ( typeExistsInStore( type ) ) {
-      return _getListOf( type );
-    };
-    return [];
+      var objects = [];
+      for( id in memoryStore[ type ] ) {
+        objects.push( memoryStore[ type ][ id ] );
+      };
+      return objects;
 }
 
 function deleteDataFor( type, id ) {

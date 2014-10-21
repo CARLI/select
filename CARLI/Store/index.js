@@ -72,7 +72,10 @@ module.exports = function( storeType ) {
           if( ! type ) {
             throw new Error( 'Must Specify Type' );
           };
-          return myStore.listDataFor( type );
+          if ( myStore.typeExistsInStore( type ) ) {
+            return myStore.listDataFor( type );
+          };
+          return [];
         },
 
         delete: function( options ) {
