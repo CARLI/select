@@ -1,3 +1,9 @@
+/**
+ * @name FilterByActive Filter
+ * @desc This function filters a list based on the active state of the items. 
+ * It works in conjunction with the `filterByActiveToggle` directive to limit
+ * which items are shown. 
+ */
 angular.module('carli.filterByActive')
     .filter('filterByActive', filterByActive);
 
