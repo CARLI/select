@@ -510,6 +510,16 @@ module.exports = function ( grunt ) {
         'protractor'
     ]);
 
+    grunt.registerTask( 'test:jenkins', [
+        'test:unit',
+        'test:e2e:jenkins'
+    ]);
+    grunt.registerTask( 'test:e2e:jenkins', [
+        'clean',
+        'build',
+        'connect:tests',
+        'protractor'
+    ]);
 
     /*
      * The `serve` task is used during development to preview the app and live reload 
