@@ -173,7 +173,6 @@ function test( storeType ) {
             var objectType = uuid.v4();
             var object = makeValidObject();
             object.type = uuid.v4();
-            console.log( object.type );
             object.id = DataStore.save( object );
 
             it( 'should fail without an id', function() {
@@ -208,8 +207,8 @@ function test( storeType ) {
                 function getAfterDeleteShouldFail() {
                   DataStore.get( object );
                 };
-                expect( getAfterDeleteShouldFail ).to.throw( 'Id not found' );;
-                expect( DataStore.list( objectType ) ).to.be.an('Array').of.length( 0 );;
+                expect( getAfterDeleteShouldFail ).to.throw( 'Id not found' );
+                expect( DataStore.list( objectType ) ).to.be.an('Array').of.length( 0 );
             } );
         } );
 

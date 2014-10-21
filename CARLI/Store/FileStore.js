@@ -36,7 +36,6 @@ function getDataFor( type, id ) {
         return JSON.parse( fs.readFileSync( resourcePath + '/' + type + '/' + id + '.json' ) );
     }
     catch( e ){
-        console.log( e );
         return false;
     }
 }
