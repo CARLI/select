@@ -74,6 +74,7 @@ function test( storeType ) {
             function badGetNoType(){
                 DataStore.get({ id: 'foo' });
             }
+
             it( 'should fail without a type argument', function(){
                expect( badGetNoType ).to.throw( /Requires a type/ );
             } );
@@ -129,39 +130,87 @@ function test( storeType ) {
         } );
 
         describe( storeType + '.list', function() {
-          var objectType = uuid.v4();
-
-          it( 'should fail without a specified type', function() {
-            function failWithoutType() {
-              DataStore.list();
-            };
-            expect( failWithoutType ).to.throw('Must Specify Type');
-          } );
-
-          it( 'should return an array', function() {
-            expect( DataStore.list( objectType ) ).to.be.an('Array');
-          } );
-
-          function test5Objects() {
             var objectType = uuid.v4();
-            for ( i = 0; i < 5; i++ ) {
-              var object = makeValidObject();
-              object.type = objectType;
-              DataStore.save( object );
-            };
-            return DataStore.list( objectType );
-          }
 
-          it( 'should return an array of length 5 for our test objects', function() {
-            expect( test5Objects() ).to.be.an('Array').of.length( 5 );
-          } );
-
-          it( 'should return an array of objects', function() {
-            test5Objects().forEach( function( element ) {
-              expect( element ).to.be.an( 'Object' );
+            it( 'should fail without a specified type', function() {
+                function failWithoutType() {
+                    DataStore.list();
+                };
+                expect( failWithoutType ).to.throw('Must Specify Type');
             } );
-          } );
 
+            it( 'should return an array', function() {
+                expect( DataStore.list( objectType ) ).to.be.an('Array');
+            } );
+
+            function test5Objects() {
+                var objectType = uuid.v4();
+                for ( i = 0; i < 5; i++ ) {
+                    var object = makeValidObject();
+                    object.type = objectType;
+                    DataStore.save( object );
+                };
+                return DataStore.list( objectType );
+            }
+
+            it( 'should return an array of length 5 for our test objects', function() {
+                expect( test5Objects() ).to.be.an('Array').of.length( 5 );
+            } );
+
+            it( 'should return an array of objects', function() {
+                test5Objects().forEach( function( element ) {
+                    expect( element ).to.be.an( 'Object' );
+                } );
+            } );
+
+        } );
+
+        it( 'should have a delete function', function() {
+            expect( DataStore.delete ).to.be.a( 'function' );
+        } );
+
+        describe( storeType + '.delete', function() {
+            var objectType = uuid.v4();
+            var object = makeValidObject();
+            object.type = uuid.v4();
+            console.log( object.type );
+            object.id = DataStore.save( object );
+
+            it( 'should fail without an id', function() {
+                expect( DataStore.delete ).to.throw( /Requires an id/ );
+            } );
+
+            function badGetNoType(){
+                DataStore.delete({ id: 'foo' });
+            }
+
+            it( 'should fail without a type argument', function(){
+                expect( badGetNoType ).to.throw( /Requires a type/ );
+            } );
+
+            function badGetTypeNotInStore(){
+                DataStore.delete({ id: uuid.v4(), type: uuid.v4() });
+            }
+            it( 'should fail when the type is not in the store', function() {
+                expect( badGetTypeNotInStore ).to.throw( /Type not found/ );
+            } );
+
+            function badGetIdNotFound() {
+                DataStore.delete( { id: uuid.v4(), type: 'testy' } );
+            };
+            it( 'should fail when an id not found', function() {
+                expect( badGetIdNotFound ).to.throw( /Id not found/ );
+            } );
+
+            it( 'should delete a valid object', function() {
+                expect( DataStore.get( object ) ).to.be.an( 'Object' );
+                expect( DataStore.delete( object ) ).to.be.ok;
+                function getAfterDeleteShouldFail() {
+                  DataStore.get( object );
+                };
+                expect( getAfterDeleteShouldFail ).to.throw( 'Id not found' );;
+                expect( DataStore.list( objectType ) ).to.be.an('Array').of.length( 0 );;
+            } );
         } );
 
 

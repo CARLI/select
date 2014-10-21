@@ -38,11 +38,17 @@ function listDataFor( type ) {
     return [];
 }
 
+function deleteDataFor( type, id ) {
+    delete memoryStore[type][id];
+    return true;
+}
+
 module.exports = {
   typeExistsInStore: typeExistsInStore,
   idForTypeExistsInStore: idForTypeExistsInStore,
   getDataFor: getDataFor,
   ensureStoreTypeExists: ensureStoreTypeExists,
   storeData: storeData,
-  listDataFor: listDataFor
+  listDataFor: listDataFor,
+  deleteDataFor: deleteDataFor
 }

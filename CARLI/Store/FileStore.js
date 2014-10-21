@@ -58,7 +58,6 @@ function storeData( data ) {
     return data.id; 
 }
 
-
 function listDataFor( type ) {
   if ( typeExistsInStore( type ) ) {
     return _getListOf( type );
@@ -66,11 +65,25 @@ function listDataFor( type ) {
   return [];
 }
 
+function deleteDataFor( type, id ) {
+    try {
+        fs.unlinkSync( resourcePath + '/' + type + '/' + id + '.json' );
+        return true;
+    }
+    catch( e ){
+        return false;
+    }
+    return false;
+
+}
+
+
 module.exports = {
   typeExistsInStore: typeExistsInStore,
   idForTypeExistsInStore: idForTypeExistsInStore,
   getDataFor: getDataFor,
   ensureStoreTypeExists: ensureStoreTypeExists,
   storeData: storeData,
-  listDataFor: listDataFor
+  listDataFor: listDataFor,
+  deleteDataFor: deleteDataFor
 }

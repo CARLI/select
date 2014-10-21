@@ -39,23 +39,27 @@ function ensureSaveDataIsValid( data ) {
     ensureSaveDataHasType( data );
 }
 
+function toGetOrDelete( myStore, options, toDelete ) {
+    ensureGetOptionsAreValid( options );
+
+    if ( myStore.typeExistsInStore( options.type ) ) {
+        if ( myStore.idForTypeExistsInStore( options.type, options.id ) ){
+            return toDelete
+              ? myStore.deleteDataFor( options.type, options.id )
+              : myStore.getDataFor( options.type, options.id ); 
+        }
+        throw new Error( 'Id not found' );
+    }
+    throw new Error( 'Type not found' );
+}
+
 module.exports = function( storeType ) {
     var myStore = '';
     myStore = require( './' + storeType );
     return {
 
         get: function( options ) {
-            ensureGetOptionsAreValid( options );
-
-            if ( myStore.typeExistsInStore( options.type ) ) {
-                if ( myStore.idForTypeExistsInStore( options.type, options.id ) ){
-                    return myStore.getDataFor( options.type, options.id );
-                }
-
-                throw new Error( 'Id not found' );
-            }
-
-            throw new Error( 'Type not found' );
+            return toGetOrDelete( myStore, options );
         },
 
         save: function( data ) {
@@ -69,7 +73,11 @@ module.exports = function( storeType ) {
             throw new Error( 'Must Specify Type' );
           };
           return myStore.listDataFor( type );
-        }
+        },
+
+        delete: function( options ) {
+            return toGetOrDelete( myStore, options, true );
+        } 
 
     };
 };
