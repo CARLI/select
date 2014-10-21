@@ -3,24 +3,55 @@
 
     <form name="vendorForm">
 
-        <label for="vendorName">Name</label>
-        <input type="text" name="vendorName" ng-model="vm.vendor.name">
+        <div>
+            <label for="vendorName">Name</label>
+            <input type="text" name="vendorName" ng-model="vm.vendor.name">
+        </div>
+        <div>
+            <label for="vendorWebsite">Website</label>
+            <input type="text" name="vendorWebsite" ng-model="vm.vendor.websiteUrl">
+        </div>
+        <div>
+            <label for="vendorComments">Comments</label>
+            <textarea name="vendorComments" ng-model="vm.vendor.comments"></textarea>
+        </div>
+        <div>
+            <label for="vendorAdminModule">Admin Module</label>
+            <textarea name="vendorAdminModule" ng-model="vm.vendor.adminModule"></textarea>
+        </div>
+        <div>
+            <label for="vendorStatus">Admin Module</label>
+            <input type="radio" name="vendorStatus" ng-value="true" ng-model="vm.vendor.isActive"> Active
+            <input type="radio" name="vendorStatus" ng-value="false" ng-model="vm.vendor.isActive"> Inactive
+        </div>
 
-        <label for="vendorWebsite">Website</label>
-        <input type="text" name="vendorWebsite" ng-model="vm.vendor.websiteUrl">
+        <h2>Contacts</h2>
 
-        <label for="vendorComments">Comments</label>
-        <textarea name="vendorComments" ng-model="vm.vendor.comments"></textarea>
+        <h3>Billing</h3>
+        <div ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Billing' }">
+            <contact-editor contact="contact"></contact-editor>
+            <a ng-click="vm.deleteContact(contact)">Delete</a>
+        </div>
+        <a ng-click="vm.addContact('Billing')">Add Contact</a>
 
-        <label for="vendorAdminModule">Admin Module</label>
-        <textarea name="vendorAdminModule" ng-model="vm.vendor.adminModule"></textarea>
+        <h3>Sales</h3>
+        <div ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Sales' }">
+            <contact-editor contact="contact"></contact-editor>
+            <a ng-click="vm.deleteContact(contact)">Delete</a>
+        </div>
+        <a ng-click="vm.addContact('Sales')">Add Contact</a>
 
-        <label for="vendorStatus">Admin Module</label>
-        <input type="radio" name="vendorStatus" ng-value="true" ng-model="vm.vendor.isActive"> Active
-        <input type="radio" name="vendorStatus" ng-value="false" ng-model="vm.vendor.isActive"> Inactive
+        <h3>Technical</h3>
+        <div ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Technical' }">
+            <contact-editor contact="contact"></contact-editor>
+            <a ng-click="vm.deleteContact(contact)">Delete</a>
+        </div>
+        <a ng-click="vm.addContact('Technical')">Add Contact</a>
 
-        <a href="/vendor">Cancel</a>
-        <input type="submit">
+        <div>
+            <a href="/vendors">Cancel</a>
+            <input type="submit">
+        </div>
     </form>
 
 

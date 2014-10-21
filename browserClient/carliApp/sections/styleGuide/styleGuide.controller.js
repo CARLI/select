@@ -36,5 +36,11 @@ function styleGuideController(componentExamples, componentGatherer) {
         }
     ];
 
+    vm.exampleContact = {
+        name: "Hal 9000",
+        email: "hal@uiuc.edu",
+        phoneNumber: "333-4444"
+    };
+
     vm.activeFilterState = "All";
 }

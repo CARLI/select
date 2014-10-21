@@ -14,3 +14,16 @@ function editVendorController( $routeParams, vendorService ){
         vm.vendor = vendorService.getVendor(vendorId);
     }
 }
+
+editVendorController.prototype.addContact = function addContact(contactType) {
+    this.vendor.contacts.push({
+        contactType: contactType
+    });
+};
+
+editVendorController.prototype.deleteContact = function deleteContact(contact) {
+    var contactIndex = this.vendor.contacts.indexOf(contact);
+    if (contactIndex > 0) {
+        this.vendor.contacts.splice(contactIndex, 1);
+    }
+};
