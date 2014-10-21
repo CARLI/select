@@ -1,6 +1,9 @@
 angular.module('carli.sections.vendors')
-.controller('vendorsController', function( vendorService ){
+.controller('vendorsController', vendorController);
 
-        this.vendorList = vendorService.getVendorList();
-        this.activeFilterState = 'Active';
-});
+function vendorController( vendorService ){
+    var vm = this;
+
+    vm.vendorList = vendorService.getVendorList();
+    vm.activeFilterState = 'Active';
+}

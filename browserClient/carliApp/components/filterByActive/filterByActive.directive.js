@@ -1,5 +1,7 @@
 angular.module('carli.filterByActive')
-    .directive('filterByActiveToggle', function() {
+    .directive('filterByActiveToggle', filterByActiveToggle);
+
+    function filterByActiveToggle() {
         return {
             restrict: 'E',
             transclude: true,
@@ -7,7 +9,7 @@ angular.module('carli.filterByActive')
             scope: { entityLabel: '=', activeFilterState: '=' },
             controller: filterByActiveToggleController
         };
-    });
+    }
 
 function filterByActiveToggleController($scope) {
     $scope.isShowActive = isShowActive;

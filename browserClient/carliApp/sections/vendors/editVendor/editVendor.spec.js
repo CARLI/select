@@ -1,12 +1,12 @@
 var NewVendorPage = function () {
-    this.nameInput = element(by.model('editVendorController.vendor.name'));
-    this.websiteInput = element(by.model('editVendorController.vendor.websiteUrl'));
-    this.commentsInput = element(by.model('editVendorController.vendor.comments'));
-    this.adminModuleInput = element(by.model('editVendorController.vendor.adminModule'));
-    this.statusInputs = element.all(by.model('editVendorController.vendor.isActive'));
+    this.nameInput = element(by.model('vm.vendor.name'));
+    this.websiteInput = element(by.model('vm.vendor.websiteUrl'));
+    this.commentsInput = element(by.model('vm.vendor.comments'));
+    this.adminModuleInput = element(by.model('vm.vendor.adminModule'));
+    this.statusInputs = element.all(by.model('vm.vendor.isActive'));
 
     this.get = function () {
-        browser.get('http://0.0.0.0:8000/vendors/new');
+        browser.get('http://0.0.0.0:8000/vendor/new');
     };
 };
 

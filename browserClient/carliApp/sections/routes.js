@@ -10,41 +10,41 @@ angular.module('carli.routes',[
     .when('/', {
         templateUrl: '/carliApp/sections/dashboard/dashboard.html',
         controller:  'dashboardController',
-        controllerAs:'dashboardController'
+        controllerAs:'vm'
     })
     .when('/dashboard', {
         templateUrl: '/carliApp/sections/dashboard/dashboard.html',
         controller:  'dashboardController',
-        controllerAs:'dashboardController'
+        controllerAs:'vm'
     })
-    .when('/subscriptions', {
+    .when('/subscription', {
         templateUrl: '/carliApp/sections/subscriptions/subscriptions.html',
         controller:  'subscriptionsController',
-        controllerAs:'subscriptionsController' 
+        controllerAs:'vm'
     })
-    .when('/vendors', {
+    .when('/vendor', {
         templateUrl: '/carliApp/sections/vendors/vendors.html',
         controller:  'vendorsController',
-        controllerAs:'vendorsController'
+        controllerAs:'vm'
     })
-    .when('/vendors/:id', {
+    .when('/vendor/:id', {
         templateUrl: '/carliApp/sections/vendors/editVendor/editVendor.html',
         controller:  'editVendorController',
-        controllerAs:'editVendorController'
+        controllerAs:'vm'
     })
-    .when('/products', {
+    .when('/product', {
         templateUrl: '/carliApp/sections/products/products.html',
         controller:  'productsController',
-        controllerAs:'productsController'
+        controllerAs:'vm'
     })
-    .when('/products/:id', {
+    .when('/product/:id', {
         templateUrl: '/carliApp/sections/products/editProduct/editProduct.html',
         controller:  'editProductController',
-        controllerAs:'editProductController'
+        controllerAs:'vm'
     })
     .when('/styleGuide', {
         templateUrl: '/carliApp/sections/styleGuide/styleGuide.html',
         controller:  'styleGuideController',
-        controllerAs:'styleGuideController'
+        controllerAs:'vm'
     });
 });

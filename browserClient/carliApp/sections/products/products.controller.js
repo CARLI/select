@@ -1,5 +1,8 @@
 angular.module('carli.sections.products')
-.controller('productsController', function( productService ){
+.controller('productsController', productsController);
 
-        this.productList = productService.getProductList();
-});
+function productsController( productService ){
+    var vm = this.
+
+    vm.productList = productService.getProductList();
+}
