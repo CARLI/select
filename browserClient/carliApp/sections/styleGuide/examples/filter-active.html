@@ -1,5 +1,5 @@
-<filter-by-active-toggle entity-label="'vendors'" active-filter-state="styleGuideController.activeFilterState">
-    <div ng-repeat="vendor in styleGuideController.exampleVendors | filterByActive:styleGuideController.activeFilterState">
+<filter-by-active-toggle entity-label="'vendors'" active-filter-state="vm.activeFilterState">
+    <div ng-repeat="vendor in vm.exampleVendors | filterByActive:vm.activeFilterState">
         {{ vendor.name }}
     </div>
 </filter-by-active-toggle>
