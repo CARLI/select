@@ -3,40 +3,57 @@
 
     <form name="vendorForm">
 
-        <label for="vendorName">Name</label>
-        <input type="text" name="vendorName" ng-model="editVendorController.vendor.name">
-
-        <label for="vendorWebsite">Website</label>
-        <input type="text" name="vendorWebsite" ng-model="editVendorController.vendor.websiteUrl">
-
-        <label for="vendorComments">Comments</label>
-        <textarea name="vendorComments" ng-model="editVendorController.vendor.comments"></textarea>
-
-        <label for="vendorAdminModule">Admin Module</label>
-        <textarea name="vendorAdminModule" ng-model="editVendorController.vendor.adminModule"></textarea>
-
-        <label for="vendorStatus">Admin Module</label>
-        <input type="radio" name="vendorStatus" ng-value="true" ng-model="editVendorController.vendor.isActive"> Active
-        <input type="radio" name="vendorStatus" ng-value="false" ng-model="editVendorController.vendor.isActive"> Inactive
+        <div>
+            <label for="vendorName">Name</label>
+            <input type="text" name="vendorName" ng-model="editVendorController.vendor.name">
+        </div>
+        <div>
+            <label for="vendorWebsite">Website</label>
+            <input type="text" name="vendorWebsite" ng-model="editVendorController.vendor.websiteUrl">
+        </div>
+        <div>
+            <label for="vendorComments">Comments</label>
+            <textarea name="vendorComments" ng-model="editVendorController.vendor.comments"></textarea>
+        </div>
+        <div>
+            <label for="vendorAdminModule">Admin Module</label>
+            <textarea name="vendorAdminModule" ng-model="editVendorController.vendor.adminModule"></textarea>
+        </div>
+        <div>
+            <label for="vendorStatus">Admin Module</label>
+            <input type="radio" name="vendorStatus" ng-value="true" ng-model="editVendorController.vendor.isActive">
+            Active
+            <input type="radio" name="vendorStatus" ng-value="false" ng-model="editVendorController.vendor.isActive">
+            Inactive
+        </div>
 
         <h2>Contacts</h2>
 
-        <h3>Test Single Contact</h3>
-        <contact-editor contact="editVendorController.vendor.contacts[0]"></contact-editor>
-
-        <!--
         <h3>Billing</h3>
-        <contact-editor contact="editVendorController.vendor.contacts | filter:{ type: 'Billing' }"></contact-editor>
+        <div ng-repeat="contact in editVendorController.vendor.contacts | filter:{ contactType: 'Billing' }">
+            <contact-editor contact="contact"></contact-editor>
+            <a ng-click="editVendorController.deleteContact(contact)">Delete</a>
+        </div>
+        <a ng-click="editVendorController.addContact('Billing')">Add Contact</a>
 
         <h3>Sales</h3>
-        <contact-editor contact="editVendorController.vendor.contacts | filter:{ type: 'Sales' }"></contact-editor>
+        <div ng-repeat="contact in editVendorController.vendor.contacts | filter:{ contactType: 'Sales' }">
+            <contact-editor contact="contact"></contact-editor>
+            <a ng-click="editVendorController.deleteContact(contact)">Delete</a>
+        </div>
+        <a ng-click="editVendorController.addContact('Sales')">Add Contact</a>
 
         <h3>Technical</h3>
-        <contact-editor contact="editVendorController.vendor.contacts | filter:{ type: 'Technical' }"></contact-editor>
-        -->
+            <div ng-repeat="contact in editVendorController.vendor.contacts | filter:{ contactType: 'Technical' }">
+            <contact-editor contact="contact"></contact-editor>
+        <a ng-click="editVendorController.deleteContact(contact)">Delete</a>
+        </div>
+        <a ng-click="editVendorController.addContact('Technical')">Add Contact</a>
 
-        <a href="/vendors">Cancel</a>
-        <input type="submit">
+        <div>
+            <a href="/vendors">Cancel</a>
+            <input type="submit">
+        </div>
     </form>
 
 
