@@ -1,6 +1,9 @@
+
+var devServerUrl = process.env.CARLI_DEV_SERVER_URL || 'http://0.0.0.0:8000';
+
 var StyleGuidePage = function () {
     this.get = function () {
-        browser.get('http://0.0.0.0:8000/styleGuide');
+        browser.get(devServerUrl + '/styleGuide');
     };
 };
 
