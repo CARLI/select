@@ -1,7 +1,7 @@
 var ip = require('ip');
 var devServerUrl = 'http://' + ip.address() + ':8000';
 
-var NewVendorPage = function () {
+var EditVendorPage = function () {
     this.nameInput = element(by.model('vm.vendor.name'));
     this.websiteInput = element(by.model('vm.vendor.websiteUrl'));
     this.commentsInput = element(by.model('vm.vendor.comments'));
@@ -9,44 +9,33 @@ var NewVendorPage = function () {
     this.statusInputs = element.all(by.model('vm.vendor.isActive'));
 
     this.get = function () {
-        browser.get(devServerUrl + '/vendor/new');
+        browser.get(devServerUrl + '/vendor/0');
     };
 };
 
-describe('The new vendor screen', function () {
+/**
+ * These depend on the static JSON as it currently exists. Change to match real fixture data when it is ready..
+ */
+describe('The edit vendor screen', function() {
+    var editVendorPage = new EditVendorPage(); 
 
-    var newVendorPage = new NewVendorPage();
-    newVendorPage.get();
-
-    it('should have a blank name input field', function () {
-        expect(newVendorPage.nameInput.isPresent()).toBe(true);
-        expect(newVendorPage.nameInput.getTagName()).toBe('input');
-        expect(newVendorPage.nameInput.getText()).toBe('');
+    beforeEach( function(){
+        editVendorPage.get();
     });
 
-    it('should have a blank Website input field', function () {
-        expect(newVendorPage.websiteInput.isPresent()).toBe(true);
-        expect(newVendorPage.websiteInput.getTagName()).toBe('input');
-        expect(newVendorPage.websiteInput.getText()).toBe('');
+    it('should have a populated name field', function() {
+        expect(editVendorPage.nameInput.getAttribute('value')).toBe('vendor0');
     });
 
-    it('should have a blank Comments textarea', function () {
-        expect(newVendorPage.commentsInput.isPresent()).toBe(true);
-        expect(newVendorPage.commentsInput.getTagName()).toBe('textarea');
-        expect(newVendorPage.commentsInput.getText()).toBe('');
-    });
+    it('should have a populated website field', function() {
+        expect(editVendorPage.websiteInput.getAttribute('value')).toBe('http://www.example.com');
+    }); 
 
-    it('should have a blank Admin Module textarea', function () {
-        expect(newVendorPage.adminModuleInput.isPresent()).toBe(true);
-        expect(newVendorPage.adminModuleInput.getTagName()).toBe('textarea');
-        expect(newVendorPage.adminModuleInput.getText()).toBe('');
-    });
+    it('should have a populated comments field', function() {
+        expect(editVendorPage.commentsInput.getAttribute('value')).toBe('This is a comment');
+    }); 
 
-    it('should have a active / inactive control', function () {
-        newVendorPage.statusInputs.then(function(items) {
-            expect(items.length).toBe(2);
-            expect(items[0].getAttribute('type')).toBe('radio');
-            expect(items[1].getAttribute('type')).toBe('radio');
-        });
-    });
+    it('should have a populated admin module comment field', function() {
+        expect(editVendorPage.adminModuleInput.getAttribute('value')).toBe('This is an Admin Module comment');
+    }); 
 });
