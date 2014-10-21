@@ -1,5 +1,7 @@
 angular.module('carli.activeTab')
-    .directive('activeTab', function ($location) {
+    .directive('activeTab', activeTab);
+
+    function activeTab($location) {
         return {
             restrict: 'A',
             link: function postLink(scope, element, attrs) {
@@ -18,4 +20,4 @@ angular.module('carli.activeTab')
                 });
             }
         };
-    });
+    }

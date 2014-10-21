@@ -1,5 +1,7 @@
 angular.module('carli.componentGatherer')
-    .service('componentGatherer', function ($http) {
+    .service('componentGatherer', componentGatherer);
+
+    function componentGatherer($http) {
 
         function gatherComponents(examples, basePath) {
             var components = [];
@@ -18,5 +20,5 @@ angular.module('carli.componentGatherer')
         }
 
         return { gather: gatherComponents };
-    });
+    }
 

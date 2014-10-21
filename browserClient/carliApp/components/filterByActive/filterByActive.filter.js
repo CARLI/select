@@ -1,5 +1,7 @@
 angular.module('carli.filterByActive')
-    .filter('filterByActive', function ($filter) {
+    .filter('filterByActive', filterByActive);
+
+    function filterByActive($filter) {
         return function (values, activeFilterState) {
             return $filter('filter')(values, function (value) {
                 switch (activeFilterState) {
@@ -12,4 +14,4 @@ angular.module('carli.filterByActive')
                 }
             });
         };
-    });
+    }
