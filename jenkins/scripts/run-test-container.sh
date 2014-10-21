@@ -9,7 +9,7 @@ docker run \
     --name carli-grunt-test \
     --workdir=/carli-select/browserClient \
     --link=carli-selenium:selenium \
-    -e "CARLI_DEV_SERVER_URL=$CARLI_DEV_SERVER_URL";
+    -e "CARLI_DEV_SERVER_URL=$CARLI_DEV_SERVER_URL" \
     carli-grunt grunt test:jenkins
 rc=$?
 
