@@ -1,8 +1,5 @@
 #!/bin/sh
 
-my_ip=`ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
-export CARLI_DEV_SERVER_URL="http://$my_ip:8000"
-
 docker run --detach=true --name=carli-selenium --privileged -p 4444 -p 5900 elgalu/docker-selenium
 
 docker run \

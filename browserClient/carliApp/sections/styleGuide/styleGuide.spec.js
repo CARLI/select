@@ -1,5 +1,6 @@
 
-var devServerUrl = process.env.CARLI_DEV_SERVER_URL || 'http://0.0.0.0:8000';
+var ip = require('ip');
+var devServerUrl = 'http://' + ip.address() + ':8000';
 
 var StyleGuidePage = function () {
     this.get = function () {
