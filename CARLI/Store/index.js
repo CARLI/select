@@ -39,7 +39,29 @@ function ensureSaveDataIsValid( data ) {
     ensureSaveDataHasType( data );
 }
 
-module.exports = {
-    ensureGetOptionsAreValid: ensureGetOptionsAreValid,
-    ensureSaveDataIsValid: ensureSaveDataIsValid 
+module.exports = function( storeType ) {
+    var myStore = '';
+    myStore = require( './' + storeType );
+    return {
+
+        get: function( options ) {
+            ensureGetOptionsAreValid( options );
+
+            if ( myStore.typeExistsInStore( options.type ) ) {
+                if ( myStore.idForTypeExistsInStore( options.type, options.id ) ){
+                    return myStore.getDataFor( options.type, options.id );
+                }
+
+                throw new Error( 'Id not found' );
+            }
+
+            throw new Error( 'Type not found' );
+        },
+
+        save: function( data ) {
+            ensureSaveDataIsValid( data );
+            myStore.ensureStoreTypeExists( data.type );
+            return myStore.storeData( data );
+        }
+    };
 };

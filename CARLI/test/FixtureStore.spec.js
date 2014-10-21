@@ -1,4 +1,4 @@
-var test   = require( './StoreInterface.spec' )
+var test   = require( './Store/StoreInterface.spec' )
 ;
 
 test.run( 'FixtureStore' );

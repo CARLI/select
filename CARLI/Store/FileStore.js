@@ -1,6 +1,4 @@
 var memoryStore = {}
-  , store = require( './_Store' )
-  , uuid = require( 'node-uuid' )
   , fs   = require( 'fs' )
   , resourcePath = '../Resources'
 ;
@@ -50,22 +48,9 @@ function storeData( data ) {
 }
 
 module.exports = {
-
-    get: function( options ) {
-        store.ensureGetOptionsAreValid( options );
-
-        if ( typeExistsInStore( options.type ) ) {
-            if ( idForTypeExistsInStore( options.type, options.id ) ){
-                return getDataFor( options.type, options.id );
-            }
-            throw new Error( 'Id not found' );
-        }
-        throw new Error( 'Type not found' );
-    },
-
-    save: function( data ) {
-        store.ensureSaveDataIsValid( data );
-        ensureStoreTypeExists( data.type );
-        return storeData( data );
-    }
-};
+  typeExistsInStore: typeExistsInStore,
+  idForTypeExistsInStore: idForTypeExistsInStore,
+  getDataFor: getDataFor,
+  ensureStoreTypeExists: ensureStoreTypeExists,
+  storeData: storeData
+}

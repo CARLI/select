@@ -1,11 +1,12 @@
 var chai   = require( 'chai' )
   , expect = chai.expect
   , uuid   = require( 'node-uuid' )
+  , store = require( '../../Store' )
 ;
 
 function test( storeType ) {
     describe( storeType, function() {
-        var DataStore = require( '../' + storeType );
+        var DataStore = store( storeType );
     
         it( 'should be a module', function() {
             expect(DataStore).to.be.an('object');

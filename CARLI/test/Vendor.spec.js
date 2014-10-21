@@ -2,7 +2,8 @@ var chai   = require( 'chai' )
   , expect = chai.expect
   , uuid   = require( 'node-uuid' )
   , Vendor = require( '../Vendor' )
-  , Store  = require( '../FixtureStore' )
+  , store  = require( '../Store' )
+  , Store  = store( 'FixtureStore' ) 
 ;
 
 describe( 'Vendor', function() {
