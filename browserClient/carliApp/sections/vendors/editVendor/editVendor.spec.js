@@ -1,3 +1,6 @@
+var ip = require('ip');
+var devServerUrl = 'http://' + ip.address() + ':8000';
+
 var NewVendorPage = function () {
     this.nameInput = element(by.model('editVendorController.vendor.name'));
     this.websiteInput = element(by.model('editVendorController.vendor.websiteUrl'));
@@ -6,7 +9,7 @@ var NewVendorPage = function () {
     this.statusInputs = element.all(by.model('editVendorController.vendor.isActive'));
 
     this.get = function () {
-        browser.get('http://0.0.0.0:8000/vendors/new');
+        browser.get(devServerUrl + 'vendors/new');
     };
 };
 
