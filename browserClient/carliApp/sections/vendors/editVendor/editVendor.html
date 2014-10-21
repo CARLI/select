@@ -19,6 +19,22 @@
         <input type="radio" name="vendorStatus" ng-value="true" ng-model="editVendorController.vendor.isActive"> Active
         <input type="radio" name="vendorStatus" ng-value="false" ng-model="editVendorController.vendor.isActive"> Inactive
 
+        <h2>Contacts</h2>
+
+        <h3>Test Single Contact</h3>
+        <contact-editor contact="editVendorController.vendor.contacts[0]"></contact-editor>
+
+        <!--
+        <h3>Billing</h3>
+        <contact-editor contact="editVendorController.vendor.contacts | filter:{ type: 'Billing' }"></contact-editor>
+
+        <h3>Sales</h3>
+        <contact-editor contact="editVendorController.vendor.contacts | filter:{ type: 'Sales' }"></contact-editor>
+
+        <h3>Technical</h3>
+        <contact-editor contact="editVendorController.vendor.contacts | filter:{ type: 'Technical' }"></contact-editor>
+        -->
+
         <a href="/vendors">Cancel</a>
         <input type="submit">
     </form>

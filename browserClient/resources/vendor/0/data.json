@@ -5,22 +5,19 @@
     "webSite": "url: 0",
     "contacts" : [
         {
-            "firstName" : "Hal",
-            "lastName" : "2000",
+            "name" : "Hal 9000",
             "email" : "hal@beckman.edu",
             "phoneNumber" : "217-333-3333",
             "contactType" : "Technical"
         },
         {
-            "firstName" : "Jane",
-            "lastName" : "Doe",
+            "name" : "Jane Curtis",
             "email" : "jane@beckman.edu",
             "phoneNumber" : "217-333-3333",
             "contactType" : "Billing"
         },
         {
-            "firstName" : "Freddie",
-            "lastName" : "Kruger",
+            "name" : "Freddie Mercury",
             "email" : "claws@beckman.edu",
             "phoneNumber" : "217-333-3333",
             "contactType" : "Sales"

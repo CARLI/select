@@ -32,5 +32,11 @@ angular.module('carli.sections.styleGuide')
             }
         ];
 
+        this.exampleContact = {
+            name: "Hal 9000",
+            email: "hal@uiuc.edu",
+            phoneNumber: "333-4444"
+        };
+
         this.activeFilterState = "All";
     });
