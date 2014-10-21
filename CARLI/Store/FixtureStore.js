@@ -1,6 +1,14 @@
 var memoryStore = {}
 ;
 
+function _getListOf( type ) {
+      var objects = [];
+      for( id in memoryStore[ type ] ) {
+        objects.push( memoryStore[ type ][ id ] );
+      };
+      return objects;
+}
+
 function typeExistsInStore( type ) {
     return memoryStore[type] ? true : false;
 }
@@ -23,10 +31,18 @@ function storeData( data ) {
     return data.id;
 }
 
+function listDataFor( type ) {
+    if ( typeExistsInStore( type ) ) {
+      return _getListOf( type );
+    };
+    return [];
+}
+
 module.exports = {
   typeExistsInStore: typeExistsInStore,
   idForTypeExistsInStore: idForTypeExistsInStore,
   getDataFor: getDataFor,
   ensureStoreTypeExists: ensureStoreTypeExists,
-  storeData: storeData
+  storeData: storeData,
+  listDataFor: listDataFor
 }

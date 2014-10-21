@@ -62,6 +62,14 @@ module.exports = function( storeType ) {
             ensureSaveDataIsValid( data );
             myStore.ensureStoreTypeExists( data.type );
             return myStore.storeData( data );
+        },
+
+        list: function( type ) {
+          if( ! type ) {
+            throw new Error( 'Must Specify Type' );
+          };
+          return myStore.listDataFor( type );
         }
+
     };
 };

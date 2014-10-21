@@ -3,6 +3,16 @@ var memoryStore = {}
   , resourcePath = '../Resources'
 ;
 
+function _getListOf( type ) {
+  var files = fs.readdirSync( resourcePath + '/' + type );
+  var list = [];
+  files.forEach( function( id ) {
+    
+    list.push( getDataFor( type, id.slice(0,-5) ) );
+  } );
+  return list;
+};
+
 function typeExistsInStore( type ) {
     try {
         return fs.statSync( resourcePath + '/' + type ).isDirectory();
@@ -26,6 +36,7 @@ function getDataFor( type, id ) {
         return JSON.parse( fs.readFileSync( resourcePath + '/' + type + '/' + id + '.json' ) );
     }
     catch( e ){
+        console.log( e );
         return false;
     }
 }
@@ -47,10 +58,19 @@ function storeData( data ) {
     return data.id; 
 }
 
+
+function listDataFor( type ) {
+  if ( typeExistsInStore( type ) ) {
+    return _getListOf( type );
+  }
+  return [];
+}
+
 module.exports = {
   typeExistsInStore: typeExistsInStore,
   idForTypeExistsInStore: idForTypeExistsInStore,
   getDataFor: getDataFor,
   ensureStoreTypeExists: ensureStoreTypeExists,
-  storeData: storeData
+  storeData: storeData,
+  listDataFor: listDataFor
 }
