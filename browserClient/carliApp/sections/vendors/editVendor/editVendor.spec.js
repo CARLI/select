@@ -1,5 +1,5 @@
 
-var VendorPage = require('./VendorPage');
+var VendorPage = require('./VendorPage.spec');
 
 /**
  * These depend on the static JSON as it currently exists. Change to match real fixture data when it is ready..
