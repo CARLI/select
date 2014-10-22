@@ -107,6 +107,14 @@ function test( storeType ) {
                 expect( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.deep.equal( objectWithId );
             } );
 
+            it( "shouldn't update the store because of an object reference bug", function() {
+                objectWithId.foo = 'new value';
+                DataStore.save( objectWithId );
+                testObject = DataStore.get( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) );
+                objectWithId.foo = 'garbage'; // Change the object to fail
+                expect( testObject ).to.not.deep.equal( objectWithId );
+            } );
+
             it('should save objects with differing types and same id separately', function(){
                 var sharedId = uuid.v4();
 

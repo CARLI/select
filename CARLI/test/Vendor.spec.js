@@ -117,13 +117,23 @@ describe( 'Vendor', function() {
             expect( badSaveNoId ).to.throw( 'Id Required' );
         } );
 
+        it( "shouldn't have a false positive because of update with object reference bugs", function() {
+            var vendor_data = validVendorData();
+            vendor_data.foo = 'bar';
+            var vendor = Vendor.create( vendor_data );
+            vendor.foo = 'new value';
+            Vendor.update( vendor );
+            var storedVendor = Vendor.load( vendor.id );
+            vendor.foo = 'garbage';
+            expect( storedVendor ).to.not.deep.equal( vendor );
+        } );
+
         it( 'should update properties of a previously saved object', function(){
             var vendor_data = validVendorData();
             vendor_data.foo = 'bar';
             var vendor = Vendor.create( vendor_data );
             vendor.foo = 'new value';
             Vendor.update( vendor );
-
             expect( Vendor.load( vendor.id ) ).to.deep.equal( vendor );
         } );
 
@@ -152,8 +162,8 @@ describe( 'Vendor', function() {
 
         // KLUDGE:  We really need to destroy all items and start over in each test
         //          group once we have a destroy();  THis is the number of items up to this point
-        it( 'should return an array with 9 elements', function() {
-            expect( Vendor.list() ).to.be.an('Array').of.length( 9 );
+        it( 'should return an array with 10 elements', function() {
+            expect( Vendor.list() ).to.be.an('Array').of.length( 10 );
         } );
     } );
 

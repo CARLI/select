@@ -10,9 +10,8 @@ function idForTypeExistsInStore( type, id ) {
 }
 
 function getDataFor( type, id ) {
-    return memoryStore[type][id];
+    return JSON.parse( JSON.stringify( memoryStore[type][id] ) );
 }
-
 
 function ensureStoreTypeExists( type ) {
     memoryStore[type] = memoryStore[type] || {};
@@ -26,7 +25,7 @@ function storeData( data ) {
 function listDataFor( type ) {
       var objects = [];
       for( id in memoryStore[ type ] ) {
-        objects.push( memoryStore[ type ][ id ] );
+        objects.push( getDataFor( type, id ) );
       };
       return objects;
 }

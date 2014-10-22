@@ -26,6 +26,9 @@ function validateUpdateData( data ){
     validateCreateData( data );
 }
 
+function _cloneData ( data ) {
+    return JSON.parse( JSON.stringify( data ) );
+}
 
 module.exports = {
 
@@ -40,13 +43,13 @@ module.exports = {
         data.type = 'vendor';
 
         dataStore.save( data );
-        return data;
+        return _cloneData( data );
     },
 
     update: function( data ){
         validateUpdateData( data );
         if ( dataStore.save( data ) ) {
-            return data;
+            return _cloneData( data );
         };
     },
     
