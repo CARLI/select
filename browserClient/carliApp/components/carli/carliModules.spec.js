@@ -1,6 +1,6 @@
 describe('The CarliModules Service', function(){
 
-    beforeEach( module('carli.carliModules.service') );
+    beforeEach( module('carli.carliModules') );
 
     it( 'should provide the CARLI module', inject( function(CarliModules) {
         expect(CarliModules).to.be.an('Object');

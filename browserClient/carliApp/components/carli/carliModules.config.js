@@ -1,1 +1,1 @@
-angular.module('carli.carliModules.service',[]);
+angular.module('carli.carliModules',[]);
