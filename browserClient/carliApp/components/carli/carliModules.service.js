@@ -8,7 +8,7 @@
  * **window.CARLI**, which this service returns. 
  *
  */
-angular.module('carli.service')
+angular.module('carli.carliModules.service')
 .factory('CarliModules', function( $window ){
     return $window.CARLI;
 });
