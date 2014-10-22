@@ -3,7 +3,7 @@ var chai   = require( 'chai' )
   , uuid   = require( 'node-uuid' )
   , Vendor = require( '../Vendor' )
   , Store  = require( '../Store' )
-  , FixtureStore  = require( '../Store/FixtureStore' ) 
+  , MemoryStore  = require( '../Store/MemoryStore' ) 
 ;
 
 describe( 'Vendor', function() {
@@ -20,7 +20,7 @@ describe( 'Vendor', function() {
         expect( Vendor.setStore ).to.be.a( 'function' );
     } );
 
-    Vendor.setStore( Store( FixtureStore ) );
+    Vendor.setStore( Store( MemoryStore ) );
 
     it( 'should have a create function', function() {
         expect(Vendor.create).to.be.a('function');

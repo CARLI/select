@@ -1,6 +1,6 @@
 module.exports = {
     Vendor: require('./Vendor'),
     Store: require('./Store'),
-    FixtureStore: require('./Store/FixtureStore'),
+    MemoryStore: require('./Store/MemoryStore'),
     FileStore: require('./Store/FileStore')
 };

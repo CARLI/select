@@ -1,6 +1,6 @@
 var chai   = require( 'chai' )
   , expect = chai.expect
-  , CARLI  = require( '../CARLI' )
+  , CARLI  = require( '../../CARLI' )
 ;
 
 describe( 'CARLI', function() {
@@ -17,8 +17,8 @@ describe( 'CARLI', function() {
         expect(CARLI.Store).to.be.a('Function');
     } );
 
-    it( 'should export the FixtureStore module', function() {
-        expect(CARLI.FixtureStore).to.be.an('Object');
+    it( 'should export the MemoryStore module', function() {
+        expect(CARLI.MemoryStore).to.be.an('Object');
     } );
 
     it( 'should export the FileStore module', function() {
