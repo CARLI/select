@@ -6,6 +6,8 @@ var fs = require('fs');
 var mysql = require('mysql');
 var mkdirp = require('mkdirp');
 
+var vendorsDataPath = CONFIG.resourcePath + '/vendor';
+
 // establish the connection
 var connection = mysql.createConnection( CONFIG.dsn );
 connection.connect();
@@ -26,12 +28,11 @@ function getVendors(callback) {
 
 
 function createJsonFiles(vendors) {
-
-    var vendorsFilePath = 'data/vendor/list.json';
+    var vendorsListFilePath = vendorsDataPath + '/list.json';
     var vendorList = [];
     var vendorData;
 
-    mkdirp('data/vendor');
+    mkdirp(vendorsDataPath);
 
     for (var i in vendors) {
         var v = vendors[i];
@@ -41,18 +42,18 @@ function createJsonFiles(vendors) {
         createVendorJsonFile(v);
     }
 
-    fs.writeFileSync(vendorsFilePath, JSON.stringify(vendorList, null, 2));
+    fs.writeFileSync(vendorsListFilePath, JSON.stringify(vendorList, null, 2));
 }
 
 function createVendorJsonFile(v) {
-    var vendorFilePath = 'data/vendor/' + v.id + '/';
+    var vendorFilePath = vendorsDataPath + '/' + v.id;
     mkdirp.sync(vendorFilePath);
 
     var vendorData = {
         id: v.id,
         name: v.name,
         previousName: "",
-        webSite: v.info_url,
+        websiteUrl: v.info_url,
         contacts: extractVendorContacts(v),
         comments: "",
         adminModule: v.admin_module_url,
@@ -69,56 +70,34 @@ function extractVendorContacts(vendor) {
 
     contactList = [];
     if (vendor.salesrep_name) {
-        contactList.push(extractSalesContact(vendor));
+        contactList.push(extractSalesContact(vendor, 'salesrep'));
     }
     if (vendor.salesrep2_name) {
-        contactList.push(extractSalesContact2(vendor));
+        contactList.push(extractSalesContact(vendor, 'salesrep2'));
     }
     if (vendor.technicalcontact_name) {
-        contactList.push(extractTechnicalContact(vendor));
+        contactList.push(extractTechnicalContact(vendor, 'technicalcontact'));
     }
     if (vendor.technicalcontact2_name) {
-        contactList.push(extractTechnicalContact2(vendor));
+        contactList.push(extractTechnicalContact(vendor, 'technicalcontact2'));
     }
     return contactList;
 }
 
-function extractSalesContact(vendor) {
+function extractSalesContact(vendor, prefix) {
     return {
-        firstName: vendor.salesrep_name,
-        lastName: "",
-        email: vendor.salesrep_email,
-        phoneNumber: vendor.salesrep_phone,
+        name: vendor[prefix + '_name'],
+        email: vendor[prefix + '_email'],
+        phoneNumber: vendor[prefix + '_phone'],
         contactType: "Sales"
     };
 }
 
-function extractSalesContact2(vendor) {
+function extractTechnicalContact(vendor, prefix) {
     return {
-        firstName: vendor.salesrep2_name,
-        lastName: "",
-        email: vendor.salesrep2_email,
-        phoneNumber: vendor.salesrep2_phone,
-        contactType: "Sales"
-    };
-}
-
-function extractTechnicalContact(vendor) {
-    return {
-        firstName: vendor.technicalcontact_name,
-        lastName: "",
-        email: vendor.technicalcontact_email,
-        phoneNumber: vendor.technicalcontact_phone,
-        contactType: "Technical"
-    };
-}
-
-function extractTechnicalContact2(vendor) {
-    return {
-        firstName: vendor.technicalcontact2_name,
-        lastName: "",
-        email: vendor.technicalcontact2_email,
-        phoneNumber: vendor.technicalcontact2_phone,
+        name: vendor[prefix + '_name'],
+        email: vendor[prefix + '_email'],
+        phoneNumber: vendor[prefix + '_phone'],
         contactType: "Technical"
     };
 }

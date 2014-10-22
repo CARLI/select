@@ -7,5 +7,7 @@ module.exports = {
 
   "Collection": {
     "ids": [190, 200]
-  }
-}
+  },
+
+    resourcePath: "../resources"
+};
