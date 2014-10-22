@@ -1,0 +1,19 @@
+{
+  "name": "CARLI",
+  "version": "0.0.0",
+  "description": "",
+  "main": "CARLI.js",
+  "scripts": {
+    "test": "mocha *.spec.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "tv4": "^1.1.4"
+  },
+  "devDependencies": {
+    "chai": "^1.9.2",
+    "mocha": "^1.21.5",
+    "node-uuid": "^1.4.1"
+  }
+}
