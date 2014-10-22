@@ -2,8 +2,8 @@ var chai   = require( 'chai' )
   , expect = chai.expect
   , uuid   = require( 'node-uuid' )
   , Vendor = require( '../Vendor' )
-  , store  = require( '../Store' )
-  , Store  = store( 'FixtureStore' ) 
+  , Store  = require( '../Store' )
+  , FixtureStore  = require( '../Store/FixtureStore' ) 
 ;
 
 describe( 'Vendor', function() {
@@ -20,7 +20,7 @@ describe( 'Vendor', function() {
         expect( Vendor.setStore ).to.be.a( 'function' );
     } );
 
-    Vendor.setStore( Store );
+    Vendor.setStore( Store( FixtureStore ) );
 
     it( 'should have a create function', function() {
         expect(Vendor.create).to.be.a('function');

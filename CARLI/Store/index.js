@@ -54,8 +54,9 @@ function toGetOrDelete( myStore, options, toDelete ) {
 }
 
 module.exports = function( storeType ) {
-    var myStore = '';
-    myStore = require( './' + storeType );
+
+    var myStore = storeType;
+
     return {
 
         get: function( options ) {

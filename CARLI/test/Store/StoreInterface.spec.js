@@ -4,7 +4,10 @@ var chai   = require( 'chai' )
   , store = require( '../../Store' )
 ;
 
-function test( storeType ) {
+function test( storeTypeName ) {
+
+    var storeType = require('../../Store/'+storeTypeName );
+
     function makeValidObject() {
         return {
             id:     uuid.v4(),
@@ -12,7 +15,7 @@ function test( storeType ) {
         }
     };
 
-    describe( storeType, function() {
+    describe( storeTypeName, function() {
         var DataStore = store( storeType );
 
         it( 'should be a module', function() {
@@ -24,7 +27,7 @@ function test( storeType ) {
             expect(DataStore.save).to.be.a('function');
         } );
 
-        describe( storeType + '.save', function() {
+        describe( storeTypeName + '.save', function() {
 
             it( 'should fail without data', function() {
                 expect( DataStore.save ).to.throw( /Requires Data/ );
@@ -56,7 +59,7 @@ function test( storeType ) {
             expect(DataStore.get).to.be.a('function');
         } );
 
-        describe( storeType + '.get', function() {
+        describe( storeTypeName + '.get', function() {
 
             var simpleObject = makeValidObject();
             simpleObject.foo = 'bar';
@@ -137,7 +140,7 @@ function test( storeType ) {
             expect( DataStore.list ).to.be.a( 'function' );
         } );
 
-        describe( storeType + '.list', function() {
+        describe( storeTypeName + '.list', function() {
             var objectType = uuid.v4();
 
             it( 'should fail without a specified type', function() {
@@ -177,7 +180,7 @@ function test( storeType ) {
             expect( DataStore.delete ).to.be.a( 'function' );
         } );
 
-        describe( storeType + '.delete', function() {
+        describe( storeTypeName + '.delete', function() {
             var objectType = uuid.v4();
             var object = makeValidObject();
             object.type = uuid.v4();
