@@ -1,5 +1,5 @@
 /**
- * @name CARLI Service
+ * @name CarliModules Service
  * @ngdoc service
  * @description 
  * ## External Code ##
@@ -9,6 +9,6 @@
  *
  */
 angular.module('carli.service')
-.factory('CARLI', function( $window ){
+.factory('CarliModules', function( $window ){
     return $window.CARLI;
 });
