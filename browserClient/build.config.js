@@ -31,7 +31,7 @@ module.exports = {
      */
     logic_files: {
         global_var: 'CARLI',
-        js: '../CARLI/CARLI.js',
+        js: '../CARLI/index.js',
         build: 'CARLI.js'
     },
 

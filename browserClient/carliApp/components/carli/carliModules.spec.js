@@ -14,8 +14,8 @@ describe('The CarliModules Service', function(){
         expect(CarliModules.Store).to.be.a('Function');
     }));
 
-    it( 'should export the FixtureStore module', inject( function(CarliModules) {
-        expect(CarliModules.FixtureStore).to.be.an('Object');
+    it( 'should export the MemoryStore module', inject( function(CarliModules) {
+        expect(CarliModules.MemoryStore).to.be.an('Object');
     }));
 
 });

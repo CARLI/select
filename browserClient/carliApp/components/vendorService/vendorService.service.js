@@ -5,7 +5,7 @@ function vendorService( CarliModules ) {
 
     var vendorModule = CarliModules.Vendor;
 
-    var vendorStore = CarliModules.Store( CarliModules.FixtureStore );
+    var vendorStore = CarliModules.Store( CarliModules.MemoryStore );
 
     vendorModule.setStore( vendorStore );
 
