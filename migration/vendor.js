@@ -2,24 +2,24 @@
 
 // dependencies
 var CONFIG = require('./config');
-var fs = require('fs');
 var mysql = require('mysql');
-var mkdirp = require('mkdirp');
+var Vendor = require('../CARLI/CARLI').Vendor;
+var FileStore = require('../CARLI/CARLI').FileStore;
+var Store = require('../CARLI/CARLI').Store;
 
-var vendorsDataPath = CONFIG.resourcePath + '/vendor';
+Vendor.setStore( Store(FileStore) );
 
 // establish the connection
 var connection = mysql.createConnection( CONFIG.dsn );
 connection.connect();
 
-var vendors = getVendors( function(err, rows, fields) {
+getVendors( function(err, rows, fields) {
     if(err) { console.log(err); }
     vendors = rows;
 
     connection.end();
-    createJsonFiles(rows);
+    extractVendors(rows);
 });
-
 
 function getVendors(callback) {
     var query = "select * from vendor";
@@ -27,43 +27,25 @@ function getVendors(callback) {
 }
 
 
-function createJsonFiles(vendors) {
-    var vendorsListFilePath = vendorsDataPath + '/list.json';
-    var vendorList = [];
-    var vendorData;
-
-    mkdirp(vendorsDataPath);
-
+function extractVendors(vendors) {
     for (var i in vendors) {
-        var v = vendors[i];
-
-        vendorList.push({id: v.id, name: v.name, isActive: true})
-
-        createVendorJsonFile(v);
+        var vendor = extractVendor(vendors[i]);
+        Vendor.create( vendor );
     }
-
-    fs.writeFileSync(vendorsListFilePath, JSON.stringify(vendorList, null, 2));
 }
 
-function createVendorJsonFile(v) {
-    var vendorFilePath = vendorsDataPath + '/' + v.id;
-    mkdirp.sync(vendorFilePath);
-
-    var vendorData = {
-        id: v.id,
+function extractVendor(v) {
+    return {
         name: v.name,
         previousName: "",
         websiteUrl: v.info_url,
         contacts: extractVendorContacts(v),
         comments: "",
-        adminModule: v.admin_module_url,
+        adminModule: v.admin_module_url || '',
         isActive: true,
         licenseAgreements: extractVendorLicenseAgreements(v),
         products: extractVendorProducts(v)
     };
-
-    fs.writeFileSync(vendorFilePath + "/data.json", JSON.stringify(vendorData, null, 2));
-
 }
 
 function extractVendorContacts(vendor) {
