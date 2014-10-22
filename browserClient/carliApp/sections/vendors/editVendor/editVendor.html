@@ -32,24 +32,24 @@
             <contact-editor contact="contact"></contact-editor>
             <a ng-click="vm.deleteContact(contact)">Delete</a>
         </div>
-        <a ng-click="vm.addContact('Billing')">Add Contact</a>
+        <a id="add-billing-contact" ng-click="vm.addContact('Billing')">Add Contact</a>
 
         <h3>Sales</h3>
         <div ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Sales' }">
             <contact-editor contact="contact"></contact-editor>
             <a ng-click="vm.deleteContact(contact)">Delete</a>
         </div>
-        <a ng-click="vm.addContact('Sales')">Add Contact</a>
+        <a id="add-sales-contact" ng-click="vm.addContact('Sales')">Add Contact</a>
 
         <h3>Technical</h3>
         <div ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Technical' }">
             <contact-editor contact="contact"></contact-editor>
             <a ng-click="vm.deleteContact(contact)">Delete</a>
         </div>
-        <a ng-click="vm.addContact('Technical')">Add Contact</a>
+        <a id="add-technical-contact" ng-click="vm.addContact('Technical')">Add Contact</a>
 
         <div>
-            <a href="/vendors">Cancel</a>
+            <a href="/vendor">Cancel</a>
             <input type="submit">
         </div>
     </form>

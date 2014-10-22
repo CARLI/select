@@ -1,24 +1,12 @@
-var ip = require('ip');
-var devServerUrl = 'http://' + ip.address() + ':8000';
 
-var NewVendorPage = function () {
-    this.nameInput = element(by.model('vm.vendor.name'));
-    this.websiteInput = element(by.model('vm.vendor.websiteUrl'));
-    this.commentsInput = element(by.model('vm.vendor.comments'));
-    this.adminModuleInput = element(by.model('vm.vendor.adminModule'));
-    this.statusInputs = element.all(by.model('vm.vendor.isActive'));
-
-    this.get = function () {
-        browser.get(devServerUrl + '/vendor/new');
-    };
-};
+var VendorPage = require('./VendorPage');
 
 describe('The new vendor screen', function () {
 
-    var newVendorPage = new NewVendorPage();
+    var newVendorPage = new VendorPage();
 
     beforeEach( function(){
-        newVendorPage.get();
+        newVendorPage.getNewVendorPage();
     });
 
     it('should have a default name input field', function () {
@@ -50,6 +38,27 @@ describe('The new vendor screen', function () {
             expect(items.length).toBe(2);
             expect(items[0].getAttribute('type')).toBe('radio');
             expect(items[1].getAttribute('type')).toBe('radio');
+        });
+    });
+
+    it('should have "Add Contact" links for all three types of contacts', function () {
+        expect(newVendorPage.addBillingContactLink.isPresent()).toBe(true);
+        expect(newVendorPage.addBillingContactLink.getTagName()).toBe('a');
+        expect(newVendorPage.addSalesContactLink.isPresent()).toBe(true);
+        expect(newVendorPage.addSalesContactLink.getTagName()).toBe('a');
+        expect(newVendorPage.addTechnicalContactLink.isPresent()).toBe(true);
+        expect(newVendorPage.addTechnicalContactLink.getTagName()).toBe('a');
+    });
+
+    it('should add a new billing contact when the "Add Contact" for billing contacts is clicked', function () {
+        element.all(by.tagName('contact-editor')).count().then(function (beforeCount) {
+            console.log('beforeCount=' + beforeCount);
+            newVendorPage.addBillingContactLink.click();
+
+            var afterCount = element.all(by.tagName('contact-editor')).count().then(function (afterCount) {
+                console.log('afterCount=' + afterCount);
+                expect(afterCount == beforeCount + 1).toBe(true);
+            });
         });
     });
 });

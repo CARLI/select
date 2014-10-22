@@ -5,7 +5,8 @@ function editVendorController( $routeParams, vendorService ){
     var vm = this;
 
     vm.vendor = {
-        name: 'New Vendor'
+        name: 'New Vendor',
+        contacts: []
     };
 
     var vendorId = $routeParams.id;

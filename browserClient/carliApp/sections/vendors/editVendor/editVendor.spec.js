@@ -1,26 +1,14 @@
-var ip = require('ip');
-var devServerUrl = 'http://' + ip.address() + ':8000';
 
-var EditVendorPage = function () {
-    this.nameInput = element(by.model('vm.vendor.name'));
-    this.websiteInput = element(by.model('vm.vendor.websiteUrl'));
-    this.commentsInput = element(by.model('vm.vendor.comments'));
-    this.adminModuleInput = element(by.model('vm.vendor.adminModule'));
-    this.statusInputs = element.all(by.model('vm.vendor.isActive'));
-
-    this.get = function () {
-        browser.get(devServerUrl + '/vendor/0');
-    };
-};
+var VendorPage = require('./VendorPage');
 
 /**
  * These depend on the static JSON as it currently exists. Change to match real fixture data when it is ready..
  */
 describe('The edit vendor screen', function() {
-    var editVendorPage = new EditVendorPage(); 
+    var editVendorPage = new VendorPage();
 
     beforeEach( function(){
-        editVendorPage.get();
+        editVendorPage.getEditVendorPage();
     });
 
     it('should have a populated name field', function() {
