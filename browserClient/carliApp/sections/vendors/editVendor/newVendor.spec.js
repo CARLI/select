@@ -1,5 +1,5 @@
 
-var VendorPage = require('./VendorPage');
+var VendorPage = require('./VendorPage.spec');
 
 describe('The new vendor screen', function () {
 
