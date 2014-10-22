@@ -3,9 +3,9 @@
 // dependencies
 var CONFIG = require('./config');
 var mysql = require('mysql');
-var Vendor = require('../CARLI/CARLI').Vendor;
-var FileStore = require('../CARLI/CARLI').FileStore;
-var Store = require('../CARLI/CARLI').Store;
+var Vendor = require('../CARLI').Vendor;
+var FileStore = require('../CARLI').FileStore;
+var Store = require('../CARLI').Store;
 
 Vendor.setStore( Store(FileStore) );
 
