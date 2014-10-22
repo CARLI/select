@@ -1,4 +1,4 @@
-/Resources
+/resources
 
 # Ignore Schema Browser build products
 /schemas/browser/*.json
