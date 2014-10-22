@@ -9,6 +9,6 @@
  *
  */
 angular.module('carli.service')
-.factory('CARLI', function(){
-    return window.CARLI;
+.factory('CARLI', function( $window ){
+    return $window.CARLI;
 });
