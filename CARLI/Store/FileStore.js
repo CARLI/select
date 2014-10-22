@@ -1,6 +1,6 @@
 var memoryStore = {}
   , fs   = require( 'fs' )
-  , resourcePath = '../Resources'
+  , resourcePath = '../resources'
 ;
 
 function typeExistsInStore( type ) {
@@ -32,6 +32,15 @@ function getDataFor( type, id ) {
 
 function ensureStoreTypeExists( type ) {
     try {
+        fs.mkdirSync( resourcePath, '0777' )
+    }
+    catch(err){
+        if ( err.code !== 'EEXIST' ) {
+            throw new Error(err);
+        }
+    }
+
+    try {
         fs.mkdirSync( resourcePath + '/' + type, '0777' );
     }
     catch(err) { 
@@ -39,7 +48,7 @@ function ensureStoreTypeExists( type ) {
             return true;
         }
         throw new Error(err);
-    }; 
+    };
 }
 
 function storeData( data ) {
