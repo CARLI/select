@@ -40,4 +40,25 @@ describe('The new vendor screen', function () {
             expect(items[1].getAttribute('type')).toBe('radio');
         });
     });
+
+    it('should have "Add Contact" links for all three types of contacts', function () {
+        expect(newVendorPage.addBillingContactLink.isPresent()).toBe(true);
+        expect(newVendorPage.addBillingContactLink.getTagName()).toBe('a');
+        expect(newVendorPage.addSalesContactLink.isPresent()).toBe(true);
+        expect(newVendorPage.addSalesContactLink.getTagName()).toBe('a');
+        expect(newVendorPage.addTechnicalContactLink.isPresent()).toBe(true);
+        expect(newVendorPage.addTechnicalContactLink.getTagName()).toBe('a');
+    });
+
+    it('should add a new billing contact when the "Add Contact" for billing contacts is clicked', function () {
+        element.all(by.tagName('contact-editor')).count().then(function (beforeCount) {
+            console.log('beforeCount=' + beforeCount);
+            newVendorPage.addBillingContactLink.click();
+
+            var afterCount = element.all(by.tagName('contact-editor')).count().then(function (afterCount) {
+                console.log('afterCount=' + afterCount);
+                expect(afterCount == beforeCount + 1).toBe(true);
+            });
+        });
+    });
 });
