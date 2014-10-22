@@ -1,15 +1,18 @@
 angular.module('carli.vendorService')
     .service('vendorService', vendorService);
 
-function vendorService($resource) {
-    var service = {};
-    var vendorListResource = $resource('/resources/vendor/list.json');
+function vendorService( CarliModules ) {
 
-    service.getVendorList = vendorListResource.query;
-    service.getVendor = function( vendorId ){
-        var vendorResource = $resource('/resources/vendor/'+vendorId+'/data.json');
-        return vendorResource.get();
+    var vendorModule = CarliModules.Vendor;
+
+    var vendorStore = CarliModules.Store( CarliModules.FixtureStore );
+
+    vendorModule.setStore( vendorStore );
+
+    return {
+        list: vendorModule.list,
+        create: vendorModule.create,
+        update: vendorModule.update,
+        load: vendorModule.load
     };
-
-    return service;
 }

@@ -4,7 +4,7 @@ var VendorPage = require('./VendorPage.spec');
 /**
  * These depend on the static JSON as it currently exists. Change to match real fixture data when it is ready..
  */
-describe('The edit vendor screen', function() {
+xdescribe('The edit vendor screen', function() {
     var editVendorPage = new VendorPage();
 
     beforeEach( function(){

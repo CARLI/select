@@ -30,7 +30,7 @@ module.exports = {
      * Browserify will set up a global (window) variable for the package logic files.
      */
     logic_files: {
-        global_var: 'Carli',
+        global_var: 'CARLI',
         js: '../CARLI/CARLI.js',
         build: 'CARLI.js'
     },
