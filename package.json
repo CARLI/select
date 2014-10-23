@@ -1,0 +1,19 @@
+{
+  "name": "carli-select",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:pixotech/carli-select.git"
+  },
+  "author": "carli@pixotech.com",
+  "license": "BSD"
+}
