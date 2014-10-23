@@ -52,11 +52,9 @@ describe('The new vendor screen', function () {
 
     it('should add a new billing contact when the "Add Contact" for billing contacts is clicked', function () {
         element.all(by.tagName('contact-editor')).count().then(function (beforeCount) {
-            console.log('beforeCount=' + beforeCount);
             newVendorPage.addBillingContactLink.click();
 
             var afterCount = element.all(by.tagName('contact-editor')).count().then(function (afterCount) {
-                console.log('afterCount=' + afterCount);
                 expect(afterCount == beforeCount + 1).toBe(true);
             });
         });
