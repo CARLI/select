@@ -13,7 +13,7 @@ module.exports = function(grunt) {
         grunt.task.run(['subdir-exec:CARLI:npm install']);
     });
     grunt.registerTask('bower-install', function() {
-        grunt.task.run(['subdir-exec:browserClient:bower install']);
+        grunt.task.run(['subdir-exec:browserClient:bower --allow-root install']);
     });
 
     grunt.registerTask('install-deps', [
