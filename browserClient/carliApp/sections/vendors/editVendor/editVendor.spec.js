@@ -1,18 +1,11 @@
-var CarliApp = require('../../../CarliApp.spec');
 var VendorPage = require('./VendorPage.spec');
 
 describe('The new vendor screen', function () {
-
-    var carliApp = new CarliApp();
-
-    it('should load the Vendors List screen', function() {
-        carliApp.navBar.vendors.click();
-        element(by.id('new-vendor')).click();
-    
-        //expect( 'to be on the new Vendor screen' )
-    });
-
     var newVendorPage = new VendorPage();
+
+    it('should be routed at /vendor/new', function(){
+        browser.setLocation('/vendor/new');
+    });
 
     it('should have a default name input field', function () {
         expect(newVendorPage.nameInput.isPresent()).toBe(true);
@@ -57,11 +50,9 @@ describe('The new vendor screen', function () {
 
     it('should add a new billing contact when the "Add Contact" for billing contacts is clicked', function () {
         element.all(by.tagName('contact-editor')).count().then(function (beforeCount) {
-            console.log('beforeCount=' + beforeCount);
             newVendorPage.addBillingContactLink.click();
 
             var afterCount = element.all(by.tagName('contact-editor')).count().then(function (afterCount) {
-                console.log('afterCount=' + afterCount);
                 expect(afterCount == beforeCount + 1).toBe(true);
             });
         });
@@ -77,13 +68,8 @@ describe('The new vendor screen', function () {
 
 xdescribe('The edit vendor screen', function () {
 
-    var carliApp = new CarliApp();
-
     it('should load the Vendors List screen', function() {
-        carliApp.navBar.vendors.click();
-        element(by.id('new-vendor')).click();
-
-        //expect( 'to be on the new Vendor screen' )
+        browser.setLocation();
     });
 
     var editVendorPage = new VendorPage(); 

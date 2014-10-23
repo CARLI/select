@@ -1,21 +1,13 @@
-var CarliApp = require('../../CarliApp.spec');
 var StyleGuidePage = function () {
-    this.get = function () {
-        browser.get(devServerUrl + '/styleGuide');
-    };
 };
 
 describe('CARLI Style Guide', function () {
 
-    var carliApp = new CarliApp();
-
-    it('should load the Style Guide screen', function() {
-        carliApp.navBar.styleGuide.click();
-
-        //expect( 'to be on the Style Guide screen' )
-    });
-
     var styleGuidePage = new StyleGuidePage();
+
+    it('should be routed at /styleGuide', function(){
+        browser.setLocation('/styleGuide');
+    });
 
     it('should have a title', function () {
         expect(browser.getTitle()).toEqual('CARLI Select');
