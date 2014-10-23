@@ -16,7 +16,7 @@ module.exports = {
     carliApp_files: {
         js: [ 'carliApp/**/*.js', '!carliApp/**/*.spec.js'],
         jsUnit: ['carliApp/components/**/*.spec.js'],
-        jsE2e: ['carliApp/sections/**/*.spec.js'],
+        jsE2e: ['carliApp/*.spec.js', 'carliApp/sections/**/*.spec.js'],
         jsAll: ['carliApp/**/*.js'],
         index: ['carliApp/index.html'],
         html: ['carliApp/**/*.html', '!carliApp/index.html'],
