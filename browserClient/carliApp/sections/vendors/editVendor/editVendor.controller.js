@@ -1,7 +1,7 @@
 angular.module('carli.sections.vendors.edit')
 .controller('editVendorController', editVendorController);
 
-function editVendorController( $routeParams, vendorService ){
+function editVendorController( $location, $routeParams, vendorService ){
     var vm = this;
 
     vm.vendor = {
@@ -17,6 +17,7 @@ function editVendorController( $routeParams, vendorService ){
 
     vm.saveVendor = function(){
         vendorService.create( vm.vendor );
+        $location.path('/vendor');
     };
 }
 
