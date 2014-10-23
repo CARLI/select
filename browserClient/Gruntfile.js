@@ -536,7 +536,8 @@ module.exports = function ( grunt ) {
      */
     grunt.registerTask( 'serve:jenkins', [
         'build',
-        'connect:serve'
+        'connect:serve',
+        'watch'
     ]);
 
     /**
