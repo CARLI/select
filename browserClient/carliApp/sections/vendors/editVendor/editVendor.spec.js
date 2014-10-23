@@ -1,6 +1,6 @@
 var VendorPage = require('./VendorPage.spec');
 
-describe('The new vendor screen', function () {
+describe('The New Vendor screen', function () {
     var newVendorPage = new VendorPage();
 
     it('should be routed at /vendor/new', function(){
@@ -58,11 +58,52 @@ describe('The new vendor screen', function () {
         });
     });
 
-/*
     it('should save a new Vendor when filling in the form and clicking save', function() {
+        var i, contact, testData;
+        var fillInContact = newVendorPage.fillInContact;
+
+        newVendorPage.nameInput.clear();
         newVendorPage.nameInput.sendKeys( newVendorPage.testVendor.name );
+        expect( newVendorPage.nameInput.getAttribute('value')).toBe( newVendorPage.testVendor.name );
+
+        newVendorPage.websiteInput.sendKeys( newVendorPage.testVendor.website );
+        newVendorPage.commentsInput.sendKeys( newVendorPage.testVendor.comments );
+        newVendorPage.adminModuleInput.sendKeys( newVendorPage.testVendor.adminModule );
+
+        newVendorPage.statusInputs.get(0).click();
+
+        for ( i = 0 ; i < newVendorPage.testVendor.billingContacts.length ; i++ ){
+            newVendorPage.addBillingContactLink.click();
+
+            contact = newVendorPage.getContact('Billing',i);
+            testData = newVendorPage.testVendor.billingContacts[i];
+
+            fillInContact( contact, testData );
+        }
+
+        for ( i = 0 ; i < newVendorPage.testVendor.salesContacts.length ; i++ ){
+            newVendorPage.addSalesContactLink.click();
+
+            contact = newVendorPage.getContact('Sales',i);
+            testData = newVendorPage.testVendor.salesContacts[i];
+
+            fillInContact( contact, testData );
+        }
+
+        for ( i = 0 ; i < newVendorPage.testVendor.technicalContacts.length ; i++ ){
+            newVendorPage.addTechnicalContactLink.click();
+
+            contact = newVendorPage.getContact('Technical',i);
+            testData = newVendorPage.testVendor.technicalContacts[i];
+
+            fillInContact( contact, testData );
+        }
+
+        newVendorPage.addSalesContactLink.click();
+
+        newVendorPage.addTechnicalContactLink.click();
     });
-*/
+
 });
 
 
