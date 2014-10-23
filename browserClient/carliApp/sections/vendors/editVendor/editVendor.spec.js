@@ -59,7 +59,7 @@ describe('The New Vendor screen', function () {
     });
 
     it('should save a new Vendor when filling in the form and clicking save', function() {
-        var i, contact, testData;
+        var i, contact, testData, vendorList;
         var fillInContact = newVendorPage.fillInContact;
 
         newVendorPage.nameInput.clear();
@@ -99,9 +99,17 @@ describe('The New Vendor screen', function () {
             fillInContact( contact, testData );
         }
 
-        newVendorPage.addSalesContactLink.click();
+        newVendorPage.submit.click();
 
-        newVendorPage.addTechnicalContactLink.click();
+        element.all(by.repeater('vendor in vm.vendorList'))
+        .filter( function(el, index) {
+            return el.getText().then(function(text){
+                return text === newVendorPage.testVendor.name;
+            });
+        })
+        .then( function( vendorList ) {
+            expect( vendorList.length ).toBe(1);
+        });
     });
 
 });
