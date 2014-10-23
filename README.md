@@ -12,6 +12,12 @@ See [Getting Started] for instructions to setup the project and start working on
 ## Organization ##
 See [Directory Layout] for a description of the top-level folders in the project.
 
+## Project Wide Tasks ##
+Grunt is used as a task runner at the top level of the project.  The following tasks are available.
+
+* `grunt test`: Run all tests for the project.
+* `grunt install-deps`: Install all npm and bower dependencies for the project.
+
 View the [Full Documentation].
 
 [JIRA]: https://jira.pixotech.com/browse/CARLI
