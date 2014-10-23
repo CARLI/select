@@ -531,6 +531,13 @@ module.exports = function ( grunt ) {
         'connect:serve',
         'watch'
     ]);
+    /*
+     * The `serve:jenkins` task is spawned by jenkins in a container to serve carli.dev.pixotech.com
+     */
+    grunt.registerTask( 'serve:jenkins', [
+        'build',
+        'connect:serve'
+    ]);
 
     /**
      * The `compile` task gets your app ready for deployment by concatenating and

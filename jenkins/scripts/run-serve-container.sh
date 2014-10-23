@@ -8,4 +8,4 @@ docker run \
     --detach=true \
     --workdir=/carli-select/browserClient \
     -p $host_port:8000 \
-    carli-grunt grunt serve
+    carli-grunt grunt serve:jenkins
