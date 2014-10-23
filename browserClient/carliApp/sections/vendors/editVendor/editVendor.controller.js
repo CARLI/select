@@ -14,6 +14,10 @@ function editVendorController( $routeParams, vendorService ){
     if ( vendorId !== 'new' ) {
         vm.vendor = vendorService.getVendor(vendorId);
     }
+
+    vm.saveVendor = function(){
+        vendorService.create( vm.vendor );
+    };
 }
 
 editVendorController.prototype.addContact = function addContact(contactType) {

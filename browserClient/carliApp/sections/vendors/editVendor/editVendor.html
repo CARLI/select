@@ -1,7 +1,7 @@
 <section id="vendors">
     <h1>{{ vm.vendor.name }}</h1>
 
-    <form name="vendorForm">
+    <form name="vendorForm" ng-submit="vm.saveVendor()">
 
         <div>
             <label for="vendorName">Name</label>
