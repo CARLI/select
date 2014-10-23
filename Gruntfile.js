@@ -3,9 +3,9 @@ module.exports = function(grunt) {
     grunt.registerTask('subdir-grunt', subdirGruntTask);
     grunt.registerTask('subdir-exec', subdirExecTask);
 
-    grunt.registerTask('test', function() {
-        grunt.task.run(['subdir-grunt:browserClient:test']);
-        grunt.task.run(['subdir-exec:CARLI:npm test']);
+    grunt.registerTask('test', function(arg) {
+        grunt.task.run(['subdir-grunt:browserClient:test:' + arg]);
+        grunt.task.run(['subdir-exec:CARLI:npm test:' + arg]);
     });
 
     grunt.registerTask('npm-install', function() {
