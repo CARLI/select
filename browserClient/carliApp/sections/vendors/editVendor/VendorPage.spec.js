@@ -7,6 +7,7 @@ var VendorPage = function () {
     this.addBillingContactLink = element(by.id('add-billing-contact'));
     this.addSalesContactLink = element(by.id('add-sales-contact'));
     this.addTechnicalContactLink = element(by.id('add-technical-contact'));
+    this.submit = element(by.id('vendor-submit'));
 
     this.getContact = function getContact( type, index ){
         var contact = element(by.repeater("contact in vm.vendor.contacts | filter:{ contactType: '"+type+"' }").row(index));
