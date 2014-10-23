@@ -30,7 +30,6 @@ var VendorPage = function () {
         website: 'http://www.example.com',
         comments: 'This is a comment',
         adminModule: 'This is an admin module comment',
-        active: true,
         billingContacts: [
             {
                 name: 'Billing Contact 1',
