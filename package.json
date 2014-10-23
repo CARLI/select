@@ -15,5 +15,9 @@
     "url": "git@bitbucket.org:pixotech/carli-select.git"
   },
   "author": "carli@pixotech.com",
-  "license": "BSD"
+  "license": "BSD",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-exec": "^0.4.6"
+  }
 }
