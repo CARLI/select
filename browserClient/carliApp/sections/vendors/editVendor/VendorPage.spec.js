@@ -1,6 +1,3 @@
-var ip = require('ip');
-var devServerUrl = 'http://' + ip.address() + ':8000';
-
 var VendorPage = function () {
     this.nameInput = element(by.model('vm.vendor.name'));
     this.websiteInput = element(by.model('vm.vendor.websiteUrl'));
@@ -10,13 +7,6 @@ var VendorPage = function () {
     this.addBillingContactLink = element(by.id('add-billing-contact'));
     this.addSalesContactLink = element(by.id('add-sales-contact'));
     this.addTechnicalContactLink = element(by.id('add-technical-contact'));
-
-    this.getEditVendorPage = function () {
-        browser.get(devServerUrl + '/vendor/0');
-    };
-    this.getNewVendorPage = function () {
-        browser.get(devServerUrl + '/vendor/new');
-    };
 };
 
 module.exports = VendorPage;
