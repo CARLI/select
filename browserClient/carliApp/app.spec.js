@@ -16,4 +16,9 @@ describe('The CARLI App', function() {
         expect(carliApp.navBar.vendors.getTagName()).toBe('a');
     });
 
+    //This might belong in a file called 'app.dev.spec.js'
+    it('should have a Style Guide link in the navBar', function() {
+        expect(carliApp.navBar.styleGuide.isPresent()).toBe(true);
+        expect(carliApp.navBar.styleGuide.getTagName()).toBe('a');
+    });
 });
