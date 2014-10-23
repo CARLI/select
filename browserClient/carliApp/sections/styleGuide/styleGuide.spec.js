@@ -1,7 +1,4 @@
-
-var ip = require('ip');
-var devServerUrl = 'http://' + ip.address() + ':8000';
-
+var CarliApp = require('../../CarliApp.spec');
 var StyleGuidePage = function () {
     this.get = function () {
         browser.get(devServerUrl + '/styleGuide');
@@ -10,8 +7,15 @@ var StyleGuidePage = function () {
 
 describe('CARLI Style Guide', function () {
 
+    var carliApp = new CarliApp();
+
+    it('should load the Style Guide screen', function() {
+        carliApp.navBar.styleGuide.click();
+
+        //expect( 'to be on the Style Guide screen' )
+    });
+
     var styleGuidePage = new StyleGuidePage();
-    styleGuidePage.get();
 
     it('should have a title', function () {
         expect(browser.getTitle()).toEqual('CARLI Select');
