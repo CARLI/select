@@ -23,5 +23,5 @@ COPY . /carli-select
 EXPOSE 8000
 
 # Install project dependencies
-RUN cd /carli-select/browserClient && npm install && bower --allow-root install
+RUN cd /carli-select/CARLI && npm install && cd /carli-select/browserClient && npm install && bower --allow-root install
 
