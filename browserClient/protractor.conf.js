@@ -9,6 +9,8 @@ exports.config = {
     onPrepare: function() {
         require('jasmine-spec-reporter');
         jasmine.getEnv().addReporter(new jasmine.SpecReporter({displayStacktrace: true}));
+        require('jasmine-reporters');
+        jasmine.getEnv().addReporter(new jasmine.JUnitXmlReporter('../artifacts/test-results', true, true));
     },
     jasmineNodeOpts: {
         silent: true

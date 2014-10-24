@@ -224,7 +224,7 @@ module.exports = function ( grunt ) {
                 browsers: [ 'PhantomJS' ],
                 reporters: [ 'mocha', 'junit' ],
                 junitReporter: {
-                    outputFile: '../artifacts/test-results/karma.xml'
+                    outputFile: '../artifacts/test-results/browserClient-unit.xml'
                 }
             },
             configTemplate: {
