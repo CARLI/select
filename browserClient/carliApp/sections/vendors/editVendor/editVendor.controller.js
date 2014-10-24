@@ -3,17 +3,23 @@ angular.module('carli.sections.vendors.edit')
 
 function editVendorController( $location, $routeParams, vendorService ){
     var vm = this;
-
-    vm.vendor = {
-        name: 'New Vendor',
-        contacts: []
-    };
-
     var vendorId = $routeParams.id;
 
-    if ( vendorId !== 'new' ) {
-        vm.vendor = vendorService.getVendor(vendorId);
+    if ( vendorId === 'new' ) {
+        vm.vendor = {
+            name: 'New Vendor',
+            contacts: []
+        };
+        vm.editable = true;
     }
+    else {
+        vm.vendor = vendorService.load(vendorId);
+        vm.editable = false;
+    }
+
+    vm.toggleEditable = function(){
+        vm.editable = !vm.editable;
+    };
 
     vm.saveVendor = function(){
         vendorService.create( vm.vendor );

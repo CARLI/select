@@ -1,8 +1,10 @@
 <section id="vendors">
     <h1>{{ vm.vendor.name }}</h1>
 
-    <form name="vendorForm" ng-submit="vm.saveVendor()">
+    <div id="vendor-edit" class="btn btn-default" ng-click="vm.toggleEditable()">{{ vm.editable ? 'Disable Editing' : 'Edit' }}</div>
 
+    <form name="vendorForm" ng-submit="vm.saveVendor()">
+      <fieldset ng-disabled="!vm.editable">
         <div>
             <label for="vendorName">Name</label>
             <input type="text" name="vendorName" ng-model="vm.vendor.name">
@@ -52,6 +54,7 @@
             <a href="/vendor">Cancel</a>
             <input id="vendor-submit" type="submit">
         </div>
+      </fieldset>
     </form>
 
 
