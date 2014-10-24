@@ -11,7 +11,7 @@ docker run \
 rc=$?
 
 mkdir -p artifacts/test-results
-docker cp carli-grunt-test:/carli-select/artifacts/test-results/*.xml artifacts/test-results
+docker cp carli-grunt-test:/carli-select/artifacts/test-results artifacts
 
 docker rm carli-grunt-test
 docker stop carli-selenium
