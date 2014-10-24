@@ -70,7 +70,7 @@ describe('The New Vendor screen', function () {
         vendorPage.commentsInput.sendKeys( vendorPage.testVendor.comments );
         vendorPage.adminModuleInput.sendKeys( vendorPage.testVendor.adminModule );
 
-        vendorPage.statusInputs.get(0).click();
+        vendorPage.clickStatusInput(vendorPage.testVendor.isActive); // selects a radio button
 
         for ( i = 0 ; i < vendorPage.testVendor.billingContacts.length ; i++ ){
             vendorPage.addBillingContactLink.click();
@@ -115,27 +115,38 @@ describe('The New Vendor screen', function () {
 });
 
 
-xdescribe('The edit vendor screen', function () {
+describe('The edit vendor screen', function () {
+    var vendorPage = new VendorPage();
 
-    it('should load the Vendors List screen', function() {
-        browser.setLocation();
+    it('should be routed to the edit screen for the test vendor', function () {
+        element.all(by.repeater('vendor in vm.vendorList'))
+            .filter(function (el, index) {
+                return el.getText().then(function (text) {
+                    return text === vendorPage.testVendor.name;
+                });
+            })
+            .then(function (vendorList) {
+                vendorList[0].element(by.tagName('a')).click();
+            });
     });
 
-    var editVendorPage = new VendorPage(); 
-
     it('should have a populated name field', function() {
-        expect(editVendorPage.nameInput.getAttribute('value')).toBe('vendor0');
+        expect(vendorPage.nameInput.getAttribute('value')).toBe(vendorPage.testVendor.name);
     });
 
     it('should have a populated website field', function() {
-        expect(editVendorPage.websiteInput.getAttribute('value')).toBe('http://www.example.com');
+        expect(vendorPage.websiteInput.getAttribute('value')).toBe(vendorPage.testVendor.website);
     });
 
     it('should have a populated comments field', function() {
-        expect(editVendorPage.commentsInput.getAttribute('value')).toBe('This is a comment');
+        expect(vendorPage.commentsInput.getAttribute('value')).toBe(vendorPage.testVendor.comments);
     });
 
     it('should have a populated admin module comment field', function() {
-        expect(editVendorPage.adminModuleInput.getAttribute('value')).toBe('This is an Admin Module comment');
+        expect(vendorPage.adminModuleInput.getAttribute('value')).toBe(vendorPage.testVendor.adminModule);
+    });
+
+    it('should have a correctly selected Vendor Status radio button', function() {
+       expect(vendorPage.getStatusInputActive()).toBe(vendorPage.testVendor.isActive ? 'true' : null);
     });
 });
