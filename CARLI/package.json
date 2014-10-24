@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "test": "mocha"
+    "test": "JUNIT_REPORT_PATH=../artifacts/test-results/CARLI.xml JUNIT_REPORT_STACK=1 mocha --reporter mocha-jenkins-reporter"
   },
   "author": "",
   "dependencies": {
@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "chai": "^1.9.2",
-    "mocha": "^1.21.5"
+    "mocha": "^1.21.5",
+    "mocha-jenkins-reporter": "^0.1.2"
   }
 }
