@@ -222,7 +222,7 @@ module.exports = function ( grunt ) {
             continuous: {
                 singleRun: true,
                 browsers: [ 'PhantomJS' ],
-                reporters: [ 'dots', 'junit' ],
+                reporters: [ 'mocha', 'junit' ],
                 junitReporter: {
                     outputFile: '../artifacts/test-results/karma.xml'
                 }
