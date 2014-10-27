@@ -40,8 +40,13 @@ var VendorPage = function () {
     };
 
     this.fillInContact = function fillInContact( contactElement, contactData ){
+        contactElement.name.clear();
         contactElement.name.sendKeys( contactData.name );
+
+        contactElement.email.clear();
         contactElement.email.sendKeys( contactData.email );
+
+        contactElement.phoneNumber.clear();
         contactElement.phoneNumber.sendKeys( contactData.phoneNumber );
     };
 
