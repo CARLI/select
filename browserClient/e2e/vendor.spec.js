@@ -60,44 +60,8 @@ describe('The New Vendor screen', function () {
 
     it('should save a new Vendor when filling in the form and clicking save', function() {
         var i, contact, testData, vendorList;
-        var fillInContact = vendorPage.fillInContact;
 
-        vendorPage.nameInput.clear();
-        vendorPage.nameInput.sendKeys( vendorPage.testVendor.name );
-        expect( vendorPage.nameInput.getAttribute('value')).toBe( vendorPage.testVendor.name );
-
-        vendorPage.websiteInput.sendKeys( vendorPage.testVendor.website );
-        vendorPage.commentsInput.sendKeys( vendorPage.testVendor.comments );
-        vendorPage.adminModuleInput.sendKeys( vendorPage.testVendor.adminModule );
-
-        vendorPage.clickStatusInput(vendorPage.testVendor.isActive); // selects a radio button
-
-        for ( i = 0 ; i < vendorPage.testVendor.billingContacts.length ; i++ ){
-            vendorPage.addBillingContactLink.click();
-
-            contact = vendorPage.getContact('Billing',i);
-            testData = vendorPage.testVendor.billingContacts[i];
-
-            fillInContact( contact, testData );
-        }
-
-        for ( i = 0 ; i < vendorPage.testVendor.salesContacts.length ; i++ ){
-            vendorPage.addSalesContactLink.click();
-
-            contact = vendorPage.getContact('Sales',i);
-            testData = vendorPage.testVendor.salesContacts[i];
-
-            fillInContact( contact, testData );
-        }
-
-        for ( i = 0 ; i < vendorPage.testVendor.technicalContacts.length ; i++ ){
-            vendorPage.addTechnicalContactLink.click();
-
-            contact = vendorPage.getContact('Technical',i);
-            testData = vendorPage.testVendor.technicalContacts[i];
-
-            fillInContact( contact, testData );
-        }
+        vendorPage.fillInVendor( vendorPage.testVendor );
 
         vendorPage.submit.click();
 
@@ -137,7 +101,7 @@ describe('The edit vendor screen', function () {
     });
 
     it('should have a populated website field', function() {
-        expect(vendorPage.websiteInput.getAttribute('value')).toBe(vendorPage.testVendor.website);
+        expect(vendorPage.websiteInput.getAttribute('value')).toBe(vendorPage.testVendor.websiteUrl);
     });
 
     it('should have a populated comments field', function() {
@@ -152,11 +116,41 @@ describe('The edit vendor screen', function () {
        expect(vendorPage.getStatusInputActive()).toBe(vendorPage.testVendor.isActive ? 'true' : null);
     });
 
+    it('should have correctly filled in Contact fields', function(){
+        var element, contact;
+
+        for ( i = 0 ; i < vendorPage.testVendor.billingContacts.length ; i++ ){
+            element = vendorPage.getContact('Billing', i);
+            contact = vendorPage.testVendor.billingContacts[i];
+            expect(element.name.getAttribute('value')).toBe(contact.name);
+            expect(element.email.getAttribute('value')).toBe(contact.email);
+            expect(element.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
+        }
+
+        for ( i = 0 ; i < vendorPage.testVendor.salesContacts.length ; i++ ){
+            element = vendorPage.getContact('Sales', i);
+            contact = vendorPage.testVendor.salesContacts[i];
+            expect(element.name.getAttribute('value')).toBe(contact.name);
+            expect(element.email.getAttribute('value')).toBe(contact.email);
+            expect(element.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
+        }
+
+        for ( i = 0 ; i < vendorPage.testVendor.technicalContacts.length ; i++ ){
+            element = vendorPage.getContact('Technical', i);
+            contact = vendorPage.testVendor.technicalContacts[i];
+            expect(element.name.getAttribute('value')).toBe(contact.name);
+            expect(element.email.getAttribute('value')).toBe(contact.email);
+            expect(element.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
+        }
+    });
+
     it('should save changes to the vendor when submitting the form', function() {
+
+
+
         vendorPage.editButton.click();
 
-        vendorPage.nameInput.clear();
-        vendorPage.nameInput.sendKeys(vendorPage.testEditVendor.name);
+        vendorPage.fillInVendor( vendorPage.testEditVendor );
 
         vendorPage.submit.click();
 

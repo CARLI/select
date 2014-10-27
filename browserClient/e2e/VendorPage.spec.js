@@ -1,6 +1,4 @@
 var VendorPage = function () {
-    var vp = this;
-
     this.nameInput = element(by.model('vm.vendor.name'));
     this.websiteInput = element(by.model('vm.vendor.websiteUrl'));
     this.commentsInput = element(by.model('vm.vendor.comments'));
@@ -12,30 +10,23 @@ var VendorPage = function () {
     this.submit = element(by.id('vendor-submit'));
     this.editButton = element(by.id('vendor-edit'));
 
-    // TODO: Test isActive is what we set it to (true or false)
-        // TODO: testVendor data doesn't load on the edit screen if isActive = false
-    // TODO: Contacts we add are there
-    // TODO: Use Protractor to make edits to form & submit + confirm edits worked
-    // TODO: Test adding more than one contact
-
     /*
      * Clicks the radio button defined in testVendor
      */
 
     this.clickStatusInput = function clickStatusInput(isActive) {
-        // all is needed to select both radio buttons that have the same ng-model name
-        var radios = vp.statusInputs;
+        var radios = this.statusInputs;
 
-        if (isActive) { // testVendor.isActive = true
+        if (isActive) {
             radios.get(0).click();
-        } else { // = false
+        } else {
             radios.get(1).click();
         }
     };
 
     this.getStatusInputActive = function getStatusInputActive() {
         // returns string 'true' if active is selected -or- NULL if not
-        return vp.statusInputs.get(0).getAttribute('checked');
+        return this.statusInputs.get(0).getAttribute('checked');
     };
 
     this.getContact = function getContact( type, index ){
@@ -54,10 +45,51 @@ var VendorPage = function () {
         contactElement.phoneNumber.sendKeys( contactData.phoneNumber );
     };
 
+    this.fillInVendor = function fillInVendorForm ( vendorObject ){
+
+        this.nameInput.clear();
+        this.nameInput.sendKeys(vendorObject.name);
+        this.websiteInput.clear();
+        this.websiteInput.sendKeys(vendorObject.websiteUrl);
+        this.commentsInput.clear();
+        this.commentsInput.sendKeys(vendorObject.comments);
+        this.adminModuleInput.clear();
+        this.adminModuleInput.sendKeys(vendorObject.adminModule);
+
+        this.clickStatusInput(vendorObject.isActive);
+
+        for ( i = 0 ; i < vendorObject.billingContacts.length ; i++ ){
+            this.addBillingContactLink.click();
+
+            contact = this.getContact('Billing',i);
+            testData = vendorObject.billingContacts[i];
+
+            this.fillInContact( contact, testData );
+        }
+
+        for ( i = 0 ; i < vendorObject.salesContacts.length ; i++ ){
+            this.addSalesContactLink.click();
+
+            contact = this.getContact('Sales',i);
+            testData = vendorObject.salesContacts[i];
+
+            this.fillInContact( contact, testData );
+        }
+
+        for ( i = 0 ; i < vendorObject.technicalContacts.length ; i++ ){
+            this.addTechnicalContactLink.click();
+
+            contact = this.getContact('Technical',i);
+            testData = vendorObject.technicalContacts[i];
+
+            this.fillInContact( contact, testData );
+        }
+    };
+
 
     this.testVendor = {
         name: 'Test Vendor 1',
-        website: 'http://www.example.com',
+        websiteUrl: 'http://www.example.com',
         comments: 'This is a comment',
         adminModule: 'This is an admin module comment',
         isActive: true,
@@ -67,6 +99,11 @@ var VendorPage = function () {
                 email:'billing1@example.com',
                 phoneNumber:'123-4567'
             },
+            {
+                name: 'Billing Contact 2',
+                email:'billing2@example.com',
+                phoneNumber:'890-4567'
+            }
         ],
         salesContacts: [
             {
@@ -85,7 +122,37 @@ var VendorPage = function () {
     };
 
     this.testEditVendor = {
-        name: 'Change Vendor Name'
+        name: 'Change Vendor Name',
+        websiteUrl: 'http://www.example.net',
+        comments: 'This is an edited comment',
+        adminModule: 'This is an edited admin module comment',
+        isActive: true,
+        billingContacts: [
+            {
+                name: 'Billing Contact 1 - Edited',
+                email:'billing1.edit@example.com',
+                phoneNumber:'217-4567'
+            },
+            {
+                name: 'Billing Contact 2 - Edited',
+                email:'billing2.edit@example.com',
+                phoneNumber:'217-4567'
+            }
+        ],
+        salesContacts: [
+            {
+                name: 'Sales Contact 1 - Edited',
+                email:'sales.edit@exmaple.com',
+                phoneNumber:'217-5678'
+            }
+        ],
+        technicalContacts: [
+            {
+                name: 'Technical Contact 1 - Edited',
+                email:'tech.edit@example.com',
+                phoneNumber:'217-6789'
+            }
+        ]
     };
 };
 
