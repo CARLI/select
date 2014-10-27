@@ -22,7 +22,12 @@ function editVendorController( $location, $routeParams, vendorService ){
     };
 
     vm.saveVendor = function(){
-        vendorService.create( vm.vendor );
+        if ( vendorId !== 'new' ){
+            vendorService.update( vm.vendor );
+        }
+        else {
+            vendorService.create( vm.vendor );
+        }
         $location.path('/vendor');
     };
 }
