@@ -49,7 +49,7 @@ function editVendorController( $location, $routeParams, vendorService ) {
 
     function deleteContact(contact) {
         var contactIndex = vm.vendor.contacts.indexOf(contact);
-        if (contactIndex > 0) {
+        if (contactIndex >= 0) {
             vm.vendor.contacts.splice(contactIndex, 1);
         }
     }
