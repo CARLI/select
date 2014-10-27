@@ -119,6 +119,8 @@ describe('The edit vendor screen', function () {
     var vendorPage = new VendorPage();
 
     it('should be routed to the edit screen for the test vendor', function () {
+        browser.setLocation('/vendor');
+
         element.all(by.repeater('vendor in vm.vendorList'))
             .filter(function (el, index) {
                 return el.getText().then(function (text) {
@@ -148,5 +150,23 @@ describe('The edit vendor screen', function () {
 
     it('should have a correctly selected Vendor Status radio button', function() {
        expect(vendorPage.getStatusInputActive()).toBe(vendorPage.testVendor.isActive ? 'true' : null);
+    });
+
+    it('should save changes to the vendor when submitting the form', function() {
+        vendorPage.nameInput.sendKeys(vendorPage.testEditVendor.name);
+
+        vendorPage.submit.click();
+
+        element.all(by.repeater('vendor in vm.vendorList'))
+            .filter(function (el, index) {
+                return el.getText().then(function (text) {
+                    return text === vendorPage.testEditVendor.name;
+                });
+            })
+            .then(function (vendorList) {
+                vendorList[0].element(by.tagName('a')).click();
+            });
+
+        expect(vendorPage.nameInput.getAttribute('value')).toBe(vendorPage.testEditVendor.name);
     });
 });

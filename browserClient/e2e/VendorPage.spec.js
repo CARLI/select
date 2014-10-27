@@ -82,6 +82,10 @@ var VendorPage = function () {
             }
         ]
     };
+
+    this.testEditVendor = {
+        name: 'Change Vendor Name'
+    };
 };
 
 module.exports = VendorPage;
