@@ -153,6 +153,9 @@ describe('The edit vendor screen', function () {
     });
 
     it('should save changes to the vendor when submitting the form', function() {
+        vendorPage.editButton.click();
+
+        vendorPage.nameInput.clear();
         vendorPage.nameInput.sendKeys(vendorPage.testEditVendor.name);
 
         vendorPage.submit.click();
@@ -164,9 +167,11 @@ describe('The edit vendor screen', function () {
                 });
             })
             .then(function (vendorList) {
+                expect( vendorList.length ).toBe(1);
                 vendorList[0].element(by.tagName('a')).click();
             });
 
         expect(vendorPage.nameInput.getAttribute('value')).toBe(vendorPage.testEditVendor.name);
     });
+
 });

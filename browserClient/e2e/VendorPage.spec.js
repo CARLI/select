@@ -10,6 +10,7 @@ var VendorPage = function () {
     this.addSalesContactLink = element(by.id('add-sales-contact'));
     this.addTechnicalContactLink = element(by.id('add-technical-contact'));
     this.submit = element(by.id('vendor-submit'));
+    this.editButton = element(by.id('vendor-edit'));
 
     // TODO: Test isActive is what we set it to (true or false)
         // TODO: testVendor data doesn't load on the edit screen if isActive = false
