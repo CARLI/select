@@ -10,7 +10,7 @@ var chai   = require( 'chai' )
   * Valid data
   * Invalid data
  */
-function test( entityTypeName, validData ) {
+function test( entityTypeName, validData, invalidData ) {
 
     var Entity = require('../../Entity/'+entityTypeName );
 
@@ -80,7 +80,7 @@ function test( entityTypeName, validData ) {
 
             it( 'should fail on an invalid schema', function() {
                 function badEntitySchema() {
-                  Entity.create( {} );
+                  Entity.create( invalidData() );
                 };
                 expect( badEntitySchema ).to.throw( 'Missing required property: name' );
             } );
