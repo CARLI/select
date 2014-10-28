@@ -12,13 +12,9 @@ body {
     padding: 0;
 }
 
-.layout {
-  width: $page_content_width + $page_margin + $page_margin;
-}
-
 main {
-  width: $page_content_width;
-  margin: 0 auto;
+  min-width: $page_content_width;
+  margin: 0 $page_margin;
 }
 
 $button_padding: 10px;
