@@ -1,6 +1,6 @@
 var uuid  = require( 'node-uuid' )
   , tv4   = require( 'tv4' )
-  , schema = require( '../schemas/vendor.json' )
+  , schema = require( '../../schemas/vendor.json' )
 ;
 
 var dataStore;
