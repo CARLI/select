@@ -1,4 +1,8 @@
 var test = require( './Entity/EntityInterface.spec' ) 
 ;
 
-test.run('Vendor');
+function validVendorData() {
+  return { name: 'foo' };
+};
+
+test.run('Vendor', validVendorData);

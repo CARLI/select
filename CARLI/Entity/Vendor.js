@@ -4,6 +4,8 @@ var uuid  = require( 'node-uuid' )
 ;
 
 var dataStore;
+var type = 'Vendor';
+
 function throwIfDataIsEmpty ( data ) {
     if ( !data ){
         throw new Error( 'Data Required' );
@@ -40,7 +42,7 @@ module.exports = {
         validateCreateData( data );
 
         data.id = data.id || uuid.v4(),
-        data.type = 'vendor';
+        data.type = type;
 
         dataStore.save( data );
         return _cloneData( data );
@@ -52,9 +54,9 @@ module.exports = {
             return _cloneData( data );
         };
     },
-    
+
     list: function() {
-      return dataStore.list( 'vendor' );
+      return dataStore.list( type );
     },
 
     load: function( id ){
@@ -62,10 +64,10 @@ module.exports = {
             throw new Error('Id Required');
         }
         try {
-            return dataStore.get( { id: id, type: 'vendor' } );
+            return dataStore.get( { id: id, type: type } );
         }
         catch( e ) {
             return false;
-        } 
+        }
     }
 };

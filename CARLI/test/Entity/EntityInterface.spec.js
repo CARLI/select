@@ -10,15 +10,11 @@ var chai   = require( 'chai' )
   * Valid data
   * Invalid data
  */
-function test( entityTypeName ) {
+function test( entityTypeName, validData ) {
 
     var Entity = require('../../Entity/'+entityTypeName );
 
     describe( entityTypeName, function() {
-
-        function validVendorData() {
-          return { name: 'foo' };
-        };
 
         it( 'should be a module', function() {
             expect(Entity).to.be.an('Object');
@@ -34,7 +30,7 @@ function test( entityTypeName ) {
             expect(Entity.create).to.be.a('function');
         } );
 
-        describe( 'Vendor.create', function() {
+        describe( entityTypeName + '.create', function() {
 
             it( 'should fail without data', function() {
                 function badSaveNoData(){
@@ -44,24 +40,24 @@ function test( entityTypeName ) {
             } );
 
             it( 'should return an object with an id', function() {
-                expect( Entity.create( validVendorData() ) ).to.be.an('object').and.have.property('id');
+                expect( Entity.create( validData() ) ).to.be.an('object').and.have.property('id');
             } );
 
-            it( 'should return an object with type of "vendor"', function() {
-                expect( Entity.create( validVendorData() ) ).to.have.property('type').to.equal('vendor');
+            it( 'should return an object with type of "'+ entityTypeName +'"', function() {
+                expect( Entity.create( validData() ) ).to.have.property('type').to.equal(entityTypeName);
             } );
 
             it( 'should use a new id for new objects', function() {
-                var vendor1 = Entity.create( validVendorData() );
-                var vendor2 = Entity.create( validVendorData() );
-                expect( vendor1.id ).to.not.equal( vendor2.id );;
+                var entity1 = Entity.create( validData() );
+                var entity2 = Entity.create( validData() );
+                expect( entity1.id ).to.not.equal( entity2.id );;
             } );
 
             it( 'should use an id if provided', function() {
-                var vendorData = validVendorData();
-                vendorData.id = 'foo';
-                var vendor = Entity.create( vendorData );
-                expect( vendor.id ).to.equal('foo');
+                var entityData = validData();
+                entityData.id = 'foo';
+                var entity = Entity.create( entityData );
+                expect( entity.id ).to.equal('foo');
             } );
 
         } );
@@ -70,7 +66,7 @@ function test( entityTypeName ) {
             expect(Entity.load).to.be.a('function');
         } );
 
-        describe( 'Vendor.load', function() {
+        describe( entityTypeName + '.load', function() {
             it( 'should fail if no id string is provided', function() {
                 function badLoadNoId() {
                     Entity.load();
@@ -83,24 +79,24 @@ function test( entityTypeName ) {
             } );
 
             it( 'should fail on an invalid schema', function() {
-                function badVendorSchema() {
+                function badEntitySchema() {
                   Entity.create( {} );
                 };
-                expect( badVendorSchema ).to.throw( 'Missing required property: name' );
+                expect( badEntitySchema ).to.throw( 'Missing required property: name' );
             } );
 
             it( 'should return an object', function() {
-                var vendor = Entity.create( validVendorData() );
-                expect( Entity.load( vendor.id ) ).to.be.an('object');
+                var entity = Entity.create( validData() );
+                expect( Entity.load( entity.id ) ).to.be.an('object');
             } );
 
             it( 'should return the object that was created', function() {
-                var vendor_data = validVendorData();
-                vendor_data.id = 'thingy';
-                vendor_data.foo = 'bar'; 
-                var vendor = Entity.create( vendor_data );
-                vendor_data.type = 'vendor';
-                expect( Entity.load( 'thingy' ) ).deep.equal( vendor_data );
+                var entity_data = validData();
+                entity_data.id = 'thingy';
+                entity_data.foo = 'bar';
+                var entity = Entity.create( entity_data );
+                entity_data.type = entityTypeName;
+                expect( Entity.load( 'thingy' ) ).deep.equal( entity_data );
             } );
 
         } );
@@ -110,7 +106,7 @@ function test( entityTypeName ) {
             expect(Entity.update).to.be.a('function');
         } );
 
-        describe( 'Vendor.update', function(){
+        describe( entityTypeName + '.update', function(){
             it( 'should fail without data', function(){
                 function badSaveNoData(){
                     Entity.update();
@@ -126,35 +122,35 @@ function test( entityTypeName ) {
             } );
 
             it( "shouldn't have a false positive because of update with object reference bugs", function() {
-                var vendor_data = validVendorData();
-                vendor_data.foo = 'bar';
-                var vendor = Entity.create( vendor_data );
-                vendor.foo = 'new value';
-                Entity.update( vendor );
-                var storedVendor = Entity.load( vendor.id );
-                vendor.foo = 'garbage';
-                expect( storedVendor ).to.not.deep.equal( vendor );
+                var entity_data = validData();
+                entity_data.foo = 'bar';
+                var entity = Entity.create( entity_data );
+                entity.foo = 'new value';
+                Entity.update( entity );
+                var storedEntity = Entity.load( entity.id );
+                entity.foo = 'garbage';
+                expect( storedEntity ).to.not.deep.equal( entity );
             } );
 
             it( 'should update properties of a previously saved object', function(){
-                var vendor_data = validVendorData();
-                vendor_data.foo = 'bar';
-                var vendor = Entity.create( vendor_data );
-                vendor.foo = 'new value';
-                Entity.update( vendor );
-                expect( Entity.load( vendor.id ) ).to.deep.equal( vendor );
+                var entity_data = validData();
+                entity_data.foo = 'bar';
+                var entity = Entity.create( entity_data );
+                entity.foo = 'new value';
+                Entity.update( entity );
+                expect( Entity.load( entity.id ) ).to.deep.equal( entity );
             } );
 
             it( 'should fail on update with invalid schema', function(){
-                var vendor_data = validVendorData();
-                vendor_data.foo = 'bar';
-                var vendor = Entity.create( vendor_data );
-                vendor.foo = 'new value';
-                delete vendor.name;
-                function updateBadVendor() {
-                  Entity.update( vendor );
+                var entity_data = validData();
+                entity_data.foo = 'bar';
+                var entity = Entity.create( entity_data );
+                entity.foo = 'new value';
+                delete entity.name;
+                function updateBadEntity() {
+                  Entity.update( entity );
                 }
-                expect( updateBadVendor ).to.throw( 'Missing required property: name' );
+                expect( updateBadEntity ).to.throw( 'Missing required property: name' );
             } );
 
         } );
@@ -163,7 +159,7 @@ function test( entityTypeName ) {
             expect(Entity.list).to.be.a('function');
         } );
 
-        describe( 'Vendor.list', function(){
+        describe( entityTypeName + '.list', function(){
             it( 'should return an array', function() {
                 expect( Entity.list() ).to.be.an('Array');
             } );
@@ -176,7 +172,7 @@ function test( entityTypeName ) {
         } );
 
     } );
-    
+
 }
 
 module.exports = {
