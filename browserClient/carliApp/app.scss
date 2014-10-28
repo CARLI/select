@@ -1,4 +1,5 @@
 @import url(http://fonts.googleapis.com/css?family=Dosis:600|Merriweather:300,700,400italic);
+@import "variables";
 
 * {
     box-sizing: border-box;
@@ -10,6 +11,34 @@ body {
     padding: 0;
 }
 
-main {
+.layout {
+  width: $page_content_width + $page_margin + $page_margin;
+}
 
+main {
+  width: $page_content_width;
+  margin: 0 auto;
+}
+
+$button_padding: 10px;
+
+.btn {
+  font-family: 'Dosis', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  color: $orange;
+  text-decoration: none;
+  text-transform: uppercase;
+  border: 1px solid $light_gray;
+  padding: $button_padding;
+  text-align: center;
+  height: 40px;
+  display: inline-block;
+
+  span {
+    margin: 10px 0px 10px 10px;
+    font-size: 22px;
+    vertical-align: bottom;
+    line-height: 0px;
+  }
 }

@@ -10,11 +10,13 @@
     <body>
         <header carli-header></header>
         <nav nav-bar></nav>
-        <main ng-view></main>
+        <div class="layout">
+            <main ng-view></main>
 
-        <!-- compiled JavaScript -->
-        <% scripts.forEach( function ( file ) { %>
-            <script type="text/javascript" src="/<%= file %>"></script>
-        <% }); %>
+            <!-- compiled JavaScript -->
+            <% scripts.forEach( function ( file ) { %>
+                <script type="text/javascript" src="/<%= file %>"></script>
+            <% }); %>
+        </div>
     </body>
 </html>
