@@ -13,10 +13,10 @@
         <div class="layout">
             <main ng-view></main>
 
-            <!-- compiled JavaScript -->
-            <% scripts.forEach( function ( file ) { %>
-                <script type="text/javascript" src="/<%= file %>"></script>
-            <% }); %>
         </div>
+        <!-- compiled JavaScript -->
+        <% scripts.forEach( function ( file ) { %>
+            <script type="text/javascript" src="/<%= file %>"></script>
+        <% }); %>
     </body>
 </html>
