@@ -19,10 +19,11 @@ nav[nav-bar] {
     background-attachment: $bg_color;
 
     ul {
+        display: table;
         list-style: outside none none;
         margin: 0;
-        margin-left: $header_background_margin_left;
-        display: table;
+        margin-left: $page_gutter;
+        padding: 0;
     }
 
     li:first-child {

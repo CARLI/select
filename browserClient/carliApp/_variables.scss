@@ -15,13 +15,11 @@ $violet: #663284;
 $dark_violet: #834ba2;
 $very_dark_violet: #411a57;
 
-$header_background_margin_left: 82px;
+$page_gutter: 124px;
+$page_content_width: 960px;
 
 /** TODO: These definitions should be moved to the header component and user menu components .scss files */
 
 $user_menu_bg_color: $dark_magenta;
 $user_menu_fg_color: $soft_magenta;
-
-$page_margin: 82px;
-$page_content_width: 960px;
 

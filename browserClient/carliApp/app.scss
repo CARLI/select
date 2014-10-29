@@ -15,8 +15,14 @@ body {
 }
 
 main {
-    min-width: $page_content_width;
-    margin: 0 $page_margin;
+    // min-width: $page_content_width;
+    margin: 0;
+}
+
+.container,
+.container-fluid {
+    padding-left: $page_gutter;
+    padding-right: $page_gutter;
 }
 
 h1 {

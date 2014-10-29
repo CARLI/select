@@ -5,7 +5,6 @@ $fg_color: $white;
 $height: 110px;
 $logo_width: 243px;
 $logo_height: 59px;
-$logo_align_with_bg_image: 42px;
 
 header.carli-header {
     color: $fg_color;
@@ -16,7 +15,7 @@ header.carli-header {
 
     .carli-logo {
         margin-top: 20px;
-        margin-left: $header_background_margin_left + $logo_align_with_bg_image;
+        margin-left: $page_gutter;
         width: $logo_width;
         height: $logo_height;
         background-image: url('/images/carli-logo.png');

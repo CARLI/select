@@ -46,7 +46,7 @@ $border: 1px solid $light_gray;
             }
 
             .col {
-                @include make-md-column(4, 0);
+                @include make-sm-column(4, 0);
                 border-left: $border;
                 padding: 1rem;
 
