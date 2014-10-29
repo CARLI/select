@@ -1,8 +1,11 @@
 $border: 1px solid $light_gray;
+$top-border: 3px solid $very_dark_gray;
+$zebra-table-color: $very_light_gray;
+$icon-color: $orange;
 
 #vendors {
     
-    .header {
+    .section-header {
         @include flexbox;
         @include vendor-prefix('align-items', 'center');
 
@@ -22,12 +25,58 @@ $border: 1px solid $light_gray;
 
     .controls {
         @include make-row(0);
+        border-top: $top-border;
+        background: $zebra-table-color;
 
-        .filter-controls {
+        .filter-input-container {
+            @include make-sm-column(4);
+            border-left: $border;
+            font-size: 1.28rem;
+            line-height: 1.77;
+            padding-left: .57rem;
+
+            $filter-input-margin: .57rem;
+            .filter-input {
+                border: $border;
+                padding: 0 1.75em 0 $filter-input-margin;
+                margin: $filter-input-margin 0;
+                width: 100%;
+            }
+
+            &:after {
+                color: $icon-color; 
+                content: "\f002";
+                font-family: "FontAwesome";
+                position: absolute;
+                top: $filter-input-margin;
+                right: $filter-input-margin;
+            }
+        }
+
+        .filter-by-active-container {
+            @include make-sm-column(8);
+            border-right: $border;
+            .filter-by-active {
+                @include font-size(14);
+                line-height: 2;
+                margin: .57rem;
+                menuitem {
+                    margin-right: 1.5em;
+                }
+            }
         }
     }
 
     ul.vendor-list {
+        li.column-headers {
+            .col, .col:first-child {
+                color: $very_dark_gray;
+                font-family: 'Verdana';
+                font-weight: 700;
+                @include font-size(11);
+                padding: .5rem 1rem;
+            }
+        }
         list-style: none inside;
         padding: 0;
         li {
@@ -37,8 +86,8 @@ $border: 1px solid $light_gray;
             font-family: 'Verdana' sans-serif;
             @include font-size(15);
 
-            &:nth-child(2n+0) {
-                background: $very_light_gray;    
+            &:nth-child(2n+1) {
+                background: $zebra-table-color;    
             }
             
             &:last-child {
@@ -55,7 +104,6 @@ $border: 1px solid $light_gray;
                     font-weight: 700;
                     border-left: 0;
                 }
-                
             }
 
             .col, .col a {

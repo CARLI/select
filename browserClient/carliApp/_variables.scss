@@ -18,6 +18,9 @@ $very_dark_violet: #411a57;
 $page_gutter: 124px;
 $page_content_width: 960px;
 
+/** Bootstrap overrides */
+$grid-gutter-width: 0;
+
 /** TODO: These definitions should be moved to the header component and user menu components .scss files */
 
 $user_menu_bg_color: $dark_magenta;
