@@ -4,7 +4,7 @@
   }
 }
 
-@mixin font_size ($pix) {
+@mixin font-size ($pix) {
     font-size: #{$pix / 14}rem;
 }
 

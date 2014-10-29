@@ -21,7 +21,7 @@ main {
 
 h1 {
     font-family: 'Merriweather';
-    @include font_size(24);
+    @include font-size(24);
     font-weight: 700;
 }
 
@@ -30,7 +30,7 @@ $button_padding: 10px;
 .carli-button {
     font-family: 'Dosis', sans-serif;
     font-weight: 600;
-    @include font_size(15);
+    @include font-size(15);
     color: $orange;
     text-decoration: none;
     text-transform: uppercase;
@@ -42,7 +42,7 @@ $button_padding: 10px;
 
     span {
         margin: 10px 0px 10px 10px;
-        @include font_size(22);
+        @include font-size(22);
         vertical-align: bottom;
         line-height: 0px;
     }
