@@ -1,0 +1,31 @@
+{
+    "$schema": "json-schema.org/draft-04/schema",
+    "title": "OutstandingBalance",
+    "type": "object",
+    "properties": {
+        "id": {
+            "description": "Unique identifier for the Outstanding Balance record",
+            "type": "string"
+        },
+        "name": {
+            "description": "Name of Library",
+            "type": "string"
+        },
+        "amount": {
+            "description": "Amount of balance owed",
+            "type": "integer"
+        },
+        "cycleType": {
+            "description": "Fiscal Year, Calendar Year, etc.",
+            "$ref": "./cycle-type.json"
+        },
+        "year": {
+            "description": "Year balance is owed",
+            "type": "string"
+        },
+        "comment": {
+            "description": "Comment for outstanding balance",
+            "type": "string"
+        }
+    }
+}

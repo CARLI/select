@@ -17,8 +17,24 @@
             "oneOf": [
                 "Billing",
                 "Sales",
-                "Technical"
+                "Technical",
+                "Director",
+                "E-Resources Liaison",
+                "Other",
+                "Notification Only"
             ]
+        },
+        "includeInBilling": {
+            "description": "Whether to include this user when sending billing messages",
+            "type": "boolean"
+        },
+        "canViewProducts": {
+            "description": "Whether user can view products",
+            "type": "boolean"
+        },
+        "canMakeSelections": {
+            "description": "Whether user can make selections",
+            "type": "boolean"
         }
     },
     "required": [ "name", "email", "contactType" ]

@@ -1,0 +1,62 @@
+{
+    "$schema": "json-schema.org/draft-04/schema",
+    "title": "Library",
+    "type": "object",
+    "properties": {
+        "id": {
+            "description": "Unique identifier for the Library record",
+            "type": "string"
+        },
+        "name": {
+            "description": "Name of Library",
+            "type": "string"
+        },
+        "fte": {
+            "description": "Full-time Enrollment of Library",
+            "type": "integer"
+        },
+        "institutionYears": {
+            "description": "2 or 4 years",
+            "$ref": "./institution-years.json"
+        },
+        "institutionType": {
+            "description": "public or private",
+            "$ref": "./institution-type.json"
+        },
+        "ipAddresses": {
+            "description": "List of IP Addresses",
+            "type": "array",
+            "items": { "type": "string"}
+        },
+        "membershipLevel": {
+            "description": "Governing, Affiliate, or Non-Member",
+            "$ref": "./membership-level.json"
+        },
+        "isIshareMember": {
+            "type": "boolean"
+        },
+        "gar": {
+            "description": "General Account Receivable",
+            "type": "string"
+        },
+        "isActive": {
+            "description": "Is this library active?",
+            "type": "boolean"
+        },
+        "outstandingBalances": {
+            "description": "List of outstanding balances",
+            "type": "array",
+            "items":  { "$ref": "./institution-type.json" }
+        },
+        "products": {
+            "description": "Products offered by this library",
+            "type": "array",
+            "items": { "$ref": "./product.json" }
+        },
+        "contacts": {
+            "description": "List of library contacts",
+            "type": "array",
+            "items": { "$ref": "./contact.json" }
+        }
+    }
+}

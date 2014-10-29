@@ -1,0 +1,6 @@
+{
+    "type": "string",
+    "oneOf": [
+        "Private", "Public", "Other"
+    ]
+}
