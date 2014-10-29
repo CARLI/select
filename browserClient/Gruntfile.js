@@ -292,7 +292,7 @@ module.exports = function ( grunt ) {
         sass: {
             build: {
                 files: [{
-                    src: ['<%= carliApp_files.css %>', '<%= vendor_files.css %>'],
+                    src: ['<%= carliApp_files.scss %>', '<%= vendor_files.css %>'],
                     dest: '<%= build_dir %>/css/',
                     ext: '.css',
                     expand: true,
@@ -373,8 +373,8 @@ module.exports = function ( grunt ) {
             },
 
             css: {
-                files: ['<%= carliApp_files.css %>'],
-                tasks: ['newer:sass:build']
+                files: ['<%= carliApp_files.watchSass %>'],
+                tasks: ['sass:build']
             }
         },
 

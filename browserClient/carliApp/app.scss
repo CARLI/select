@@ -11,7 +11,7 @@ html,
 body {
     margin: 0;
     padding: 0;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 main {
@@ -27,7 +27,7 @@ h1 {
 
 $button_padding: 10px;
 
-.btn {
+.carli-button {
     font-family: 'Dosis', sans-serif;
     font-weight: 600;
     @include font_size(15);
@@ -47,3 +47,8 @@ $button_padding: 10px;
         line-height: 0px;
     }
 }
+
+@import "carliApp/components/carliHeader/carliHeader";
+@import "carliApp/components/filterByActive/filterByActive";
+@import "carliApp/components/navBar/navBar";
+@import "carliApp/sections/vendors/vendors";

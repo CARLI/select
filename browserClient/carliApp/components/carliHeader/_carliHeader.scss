@@ -1,5 +1,3 @@
-@import "../../variables";
-@import "../../mixins";
 
 $bg_color: $moderate_magenta;
 $fg_color: $white;
@@ -11,7 +9,7 @@ $logo_align_with_bg_image: 42px;
 
 header.carli-header {
     color: $fg_color;
-    background-color: $moderate_magenta;
+    background-color: $bg_color;
     background-image: url('/images/header-background.png');
     background-repeat: no-repeat;
     height: 110px;
