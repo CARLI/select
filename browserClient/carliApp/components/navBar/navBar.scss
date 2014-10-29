@@ -1,4 +1,5 @@
 @import "../../variables";
+@import "../../mixins";
 
 $border_color: $light_gray;
 $active_fg_color: $orange;
@@ -13,7 +14,7 @@ nav[nav-bar] {
     border-bottom: $border;
     font-family: 'Dosis', sans-serif;
     font-weight: 600;
-    font-size: 15px;
+    @include font_size(15);
     line-height: 18px;
     text-transform: uppercase;
     height: $height;
