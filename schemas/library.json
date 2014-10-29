@@ -46,7 +46,7 @@
         "outstandingBalances": {
             "description": "List of outstanding balances",
             "type": "array",
-            "items":  { "$ref": "./institution-type.json" }
+            "items":  { "$ref": "./outstanding-balances.json" }
         },
         "products": {
             "description": "Products offered by this library",
