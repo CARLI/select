@@ -10,6 +10,10 @@ describe('The CarliModules Service', function(){
         expect(CarliModules.Vendor).to.be.an('Object');
     }));
 
+    it( 'should export the Library module', inject( function(CarliModules) {
+        expect(CarliModules.Library).to.be.an('Object');
+    }));
+
     it( 'should export the Store interface', inject( function(CarliModules) {
         expect(CarliModules.Store).to.be.a('Function');
     }));
