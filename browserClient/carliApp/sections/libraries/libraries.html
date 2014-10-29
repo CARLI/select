@@ -1,0 +1,13 @@
+<section id="libraries">
+    <h1>Libraries</h1>
+
+    <div class="pull-right">
+        <a id="new-library" href="/library/new" class="btn">New Library <span class="fa fa-plus-circle"></span> </a>
+    </div>
+    <input type="text" ng-model="filterText"><br/>
+    <filter-by-active-toggle entity-label="'libraries'" active-filter-state="vm.activeFilterState">
+        <div ng-repeat="library in vm.libraryList | filterByActive:vm.activeFilterState | filter:filterText">
+            <a href="library/{{ library.id }}">{{ library.name }}</a>
+        </div>
+    </filter-by-active-toggle>
+</section>

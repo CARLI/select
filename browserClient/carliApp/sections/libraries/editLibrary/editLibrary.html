@@ -1,0 +1,62 @@
+<section id="libraries">
+    <h1>{{ vm.library.name }}</h1>
+
+    <div id="library-edit" class="btn btn-default" ng-click="vm.toggleEditable()">{{ vm.editable ? 'Disable Editing' : 'Edit' }}</div>
+
+    <form name="libraryForm" ng-submit="vm.saveLibrary()">
+      <fieldset ng-disabled="!vm.editable">
+        <div>
+            <label for="libraryName">Name</label>
+            <input type="text" name="libraryName" ng-model="vm.library.name">
+        </div>
+        <div>
+            <label for="libraryWebsite">Website</label>
+            <input type="text" name="libraryWebsite" ng-model="vm.library.websiteUrl">
+        </div>
+        <div>
+            <label for="libraryComments">Comments</label>
+            <textarea name="libraryComments" ng-model="vm.library.comments"></textarea>
+        </div>
+        <div>
+            <label for="libraryAdminModule">Admin Module</label>
+            <textarea name="libraryAdminModule" ng-model="vm.library.adminModule"></textarea>
+        </div>
+        <div>
+            <label for="libraryStatus">Library Status</label>
+            <input type="radio" name="libraryStatus" ng-value="true" ng-model="vm.library.isActive"> Active
+            <input type="radio" name="libraryStatus" ng-value="false" ng-model="vm.library.isActive"> Inactive
+        </div>
+
+        <h2>Contacts</h2>
+
+        <h3>Billing</h3>
+        <div ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Billing' }">
+            <contact-editor contact="contact"></contact-editor>
+            <a ng-click="vm.deleteContact(contact)">Delete</a>
+        </div>
+        <a id="add-billing-contact" ng-click="vm.addContact('Billing')">Add Contact</a>
+
+        <h3>Sales</h3>
+        <div ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Sales' }">
+            <contact-editor contact="contact"></contact-editor>
+            <a ng-click="vm.deleteContact(contact)">Delete</a>
+        </div>
+        <a id="add-sales-contact" ng-click="vm.addContact('Sales')">Add Contact</a>
+
+        <h3>Technical</h3>
+        <div ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Technical' }">
+            <contact-editor contact="contact"></contact-editor>
+            <a ng-click="vm.deleteContact(contact)">Delete</a>
+        </div>
+        <a id="add-technical-contact" ng-click="vm.addContact('Technical')">Add Contact</a>
+
+        <div>
+            <a href="/library">Cancel</a>
+            <input id="library-submit" type="submit">
+        </div>
+      </fieldset>
+    </form>
+
+
+    <hr><pre>{{ vm.library }}</pre>
+</section>
