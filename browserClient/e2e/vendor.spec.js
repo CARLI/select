@@ -48,22 +48,14 @@ describe('The New Vendor screen', function () {
         expect(vendorPage.addTechnicalContactLink.getTagName()).toBe('a');
     });
 
-    it('should add a new billing contact when the "Add Contact" for billing contacts is clicked', function () {
-        element.all(by.tagName('contact-editor')).count().then(function (beforeCount) {
-            vendorPage.addBillingContactLink.click();
-
-            var afterCount = element.all(by.tagName('contact-editor')).count().then(function (afterCount) {
-                expect(afterCount == beforeCount + 1).toBe(true);
-            });
-        });
-    });
-
     it('should save a new Vendor when filling in the form and clicking save', function() {
         var i, contact, testData, vendorList;
 
         vendorPage.fillInVendor( vendorPage.testVendor );
 
         vendorPage.submit.click();
+
+        vendorPage.listFilterShowAll.click();
 
         element.all(by.repeater('vendor in vm.vendorList'))
         .filter( function(el, index) {
@@ -79,11 +71,14 @@ describe('The New Vendor screen', function () {
 });
 
 
-describe('The edit vendor screen', function () {
+describe('Viewing an existing Vendor', function () {
     var vendorPage = new VendorPage();
 
-    it('should be routed to the edit screen for the test vendor', function () {
-        browser.setLocation('/vendor');
+    it('should be routed to the screen for the test vendor', function () {
+
+        //Don't need to call these as long as the previous test left us on the list page with 'All' showing
+        //browser.setLocation('/vendor');
+        //vendorPage.listFilterShowAll.click();
 
         element.all(by.repeater('vendor in vm.vendorList'))
             .filter(function (el, index) {
@@ -143,15 +138,33 @@ describe('The edit vendor screen', function () {
             expect(contactElement.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
         }
     });
+});
 
-    it('should save changes to the vendor when submitting the form', function() {
-        var contactElement, contact;
+describe('Making changes to an existing Vendor', function(){
+    var vendorPage = new VendorPage();
+
+    it('should change the entry on the Vendor list screen when changing the name', function () {
+        browser.setLocation('/vendor');
+
+        vendorPage.listFilterShowAll.click();
+
+        element.all(by.repeater('vendor in vm.vendorList'))
+            .filter(function (el, index) {
+                return el.getText().then(function (text) {
+                    return text === vendorPage.testVendor.name;
+                });
+            })
+            .then(function (vendorList) {
+                vendorList[0].element(by.tagName('a')).click();
+            });
 
         vendorPage.editButton.click();
 
         vendorPage.fillInVendor( vendorPage.testEditVendor );
 
         vendorPage.submit.click();
+
+        vendorPage.listFilterShowAll.click();
 
         element.all(by.repeater('vendor in vm.vendorList'))
             .filter(function (el, index) {
@@ -163,12 +176,30 @@ describe('The edit vendor screen', function () {
                 expect( vendorList.length ).toBe(1);
                 vendorList[0].element(by.tagName('a')).click();
             });
+    });
 
+    it('should save changes to the name field', function() {
         expect(vendorPage.nameInput.getAttribute('value')).toBe(vendorPage.testEditVendor.name);
+    });
+
+    it('should save changes to the websiteUrl field', function() {
         expect(vendorPage.websiteInput.getAttribute('value')).toBe(vendorPage.testEditVendor.websiteUrl);
+    });
+
+    it('should save changes to the comments field', function() {
         expect(vendorPage.commentsInput.getAttribute('value')).toBe(vendorPage.testEditVendor.comments);
+    });
+
+    it('should save changes to the adminModule field', function() {
         expect(vendorPage.adminModuleInput.getAttribute('value')).toBe(vendorPage.testEditVendor.adminModule);
+    });
+
+    it('should save changes to the isActive field', function() {
         expect(vendorPage.getStatusInputActive()).toBe(vendorPage.testEditVendor.isActive ? 'true' : null);
+    });
+
+    it('should save changes to the Contacts', function() {
+        var contactElement, contact; 
 
         for ( i = 0 ; i < vendorPage.testEditVendor.billingContacts.length ; i++ ){
             contactElement = vendorPage.getContact('Billing', i);
@@ -194,5 +225,4 @@ describe('The edit vendor screen', function () {
             expect(contactElement.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
         }
     });
-
 });

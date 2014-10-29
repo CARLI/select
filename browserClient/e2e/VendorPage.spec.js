@@ -1,4 +1,6 @@
 var VendorPage = function () {
+    this.listFilterShowAll = element(by.cssContainingText('.ng-binding', 'See all vendors'));
+
     this.nameInput = element(by.model('vm.vendor.name'));
     this.websiteInput = element(by.model('vm.vendor.websiteUrl'));
     this.commentsInput = element(by.model('vm.vendor.comments'));
@@ -97,7 +99,7 @@ var VendorPage = function () {
         websiteUrl: 'http://www.example.com',
         comments: 'This is a comment',
         adminModule: 'This is an admin module comment',
-        isActive: true,
+        isActive: false,
         billingContacts: [
             {
                 name: 'Billing Contact 1',
