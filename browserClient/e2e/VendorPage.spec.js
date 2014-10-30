@@ -1,5 +1,5 @@
 var VendorPage = function () {
-    this.listFilterShowAll = element(by.cssContainingText('.ng-binding', 'See all vendors'));
+    this.listFilterShowAll = element(by.cssContainingText('.ng-binding', 'All vendors'));
 
     this.nameInput = element(by.model('vm.vendor.name'));
     this.websiteInput = element(by.model('vm.vendor.websiteUrl'));

@@ -60,7 +60,7 @@ describe('The New Vendor screen', function () {
         element.all(by.repeater('vendor in vm.vendorList'))
         .filter( function(el, index) {
             return el.getText().then(function(text){
-                return text === vendorPage.testVendor.name;
+                return (text.search(vendorPage.testVendor.name) > -1);
             });
         })
         .then( function( vendorList ) {
@@ -83,7 +83,7 @@ describe('Viewing an existing Vendor', function () {
         element.all(by.repeater('vendor in vm.vendorList'))
             .filter(function (el, index) {
                 return el.getText().then(function (text) {
-                    return text === vendorPage.testVendor.name;
+                    return (text.search(vendorPage.testVendor.name) > -1);
                 });
             })
             .then(function (vendorList) {
@@ -151,7 +151,7 @@ describe('Making changes to an existing Vendor', function(){
         element.all(by.repeater('vendor in vm.vendorList'))
             .filter(function (el, index) {
                 return el.getText().then(function (text) {
-                    return text === vendorPage.testVendor.name;
+                    return (text.search(vendorPage.testVendor.name) > -1);
                 });
             })
             .then(function (vendorList) {
@@ -169,7 +169,7 @@ describe('Making changes to an existing Vendor', function(){
         element.all(by.repeater('vendor in vm.vendorList'))
             .filter(function (el, index) {
                 return el.getText().then(function (text) {
-                    return text === vendorPage.testEditVendor.name;
+                    return (text.search(vendorPage.testEditVendor.name) > -1);
                 });
             })
             .then(function (vendorList) {

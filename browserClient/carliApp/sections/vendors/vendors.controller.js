@@ -52,7 +52,7 @@ var testVendors = [
 
 function vendorController( vendorService ){
     var vm = this;
-    createTestVendors();
+    //createTestVendors();
     activate();
 
 
