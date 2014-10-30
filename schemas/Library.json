@@ -59,5 +59,6 @@
             "type": "array",
             "items": { "$ref": "./contact.json" }
         }
-    }
+    },
+    "required": [ "name" ]
 }
