@@ -1,6 +1,6 @@
-$border: 1px solid $light_gray;
-$top-border: 3px solid $very_dark_gray;
-$zebra-table-color: $very_light_gray;
+$border: 1px solid $gray;
+$top-border: 3px solid $black;
+$zebra-table-color: $light_gray;
 $icon-color: $orange;
 
 #vendors {
@@ -70,7 +70,7 @@ $icon-color: $orange;
     ul.vendor-list {
         li.column-headers {
             .col, .col:first-child {
-                color: $very_dark_gray;
+                color: $black;
                 font-family: 'Verdana';
                 font-weight: 700;
                 @include font-size(11);

@@ -1,15 +1,22 @@
 
 /* Shades of Gray */
 $white: #ffffff;
-$very_light_gray: #f8f8f8;
-$light_gray: #d6d6d6;
-$very_dark_gray: #242424;
+$light_gray: #f8f8f8;
+$gray: #d6d6d6;
+$black: #242424;
 
 /* Roy G Biv */
+$red: #ff1200;
+$dark_red: #b60d00;
 $orange: #f57300;
-$magenta: #723983;
-$dark_magenta: #52275f;
-$soft_magenta: #e0b4ed;
+$dark_orange: #d75100;
+$green: #9bca1d;
+$dark_green: #81ac0c;
+$light_purple: #e0b4ed;
+$purple: #723983;
+$dark_purple: #52275f;
+
+/* These are not in the spec sheet */
 $moderate_magenta: #703880;
 $violet: #663284;
 $dark_violet: #834ba2;
@@ -23,6 +30,5 @@ $grid-gutter-width: 0;
 
 /** TODO: These definitions should be moved to the header component and user menu components .scss files */
 
-$user_menu_bg_color: $dark_magenta;
-$user_menu_fg_color: $soft_magenta;
-
+$user_menu_bg_color: $dark_purple;
+$user_menu_fg_color: $light_purple;
