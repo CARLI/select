@@ -1,5 +1,6 @@
 {
     "title": "Product",
+    "schemaType": "Product",
     "type": "object",
     "properties": {
         "id" : {

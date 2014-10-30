@@ -1,6 +1,7 @@
 {
     "$schema": "json-schema.org/draft-04/schema",
     "title": "Vendor",
+    "schemaType": "Vendor",
     "type": "object",
     "properties": {
         "id": {

@@ -1,5 +1,6 @@
 {
     "title": "Contact",
+    "schemaType": "Contact",
     "type": "object",
     "properties": {
         "name": {
