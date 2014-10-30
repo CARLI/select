@@ -5,5 +5,5 @@ angular.module('carli.sections.styleGuide',
 )
     .value('componentExamples', {
         'Filter by Active': 'filter-active.html',
-        'Contact Editor': 'contact-editor.html'
+        'View Edit Contact': 'view-edit-contact.html'
     });

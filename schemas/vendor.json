@@ -1,6 +1,7 @@
 {
     "$schema": "json-schema.org/draft-04/schema",
     "title": "Vendor",
+    "schemaType": "Vendor",
     "type": "object",
     "properties": {
         "id": {
@@ -17,12 +18,12 @@
         },
         "websiteUrl": {
             "description": "Vendor's Website",
-            "$ref": "./web-address.json"
+            "$ref": "./WebAddress.json"
         },
         "contacts": {
             "description": "List of vendor contacts",
             "type": "array",
-            "items": { "$ref": "./contact.json" }
+            "items": { "$ref": "./Contact.json" }
         },
         "comments": {
             "description": "Vendor comments",
@@ -39,12 +40,12 @@
         "products": {
             "description": "Products offered by this vendor",
             "type": "array",
-            "items": { "$ref": "./product.json" }
+            "items": { "$ref": "./Product.json" }
         },
         "licenseAgreements": {
             "description": "License agreements used by this vendor",
             "type": "array",
-            "items": { "$ref": "./license-agreement.json" }
+            "items": { "$ref": "./LicenseAgreement.json" }
         }
     },
     "required": [ "name" ]
