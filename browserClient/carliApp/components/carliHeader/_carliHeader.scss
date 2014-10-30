@@ -1,23 +1,23 @@
 
-$bg_color: $moderate_magenta;
-$fg_color: $white;
+$bg-color: $moderate-magenta;
+$fg-color: $white;
 
 $height: 110px;
-$logo_width: 243px;
-$logo_height: 59px;
+$logo-width: 243px;
+$logo-height: 59px;
 
 header.carli-header {
-    color: $fg_color;
-    background-color: $bg_color;
+    color: $fg-color;
+    background-color: $bg-color;
     background-image: url('/images/header-background.png');
     background-repeat: no-repeat;
     height: 110px;
 
     .carli-logo {
         margin-top: 20px;
-        margin-left: $page_gutter;
-        width: $logo_width;
-        height: $logo_height;
+        margin-left: $page-gutter;
+        width: $logo-width;
+        height: $logo-height;
         background-image: url('/images/carli-logo.png');
         background-repeat: no-repeat;
         float: left;

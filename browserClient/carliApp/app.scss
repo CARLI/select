@@ -15,14 +15,14 @@ body {
 }
 
 main {
-    // min-width: $page_content_width;
+    // min-width: $page-content-width;
     margin: 0;
 }
 
 .container,
 .container-fluid {
-    padding-left: $page_gutter;
-    padding-right: $page_gutter;
+    padding-left: $page-gutter;
+    padding-right: $page-gutter;
 }
 .row {
     margin-right: 0;
@@ -40,7 +40,7 @@ h1 {
     font-weight: 700;
 }
 
-$button_padding: 10px;
+$button-padding: 10px;
 
 .carli-button {
     font-family: 'Dosis', sans-serif;
@@ -50,7 +50,7 @@ $button_padding: 10px;
     text-decoration: none;
     text-transform: uppercase;
     border: 1px solid $gray;
-    padding: $button_padding;
+    padding: $button-padding;
     text-align: center;
     height: 40px;
     display: inline-block;

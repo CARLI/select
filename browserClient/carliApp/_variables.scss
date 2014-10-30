@@ -1,34 +1,34 @@
 
 /* Shades of Gray */
 $white: #ffffff;
-$light_gray: #f8f8f8;
+$light-gray: #f8f8f8;
 $gray: #d6d6d6;
 $black: #242424;
 
 /* Roy G Biv */
 $red: #ff1200;
-$dark_red: #b60d00;
+$dark-red: #b60d00;
 $orange: #f57300;
-$dark_orange: #d75100;
+$dark-orange: #d75100;
 $green: #9bca1d;
-$dark_green: #81ac0c;
-$light_purple: #e0b4ed;
+$dark-green: #81ac0c;
+$light-purple: #e0b4ed;
 $purple: #723983;
-$dark_purple: #52275f;
+$dark-purple: #52275f;
 
 /* These are not in the spec sheet */
-$moderate_magenta: #703880;
+$moderate-magenta: #703880;
 $violet: #663284;
-$dark_violet: #834ba2;
-$very_dark_violet: #411a57;
+$dark-violet: #834ba2;
+$very-dark-violet: #411a57;
 
-$page_gutter: 124px;
-$page_content_width: 960px;
+$page-gutter: 124px;
+$page-content-width: 960px;
 
 /** Bootstrap overrides */
 $grid-gutter-width: 0;
 
 /** TODO: These definitions should be moved to the header component and user menu components .scss files */
 
-$user_menu_bg_color: $dark_purple;
-$user_menu_fg_color: $light_purple;
+$user-menu-bg-color: $dark-purple;
+$user-menu-fg-color: $light-purple;

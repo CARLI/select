@@ -1,11 +1,11 @@
 
-$border_color: $gray;
-$active_fg_color: $orange;
-$inactive_fg_color: $black;
-$bg_color: $white;
+$border-color: $gray;
+$active-fg-color: $orange;
+$inactive-fg-color: $black;
+$bg-color: $white;
 
 $height: 54px;
-$border: 1px solid $border_color;
+$border: 1px solid $border-color;
 
 nav[nav-bar] {
     border: 0;
@@ -16,13 +16,13 @@ nav[nav-bar] {
     line-height: 18px;
     text-transform: uppercase;
     height: $height;
-    background-attachment: $bg_color;
+    background-attachment: $bg-color;
 
     ul {
         display: table;
         list-style: outside none none;
         margin: 0;
-        margin-left: $page_gutter;
+        margin-left: $page-gutter;
         padding: 0;
     }
 
@@ -40,12 +40,12 @@ nav[nav-bar] {
         border-right: $border;
 
         a {
-            color: $inactive_fg_color;
+            color: $inactive-fg-color;
             text-decoration: none;
         }
         &.active {
-            border-top: solid $active_fg_color 3px;
-            a { color: $active_fg_color; }
+            border-top: solid $active-fg-color 3px;
+            a { color: $active-fg-color; }
         }
     }
 }
