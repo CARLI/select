@@ -3,6 +3,16 @@ var chai   = require( 'chai' )
   , Validator = require( '../Validator' )
 ;
 
+var validTypes = [
+    'Contact',
+    'CycleType',
+    'LicenseAgreement',
+    'PriceCap',
+    'Product',
+    'Vendor',
+    'WebAddress'
+];
+
 describe( 'The Validator Module', function() {
 
     it( 'should be a module', function() {
@@ -49,4 +59,19 @@ describe( 'The Validator Module', function() {
             expect( Validator.validate(validVendor) ).to.be.true;
         });
     });
+
+    it( 'should have a list method', function() {
+        expect( Validator.list ).to.be.a('Function');
+    });
+
+    describe( 'Validator.list', function() {
+        it( 'should return an array', function() {
+            expect( Validator.list() ).to.be.an('Array');
+        });
+
+        it( 'should return the valid types', function() {
+            expect( Validator.list() ).to.have.members( validTypes );
+        });
+    });
+
 });
