@@ -12,13 +12,13 @@
             "type": "string"
         },
         "cycleType": {
-            "$ref": "./cycle-type.json"
+            "$ref": "./CycleType.json"
         },
         "vendor": {
-            "$ref": "./vendor.json"
+            "$ref": "./Vendor.json"
         },
         "productUrl": {
-            "$ref": "./url.json"
+            "$ref": "./WebAddress.json"
         },
         "description": {
             "type": "string"
@@ -48,10 +48,10 @@
             "type": "boolean"
         },
         "licenseAgreement": {
-            "$ref": "./license-agreement.json"
+            "$ref": "./LicenseAgreement.json"
         },
         "priceCap": {
-            "$ref": "./price-cap.json"
+            "$ref": "./PriceCap.json"
         },
         "detailCode": {
             "$ref": "./product-detail-code.json"
@@ -65,7 +65,7 @@
         "librariesThatHavePaidAcf": {
             "type": "array",
             "items:": {
-                "$ref": "./library.json"
+                "$ref": "./Library.json"
             }
         }
     }
