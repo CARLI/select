@@ -55,12 +55,22 @@ $button-padding: 10px;
     height: 40px;
     display: inline-block;
 
-    span {
+    i {
         margin: 10px 0px 10px 10px;
         @include font-size(22);
         vertical-align: bottom;
         line-height: 0px;
     }
+
+
+    &:hover {
+        background-color: $light-gray;
+        text-decoration: none;
+        color: $dark-orange;
+
+    }
+
+
 }
 
 @import "carliApp/components/carliHeader/carliHeader";
