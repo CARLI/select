@@ -1,5 +1,5 @@
 <section id="vendors">
-    <div class="section-header clearfix">
+    <div class="section-header">
         <h1>Vendors</h1>
         <div class="new-vendor-container">
             <a id="new-vendor" href="/vendor/new" class="carli-button">New Vendor <i class="fa fa-plus-circle"></i></a>
@@ -14,20 +14,20 @@
             <filter-by-active-toggle entity-label="'vendors'" active-filter-state="vm.activeFilterState"></filter-by-active-toggle>
         </div>
     </div>
-    <ul class="vendor-list">
+    <ul class="entity-list">
         <li class="column-headers">
-            <div class="col">Vendor Name</div>
-            <div class="col">Vendor Website</div>
-            <div class="col">Comments</div>
+            <div class="column">Vendor Name</div>
+            <div class="column">Vendor Website</div>
+            <div class="column">Comments</div>
         </li>
         <li ng-repeat="vendor in vm.vendorList | filterByActive:vm.activeFilterState | filter:filterText">
-            <div class="col">
+            <div class="column">
                 <a href="vendor/{{ vendor.id }}">{{ vendor.name }}</a>
             </div>
-            <div class="col">
+            <div class="column">
                 {{ vendor.websiteUrl }}
             </div>
-            <div class="col">
+            <div class="column">
                 {{ vendor.comments }}
             </div>
         </li>
