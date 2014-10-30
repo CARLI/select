@@ -58,6 +58,24 @@ describe( 'The Validator Module', function() {
             };
             expect( Validator.validate(validVendor) ).to.be.true;
         });
+
+        it( 'should return false for a Vendor object with an invalid websiteUrl', function() {
+            var invalidVendor = {
+                type: 'Vendor',
+                name: 'Example Vendor',
+                websiteUrl: 'this is an invalid url'
+            };
+            expect( Validator.validate(invalidVendor) ).to.be.false;
+        });
+
+        it( 'should return true for a Vendor object with a valid websiteUrl', function() {
+            var invalidVendor = {
+                type: 'Vendor',
+                name: 'Example Vendor',
+                websiteUrl: 'http://www.examplevendor.com'
+            };
+            expect( Validator.validate(invalidVendor) ).to.be.true;
+        });
     });
 
     it( 'should have a list method', function() {
