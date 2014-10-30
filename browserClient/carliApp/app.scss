@@ -1,41 +1,81 @@
 @import url(http://fonts.googleapis.com/css?family=Dosis:600|Merriweather:300,700,400italic);
 @import "bower_modules/bootstrap-sass-official/assets/stylesheets/bootstrap";
 @import "variables";
+@import "mixins";
+@import "gridAdapter";
 
 * {
     box-sizing: border-box;
-}
-
-html,
-body {
     margin: 0;
     padding: 0;
 }
 
+html,
+body {
+    font-size: 14px;
+}
+
 main {
-  min-width: $page_content_width;
-  margin: 0 $page_margin;
+    // min-width: $page-content-width;
+    margin: 0;
 }
 
-$button_padding: 10px;
-
-.btn {
-  font-family: 'Dosis', sans-serif;
-  font-weight: 600;
-  font-size: 15px;
-  color: $orange;
-  text-decoration: none;
-  text-transform: uppercase;
-  border: 1px solid $light_gray;
-  padding: $button_padding;
-  text-align: center;
-  height: 40px;
-  display: inline-block;
-
-  span {
-    margin: 10px 0px 10px 10px;
-    font-size: 22px;
-    vertical-align: bottom;
-    line-height: 0px;
-  }
+.container,
+.container-fluid {
+    padding-left: $page-gutter;
+    padding-right: $page-gutter;
 }
+.row {
+    margin-right: 0;
+    margin-left: 0;
+}
+.row [class^="col-"],
+.row [class*=" col-"]{
+    padding-right: 0;
+    padding-left: 0;
+}
+
+h1 {
+    font-family: 'Merriweather';
+    @include font-size(24);
+    font-weight: 700;
+}
+
+$button-padding: 10px;
+
+.carli-button {
+    font-family: 'Dosis', sans-serif;
+    font-weight: 600;
+    @include font-size(15);
+    color: $orange;
+    text-decoration: none;
+    text-transform: uppercase;
+    border: 1px solid $gray;
+    padding: $button-padding;
+    text-align: center;
+    height: 40px;
+    display: inline-block;
+
+    i {
+        margin: 10px 0px 10px 10px;
+        @include font-size(22);
+        vertical-align: bottom;
+        line-height: 0px;
+    }
+
+
+    &:hover {
+        background-color: $light-gray;
+        text-decoration: none;
+        color: $dark-orange;
+
+    }
+
+
+}
+
+@import "carliApp/components/carliHeader/carliHeader";
+@import "carliApp/components/filterByActive/filterByActive";
+@import "carliApp/components/navBar/navBar";
+@import "carliApp/sections/vendors/vendors";
+

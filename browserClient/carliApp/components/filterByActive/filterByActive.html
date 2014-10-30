@@ -1,10 +1,13 @@
-<span ng-show="isShowActive()">Showing all <strong>active</strong> {{ entityLabel }}</span>
-<a ng-show="!isShowActive()" ng-click="setShowActive()">See all active {{ entityLabel }}</a>
-|
-<span ng-show="isShowInactive()">Showing all <strong>inactive</strong> {{ entityLabel }}</span>
-<a ng-show="!isShowInactive()" ng-click="setShowInactive()">See all inactive {{ entityLabel }}</a>
-|
-<span ng-show="isShowAll()">Showing <strong>all</strong> {{ entityLabel }}</span>
-<a ng-show="!isShowAll()" ng-click="setShowAll()">See all {{ entityLabel }}</a>
+<menu class="filter-by-active">
+    <menuitem ng-click="setShowActive()">
+        <i class="fa" ng-class="{ 'fa-dot-circle-o': isShowActive(), 'fa-circle-o': !isShowActive() }"></i> Active {{ entityLabel }}
+    </menuitem>
+    <menuitem ng-click="setShowInactive()">
+        <i class="fa" ng-class="{ 'fa-dot-circle-o': isShowInactive(), 'fa-circle-o': !isShowInactive() }"></i> Inactive {{ entityLabel }}
+    </menuitem>
+    <menuitem ng-click="setShowAll()">
+        <i class="fa" ng-class="{ 'fa-dot-circle-o': isShowAll(), 'fa-circle-o': !isShowAll() }"></i> All {{ entityLabel }}
+    </menuitem>
 
-<div ng-transclude></div>
+    <div ng-transclude></div>
+</menu>

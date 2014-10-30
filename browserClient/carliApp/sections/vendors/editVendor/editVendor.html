@@ -1,7 +1,10 @@
 <section id="vendors">
-    <h1>{{ vm.vendor.name }}</h1>
 
-    <div id="vendor-edit" class="btn btn-default" ng-click="vm.toggleEditable()">{{ vm.editable ? 'Disable Editing' : 'Edit' }}</div>
+    <div class="edit-vendors-header">
+        <h1>{{ vm.vendor.name }}</h1>
+
+        <div id="vendor-edit" class="btn btn-default" ng-click="vm.toggleEditable()">{{ vm.editable ? 'Disable Editing' : 'Edit' }}</div>
+    </div>
 
     <form name="vendorForm" ng-submit="vm.saveVendor()">
       <fieldset ng-disabled="!vm.editable">
@@ -31,21 +34,21 @@
 
         <h3>Billing</h3>
         <div ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Billing' }">
-            <contact-editor contact="contact"></contact-editor>
+            <view-edit-contact contact="contact"></view-edit-contact>
             <a ng-click="vm.deleteContact(contact)">Delete</a>
         </div>
         <a id="add-billing-contact" ng-click="vm.addContact('Billing')">Add Contact</a>
 
         <h3>Sales</h3>
         <div ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Sales' }">
-            <contact-editor contact="contact"></contact-editor>
+            <view-edit-contact contact="contact"></view-edit-contact>
             <a ng-click="vm.deleteContact(contact)">Delete</a>
         </div>
         <a id="add-sales-contact" ng-click="vm.addContact('Sales')">Add Contact</a>
 
         <h3>Technical</h3>
         <div ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Technical' }">
-            <contact-editor contact="contact"></contact-editor>
+            <view-edit-contact contact="contact"></view-edit-contact>
             <a ng-click="vm.deleteContact(contact)">Delete</a>
         </div>
         <a id="add-technical-contact" ng-click="vm.addContact('Technical')">Add Contact</a>
