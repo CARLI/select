@@ -2,10 +2,15 @@ var test = require( './Entity/EntityInterface.spec' )
 ;
 
 function validLibraryData() {
-  return { name: 'foo' };
+    return {
+        type: 'Library',
+        name: 'foo' 
+    };
 };
 function invalidLibraryData() {
-  return { };
+    return {
+        type: 'Library'
+    };
 };
 
 test.run('Library', validLibraryData, invalidLibraryData);

@@ -82,7 +82,7 @@ function test( entityTypeName, validData, invalidData ) {
                 function badEntitySchema() {
                   EntityRepository.create( invalidData() );
                 };
-                expect( badEntitySchema ).to.throw( 'Missing required property: name' );
+                expect( badEntitySchema ).to.throw( /Invalid Data/i );
             } );
 
             it( 'should return an object', function() {
@@ -150,7 +150,7 @@ function test( entityTypeName, validData, invalidData ) {
                 function updateBadEntity() {
                   EntityRepository.update( entity );
                 }
-                expect( updateBadEntity ).to.throw( 'Missing required property: name' );
+                expect( updateBadEntity ).to.throw( /Invalid Data/i );
             } );
 
         } );
