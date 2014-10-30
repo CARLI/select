@@ -1,6 +1,7 @@
 {
     "$schema": "json-schema.org/draft-04/schema",
     "title": "Library",
+    "schemaType": "Library",
     "type": "object",
     "properties": {
         "id": {
