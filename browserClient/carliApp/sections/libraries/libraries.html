@@ -1,13 +1,35 @@
 <section id="libraries">
-    <h1>Libraries</h1>
-
-    <div class="pull-right">
-        <a id="new-library" href="/library/new" class="btn">New Library <span class="fa fa-plus-circle"></span> </a>
-    </div>
-    <input type="text" ng-model="filterText"><br/>
-    <filter-by-active-toggle entity-label="'libraries'" active-filter-state="vm.activeFilterState">
-        <div ng-repeat="library in vm.libraryList | filterByActive:vm.activeFilterState | filter:filterText">
-            <a href="library/{{ library.id }}">{{ library.name }}</a>
+    <div class="section-header">
+        <h1>Libraries</h1>
+        <div class="button-container">
+            <a id="new-library" href="/library/new" class="carli-button">New Library <i class="fa fa-plus-circle"></i></a>
         </div>
-    </filter-by-active-toggle>
+    </div>
+
+    <div class="controls">
+        <div class="filter-input-container">
+            <input type="text" class="filter-input" ng-model="filterText">
+        </div>
+        <div class="filter-by-active-container">
+            <filter-by-active-toggle entity-label="'libraries'" active-filter-state="vm.activeFilterState"></filter-by-active-toggle>
+        </div>
+    </div>
+    <ul class="entity-list">
+        <li class="column-headers">
+            <div class="column">Library Name</div>
+            <div class="column">Institution Years</div>
+            <div class="column">Institution Type</div>
+        </li>
+        <li ng-repeat="library in vm.libraryList | filterByActive:vm.activeFilterState | filter:filterText">
+            <div class="column">
+                <a href="library/{{ library.id }}">{{ library.name }}</a>
+            </div>
+            <div class="column">
+                {{ library.institutionYears }}
+            </div>
+            <div class="column">
+                {{ library.institutionType }}
+            </div>
+        </li>
+    </ul>
 </section>
