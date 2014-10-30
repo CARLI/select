@@ -24,12 +24,11 @@ $icon-color: $orange;
     }
 
     .controls {
-        @include make-row(0);
+        @include grid-row(0);
         border-top: $top-border;
         background: $zebra-table-color;
-
         .filter-input-container {
-            @include make-sm-column(4);
+            @include grid-column(4);
             border-left: $border;
             font-size: 1.28rem;
             line-height: 1.77;
@@ -54,7 +53,7 @@ $icon-color: $orange;
         }
 
         .filter-by-active-container {
-            @include make-sm-column(8);
+            @include grid-column(8);
             border-right: $border;
             .filter-by-active {
                 @include font-size(14);
@@ -80,7 +79,7 @@ $icon-color: $orange;
         list-style: none inside;
         padding: 0;
         li {
-            @include make-row(0);
+            @include grid-row(0);
             border: $border;
             border-bottom: 0;
             font-family: 'Verdana' sans-serif;
@@ -95,7 +94,7 @@ $icon-color: $orange;
             }
 
             .col {
-                @include make-sm-column(4, 0);
+                @include grid-column(4, 0);
                 border-left: $border;
                 padding: 1rem;
 
