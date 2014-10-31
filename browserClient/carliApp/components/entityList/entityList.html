@@ -8,9 +8,7 @@
 </div>
 <ul class="entity-list">
     <li class="column-headers">
-        <div class="column">Library Name</div>
-        <div class="column">Institution Years</div>
-        <div class="column">Institution Type</div>
+        <div class="column" ng-repeat="(key, value) in columns">{{ key }}</div>
     </li>
     <li ng-repeat="library in values | filterByActive:vm.activeFilterState | filter:filterText">
         <div class="column">

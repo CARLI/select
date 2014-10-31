@@ -6,4 +6,10 @@ function libraryController( libraryService ){
 
     vm.libraryList = libraryService.list();
     vm.activeFilterState = 'Active';
+
+    vm.entityListColumns = {
+        'Library Name': 'library.name',
+        'Institution Years': '',
+        'Institution Type' : ''
+    };
 }
