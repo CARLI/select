@@ -6,30 +6,5 @@
         </div>
     </div>
 
-    <div class="entity-list-controls">
-        <div class="filter-input-container">
-            <input type="text" class="filter-input" ng-model="filterText">
-        </div>
-        <div class="filter-by-active-container">
-            <filter-by-active-toggle entity-label="'libraries'" active-filter-state="vm.activeFilterState"></filter-by-active-toggle>
-        </div>
-    </div>
-    <ul class="entity-list">
-        <li class="column-headers">
-            <div class="column">Library Name</div>
-            <div class="column">Institution Years</div>
-            <div class="column">Institution Type</div>
-        </li>
-        <li ng-repeat="library in vm.libraryList | filterByActive:vm.activeFilterState | filter:filterText">
-            <div class="column">
-                <a href="library/{{ library.id }}">{{ library.name }}</a>
-            </div>
-            <div class="column">
-                {{ library.institutionYears }}
-            </div>
-            <div class="column">
-                {{ library.institutionType }}
-            </div>
-        </li>
-    </ul>
+    <entity-list values="vm.libraryList" columns="vm.entityListColumns"></entity-list> 
 </section>
