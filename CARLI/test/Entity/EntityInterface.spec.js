@@ -82,7 +82,7 @@ function test( entityTypeName, validData, invalidData ) {
                 function badEntitySchema() {
                   EntityRepository.create( invalidData() );
                 };
-                expect( badEntitySchema ).to.throw( /Invalid Data/i );
+                expect( badEntitySchema ).to.throw( /ValidationError/i );
             } );
 
             it( 'should return an object', function() {
@@ -150,7 +150,7 @@ function test( entityTypeName, validData, invalidData ) {
                 function updateBadEntity() {
                   EntityRepository.update( entity );
                 }
-                expect( updateBadEntity ).to.throw( /Invalid Data/i );
+                expect( updateBadEntity ).to.throw( /ValidationError/i );
             } );
 
         } );

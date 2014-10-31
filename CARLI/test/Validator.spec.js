@@ -45,11 +45,13 @@ describe( 'The Validator Module', function() {
             expect( badValidateUnrecognizedType ).to.throw( /Unrecognized Type/i );
         });
 
-        it( 'should return false for an invalid Vendor object', function() {
-            var invalidVendor = {
-                type: 'Vendor'
-            };
-            expect( Validator.validate(invalidVendor) ).to.be.false;
+        it( 'should throw a validation error for an invalid Vendor object', function() {
+            function badValidateInvalidData(){
+                Validator.validate({
+                    type: 'Vendor'
+                });
+            }
+            expect( badValidateInvalidData ).to.throw( /ValidationError/i );
         });
 
         it( 'should return true for a valid Vendor object', function() {
@@ -60,13 +62,15 @@ describe( 'The Validator Module', function() {
             expect( Validator.validate(validVendor) ).to.be.true;
         });
 
-        it( 'should return false for a Vendor object with an invalid websiteUrl', function() {
-            var invalidVendor = {
-                type: 'Vendor',
-                name: 'Example Vendor',
-                websiteUrl: 'this is an invalid url'
-            };
-            expect( Validator.validate(invalidVendor) ).to.be.false;
+        it( 'should throw a validation error for a Vendor object with an invalid websiteUrl', function() {
+            function badValidateInvalidWebsiteUrl(){
+                Validator.validate({
+                    type: 'Vendor',
+                    name: 'Example Vendor',
+                    websiteUrl: 'this is an invalid url'
+                });
+            }
+            expect( badValidateInvalidWebsiteUrl ).to.throw( /ValidationError/i );
         });
 
         it( 'should return true for a Vendor object with a valid websiteUrl', function() {

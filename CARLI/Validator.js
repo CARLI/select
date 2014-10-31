@@ -39,6 +39,9 @@ function validate(data) {
 
     _loadSchemas();
     var result = tv4.validateResult(data, schemas[data.type]);
+    if (result.error) {
+        throw new Error('Validator.validate(data): ' + result.error);
+    }
     return result.valid;
 }
 

@@ -13,10 +13,7 @@ function throwIfDataIsEmpty ( data ) {
 
 function validateCreateData( data ){
     throwIfDataIsEmpty( data );
-    var valid = Validator.validate( data );
-    if ( ! valid ) {
-        throw new Error( 'Invalid Data' ); //TODO; get this actual message from TV4
-    }
+    Validator.validate( data );
 }
 
 function validateUpdateData( data ){
