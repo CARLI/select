@@ -7,44 +7,44 @@
       <fieldset ng-disabled="!vm.editable">
         <div>
             <label for="libraryName">Name</label>
-            <input type="text" name="libraryName" ng-model="vm.library.name">
+            <input type="text" id="libraryName" name="libraryName" ng-model="vm.library.name">
         </div>
         <div>
             <label for="libraryFte">fte</label>
-            <input type="text" name="libraryFte" ng-model="vm.library.fte">
+            <input type="text" id="libraryFte" name="libraryFte" ng-model="vm.library.fte">
         </div>
         <div>
             <label for="libraryInstitutionYears">Institution Type: 2 year/4 year</label>
-            <textarea name="libraryInstitutionYears" ng-model="vm.library.institutionYears"></textarea>
+            <select name="libraryInstitutionYears" id="libraryInstitutionYears" ng-model="vm.library.institutionYears" ng-options="option for option in vm.institutionYearsOptions"></select>
         </div>
         <div>
             <label for="libraryInstitutionType">Institution Type: Private/Public</label>
-            <textarea name="libraryInstitutionType" ng-model="vm.library.institutionType"></textarea>
+            <select name="libraryInstitutionType" id="libraryInstitutionType" ng-model="vm.library.institutionType" ng-options="option for option in vm.institutionTypeOptions"></select>
         </div>
         <div>
             <label for="libraryIpAddresses">IP Addresses</label>
-            <textarea name="libraryIpAddresses" ng-model="vm.library.ipAddresses"></textarea>
+            <textarea name="libraryIpAddresses" id="libraryIpAddresses" ng-model="vm.library.ipAddresses"></textarea>
         </div>
         <div>
             <label for="libraryMembershipLevel">Membership Level</label>
-            <input type="text" name="libraryMembershipLevel" ng-model="vm.library.membershipLevel">
+            <select name="libraryMembershipLevel" id="libraryMembershipLevel" ng-model="vm.library.membershipLevel" ng-options="option for option in vm.membershipLevelOptions"></select>
         </div>
         <div>
             <label for="libraryIshareMember">I-Share Member</label>
-            <input type="checkbox" name="libraryIshareMember" ng-model="vm.library.isIshareMember">
+            <input type="checkbox" id="libraryIshareMember" name="libraryIshareMember" ng-model="vm.library.isIshareMember">
         </div>
         <div>
             <label for="libraryGar">General Account Receivable</label>
-            <input type="text" name="libraryGar" ng-model="vm.library.gar">
+            <input type="text" id="libraryGar" name="libraryGar" ng-model="vm.library.gar">
         </div>
         <div>
-            <label for="libraryStatus">Library Status</label>
-            <input type="radio" name="libraryStatus" ng-value="true" ng-model="vm.library.isActive"> Active
-            <input type="radio" name="libraryStatus" ng-value="false" ng-model="vm.library.isActive"> Inactive
+            <label>Library Status</label>
+            <input type="radio" id="libraryStatusActive" name="libraryStatus" ng-value="true" ng-model="vm.library.isActive"> <label for="libraryStatusActive">Active</label>
+            <input type="radio" id="libraryStatusInactive" name="libraryStatus" ng-value="false" ng-model="vm.library.isActive"> <label for="libraryStatusInactive">Inactive</label>
         </div>
         <div>
             <label for="libraryOutstandingBalances">Outstanding Balances</label>
-            <input type="text" name="libraryOutstandingBalances" ng-model="vm.library.outstandingBalances">
+            <input type="text" id="libraryOutstandingBalances" name="libraryOutstandingBalances" ng-model="vm.library.outstandingBalances">
         </div>
         <!-- TODO: Products -->
         <div>
