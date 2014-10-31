@@ -10,6 +10,10 @@ function editLibraryController( $location, $routeParams, libraryService ) {
     vm.addContact = addContact;
     vm.deleteContact = deleteContact;
 
+    vm.institutionYearsOptions = libraryService.getInstitutionYearsOptions();
+    vm.institutionTypeOptions = libraryService.getInstitutionTypeOptions();
+    vm.membershipLevelOptions = libraryService.getMembershipLevelOptions();
+
     activate();
 
     function activate() {
@@ -28,6 +32,7 @@ function editLibraryController( $location, $routeParams, libraryService ) {
         };
         vm.editable = true;
     }
+ 
     function initializeForExistingLibrary() {
         vm.library = libraryService.load(libraryId);
         vm.editable = false;

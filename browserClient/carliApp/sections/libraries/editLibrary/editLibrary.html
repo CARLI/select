@@ -19,7 +19,7 @@
         </div>
         <div>
             <label for="libraryInstitutionType">Institution Type: Private/Public</label>
-            <textarea name="libraryInstitutionType" ng-model="vm.library.institutionType"></textarea>
+            <select name="libraryInstitutionType" ng-model="vm.library.institutionType" ng-options="option for option in vm.institutionYearsOptions"></select>
         </div>
         <div>
             <label for="libraryIpAddresses">IP Addresses</label>
