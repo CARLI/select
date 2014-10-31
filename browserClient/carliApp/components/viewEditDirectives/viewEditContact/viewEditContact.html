@@ -1,6 +1,15 @@
-<label for="contactName">Name</label>
-<input type="text" name="contactName" ng-model="contact.name">
-<label for="contactEmail">Email</label>
-<input type="text" name="contactName" ng-model="contact.email">
-<label for="contactPhone">Phone</label>
-<input type="text" name="contactName" ng-model="contact.phoneNumber">
+<div ng-show="editMode">
+    <label for="contactName">Name</label>
+    <input type="text" name="contactName" ng-model="contact.name">
+    <label for="contactEmail">Email</label>
+    <input type="text" name="contactName" ng-model="contact.email">
+    <label for="contactPhone">Phone</label>
+    <input type="text" name="contactName" ng-model="contact.phoneNumber">
+</div>
+<div ng-show="!editMode">
+    <div class="contact-name">{{ contact.name }}</div>
+    <div class="contact-contact-methods">
+        <a class="contact-phone" href="tel:{{ contact.phoneNumber }}">{{ contact.phoneNumber }}</a>
+        <a class="contact-email" href="mailto:{{ contact.email }}">{{ contact.email }}</a>
+    </div>
+</div>
