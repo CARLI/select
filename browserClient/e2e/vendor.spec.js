@@ -10,7 +10,7 @@ describe('The New Vendor screen', function () {
     it('should have a default name input field', function () {
         expect(vendorPage.nameInput.isPresent()).toBe(true);
         expect(vendorPage.nameInput.getTagName()).toBe('input');
-        expect(vendorPage.nameInput.getAttribute('value')).toBe('New Vendor');
+        expect(vendorPage.nameInput.getAttribute('value')).toBe('');
     });
 
     it('should have a blank Website input field', function () {
@@ -91,7 +91,12 @@ describe('Viewing an existing Vendor in read only mode', function () {
             });
     });
 
-//    it('should not have an editable name field');
+
+    it('should not have an editable name field', function() {
+        expect(vendorPage.nameInput.isDisplayed()).toBe(false);
+    });
+
+
 //    it('should not have an editable website field');
 //    it('should not have an editable comments field');
 //    it('should not have an editable admin module comment field');
@@ -119,7 +124,12 @@ describe('Viewing an existing Vendor in read only mode', function () {
         }
     });
 
-//    it('should display name');
+    it('should display name', function() {
+        vendorPage.nameDisplay.getText().then(function (text) {
+            expect(text).toBe(vendorPage.testVendor.name);
+        });
+    });
+
 //    it('should display the website');
 //    it('should display the comments field');
 //    it('should display the admin module comment field');

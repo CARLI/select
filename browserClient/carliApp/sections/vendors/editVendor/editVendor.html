@@ -1,16 +1,14 @@
 <section id="vendors">
 
-    <div class="edit-vendors-header">
-        <h1>{{ vm.vendor.name }}</h1>
-
-        <div id="vendor-edit" class="btn btn-default" ng-click="vm.toggleEditable()">{{ vm.editable ? 'Disable Editing' : 'Edit' }}</div>
-    </div>
-
     <form name="vendorForm" ng-submit="vm.saveVendor()">
+
+      <div class="edit-vendors-header">
+        <div id="vendor-edit" class="btn btn-default" ng-click="vm.toggleEditable()">{{ vm.editable ? 'Disable Editing' : 'Edit' }}</div>
+      </div>
       <fieldset ng-disabled="!vm.editable">
         <div>
             <label for="vendorName">Name</label>
-            <input type="text" name="vendorName" ng-model="vm.vendor.name">
+            <view-edit-text-field ng-model="vm.vendor.name" edit-mode="vm.editable"><h1>{{vm.vendor.name}}</h1></view-edit-text-field>
         </div>
         <div>
             <label for="vendorWebsite">Website</label>

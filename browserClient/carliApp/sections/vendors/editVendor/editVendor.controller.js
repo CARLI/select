@@ -22,7 +22,7 @@ function editVendorController( $location, $routeParams, vendorService ) {
     }
     function initializeForNewVendor() {
         vm.vendor = {
-            name: 'New Vendor',
+            isActive: true,
             contacts: []
         };
         vm.editable = true;
