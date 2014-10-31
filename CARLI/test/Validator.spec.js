@@ -6,6 +6,7 @@ var chai   = require( 'chai' )
 var validTypes = [
     'Contact',
     'CycleType',
+    'Library',
     'LicenseAgreement',
     'PriceCap',
     'Product',

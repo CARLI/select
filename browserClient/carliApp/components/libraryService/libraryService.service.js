@@ -13,6 +13,30 @@ function libraryService( CarliModules ) {
         list: libraryModule.list,
         create: libraryModule.create,
         update: libraryModule.update,
-        load: libraryModule.load
+        load: libraryModule.load,
+
+        getInstitutionYearsOptions: function(){
+            return [
+                "4 Year",
+                "2 Year",
+                "Other"
+            ];
+        },
+
+        getInstitutionTypeOptions: function(){
+            return [
+                "Private",
+                "Public",
+                "Other"
+            ];
+        },
+
+        getMembershipLevelOptions: function(){
+            return [
+                "Governing",
+                "Affiliate",
+                "Non-Member"
+            ];
+        }
     };
 }

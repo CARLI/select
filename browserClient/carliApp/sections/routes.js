@@ -3,6 +3,7 @@ angular.module('carli.routes',[
     'carli.sections.subscriptions',
     'carli.sections.vendors',
     'carli.sections.products',
+    'carli.sections.libraries',
     'carli.sections.styleGuide'
 ])
 .config(function ($routeProvider) {
@@ -40,6 +41,16 @@ angular.module('carli.routes',[
     .when('/product/:id', {
         templateUrl: '/carliApp/sections/products/editProduct/editProduct.html',
         controller:  'editProductController',
+        controllerAs:'vm'
+    })
+    .when('/library', {
+        templateUrl: '/carliApp/sections/libraries/libraries.html',
+        controller:  'librariesController',
+        controllerAs:'vm'
+    })
+    .when('/library/:id', {
+        templateUrl: '/carliApp/sections/libraries/editLibrary/editLibrary.html',
+        controller:  'editLibraryController',
         controllerAs:'vm'
     })
     .when('/styleGuide', {

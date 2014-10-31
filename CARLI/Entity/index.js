@@ -1,6 +1,6 @@
 var uuid  = require( 'node-uuid' )
   , tv4   = require( 'tv4' )
-  , schema = require( '../../schemas/vendor.json' )
+  , Validator = require( '../Validator' ) 
 ;
 
 var dataStore;
@@ -13,9 +13,9 @@ function throwIfDataIsEmpty ( data ) {
 
 function validateCreateData( data ){
     throwIfDataIsEmpty( data );
-    var valid = tv4.validate( data, schema );
+    var valid = Validator.validate( data );
     if ( ! valid ) {
-        throw new Error( tv4.error.message );
+        throw new Error( 'Invalid Data' ); //TODO; get this actual message from TV4
     }
 }
 

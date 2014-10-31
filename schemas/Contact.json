@@ -1,0 +1,41 @@
+{
+    "title": "Contact",
+    "schemaType": "Contact",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "email": {
+            "type": "string"
+        },
+        "phoneNumber": {
+            "type": "string"
+        },
+        "contactType": {
+            "type": "string",
+            "oneOf": [
+                "Billing",
+                "Sales",
+                "Technical",
+                "Director",
+                "E-Resources Liaison",
+                "Other",
+                "Notification Only"
+            ]
+        },
+        "includeInBilling": {
+            "description": "Whether to include this user when sending billing messages",
+            "type": "boolean"
+        },
+        "canViewProducts": {
+            "description": "Whether user can view products",
+            "type": "boolean"
+        },
+        "canMakeSelections": {
+            "description": "Whether user can make selections",
+            "type": "boolean"
+        }
+    },
+    "required": [ "name", "email", "contactType" ]
+}

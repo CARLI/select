@@ -67,6 +67,7 @@
             "items:": {
                 "$ref": "./Library.json"
             }
-        }
+        },
+        "required": [ "name" ]
     }
 }

@@ -6,7 +6,10 @@ angular.module('carli.filterByActive')
             restrict: 'E',
             transclude: true,
             templateUrl: 'carliApp/components/filterByActive/filterByActive.html',
-            scope: { entityLabel: '=', activeFilterState: '=' },
+            scope: {
+                entityLabel: '=',
+                activeFilterState: '='
+            },
             controller: filterByActiveToggleController
         };
     }

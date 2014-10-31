@@ -74,8 +74,28 @@ $button-padding: 10px;
 
 }
 
+.section-header {
+    @include flexbox;
+    @include vendor-prefix('align-items', 'center');
+
+    h1 {
+        @include flex(1 1 auto);
+        vertical-align: baseline;
+    }
+
+    .button-container {
+        @include flex(1 1 auto);
+        text-align: right;
+        #new-vendor {
+            margin: 0;
+        }
+    }
+}
+
+
 @import "carliApp/components/carliHeader/carliHeader";
 @import "carliApp/components/filterByActive/filterByActive";
 @import "carliApp/components/navBar/navBar";
+@import "carliApp/components/entityList/entityList";
 @import "carliApp/sections/vendors/vendors";
 
