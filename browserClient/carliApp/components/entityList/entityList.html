@@ -8,17 +8,11 @@
 </div>
 <ul class="entity-list">
     <li class="column-headers">
-        <div class="column" ng-repeat="(key, value) in columns">{{ key }}</div>
+        <div class="column" ng-repeat="column in columns">{{ column.label }}</div>
     </li>
-    <li ng-repeat="library in values | filterByActive:vm.activeFilterState | filter:filterText">
-        <div class="column">
-            <a href="library/{{ library.id }}">{{ library.name }}</a>
-        </div>
-        <div class="column">
-            {{ library.institutionYears }}
-        </div>
-        <div class="column">
-            {{ library.institutionType }}
+    <li ng-repeat="entity in values | filterByActive:vm.activeFilterState | filter:filterText">
+        <div class="column" ng-repeat="column in columns">
+            {{ column.contentFunction(entity) }}
         </div>
     </li>
 </ul>
