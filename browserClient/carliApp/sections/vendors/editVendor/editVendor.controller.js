@@ -22,6 +22,7 @@ function editVendorController( $location, $routeParams, vendorService ) {
     }
     function initializeForNewVendor() {
         vm.vendor = {
+            type: 'Vendor',
             name: 'New Vendor',
             contacts: []
         };

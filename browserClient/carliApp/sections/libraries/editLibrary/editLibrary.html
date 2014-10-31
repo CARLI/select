@@ -15,16 +15,40 @@
         </div>
         <div>
             <label for="libraryInstitutionYears">Institution Type: 2 year/4 year</label>
-            <textarea name="libraryComments" ng-model="vm.library.comments"></textarea>
+            <textarea name="libraryInstitutionYears" ng-model="vm.library.institutionYears"></textarea>
         </div>
         <div>
             <label for="libraryInstitutionType">Institution Type: Private/Public</label>
             <textarea name="libraryInstitutionType" ng-model="vm.library.institutionType"></textarea>
         </div>
         <div>
+            <label for="libraryIpAddresses">IP Addresses</label>
+            <textarea name="libraryIpAddresses" ng-model="vm.library.ipAddresses"></textarea>
+        </div>
+        <div>
+            <label for="libraryMembershipLevel">Membership Level</label>
+            <input type="text" name="libraryMembershipLevel" ng-model="vm.library.membershipLevel">
+        </div>
+        <div>
+            <label for="libraryIshareMember">I-Share Member</label>
+            <input type="checkbox" name="libraryIshareMember" ng-model="vm.library.isIshareMember">
+        </div>
+        <div>
+            <label for="libraryGar">General Account Receivable</label>
+            <input type="text" name="libraryGar" ng-model="vm.library.gar">
+        </div>
+        <div>
             <label for="libraryStatus">Library Status</label>
             <input type="radio" name="libraryStatus" ng-value="true" ng-model="vm.library.isActive"> Active
             <input type="radio" name="libraryStatus" ng-value="false" ng-model="vm.library.isActive"> Inactive
+        </div>
+        <div>
+            <label for="libraryOutstandingBalances">Outstanding Balances</label>
+            <input type="text" name="libraryOutstandingBalances" ng-model="vm.library.outstandingBalances">
+        </div>
+        <!-- TODO: Products -->
+        <div>
+            <label for="libraryProducts">Products</label>
         </div>
 
         <h2>Contacts</h2>
