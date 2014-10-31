@@ -2,7 +2,7 @@ angular.module('carli.sections.libraries')
 .controller('librariesController', libraryController);
 
 var testLibraries = [
-    {"type":"Library", "name":"Test Library 1", "fte":0, "institutionYears":"2 Year", "institutionType":"Public"},
+    {"type":"Library", "name":"Test Library 1", "fte":0, "institutionYears":"2 Year", "institutionType":"Public", "isActive":true},
     {"type":"Library", "name":"Test Library 2", "fte":0, "institutionYears":"2 Year", "institutionType":"Public"},
     {"type":"Library", "name":"Test Library your mom", "fte":0, "institutionYears":"2 Year", "institutionType":"Private"},
     {"type":"Library", "name":"Test Library 3", "fte":0, "institutionYears":"2 Year", "institutionType":"Public"},
@@ -25,8 +25,6 @@ function libraryController( $sce, libraryService ){
     createTestLibraries();
 
     vm.libraryList = libraryService.list();
-    vm.activeFilterState = 'Active';
-
 
     vm.entityListColumns = [
         {

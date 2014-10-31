@@ -58,7 +58,6 @@ function vendorController( vendorService ){
 
     function activate() {
         vm.vendorList = vendorService.list();
-        vm.activeFilterState = 'Active';
     }
 
     function createTestVendors() {

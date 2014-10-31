@@ -3,14 +3,14 @@
         <input type="text" class="filter-input" ng-model="filterText">
     </div>
     <div class="filter-by-active-container">
-        <filter-by-active-toggle entity-label="'libraries'" active-filter-state="vm.activeFilterState"></filter-by-active-toggle>
+        <filter-by-active-toggle entity-label="entityLabel" active-filter-state="activeFilterState"></filter-by-active-toggle>
     </div>
 </div>
 <ul class="entity-list">
     <li class="column-headers">
         <div class="column" ng-repeat="column in columns">{{ column.label }}</div>
     </li>
-    <li ng-repeat="entity in values | filterByActive:vm.activeFilterState | filter:filterText">
+    <li ng-repeat="entity in values | filterByActive:activeFilterState | filter:filterText">
         <div class="column" ng-repeat="column in columns">
             {{ column.contentFunction(entity) }}
         </div>

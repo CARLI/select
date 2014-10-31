@@ -5,7 +5,11 @@ angular.module('carli.entityList')
         templateUrl: '/carliApp/components/entityList/entityList.html',
         scope: {
             values: '=',
-            columns: '='
+            columns: '=',
+            entityLabel: '@'
+        },
+        controller: function($scope){
+            $scope.activeFilterState = 'Active';
         } 
     };
 });
