@@ -95,8 +95,10 @@ $button-padding: 10px;
 $controls-top-border: 3px solid $black;
 $controls-background: $light-gray;
 $icon-color: $orange;
+$default-border: 1px solid $gray;
+$zebra-table-color: $light-gray;
 
-.controls {
+.entity-list-controls {
     @include flexbox;
     border-top: $controls-top-border;
     background: $controls-background;
@@ -141,8 +143,6 @@ $icon-color: $orange;
     }
 }
 
-$default-border: 1px solid $gray;
-$zebra-table-color: $light-gray;
 ul.entity-list {
     li.column-headers {
         .column, .column:first-child {
