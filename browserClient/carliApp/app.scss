@@ -92,104 +92,10 @@ $button-padding: 10px;
     }
 }
 
-$controls-top-border: 3px solid $black;
-$controls-background: $light-gray;
-$icon-color: $orange;
-$default-border: 1px solid $gray;
-$zebra-table-color: $light-gray;
-
-.entity-list-controls {
-    @include flexbox;
-    border-top: $controls-top-border;
-    background: $controls-background;
-
-    .filter-input-container {
-        @include flex(1 1 33.3333%);
-        border-left: $default-border;
-        font-size: 1.28rem;
-        line-height: 1.77;
-        padding-left: .57rem;
-        position: relative;
-
-        $filter-input-margin: .57rem;
-        .filter-input {
-            border: $default-border;
-            padding: 0 1.75em 0 $filter-input-margin;
-            margin: $filter-input-margin 0;
-            width: 100%;
-        }
-
-        &:after {
-            color: $icon-color; 
-            content: "\f002";
-            font-family: "FontAwesome";
-            position: absolute;
-            top: $filter-input-margin;
-            right: $filter-input-margin;
-        }
-    }
-
-    .filter-by-active-container {
-        @include flex(1 1 66.6666%);
-        border-right: $default-border;
-        .filter-by-active {
-            @include font-size(14);
-            line-height: 2;
-            margin: .714rem;
-            menuitem {
-                margin-right: 1.5em;
-            }
-        }
-    }
-}
-
-ul.entity-list {
-    li.column-headers {
-        .column, .column:first-child {
-            color: $black;
-            font-family: 'Verdana';
-            font-weight: 700;
-            @include font-size(11);
-            padding: .5rem 1rem;
-        }
-    }
-    list-style: none inside;
-    padding: 0;
-    li {
-        @include grid-row(0);
-        border: $default-border;
-        border-bottom: 0;
-        font-family: 'Verdana' sans-serif;
-        @include font-size(15);
-
-        &:nth-child(2n+1) {
-            background: $zebra-table-color;
-        }
-
-        &:last-child {
-            border-bottom: $default-border;
-        }
-
-        .column {
-            @include grid-column(4, 0);
-            border-left: $default-border;
-            padding: 1rem;
-
-            &:first-child {
-                font-family: 'Merriweather' serif;
-                font-weight: 700;
-                border-left: 0;
-            }
-        }
-
-        .column, .column a {
-            color: $moderate-magenta;
-        }
-    }
-}
 
 @import "carliApp/components/carliHeader/carliHeader";
 @import "carliApp/components/filterByActive/filterByActive";
 @import "carliApp/components/navBar/navBar";
+@import "carliApp/components/entityList/entityList";
 @import "carliApp/sections/vendors/vendors";
 
