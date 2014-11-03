@@ -1,11 +1,13 @@
 <section id="vendors">
-    <div class="section-header">
+    <div class="list-page-header">
         <h1>Vendors</h1>
         <div class="new-vendor-container">
             <a id="new-vendor" href="/vendor/new" class="carli-button">New Vendor <i class="fa fa-plus-circle"></i></a>
         </div>
     </div>
 
-    <entity-list values="vm.vendorList" columns="vm.vendorListColumns" entity-label="vendors"></entity-list>
+    <section class="content">
+        <entity-list values="vm.vendorList" columns="vm.vendorListColumns" entity-label="vendors"></entity-list>
+    </section>
 
 </section>
