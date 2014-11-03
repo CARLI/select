@@ -8,11 +8,11 @@
       <fieldset ng-disabled="!vm.editable">
         <div>
             <label for="vendorName">Name</label>
-            <view-edit-text-field ng-model="vm.vendor.name" edit-mode="vm.editable"><h1>{{vm.vendor.name}}</h1></view-edit-text-field>
+            <view-edit-text-field ng-model="vm.vendor.name" edit-mode="vm.editable"><h1>{{ vm.vendor.name }}</h1></view-edit-text-field>
         </div>
         <div>
             <label for="vendorWebsite">Website</label>
-            <input type="text" name="vendorWebsite" ng-model="vm.vendor.websiteUrl">
+            <view-edit-text-field ng-model="vm.vendor.websiteUrl" edit-mode="vm.editable"><a ng-href="{{ vm.vendor.websiteURL }}">{{ vm.vendor.websiteUrl }}</a></view-edit-text-field>
         </div>
         <div>
             <label for="vendorComments">Comments</label>
