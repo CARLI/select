@@ -2,7 +2,7 @@ var chai   = require( 'chai' )
   , expect = chai.expect
   , uuid   = require( 'node-uuid' )
   , Store = require( '../../Store' )
-  , MemoryStore = require('../../Store/MemoryStore')
+  , MemoryStore = require('../../Store/MemoryStore')()
 ;
 
 /**

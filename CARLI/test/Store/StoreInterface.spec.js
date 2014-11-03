@@ -4,9 +4,9 @@ var chai   = require( 'chai' )
   , store = require( '../../Store' )
 ;
 
-function test( storeTypeName ) {
+function test( storeTypeName, options ) {
 
-    var storeType = require('../../Store/'+storeTypeName );
+    var storeType = require('../../Store/'+storeTypeName )( options );
 
     function makeValidObject() {
         return {

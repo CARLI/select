@@ -35,12 +35,14 @@ function deleteDataFor( type, id ) {
     return true;
 }
 
-module.exports = {
-  typeExistsInStore: typeExistsInStore,
-  idForTypeExistsInStore: idForTypeExistsInStore,
-  getDataFor: getDataFor,
-  ensureStoreTypeExists: ensureStoreTypeExists,
-  storeData: storeData,
-  listDataFor: listDataFor,
-  deleteDataFor: deleteDataFor
+module.exports = function ( options ) {
+  return {
+    typeExistsInStore: typeExistsInStore,
+    idForTypeExistsInStore: idForTypeExistsInStore,
+    getDataFor: getDataFor,
+    ensureStoreTypeExists: ensureStoreTypeExists,
+    storeData: storeData,
+    listDataFor: listDataFor,
+    deleteDataFor: deleteDataFor
+  }
 }

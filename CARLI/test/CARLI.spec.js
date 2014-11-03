@@ -22,11 +22,11 @@ describe( 'CARLI', function() {
     } );
 
     it( 'should export the MemoryStore module', function() {
-        expect(CARLI.MemoryStore).to.be.an('Object');
+        expect(CARLI.MemoryStore).to.be.a('Function');
     } );
 
     it( 'should export the FileStore module', function() {
-        expect(CARLI.FileStore).to.be.an('Object');
+        expect(CARLI.FileStore).to.be.a('Function');
     } );
 
     it( 'should export the Validator module', function() {

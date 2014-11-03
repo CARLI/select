@@ -1,6 +1,6 @@
 var memoryStore = {}
   , fs   = require( 'fs' )
-  , resourcePath = '../resources'
+  , resourcePath = undefined 
 ;
 
 function typeExistsInStore( type ) {
@@ -78,12 +78,15 @@ function deleteDataFor( type, id ) {
 }
 
 
-module.exports = {
-  typeExistsInStore: typeExistsInStore,
-  idForTypeExistsInStore: idForTypeExistsInStore,
-  getDataFor: getDataFor,
-  ensureStoreTypeExists: ensureStoreTypeExists,
-  storeData: storeData,
-  listDataFor: listDataFor,
-  deleteDataFor: deleteDataFor
+module.exports = function( options ) {
+  resourcePath = options.resourcePath;
+  return {
+    typeExistsInStore: typeExistsInStore,
+    idForTypeExistsInStore: idForTypeExistsInStore,
+    getDataFor: getDataFor,
+    ensureStoreTypeExists: ensureStoreTypeExists,
+    storeData: storeData,
+    listDataFor: listDataFor,
+    deleteDataFor: deleteDataFor
+  }
 }
