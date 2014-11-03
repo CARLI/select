@@ -193,6 +193,10 @@ describe('Viewing an existing Vendor in read only mode', function () {
 describe('Viewing an existing Vendor in edit mode', function () {
     var vendorPage = new VendorPage();
 
+    it('should be in edit mode', function () {
+        vendorPage.editButton.click();
+    });
+
     it('should have a populated name field', function() {
         expect(vendorPage.nameInput.getAttribute('value')).toBe(vendorPage.testVendor.name);
     });
