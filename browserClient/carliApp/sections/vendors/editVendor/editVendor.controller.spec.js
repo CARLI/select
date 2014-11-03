@@ -54,7 +54,7 @@ describe('The Edit Vendor Controller', function(){
 
     it('should have a default, editable Vendor on the New Vendor screen', inject(function($controller){
         var editCtrl = $controller('editVendorController', mockDependenciesForNewVendor);
-        expect( editCtrl.vendor.name ).to.equal('New Vendor');
+        expect( editCtrl.vendor.isActive ).to.equal(true);
         expect( editCtrl.editable ).to.equal(true);
     }));
 

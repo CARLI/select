@@ -1,1 +1,3 @@
-<view-edit-contact contact="styleGuideController.exampleContact"></view-edit-contact>
+<view-edit-contact contact="vm.exampleContact" edit-mode="vm.contactEditable"></view-edit-contact>
+<div class="btn btn-default" ng-click="vm.toggleContactEditable()">{{ vm.contactEditable ? 'View' : 'Edit' }}</div>
+

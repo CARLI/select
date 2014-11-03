@@ -10,7 +10,7 @@ describe('The New Vendor screen', function () {
     it('should have a default name input field', function () {
         expect(vendorPage.nameInput.isPresent()).toBe(true);
         expect(vendorPage.nameInput.getTagName()).toBe('input');
-        expect(vendorPage.nameInput.getAttribute('value')).toBe('New Vendor');
+        expect(vendorPage.nameInput.getAttribute('value')).toBe('');
     });
 
     it('should have a blank Website input field', function () {
@@ -71,7 +71,7 @@ describe('The New Vendor screen', function () {
 });
 
 
-describe('Viewing an existing Vendor', function () {
+describe('Viewing an existing Vendor in read only mode', function () {
     var vendorPage = new VendorPage();
 
     it('should be routed to the screen for the test vendor', function () {
@@ -90,6 +90,107 @@ describe('Viewing an existing Vendor', function () {
                 vendorList[0].element(by.tagName('a')).click();
             });
     });
+
+
+    it('should not have an editable name field', function() {
+        expect(vendorPage.nameInput.isDisplayed()).toBe(false);
+    });
+
+    it('should not have an editable websiteUrl field', function() {
+        expect(vendorPage.websiteInput.isDisplayed()).toBe(false);
+    });
+
+    it('should not have an editable comments textarea', function() {
+        expect(vendorPage.commentsInput.isDisplayed()).toBe(false);
+    });
+
+    it('should not have an editable adminModule textarea', function() {
+        expect(vendorPage.adminModuleInput.isDisplayed()).toBe(false);
+    });
+
+    it('should not have an editable isActive input', function() {
+        vendorPage.statusInputs.then(function(items) {
+            expect(items[0].isDisplayed()).toBe(false);
+        });
+    });
+
+    it('should not display editable Contact fields', function() {
+        var contactForm;
+        for ( i = 0 ; i < vendorPage.testVendor.billingContacts.length ; i++ ) {
+            contactForm = vendorPage.getContactEditForm('Billing', i);
+            expect(contactForm.name.isDisplayed()).toBe(false);
+            expect(contactForm.phoneNumber.isDisplayed()).toBe(false);
+            expect(contactForm.email.isDisplayed()).toBe(false);
+        }
+        for ( i = 0 ; i < vendorPage.testVendor.technicalContacts.length ; i++ ) {
+            contactForm = vendorPage.getContactEditForm('Technical', i);
+            expect(contactForm.name.isDisplayed()).toBe(false);
+            expect(contactForm.phoneNumber.isDisplayed()).toBe(false);
+            expect(contactForm.email.isDisplayed()).toBe(false);
+        }
+        for ( i = 0 ; i < vendorPage.testVendor.salesContacts.length ; i++ ) {
+            contactForm = vendorPage.getContactEditForm('Sales', i);
+            expect(contactForm.name.isDisplayed()).toBe(false);
+            expect(contactForm.phoneNumber.isDisplayed()).toBe(false);
+            expect(contactForm.email.isDisplayed()).toBe(false);
+        }
+    });
+
+    it('should display name', function() {
+        vendorPage.nameDisplay.getText().then(function (text) {
+            expect(text).toBe(vendorPage.testVendor.name);
+        });
+    });
+
+    it('should display websiteUrl', function() {
+        vendorPage.websiteDisplay.getText().then(function (text) {
+            expect(text).toBe(vendorPage.testVendor.websiteUrl);
+        });
+    });
+
+    it('should display comments', function() {
+        vendorPage.commentsInputDisplay.getText().then(function (text) {
+            expect(text).toBe(vendorPage.testVendor.comments);
+        });
+    });
+
+    it('should display adminModule', function() {
+        vendorPage.adminModuleInputDisplay.getText().then(function (text) {
+            expect(text).toBe(vendorPage.testVendor.adminModule);
+        });
+    });
+
+    it('should display Vendor Status', function() {
+        vendorPage.statusInputDisplay.getText().then(function (text) {
+            expect(text).toBe(vendorPage.testVendor.isActive ? 'Active' : 'Inactive');
+        });
+    });
+
+    it('should display Contacts', function() {
+        var contactElement;
+        for ( i = 0 ; i < vendorPage.testVendor.billingContacts.length ; i++ ) {
+            contactElement = vendorPage.getContactViewElement('Billing', i);
+            expect(contactElement.name.isDisplayed()).toBe(true);
+            expect(contactElement.phoneNumber.isDisplayed()).toBe(true);
+            expect(contactElement.email.isDisplayed()).toBe(true);
+        }
+        for ( i = 0 ; i < vendorPage.testVendor.technicalContacts.length ; i++ ) {
+            contactElement = vendorPage.getContactViewElement('Technical', i);
+            expect(contactElement.name.isDisplayed()).toBe(true);
+            expect(contactElement.phoneNumber.isDisplayed()).toBe(true);
+            expect(contactElement.email.isDisplayed()).toBe(true);
+        }
+        for ( i = 0 ; i < vendorPage.testVendor.salesContacts.length ; i++ ) {
+            contactElement = vendorPage.getContactViewElement('Sales', i);
+            expect(contactElement.name.isDisplayed()).toBe(true);
+            expect(contactElement.phoneNumber.isDisplayed()).toBe(true);
+            expect(contactElement.email.isDisplayed()).toBe(true);
+        }
+    });
+});
+
+describe('Viewing an existing Vendor in edit mode', function () {
+    var vendorPage = new VendorPage();
 
     it('should have a populated name field', function() {
         expect(vendorPage.nameInput.getAttribute('value')).toBe(vendorPage.testVendor.name);
@@ -112,30 +213,30 @@ describe('Viewing an existing Vendor', function () {
     });
 
     it('should have correctly filled in Contact fields', function(){
-        var contactElement, contact;
+        var contactForm, contact;
 
         for ( i = 0 ; i < vendorPage.testVendor.billingContacts.length ; i++ ){
-            contactElement = vendorPage.getContact('Billing', i);
+            contactForm = vendorPage.getContactEditForm('Billing', i);
             contact = vendorPage.testVendor.billingContacts[i];
-            expect(contactElement.name.getAttribute('value')).toBe(contact.name);
-            expect(contactElement.email.getAttribute('value')).toBe(contact.email);
-            expect(contactElement.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
+            expect(contactForm.name.getAttribute('value')).toBe(contact.name);
+            expect(contactForm.email.getAttribute('value')).toBe(contact.email);
+            expect(contactForm.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
         }
 
         for ( i = 0 ; i < vendorPage.testVendor.salesContacts.length ; i++ ){
-            contactElement = vendorPage.getContact('Sales', i);
+            contactForm = vendorPage.getContactEditForm('Sales', i);
             contact = vendorPage.testVendor.salesContacts[i];
-            expect(contactElement.name.getAttribute('value')).toBe(contact.name);
-            expect(contactElement.email.getAttribute('value')).toBe(contact.email);
-            expect(contactElement.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
+            expect(contactForm.name.getAttribute('value')).toBe(contact.name);
+            expect(contactForm.email.getAttribute('value')).toBe(contact.email);
+            expect(contactForm.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
         }
 
         for ( i = 0 ; i < vendorPage.testVendor.technicalContacts.length ; i++ ){
-            contactElement = vendorPage.getContact('Technical', i);
+            contactForm = vendorPage.getContactEditForm('Technical', i);
             contact = vendorPage.testVendor.technicalContacts[i];
-            expect(contactElement.name.getAttribute('value')).toBe(contact.name);
-            expect(contactElement.email.getAttribute('value')).toBe(contact.email);
-            expect(contactElement.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
+            expect(contactForm.name.getAttribute('value')).toBe(contact.name);
+            expect(contactForm.email.getAttribute('value')).toBe(contact.email);
+            expect(contactForm.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
         }
     });
 });
@@ -199,30 +300,30 @@ describe('Making changes to an existing Vendor', function(){
     });
 
     it('should save changes to the Contacts', function() {
-        var contactElement, contact; 
+        var contactForm, contact;
 
         for ( i = 0 ; i < vendorPage.testEditVendor.billingContacts.length ; i++ ){
-            contactElement = vendorPage.getContact('Billing', i);
+            contactForm = vendorPage.getContactEditForm('Billing', i);
             contact = vendorPage.testEditVendor.billingContacts[i];
-            expect(contactElement.name.getAttribute('value')).toBe(contact.name);
-            expect(contactElement.email.getAttribute('value')).toBe(contact.email);
-            expect(contactElement.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
+            expect(contactForm.name.getAttribute('value')).toBe(contact.name);
+            expect(contactForm.email.getAttribute('value')).toBe(contact.email);
+            expect(contactForm.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
         }
 
         for ( i = 0 ; i < vendorPage.testEditVendor.salesContacts.length ; i++ ){
-            contactElement = vendorPage.getContact('Sales', i);
+            contactForm = vendorPage.getContactEditForm('Sales', i);
             contact = vendorPage.testEditVendor.salesContacts[i];
-            expect(contactElement.name.getAttribute('value')).toBe(contact.name);
-            expect(contactElement.email.getAttribute('value')).toBe(contact.email);
-            expect(contactElement.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
+            expect(contactForm.name.getAttribute('value')).toBe(contact.name);
+            expect(contactForm.email.getAttribute('value')).toBe(contact.email);
+            expect(contactForm.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
         }
 
         for ( i = 0 ; i < vendorPage.testEditVendor.technicalContacts.length ; i++ ){
-            contactElement = vendorPage.getContact('Technical', i);
+            contactForm = vendorPage.getContactEditForm('Technical', i);
             contact = vendorPage.testEditVendor.technicalContacts[i];
-            expect(contactElement.name.getAttribute('value')).toBe(contact.name);
-            expect(contactElement.email.getAttribute('value')).toBe(contact.email);
-            expect(contactElement.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
+            expect(contactForm.name.getAttribute('value')).toBe(contact.name);
+            expect(contactForm.email.getAttribute('value')).toBe(contact.email);
+            expect(contactForm.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
         }
     });
 });

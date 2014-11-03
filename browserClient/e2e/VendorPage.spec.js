@@ -1,11 +1,16 @@
 var VendorPage = function () {
     this.listFilterShowAll = element(by.cssContainingText('.ng-binding', 'All vendors'));
 
-    this.nameInput = element(by.model('vm.vendor.name'));
-    this.websiteInput = element(by.model('vm.vendor.websiteUrl'));
-    this.commentsInput = element(by.model('vm.vendor.comments'));
-    this.adminModuleInput = element(by.model('vm.vendor.adminModule'));
-    this.statusInputs = element.all(by.model('vm.vendor.isActive'));
+    this.nameInput = element(by.model('vm.vendor.name')).element(by.tagName('input'));
+    this.nameDisplay = element(by.model('vm.vendor.name'));
+    this.websiteInput = element(by.model('vm.vendor.websiteUrl')).element(by.tagName('input'));
+    this.websiteDisplay = element(by.model('vm.vendor.websiteUrl'));
+    this.commentsInput = element(by.model('vm.vendor.comments')).element(by.tagName('textarea'));
+    this.commentsInputDisplay = element(by.model('vm.vendor.comments'));
+    this.adminModuleInput = element(by.model('vm.vendor.adminModule')).element(by.tagName('textarea'));
+    this.adminModuleInputDisplay = element(by.model('vm.vendor.adminModule'));
+    this.statusInputs = element.all(by.model('vm.vendor.isActive')).all(by.tagName('input'));
+    this.statusInputDisplay = element(by.model('vm.vendor.isActive'));
     this.addBillingContactLink = element(by.id('add-billing-contact'));
     this.addSalesContactLink = element(by.id('add-sales-contact'));
     this.addTechnicalContactLink = element(by.id('add-technical-contact'));
@@ -31,11 +36,20 @@ var VendorPage = function () {
         return this.statusInputs.get(0).getAttribute('checked');
     };
 
-    this.getContact = function getContact( type, index ){
-        var contact = element(by.repeater("contact in vm.vendor.contacts | filter:{ contactType: '"+type+"' }").row(index));
+    this.getContactViewElement = function getContactViewElement(type, index) {
+        var contact = element(by.repeater("contact in vm.vendor.contacts | filter:{ contactType: '" + type + "' }").row(index));
 
         return {
-            name:  contact.all(by.model('contact.name')).get(0),
+            name: contact.all(by.exactBinding('contact.name')).get(0),
+            email: contact.all(by.exactBinding('contact.email')).get(0),
+            phoneNumber: contact.all(by.exactBinding('contact.phoneNumber')).get(0)
+        };
+    };
+    this.getContactEditForm = function getContactEditForm(type, index) {
+        var contact = element(by.repeater("contact in vm.vendor.contacts | filter:{ contactType: '" + type + "' }").row(index));
+
+        return {
+            name: contact.all(by.model('contact.name')).get(0),
             email: contact.all(by.model('contact.email')).get(0),
             phoneNumber: contact.all(by.model('contact.phoneNumber')).get(0)
         };
@@ -68,7 +82,7 @@ var VendorPage = function () {
         for ( i = 0 ; i < vendorObject.billingContacts.length ; i++ ){
             this.addBillingContactLink.click();
 
-            contact = this.getContact('Billing',i);
+            contact = this.getContactEditForm('Billing',i);
             testData = vendorObject.billingContacts[i];
 
             this.fillInContact( contact, testData );
@@ -77,7 +91,7 @@ var VendorPage = function () {
         for ( i = 0 ; i < vendorObject.salesContacts.length ; i++ ){
             this.addSalesContactLink.click();
 
-            contact = this.getContact('Sales',i);
+            contact = this.getContactEditForm('Sales',i);
             testData = vendorObject.salesContacts[i];
 
             this.fillInContact( contact, testData );
@@ -86,7 +100,7 @@ var VendorPage = function () {
         for ( i = 0 ; i < vendorObject.technicalContacts.length ; i++ ){
             this.addTechnicalContactLink.click();
 
-            contact = this.getContact('Technical',i);
+            contact = this.getContactEditForm('Technical',i);
             testData = vendorObject.technicalContacts[i];
 
             this.fillInContact( contact, testData );
