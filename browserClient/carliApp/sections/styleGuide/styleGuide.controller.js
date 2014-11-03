@@ -5,21 +5,18 @@ function styleGuideController(componentExamples, componentGatherer) {
     var vm = this;
     var basePath = '/carliApp/sections/styleGuide/examples/';
 
+    vm.contactEditable = false;
+    vm.textFieldEditable = false;
+    vm.defaultTextEditValue = "Default Text Field Value";
+
+    vm.toggleContactEditable = function toggleContactEditable () {
+        vm.contactEditable = !vm.contactEditable;
+    };
+    vm.toggleTextFieldEditable = function toggleTextFieldEditable () {
+        vm.textFieldEditable = !vm.textFieldEditable;
+    };
+
     vm.components = componentGatherer.gather(componentExamples, basePath);
-    vm.exampleCycleList = [
-        {
-            name: "Example Cycle 1",
-            status: "Pending"
-        },
-        {
-            name: "Example Cycle 2",
-            status: "Open"
-        },
-        {
-            name: "Example Cycle 3",
-            status: "Closed"
-        }
-    ];
 
     vm.exampleVendors = [
         {
