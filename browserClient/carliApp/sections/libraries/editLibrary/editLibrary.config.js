@@ -1,4 +1,4 @@
 angular.module('carli.sections.libraries.edit',[
     'carli.libraryService',
-    'carli.viewEditContact'
+    'carli.viewEditDirectives.viewEditContact'
 ]);
