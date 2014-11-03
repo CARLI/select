@@ -1,3 +1,5 @@
+$column-gutter: 1.5em;
+
 #vendors {
     .edit-vendors-header {
         background-color: $light-gray;
@@ -5,8 +7,19 @@
     fieldset {
         @include grid-row();
 
+        input[type=text],
+        textarea {
+          width: 100%;
+        }
+
         div.column {
             @include grid-column(6);
+            &:nth-child(1) {
+              padding-right: $column-gutter / 2;
+            }
+            &:nth-child(2) {
+              padding-left: $column-gutter / 2;
+            }
         }
     }
 }

@@ -1,10 +1,9 @@
 $num-columns: 3;
 $column-percent: 100% / $num-columns;
 
-$filter-input-margin: 0.57rem;
+$filter-input-spacing: 0.57rem;
 $filter-by-active-inner-spacing: 1.5em;
 
-$default-border: 1px solid $gray;
 $controls-top-border: 3px solid $black;
 
 $controls-background: $light-gray;
@@ -23,13 +22,12 @@ $table-content-fg-color: $moderate-magenta;
         border-left: $default-border;
         font-size: 1.28rem;
         line-height: 1.77;
-        padding-left: $filter-input-margin;
+        padding-left: $filter-input-spacing;
         position: relative;
 
         .filter-input {
-            border: $default-border;
-            padding: 0 1.75em 0 $filter-input-margin;
-            margin: $filter-input-margin 0;
+            padding-right: 1.75em;
+            margin: $filter-input-spacing 0;
             width: 100%;
         }
 
@@ -38,8 +36,8 @@ $table-content-fg-color: $moderate-magenta;
             content: "\f002"; // fa-search
             font-family: "FontAwesome";
             position: absolute;
-            top: $filter-input-margin;
-            right: $filter-input-margin;
+            top: $filter-input-spacing;
+            right: $filter-input-spacing;
         }
     }
 

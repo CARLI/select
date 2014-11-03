@@ -41,6 +41,13 @@ h1 {
     font-weight: 700;
 }
 
+input[type=text],
+textarea {
+    border: $default-border;
+    padding: 0 $default-input-padding;
+    width: 100%;
+}
+
 $button-padding: 10px;
 
 .carli-button {
@@ -76,12 +83,14 @@ $button-padding: 10px;
 
 .page-header {
     @extend .container-fluid;
+    margin-top: 0;
 }
 section.content {
     @extend .container-fluid;
 }
 
-.section-header {
+.list-page-header {
+    @extend .container-fluid;
     @include flexbox;
     @include vendor-prefix('align-items', 'center');
 
