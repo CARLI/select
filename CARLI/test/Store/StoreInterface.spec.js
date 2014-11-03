@@ -114,28 +114,35 @@ function test( storeTypeName, options ) {
             } );
 
             it( 'should return stored data for id', function() {
-                expect( DataStore.get( { id: simpleObjectSaveId, type: simpleObject.type } ) ).to.deep.equal( simpleObject );
+                expect( DataStore.get( { id: simpleObjectSaveId, type: simpleObject.type } ) ).to.eventually.deep.equal( simpleObject );
             } );
 
             it( 'should save the data under id if id property is set', function() {
-                expect( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.deep.equal( objectWithId );
+                expect( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.eventually.deep.equal( objectWithId );
             } );
 
             it( 'should update the store if called with the same id', function(){
                 objectWithId.foo = 'new value';
                 DataStore.save( objectWithId );
-                expect( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.deep.equal( objectWithId );
+                expect( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.eventually.deep.equal( objectWithId );
             } );
 
             it( "shouldn't update the store because of an object reference bug", function() {
-                objectWithId.foo = 'new value';
-                DataStore.save( objectWithId );
-                testObject = DataStore.get( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) );
-                objectWithId.foo = 'garbage'; // Change the object to fail
-                expect( testObject ).to.not.deep.equal( objectWithId );
+                DataStore.save( objectWithId )
+                .then( function() {
+                    return DataStore.get({id: objectWithIdSaveId, type: objectWithId.type})
+                } )
+                .then( function( objectWithId ) {
+                    return DataStore.get( objectWithId );
+                } )
+                .then( function( testObject ) {
+                    objectWithId.foo = uuid.v4();
+                    expect( testObject ).to.not.deep.equal( objectWithId );
+                    done();
+                } );
             } );
 
-            it('should save objects with differing types and same id separately', function(){
+            it('should save objects with differing types and same id separately', function( done ){
                 var sharedId = uuid.v4();
 
                 var objectWithType = makeValidObject();
@@ -145,11 +152,16 @@ function test( storeTypeName, options ) {
                 objectWithNewType.type = 'new_type';
                 objectWithNewType.id = sharedId;
 
-                DataStore.save( objectWithType );
-                DataStore.save( objectWithNewType );
+                Q.all([
+                  DataStore.save( objectWithType ),
+                  DataStore.save( objectWithNewType )
+                ])
+                .then( function() {
+                   expect( DataStore.get( {id: sharedId, type: objectWithType.type} ) ).to.eventually.deep.equal( objectWithType );
+                   expect( DataStore.get( {id: sharedId, type: objectWithNewType.type} ) ).to.eventually.deep.equal( objectWithNewType );
+                    done();
+                } );
 
-                expect( DataStore.get( { id: sharedId, type: objectWithType.type } ) ).to.deep.equal( objectWithType );
-                expect( DataStore.get( { id: sharedId, type: objectWithNewType.type } ) ).to.deep.equal( objectWithNewType );
             } );
         } );
 

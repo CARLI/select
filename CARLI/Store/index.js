@@ -63,7 +63,14 @@ module.exports = function( storeType ) {
     return {
 
         get: function( options ) {
-            return toGetOrDelete( myStore, options );
+            var deferred = Q.defer();
+            try {
+                deferred.resolve( toGetOrDelete( myStore, options ) );
+            }
+            catch( err ) {
+                throw err;
+            }
+            return deferred.promise;
         },
 
         save: function( data ) {

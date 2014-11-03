@@ -96,7 +96,7 @@ function test( entityTypeName, validData, invalidData ) {
                 entity_data.foo = 'bar';
                 var entity = EntityRepository.create( entity_data );
                 entity_data.type = entityTypeName;
-                expect( EntityRepository.load( 'thingy' ) ).deep.equal( entity_data );
+                expect( EntityRepository.load( 'thingy' ) ).to.eventually.deep.equal( entity_data );
             } );
 
         } );
@@ -138,7 +138,7 @@ function test( entityTypeName, validData, invalidData ) {
                 var entity = EntityRepository.create( entity_data );
                 entity.foo = 'new value';
                 EntityRepository.update( entity );
-                expect( EntityRepository.load( entity.id ) ).to.deep.equal( entity );
+                expect( EntityRepository.load( entity.id ) ).to.eventually.deep.equal( entity );
             } );
 
             it( 'should fail on update with invalid schema', function(){
