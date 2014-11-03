@@ -74,6 +74,13 @@ $button-padding: 10px;
 
 }
 
+.page-header {
+    @extend .container-fluid;
+}
+section.content {
+    @extend .container-fluid;
+}
+
 .section-header {
     @include flexbox;
     @include vendor-prefix('align-items', 'center');

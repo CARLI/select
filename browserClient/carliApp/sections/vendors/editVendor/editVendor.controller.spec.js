@@ -56,6 +56,7 @@ describe('The Edit Vendor Controller', function(){
         var editCtrl = $controller('editVendorController', mockDependenciesForNewVendor);
         expect( editCtrl.vendor.isActive ).to.equal(true);
         expect( editCtrl.editable ).to.equal(true);
+        expect( editCtrl.newVendor ).to.equal(true);
     }));
 
     it('should call vendorService.create when saving a new Vendor', inject(function($controller){
@@ -69,6 +70,7 @@ describe('The Edit Vendor Controller', function(){
         var editCtrl = $controller('editVendorController', mockDependenciesForEditVendor);
         expect( editCtrl.vendor.name ).to.equal('Test Vendor');
         expect( editCtrl.editable ).to.equal(false);
+        expect( editCtrl.newVendor ).to.equal(false);
     }));
 
     it('should call vendorService.update when saving an existing Vendor', inject(function($controller){

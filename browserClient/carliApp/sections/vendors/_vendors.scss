@@ -1,2 +1,12 @@
 #vendors {
+    .edit-vendors-header {
+        background-color: $light-gray;
+    }
+    fieldset {
+        @include grid-row();
+
+        div.column {
+            @include grid-column(6);
+        }
+    }
 }
