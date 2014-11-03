@@ -2,7 +2,11 @@ var chai   = require( 'chai' )
   , expect = chai.expect
   , uuid   = require( 'node-uuid' )
   , store = require( '../../Store' )
+  , chaiAsPromised = require( 'chai-as-promised' )
+  , Q     = require( 'q' )
 ;
+
+chai.use( chaiAsPromised );
 
 function test( storeTypeName, options ) {
 
@@ -49,7 +53,7 @@ function test( storeTypeName, options ) {
 
             it( 'should save data and return id', function() {
                 var id = uuid.v4();
-                expect( DataStore.save( { id: id, type: 'testy' } ) ).to.equal( id );
+                expect( DataStore.save( { id: id, type: 'testy' } ) ).to.eventually.equal( id );
             } );
 
         } );
@@ -63,12 +67,25 @@ function test( storeTypeName, options ) {
 
             var simpleObject = makeValidObject();
             simpleObject.foo = 'bar';
-            var simpleObjectSaveId  = DataStore.save( simpleObject );
+            var simpleObjectSaveId  = null;
+
+
 
             var objectWithId = makeValidObject();
             objectWithId.id = uuid.v4();
             objectWithId.foo = 'baz';
-            var objectWithIdSaveId  = DataStore.save( objectWithId );
+            var objectWithIdSaveId  = null;
+
+            before( function( done ) {
+                Q.all([
+                    DataStore.save( simpleObject ),
+                    DataStore.save( objectWithId )
+                ]).then( function( ids ) {
+                    simpleObjectSaveId = ids[0];
+                    objectWithIdSaveId = ids[1];
+                    done();
+                } );
+            } );
 
             it( 'should fail without an id', function() {
                 expect( DataStore.get ).to.throw( /Requires an id/ );
@@ -184,6 +201,14 @@ function test( storeTypeName, options ) {
             var objectType = uuid.v4();
             var object = makeValidObject();
             object.type = uuid.v4();
+
+            before( function( done ) {
+                DataStore.save( object ).then( function ( id ) {
+                    object.id = id;
+                    done();
+                } );
+            } );
+
             object.id = DataStore.save( object );
 
             it( 'should fail without an id', function() {

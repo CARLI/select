@@ -1,3 +1,6 @@
+var Q = require( 'q' )
+;
+
 function ensureGetOptionsExist( options ){
     if( !options || !options.id ) {
             throw new Error( 'Requires an id' );
@@ -64,9 +67,15 @@ module.exports = function( storeType ) {
         },
 
         save: function( data ) {
-            ensureSaveDataIsValid( data );
-            myStore.ensureStoreTypeExists( data.type );
-            return myStore.storeData( data );
+            var deferred = Q.defer();
+            try {
+              ensureSaveDataIsValid( data );
+              myStore.ensureStoreTypeExists( data.type );
+              deferred.resolve( myStore.storeData( data ) );
+            } catch( err ) {
+              throw err;
+            }
+            return deferred.promise;
         },
 
         list: function( type ) {

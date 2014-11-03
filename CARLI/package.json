@@ -7,11 +7,13 @@
   },
   "author": "",
   "dependencies": {
-    "tv4": "^1.1.4",
-    "node-uuid": "^1.4.1"
+    "node-uuid": "^1.4.1",
+    "q": "^1.0.1",
+    "tv4": "^1.1.4"
   },
   "devDependencies": {
     "chai": "^1.9.2",
+    "chai-as-promised": "^4.1.1",
     "mocha": "^1.21.5",
     "mocha-jenkins-reporter": "^0.1.2"
   }
