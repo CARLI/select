@@ -96,10 +96,18 @@ describe('Viewing an existing Vendor in read only mode', function () {
         expect(vendorPage.nameInput.isDisplayed()).toBe(false);
     });
 
+    it('should not have an editable websiteUrl field', function() {
+        expect(vendorPage.websiteInput.isDisplayed()).toBe(false);
+    });
 
-//    it('should not have an editable website field');
-//    it('should not have an editable comments field');
-//    it('should not have an editable admin module comment field');
+    it('should not have an editable comments textarea', function() {
+        expect(vendorPage.commentsInput.isDisplayed()).toBe(false);
+    });
+
+    it('should not have an editable adminModule textarea', function() {
+        expect(vendorPage.adminModuleInput.isDisplayed()).toBe(false);
+    });
+
 //    it('should not have editable Vendor Status radio buttons');
 
     it('should not display editable Contact fields', function() {
@@ -130,9 +138,24 @@ describe('Viewing an existing Vendor in read only mode', function () {
         });
     });
 
-//    it('should display the website');
-//    it('should display the comments field');
-//    it('should display the admin module comment field');
+    it('should display websiteUrl', function() {
+        vendorPage.websiteDisplay.getText().then(function (text) {
+            expect(text).toBe(vendorPage.testVendor.websiteUrl);
+        });
+    });
+
+    it('should display comments', function() {
+        vendorPage.commentsInputDisplay.getText().then(function (text) {
+            expect(text).toBe(vendorPage.testVendor.comments);
+        });
+    });
+
+    it('should display adminModule', function() {
+        vendorPage.adminModuleInputDisplay.getText().then(function (text) {
+            expect(text).toBe(vendorPage.testVendor.adminModule);
+        });
+    });
+
 //    it('should display the Vendor Status');
 
     it('should display Contacts', function() {
