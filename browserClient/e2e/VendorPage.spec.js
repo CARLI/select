@@ -66,6 +66,20 @@ var VendorPage = function () {
         contactElement.phoneNumber.sendKeys( contactData.phoneNumber );
     };
 
+    this.addEmptyContacts = function addEmptyContacts ( vendorObject ) {
+        for ( i = 0 ; i < vendorObject.billingContacts.length ; i++ ){
+            this.addBillingContactLink.click();
+        }
+
+        for ( i = 0 ; i < vendorObject.salesContacts.length ; i++ ){
+            this.addSalesContactLink.click();
+        }
+
+        for ( i = 0 ; i < vendorObject.technicalContacts.length ; i++ ){
+            this.addTechnicalContactLink.click();
+        }
+    };
+
     this.fillInVendor = function fillInVendorForm ( vendorObject ){
 
         this.nameInput.clear();
@@ -80,8 +94,6 @@ var VendorPage = function () {
         this.clickStatusInput(vendorObject.isActive);
 
         for ( i = 0 ; i < vendorObject.billingContacts.length ; i++ ){
-            this.addBillingContactLink.click();
-
             contact = this.getContactEditForm('Billing',i);
             testData = vendorObject.billingContacts[i];
 
@@ -89,8 +101,6 @@ var VendorPage = function () {
         }
 
         for ( i = 0 ; i < vendorObject.salesContacts.length ; i++ ){
-            this.addSalesContactLink.click();
-
             contact = this.getContactEditForm('Sales',i);
             testData = vendorObject.salesContacts[i];
 
@@ -98,8 +108,6 @@ var VendorPage = function () {
         }
 
         for ( i = 0 ; i < vendorObject.technicalContacts.length ; i++ ){
-            this.addTechnicalContactLink.click();
-
             contact = this.getContactEditForm('Technical',i);
             testData = vendorObject.technicalContacts[i];
 

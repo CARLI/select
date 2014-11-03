@@ -51,13 +51,14 @@ describe('The New Vendor screen', function () {
     it('should save a new Vendor when filling in the form and clicking save', function() {
         var i, contact, testData, vendorList;
 
+        vendorPage.addEmptyContacts( vendorPage.testVendor );
         vendorPage.fillInVendor( vendorPage.testVendor );
 
         vendorPage.submit.click();
 
         vendorPage.listFilterShowAll.click();
 
-        element.all(by.repeater('vendor in vm.vendorList'))
+        element.all(by.repeater('entity in values'))
         .filter( function(el, index) {
             return el.getText().then(function(text){
                 return (text.search(vendorPage.testVendor.name) > -1);
@@ -80,7 +81,7 @@ describe('Viewing an existing Vendor in read only mode', function () {
         //browser.setLocation('/vendor');
         //vendorPage.listFilterShowAll.click();
 
-        element.all(by.repeater('vendor in vm.vendorList'))
+        element.all(by.repeater('entity in values'))
             .filter(function (el, index) {
                 return el.getText().then(function (text) {
                     return (text.search(vendorPage.testVendor.name) > -1);
@@ -249,7 +250,7 @@ describe('Making changes to an existing Vendor', function(){
 
         vendorPage.listFilterShowAll.click();
 
-        element.all(by.repeater('vendor in vm.vendorList'))
+        element.all(by.repeater('entity in values'))
             .filter(function (el, index) {
                 return el.getText().then(function (text) {
                     return (text.search(vendorPage.testVendor.name) > -1);
@@ -267,7 +268,7 @@ describe('Making changes to an existing Vendor', function(){
 
         vendorPage.listFilterShowAll.click();
 
-        element.all(by.repeater('vendor in vm.vendorList'))
+        element.all(by.repeater('entity in values'))
             .filter(function (el, index) {
                 return el.getText().then(function (text) {
                     return (text.search(vendorPage.testEditVendor.name) > -1);
