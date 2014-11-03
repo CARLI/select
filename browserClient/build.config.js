@@ -60,6 +60,7 @@ module.exports = {
             'bower_modules/angular/angular.js',
             'bower_modules/angular-route/angular-route.js',
             'bower_modules/angular-resource/angular-resource.js',
+            'bower_modules/angular-sanitize/angular-sanitize.js',
             'bower_modules/angular-fontawesome/dist/angular-fontawesome.js'
         ],
         css: [
