@@ -57,7 +57,13 @@ describe( 'The Validator Module', function() {
         it( 'should return true for a valid Vendor object', function() {
             var validVendor = {
                 type: 'Vendor',
-                name: 'Example Vendor'
+                name: 'Example Vendor',
+                contacts: [{
+                    contactType: 'Billing',
+                    name: 'George',
+                    email: 'george@jetson.com',
+                    phoneNumber: '123-4567'
+                }]
             };
             expect( Validator.validate(validVendor) ).to.be.true;
         });
