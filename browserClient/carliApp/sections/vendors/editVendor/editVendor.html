@@ -35,26 +35,26 @@
             <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
             <a ng-click="vm.deleteContact(contact)">Delete</a>
         </div>
-        <a id="add-billing-contact" ng-click="vm.addContact('Billing')">Add Contact</a>
+        <a id="add-billing-contact" ng-show="vm.editable" ng-click="vm.addContact('Billing')">Add Contact</a>
 
         <h3>Sales</h3>
         <div ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Sales' }">
             <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
             <a ng-click="vm.deleteContact(contact)">Delete</a>
         </div>
-        <a id="add-sales-contact" ng-click="vm.addContact('Sales')">Add Contact</a>
+        <a id="add-sales-contact" ng-show="vm.editable" ng-click="vm.addContact('Sales')">Add Contact</a>
 
         <h3>Technical</h3>
         <div ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Technical' }">
             <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
             <a ng-click="vm.deleteContact(contact)">Delete</a>
         </div>
-        <a id="add-technical-contact" ng-click="vm.addContact('Technical')">Add Contact</a>
+        <a id="add-technical-contact" ng-show="vm.editable" ng-click="vm.addContact('Technical')">Add Contact</a>
 
-        <div>
+        <footer ng-show="vm.editable">
             <a href="/vendor">Cancel</a>
             <input id="vendor-submit" type="submit">
-        </div>
+        </footer>
       </fieldset>
     </form>
 
