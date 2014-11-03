@@ -24,8 +24,7 @@
         </div>
         <div>
             <label for="vendorStatus">Vendor Status</label>
-            <input type="radio" name="vendorStatus" ng-value="true" ng-model="vm.vendor.isActive"> Active
-            <input type="radio" name="vendorStatus" ng-value="false" ng-model="vm.vendor.isActive"> Inactive
+            <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.vendor.isActive" edit-mode="vm.editable">{{ vm.vendor.isActive ? 'Active' : 'Inactive' }}</view-edit-radios>
         </div>
 
         <h2>Contacts</h2>

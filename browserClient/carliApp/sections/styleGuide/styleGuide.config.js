@@ -3,7 +3,8 @@ angular.module('carli.sections.styleGuide',
         'carli.componentGatherer',
         'carli.viewEditDirectives.viewEditContact',
         'carli.viewEditDirectives.viewEditTextField',
-        'carli.viewEditDirectives.viewEditTextArea'
+        'carli.viewEditDirectives.viewEditTextArea',
+        'carli.viewEditDirectives.viewEditRadios'
     ]
 )
     .value('componentExamples', {

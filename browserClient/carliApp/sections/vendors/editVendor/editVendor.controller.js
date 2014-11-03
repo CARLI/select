@@ -10,6 +10,17 @@ function editVendorController( $location, $routeParams, vendorService ) {
     vm.addContact = addContact;
     vm.deleteContact = deleteContact;
 
+    vm.statusOptions = [
+        {
+            label: 'Active',
+            value: true
+        },
+        {
+            label: 'Inactive',
+            value: false
+        }
+    ];
+
     activate();
 
     function activate() {

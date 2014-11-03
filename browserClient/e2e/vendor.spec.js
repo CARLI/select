@@ -108,7 +108,11 @@ describe('Viewing an existing Vendor in read only mode', function () {
         expect(vendorPage.adminModuleInput.isDisplayed()).toBe(false);
     });
 
-//    it('should not have editable Vendor Status radio buttons');
+    it('should not have an editable isActive input', function() {
+        vendorPage.statusInputs.then(function(items) {
+            expect(items[0].isDisplayed()).toBe(false);
+        });
+    });
 
     it('should not display editable Contact fields', function() {
         var contactForm;
@@ -156,7 +160,11 @@ describe('Viewing an existing Vendor in read only mode', function () {
         });
     });
 
-//    it('should display the Vendor Status');
+    it('should display Vendor Status', function() {
+        vendorPage.statusInputDisplay.getText().then(function (text) {
+            expect(text).toBe(vendorPage.testVendor.isActive ? 'Active' : 'Inactive');
+        });
+    });
 
     it('should display Contacts', function() {
         var contactElement;
