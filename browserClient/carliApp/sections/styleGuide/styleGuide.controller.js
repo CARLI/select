@@ -8,12 +8,17 @@ function styleGuideController(componentExamples, componentGatherer) {
     vm.contactEditable = false;
     vm.textFieldEditable = false;
     vm.defaultTextEditValue = "Default Text Field Value";
+    vm.textAreaEditable = false;
+    vm.defaultTextAreaValue = "Default Text Area Value";
 
     vm.toggleContactEditable = function toggleContactEditable () {
         vm.contactEditable = !vm.contactEditable;
     };
     vm.toggleTextFieldEditable = function toggleTextFieldEditable () {
         vm.textFieldEditable = !vm.textFieldEditable;
+    };
+    vm.toggleTextAreaEditable = function toggleTextAreaEditable () {
+        vm.textAreaEditable = !vm.textAreaEditable;
     };
 
     vm.components = componentGatherer.gather(componentExamples, basePath);
