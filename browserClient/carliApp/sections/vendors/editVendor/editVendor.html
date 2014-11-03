@@ -16,11 +16,11 @@
         </div>
         <div>
             <label for="vendorComments">Comments</label>
-            <textarea name="vendorComments" ng-model="vm.vendor.comments"></textarea>
+            <view-edit-text-area ng-model="vm.vendor.comments" edit-mode="vm.editable">{{ vm.vendor.comments }}</view-edit-text-area>
         </div>
         <div>
             <label for="vendorAdminModule">Admin Module</label>
-            <textarea name="vendorAdminModule" ng-model="vm.vendor.adminModule"></textarea>
+            <view-edit-text-area name="vendorAdminModule" ng-model="vm.vendor.adminModule" edit-mode="vm.editable">{{ vm.vendor.adminModule }}</view-edit-text-area>
         </div>
         <div>
             <label for="vendorStatus">Vendor Status</label>
