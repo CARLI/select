@@ -50,7 +50,7 @@ var testVendors = [
     {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"}
 ];
 
-function vendorController( vendorService ){
+function vendorController( $sce, vendorService ){
     var vm = this;
     createTestVendors();
     activate();
@@ -69,7 +69,9 @@ function vendorController( vendorService ){
     vm.vendorListColumns = [
         {
             label: "Vendor Name",
-            contentFunction: function(vendor) { return '<a href="vendor/' + vendor.id + '">' + vendor.name + '</a>'; }
+            contentFunction: function(vendor) {
+                return $sce.trustAsHtml('<a href="vendor/' + vendor.id + '">' + vendor.name + '</a>');
+            }
         },
         {
             label: "Vendor Website",
