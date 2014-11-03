@@ -11,8 +11,6 @@
         <div class="column" ng-repeat="column in columns">{{ column.label }}</div>
     </li>
     <li ng-repeat="entity in values | filterByActive:activeFilterState | filter:filterText">
-        <div class="column" ng-repeat="column in columns">
-            {{ column.contentFunction(entity) }}
-        </div>
+        <div class="column" ng-repeat="column in columns" ng-bind-html="column.contentFunction(entity)"></div>
     </li>
 </ul>
