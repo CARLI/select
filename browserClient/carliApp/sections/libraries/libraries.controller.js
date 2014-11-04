@@ -17,6 +17,8 @@ var testLibraries = [
 function libraryController( $sce, libraryService ){
     var vm = this;
 
+    vm.mostRecentFteUpdateDate = libraryService.getMostRecentFteUpdateDate();
+
     function createTestLibraries() {
         testLibraries.forEach(function (l) {
             libraryService.create(l);
