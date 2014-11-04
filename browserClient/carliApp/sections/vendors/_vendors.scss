@@ -24,3 +24,14 @@ $column-gutter: 1.5em;
         }
     }
 }
+
+#vendors {
+    .vendor-form {
+        .admin-module textarea {
+            height: 80px;
+        }
+        .comments textarea {
+            height: 223px;
+        }
+    }
+}

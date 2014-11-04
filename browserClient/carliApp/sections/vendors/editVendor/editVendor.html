@@ -18,11 +18,11 @@
             <label for="vendorStatus">Status</label>
             <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.vendor.isActive" edit-mode="vm.editable">{{ vm.vendor.isActive ? 'Active' : 'Inactive' }}</view-edit-radios>
             <label for="vendorAdminModule">Admin Module</label>
-            <view-edit-text-area name="vendorAdminModule" ng-model="vm.vendor.adminModule" edit-mode="vm.editable">{{ vm.vendor.adminModule }}</view-edit-text-area>
+            <view-edit-text-area class="admin-module" ng-model="vm.vendor.adminModule" edit-mode="vm.editable">{{ vm.vendor.adminModule }}</view-edit-text-area>
         </div>
         <div class="column">
             <label for="vendorComments">Comments</label>
-            <view-edit-text-area ng-model="vm.vendor.comments" edit-mode="vm.editable">{{ vm.vendor.comments }}</view-edit-text-area>
+            <view-edit-text-area class="comments" ng-model="vm.vendor.comments" edit-mode="vm.editable">{{ vm.vendor.comments }}</view-edit-text-area>
         </div>
       </fieldset>
       <fieldset>
