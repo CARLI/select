@@ -21,7 +21,7 @@ $table-content-fg-color: $moderate-magenta;
         @include flex(1 1 $column-percent);
         border-left: $default-border;
         font-size: 1.28rem;
-        line-height: 1.77;
+        line-height: 1;
         padding-left: $filter-input-spacing;
         position: relative;
 
@@ -36,7 +36,7 @@ $table-content-fg-color: $moderate-magenta;
             content: "\f002"; // fa-search
             font-family: "FontAwesome";
             position: absolute;
-            top: $filter-input-spacing;
+            top: $default-input-padding-top + $filter-input-spacing;
             right: $filter-input-spacing;
         }
     }
