@@ -2,9 +2,42 @@
     <div class="section-header">
         <h1>Libraries</h1>
         <div class="button-container">
+            <a id="update-fte" href="#" class="carli-button" data-toggle="modal" data-target="#myModal">Update FTE</a>
             <a id="new-library" href="/library/new" class="carli-button">New Library <i class="fa fa-plus-circle"></i></a>
         </div>
     </div>
 
     <entity-list values="vm.libraryList" columns="vm.entityListColumns" entity-label="libraries"></entity-list> 
 </section>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Update Full Time Enrollment (FTE)</h4>
+            </div>
+            <div class="modal-body">
+                <form name="fte-form">
+                    <div>
+                        Year <br>
+                        <select>
+                            <option>2015</option>
+                            <option>2014</option>
+                            <option>2013</option>
+                            <option>TODO: Grab these from actual data</option>
+                        </select>
+                    </div>
+                    <div>
+                        Library Name/FTE input boxes go here in multiple columns
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
