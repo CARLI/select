@@ -1,9 +1,10 @@
 $column-gutter: 1.5em;
 
-#vendors {
-    .edit-vendors-header {
-        background-color: $light-gray;
+.vendor-form {
+    label {
+        margin-top: 22px;
     }
+
     fieldset {
         @include grid-row();
 

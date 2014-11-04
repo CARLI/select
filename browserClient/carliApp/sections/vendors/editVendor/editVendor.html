@@ -1,6 +1,6 @@
 <section id="vendors">
 
-    <form name="vendorForm" ng-submit="vm.saveVendor()">
+    <form class="vendor-form" name="vendorForm" ng-submit="vm.saveVendor()">
 
       <header class="page-header edit-vendors-header">
           <h1 ng-show="vm.newVendor">New Vendor</h1>
@@ -15,7 +15,7 @@
         <div class="column">
             <label for="vendorWebsite">Vendor Website</label>
             <view-edit-text-field ng-model="vm.vendor.websiteUrl" edit-mode="vm.editable"><a ng-href="{{ vm.vendor.websiteURL }}">{{ vm.vendor.websiteUrl }}</a></view-edit-text-field>
-            <label for="vendorStatus">Vendor Status</label>
+            <label for="vendorStatus">Status</label>
             <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.vendor.isActive" edit-mode="vm.editable">{{ vm.vendor.isActive ? 'Active' : 'Inactive' }}</view-edit-radios>
             <label for="vendorAdminModule">Admin Module</label>
             <view-edit-text-area name="vendorAdminModule" ng-model="vm.vendor.adminModule" edit-mode="vm.editable">{{ vm.vendor.adminModule }}</view-edit-text-area>

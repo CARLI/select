@@ -25,7 +25,10 @@ $very-dark-violet: #411a57;
 $page-gutter: 124px;
 $page-content-width: 960px;
 $default-border: 1px solid $gray;
-$default-input-padding: 0.57rem;
+$default-input-padding-top: 0.39rem;
+$default-input-padding-left: 0.57rem;
+$default-input-padding: $default-input-padding-top $default-input-padding-left;
+
 
 /** Bootstrap overrides */
 $grid-gutter-width: 0;
