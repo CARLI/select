@@ -64,13 +64,13 @@
                             <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
                         </div>
                     </div>
-
-                    <footer ng-show="vm.editable">
-                        <a href="/vendor">Cancel</a>
-                        <input ng-disabled="!vm.editable" id="vendor-submit" type="submit">
-                    </footer>
                 </div>
             </fieldset>
+
+            <footer ng-show="vm.editable">
+                <a class="carli-button cancel-button" href="/vendor">Cancel</a>
+                <input class="carli-button save-button" ng-disabled="!vm.editable" id="vendor-submit" type="submit">
+            </footer>
         </section>
     </form>
 

@@ -51,6 +51,19 @@
             }
         }
     }
+
+    footer {
+        margin-top: 50px;
+        padding: 7px 9px 8px;
+        width: 100%;
+        background-color: $light-gray;
+        border: $default-border;
+        position: relative;
+        text-align: right;
+        .cancel-button {
+            margin-right: 3px;
+        }
+    }
 }
 
 #vendors {
