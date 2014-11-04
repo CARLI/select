@@ -10,7 +10,7 @@
                 <view-edit-text-field ng-model="vm.vendor.name" edit-mode="vm.editable"><h1>{{ vm.vendor.name }}</h1>
                 </view-edit-text-field>
             </div>
-            <div id="vendor-edit" class="btn btn-default" ng-show="!vm.newVendor" ng-click="vm.toggleEditable()">{{ vm.editable ? 'Disable Editing' : 'Edit' }}</div>
+            <div id="vendor-edit" class="carli-button pull-right" ng-show="!vm.newVendor" ng-click="vm.toggleEditable()">{{ vm.editable ? 'Disable Editing' : 'Edit' }}<i class="fa fa-edit"></i></div>
         </header>
         <section class="content">
             <fieldset>
