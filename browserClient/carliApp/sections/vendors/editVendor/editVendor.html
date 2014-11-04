@@ -27,37 +27,46 @@
       </fieldset>
       <fieldset>
 
-          <div class="contact-list">
-              <label>Contacts: <em>Billing</em></label>
-              <a id="add-billing-contact" ng-show="vm.editable" ng-click="vm.addContact('Billing')">Add Contact</a>
-              <div ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Billing' }">
-                  <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
-                  <a ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</a>
-              </div>
+          <div class="column">
+            <!--Products will go here-->
           </div>
+          <div class="column">
 
-          <div class="contact-list">
-              <label>Contacts: <em>Sales</em></label>
-              <a id="add-sales-contact" ng-show="vm.editable" ng-click="vm.addContact('Sales')">Add Contact</a>
-              <div ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Sales' }">
-                  <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
-                  <a ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</a>
+              <div class="contact-list">
+                  <label>Contacts: <em>Billing</em></label>
+                  <span class="pull-right add-contact" id="add-billing-contact" ng-show="vm.editable" ng-click="vm.addContact('Billing')">Add Contact</span>
+
+                  <div class="clearfix" ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Billing' }">
+                      <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
+                      <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
+                  </div>
               </div>
-          </div>
 
-          <div class="contact-list">
-              <label>Contacts: <em>Technical</em></label>
-              <a id="add-technical-contact" ng-show="vm.editable" ng-click="vm.addContact('Technical')">Add Contact</a>
-              <div ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Technical' }">
-                  <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
-                  <a ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</a>
+              <div class="contact-list">
+                  <label>Contacts: <em>Sales</em></label>
+                  <span class="pull-right add-contact" id="add-sales-contact" ng-show="vm.editable" ng-click="vm.addContact('Sales')">Add Contact</span>
+
+                  <div class="clearfix" ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Sales' }">
+                      <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
+                      <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
+                  </div>
               </div>
-          </div>
 
-          <footer ng-show="vm.editable">
-              <a href="/vendor">Cancel</a>
-              <input ng-disabled="!vm.editable" id="vendor-submit" type="submit">
-          </footer>
+              <div class="contact-list">
+                  <label>Contacts: <em>Technical</em></label>
+                  <span class="pull-right add-contact" id="add-technical-contact" ng-show="vm.editable" ng-click="vm.addContact('Technical')">Add Contact</span>
+
+                  <div class="clearfix" ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Technical' }">
+                      <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
+                      <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
+                  </div>
+              </div>
+
+              <footer ng-show="vm.editable">
+                  <a href="/vendor">Cancel</a>
+                  <input ng-disabled="!vm.editable" id="vendor-submit" type="submit">
+              </footer>
+          </div>
       </fieldset>
       </section>
     </form>

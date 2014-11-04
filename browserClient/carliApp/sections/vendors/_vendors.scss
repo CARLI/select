@@ -1,6 +1,9 @@
-$column-gutter: 1.5em;
 
 .vendor-form {
+    $column-gutter: 20px;
+    $add-contact-color: $orange;
+    $plus-icon-padding: .5em;
+
     label {
         margin-top: 22px;
     }
@@ -22,7 +25,31 @@ $column-gutter: 1.5em;
               padding-left: $column-gutter / 2;
             }
         }
-
+        .contact-list {
+            @include clearfix();
+            em {
+                color: $purple;
+            }
+            .add-contact {
+                cursor: pointer;
+                margin-top: 22px;
+                color: $add-contact-color;
+                padding-right: $plus-icon-padding;
+                &:after {
+                    color: $add-contact-color;
+                    content: "\f055"; // fa-plus-circle
+                    font-size: 1.25em;
+                    font-family: "FontAwesome";
+                    position: relative;
+                    top: .05em;
+                    left: $plus-icon-padding;
+                }
+            }
+            .delete-contact {
+                cursor: pointer;
+                color: $red;
+            }
+        }
     }
 }
 
@@ -34,5 +61,6 @@ $column-gutter: 1.5em;
         .comments textarea {
             height: 223px;
         }
+
     }
 }
