@@ -1,0 +1,6 @@
+.edit-contact {
+    @include grid-row();
+    .form-group {
+        @include grid-column(4);
+    }
+}
