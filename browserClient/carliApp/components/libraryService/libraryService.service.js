@@ -15,6 +15,10 @@ function libraryService( CarliModules ) {
         update: libraryModule.update,
         load: libraryModule.load,
 
+        getMostRecentFteUpdateDate: function() {
+            return "Jan 1, 1970";
+        },
+
         getInstitutionYearsOptions: function(){
             return [
                 "4 Year",
