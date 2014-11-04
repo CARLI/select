@@ -89,10 +89,12 @@ module.exports = function( storeType ) {
           if( ! type ) {
             throw new Error( 'Must Specify Type' );
           };
+          var deferred = Q.defer();
           if ( myStore.typeExistsInStore( type ) ) {
-            return myStore.listDataFor( type );
+              deferred.resolve(myStore.listDataFor( type ) );
           };
-          return [];
+
+          return deferred.promise;
         },
 
         delete: function( options ) {

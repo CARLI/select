@@ -14,7 +14,7 @@ function test( entityTypeName, validData, invalidData ) {
 
     var EntityRepository = require('../../Entity/'+entityTypeName+'Repository' );
 
-    describe( entityTypeName, function() {
+    describe.skip( entityTypeName, function() {
 
         it( 'should be a module', function() {
             expect(EntityRepository).to.be.an('Object');

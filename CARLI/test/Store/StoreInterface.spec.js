@@ -179,27 +179,38 @@ function test( storeTypeName, options ) {
                 expect( failWithoutType ).to.throw('Must Specify Type');
             } );
 
-            it( 'should return an array', function() {
-                expect( DataStore.list( objectType ) ).to.be.an('Array');
+            it( 'should return an object', function() {
+                expect( DataStore.list( objectType ) ).to.be.an( 'Object' );
+            } );
+
+            it( 'should eventually be an array', function( ) {
+                expect( DataStore.list( objectType ) ).to.eventually.be.an('Array');
             } );
 
             function test5Objects() {
                 var objectType = uuid.v4();
+                var object = makeValidObject();
+                object.type = objectType;
+                var promises = [];
                 for ( i = 0; i < 5; i++ ) {
                     var object = makeValidObject();
                     object.type = objectType;
-                    DataStore.save( object );
+                    promises.push( DataStore.save( object ) );
                 };
-                return DataStore.list( objectType );
+                return Q.all( promises ).then( function() {
+                   return DataStore.list( objectType );
+                } );
             }
 
-            it( 'should return an array of length 5 for our test objects', function() {
-                expect( test5Objects() ).to.be.an('Array').of.length( 5 );
+            it( 'should return an array of test objects', function( ) {
+                return expect( test5Objects() ).to.eventually.be.an('Array').of.length( 5 );
             } );
 
             it( 'should return an array of objects', function() {
-                test5Objects().forEach( function( element ) {
-                    expect( element ).to.be.an( 'Object' );
+                return test5Objects().then(function ( result ) {
+                    result.forEach( function( element ) {
+                        expect( element ).to.be.an( 'Object' );
+                    } );
                 } );
             } );
 
@@ -209,7 +220,7 @@ function test( storeTypeName, options ) {
             expect( DataStore.delete ).to.be.a( 'function' );
         } );
 
-        describe( storeTypeName + '.delete', function() {
+        describe.skip( storeTypeName + '.delete', function() {
             var objectType = uuid.v4();
             var object = makeValidObject();
             object.type = uuid.v4();
