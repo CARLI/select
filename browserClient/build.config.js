@@ -57,11 +57,13 @@ module.exports = {
      */
     vendor_files: {
         js: [
+            'bower_modules/jquery/dist/jquery.js',
             'bower_modules/angular/angular.js',
             'bower_modules/angular-route/angular-route.js',
             'bower_modules/angular-resource/angular-resource.js',
             'bower_modules/angular-sanitize/angular-sanitize.js',
-            'bower_modules/angular-fontawesome/dist/angular-fontawesome.js'
+            'bower_modules/angular-fontawesome/dist/angular-fontawesome.js',
+            'bower_modules/bootstrap-sass-official/assets/javascripts/bootstrap.js'
         ],
         css: [
             'bower_modules/font-awesome/css/font-awesome.min.css'
