@@ -221,8 +221,6 @@ function test( storeTypeName, options ) {
                 } );
             } );
 
-            object.id = DataStore.save( object );
-
             it( 'should fail without an id', function() {
                 expect( DataStore.delete ).to.throw( /Requires an id/ );
             } );
