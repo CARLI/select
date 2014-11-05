@@ -1,58 +1,9 @@
 angular.module('carli.sections.vendors')
 .controller('vendorsController', vendorController);
 
-var testVendors = [
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"FOOBAR of New York","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"acme"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"},
-    {"type":"Vendor","name":"ACME Publishing","contacts":[],"websiteUrl":"http://www.acme.com","isActive":true,"comments":"foobar"}
-];
-
-function vendorController( $sce, vendorService ){
+function vendorController( $sce, vendorService, testVendors ){
     var vm = this;
-//    createTestVendors();
+    createTestVendors();
     activate();
 
 
