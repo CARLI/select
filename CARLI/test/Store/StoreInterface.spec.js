@@ -99,18 +99,12 @@ function test( storeTypeName, options ) {
                expect( badGetNoType ).to.throw( /Requires a type/ );
             } );
 
-            function badGetTypeNotInStore(){
-                DataStore.get({ id: uuid.v4(), type: uuid.v4() });
-            }
             it( 'should fail when the type is not in the store', function() {
-                expect( badGetTypeNotInStore ).to.throw( /Type not found/ );
+                expect( DataStore.get({ id: uuid.v4(), type: uuid.v4() })).to.be.rejectedWith( /Type not found/ );
             } );
 
-            function badGetIdNotFound() {
-                DataStore.get( { id: uuid.v4(), type: 'testy' } );
-            };
             it( 'should fail when an id not found', function() {
-                expect( badGetIdNotFound ).to.throw( /Id not found/ );
+                expect( DataStore.get( { id: uuid.v4(), type: 'testy' } )).to.be.rejectedWith( /Id not found/ );
             } );
 
             it( 'should return stored data for id', function() {

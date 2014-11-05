@@ -44,16 +44,22 @@ function ensureSaveDataIsValid( data ) {
 
 function toGetOrDelete( myStore, options, toDelete ) {
     ensureGetOptionsAreValid( options );
+    var deferred = Q.defer();
 
     if ( myStore.typeExistsInStore( options.type ) ) {
         if ( myStore.idForTypeExistsInStore( options.type, options.id ) ){
-            return toDelete
-              ? myStore.deleteDataFor( options.type, options.id )
-              : myStore.getDataFor( options.type, options.id ); 
+            deferred.resolve (
+              toDelete
+                ? myStore.deleteDataFor( options.type, options.id )
+                : myStore.getDataFor( options.type, options.id )
+            );
         }
-        throw new Error( 'Id not found' );
+        deferred.reject( 'Id not found' );
     }
-    throw new Error( 'Type not found' );
+    else {
+        deferred.reject( 'Type not found' );
+    }
+    return deferred.promise;
 }
 
 module.exports = function( storeType ) {
@@ -64,12 +70,13 @@ module.exports = function( storeType ) {
 
         get: function( options ) {
             var deferred = Q.defer();
-            try {
-                deferred.resolve( toGetOrDelete( myStore, options ) );
-            }
-            catch( err ) {
-                throw err;
-            }
+            toGetOrDelete( myStore, options )
+            .then( function( result ) {
+                deferred.resolve( result );
+            } )
+            .catch( function() {
+                deferred.reject( result );
+            } );
             return deferred.promise;
         },
 
