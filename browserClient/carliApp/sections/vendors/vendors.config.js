@@ -1,4 +1,4 @@
-angular.module('carli.sections.vendors',[
+angular.module('carli.sections.vendors', [
     'ngSanitize',
     'carli.sections.vendors.edit',
     'carli.vendorService',

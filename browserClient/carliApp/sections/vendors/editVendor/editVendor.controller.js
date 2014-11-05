@@ -38,10 +38,12 @@ function editVendorController( $location, $routeParams, vendorService ) {
             contacts: []
         };
         vm.editable = true;
+        vm.newVendor = true;
     }
     function initializeForExistingVendor() {
         vm.vendor = vendorService.load(vendorId);
         vm.editable = false;
+        vm.newVendor = false;
     }
 
     function toggleEditable(){

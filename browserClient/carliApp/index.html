@@ -10,10 +10,8 @@
     <body>
         <header carli-header></header>
         <nav nav-bar></nav>
-        <div class="container-fluid">
-            <main ng-view></main>
+        <main ng-view></main>
 
-        </div>
         <!-- compiled JavaScript -->
         <% scripts.forEach( function ( file ) { %>
             <script type="text/javascript" src="/<%= file %>"></script>

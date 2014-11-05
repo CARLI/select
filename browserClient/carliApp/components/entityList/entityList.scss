@@ -1,105 +1,107 @@
-$num-columns: 3;
-$column-percent: 100% / $num-columns;
+body {
+    $num-columns: 3;
+    $column-percent: 100% / $num-columns;
 
-$filter-input-margin: 0.57rem;
-$filter-by-active-inner-spacing: 1.5em;
+    $filter-input-spacing: 0.57rem;
+    $filter-by-active-inner-spacing: 1.5em;
 
-$default-border: 1px solid $gray;
-$controls-top-border: 3px solid $black;
+    $controls-top-border: 3px solid $black;
 
-$controls-background: $light-gray;
-$icon-color: $orange;
-$zebra-table-color: $light-gray;
-$table-header-fg-color: $black;
-$table-content-fg-color: $moderate-magenta;
+    $controls-background: $light-gray;
+    $icon-color: $orange;
+    $zebra-table-color: $light-gray;
+    $table-header-fg-color: $black;
+    $table-content-fg-color: $moderate-magenta;
 
-.entity-list-controls {
-    @include flexbox;
-    border-top: $controls-top-border;
-    background: $controls-background;
+    .entity-list-controls {
 
-    .filter-input-container {
-        @include flex(1 1 $column-percent);
-        border-left: $default-border;
-        font-size: 1.28rem;
-        line-height: 1.77;
-        padding-left: $filter-input-margin;
-        position: relative;
-
-        .filter-input {
-            border: $default-border;
-            padding: 0 1.75em 0 $filter-input-margin;
-            margin: $filter-input-margin 0;
-            width: 100%;
-        }
-
-        &:after {
-            color: $icon-color; 
-            content: "\f002"; // fa-search
-            font-family: "FontAwesome";
-            position: absolute;
-            top: $filter-input-margin;
-            right: $filter-input-margin;
-        }
-    }
-
-    .filter-by-active-container {
-        @include flex(1 1 2*$column-percent);
-        border-right: $default-border;
-        .filter-by-active {
-            @include font-size(14);
-            line-height: 2;
-            margin: .714rem;
-            menuitem {
-                margin-right: $filter-by-active-inner-spacing;
-            }
-        }
-    }
-}
-
-ul.entity-list {
-    li.column-headers {
-        .column, .column:first-child {
-            color: $table-header-fg-color;
-            font-family: 'Verdana';
-            font-weight: 700;
-            @include font-size(11);
-            padding: .5rem 1rem;
-        }
-    }
-    list-style: none inside;
-    padding: 0;
-    li {
         @include flexbox;
-        border: $default-border;
-        border-bottom: 0;
-        font-family: 'Verdana' sans-serif;
-        @include font-size(15);
+        border-top: $controls-top-border;
+        background: $controls-background;
 
-        &:nth-child(2n+1) {
-            background: $zebra-table-color;
-        }
-
-        &:last-child {
-            border-bottom: $default-border;
-        }
-
-        .column {
-            @include flex(1 1 auto);
+        .filter-input-container {
+            @include flex(1 1 $column-percent);
             border-left: $default-border;
-            padding: 1rem;
-            width: $column-percent;
+            font-size: 1.28rem;
+            line-height: 1;
+            padding-left: $filter-input-spacing;
+            position: relative;
 
-            &:first-child {
-                font-family: 'Merriweather' serif;
-                font-weight: 700;
-                border-left: 0;
+            .filter-input {
+                padding-right: 1.75em;
+                margin: $filter-input-spacing 0;
+                width: 100%;
+            }
+
+            &:after {
+                color: $icon-color;
+                content: "\f002"; // fa-search
+                font-family: "FontAwesome";
+                position: absolute;
+                top: $default-input-padding-top + $filter-input-spacing;
+                right: $filter-input-spacing;
             }
         }
 
-        .column, .column a {
-            color: $table-content-fg-color;
+        .filter-by-active-container {
+            @include flex(1 1 2*$column-percent);
+            border-right: $default-border;
+            .filter-by-active {
+                @include font-size(14);
+                line-height: 2;
+                margin: .714rem;
+                menuitem {
+                    margin-right: $filter-by-active-inner-spacing;
+                }
+            }
         }
     }
-}
 
+    ul.entity-list {
+        li.column-headers {
+            .column, .column:first-child {
+                color: $table-header-fg-color;
+                font-family: 'Verdana';
+                font-weight: 700;
+                @include font-size(11);
+                padding: .5rem 1rem;
+            }
+        }
+        list-style: none inside;
+        padding: 0;
+        li {
+            @include flexbox;
+            background: $white;
+            border: $default-border;
+            border-bottom: 0;
+            font-family: 'Verdana' sans-serif;
+            @include font-size(15);
+
+            &:nth-child(2n+1) {
+                background: $zebra-table-color;
+            }
+
+            &:last-child {
+                border-bottom: $default-border;
+            }
+
+            .column {
+                @include flex(1 1 auto);
+                border-left: $default-border;
+                padding: 1rem;
+                width: $column-percent;
+
+                &:first-child {
+                    font-family: 'Merriweather' serif;
+                    font-weight: 700;
+                    border-left: 0;
+                }
+            }
+
+            .column, .column a {
+                color: $table-content-fg-color;
+            }
+        }
+    }
+
+}

@@ -1,2 +1,132 @@
+
+.vendor-form {
+    $column-gutter: 20px;
+    $add-contact-color: $orange;
+    $plus-icon-padding: .5em;
+
+    .edit-vendor-header {
+        label {
+            margin-top: 0;
+        }
+        .vendor-name {
+            @include grid-column(6);
+        }
+    }
+
+    label {
+        margin-top: 22px;
+    }
+
+    fieldset {
+        @include grid-row();
+
+        input[type=text],
+        textarea {
+          width: 100%;
+        }
+
+        div.column {
+            @include grid-column(6);
+            &:nth-child(1) {
+              padding-right: $column-gutter / 2;
+            }
+            &:nth-child(2) {
+              padding-left: $column-gutter / 2;
+            }
+        }
+        .contact-list {
+            @include clearfix();
+            em {
+                color: $purple;
+            }
+            .add-contact {
+                cursor: pointer;
+                margin-top: 22px;
+                color: $add-contact-color;
+                padding-right: $plus-icon-padding;
+                &:after {
+                    color: $add-contact-color;
+                    content: "\f055"; // fa-plus-circle
+                    font-size: 1.25em;
+                    font-family: "FontAwesome";
+                    position: relative;
+                    top: .05em;
+                    left: $plus-icon-padding;
+                }
+            }
+            .delete-contact {
+                cursor: pointer;
+                color: $red;
+            }
+        }
+    }
+
+    .contact-list-item {
+        @include clearfix();
+    }
+
+    &.viewMode {
+        .contact-list-item {
+            border: $default-border;
+            border-top: 0;
+
+            &:first-of-type {
+                border-top: $default-border;
+            }
+
+            &:nth-child(2n) {
+                background: $light-gray;
+            }
+
+            .view-contact {
+                .contact-name {
+                    padding: 1rem;
+                    border-right: $default-border;
+                    font-size: 15px;
+                }
+
+                .contact-contact-methods {
+                    padding: 0.5rem 1rem;
+
+                    a {
+                        display: block;
+                        font-size: 12px;
+
+                        &.contact-phone {
+                            color: $black;
+                        }
+
+                        &.contact-email {
+                            color: $purple;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    footer {
+        margin-top: 50px;
+        padding: 7px 9px 8px;
+        width: 100%;
+        background-color: $light-gray;
+        border: $default-border;
+        position: relative;
+        text-align: right;
+        .cancel-button {
+            margin-right: 3px;
+        }
+    }
+}
+
 #vendors {
+    .vendor-form {
+        .admin-module textarea {
+            height: 80px;
+        }
+        .comments textarea {
+            height: 223px;
+        }
+
+    }
 }

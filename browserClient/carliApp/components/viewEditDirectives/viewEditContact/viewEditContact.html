@@ -1,12 +1,18 @@
-<div ng-show="editMode">
-    <label for="contactName">Name</label>
-    <input type="text" name="contactName" ng-model="contact.name">
-    <label for="contactEmail">Email</label>
-    <input type="text" name="contactName" ng-model="contact.email">
-    <label for="contactPhone">Phone</label>
-    <input type="text" name="contactName" ng-model="contact.phoneNumber">
+<div class="edit-contact" ng-show="editMode">
+    <div class="form-group">
+        <label for="contactName">Name</label>
+        <input type="text" name="contactName" ng-model="contact.name">
+    </div>
+    <div class="form-group">
+        <label for="contactEmail">Email</label>
+        <input type="text" name="contactName" ng-model="contact.email">
+    </div>
+    <div class="form-group">
+        <label for="contactPhone">Phone</label>
+        <input type="text" name="contactName" ng-model="contact.phoneNumber">
+    </div>
 </div>
-<div ng-show="!editMode">
+<div class="view-contact" ng-show="!editMode">
     <div class="contact-name">{{ contact.name }}</div>
     <div class="contact-contact-methods">
         <a class="contact-phone" href="tel:{{ contact.phoneNumber }}">{{ contact.phoneNumber }}</a>
