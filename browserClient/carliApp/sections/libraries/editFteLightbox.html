@@ -6,7 +6,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title" id="myModalLabel">Update Full Time Enrollment (FTE)</h4>
             </div>
-            <form name="fte-form" ng-submit="vm.saveLibraryFtes()">
+            <form name="fte-form" ng-submit="vm.saveLibraryFtes(); vm.closeFteModal()">
             <div class="modal-body">
                     <div>
                         Last Updated: {{ vm.mostRecentFteUpdateDate }}
