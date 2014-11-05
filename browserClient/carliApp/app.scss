@@ -71,12 +71,25 @@ textarea {
     width: 100%;
 }
 
+a {
+    color: $purple;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+        color: $dark-purple;
+    }
+}
+
+
 .page-header {
     @extend .container-fluid;
     margin-top: 0;
     margin-bottom: 0;
     padding-top: 30px;
     padding-bottom: 30px;
+
+    border-bottom: $default-border;
 
     h1 {
         margin-top: 0;
@@ -99,6 +112,9 @@ section.content {
     h1 {
         @include flex(1 1 auto);
         vertical-align: baseline;
+        margin: 0 auto;
+        padding-top: 40px;
+        padding-bottom: 30px;
     }
 
     .button-container {
@@ -110,6 +126,7 @@ section.content {
     }
 }
 
+@import "editForm";
 @import "carliApp/components/buttons/buttons";
 @import "carliApp/components/carliHeader/carliHeader";
 @import "carliApp/components/entityList/entityList";
@@ -117,6 +134,6 @@ section.content {
 @import "carliApp/components/navBar/navBar";
 @import "carliApp/components/viewEditDirectives/viewEditRadios/viewEditRadios";
 @import "carliApp/components/viewEditDirectives/viewEditContact/viewEditContact";
-
-@import "carliApp/sections/styleGuide/styleGuide";
+@import "carliApp/sections/libraries/libraries";
 @import "carliApp/sections/vendors/vendors";
+@import "carliApp/sections/styleGuide/styleGuide";

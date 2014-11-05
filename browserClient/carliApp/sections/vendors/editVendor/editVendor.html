@@ -1,25 +1,34 @@
 <section id="vendors">
 
-    <form class="vendor-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="vendorForm" ng-submit="vm.saveVendor()">
+    <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="vendorForm" ng-submit="vm.saveVendor()">
 
-        <header class="page-header edit-vendor-header">
+        <header class="page-header">
             <h1 ng-show="vm.newVendor">New Vendor</h1>
 
-            <div class="vendor-name">
+            <div class="name">
                 <label for="vendorName">Vendor Name</label>
                 <view-edit-text-field ng-model="vm.vendor.name" edit-mode="vm.editable"><h1>{{ vm.vendor.name }}</h1>
                 </view-edit-text-field>
             </div>
-            <div id="vendor-edit" class="carli-button pull-right" ng-show="!vm.newVendor" ng-click="vm.toggleEditable()">{{ vm.editable ? 'Disable Editing' : 'Edit' }}<i class="fa fa-edit"></i></div>
+
+            <div ng-show="!vm.newVendor" class="edit-buttons pull-right">
+                <div ng-show="vm.editable">
+                    <a class="carli-button cancel-button" href="/vendor">Cancel</a>
+                    <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit">
+                </div>
+
+                <div id="vendor-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></div>
+            </div>
         </header>
+
         <section class="content">
             <fieldset>
                 <div class="column">
+
                     <label for="vendorWebsite">Vendor Website</label>
-                    <view-edit-text-field ng-model="vm.vendor.websiteUrl" edit-mode="vm.editable">
-                        <a ng-href="{{ vm.vendor.websiteURL }}">{{ vm.vendor.websiteUrl }}</a></view-edit-text-field>
+                    <view-edit-text-field ng-model="vm.vendor.websiteUrl" edit-mode="vm.editable"><h3>{{ vm.vendor.websiteUrl }}</h3></view-edit-text-field>
                     <label for="vendorStatus">Status</label>
-                    <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.vendor.isActive" edit-mode="vm.editable">{{ vm.vendor.isActive ? 'Active' : 'Inactive' }}</view-edit-radios>
+                    <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.vendor.isActive" edit-mode="vm.editable"><h3>{{ vm.vendor.isActive ? 'Active' : 'Inactive' }}</h3></view-edit-radios>
                     <label for="vendorAdminModule">Admin Module</label>
                     <view-edit-text-area class="admin-module" ng-model="vm.vendor.adminModule" edit-mode="vm.editable">{{ vm.vendor.adminModule }}</view-edit-text-area>
                 </div>
