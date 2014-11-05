@@ -47,8 +47,10 @@ function listDataFor( type ) {
 }
 
 function deleteDataFor( type, id ) {
+    var deferred = Q.defer();
     delete memoryStore[type][id];
-    return true;
+    deferred.resolve();
+    return deferred.promise;
 }
 
 module.exports = function ( options ) {

@@ -214,7 +214,7 @@ function test( storeTypeName, options ) {
             expect( DataStore.delete ).to.be.a( 'function' );
         } );
 
-        describe.skip( storeTypeName + '.delete', function() {
+        describe( storeTypeName + '.delete', function() {
             var objectType = uuid.v4();
             var object = makeValidObject();
             object.type = uuid.v4();
@@ -238,28 +238,20 @@ function test( storeTypeName, options ) {
                 expect( badGetNoType ).to.throw( /Requires a type/ );
             } );
 
-            function badGetTypeNotInStore(){
-                DataStore.delete({ id: uuid.v4(), type: uuid.v4() });
-            }
             it( 'should fail when the type is not in the store', function() {
-                expect( badGetTypeNotInStore ).to.throw( /Type not found/ );
+                expect( DataStore.delete({ id: uuid.v4(), type: uuid.v4() }) ).to.be.rejectedWith( /Type not found/ );
             } );
 
-            function badGetIdNotFound() {
-                DataStore.delete( { id: uuid.v4(), type: 'testy' } );
-            };
             it( 'should fail when an id not found', function() {
-                expect( badGetIdNotFound ).to.throw( /Id not found/ );
+                expect( DataStore.delete( { id: uuid.v4(), type: 'testy' } ) ).to.be.rejectedWith( /Id not found/ );
             } );
 
-            it( 'should delete a valid object', function() {
+            it.skip( 'should delete a valid object', function() {
+                // These are not all be tested correctly.
                 expect( DataStore.get( object ) ).to.be.an( 'Object' );
-                expect( DataStore.delete( object ) ).to.be.ok;
-                function getAfterDeleteShouldFail() {
-                  DataStore.get( object );
-                };
-                expect( getAfterDeleteShouldFail ).to.throw( 'Id not found' );
-                expect( DataStore.list( objectType ) ).to.be.an('Array').of.length( 0 );
+                expect( DataStore.delete( object ) ).to.be.fulfilled;
+                expect( DataStore.get( object ) ).to.be.rejectedWith( 'Id not found' );
+                expect( DataStore.list( objectType ) ).to.eventually.be.an('Array').of.length( 0 );
             } );
         } );
 
