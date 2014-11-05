@@ -1,20 +1,12 @@
 angular.module('carli.sections.vendors')
 .controller('vendorsController', vendorController);
 
-function vendorController( $sce, vendorService, testVendors ){
+function vendorController( $sce, vendorService ){
     var vm = this;
-    createTestVendors();
     activate();
-
 
     function activate() {
         vm.vendorList = vendorService.list();
-    }
-
-    function createTestVendors() {
-        testVendors.forEach(function (v) {
-            vendorService.create(v);
-        });
     }
 
     vm.vendorListColumns = [
