@@ -1,5 +1,6 @@
 angular.module('carli.sections.libraries.edit',[
     'carli.libraryService',
+    'carli.viewEditDirectives.viewEditCheckbox',
     'carli.viewEditDirectives.viewEditContact',
     'carli.viewEditDirectives.viewEditRadios',
     'carli.viewEditDirectives.viewEditSelect',
