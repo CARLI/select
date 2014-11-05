@@ -1,5 +1,4 @@
 .edit-form {
-    $column-gutter: 20px;
     $add-contact-color: $orange;
     $plus-icon-padding: .5em;
 
@@ -32,15 +31,6 @@
             width: 100%;
         }
 
-        div.column {
-            @include grid-column(6);
-            &:nth-child(1) {
-                padding-right: $column-gutter / 2;
-            }
-            &:nth-child(2) {
-                padding-left: $column-gutter / 2;
-            }
-        }
         .contact-list {
             @include clearfix();
             em {

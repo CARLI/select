@@ -1,0 +1,9 @@
+#libraries {
+    $column-gutter: 20px;
+
+    .edit-form {
+        div.column {
+            @include grid-column(3);
+        }
+    }
+}
