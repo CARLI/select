@@ -31,11 +31,13 @@ function editLibraryController( $location, $routeParams, libraryService ) {
             contacts: []
         };
         vm.editable = true;
+        vm.newLibrary = true;
     }
  
     function initializeForExistingLibrary() {
         vm.library = libraryService.load(libraryId);
         vm.editable = false;
+        vm.newLibrary = false;
     }
 
     function toggleEditable(){
