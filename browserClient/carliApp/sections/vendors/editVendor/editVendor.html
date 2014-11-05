@@ -10,7 +10,16 @@
                 <view-edit-text-field ng-model="vm.vendor.name" edit-mode="vm.editable"><h1>{{ vm.vendor.name }}</h1>
                 </view-edit-text-field>
             </div>
-            <div id="vendor-edit" class="carli-button pull-right" ng-show="!vm.newVendor" ng-click="vm.toggleEditable()">{{ vm.editable ? 'Disable Editing' : 'Edit' }}<i class="fa fa-edit"></i></div>
+
+            <div ng-show="!vm.newVendor" class="pull-right">
+                <div ng-show="vm.editable">
+                    <a class="carli-button cancel-button" href="/vendor">Cancel</a>
+                    <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit">
+                </div>
+
+                <div id="vendor-edit" class="carli-button pull-right" ng-hide="vm.editable" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></div>
+            </div>
+
         </header>
         <section class="content">
             <fieldset>
