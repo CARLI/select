@@ -71,6 +71,7 @@ body {
         padding: 0;
         li {
             @include flexbox;
+            background: $white;
             border: $default-border;
             border-bottom: 0;
             font-family: 'Verdana' sans-serif;
