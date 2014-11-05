@@ -4,8 +4,8 @@ var memoryStore = {}
 
 function typeExistsInStore( type ) {
     var deferred = Q.defer();
-    memoryStore[type] 
-        ? deferred.resolve(true) 
+    memoryStore[type]
+        ? deferred.resolve(true)
         : deferred.reject(false);
     return deferred.promise;
 }

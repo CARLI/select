@@ -20,7 +20,7 @@ function ensureGetOptionsAreValid( options ){
 
 function ensureSaveDataArgumentExists( data ) {
     if ( !data ) {
-        throw new Error( 'Requires Data' );  
+        throw new Error( 'Requires Data' );
     };
 }
 
@@ -115,7 +115,7 @@ module.exports = function( storeType ) {
 
         delete: function( options ) {
             return toGetOrDelete( myStore, options, true );
-        } 
+        }
 
     };
 };
