@@ -44,6 +44,25 @@ h1 {
     @include font-size(24);
     font-weight: 700;
 }
+h2 {
+    font-family: 'Verdana';
+    color: $black;
+    font-weight: 700;
+    @include font-size(12);
+    line-height: 18px;
+}
+h3 {
+    font-family: 'Verdana';
+    color: $purple;
+    font-weight: 400;
+    @include font-size(15);
+}
+h4 {
+    font-family: 'Merriweather';
+    color: $purple;
+    @include font-size(17);
+    font-weight: 700;
+}
 
 input[type=text],
 textarea {
@@ -98,5 +117,6 @@ section.content {
 @import "carliApp/components/navBar/navBar";
 @import "carliApp/components/viewEditDirectives/viewEditRadios/viewEditRadios";
 @import "carliApp/components/viewEditDirectives/viewEditContact/viewEditContact";
-@import "carliApp/sections/vendors/vendors";
 
+@import "carliApp/sections/styleGuide/styleGuide";
+@import "carliApp/sections/vendors/vendors";

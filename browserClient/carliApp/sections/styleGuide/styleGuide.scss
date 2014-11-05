@@ -1,0 +1,19 @@
+section.style-guide {
+    .component {
+        margin-top: 10px;
+        overflow: hidden;
+
+        .example {
+            @include grid-row();
+
+            .rendered {
+                @include grid-column(5);
+            }
+            .source {
+                @include grid-column(7);
+            }
+        }
+
+    }
+}
+
