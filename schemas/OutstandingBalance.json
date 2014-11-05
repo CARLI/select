@@ -17,7 +17,7 @@
         },
         "cycleType": {
             "description": "Fiscal Year, Calendar Year, etc.",
-            "$ref": "./cycle-type.json"
+            "$ref": "./CycleType.json"
         },
         "year": {
             "description": "Year balance is owed",

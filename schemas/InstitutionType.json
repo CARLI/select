@@ -1,6 +1,8 @@
 {
     "type": "string",
-    "oneOf": [
-        "Private", "Public", "Other"
+    "enum": [
+        "Private",
+        "Public",
+        "Other"
     ]
 }

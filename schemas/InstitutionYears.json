@@ -1,6 +1,8 @@
 {
     "type": "string",
-    "oneOf": [
-        "4 Year", "2 Year", "Other"
+    "enum": [
+        "4 Year",
+        "2 Year",
+        "Other"
     ]
 }

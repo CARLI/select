@@ -18,11 +18,11 @@
         },
         "institutionYears": {
             "description": "2 or 4 years",
-            "$ref": "./institution-years.json"
+            "$ref": "./InstitutionYears.json"
         },
         "institutionType": {
             "description": "public or private",
-            "$ref": "./institution-type.json"
+            "$ref": "./InstitutionType.json"
         },
         "ipAddresses": {
             "description": "List of IP Addresses",
@@ -31,7 +31,7 @@
         },
         "membershipLevel": {
             "description": "Governing, Affiliate, or Non-Member",
-            "$ref": "./membership-level.json"
+            "$ref": "./MembershipLevel.json"
         },
         "isIshareMember": {
             "type": "boolean"
@@ -47,17 +47,17 @@
         "outstandingBalances": {
             "description": "List of outstanding balances",
             "type": "array",
-            "items":  { "$ref": "./outstanding-balances.json" }
+            "items":  { "$ref": "./OutstandingBalances.json" }
         },
         "products": {
             "description": "Products offered by this library",
             "type": "array",
-            "items": { "$ref": "./product.json" }
+            "items": { "$ref": "./Product.json" }
         },
         "contacts": {
             "description": "List of library contacts",
             "type": "array",
-            "items": { "$ref": "./contact.json" }
+            "items": { "$ref": "./Contact.json" }
         }
     },
     "required": [ "name" ]
