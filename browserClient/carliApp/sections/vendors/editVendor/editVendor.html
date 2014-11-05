@@ -49,7 +49,7 @@
                         <label>Contacts: <em>Sales</em></label>
                         <span class="pull-right add-contact" id="add-sales-contact" ng-show="vm.editable" ng-click="vm.addContact('Sales')">Add Contact</span>
 
-                        <div class="clearfix" ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Sales' }">
+                        <div class="contact-list-item" ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Sales' }">
                             <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
                             <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
                         </div>
@@ -59,7 +59,7 @@
                         <label>Contacts: <em>Technical</em></label>
                         <span class="pull-right add-contact" id="add-technical-contact" ng-show="vm.editable" ng-click="vm.addContact('Technical')">Add Contact</span>
 
-                        <div class="clearfix" ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Technical' }">
+                        <div class="contact-list-item" ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Technical' }">
                             <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
                             <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
                         </div>
