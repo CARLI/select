@@ -1,17 +1,20 @@
-<h1>Heading 1</h1>
-<h2>Heading 2</h2>
-<h3>Heading 3</h3>
-<h4>Heading 4</h4>
-<h5>Heading 5</h5>
-<h6>Heading 6</h6>
+<section class="content style-guide">
+    <h1>Heading 1</h1>
+    <h2>Heading 2</h2>
+    <h3>Heading 3</h3>
+    <h4>Heading 4</h4>
 
-<h2>Icons</h2>
-<fa name="birthday-cake"></fa> Happy Birthday Marty!
+    <h2>Icons</h2>
+    <fa name="book"></fa> &larr; It's a book!
 
-<h2>Components</h2>
-<div ng-repeat="component in vm.components" class="component">
-    <h3>{{ component.title }}</h3>
-    <div class="pull-left" ng-include="component.templateUrl"></div>
-    <div class="pull-right"><pre>{{ component.source }}</pre></div>
-</div>
+    <h2>Components</h2>
+    <div ng-repeat="component in vm.components" class="component">
+        <h3>{{ component.title }}</h3>
+        <div class="example">
+            <div class="rendered" ng-include="component.templateUrl"></div>
+            <div class="source"><pre>{{ component.source }}</pre></div>
+        </div>
+    </div>
+</section>
+
 
