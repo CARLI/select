@@ -2,22 +2,23 @@ angular.module('carli.sections.libraries')
 .controller('librariesController', libraryController);
 
 var testLibraries = [
-    {"type":"Library", "name":"Test Library 1", "fte":0, "institutionYears":"2 Year", "institutionType":"Public", "isActive":true},
-    {"type":"Library", "name":"Test Library 2", "fte":0, "institutionYears":"2 Year", "institutionType":"Public"},
-    {"type":"Library", "name":"Test Library your mom", "fte":0, "institutionYears":"2 Year", "institutionType":"Private"},
-    {"type":"Library", "name":"Test Library 3", "fte":0, "institutionYears":"2 Year", "institutionType":"Public"},
-    {"type":"Library", "name":"Test Library 4", "fte":0, "institutionYears":"4 Year", "institutionType":"Private"},
-    {"type":"Library", "name":"Test Library 5", "fte":0, "institutionYears":"4 Year", "institutionType":"Public"},
-    {"type":"Library", "name":"Test Library 6", "fte":0, "institutionYears":"2 Year", "institutionType":"Public"},
-    {"type":"Library", "name":"Test Library Seven", "fte":0, "institutionYears":"2 Year", "institutionType":"Public"},
-    {"type":"Library", "name":"Test Library 8", "fte":0, "institutionYears":"4 Year", "institutionType":"Public"},
-    {"type":"Library", "name":"Test Library 9", "fte":0, "institutionYears":"4 Year", "institutionType":"Private"}
+    {"type":"Library", "name":"Test Library 1", "institutionYears":"2 Year", "institutionType":"Public", "isActive":true, "contacts":[]},
+    {"type":"Library", "name":"Test Library 2", "institutionYears":"2 Year", "institutionType":"Public", "contacts":[]},
+    {"type":"Library", "name":"Test Library your mom", "institutionYears":"2 Year", "institutionType":"Private", "contacts":[]},
+    {"type":"Library", "name":"Test Library 3", "institutionYears":"2 Year", "institutionType":"Public", "contacts":[]},
+    {"type":"Library", "name":"Test Library 4", "institutionYears":"4 Year", "institutionType":"Private", "contacts":[]},
+    {"type":"Library", "name":"Test Library 5", "institutionYears":"4 Year", "institutionType":"Public", "contacts":[]},
+    {"type":"Library", "name":"Test Library 6", "institutionYears":"2 Year", "institutionType":"Public", "contacts":[]},
+    {"type":"Library", "name":"Test Library Seven", "institutionYears":"2 Year", "institutionType":"Public", "contacts":[]},
+    {"type":"Library", "name":"Test Library 8", "institutionYears":"4 Year", "institutionType":"Public", "contacts":[]},
+    {"type":"Library", "name":"Test Library 9", "institutionYears":"4 Year", "institutionType":"Private", "contacts":[]}
 ];
 
 function libraryController( $sce, libraryService ){
     var vm = this;
 
     vm.mostRecentFteUpdateDate = libraryService.getMostRecentFteUpdateDate();
+    vm.saveLibraryFtes = saveLibraryFtes;
 
     function createTestLibraries() {
         testLibraries.forEach(function (l) {
@@ -42,4 +43,10 @@ function libraryController( $sce, libraryService ){
             'contentFunction': function(library) { return library.institutionType; }
         }
     ];
+
+    function saveLibraryFtes() {
+        for (var i in vm.libraryList) {
+            libraryService.update( vm.libraryList[i]);
+        }
+    }
 }
