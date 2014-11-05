@@ -27,7 +27,7 @@ function editLibraryController( $location, $routeParams, libraryService ) {
     function initializeForNewLibrary() {
         vm.library = {
             type: 'Library',
-            name: 'New Library',
+            isActive: true,
             contacts: []
         };
         vm.editable = true;

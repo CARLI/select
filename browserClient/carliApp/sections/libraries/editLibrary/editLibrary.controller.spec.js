@@ -65,7 +65,7 @@ describe('The Edit Library Controller', function(){
 
     it('should have a default, editable library on the New Library screen', inject(function($controller){
         var editCtrl = $controller('editLibraryController', mockDependenciesForNewLibrary);
-        expect( editCtrl.library.name ).to.equal('New Library');
+        expect( editCtrl.library.isActive ).to.equal(true);
         expect( editCtrl.editable ).to.equal(true);
         expect( editCtrl.newLibrary ).to.equal(true);
     }));
