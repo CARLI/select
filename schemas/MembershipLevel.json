@@ -1,6 +1,8 @@
 {
     "type": "string",
-    "oneOf": [
-        "Governing", "Affiliate", "Non-Member"
+    "enum": [
+        "Governing",
+        "Affiliate",
+        "Non-Member"
     ]
 }

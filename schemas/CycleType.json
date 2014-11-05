@@ -1,7 +1,10 @@
 {
     "type": "string",
     "schemaType": "CycleType",
-    "oneOf": [
-        "Calendar Year", "Fiscal Year", "One-Time Purchase", "Alternative Cycle"
+    "enum": [
+        "Calendar Year",
+        "Fiscal Year",
+        "One-Time Purchase",
+        "Alternative Cycle"
     ]
 }
