@@ -52,6 +52,6 @@ function libraryController( $sce, libraryService ){
     }
 
     function closeFteModal() {
-        $('#editFteModal').modal('hide');
+        $('#edit-fte-modal').modal('hide');
     }
 }
