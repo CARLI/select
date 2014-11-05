@@ -29,9 +29,11 @@ function _ensureStoreTypeExists( type ) {
 }
 
 function storeData( data ) {
+    var deferred = Q.defer();
     _ensureStoreTypeExists( data.type );
     memoryStore[ data.type ][ data.id ] = data;
-    return data.id;
+    deferred.resolve( data.id );
+    return deferred.promise;
 }
 
 function listDataFor( type ) {
