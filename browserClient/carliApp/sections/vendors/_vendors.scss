@@ -61,6 +61,25 @@
         }
     }
 
+    .contact-list-item {
+        @include clearfix();
+    }
+
+    &.viewMode {
+        .contact-list-item {
+            border: $default-border;
+            border-top: 0;
+
+            &:first-of-type {
+                border-top: $default-border;
+            }
+
+            &:nth-child(2n) {
+                background: $light-gray;
+            }
+        }
+    }
+
     footer {
         margin-top: 50px;
         padding: 7px 9px 8px;
