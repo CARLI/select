@@ -31,10 +31,14 @@
                     </view-edit-text-field>
 
                     <label for="libraryInstitutionYears">Institution Type: 2 year/4 year</label>
-                    <select name="libraryInstitutionYears" id="libraryInstitutionYears" ng-model="vm.library.institutionYears" ng-options="option for option in vm.institutionYearsOptions"></select>
+                    <view-edit-select ng-model="vm.library.institutionYears" items="vm.institutionYearsOptions" edit-mode="vm.editable">
+                        {{ vm.library.institutionYears }}
+                    </view-edit-select>
 
                     <label for="libraryInstitutionType">Institution Type: Private/Public</label>
-                    <select name="libraryInstitutionType" id="libraryInstitutionType" ng-model="vm.library.institutionType" ng-options="option for option in vm.institutionTypeOptions"></select>
+                    <view-edit-select ng-model="vm.library.institutionType" items="vm.institutionTypeOptions" edit-mode="vm.editable">
+                        {{ vm.library.institutionType }}
+                    </view-edit-select>
 
                     <label for="libraryIpAddresses">IP Addresses</label>
                     <view-edit-text-area id="libraryIpAddresses" ng-model="vm.library.ipAddresses" edit-mode="vm.editable">
@@ -42,7 +46,9 @@
                     </view-edit-text-area>
 
                     <label for="libraryMembershipLevel">Membership Level</label>
-                    <select name="libraryMembershipLevel" id="libraryMembershipLevel" ng-model="vm.library.membershipLevel" ng-options="option for option in vm.membershipLevelOptions"></select>
+                    <view-edit-select ng-model="vm.library.membershipLevel" items="vm.membershipLevelOptions" edit-mode="vm.editable">
+                        {{ vm.library.membershipLevel }}
+                    </view-edit-select>
 
                     <label for="libraryIshareMember">I-Share Member</label>
                     <input type="checkbox" id="libraryIshareMember" name="libraryIshareMember" ng-model="vm.library.isIshareMember">
