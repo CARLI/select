@@ -16,7 +16,7 @@
         }
 
         .edit-buttons {
-            margin-top: 10px;
+            margin-top: 5px;
         }
     }
 
@@ -63,7 +63,9 @@
             }
             .delete-contact {
                 cursor: pointer;
-                color: $red;
+                color: $purple;
+                font-size: 12px;
+                margin-top: 2px;
             }
         }
     }

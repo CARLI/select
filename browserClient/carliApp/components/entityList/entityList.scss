@@ -92,6 +92,7 @@ body {
                 width: $column-percent;
 
                 &:first-child {
+                    @include font-size(17);
                     font-family: 'Merriweather' serif;
                     font-weight: 700;
                     border-left: 0;
