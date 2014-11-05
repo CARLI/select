@@ -18,7 +18,7 @@ function libraryController( $sce, libraryService ){
     var vm = this;
 
     vm.mostRecentFteUpdateDate = libraryService.getMostRecentFteUpdateDate();
-    vm.saveLibraryFtes = saveLibraryFtes;
+    vm.saveAllLibraries = saveAllLibraries;
     vm.closeFteModal = closeFteModal;
 
     function createTestLibraries() {
@@ -45,13 +45,13 @@ function libraryController( $sce, libraryService ){
         }
     ];
 
-    function saveLibraryFtes() {
+    function saveAllLibraries() {
         for (var i in vm.libraryList) {
             libraryService.update( vm.libraryList[i]);
         }
     }
 
     function closeFteModal() {
-        $('#editFteLightbox').modal('hide');
+        $('#editFteModal').modal('hide');
     }
 }
