@@ -178,7 +178,7 @@ function test( storeTypeName, options ) {
             } );
 
             it( 'should eventually be an array', function( ) {
-                expect( DataStore.list( objectType ) ).to.eventually.be.an('Array');
+                return expect( DataStore.list( objectType ) ).to.eventually.be.an('Array');
             } );
 
             function test5Objects() {

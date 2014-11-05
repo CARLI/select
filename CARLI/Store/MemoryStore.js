@@ -37,11 +37,13 @@ function storeData( data ) {
 }
 
 function listDataFor( type ) {
-      var objects = [];
-      for( id in memoryStore[ type ] ) {
+    var deferred = Q.defer();
+    var objects = [];
+    for( id in memoryStore[ type ] ) {
         objects.push( getDataFor( type, id ) );
-      };
-      return objects;
+    };
+    deferred.resolve( objects );
+    return deferred.promise;
 }
 
 function deleteDataFor( type, id ) {
