@@ -71,12 +71,25 @@ textarea {
     width: 100%;
 }
 
+a {
+    color: $purple;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+        color: $dark-purple;
+    }
+}
+
+
 .page-header {
     @extend .container-fluid;
     margin-top: 0;
     margin-bottom: 0;
-    padding-top: 30px;
+    padding-top: 20px;
     padding-bottom: 30px;
+
+    border-bottom: $default-border;
 
     h1 {
         margin-top: 0;

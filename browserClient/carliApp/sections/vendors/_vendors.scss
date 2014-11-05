@@ -5,6 +5,10 @@
     $plus-icon-padding: .5em;
 
     .edit-vendor-header {
+        h1 {
+            color: $purple;
+        }
+
         label {
             margin-top: 0;
         }
@@ -121,12 +125,17 @@
 
 #vendors {
     .vendor-form {
+        .web-site {
+            font-size: 15px;
+        }
+
         .admin-module textarea {
             height: 80px;
         }
         .comments textarea {
             height: 223px;
         }
+
 
     }
 }
