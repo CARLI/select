@@ -29,8 +29,8 @@ function _ensureStoreTypeExists( type ) {
 }
 
 function storeData( data ) {
-    var deferred = Q.defer();
     _ensureStoreTypeExists( data.type );
+    var deferred = Q.defer();
     memoryStore[ data.type ][ data.id ] = data;
     deferred.resolve( data.id );
     return deferred.promise;

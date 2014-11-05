@@ -3,13 +3,13 @@ var Q = require( 'q' )
 
 function ensureGetOptionsExist( options ){
     if( !options || !options.id ) {
-            throw new Error( 'Requires an id' );
+        throw new Error( 'Requires an id' );
     };
 }
 
 function ensureGetOptionsHastype( options ){
     if ( !options.type ){
-            throw new Error( 'Requires a type' );
+        throw new Error( 'Requires a type' );
     }
 }
 
@@ -58,9 +58,9 @@ function toGetOrDelete( myStore, options, toDelete ) {
     .then(
         function() {
             deferred.resolve (
-              toDelete
-                ? myStore.deleteDataFor( options.type, options.id )
-                : myStore.getDataFor( options.type, options.id )
+                toDelete
+                    ? myStore.deleteDataFor( options.type, options.id )
+                    : myStore.getDataFor( options.type, options.id )
             )
         },
         function() { //catch
@@ -92,19 +92,19 @@ module.exports = function( storeType ) {
         save: function( data ) {
             var deferred = Q.defer();
             try {
-              ensureSaveDataIsValid( data );
-              deferred.resolve( myStore.storeData( data ) );
+                ensureSaveDataIsValid( data );
+                deferred.resolve( myStore.storeData( data ) );
             } catch( err ) {
-              throw err;
+                throw err;
             }
             return deferred.promise;
         },
 
         list: function( type ) {
-          if( ! type ) {
-            throw new Error( 'Must Specify Type' );
-          };
-          return myStore.listDataFor( type );
+            if( ! type ) {
+                throw new Error( 'Must Specify Type' );
+            }
+            return myStore.listDataFor( type );
         },
 
         delete: function( options ) {
