@@ -1,23 +1,23 @@
 <section id="vendors">
 
-    <form class="vendor-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="vendorForm" ng-submit="vm.saveVendor()">
+    <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="vendorForm" ng-submit="vm.saveVendor()">
 
-        <header class="page-header edit-vendor-header">
+        <header class="page-header">
             <h1 ng-show="vm.newVendor">New Vendor</h1>
 
-            <div class="vendor-name">
+            <div class="name">
                 <label for="vendorName">Vendor Name</label>
                 <view-edit-text-field ng-model="vm.vendor.name" edit-mode="vm.editable"><h1>{{ vm.vendor.name }}</h1>
                 </view-edit-text-field>
             </div>
 
-            <div ng-show="!vm.newVendor" class="pull-right">
+            <div ng-show="!vm.newVendor" class="edit-buttons pull-right">
                 <div ng-show="vm.editable">
                     <a class="carli-button cancel-button" href="/vendor">Cancel</a>
                     <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit">
                 </div>
 
-                <div id="vendor-edit" class="carli-button pull-right" ng-hide="vm.editable" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></div>
+                <div id="vendor-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></div>
             </div>
 
         </header>
