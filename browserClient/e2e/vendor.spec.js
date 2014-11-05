@@ -41,11 +41,8 @@ describe('The New Vendor screen', function () {
 
     it('should have "Add Contact" links for all three types of contacts', function () {
         expect(vendorPage.addBillingContactLink.isPresent()).toBe(true);
-        expect(vendorPage.addBillingContactLink.getTagName()).toBe('a');
         expect(vendorPage.addSalesContactLink.isPresent()).toBe(true);
-        expect(vendorPage.addSalesContactLink.getTagName()).toBe('a');
         expect(vendorPage.addTechnicalContactLink.isPresent()).toBe(true);
-        expect(vendorPage.addTechnicalContactLink.getTagName()).toBe('a');
     });
 
     it('should save a new Vendor when filling in the form and clicking save', function() {
