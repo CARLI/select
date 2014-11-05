@@ -30,7 +30,7 @@ function getDataFor( type, id ) {
     }
 }
 
-function ensureStoreTypeExists( type ) {
+function _ensureStoreTypeExists( type ) {
     try {
         fs.mkdirSync( resourcePath, '0777' )
     }
@@ -52,6 +52,7 @@ function ensureStoreTypeExists( type ) {
 }
 
 function storeData( data ) {
+    _ensureStoreTypeExists( data.type );
     fs.writeFileSync( resourcePath + '/' + data.type + '/' + data.id + '.json', JSON.stringify(data) ); 
     return data.id; 
 }
@@ -84,7 +85,6 @@ module.exports = function( options ) {
     typeExistsInStore: typeExistsInStore,
     idForTypeExistsInStore: idForTypeExistsInStore,
     getDataFor: getDataFor,
-    ensureStoreTypeExists: ensureStoreTypeExists,
     storeData: storeData,
     listDataFor: listDataFor,
     deleteDataFor: deleteDataFor

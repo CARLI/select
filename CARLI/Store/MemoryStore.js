@@ -22,11 +22,12 @@ function getDataFor( type, id ) {
     return JSON.parse( JSON.stringify( memoryStore[type][id] ) );
 }
 
-function ensureStoreTypeExists( type ) {
+function _ensureStoreTypeExists( type ) {
     memoryStore[type] = memoryStore[type] || {};
 }
 
 function storeData( data ) {
+    _ensureStoreTypeExists( data.type );
     memoryStore[ data.type ][ data.id ] = data;
     return data.id;
 }
@@ -49,7 +50,6 @@ module.exports = function ( options ) {
     typeExistsInStore: typeExistsInStore,
     idForTypeExistsInStore: idForTypeExistsInStore,
     getDataFor: getDataFor,
-    ensureStoreTypeExists: ensureStoreTypeExists,
     storeData: storeData,
     listDataFor: listDataFor,
     deleteDataFor: deleteDataFor

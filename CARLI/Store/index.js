@@ -93,7 +93,6 @@ module.exports = function( storeType ) {
             var deferred = Q.defer();
             try {
               ensureSaveDataIsValid( data );
-              myStore.ensureStoreTypeExists( data.type );
               deferred.resolve( myStore.storeData( data ) );
             } catch( err ) {
               throw err;
