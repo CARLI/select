@@ -13,3 +13,12 @@
         padding-left: 0;
     }
 }
+
+.view-contact {
+    @include flexbox;
+
+    .contact-name,
+    .contact-contact-methods {
+        @include flex(1 1 50%);
+    }
+}
