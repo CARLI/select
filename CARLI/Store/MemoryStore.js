@@ -1,8 +1,13 @@
 var memoryStore = {}
+    Q = require('q')
 ;
 
 function typeExistsInStore( type ) {
-    return memoryStore[type] ? true : false;
+    var deferred = Q.defer();
+    memoryStore[type] 
+        ? deferred.resolve(true) 
+        : deferred.reject(false);
+    return deferred.promise;
 }
 
 function idForTypeExistsInStore( type, id ) {
