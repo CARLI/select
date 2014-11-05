@@ -100,19 +100,19 @@ function test( storeTypeName, options ) {
             } );
 
             it( 'should fail when the type is not in the store', function() {
-                expect( DataStore.get({ id: uuid.v4(), type: uuid.v4() })).to.be.rejectedWith( /Type not found/ );
+                return expect( DataStore.get({ id: uuid.v4(), type: uuid.v4() })).to.be.rejectedWith( /Type not found/ );
             } );
 
             it( 'should fail when an id not found', function() {
-                expect( DataStore.get( { id: uuid.v4(), type: 'testy' } )).to.be.rejectedWith( /Id not found/ );
+                return expect( DataStore.get( { id: uuid.v4(), type: 'testy' } )).to.be.rejectedWith( /Id not found/ );
             } );
 
             it( 'should return stored data for id', function() {
-                expect( DataStore.get( { id: simpleObjectSaveId, type: simpleObject.type } ) ).to.eventually.deep.equal( simpleObject );
+                return expect( DataStore.get( { id: simpleObjectSaveId, type: simpleObject.type } ) ).to.eventually.deep.equal( simpleObject );
             } );
 
             it( 'should save the data under id if id property is set', function() {
-                expect( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.eventually.deep.equal( objectWithId );
+                return expect( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.eventually.deep.equal( objectWithId );
             } );
 
             it( 'should update the store if called with the same id', function(){
