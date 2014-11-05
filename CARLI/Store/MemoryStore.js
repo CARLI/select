@@ -19,7 +19,9 @@ function idForTypeExistsInStore( type, id ) {
 }
 
 function getDataFor( type, id ) {
-    return JSON.parse( JSON.stringify( memoryStore[type][id] ) );
+    var deferred = Q.defer();
+    deferred.resolve( JSON.parse( JSON.stringify( memoryStore[type][id] ) ) );
+    return deferred.promise;
 }
 
 function _ensureStoreTypeExists( type ) {
