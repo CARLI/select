@@ -14,6 +14,17 @@ function editLibraryController( $location, $routeParams, libraryService ) {
     vm.institutionTypeOptions = libraryService.getInstitutionTypeOptions();
     vm.membershipLevelOptions = libraryService.getMembershipLevelOptions();
 
+    vm.statusOptions = [
+        {
+            label: 'Active',
+            value: true
+        },
+        {
+            label: 'Inactive',
+            value: false
+        }
+    ];
+
     activate();
 
     function activate() {
@@ -27,15 +38,17 @@ function editLibraryController( $location, $routeParams, libraryService ) {
     function initializeForNewLibrary() {
         vm.library = {
             type: 'Library',
-            name: 'New Library',
+            isActive: true,
             contacts: []
         };
         vm.editable = true;
+        vm.newLibrary = true;
     }
  
     function initializeForExistingLibrary() {
         vm.library = libraryService.load(libraryId);
         vm.editable = false;
+        vm.newLibrary = false;
     }
 
     function toggleEditable(){

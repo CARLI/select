@@ -6,7 +6,8 @@
 
             <div class="name">
                 <label for="libraryName">Library Name</label>
-                <view-edit-text-field ng-model="vm.library.name" edit-mode="vm.editable"><h1>{{ vm.library.name }}</h1>
+                <view-edit-text-field id="libraryName" ng-model="vm.library.name" edit-mode="vm.editable">
+                    <h1>{{ vm.library.name }}</h1>
                 </view-edit-text-field>
             </div>
 
@@ -25,34 +26,47 @@
             <fieldset>
                 <div class="column">
                     <label for="libraryFte">fte</label>
-                    <input type="number" id="libraryFte" name="libraryFte" ng-model="vm.library.fte">
+                    <view-edit-text-field id="libraryFte" ng-model="vm.library.fte" edit-mode="vm.editable">
+                        {{ vm.library.fte }}
+                    </view-edit-text-field>
 
                     <label for="libraryInstitutionYears">Institution Type: 2 year/4 year</label>
-                    <select name="libraryInstitutionYears" id="libraryInstitutionYears" ng-model="vm.library.institutionYears" ng-options="option for option in vm.institutionYearsOptions"></select>
+                    <view-edit-select ng-model="vm.library.institutionYears" items="vm.institutionYearsOptions" edit-mode="vm.editable">
+                        {{ vm.library.institutionYears }}
+                    </view-edit-select>
 
                     <label for="libraryInstitutionType">Institution Type: Private/Public</label>
-                    <select name="libraryInstitutionType" id="libraryInstitutionType" ng-model="vm.library.institutionType" ng-options="option for option in vm.institutionTypeOptions"></select>
+                    <view-edit-select ng-model="vm.library.institutionType" items="vm.institutionTypeOptions" edit-mode="vm.editable">
+                        {{ vm.library.institutionType }}
+                    </view-edit-select>
 
                     <label for="libraryIpAddresses">IP Addresses</label>
-                    <textarea name="libraryIpAddresses" id="libraryIpAddresses" ng-model="vm.library.ipAddresses"></textarea>
+                    <view-edit-text-area id="libraryIpAddresses" ng-model="vm.library.ipAddresses" edit-mode="vm.editable">
+                        {{ vm.library.ipAddresses }}
+                    </view-edit-text-area>
 
                     <label for="libraryMembershipLevel">Membership Level</label>
-                    <select name="libraryMembershipLevel" id="libraryMembershipLevel" ng-model="vm.library.membershipLevel" ng-options="option for option in vm.membershipLevelOptions"></select>
+                    <view-edit-select ng-model="vm.library.membershipLevel" items="vm.membershipLevelOptions" edit-mode="vm.editable">
+                        {{ vm.library.membershipLevel }}
+                    </view-edit-select>
 
                     <label for="libraryIshareMember">I-Share Member</label>
-                    <input type="checkbox" id="libraryIshareMember" name="libraryIshareMember" ng-model="vm.library.isIshareMember">
+                    <view-edit-checkbox ng-model="vm.library.isIshareMember" edit-mode="vm.editable">
+                        {{ vm.library.isIshareMember }}
+                    </view-edit-checkbox>
 
                     <label for="libraryGar">General Account Receivable</label>
-                    <input type="text" id="libraryGar" name="libraryGar" ng-model="vm.library.gar">
+                    <view-edit-text-field id="libraryGar" ng-model="vm.library.gar" edit-mode="vm.editable">
+                        {{ vm.library.gar }}
+                    </view-edit-text-field>
 
                     <label>Library Status</label>
-                    <input type="radio" id="libraryStatusActive" name="libraryStatus" ng-value="true" ng-model="vm.library.isActive">
-                    <label for="libraryStatusActive">Active</label>
-                    <input type="radio" id="libraryStatusInactive" name="libraryStatus" ng-value="false" ng-model="vm.library.isActive">
-                    <label for="libraryStatusInactive">Inactive</label>
+                    <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.library.isActive" edit-mode="vm.editable"><h3>{{ vm.vendor.isActive ? 'Active' : 'Inactive' }}</h3></view-edit-radios>
 
                     <label for="libraryOutstandingBalances">Outstanding Balances</label>
-                    <input type="text" id="libraryOutstandingBalances" name="libraryOutstandingBalances" ng-model="vm.library.outstandingBalances">
+                    <view-edit-text-field id="libraryOutstandingBalances" ng-model="vm.library.outstandingBalances" edit-mode="vm.editable">
+                        {{ vm.library.outstandingBalances }}
+                    </view-edit-text-field>
 
 
                     <!-- TODO: Products -->

@@ -35,7 +35,7 @@ describe('The Edit Library Controller', function(){
         getMembershipLevelOptions: function(){ return []; }
     };
 
-    var mockDependenciesFornewLibrary = {
+    var mockDependenciesForNewLibrary = {
         $location: mockLocation,
         $routeParams: {
             id: 'new'
@@ -57,29 +57,31 @@ describe('The Edit Library Controller', function(){
     });
 
     it('should export lists of options in the ViewModel', inject(function($controller){
-        var editCtrl = $controller('editLibraryController', mockDependenciesFornewLibrary);
+        var editCtrl = $controller('editLibraryController', mockDependenciesForNewLibrary);
         expect( editCtrl.institutionYearsOptions ).to.be.an('Array');
         expect( editCtrl.institutionTypeOptions ).to.be.an('Array');
         expect( editCtrl.membershipLevelOptions ).to.be.an('Array');
     }));
 
     it('should have a default, editable library on the New Library screen', inject(function($controller){
-        var editCtrl = $controller('editLibraryController', mockDependenciesFornewLibrary);
-        expect( editCtrl.library.name ).to.equal('New Library');
+        var editCtrl = $controller('editLibraryController', mockDependenciesForNewLibrary);
+        expect( editCtrl.library.isActive ).to.equal(true);
         expect( editCtrl.editable ).to.equal(true);
+        expect( editCtrl.newLibrary ).to.equal(true);
     }));
 
     it('should call libraryService.create when saving a new Library', inject(function($controller){
-        var editCtrl = $controller('editLibraryController', mockDependenciesFornewLibrary);
-        expect( mockDependenciesFornewLibrary.libraryService.createOrUpdate ).to.equal('neither');
+        var editCtrl = $controller('editLibraryController', mockDependenciesForNewLibrary);
+        expect( mockDependenciesForNewLibrary.libraryService.createOrUpdate ).to.equal('neither');
         editCtrl.saveLibrary();
-        expect( mockDependenciesFornewLibrary.libraryService.createOrUpdate ).to.equal('create');
+        expect( mockDependenciesForNewLibrary.libraryService.createOrUpdate ).to.equal('create');
     }));
 
     it('should have a known, non-editable library on the Edit library screen', inject(function($controller){
         var editCtrl = $controller('editLibraryController', mockDependenciesForEditLibrary);
         expect( editCtrl.library.name ).to.equal('Test Library');
         expect( editCtrl.editable ).to.equal(false);
+        expect( editCtrl.newLibrary ).to.equal(false);
     }));
 
     it('should call libraryService.update when saving an existing library', inject(function($controller){
