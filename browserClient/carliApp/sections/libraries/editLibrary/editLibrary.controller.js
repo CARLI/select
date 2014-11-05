@@ -14,6 +14,17 @@ function editLibraryController( $location, $routeParams, libraryService ) {
     vm.institutionTypeOptions = libraryService.getInstitutionTypeOptions();
     vm.membershipLevelOptions = libraryService.getMembershipLevelOptions();
 
+    vm.statusOptions = [
+        {
+            label: 'Active',
+            value: true
+        },
+        {
+            label: 'Inactive',
+            value: false
+        }
+    ];
+
     activate();
 
     function activate() {
