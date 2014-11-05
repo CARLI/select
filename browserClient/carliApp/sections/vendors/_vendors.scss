@@ -4,6 +4,15 @@
     $add-contact-color: $orange;
     $plus-icon-padding: .5em;
 
+    .edit-vendor-header {
+        label {
+            margin-top: 0;
+        }
+        .vendor-name {
+            @include grid-column(6);
+        }
+    }
+
     label {
         margin-top: 22px;
     }

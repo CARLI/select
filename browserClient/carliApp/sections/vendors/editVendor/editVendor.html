@@ -2,10 +2,10 @@
 
     <form class="vendor-form" name="vendorForm" ng-submit="vm.saveVendor()">
 
-        <header class="page-header edit-vendors-header">
+        <header class="page-header edit-vendor-header">
             <h1 ng-show="vm.newVendor">New Vendor</h1>
 
-            <div>
+            <div class="vendor-name">
                 <label for="vendorName">Vendor Name</label>
                 <view-edit-text-field ng-model="vm.vendor.name" edit-mode="vm.editable"><h1>{{ vm.vendor.name }}</h1>
                 </view-edit-text-field>
