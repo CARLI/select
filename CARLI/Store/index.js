@@ -45,20 +45,29 @@ function ensureSaveDataIsValid( data ) {
 function toGetOrDelete( myStore, options, toDelete ) {
     ensureGetOptionsAreValid( options );
     var deferred = Q.defer();
+
     myStore.typeExistsInStore( options.type )
-    .then( function() {
-        if ( myStore.idForTypeExistsInStore( options.type, options.id ) ){
+    .then(
+        function() {
+            return myStore.idForTypeExistsInStore( options.type, options.id );
+        },
+        function() { //catch
+            deferred.reject( 'Type not found' );
+        }
+    )
+    .then(
+        function() {
             defer.resolve (
               toDelete
                 ? myStore.deleteDataFor( options.type, options.id )
                 : myStore.getDataFor( options.type, options.id )
-            );
+            )
+        },
+        function() { //catch
+            deferred.reject( 'Id not found' );
         }
-        deferred.reject( 'Id not found' );
-    } )
-    .catch( function() {
-        deferred.reject( 'Type not found' );
-    } );
+    );
+
     return deferred.promise;
 }
 

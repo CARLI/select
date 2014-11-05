@@ -11,7 +11,11 @@ function typeExistsInStore( type ) {
 }
 
 function idForTypeExistsInStore( type, id ) {
-    return memoryStore[type][id] ? true : false;
+    var deferred = Q.defer();
+    memoryStore[type][id]
+        ? deferred.resolve(true)
+        : deferred.reject(false);
+    return deferred.promise;
 }
 
 function getDataFor( type, id ) {
