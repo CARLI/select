@@ -57,7 +57,7 @@ function toGetOrDelete( myStore, options, toDelete ) {
     )
     .then(
         function() {
-            defer.resolve (
+            deferred.resolve (
               toDelete
                 ? myStore.deleteDataFor( options.type, options.id )
                 : myStore.getDataFor( options.type, options.id )
@@ -83,7 +83,7 @@ module.exports = function( storeType ) {
             .then( function( result ) {
                 deferred.resolve( result );
             } )
-            .catch( function() {
+            .catch( function( result ) {
                 deferred.reject( result );
             } );
             return deferred.promise;
