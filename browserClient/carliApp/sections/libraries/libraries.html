@@ -1,6 +1,5 @@
-<ng-include src="'carliApp/sections/libraries/editFteModal.html'"></ng-include>
 <section id="libraries">
-    <div class="section-header">
+    <div class="list-page-header">
         <h1>Libraries</h1>
         <div class="button-container">
             <a id="update-fte" href="#" class="carli-button" data-toggle="modal" data-target="#edit-fte-modal">Update FTE</a>
@@ -8,8 +7,9 @@
         </div>
     </div>
 
-    <entity-list values="vm.libraryList" columns="vm.entityListColumns" entity-label="libraries"></entity-list> 
+    <section class="content list-content">
+        <entity-list values="vm.libraryList" columns="vm.entityListColumns" entity-label="libraries"></entity-list>
+    </section>
 </section>
 
-
-
+<ng-include src="'carliApp/sections/libraries/editFteLightbox.html'"></ng-include>
