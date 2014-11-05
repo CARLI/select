@@ -246,12 +246,16 @@ function test( storeTypeName, options ) {
                 expect( DataStore.delete( { id: uuid.v4(), type: 'testy' } ) ).to.be.rejectedWith( /Id not found/ );
             } );
 
-            it.skip( 'should delete a valid object', function() {
-                // These are not all be tested correctly.
-                expect( DataStore.get( object ) ).to.be.an( 'Object' );
-                expect( DataStore.delete( object ) ).to.be.fulfilled;
-                expect( DataStore.get( object ) ).to.be.rejectedWith( 'Id not found' );
-                expect( DataStore.list( objectType ) ).to.eventually.be.an('Array').of.length( 0 );
+            it( 'should delete a valid object', function( ) {
+                return expect( DataStore.get( object ) ).to.be.fulfilled
+                .then( function() {
+                    return expect( DataStore.delete( object ) ).to.be.fulfilled
+                    .then( function() {
+                      return expect( DataStore.get( object ) ).to.be.rejectedWith( 'Id not found' ).then( function() {
+                      return expect( DataStore.list( objectType ) ).to.eventually.be.an('Array').of.length( 0 )
+} );
+                    } );
+                } );
             } );
         } );
 
