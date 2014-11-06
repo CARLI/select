@@ -5,7 +5,8 @@ angular.module('carli.sections.styleGuide',
         'carli.viewEditDirectives.viewEditTextField',
         'carli.viewEditDirectives.viewEditTextArea',
         'carli.viewEditDirectives.viewEditRadios',
-        'carli.viewEditDirectives.viewEditNumberField'
+        'carli.viewEditDirectives.viewEditNumberField',
+        'carli.viewEditDirectives.viewEditCheckbox'
     ]
 )
     .value('componentExamples', {
@@ -13,5 +14,6 @@ angular.module('carli.sections.styleGuide',
         'View Edit Contact': 'view-edit-contact.html',
         'View Edit Text Field': 'view-edit-text-field.html',
         'View Edit Text Area': 'view-edit-text-area.html',
-        'View Edit Number Field ': 'view-edit-number-field.html'
+        'View Edit Number Field ': 'view-edit-number-field.html',
+        'View Edit Checkbox ': 'view-edit-checkbox.html'
     });
