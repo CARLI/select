@@ -7,6 +7,7 @@ angular.module('carli.alerts')
         };
 
         function alertLink (scope) {
+            scope.clearAlert = alertService.clearAlert;
             scope.$watch( alertService.getAlerts, function(newAlerts, oldAlerts){
                 scope.alerts = newAlerts;
             });

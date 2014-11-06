@@ -4,7 +4,7 @@ angular.module('carli.alerts')
 function alertService($timeout) {
     var alerts = [];
     var defaultOptions = {
-        expireAfter: 2000,
+        expireAfter: 10000,
         severity: 'info'
     };
 
@@ -38,7 +38,6 @@ function alertService($timeout) {
         }
     }
 
-    putAlert("Hello", { expireAfter: 5000, severity: "success" });
     return {
         getAlerts: getAlerts,
         putAlert: putAlert,
