@@ -64,10 +64,11 @@ h4 {
     font-weight: 700;
 }
 
-input[type=number] {
+.edit-form fieldset input[type=number] {
     width: auto;
 }
 
+input[type=number],
 input[type=text],
 textarea {
     border: $default-border;
