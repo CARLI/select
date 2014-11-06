@@ -2,6 +2,7 @@ angular.module('carli.app', [
     'ngRoute',
     'carli.carliHeader',
     'carli.navBar',
+    'carli.alerts',
     'carli.routes',
     'picardy.fontawesome'
 ])

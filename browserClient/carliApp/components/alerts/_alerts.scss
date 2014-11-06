@@ -1,0 +1,5 @@
+alerts {
+    div {
+        @include vendor-prefix(transition, opacity 2s);
+    }
+}
