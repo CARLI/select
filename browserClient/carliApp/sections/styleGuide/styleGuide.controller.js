@@ -10,6 +10,8 @@ function styleGuideController(componentExamples, componentGatherer) {
     vm.defaultTextEditValue = "Default Text Field Value";
     vm.textAreaEditable = false;
     vm.defaultTextAreaValue = "Default Text Area Value";
+    vm.numberFieldEditable = false;
+    vm.defaultNumberEditValue = 123;
 
     vm.toggleContactEditable = function toggleContactEditable () {
         vm.contactEditable = !vm.contactEditable;
@@ -19,6 +21,9 @@ function styleGuideController(componentExamples, componentGatherer) {
     };
     vm.toggleTextAreaEditable = function toggleTextAreaEditable () {
         vm.textAreaEditable = !vm.textAreaEditable;
+    };
+    vm.toggleNumberFieldEditable = function toggleNumberFieldEditable () {
+        vm.numberFieldEditable = !vm.numberFieldEditable;
     };
 
     vm.components = componentGatherer.gather(componentExamples, basePath);
