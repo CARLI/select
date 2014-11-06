@@ -1,4 +1,5 @@
 <section id="libraries">
+
     <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="libraryForm" ng-submit="vm.saveLibrary()">
 
         <header class="page-header">
@@ -25,10 +26,10 @@
         <section class="content">
             <fieldset>
                 <div class="column">
-                    <label for="libraryFte">fte</label>
-                    <view-edit-text-field id="libraryFte" ng-model="vm.library.fte" edit-mode="vm.editable">
+                    <label for="libraryFte">Full Time Enrollment</label>
+                    <view-edit-number-field id="libraryFte" ng-model="vm.library.fte" edit-mode="vm.editable">
                         {{ vm.library.fte }}
-                    </view-edit-text-field>
+                    </view-edit-number-field>
 
                     <label for="libraryInstitutionYears">Institution Type: 2 year/4 year</label>
                     <view-edit-select ng-model="vm.library.institutionYears" items="vm.institutionYearsOptions" edit-mode="vm.editable">
@@ -67,36 +68,50 @@
                     <view-edit-text-field id="libraryOutstandingBalances" ng-model="vm.library.outstandingBalances" edit-mode="vm.editable">
                         {{ vm.library.outstandingBalances }}
                     </view-edit-text-field>
-
-
-                    <!-- TODO: Products -->
-                    <div>
-                        <label for="libraryProducts">Products</label>
-                    </div>
                 </div>
 
                 <div class="column">
-                    <div ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Billing' }">
-                        <view-edit-contact contact="contact"></view-edit-contact>
-                        <a ng-click="vm.deleteContact(contact)">Delete</a>
-                    </div>
-                    <a id="add-billing-contact" ng-click="vm.addContact('Billing')">Add Contact</a>
-                </div>
 
-                <div class="column">
-                    <div ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Sales' }">
-                        <view-edit-contact contact="contact"></view-edit-contact>
-                        <a ng-click="vm.deleteContact(contact)">Delete</a>
-                    </div>
-                    <a id="add-sales-contact" ng-click="vm.addContact('Sales')">Add Contact</a>
-                </div>
+                    <div class="contact-list">
+                        <label>Users: <em>Director</em></label>
+                        <span class="pull-right add-contact" id="add-director-contact" ng-show="vm.editable" ng-click="vm.addContact('Director')">Add Contact</span>
 
-                <div class="column">
-                    <div ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Technical' }">
-                        <view-edit-contact contact="contact"></view-edit-contact>
-                        <a ng-click="vm.deleteContact(contact)">Delete</a>
+                        <div class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Director' }">
+                            <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
+                            <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
+                        </div>
                     </div>
-                    <a id="add-technical-contact" ng-click="vm.addContact('Technical')">Add Contact</a>
+
+                    <div class="contact-list">
+                        <label>Users: <em>E-Resources Liaison</em></label>
+                        <span class="pull-right add-contact" id="add-liaison-contact" ng-show="vm.editable" ng-click="vm.addContact('E-Resources Liaison')">Add Contact</span>
+
+                        <div class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'E-Resources Liaison' }">
+                            <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
+                            <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-list">
+                        <label>Users: <em>Additional Users</em></label>
+                        <span class="pull-right add-contact" id="add-other-contact" ng-show="vm.editable" ng-click="vm.addContact('Other')">Add Contact</span>
+
+                        <div class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Other' }">
+                            <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
+                            <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-list">
+                        <label>Users: <em>Billing Staff</em></label>
+                        <span class="pull-right add-contact" id="add-billing-contact" ng-show="vm.editable" ng-click="vm.addContact('Notification Only')">Add Contact</span>
+
+                        <div class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Notification Only' }">
+                            <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
+                            <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
+                        </div>
+                    </div>
+
                 </div>
             </fieldset>
 
