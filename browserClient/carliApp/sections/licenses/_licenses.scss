@@ -1,0 +1,23 @@
+
+#licenses {
+    $column-gutter: 20px;
+
+    .edit-form {
+        div.column {
+            @include grid-column(6);
+            &:nth-child(1) {
+                padding-right: $column-gutter / 2;
+            }
+            &:nth-child(2) {
+                padding-left: $column-gutter / 2;
+            }
+        }
+
+        .admin-module textarea {
+            height: 80px;
+        }
+        .comments textarea {
+            height: 223px;
+        }
+    }
+}
