@@ -62,7 +62,7 @@
                     </view-edit-text-field>
 
                     <label>Library Status</label>
-                    <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.library.isActive" edit-mode="vm.editable"><h3>{{ vm.vendor.isActive ? 'Active' : 'Inactive' }}</h3></view-edit-radios>
+                    <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.library.isActive" edit-mode="vm.editable"><h3>{{ vm.library.isActive ? 'Active' : 'Inactive' }}</h3></view-edit-radios>
 
                     <label for="libraryOutstandingBalances">Outstanding Balances</label>
                     <view-edit-text-field id="libraryOutstandingBalances" ng-model="vm.library.outstandingBalances" edit-mode="vm.editable">
@@ -116,8 +116,8 @@
             </fieldset>
 
             <footer ng-show="vm.editable">
-                <a class="carli-button cancel-button" href="/vendor">Cancel</a>
-                <input class="carli-button save-button" ng-disabled="!vm.editable" id="vendor-submit" type="submit">
+                <a class="carli-button cancel-button" href="/library">Cancel</a>
+                <input class="carli-button save-button" ng-disabled="!vm.editable" id="library-submit" type="submit">
             </footer>
         </section>
     </form>
