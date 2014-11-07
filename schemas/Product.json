@@ -47,8 +47,8 @@
         "isActive": {
             "type": "boolean"
         },
-        "licenseAgreement": {
-            "$ref": "./LicenseAgreement.json"
+        "license": {
+            "$ref": "./License.json"
         },
         "priceCap": {
             "$ref": "./PriceCap.json"

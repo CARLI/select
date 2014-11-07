@@ -5,7 +5,7 @@ var schemas = {
     Contact: require('../schemas/Contact.json'),
     CycleType: require('../schemas/CycleType.json'),
     Library: require('../schemas/Library.json'),
-    LicenseAgreement: require('../schemas/LicenseAgreement.json'),
+    License: require('../schemas/License.json'),
     PriceCap: require('../schemas/PriceCap.json'),
     Product: require('../schemas/Product.json'),
     Vendor: require('../schemas/Vendor.json'),

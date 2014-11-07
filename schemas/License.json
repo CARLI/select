@@ -1,7 +1,7 @@
 {
     "$schema": "json-schema.org/draft-04/schema",
     "title": "License",
-    "schemaType": "LicenseAgreement",
+    "schemaType": "License",
     "type": "object",
     "properties": {
         "id": {

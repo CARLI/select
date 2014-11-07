@@ -7,7 +7,7 @@ var validTypes = [
     'Contact',
     'CycleType',
     'Library',
-    'LicenseAgreement',
+    'License',
     'PriceCap',
     'Product',
     'Vendor',
