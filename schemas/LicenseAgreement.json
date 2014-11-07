@@ -1,3 +1,25 @@
 {
-    "schemaType": "LicenseAgreement"
+    "$schema": "json-schema.org/draft-04/schema",
+    "title": "License",
+    "schemaType": "LicenseAgreement",
+    "type": "object",
+    "properties": {
+        "id": {
+            "description": "Unique identifier for the License record",
+            "type": "string"
+        },
+        "name": {
+            "description": "Name of License Agreement",
+            "type": "string"
+        },
+        "vendor": {
+            "description": "The Vendor associated with this License",
+            "$ref": "./Vendor.json"
+        },
+        "contractNumber": {
+            "description": "Name of License Agreement",
+            "type": "string"
+        }
+    },
+    "required": [ "name" ]
 }
