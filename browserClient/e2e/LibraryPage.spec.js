@@ -8,15 +8,18 @@ var LibraryPage = function () {
     this.fteDisplay = element(by.model('vm.library.fte'));
 
     this.institutionYearsInput = element(by.model('vm.library.institutionYears')).element(by.tagName('select'));
+    this.institutionYearsInputSelectedOption = this.institutionYearsInput.element(by.css('option:checked'));
     this.institutionYersInputDisplay = element(by.model('vm.library.institutionYears'));
 
     this.institutionTypeInput = element(by.model('vm.library.institutionType')).element(by.tagName('select'));
+    this.institutionTypeInputSelectedOption = this.institutionTypeInput.element(by.css('option:checked'));
     this.institutionTypeInputDisplay = element(by.model('vm.library.institutionType'));
 
     this.ipAddressInput = element(by.model('vm.library.ipAddresses')).element(by.tagName('textarea'));
     this.ipAddressnputDisplay = element(by.model('vm.library.ipAddresses'));
 
     this.membershipLevelInput = element(by.model('vm.library.membershipLevel')).element(by.tagName('select'));
+    this.membershipLevelInputSelectedOption = this.membershipLevelInput.element(by.css('option:checked'));
     this.membershipLevelInputDisplay = element(by.model('vm.library.membershipLevel'));
 
     this.iShareInput = element(by.model('vm.library.isIshareMember')).element(by.tagName('input'));
@@ -122,7 +125,16 @@ var LibraryPage = function () {
 
         this.membershipLevelInput.element(by.cssContainingText('option', libraryObject.membershipLevel )).click();
 
-        //TODO: this should depend on the value from the test data
+        /*
+         * TODO: this should depend on the value from the test data
+         * - Determine whether the checkbox is already clicked.
+         *     - If it is, and the new data is true, do nothing
+         *     - If it is, and the new data is false, click it
+         *     - If it is not, and the new data is true, click it
+         *     - If it is not, and the new data is false, do nothing
+         *
+         * (If the checked state and the new data match, do nothing, else click)
+         */
         this.iShareInput.click();
 
         this.garInput.clear();
@@ -161,7 +173,7 @@ var LibraryPage = function () {
 
 
     this.testLibrary = {
-        name: 'Test Library 1',
+        name: 'New Test Library 1',
         fte: 1000,
         institutionYears: '2 Year',
         institutionType: 'Public',
@@ -212,7 +224,7 @@ var LibraryPage = function () {
         institutionType: 'Private',
         ipAddresses: '192.168.1.1',
         membershipLevel: 'Affiliate',
-        isIshareMember: true,
+        isIshareMember: false,
         gar: 'Test Gar Value',
         isActive: false,
         directorContacts: [
