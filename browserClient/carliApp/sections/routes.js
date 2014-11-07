@@ -4,6 +4,7 @@ angular.module('carli.routes',[
     'carli.sections.vendors',
     'carli.sections.products',
     'carli.sections.libraries',
+    'carli.sections.licenses',
     'carli.sections.styleGuide'
 ])
 .config(function ($routeProvider) {
@@ -55,12 +56,12 @@ angular.module('carli.routes',[
     })
     .when('/license', {
         templateUrl: '/carliApp/sections/licenses/licenses.html',
-        controller:  'librariesController',
+        controller:  'licensesController',
         controllerAs:'vm'
     })
     .when('/license/:id', {
         templateUrl: '/carliApp/sections/licenses/editLicense/editLicense.html',
-        controller:  'editLibraryController',
+        controller:  'editLicenseController',
         controllerAs:'vm'
     })
     .when('/styleGuide', {
