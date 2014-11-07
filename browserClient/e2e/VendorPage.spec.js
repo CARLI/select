@@ -67,15 +67,15 @@ var VendorPage = function () {
     };
 
     this.addEmptyContacts = function addEmptyContacts ( vendorObject ) {
-        for ( i = 0 ; i < vendorObject.billingContacts.length ; i++ ){
+        for ( i = 0 ; i < vendorObject.billingContacts.length - 1 ; i++ ){
             this.addBillingContactLink.click();
         }
 
-        for ( i = 0 ; i < vendorObject.salesContacts.length ; i++ ){
+        for ( i = 0 ; i < vendorObject.salesContacts.length - 1 ; i++ ){
             this.addSalesContactLink.click();
         }
 
-        for ( i = 0 ; i < vendorObject.technicalContacts.length ; i++ ){
+        for ( i = 0 ; i < vendorObject.technicalContacts.length - 1 ; i++ ){
             this.addTechnicalContactLink.click();
         }
     };
