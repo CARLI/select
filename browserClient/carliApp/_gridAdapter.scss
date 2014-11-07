@@ -1,6 +1,6 @@
 
 @mixin grid-column($col-span, $gutter: 0) {
-    @include make-sm-column($col-span, $gutter);
+    @include make-md-column($col-span, $gutter);
 }
 
 @mixin grid-row($gutter: 0) {
