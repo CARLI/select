@@ -1,7 +1,7 @@
 angular.module('carli.sections.vendors.edit')
     .controller('editVendorController', editVendorController);
 
-function editVendorController( $location, $routeParams, vendorService ) {
+function editVendorController( $location, $routeParams, vendorService, alertService ) {
     var vm = this;
     var vendorId = $routeParams.id;
 
@@ -53,9 +53,11 @@ function editVendorController( $location, $routeParams, vendorService ) {
     function saveVendor(){
         if ( vendorId !== 'new' ){
             vendorService.update( vm.vendor );
+            alertService.putAlert('Vendor updated', {severity: 'success'});
         }
         else {
             vendorService.create( vm.vendor );
+            alertService.putAlert('Vendor added', {severity: 'success'});
         }
         $location.path('/vendor');
     }

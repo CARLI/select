@@ -31,12 +31,23 @@ describe('The Edit Vendor Controller', function(){
         }
     };
 
+    var mockAlertService = {
+        alertCount: 0,
+        putAlert: function(){
+            this.alertCount++;
+        },
+        reset: function(){
+            this.alertCount = 0;
+        }
+    };
+
     var mockDependenciesForNewVendor = {
         $location: mockLocation,
         $routeParams: {
             id: 'new'
         },
-        vendorService: mockVendorService
+        vendorService: mockVendorService,
+        alertService: mockAlertService
     };
 
     var mockDependenciesForEditVendor = {
@@ -44,12 +55,14 @@ describe('The Edit Vendor Controller', function(){
         $routeParams: {
             id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
         },
-        vendorService: mockVendorService
+        vendorService: mockVendorService,
+        alertService: mockAlertService
     };
 
     beforeEach(module('carli.sections.vendors.edit'));
     afterEach(function(){
         mockVendorService.reset();
+        mockAlertService.reset();
     });
 
     it('should have a default, editable Vendor on the New Vendor screen', inject(function($controller){
@@ -60,6 +73,13 @@ describe('The Edit Vendor Controller', function(){
     }));
 
     it('should call vendorService.create when saving a new Vendor', inject(function($controller){
+        var editCtrl = $controller('editVendorController', mockDependenciesForNewVendor);
+        expect( mockDependenciesForNewVendor.alertService.alertCount ).to.equal( 0 );
+        editCtrl.saveVendor();
+        expect( mockDependenciesForNewVendor.alertService.alertCount ).to.equal( 1 );
+    }));
+
+    it('should add an alert when saving a new Vendor', inject(function($controller){
         var editCtrl = $controller('editVendorController', mockDependenciesForNewVendor);
         expect( mockDependenciesForNewVendor.vendorService.createOrUpdate ).to.equal('neither');
         editCtrl.saveVendor();
@@ -78,6 +98,13 @@ describe('The Edit Vendor Controller', function(){
         expect( mockDependenciesForEditVendor.vendorService.createOrUpdate ).to.equal('neither');
         editCtrl.saveVendor();
         expect( mockDependenciesForEditVendor.vendorService.createOrUpdate ).to.equal('update');
+    }));
+
+    it('should add an alert when saving an existing Vendor', inject(function($controller){
+        var editCtrl = $controller('editVendorController', mockDependenciesForNewVendor);
+        expect( mockDependenciesForNewVendor.alertService.alertCount ).to.equal( 0 );
+        editCtrl.saveVendor();
+        expect( mockDependenciesForNewVendor.alertService.alertCount ).to.equal( 1 );
     }));
 
     it('should toggle the editable variable when calling toggleEditable()', inject(function($controller){
