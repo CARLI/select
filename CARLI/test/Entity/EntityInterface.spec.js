@@ -3,7 +3,11 @@ var chai   = require( 'chai' )
   , uuid   = require( 'node-uuid' )
   , Store = require( '../../Store' )
   , MemoryStore = require('../../Store/MemoryStore')()
+  , chaiAsPromised = require( 'chai-as-promised' )
+  , Q     = require( 'q' )
 ;
+
+chai.use( chaiAsPromised );
 
 /**
   * Type Name
@@ -14,7 +18,7 @@ function test( entityTypeName, validData, invalidData ) {
 
     var EntityRepository = require('../../Entity/'+entityTypeName+'Repository' );
 
-    describe.skip( entityTypeName, function() {
+    describe( entityTypeName, function() {
 
         it( 'should be a module', function() {
             expect(EntityRepository).to.be.an('Object');
@@ -39,25 +43,37 @@ function test( entityTypeName, validData, invalidData ) {
                 expect( badSaveNoData ).to.throw( 'Data Required' );
             } );
 
+            it( 'should be rejected on an invalid schema', function() {
+                return expect( EntityRepository.create( invalidData() ) ).to.be.rejectedWith( /validation error:/ );
+            } );
+
             it( 'should return an object with an id', function() {
-                expect( EntityRepository.create( validData() ) ).to.be.an('object').and.have.property('id');
+                expect( EntityRepository.create( validData() ) ).to.eventually.be.an('object').and.have.property('id');
             } );
 
             it( 'should return an object with type of "'+ entityTypeName +'"', function() {
-                expect( EntityRepository.create( validData() ) ).to.have.property('type').to.equal(entityTypeName);
+                expect( EntityRepository.create( validData() ) ).to.eventually.have.property('type').to.equal(entityTypeName);
             } );
 
             it( 'should use a new id for new objects', function() {
-                var entity1 = EntityRepository.create( validData() );
-                var entity2 = EntityRepository.create( validData() );
-                expect( entity1.id ).to.not.equal( entity2.id );;
+                var entity1, entity2;
+                return EntityRepository.create( validData() )
+                .then( function( data ) {
+                    entity1 = data;
+                    return EntityRepository.create( validData() );
+                } )
+                .then( function ( data ) {
+                    entity2 = data;
+                    return expect( entity1.id ).to.not.equal( entity2.id );
+                } );
             } );
 
             it( 'should use an id if provided', function() {
                 var entityData = validData();
                 entityData.id = 'foo';
-                var entity = EntityRepository.create( entityData );
-                expect( entity.id ).to.equal('foo');
+                return EntityRepository.create( entityData ).then( function ( entity ) {
+                    expect( entity.id ).to.equal('foo');
+                } );
             } );
 
         } );
@@ -74,20 +90,16 @@ function test( entityTypeName, validData, invalidData ) {
                 expect( badLoadNoId ).to.throw( 'Id Required' );
             } );
 
-            it( 'should return false if id not found', function() {
-                expect( EntityRepository.load( uuid.v4() ) ).to.be.false;
+            it( 'should be rejected if id not found', function() {
+                return expect( EntityRepository.load( uuid.v4() ) ).to.be.rejectedWith( 'Id not found' );
             } );
 
-            it( 'should fail on an invalid schema', function() {
-                function badEntitySchema() {
-                  EntityRepository.create( invalidData() );
-                };
-                expect( badEntitySchema ).to.throw( /ValidationError/i );
-            } );
 
             it( 'should return an object', function() {
-                var entity = EntityRepository.create( validData() );
-                expect( EntityRepository.load( entity.id ) ).to.be.an('object');
+                return EntityRepository.create( validData() ).then( function( entity ) {
+                    return expect( EntityRepository.load( entity.id ) )
+                      .to.eventually.be.an('object').with.property('id');
+                } );
             } );
 
             it( 'should return the object that was created', function() {
@@ -124,33 +136,40 @@ function test( entityTypeName, validData, invalidData ) {
             it( "shouldn't have a false positive because of update with object reference bugs", function() {
                 var entity_data = validData();
                 entity_data.foo = 'bar';
-                var entity = EntityRepository.create( entity_data );
-                entity.foo = 'new value';
-                EntityRepository.update( entity );
-                var storedEntity = EntityRepository.load( entity.id );
-                entity.foo = 'garbage';
-                expect( storedEntity ).to.not.deep.equal( entity );
+                return EntityRepository.create( entity_data )
+                .then( function( entity ) {
+                    entity.foo = 'new value';
+                    return EntityRepository.update( entity );
+                } )
+                .then( function( entity ) {
+                    entity.foo = 'garbage';
+                    return EntityRepository.load( entity.id );
+                } )
+                .then( function( entity ) {
+                    return expect( entity ).to.not.deep.equal( entity_data );
+                } );
             } );
 
             it( 'should update properties of a previously saved object', function(){
                 var entity_data = validData();
                 entity_data.foo = 'bar';
-                var entity = EntityRepository.create( entity_data );
-                entity.foo = 'new value';
-                EntityRepository.update( entity );
-                expect( EntityRepository.load( entity.id ) ).to.eventually.deep.equal( entity );
+                return EntityRepository.create( entity_data ).then( function ( entity ) {
+                    entity.foo = 'new value';
+                    return EntityRepository.update( entity );
+                } )
+                .then ( function ( entity ) {
+                    return expect( EntityRepository.load( entity.id ) ).to.eventually.deep.equal( entity );
+                } );
             } );
 
             it( 'should fail on update with invalid schema', function(){
                 var entity_data = validData();
                 entity_data.foo = 'bar';
-                var entity = EntityRepository.create( entity_data );
-                entity.foo = 'new value';
-                delete entity.name;
-                function updateBadEntity() {
-                  EntityRepository.update( entity );
-                }
-                expect( updateBadEntity ).to.throw( /ValidationError/i );
+                return EntityRepository.create( entity_data ).then( function( entity ) {
+                    entity.foo = 'new value';
+                    delete entity.name;
+                    return expect( EntityRepository.update( entity ) ).to.be.rejectedWith( /validation error/ );
+                } );
             } );
 
         } );
@@ -161,13 +180,13 @@ function test( entityTypeName, validData, invalidData ) {
 
         describe( entityTypeName + '.list', function(){
             it( 'should return an array', function() {
-                expect( EntityRepository.list() ).to.be.an('Array');
+                expect( EntityRepository.list() ).to.eventually.be.an('Array');
             } );
 
             // KLUDGE:  We really need to destroy all items and start over in each test
             //          group once we have a destroy();  THis is the number of items up to this point
             it( 'should return an array with 10 elements', function() {
-                expect( EntityRepository.list() ).to.be.an('Array').of.length( 10 );
+                expect( EntityRepository.list() ).to.eventually.be.an('Array').of.length( 10 );
             } );
         } );
 
