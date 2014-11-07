@@ -1,7 +1,10 @@
 var chai   = require( 'chai' )
   , expect = chai.expect
   , Validator = require( '../Validator' )
+  , chaiAsPromised = require( 'chai-as-promised' )
 ;
+
+chai.use( chaiAsPromised );
 
 var validTypes = [
     'Contact',
@@ -29,14 +32,14 @@ describe( 'The Validator Module', function() {
             expect( Validator.validate ).to.throw( /Requires Data/i );
         });
 
-        it( 'should fail without a type in the data', function() {
+        it( 'should throw without a type in the data', function() {
             function badValidateNoType(){
                 Validator.validate( {} );
             }
             expect( badValidateNoType ).to.throw( /Requires Type/i );
         });
 
-        it( 'should fail for an unrecognized type', function() {
+        it( 'should throw for an unrecognized type', function() {
             function badValidateUnrecognizedType(){
                 Validator.validate({
                     type: 'foobar'
@@ -45,13 +48,8 @@ describe( 'The Validator Module', function() {
             expect( badValidateUnrecognizedType ).to.throw( /Unrecognized Type/i );
         });
 
-        it( 'should throw a validation error for an invalid Vendor object', function() {
-            function badValidateInvalidData(){
-                Validator.validate({
-                    type: 'Vendor'
-                });
-            }
-            expect( badValidateInvalidData ).to.throw( /ValidationError/i );
+        it( 'should reject with a validation error for an invalid Vendor object', function() {
+            return expect( Validator.validate( { type: 'Vendor' } ) ).to.be.rejectedWith( /Vendor validation error:/ );
         });
 
         it( 'should return true for a valid Vendor object', function() {
@@ -59,27 +57,17 @@ describe( 'The Validator Module', function() {
                 type: 'Vendor',
                 name: 'Example Vendor'
             };
-            expect( Validator.validate(validVendor) ).to.be.true;
+            return expect( Validator.validate(validVendor) ).to.be.fullfilled
         });
 
         it( 'should throw a validation error for a Vendor object with an invalid websiteUrl', function() {
-            function badValidateInvalidWebsiteUrl(){
-                Validator.validate({
-                    type: 'Vendor',
-                    name: 'Example Vendor',
-                    websiteUrl: 'this is an invalid url'
-                });
-            }
-            expect( badValidateInvalidWebsiteUrl ).to.throw( /ValidationError/i );
+            return expect( Validator.validate({ type: 'Vendor', name: 'Example Vendor', websiteUrl: 'this is an invalid url' }) )
+              .to.be.rejectedWith(/Vendor validation error:/ );
         });
 
         it( 'should return true for a Vendor object with a valid websiteUrl', function() {
-            var invalidVendor = {
-                type: 'Vendor',
-                name: 'Example Vendor',
-                websiteUrl: 'http://www.examplevendor.com'
-            };
-            expect( Validator.validate(invalidVendor) ).to.be.true;
+            return expect( Validator.validate({ type: 'Vendor', name: 'Example Vendor', websiteUrl: 'http://www.examplevendor.com' }) )
+              .to.be.fullfilled
         });
     });
 
