@@ -53,6 +53,16 @@ angular.module('carli.routes',[
         controller:  'editLibraryController',
         controllerAs:'vm'
     })
+    .when('/license', {
+        templateUrl: '/carliApp/sections/licenses/licenses.html',
+        controller:  'librariesController',
+        controllerAs:'vm'
+    })
+    .when('/license/:id', {
+        templateUrl: '/carliApp/sections/licenses/editLicense/editLicense.html',
+        controller:  'editLibraryController',
+        controllerAs:'vm'
+    })
     .when('/styleGuide', {
         templateUrl: '/carliApp/sections/styleGuide/styleGuide.html',
         controller:  'styleGuideController',
