@@ -74,8 +74,10 @@
 
                 <div class="column">
 
+                    <div class="h3"><strong>Users</strong></div>
+
                     <div class="contact-list">
-                        <label>Users: <em>Director</em></label>
+                        <label><em>Director</em></label>
                         <span class="pull-right add-contact" id="add-director-contact" ng-show="vm.editable" ng-click="vm.addContact('Director')">Add Contact</span>
 
                         <div class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Director' }">
@@ -85,7 +87,7 @@
                     </div>
 
                     <div class="contact-list">
-                        <label>Users: <em>E-Resources Liaison</em></label>
+                        <label><em>E-Resources Liaison</em></label>
                         <span class="pull-right add-contact" id="add-liaison-contact" ng-show="vm.editable" ng-click="vm.addContact('E-Resources Liaison')">Add Contact</span>
 
                         <div class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'E-Resources Liaison' }">
@@ -95,7 +97,7 @@
                     </div>
 
                     <div class="contact-list">
-                        <label>Users: <em>Additional Users</em></label>
+                        <label><em>Additional Users</em></label>
                         <span class="pull-right add-contact" id="add-other-contact" ng-show="vm.editable" ng-click="vm.addContact('Other')">Add Contact</span>
 
                         <div class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Other' }">
@@ -105,7 +107,7 @@
                     </div>
 
                     <div class="contact-list">
-                        <label>Users: <em>Billing Staff</em></label>
+                        <label><em>Billing Staff</em></label>
                         <span class="pull-right add-contact" id="add-billing-contact" ng-show="vm.editable" ng-click="vm.addContact('Notification Only')">Add Contact</span>
 
                         <div class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Notification Only' }">

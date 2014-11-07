@@ -45,8 +45,10 @@
                 </div>
                 <div class="column">
 
+                    <div class="h3"><strong>Contacts</strong></div>
+
                     <div class="contact-list">
-                        <label>Contacts: <em>Billing</em></label>
+                        <label><em>Billing</em></label>
                         <span class="pull-right add-contact" id="add-billing-contact" ng-show="vm.editable" ng-click="vm.addContact('Billing')">Add Contact</span>
 
                         <div class="contact-list-item" ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Billing' }">
@@ -56,7 +58,7 @@
                     </div>
 
                     <div class="contact-list">
-                        <label>Contacts: <em>Sales</em></label>
+                        <label><em>Sales</em></label>
                         <span class="pull-right add-contact" id="add-sales-contact" ng-show="vm.editable" ng-click="vm.addContact('Sales')">Add Contact</span>
 
                         <div class="contact-list-item" ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Sales' }">
@@ -66,7 +68,7 @@
                     </div>
 
                     <div class="contact-list">
-                        <label>Contacts: <em>Technical</em></label>
+                        <label><em>Technical</em></label>
                         <span class="pull-right add-contact" id="add-technical-contact" ng-show="vm.editable" ng-click="vm.addContact('Technical')">Add Contact</span>
 
                         <div class="contact-list-item" ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Technical' }">
