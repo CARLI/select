@@ -35,7 +35,11 @@ function editVendorController( $location, $routeParams, vendorService, alertServ
         vm.vendor = {
             type: 'Vendor',
             isActive: true,
-            contacts: []
+            contacts: [
+                { contactType: 'Billing' },
+                { contactType: 'Sales' },
+                { contactType: 'Technical' }
+            ]
         };
         vm.editable = true;
         vm.newVendor = true;
