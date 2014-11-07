@@ -27,9 +27,9 @@
                 <div class="column">
 
                     <label for="vendorWebsite">Vendor Website</label>
-                    <view-edit-text-field ng-model="vm.vendor.websiteUrl" edit-mode="vm.editable"><h3>{{ vm.vendor.websiteUrl }}</h3></view-edit-text-field>
+                    <view-edit-text-field ng-model="vm.vendor.websiteUrl" edit-mode="vm.editable"><span class="h3">{{ vm.vendor.websiteUrl }}</span></view-edit-text-field>
                     <label for="vendorStatus">Status</label>
-                    <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.vendor.isActive" edit-mode="vm.editable"><h3>{{ vm.vendor.isActive ? 'Active' : 'Inactive' }}</h3></view-edit-radios>
+                    <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.vendor.isActive" edit-mode="vm.editable"><span class="h3">{{ vm.vendor.isActive ? 'Active' : 'Inactive' }}</span></view-edit-radios>
                     <label for="vendorAdminModule">Admin Module</label>
                     <view-edit-text-area class="admin-module" ng-model="vm.vendor.adminModule" edit-mode="vm.editable">{{ vm.vendor.adminModule }}</view-edit-text-area>
                 </div>

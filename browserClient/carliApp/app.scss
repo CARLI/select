@@ -39,11 +39,14 @@ main {
     padding-left: 0;
 }
 
+.h1,
 h1 {
     font-family: 'Merriweather';
     @include font-size(24);
     font-weight: 700;
 }
+
+.h2,
 h2 {
     font-family: 'Verdana';
     color: $black;
@@ -51,12 +54,16 @@ h2 {
     @include font-size(12);
     line-height: 18px;
 }
+
+.h3,
 h3 {
     font-family: 'Verdana';
     color: $purple;
     font-weight: 400;
     @include font-size(15);
 }
+
+.h4,
 h4 {
     font-family: 'Merriweather';
     color: $purple;
