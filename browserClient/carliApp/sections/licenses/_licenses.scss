@@ -4,13 +4,41 @@
 
     .edit-form {
         div.column {
-            @include grid-column(6);
-            &:nth-child(1) {
-                padding-right: $column-gutter / 2;
+            @include grid-column(4);
+            @include grid-gutter($column-gutter);
+        }
+        .e-resource-comments textarea {
+            height: 120px;
+        }
+        .business-comments textarea {
+            height: 120px;
+        }
+        .date-range {
+            @include grid-row();
+            .start-date {
+                @include grid-column(5);
             }
-            &:nth-child(2) {
-                padding-left: $column-gutter / 2;
+            .separator {
+                @include grid-column(1);
+                text-align: center;
+                position: relative;
+                top: 0.5em;
+                left: 1em;
             }
+            .end-date {
+                @include grid-column(5);
+                @include grid-column-offset(1);
+            }
+        }
+        .terms-row {
+            @include grid-row();
+            .terms-col {
+                @include grid-column(6);
+            }
+        }
+        view-edit-checkbox label {
+            font-weight: normal;
+            margin-top: 0;
         }
     }
 }

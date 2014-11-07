@@ -7,8 +7,12 @@ function editLicenseController( $location, $routeParams, licenseService ) {
 
     vm.toggleEditable = toggleEditable;
     vm.saveLicense = saveLicense;
-    vm.addContact = addContact;
-    vm.deleteContact = deleteContact;
+
+    vm.termOptions = [
+        "Yes",
+        "No",
+        "Other"
+    ];
 
     vm.statusOptions = [
         {
@@ -18,6 +22,16 @@ function editLicenseController( $location, $routeParams, licenseService ) {
         {
             label: 'Inactive',
             value: false
+        }
+    ];
+    vm.offeringTypeOptions = [
+        {
+            label: 'Product',
+            value: 'Product'
+        },
+        {
+            label: 'Service',
+            value: 'Service'
         }
     ];
 
@@ -58,18 +72,5 @@ function editLicenseController( $location, $routeParams, licenseService ) {
             licenseService.create( vm.license );
         }
         $location.path('/license');
-    }
-
-    function addContact(contactType) {
-        vm.license.contacts.push({
-            contactType: contactType
-        });
-    }
-
-    function deleteContact(contact) {
-        var contactIndex = vm.license.contacts.indexOf(contact);
-        if (contactIndex >= 0) {
-            vm.license.contacts.splice(contactIndex, 1);
-        }
     }
 }
