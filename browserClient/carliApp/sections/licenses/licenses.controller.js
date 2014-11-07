@@ -1,7 +1,7 @@
 angular.module('carli.sections.licenses')
-.controller('licensesController', licenseController);
+.controller('licensesController', licensesController);
 
-function licenseController( $sce, licenseService ){
+function licensesController( $sce, licenseService ){
     var vm = this;
     activate();
 
