@@ -88,7 +88,7 @@
 
                     <div class="contact-list">
                         <label><em>E-Resources Liaison</em></label>
-                        <span class="pull-right add-contact" id="add-liaison-contact" ng-show="vm.editable" ng-click="vm.addContact('E-Resources Liaison')">Add Contact</span>
+                        <span class="pull-right add-contact" id="add-e-resources-liaison-contact" ng-show="vm.editable" ng-click="vm.addContact('E-Resources Liaison')">Add Contact</span>
 
                         <div class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'E-Resources Liaison' }">
                             <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
@@ -108,7 +108,7 @@
 
                     <div class="contact-list">
                         <label><em>Billing Staff</em></label>
-                        <span class="pull-right add-contact" id="add-billing-contact" ng-show="vm.editable" ng-click="vm.addContact('Notification Only')">Add Contact</span>
+                        <span class="pull-right add-contact" id="add-notification-only-contact" ng-show="vm.editable" ng-click="vm.addContact('Notification Only')">Add Contact</span>
 
                         <div class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Notification Only' }">
                             <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
