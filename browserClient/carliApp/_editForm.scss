@@ -1,6 +1,7 @@
 .edit-form {
     $add-contact-color: $orange;
     $plus-icon-padding: .5em;
+    $edit-form-width: 960px;
 
     .page-header {
         h1 {
@@ -26,12 +27,21 @@
     fieldset {
         @include grid-row();
 
+        max-width: $edit-form-width;
+
         input[type=text],
         textarea {
             width: 100%;
         }
 
         .contact-list {
+            border-bottom: $default-border;
+            padding-bottom: 1rem;
+
+            &:last-child {
+                border-bottom: none;
+            }
+
             @include clearfix();
             em {
                 color: $purple;
@@ -107,7 +117,7 @@
     footer {
         margin-top: 50px;
         padding: 7px 9px 8px;
-        width: 100%;
+        max-width: $edit-form-width;
         background-color: $light-gray;
         border: $default-border;
         position: relative;

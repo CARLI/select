@@ -5,5 +5,6 @@ angular.module('carli.sections.libraries.edit',[
     'carli.viewEditDirectives.viewEditRadios',
     'carli.viewEditDirectives.viewEditSelect',
     'carli.viewEditDirectives.viewEditTextArea',
-    'carli.viewEditDirectives.viewEditTextField'
+    'carli.viewEditDirectives.viewEditTextField',
+    'carli.viewEditDirectives.viewEditNumberField'
 ]);

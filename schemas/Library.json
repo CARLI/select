@@ -26,8 +26,7 @@
         },
         "ipAddresses": {
             "description": "List of IP Addresses",
-            "type": "array",
-            "items": { "type": "string"}
+            "type": "string"
         },
         "membershipLevel": {
             "description": "Governing, Affiliate, or Non-Member",
