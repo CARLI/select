@@ -1,133 +1,165 @@
-var VendorPage = require('./VendorPage.spec');
+var LibraryPage = require('./LibraryPage.spec');
 
-describe('The New Vendor screen', function () {
-    var vendorPage = new VendorPage();
+describe('The New Library screen', function () {
+    var libraryPage = new LibraryPage();
 
-    it('should be routed at /vendor/new', function(){
-        browser.setLocation('/vendor/new');
+    it('should be routed at /library/new', function(){
+        browser.setLocation('/library/new');
     });
 
     it('should have a default name input field', function () {
-        expect(vendorPage.nameInput.isPresent()).toBe(true);
-        expect(vendorPage.nameInput.getTagName()).toBe('input');
-        expect(vendorPage.nameInput.getAttribute('value')).toBe('');
+        expect(libraryPage.nameInput.isPresent()).toBe(true);
+        expect(libraryPage.nameInput.getAttribute('value')).toBe('');
     });
 
-    it('should have a blank Website input field', function () {
-        expect(vendorPage.websiteInput.isPresent()).toBe(true);
-        expect(vendorPage.websiteInput.getTagName()).toBe('input');
-        expect(vendorPage.websiteInput.getAttribute('value')).toBe('');
+    it('should have a blank Full Time Enrollment input field', function () {
+        expect(libraryPage.fteInput.isPresent()).toBe(true);
+        expect(libraryPage.fteInput.getAttribute('value')).toBe('');
     });
 
-    it('should have a blank Comments textarea', function () {
-        expect(vendorPage.commentsInput.isPresent()).toBe(true);
-        expect(vendorPage.commentsInput.getTagName()).toBe('textarea');
-        expect(vendorPage.commentsInput.getAttribute('value')).toBe('');
+    it('should have a blank Institution Years select', function () {
+        expect(libraryPage.institutionYearsInput.isPresent()).toBe(true);
+        expect(libraryPage.institutionYearsInput.getAttribute('value')).toBe('');
     });
 
-    it('should have a blank Admin Module textarea', function () {
-        expect(vendorPage.adminModuleInput.isPresent()).toBe(true);
-        expect(vendorPage.adminModuleInput.getTagName()).toBe('textarea');
-        expect(vendorPage.adminModuleInput.getAttribute('value')).toBe('');
+    it('should have a blank Institution Type Select', function () {
+        expect(libraryPage.institutionTypeInput.isPresent()).toBe(true);
+        expect(libraryPage.institutionTypeInput.getAttribute('value')).toBe('');
+    });
+
+    it('should have a blank ipAddress Input', function () {
+        expect(libraryPage.ipAddressInput.isPresent()).toBe(true);
+        expect(libraryPage.ipAddressInput.getAttribute('value')).toBe('');
+    });
+
+    it('should have a blank Membership Level Select', function () {
+        expect(libraryPage.membershipLevelInput.isPresent()).toBe(true);
+        expect(libraryPage.membershipLevelInput.getAttribute('value')).toBe('');
+    });
+
+    it('should have a blank iShareInput', function () {
+        expect(libraryPage.iShareInput.isPresent()).toBe(true);
+        expect(libraryPage.iShareInput.getAttribute('value')).toBe('');
+    });
+
+    it('should have a blank GAR Input', function () {
+        expect(libraryPage.garInput.isPresent()).toBe(true);
+        expect(libraryPage.garInput.getAttribute('value')).toBe('');
     });
 
     it('should have a active / inactive control', function () {
-        vendorPage.statusInputs.then(function(items) {
+        libraryPage.statusInputs.then(function(items) {
             expect(items.length).toBe(2);
             expect(items[0].getAttribute('type')).toBe('radio');
             expect(items[1].getAttribute('type')).toBe('radio');
         });
     });
 
-    it('should have "Add Contact" links for all three types of contacts', function () {
-        expect(vendorPage.addBillingContactLink.isPresent()).toBe(true);
-        expect(vendorPage.addSalesContactLink.isPresent()).toBe(true);
-        expect(vendorPage.addTechnicalContactLink.isPresent()).toBe(true);
+    it('should have "Add Contact" links for all four types of users', function () {
+        expect(libraryPage.addDirectorContactLink.isPresent()).toBe(true);
+        expect(libraryPage.addLiaisonContactLink.isPresent()).toBe(true);
+        expect(libraryPage.addOtherContactLink.isPresent()).toBe(true);
+        expect(libraryPage.addNotificationonlyContactLink.isPresent()).toBe(true);
     });
 
-    it('should save a new Vendor when filling in the form and clicking save', function() {
-        var i, contact, testData, vendorList;
+    it('should save a new Library when filling in the form and clicking save', function() {
+        var i, contact, testData, libraryList;
 
-        vendorPage.addEmptyContacts( vendorPage.testVendor );
-        vendorPage.fillInVendor( vendorPage.testVendor );
+        libraryPage.addEmptyContacts( libraryPage.testLibrary );
+        libraryPage.fillInLibrary( libraryPage.testLibrary );
 
-        vendorPage.submit.click();
+        libraryPage.submit.click();
 
-        vendorPage.listFilterShowAll.click();
+        libraryPage.listFilterShowAll.click();
 
         element.all(by.repeater('entity in values'))
         .filter( function(el, index) {
             return el.getText().then(function(text){
-                return (text.search(vendorPage.testVendor.name) > -1);
+                return (text.search(libraryPage.testLibrary.name) > -1);
             });
         })
-        .then( function( vendorList ) {
-            expect( vendorList.length ).toBe(1);
+        .then( function( libraryList ) {
+            expect( libraryList.length ).toBe(1);
         });
     });
 
 });
 
 
-describe('Viewing an existing Vendor in read only mode', function () {
-    var vendorPage = new VendorPage();
+describe('Viewing an existing Library in read only mode', function () {
+    var libraryPage = new LibraryPage();
 
-    it('should be routed to the screen for the test vendor', function () {
+    it('should be routed to the screen for the test library', function () {
 
         //Don't need to call these as long as the previous test left us on the list page with 'All' showing
-        //browser.setLocation('/vendor');
-        //vendorPage.listFilterShowAll.click();
+        //browser.setLocation('/library');
+        //libraryPage.listFilterShowAll.click();
 
         element.all(by.repeater('entity in values'))
             .filter(function (el, index) {
                 return el.getText().then(function (text) {
-                    return (text.search(vendorPage.testVendor.name) > -1);
+                    return (text.search(libraryPage.testLibrary.name) > -1);
                 });
             })
-            .then(function (vendorList) {
-                vendorList[0].element(by.tagName('a')).click();
+            .then(function (libraryList) {
+                libraryList[0].element(by.tagName('a')).click();
             });
     });
 
-
-    it('should not have an editable name field', function() {
-        expect(vendorPage.nameInput.isDisplayed()).toBe(false);
+    it('should not have an editable name input field', function () {
+        expect(libraryPage.nameInput.isDisplayed()).toBe(false);
     });
 
-    it('should not have an editable websiteUrl field', function() {
-        expect(vendorPage.websiteInput.isDisplayed()).toBe(false);
+    it('should not have an editable Full Time Enrollment input field', function () {
+        expect(libraryPage.fteInput.isDisplayed()).toBe(false);
     });
 
-    it('should not have an editable comments textarea', function() {
-        expect(vendorPage.commentsInput.isDisplayed()).toBe(false);
+    it('should not have an editable Institution Years textarea Select', function () {
+        expect(libraryPage.institutionYearsInput.isDisplayed()).toBe(false);
     });
 
-    it('should not have an editable adminModule textarea', function() {
-        expect(vendorPage.adminModuleInput.isDisplayed()).toBe(false);
+    it('should not have an editable Institution Type Select', function () {
+        expect(libraryPage.institutionTypeInput.isDisplayed()).toBe(false);
     });
 
-    it('should not have an editable isActive input', function() {
-        vendorPage.statusInputs.then(function(items) {
-            expect(items[0].isDisplayed()).toBe(false);
-        });
+    it('should not have an editable ipAddress Input', function () {
+        expect(libraryPage.ipAddressInput.isDisplayed()).toBe(false);
     });
 
-    it('should not display editable Contact fields', function() {
+    it('should not have an editable Membership Level Select', function () {
+        expect(libraryPage.membershipLevelInput.isDisplayed()).toBe(false);
+    });
+
+    it('should not have an editable iShareInput', function () {
+        expect(libraryPage.iShareInput.isDisplayed()).toBe(false);
+    });
+
+    it('should not have an editable GAR Input', function () {
+        expect(libraryPage.garInput.isDisplayed()).toBe(false);
+    });
+
+    it('should not display editable User fields', function() {
         var contactForm;
-        for ( i = 0 ; i < vendorPage.testVendor.billingContacts.length ; i++ ) {
-            contactForm = vendorPage.getContactEditForm('Billing', i);
+        for ( i = 0 ; i < libraryPage.testLibrary.directorContacts.length ; i++ ) {
+            contactForm = libraryPage.getContactEditForm('Director', i);
             expect(contactForm.name.isDisplayed()).toBe(false);
             expect(contactForm.phoneNumber.isDisplayed()).toBe(false);
             expect(contactForm.email.isDisplayed()).toBe(false);
         }
-        for ( i = 0 ; i < vendorPage.testVendor.technicalContacts.length ; i++ ) {
-            contactForm = vendorPage.getContactEditForm('Technical', i);
+        for ( i = 0 ; i < libraryPage.testLibrary.liaisonContacts.length ; i++ ) {
+            contactForm = libraryPage.getContactEditForm('Liaison', i);
             expect(contactForm.name.isDisplayed()).toBe(false);
             expect(contactForm.phoneNumber.isDisplayed()).toBe(false);
             expect(contactForm.email.isDisplayed()).toBe(false);
         }
-        for ( i = 0 ; i < vendorPage.testVendor.salesContacts.length ; i++ ) {
-            contactForm = vendorPage.getContactEditForm('Sales', i);
+        for ( i = 0 ; i < libraryPage.testLibrary.otherContacts.length ; i++ ) {
+            contactForm = libraryPage.getContactEditForm('Other', i);
+            expect(contactForm.name.isDisplayed()).toBe(false);
+            expect(contactForm.phoneNumber.isDisplayed()).toBe(false);
+            expect(contactForm.email.isDisplayed()).toBe(false);
+        }
+        for ( i = 0 ; i < libraryPage.testLibrary.notificationonlyContacts.length ; i++ ) {
+            contactForm = libraryPage.getContactEditForm('Notificationonly', i);
             expect(contactForm.name.isDisplayed()).toBe(false);
             expect(contactForm.phoneNumber.isDisplayed()).toBe(false);
             expect(contactForm.email.isDisplayed()).toBe(false);
@@ -135,51 +167,57 @@ describe('Viewing an existing Vendor in read only mode', function () {
     });
 
     it('should display name', function() {
-        vendorPage.nameDisplay.getText().then(function (text) {
-            expect(text).toBe(vendorPage.testVendor.name);
+        libraryPage.nameDisplay.getText().then(function (text) {
+            expect(text).toBe(libraryPage.testLibrary.name);
         });
     });
 
     it('should display websiteUrl', function() {
-        vendorPage.websiteDisplay.getText().then(function (text) {
-            expect(text).toBe(vendorPage.testVendor.websiteUrl);
+        libraryPage.websiteDisplay.getText().then(function (text) {
+            expect(text).toBe(libraryPage.testLibrary.websiteUrl);
         });
     });
 
     it('should display comments', function() {
-        vendorPage.commentsInputDisplay.getText().then(function (text) {
-            expect(text).toBe(vendorPage.testVendor.comments);
+        libraryPage.commentsInputDisplay.getText().then(function (text) {
+            expect(text).toBe(libraryPage.testLibrary.comments);
         });
     });
 
     it('should display adminModule', function() {
-        vendorPage.adminModuleInputDisplay.getText().then(function (text) {
-            expect(text).toBe(vendorPage.testVendor.adminModule);
+        libraryPage.adminModuleInputDisplay.getText().then(function (text) {
+            expect(text).toBe(libraryPage.testLibrary.adminModule);
         });
     });
 
-    it('should display Vendor Status', function() {
-        vendorPage.statusInputDisplay.getText().then(function (text) {
-            expect(text).toBe(vendorPage.testVendor.isActive ? 'Active' : 'Inactive');
+    it('should display Library Status', function() {
+        libraryPage.statusInputDisplay.getText().then(function (text) {
+            expect(text).toBe(libraryPage.testLibrary.isActive ? 'Active' : 'Inactive');
         });
     });
 
     it('should display Contacts', function() {
         var contactElement;
-        for ( i = 0 ; i < vendorPage.testVendor.billingContacts.length ; i++ ) {
-            contactElement = vendorPage.getContactViewElement('Billing', i);
+        for ( i = 0 ; i < libraryPage.testLibrary.directorContacts.length ; i++ ) {
+            contactElement = libraryPage.getContactViewElement('Director', i);
             expect(contactElement.name.isDisplayed()).toBe(true);
             expect(contactElement.phoneNumber.isDisplayed()).toBe(true);
             expect(contactElement.email.isDisplayed()).toBe(true);
         }
-        for ( i = 0 ; i < vendorPage.testVendor.technicalContacts.length ; i++ ) {
-            contactElement = vendorPage.getContactViewElement('Technical', i);
+        for ( i = 0 ; i < libraryPage.testLibrary.eResourceLiaisonContacts.length ; i++ ) {
+            contactElement = libraryPage.getContactViewElement('E-Resources Liaison', i);
             expect(contactElement.name.isDisplayed()).toBe(true);
             expect(contactElement.phoneNumber.isDisplayed()).toBe(true);
             expect(contactElement.email.isDisplayed()).toBe(true);
         }
-        for ( i = 0 ; i < vendorPage.testVendor.salesContacts.length ; i++ ) {
-            contactElement = vendorPage.getContactViewElement('Sales', i);
+        for ( i = 0 ; i < libraryPage.testLibrary.otherContacts.length ; i++ ) {
+            contactElement = libraryPage.getContactViewElement('Other', i);
+            expect(contactElement.name.isDisplayed()).toBe(true);
+            expect(contactElement.phoneNumber.isDisplayed()).toBe(true);
+            expect(contactElement.email.isDisplayed()).toBe(true);
+        }
+        for ( i = 0 ; i < libraryPage.testLibrary.notificationOnlyContacts.length ; i++ ) {
+            contactElement = libraryPage.getContactViewElement('Notification Only', i);
             expect(contactElement.name.isDisplayed()).toBe(true);
             expect(contactElement.phoneNumber.isDisplayed()).toBe(true);
             expect(contactElement.email.isDisplayed()).toBe(true);
@@ -187,55 +225,79 @@ describe('Viewing an existing Vendor in read only mode', function () {
     });
 });
 
-describe('Viewing an existing Vendor in edit mode', function () {
-    var vendorPage = new VendorPage();
+describe('Viewing an existing Library in edit mode', function () {
+    var libraryPage = new LibraryPage();
 
     it('should be in edit mode', function () {
-        vendorPage.editButton.click();
+        libraryPage.editButton.click();
     });
 
     it('should have a populated name field', function() {
-        expect(vendorPage.nameInput.getAttribute('value')).toBe(vendorPage.testVendor.name);
+        expect(libraryPage.nameInput.getAttribute('value')).toBe(libraryPage.testLibrary.name);
     });
 
-    it('should have a populated website field', function() {
-        expect(vendorPage.websiteInput.getAttribute('value')).toBe(vendorPage.testVendor.websiteUrl);
+    it('should have a populated Full-Time Enrollment field', function() {
+        expect(libraryPage.fteInput.getAttribute('value')).toBe(libraryPage.testLibrary.fte);
     });
 
-    it('should have a populated comments field', function() {
-        expect(vendorPage.commentsInput.getAttribute('value')).toBe(vendorPage.testVendor.comments);
+    it('should have a selected Institution Years value', function() {
+        expect(libraryPage.institutionYearsInput.getAttribute('value')).toBe(libraryPage.testLibrary.institutionYears);
     });
 
-    it('should have a populated admin module comment field', function() {
-        expect(vendorPage.adminModuleInput.getAttribute('value')).toBe(vendorPage.testVendor.adminModule);
+    it('should have a selected Institution Type value', function() {
+        expect(libraryPage.institutionTypeInput.getAttribute('value')).toBe(libraryPage.testLibrary.institutionType);
     });
 
-    it('should have a correctly selected Vendor Status radio button', function() {
-       expect(vendorPage.getStatusInputActive()).toBe(vendorPage.testVendor.isActive ? 'true' : null);
+    it('should have a populated IP Addresses field', function() {
+        expect(libraryPage.ipAddressInput.getAttribute('value')).toBe(libraryPage.testLibrary.ipAddresses);
     });
 
-    it('should have correctly filled in Contact fields', function(){
+    it('should have a selected Membership Level value', function() {
+        expect(libraryPage.membershipLevelInput.getAttribute('value')).toBe(libraryPage.testLibrary.membershipLevel);
+    });
+
+    it('should have a correctly selected I-Share Member checkbox', function() {
+        expect(libraryPage.iShareInput.getAttribute('value')).toBe(libraryPage.testLibrary.isIshareMember);
+    });
+
+    it('should have a populated GAR field', function() {
+        expect(libraryPage.garInput.getAttribute('value')).toBe(libraryPage.testLibrary.gar);
+    });
+
+    it('should have a correctly selected Membership Status radio button', function() {
+        expect(libraryPage.getStatusInputActive()).toBe(libraryPage.testLibrary.isActive ? 'true' : null);
+    });
+
+    it('should have correctly filled in User fields', function(){
         var contactForm, contact;
 
-        for ( i = 0 ; i < vendorPage.testVendor.billingContacts.length ; i++ ){
-            contactForm = vendorPage.getContactEditForm('Billing', i);
-            contact = vendorPage.testVendor.billingContacts[i];
+        for ( i = 0 ; i < libraryPage.testLibrary.directorContacts.length ; i++ ){
+            contactForm = libraryPage.getContactEditForm('Director', i);
+            contact = libraryPage.testLibrary.directorContacts[i];
             expect(contactForm.name.getAttribute('value')).toBe(contact.name);
             expect(contactForm.email.getAttribute('value')).toBe(contact.email);
             expect(contactForm.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
         }
 
-        for ( i = 0 ; i < vendorPage.testVendor.salesContacts.length ; i++ ){
-            contactForm = vendorPage.getContactEditForm('Sales', i);
-            contact = vendorPage.testVendor.salesContacts[i];
+        for ( i = 0 ; i < libraryPage.testLibrary.eResourceLiaisonContacts.length ; i++ ){
+            contactForm = libraryPage.getContactEditForm('E-Resources Liaison', i);
+            contact = libraryPage.testLibrary.eResourceLiaisonContacts[i];
             expect(contactForm.name.getAttribute('value')).toBe(contact.name);
             expect(contactForm.email.getAttribute('value')).toBe(contact.email);
             expect(contactForm.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
         }
 
-        for ( i = 0 ; i < vendorPage.testVendor.technicalContacts.length ; i++ ){
-            contactForm = vendorPage.getContactEditForm('Technical', i);
-            contact = vendorPage.testVendor.technicalContacts[i];
+        for ( i = 0 ; i < libraryPage.testLibrary.otherContacts.length ; i++ ){
+            contactForm = libraryPage.getContactEditForm('Other', i);
+            contact = libraryPage.testLibrary.otherContacts[i];
+            expect(contactForm.name.getAttribute('value')).toBe(contact.name);
+            expect(contactForm.email.getAttribute('value')).toBe(contact.email);
+            expect(contactForm.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
+        }
+
+        for ( i = 0 ; i < libraryPage.testLibrary.notificationOnlyContacts.length ; i++ ){
+            contactForm = libraryPage.getContactEditForm('Notification Only', i);
+            contact = libraryPage.testLibrary.notificationOnlyContacts[i];
             expect(contactForm.name.getAttribute('value')).toBe(contact.name);
             expect(contactForm.email.getAttribute('value')).toBe(contact.email);
             expect(contactForm.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
@@ -243,86 +305,110 @@ describe('Viewing an existing Vendor in edit mode', function () {
     });
 });
 
-describe('Making changes to an existing Vendor', function(){
-    var vendorPage = new VendorPage();
+describe('Making changes to an existing Library', function(){
+    var libraryPage = new LibraryPage();
 
-    it('should change the entry on the Vendor list screen when changing the name', function () {
-        browser.setLocation('/vendor');
+    it('should change the entry on the Library list screen when changing the name', function () {
+        browser.setLocation('/library');
 
-        vendorPage.listFilterShowAll.click();
+        libraryPage.listFilterShowAll.click();
 
         element.all(by.repeater('entity in values'))
             .filter(function (el, index) {
                 return el.getText().then(function (text) {
-                    return (text.search(vendorPage.testVendor.name) > -1);
+                    return (text.search(libraryPage.testLibrary.name) > -1);
                 });
             })
-            .then(function (vendorList) {
-                vendorList[0].element(by.tagName('a')).click();
+            .then(function (libraryList) {
+                libraryList[0].element(by.tagName('a')).click();
             });
 
-        vendorPage.editButton.click();
+        libraryPage.editButton.click();
 
-        vendorPage.fillInVendor( vendorPage.testEditVendor );
+        libraryPage.fillInLibrary( libraryPage.testEditLibrary );
 
-        vendorPage.submit.click();
+        libraryPage.submit.click();
 
-        vendorPage.listFilterShowAll.click();
+        libraryPage.listFilterShowAll.click();
 
         element.all(by.repeater('entity in values'))
             .filter(function (el, index) {
                 return el.getText().then(function (text) {
-                    return (text.search(vendorPage.testEditVendor.name) > -1);
+                    return (text.search(libraryPage.testEditLibrary.name) > -1);
                 });
             })
-            .then(function (vendorList) {
-                expect( vendorList.length ).toBe(1);
-                vendorList[0].element(by.tagName('a')).click();
+            .then(function (libraryList) {
+                expect( libraryList.length ).toBe(1);
+                libraryList[0].element(by.tagName('a')).click();
             });
     });
 
     it('should save changes to the name field', function() {
-        expect(vendorPage.nameInput.getAttribute('value')).toBe(vendorPage.testEditVendor.name);
+        expect(libraryPage.nameInput.getAttribute('value')).toBe(libraryPage.testLibrary.name);
     });
 
-    it('should save changes to the websiteUrl field', function() {
-        expect(vendorPage.websiteInput.getAttribute('value')).toBe(vendorPage.testEditVendor.websiteUrl);
+    it('should save changes to the Full-Time Enrollment field', function() {
+        expect(libraryPage.fteInput.getAttribute('value')).toBe(libraryPage.testLibrary.fte);
     });
 
-    it('should save changes to the comments field', function() {
-        expect(vendorPage.commentsInput.getAttribute('value')).toBe(vendorPage.testEditVendor.comments);
+    it('should save changes to the Institution Years select list', function() {
+        expect(libraryPage.institutionYearsInput.getAttribute('value')).toBe(libraryPage.testLibrary.institutionYears);
     });
 
-    it('should save changes to the adminModule field', function() {
-        expect(vendorPage.adminModuleInput.getAttribute('value')).toBe(vendorPage.testEditVendor.adminModule);
+    it('should save changes to the Institution Type select list', function() {
+        expect(libraryPage.institutionTypeInput.getAttribute('value')).toBe(libraryPage.testLibrary.institutionType);
     });
 
-    it('should save changes to the isActive field', function() {
-        expect(vendorPage.getStatusInputActive()).toBe(vendorPage.testEditVendor.isActive ? 'true' : null);
+    it('should save changes to the IP Addresses field', function() {
+        expect(libraryPage.ipAddressInput.getAttribute('value')).toBe(libraryPage.testLibrary.ipAddresses);
     });
 
-    it('should save changes to the Contacts', function() {
+    it('should save changes to the Membership select list', function() {
+        expect(libraryPage.membershipLevelInput.getAttribute('value')).toBe(libraryPage.testLibrary.membershipLevel);
+    });
+
+    it('should save changes to the I-Share Member checkbox', function() {
+        expect(libraryPage.iShareInput.getAttribute('value')).toBe(libraryPage.testLibrary.isIshareMember);
+    });
+
+    it('should save changes to the GAR field', function() {
+        expect(libraryPage.garInput.getAttribute('value')).toBe(libraryPage.testLibrary.gar);
+    });
+
+    it('should save changes to the Membership Status radio button', function() {
+        expect(libraryPage.getStatusInputActive()).toBe(libraryPage.testLibrary.isActive ? 'true' : null);
+    });
+
+    it('should save changes to the User fields', function(){
         var contactForm, contact;
 
-        for ( i = 0 ; i < vendorPage.testEditVendor.billingContacts.length ; i++ ){
-            contactForm = vendorPage.getContactEditForm('Billing', i);
-            contact = vendorPage.testEditVendor.billingContacts[i];
+        for ( i = 0 ; i < libraryPage.testLibrary.directorContacts.length ; i++ ){
+            contactForm = libraryPage.getContactEditForm('Director', i);
+            contact = libraryPage.testLibrary.directorContacts[i];
             expect(contactForm.name.getAttribute('value')).toBe(contact.name);
             expect(contactForm.email.getAttribute('value')).toBe(contact.email);
             expect(contactForm.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
         }
 
-        for ( i = 0 ; i < vendorPage.testEditVendor.salesContacts.length ; i++ ){
-            contactForm = vendorPage.getContactEditForm('Sales', i);
-            contact = vendorPage.testEditVendor.salesContacts[i];
+        for ( i = 0 ; i < libraryPage.testLibrary.eResourceLiaisonContacts.length ; i++ ){
+            contactForm = libraryPage.getContactEditForm('E-Resources Liaison', i);
+            contact = libraryPage.testLibrary.eResourceLiaisonContacts[i];
             expect(contactForm.name.getAttribute('value')).toBe(contact.name);
             expect(contactForm.email.getAttribute('value')).toBe(contact.email);
             expect(contactForm.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
         }
 
-        for ( i = 0 ; i < vendorPage.testEditVendor.technicalContacts.length ; i++ ){
-            contactForm = vendorPage.getContactEditForm('Technical', i);
-            contact = vendorPage.testEditVendor.technicalContacts[i];
+        for ( i = 0 ; i < libraryPage.testLibrary.otherContacts.length ; i++ ){
+            contactForm = libraryPage.getContactEditForm('Other', i);
+            contact = libraryPage.testLibrary.otherContacts[i];
+            expect(contactForm.name.getAttribute('value')).toBe(contact.name);
+            expect(contactForm.email.getAttribute('value')).toBe(contact.email);
+            expect(contactForm.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
+        }
+
+        for ( i = 0 ; i < libraryPage.testLibrary.notificationOnlyContacts.length ; i++ ){
+            contactForm = libraryPage.getContactEditForm('Notification Only', i);
+            contact = libraryPage.testLibrary.notificationOnlyContacts[i];
             expect(contactForm.name.getAttribute('value')).toBe(contact.name);
             expect(contactForm.email.getAttribute('value')).toBe(contact.email);
             expect(contactForm.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);

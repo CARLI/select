@@ -1,24 +1,44 @@
-var VendorPage = function () {
-    this.listFilterShowAll = element(by.cssContainingText('.ng-binding', 'All vendors'));
+var LibraryPage = function () {
+    this.listFilterShowAll = element(by.cssContainingText('.ng-binding', 'All Libraries'));
 
-    this.nameInput = element(by.model('vm.vendor.name')).element(by.tagName('input'));
-    this.nameDisplay = element(by.model('vm.vendor.name'));
-    this.websiteInput = element(by.model('vm.vendor.websiteUrl')).element(by.tagName('input'));
-    this.websiteDisplay = element(by.model('vm.vendor.websiteUrl'));
-    this.commentsInput = element(by.model('vm.vendor.comments')).element(by.tagName('textarea'));
-    this.commentsInputDisplay = element(by.model('vm.vendor.comments'));
-    this.adminModuleInput = element(by.model('vm.vendor.adminModule')).element(by.tagName('textarea'));
-    this.adminModuleInputDisplay = element(by.model('vm.vendor.adminModule'));
-    this.statusInputs = element.all(by.model('vm.vendor.isActive')).all(by.tagName('input'));
-    this.statusInputDisplay = element(by.model('vm.vendor.isActive'));
-    this.addBillingContactLink = element(by.id('add-billing-contact'));
-    this.addSalesContactLink = element(by.id('add-sales-contact'));
-    this.addTechnicalContactLink = element(by.id('add-technical-contact'));
-    this.submit = element(by.id('vendor-submit'));
-    this.editButton = element(by.id('vendor-edit'));
+    this.nameInput = element(by.model('vm.library.name')).element(by.tagName('input'));
+    this.nameDisplay = element(by.model('vm.library.name'));
+
+    this.fteInput = element(by.model('vm.library.fte')).element(by.tagName('input'));
+    this.fteDisplay = element(by.model('vm.library.fte'));
+
+    this.institutionYearsInput = element(by.model('vm.library.institutionYears')).element(by.tagName('select'));
+    this.institutionYersInputDisplay = element(by.model('vm.library.institutionYears'));
+
+    this.institutionTypeInput = element(by.model('vm.library.institutionType')).element(by.tagName('select'));
+    this.institutionTypeInputDisplay = element(by.model('vm.library.institutionType'));
+
+    this.ipAddressInput = element(by.model('vm.library.ipAddresses')).element(by.tagName('input'));
+    this.ipAddressnputDisplay = element(by.model('vm.library.ipAddresses'));
+
+    this.membershipLevelInput = element(by.model('vm.library.membershipLevel')).element(by.tagName('select'));
+    this.membershipLevelInputDisplay = element(by.model('vm.library.membershipLevel'));
+
+    this.iShareInput = element(by.model('vm.library.isIshareMember')).element(by.tagName('input'));
+    this.iShareInputDisplay = element(by.model('vm.library.isIshareMember'));
+
+    this.garInput = element(by.model('vm.library.gar')).element(by.tagName('input'));
+    this.garInputDisplay = element(by.model('vm.library.gar'));
+
+    this.statusInputs = element.all(by.model('vm.library.isActive')).all(by.tagName('input'));
+    this.statusInputDisplay = element(by.model('vm.library.isActive'));
+
+    this.addDirectorContactLink = element(by.id('add-director-contact'));
+    this.addEresourceLiaisonContactLink = element(by.id('add-e-resources-liaison-contact'));
+    this.addOtherContactLink = element(by.id('add-other-contact'));
+    this.addNotificationOnlyContactLink = element(by.id('add-notification-only-contact'));
+
+    this.submit = element(by.id('library-submit'));
+
+    this.editButton = element(by.id('library-edit'));
 
     /*
-     * Clicks the radio button defined in testVendor
+     * Clicks the radio button defined in testLibrary
      */
 
     this.clickStatusInput = function clickStatusInput(isActive) {
@@ -37,7 +57,7 @@ var VendorPage = function () {
     };
 
     this.getContactViewElement = function getContactViewElement(type, index) {
-        var contact = element(by.repeater("contact in vm.vendor.contacts | filter:{ contactType: '" + type + "' }").row(index));
+        var contact = element(by.repeater("contact in vm.library.contacts | filter:{ contactType: '" + type + "' }").row(index));
 
         return {
             name: contact.all(by.exactBinding('contact.name')).get(0),
@@ -46,7 +66,7 @@ var VendorPage = function () {
         };
     };
     this.getContactEditForm = function getContactEditForm(type, index) {
-        var contact = element(by.repeater("contact in vm.vendor.contacts | filter:{ contactType: '" + type + "' }").row(index));
+        var contact = element(by.repeater("contact in vm.library.contacts | filter:{ contactType: '" + type + "' }").row(index));
 
         return {
             name: contact.all(by.model('contact.name')).get(0),
@@ -66,123 +86,169 @@ var VendorPage = function () {
         contactElement.phoneNumber.sendKeys( contactData.phoneNumber );
     };
 
-    this.addEmptyContacts = function addEmptyContacts ( vendorObject ) {
-        for ( i = 0 ; i < vendorObject.billingContacts.length - 1 ; i++ ){
-            this.addBillingContactLink.click();
+    this.addEmptyContacts = function addEmptyContacts ( libraryObject ) {
+        for ( i = 0 ; i < libraryObject.directorContacts.length - 1 ; i++ ){
+            this.addDirectorContactLink.click();
         }
 
-        for ( i = 0 ; i < vendorObject.salesContacts.length - 1 ; i++ ){
-            this.addSalesContactLink.click();
+        for ( i = 0 ; i < libraryObject.eResourceLiaisonContacts.length - 1 ; i++ ){
+            this.addEresourceLiaisonContactLink.click();
         }
 
-        for ( i = 0 ; i < vendorObject.technicalContacts.length - 1 ; i++ ){
-            this.addTechnicalContactLink.click();
+        for ( i = 0 ; i < libraryObject.otherContacts.length - 1 ; i++ ){
+            this.addOtherContactLink.click();
         }
+
+        for ( i = 0 ; i < libraryObject.notificationOnlyContacts.length - 1 ; i++ ){
+            this.addNotificationOnlyContactLink.click();
+        }
+
     };
 
-    this.fillInVendor = function fillInVendorForm ( vendorObject ){
+    this.fillInLibrary = function fillInLibraryForm ( libraryObject ){
 
         this.nameInput.clear();
-        this.nameInput.sendKeys(vendorObject.name);
-        this.websiteInput.clear();
-        this.websiteInput.sendKeys(vendorObject.websiteUrl);
-        this.commentsInput.clear();
-        this.commentsInput.sendKeys(vendorObject.comments);
-        this.adminModuleInput.clear();
-        this.adminModuleInput.sendKeys(vendorObject.adminModule);
+        this.nameInput.sendKeys(libraryObject.name);
 
-        this.clickStatusInput(vendorObject.isActive);
+        this.fteInput.clear();
+        this.fteInput.sendKeys(libraryObject.websiteUrl);
 
-        for ( i = 0 ; i < vendorObject.billingContacts.length ; i++ ){
-            contact = this.getContactEditForm('Billing',i);
-            testData = vendorObject.billingContacts[i];
+        this.institutionYearsInput.element(by.cssContainingText('option', libraryObject.institutionYears )).click();
+
+        this.institutionTypeInput.element(by.cssContainingText('option', libraryObject.institutionType )).click();
+
+        this.ipAddressInput.clear();
+        this.ipAddressInput.sendKeys(libraryObject.adminModule);
+
+        this.membershipLevelInput.element(by.cssContainingText('option', libraryObject.membershipLevel )).click();
+
+        this.iShareInput.clear();
+        this.iShareInput.sendKeys(libraryObject.adminModule);
+
+        this.garInput.clear();
+        this.garInput.sendKeys(libraryObject.adminModule);
+
+        this.clickStatusInput(libraryObject.isActive);
+
+        for ( i = 0 ; i < libraryObject.directorContacts.length ; i++ ){
+            contact = this.getContactEditForm('Director',i);
+            testData = libraryObject.directorContacts[i];
 
             this.fillInContact( contact, testData );
         }
 
-        for ( i = 0 ; i < vendorObject.salesContacts.length ; i++ ){
-            contact = this.getContactEditForm('Sales',i);
-            testData = vendorObject.salesContacts[i];
+        for ( i = 0 ; i < libraryObject.eResourceLiaisonContacts.length ; i++ ){
+            contact = this.getContactEditForm('E-Resources Liaison',i);
+            testData = libraryObject.eResourceLiaisonContacts[i];
 
             this.fillInContact( contact, testData );
         }
 
-        for ( i = 0 ; i < vendorObject.technicalContacts.length ; i++ ){
-            contact = this.getContactEditForm('Technical',i);
-            testData = vendorObject.technicalContacts[i];
+        for ( i = 0 ; i < libraryObject.otherContacts.length ; i++ ){
+            contact = this.getContactEditForm('Other',i);
+            testData = libraryObject.otherContacts[i];
+
+            this.fillInContact( contact, testData );
+        }
+
+        for ( i = 0 ; i < libraryObject.notificationOnlyContacts.length ; i++ ){
+            contact = this.getContactEditForm('Notification Only',i);
+            testData = libraryObject.notificationOnlyContacts[i];
 
             this.fillInContact( contact, testData );
         }
     };
 
 
-    this.testVendor = {
-        name: 'Test Vendor 1',
-        websiteUrl: 'http://www.example.com',
-        comments: 'This is a comment',
-        adminModule: 'This is an admin module comment',
+    this.testLibrary = {
+        name: 'Test Library 1',
+        fte: 'http://www.example.com',
+        institutionYears: '2 Year',
+        institutionType: 'Public',
+        ipAddresses: '192.168.0.1',
+        membershipLevel: 'Governing',
+        isIshareMember: true,
+        gar: 'Test Gar Value',
         isActive: false,
-        billingContacts: [
+        directorContacts: [
             {
-                name: 'Billing Contact 1',
-                email:'billing1@example.com',
+                name: 'Director Contact 1',
+                email:'director1@example.com',
                 phoneNumber:'123-4567'
             },
             {
-                name: 'Billing Contact 2',
-                email:'billing2@example.com',
+                name: 'Director Contact 2',
+                email:'director1@example.com',
                 phoneNumber:'890-4567'
             }
         ],
-        salesContacts: [
+        eResourceLiaisonContacts: [
             {
-                name: 'Sales Contact 1',
-                email:'sales@exmaple.com',
+                name: 'Liaison Contact 1',
+                email:'liaison@exmaple.com',
                 phoneNumber:'234-5678'
             }
         ],
-        technicalContacts: [
+        otherContacts: [
             {
-                name: 'Technical Contact 1',
-                email:'tech@example.com',
+                name: 'Other Contact 1',
+                email:'other@example.com',
+                phoneNumber:'345-6789'
+            }
+        ],
+        notificationOnlyContacts: [
+            {
+                name: 'Billing Contact 1',
+                email:'billing@example.com',
                 phoneNumber:'345-6789'
             }
         ]
     };
 
-    this.testEditVendor = {
-        name: 'Change Vendor Name',
-        websiteUrl: 'http://www.example.net',
-        comments: 'This is an edited comment',
-        adminModule: 'This is an edited admin module comment',
-        isActive: true,
-        billingContacts: [
+    this.testEditLibrary = {
+        name: 'Test Library Edit 1',
+        fte: 'http://www.example.com/test',
+        institutionYears: '4 Year',
+        institutionType: 'Private',
+        ipAddresses: '192.168.1.1',
+        membershipLevel: 'Affiliate',
+        isIshareMember: true,
+        gar: 'Test Gar Value',
+        isActive: false,
+        directorContacts: [
             {
-                name: 'Billing Contact 1 - Edited',
-                email:'billing1.edit@example.com',
-                phoneNumber:'217-4567'
+                name: 'Edited Director Contact 1',
+                email:'director1.edit@example.com',
+                phoneNumber:'123-4567'
             },
             {
-                name: 'Billing Contact 2 - Edited',
-                email:'billing2.edit@example.com',
-                phoneNumber:'217-4567'
+                name: 'Edited Director Contact 2',
+                email:'director1.edit@example.com',
+                phoneNumber:'123-4567'
             }
         ],
-        salesContacts: [
+        eResourceLiaisonContacts: [
             {
-                name: 'Sales Contact 1 - Edited',
-                email:'sales.edit@exmaple.com',
-                phoneNumber:'217-5678'
+                name: 'Edited Liaison Contact 1',
+                email:'liaison.edit@exmaple.com',
+                phoneNumber:'345-5678'
             }
         ],
-        technicalContacts: [
+        otherContacts: [
             {
-                name: 'Technical Contact 1 - Edited',
-                email:'tech.edit@example.com',
-                phoneNumber:'217-6789'
+                name: 'Edited Other Contact 1',
+                email:'other.edit@example.com',
+                phoneNumber:'346-6789'
+            }
+        ],
+        notificationOnlyContacts: [
+            {
+                name: 'Edited Billing Contact 1',
+                email:'billing.edit@example.com',
+                phoneNumber:'347-6789'
             }
         ]
     };
 };
 
-module.exports = VendorPage;
+module.exports = LibraryPage;
