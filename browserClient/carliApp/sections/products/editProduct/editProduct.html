@@ -1,5 +1,88 @@
 <section id="products">
-    <h1>{{ vm.product.name }}</h1>
 
-    {{ vm.product }}
+    <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="productForm" ng-submit="vm.saveProduct()">
+
+        <header class="page-header">
+            <h1 ng-show="vm.newProduct">New Product</h1>
+
+            <div class="name">
+                <label for="productName">Product Name</label>
+                <view-edit-text-field ng-model="vm.product.name" edit-mode="vm.editable"><h1>{{ vm.product.name }}</h1>
+                </view-edit-text-field>
+            </div>
+
+            <div ng-show="!vm.newProduct" class="edit-buttons pull-right">
+                <div ng-show="vm.editable">
+                    <a class="carli-button cancel-button" href="/product">Cancel</a>
+                    <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit">
+                </div>
+
+                <div id="product-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></div>
+            </div>
+        </header>
+
+        <section class="content">
+            <fieldset>
+                <div class="column">
+
+                    <label for="productWebsite">Product Website</label>
+                    <view-edit-text-field ng-model="vm.product.websiteUrl" edit-mode="vm.editable"><h3>{{ vm.product.websiteUrl }}</h3></view-edit-text-field>
+                    <label for="productStatus">Status</label>
+                    <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.product.isActive" edit-mode="vm.editable"><h3>{{ vm.product.isActive ? 'Active' : 'Inactive' }}</h3></view-edit-radios>
+                    <label for="productAdminModule">Admin Module</label>
+                    <view-edit-text-area class="admin-module" ng-model="vm.product.adminModule" edit-mode="vm.editable">{{ vm.product.adminModule }}</view-edit-text-area>
+                </div>
+                <div class="column">
+                    <label for="productComments">Comments</label>
+                    <view-edit-text-area class="comments" ng-model="vm.product.comments" edit-mode="vm.editable">{{ vm.product.comments }}</view-edit-text-area>
+                </div>
+            </fieldset>
+            <fieldset>
+
+                <div class="column">
+                    <!--Products will go here-->
+                </div>
+                <div class="column">
+
+                    <div class="contact-list">
+                        <label>Contacts: <em>Billing</em></label>
+                        <span class="pull-right add-contact" id="add-billing-contact" ng-show="vm.editable" ng-click="vm.addContact('Billing')">Add Contact</span>
+
+                        <div class="contact-list-item" ng-repeat="contact in vm.product.contacts | filter:{ contactType: 'Billing' }">
+                            <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
+                            <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-list">
+                        <label>Contacts: <em>Sales</em></label>
+                        <span class="pull-right add-contact" id="add-sales-contact" ng-show="vm.editable" ng-click="vm.addContact('Sales')">Add Contact</span>
+
+                        <div class="contact-list-item" ng-repeat="contact in vm.product.contacts | filter:{ contactType: 'Sales' }">
+                            <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
+                            <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-list">
+                        <label>Contacts: <em>Technical</em></label>
+                        <span class="pull-right add-contact" id="add-technical-contact" ng-show="vm.editable" ng-click="vm.addContact('Technical')">Add Contact</span>
+
+                        <div class="contact-list-item" ng-repeat="contact in vm.product.contacts | filter:{ contactType: 'Technical' }">
+                            <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
+                            <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <footer ng-show="vm.editable">
+                <a class="carli-button cancel-button" href="/product">Cancel</a>
+                <input class="carli-button save-button" ng-disabled="!vm.editable" id="product-submit" type="submit">
+            </footer>
+        </section>
+    </form>
+
+    <hr>
+    <pre>{{ vm.product }}</pre>
 </section>
