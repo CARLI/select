@@ -17,6 +17,10 @@ describe( 'CARLI', function() {
         expect(CARLI.Library).to.be.an('Object');
     } );
 
+    it( 'should export the License module', function() {
+        expect(CARLI.License).to.be.an('Object');
+    } );
+
     it( 'should export a Store Interface', function() {
         expect(CARLI.Store).to.be.a('Function');
     } );
