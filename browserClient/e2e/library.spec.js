@@ -1,3 +1,7 @@
+function toString( val ){
+    return val + '';
+}
+
 var LibraryPage = require('./LibraryPage.spec');
 
 describe('The New Library screen', function () {
@@ -19,12 +23,13 @@ describe('The New Library screen', function () {
 
     it('should have a blank Institution Years select', function () {
         expect(libraryPage.institutionYearsInput.isPresent()).toBe(true);
-        expect(libraryPage.institutionYearsInput.getAttribute('value')).toBe('');
+        //expect ? because that's what Angular puts be default for the empty option (when nothing is set in the model by default)
+        expect(libraryPage.institutionYearsInput.getAttribute('value')).toBe('?');
     });
 
     it('should have a blank Institution Type Select', function () {
         expect(libraryPage.institutionTypeInput.isPresent()).toBe(true);
-        expect(libraryPage.institutionTypeInput.getAttribute('value')).toBe('');
+        expect(libraryPage.institutionTypeInput.getAttribute('value')).toBe('?');
     });
 
     it('should have a blank ipAddress Input', function () {
@@ -34,12 +39,13 @@ describe('The New Library screen', function () {
 
     it('should have a blank Membership Level Select', function () {
         expect(libraryPage.membershipLevelInput.isPresent()).toBe(true);
-        expect(libraryPage.membershipLevelInput.getAttribute('value')).toBe('');
+        expect(libraryPage.membershipLevelInput.getAttribute('value')).toBe('?');
     });
 
     it('should have a blank iShareInput', function () {
         expect(libraryPage.iShareInput.isPresent()).toBe(true);
-        expect(libraryPage.iShareInput.getAttribute('value')).toBe('');
+        // expect null because Protractor returns 'true' if checked and null if not
+        expect(libraryPage.iShareInput.getAttribute('checked')).toBe(null);
     });
 
     it('should have a blank GAR Input', function () {
@@ -57,10 +63,11 @@ describe('The New Library screen', function () {
 
     it('should have "Add Contact" links for all four types of users', function () {
         expect(libraryPage.addDirectorContactLink.isPresent()).toBe(true);
-        expect(libraryPage.addLiaisonContactLink.isPresent()).toBe(true);
+        expect(libraryPage.addEresourceLiaisonContactLink.isPresent()).toBe(true);
         expect(libraryPage.addOtherContactLink.isPresent()).toBe(true);
-        expect(libraryPage.addNotificationonlyContactLink.isPresent()).toBe(true);
+        expect(libraryPage.addNotificationOnlyContactLink.isPresent()).toBe(true);
     });
+
 
     it('should save a new Library when filling in the form and clicking save', function() {
         var i, contact, testData, libraryList;
@@ -146,8 +153,8 @@ describe('Viewing an existing Library in read only mode', function () {
             expect(contactForm.phoneNumber.isDisplayed()).toBe(false);
             expect(contactForm.email.isDisplayed()).toBe(false);
         }
-        for ( i = 0 ; i < libraryPage.testLibrary.liaisonContacts.length ; i++ ) {
-            contactForm = libraryPage.getContactEditForm('Liaison', i);
+        for ( i = 0 ; i < libraryPage.testLibrary.eResourceLiaisonContacts.length ; i++ ) {
+            contactForm = libraryPage.getContactEditForm('E-Resources Liaison', i);
             expect(contactForm.name.isDisplayed()).toBe(false);
             expect(contactForm.phoneNumber.isDisplayed()).toBe(false);
             expect(contactForm.email.isDisplayed()).toBe(false);
@@ -158,8 +165,8 @@ describe('Viewing an existing Library in read only mode', function () {
             expect(contactForm.phoneNumber.isDisplayed()).toBe(false);
             expect(contactForm.email.isDisplayed()).toBe(false);
         }
-        for ( i = 0 ; i < libraryPage.testLibrary.notificationonlyContacts.length ; i++ ) {
-            contactForm = libraryPage.getContactEditForm('Notificationonly', i);
+        for ( i = 0 ; i < libraryPage.testLibrary.notificationOnlyContacts.length ; i++ ) {
+            contactForm = libraryPage.getContactEditForm('Notification Only', i);
             expect(contactForm.name.isDisplayed()).toBe(false);
             expect(contactForm.phoneNumber.isDisplayed()).toBe(false);
             expect(contactForm.email.isDisplayed()).toBe(false);
@@ -172,21 +179,45 @@ describe('Viewing an existing Library in read only mode', function () {
         });
     });
 
-    it('should display websiteUrl', function() {
-        libraryPage.websiteDisplay.getText().then(function (text) {
-            expect(text).toBe(libraryPage.testLibrary.websiteUrl);
+    it('should display Full Time Enrollment', function() {
+        libraryPage.fteDisplay.getText().then(function (text) {
+            expect(text).toBe( toString(libraryPage.testLibrary.fte));
         });
     });
 
-    it('should display comments', function() {
-        libraryPage.commentsInputDisplay.getText().then(function (text) {
-            expect(text).toBe(libraryPage.testLibrary.comments);
+    it('should display Institution Years', function() {
+        libraryPage.institutionYersInputDisplay.getText().then(function (text) {
+            expect(text).toBe(libraryPage.testLibrary.institutionYears);
         });
     });
 
-    it('should display adminModule', function() {
-        libraryPage.adminModuleInputDisplay.getText().then(function (text) {
-            expect(text).toBe(libraryPage.testLibrary.adminModule);
+    it('should display Institution Type', function() {
+        libraryPage.institutionTypeInputDisplay.getText().then(function (text) {
+            expect(text).toBe(libraryPage.testLibrary.institutionType);
+        });
+    });
+
+    it('should display ipAddresses', function() {
+        libraryPage.ipAddressnputDisplay.getText().then(function (text) {
+            expect(text).toBe(libraryPage.testLibrary.ipAddresses);
+        });
+    });
+
+    it('should display Membership Level', function() {
+        libraryPage.membershipLevelInputDisplay.getText().then(function (text) {
+            expect(text).toBe(libraryPage.testLibrary.membershipLevel);
+        });
+    });
+
+    it('should display iShare', function() {
+        libraryPage.iShareInputDisplay.getText().then(function (text) {
+            expect(text).toBe( toString(libraryPage.testLibrary.isIshareMember) );
+        });
+    });
+
+    it('should display GAR', function() {
+        libraryPage.garInputDisplay.getText().then(function (text) {
+            expect(text).toBe(libraryPage.testLibrary.gar);
         });
     });
 
@@ -237,7 +268,7 @@ describe('Viewing an existing Library in edit mode', function () {
     });
 
     it('should have a populated Full-Time Enrollment field', function() {
-        expect(libraryPage.fteInput.getAttribute('value')).toBe(libraryPage.testLibrary.fte);
+        expect(libraryPage.fteInput.getAttribute('value')).toBe( toString(libraryPage.testLibrary.fte) );
     });
 
     it('should have a selected Institution Years value', function() {
@@ -257,7 +288,7 @@ describe('Viewing an existing Library in edit mode', function () {
     });
 
     it('should have a correctly selected I-Share Member checkbox', function() {
-        expect(libraryPage.iShareInput.getAttribute('value')).toBe(libraryPage.testLibrary.isIshareMember);
+        expect(libraryPage.iShareInput.getAttribute('checked')).toBe(libraryPage.testLibrary.isIshareMember ? 'true' : null);
     });
 
     it('should have a populated GAR field', function() {
@@ -344,71 +375,71 @@ describe('Making changes to an existing Library', function(){
     });
 
     it('should save changes to the name field', function() {
-        expect(libraryPage.nameInput.getAttribute('value')).toBe(libraryPage.testLibrary.name);
+        expect(libraryPage.nameInput.getAttribute('value')).toBe(libraryPage.testEditLibrary.name);
     });
 
     it('should save changes to the Full-Time Enrollment field', function() {
-        expect(libraryPage.fteInput.getAttribute('value')).toBe(libraryPage.testLibrary.fte);
+        expect(libraryPage.fteInput.getAttribute('value')).toBe(libraryPage.testEditLibrary.fte);
     });
 
     it('should save changes to the Institution Years select list', function() {
-        expect(libraryPage.institutionYearsInput.getAttribute('value')).toBe(libraryPage.testLibrary.institutionYears);
+        expect(libraryPage.institutionYearsInput.getAttribute('value')).toBe(libraryPage.testEditLibrary.institutionYears);
     });
 
     it('should save changes to the Institution Type select list', function() {
-        expect(libraryPage.institutionTypeInput.getAttribute('value')).toBe(libraryPage.testLibrary.institutionType);
+        expect(libraryPage.institutionTypeInput.getAttribute('value')).toBe(libraryPage.testEditLibrary.institutionType);
     });
 
     it('should save changes to the IP Addresses field', function() {
-        expect(libraryPage.ipAddressInput.getAttribute('value')).toBe(libraryPage.testLibrary.ipAddresses);
+        expect(libraryPage.ipAddressInput.getAttribute('value')).toBe(libraryPage.testEditLibrary.ipAddresses);
     });
 
     it('should save changes to the Membership select list', function() {
-        expect(libraryPage.membershipLevelInput.getAttribute('value')).toBe(libraryPage.testLibrary.membershipLevel);
+        expect(libraryPage.membershipLevelInput.getAttribute('value')).toBe(libraryPage.testEditLibrary.membershipLevel);
     });
 
     it('should save changes to the I-Share Member checkbox', function() {
-        expect(libraryPage.iShareInput.getAttribute('value')).toBe(libraryPage.testLibrary.isIshareMember);
+        expect(libraryPage.iShareInput.getAttribute('value')).toBe(libraryPage.testEditLibrary.isIshareMember ? 'true' : null);
     });
 
     it('should save changes to the GAR field', function() {
-        expect(libraryPage.garInput.getAttribute('value')).toBe(libraryPage.testLibrary.gar);
+        expect(libraryPage.garInput.getAttribute('value')).toBe(libraryPage.testEditLibrary.gar);
     });
 
     it('should save changes to the Membership Status radio button', function() {
-        expect(libraryPage.getStatusInputActive()).toBe(libraryPage.testLibrary.isActive ? 'true' : null);
+        expect(libraryPage.getStatusInputActive()).toBe(libraryPage.testEditLibrary.isActive ? 'true' : null);
     });
 
     it('should save changes to the User fields', function(){
         var contactForm, contact;
 
-        for ( i = 0 ; i < libraryPage.testLibrary.directorContacts.length ; i++ ){
+        for ( i = 0 ; i < libraryPage.testEditLibrary.directorContacts.length ; i++ ){
             contactForm = libraryPage.getContactEditForm('Director', i);
-            contact = libraryPage.testLibrary.directorContacts[i];
+            contact = libraryPage.testEditLibrary.directorContacts[i];
             expect(contactForm.name.getAttribute('value')).toBe(contact.name);
             expect(contactForm.email.getAttribute('value')).toBe(contact.email);
             expect(contactForm.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
         }
 
-        for ( i = 0 ; i < libraryPage.testLibrary.eResourceLiaisonContacts.length ; i++ ){
+        for ( i = 0 ; i < libraryPage.testEditLibrary.eResourceLiaisonContacts.length ; i++ ){
             contactForm = libraryPage.getContactEditForm('E-Resources Liaison', i);
-            contact = libraryPage.testLibrary.eResourceLiaisonContacts[i];
+            contact = libraryPage.testEditLibrary.eResourceLiaisonContacts[i];
             expect(contactForm.name.getAttribute('value')).toBe(contact.name);
             expect(contactForm.email.getAttribute('value')).toBe(contact.email);
             expect(contactForm.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
         }
 
-        for ( i = 0 ; i < libraryPage.testLibrary.otherContacts.length ; i++ ){
+        for ( i = 0 ; i < libraryPage.testEditLibrary.otherContacts.length ; i++ ){
             contactForm = libraryPage.getContactEditForm('Other', i);
-            contact = libraryPage.testLibrary.otherContacts[i];
+            contact = libraryPage.testEditLibrary.otherContacts[i];
             expect(contactForm.name.getAttribute('value')).toBe(contact.name);
             expect(contactForm.email.getAttribute('value')).toBe(contact.email);
             expect(contactForm.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
         }
 
-        for ( i = 0 ; i < libraryPage.testLibrary.notificationOnlyContacts.length ; i++ ){
+        for ( i = 0 ; i < libraryPage.testEditLibrary.notificationOnlyContacts.length ; i++ ){
             contactForm = libraryPage.getContactEditForm('Notification Only', i);
-            contact = libraryPage.testLibrary.notificationOnlyContacts[i];
+            contact = libraryPage.testEditLibrary.notificationOnlyContacts[i];
             expect(contactForm.name.getAttribute('value')).toBe(contact.name);
             expect(contactForm.email.getAttribute('value')).toBe(contact.email);
             expect(contactForm.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);

@@ -1,5 +1,5 @@
 var LibraryPage = function () {
-    this.listFilterShowAll = element(by.cssContainingText('.ng-binding', 'All Libraries'));
+    this.listFilterShowAll = element(by.cssContainingText('.ng-binding', 'All libraries'));
 
     this.nameInput = element(by.model('vm.library.name')).element(by.tagName('input'));
     this.nameDisplay = element(by.model('vm.library.name'));
@@ -13,7 +13,7 @@ var LibraryPage = function () {
     this.institutionTypeInput = element(by.model('vm.library.institutionType')).element(by.tagName('select'));
     this.institutionTypeInputDisplay = element(by.model('vm.library.institutionType'));
 
-    this.ipAddressInput = element(by.model('vm.library.ipAddresses')).element(by.tagName('input'));
+    this.ipAddressInput = element(by.model('vm.library.ipAddresses')).element(by.tagName('textarea'));
     this.ipAddressnputDisplay = element(by.model('vm.library.ipAddresses'));
 
     this.membershipLevelInput = element(by.model('vm.library.membershipLevel')).element(by.tagName('select'));
@@ -111,22 +111,22 @@ var LibraryPage = function () {
         this.nameInput.sendKeys(libraryObject.name);
 
         this.fteInput.clear();
-        this.fteInput.sendKeys(libraryObject.websiteUrl);
+        this.fteInput.sendKeys(libraryObject.fte);
 
         this.institutionYearsInput.element(by.cssContainingText('option', libraryObject.institutionYears )).click();
 
         this.institutionTypeInput.element(by.cssContainingText('option', libraryObject.institutionType )).click();
 
         this.ipAddressInput.clear();
-        this.ipAddressInput.sendKeys(libraryObject.adminModule);
+        this.ipAddressInput.sendKeys(libraryObject.ipAddresses);
 
         this.membershipLevelInput.element(by.cssContainingText('option', libraryObject.membershipLevel )).click();
 
-        this.iShareInput.clear();
-        this.iShareInput.sendKeys(libraryObject.adminModule);
+        //TODO: this should depend on the value from the test data
+        this.iShareInput.click();
 
         this.garInput.clear();
-        this.garInput.sendKeys(libraryObject.adminModule);
+        this.garInput.sendKeys(libraryObject.gar);
 
         this.clickStatusInput(libraryObject.isActive);
 
@@ -162,7 +162,7 @@ var LibraryPage = function () {
 
     this.testLibrary = {
         name: 'Test Library 1',
-        fte: 'http://www.example.com',
+        fte: 1000,
         institutionYears: '2 Year',
         institutionType: 'Public',
         ipAddresses: '192.168.0.1',
@@ -207,7 +207,7 @@ var LibraryPage = function () {
 
     this.testEditLibrary = {
         name: 'Test Library Edit 1',
-        fte: 'http://www.example.com/test',
+        fte: 1001,
         institutionYears: '4 Year',
         institutionType: 'Private',
         ipAddresses: '192.168.1.1',
