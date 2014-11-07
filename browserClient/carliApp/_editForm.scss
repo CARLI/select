@@ -34,6 +34,12 @@
             width: 100%;
         }
 
+        .contacts-header {
+            @extend .h3;
+            color: black;
+            font-weight: bold;
+        }
+
         .contact-list {
             border-bottom: $default-border;
             padding-bottom: 1rem;
