@@ -1,12 +1,15 @@
+var Q = require( 'q' )
+;
+
 function ensureGetOptionsExist( options ){
     if( !options || !options.id ) {
-            throw new Error( 'Requires an id' );
+        throw new Error( 'Requires an id' );
     };
 }
 
 function ensureGetOptionsHastype( options ){
     if ( !options.type ){
-            throw new Error( 'Requires a type' );
+        throw new Error( 'Requires a type' );
     }
 }
 
@@ -17,7 +20,7 @@ function ensureGetOptionsAreValid( options ){
 
 function ensureSaveDataArgumentExists( data ) {
     if ( !data ) {
-        throw new Error( 'Requires Data' );  
+        throw new Error( 'Requires Data' );
     };
 }
 
@@ -41,16 +44,31 @@ function ensureSaveDataIsValid( data ) {
 
 function toGetOrDelete( myStore, options, toDelete ) {
     ensureGetOptionsAreValid( options );
+    var deferred = Q.defer();
 
-    if ( myStore.typeExistsInStore( options.type ) ) {
-        if ( myStore.idForTypeExistsInStore( options.type, options.id ) ){
-            return toDelete
-              ? myStore.deleteDataFor( options.type, options.id )
-              : myStore.getDataFor( options.type, options.id ); 
+    myStore.typeExistsInStore( options.type )
+    .then(
+        function() {
+            return myStore.idForTypeExistsInStore( options.type, options.id );
+        },
+        function() { //catch
+            deferred.reject( 'Type not found' );
         }
-        throw new Error( 'Id not found' );
-    }
-    throw new Error( 'Type not found' );
+    )
+    .then(
+        function() {
+            deferred.resolve (
+                toDelete
+                    ? myStore.deleteDataFor( options.type, options.id )
+                    : myStore.getDataFor( options.type, options.id )
+            )
+        },
+        function() { //catch
+            deferred.reject( 'Id not found' );
+        }
+    );
+
+    return deferred.promise;
 }
 
 module.exports = function( storeType ) {
@@ -60,28 +78,38 @@ module.exports = function( storeType ) {
     return {
 
         get: function( options ) {
-            return toGetOrDelete( myStore, options );
+            var deferred = Q.defer();
+            toGetOrDelete( myStore, options )
+            .then( function( result ) {
+                deferred.resolve( result );
+            } )
+            .catch( function( result ) {
+                deferred.reject( result );
+            } );
+            return deferred.promise;
         },
 
         save: function( data ) {
-            ensureSaveDataIsValid( data );
-            myStore.ensureStoreTypeExists( data.type );
-            return myStore.storeData( data );
+            var deferred = Q.defer();
+            try {
+                ensureSaveDataIsValid( data );
+                deferred.resolve( myStore.storeData( data ) );
+            } catch( err ) {
+                throw err;
+            }
+            return deferred.promise;
         },
 
         list: function( type ) {
-          if( ! type ) {
-            throw new Error( 'Must Specify Type' );
-          };
-          if ( myStore.typeExistsInStore( type ) ) {
+            if( ! type ) {
+                throw new Error( 'Must Specify Type' );
+            }
             return myStore.listDataFor( type );
-          };
-          return [];
         },
 
         delete: function( options ) {
             return toGetOrDelete( myStore, options, true );
-        } 
+        }
 
     };
 };

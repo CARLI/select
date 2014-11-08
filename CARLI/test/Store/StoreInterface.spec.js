@@ -2,11 +2,15 @@ var chai   = require( 'chai' )
   , expect = chai.expect
   , uuid   = require( 'node-uuid' )
   , store = require( '../../Store' )
+  , chaiAsPromised = require( 'chai-as-promised' )
+  , Q     = require( 'q' )
 ;
 
-function test( storeTypeName ) {
+chai.use( chaiAsPromised );
 
-    var storeType = require('../../Store/'+storeTypeName );
+function test( storeTypeName, options ) {
+
+    var storeType = require('../../Store/'+storeTypeName )( options );
 
     function makeValidObject() {
         return {
@@ -49,7 +53,7 @@ function test( storeTypeName ) {
 
             it( 'should save data and return id', function() {
                 var id = uuid.v4();
-                expect( DataStore.save( { id: id, type: 'testy' } ) ).to.equal( id );
+                expect( DataStore.save( { id: id, type: 'testy' } ) ).to.eventually.equal( id );
             } );
 
         } );
@@ -63,12 +67,25 @@ function test( storeTypeName ) {
 
             var simpleObject = makeValidObject();
             simpleObject.foo = 'bar';
-            var simpleObjectSaveId  = DataStore.save( simpleObject );
+            var simpleObjectSaveId  = null;
+
+
 
             var objectWithId = makeValidObject();
             objectWithId.id = uuid.v4();
             objectWithId.foo = 'baz';
-            var objectWithIdSaveId  = DataStore.save( objectWithId );
+            var objectWithIdSaveId  = null;
+
+            before( function( done ) {
+                Q.all([
+                    DataStore.save( simpleObject ),
+                    DataStore.save( objectWithId )
+                ]).then( function( ids ) {
+                    simpleObjectSaveId = ids[0];
+                    objectWithIdSaveId = ids[1];
+                    done();
+                } );
+            } );
 
             it( 'should fail without an id', function() {
                 expect( DataStore.get ).to.throw( /Requires an id/ );
@@ -82,43 +99,44 @@ function test( storeTypeName ) {
                expect( badGetNoType ).to.throw( /Requires a type/ );
             } );
 
-            function badGetTypeNotInStore(){
-                DataStore.get({ id: uuid.v4(), type: uuid.v4() });
-            }
             it( 'should fail when the type is not in the store', function() {
-                expect( badGetTypeNotInStore ).to.throw( /Type not found/ );
+                return expect( DataStore.get({ id: uuid.v4(), type: uuid.v4() })).to.be.rejectedWith( /Type not found/ );
             } );
 
-            function badGetIdNotFound() {
-                DataStore.get( { id: uuid.v4(), type: 'testy' } );
-            };
             it( 'should fail when an id not found', function() {
-                expect( badGetIdNotFound ).to.throw( /Id not found/ );
+                return expect( DataStore.get( { id: uuid.v4(), type: 'testy' } )).to.be.rejectedWith( /Id not found/ );
             } );
 
             it( 'should return stored data for id', function() {
-                expect( DataStore.get( { id: simpleObjectSaveId, type: simpleObject.type } ) ).to.deep.equal( simpleObject );
+                return expect( DataStore.get( { id: simpleObjectSaveId, type: simpleObject.type } ) ).to.eventually.deep.equal( simpleObject );
             } );
 
             it( 'should save the data under id if id property is set', function() {
-                expect( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.deep.equal( objectWithId );
+                return expect( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.eventually.deep.equal( objectWithId );
             } );
 
             it( 'should update the store if called with the same id', function(){
                 objectWithId.foo = 'new value';
                 DataStore.save( objectWithId );
-                expect( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.deep.equal( objectWithId );
+                expect( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.eventually.deep.equal( objectWithId );
             } );
 
             it( "shouldn't update the store because of an object reference bug", function() {
-                objectWithId.foo = 'new value';
-                DataStore.save( objectWithId );
-                testObject = DataStore.get( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) );
-                objectWithId.foo = 'garbage'; // Change the object to fail
-                expect( testObject ).to.not.deep.equal( objectWithId );
+                DataStore.save( objectWithId )
+                .then( function() {
+                    return DataStore.get({id: objectWithIdSaveId, type: objectWithId.type})
+                } )
+                .then( function( objectWithId ) {
+                    return DataStore.get( objectWithId );
+                } )
+                .then( function( testObject ) {
+                    objectWithId.foo = uuid.v4();
+                    expect( testObject ).to.not.deep.equal( objectWithId );
+                    done();
+                } );
             } );
 
-            it('should save objects with differing types and same id separately', function(){
+            it('should save objects with differing types and same id separately', function( done ){
                 var sharedId = uuid.v4();
 
                 var objectWithType = makeValidObject();
@@ -128,11 +146,16 @@ function test( storeTypeName ) {
                 objectWithNewType.type = 'new_type';
                 objectWithNewType.id = sharedId;
 
-                DataStore.save( objectWithType );
-                DataStore.save( objectWithNewType );
+                Q.all([
+                  DataStore.save( objectWithType ),
+                  DataStore.save( objectWithNewType )
+                ])
+                .then( function() {
+                   expect( DataStore.get( {id: sharedId, type: objectWithType.type} ) ).to.eventually.deep.equal( objectWithType );
+                   expect( DataStore.get( {id: sharedId, type: objectWithNewType.type} ) ).to.eventually.deep.equal( objectWithNewType );
+                    done();
+                } );
 
-                expect( DataStore.get( { id: sharedId, type: objectWithType.type } ) ).to.deep.equal( objectWithType );
-                expect( DataStore.get( { id: sharedId, type: objectWithNewType.type } ) ).to.deep.equal( objectWithNewType );
             } );
         } );
 
@@ -150,27 +173,38 @@ function test( storeTypeName ) {
                 expect( failWithoutType ).to.throw('Must Specify Type');
             } );
 
-            it( 'should return an array', function() {
-                expect( DataStore.list( objectType ) ).to.be.an('Array');
+            it( 'should return an object', function() {
+                expect( DataStore.list( objectType ) ).to.be.an( 'Object' );
+            } );
+
+            it( 'should eventually be an array', function( ) {
+                return expect( DataStore.list( objectType ) ).to.eventually.be.an('Array');
             } );
 
             function test5Objects() {
                 var objectType = uuid.v4();
+                var object = makeValidObject();
+                object.type = objectType;
+                var promises = [];
                 for ( i = 0; i < 5; i++ ) {
                     var object = makeValidObject();
                     object.type = objectType;
-                    DataStore.save( object );
+                    promises.push( DataStore.save( object ) );
                 };
-                return DataStore.list( objectType );
+                return Q.all( promises ).then( function() {
+                   return DataStore.list( objectType );
+                } );
             }
 
-            it( 'should return an array of length 5 for our test objects', function() {
-                expect( test5Objects() ).to.be.an('Array').of.length( 5 );
+            it( 'should return an array of test objects', function( ) {
+                return expect( test5Objects() ).to.eventually.be.an('Array').of.length( 5 );
             } );
 
             it( 'should return an array of objects', function() {
-                test5Objects().forEach( function( element ) {
-                    expect( element ).to.be.an( 'Object' );
+                return test5Objects().then(function ( result ) {
+                    result.forEach( function( element ) {
+                        expect( element ).to.be.an( 'Object' );
+                    } );
                 } );
             } );
 
@@ -184,7 +218,13 @@ function test( storeTypeName ) {
             var objectType = uuid.v4();
             var object = makeValidObject();
             object.type = uuid.v4();
-            object.id = DataStore.save( object );
+
+            before( function( done ) {
+                DataStore.save( object ).then( function ( id ) {
+                    object.id = id;
+                    done();
+                } );
+            } );
 
             it( 'should fail without an id', function() {
                 expect( DataStore.delete ).to.throw( /Requires an id/ );
@@ -198,29 +238,26 @@ function test( storeTypeName ) {
                 expect( badGetNoType ).to.throw( /Requires a type/ );
             } );
 
-            function badGetTypeNotInStore(){
-                DataStore.delete({ id: uuid.v4(), type: uuid.v4() });
-            }
             it( 'should fail when the type is not in the store', function() {
-                expect( badGetTypeNotInStore ).to.throw( /Type not found/ );
+                expect( DataStore.delete({ id: uuid.v4(), type: uuid.v4() }) ).to.be.rejectedWith( /Type not found/ );
             } );
 
-            function badGetIdNotFound() {
-                DataStore.delete( { id: uuid.v4(), type: 'testy' } );
-            };
             it( 'should fail when an id not found', function() {
-                expect( badGetIdNotFound ).to.throw( /Id not found/ );
+                expect( DataStore.delete( { id: uuid.v4(), type: 'testy' } ) ).to.be.rejectedWith( /Id not found/ );
             } );
 
-            it( 'should delete a valid object', function() {
-                expect( DataStore.get( object ) ).to.be.an( 'Object' );
-                expect( DataStore.delete( object ) ).to.be.ok;
-                function getAfterDeleteShouldFail() {
-                  DataStore.get( object );
-                };
-                expect( getAfterDeleteShouldFail ).to.throw( 'Id not found' );
-                expect( DataStore.list( objectType ) ).to.be.an('Array').of.length( 0 );
-            } );
+            it('should delete a valid object', function () {
+                return expect(DataStore.get(object)).to.be.fulfilled
+                .then(function () {
+                    return expect(DataStore.delete(object)).to.be.fulfilled;
+                })
+                .then(function () {
+                    return expect(DataStore.get(object)).to.be.rejectedWith('Id not found');
+                })
+                .then(function () {
+                    return expect(DataStore.list(objectType)).to.eventually.be.an('Array').of.length(0)
+                });
+            });
         } );
 
 

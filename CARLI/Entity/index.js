@@ -1,6 +1,6 @@
 var uuid  = require( 'node-uuid' )
   , tv4   = require( 'tv4' )
-  , Validator = require( '../Validator' ) 
+  , Validator = require( '../Validator' )
 ;
 
 var dataStore;
@@ -13,7 +13,6 @@ function throwIfDataIsEmpty ( data ) {
 
 function validateCreateData( data ){
     throwIfDataIsEmpty( data );
-    Validator.validate( data );
 }
 
 function validateUpdateData( data ){
@@ -41,15 +40,35 @@ module.exports = function (type) {
             data.id = data.id || uuid.v4();
             data.type = type;
 
-            dataStore.save( data );
-            return _cloneData( data );
+            var deferred = Q.defer();
+
+            Validator.validate( data )
+            .then( function() {
+                return dataStore.save( data )
+            } )
+            .then( function( id ) {
+                deferred.resolve( _cloneData( data ) );
+            } )
+            .catch( function( err ) {
+                deferred.reject( err );
+            } );
+            return deferred.promise;
         },
 
         update: function( data ){
             validateUpdateData( data );
-            if ( dataStore.save( data ) ) {
-                return _cloneData( data );
-            }
+            var deferred = Q.defer();
+            Validator.validate( data )
+            .then( function() {
+                return dataStore.save( data )
+            } )
+            .then( function( id ) {
+                deferred.resolve( _cloneData( data ) );
+            } )
+            .catch( function( err ) {
+                deferred.reject( err );
+            } );
+            return deferred.promise; 
         },
 
         list: function() {
@@ -60,12 +79,7 @@ module.exports = function (type) {
             if ( !id ){
                 throw new Error('Id Required');
             }
-            try {
-                return dataStore.get( { id: id, type: type } );
-            }
-            catch( e ) {
-                return false;
-            }
+            return dataStore.get( { id: id, type: type } );
         }
     };
 };

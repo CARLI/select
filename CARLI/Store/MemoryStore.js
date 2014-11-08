@@ -1,46 +1,65 @@
 var memoryStore = {}
+    Q = require('q')
 ;
 
 function typeExistsInStore( type ) {
-    return memoryStore[type] ? true : false;
+    var deferred = Q.defer();
+    memoryStore[type]
+        ? deferred.resolve()
+        : deferred.reject();
+    return deferred.promise;
 }
 
 function idForTypeExistsInStore( type, id ) {
-    return memoryStore[type][id] ? true : false;
+    var deferred = Q.defer();
+    memoryStore[type][id]
+        ? deferred.resolve(true)
+        : deferred.reject(false);
+    return deferred.promise;
 }
 
 function getDataFor( type, id ) {
-    return JSON.parse( JSON.stringify( memoryStore[type][id] ) );
+    var deferred = Q.defer();
+    deferred.resolve( JSON.parse( JSON.stringify( memoryStore[type][id] ) ) );
+    return deferred.promise;
 }
 
-function ensureStoreTypeExists( type ) {
+function _ensureStoreTypeExists( type ) {
     memoryStore[type] = memoryStore[type] || {};
 }
 
 function storeData( data ) {
+    _ensureStoreTypeExists( data.type );
+    var deferred = Q.defer();
     memoryStore[ data.type ][ data.id ] = data;
-    return data.id;
+    deferred.resolve( data.id );
+    return deferred.promise;
 }
 
 function listDataFor( type ) {
-      var objects = [];
-      for( id in memoryStore[ type ] ) {
+    var deferred = Q.defer();
+    var objects = [];
+    for( id in memoryStore[ type ] ) {
         objects.push( getDataFor( type, id ) );
-      };
-      return objects;
+    };
+    deferred.resolve( objects );
+    return deferred.promise;
 }
 
 function deleteDataFor( type, id ) {
+    var deferred = Q.defer();
     delete memoryStore[type][id];
-    return true;
+    deferred.resolve();
+    return deferred.promise;
 }
 
-module.exports = {
-  typeExistsInStore: typeExistsInStore,
-  idForTypeExistsInStore: idForTypeExistsInStore,
-  getDataFor: getDataFor,
-  ensureStoreTypeExists: ensureStoreTypeExists,
-  storeData: storeData,
-  listDataFor: listDataFor,
-  deleteDataFor: deleteDataFor
+module.exports = function ( options ) {
+  return {
+    typeExistsInStore: typeExistsInStore,
+    idForTypeExistsInStore: idForTypeExistsInStore,
+    getDataFor: getDataFor,
+    storeData: storeData,
+    listDataFor: listDataFor,
+    deleteDataFor: deleteDataFor
+  }
 }

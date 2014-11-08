@@ -1,4 +1,5 @@
 var tv4 = require('tv4')
+  , Q = require( 'q' )
 ;
 
 var schemas = {
@@ -37,12 +38,16 @@ function validate(data) {
         throw new Error('Validator.validate(data) unrecognized type "' + data.type + '"');
     }
 
+    var deferred = Q.defer();
     _loadSchemas();
     var result = tv4.validateResult(data, schemas[data.type]);
     if (result.error) {
-        throw new Error('Validator.validate(data): ' + result.error);
+        deferred.reject( data.type + ' validation error: ' + result.error );
     }
-    return result.valid;
+    else {
+        deferred.resolve();
+    }
+    return deferred.promise;
 }
 
 module.exports = {
