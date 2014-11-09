@@ -42,20 +42,6 @@ var LibraryPage = function () {
 
     this.editButton = element(by.id('library-edit'));
 
-    /*
-     * Clicks the radio button defined in testLibrary
-     */
-
-    this.clickStatusInput = function clickStatusInput(isActive) {
-        var radios = this.statusInputs;
-
-        if (isActive) {
-            radios.get(0).click();
-        } else {
-            radios.get(1).click();
-        }
-    };
-
     this.getStatusInputActive = function getStatusInputActive() {
         // returns string 'true' if active is selected -or- NULL if not
         return this.statusInputs.get(0).getAttribute('checked');
@@ -118,7 +104,8 @@ var LibraryPage = function () {
         this.fteInput.clear();
         this.fteInput.sendKeys(libraryObject.fte);
 
-        this.institutionYearsInput.element(by.cssContainingText('option', libraryObject.institutionYears )).click();
+        //this.institutionYearsInput.element(by.cssContainingText('option', libraryObject.institutionYears )).click();
+        macros.setSelectValue( this.institutionYearsInput, libraryObject.institutionYears );
 
         this.institutionTypeInput.element(by.cssContainingText('option', libraryObject.institutionType )).click();
 
@@ -142,7 +129,8 @@ var LibraryPage = function () {
         this.garInput.clear();
         this.garInput.sendKeys(libraryObject.gar);
 
-        this.clickStatusInput(libraryObject.isActive);
+        //this.clickStatusInput(libraryObject.isActive);
+        macros.setRadioGroupValue( this.statusInputs, libraryObject.isActive ? 0 : 1 );
 
         for ( i = 0 ; i < libraryObject.directorContacts.length ; i++ ){
             contact = this.getContactEditForm('Director',i);

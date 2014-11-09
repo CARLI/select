@@ -28,6 +28,16 @@ function currentlySelectedOptionByModelElementFinder( modelName ){
     return selectByModelElementFinder(modelName).element(by.css('option:checked'));
 }
 
+/* ---------- Element Interaction Helper Functions ---------- */
+
+function setRadioGroupValue( elementFinder, index ){
+    elementFinder.get( index).click();
+}
+
+function setSelectValue( elementFinder, optionText ){
+    elementFinder.element(by.cssContainingText('option', optionText)).click();
+}
+
 /* ---------- Element Assertion Helper Functions ---------- */
 
 function ensureElementIsPresent( elementFinder, description ){
@@ -142,6 +152,9 @@ module.exports = {
     selectByModel: selectByModelElementFinder,
     textareaByModel: textareaByModelElementFinder,
     selectedOptionByModel: currentlySelectedOptionByModelElementFinder,
+
+    setRadioGroupValue: setRadioGroupValue,
+    setSelectValue: setSelectValue,
 
     ensureElementIsPresent: ensureElementIsPresent,
     ensureInputIsBlank: ensureInputIsBlank,
