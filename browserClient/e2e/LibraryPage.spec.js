@@ -1,31 +1,33 @@
+var macros = require('./protractorMacros');
+
 var LibraryPage = function () {
     this.listFilterShowAll = element(by.cssContainingText('.ng-binding', 'All libraries'));
 
-    this.nameInput = element(by.model('vm.library.name')).element(by.tagName('input'));
+    this.nameInput = macros.inputByModel('vm.library.name');
     this.nameDisplay = element(by.model('vm.library.name'));
 
-    this.fteInput = element(by.model('vm.library.fte')).element(by.tagName('input'));
+    this.fteInput = macros.inputByModel('vm.library.fte');
     this.fteDisplay = element(by.model('vm.library.fte'));
 
-    this.institutionYearsInput = element(by.model('vm.library.institutionYears')).element(by.tagName('select'));
-    this.institutionYearsInputSelectedOption = this.institutionYearsInput.element(by.css('option:checked'));
+    this.institutionYearsInput = macros.selectByModel('vm.library.institutionYears');
+    this.institutionYearsInputSelectedOption = macros.selectedOptionByModel('vm.library.institutionYears');
     this.institutionYersInputDisplay = element(by.model('vm.library.institutionYears'));
 
-    this.institutionTypeInput = element(by.model('vm.library.institutionType')).element(by.tagName('select'));
-    this.institutionTypeInputSelectedOption = this.institutionTypeInput.element(by.css('option:checked'));
+    this.institutionTypeInput = macros.selectByModel('vm.library.institutionType');
+    this.institutionTypeInputSelectedOption = macros.selectedOptionByModel('vm.library.institutionType');
     this.institutionTypeInputDisplay = element(by.model('vm.library.institutionType'));
 
-    this.ipAddressInput = element(by.model('vm.library.ipAddresses')).element(by.tagName('textarea'));
+    this.ipAddressInput = macros.textareaByModel('vm.library.ipAddresses');
     this.ipAddressnputDisplay = element(by.model('vm.library.ipAddresses'));
 
-    this.membershipLevelInput = element(by.model('vm.library.membershipLevel')).element(by.tagName('select'));
+    this.membershipLevelInput = macros.selectByModel('vm.library.membershipLevel');
     this.membershipLevelInputSelectedOption = this.membershipLevelInput.element(by.css('option:checked'));
     this.membershipLevelInputDisplay = element(by.model('vm.library.membershipLevel'));
 
-    this.iShareInput = element(by.model('vm.library.isIshareMember')).element(by.tagName('input'));
+    this.iShareInput = macros.inputByModel('vm.library.isIshareMember');
     this.iShareInputDisplay = element(by.model('vm.library.isIshareMember'));
 
-    this.garInput = element(by.model('vm.library.gar')).element(by.tagName('input'));
+    this.garInput = macros.inputByModel('vm.library.gar');
     this.garInputDisplay = element(by.model('vm.library.gar'));
 
     this.statusInputs = element.all(by.model('vm.library.isActive')).all(by.tagName('input'));
