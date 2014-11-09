@@ -63,24 +63,17 @@ describe('The New Library screen', function () {
         macro.ensureFormElementIsPresentAndBlank( formElement );
     });
 
-    it('should have a active / inactive control', function () {
-        libraryPage.statusInputs.then(function(items) {
-            expect(items.length).toBe(2);
-            expect(items[0].getAttribute('type')).toBe('radio');
-            expect(items[1].getAttribute('type')).toBe('radio');
-        });
-    });
-
     it('should have "Add Contact" links for all four types of users', function () {
         expect(libraryPage.addDirectorContactLink.isPresent()).toBe(true);
         expect(libraryPage.addEresourceLiaisonContactLink.isPresent()).toBe(true);
         expect(libraryPage.addOtherContactLink.isPresent()).toBe(true);
         expect(libraryPage.addNotificationOnlyContactLink.isPresent()).toBe(true);
     });
+});
 
-
+describe('Creating a New Library', function(){
     it('should save a new Library when filling in the form and clicking save', function() {
-        var i, contact, testData, libraryList;
+        var libraryPage = new LibraryPage();
 
         libraryPage.addEmptyContacts( libraryPage.testLibrary );
         libraryPage.fillInLibrary( libraryPage.testLibrary );
@@ -99,9 +92,7 @@ describe('The New Library screen', function () {
             expect( libraryList.length ).toBe(1);
         });
     });
-
 });
-
 
 describe('Viewing an existing Library in read only mode', function () {
     var libraryPage = new LibraryPage();
