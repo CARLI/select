@@ -14,6 +14,7 @@ toString = macro.toString;
  *       contactType: only for type 'contact' - which 'filter' value is used to get the list of contacts
  *       value1: the value used when creating the test entity
  *       value2: the value used when testing editing the entity
+ *       valueToIndex: for radio buttons, tells which value (label) maps to which button (by index)
  * }
  */
 var libraryTestConfig = {
@@ -77,8 +78,12 @@ var libraryTestConfig = {
         type: 'radio',
         description: 'isActive',
         model: 'vm.library.isActive',
-        value1: false,
-        value2: true
+        value1: 'Inactive',
+        value2: 'Active',
+        valueToIndex: {
+            'Inactive': 0,
+            'Active': 1
+        }
     },
     directorContacts: {
         type: 'contact',
@@ -216,6 +221,7 @@ describe('Creating a New Library', function(){
 
 describe('Viewing an existing Library in read only mode', function () {
     var libraryPage = new LibraryPage();
+    var formElement;
 
     it('should be routed to the screen for the test library', function () {
 
@@ -234,63 +240,14 @@ describe('Viewing an existing Library in read only mode', function () {
             });
     });
 
-    for ( var formElement in libraryTestConfig ){
+    for ( formElement in libraryTestConfig ){
         macro.ensureFormElementIsHidden( libraryTestConfig[formElement] );
     }
 
-    it('should display name', function() {
-        libraryPage.nameDisplay.getText().then(function (text) {
-            expect(text).toBe(libraryPage.testLibrary.name);
-        });
-    });
-
-    it('should display Full Time Enrollment', function() {
-        libraryPage.fteDisplay.getText().then(function (text) {
-            expect(text).toBe( toString(libraryPage.testLibrary.fte));
-        });
-    });
-
-    it('should display Institution Years', function() {
-        libraryPage.institutionYersInputDisplay.getText().then(function (text) {
-            expect(text).toBe(libraryPage.testLibrary.institutionYears);
-        });
-    });
-
-    it('should display Institution Type', function() {
-        libraryPage.institutionTypeInputDisplay.getText().then(function (text) {
-            expect(text).toBe(libraryPage.testLibrary.institutionType);
-        });
-    });
-
-    it('should display ipAddresses', function() {
-        libraryPage.ipAddressnputDisplay.getText().then(function (text) {
-            expect(text).toBe(libraryPage.testLibrary.ipAddresses);
-        });
-    });
-
-    it('should display Membership Level', function() {
-        libraryPage.membershipLevelInputDisplay.getText().then(function (text) {
-            expect(text).toBe(libraryPage.testLibrary.membershipLevel);
-        });
-    });
-
-    it('should display iShare', function() {
-        libraryPage.iShareInputDisplay.getText().then(function (text) {
-            expect(text).toBe( toString(libraryPage.testLibrary.isIshareMember) );
-        });
-    });
-
-    it('should display GAR', function() {
-        libraryPage.garInputDisplay.getText().then(function (text) {
-            expect(text).toBe(libraryPage.testLibrary.gar);
-        });
-    });
-
-    it('should display Library Status', function() {
-        libraryPage.statusInputDisplay.getText().then(function (text) {
-            expect(text).toBe(libraryPage.testLibrary.isActive ? 'Active' : 'Inactive');
-        });
-    });
+    for ( formElement in libraryTestConfig ){
+        config = libraryTestConfig[formElement];
+        macro.ensureFormElementDisplaysText( config, config.value1 );
+    }
 
     it('should display Contacts', function() {
         var contactElement;
@@ -324,6 +281,7 @@ describe('Viewing an existing Library in read only mode', function () {
 describe('Viewing an existing Library in edit mode', function () {
     var libraryPage = new LibraryPage();
 
+
     it('should be in edit mode', function () {
         libraryPage.editButton.click();
     });
@@ -356,9 +314,7 @@ describe('Viewing an existing Library in edit mode', function () {
         expect(libraryPage.iShareInput.getAttribute('checked')).toBe(libraryPage.testLibrary.isIshareMember ? 'true' : null);
     });
 
-    it('should have a populated GAR field', function() {
-        expect(libraryPage.garInput.getAttribute('value')).toBe(libraryPage.testLibrary.gar);
-    });
+    macro.ensureInputHasValue( libraryPage.garInput, 'GAR Input', libraryTestConfig.gar.value1 );
 
     it('should have a correctly selected Membership Status radio button', function() {
         expect(libraryPage.getStatusInputActive()).toBe(libraryPage.testLibrary.isActive ? 'true' : null);

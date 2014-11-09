@@ -42,13 +42,19 @@ function contactEditorInputGroupElementFinder( contactEditorElementFinder){
 
 /* ---------- Element Interaction Helper Functions ---------- */
 
-function setRadioGroupValue( elementFinder, index ){
-    elementFinder.get( index).click();
+function setInputValue( elementFinder, value ){
+    elementFinder.clear();
+    elementFinder.sendKeys( value );
 }
 
 function setSelectValue( elementFinder, optionText ){
     elementFinder.element(by.cssContainingText('option', optionText)).click();
 }
+
+function setRadioGroupValueByIndex( elementFinder, index ){
+    elementFinder.get(index).click();
+}
+
 
 /* ---------- Element Assertion Helper Functions ---------- */
 
@@ -135,6 +141,18 @@ function ensureContactEditorIsBlank( elementFinder, config ) {
         expect(row.phoneNumber.getAttribute('value')).toBe('');
         expect(row.email.getAttribute('value')).toBe('');
     })
+}
+
+function ensureElementHasText( elementFinder, description, testText ) {
+    it(description + ' should display "' + testText + '"', function(){
+        expect(elementFinder.getText()).toBe( toString(testText) );
+    });
+}
+
+function ensureInputHasValue( elementFinder, description, testValue ) {
+    it(description + ' should have value "' + testValue + '"', function(){
+       expect(elementFinder.getAttribute('value')).toBe( testValue );
+    });
 }
 
 /* ---------- Test Shortcut Helper Functions ---------- */
@@ -224,6 +242,41 @@ function ensureFormElementIsHidden( config ){
     }
 }
 
+function ensureFormElementDisplaysText( config, testText ){
+    var elementFinder = elementByModel( config.model );
+
+    if ( config.type === 'contact' ){
+        //ensureContactEditorIsHidden( elementFinder, config );
+    }
+    else {
+        ensureElementHasText( elementFinder, config.description, testText );
+    }
+}
+
+function setFormElementValue( config, value ){
+    var elementFinder = _elementFinderForConfig( config );
+
+    switch( config.type ){
+        case 'input':
+        case 'textarea':
+            setInputValue( elementFinder, value );
+            break;
+        case 'checkbox':
+            // setCheckboxValue
+            break;
+        case 'select':
+            setSelectValue( elementFinder, value );
+            break;
+        case 'radio':
+            setRadioGroupValueByIndex( elementFinder, config.valueToIndex[value] );
+            break;
+        case 'contact':
+            // fillInContact
+            break;
+        default:
+            throw new Error('ensureFormElementIsPresentAndBlank unknown type: ' + config.type);
+    }
+}
 
 /* ---------------------- Exports ------------------------- */
 
@@ -239,15 +292,20 @@ module.exports = {
     contactEditorRowByModel: contactEditorRowElementFinder,
     contactEditorInputs: contactEditorInputGroupElementFinder,
 
-    setRadioGroupValue: setRadioGroupValue,
+    setInputValue: setInputValue,
     setSelectValue: setSelectValue,
+    setRadioGroupValue: setRadioGroupValueByIndex,
 
     ensureElementIsPresent: ensureElementIsPresent,
     ensureElementIsHidden: ensureElementIsHidden,
     ensureInputIsBlank: ensureInputIsBlank,
     ensureSelectIsBlank: ensureSelectIsBlank,
     ensureCheckboxIsBlank: ensureCheckboxIsBlank,
+    ensureElementHasText: ensureElementHasText,
+    ensureInputHasValue: ensureInputHasValue,
 
     ensureFormElementIsPresentAndBlank: ensureFormElementIsPresentAndBlank,
-    ensureFormElementIsHidden: ensureFormElementIsHidden
+    ensureFormElementIsHidden: ensureFormElementIsHidden,
+    ensureFormElementDisplaysText: ensureFormElementDisplaysText,
+    setFormElementValue: setFormElementValue
 };

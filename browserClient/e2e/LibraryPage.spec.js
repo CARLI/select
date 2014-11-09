@@ -126,8 +126,11 @@ var LibraryPage = function () {
          */
         this.iShareInput.click();
 
-        this.garInput.clear();
-        this.garInput.sendKeys(libraryObject.gar);
+        macros.setFormElementValue( {
+            type: 'input',
+            description: 'GAR',
+            model: 'vm.library.gar'}, 'Test GAR Value' );
+
 
         //this.clickStatusInput(libraryObject.isActive);
         macros.setRadioGroupValue( this.statusInputs, libraryObject.isActive ? 0 : 1 );
