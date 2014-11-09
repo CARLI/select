@@ -3,54 +3,174 @@ var LibraryPage = require('./LibraryPage.spec');
 
 toString = macro.toString;
 
-var libraryFormElements = [
-    {
+/**
+ * The configuration below is used by the macros to generate tests. They take the following form:
+ * propertyName should match the schema
+ *
+ * propertyName: {
+ *       type: the input type (tag name) or 'contact' for a list of contacts
+ *       description: how the form field will appear in test descriptions
+ *       model: the value of the ng-model attribute used to bind the input to the Controller
+ *       contactType: only for type 'contact' - which 'filter' value is used to get the list of contacts
+ *       value1: the value used when creating the test entity
+ *       value2: the value used when testing editing the entity
+ * }
+ */
+var libraryTestConfig = {
+    name: {
         type: 'input',
-        name: 'Name',
-        model: 'vm.library.name'
+        description: 'Name',
+        model: 'vm.library.name',
+        value1: 'New Test Library 1',
+        value2: 'New Test Library Edit 1'
     },
-    {
+    fte: {
         type: 'input',
-        name: 'Full Time Enrollment',
-        model: 'vm.library.fte'
+        description: 'Full Time Enrollment',
+        model: 'vm.library.fte',
+        value1: 1000,
+        value2: 10001
     },
-    {
+    institutionYears: {
         type: 'select',
-        name: 'Institution Years',
-        model: 'vm.library.institutionYears'
+        description: 'Institution Years',
+        model: 'vm.library.institutionYears',
+        value1: '2 Year',
+        value2: '4 Year'
     },
-    {
+    institutionType: {
         type: 'select',
-        name: 'Institution Type',
-        model: 'vm.library.institutionType'
+        description: 'Institution Type',
+        model: 'vm.library.institutionType',
+        value1: 'Public',
+        value2: 'Private'
     },
-    {
+    ipAddresses: {
         type: 'textarea',
-        name: 'IP Adresses',
-        model: 'vm.library.ipAddresses'
+        description: 'IP Adresses',
+        model: 'vm.library.ipAddresses',
+        value1: '192.168.0.1',
+        value2: '192.168.0.2'
     },
-    {
+    membershipLevel: {
         type: 'select',
-        name: 'Membership Level',
-        model: 'vm.library.membershipLevel'
+        description: 'Membership Level',
+        model: 'vm.library.membershipLevel',
+        value1: 'Governing',
+        value2: 'Affiliate'
     },
-    {
+    isIshareMember: {
         type: 'checkbox',
-        name: 'iShare',
-        model: 'vm.library.isIshareMember'
+        description: 'iShare',
+        model: 'vm.library.isIshareMember',
+        value1: true,
+        value2: false
     },
-    {
+    gar: {
         type: 'input',
-        name: 'GAR',
-        model: 'vm.library.gar'
+        description: 'GAR',
+        model: 'vm.library.gar',
+        value1: 'Test GAR Value',
+        value2: 'Test Edit GAR Value'
     },
-    {
+    isActive: {
         type: 'radio',
-        name: 'isActive',
-        model: 'vm.library.isActive'
+        description: 'isActive',
+        model: 'vm.library.isActive',
+        value1: false,
+        value2: true
+    },
+    directorContacts: {
+        type: 'contact',
+        description: 'Director Contacts',
+        model: 'vm.library.contacts',
+        contactType: 'Director',
+        value1: [
+            {
+                name: 'Director Contact 1',
+                email: 'director1@example.com',
+                phoneNumber: '123-4567'
+            },
+            {
+                name: 'Director Contact 2',
+                email: 'director1@example.com',
+                phoneNumber: '890-4567'
+            }
+        ],
+        value2: [
+            {
+                name: 'Edited Director Contact 1',
+                email:'director1.edit@example.com',
+                phoneNumber:'123-4567'
+            },
+            {
+                name: 'Edited Director Contact 2',
+                email:'director1.edit@example.com',
+                phoneNumber:'123-4567'
+            }
+        ]
+    },
+    eResourceLiaisonContacts: {
+        type: 'contact',
+        description: 'E-Resource Liaison Contacts',
+        model: 'vm.library.contacts',
+        contactType: 'E-Resources Liaison',
+        value1: [
+            {
+                name: 'Liaison Contact 1',
+                email: 'liaison@exmaple.com',
+                phoneNumber: '234-5678'
+            }
+        ],
+        value2: [
+            {
+                name: 'Edited Liaison Contact 1',
+                email:'liaison.edit@exmaple.com',
+                phoneNumber:'345-5678'
+            }
+        ]
+    },
+    otherContacts: {
+        type: 'contact',
+        description: 'Other Contacts',
+        model: 'vm.library.contacts',
+        contactType: 'Other',
+        value1: [
+            {
+                name: 'Other Contact 1',
+                email: 'other@example.com',
+                phoneNumber: '345-6789'
+            }
+        ],
+        value2: [
+            {
+                name: 'Edited Other Contact 1',
+                email:'other.edit@example.com',
+                phoneNumber:'346-6789'
+            }
+        ]
+    },
+    notificationOnlyContacts: {
+        type: 'contact',
+        description: 'Notification Only Contacts',
+        model: 'vm.library.contacts',
+        contactType: 'Notification Only',
+        value1: [
+            {
+                name: 'Billing Contact 1',
+                email: 'billing@example.com',
+                phoneNumber: '345-6789'
+            }
+        ],
+        value2: [
+            {
+                name: 'Edited Billing Contact 1',
+                email:'billing.edit@example.com',
+                phoneNumber:'347-6789'
+            }
+        ]
     }
-
-];
+};
 
 describe('The New Library screen', function () {
     var libraryPage = new LibraryPage();
@@ -59,9 +179,9 @@ describe('The New Library screen', function () {
         browser.setLocation('/library/new');
     });
 
-    libraryFormElements.forEach( function( formElement ){
-        macro.ensureFormElementIsPresentAndBlank( formElement );
-    });
+    for ( var formElement in libraryTestConfig ){
+        macro.ensureFormElementIsPresentAndBlank( libraryTestConfig[formElement] );
+    }
 
     it('should have "Add Contact" links for all four types of users', function () {
         expect(libraryPage.addDirectorContactLink.isPresent()).toBe(true);
@@ -114,37 +234,9 @@ describe('Viewing an existing Library in read only mode', function () {
             });
     });
 
-    libraryFormElements.forEach( function( formElement ){
-        macro.ensureFormElementIsHidden( formElement );
-    });
-
-    it('should not display editable User fields', function() {
-        var contactForm;
-        for ( i = 0 ; i < libraryPage.testLibrary.directorContacts.length ; i++ ) {
-            contactForm = libraryPage.getContactEditForm('Director', i);
-            expect(contactForm.name.isDisplayed()).toBe(false);
-            expect(contactForm.phoneNumber.isDisplayed()).toBe(false);
-            expect(contactForm.email.isDisplayed()).toBe(false);
-        }
-        for ( i = 0 ; i < libraryPage.testLibrary.eResourceLiaisonContacts.length ; i++ ) {
-            contactForm = libraryPage.getContactEditForm('E-Resources Liaison', i);
-            expect(contactForm.name.isDisplayed()).toBe(false);
-            expect(contactForm.phoneNumber.isDisplayed()).toBe(false);
-            expect(contactForm.email.isDisplayed()).toBe(false);
-        }
-        for ( i = 0 ; i < libraryPage.testLibrary.otherContacts.length ; i++ ) {
-            contactForm = libraryPage.getContactEditForm('Other', i);
-            expect(contactForm.name.isDisplayed()).toBe(false);
-            expect(contactForm.phoneNumber.isDisplayed()).toBe(false);
-            expect(contactForm.email.isDisplayed()).toBe(false);
-        }
-        for ( i = 0 ; i < libraryPage.testLibrary.notificationOnlyContacts.length ; i++ ) {
-            contactForm = libraryPage.getContactEditForm('Notification Only', i);
-            expect(contactForm.name.isDisplayed()).toBe(false);
-            expect(contactForm.phoneNumber.isDisplayed()).toBe(false);
-            expect(contactForm.email.isDisplayed()).toBe(false);
-        }
-    });
+    for ( var formElement in libraryTestConfig ){
+        macro.ensureFormElementIsHidden( libraryTestConfig[formElement] );
+    }
 
     it('should display name', function() {
         libraryPage.nameDisplay.getText().then(function (text) {
