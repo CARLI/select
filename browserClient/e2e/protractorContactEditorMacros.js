@@ -64,9 +64,9 @@ module.exports = {
     contactEditorRowByModel: contactEditorRowElementFinder,
     contactEditorInputs: contactEditorInputGroupElementFinder,
 
-    ensureContactEditorIsPresent: ensureContactEditorRowIsPresent,
-    ensureContactEditorIsHidden: ensureContactEditorRowIsHidden,
-    ensureContactEditorIsBlank: ensureContactEditorRowIsBlank,
+    ensureContactEditorRowIsPresent: ensureContactEditorRowIsPresent,
+    ensureContactEditorRowIsHidden: ensureContactEditorRowIsHidden,
+    ensureContactEditorRowIsBlank: ensureContactEditorRowIsBlank,
 
     ensureContactEditorIsPresentAndBlank: ensureContactEditorIsPresentAndBlank,
     ensureContactEditorIsHidden: ensureContactEditorIsHidden
