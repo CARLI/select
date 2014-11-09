@@ -1,8 +1,56 @@
-function toString( val ){
-    return val + '';
-}
-
+var macro = require('./protractorMacros');
 var LibraryPage = require('./LibraryPage.spec');
+
+toString = macro.toString;
+
+var libraryFormElements = [
+    {
+        type: 'input',
+        name: 'Name',
+        model: 'vm.library.name'
+    },
+    {
+        type: 'input',
+        name: 'Full Time Enrollment',
+        model: 'vm.library.fte'
+    },
+    {
+        type: 'select',
+        name: 'Institution Years',
+        model: 'vm.library.institutionYears'
+    },
+    {
+        type: 'select',
+        name: 'Institution Type',
+        model: 'vm.library.institutionType'
+    },
+    {
+        type: 'textarea',
+        name: 'IP Adresses',
+        model: 'vm.library.ipAddresses'
+    },
+    {
+        type: 'select',
+        name: 'Membership Level',
+        model: 'vm.library.membershipLevel'
+    },
+    {
+        type: 'checkbox',
+        name: 'iShare',
+        model: 'vm.library.isIshareMember'
+    },
+    {
+        type: 'input',
+        name: 'GAR',
+        model: 'vm.library.gar'
+    },
+    {
+        type: 'radio',
+        name: 'isActive',
+        model: 'vm.library.isActive'
+    }
+
+];
 
 describe('The New Library screen', function () {
     var libraryPage = new LibraryPage();
@@ -11,46 +59,8 @@ describe('The New Library screen', function () {
         browser.setLocation('/library/new');
     });
 
-    it('should have a default name input field', function () {
-        expect(libraryPage.nameInput.isPresent()).toBe(true);
-        expect(libraryPage.nameInput.getAttribute('value')).toBe('');
-    });
-
-    it('should have a blank Full Time Enrollment input field', function () {
-        expect(libraryPage.fteInput.isPresent()).toBe(true);
-        expect(libraryPage.fteInput.getAttribute('value')).toBe('');
-    });
-
-    it('should have a blank Institution Years select', function () {
-        expect(libraryPage.institutionYearsInput.isPresent()).toBe(true);
-        //expect ? because that's what Angular puts be default for the empty option (when nothing is set in the model by default)
-        expect(libraryPage.institutionYearsInput.getAttribute('value')).toBe('?');
-    });
-
-    it('should have a blank Institution Type Select', function () {
-        expect(libraryPage.institutionTypeInput.isPresent()).toBe(true);
-        expect(libraryPage.institutionTypeInput.getAttribute('value')).toBe('?');
-    });
-
-    it('should have a blank ipAddress Input', function () {
-        expect(libraryPage.ipAddressInput.isPresent()).toBe(true);
-        expect(libraryPage.ipAddressInput.getAttribute('value')).toBe('');
-    });
-
-    it('should have a blank Membership Level Select', function () {
-        expect(libraryPage.membershipLevelInput.isPresent()).toBe(true);
-        expect(libraryPage.membershipLevelInput.getAttribute('value')).toBe('?');
-    });
-
-    it('should have a blank iShareInput', function () {
-        expect(libraryPage.iShareInput.isPresent()).toBe(true);
-        // expect null because Protractor returns 'true' if checked and null if not
-        expect(libraryPage.iShareInput.getAttribute('checked')).toBe(null);
-    });
-
-    it('should have a blank GAR Input', function () {
-        expect(libraryPage.garInput.isPresent()).toBe(true);
-        expect(libraryPage.garInput.getAttribute('value')).toBe('');
+    libraryFormElements.forEach( function( formElement ){
+        macro.ensureFormElementIsPresentAndBlank( formElement );
     });
 
     it('should have a active / inactive control', function () {
