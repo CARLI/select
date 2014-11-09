@@ -40,18 +40,33 @@ function setSelectValue( elementFinder, optionText ){
 
 /* ---------- Element Assertion Helper Functions ---------- */
 
-function ensureElementIsPresent( elementFinder, description ){
-    it('should have a ' + description, function(){
+function ensureElementIsPresent(elementFinder, description) {
+    it('should have a ' + description, function () {
+        expect(elementFinder.isPresent()).toBe(true);
+    });
+}
 
-        if ( typeof( elementFinder.isPresent ) === 'Function' ){
-            expect( elementFinder.isPresent() ).toBe(true);
-        }
+function ensureElementsArePresent(elementArrayFinder, description) {
+    it('should have ' + description, function () {
+        elementArrayFinder.then(function (items) {
+            expect(items.length).toBeGreaterThan(0);
+        });
+    });
+}
 
-        if( typeof( elementFinder.then ) === 'Function' ){
-            elementFinder.then( function(items){
-                expect(items.length).toBeGreaterThan(0);
-            });
-        }
+function ensureElementIsHidden(elementFinder, description) {
+    it('should have a hidden ' + description, function () {
+        expect(elementFinder.isDisplayed()).toBe(false);
+    });
+}
+
+function ensureElementsAreHidden(elementArrayFinder, description) {
+    it('should have hidden ' + description, function () {
+        elementArrayFinder.then(function (items) {
+            for (var i = 0; i < items.length; i++) {
+                expect(items[i].isDisplayed()).toBe(false);
+            }
+        });
     });
 }
 
@@ -120,7 +135,12 @@ function _elementFinderForConfig( config ){
 function ensureFormElementIsPresentAndBlank( config ){
     var elementFinder = _elementFinderForConfig( config );
 
-    ensureElementIsPresent( elementFinder, config.name + ' input');
+    if ( config.type === 'radio' ){
+        ensureElementsArePresent( elementFinder, config.name + ' radio group' );
+    }
+    else {
+        ensureElementIsPresent( elementFinder, config.name + ' input');
+    }
 
     switch( config.type ){
         case 'input':
@@ -141,6 +161,17 @@ function ensureFormElementIsPresentAndBlank( config ){
     }
 }
 
+function ensureFormElementIsHidden( config ){
+    var elementFinder = _elementFinderForConfig( config );
+
+    if ( config.type === 'radio' ){
+        ensureElementsAreHidden( elementFinder, config.name + ' radio group');
+    }
+    else {
+        ensureElementIsHidden( elementFinder, config.name + ' input');
+    }
+}
+
 
 /* ---------------------- Exports ------------------------- */
 
@@ -157,9 +188,11 @@ module.exports = {
     setSelectValue: setSelectValue,
 
     ensureElementIsPresent: ensureElementIsPresent,
+    ensureElementIsHidden: ensureElementIsHidden,
     ensureInputIsBlank: ensureInputIsBlank,
     ensureSelectIsBlank: ensureSelectIsBlank,
     ensureCheckboxIsBlank: ensureCheckboxIsBlank,
 
-    ensureFormElementIsPresentAndBlank: ensureFormElementIsPresentAndBlank
+    ensureFormElementIsPresentAndBlank: ensureFormElementIsPresentAndBlank,
+    ensureFormElementIsHidden: ensureFormElementIsHidden
 };

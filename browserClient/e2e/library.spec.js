@@ -114,36 +114,8 @@ describe('Viewing an existing Library in read only mode', function () {
             });
     });
 
-    it('should not have an editable name input field', function () {
-        expect(libraryPage.nameInput.isDisplayed()).toBe(false);
-    });
-
-    it('should not have an editable Full Time Enrollment input field', function () {
-        expect(libraryPage.fteInput.isDisplayed()).toBe(false);
-    });
-
-    it('should not have an editable Institution Years textarea Select', function () {
-        expect(libraryPage.institutionYearsInput.isDisplayed()).toBe(false);
-    });
-
-    it('should not have an editable Institution Type Select', function () {
-        expect(libraryPage.institutionTypeInput.isDisplayed()).toBe(false);
-    });
-
-    it('should not have an editable ipAddress Input', function () {
-        expect(libraryPage.ipAddressInput.isDisplayed()).toBe(false);
-    });
-
-    it('should not have an editable Membership Level Select', function () {
-        expect(libraryPage.membershipLevelInput.isDisplayed()).toBe(false);
-    });
-
-    it('should not have an editable iShareInput', function () {
-        expect(libraryPage.iShareInput.isDisplayed()).toBe(false);
-    });
-
-    it('should not have an editable GAR Input', function () {
-        expect(libraryPage.garInput.isDisplayed()).toBe(false);
+    libraryFormElements.forEach( function( formElement ){
+        macro.ensureFormElementIsHidden( formElement );
     });
 
     it('should not display editable User fields', function() {
