@@ -3,6 +3,7 @@ ensureFormElementIsPresentAndBlank = macro.ensureFormElementIsPresentAndBlank;
 
 var contactEditorMacro = require('./protractorContactEditorMacros');
 ensureContactEditorIsPresentAndBlank = contactEditorMacro.ensureContactEditorIsPresentAndBlank;
+ensureContactEditorIsHidden = contactEditorMacro.ensureContactEditorIsHidden;
 
 var LibraryPage = require('./LibraryPage.spec');
 
@@ -260,37 +261,17 @@ describe('Viewing an existing Library in read only mode', function () {
         macro.ensureFormElementIsHidden( formInputsTestConfig[formElement] );
     }
 
+    for ( var contactEditor in contactEditorsTestConfig ){
+        ensureContactEditorIsHidden( contactEditorsTestConfig[contactEditor] );
+    }
+
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
         macro.ensureFormElementDisplaysText( config, config.value1 );
     }
 
     it('should display Contacts', function() {
-        var contactElement;
-        for ( i = 0 ; i < libraryPage.testLibrary.directorContacts.length ; i++ ) {
-            contactElement = libraryPage.getContactViewElement('Director', i);
-            expect(contactElement.name.isDisplayed()).toBe(true);
-            expect(contactElement.phoneNumber.isDisplayed()).toBe(true);
-            expect(contactElement.email.isDisplayed()).toBe(true);
-        }
-        for ( i = 0 ; i < libraryPage.testLibrary.eResourceLiaisonContacts.length ; i++ ) {
-            contactElement = libraryPage.getContactViewElement('E-Resources Liaison', i);
-            expect(contactElement.name.isDisplayed()).toBe(true);
-            expect(contactElement.phoneNumber.isDisplayed()).toBe(true);
-            expect(contactElement.email.isDisplayed()).toBe(true);
-        }
-        for ( i = 0 ; i < libraryPage.testLibrary.otherContacts.length ; i++ ) {
-            contactElement = libraryPage.getContactViewElement('Other', i);
-            expect(contactElement.name.isDisplayed()).toBe(true);
-            expect(contactElement.phoneNumber.isDisplayed()).toBe(true);
-            expect(contactElement.email.isDisplayed()).toBe(true);
-        }
-        for ( i = 0 ; i < libraryPage.testLibrary.notificationOnlyContacts.length ; i++ ) {
-            contactElement = libraryPage.getContactViewElement('Notification Only', i);
-            expect(contactElement.name.isDisplayed()).toBe(true);
-            expect(contactElement.phoneNumber.isDisplayed()).toBe(true);
-            expect(contactElement.email.isDisplayed()).toBe(true);
-        }
+        //TODO
     });
 });
 
@@ -336,7 +317,7 @@ describe('Viewing an existing Library in edit mode', function () {
         expect(libraryPage.getStatusInputActive()).toBe(libraryPage.testLibrary.isActive ? 'true' : null);
     });
 
-    it('should have correctly filled in User fields', function(){
+    it('should have correctly filled in Contacts', function(){
         var contactForm, contact;
 
         for ( i = 0 ; i < libraryPage.testLibrary.directorContacts.length ; i++ ){
