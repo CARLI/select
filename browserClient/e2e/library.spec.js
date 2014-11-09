@@ -7,8 +7,6 @@ var contactEditorMacro = require('./protractorContactEditorMacros');
 ensureContactEditorIsPresentAndBlank = contactEditorMacro.ensureContactEditorIsPresentAndBlank;
 ensureContactEditorIsHidden = contactEditorMacro.ensureContactEditorIsHidden;
 
-toString = macro.toString;
-
 /**
  * The configuration below is used by the macros to generate tests. They take the following form:
  * propertyName should match the schema
@@ -17,8 +15,8 @@ toString = macro.toString;
  *       type: the input type (tag name) or 'contact' for a list of contacts
  *       description: how the form field will appear in test descriptions
  *       model: the value of the ng-model attribute used to bind the input to the Controller
- *       value1: the value used when creating the test entity
- *       value2: the value used when testing editing the entity
+ *       initialValue: the value used when creating the test entity
+ *       editedValue: the value used when testing editing the entity
  *       valueToIndex: for radio buttons, tells which value (label) maps to which button (by index)
  * }
  */
@@ -27,64 +25,64 @@ var formInputsTestConfig = {
         type: 'input',
         description: 'Name',
         model: 'vm.library.name',
-        value1: 'New Test Library 1',
-        value2: 'New Test Library Edit 1'
+        initialValue: 'New Test Library 1',
+        editedValue: 'New Test Library Edit 1'
     },
     fte: {
         type: 'input',
         description: 'Full Time Enrollment',
         model: 'vm.library.fte',
-        value1: 1000,
-        value2: 10001
+        initialValue: 1000,
+        editedValue: 1001
     },
     institutionYears: {
         type: 'select',
         description: 'Institution Years',
         model: 'vm.library.institutionYears',
-        value1: '2 Year',
-        value2: '4 Year'
+        initialValue: '2 Year',
+        editedValue: '4 Year'
     },
     institutionType: {
         type: 'select',
         description: 'Institution Type',
         model: 'vm.library.institutionType',
-        value1: 'Public',
-        value2: 'Private'
+        initialValue: 'Public',
+        editedValue: 'Private'
     },
     ipAddresses: {
         type: 'textarea',
         description: 'IP Adresses',
         model: 'vm.library.ipAddresses',
-        value1: '192.168.0.1',
-        value2: '192.168.0.2'
+        initialValue: '192.168.0.1',
+        editedValue: '192.168.0.2'
     },
     membershipLevel: {
         type: 'select',
         description: 'Membership Level',
         model: 'vm.library.membershipLevel',
-        value1: 'Governing',
-        value2: 'Affiliate'
+        initialValue: 'Governing',
+        editedValue: 'Affiliate'
     },
     isIshareMember: {
         type: 'checkbox',
         description: 'iShare',
         model: 'vm.library.isIshareMember',
-        value1: true,
-        value2: false
+        initialValue: true,
+        editedValue: false
     },
     gar: {
         type: 'input',
         description: 'GAR',
         model: 'vm.library.gar',
-        value1: 'Test GAR Value',
-        value2: 'Test Edit GAR Value'
+        initialValue: 'Test GAR Value',
+        editedValue: 'Test Edit GAR Value'
     },
     isActive: {
         type: 'radio',
         description: 'isActive',
         model: 'vm.library.isActive',
-        value1: 'Inactive',
-        value2: 'Active',
+        initialValue: 'Inactive',
+        editedValue: 'Active',
         valueToIndex: {
             'Active': 0,
             'Inactive': 1
@@ -92,16 +90,16 @@ var formInputsTestConfig = {
     }
 };
 
-testLibraryName = formInputsTestConfig.name.value1;
-testLibraryEditedName = formInputsTestConfig.name.value2;
+testLibraryName = formInputsTestConfig.name.initialValue;
+testLibraryEditedName = formInputsTestConfig.name.editedValue;
 
 /**
  * This configuration is used to test the contact editors
  *
  *  description: how the contact editor group will appear in test descriptions
  *  model: the value from the Controller that appears in the ng-repeat
- *  value1: the value used when creating the test entity
- *  value2: the value used when testing editing the entity
+ *  initialValue: the value used when creating the test entity
+ *  editedValue: the value used when testing editing the entity
  *  filterString: which 'filter' value is used to get the list of contacts by repeater
  */
 var contactEditorsTestConfig = {
@@ -110,7 +108,7 @@ var contactEditorsTestConfig = {
         model: 'vm.library.contacts',
         filterString: 'Director',
         addContactLink: elementById('add-director-contact'),
-        value1: [
+        initialValue: [
             {
                 name: 'Director Contact 1',
                 email: 'director1@example.com',
@@ -122,7 +120,7 @@ var contactEditorsTestConfig = {
                 phoneNumber: '890-4567'
             }
         ],
-        value2: [
+        editedValue: [
             {
                 name: 'Edited Director Contact 1',
                 email:'director1.edit@example.com',
@@ -140,14 +138,14 @@ var contactEditorsTestConfig = {
         model: 'vm.library.contacts',
         filterString: 'E-Resources Liaison',
         addContactLink: elementById('add-e-resources-liaison-contact'),
-        value1: [
+        initialValue: [
             {
                 name: 'Liaison Contact 1',
                 email: 'liaison@exmaple.com',
                 phoneNumber: '234-5678'
             }
         ],
-        value2: [
+        editedValue: [
             {
                 name: 'Edited Liaison Contact 1',
                 email:'liaison.edit@exmaple.com',
@@ -160,14 +158,14 @@ var contactEditorsTestConfig = {
         model: 'vm.library.contacts',
         filterString: 'Other',
         addContactLink: elementById('add-other-contact'),
-        value1: [
+        initialValue: [
             {
                 name: 'Other Contact 1',
                 email: 'other@example.com',
                 phoneNumber: '345-6789'
             }
         ],
-        value2: [
+        editedValue: [
             {
                 name: 'Edited Other Contact 1',
                 email:'other.edit@example.com',
@@ -180,14 +178,14 @@ var contactEditorsTestConfig = {
         model: 'vm.library.contacts',
         filterString: 'Notification Only',
         addContactLink: elementById('add-notification-only-contact'),
-        value1: [
+        initialValue: [
             {
                 name: 'Billing Contact 1',
                 email: 'billing@example.com',
                 phoneNumber: '345-6789'
             }
         ],
-        value2: [
+        editedValue: [
             {
                 name: 'Edited Billing Contact 1',
                 email:'billing.edit@example.com',
@@ -200,7 +198,7 @@ var contactEditorsTestConfig = {
 /**
  * Other special-case elements specific to this page, plus some helper functions
  */
-var libraryPage = {
+var pageConfig = {
     listFilterShowAll: element(by.cssContainingText('.ng-binding', 'All libraries')),
     submit: element(by.id('library-submit')),
     editButton: element(by.id('library-edit')),
@@ -211,7 +209,7 @@ var libraryPage = {
         for ( var contactEditor in contactEditorsTestConfig ){
             config = contactEditorsTestConfig[contactEditor];
 
-            for ( i = 0 ; i < config.value1.length -1 ; i++ ){
+            for ( i = 0 ; i < config.initialValue.length -1 ; i++ ){
                 config.addContactLink.click();
             }
         }
@@ -219,7 +217,7 @@ var libraryPage = {
 
     fillInLibraryWithTestData: function( useEditData ){
         var row, formElement, contactEditor;
-        var dataSet = useEditData || 'value1';
+        var dataSet = useEditData || 'initialValue';
 
         for ( formElement in formInputsTestConfig ){
             config = formInputsTestConfig[formElement];
@@ -258,12 +256,12 @@ describe('The New Library screen', function () {
 describe('Creating a New Library', function(){
     it('should save a new Library when filling in the form and clicking save', function() {
 
-        libraryPage.addEmptyContactsForTestData();
-        libraryPage.fillInLibraryWithTestData();
+        pageConfig.addEmptyContactsForTestData();
+        pageConfig.fillInLibraryWithTestData();
 
-        libraryPage.submit.click();
+        pageConfig.submit.click();
 
-        libraryPage.listFilterShowAll.click();
+        pageConfig.listFilterShowAll.click();
 
         element.all(by.repeater('entity in values'))
         .filter( function(el, index) {
@@ -308,11 +306,11 @@ describe('Viewing an existing Library in read only mode', function () {
 
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
-        macro.ensureFormElementDisplaysText( config, config.value1 );
+        macro.ensureFormElementDisplaysText( config, config.initialValue );
     }
 
     for ( contactEditor in contactEditorsTestConfig ){
-        //TODO: ensureContactEditorDisplays( 'value1' )
+        //TODO: ensureContactEditorDisplays( 'initialValue' )
     }
 });
 
@@ -320,16 +318,16 @@ describe('Viewing an existing Library in edit mode', function () {
     var config, formElement, contactEditor;
 
     it('should be in edit mode', function () {
-        libraryPage.editButton.click();
+        pageConfig.editButton.click();
     });
 
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
-        macro.ensureFormElementHasValue( config, config.value1 );
+        macro.ensureFormElementHasValue( config, config.initialValue );
     }
 
     for ( contactEditor in contactEditorsTestConfig ){
-        //TODO: ensureContactEditorHasValues( 'value1' )
+        //TODO: ensureContactEditorHasValues( 'initialValue' )
     }
 });
 
@@ -339,7 +337,7 @@ describe('Making changes to an existing Library', function(){
     it('should change the entry on the Library list screen when changing the name', function () {
         browser.setLocation('/library');
 
-        libraryPage.listFilterShowAll.click();
+        pageConfig.listFilterShowAll.click();
 
         element.all(by.repeater('entity in values'))
             .filter(function (el, index) {
@@ -351,13 +349,13 @@ describe('Making changes to an existing Library', function(){
                 libraryList[0].element(by.tagName('a')).click();
             });
 
-        libraryPage.editButton.click();
+        pageConfig.editButton.click();
 
-        libraryPage.fillInLibraryWithTestData('value2');
+        pageConfig.fillInLibraryWithTestData('editedValue');
 
-        libraryPage.submit.click();
+        pageConfig.submit.click();
 
-        libraryPage.listFilterShowAll.click();
+        pageConfig.listFilterShowAll.click();
 
         element.all(by.repeater('entity in values'))
             .filter(function (el, index) {
@@ -374,10 +372,10 @@ describe('Making changes to an existing Library', function(){
 
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
-        macro.ensureFormElementDisplaysText( config, config.value2 );
+        macro.ensureFormElementDisplaysText( config, config.editedValue );
     }
 
     for ( contactEditor in contactEditorsTestConfig ){
-        //TODO: ensureContactEditorDisplays( 'value2' )
+        //TODO: ensureContactEditorDisplays( 'editedValue' )
     }
 });
