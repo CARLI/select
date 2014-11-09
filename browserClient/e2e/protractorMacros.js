@@ -28,17 +28,6 @@ function radioGroupInputsByModelElementFinder( modelName ){
     return element.all(by.model( modelName )).all(by.tagName('input'))
 }
 
-function contactEditorRowElementFinder( modelName, type, row ){
-    return element(by.repeater("contact in " + modelName + " | filter:{ contactType: '" + type + "' }").row(row));
-}
-
-function contactEditorInputGroupElementFinder( contactEditorElementFinder){
-    return {
-        name: contactEditorElementFinder.all(by.model('contact.name')).get(0),
-        email: contactEditorElementFinder.all(by.model('contact.email')).get(0),
-        phoneNumber: contactEditorElementFinder.all(by.model('contact.phoneNumber')).get(0)
-    };
-}
 
 /* ---------- Element Interaction Helper Functions ---------- */
 
@@ -72,15 +61,6 @@ function ensureElementsArePresent(elementArrayFinder, description) {
     });
 }
 
-function ensureContactEditorIsPresent(elementFinder, config) {
-    it('should have ' + config.description + '  editor', function(){
-        var row = contactEditorInputGroupElementFinder( elementFinder );
-        expect(row.name.isPresent()).toBe(true);
-        expect(row.phoneNumber.isPresent()).toBe(true);
-        expect(row.email.isPresent()).toBe(true);
-    })
-}
-
 function ensureElementIsHidden(elementFinder, description) {
     it('should have a hidden ' + description, function () {
         expect(elementFinder.isDisplayed()).toBe(false);
@@ -94,15 +74,6 @@ function ensureElementsAreHidden(elementArrayFinder, description) {
                 expect(items[i].isDisplayed()).toBe(false);
             }
         });
-    });
-}
-
-function ensureContactEditorIsHidden( elementFinder, config ){
-    it('should have a hidden ' + config.description + '  editor', function () {
-        var row = contactEditorInputGroupElementFinder( elementFinder );
-        expect(row.name.isDisplayed()).toBe(false);
-        expect(row.phoneNumber.isDisplayed()).toBe(false);
-        expect(row.email.isDisplayed()).toBe(false);
     });
 }
 
@@ -132,15 +103,6 @@ function ensureRadioGroupIsBlank( elementFinder, description ){
         //TODO: determine if radio is in default state.
         //need an index to count as blank and maybe a mapping of index -> values
     });
-}
-
-function ensureContactEditorIsBlank( elementFinder, config ) {
-    it('should have a blank ' + config.description + '  editor', function(){
-        var row = contactEditorInputGroupElementFinder( elementFinder );
-        expect(row.name.getAttribute('value')).toBe('');
-        expect(row.phoneNumber.getAttribute('value')).toBe('');
-        expect(row.email.getAttribute('value')).toBe('');
-    })
 }
 
 function ensureElementHasText( elementFinder, description, testText ) {
@@ -184,10 +146,6 @@ function _elementFinderForConfig( config ){
         case 'radio':
             return radioGroupInputsByModelElementFinder( config.model );
             break;
-        case 'contact':
-            //WARNING: the 0 means this is only getting the first row. So 'present', 'blank', and 'hidden' tests only test the first row.
-            return contactEditorRowElementFinder( config.model, config.contactType, 0 );
-            break;
         default:
             throw new Error('elementFinderForConfig unknown type: ' + config.type);
     }
@@ -198,9 +156,6 @@ function ensureFormElementIsPresentAndBlank( config ){
 
     if ( config.type === 'radio' ){
         ensureElementsArePresent( elementFinder, config.description + ' radio group' );
-    }
-    else if ( config.type === 'contact' ){
-        ensureContactEditorIsPresent( elementFinder, config );
     }
     else {
         ensureElementIsPresent( elementFinder, config.description + ' input');
@@ -220,9 +175,6 @@ function ensureFormElementIsPresentAndBlank( config ){
         case 'radio':
             ensureRadioGroupIsBlank( elementFinder, config.description + ' radio group');
             break;
-        case 'contact':
-            ensureContactEditorIsBlank( elementFinder, config);
-            break;
         default:
             throw new Error('ensureFormElementIsPresentAndBlank unknown type: ' + config.type);
     }
@@ -234,9 +186,6 @@ function ensureFormElementIsHidden( config ){
     if ( config.type === 'radio' ){
         ensureElementsAreHidden( elementFinder, config.description + ' radio group');
     }
-    else if ( config.type === 'contact' ){
-        ensureContactEditorIsHidden( elementFinder, config );
-    }
     else {
         ensureElementIsHidden( elementFinder, config.description + ' input');
     }
@@ -244,13 +193,7 @@ function ensureFormElementIsHidden( config ){
 
 function ensureFormElementDisplaysText( config, testText ){
     var elementFinder = elementByModel( config.model );
-
-    if ( config.type === 'contact' ){
-        //ensureContactEditorIsHidden( elementFinder, config );
-    }
-    else {
-        ensureElementHasText( elementFinder, config.description, testText );
-    }
+    ensureElementHasText( elementFinder, config.description, testText );
 }
 
 function setFormElementValue( config, value ){
@@ -270,9 +213,6 @@ function setFormElementValue( config, value ){
         case 'radio':
             setRadioGroupValueByIndex( elementFinder, config.valueToIndex[value] );
             break;
-        case 'contact':
-            // fillInContact
-            break;
         default:
             throw new Error('ensureFormElementIsPresentAndBlank unknown type: ' + config.type);
     }
@@ -289,8 +229,6 @@ module.exports = {
     selectedOptionByModel: currentlySelectedOptionByModelElementFinder,
     textareaByModel: textareaByModelElementFinder,
     radioGroupInputsByModel: radioGroupInputsByModelElementFinder,
-    contactEditorRowByModel: contactEditorRowElementFinder,
-    contactEditorInputs: contactEditorInputGroupElementFinder,
 
     setInputValue: setInputValue,
     setSelectValue: setSelectValue,

@@ -1,4 +1,9 @@
 var macro = require('./protractorMacros');
+ensureFormElementIsPresentAndBlank = macro.ensureFormElementIsPresentAndBlank;
+
+var contactEditorMacro = require('./protractorContactEditorMacros');
+ensureContactEditorIsPresentAndBlank = contactEditorMacro.ensureContactEditorIsPresentAndBlank;
+
 var LibraryPage = require('./LibraryPage.spec');
 
 toString = macro.toString;
@@ -11,13 +16,12 @@ toString = macro.toString;
  *       type: the input type (tag name) or 'contact' for a list of contacts
  *       description: how the form field will appear in test descriptions
  *       model: the value of the ng-model attribute used to bind the input to the Controller
- *       contactType: only for type 'contact' - which 'filter' value is used to get the list of contacts
  *       value1: the value used when creating the test entity
  *       value2: the value used when testing editing the entity
  *       valueToIndex: for radio buttons, tells which value (label) maps to which button (by index)
  * }
  */
-var libraryTestConfig = {
+var formInputsTestConfig = {
     name: {
         type: 'input',
         description: 'Name',
@@ -84,12 +88,23 @@ var libraryTestConfig = {
             'Inactive': 0,
             'Active': 1
         }
-    },
+    }
+};
+
+/**
+ * This configuration is used to test the contact editors
+ *
+ *  description: how the contact editor group will appear in test descriptions
+ *  model: the value from the Controller that appears in the ng-repeat
+ *  value1: the value used when creating the test entity
+ *  value2: the value used when testing editing the entity
+ *  filterString: which 'filter' value is used to get the list of contacts by repeater
+ */
+var contactEditorsTestConfig = {
     directorContacts: {
-        type: 'contact',
         description: 'Director Contacts',
         model: 'vm.library.contacts',
-        contactType: 'Director',
+        filterString: 'Director',
         value1: [
             {
                 name: 'Director Contact 1',
@@ -116,10 +131,9 @@ var libraryTestConfig = {
         ]
     },
     eResourceLiaisonContacts: {
-        type: 'contact',
         description: 'E-Resource Liaison Contacts',
         model: 'vm.library.contacts',
-        contactType: 'E-Resources Liaison',
+        filterString: 'E-Resources Liaison',
         value1: [
             {
                 name: 'Liaison Contact 1',
@@ -136,10 +150,9 @@ var libraryTestConfig = {
         ]
     },
     otherContacts: {
-        type: 'contact',
         description: 'Other Contacts',
         model: 'vm.library.contacts',
-        contactType: 'Other',
+        filterString: 'Other',
         value1: [
             {
                 name: 'Other Contact 1',
@@ -156,10 +169,9 @@ var libraryTestConfig = {
         ]
     },
     notificationOnlyContacts: {
-        type: 'contact',
         description: 'Notification Only Contacts',
         model: 'vm.library.contacts',
-        contactType: 'Notification Only',
+        filterString: 'Notification Only',
         value1: [
             {
                 name: 'Billing Contact 1',
@@ -184,8 +196,12 @@ describe('The New Library screen', function () {
         browser.setLocation('/library/new');
     });
 
-    for ( var formElement in libraryTestConfig ){
-        macro.ensureFormElementIsPresentAndBlank( libraryTestConfig[formElement] );
+    for ( var formElement in formInputsTestConfig ){
+        ensureFormElementIsPresentAndBlank( formInputsTestConfig[formElement] );
+    }
+
+    for ( var contactEditor in contactEditorsTestConfig ){
+        ensureContactEditorIsPresentAndBlank( contactEditorsTestConfig[contactEditor] );
     }
 
     it('should have "Add Contact" links for all four types of users', function () {
@@ -240,12 +256,12 @@ describe('Viewing an existing Library in read only mode', function () {
             });
     });
 
-    for ( formElement in libraryTestConfig ){
-        macro.ensureFormElementIsHidden( libraryTestConfig[formElement] );
+    for ( formElement in formInputsTestConfig ){
+        macro.ensureFormElementIsHidden( formInputsTestConfig[formElement] );
     }
 
-    for ( formElement in libraryTestConfig ){
-        config = libraryTestConfig[formElement];
+    for ( formElement in formInputsTestConfig ){
+        config = formInputsTestConfig[formElement];
         macro.ensureFormElementDisplaysText( config, config.value1 );
     }
 
@@ -314,7 +330,7 @@ describe('Viewing an existing Library in edit mode', function () {
         expect(libraryPage.iShareInput.getAttribute('checked')).toBe(libraryPage.testLibrary.isIshareMember ? 'true' : null);
     });
 
-    macro.ensureInputHasValue( libraryPage.garInput, 'GAR Input', libraryTestConfig.gar.value1 );
+    macro.ensureInputHasValue( libraryPage.garInput, 'GAR Input', formInputsTestConfig.gar.value1 );
 
     it('should have a correctly selected Membership Status radio button', function() {
         expect(libraryPage.getStatusInputActive()).toBe(libraryPage.testLibrary.isActive ? 'true' : null);
