@@ -1,11 +1,11 @@
 var macro = require('./protractorMacros');
+elementById = macro.elementById;
 ensureFormElementIsPresentAndBlank = macro.ensureFormElementIsPresentAndBlank;
+setFormElementValue = macro.setFormElementValue;
 
 var contactEditorMacro = require('./protractorContactEditorMacros');
 ensureContactEditorIsPresentAndBlank = contactEditorMacro.ensureContactEditorIsPresentAndBlank;
 ensureContactEditorIsHidden = contactEditorMacro.ensureContactEditorIsHidden;
-
-var LibraryPage = require('./LibraryPage.spec');
 
 toString = macro.toString;
 
@@ -86,11 +86,14 @@ var formInputsTestConfig = {
         value1: 'Inactive',
         value2: 'Active',
         valueToIndex: {
-            'Inactive': 0,
-            'Active': 1
+            'Active': 0,
+            'Inactive': 1
         }
     }
 };
+
+testLibraryName = formInputsTestConfig.name.value1;
+testLibraryEditedName = formInputsTestConfig.name.value2;
 
 /**
  * This configuration is used to test the contact editors
@@ -106,6 +109,7 @@ var contactEditorsTestConfig = {
         description: 'Director Contacts',
         model: 'vm.library.contacts',
         filterString: 'Director',
+        addContactLink: elementById('add-director-contact'),
         value1: [
             {
                 name: 'Director Contact 1',
@@ -135,6 +139,7 @@ var contactEditorsTestConfig = {
         description: 'E-Resource Liaison Contacts',
         model: 'vm.library.contacts',
         filterString: 'E-Resources Liaison',
+        addContactLink: elementById('add-e-resources-liaison-contact'),
         value1: [
             {
                 name: 'Liaison Contact 1',
@@ -154,6 +159,7 @@ var contactEditorsTestConfig = {
         description: 'Other Contacts',
         model: 'vm.library.contacts',
         filterString: 'Other',
+        addContactLink: elementById('add-other-contact'),
         value1: [
             {
                 name: 'Other Contact 1',
@@ -173,6 +179,7 @@ var contactEditorsTestConfig = {
         description: 'Notification Only Contacts',
         model: 'vm.library.contacts',
         filterString: 'Notification Only',
+        addContactLink: elementById('add-notification-only-contact'),
         value1: [
             {
                 name: 'Billing Contact 1',
@@ -190,8 +197,48 @@ var contactEditorsTestConfig = {
     }
 };
 
+/**
+ * Other special-case elements specific to this page, plus some helper functions
+ */
+var libraryPage = {
+    listFilterShowAll: element(by.cssContainingText('.ng-binding', 'All libraries')),
+    submit: element(by.id('library-submit')),
+    editButton: element(by.id('library-edit')),
+
+    addEmptyContactsForTestData: function(){
+        var i, config;
+
+        for ( var contactEditor in contactEditorsTestConfig ){
+            config = contactEditorsTestConfig[contactEditor];
+
+            for ( i = 0 ; i < config.value1.length -1 ; i++ ){
+                config.addContactLink.click();
+            }
+        }
+    },
+
+    fillInLibraryWithTestData: function( useEditData ){
+        var row, formElement, contactEditor;
+        var dataSet = useEditData || 'value1';
+
+        for ( formElement in formInputsTestConfig ){
+            config = formInputsTestConfig[formElement];
+
+            setFormElementValue( config, config[dataSet] );
+        }
+
+        for ( contactEditor  in contactEditorsTestConfig ){
+            config = contactEditorsTestConfig[contactEditor];
+
+            for ( row = 0 ; row < config[dataSet].length ; row++ ){
+                contactEditorMacro.fillInContactRow( config, row, config[dataSet][row] );
+            }
+        }
+    }
+};
+
 describe('The New Library screen', function () {
-    var libraryPage = new LibraryPage();
+    var config;
 
     it('should be routed at /library/new', function(){
         browser.setLocation('/library/new');
@@ -202,23 +249,17 @@ describe('The New Library screen', function () {
     }
 
     for ( var contactEditor in contactEditorsTestConfig ){
-        ensureContactEditorIsPresentAndBlank( contactEditorsTestConfig[contactEditor] );
+        config = contactEditorsTestConfig[contactEditor];
+        macro.ensureElementIsPresent( config.addContactLink, 'Add Contact Link for ' + config.description );
+        ensureContactEditorIsPresentAndBlank( config );
     }
-
-    it('should have "Add Contact" links for all four types of users', function () {
-        expect(libraryPage.addDirectorContactLink.isPresent()).toBe(true);
-        expect(libraryPage.addEresourceLiaisonContactLink.isPresent()).toBe(true);
-        expect(libraryPage.addOtherContactLink.isPresent()).toBe(true);
-        expect(libraryPage.addNotificationOnlyContactLink.isPresent()).toBe(true);
-    });
 });
 
 describe('Creating a New Library', function(){
     it('should save a new Library when filling in the form and clicking save', function() {
-        var libraryPage = new LibraryPage();
 
-        libraryPage.addEmptyContacts( libraryPage.testLibrary );
-        libraryPage.fillInLibrary( libraryPage.testLibrary );
+        libraryPage.addEmptyContactsForTestData();
+        libraryPage.fillInLibraryWithTestData();
 
         libraryPage.submit.click();
 
@@ -227,7 +268,7 @@ describe('Creating a New Library', function(){
         element.all(by.repeater('entity in values'))
         .filter( function(el, index) {
             return el.getText().then(function(text){
-                return (text.search(libraryPage.testLibrary.name) > -1);
+                return (text.search(testLibraryName) > -1);
             });
         })
         .then( function( libraryList ) {
@@ -237,8 +278,8 @@ describe('Creating a New Library', function(){
 });
 
 describe('Viewing an existing Library in read only mode', function () {
-    var libraryPage = new LibraryPage();
-    var formElement;
+
+    var config, formElement, contactEditor;
 
     it('should be routed to the screen for the test library', function () {
 
@@ -249,7 +290,7 @@ describe('Viewing an existing Library in read only mode', function () {
         element.all(by.repeater('entity in values'))
             .filter(function (el, index) {
                 return el.getText().then(function (text) {
-                    return (text.search(libraryPage.testLibrary.name) > -1);
+                    return (text.search(testLibraryName) > -1);
                 });
             })
             .then(function (libraryList) {
@@ -261,7 +302,7 @@ describe('Viewing an existing Library in read only mode', function () {
         macro.ensureFormElementIsHidden( formInputsTestConfig[formElement] );
     }
 
-    for ( var contactEditor in contactEditorsTestConfig ){
+    for ( contactEditor in contactEditorsTestConfig ){
         ensureContactEditorIsHidden( contactEditorsTestConfig[contactEditor] );
     }
 
@@ -270,92 +311,30 @@ describe('Viewing an existing Library in read only mode', function () {
         macro.ensureFormElementDisplaysText( config, config.value1 );
     }
 
-    it('should display Contacts', function() {
-        //TODO
-    });
+    for ( contactEditor in contactEditorsTestConfig ){
+        //TODO: ensureContactEditorDisplays( 'value1' )
+    }
 });
 
 describe('Viewing an existing Library in edit mode', function () {
-    var libraryPage = new LibraryPage();
-
+    var config, formElement, contactEditor;
 
     it('should be in edit mode', function () {
         libraryPage.editButton.click();
     });
 
-    it('should have a populated name field', function() {
-        expect(libraryPage.nameInput.getAttribute('value')).toBe(libraryPage.testLibrary.name);
-    });
+    for ( formElement in formInputsTestConfig ){
+        config = formInputsTestConfig[formElement];
+        macro.ensureFormElementHasValue( config, config.value1 );
+    }
 
-    it('should have a populated Full-Time Enrollment field', function() {
-        expect(libraryPage.fteInput.getAttribute('value')).toBe( toString(libraryPage.testLibrary.fte) );
-    });
-
-    it('should have a selected Institution Years value', function() {
-        expect(libraryPage.institutionYearsInputSelectedOption.getText()).toBe(libraryPage.testLibrary.institutionYears);
-    });
-
-    it('should have a selected Institution Type value', function() {
-        expect(libraryPage.institutionTypeInputSelectedOption.getText()).toBe(libraryPage.testLibrary.institutionType);
-    });
-
-    it('should have a populated IP Addresses field', function() {
-        expect(libraryPage.ipAddressInput.getAttribute('value')).toBe(libraryPage.testLibrary.ipAddresses);
-    });
-
-    it('should have a selected Membership Level value', function() {
-        expect(libraryPage.membershipLevelInputSelectedOption.getText()).toBe(libraryPage.testLibrary.membershipLevel);
-    });
-
-    it('should have a correctly selected I-Share Member checkbox', function() {
-        expect(libraryPage.iShareInput.getAttribute('checked')).toBe(libraryPage.testLibrary.isIshareMember ? 'true' : null);
-    });
-
-    macro.ensureInputHasValue( libraryPage.garInput, 'GAR Input', formInputsTestConfig.gar.value1 );
-
-    it('should have a correctly selected Membership Status radio button', function() {
-        expect(libraryPage.getStatusInputActive()).toBe(libraryPage.testLibrary.isActive ? 'true' : null);
-    });
-
-    it('should have correctly filled in Contacts', function(){
-        var contactForm, contact;
-
-        for ( i = 0 ; i < libraryPage.testLibrary.directorContacts.length ; i++ ){
-            contactForm = libraryPage.getContactEditForm('Director', i);
-            contact = libraryPage.testLibrary.directorContacts[i];
-            expect(contactForm.name.getAttribute('value')).toBe(contact.name);
-            expect(contactForm.email.getAttribute('value')).toBe(contact.email);
-            expect(contactForm.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
-        }
-
-        for ( i = 0 ; i < libraryPage.testLibrary.eResourceLiaisonContacts.length ; i++ ){
-            contactForm = libraryPage.getContactEditForm('E-Resources Liaison', i);
-            contact = libraryPage.testLibrary.eResourceLiaisonContacts[i];
-            expect(contactForm.name.getAttribute('value')).toBe(contact.name);
-            expect(contactForm.email.getAttribute('value')).toBe(contact.email);
-            expect(contactForm.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
-        }
-
-        for ( i = 0 ; i < libraryPage.testLibrary.otherContacts.length ; i++ ){
-            contactForm = libraryPage.getContactEditForm('Other', i);
-            contact = libraryPage.testLibrary.otherContacts[i];
-            expect(contactForm.name.getAttribute('value')).toBe(contact.name);
-            expect(contactForm.email.getAttribute('value')).toBe(contact.email);
-            expect(contactForm.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
-        }
-
-        for ( i = 0 ; i < libraryPage.testLibrary.notificationOnlyContacts.length ; i++ ){
-            contactForm = libraryPage.getContactEditForm('Notification Only', i);
-            contact = libraryPage.testLibrary.notificationOnlyContacts[i];
-            expect(contactForm.name.getAttribute('value')).toBe(contact.name);
-            expect(contactForm.email.getAttribute('value')).toBe(contact.email);
-            expect(contactForm.phoneNumber.getAttribute('value')).toBe(contact.phoneNumber);
-        }
-    });
+    for ( contactEditor in contactEditorsTestConfig ){
+        //TODO: ensureContactEditorHasValues( 'value1' )
+    }
 });
 
 describe('Making changes to an existing Library', function(){
-    var libraryPage = new LibraryPage();
+    var config, formElement, contactEditor;
 
     it('should change the entry on the Library list screen when changing the name', function () {
         browser.setLocation('/library');
@@ -365,7 +344,7 @@ describe('Making changes to an existing Library', function(){
         element.all(by.repeater('entity in values'))
             .filter(function (el, index) {
                 return el.getText().then(function (text) {
-                    return (text.search(libraryPage.testLibrary.name) > -1);
+                    return (text.search(testLibraryName) > -1);
                 });
             })
             .then(function (libraryList) {
@@ -374,7 +353,7 @@ describe('Making changes to an existing Library', function(){
 
         libraryPage.editButton.click();
 
-        libraryPage.fillInLibrary( libraryPage.testEditLibrary );
+        libraryPage.fillInLibraryWithTestData('value2');
 
         libraryPage.submit.click();
 
@@ -383,94 +362,22 @@ describe('Making changes to an existing Library', function(){
         element.all(by.repeater('entity in values'))
             .filter(function (el, index) {
                 return el.getText().then(function (text) {
-                    return (text.search(libraryPage.testEditLibrary.name) > -1);
+                    return (text.search(testLibraryEditedName) > -1);
                 });
             })
             .then(function (libraryList) {
                 expect( libraryList.length ).toBe(1);
                 libraryList[0].element(by.tagName('a')).click();
             });
+
     });
 
-    it('should display updated name', function() {
-        libraryPage.nameDisplay.getText().then(function (text) {
-            expect(text).toBe(libraryPage.testEditLibrary.name);
-        });
-    });
+    for ( formElement in formInputsTestConfig ){
+        config = formInputsTestConfig[formElement];
+        macro.ensureFormElementDisplaysText( config, config.value2 );
+    }
 
-    it('should display updated Full Time Enrollment', function() {
-        libraryPage.fteDisplay.getText().then(function (text) {
-            expect(text).toBe( toString(libraryPage.testEditLibrary.fte));
-        });
-    });
-
-    it('should display updated Institution Years', function() {
-        libraryPage.institutionYersInputDisplay.getText().then(function (text) {
-            expect(text).toBe(libraryPage.testEditLibrary.institutionYears);
-        });
-    });
-
-    it('should display updated Institution Type', function() {
-        libraryPage.institutionTypeInputDisplay.getText().then(function (text) {
-            expect(text).toBe(libraryPage.testEditLibrary.institutionType);
-        });
-    });
-
-    it('should display updated ipAddresses', function() {
-        libraryPage.ipAddressnputDisplay.getText().then(function (text) {
-            expect(text).toBe(libraryPage.testEditLibrary.ipAddresses);
-        });
-    });
-
-    it('should display updated Membership Level', function() {
-        libraryPage.membershipLevelInputDisplay.getText().then(function (text) {
-            expect(text).toBe(libraryPage.testEditLibrary.membershipLevel);
-        });
-    });
-
-    it('should display updated iShare', function() {
-        libraryPage.iShareInputDisplay.getText().then(function (text) {
-            expect(text).toBe( toString(libraryPage.testEditLibrary.isIshareMember) );
-        });
-    });
-
-    it('should display updated GAR', function() {
-        libraryPage.garInputDisplay.getText().then(function (text) {
-            expect(text).toBe(libraryPage.testEditLibrary.gar);
-        });
-    });
-
-    it('should display updated Library Status', function() {
-        libraryPage.statusInputDisplay.getText().then(function (text) {
-            expect(text).toBe(libraryPage.testEditLibrary.isActive ? 'Active' : 'Inactive');
-        });
-    });
-
-    it('should display updated Contacts', function() {
-        var contactElement;
-        for ( i = 0 ; i < libraryPage.testEditLibrary.directorContacts.length ; i++ ) {
-            contactElement = libraryPage.getContactViewElement('Director', i);
-            expect(contactElement.name.isDisplayed()).toBe(true);
-            expect(contactElement.phoneNumber.isDisplayed()).toBe(true);
-            expect(contactElement.email.isDisplayed()).toBe(true);
-        }
-        for ( i = 0 ; i < libraryPage.testEditLibrary.eResourceLiaisonContacts.length ; i++ ) {
-            contactElement = libraryPage.getContactViewElement('E-Resources Liaison', i);
-            expect(contactElement.name.isDisplayed()).toBe(true);
-            expect(contactElement.phoneNumber.isDisplayed()).toBe(true);
-            expect(contactElement.email.isDisplayed()).toBe(true);
-        }
-        for ( i = 0 ; i < libraryPage.testEditLibrary.otherContacts.length ; i++ ) {
-            contactElement = libraryPage.getContactViewElement('Other', i);
-            expect(contactElement.name.isDisplayed()).toBe(true);
-            expect(contactElement.phoneNumber.isDisplayed()).toBe(true);
-            expect(contactElement.email.isDisplayed()).toBe(true);
-        }
-        for ( i = 0 ; i < libraryPage.testEditLibrary.notificationOnlyContacts.length ; i++ ) {
-            contactElement = libraryPage.getContactViewElement('Notification Only', i);
-            expect(contactElement.name.isDisplayed()).toBe(true);
-            expect(contactElement.phoneNumber.isDisplayed()).toBe(true);
-            expect(contactElement.email.isDisplayed()).toBe(true);
-        }
-    });
+    for ( contactEditor in contactEditorsTestConfig ){
+        //TODO: ensureContactEditorDisplays( 'value2' )
+    }
 });

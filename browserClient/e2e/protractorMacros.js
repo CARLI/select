@@ -4,6 +4,10 @@ function toString( val ){
 }
 
 /* ---------- Element Finder Helper Functions ---------- */
+function elementById( id ){
+    return element(by.id(id));
+}
+
 function elementByModel( modelName ){
     return element(by.model( modelName ));
 }
@@ -16,8 +20,8 @@ function selectByModelElementFinder( modelName ){
     return elementByModel( modelName ).element(by.tagName('select'));
 }
 
-function currentlySelectedOptionByModelElementFinder( modelName ){
-    return selectByModelElementFinder(modelName).element(by.css('option:checked'));
+function currentlySelectedOptionElementFinder( elementFinder ){
+    return elementFinder.element(by.css('option:checked'));
 }
 
 function textareaByModelElementFinder( modelName ){
@@ -113,7 +117,19 @@ function ensureElementHasText( elementFinder, description, testText ) {
 
 function ensureInputHasValue( elementFinder, description, testValue ) {
     it(description + ' should have value "' + testValue + '"', function(){
-       expect(elementFinder.getAttribute('value')).toBe( testValue );
+       expect(elementFinder.getAttribute('value')).toBe( toString(testValue) );
+    });
+}
+
+function ensureSelectHasValue( elementFinder, description, testValue ) {
+    it(description + ' should have "' + testValue + '" selected', function(){
+        expect( currentlySelectedOptionElementFinder(elementFinder).getText()).toBe( toString(testValue) );
+    });
+}
+
+function ensureRadioGroupValueByIndex( elementFinder, description, testValue, testIndex ) {
+    it(description + ' should have chosen value "' + testValue + '"', function(){
+        expect( elementFinder.get(testIndex).getAttribute('checked') ).toBe('true');
     });
 }
 
@@ -205,7 +221,8 @@ function setFormElementValue( config, value ){
             setInputValue( elementFinder, value );
             break;
         case 'checkbox':
-            // setCheckboxValue
+            //TODO: setCheckboxValue
+            elementFinder.click();
             break;
         case 'select':
             setSelectValue( elementFinder, value );
@@ -218,15 +235,38 @@ function setFormElementValue( config, value ){
     }
 }
 
+function ensureFormElementHasValue( config, value ){
+    var elementFinder = _elementFinderForConfig( config );
+
+    switch( config.type ){
+        case 'input':
+        case 'textarea':
+            ensureInputHasValue( elementFinder, config.description, value );
+            break;
+        case 'checkbox':
+            //TODO: setCheckboxValue
+            break;
+        case 'select':
+            ensureSelectHasValue( elementFinder, config.description, value );
+            break;
+        case 'radio':
+            ensureRadioGroupValueByIndex( elementFinder, config.description, value, config.valueToIndex[value] );
+            break;
+        default:
+            throw new Error('ensureFormElementIsPresentAndBlank unknown type: ' + config.type);
+    }
+}
+
 /* ---------------------- Exports ------------------------- */
 
 module.exports = {
     toString: toString,
 
+    elementById: elementById,
     elementByModel: elementByModel,
     inputByModel: inputByModelElementFinder,
     selectByModel: selectByModelElementFinder,
-    selectedOptionByModel: currentlySelectedOptionByModelElementFinder,
+    selectedOption: currentlySelectedOptionElementFinder,
     textareaByModel: textareaByModelElementFinder,
     radioGroupInputsByModel: radioGroupInputsByModelElementFinder,
 
@@ -245,5 +285,6 @@ module.exports = {
     ensureFormElementIsPresentAndBlank: ensureFormElementIsPresentAndBlank,
     ensureFormElementIsHidden: ensureFormElementIsHidden,
     ensureFormElementDisplaysText: ensureFormElementDisplaysText,
-    setFormElementValue: setFormElementValue
+    setFormElementValue: setFormElementValue,
+    ensureFormElementHasValue: ensureFormElementHasValue
 };

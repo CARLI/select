@@ -58,6 +58,21 @@ function ensureContactEditorIsHidden(config) {
         ensureContactEditorRowIsHidden(elementFinder, config);
     }
 }
+
+function fillInContactRow( config, row, data ){
+    var elementFinder = contactEditorRowElementFinder(config.model, config.filterString, row);
+    var inputs = contactEditorInputGroupElementFinder( elementFinder );
+
+    inputs.name.clear();
+    inputs.name.sendKeys( data.name );
+
+    inputs.email.clear();
+    inputs.email.sendKeys( data.email );
+
+    inputs.phoneNumber.clear();
+    inputs.phoneNumber.sendKeys( data.phoneNumber );
+}
+
 /* ---------------------- Exports ------------------------- */
 
 module.exports = {
@@ -69,5 +84,7 @@ module.exports = {
     ensureContactEditorRowIsBlank: ensureContactEditorRowIsBlank,
 
     ensureContactEditorIsPresentAndBlank: ensureContactEditorIsPresentAndBlank,
-    ensureContactEditorIsHidden: ensureContactEditorIsHidden
+    ensureContactEditorIsHidden: ensureContactEditorIsHidden,
+
+    fillInContactRow: fillInContactRow
 };
