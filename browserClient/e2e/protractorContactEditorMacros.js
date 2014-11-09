@@ -11,7 +11,7 @@ function contactEditorInputGroupElementFinder(contactEditorElementFinder) {
 }
 
 function ensureContactEditorRowIsPresent(elementFinder, config) {
-    it('should have ' + config.description + '  editor', function () {
+    it('should have ' + config.description + ' editor', function () {
         var row = contactEditorInputGroupElementFinder(elementFinder);
         expect(row.name.isPresent()).toBe(true);
         expect(row.phoneNumber.isPresent()).toBe(true);
@@ -20,7 +20,7 @@ function ensureContactEditorRowIsPresent(elementFinder, config) {
 }
 
 function ensureContactEditorRowIsHidden(elementFinder, config) {
-    it('should have a hidden ' + config.description + '  editor', function () {
+    it('should have a hidden ' + config.description + ' editor', function () {
         var row = contactEditorInputGroupElementFinder(elementFinder);
         expect(row.name.isDisplayed()).toBe(false);
         expect(row.phoneNumber.isDisplayed()).toBe(false);
@@ -29,7 +29,7 @@ function ensureContactEditorRowIsHidden(elementFinder, config) {
 }
 
 function ensureContactEditorRowIsBlank(elementFinder, config) {
-    it('should have a blank ' + config.description + '  editor', function () {
+    it('should have a blank ' + config.description + ' editor', function () {
         var row = contactEditorInputGroupElementFinder(elementFinder);
         expect(row.name.getAttribute('value')).toBe('');
         expect(row.phoneNumber.getAttribute('value')).toBe('');
@@ -73,6 +73,19 @@ function fillInContactRow( config, row, data ){
     inputs.phoneNumber.sendKeys( data.phoneNumber );
 }
 
+function ensureContactRowHasValues( config, row, data ){
+    var elementFinder = contactEditorRowElementFinder(config.model, config.filterString, row);
+    var inputs = contactEditorInputGroupElementFinder( elementFinder );
+
+    it(config.description + ' editor ' + row + ' should have values ', function(){
+        expect(inputs.name.getAttribute('value')).toBe(data.name);
+        expect(inputs.email.getAttribute('value')).toBe(data.email);
+        expect(inputs.phoneNumber.getAttribute('value')).toBe(data.phoneNumber);
+    });
+}
+
+
+
 /* ---------------------- Exports ------------------------- */
 
 module.exports = {
@@ -85,6 +98,7 @@ module.exports = {
 
     ensureContactEditorIsPresentAndBlank: ensureContactEditorIsPresentAndBlank,
     ensureContactEditorIsHidden: ensureContactEditorIsHidden,
+    ensureContactRowHasValues: ensureContactRowHasValues,
 
     fillInContactRow: fillInContactRow
 };

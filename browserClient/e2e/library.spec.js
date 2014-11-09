@@ -6,6 +6,7 @@ setFormElementValue = macro.setFormElementValue;
 var contactEditorMacro = require('./protractorContactEditorMacros');
 ensureContactEditorIsPresentAndBlank = contactEditorMacro.ensureContactEditorIsPresentAndBlank;
 ensureContactEditorIsHidden = contactEditorMacro.ensureContactEditorIsHidden;
+ensureContactRowHasValues = contactEditorMacro.ensureContactRowHasValues;
 
 /**
  * The configuration below is used by the macros to generate tests. They take the following form:
@@ -315,7 +316,7 @@ describe('Viewing an existing Library in read only mode', function () {
 });
 
 describe('Viewing an existing Library in edit mode', function () {
-    var config, formElement, contactEditor;
+    var row, config, formElement, contactEditor;
 
     it('should be in edit mode', function () {
         pageConfig.editButton.click();
@@ -326,8 +327,12 @@ describe('Viewing an existing Library in edit mode', function () {
         macro.ensureFormElementHasValue( config, config.initialValue );
     }
 
-    for ( contactEditor in contactEditorsTestConfig ){
-        //TODO: ensureContactEditorHasValues( 'initialValue' )
+    for (contactEditor in contactEditorsTestConfig) {
+        config = contactEditorsTestConfig[contactEditor];
+
+        for (row = 0; row < config.initialValue.length; row++) {
+            ensureContactRowHasValues(config, row, config.initialValue[row] );
+        }
     }
 });
 
