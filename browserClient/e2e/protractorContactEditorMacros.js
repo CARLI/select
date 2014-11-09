@@ -10,6 +10,14 @@ function contactEditorInputGroupElementFinder(contactEditorElementFinder) {
     };
 }
 
+function contactEditorDisplayGroupElementFinder(contactEditorElementFinder) {
+    return {
+        name: contactEditorElementFinder.all(by.exactBinding('contact.name')).get(0),
+        email: contactEditorElementFinder.all(by.exactBinding('contact.email')).get(0),
+        phoneNumber: contactEditorElementFinder.all(by.exactBinding('contact.phoneNumber')).get(0)
+    };
+}
+
 function ensureContactEditorRowIsPresent(elementFinder, config) {
     it('should have ' + config.description + ' editor', function () {
         var row = contactEditorInputGroupElementFinder(elementFinder);
@@ -77,13 +85,23 @@ function ensureContactRowHasValues( config, row, data ){
     var elementFinder = contactEditorRowElementFinder(config.model, config.filterString, row);
     var inputs = contactEditorInputGroupElementFinder( elementFinder );
 
-    it(config.description + ' editor ' + row + ' should have values ', function(){
+    it(config.description + ' editor ' + row + ' should have values', function(){
         expect(inputs.name.getAttribute('value')).toBe(data.name);
         expect(inputs.email.getAttribute('value')).toBe(data.email);
         expect(inputs.phoneNumber.getAttribute('value')).toBe(data.phoneNumber);
     });
 }
 
+function ensureContactRowDisplaysValues( config, row, data ){
+    var elementFinder = contactEditorRowElementFinder(config.model, config.filterString, row);
+    var display = contactEditorDisplayGroupElementFinder( elementFinder );
+
+    it(config.description + ' row ' + row + ' should display values', function(){
+        expect(display.name.getText()).toBe(data.name);
+        expect(display.email.getText()).toBe(data.email);
+        expect(display.phoneNumber.getText()).toBe(data.phoneNumber);
+    });
+}
 
 
 /* ---------------------- Exports ------------------------- */
@@ -91,6 +109,7 @@ function ensureContactRowHasValues( config, row, data ){
 module.exports = {
     contactEditorRowByModel: contactEditorRowElementFinder,
     contactEditorInputs: contactEditorInputGroupElementFinder,
+    contactEditorDisplay: contactEditorDisplayGroupElementFinder,
 
     ensureContactEditorRowIsPresent: ensureContactEditorRowIsPresent,
     ensureContactEditorRowIsHidden: ensureContactEditorRowIsHidden,
@@ -99,6 +118,7 @@ module.exports = {
     ensureContactEditorIsPresentAndBlank: ensureContactEditorIsPresentAndBlank,
     ensureContactEditorIsHidden: ensureContactEditorIsHidden,
     ensureContactRowHasValues: ensureContactRowHasValues,
+    ensureContactRowDisplaysValues: ensureContactRowDisplaysValues,
 
     fillInContactRow: fillInContactRow
 };

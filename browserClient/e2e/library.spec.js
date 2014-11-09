@@ -7,6 +7,7 @@ var contactEditorMacro = require('./protractorContactEditorMacros');
 ensureContactEditorIsPresentAndBlank = contactEditorMacro.ensureContactEditorIsPresentAndBlank;
 ensureContactEditorIsHidden = contactEditorMacro.ensureContactEditorIsHidden;
 ensureContactRowHasValues = contactEditorMacro.ensureContactRowHasValues;
+ensureContactRowDisplaysValues = contactEditorMacro.ensureContactRowDisplaysValues;
 
 /**
  * The configuration below is used by the macros to generate tests. They take the following form:
@@ -278,7 +279,7 @@ describe('Creating a New Library', function(){
 
 describe('Viewing an existing Library in read only mode', function () {
 
-    var config, formElement, contactEditor;
+    var row, config, formElement, contactEditor;
 
     it('should be routed to the screen for the test library', function () {
 
@@ -311,7 +312,11 @@ describe('Viewing an existing Library in read only mode', function () {
     }
 
     for ( contactEditor in contactEditorsTestConfig ){
-        //TODO: ensureContactEditorDisplays( 'initialValue' )
+        config = contactEditorsTestConfig[contactEditor];
+
+        for ( row = 0 ; row < config.initialValue.length ; row++ ){
+            ensureContactRowDisplaysValues( config, row, config.initialValue[row] );
+        }
     }
 });
 
@@ -380,7 +385,11 @@ describe('Making changes to an existing Library', function(){
         macro.ensureFormElementDisplaysText( config, config.editedValue );
     }
 
-    for ( contactEditor in contactEditorsTestConfig ){
-        //TODO: ensureContactEditorDisplays( 'editedValue' )
+    for (contactEditor in contactEditorsTestConfig) {
+        config = contactEditorsTestConfig[contactEditor];
+
+        for (row = 0; row < config.editedValue.length; row++) {
+            ensureContactRowHasValues(config, row, config.editedValue[row] );
+        }
     }
 });
