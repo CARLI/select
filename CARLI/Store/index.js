@@ -45,7 +45,6 @@ function ensureSaveDataIsValid( data ) {
 function toGetOrDelete( myStore, options, toDelete ) {
     ensureGetOptionsAreValid( options );
     var deferred = Q.defer();
-
     myStore.typeExistsInStore( options.type )
     .then(
         function() {
