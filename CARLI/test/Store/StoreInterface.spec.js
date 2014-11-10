@@ -197,7 +197,9 @@ function test( storeTypeName, options ) {
             }
 
             it( 'should return an array of test objects', function( ) {
-                return expect( test5Objects() ).to.eventually.be.an('Array').of.length( 5 );
+                return expect( test5Objects() )
+                    .to.eventually.be.an('Array').of.length(5)
+                    .to.have.deep.property('[4].type');
             } );
 
             it( 'should return an array of objects', function() {
