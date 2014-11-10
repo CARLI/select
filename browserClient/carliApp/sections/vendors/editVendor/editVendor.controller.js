@@ -56,14 +56,17 @@ function editVendorController( $location, $routeParams, vendorService, alertServ
 
     function saveVendor(){
         if ( vendorId !== 'new' ){
-            vendorService.update( vm.vendor );
-            alertService.putAlert('Vendor updated', {severity: 'success'});
+            vendorService.update( vm.vendor ).then(function(){
+                alertService.putAlert('Vendor updated', {severity: 'success'});
+                $location.path('/vendor');
+            });
         }
         else {
-            vendorService.create( vm.vendor );
-            alertService.putAlert('Vendor added', {severity: 'success'});
+            vendorService.create( vm.vendor ).then(function(){
+                alertService.putAlert('Vendor added', {severity: 'success'});
+                $location.path('/vendor');
+            });
         }
-        $location.path('/vendor');
     }
 
     function addContact(contactType) {
