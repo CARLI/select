@@ -206,9 +206,9 @@ var pageConfig = {
     editButton: element(by.id('library-edit')),
 
     addEmptyContactsForTestData: function(){
-        var i, config;
+        var i, config, contactEditor;
 
-        for ( var contactEditor in contactEditorsTestConfig ){
+        for ( contactEditor in contactEditorsTestConfig ){
             config = contactEditorsTestConfig[contactEditor];
 
             for ( i = 0 ; i < config.initialValue.length -1 ; i++ ){
@@ -238,17 +238,17 @@ var pageConfig = {
 };
 
 describe('The New Library screen', function () {
-    var config;
+    var config, formElement, contactEditor;
 
     it('should be routed at /library/new', function(){
         browser.setLocation('/library/new');
     });
 
-    for ( var formElement in formInputsTestConfig ){
+    for ( formElement in formInputsTestConfig ){
         ensureFormElementIsPresentAndBlank( formInputsTestConfig[formElement] );
     }
 
-    for ( var contactEditor in contactEditorsTestConfig ){
+    for ( contactEditor in contactEditorsTestConfig ){
         config = contactEditorsTestConfig[contactEditor];
         macro.ensureElementIsPresent( config.addContactLink, 'Add Contact Link for ' + config.description );
         ensureContactEditorIsPresentAndBlank( config );
@@ -285,7 +285,7 @@ describe('Viewing an existing Library in read only mode', function () {
 
         //Don't need to call these as long as the previous test left us on the list page with 'All' showing
         //browser.setLocation('/library');
-        //libraryPage.listFilterShowAll.click();
+        //pageConfig.listFilterShowAll.click();
 
         element.all(by.repeater('entity in values'))
             .filter(function (el, index) {
