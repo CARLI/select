@@ -31,16 +31,16 @@
                     <view-edit-text-field ng-model="vm.license.contractNumber"  edit-mode="vm.editable">{{ vm.license.contractNumber }}</view-edit-text-field>
 
                     <label>Redacted License</label>
-                    <view-edit-text-field ng-model="vm.license.redactedLicenseFile"  edit-mode="vm.editable">Change this to a viewEditFile</view-edit-text-field>
+                    <view-edit-text-field ng-model="vm.license.redactedLicenseFile"  edit-mode="vm.editable">{{ vm.license.redactedLicenseFile }}</view-edit-text-field>
 
                     <label>Full License</label>
-                    <view-edit-text-field ng-model="vm.license.fullLicenseFile"  edit-mode="vm.editable">Change this to a viewEditFile</view-edit-text-field>
+                    <view-edit-text-field ng-model="vm.license.fullLicenseFile"  edit-mode="vm.editable">{{ vm.license.fullLicenseFile }}</view-edit-text-field>
 
                     <label for="eResourceComments">Internal E-Resource Comments</label>
-                    <view-edit-text-area class="e-resource-comments" ng-model="vm.vendor.eResourceComments" edit-mode="vm.editable">{{ vm.vendor.eResourceComments }}</view-edit-text-area>
+                    <view-edit-text-area class="e-resource-comments" ng-model="vm.license.eResourceComments" edit-mode="vm.editable">{{ vm.license.eResourceComments }}</view-edit-text-area>
 
                     <label for="businessComments">Internal Business Services Comments</label>
-                    <view-edit-text-area class="business-comments" ng-model="vm.vendor.businessComments" edit-mode="vm.editable">{{ vm.vendor.businessComments }}</view-edit-text-area>
+                    <view-edit-text-area class="business-comments" ng-model="vm.license.businessComments" edit-mode="vm.editable">{{ vm.license.businessComments }}</view-edit-text-area>
 
                     <label for="vendorStatus">Status</label>
                     <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.license.isActive" edit-mode="vm.editable"><h3>{{ vm.license.isActive ? 'Active' : 'Inactive' }}</h3></view-edit-radios>
@@ -48,22 +48,22 @@
                 </div>
                 <div class="column">
                     <label>Date Effective</label>
-                    <view-edit-text-field ng-model="vm.license.effectiveDate"  edit-mode="vm.editable">Change this to a viewEditDate</view-edit-text-field>
+                    <view-edit-text-field ng-model="vm.license.effectiveDate"  edit-mode="vm.editable">{{ vm.license.effectiveDate }}</view-edit-text-field>
                     <label>Total Contract Term</label>
                     <div class="date-range">
-                        <view-edit-text-field class="start-date" ng-model="vm.license.totalTermStartDate" edit-mode="vm.editable">viewEditDate</view-edit-text-field>
+                        <view-edit-text-field class="start-date" ng-model="vm.license.totalTermStartDate" edit-mode="vm.editable">{{ vm.license.totalTermStartDate }}</view-edit-text-field>
                         <span class="separator"> to </span>
-                        <view-edit-text-field class="end-date" ng-model="vm.license.totalEndStartDate" edit-mode="vm.editable">viewEditDate</view-edit-text-field>
+                        <view-edit-text-field class="end-date" ng-model="vm.license.totalTermEndDate" edit-mode="vm.editable">{{ vm.license.totalTermEndDate }}</view-edit-text-field>
                     </div>
                     <label>Current Term</label>
 
                     <div class="date-range">
-                        <view-edit-text-field class="start-date" ng-model="vm.license.currentTermStartDate" edit-mode="vm.editable">viewEditDate</view-edit-text-field>
+                        <view-edit-text-field class="start-date" ng-model="vm.license.currentTermStartDate" edit-mode="vm.editable">{{ vm.license.totalTermEndDate }}</view-edit-text-field>
                         <span class="separator"> to </span>
-                        <view-edit-text-field class="end-date" ng-model="vm.license.currentEndStartDate" edit-mode="vm.editable">viewEditDate</view-edit-text-field>
+                        <view-edit-text-field class="end-date" ng-model="vm.license.currentTermEndDate" edit-mode="vm.editable">{{ vm.license.currentTermEndDate }}</view-edit-text-field>
                         <label>Remaining Renewals</label>
                     </div>
-                    <view-edit-number-field ng-model="vm.license.remainingRenewals"  edit-mode="vm.editable">{{ vm.license.remainingRenewals }}</view-edit-number-field>
+                    <view-edit-text-field ng-model="vm.license.remainingRenewals"  edit-mode="vm.editable">{{ vm.license.remainingRenewals }}</view-edit-text-field>
 
                     <h2>Specific Terms</h2>
                     <div class="terms-row">
