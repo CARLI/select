@@ -19,7 +19,7 @@ describe('The CarliModules Service', function(){
     }));
 
     it( 'should export the MemoryStore module', inject( function(CarliModules) {
-        expect(CarliModules.MemoryStore).to.be.an('Object');
+        expect(CarliModules.MemoryStore).to.be.a('Function');
     }));
 
 });
