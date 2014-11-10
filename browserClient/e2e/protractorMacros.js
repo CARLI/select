@@ -40,6 +40,20 @@ function setInputValue( elementFinder, value ){
     elementFinder.sendKeys( value );
 }
 
+function setCheckboxValue( elementFinder, newCheckedState ){
+    elementFinder.getAttribute('checked').then( function(checkedState){
+        var checkboxIsChecked = !(checkedState === null);
+
+        // Only click the checkbox if it's already checked and we want it un-checked,
+        // or it's not already checked but it should be.
+        if( checkboxIsChecked && !newCheckedState ||
+           !checkboxIsChecked &&  newCheckedState){
+            elementFinder.click();
+        }
+        // Otherwise it's already in the appropriate state. Leave it alone.
+    });
+}
+
 function setSelectValue( elementFinder, optionText ){
     elementFinder.element(by.cssContainingText('option', optionText)).click();
 }
@@ -118,6 +132,12 @@ function ensureElementHasText( elementFinder, description, testText ) {
 function ensureInputHasValue( elementFinder, description, testValue ) {
     it(description + ' should have value "' + testValue + '"', function(){
        expect(elementFinder.getAttribute('value')).toBe( toString(testValue) );
+    });
+}
+
+function ensureCheckboxIsChecked( elementFinder, description, testValue ) {
+    it(description + ' should ' + (testValue ? '' : 'not') + ' be checked', function(){
+        expect(elementFinder.getAttribute('checked')).toBe( testValue ? 'true' : null );
     });
 }
 
@@ -221,8 +241,7 @@ function setFormElementValue( config, value ){
             setInputValue( elementFinder, value );
             break;
         case 'checkbox':
-            //TODO: setCheckboxValue
-            elementFinder.click();
+            setCheckboxValue( elementFinder, value );
             break;
         case 'select':
             setSelectValue( elementFinder, value );
@@ -244,7 +263,7 @@ function ensureFormElementHasValue( config, value ){
             ensureInputHasValue( elementFinder, config.description, value );
             break;
         case 'checkbox':
-            //TODO: setCheckboxValue
+            ensureCheckboxIsChecked( elementFinder, config.description, value );
             break;
         case 'select':
             ensureSelectHasValue( elementFinder, config.description, value );
