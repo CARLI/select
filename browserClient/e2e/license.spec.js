@@ -181,6 +181,7 @@ var formInputsTestConfig = {
         description: 'Is RFP Type',
         model: 'vm.license.isRfp',
         initialValue: true,
+        initialText: 'Yes',
         editedValue: false
     },
     isSoleSource: {
@@ -188,6 +189,7 @@ var formInputsTestConfig = {
         description: 'Is Sole Source',
         model: 'vm.license.isSoleSource',
         initialValue: false,
+        initialText: 'No',
         editedValue: true
     },
     isSealedBid: {
@@ -195,6 +197,7 @@ var formInputsTestConfig = {
         description: 'Is Sealed Bid',
         model: 'vm.license.isSealedBid',
         initialValue: true,
+        initialText: 'Yes',
         editedValue: false
     },
     isOtherType: {
@@ -202,6 +205,7 @@ var formInputsTestConfig = {
         description: 'Is Other Type',
         model: 'vm.license.isOtherType',
         initialValue: false,
+        initialText: 'No',
         editedValue: true
     },
     otherType: {
@@ -310,7 +314,11 @@ describe('Viewing an existing License in read only mode', function () {
 
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
-        macro.ensureFormElementDisplaysText( config, config.initialValue );
+        value = config.initialText;
+        if (!value) {
+            value = config.initialValue;
+        }
+        macro.ensureFormElementDisplaysText( config, value );
     }
 
 });
