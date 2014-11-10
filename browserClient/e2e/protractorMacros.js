@@ -136,7 +136,7 @@ function ensureInputHasValue( elementFinder, description, testValue ) {
 }
 
 function ensureCheckboxIsChecked( elementFinder, description, testValue ) {
-    it(description + ' should ' + (testValue ? '' : 'not') + ' be checked', function(){
+    it(description + ' should ' + (testValue ? '' : 'not ') + 'be checked', function(){
         expect(elementFinder.getAttribute('checked')).toBe( testValue ? 'true' : null );
     });
 }
