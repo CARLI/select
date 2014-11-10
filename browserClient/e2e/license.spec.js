@@ -91,14 +91,138 @@ var formInputsTestConfig = {
         model: 'vm.license.currentTermEndDate',
         initialValue: 'Current End Date -- will eventually be a viewEditDate',
         editedValue: 'Edited Current End Date'
-    },
+    }, /* -- TODO when we figure out what to do with viewEditNumber
     remainingRenewals: {
         type: 'input',
         description: 'Remaining Renewals',
         model: 'vm.license.remainingRenewals',
         initialValue: '12',
         editedValue: '32'
+    }, */
+    downloadTerms: {
+        type: 'select',
+        description: 'Download Terms',
+        model: 'vm.license.downloadTerms',
+        initialValue: 'Yes',
+        editedValue: 'Other'
+    },
+    coursePacksTerms: {
+        type: 'select',
+        description: 'Course Pack  Terms',
+        model: 'vm.license.coursePacksTerms',
+        initialValue: 'No',
+        editedValue: 'Other'
+    },
+    interLibraryLoanTerms: {
+        type: 'select',
+        description: 'Interlibrary Loan Terms',
+        model: 'vm.license.interLibraryLoanTerms',
+        initialValue: 'Yes',
+        editedValue: 'No'
+    },
+    printTerms: {
+        type: 'select',
+        description: 'Print Terms',
+        model: 'vm.license.printTerms',
+        initialValue: 'No',
+        editedValue: 'Yes'
+    },
+    limitedScholarlySharingTerms: {
+        type: 'select',
+        description: 'Limited Scholarly Sharing Terms',
+        model: 'vm.license.limitedScholarlySharingTerms',
+        initialValue: 'Yes',
+        editedValue: 'Other'
+    },
+    walkinTerms: {
+        type: 'select',
+        description: 'Use by Walkin Terms',
+        model: 'vm.license.walkinTerms',
+        initialValue: 'Other',
+        editedValue: 'No'
+    },
+    eReservesTerms: {
+        type: 'select',
+        description: 'E-Reserve Terms',
+        model: 'vm.license.eReservesTerms',
+        initialValue: 'Other',
+        editedValue: 'Yes'
+    },
+    hasConfidentialityLanguage: {
+        type: 'select',
+        description: 'Has Confidentiality Language',
+        model: 'vm.license.hasConfidentialityLanguage',
+        initialValue: "Yes",
+        editedValue: "No"
+    },
+    purchaseOrderNumber: {
+        type: 'input',
+        description: 'PO Number',
+        model: 'vm.license.purchaseOrderNumber',
+        initialValue: '20,000',
+        editedValue: '30,000'
+    },
+    purchaseOrderAmount: {
+        type: 'input',
+        description: 'PO Amount',
+        model: 'vm.license.purchaseOrderAmount',
+        initialValue: '20,000',
+        editedValue: '30,000'
+    },
+    bannerId: {
+        type: 'input',
+        description: 'Banner ID',
+        model: 'vm.license.bannerId',
+        initialValue: 'Banner ID X',
+        editedValue: 'Banner ID 11343'
+    },
+    isRfp: {
+        type: 'checkbox',
+        description: 'Is RFP Type',
+        model: 'vm.license.isRfp',
+        initialValue: true,
+        editedValue: false
+    },
+    isSoleSource: {
+        type: 'checkbox',
+        description: 'Is Sole Source',
+        model: 'vm.license.isSoleSource',
+        initialValue: false,
+        editedValue: true
+    },
+    isSealedBid: {
+        type: 'checkbox',
+        description: 'Is Sealed Bid',
+        model: 'vm.license.isSealedBid',
+        initialValue: true,
+        editedValue: false
+    },
+    isOtherType: {
+        type: 'checkbox',
+        description: 'Is Other Type',
+        model: 'vm.license.isOtherType',
+        initialValue: false,
+        editedValue: true
+    },
+    otherType: {
+        type: 'input',
+        description: 'Other Type text',
+        model: 'vm.license.otherType',
+        initialValue: 'Other',
+        editedValue: 'Other Other'
+    },
+    offeringType: {
+        type: 'radio',
+        description: 'Offering Type (Product/Service)',
+        model: 'vm.license.offeringType',
+        initialValue: 'Product',
+        editedValue: 'Service',
+        valueToIndex: {
+            'Product': 0,
+            'Service': 1
+        }
     }
+
 };
 
 testLicenseName = formInputsTestConfig.name.initialValue;

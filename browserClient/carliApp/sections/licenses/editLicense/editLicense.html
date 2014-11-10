@@ -58,23 +58,23 @@
                     <label>Current Term</label>
 
                     <div class="date-range">
-                        <view-edit-text-field class="start-date" ng-model="vm.license.currentTermStartDate" edit-mode="vm.editable">{{ vm.license.totalTermEndDate }}</view-edit-text-field>
+                        <view-edit-text-field class="start-date" ng-model="vm.license.currentTermStartDate" edit-mode="vm.editable">{{ vm.license.currentTermStartDate }}</view-edit-text-field>
                         <span class="separator"> to </span>
                         <view-edit-text-field class="end-date" ng-model="vm.license.currentTermEndDate" edit-mode="vm.editable">{{ vm.license.currentTermEndDate }}</view-edit-text-field>
                         <label>Remaining Renewals</label>
                     </div>
-                    <view-edit-text-field ng-model="vm.license.remainingRenewals"  edit-mode="vm.editable">{{ vm.license.remainingRenewals }}</view-edit-text-field>
+                    <view-edit-number-field ng-model="vm.license.remainingRenewals"  edit-mode="vm.editable">{{ vm.license.remainingRenewals }}</view-edit-number-field>
 
                     <h2>Specific Terms</h2>
                     <div class="terms-row">
                         <div class="terms-col">
-                            <label for="downloadTerms">Download</label>
+                            <label>Download</label>
                             <view-edit-select ng-model="vm.license.downloadTerms" items="vm.termOptions" edit-mode="vm.editable">
                                 {{ vm.license.downloadTerms }}
                             </view-edit-select>
                         </div>
                         <div class="terms-col">
-                            <label for="coursePacksTerms">Course Packs</label>
+                            <label>Course Packs</label>
                             <view-edit-select ng-model="vm.license.coursePacksTerms" items="vm.termOptions" edit-mode="vm.editable">
                                 {{ vm.license.coursePacksTerms }}
                             </view-edit-select>
@@ -82,13 +82,13 @@
                     </div>
                     <div class="terms-row">
                         <div class="terms-col">
-                            <label for="downloadTerms">ILL</label>
+                            <label>ILL</label>
                             <view-edit-select ng-model="vm.license.interLibraryLoanTerms" items="vm.termOptions" edit-mode="vm.editable">
                                 {{ vm.license.interLibraryLoanTerms }}
                             </view-edit-select>
                         </div>
                         <div class="terms-col">
-                            <label for="coursePacksTerms">Print (in accordance with the Copyright Act)</label>
+                            <label>Print (in accordance with the Copyright Act)</label>
                             <view-edit-select ng-model="vm.license.printTerms" items="vm.termOptions" edit-mode="vm.editable">
                                 {{ vm.license.printTerms }}
                             </view-edit-select>
@@ -96,13 +96,13 @@
                     </div>
                     <div class="terms-row">
                         <div class="terms-col">
-                            <label for="downloadTerms">Limited Sharing for Scholarly Purposes</label>
+                            <label>Limited Sharing for Scholarly Purposes</label>
                             <view-edit-select ng-model="vm.license.limitedScholarlySharingTerms" items="vm.termOptions" edit-mode="vm.editable">
                                 {{ vm.license.limitedScholarlySharingTerms }}
                             </view-edit-select>
                         </div>
                         <div class="terms-col">
-                            <label for="coursePacksTerms">Use by Walk-ins</label>
+                            <label>Use by Walk-ins</label>
                             <view-edit-select ng-model="vm.license.walkinTerms" items="vm.termOptions" edit-mode="vm.editable">
                                 {{ vm.license.walkinTerms }}
                             </view-edit-select>
@@ -110,13 +110,13 @@
                     </div>
                     <div class="terms-row">
                         <div class="terms-col">
-                            <label for="downloadTerms">E-Reserves</label>
+                            <label>E-Reserves</label>
                             <view-edit-select ng-model="vm.license.eReservesTerms" items="vm.termOptions" edit-mode="vm.editable">
                                 {{ vm.license.eReservesTerms }}
                             </view-edit-select>
                         </div>
                         <div class="terms-col">
-                            <label for="coursePacksTerms">Confidentiality Language</label>
+                            <label>Confidentiality Language</label>
                             <view-edit-select ng-model="vm.license.hasConfidentialityLanguage" items="vm.termOptions" edit-mode="vm.editable">
                                 {{ vm.license.hasConfidentialityLanguage }}
                             </view-edit-select>
@@ -136,16 +136,16 @@
 
                     <h2>Type</h2>
                     <view-edit-checkbox ng-model="vm.license.isRfp" edit-mode="vm.editable" label="'RFP'">
-                        {{ vm.license.isRfp }}
+                        {{ vm.license.isRfp ? 'Yes' : 'No' }}
                     </view-edit-checkbox>
                     <view-edit-checkbox ng-model="vm.license.isSoleSource" edit-mode="vm.editable" label="'Sole Source'">
-                        {{ vm.license.isSoleSource }}
+                        {{ vm.license.isSoleSource ? 'Yes' : 'No' }}
                     </view-edit-checkbox>
                     <view-edit-checkbox ng-model="vm.license.isSealedBid" edit-mode="vm.editable" label="'Sealed Bid'">
-                        {{ vm.license.isSealedBid }}
-                    </view-edit-checkbox>
+                        {{ vm.license.isSealedBid ? 'Yes' : 'No' }}
+                     </view-edit-checkbox>
                     <view-edit-checkbox ng-model="vm.license.isOtherType" edit-mode="vm.editable" label="'Other'">
-                        {{ vm.license.isOtherType }}
+                        {{ vm.license.isOtherType ? 'Yes' : 'No' }}
                     </view-edit-checkbox>
                     <view-edit-text-field ng-model="vm.license.otherType"  edit-mode="vm.editable">{{ vm.license.otherType }}</view-edit-text-field>
 
