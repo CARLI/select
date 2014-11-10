@@ -24,6 +24,12 @@
         margin-top: 22px;
     }
 
+    aside {
+        font-style: italic;
+        font-weight: normal;
+        display: inline-block;
+    }
+
     fieldset {
         @include grid-row();
 

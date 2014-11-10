@@ -7,9 +7,8 @@ function editProductController( $location, $routeParams, productService ) {
 
     vm.toggleEditable = toggleEditable;
     vm.saveProduct = saveProduct;
-    vm.addContact = addContact;
-    vm.deleteContact = deleteContact;
 
+    //TODO: Move to someplace common since it's on Vendor, Library, and Product now
     vm.statusOptions = [
         {
             label: 'Active',
@@ -19,6 +18,35 @@ function editProductController( $location, $routeParams, productService ) {
             label: 'Inactive',
             value: false
         }
+    ];
+
+    //TODO: Move this someplace more common than here (Cycle Service?)
+    vm.cycleOptions = [
+        "Fiscal Year",
+        "Calendar Year",
+        "One-Time Purchases",
+        "Alternative Cycle"
+    ];
+
+    vm.productDetailCodeOptions = [
+        "USIA - Membership",
+        "USIB - Database",
+        "USIE - Misc.",
+        "USIF - I-Share",
+        "USIG - Chronicle of Higher Education",
+        "USIH - OED",
+        "USII - Spring Database",
+        "USIJ - Fall Database",
+        "USIK - SFX",
+        "USIL - SFX",
+        "USIM - I-Share Pre-Pay",
+        "USIN - Database Pre-Pay"
+    ];
+
+    vm.termOptions = [
+        "Yes",
+        "No",
+        "Other"
     ];
 
     activate();
@@ -58,18 +86,5 @@ function editProductController( $location, $routeParams, productService ) {
             productService.create( vm.product );
         }
         $location.path('/product');
-    }
-
-    function addContact(contactType) {
-        vm.product.contacts.push({
-            contactType: contactType
-        });
-    }
-
-    function deleteContact(contact) {
-        var contactIndex = vm.product.contacts.indexOf(contact);
-        if (contactIndex >= 0) {
-            vm.product.contacts.splice(contactIndex, 1);
-        }
     }
 }
