@@ -34,19 +34,19 @@
         },
         "priceList": {
             "type": "array",
-            "items:": {
+            "items": {
                 "$ref": "./price.json"
             }
         },
         "lastYearsPriceList": {
             "type": "array",
-            "items:": {
+            "items": {
                 "$ref": "./price.json"
             }
         },
         "fundings": {
             "type": "array",
-            "items:": {
+            "items": {
                 "$ref": "./funding.json"
             }
         },
@@ -68,7 +68,7 @@
         },
         "librariesThatHavePaidAcf": {
             "type": "array",
-            "items:": {
+            "items": {
                 "$ref": "./Library.json"
             }
         },
