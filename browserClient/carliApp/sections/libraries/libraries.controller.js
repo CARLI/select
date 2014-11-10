@@ -8,7 +8,9 @@ function libraryController( $sce, libraryService ){
     vm.saveAllLibraries = saveAllLibraries;
     vm.closeFteModal = closeFteModal;
 
-    vm.libraryList = libraryService.list();
+    libraryService.list().then( function( libraryList ){
+        vm.libraryList = libraryList;
+    });
 
     vm.entityListColumns = [
         {
