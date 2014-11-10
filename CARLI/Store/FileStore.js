@@ -97,11 +97,13 @@ function listDataFor( type ) {
             deferred.resolve( [] );
         }
         else {
-            var list = [];
+            var promises = [];
             files.forEach( function( id ) {
-                list.push( getDataFor( type, id.slice(0,-5) ) );
+                promises.push( getDataFor( type, id.slice(0,-5) ) );
             } );
-            deferred.resolve( list );  
+            Q.all(promises).then(function (list) {
+                deferred.resolve( list );
+            });
         }
     } );
 

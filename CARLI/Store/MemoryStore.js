@@ -38,11 +38,13 @@ function storeData( data ) {
 
 function listDataFor( type ) {
     var deferred = Q.defer();
-    var objects = [];
+    var promises = [];
     for( id in memoryStore[ type ] ) {
-        objects.push( getDataFor( type, id ) );
+        promises.push( getDataFor( type, id ) );
     };
-    deferred.resolve( objects );
+    Q.all(promises).then (function (objects) {
+        deferred.resolve( objects );
+    });
     return deferred.promise;
 }
 
