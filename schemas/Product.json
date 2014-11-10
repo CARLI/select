@@ -11,9 +11,6 @@
             "description": "Name of the product",
             "type": "string"
         },
-        "cycleType": {
-            "$ref": "./CycleType.json"
-        },
         "vendor": {
             "$ref": "./Vendor.json"
         },
@@ -25,6 +22,15 @@
         },
         "comments": {
             "type": "string"
+        },
+        "isThirdPartyProduct": {
+            "type": "boolean"
+        },
+        "hasArchiveCapitalFee": {
+            "type": "boolean"
+        },
+        "cycleType": {
+            "$ref": "./CycleType.json"
         },
         "priceList": {
             "type": "array",
@@ -54,18 +60,11 @@
             "description": "Terms of the license that this Product overrides",
             "$ref": "./LicenseTerms.json"
         },
-
         "priceCap": {
             "$ref": "./PriceCap.json"
         },
         "detailCode": {
             "$ref": "./product-detail-code.json"
-        },
-        "isThirdPartyProduct": {
-            "type": "boolean"
-        },
-        "hasArchiveCapitalFee": {
-            "type": "boolean"
         },
         "librariesThatHavePaidAcf": {
             "type": "array",
