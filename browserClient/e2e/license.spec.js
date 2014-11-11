@@ -181,36 +181,36 @@ var formInputsTestConfig = {
         description: 'Is RFP Type',
         model: 'vm.license.isRfp',
         initialValue: true,
-        initialText: 'Yes',
+        initialText: 'RFP: Yes',
         editedValue: false,
-        editedText: 'No'
+        editedText: 'RFP: No'
     },
     isSoleSource: {
         type: 'checkbox',
         description: 'Is Sole Source',
         model: 'vm.license.isSoleSource',
         initialValue: false,
-        initialText: 'No',
+        initialText: 'Sole Source: No',
         editedValue: true,
-        editedText: 'Yes'
+        editedText: 'Sole Source: Yes'
     },
     isSealedBid: {
         type: 'checkbox',
         description: 'Is Sealed Bid',
         model: 'vm.license.isSealedBid',
         initialValue: true,
-        initialText: 'Yes',
+        initialText: 'Sealed Bid: Yes',
         editedValue: false,
-        editedText: 'No'
+        editedText: 'Sealed Bid: No'
     },
     isOtherType: {
         type: 'checkbox',
         description: 'Is Other Type',
         model: 'vm.license.isOtherType',
         initialValue: false,
-        initialText: 'No',
+        initialText: 'Other: No',
         editedValue: true,
-        editedText: 'Yes'
+        editedText: 'Other: Yes'
     },
     otherType: {
         type: 'input',
