@@ -93,7 +93,11 @@ function listDataFor( type ) {
                 deferred.reject( error );
             }
             else {
-                deferred.resolve( data.rows );
+                var results = [];
+                data.rows.forEach( function( row ) {
+                    results.push( row.value );
+                } );
+                deferred.resolve( results );
             }
         }
     );
