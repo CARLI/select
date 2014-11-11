@@ -70,9 +70,9 @@ function test( entityTypeName, validData, invalidData ) {
 
             it( 'should use an id if provided', function() {
                 var entityData = validData();
-                entityData.id = 'foo';
+                entityData.id = uuid.v4();
                 return EntityRepository.create( entityData ).then( function ( entity ) {
-                    expect( entity.id ).to.equal('foo');
+                    expect( entity.id ).to.equal( entityData.id );
                 } );
             } );
 
@@ -158,7 +158,7 @@ function test( entityTypeName, validData, invalidData ) {
                     return EntityRepository.update( entity );
                 } )
                 .then ( function ( entity ) {
-                    return expect( EntityRepository.load( entity.id ) ).to.eventually.deep.equal( entity );
+                    return expect( EntityRepository.load( entity.id ) ).to.eventually.deep.have.property( 'foo', 'new value' );
                 } );
             } );
 

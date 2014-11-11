@@ -9,9 +9,11 @@ describe('The Edit Vendor Controller', function(){
         createOrUpdate: 'neither',
         create: function(){
             this.createOrUpdate = 'create';
+            return { then: function(callback) { callback(); } };
         },
         update: function(){
             this.createOrUpdate = 'update';
+            return { then: function(callback) { callback(); } };
         },
         load: function(){
             return {
@@ -74,16 +76,16 @@ describe('The Edit Vendor Controller', function(){
 
     it('should call vendorService.create when saving a new Vendor', inject(function($controller){
         var editCtrl = $controller('editVendorController', mockDependenciesForNewVendor);
-        expect( mockDependenciesForNewVendor.alertService.alertCount ).to.equal( 0 );
+        expect( mockDependenciesForNewVendor.vendorService.createOrUpdate ).to.equal('neither');
         editCtrl.saveVendor();
-        expect( mockDependenciesForNewVendor.alertService.alertCount ).to.equal( 1 );
+        expect( mockDependenciesForNewVendor.vendorService.createOrUpdate ).to.equal('create');
     }));
 
     it('should add an alert when saving a new Vendor', inject(function($controller){
         var editCtrl = $controller('editVendorController', mockDependenciesForNewVendor);
-        expect( mockDependenciesForNewVendor.vendorService.createOrUpdate ).to.equal('neither');
+        expect( mockDependenciesForNewVendor.alertService.alertCount ).to.equal( 0 );
         editCtrl.saveVendor();
-        expect( mockDependenciesForNewVendor.vendorService.createOrUpdate ).to.equal('create');
+        expect( mockDependenciesForNewVendor.alertService.alertCount ).to.equal( 1 );
     }));
 
     it('should have a known, non-editable Vendor on the Edit Vendor screen', inject(function($controller){

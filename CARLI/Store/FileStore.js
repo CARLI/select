@@ -71,6 +71,10 @@ function _ensureStoreTypeExists( type ) {
     };
 }
 
+function _cloneData( data ) {
+    return JSON.parse( JSON.stringify( data ) );
+}
+
 function storeData( data ) {
     _ensureStoreTypeExists( data.type );
 
@@ -82,7 +86,7 @@ function storeData( data ) {
         function( err ) {
             err
                 ? deferred.reject()
-                : deferred.resolve( data.id );
+                : deferred.resolve( _cloneData( data ) );
         }
     ); 
 
@@ -97,11 +101,13 @@ function listDataFor( type ) {
             deferred.resolve( [] );
         }
         else {
-            var list = [];
+            var promises = [];
             files.forEach( function( id ) {
-                list.push( getDataFor( type, id.slice(0,-5) ) );
+                promises.push( getDataFor( type, id.slice(0,-5) ) );
             } );
-            deferred.resolve( list );  
+            Q.all(promises).then(function (list) {
+                deferred.resolve( list );
+            });
         }
     } );
 

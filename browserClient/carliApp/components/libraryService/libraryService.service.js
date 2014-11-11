@@ -1,11 +1,11 @@
 angular.module('carli.libraryService')
     .service('libraryService', libraryService);
 
-function libraryService( CarliModules ) {
+function libraryService( CarliModules, $q ) {
 
     var libraryModule = CarliModules.Library;
 
-    var libraryStore = CarliModules.Store( CarliModules.MemoryStore );
+    var libraryStore = CarliModules.Store( CarliModules.MemoryStore({}) );
 
     libraryModule.setStore( libraryStore );
 
@@ -27,10 +27,10 @@ function libraryService( CarliModules ) {
 
 
     return {
-        list: libraryModule.list,
-        create: libraryModule.create,
-        update: libraryModule.update,
-        load: libraryModule.load,
+        list:   function() { return $q.when( libraryModule.list() ); },
+        create: function() { return $q.when( libraryModule.create.apply( this, arguments) ); },
+        update: function() { return $q.when( libraryModule.update.apply( this, arguments) ); },
+        load:   function() { return $q.when( libraryModule.load.apply( this, arguments) ); },
 
         getMostRecentFteUpdateDate: function() {
             return "Jan 1, 1970";

@@ -6,7 +6,9 @@ function vendorController( $sce, vendorService ){
     activate();
 
     function activate() {
-        vm.vendorList = vendorService.list();
+        vendorService.list().then( function(vendorList){
+            vm.vendorList = vendorList;
+        });
     }
 
     vm.vendorListColumns = [

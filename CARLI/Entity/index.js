@@ -1,6 +1,7 @@
 var uuid  = require( 'node-uuid' )
   , tv4   = require( 'tv4' )
   , Validator = require( '../Validator' )
+  , Q = require( 'q' )
 ;
 
 var dataStore;
@@ -46,8 +47,8 @@ module.exports = function (type) {
             .then( function() {
                 return dataStore.save( data )
             } )
-            .then( function( id ) {
-                deferred.resolve( _cloneData( data ) );
+            .then( function( savedData ) {
+                deferred.resolve( _cloneData( savedData ) );
             } )
             .catch( function( err ) {
                 deferred.reject( err );
@@ -62,8 +63,8 @@ module.exports = function (type) {
             .then( function() {
                 return dataStore.save( data )
             } )
-            .then( function( id ) {
-                deferred.resolve( _cloneData( data ) );
+            .then( function( savedData ) {
+                deferred.resolve( _cloneData( savedData ) );
             } )
             .catch( function( err ) {
                 deferred.reject( err );

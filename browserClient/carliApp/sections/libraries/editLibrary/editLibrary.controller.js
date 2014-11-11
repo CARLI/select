@@ -1,7 +1,7 @@
 angular.module('carli.sections.libraries.edit')
     .controller('editLibraryController', editLibraryController);
 
-function editLibraryController( $location, $routeParams, libraryService ) {
+function editLibraryController( $location, $routeParams, libraryService, alertService ) {
     var vm = this;
     var libraryId = $routeParams.id;
 
@@ -51,7 +51,9 @@ function editLibraryController( $location, $routeParams, libraryService ) {
     }
  
     function initializeForExistingLibrary() {
-        vm.library = libraryService.load(libraryId);
+        libraryService.load(libraryId).then( function( library ) {
+          vm.library = library;
+        } );
         vm.editable = false;
         vm.newLibrary = false;
     }
@@ -62,12 +64,17 @@ function editLibraryController( $location, $routeParams, libraryService ) {
 
     function saveLibrary(){
         if ( libraryId !== 'new' ){
-            libraryService.update( vm.library );
+            libraryService.update( vm.library ).then(function(){
+                alertService.putAlert('Library updated', {severity: 'success'});
+                $location.path('/library');
+            });
         }
         else {
-            libraryService.create( vm.library );
+            libraryService.create( vm.library ).then(function(){
+                alertService.putAlert('Library created', {severity: 'success'});
+                $location.path('/library');
+            });
         }
-        $location.path('/library');
     }
 
     function addContact(contactType) {

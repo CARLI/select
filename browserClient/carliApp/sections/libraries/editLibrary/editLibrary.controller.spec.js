@@ -9,9 +9,11 @@ describe('The Edit Library Controller', function(){
         createOrUpdate: 'neither',
         create: function(){
             this.createOrUpdate = 'create';
+            return { then: function() { } };
         },
         update: function(){
             this.createOrUpdate = 'update';
+            return { then: function() { } };
         },
         load: function(){
             return {
