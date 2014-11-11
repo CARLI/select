@@ -47,8 +47,8 @@ module.exports = function (type) {
             .then( function() {
                 return dataStore.save( data )
             } )
-            .then( function( id ) {
-                deferred.resolve( _cloneData( data ) );
+            .then( function( savedData ) {
+                deferred.resolve( _cloneData( savedData ) );
             } )
             .catch( function( err ) {
                 deferred.reject( err );
@@ -63,8 +63,8 @@ module.exports = function (type) {
             .then( function() {
                 return dataStore.save( data )
             } )
-            .then( function( id ) {
-                deferred.resolve( _cloneData( data ) );
+            .then( function( savedData ) {
+                deferred.resolve( _cloneData( savedData ) );
             } )
             .catch( function( err ) {
                 deferred.reject( err );

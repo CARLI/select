@@ -70,12 +70,13 @@ function storeData( data ) {
       json: data,
       method: "PUT"
     }, function( err, response, body ) {
+        data._rev = body.rev;
         var error = err || body.error;
         if( error ) {
             deferred.reject( error );
         }
         else {
-            deferred.resolve( body );
+            deferred.resolve( data );
         }
     } );
 

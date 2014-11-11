@@ -108,17 +108,18 @@ function test( storeTypeName, options ) {
             } );
 
             it( 'should return stored data for id', function() {
-                return expect( DataStore.get( { id: simpleObjectSaveId, type: simpleObject.type } ) ).to.eventually.deep.equal( simpleObject );
+                return expect( DataStore.get( { id: simpleObjectSaveId, type: simpleObject.type } ) ).to.eventually.deep.have.deep.property( 'id', simpleObject.id );
             } );
 
             it( 'should save the data under id if id property is set', function() {
-                return expect( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.eventually.deep.equal( objectWithId );
+                return expect( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.eventually.have.deep.property( 'id', objectWithIdSaveId );
             } );
 
             it( 'should update the store if called with the same id', function(){
                 objectWithId.foo = 'new value';
-                DataStore.save( objectWithId );
-                expect( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.eventually.deep.equal( objectWithId );
+                return DataStore.save( objectWithId ).then( function() {
+                    return expect( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.eventually.have.deep.property( 'id', objectWithIdSaveId );
+                } );
             } );
 
             it( "shouldn't update the store because of an object reference bug", function() {

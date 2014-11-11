@@ -2,7 +2,7 @@ var chai   = require( 'chai' )
   , expect = chai.expect
   , uuid   = require( 'node-uuid' )
   , Store = require( '../../Store' )
-  , MemoryStore = require('../../Store/CouchDbStore')()
+  , MemoryStore = require('../../Store/MemoryStore')()
   , chaiAsPromised = require( 'chai-as-promised' )
   , Q     = require( 'q' )
 ;
@@ -158,7 +158,7 @@ function test( entityTypeName, validData, invalidData ) {
                     return EntityRepository.update( entity );
                 } )
                 .then ( function ( entity ) {
-                    return expect( EntityRepository.load( entity.id ) ).to.eventually.deep.equal( entity );
+                    return expect( EntityRepository.load( entity.id ) ).to.eventually.deep.have.property( 'foo', 'new value' );
                 } );
             } );
 
