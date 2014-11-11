@@ -182,7 +182,8 @@ var formInputsTestConfig = {
         model: 'vm.license.isRfp',
         initialValue: true,
         initialText: 'Yes',
-        editedValue: false
+        editedValue: false,
+        editedText: 'No'
     },
     isSoleSource: {
         type: 'checkbox',
@@ -190,7 +191,8 @@ var formInputsTestConfig = {
         model: 'vm.license.isSoleSource',
         initialValue: false,
         initialText: 'No',
-        editedValue: true
+        editedValue: true,
+        editedText: 'Yes'
     },
     isSealedBid: {
         type: 'checkbox',
@@ -198,7 +200,8 @@ var formInputsTestConfig = {
         model: 'vm.license.isSealedBid',
         initialValue: true,
         initialText: 'Yes',
-        editedValue: false
+        editedValue: false,
+        editedText: 'No'
     },
     isOtherType: {
         type: 'checkbox',
@@ -206,7 +209,8 @@ var formInputsTestConfig = {
         model: 'vm.license.isOtherType',
         initialValue: false,
         initialText: 'No',
-        editedValue: true
+        editedValue: true,
+        editedText: 'Yes'
     },
     otherType: {
         type: 'input',
@@ -377,6 +381,7 @@ describe('Making changes to an existing License', function(){
 
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
-        macro.ensureFormElementDisplaysText( config, config.editedValue );
+        var value = config.editedText || config.editedValue;
+        macro.ensureFormElementDisplaysText( config, value );
     }
 });
