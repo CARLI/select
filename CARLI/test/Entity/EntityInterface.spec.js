@@ -2,7 +2,7 @@ var chai   = require( 'chai' )
   , expect = chai.expect
   , uuid   = require( 'node-uuid' )
   , Store = require( '../../Store' )
-  , MemoryStore = require('../../Store/MemoryStore')()
+  , MemoryStore = require('../../Store/CouchDbStore')()
   , chaiAsPromised = require( 'chai-as-promised' )
   , Q     = require( 'q' )
 ;
@@ -70,9 +70,9 @@ function test( entityTypeName, validData, invalidData ) {
 
             it( 'should use an id if provided', function() {
                 var entityData = validData();
-                entityData.id = 'foo';
+                entityData.id = uuid.v4();
                 return EntityRepository.create( entityData ).then( function ( entity ) {
-                    expect( entity.id ).to.equal('foo');
+                    expect( entity.id ).to.equal( entityData.id );
                 } );
             } );
 
