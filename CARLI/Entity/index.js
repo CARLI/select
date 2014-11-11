@@ -1,6 +1,7 @@
 var uuid  = require( 'node-uuid' )
   , tv4   = require( 'tv4' )
   , Validator = require( '../Validator' )
+  , Q = require( 'q' )
 ;
 
 var dataStore;
