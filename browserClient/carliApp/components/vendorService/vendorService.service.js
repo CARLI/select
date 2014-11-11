@@ -1,7 +1,7 @@
 angular.module('carli.vendorService')
     .service('vendorService', vendorService);
 
-function vendorService( CarliModules ) {
+function vendorService( CarliModules, $q ) {
 
     var vendorModule = CarliModules.Vendor;
 
@@ -27,9 +27,9 @@ function vendorService( CarliModules ) {
 
 
     return {
-        list: vendorModule.list,
-        create: vendorModule.create,
-        update: vendorModule.update,
-        load: vendorModule.load
+        list:   function() { $q.when( vendorModule.list() ); },
+        create: function() { $q.when( vendorModule.create() ); },
+        update: function() { $q.when( vendorModule.update() ); },
+        load:   function() { $q.when( vendorModule.load() ); }
     };
 }
