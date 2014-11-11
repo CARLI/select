@@ -136,16 +136,16 @@
 
                     <h2>Type</h2>
                     <view-edit-checkbox ng-model="vm.license.isRfp" edit-mode="vm.editable" label="'RFP'">
-                        {{ vm.license.isRfp ? 'Yes' : 'No' }}
+                        RFP: {{ vm.license.isRfp ? 'Yes' : 'No' }}
                     </view-edit-checkbox>
                     <view-edit-checkbox ng-model="vm.license.isSoleSource" edit-mode="vm.editable" label="'Sole Source'">
-                        {{ vm.license.isSoleSource ? 'Yes' : 'No' }}
+                        Sole Source: {{ vm.license.isSoleSource ? 'Yes' : 'No' }}
                     </view-edit-checkbox>
                     <view-edit-checkbox ng-model="vm.license.isSealedBid" edit-mode="vm.editable" label="'Sealed Bid'">
-                        {{ vm.license.isSealedBid ? 'Yes' : 'No' }}
+                        Sealed Bid: {{ vm.license.isSealedBid ? 'Yes' : 'No' }}
                      </view-edit-checkbox>
                     <view-edit-checkbox ng-model="vm.license.isOtherType" edit-mode="vm.editable" label="'Other'">
-                        {{ vm.license.isOtherType ? 'Yes' : 'No' }}
+                        Other: {{ vm.license.isOtherType ? 'Yes' : 'No' }}
                     </view-edit-checkbox>
                     <view-edit-text-field ng-model="vm.license.otherType"  edit-mode="vm.editable">{{ vm.license.otherType }}</view-edit-text-field>
 
