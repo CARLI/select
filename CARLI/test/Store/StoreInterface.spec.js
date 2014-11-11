@@ -53,7 +53,7 @@ function test( storeTypeName, options ) {
 
             it( 'should save data and return id', function() {
                 var id = uuid.v4();
-                return expect( DataStore.save( { id: id, type: 'testy' } ) ).to.eventually.equal( id );
+                return expect( DataStore.save( { id: id, type: 'testy' } ) ).to.eventually.have.deep.property( 'id', id );
             } );
 
         } );
@@ -81,8 +81,8 @@ function test( storeTypeName, options ) {
                     DataStore.save( simpleObject ),
                     DataStore.save( objectWithId )
                 ]).then( function( ids ) {
-                    simpleObjectSaveId = ids[0];
-                    objectWithIdSaveId = ids[1];
+                    simpleObjectSaveId = ids[0].id;
+                    objectWithIdSaveId = ids[1].id;
                     done();
                 } );
             } );
@@ -222,8 +222,8 @@ function test( storeTypeName, options ) {
             object.type = uuid.v4();
 
             before( function( done ) {
-                DataStore.save( object ).then( function ( id ) {
-                    object.id = id;
+                DataStore.save( object ).then( function ( result ) {
+                    object.id = result.id;
                     done();
                 } );
             } );
@@ -251,15 +251,15 @@ function test( storeTypeName, options ) {
             } );
 
             it('should delete a valid object', function () {
-                return expect(DataStore.get(object)).to.be.fulfilled
+                return expect( DataStore.get(object) ).to.be.fulfilled
                 .then(function () {
-                    return expect(DataStore.delete(object)).to.be.fulfilled;
+                    return expect( DataStore.delete(object) ).to.be.fulfilled;
                 })
                 .then(function () {
-                    return expect(DataStore.get(object)).to.be.rejected;
+                    return expect( DataStore.get(object) ).to.be.rejected;
                 })
                 .then(function () {
-                    return expect(DataStore.list(objectType)).to.eventually.be.an('Array').of.length(0)
+                    return expect( DataStore.list(objectType) ).to.eventually.be.an('Array').of.length(0)
                 });
             });
         } );

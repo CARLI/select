@@ -28,11 +28,15 @@ function _ensureStoreTypeExists( type ) {
     memoryStore[type] = memoryStore[type] || {};
 }
 
+function _cloneData( data ) {
+    return JSON.parse( JSON.stringify( data ) );
+}
+
 function storeData( data ) {
     _ensureStoreTypeExists( data.type );
     var deferred = Q.defer();
     memoryStore[ data.type ][ data.id ] = data;
-    deferred.resolve( data.id );
+    deferred.resolve( JSON.parse( JSON.stringify( data ) ) );
     return deferred.promise;
 }
 

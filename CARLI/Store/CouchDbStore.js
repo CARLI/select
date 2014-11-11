@@ -3,6 +3,10 @@ var Q = require('q')
   , db_host = 'http://localhost:5984/testy'
 ;
 
+function _cloneData( data ) {
+    return JSON.parse( JSON.stringify( data ) );
+};
+
 function typeExistsInStore( type ) {
     var deferred = Q.defer();
     request({ url: db_host + '/' + '_design/CARLI/_view/doc_types?group=true' },
@@ -71,7 +75,7 @@ function storeData( data ) {
             deferred.reject( error );
         }
         else {
-            deferred.resolve( data.id );
+            deferred.resolve( body );
         }
     } );
 
