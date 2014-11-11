@@ -27,9 +27,9 @@ function vendorService( CarliModules, $q ) {
 
 
     return {
-        list:   function() { $q.when( vendorModule.list() ); },
-        create: function() { $q.when( vendorModule.create() ); },
-        update: function() { $q.when( vendorModule.update() ); },
-        load:   function() { $q.when( vendorModule.load() ); }
+        list:   function() { return $q.when( vendorModule.list() ); },
+        create: function() { return $q.when( vendorModule.create.apply(this, arguments) ); },
+        update: function() { return $q.when( vendorModule.update.apply(this, arguments) ); },
+        load:   function() { return $q.when( vendorModule.load.apply(this, arguments) ); }
     };
 }

@@ -51,7 +51,9 @@ function editLibraryController( $location, $routeParams, libraryService, alertSe
     }
  
     function initializeForExistingLibrary() {
-        vm.library = libraryService.load(libraryId);
+        libraryService.load(libraryId).then( function( library ) {
+          vm.library = library;
+        } );
         vm.editable = false;
         vm.newLibrary = false;
     }

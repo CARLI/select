@@ -45,7 +45,9 @@ function editVendorController( $location, $routeParams, vendorService, alertServ
         vm.newVendor = true;
     }
     function initializeForExistingVendor() {
-        vm.vendor = vendorService.load(vendorId);
+        vendorService.load(vendorId).then( function( vendor ) {
+            vm.vendor = vendor;
+        } );
         vm.editable = false;
         vm.newVendor = false;
     }
