@@ -27,11 +27,11 @@ function editLicenseController( $location, $routeParams, licenseService ) {
     vm.offeringTypeOptions = [
         {
             label: 'Product',
-            value: 'Product'
+            value: "'Product'"
         },
         {
             label: 'Service',
-            value: 'Service'
+            value: "'Service'"
         }
     ];
 
@@ -49,6 +49,7 @@ function editLicenseController( $location, $routeParams, licenseService ) {
         vm.license = {
             type: 'License',
             isActive: true,
+            offeringType: 'Product',
             contacts: []
         };
         vm.editable = true;
