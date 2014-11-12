@@ -1,1 +1,8 @@
 <h1>One-Time Purchases</h1>
+
+<div collapsible ng-repeat="library in vm.libraryList" class="collapsed">
+    <header>{{ library.name }}, FTE:{{ library.fte }}, Type: {{ library.institutionType }} </header>
+    <div class="content">
+        <!-- PRODUCTS HERE -->
+    </div>
+</div>
