@@ -139,6 +139,7 @@ section.content {
 }
 
 @import "editForm";
+
 @import "carliApp/components/alerts/alerts";
 @import "carliApp/components/buttons/buttons";
 @import "carliApp/components/carliHeader/carliHeader";
@@ -147,6 +148,8 @@ section.content {
 @import "carliApp/components/navBar/navBar";
 @import "carliApp/components/viewEditDirectives/viewEditRadios/viewEditRadios";
 @import "carliApp/components/viewEditDirectives/viewEditContact/viewEditContact";
+
 @import "carliApp/sections/libraries/libraries";
+@import "carliApp/sections/licenses/licenses";
 @import "carliApp/sections/vendors/vendors";
 @import "carliApp/sections/styleGuide/styleGuide";

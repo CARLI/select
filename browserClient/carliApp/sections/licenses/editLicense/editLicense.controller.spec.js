@@ -1,0 +1,111 @@
+
+describe('The Edit License Controller', function(){
+
+    var mockLocation = {
+        path: function(){}
+    };
+
+    var mockLicenseService = {
+        createOrUpdate: 'neither',
+        create: function(){
+            this.createOrUpdate = 'create';
+        },
+        update: function(){
+            this.createOrUpdate = 'update';
+        },
+        load: function(){
+            return {
+                name: 'Test License',
+                "contacts": [
+                    {
+                        "contactType": "Billing",
+                        "name": "Bob Martin",
+                        "email": "bob@cleancode.org",
+                        "phoneNumber": "123-555-1234"
+                    }
+                ]
+            };
+        },
+        reset: function(){
+            this.createOrUpdate = 'neither';
+        }
+    };
+
+    var mockDependenciesForNewLicense = {
+        $location: mockLocation,
+        $routeParams: {
+            id: 'new'
+        },
+        licenseService: mockLicenseService
+    };
+
+    var mockDependenciesForEditLicense = {
+        $location: mockLocation,
+        $routeParams: {
+            id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+        },
+        licenseService: mockLicenseService
+    };
+
+    beforeEach(module('carli.sections.licenses.edit'));
+    afterEach(function(){
+        mockLicenseService.reset();
+    });
+
+    it('should have a default, editable License on the New License screen', inject(function($controller){
+        var editCtrl = $controller('editLicenseController', mockDependenciesForNewLicense);
+        expect( editCtrl.license.isActive ).to.equal(true);
+        expect( editCtrl.editable ).to.equal(true);
+        expect( editCtrl.newLicense ).to.equal(true);
+    }));
+
+    it('should call licenseService.create when saving a new License', inject(function($controller){
+        var editCtrl = $controller('editLicenseController', mockDependenciesForNewLicense);
+        expect( mockDependenciesForNewLicense.licenseService.createOrUpdate ).to.equal('neither');
+        editCtrl.saveLicense();
+        expect( mockDependenciesForNewLicense.licenseService.createOrUpdate ).to.equal('create');
+    }));
+
+    it('should have a known, non-editable License on the Edit License screen', inject(function($controller){
+        var editCtrl = $controller('editLicenseController', mockDependenciesForEditLicense);
+        expect( editCtrl.license.name ).to.equal('Test License');
+        expect( editCtrl.editable ).to.equal(false);
+        expect( editCtrl.newLicense ).to.equal(false);
+    }));
+
+    it('should call licenseService.update when saving an existing License', inject(function($controller){
+        var editCtrl = $controller('editLicenseController', mockDependenciesForEditLicense);
+        expect( mockDependenciesForEditLicense.licenseService.createOrUpdate ).to.equal('neither');
+        editCtrl.saveLicense();
+        expect( mockDependenciesForEditLicense.licenseService.createOrUpdate ).to.equal('update');
+    }));
+
+    it('should toggle the editable variable when calling toggleEditable()', inject(function($controller){
+        var editCtrl = $controller('editLicenseController', mockDependenciesForEditLicense);
+        expect( editCtrl.editable ).to.equal(false);
+        editCtrl.toggleEditable();
+        expect( editCtrl.editable ).to.equal(true);
+    }));
+
+    it('should be able to delete the first Billing contact', inject(function($controller) {
+        var editCtrl = $controller('editLicenseController', mockDependenciesForEditLicense);
+        var contacts = editCtrl.license.contacts;
+        var firstBillingContact = findFirstBillingContact(contacts);
+        var initialLength = contacts.length;
+
+        editCtrl.deleteContact(firstBillingContact);
+        expect( contacts.length ).to.equal(initialLength - 1);
+    }));
+
+});
+
+function findFirstBillingContact(contacts) {
+    var firstBillingContact = null;
+    for (var i = 0; i < contacts.length; i++) {
+        if (contacts[i].contactType === 'Billing') {
+            firstBillingContact = contacts[i];
+            break;
+        }
+    }
+    return firstBillingContact;
+}

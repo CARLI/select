@@ -1,0 +1,141 @@
+{
+    "$schema": "json-schema.org/draft-04/schema",
+    "title": "License",
+    "schemaType": "License",
+    "type": "object",
+    "properties": {
+        "id": {
+            "description": "Unique identifier for the License record",
+            "type": "string"
+        },
+        "name": {
+            "description": "Name of License Agreement",
+            "type": "string"
+        },
+        "vendor": {
+            "description": "The Vendor associated with this License",
+            "$ref": "./Vendor.json"
+        },
+        "contractNumber": {
+            "description": "Name of License Agreement",
+            "type": "string"
+        },
+        "redactedLicenseFile": {
+            "description": "Redacted License File",
+            "type": "string"
+        },
+        "fullLicenseFile": {
+            "description": "Full License File",
+            "type": "string"
+        },
+        "eResourcesComments": {
+            "description": "Internal E-Resource Comments",
+            "type": "string"
+        },
+        "businessComments": {
+            "description": "Internal Business Services Comments",
+            "type": "string"
+        },
+        "isActive": {
+            "description": "Is this license active?",
+            "type": "boolean"
+        },
+        "effectiveDate": {
+            "description": "Effective date of License",
+            "$ref": "./Date.json"
+        },
+        "totalTermStartDate": {
+            "description": "Start date of license total term",
+            "$ref": "./Date.json"
+        },
+        "totalTermEndDate": {
+            "description": "End date of license total term",
+            "$ref": "./Date.json"
+        },
+        "currentTermStartDate": {
+            "description": "Start date of license current term",
+            "$ref": "./Date.json"
+        },
+        "currentTermEndDate": {
+            "description": "End date of license current term",
+            "$ref": "./Date.json"
+        },
+        "remainingRenewals": {
+            "description": "Number of renewals remaining in contract",
+            "type": "integer"
+        },
+        "downloadTerms": {
+            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
+            "type": "string"
+        },
+        "coursePacksTerms": {
+            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
+            "type": "string"
+        },
+        "interLibraryLoanTerms": {
+            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
+            "type": "string"
+        },
+        "printTerms": {
+            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
+            "type": "string"
+        },
+        "limitedScholarlySharingTerms": {
+            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
+            "type": "string"
+        },
+        "walkinTerms": {
+            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
+            "type": "string"
+        },
+        "eReservesTerms": {
+            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
+            "type": "string"
+        },
+        "hasConfidentialityTerms": {
+            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
+            "type": "string"
+        },
+        "purchaseOrderNumber": {
+            "description": "Purchase Order Number",
+            "type": "string"
+        },
+        "purchaseOrderAmount": {
+            "description": "Purchase Order Amount",
+            "type": "string"
+        },
+        "purchaseOrderBalance": {
+            "description": "Purchase Order Balance",
+            "type": "string"
+        },
+        "bannerId": {
+            "description": "Banner ID",
+            "type": "string"
+        },
+        "isRfp": {
+            "description": "Is this a request for proposal?",
+            "type": "boolean"
+        },
+        "isSoleSource": {
+            "description": "Is this a sole source license?",
+            "type": "boolean"
+        },
+        "isSealedBid": {
+            "description": "Is this a sealed bid license?",
+            "type": "boolean"
+        },
+        "isOtherType": {
+            "description": "Is this another type of license?",
+            "type": "boolean"
+        },
+        "otherType": {
+            "description": "The other type of license this is",
+            "type": "string"
+        },
+        "offeringType": {
+            "description": "Type of offering, e.g. product or service",
+            "type": "string"
+        }
+    },
+    "required": [ "name" ]
+}

@@ -1,0 +1,167 @@
+<section id="licenses">
+
+    <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="licenseForm" ng-submit="vm.saveLicense()">
+
+        <header class="page-header">
+            <h1 ng-show="vm.newLicense">New License</h1>
+
+            <div class="name">
+                <label for="licenseName">License Name</label>
+                <view-edit-text-field ng-model="vm.license.name" edit-mode="vm.editable"><h1>{{ vm.license.name }}</h1>
+                </view-edit-text-field>
+            </div>
+
+            <div ng-show="!vm.newLicense" class="edit-buttons pull-right">
+                <div ng-show="vm.editable">
+                    <a class="carli-button cancel-button" href="/license">Cancel</a>
+                    <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit">
+                </div>
+
+                <div id="license-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></div>
+            </div>
+        </header>
+
+        <section class="content">
+            <fieldset>
+                <div class="column">
+                    <label>Vendor</label>
+                    <view-edit-text-field ng-model="vm.license.vendor.name"  edit-mode="vm.editable">{{ vm.license.vendor.name }}</view-edit-text-field>
+
+                    <label>Contract Number</label>
+                    <view-edit-text-field ng-model="vm.license.contractNumber"  edit-mode="vm.editable">{{ vm.license.contractNumber }}</view-edit-text-field>
+
+                    <label>Redacted License</label>
+                    <view-edit-text-field ng-model="vm.license.redactedLicenseFile"  edit-mode="vm.editable">{{ vm.license.redactedLicenseFile }}</view-edit-text-field>
+
+                    <label>Full License</label>
+                    <view-edit-text-field ng-model="vm.license.fullLicenseFile"  edit-mode="vm.editable">{{ vm.license.fullLicenseFile }}</view-edit-text-field>
+
+                    <label for="eResourceComments">Internal E-Resource Comments</label>
+                    <view-edit-text-area class="e-resource-comments" ng-model="vm.license.eResourceComments" edit-mode="vm.editable">{{ vm.license.eResourceComments }}</view-edit-text-area>
+
+                    <label for="businessComments">Internal Business Services Comments</label>
+                    <view-edit-text-area class="business-comments" ng-model="vm.license.businessComments" edit-mode="vm.editable">{{ vm.license.businessComments }}</view-edit-text-area>
+
+                    <label for="vendorStatus">Status</label>
+                    <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.license.isActive" edit-mode="vm.editable"><h3>{{ vm.license.isActive ? 'Active' : 'Inactive' }}</h3></view-edit-radios>
+
+                </div>
+                <div class="column">
+                    <label>Date Effective</label>
+                    <view-edit-text-field ng-model="vm.license.effectiveDate"  edit-mode="vm.editable">{{ vm.license.effectiveDate }}</view-edit-text-field>
+                    <label>Total Contract Term</label>
+                    <div class="date-range">
+                        <view-edit-text-field class="start-date" ng-model="vm.license.totalTermStartDate" edit-mode="vm.editable">{{ vm.license.totalTermStartDate }}</view-edit-text-field>
+                        <span class="separator"> to </span>
+                        <view-edit-text-field class="end-date" ng-model="vm.license.totalTermEndDate" edit-mode="vm.editable">{{ vm.license.totalTermEndDate }}</view-edit-text-field>
+                    </div>
+                    <label>Current Term</label>
+
+                    <div class="date-range">
+                        <view-edit-text-field class="start-date" ng-model="vm.license.currentTermStartDate" edit-mode="vm.editable">{{ vm.license.currentTermStartDate }}</view-edit-text-field>
+                        <span class="separator"> to </span>
+                        <view-edit-text-field class="end-date" ng-model="vm.license.currentTermEndDate" edit-mode="vm.editable">{{ vm.license.currentTermEndDate }}</view-edit-text-field>
+                        <label>Remaining Renewals</label>
+                    </div>
+                    <view-edit-number-field ng-model="vm.license.remainingRenewals"  edit-mode="vm.editable">{{ vm.license.remainingRenewals }}</view-edit-number-field>
+
+                    <h2>Specific Terms</h2>
+                    <div class="terms-row">
+                        <div class="terms-col">
+                            <label>Download</label>
+                            <view-edit-select ng-model="vm.license.downloadTerms" items="vm.termOptions" edit-mode="vm.editable">
+                                {{ vm.license.downloadTerms }}
+                            </view-edit-select>
+                        </div>
+                        <div class="terms-col">
+                            <label>Course Packs</label>
+                            <view-edit-select ng-model="vm.license.coursePacksTerms" items="vm.termOptions" edit-mode="vm.editable">
+                                {{ vm.license.coursePacksTerms }}
+                            </view-edit-select>
+                        </div>
+                    </div>
+                    <div class="terms-row">
+                        <div class="terms-col">
+                            <label>ILL</label>
+                            <view-edit-select ng-model="vm.license.interLibraryLoanTerms" items="vm.termOptions" edit-mode="vm.editable">
+                                {{ vm.license.interLibraryLoanTerms }}
+                            </view-edit-select>
+                        </div>
+                        <div class="terms-col">
+                            <label>Print (in accordance with the Copyright Act)</label>
+                            <view-edit-select ng-model="vm.license.printTerms" items="vm.termOptions" edit-mode="vm.editable">
+                                {{ vm.license.printTerms }}
+                            </view-edit-select>
+                        </div>
+                    </div>
+                    <div class="terms-row">
+                        <div class="terms-col">
+                            <label>Limited Sharing for Scholarly Purposes</label>
+                            <view-edit-select ng-model="vm.license.limitedScholarlySharingTerms" items="vm.termOptions" edit-mode="vm.editable">
+                                {{ vm.license.limitedScholarlySharingTerms }}
+                            </view-edit-select>
+                        </div>
+                        <div class="terms-col">
+                            <label>Use by Walk-ins</label>
+                            <view-edit-select ng-model="vm.license.walkinTerms" items="vm.termOptions" edit-mode="vm.editable">
+                                {{ vm.license.walkinTerms }}
+                            </view-edit-select>
+                        </div>
+                    </div>
+                    <div class="terms-row">
+                        <div class="terms-col">
+                            <label>E-Reserves</label>
+                            <view-edit-select ng-model="vm.license.eReservesTerms" items="vm.termOptions" edit-mode="vm.editable">
+                                {{ vm.license.eReservesTerms }}
+                            </view-edit-select>
+                        </div>
+                        <div class="terms-col">
+                            <label>Confidentiality Language</label>
+                            <view-edit-select ng-model="vm.license.hasConfidentialityLanguage" items="vm.termOptions" edit-mode="vm.editable">
+                                {{ vm.license.hasConfidentialityLanguage }}
+                            </view-edit-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <label>PO Number</label>
+                    <view-edit-text-field ng-model="vm.license.purchaseOrderNumber"  edit-mode="vm.editable">{{ vm.license.purchaseOrderNumber }}</view-edit-text-field>
+                    <label>PO Amount</label>
+                    <view-edit-text-field ng-model="vm.license.purchaseOrderAmount"  edit-mode="vm.editable">{{ vm.license.purchaseOrderAmount }}</view-edit-text-field>
+                    <label ng-show="!vm.newLicense">PO Balance</label>
+                    <div>{{ vm.license.purchaseOrderBalance }}</div>
+
+                    <label>Banner ID</label>
+                    <view-edit-text-field ng-model="vm.license.bannerId"  edit-mode="vm.editable">{{ vm.license.bannerId }}</view-edit-text-field>
+
+                    <h2>Type</h2>
+                    <view-edit-checkbox ng-model="vm.license.isRfp" edit-mode="vm.editable" label="'RFP'">
+                        RFP: {{ vm.license.isRfp ? 'Yes' : 'No' }}
+                    </view-edit-checkbox>
+                    <view-edit-checkbox ng-model="vm.license.isSoleSource" edit-mode="vm.editable" label="'Sole Source'">
+                        Sole Source: {{ vm.license.isSoleSource ? 'Yes' : 'No' }}
+                    </view-edit-checkbox>
+                    <view-edit-checkbox ng-model="vm.license.isSealedBid" edit-mode="vm.editable" label="'Sealed Bid'">
+                        Sealed Bid: {{ vm.license.isSealedBid ? 'Yes' : 'No' }}
+                     </view-edit-checkbox>
+                    <view-edit-checkbox ng-model="vm.license.isOtherType" edit-mode="vm.editable" label="'Other'">
+                        Other: {{ vm.license.isOtherType ? 'Yes' : 'No' }}
+                    </view-edit-checkbox>
+                    <view-edit-text-field ng-model="vm.license.otherType"  edit-mode="vm.editable">{{ vm.license.otherType }}</view-edit-text-field>
+
+                    <label>Product / Service</label>
+                    <view-edit-radios radio-group-name="offeringType" items="vm.offeringTypeOptions" ng-model="vm.license.offeringType" edit-mode="vm.editable">{{ vm.license.offeringType }}</view-edit-radios>
+
+                </div>
+            </fieldset>
+
+            <footer ng-show="vm.editable">
+                <a class="carli-button cancel-button" href="/license">Cancel</a>
+                <input class="carli-button save-button" ng-disabled="!vm.editable" id="license-submit" type="submit">
+            </footer>
+        </section>
+    </form>
+
+    <hr>
+    <pre>{{ vm.license }}</pre>
+</section>

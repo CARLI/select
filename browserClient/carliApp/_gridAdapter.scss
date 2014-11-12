@@ -1,8 +1,19 @@
 
+@mixin grid-row($gutter: 0) {
+    @include make-row($gutter);
+}
+
 @mixin grid-column($col-span, $gutter: 0) {
     @include make-md-column($col-span, $gutter);
 }
 
-@mixin grid-row($gutter: 0) {
-    @include make-row($gutter);
+@mixin grid-column-offset($offset) {
+    @include make-sm-column-offset($offset);
+}
+
+@mixin grid-gutter($gutter) {
+    padding-left: $gutter;
+    &:nth-child(1) {
+        padding-left: 0;
+    }
 }

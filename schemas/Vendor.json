@@ -42,10 +42,10 @@
             "type": "array",
             "items": { "$ref": "./Product.json" }
         },
-        "licenseAgreements": {
+        "license": {
             "description": "License agreements used by this vendor",
             "type": "array",
-            "items": { "$ref": "./LicenseAgreement.json" }
+            "items": { "$ref": "./License.json" }
         }
     },
     "required": [ "name" ]
