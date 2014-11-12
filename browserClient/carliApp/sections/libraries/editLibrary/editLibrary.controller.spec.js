@@ -1,63 +1,67 @@
 
 describe('The Edit Library Controller', function(){
 
-    var mockLocation = {
-        path: function(){}
-    };
-
-    var mockLibraryService = {
-        createOrUpdate: 'neither',
-        create: function(){
-            this.createOrUpdate = 'create';
-            return { then: function() { } };
-        },
-        update: function(){
-            this.createOrUpdate = 'update';
-            return { then: function() { } };
-        },
-        load: function(){
-            return {
-                then: function() {
-                    return {
-                        type: 'Library',
-                        name: 'Test Library',
-                        "contacts": [
-                            {
-                                "contactType": "Billing",
-                                "name": "Bob Martin",
-                                "email": "bob@cleancode.org",
-                                "phoneNumber": "123-555-1234"
-                            }
-                        ]
-                    };
-                }
-            };
-        },
-        reset: function(){
-            this.createOrUpdate = 'neither';
-        },
-        getInstitutionYearsOptions: function(){ return []; },
-        getInstitutionTypeOptions: function(){ return []; },
-        getMembershipLevelOptions: function(){ return []; }
-    };
-
-    var mockDependenciesForNewLibrary = {
-        $location: mockLocation,
-        $routeParams: {
-            id: 'new'
-        },
-        libraryService: mockLibraryService
-    };
-
-    var mockDependenciesForEditLibrary = {
-        $location: mockLocation,
-        $routeParams: {
-            id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
-        },
-        libraryService: mockLibraryService
-    };
+    var mockLocation, mockLibraryService, mockDependenciesForNewLibrary, mockDependenciesForEditLibrary;
 
     beforeEach(module('carli.sections.libraries.edit'));
+    beforeEach(inject( function($q) {
+        mockLocation = {
+            path: function(){}
+        };
+
+        mockLibraryService = {
+            createOrUpdate: 'neither',
+            create: function(){
+                this.createOrUpdate = 'create';
+                return { then: function() { } };
+            },
+            update: function(){
+                this.createOrUpdate = 'update';
+                return { then: function() { } };
+            },
+            load: function(){
+                return {
+                    then: function() {
+                        return {
+                            type: 'Library',
+                            name: 'Test Library',
+                            "contacts": [
+                                {
+                                    "contactType": "Billing",
+                                    "name": "Bob Martin",
+                                    "email": "bob@cleancode.org",
+                                    "phoneNumber": "123-555-1234"
+                                }
+                            ]
+                        };
+                    }
+                };
+            },
+            reset: function(){
+                this.createOrUpdate = 'neither';
+            },
+            getInstitutionYearsOptions: function(){ return []; },
+            getInstitutionTypeOptions: function(){ return []; },
+            getMembershipLevelOptions: function(){ return []; }
+        };
+
+        mockDependenciesForNewLibrary = {
+            $location: mockLocation,
+            $routeParams: {
+                id: 'new'
+            },
+            libraryService: mockLibraryService
+        };
+
+        mockDependenciesForEditLibrary = {
+            $location: mockLocation,
+            $routeParams: {
+                id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+            },
+            libraryService: mockLibraryService
+        };
+    } ));
+
     afterEach(function(){
         mockLibraryService.reset();
     });
