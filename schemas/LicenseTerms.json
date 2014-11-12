@@ -1,0 +1,41 @@
+{
+    "$schema": "json-schema.org/draft-04/schema",
+    "title": "LicenseTerms",
+    "schemaType": "LicenseTerms",
+    "type": "object",
+    "properties": {
+        "downloadTerms": {
+            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
+            "type": "string"
+        },
+        "coursePacksTerms": {
+            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
+            "type": "string"
+        },
+        "interLibraryLoanTerms": {
+            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
+            "type": "string"
+        },
+        "printTerms": {
+            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
+            "type": "string"
+        },
+        "limitedScholarlySharingTerms": {
+            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
+            "type": "string"
+        },
+        "walkinTerms": {
+            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
+            "type": "string"
+        },
+        "eReservesTerms": {
+            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
+            "type": "string"
+        },
+        "hasConfidentialityTerms": {
+            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
+            "type": "string"
+        }
+    },
+    "required": [ ]
+}

@@ -50,6 +50,11 @@
         "license": {
             "$ref": "./License.json"
         },
+        "terms": {
+            "description": "Terms of the license that this Product overrides",
+            "$ref": "./LicenseTerms.json"
+        },
+
         "priceCap": {
             "$ref": "./PriceCap.json"
         },
