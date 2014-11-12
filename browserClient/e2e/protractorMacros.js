@@ -55,7 +55,17 @@ function setCheckboxValue( elementFinder, newCheckedState ){
 }
 
 function setSelectValue( elementFinder, optionText ){
-    elementFinder.element(by.cssContainingText('option', optionText)).click();
+    // Works in Firefox, not Chrome:  // elementFinder.sendKeys(optionText);
+    // Works in Chrome, not Firefox:  // elementFinder.element(by.cssContainingText('option', optionText)).click();
+    elementFinder.all(by.tagName('option'))
+        .filter( function(el, index) {
+            return el.getText().then(function(text){
+                return (text.search(optionText) > -1);
+            });
+        })
+        .then(function (options) {
+            options[0].click();
+        });
 }
 
 function setRadioGroupValueByIndex( elementFinder, index ){
