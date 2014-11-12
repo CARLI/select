@@ -1,7 +1,7 @@
 angular.module('carli.sections.licenses.edit')
     .controller('editLicenseController', editLicenseController);
 
-function editLicenseController( $location, $routeParams, licenseService ) {
+function editLicenseController( $location, $routeParams, licenseService, alertService ) {
     var vm = this;
     var licenseId = $routeParams.id;
 
@@ -56,7 +56,10 @@ function editLicenseController( $location, $routeParams, licenseService ) {
         vm.newLicense = true;
     }
     function initializeForExistingLicense() {
-        vm.license = licenseService.load(licenseId);
+        licenseService.load(licenseId).then( function( license ) {
+            vm.license = license;
+        } );
+
         vm.editable = false;
         vm.newLicense = false;
     }
@@ -67,11 +70,16 @@ function editLicenseController( $location, $routeParams, licenseService ) {
 
     function saveLicense(){
         if ( licenseId !== 'new' ){
-            licenseService.update( vm.license );
+            licenseService.update( vm.license ).then(function(){
+                alertService.putAlert('License updated', {severity: 'success'});
+                $location.path('/license');
+            });
         }
         else {
-            licenseService.create( vm.license );
+            licenseService.create( vm.license ).then(function(){
+                alertService.putAlert('License added', {severity: 'success'});
+                $location.path('/license');
+            });
         }
-        $location.path('/license');
     }
 }

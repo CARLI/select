@@ -6,7 +6,9 @@ function licensesController( $sce, licenseService ){
     activate();
 
     function activate() {
-        vm.licenseList = licenseService.list();
+        licenseService.list().then( function(licenseList){
+            vm.licenseList = licenseList;
+        });
     }
 
     vm.licenseListColumns = [

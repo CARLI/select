@@ -1,7 +1,7 @@
 angular.module('carli.licenseService')
     .service('licenseService', licenseService);
 
-function licenseService( CarliModules ) {
+function licenseService( CarliModules, $q ) {
 
     var licenseModule = CarliModules.License;
 
@@ -25,9 +25,9 @@ function licenseService( CarliModules ) {
 
 
     return {
-        list: licenseModule.list,
-        create: licenseModule.create,
-        update: licenseModule.update,
-        load: licenseModule.load
+        list:   function() { return $q.when( licenseModule.list() ); },
+        create: function() { return $q.when( licenseModule.create.apply(this, arguments) ); },
+        update: function() { return $q.when( licenseModule.update.apply(this, arguments) ); },
+        load:   function() { return $q.when( licenseModule.load.apply(this, arguments) ); }
     };
 }
