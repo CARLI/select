@@ -43,6 +43,16 @@ function editProductController( $location, $routeParams, productService ) {
         "USIN - Database Pre-Pay"
     ];
 
+    vm.termTypes = [
+        "Download",
+        "ILL",
+        "Course Packs",
+        "Print",
+        "Limited Sharing for Scholarly Purposes",
+        "Use by Walk-ins",
+        "E-Reserves"
+    ];
+
     vm.termOptions = [
         "Yes",
         "No",

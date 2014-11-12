@@ -1,3 +1,5 @@
+<!-- TODO: Adding a margin-top on labels isn't going to cut it (use some other method) -->
+
 <section id="products">
 
     <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="productForm" ng-submit="vm.saveProduct()">
@@ -27,6 +29,7 @@
     <section class="content">
         <fieldset>
             <div class="column">
+                <!-- TODO: Use Marty's helper functions -->
                 <label for="productVendor">Vendor</label>
                 <view-edit-text-field ng-model="vm.product.vendor" edit-mode="vm.editable">
                     {{ vm.product.vendor }}
@@ -68,44 +71,106 @@
             </div>
 
             <div class="column">
-                <label for="productCycleType">Cycle</label>
-                <view-edit-select ng-model="vm.product.cycleType" items="vm.cycleOptions" edit-mode="vm.editable">
-                    {{ vm.product.cycleType }}
-                </view-edit-select>
 
-                <view-edit-text-field ng-model="vm.product.priceCap" edit-mode="vm.editable">
-                    {{ vm.product.priceCap }}
-                </view-edit-text-field>
+                <div class="clearfix">
+                    <div class="column">
+                        <div class="row">
+                            <label for="productCycleType">Cycle</label>
+                            <view-edit-select ng-model="vm.product.cycleType" items="vm.cycleOptions" edit-mode="vm.editable">
+                                {{ vm.product.cycleType }}
+                        </view-edit-select>
+                        </div>
 
-                <label for="productLicenseAgreement">License Agreement</label>
-                <view-edit-text-field id="productLicenseAgreement" ng-model="vm.product.licenseAgreement" edit-mode="vm.editable">
-                    {{ vm.product.licenseAgreement }}
-                </view-edit-text-field>
+                        <div class="row">
+                            <label>Price Cap</label>
+                            <view-edit-text-field ng-model="vm.product.priceCap" edit-mode="vm.editable">
+                                {{ vm.product.priceCap }}
+                            </view-edit-text-field>
+                        </div>
+                    </div>
 
-                <label for="productCycleType">Detail Codes</label>
-                <view-edit-select ng-model="vm.product.detailCode" items="vm.productDetailCodeOptions" edit-mode="vm.editable">
-                    {{ vm.product.detailCode }}
-                </view-edit-select>
+                    <div class="column">
+                        <label for="productLicenseAgreement">License Agreement</label>
+                        <view-edit-text-field id="productLicenseAgreement" ng-model="vm.product.licenseAgreement" edit-mode="vm.editable">
+                            {{ vm.product.licenseAgreement }}
+                        </view-edit-text-field>
+
+                        <label for="productCycleType">Detail Codes</label>
+                        <view-edit-select ng-model="vm.product.detailCode" items="vm.productDetailCodeOptions" edit-mode="vm.editable">
+                            {{ vm.product.detailCode }}
+                        </view-edit-select>
+                    </div>
+                </div>
 
                 <div>
                     <!-- funding -->
+                    FUNding stuff goes here
                 </div>
 
                 <div>
-                    <!-- These will match the License Agreement Screen + schema
-                    Download
-                    ILL
-                    Course Packs
-                    Print
-                    Limited Sharing for Scholarly Purposes
-                    Use by Walk-ins
-                    E-Reserves
-                    -->
+                    <div class="column">
+                        <label>Specific Terms</label>
+                        <div><a href="">Override License-Level Terms <i class="fa fa-edit"></i></a></div>
+
+                        <!-- TODO: Will the termTypes/termOptions data come from the License Agreement? (editProduct.controller data for now) -->
+                        <!-- TODO: This needs to be a component -->
+                        <label ng-repeat="type in vm.termTypes">
+                            <span class="subtitle">{{type}}:</span>
+
+                            <select ng-model="termsDownload.item">
+                                <option value="">--</option>
+                                <option ng-repeat="opt in vm.termOptions">{{opt}}</option>
+                            </select>
+                            <input type="text" ng-model="termsDownload.other" ng-hide="termsDownload.item !== 'Other'">
+                        </label>
+                    </div>
+
+                    <div class="column">
+                        <!-- TODO: This is a styled example of Subsciber History (needs to actually be wired/componentized -->
+                        <table class="tableSubscriber">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">Your History</th>
+                                    <th>Subscribers</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <!-- TODO: Are these clickable links? -->
+                                    <td>2015</td>
+                                    <td><i class="fa fa-check-circle"></i></td>
+                                    <td colspan="2">8 <em>Current</em></td>
+                                </tr>
+                                <tr>
+                                    <td>2014</td>
+                                    <td></td>
+                                    <td colspan="2">5</td>
+                                </tr>
+                                <tr>
+                                    <td>2013</td>
+                                    <td></td>
+                                    <td colspan="2">5</td>
+                                </tr>
+                                <tr>
+                                    <td>2012</td>
+                                    <td></td>
+                                    <td colspan="2">3</td>
+                                </tr>
+                                <tr>
+                                    <td>2011</td>
+                                    <td></td>
+                                    <td colspan="2">2</td>
+                                </tr>
+                                <tr>
+                                    <td>2010</td>
+                                    <td></td>
+                                    <td colspan="2">-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <div>
-                    <!-- subscriber history -->
-                </div>
             </div>
         </fieldset>
 
