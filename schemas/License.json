@@ -64,37 +64,9 @@
             "description": "Number of renewals remaining in contract",
             "type": "integer"
         },
-        "downloadTerms": {
-            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
-            "type": "string"
-        },
-        "coursePacksTerms": {
-            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
-            "type": "string"
-        },
-        "interLibraryLoanTerms": {
-            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
-            "type": "string"
-        },
-        "printTerms": {
-            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
-            "type": "string"
-        },
-        "limitedScholarlySharingTerms": {
-            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
-            "type": "string"
-        },
-        "walkinTerms": {
-            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
-            "type": "string"
-        },
-        "eReservesTerms": {
-            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
-            "type": "string"
-        },
-        "hasConfidentialityTerms": {
-            "description": "A string of 'Yes', 'No', or some other arbitrary 'Other' string",
-            "type": "string"
+        "terms": {
+            "description": "Terms of the license",
+            "$ref": "./LicenseTerms.json"
         },
         "purchaseOrderNumber": {
             "description": "Purchase Order Number",
