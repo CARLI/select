@@ -13,10 +13,16 @@ describe('The Edit License Controller', function(){
         mockLicenseService = {
             createOrUpdate: 'neither',
             create: function(){
+                var deferred = $q.defer();
                 this.createOrUpdate = 'create';
+                deferred.resolve();
+                return deferred.promise;
             },
             update: function(){
+                var deferred = $q.defer();
                 this.createOrUpdate = 'update';
+                deferred.resolve();
+                return deferred.promise;
             },
             load: function(){
                 var deferred = $q.defer();
@@ -68,10 +74,11 @@ describe('The Edit License Controller', function(){
         expect( editCtrl.newLicense ).to.equal(true);
     }));
 
-    it('should call licenseService.create when saving a new License', inject(function($controller){
+    it('should call licenseService.create when saving a new License', inject(function($controller, $rootScope){
         var editCtrl = $controller('editLicenseController', mockDependenciesForNewLicense);
         expect( mockDependenciesForNewLicense.licenseService.createOrUpdate ).to.equal('neither');
         editCtrl.saveLicense();
+        $rootScope.$digest();
         expect( mockDependenciesForNewLicense.licenseService.createOrUpdate ).to.equal('create');
     }));
 
@@ -83,10 +90,11 @@ describe('The Edit License Controller', function(){
         expect( editCtrl.newLicense ).to.equal(false);
     }));
 
-    it('should call licenseService.update when saving an existing License', inject(function($controller){
+    it('should call licenseService.update when saving an existing License', inject(function($controller, $rootScope){
         var editCtrl = $controller('editLicenseController', mockDependenciesForEditLicense);
         expect( mockDependenciesForEditLicense.licenseService.createOrUpdate ).to.equal('neither');
         editCtrl.saveLicense();
+        $rootScope.$digest();
         expect( mockDependenciesForEditLicense.licenseService.createOrUpdate ).to.equal('update');
     }));
 

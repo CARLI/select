@@ -14,5 +14,8 @@ exports.config = {
     },
     jasmineNodeOpts: {
         silent: true
+    },
+    capabilities: {
+        browserName: 'firefox'
     }
 };
