@@ -128,7 +128,7 @@ var contactEditorsTestConfig = {
 };
 
 var pageConfig = {
-    listFilterShowAll: element(by.cssContainingText('.ng-binding', 'All vendors')),
+    listFilterShowAll: element(by.id('filter-all')),
     submit: element(by.id('vendor-submit')),
     editButton: element(by.id('vendor-edit')),
 

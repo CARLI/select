@@ -201,7 +201,7 @@ var contactEditorsTestConfig = {
  * Other special-case elements specific to this page, plus some helper functions
  */
 var pageConfig = {
-    listFilterShowAll: element(by.cssContainingText('.ng-binding', 'All libraries')),
+    listFilterShowAll: element(by.id('filter-all')),
     submit: element(by.id('library-submit')),
     editButton: element(by.id('library-edit')),
 

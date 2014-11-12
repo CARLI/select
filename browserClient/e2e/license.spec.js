@@ -237,7 +237,7 @@ testLicenseName = formInputsTestConfig.name.initialValue;
 testLicenseEditedName = formInputsTestConfig.name.editedValue;
 
 var pageConfig = {
-    listFilterShowAll: element(by.cssContainingText('.ng-binding', 'All licenses')),
+    listFilterShowAll: element(by.id('filter-all')),
     submit: element(by.id('license-submit')),
     editButton: element(by.id('license-edit')),
 
