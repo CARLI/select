@@ -69,16 +69,24 @@ function editLicenseController( $location, $routeParams, licenseService, alertSe
 
     function saveLicense(){
         if ( licenseId !== 'new' ){
-            licenseService.update( vm.license ).then(function(){
-                alertService.putAlert('License updated', {severity: 'success'});
-                $location.path('/license');
-            });
+            licenseService.update( vm.license )
+                .then(function(){
+                    alertService.putAlert('License updated', {severity: 'success'});
+                    $location.path('/license');
+                })
+                .catch(function(error) {
+                    alertService.putAlert(error, {severity: 'danger'});
+                });
         }
         else {
-            licenseService.create( vm.license ).then(function(){
-                alertService.putAlert('License added', {severity: 'success'});
-                $location.path('/license');
-            });
+            licenseService.create( vm.license )
+                .then(function(){
+                    alertService.putAlert('License added', {severity: 'success'});
+                    $location.path('/license');
+                })
+                .catch(function(error) {
+                    alertService.putAlert(error, {severity: 'danger'});
+                });
         }
     }
 }
