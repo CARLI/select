@@ -87,25 +87,5 @@ describe('The Edit License Controller', function(){
         expect( editCtrl.editable ).to.equal(true);
     }));
 
-    it('should be able to delete the first Billing contact', inject(function($controller) {
-        var editCtrl = $controller('editLicenseController', mockDependenciesForEditLicense);
-        var contacts = editCtrl.license.contacts;
-        var firstBillingContact = findFirstBillingContact(contacts);
-        var initialLength = contacts.length;
-
-        editCtrl.deleteContact(firstBillingContact);
-        expect( contacts.length ).to.equal(initialLength - 1);
-    }));
-
 });
 
-function findFirstBillingContact(contacts) {
-    var firstBillingContact = null;
-    for (var i = 0; i < contacts.length; i++) {
-        if (contacts[i].contactType === 'Billing') {
-            firstBillingContact = contacts[i];
-            break;
-        }
-    }
-    return firstBillingContact;
-}
