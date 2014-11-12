@@ -1,10 +1,10 @@
 angular.module('carli.alerts')
     .factory('alertService', alertService);
 
-function alertService($timeout) {
+function alertService($timeout, alertTimeout) {
     var alerts = [];
     var defaultOptions = {
-        expireAfter: 10000,
+        expireAfter: alertTimeout,
         severity: 'info'
     };
 
