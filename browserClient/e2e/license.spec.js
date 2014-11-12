@@ -61,36 +61,36 @@ var formInputsTestConfig = {
         type: 'input',
         description: 'Effective Date',
         model: 'vm.license.effectiveDate',
-        initialValue: 'Effective Date -- will eventually be a viewEditDate',
-        editedValue: 'Edited Effective Date'
+        initialValue: '10/31/14',
+        editedValue: '12/25/14'
     },
     totalTermStartDate: {
         type: 'input',
         description: 'Total Contract Term Start',
         model: 'vm.license.totalTermStartDate',
-        initialValue: 'Term Start Date -- will eventually be a viewEditDate',
-        editedValue: 'Edited Term Start Date'
+        initialValue: '10/31/14',
+        editedValue: '12/25/14'
     },
     totalTermEndDate: {
         type: 'input',
         description: 'Total Contract Term End',
         model: 'vm.license.totalTermEndDate',
-        initialValue: 'Term End Date -- will eventually be a viewEditDate',
-        editedValue: 'Edited Term End Date'
+        initialValue: '10/31/17',
+        editedValue: '12/25/17'
     },
     currentTermStartDate: {
         type: 'input',
         description: 'Total Current Term Start',
         model: 'vm.license.currentTermStartDate',
-        initialValue: 'Current Start Date -- will eventually be a viewEditDate',
-        editedValue: 'Edited Current Start Date'
+        initialValue: '10/31/14',
+        editedValue: '12/25/14'
     },
     currentTermEndDate: {
         type: 'input',
         description: 'Total Current Term End',
         model: 'vm.license.currentTermEndDate',
-        initialValue: 'Current End Date -- will eventually be a viewEditDate',
-        editedValue: 'Edited Current End Date'
+        initialValue: '10/31/15',
+        editedValue: '12/25/15'
     }, /* -- TODO when we figure out what to do with viewEditNumber
     remainingRenewals: {
         type: 'input',
@@ -102,56 +102,56 @@ var formInputsTestConfig = {
     downloadTerms: {
         type: 'select',
         description: 'Download Terms',
-        model: 'vm.license.downloadTerms',
+        model: 'vm.license.terms.downloadTerms',
         initialValue: 'Yes',
         editedValue: 'Other'
     },
     coursePacksTerms: {
         type: 'select',
         description: 'Course Pack  Terms',
-        model: 'vm.license.coursePacksTerms',
+        model: 'vm.license.terms.coursePacksTerms',
         initialValue: 'No',
         editedValue: 'Other'
     },
     interLibraryLoanTerms: {
         type: 'select',
         description: 'Interlibrary Loan Terms',
-        model: 'vm.license.interLibraryLoanTerms',
+        model: 'vm.license.terms.interLibraryLoanTerms',
         initialValue: 'Yes',
         editedValue: 'No'
     },
     printTerms: {
         type: 'select',
         description: 'Print Terms',
-        model: 'vm.license.printTerms',
+        model: 'vm.license.terms.printTerms',
         initialValue: 'No',
         editedValue: 'Yes'
     },
     limitedScholarlySharingTerms: {
         type: 'select',
         description: 'Limited Scholarly Sharing Terms',
-        model: 'vm.license.limitedScholarlySharingTerms',
+        model: 'vm.license.terms.limitedScholarlySharingTerms',
         initialValue: 'Yes',
         editedValue: 'Other'
     },
     walkinTerms: {
         type: 'select',
         description: 'Use by Walkin Terms',
-        model: 'vm.license.walkinTerms',
+        model: 'vm.license.terms.walkinTerms',
         initialValue: 'Other',
         editedValue: 'No'
     },
     eReservesTerms: {
         type: 'select',
         description: 'E-Reserve Terms',
-        model: 'vm.license.eReservesTerms',
+        model: 'vm.license.terms.eReservesTerms',
         initialValue: 'Other',
         editedValue: 'Yes'
     },
     hasConfidentialityLanguage: {
         type: 'select',
         description: 'Has Confidentiality Language',
-        model: 'vm.license.hasConfidentialityLanguage',
+        model: 'vm.license.terms.hasConfidentialityLanguage',
         initialValue: "Yes",
         editedValue: "No"
     },
