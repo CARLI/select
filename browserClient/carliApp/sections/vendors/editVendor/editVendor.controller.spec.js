@@ -17,15 +17,19 @@ describe('The Edit Vendor Controller', function(){
         },
         load: function(){
             return {
-                name: 'Test Vendor',
-                "contacts": [
-                    {
-                        "contactType": "Billing",
-                        "name": "Bob Martin",
-                        "email": "bob@cleancode.org",
-                        "phoneNumber": "123-555-1234"
-                    }
-                ]
+                then: function() {
+                    return {
+                        name: 'Test Vendor',
+                        "contacts": [
+                            {
+                                "contactType": "Billing",
+                                "name": "Bob Martin",
+                                "email": "bob@cleancode.org",
+                                "phoneNumber": "123-555-1234"
+                            }
+                        ]
+                    };
+                }
             };
         },
         reset: function(){

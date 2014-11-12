@@ -17,16 +17,20 @@ describe('The Edit Library Controller', function(){
         },
         load: function(){
             return {
-                type: 'Library',
-                name: 'Test Library',
-                "contacts": [
-                    {
-                        "contactType": "Billing",
-                        "name": "Bob Martin",
-                        "email": "bob@cleancode.org",
-                        "phoneNumber": "123-555-1234"
-                    }
-                ]
+                then: function() {
+                    return {
+                        type: 'Library',
+                        name: 'Test Library',
+                        "contacts": [
+                            {
+                                "contactType": "Billing",
+                                "name": "Bob Martin",
+                                "email": "bob@cleancode.org",
+                                "phoneNumber": "123-555-1234"
+                            }
+                        ]
+                    };
+                }
             };
         },
         reset: function(){
