@@ -20,22 +20,22 @@ describe('The Edit Library Controller', function(){
                 return { then: function() { } };
             },
             load: function(){
-                return {
-                    then: function() {
-                        return {
-                            type: 'Library',
-                            name: 'Test Library',
-                            "contacts": [
-                                {
-                                    "contactType": "Billing",
-                                    "name": "Bob Martin",
-                                    "email": "bob@cleancode.org",
-                                    "phoneNumber": "123-555-1234"
-                                }
-                            ]
-                        };
+                var deferred = $q.defer();
+                deferred.resolve(
+                    {
+                        type: 'Library',
+                        name: 'Test Library',
+                        "contacts": [
+                            {
+                                "contactType": "Billing",
+                                "name": "Bob Martin",
+                                "email": "bob@cleancode.org",
+                                "phoneNumber": "123-555-1234"
+                            }
+                        ]
                     }
-                };
+                );
+                return deferred.promise;
             },
             reset: function(){
                 this.createOrUpdate = 'neither';
@@ -87,9 +87,10 @@ describe('The Edit Library Controller', function(){
         expect( mockDependenciesForNewLibrary.libraryService.createOrUpdate ).to.equal('create');
     }));
 
-    it('should have a known, non-editable library on the Edit library screen', inject(function($controller){
+    it('should have a known, non-editable library on the Edit library screen', inject(function($controller, $rootScope){
         var editCtrl = $controller('editLibraryController', mockDependenciesForEditLibrary);
-        expect( editCtrl.library.name ).to.equal('Test Library');
+        $rootScope.$digest();
+        expect( editCtrl.library.name ).to.equal( 'Test Library');
         expect( editCtrl.editable ).to.equal(false);
         expect( editCtrl.newLibrary ).to.equal(false);
     }));
@@ -108,13 +109,15 @@ describe('The Edit Library Controller', function(){
         expect( editCtrl.editable ).to.equal(true);
     }));
 
-    it('should be able to delete the first Billing contact', inject(function($controller) {
+    it('should be able to delete the first Billing contact', inject(function($controller, $rootScope) {
         var editCtrl = $controller('editLibraryController', mockDependenciesForEditLibrary);
+        $rootScope.$digest();
         var contacts = editCtrl.library.contacts;
         var firstBillingContact = findFirstBillingContact(contacts);
         var initialLength = contacts.length;
 
         editCtrl.deleteContact(firstBillingContact);
+        $rootScope.$digest();
         expect( contacts.length ).to.equal(initialLength - 1);
     }));
 

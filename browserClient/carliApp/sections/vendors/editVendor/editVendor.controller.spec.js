@@ -1,24 +1,27 @@
 
 describe('The Edit Vendor Controller', function(){
 
-    var mockLocation = {
-        path: function(){}
-    };
+    var mockLocation, mockVendorService, mockAlertService, mockDependenciesForNewVendor, mockDependenciesForEditVendor;
+    beforeEach(module('carli.sections.vendors.edit'));
+    beforeEach(inject( function($q) {
+        mockLocation = {
+            path: function(){}
+        };
 
-    var mockVendorService = {
-        createOrUpdate: 'neither',
-        create: function(){
-            this.createOrUpdate = 'create';
-            return { then: function(callback) { callback(); } };
-        },
-        update: function(){
-            this.createOrUpdate = 'update';
-            return { then: function(callback) { callback(); } };
-        },
-        load: function(){
-            return {
-                then: function() {
-                    return {
+        mockVendorService = {
+            createOrUpdate: 'neither',
+            create: function(){
+                this.createOrUpdate = 'create';
+                return { then: function(callback) { callback(); } };
+            },
+            update: function(){
+                this.createOrUpdate = 'update';
+                return { then: function(callback) { callback(); } };
+            },
+            load: function(){
+                var deferred = $q.defer();
+                deferred.resolve(
+                    {
                         name: 'Test Vendor',
                         "contacts": [
                             {
@@ -28,44 +31,44 @@ describe('The Edit Vendor Controller', function(){
                                 "phoneNumber": "123-555-1234"
                             }
                         ]
-                    };
-                }
-            };
-        },
-        reset: function(){
-            this.createOrUpdate = 'neither';
-        }
-    };
+                    }
+                );
+                return deferred.promise;
+            },
+            reset: function(){
+                this.createOrUpdate = 'neither';
+            }
+        };
 
-    var mockAlertService = {
-        alertCount: 0,
-        putAlert: function(){
-            this.alertCount++;
-        },
-        reset: function(){
-            this.alertCount = 0;
-        }
-    };
+        mockAlertService = {
+            alertCount: 0,
+            putAlert: function(){
+                this.alertCount++;
+            },
+            reset: function(){
+                this.alertCount = 0;
+            }
+        };
 
-    var mockDependenciesForNewVendor = {
-        $location: mockLocation,
-        $routeParams: {
-            id: 'new'
-        },
-        vendorService: mockVendorService,
-        alertService: mockAlertService
-    };
+        mockDependenciesForNewVendor = {
+            $location: mockLocation,
+            $routeParams: {
+                id: 'new'
+            },
+            vendorService: mockVendorService,
+            alertService: mockAlertService
+        };
 
-    var mockDependenciesForEditVendor = {
-        $location: mockLocation,
-        $routeParams: {
-            id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
-        },
-        vendorService: mockVendorService,
-        alertService: mockAlertService
-    };
+        mockDependenciesForEditVendor = {
+            $location: mockLocation,
+            $routeParams: {
+                id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+            },
+            vendorService: mockVendorService,
+            alertService: mockAlertService
+        };
+    } ));
 
-    beforeEach(module('carli.sections.vendors.edit'));
     afterEach(function(){
         mockVendorService.reset();
         mockAlertService.reset();
@@ -92,8 +95,9 @@ describe('The Edit Vendor Controller', function(){
         expect( mockDependenciesForNewVendor.alertService.alertCount ).to.equal( 1 );
     }));
 
-    it('should have a known, non-editable Vendor on the Edit Vendor screen', inject(function($controller){
+    it('should have a known, non-editable Vendor on the Edit Vendor screen', inject(function($controller, $rootScope){
         var editCtrl = $controller('editVendorController', mockDependenciesForEditVendor);
+        $rootScope.$digest();
         expect( editCtrl.vendor.name ).to.equal('Test Vendor');
         expect( editCtrl.editable ).to.equal(false);
         expect( editCtrl.newVendor ).to.equal(false);
@@ -120,8 +124,9 @@ describe('The Edit Vendor Controller', function(){
         expect( editCtrl.editable ).to.equal(true);
     }));
 
-    it('should be able to delete the first Billing contact', inject(function($controller) {
+    it('should be able to delete the first Billing contact', inject(function($controller, $rootScope) {
         var editCtrl = $controller('editVendorController', mockDependenciesForEditVendor);
+        $rootScope.$digest();
         var contacts = editCtrl.vendor.contacts;
         var firstBillingContact = findFirstBillingContact(contacts);
         var initialLength = contacts.length;

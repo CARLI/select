@@ -59,7 +59,6 @@ function editLicenseController( $location, $routeParams, licenseService, alertSe
         licenseService.load(licenseId).then( function( license ) {
             vm.license = license;
         } );
-
         vm.editable = false;
         vm.newLicense = false;
     }
