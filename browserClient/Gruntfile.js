@@ -527,7 +527,7 @@ module.exports = function ( grunt ) {
     grunt.registerTask( 'serve', [
         'build',
         'karma:unit',
-        'protractor_webdriver',
+        //'protractor_webdriver',
         'connect:serve',
         'watch'
     ]);
