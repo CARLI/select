@@ -1,11 +1,11 @@
 angular.module('carli.productService')
     .service('productService', productService);
 
-function productService( CarliModules ) {
+function productService( CarliModules, $q ) {
 
     var productModule = CarliModules.Product;
 
-    var productStore = CarliModules.Store( CarliModules.MemoryStore );
+    var productStore = CarliModules.Store( CarliModules.MemoryStore({}) );
 
     productModule.setStore( productStore );
 
@@ -22,9 +22,9 @@ function productService( CarliModules ) {
     /* ////////////// */
 
     return {
-        list: productModule.list,
-        create: productModule.create,
-        update: productModule.update,
-        load: productModule.load
+        list:   function() { return $q.when( productModule.list() ); },
+        create: function() { return $q.when( productModule.create.apply(this, arguments) ); },
+        update: function() { return $q.when( productModule.update.apply(this, arguments) ); },
+        load:   function() { return $q.when( productModule.load.apply(this, arguments) ); }
     };
 }
