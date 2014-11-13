@@ -9,7 +9,7 @@ function _cloneData( data ) {
 
 function typeExistsInStore( type ) {
     var deferred = Q.defer();
-    request({ url: db_host + '/' + '_design/CARLI/_view/doc_types?group=true' },
+    request({ url: db_host + '/' + '_design/CARLI/_view/docTypes?group=true' },
         function ( err, response, body ) {
             var data = JSON.parse( body );
             if( data.rows ) {
