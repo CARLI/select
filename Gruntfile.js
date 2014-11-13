@@ -1,13 +1,10 @@
-var fs = require('fs');
-
 module.exports = function(grunt) {
-
-    grunt.registerTask('subdir-grunt', subdirGruntTask);
-    grunt.registerTask('subdir-exec', subdirExecTask);
+    require('./grunt/subdir')(grunt);
+    require('./grunt/jsenv')(grunt);
 
     grunt.registerTask('test', function(arg) {
         grunt.task.run(['subdir-grunt:browserClient:test:' + arg]);
-        grunt.task.run(['subdir-exec:CARLI:npm test:' + arg]);
+        grunt.task.run(['subdir-grunt:CARLI:test:' + arg]);
     });
 
     grunt.registerTask('npm-install', function() {
@@ -22,69 +19,4 @@ module.exports = function(grunt) {
         'npm-install',
         'bower-install'
     ]);
-
-    grunt.registerTask('jsenv', setJsEnv);
-
-    function subdirGruntTask(dir, task) {
-        var done = this.async();
-        var spawnArgs = {
-            grunt: true,
-            args: [ task ],
-            opts: {
-                cwd: dir,
-                stdio: 'inherit'
-            }
-        };
-
-        grunt.log.writeln('* Entering ' + dir);
-        grunt.util.spawn(spawnArgs, spawnCallback(dir, done));
-    }
-    function subdirExecTask(dir, commandString) {
-        var done = this.async();
-
-        var args = commandString.split(' ');
-        var command = args.shift();
-
-        var spawnArgs = {
-            cmd: command,
-            args:  args,
-            opts: {
-                cwd: dir,
-                stdio: 'inherit'
-            }
-        };
-
-        grunt.log.writeln('* Entering ' + dir);
-        grunt.util.spawn(spawnArgs, spawnCallback(dir, done));
-    }
-
-    function spawnCallback(dir, done) {
-        return function (err, result, code) {
-            if (err == null) {
-                grunt.log.writeln('* Finished ' + dir);
-                done();
-            }
-            else {
-                grunt.log.writeln('! ' + dir + ' failed: ' + code);
-                done(false);
-            }
-        };
-    }
-
-    function setJsEnv(env) {
-        switch (env) {
-            case 'browser':
-                writeCarliRequestModule('browser-request');
-                break;
-            case 'node':
-                writeCarliRequestModule('request');
-                break;
-            default:
-                throw Error('Invalid environment: ' + env + ', valid options are "node" and "browser"');
-        }
-    }
-
-    function writeCarliRequestModule(module) {
-        fs.writeFileSync('./CARLI/carliRequest.js', "module.exports = require('"+ module +"');\n");
-    }
 };
