@@ -1,0 +1,11 @@
+<div class="view-edit-yes-no-other" ng-show="editMode">
+    <select ng-model="ngModel">
+        <option>Yes</option>
+        <option>No</option>
+        <option ng-selected="(ngModel !== 'Yes' && ngModel !== 'No' && ngModel) ? 'selected' : ''">Other</option>
+    </select>
+    <input type="text" ng-model="ngModel" ng-hide="ngModel == 'Yes' || ngModel == 'No' || !ngModel">
+</div>
+
+
+<div ng-show="!editMode" ng-transclude></div>

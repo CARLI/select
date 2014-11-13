@@ -1,4 +1,6 @@
-angular.module('carli.sections.products',[
+angular.module('carli.sections.products', [
+    'ngSanitize',
     'carli.sections.products.edit',
-    'carli.productService'
+    'carli.productService',
+    'carli.entityList'
 ]);

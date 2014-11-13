@@ -1,5 +1,218 @@
-<section id="products">
-    <h1>{{ vm.product.name }}</h1>
+<!-- TODO: Adding a margin-top on labels isn't going to cut it (use some other method) -->
 
-    {{ vm.product }}
+<section id="products">
+
+    <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="productForm" ng-submit="vm.saveProduct()">
+
+    <header class="page-header">
+        <h1 ng-show="vm.newProduct">New Product</h1>
+
+        <div class="name">
+            <label for="productName">Product Name</label>
+            <view-edit-text-field ng-model="vm.product.name" edit-mode="vm.editable">
+                <h1>{{ vm.product.name }}</h1>
+            </view-edit-text-field>
+        </div>
+
+        <div ng-show="!vm.newProduct" class="edit-buttons pull-right">
+            <div ng-show="vm.editable">
+                <a class="carli-button cancel-button" href="/product">Cancel</a>
+                <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit">
+            </div>
+
+            <div id="product-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">
+                Edit<i class="fa fa-edit"></i>
+            </div>
+        </div>
+    </header>
+
+    <section class="content">
+        <fieldset>
+            <div class="column">
+                <!-- TODO: Use Marty's helper functions -->
+                <label for="productVendor">Vendor</label>
+                <view-edit-text-field ng-model="vm.product.vendor" edit-mode="vm.editable">
+                    {{ vm.product.vendor }}
+                </view-edit-text-field>
+
+                <label for="productUrl">Product URL <aside>(Vendor can provide)</aside></label>
+                <view-edit-text-field ng-model="vm.product.productUrl" edit-mode="vm.editable">
+                    {{ vm.product.productUrl }}
+                </view-edit-text-field>
+
+                <label for="productDescription">Product Description <aside>(Vendor can provide)</aside></label>
+                <view-edit-text-area ng-model="vm.product.description" edit-mode="vm.editable">
+                    {{ vm.product.description }}
+                </view-edit-text-area>
+
+                <label for="productComments">Product Price Comments for Libraries</label>
+                <view-edit-text-area ng-model="vm.product.comments" edit-mode="vm.editable">
+                    {{ vm.product.comments }}
+                </view-edit-text-area>
+
+                <div class="column">
+                    <view-edit-checkbox input-id="third-party-product" ng-model="vm.product.isThirdPartyProduct" edit-mode="vm.editable">
+                        {{ vm.product.isThirdPartyProduct }}
+                    </view-edit-checkbox>
+                    <label for="third-party-product">3rd Party Product</label>
+
+                    <view-edit-checkbox input-id="archive-fee" ng-model="vm.product.hasArchiveCapitalFee" edit-mode="vm.editable">
+                        {{ vm.product.hasArchiveCapitalFee }}
+                    </view-edit-checkbox>
+                    <label for="archive-fee">Archive Capital Fee</label>
+                </div>
+
+                <div class="column">
+                    <label for="productStatus">Status</label>
+                    <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.product.isActive" edit-mode="vm.editable">
+                        {{ vm.product.isActive ? 'Active' : 'Inactive' }}
+                    </view-edit-radios>
+                </div>
+            </div>
+
+            <div class="column">
+
+                <div class="clearfix">
+                    <div class="column">
+                        <div class="row">
+                            <label for="productCycleType">Cycle</label>
+                            <view-edit-select ng-model="vm.product.cycleType" items="vm.cycleOptions" edit-mode="vm.editable">
+                                {{ vm.product.cycleType }}
+                        </view-edit-select>
+                        </div>
+
+                        <div class="row">
+                            <label>Price Cap</label>
+                            <view-edit-text-field ng-model="vm.product.priceCap" edit-mode="vm.editable">
+                                {{ vm.product.priceCap }}
+                            </view-edit-text-field>
+                        </div>
+                    </div>
+
+                    <div class="column">
+                        <label for="productLicenseAgreement">License Agreement</label>
+                        <view-edit-text-field id="productLicenseAgreement" ng-model="vm.product.licenseAgreement" edit-mode="vm.editable">
+                            {{ vm.product.licenseAgreement }}
+                        </view-edit-text-field>
+
+                        <label for="productCycleType">Detail Codes</label>
+                        <view-edit-select ng-model="vm.product.detailCode" items="vm.productDetailCodeOptions" edit-mode="vm.editable">
+                            {{ vm.product.detailCode }}
+                        </view-edit-select>
+                    </div>
+                </div>
+
+                <div>
+                    <!-- funding -->
+                    FUNding stuff goes here
+                </div>
+
+                <div>
+                    <div class="column">
+                        <label>Specific Terms</label>
+                        <div><a href="">Override License-Level Terms <i class="fa fa-edit"></i></a></div>
+
+                        <!-- TODO: Will the termTypes/termOptions data come from the License Agreement? (editProduct.controller data for now) -->
+                        <label>
+                            <span class="subtitle">Download:</span>
+                            <view-edit-yes-no-other ng-model="vm.product.downloadTerms" edit-mode="vm.editable">{{ vm.product.downloadTerms }}
+                            </view-edit-yes-no-other>
+                        </label>
+
+                        <label>
+                            <span class="subtitle">ILL:</span>
+                            <view-edit-yes-no-other ng-model="vm.product.interLibraryLoanTerms" edit-mode="vm.editable">{{ vm.product.interLibraryLoanTerms }}
+                            </view-edit-yes-no-other>
+                        </label>
+
+                        <label>
+                            <span class="subtitle">Course Packs:</span>
+                            <view-edit-yes-no-other ng-model="vm.product.coursePacksTerms" edit-mode="vm.editable">{{ vm.product.coursePacksTerms }}
+                            </view-edit-yes-no-other>
+                        </label>
+
+                        <label>
+                            <span class="subtitle">Print:</span>
+                            <view-edit-yes-no-other ng-model="vm.product.printTerms" edit-mode="vm.editable"> {{ vm.product.printTerms }}
+                            </view-edit-yes-no-other>
+                        </label>
+
+                        <label>
+                            <span class="subtitle">Limited Sharing for Scholarly Purposes:</span>
+                            <view-edit-yes-no-other ng-model="vm.product.limitedScholarlySharingTerms" edit-mode="vm.editable">{{ vm.product.limitedScholarlySharingTerms }}
+                            </view-edit-yes-no-other>
+                        </label>
+
+                        <label>
+                            <span class="subtitle">Use by Walk-ins:</span>
+                            <view-edit-yes-no-other ng-model="vm.product.walkinTerms" edit-mode="vm.editable">{{ vm.product.walkinTerms }}
+                            </view-edit-yes-no-other>
+                        </label>
+
+                        <label>
+                            <span class="subtitle">E-Reserves:</span>
+                            <view-edit-yes-no-other ng-model="vm.product.eReservesTerms" edit-mode="vm.editable">{{ vm.product.eReservesTerms }}
+                            </view-edit-yes-no-other>
+                        </label>
+                    </div>
+
+                    <div class="column">
+                        <!-- TODO: This is a styled example of Subsciber History (needs to actually be wired/componentized -->
+                        <table class="tableSubscriber">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">Your History</th>
+                                    <th>Subscribers</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <!-- TODO: Are these clickable links? -->
+                                    <td>2015</td>
+                                    <td><i class="fa fa-check-circle"></i></td>
+                                    <td colspan="2">8 <em>Current</em></td>
+                                </tr>
+                                <tr>
+                                    <td>2014</td>
+                                    <td></td>
+                                    <td colspan="2">5</td>
+                                </tr>
+                                <tr>
+                                    <td>2013</td>
+                                    <td></td>
+                                    <td colspan="2">5</td>
+                                </tr>
+                                <tr>
+                                    <td>2012</td>
+                                    <td></td>
+                                    <td colspan="2">3</td>
+                                </tr>
+                                <tr>
+                                    <td>2011</td>
+                                    <td></td>
+                                    <td colspan="2">2</td>
+                                </tr>
+                                <tr>
+                                    <td>2010</td>
+                                    <td></td>
+                                    <td colspan="2">-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </fieldset>
+
+        <footer ng-show="vm.editable">
+            <a class="carli-button cancel-button" href="/product">Cancel</a>
+            <input class="carli-button save-button" ng-disabled="!vm.editable" id="product-submit" type="submit">
+        </footer>
+    </section>
+
+    </form>
+
+    <hr>
+    <pre>{{ vm.product }}</pre>
 </section>
