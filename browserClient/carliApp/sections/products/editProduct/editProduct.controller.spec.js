@@ -15,15 +15,7 @@ describe('The Edit Product Controller', function(){
         },
         load: function(){
             return {
-                name: 'Test Product',
-                "contacts": [
-                    {
-                        "contactType": "Billing",
-                        "name": "Bob Martin",
-                        "email": "bob@cleancode.org",
-                        "phoneNumber": "123-555-1234"
-                    }
-                ]
+                name: 'Test Product'
             };
         },
         reset: function(){
@@ -87,25 +79,5 @@ describe('The Edit Product Controller', function(){
         expect( editCtrl.editable ).to.equal(true);
     }));
 
-    it('should be able to delete the first Billing contact', inject(function($controller) {
-        var editCtrl = $controller('editProductController', mockDependenciesForEditProduct);
-        var contacts = editCtrl.product.contacts;
-        var firstBillingContact = findFirstBillingContact(contacts);
-        var initialLength = contacts.length;
-
-        editCtrl.deleteContact(firstBillingContact);
-        expect( contacts.length ).to.equal(initialLength - 1);
-    }));
 
 });
-
-function findFirstBillingContact(contacts) {
-    var firstBillingContact = null;
-    for (var i = 0; i < contacts.length; i++) {
-        if (contacts[i].contactType === 'Billing') {
-            firstBillingContact = contacts[i];
-            break;
-        }
-    }
-    return firstBillingContact;
-}
