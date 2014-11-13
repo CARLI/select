@@ -1,6 +1,6 @@
 var Q = require('q')
-  , request = require( 'request' )
   , config = require( '../config' )
+  , request = config.request
   , db_host = config.couchDbUrl + '/' + config.couchDbName
 ;
 

@@ -5,7 +5,7 @@ function libraryService( CarliModules, $q ) {
 
     var libraryModule = CarliModules.Library;
 
-    var libraryStore = CarliModules.Store( CarliModules.MemoryStore({}) );
+    var libraryStore = CarliModules.Store( CarliModules[CarliModules.config.store]() );
 
     libraryModule.setStore( libraryStore );
 

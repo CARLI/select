@@ -7,5 +7,6 @@ module.exports = {
     Store: require('./Store'),
     MemoryStore: require('./Store/MemoryStore'),
     FileStore: require('./Store/FileStore'),
+    CouchDbStore: require('./Store/CouchDbStore'),
     Validator: require('./Validator')
 };
