@@ -1,6 +1,7 @@
 var Q = require('q')
   , request = require( 'request' )
-  , db_host = 'http://localhost:5984/testy'
+  , config = require( '../config' )
+  , db_host = config.couchDbUrl + '/' + config.couchDbName
 ;
 
 function _cloneData( data ) {
