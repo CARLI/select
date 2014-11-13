@@ -1,4 +1,5 @@
 angular.module('carli.sections.products.edit',[
+    'carli.alerts',
     'carli.productService',
     'carli.viewEditDirectives.viewEditCheckbox',
     'carli.viewEditDirectives.viewEditYesNoOther',
