@@ -6,7 +6,9 @@ function productController( $sce, productService ){
     activate();
 
     function activate() {
-        vm.productList = productService.list();
+        productService.list().then( function(productList){
+            vm.productList = productList;
+        });
     }
 
     vm.productListColumns = [

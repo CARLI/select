@@ -12,9 +12,9 @@ function productService( CarliModules, $q ) {
 
     /* This is fixture data. It can go away. */
     var testProducts = [
-        {"type": "Product", "name": "Foobar Product" },
-        {"type": "Product", "name": "Times New Roman" },
-        {"type": "Product", "name": "Sticky Buddy Lint Roller" }
+        {"type": "Product", isActive: true, "name": "Foobar Product" },
+        {"type": "Product", isActive: true, "name": "Times New Roman" },
+        {"type": "Product", isActive: true, "name": "Sticky Buddy Lint Roller" }
     ];
     testProducts.forEach(function (v) {
         productModule.create(v);
