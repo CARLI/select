@@ -10,6 +10,12 @@
 # Run `grunt generate-karmaconf` to generate it.
 /browserClient/karma.conf.js
 
+# Grunt chooses the implementation of `request` as appropriate
+# for the environment (node vs browser).
+# Run `grunt jsenv:node` or `grunt jsenv:browser` to manually
+# set the desired environment.
+/CARLI/carliRequest.js
+
 #Node
 npm-debug.log
 node_modules/

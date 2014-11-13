@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 module.exports = function(grunt) {
 
     grunt.registerTask('subdir-grunt', subdirGruntTask);
@@ -20,6 +22,8 @@ module.exports = function(grunt) {
         'npm-install',
         'bower-install'
     ]);
+
+    grunt.registerTask('jsenv', setJsEnv);
 
     function subdirGruntTask(dir, task) {
         var done = this.async();
@@ -65,5 +69,22 @@ module.exports = function(grunt) {
                 done(false);
             }
         };
+    }
+
+    function setJsEnv(env) {
+        switch (env) {
+            case 'browser':
+                writeCarliRequestModule('browser-request');
+                break;
+            case 'node':
+                writeCarliRequestModule('request');
+                break;
+            default:
+                throw Error('Invalid environment: ' + env + ', valid options are "node" and "browser"');
+        }
+    }
+
+    function writeCarliRequestModule(module) {
+        fs.writeFileSync('./CARLI/carliRequest.js', "module.exports = require('"+ module +"');\n");
     }
 };
