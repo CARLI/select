@@ -21,7 +21,7 @@
     }
 
     label {
-        margin-top: 22px;
+        margin-top: $label-margin-top;
     }
 
     aside {
@@ -60,7 +60,7 @@
             }
             .add-contact {
                 cursor: pointer;
-                margin-top: 22px;
+                margin-top: $label-margin-top;
                 color: $add-contact-color;
                 padding-right: $plus-icon-padding;
                 &:after {

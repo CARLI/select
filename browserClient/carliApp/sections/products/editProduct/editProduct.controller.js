@@ -1,12 +1,16 @@
 angular.module('carli.sections.products.edit')
     .controller('editProductController', editProductController);
 
-function editProductController( $location, $routeParams, productService, alertService ) {
+function editProductController( $location, $routeParams, libraryService, productService, alertService ) {
     var vm = this;
     var productId = $routeParams.id;
 
     vm.toggleEditable = toggleEditable;
     vm.saveProduct = saveProduct;
+
+    libraryService.list().then( function( libraryList ){
+        vm.libraryList = libraryList;
+    });
 
     //TODO: Move to someplace common since it's on Product, Library, and Product now
     vm.statusOptions = [
@@ -24,7 +28,7 @@ function editProductController( $location, $routeParams, productService, alertSe
     vm.cycleOptions = [
         "Fiscal Year",
         "Calendar Year",
-        "One-Time Purchases",
+        "One-Time Purchase",
         "Alternative Cycle"
     ];
 
@@ -73,7 +77,8 @@ function editProductController( $location, $routeParams, productService, alertSe
         vm.product = {
             type: 'Product',
             isActive: true,
-            contacts: []
+            contacts: [],
+            libraryPrices: {}
         };
         vm.editable = true;
         vm.newProduct = true;

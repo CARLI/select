@@ -14,17 +14,25 @@
         }
 
         view-edit-checkbox:first-of-type {
-            margin-top: 22px;
-        }
-
-        a {
-            color: $orange;
+            margin-top: $label-margin-top;
         }
 
         view-edit-radios {
             span {
                 display: block;
             }
+        }
+
+        .one-time-purchase-settings {
+            clear: both;
+        }
+
+        .library-list {
+            margin-top: $label-margin-top;
+        }
+
+        a {
+            color: $orange;
         }
     }
 }
