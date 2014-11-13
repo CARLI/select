@@ -1,3 +1,11 @@
-input[type='checkbox'] {
-    margin-right: 4px;
+view-edit-checkbox {
+    display: block;
+
+    input[type='checkbox'] {
+        margin-right: 4px;
+    }
+
+    label {
+        margin-top: 0 !important;
+    }
 }

@@ -85,16 +85,6 @@ h4 {
 }
 
 input[type=number],
-label {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    display: block;
-}
-
 input {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -201,8 +191,9 @@ i.fa {
 @import "carliApp/components/entityList/entityList";
 @import "carliApp/components/filterByActive/filterByActive";
 @import "carliApp/components/navBar/navBar";
-@import "carliApp/components/viewEditDirectives/viewEditRadios/viewEditRadios";
+@import "carliApp/components/viewEditDirectives/viewEditCheckbox/viewEditCheckbox";
 @import "carliApp/components/viewEditDirectives/viewEditContact/viewEditContact";
+@import "carliApp/components/viewEditDirectives/viewEditRadios/viewEditRadios";
 
 @import "carliApp/sections/libraries/libraries";
 @import "carliApp/sections/licenses/licenses";

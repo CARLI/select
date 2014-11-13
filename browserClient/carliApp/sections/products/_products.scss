@@ -13,8 +13,18 @@
             }
         }
 
+        view-edit-checkbox:first-of-type {
+            margin-top: 22px;
+        }
+
         a {
             color: $orange;
+        }
+
+        view-edit-radios {
+            span {
+                display: block;
+            }
         }
     }
 }

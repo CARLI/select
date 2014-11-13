@@ -3,7 +3,7 @@ angular.module('carli.viewEditDirectives.viewEditCheckbox')
         return {
             restrict: 'E',
             templateUrl: '/carliApp/components/viewEditDirectives/viewEditCheckbox/viewEditCheckbox.html',
-            scope: { ngModel: '=', editMode: '=', label: '=' },
+            scope: { ngModel: '=', editMode: '=', label: '@' },
             transclude: true
         };
     });

@@ -11,11 +11,11 @@ function editProductController( $location, $routeParams, productService, alertSe
     //TODO: Move to someplace common since it's on Product, Library, and Product now
     vm.statusOptions = [
         {
-            label: 'Active',
+            label: 'Active Product',
             value: true
         },
         {
-            label: 'Inactive',
+            label: 'Inactive Product',
             value: false
         }
     ];

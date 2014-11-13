@@ -51,21 +51,19 @@
                 </view-edit-text-area>
 
                 <div class="column">
-                    <view-edit-checkbox input-id="third-party-product" ng-model="vm.product.isThirdPartyProduct" edit-mode="vm.editable">
+                    <view-edit-checkbox label="3rd Party Product" ng-model="vm.product.isThirdPartyProduct" edit-mode="vm.editable">
                         {{ vm.product.isThirdPartyProduct }}
                     </view-edit-checkbox>
-                    <label for="third-party-product">3rd Party Product</label>
 
-                    <view-edit-checkbox input-id="archive-fee" ng-model="vm.product.hasArchiveCapitalFee" edit-mode="vm.editable">
+                    <view-edit-checkbox label="Archive Capital Fee" ng-model="vm.product.hasArchiveCapitalFee" edit-mode="vm.editable">
                         {{ vm.product.hasArchiveCapitalFee }}
                     </view-edit-checkbox>
-                    <label for="archive-fee">Archive Capital Fee</label>
                 </div>
 
                 <div class="column">
                     <label for="productStatus">Status</label>
                     <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.product.isActive" edit-mode="vm.editable">
-                        {{ vm.product.isActive ? 'Active' : 'Inactive' }}
+                        {{ vm.product.isActive ? 'Active Product' : 'Inactive Product' }}
                     </view-edit-radios>
                 </div>
             </div>
