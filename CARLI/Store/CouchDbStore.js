@@ -71,12 +71,12 @@ function storeData( data ) {
       method: "PUT"
     }, function( err, response, body ) {
         var error = err || body.error;
-        data._id = body.id;
-        data._rev = body.rev;
         if( error ) {
             deferred.reject( error );
         }
         else {
+            data._id = body.id;
+            data._rev = body.rev;
             deferred.resolve( data );
         }
     } );
