@@ -5,7 +5,7 @@ function productService( CarliModules ) {
 
     var productModule = CarliModules.Product;
 
-    var productStore = CarliModules.Store( CarliModules.MemoryStore );
+    var productStore = CarliModules.Store( CarliModules[CarliModules.config.store]( CarliModules.config.storeOptions ) );
 
     productModule.setStore( productStore );
 

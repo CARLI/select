@@ -1,7 +1,8 @@
 var Q = require('q')
   , config = require( '../config' )
   , request = config.request
-  , db_host = config.couchDbUrl + '/' + config.couchDbName
+
+  , db_host = undefined
 ;
 
 function _cloneData( data ) {
@@ -133,6 +134,7 @@ function deleteDataFor( type, id ) {
 }
 
 module.exports = function ( options ) {
+    db_host = options.couchDbUrl + '/' + options.couchDbName;
     return {
         typeExistsInStore: typeExistsInStore,
         idForTypeExistsInStore: idForTypeExistsInStore,

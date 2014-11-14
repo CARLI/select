@@ -5,7 +5,7 @@ function licenseService( CarliModules, $q ) {
 
     var licenseModule = CarliModules.License;
 
-    var licenseStore = CarliModules.Store( CarliModules[CarliModules.config.store]() );
+    var licenseStore = CarliModules.Store( CarliModules[CarliModules.config.store]( CarliModules.config.storeOptions ) );
 
     licenseModule.setStore( licenseStore );
 
