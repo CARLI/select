@@ -1,9 +1,9 @@
 angular.module('carli.sections.styleGuide',
     [
         'carli.componentGatherer',
-
         'carli.alerts',
         'carli.viewEditDirectives'
+        'carli.goodSelect'
     ]
 )
     .value('componentExamples', {
