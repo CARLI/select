@@ -10,6 +10,7 @@ module.exports = function ( grunt ) {
      */
     require('load-grunt-tasks')(grunt);
     require('../grunt/jsenv')(grunt);
+    require('../grunt/subdir')(grunt);
 
     /**
      * Load in our build configuration file.
@@ -473,6 +474,7 @@ module.exports = function ( grunt ) {
     grunt.registerTask( 'build', [
         'clean',
         'jsenv:browser',
+        'subdir-grunt:../CARLI:ensure-local-config',
         'newer:jshint',
         'newer:copy:build_appjs', 
         'newer:copy:build_vendorjs',
