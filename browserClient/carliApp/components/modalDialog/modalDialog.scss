@@ -12,10 +12,13 @@ modal-dialog {
         
         button.close {
             color: #fff;
-            font-size: 1.5rem;
             line-height: $height;
             opacity: 1;
             text-shadow: none;
+            
+            i.fa {
+                font-size: 1.5rem;
+            }
         }
         
         h4 {
