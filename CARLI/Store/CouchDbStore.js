@@ -50,8 +50,6 @@ function getDataFor( type, id ) {
     request({ url: db_host + '/' + id },
         function ( err, response, body ) {
             var data = JSON.parse( body );
-            delete data._id;
-            delete data._rev;
             var error = err || data.error;
             if( error ) {
                 deferred.reject( error );
@@ -71,8 +69,9 @@ function storeData( data ) {
       json: data,
       method: "PUT"
     }, function( err, response, body ) {
-        data._rev = body.rev;
         var error = err || body.error;
+        data._id = body.id;
+        data._rev = body.rev;
         if( error ) {
             deferred.reject( error );
         }

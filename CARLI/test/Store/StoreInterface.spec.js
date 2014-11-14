@@ -112,13 +112,16 @@ function test( storeTypeName, options ) {
             } );
 
             it( 'should save the data under id if id property is set', function() {
-                return expect( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.eventually.have.deep.property( 'id', objectWithIdSaveId );
+                return expect( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.eventually.have.deep.property( 'foo', 'baz' );
             } );
 
             it( 'should update the store if called with the same id', function(){
-                objectWithId.foo = 'new value';
-                return DataStore.save( objectWithId ).then( function() {
-                    return expect( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.eventually.have.deep.property( 'id', objectWithIdSaveId );
+                return DataStore.get( { id: objectWithId.id, type: objectWithId.type } )
+                .then( function( object ) {
+                    object.foo = 'new value';
+                    return DataStore.save( object )
+                }).then( function( savedObject ) {
+                    return expect(DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.eventually.have.deep.property( 'foo', 'new value' );
                 } );
             } );
 
