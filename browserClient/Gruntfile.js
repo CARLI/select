@@ -9,6 +9,8 @@ module.exports = function ( grunt ) {
      * load-grunt-tasks parses package.json and loads everything matching 'grunt-*'
      */
     require('load-grunt-tasks')(grunt);
+    require('../grunt/jsenv')(grunt);
+    require('../grunt/subdir')(grunt);
 
     /**
      * Load in our build configuration file.
@@ -417,7 +419,6 @@ module.exports = function ( grunt ) {
 
     grunt.initConfig( _.extend( taskConfig, userConfig ) );
 
-
     /**
      * A utility function to get all app JavaScript sources.
      */
@@ -472,6 +473,8 @@ module.exports = function ( grunt ) {
      */
     grunt.registerTask( 'build', [
         'clean',
+        'jsenv:browser',
+        'subdir-grunt:../CARLI:ensure-local-config',
         'newer:jshint',
         'newer:copy:build_appjs', 
         'newer:copy:build_vendorjs',
@@ -527,7 +530,7 @@ module.exports = function ( grunt ) {
     grunt.registerTask( 'serve', [
         'build',
         'karma:unit',
-        'protractor_webdriver',
+        //'protractor_webdriver',
         'connect:serve',
         'watch'
     ]);
@@ -567,11 +570,9 @@ module.exports = function ( grunt ) {
         grunt.file.write(grunt.config('karma.options.configFile'), configString);
     });
 
-
     /**
      * The default task is to build and compile.
      */
     grunt.registerTask( 'default', [ 'build', 'compile' ] );
-
 
 };

@@ -1,6 +1,8 @@
 var Q = require('q')
-  , request = require( 'request' )
-  , db_host = 'http://localhost:5984/testy'
+  , config = require( '../config' )
+  , request = config.request
+
+  , db_host = undefined
 ;
 
 function _cloneData( data ) {
@@ -9,7 +11,7 @@ function _cloneData( data ) {
 
 function typeExistsInStore( type ) {
     var deferred = Q.defer();
-    request({ url: db_host + '/' + '_design/CARLI/_view/doc_types?group=true' },
+    request({ url: db_host + '/' + '_design/CARLI/_view/docTypes?group=true' },
         function ( err, response, body ) {
             var data = JSON.parse( body );
             if( data.rows ) {
@@ -49,8 +51,6 @@ function getDataFor( type, id ) {
     request({ url: db_host + '/' + id },
         function ( err, response, body ) {
             var data = JSON.parse( body );
-            delete data._id;
-            delete data._rev;
             var error = err || data.error;
             if( error ) {
                 deferred.reject( error );
@@ -70,12 +70,13 @@ function storeData( data ) {
       json: data,
       method: "PUT"
     }, function( err, response, body ) {
-        data._rev = body.rev;
         var error = err || body.error;
         if( error ) {
             deferred.reject( error );
         }
         else {
+            data._id = body.id;
+            data._rev = body.rev;
             deferred.resolve( data );
         }
     } );
@@ -133,6 +134,7 @@ function deleteDataFor( type, id ) {
 }
 
 module.exports = function ( options ) {
+    db_host = options.couchDbUrl + '/' + options.couchDbName;
     return {
         typeExistsInStore: typeExistsInStore,
         idForTypeExistsInStore: idForTypeExistsInStore,

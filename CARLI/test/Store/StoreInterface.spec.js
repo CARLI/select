@@ -56,6 +56,14 @@ function test( storeTypeName, options ) {
                 return expect( DataStore.save( { id: id, type: 'testy' } ) ).to.eventually.have.deep.property( 'id', id );
             } );
 
+            it( 'should be able to save document twice (update)', function() {
+                var id = uuid.v4();
+                return DataStore.save( { id: id, type: 'testy' } )
+                .then( function( new_doc ) {
+                    return expect( DataStore.save( new_doc ) ).to.eventually.have.deep.property( 'id', id );
+                } );
+            } );
+
         } );
 
 
@@ -111,14 +119,14 @@ function test( storeTypeName, options ) {
                 return expect( DataStore.get( { id: simpleObjectSaveId, type: simpleObject.type } ) ).to.eventually.deep.have.deep.property( 'id', simpleObject.id );
             } );
 
-            it( 'should save the data under id if id property is set', function() {
-                return expect( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.eventually.have.deep.property( 'id', objectWithIdSaveId );
-            } );
-
             it( 'should update the store if called with the same id', function(){
-                objectWithId.foo = 'new value';
-                return DataStore.save( objectWithId ).then( function() {
-                    return expect( DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.eventually.have.deep.property( 'id', objectWithIdSaveId );
+                var new_value = uuid.v4();
+                return DataStore.get( { id: objectWithId.id, type: objectWithId.type } )
+                .then( function( object ) {
+                    object.foo = new_value;
+                    return DataStore.save( object )
+                }).then( function( savedObject ) {
+                    return expect(DataStore.get( { id: objectWithIdSaveId, type: objectWithId.type } ) ).to.eventually.have.deep.property( 'foo', new_value );
                 } );
             } );
 

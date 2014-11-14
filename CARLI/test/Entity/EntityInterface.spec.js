@@ -2,7 +2,8 @@ var chai   = require( 'chai' )
   , expect = chai.expect
   , uuid   = require( 'node-uuid' )
   , Store = require( '../../Store' )
-  , MemoryStore = require('../../Store/MemoryStore')()
+  , config = require( '../../config' )
+  , StoreModule = require( '../../Store/' + config.store )( config.storeOptions )
   , chaiAsPromised = require( 'chai-as-promised' )
   , Q     = require( 'q' )
 ;
@@ -28,7 +29,7 @@ function test( entityTypeName, validData, invalidData ) {
             expect( EntityRepository.setStore ).to.be.a( 'function' );
         } );
 
-        EntityRepository.setStore( Store( MemoryStore ) );
+        EntityRepository.setStore( Store( StoreModule ) );
 
         it( 'should have a create function', function() {
             expect(EntityRepository.create).to.be.a('function');
