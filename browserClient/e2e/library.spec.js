@@ -257,12 +257,17 @@ describe('The New Library screen', function () {
 
 describe('Creating a New Library', function(){
     it('should save a new Library when filling in the form and clicking save', function() {
-
         pageConfig.addEmptyContactsForTestData();
         pageConfig.fillInLibraryWithTestData();
 
         pageConfig.submit.click();
+    });
 
+    it('should go back to the list screen after submitting', function() {
+        expect( browser.getLocationAbsUrl() ).toBe('/library');
+    });
+
+    it('should find the new Library in the list screen', function(){
         pageConfig.listFilterShowAll.click();
 
         element.all(by.repeater('entity in values'))
