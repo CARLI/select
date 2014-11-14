@@ -15,6 +15,9 @@
 # Run `grunt jsenv:node` or `grunt jsenv:browser` to manually
 # set the desired environment.
 /CARLI/carliRequest.js
+# Ignore CARLI local config, which can be used to override the
+# default configuration that is in the repository
+/CARLI/config/local.js
 
 #Node
 npm-debug.log
