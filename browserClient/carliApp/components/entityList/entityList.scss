@@ -58,6 +58,9 @@ body {
     }
 
     ul.entity-list {
+        list-style: none inside;
+        padding: 0;
+
         li.column-headers {
             .column, .column:first-child {
                 color: $table-header-fg-color;
@@ -67,8 +70,7 @@ body {
                 padding: .5rem 1rem;
             }
         }
-        list-style: none inside;
-        padding: 0;
+
         li {
             @include flexbox;
             background: $white;

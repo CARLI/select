@@ -1,23 +1,23 @@
-describe('The product provider service', function() {
+describe('The Product service', function() {
     beforeEach(module('carli.productService'));
 
-    it('should provide productService', inject(function(productService) {
-        expect(productService).to.be.an('object');
+    it( 'should provide productService', inject( function(productService) {
+        expect(productService).to.be.an('Object');
     }));
 
-/* TODO: learn how to use Mocha/Chai to test these promise-related methods
-    it('productService.getProductList should return an array', inject(function(productService) {
-        var products = productService.getProductList();
-        expect(products).to.be.an('array');
-        expect(products).to.not.be.empty();
-        return products;
+    it( 'should provide a list method', inject( function(productService) {
+        expect(productService.list).to.be.a('Function');
     }));
 
-    it('productService.getProduct should return an object', inject(function(productService) {
-        var product = productService.getProduct(0);
-        expect(product).to.be.an('object');
-        expect(product).to.have.property('id');
-        return product;
+    it( 'should provide a create method', inject( function(productService) {
+        expect(productService.create).to.be.a('Function');
     }));
-*/
+
+    it( 'should provide a update method', inject( function(productService) {
+        expect(productService.update).to.be.a('Function');
+    }));
+
+    it( 'should provide a load method', inject( function(productService) {
+        expect(productService.load).to.be.a('Function');
+    }));
 });

@@ -1,7 +1,7 @@
 
 describe('The Edit License Controller', function(){
 
-    var mockLocation, mockLicenseService, mockDependeciesForNewLicese, mockDependenciesForEditLicense;
+    var mockLocation, mockLicenseService, mockDependeciesForNewLicense, mockDependenciesForEditLicense;
 
     beforeEach(module('carli.sections.licenses.edit'));
 

@@ -1,21 +1,25 @@
 angular.module('carli.sections.products.edit')
     .controller('editProductController', editProductController);
 
-function editProductController( $location, $routeParams, productService ) {
+function editProductController( $location, $routeParams, libraryService, productService, alertService ) {
     var vm = this;
     var productId = $routeParams.id;
 
     vm.toggleEditable = toggleEditable;
     vm.saveProduct = saveProduct;
 
-    //TODO: Move to someplace common since it's on Vendor, Library, and Product now
+    libraryService.list().then( function( libraryList ){
+        vm.libraryList = libraryList;
+    });
+
+    //TODO: Move to someplace common since it's on Product, Library, and Product now
     vm.statusOptions = [
         {
-            label: 'Active',
+            label: 'Active Product',
             value: true
         },
         {
-            label: 'Inactive',
+            label: 'Inactive Product',
             value: false
         }
     ];
@@ -24,7 +28,7 @@ function editProductController( $location, $routeParams, productService ) {
     vm.cycleOptions = [
         "Fiscal Year",
         "Calendar Year",
-        "One-Time Purchases",
+        "One-Time Purchase",
         "Alternative Cycle"
     ];
 
@@ -73,13 +77,16 @@ function editProductController( $location, $routeParams, productService ) {
         vm.product = {
             type: 'Product',
             isActive: true,
-            contacts: []
+            contacts: [],
+            libraryPrices: {}
         };
         vm.editable = true;
         vm.newProduct = true;
     }
     function initializeForExistingProduct() {
-        vm.product = productService.load(productId);
+        productService.load(productId).then( function( product ) {
+            vm.product = product;
+        } );
         vm.editable = false;
         vm.newProduct = false;
     }
@@ -90,11 +97,22 @@ function editProductController( $location, $routeParams, productService ) {
 
     function saveProduct(){
         if ( productId !== 'new' ){
-            productService.update( vm.product );
+            productService.update( vm.product ).then(function(){
+                alertService.putAlert('Product updated', {severity: 'success'});
+                $location.path('/product');
+            })
+            .catch(function(error) {
+                alertService.putAlert(error, {severity: 'danger'});
+            });
         }
         else {
-            productService.create( vm.product );
+            productService.create( vm.product ).then(function(){
+                alertService.putAlert('Product added', {severity: 'success'});
+                $location.path('/product');
+            })
+            .catch(function(error) {
+                alertService.putAlert(error, {severity: 'danger'});
+            });
         }
-        $location.path('/product');
     }
 }
