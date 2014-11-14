@@ -8,7 +8,6 @@ SCRIPTS=./jenkins/scripts
 $SCRIPTS/add-build-number.sh qa &&
 $SCRIPTS/build-container.sh grunt &&
 $SCRIPTS/build-container.sh couchdb &&
-$SCRIPTS/run-test-container.sh &&
 $SCRIPTS/tag-container.sh grunt "qa-$BUILD_NUMBER" &&
 $SCRIPTS/run-db-container.sh qa &&
 $SCRIPTS/run-serve-container.sh qa 9080

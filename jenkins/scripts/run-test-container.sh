@@ -1,11 +1,14 @@
 #!/bin/sh
 
+instance=$1
+
 sudo docker run --detach=true --name=carli-selenium --privileged -p 4444 -p 5900 elgalu/docker-selenium
 
 sudo docker run \
     --name carli-grunt-test \
     --workdir=/carli-select \
     --link=carli-selenium:selenium \
+    --link=carli-couchdb-$instance:couchdb \
     -e "CARLI_DEV_SERVER_URL=$CARLI_DEV_SERVER_URL" \
     carli-grunt /carli-select/docker/grunt/test.sh
 rc=$?
