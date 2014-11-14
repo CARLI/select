@@ -101,37 +101,35 @@
 
                 <div class="clearfix double-gap-bottom">
                     <div class="column">
-                        <div class="row">
-                            <label for="productCycleType">Cycle</label>
-                            <view-edit-select ng-model="vm.product.cycleType" items="vm.cycleOptions" edit-mode="vm.editable">
-                                {{ vm.product.cycleType }}
-                        </view-edit-select>
-                        </div>
 
-                        <div class="row">
-                            <label>Price Cap</label>
-                            <view-edit-text-field ng-model="vm.product.priceCap" edit-mode="vm.editable">
-                                {{ vm.product.priceCap }}
-                            </view-edit-text-field>
-                        </div>
+                        <label>Price Cap</label>
+                        <view-edit-text-field ng-model="vm.product.priceCap" edit-mode="vm.editable">
+                            {{ vm.product.priceCap }}
+                        </view-edit-text-field>
+
+                        <label>Cycle</label>
+                        <view-edit-select ng-model="vm.product.cycleType" items="vm.cycleOptions" edit-mode="vm.editable">
+                            {{ vm.product.cycleType }}
+                        </view-edit-select>
+
                     </div>
 
                     <div class="column">
-                        <label for="productLicenseAgreement">License Agreement</label>
+                        <label>License Agreement</label>
                         <view-edit-text-field id="productLicenseAgreement" ng-model="vm.product.licenseAgreement" edit-mode="vm.editable">
                             {{ vm.product.licenseAgreement }}
                         </view-edit-text-field>
 
-                        <label for="productCycleType">Detail Codes</label>
+                        <label>Detail Codes</label>
                         <view-edit-select ng-model="vm.product.detailCode" items="vm.productDetailCodeOptions" edit-mode="vm.editable">
                             {{ vm.product.detailCode }}
                         </view-edit-select>
                     </div>
                 </div>
 
-                <div>
+                <div style="background: steelblue; color: #FFF; line-height: 6rem; text-align: center;">
                     <!-- funding -->
-                    FUNding stuff goes here
+                    TODO: Funding stuff goes here
                 </div>
 
                 <div>
