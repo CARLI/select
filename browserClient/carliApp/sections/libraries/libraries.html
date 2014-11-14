@@ -2,7 +2,7 @@
     <div class="list-page-header">
         <h1>Libraries</h1>
         <div class="button-container">
-            <a id="update-fte" href="#" class="carli-button" data-toggle="modal" data-target="#edit-fte-modal">Update FTE</a>
+            <a id="update-fte" href="#" class="carli-button" data-toggle="modal" data-target="{{ '#' + vm.fteModalId }}">Update FTE</a>
             <a id="new-library" href="/library/new" class="carli-button">New Library <i class="fa fa-plus-circle"></i></a>
         </div>
     </div>
@@ -12,4 +12,18 @@
     </section>
 </section>
 
-<ng-include src="'carliApp/sections/libraries/editFteModal.html'"></ng-include>
+<!-- ng-include src="'carliApp/sections/libraries/editFteModal.html'"></ng-include -->
+<modal-dialog title="'Update Full Time Enrollment (FTE)'" id="vm.fteModalId" submit-fn="vm.fteModalSubmit()">
+    <div>
+        Last Updated: {{ vm.mostRecentFteUpdateDate }}
+    </div>
+    <ul class="fte-list">
+        <li >
+            <div class="column" ng-repeat="library in vm.libraryList">
+                {{ library.name }}:
+                <input type="number" ng-model="library.fte">
+            </div>
+        </li>
+
+    </ul>
+</modal-dialog>

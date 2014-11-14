@@ -6,7 +6,10 @@ function libraryController( $sce, libraryService ){
 
     vm.mostRecentFteUpdateDate = libraryService.getMostRecentFteUpdateDate();
     vm.saveAllLibraries = saveAllLibraries;
-    vm.closeFteModal = closeFteModal;
+    vm.fteModalId = 'edit-fte-modal';
+    vm.fteModalSubmit = function() {
+        vm.saveAllLibraries();
+    };
 
     libraryService.list().then( function( libraryList ){
         vm.libraryList = libraryList;
@@ -31,9 +34,5 @@ function libraryController( $sce, libraryService ){
         for (var i in vm.libraryList) {
             libraryService.update( vm.libraryList[i]);
         }
-    }
-
-    function closeFteModal() {
-        $('#edit-fte-modal').modal('hide');
     }
 }
