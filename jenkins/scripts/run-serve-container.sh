@@ -10,4 +10,4 @@ sudo docker run \
     --workdir=/carli-select/browserClient \
     --link=carli-couchdb-$instance:couchdb \
     -p $host_port:8000 \
-    carli-grunt grunt serve:jenkins
+    carli-grunt /carli-select/docker/grunt/serve.sh
