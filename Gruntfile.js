@@ -15,6 +15,10 @@ module.exports = function(grunt) {
         grunt.task.run(['subdir-exec:browserClient:bower --allow-root install']);
     });
 
+    grunt.registerTask('deploy-db', function() {
+        grunt.task.run(['subdir-exec:db:./deploy']);
+    });
+
     grunt.registerTask('install-deps', [
         'npm-install',
         'bower-install'

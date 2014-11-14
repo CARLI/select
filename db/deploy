@@ -2,4 +2,4 @@
 
 curl -X DELETE http://localhost:5984/testy;
 curl -X PUT http://localhost:5984/testy;
-couchapp push CARLI-DesignDoc.js http://localhost:5984/testy;
+./node_modules/.bin/couchapp push CARLI-DesignDoc.js http://localhost:5984/testy;
