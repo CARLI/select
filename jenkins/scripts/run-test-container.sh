@@ -7,7 +7,7 @@ sudo docker run \
     --workdir=/carli-select \
     --link=carli-selenium:selenium \
     -e "CARLI_DEV_SERVER_URL=$CARLI_DEV_SERVER_URL" \
-    carli-grunt grunt test:jenkins
+    carli-grunt /carli-select/docker/grunt/test.sh
 rc=$?
 
 mkdir -p artifacts/test-results
