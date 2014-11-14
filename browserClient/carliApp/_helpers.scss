@@ -1,0 +1,16 @@
+$gap: 1rem;
+$sides: 'top' 'right' 'bottom' 'left';
+
+@each $side in $sides {
+    .gap-#{$side} {
+        margin-#{$side}: $gap;
+    }
+
+    .double-gap-#{$side} {
+        margin-#{$side}: $gap * 2;
+    }
+
+    .half-gap-#{$side} {
+        margin-#{$side}: $gap / 2;
+    }
+}
