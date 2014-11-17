@@ -2,7 +2,8 @@
 
 var CARLI  = require( '../CARLI'),
     dbUrl  = CARLI.config.storeOptions.couchDbUrl,
-    dbName = CARLI.config.storeOptions.couchDbName
+    dbName = CARLI.config.storeOptions.couchDbName,
+    Q = require('Q')
 ;
 
 var storeOptions = {
@@ -16,12 +17,27 @@ CARLI.License.setStore( store );
 CARLI.Vendor.setStore( store );
 CARLI.Product.setStore( store );
 
-generateLibraryFixtures();
-generateLicenseFixtures();
-generateVendorFixtures();
-generateProductFixtures();
+generateLibraryFixtures().then( function( results ){
+    console.log('Done creating Libraries');
+
+    generateProductFixtures().then( function (results){
+        console.log('Finished generating Products');
+    });
+});
+
+generateLicenseFixtures().then( function( results ){
+    console.log('Done creating Licenses');
+});
+
+generateVendorFixtures().then( function( results ){
+    console.log('Done creating Vendors');
+});
+
 
 function generateLibraryFixtures() {
+    var entityCreationPromises = [];
+    console.log("Generate Libraries");
+
     var testLibraries = [
         {"type":"Library", "isActive":true, "name":"Test Library", "institutionYears":"2 Year", "institutionType":"Public", "contacts":[]},
         {"type":"Library", "isActive":false, "name":"Inactive Library", "institutionYears":"2 Year", "institutionType":"Public", "contacts":[]},
@@ -29,15 +45,17 @@ function generateLibraryFixtures() {
         {"type":"Library", "isActive":true, "name":"Test Library with a much longer name than usual", "institutionYears":"4 Year", "institutionType":"Public", "contacts":[]},
         {"type":"Library", "isActive":true, "name":"Test Library 5", "institutionYears":"4 Year", "institutionType":"Private", "contacts":[]}
     ];
-    function createTestLibraries() {
-        testLibraries.forEach(function (l) {
-            CARLI.Library.create(l);
-        });
-    }
-    createTestLibraries();
+    testLibraries.forEach(function (l) {
+        entityCreationPromises.push( CARLI.Library.create(l) );
+    });
+
+    return Q.all( entityCreationPromises );
 }
 
 function generateLicenseFixtures() {
+    var entityCreationPromises = [];
+    console.log("Generate Licenses");
+
     var testLicenses = [
         {"type": "License", "name": "ACME License 1", "contractNumber": "Contract Number 1", "vendor": {"type": "Vendor", "name": "ACME Publishing", "contacts": [{"contactType":"Billing","name":"Name","email":"Email","phoneNumber":"Phone"},{"contactType":"Billing","name":"Name2","email":"Email2","phoneNumber":"Phone2"},{"contactType":"Sales","name":"Name","email":"Email","phoneNumber":"Phone"}], "websiteUrl": "http://www.acme.com", "isActive": true, "comments": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus enim est, rhoncus ut ligula a, rhoncus maximus urna. Sed orci augue, cursus eget quam et, dignissim rhoncus enim. Nulla nec gravida dui. Nam at ligula quis nisi condimentum interdum id ac dolor.",adminModule:"Morbi pharetra nisl sed faucibus dictum. Vivamus laoreet orci ex, eget feugiat enim consequat quis. Vestibulum ac ornare nisi. Aliquam eros lacus, sodales vitae iaculis et, finibus eget dui. Mauris et convallis ligula."} },
         {"type": "License", "name": "ACME License 2", "contractNumber": "Contract Number 1", "vendor": {"type": "Vendor", "name": "ACME Publishing", "contacts": [{"contactType":"Billing","name":"Name","email":"Email","phoneNumber":"Phone"},{"contactType":"Billing","name":"Name2","email":"Email2","phoneNumber":"Phone2"},{"contactType":"Sales","name":"Name","email":"Email","phoneNumber":"Phone"}], "websiteUrl": "http://www.acme.com", "isActive": true, "comments": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus enim est, rhoncus ut ligula a, rhoncus maximus urna. Sed orci augue, cursus eget quam et, dignissim rhoncus enim. Nulla nec gravida dui. Nam at ligula quis nisi condimentum interdum id ac dolor.",adminModule:"Morbi pharetra nisl sed faucibus dictum. Vivamus laoreet orci ex, eget feugiat enim consequat quis. Vestibulum ac ornare nisi. Aliquam eros lacus, sodales vitae iaculis et, finibus eget dui. Mauris et convallis ligula."} },
@@ -46,11 +64,16 @@ function generateLicenseFixtures() {
 
     ];
     testLicenses.forEach(function (v) {
-        CARLI.License.create(v);
+        entityCreationPromises.push( CARLI.License.create(v) );
     });
+
+    return Q.all( entityCreationPromises );
 }
 
 function generateVendorFixtures() {
+    var entityCreationPromises = [];
+    console.log("Generate Vendors");
+
     var testVendors = [
         {"type": "Vendor", "name": "ACME Publishing", "contacts": [{"contactType":"Billing","name":"Name","email":"Email","phoneNumber":"Phone"},{"contactType":"Billing","name":"Name2","email":"Email2","phoneNumber":"Phone2"},{"contactType":"Sales","name":"Name","email":"Email","phoneNumber":"Phone"}], "websiteUrl": "http://www.acme.com", "isActive": true, "comments": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus enim est, rhoncus ut ligula a, rhoncus maximus urna. Sed orci augue, cursus eget quam et, dignissim rhoncus enim. Nulla nec gravida dui. Nam at ligula quis nisi condimentum interdum id ac dolor.",adminModule:"Morbi pharetra nisl sed faucibus dictum. Vivamus laoreet orci ex, eget feugiat enim consequat quis. Vestibulum ac ornare nisi. Aliquam eros lacus, sodales vitae iaculis et, finibus eget dui. Mauris et convallis ligula."},
         {"type": "Vendor", "name": "Foobar Publishing", "contacts": [], "websiteUrl": "http://www.foobar.com", "isActive": true, "comments": "foobar"},
@@ -61,18 +84,49 @@ function generateVendorFixtures() {
         {"type": "Vendor", "name": "FOOBAR of New York", "contacts": [], "websiteUrl": "http://www.foobarny.com", "isActive": true, "comments": "acme"}
     ];
     testVendors.forEach(function (v) {
-        CARLI.Vendor.create(v);
+        entityCreationPromises.push( CARLI.Vendor.create(v) );
     });
+
+    return Q.all( entityCreationPromises );
 }
 
 function generateProductFixtures() {
+    var testProductPromises = [];
+    console.log("Generate Products");
+
     var testProducts = [
-        {"type": "Product", "name": "Foobar Product" },
-        {"type": "Product", "name": "Times New Roman" },
-        {"type": "Product", "name": "Sticky Buddy Lint Roller" }
+        {"type": "Product", "name": "Fiscal Year Product", "cycleType": "Fiscal Year" },
+        {"type": "Product", "name": "Calendar Year Product", "cycleType": "Calendar Year" },
+        {"type": "Product", "name": "Alternative Cycle Product", "cycleType": "Alternative Cycle" },
+        {"type": "Product", "name": "One-Time Purchase Product 1", "cycleType": "One-Time Purchase", "libraryPrices": {} },
+        {"type": "Product", "name": "One-Time Purchase Product 2", "cycleType": "One-Time Purchase", "libraryPrices": {}  },
+        {"type": "Product", "name": "One-Time Purchase Product 3", "cycleType": "One-Time Purchase", "libraryPrices": {}  },
+        {"type": "Product", "name": "One-Time Purchase Product 4", "cycleType": "One-Time Purchase", "libraryPrices": {}  },
+        {"type": "Product", "name": "One-Time Purchase Product 5", "cycleType": "One-Time Purchase", "libraryPrices": {}  },
+        {"type": "Product", "name": "One-Time Purchase Product 6", "cycleType": "One-Time Purchase", "libraryPrices": {}  }
     ];
-    testProducts.forEach(function (v) {
-        CARLI.Product.create(v);
+
+    var listLibrariesPromise = CARLI.Library.list();
+
+    listLibrariesPromise.then(function( libraryList ){
+        testProducts.forEach(function (product) {
+            var i, libraryId;
+
+            if ( product.cycleType === "One-Time Purchase" ){
+                for ( i = 0 ; i < libraryList.length ; i++ ){
+                    libraryId = libraryList[i].id;
+                    product.libraryPrices[libraryId] = 1000+i;
+                }
+            }
+
+            testProductPromises.push( CARLI.Product.create(product) );
+        });
+
+        return testProductPromises;
+    })
+    .catch( function(result){
+        console.log('ListLibrary promised rejected: ',result);
     });
 
+    return listLibrariesPromise;
 }
