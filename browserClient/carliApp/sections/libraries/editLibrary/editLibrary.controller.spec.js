@@ -12,12 +12,16 @@ describe('The Edit Library Controller', function(){
         mockLibraryService = {
             createOrUpdate: 'neither',
             create: function(){
+                var deferred = $q.defer();
                 this.createOrUpdate = 'create';
-                return { then: function() { } };
+                deferred.resolve();
+                return deferred.promise;
             },
             update: function(){
+                var deferred = $q.defer();
                 this.createOrUpdate = 'update';
-                return { then: function() { } };
+                deferred.resolve();
+                return deferred.promise;
             },
             load: function(){
                 var deferred = $q.defer();

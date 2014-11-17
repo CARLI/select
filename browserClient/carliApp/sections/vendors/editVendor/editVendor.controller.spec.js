@@ -11,12 +11,16 @@ describe('The Edit Vendor Controller', function(){
         mockVendorService = {
             createOrUpdate: 'neither',
             create: function(){
+                var deferred = $q.defer();
                 this.createOrUpdate = 'create';
-                return { then: function(callback) { callback(); } };
+                deferred.resolve();
+                return deferred.promise;
             },
             update: function(){
+                var deferred = $q.defer();
                 this.createOrUpdate = 'update';
-                return { then: function(callback) { callback(); } };
+                deferred.resolve();
+                return deferred.promise;
             },
             load: function(){
                 var deferred = $q.defer();
@@ -88,10 +92,11 @@ describe('The Edit Vendor Controller', function(){
         expect( mockDependenciesForNewVendor.vendorService.createOrUpdate ).to.equal('create');
     }));
 
-    it('should add an alert when saving a new Vendor', inject(function($controller){
+    it('should add an alert when saving a new Vendor', inject(function($controller, $rootScope){
         var editCtrl = $controller('editVendorController', mockDependenciesForNewVendor);
         expect( mockDependenciesForNewVendor.alertService.alertCount ).to.equal( 0 );
         editCtrl.saveVendor();
+        $rootScope.$digest();
         expect( mockDependenciesForNewVendor.alertService.alertCount ).to.equal( 1 );
     }));
 
@@ -110,10 +115,11 @@ describe('The Edit Vendor Controller', function(){
         expect( mockDependenciesForEditVendor.vendorService.createOrUpdate ).to.equal('update');
     }));
 
-    it('should add an alert when saving an existing Vendor', inject(function($controller){
+    it('should add an alert when saving an existing Vendor', inject(function($controller, $rootScope){
         var editCtrl = $controller('editVendorController', mockDependenciesForNewVendor);
         expect( mockDependenciesForNewVendor.alertService.alertCount ).to.equal( 0 );
         editCtrl.saveVendor();
+        $rootScope.$digest();
         expect( mockDependenciesForNewVendor.alertService.alertCount ).to.equal( 1 );
     }));
 
