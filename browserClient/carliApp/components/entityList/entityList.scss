@@ -99,6 +99,9 @@ body {
                     font-weight: 700;
                     border-left: 0;
                 }
+                .list-button {
+                    @include list-button;
+                }
             }
 
             .column, .column a {

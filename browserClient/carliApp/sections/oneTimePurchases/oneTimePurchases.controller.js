@@ -16,7 +16,7 @@ function oneTimePurchasesController( $sce, libraryService ){
         {
             label: "Library",
             contentFunction: function(library) {
-                return $sce.trustAsHtml('<a href="library/' + library.id + '">' + library.name + '</a>');
+                return $sce.trustAsHtml('<a href="oneTimePurchases/' + library.id + '">' + library.name + '</a>');
             }
         },
         {
@@ -30,7 +30,7 @@ function oneTimePurchasesController( $sce, libraryService ){
         {
             label: "",
             contentFunction: function(library) {
-                return $sce.trustAsHtml('<a class="carli-button" href="oneTimePurchases/' + library.id + '">View <i class="fa fa-chevron-circle-right"></i></a>');
+                return $sce.trustAsHtml('<a class="carli-button list-button" href="oneTimePurchases/' + library.id + '">View <i class="fa fa-chevron-circle-right"></i></a>');
             }
         }
     ];
