@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var CARLI = require( '../CARLI' )
+var CARLI  = require( '../CARLI'),
     dbUrl  = CARLI.config.storeOptions.couchDbUrl,
     dbName = CARLI.config.storeOptions.couchDbName
 ;
@@ -16,13 +16,12 @@ CARLI.License.setStore( store );
 CARLI.Vendor.setStore( store );
 CARLI.Product.setStore( store );
 
-libraryFixtures();
-licenseFixtures();
-vendorFixtures();
-productFixtures();
+generateLibraryFixtures();
+generateLicenseFixtures();
+generateVendorFixtures();
+generateProductFixtures();
 
-function libraryFixtures() {
-    /* This is fixture data. It can go away. */
+function generateLibraryFixtures() {
     var testLibraries = [
         {"type":"Library", "isActive":true, "name":"Test Library", "institutionYears":"2 Year", "institutionType":"Public", "contacts":[]},
         {"type":"Library", "isActive":false, "name":"Inactive Library", "institutionYears":"2 Year", "institutionType":"Public", "contacts":[]},
@@ -36,10 +35,9 @@ function libraryFixtures() {
         });
     }
     createTestLibraries();
-};
+}
 
-function licenseFixtures() {
-    /* This is fixture data. It can go away. */
+function generateLicenseFixtures() {
     var testLicenses = [
         {"type": "License", "name": "ACME License 1", "contractNumber": "Contract Number 1", "vendor": {"type": "Vendor", "name": "ACME Publishing", "contacts": [{"contactType":"Billing","name":"Name","email":"Email","phoneNumber":"Phone"},{"contactType":"Billing","name":"Name2","email":"Email2","phoneNumber":"Phone2"},{"contactType":"Sales","name":"Name","email":"Email","phoneNumber":"Phone"}], "websiteUrl": "http://www.acme.com", "isActive": true, "comments": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus enim est, rhoncus ut ligula a, rhoncus maximus urna. Sed orci augue, cursus eget quam et, dignissim rhoncus enim. Nulla nec gravida dui. Nam at ligula quis nisi condimentum interdum id ac dolor.",adminModule:"Morbi pharetra nisl sed faucibus dictum. Vivamus laoreet orci ex, eget feugiat enim consequat quis. Vestibulum ac ornare nisi. Aliquam eros lacus, sodales vitae iaculis et, finibus eget dui. Mauris et convallis ligula."} },
         {"type": "License", "name": "ACME License 2", "contractNumber": "Contract Number 1", "vendor": {"type": "Vendor", "name": "ACME Publishing", "contacts": [{"contactType":"Billing","name":"Name","email":"Email","phoneNumber":"Phone"},{"contactType":"Billing","name":"Name2","email":"Email2","phoneNumber":"Phone2"},{"contactType":"Sales","name":"Name","email":"Email","phoneNumber":"Phone"}], "websiteUrl": "http://www.acme.com", "isActive": true, "comments": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus enim est, rhoncus ut ligula a, rhoncus maximus urna. Sed orci augue, cursus eget quam et, dignissim rhoncus enim. Nulla nec gravida dui. Nam at ligula quis nisi condimentum interdum id ac dolor.",adminModule:"Morbi pharetra nisl sed faucibus dictum. Vivamus laoreet orci ex, eget feugiat enim consequat quis. Vestibulum ac ornare nisi. Aliquam eros lacus, sodales vitae iaculis et, finibus eget dui. Mauris et convallis ligula."} },
@@ -50,10 +48,9 @@ function licenseFixtures() {
     testLicenses.forEach(function (v) {
         CARLI.License.create(v);
     });
-};
+}
 
-function vendorFixtures() {
-    /* This is fixture data. It can go away. */
+function generateVendorFixtures() {
     var testVendors = [
         {"type": "Vendor", "name": "ACME Publishing", "contacts": [{"contactType":"Billing","name":"Name","email":"Email","phoneNumber":"Phone"},{"contactType":"Billing","name":"Name2","email":"Email2","phoneNumber":"Phone2"},{"contactType":"Sales","name":"Name","email":"Email","phoneNumber":"Phone"}], "websiteUrl": "http://www.acme.com", "isActive": true, "comments": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus enim est, rhoncus ut ligula a, rhoncus maximus urna. Sed orci augue, cursus eget quam et, dignissim rhoncus enim. Nulla nec gravida dui. Nam at ligula quis nisi condimentum interdum id ac dolor.",adminModule:"Morbi pharetra nisl sed faucibus dictum. Vivamus laoreet orci ex, eget feugiat enim consequat quis. Vestibulum ac ornare nisi. Aliquam eros lacus, sodales vitae iaculis et, finibus eget dui. Mauris et convallis ligula."},
         {"type": "Vendor", "name": "Foobar Publishing", "contacts": [], "websiteUrl": "http://www.foobar.com", "isActive": true, "comments": "foobar"},
@@ -68,8 +65,7 @@ function vendorFixtures() {
     });
 }
 
-function productFixtures() {
-    /* This is fixture data. It can go away. */
+function generateProductFixtures() {
     var testProducts = [
         {"type": "Product", "name": "Foobar Product" },
         {"type": "Product", "name": "Times New Roman" },
@@ -78,4 +74,5 @@ function productFixtures() {
     testProducts.forEach(function (v) {
         CARLI.Product.create(v);
     });
+
 }
