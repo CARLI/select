@@ -19,6 +19,10 @@
 # default configuration that is in the repository
 /CARLI/config/local.js
 
+#Couch
+couchdb.stderr
+couchdb.stdout
+
 #Node
 npm-debug.log
 node_modules/
