@@ -39,10 +39,12 @@ function editLibraryController( $location, $routeParams, libraryService, alertSe
         vm.library = {
             type: 'Library',
             isActive: true,
-
             contacts: [
+                { contactType: 'Director' },
+                { contactType: 'E-Resources Liaison' },
+                { contactType: 'Other' },
+                { contactType: 'Notification Only' }
             ]
-
         };
         vm.editable = true;
         vm.newLibrary = true;
