@@ -1,0 +1,25 @@
+div[collapsible] {
+
+    margin-bottom: 10px;
+
+    header {
+        border: $default-border;
+
+        &::before {
+            content: 'V  ';
+        }
+    }
+}
+
+div[collapsible].collapsed {
+
+    header {
+        &::before {
+            content: '>  ';
+        }
+    }
+
+    .content {
+        display: none;
+    }
+}
