@@ -1,4 +1,5 @@
 angular.module('carli.sections.oneTimePurchases', [
+    'ngSanitize',
     'carli.libraryService',
-    'carli.collapsible'
+    'carli.sections.oneTimePurchases.selectedProducts'
 ]);

@@ -30,6 +30,11 @@ angular.module('carli.routes',[
         controller:  'oneTimePurchasesController',
         controllerAs:'vm'
     })
+    .when('/oneTimePurchases/:libraryId', {
+        templateUrl: '/carliApp/sections/oneTimePurchases/selectedProducts/selectedProducts.html',
+        controller:  'selectedProductsController',
+        controllerAs:'vm'
+    })
     .when('/vendor', {
         templateUrl: '/carliApp/sections/vendors/vendors.html',
         controller:  'vendorsController',
