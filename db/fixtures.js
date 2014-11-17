@@ -1,9 +1,15 @@
 #!/usr/bin/env node
 
 var CARLI = require( '../CARLI' )
+    dbUrl  = CARLI.config.storeOptions.couchDbUrl,
+    dbName = CARLI.config.storeOptions.couchDbName
 ;
 
-var store = CARLI.Store( CARLI.CouchDbStore() );
+var storeOptions = {
+    couchDbUrl: dbUrl,
+    couchDbName: dbName
+};
+var store = CARLI.Store( CARLI.CouchDbStore(storeOptions) );
 
 CARLI.Library.setStore( store ); 
 CARLI.License.setStore( store );
