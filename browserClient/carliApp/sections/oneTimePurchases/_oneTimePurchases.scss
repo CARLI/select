@@ -1,0 +1,23 @@
+#oneTimePurchases {
+    filter-by-active-toggle {
+        display: none;
+    }
+    entity-list {
+        li:hover .list-button {
+            @include list-button-hover;
+        }
+        .column:first-child {
+            flex: 2 1 70%;
+            padding-bottom: 0;
+        }
+
+        .column {
+            flex: 1 1 15%;
+        }
+
+        .column:last-child {
+            flex: 0 0 120px;
+            padding: 4px;
+        }
+    }
+}

@@ -2,6 +2,11 @@
 $button-padding: 10px;
 $button-height: 40px;
 
+@mixin carli-button-hover {
+    background-color: $light-gray;
+    text-decoration: none;
+    color: $dark-orange;
+}
 .carli-button {
     cursor: pointer;
     font-family: 'Dosis', sans-serif;
@@ -27,24 +32,44 @@ $button-height: 40px;
     }
 
     &:hover {
-        background-color: $light-gray;
-        text-decoration: none;
-        color: $dark-orange;
-
+        @include carli-button-hover;
     }
+}
+
+@mixin cancel-button-hover {
+    color: $dark-purple;
 }
 .cancel-button {
     background-color: $white;
     color: $purple;
     &:hover {
-        color: $dark-purple;
+        @include cancel-button-hover;
     }
+}
+
+@mixin save-button-hover {
+    background-color: $dark-orange;
+    color: $white;
 }
 .save-button {
     background-color: $orange;
     color: $white;
     &:hover {
-        background-color: $dark-orange;
-        color: $white;
+        @include save-button-hover;
     }
+}
+
+@mixin list-button-hover {
+    background-color: $white;
+    color: $orange;
+}
+@mixin list-button {
+    background-color: $white;
+    color: $gray;
+    &:hover {
+        @include list-button-hover;
+    }
+}
+.list-button {
+    @include list-button;
 }
