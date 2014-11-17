@@ -67,12 +67,18 @@ function editLibraryController( $location, $routeParams, libraryService, alertSe
             libraryService.update( vm.library ).then(function(){
                 alertService.putAlert('Library updated', {severity: 'success'});
                 $location.path('/library');
+            })
+            .catch(function(error) {
+                alertService.putAlert(error, {severity: 'danger'});
             });
         }
         else {
             libraryService.create( vm.library ).then(function(){
                 alertService.putAlert('Library created', {severity: 'success'});
                 $location.path('/library');
+            })
+            .catch(function(error) {
+                alertService.putAlert(error, {severity: 'danger'});
             });
         }
     }
