@@ -23,23 +23,31 @@ module.exports = function(grunt) {
         fs.closeSync(fs.openSync(localConfigFile, 'a'));
     }
 
-    function generateContainerConfig() {
-        var host = process.env.COUCHDB_PORT_5984_TCP_ADDR;
-        var port = process.env.COUCHDB_PORT_5984_TCP_PORT;
-
-        if (host === undefined || port === undefined) {
-            console.log('Couch container link not found');
-            return;
+    function generateContainerConfig(instance) {
+        if (instance === undefined) {
+            instance = 'dev';
         }
+        var url = _getCouchDbUrlFor(instance);
 
         var cfg = '';
         cfg += "module.exports = {\n";
         cfg += "    storeOptions: {\n";
-        cfg += "        couchDbUrl: 'http://"+host+":"+port+"',\n";
+        cfg += "        couchDbUrl: "+ url +"\n";
         cfg += "        couchDbName: 'testy'\n";
         cfg += "    }\n";
-        cfg += "}"
+        cfg += "}";
 
         fs.writeFileSync(localConfigFile, cfg);
+    }
+
+    function _getCouchDbUrlFor(instance) {
+        switch (instance) {
+            case 'dev':
+                return 'http://carli-db.dev.pixotech.com';
+            case 'qa':
+                return 'http://carli-db.qa.pixotech.com';
+            default:
+                throw new Error('Invalid instance: ' + instance);
+        }
     }
 };
