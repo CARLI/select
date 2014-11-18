@@ -33,7 +33,9 @@
                             {{ product.name }}
                         </div>
                         <div class="column">TODO: Vendor Name{{ product.vendor.name }}</div>
-                        <div class="column">{{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price }}</div>
+                        <div class="column">
+                            <span class="price">${{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price }}</span>
+                        </div>
                     </header>
                     <div class="content">
                         <div class="column">
@@ -47,8 +49,8 @@
                                     <p>{{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased }}</p>
                                 </div>
                             </div>
-                            <div class="product-boolean-item"><fa name="check"></fa> Funded</div>
-                            <div class="product-boolean-item"><fa name="check"></fa> Requires Annual Access Fee</div>
+                            <div class="product-boolean-item" ng-show=""><fa name="check"></fa> Funded</div>
+                            <div class="product-boolean-item" ng-show="product.oneTimePurchase.annualAccessFee"><fa name="check"></fa> Requires Annual Access Fee</div>
                         </div>
                         <div class="column">
                             <div class="content-item">
