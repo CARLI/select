@@ -5,8 +5,6 @@ body {
     $filter-input-spacing: 0.57rem;
     $filter-by-active-inner-spacing: 1.5em;
 
-    $controls-top-border: 3px solid $black;
-
     $controls-background: $light-gray;
     $icon-color: $orange;
     $zebra-table-color: $light-gray;
@@ -60,6 +58,7 @@ body {
     ul.entity-list {
         list-style: none inside;
         padding: 0;
+        clear: both;
 
         li.column-headers {
             .column, .column:first-child {

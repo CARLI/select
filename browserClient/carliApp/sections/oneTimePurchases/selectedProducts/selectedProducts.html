@@ -7,7 +7,7 @@
             <h1>{{ vm.library.name }}</h1>
         </header>
 
-        <section class="content list-content">
+        <section class="content">
             <a href="/oneTimePurchases" class="carli-button"> <i class="fa fa-chevron-circle-left"></i> Back to Libraries</a>
 
             <menu class="pull-right">
@@ -19,18 +19,19 @@
                 </menuitem>
             </menu>
 
-
-
-
             <ul class="entity-list">
                 <li class="column-headers">
-                    <div class="column" >Product </div>
-                    <div class="column" >Vendor</div>
-                    <div class="column" >Cost</div>
+                    <div class="column">Product </div>
+                    <div class="column">Vendor</div>
+                    <div class="column">Cost</div>
                 </li>
                 <li collapsible class="collapsed" ng-repeat="product in vm.productList | filter: vm.filter">
                     <header>
-                        <div class="column">{{ product.name }}</div>
+                        <div class="column">
+                            <fa name="angle-right"></fa>
+                            <fa name="angle-down"></fa>
+                            {{ product.name }}
+                        </div>
                         <div class="column">TODO: Vendor Name{{ product.vendor.name }}</div>
                         <div class="column">{{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price }}</div>
                     </header>
