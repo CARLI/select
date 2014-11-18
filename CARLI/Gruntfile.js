@@ -36,7 +36,7 @@ module.exports = function(grunt) {
         cfg += "module.exports = {\n";
         cfg += "    storeOptions: {\n";
         cfg += "        couchDbUrl: 'http://"+host+":"+port+"',\n";
-        cfg += "        couchDbName: 'CARLI'\n";
+        cfg += "        couchDbName: 'testy'\n";
         cfg += "    }\n";
         cfg += "}"
 
