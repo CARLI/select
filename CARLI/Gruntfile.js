@@ -32,7 +32,7 @@ module.exports = function(grunt) {
         var cfg = '';
         cfg += "module.exports = {\n";
         cfg += "    storeOptions: {\n";
-        cfg += "        couchDbUrl: "+ url +"\n";
+        cfg += "        couchDbUrl: '"+ url +"',\n";
         cfg += "        couchDbName: 'testy'\n";
         cfg += "    }\n";
         cfg += "}";
