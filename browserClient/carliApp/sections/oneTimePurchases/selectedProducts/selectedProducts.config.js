@@ -1,3 +1,5 @@
 angular.module('carli.sections.oneTimePurchases.selectedProducts', [
-    'carli.libraryService'
+    'carli.collapsible',
+    'carli.libraryService',
+    'carli.productService'
 ]);

@@ -1,0 +1,31 @@
+#one-time-purchase-products {
+
+    ul.entity-list li {
+        display: block;
+        border-left: 3px solid $purple;
+
+        &.collapsed {
+            border-left: $default-border;
+        }
+
+        header,
+        div.content {
+            @include flexbox;
+            width: 100%;
+
+            .column:first-child {
+                padding-left: 36px;
+            }
+        }
+
+        div.content {
+            border-top: $default-border;
+        }
+    }
+
+    ul.entity-list li.column-headers {
+        @include flexbox;
+        border-left: $default-border;
+    }
+
+}

@@ -20,10 +20,28 @@
             </menu>
 
 
-            <ul>
-                <!-- TODO: don't filter by cycleType here, the productService should only return these -->
-                <li ng-repeat="product in vm.productList | filter: vm.filter">{{ product.name }}</li>
+
+
+            <ul class="entity-list">
+                <li class="column-headers">
+                    <div class="column" >Product </div>
+                    <div class="column" >Vendor</div>
+                    <div class="column" >Cost</div>
+                </li>
+                <li collapsible class="collapsed" ng-repeat="product in vm.productList | filter: vm.filter">
+                    <header>
+                        <div class="column">{{ product.name }}</div>
+                        <div class="column">TODO: Vendor Name{{ product.vendor.name }}</div>
+                        <div class="column">{{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price }}</div>
+                    </header>
+                    <div class="content">
+                        <div class="column">Content</div>
+                        <div class="column">Content</div>
+                        <div class="column">Content</div>
+                    </div>
+                </li>
             </ul>
+
         </section>
 
 

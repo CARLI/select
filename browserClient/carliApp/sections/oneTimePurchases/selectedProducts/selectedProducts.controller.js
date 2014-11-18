@@ -3,7 +3,7 @@ angular.module('carli.sections.oneTimePurchases.selectedProducts')
 
 function selectedProductsController($routeParams, libraryService, productService) {
     var vm = this;
-    var libraryId = $routeParams.libraryId;
+    vm.libraryId = $routeParams.libraryId;
 
     vm.filterState = 'all';
 
@@ -12,7 +12,7 @@ function selectedProductsController($routeParams, libraryService, productService
         return (
             value.cycleType === 'One-Time Purchase' &&
             value.isActive === true &&
-            (vm.filterState === 'all' || value.oneTimePurchase.libraryPurchaseData[libraryId].datePurchased)
+            (vm.filterState === 'all' || value.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased)
         );
     };
 
@@ -27,7 +27,7 @@ function selectedProductsController($routeParams, libraryService, productService
     activate();
 
     function activate(){
-        libraryService.load(libraryId).then( function( library ) {
+        libraryService.load(vm.libraryId).then( function( library ) {
             vm.library = library;
         } );
 

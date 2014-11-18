@@ -1,25 +1,16 @@
-div[collapsible] {
-
-    margin-bottom: 10px;
+[collapsible] {
 
     header {
-        border: $default-border;
-
-        &::before {
-            content: 'V  ';
-        }
     }
+
 }
 
-div[collapsible].collapsed {
+[collapsible].collapsed {
 
     header {
-        &::before {
-            content: '>  ';
-        }
     }
 
     .content {
-        display: none;
+        display: none !important;
     }
 }
