@@ -1,1 +1,31 @@
-Hello world
+<section id="one-time-purchase-products">
+
+    <form class="edit-form" name="oneTimePurchaseProductForm" ng-submit="vm.savePurchase()">
+
+        <header class="page-header">
+            <label>One-Time Purchases</label>
+            <h1>{{ vm.library.name }}</h1>
+        </header>
+
+        <section class="content list-content">
+            <a href="/oneTimePurchases" class="carli-button"> <i class="fa fa-chevron-circle-left"></i> Back to Libraries</a>
+
+            <menu class="pull-right">
+                <menuitem ng-click="vm.setShowSelectedProducts()">
+                    <i class="fa" ng-class="{ 'fa-dot-circle-o': vm.filterState === 'selected', 'fa-circle-o': vm.filterState === 'all' }"></i> Show all <b>selected</b> products
+                </menuitem>
+                <menuitem ng-click="vm.setShowAllProducts()" id="filter-inactive">
+                    <i class="fa" ng-class="{ 'fa-dot-circle-o': vm.filterState === 'all', 'fa-circle-o': vm.filterState === 'selected' }"></i> Show all <b>available</b> products
+                </menuitem>
+            </menu>
+
+
+            <ul>
+                <!-- TODO: don't filter by cycleType here, the productService should only return these -->
+                <li ng-repeat="product in vm.productList | filter: vm.filter">{{ product.name }}</li>
+            </ul>
+        </section>
+
+
+    </form>
+</section>
