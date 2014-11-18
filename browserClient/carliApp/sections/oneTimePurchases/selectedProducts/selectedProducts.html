@@ -49,9 +49,22 @@
                             <div class="product-boolean-item"><fa name="check"></fa> Funded</div>
                             <div class="product-boolean-item"><fa name="check"></fa> Requires Annual Access Fee</div>
                         </div>
-                        <div class="column">Content</div>
-                        <div class="column">Content</div>
+                        <div class="column">
+                            <div class="content-item">
+                                <label>Comments for Library:</label>
+                                <p class="comments">{{ product.comments }}</p>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <label>Selected Price</label>
+                            <select ng-model="product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased">
+                                <option>--</option>
+                                <option ng-value="'2014-11-18'">${{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price }}</option>
+                                <option ng-value="null">Remove</option>
+                            </select>
+                        </div>
                     </div>
+
                 </li>
             </ul>
 
