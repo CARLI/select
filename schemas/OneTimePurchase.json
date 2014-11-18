@@ -6,7 +6,7 @@
         "annualAccessFee": { "type": "integer" },
         "availableForPurchase": { "$ref": "./Date.json" },
         "libraryPurchaseData": {
-            "type": "array",
+            "type": "object",
             "items": {
                 "price": { "type": "integer" },
                 "datePurchased": { "$ref": "./Date.json" }

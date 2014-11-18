@@ -118,14 +118,14 @@ function generateProductFixtures() {
 
             if ( product.cycleType === "One-Time Purchase" ){
                 product.oneTimePurchase = {
-                    annualAccessFee: '5000',
+                    annualAccessFee: 5000,
                     availableForPurchase: "2014-06-01",
                     libraryPurchaseData: {}
                 };
                 for ( i = 0 ; i < libraryList.length ; i++ ){
                     libraryId = libraryList[i].id;
                     product.oneTimePurchase.libraryPurchaseData[libraryId] = {
-                        price: '5000',
+                        price: 5000,
                         datePurchased: null
                     }
                 }
@@ -134,7 +134,7 @@ function generateProductFixtures() {
             testProductPromises.push( CARLI.Product.create(product) );
         });
 
-        return testProductPromises;
+        return Q.all(testProductPromises);
     })
     .catch( function(result){
         console.log('ListLibrary promised rejected: ',result);
