@@ -5,8 +5,10 @@ var tv4 = require('tv4')
 var schemas = {
     Contact: require('../schemas/Contact.json'),
     CycleType: require('../schemas/CycleType.json'),
+    Date: require('../schemas/Date.json'),
     Library: require('../schemas/Library.json'),
     License: require('../schemas/License.json'),
+    OneTimePurchase: require('../schemas/OneTimePurchase.json'),
     PriceCap: require('../schemas/PriceCap.json'),
     Product: require('../schemas/Product.json'),
     Vendor: require('../schemas/Vendor.json'),

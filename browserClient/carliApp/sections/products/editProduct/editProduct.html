@@ -66,13 +66,13 @@
 
                 <div class="one-time-purchase-settings" ng-if="vm.product.cycleType == 'One-Time Purchase'">
                     <label>Annual Access Fee</label>
-                    <view-edit-text-field ng-model="vm.product.annualAccessFee" edit-mode="vm.editable">
-                        {{ vm.product.annualAccessFee }}
+                    <view-edit-text-field ng-model="vm.product.oneTimePurchase.annualAccessFee" edit-mode="vm.editable">
+                        {{ vm.product.oneTimePurchase.annualAccessFee }}
                     </view-edit-text-field>
 
                     <label>Available for Purchase Through</label>
-                    <view-edit-text-field ng-model="vm.product.AvailableForPurchaseThrough" edit-mode="vm.editable">
-                        {{ vm.product.AvailableForPurchaseThrough }}
+                    <view-edit-text-field ng-model="vm.product.oneTimePurchase.availableForPurchase" edit-mode="vm.editable">
+                        {{ vm.product.oneTimePurchase.availableForPurchase }}
                     </view-edit-text-field>
 
                     <ul class="library-list entity-list">
@@ -84,13 +84,12 @@
                         <li ng-repeat="library in vm.libraryList | filterByActive:activeFilterState | filter:filterText">
                             <span class="column">{{ library.name }}</span>
                             <span class="column">
-                                <view-edit-text-field ng-model="vm.product.libraryPrices[library.id]" edit-mode="vm.editable">
-                                {{ vm.product.libraryPrices[library.id] }}
+                                <view-edit-text-field ng-model="vm.product.oneTimePurchase.libraryPurchaseData[library.id].price" edit-mode="vm.editable">
+                                {{ vm.product.oneTimePurchase.libraryPurchaseData[library.id].price }}
                                 </view-edit-text-field>
                             </span>
                             <span class="column text-center">
-                                <!-- TODO: Should only show check if actually purchased -->
-                                <i class="fa fa-check-circle"></i>
+                                <i class="fa fa-check-circle" ng-show="vm.product.oneTimePurchase.libraryPurchaseData[library.id].datePurchased"></i>
                             </span>
                         </li>
                     </ul>

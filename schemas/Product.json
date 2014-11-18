@@ -72,6 +72,9 @@
                 "$ref": "./Library.json"
             }
         },
+        "oneTimePurchase": {
+            "$ref": "./OneTimePurchase.json"
+        },
         "required": [ "name" ]
     }
 }

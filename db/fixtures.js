@@ -20,9 +20,13 @@ CARLI.Product.setStore( store );
 generateLibraryFixtures().then( function( results ){
     console.log('Done creating Libraries');
 
-    generateProductFixtures().then( function (results){
-        console.log('Finished generating Products');
-    });
+    generateProductFixtures()
+        .then( function (results){
+            console.log('Finished generating Products');
+        })
+        .catch( function (err) {
+            console.log(err);
+        });
 });
 
 generateLicenseFixtures().then( function( results ){
@@ -95,15 +99,18 @@ function generateProductFixtures() {
     console.log("Generate Products");
 
     var testProducts = [
-        {"type": "Product", "name": "Fiscal Year Product", "cycleType": "Fiscal Year" },
-        {"type": "Product", "name": "Calendar Year Product", "cycleType": "Calendar Year" },
-        {"type": "Product", "name": "Alternative Cycle Product", "cycleType": "Alternative Cycle" },
-        {"type": "Product", "name": "One-Time Purchase Product 1", "cycleType": "One-Time Purchase", "libraryPrices": {} },
-        {"type": "Product", "name": "One-Time Purchase Product 2", "cycleType": "One-Time Purchase", "libraryPrices": {}  },
-        {"type": "Product", "name": "One-Time Purchase Product 3", "cycleType": "One-Time Purchase", "libraryPrices": {}  },
-        {"type": "Product", "name": "One-Time Purchase Product 4", "cycleType": "One-Time Purchase", "libraryPrices": {}  },
-        {"type": "Product", "name": "One-Time Purchase Product 5", "cycleType": "One-Time Purchase", "libraryPrices": {}  },
-        {"type": "Product", "name": "One-Time Purchase Product 6", "cycleType": "One-Time Purchase", "libraryPrices": {}  }
+        {"type": "Product", "isActive": true, "name": "Fiscal Year Product", "cycleType": "Fiscal Year" },
+        {"type": "Product", "isActive": true, "name": "Calendar Year Product", "cycleType": "Calendar Year" },
+        {"type": "Product", "isActive": true, "name": "Alternative Cycle Product", "cycleType": "Alternative Cycle" },
+        {"type": "Product", "isActive": false, "name": "Fiscal Year Product Inactive", "cycleType": "Fiscal Year" },
+        {"type": "Product", "isActive": false, "name": "Calendar Year Product Inactive", "cycleType": "Calendar Year" },
+        {"type": "Product", "isActive": false, "name": "Alternative Cycle Produc Inactivet", "cycleType": "Alternative Cycle" },
+        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 1", "cycleType": "One-Time Purchase", "oneTimePurchase": {} },
+        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 2", "cycleType": "One-Time Purchase", "oneTimePurchase": {}  },
+        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 3", "cycleType": "One-Time Purchase", "oneTimePurchase": {}  },
+        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 4", "cycleType": "One-Time Purchase", "oneTimePurchase": {}  },
+        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 5", "cycleType": "One-Time Purchase", "oneTimePurchase": {}  },
+        {"type": "Product", "isActive": false, "name": "One-Time Purchase Inactive", "cycleType": "One-Time Purchase", "oneTimePurchase": {}  }
     ];
 
     var listLibrariesPromise = CARLI.Library.list();
@@ -113,16 +120,24 @@ function generateProductFixtures() {
             var i, libraryId;
 
             if ( product.cycleType === "One-Time Purchase" ){
+                product.oneTimePurchase = {
+                    annualAccessFee: 5000,
+                    availableForPurchase: "2014-06-01",
+                    libraryPurchaseData: {}
+                };
                 for ( i = 0 ; i < libraryList.length ; i++ ){
                     libraryId = libraryList[i].id;
-                    product.libraryPrices[libraryId] = 1000+i;
+                    product.oneTimePurchase.libraryPurchaseData[libraryId] = {
+                        price: 5000,
+                        datePurchased: null
+                    }
                 }
             }
 
             testProductPromises.push( CARLI.Product.create(product) );
         });
 
-        return testProductPromises;
+        return Q.all(testProductPromises);
     })
     .catch( function(result){
         console.log('ListLibrary promised rejected: ',result);
@@ -130,3 +145,4 @@ function generateProductFixtures() {
 
     return listLibrariesPromise;
 }
+

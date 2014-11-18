@@ -9,8 +9,10 @@ chai.use( chaiAsPromised );
 var validTypes = [
     'Contact',
     'CycleType',
+    'Date',
     'Library',
     'License',
+    'OneTimePurchase',
     'PriceCap',
     'Product',
     'Vendor',
