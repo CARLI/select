@@ -2,11 +2,15 @@ module.exports = function (grunt) {
     grunt.registerTask('subdir-grunt', subdirGruntTask);
     grunt.registerTask('subdir-exec', subdirExecTask);
 
-    function subdirGruntTask (dir, task) {
+    function subdirGruntTask (dir, task, arg) {
         var done = this.async();
+        var args = task;
+        if (arg !== undefined) {
+            args += ':' + arg;
+        }
         var spawnArgs = {
             grunt: true,
-            args: [ task ],
+            args: [ args ],
             opts: {
                 cwd: dir,
                 stdio: 'inherit'
