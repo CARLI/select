@@ -13,6 +13,7 @@ function productService( CarliModules, $q ) {
         list:   function() { return $q.when( productModule.list() ); },
         create: function() { return $q.when( productModule.create.apply(this, arguments) ); },
         update: function() { return $q.when( productModule.update.apply(this, arguments) ); },
-        load:   function() { return $q.when( productModule.load.apply(this, arguments) ); }
+        load:   function() { return $q.when( productModule.load.apply(this, arguments) ); },
+        listOneTimePurchaseProducts: function() { return $q.when(productModule.list() ); }
     };
 }

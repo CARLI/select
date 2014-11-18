@@ -1,1 +1,78 @@
-Hello world
+<section id="one-time-purchase-products">
+
+    <form class="edit-form" name="oneTimePurchaseProductForm" ng-submit="vm.savePurchase()">
+
+        <header class="page-header">
+            <label>One-Time Purchases</label>
+            <h1>{{ vm.library.name }}</h1>
+        </header>
+
+        <section class="content">
+            <a href="/oneTimePurchases" class="carli-button"> <i class="fa fa-chevron-circle-left"></i> Back to Libraries</a>
+
+            <menu class="pull-right">
+                <menuitem ng-click="vm.setShowSelectedProducts()">
+                    <i class="fa" ng-class="{ 'fa-dot-circle-o': vm.filterState === 'selected', 'fa-circle-o': vm.filterState === 'all' }"></i> Show all <b>selected</b> products
+                </menuitem>
+                <menuitem ng-click="vm.setShowAllProducts()" id="filter-inactive">
+                    <i class="fa" ng-class="{ 'fa-dot-circle-o': vm.filterState === 'all', 'fa-circle-o': vm.filterState === 'selected' }"></i> Show all <b>available</b> products
+                </menuitem>
+            </menu>
+
+            <ul class="entity-list">
+                <li class="column-headers">
+                    <div class="column">Product </div>
+                    <div class="column">Vendor</div>
+                    <div class="column">Cost</div>
+                </li>
+                <li collapsible class="collapsed" ng-repeat="product in vm.productList | filter: vm.filter">
+                    <header>
+                        <div class="column">
+                            <fa name="angle-right"></fa>
+                            <fa name="angle-down"></fa>
+                            {{ product.name }}
+                        </div>
+                        <div class="column">TODO: Vendor Name{{ product.vendor.name }}</div>
+                        <div class="column">
+                            <span class="price">${{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price }}</span>
+                        </div>
+                    </header>
+                    <div class="content">
+                        <div class="column">
+                            <div class="content-item-group">
+                                <div class="content-item">
+                                    <label>Date Available Through:</label>
+                                    <p>{{ product.oneTimePurchase.availableForPurchase }}</p>
+                                </div>
+                                <div class="content-item">
+                                    <label>Purchase Date:</label>
+                                    <p>{{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased }}</p>
+                                </div>
+                            </div>
+                            <div class="product-boolean-item" ng-show=""><fa name="check"></fa> Funded</div>
+                            <div class="product-boolean-item" ng-show="product.oneTimePurchase.annualAccessFee"><fa name="check"></fa> Requires Annual Access Fee</div>
+                        </div>
+                        <div class="column">
+                            <div class="content-item">
+                                <label>Comments for Library:</label>
+                                <p class="comments">{{ product.comments }}</p>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <label>Selected Price</label>
+                            <select ng-model="product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased">
+                                <option>--</option>
+                                <option ng-value="'2014-11-18'">${{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price }}</option>
+                                <option ng-value="null">Remove</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </li>
+            </ul>
+
+        </section>
+
+
+    </form>
+</section>

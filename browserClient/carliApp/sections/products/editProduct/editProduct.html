@@ -84,7 +84,7 @@
                         <li ng-repeat="library in vm.libraryList | filterByActive:activeFilterState | filter:filterText">
                             <span class="column">{{ library.name }}</span>
                             <span class="column">
-                                <view-edit-text-field ng-model="vm.product.oneTimePurchase.libraryPurchaseData[library.id].price" edit-mode="vm.editable">
+                                <view-edit-text-field ng-model="vm.product.oneTimePurchase.libraryPurchaseData[library.id].price" edit-mode="vm.editable && !vm.product.oneTimePurchase.libraryPurchaseData[library.id].datePurchased">
                                 {{ vm.product.oneTimePurchase.libraryPurchaseData[library.id].price }}
                                 </view-edit-text-field>
                             </span>
@@ -194,7 +194,7 @@
                         </ul>
                     </div>
 
-                    <div class="column">
+                    <div class="column" ng-show="vm.product.cycleType !== 'One-Time Purchase'">
                         <!-- TODO: This is a styled example of Subsciber History (needs to actually be wired/componentized -->
                         <table class="tableSubscriber">
                             <thead>
@@ -238,6 +238,7 @@
                             </tbody>
                         </table>
                     </div>
+
                 </div>
 
             </div>
