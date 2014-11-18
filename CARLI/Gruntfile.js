@@ -34,8 +34,10 @@ module.exports = function(grunt) {
 
         var cfg = '';
         cfg += "module.exports = {\n";
-        cfg += "    couchDbUrl: 'http://"+host+":"+port+"',\n";
-        cfg += "    couchDbName: 'CARLI'\n";
+        cfg += "    storeOptions: {\n";
+        cfg += "        couchDbUrl: 'http://"+host+":"+port+"',\n";
+        cfg += "        couchDbName: 'CARLI'\n";
+        cfg += "    }\n";
         cfg += "}"
 
         fs.writeFileSync(localConfigFile, cfg);
