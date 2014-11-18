@@ -35,7 +35,20 @@
                         <div class="column">{{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price }}</div>
                     </header>
                     <div class="content">
-                        <div class="column">Content</div>
+                        <div class="column">
+                            <div class="content-item-group">
+                                <div class="content-item">
+                                    <label>Date Available Through:</label>
+                                    <p>{{ product.oneTimePurchase.availableForPurchase }}</p>
+                                </div>
+                                <div class="content-item">
+                                    <label>Purchase Date:</label>
+                                    <p>{{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased }}</p>
+                                </div>
+                            </div>
+                            <div class="product-boolean-item"><fa name="check"></fa> Funded</div>
+                            <div class="product-boolean-item"><fa name="check"></fa> Requires Annual Access Fee</div>
+                        </div>
                         <div class="column">Content</div>
                         <div class="column">Content</div>
                     </div>

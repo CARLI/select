@@ -1,4 +1,5 @@
 #one-time-purchase-products {
+    $default-spacing: 36px;
 
     ul.entity-list li {
         display: block;
@@ -14,12 +15,39 @@
             width: 100%;
 
             .column:first-child {
-                padding-left: 36px;
+                padding-left: $default-spacing;
             }
         }
 
         div.content {
             border-top: $default-border;
+
+            .content-item-group {
+                margin-bottom: 25px;
+
+                .content-item {
+                    display: inline-block;
+
+                    label {
+                        margin: 0;
+                    }
+
+                    p {
+                        @extend .h3;
+                        margin: 0;
+                    }
+                }
+
+                .content-item + .content-item {
+                    margin-left: $default-spacing;
+                }
+            }
+
+            .product-boolean-item {
+                @include body-text;
+                font-weight: bold;
+                color: $purple;
+            }
         }
     }
 
