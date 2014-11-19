@@ -1,63 +1,37 @@
 
 describe('The Edit Product Controller', function(){
 
-    var mockLocation, mockProductService, mockDependeciesForNewProduct, mockDependenciesForEditProduct;
+    var mockDependenciesForNewProduct, mockDependenciesForEditProduct;
 
-    beforeEach(module('carli.sections.products.edit'));
+    beforeEach(function(){
+        module('carli.sections.products.edit');
+        module('carli.mockLocationService');
+        module('carli.mockLibraryService');
+        module('carli.mockProductService');
+        module('carli.mockVendorService');
+    });
 
-    beforeEach(inject( function($q) {
-        mockLocation = {
-            path: function(){}
-        };
-
-        mockProductService = {
-            createOrUpdate: 'neither',
-            create: function(){
-                var deferred = $q.defer();
-                this.createOrUpdate = 'create';
-                deferred.resolve();
-                return deferred.promise;
-            },
-            update: function(){
-                var deferred = $q.defer();
-                this.createOrUpdate = 'update';
-                deferred.resolve();
-                return deferred.promise;
-            },
-            load: function(){
-                var deferred = $q.defer();
-                deferred.resolve( 
-                    {
-                        name: 'Test Product'
-                    }
-                );
-                return deferred.promise;
-            },
-            reset: function(){
-                this.createOrUpdate = 'neither';
-            }
-        };
-
+    beforeEach(inject( function($q, mockLocationService, mockLibraryService, mockProductService, mockVendorService ) {
         mockDependenciesForNewProduct = {
-            $location: mockLocation,
+            $location: mockLocationService,
             $routeParams: {
                 id: 'new'
             },
-            productService: mockProductService
+            productService: mockProductService,
+            libraryService: mockLibraryService,
+            vendorService: mockVendorService
         };
 
         mockDependenciesForEditProduct = {
-            $location: mockLocation,
+            $location: mockLocationService,
             $routeParams: {
                 id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
             },
-            productService: mockProductService
+            productService: mockProductService,
+            libraryService: mockLibraryService,
+            vendorService: mockVendorService
         };
     } ));
-
-    afterEach(function(){
-        mockProductService.reset();
-    });
 
     it('should have a default, editable Product on the New Product screen', inject(function($controller){
         var editCtrl = $controller('editProductController', mockDependenciesForNewProduct);
