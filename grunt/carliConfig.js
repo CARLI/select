@@ -20,7 +20,7 @@ module.exports = function (grunt) {
             cfg.storeOptions = _.extend(storeOptions, getPublicCouchConfig(instance));
         }
 
-        fs.writeFileSync(localConfigFile, JSON.stringify(cfg, null, '    '));
+        fs.writeFileSync(localConfigFile, stringifyConfig(cfg));
     }
 
     function readExistingConfig() {
@@ -32,6 +32,10 @@ module.exports = function (grunt) {
             cfg = {};
         }
         return cfg;
+    }
+
+    function stringifyConfig(cfg) {
+        return 'module.exports = ' + JSON.stringify(cfg, null, '    ') + ';';
     }
 
     function getContainerCouchConfig() {
