@@ -63,6 +63,13 @@ function selectedProductsController($routeParams, libraryService, productService
         return totalAmount;
     };
 
+    vm.invoiceProducts = function() {
+        alert("Invoice Products:" + JSON.stringify(vm.selectedProducts));
+    };
+
+    vm.reportProducts = function() {
+        alert("Report Products:" + JSON.stringify(vm.selectedProducts));
+    };
 
     activate();
 

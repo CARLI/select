@@ -15,6 +15,20 @@
                 margin-right: 1.5rem;
             }
         }
+
+        .notifications {
+            margin-top: 2rem;
+
+            header {
+                @extend label;
+                display: block;
+            }
+
+            .carli-button {
+                margin-top: 0;
+                margin-right: .5rem;
+            }
+        }
     }
 
     ul.entity-list {
@@ -113,6 +127,7 @@
                 .comments {
                     border: $default-border;
                     min-height: 4rem;
+                    background-color: $white;
                 }
 
                 .content-item-group {
