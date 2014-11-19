@@ -1,81 +1,31 @@
 
 describe('The Edit Vendor Controller', function(){
 
-    var mockLocation, mockVendorService, mockAlertService, mockDependenciesForNewVendor, mockDependenciesForEditVendor;
-    beforeEach(module('carli.sections.vendors.edit'));
-    beforeEach(inject( function($q) {
-        mockLocation = {
-            path: function(){}
-        };
+    var mockDependenciesForNewVendor, mockDependenciesForEditVendor;
 
-        mockVendorService = {
-            createOrUpdate: 'neither',
-            create: function(){
-                var deferred = $q.defer();
-                this.createOrUpdate = 'create';
-                deferred.resolve();
-                return deferred.promise;
-            },
-            update: function(){
-                var deferred = $q.defer();
-                this.createOrUpdate = 'update';
-                deferred.resolve();
-                return deferred.promise;
-            },
-            load: function(){
-                var deferred = $q.defer();
-                deferred.resolve(
-                    {
-                        name: 'Test Vendor',
-                        "contacts": [
-                            {
-                                "contactType": "Billing",
-                                "name": "Bob Martin",
-                                "email": "bob@cleancode.org",
-                                "phoneNumber": "123-555-1234"
-                            }
-                        ]
-                    }
-                );
-                return deferred.promise;
-            },
-            reset: function(){
-                this.createOrUpdate = 'neither';
-            }
-        };
+    beforeEach(function(){
+        module('carli.sections.vendors.edit');
+        module('carli.mockServices');
 
-        mockAlertService = {
-            alertCount: 0,
-            putAlert: function(){
-                this.alertCount++;
-            },
-            reset: function(){
-                this.alertCount = 0;
-            }
-        };
+        inject( function($q, mockLocationService, mockVendorService, mockAlertService ) {
+            mockDependenciesForNewVendor = {
+                $location: mockLocationService,
+                $routeParams: {
+                    id: 'new'
+                },
+                vendorService: mockVendorService,
+                alertService: mockAlertService
+            };
 
-        mockDependenciesForNewVendor = {
-            $location: mockLocation,
-            $routeParams: {
-                id: 'new'
-            },
-            vendorService: mockVendorService,
-            alertService: mockAlertService
-        };
-
-        mockDependenciesForEditVendor = {
-            $location: mockLocation,
-            $routeParams: {
-                id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
-            },
-            vendorService: mockVendorService,
-            alertService: mockAlertService
-        };
-    } ));
-
-    afterEach(function(){
-        mockVendorService.reset();
-        mockAlertService.reset();
+            mockDependenciesForEditVendor = {
+                $location: mockLocationService,
+                $routeParams: {
+                    id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+                },
+                vendorService: mockVendorService,
+                alertService: mockAlertService
+            };
+        });
     });
 
     it('should have a default, editable Vendor on the New Vendor screen', inject(function($controller){

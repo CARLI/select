@@ -5,33 +5,30 @@ describe('The Edit Product Controller', function(){
 
     beforeEach(function(){
         module('carli.sections.products.edit');
-        module('carli.mockLocationService');
-        module('carli.mockLibraryService');
-        module('carli.mockProductService');
-        module('carli.mockVendorService');
+        module('carli.mockServices');
+
+        inject(function ($q, mockLocationService, mockLibraryService, mockProductService, mockVendorService) {
+            mockDependenciesForNewProduct = {
+                $location: mockLocationService,
+                $routeParams: {
+                    id: 'new'
+                },
+                productService: mockProductService,
+                libraryService: mockLibraryService,
+                vendorService: mockVendorService
+            };
+
+            mockDependenciesForEditProduct = {
+                $location: mockLocationService,
+                $routeParams: {
+                    id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+                },
+                productService: mockProductService,
+                libraryService: mockLibraryService,
+                vendorService: mockVendorService
+            };
+        });
     });
-
-    beforeEach(inject( function($q, mockLocationService, mockLibraryService, mockProductService, mockVendorService ) {
-        mockDependenciesForNewProduct = {
-            $location: mockLocationService,
-            $routeParams: {
-                id: 'new'
-            },
-            productService: mockProductService,
-            libraryService: mockLibraryService,
-            vendorService: mockVendorService
-        };
-
-        mockDependenciesForEditProduct = {
-            $location: mockLocationService,
-            $routeParams: {
-                id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
-            },
-            productService: mockProductService,
-            libraryService: mockLibraryService,
-            vendorService: mockVendorService
-        };
-    } ));
 
     it('should have a default, editable Product on the New Product screen', inject(function($controller){
         var editCtrl = $controller('editProductController', mockDependenciesForNewProduct);

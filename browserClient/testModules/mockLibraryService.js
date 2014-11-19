@@ -23,13 +23,22 @@ angular.module('carli.mockLibraryService', [])
                 var deferred = $q.defer();
                 deferred.resolve(
                     {
-                        name: 'Test Library'
+                        name: 'Test Library',
+                        contacts: [
+                            {
+                                "contactType": "Director",
+                                "name": "Bob Martin",
+                                "email": "bob@cleancode.org",
+                                "phoneNumber": "123-555-1234"
+                            }
+                        ]
+
                     }
                 );
                 return deferred.promise;
             },
-            reset: function () {
-                this.createOrUpdate = 'neither';
-            }
+            getInstitutionYearsOptions: function(){ return []; },
+            getInstitutionTypeOptions: function(){ return []; },
+            getMembershipLevelOptions: function(){ return []; }
         };
     });

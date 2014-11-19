@@ -1,70 +1,29 @@
 
 describe('The Edit License Controller', function(){
 
-    var mockLocation, mockLicenseService, mockDependenciesForNewLicense, mockDependenciesForEditLicense;
+    var mockDependenciesForNewLibrary, mockDependenciesForEditLibrary;
 
-    beforeEach(module('carli.sections.licenses.edit'));
+    beforeEach(function () {
+        module('carli.sections.licenses.edit');
+        module('carli.mockServices');
 
-    beforeEach(inject( function($q) {
-        mockLocation = {
-            path: function(){}
-        };
+        inject(function ($q, mockLocationService, mockLicenseService) {
+            mockDependenciesForNewLicense = {
+                $location: mockLocationService,
+                $routeParams: {
+                    id: 'new'
+                },
+                licenseService: mockLicenseService
+            };
 
-        mockLicenseService = {
-            createOrUpdate: 'neither',
-            create: function(){
-                var deferred = $q.defer();
-                this.createOrUpdate = 'create';
-                deferred.resolve();
-                return deferred.promise;
-            },
-            update: function(){
-                var deferred = $q.defer();
-                this.createOrUpdate = 'update';
-                deferred.resolve();
-                return deferred.promise;
-            },
-            load: function(){
-                var deferred = $q.defer();
-                deferred.resolve( 
-                    {
-                        name: 'Test License',
-                        "contacts": [
-                            {
-                                "contactType": "Billing",
-                                "name": "Bob Martin",
-                                "email": "bob@cleancode.org",
-                                "phoneNumber": "123-555-1234"
-                            }
-                        ]
-                    }
-                );
-                return deferred.promise;
-            },
-            reset: function(){
-                this.createOrUpdate = 'neither';
-            }
-        };
-
-        mockDependenciesForNewLicense = {
-            $location: mockLocation,
-            $routeParams: {
-                id: 'new'
-            },
-            licenseService: mockLicenseService
-        };
-
-        mockDependenciesForEditLicense = {
-            $location: mockLocation,
-            $routeParams: {
-                id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
-            },
-            licenseService: mockLicenseService
-        };
-    } ));
-
-    afterEach(function(){
-        mockLicenseService.reset();
+            mockDependenciesForEditLicense = {
+                $location: mockLocationService,
+                $routeParams: {
+                    id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+                },
+                licenseService: mockLicenseService
+            };
+        });
     });
 
     it('should have a default, editable License on the New License screen', inject(function($controller){

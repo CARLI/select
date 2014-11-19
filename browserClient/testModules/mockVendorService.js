@@ -23,13 +23,19 @@ angular.module('carli.mockVendorService', [])
                 var deferred = $q.defer();
                 deferred.resolve(
                     {
-                        name: 'Test Vendor'
+                        name: 'Test Vendor',
+                        contacts: [
+                            {
+                                "contactType": "Billing",
+                                "name": "Bob Martin",
+                                "email": "bob@cleancode.org",
+                                "phoneNumber": "123-555-1234"
+                            }
+                        ]
+
                     }
                 );
                 return deferred.promise;
-            },
-            reset: function () {
-                this.createOrUpdate = 'neither';
             }
         };
     });

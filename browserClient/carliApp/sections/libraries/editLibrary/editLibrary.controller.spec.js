@@ -1,73 +1,29 @@
 
 describe('The Edit Library Controller', function(){
 
-    var mockLocation, mockLibraryService, mockDependenciesForNewLibrary, mockDependenciesForEditLibrary;
+    var mockDependenciesForNewLibrary, mockDependenciesForEditLibrary;
 
-    beforeEach(module('carli.sections.libraries.edit'));
-    beforeEach(inject( function($q) {
-        mockLocation = {
-            path: function(){}
-        };
+    beforeEach(function(){
+        module('carli.sections.libraries.edit');
+        module('carli.mockServices');
 
-        mockLibraryService = {
-            createOrUpdate: 'neither',
-            create: function(){
-                var deferred = $q.defer();
-                this.createOrUpdate = 'create';
-                deferred.resolve();
-                return deferred.promise;
-            },
-            update: function(){
-                var deferred = $q.defer();
-                this.createOrUpdate = 'update';
-                deferred.resolve();
-                return deferred.promise;
-            },
-            load: function(){
-                var deferred = $q.defer();
-                deferred.resolve(
-                    {
-                        type: 'Library',
-                        name: 'Test Library',
-                        "contacts": [
-                            {
-                                "contactType": "Billing",
-                                "name": "Bob Martin",
-                                "email": "bob@cleancode.org",
-                                "phoneNumber": "123-555-1234"
-                            }
-                        ]
-                    }
-                );
-                return deferred.promise;
-            },
-            reset: function(){
-                this.createOrUpdate = 'neither';
-            },
-            getInstitutionYearsOptions: function(){ return []; },
-            getInstitutionTypeOptions: function(){ return []; },
-            getMembershipLevelOptions: function(){ return []; }
-        };
+        inject( function($q, mockLocationService, mockLibraryService ) {
+            mockDependenciesForNewLibrary = {
+                $location: mockLocationService,
+                $routeParams: {
+                    id: 'new'
+                },
+                libraryService: mockLibraryService
+            };
 
-        mockDependenciesForNewLibrary = {
-            $location: mockLocation,
-            $routeParams: {
-                id: 'new'
-            },
-            libraryService: mockLibraryService
-        };
-
-        mockDependenciesForEditLibrary = {
-            $location: mockLocation,
-            $routeParams: {
-                id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
-            },
-            libraryService: mockLibraryService
-        };
-    } ));
-
-    afterEach(function(){
-        mockLibraryService.reset();
+            mockDependenciesForEditLibrary = {
+                $location: mockLocationService,
+                $routeParams: {
+                    id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+                },
+                libraryService: mockLibraryService
+            };
+        });
     });
 
     it('should export lists of options in the ViewModel', inject(function($controller){
@@ -113,27 +69,27 @@ describe('The Edit Library Controller', function(){
         expect( editCtrl.editable ).to.equal(true);
     }));
 
-    it('should be able to delete the first Billing contact', inject(function($controller, $rootScope) {
+    it('should be able to delete the first Director contact', inject(function($controller, $rootScope) {
         var editCtrl = $controller('editLibraryController', mockDependenciesForEditLibrary);
         $rootScope.$digest();
         var contacts = editCtrl.library.contacts;
-        var firstBillingContact = findFirstBillingContact(contacts);
+        var firstDirectorContact = findFirstDirectorContact(contacts);
         var initialLength = contacts.length;
 
-        editCtrl.deleteContact(firstBillingContact);
+        editCtrl.deleteContact(firstDirectorContact);
         $rootScope.$digest();
         expect( contacts.length ).to.equal(initialLength - 1);
     }));
 
 });
 
-function findFirstBillingContact(contacts) {
-    var firstBillingContact = null;
+function findFirstDirectorContact(contacts) {
+    var firstDirectorContact = null;
     for (var i = 0; i < contacts.length; i++) {
-        if (contacts[i].contactType === 'Billing') {
-            firstBillingContact = contacts[i];
+        if (contacts[i].contactType === 'Director') {
+            firstDirectorContact = contacts[i];
             break;
         }
     }
-    return firstBillingContact;
+    return firstDirectorContact;
 }

@@ -1,29 +1,24 @@
-angular.module('carli.mockProductService', [])
-    .factory('mockProductService', function mockProductService($q) {
+angular.module('carli.mockLicenseService', [])
+    .factory('mockLicenseService', function mockLicenseService($q) {
         return {
             createOrUpdate: 'neither',
-            list: function () {
-                var deferred = $q.defer();
-                deferred.resolve();
-                return deferred.promise;
-            },
-            create: function () {
+            create: function(){
                 var deferred = $q.defer();
                 this.createOrUpdate = 'create';
                 deferred.resolve();
                 return deferred.promise;
             },
-            update: function () {
+            update: function(){
                 var deferred = $q.defer();
                 this.createOrUpdate = 'update';
                 deferred.resolve();
                 return deferred.promise;
             },
-            load: function () {
+            load: function(){
                 var deferred = $q.defer();
                 deferred.resolve(
                     {
-                        name: 'Test Product'
+                        name: 'Test License'
                     }
                 );
                 return deferred.promise;
