@@ -1,0 +1,29 @@
+checkbox {
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-block;
+    position: relative;
+    width: 1.1em;
+    height: 1em;
+
+    .checkbox-display {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    input[type="checkbox"]  {
+        margin: 0;
+        opacity: 0;
+        position: absolute;
+
+        & + .checkbox-display:before {
+            content: "\f096";
+        }
+
+        &:checked + .checkbox-display:before {
+            content: "\f14a";
+        }
+    }
+}
+

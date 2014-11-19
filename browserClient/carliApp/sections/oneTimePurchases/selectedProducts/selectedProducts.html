@@ -26,15 +26,16 @@
                     <div class="column">Cost</div>
                 </li>
                 <li collapsible class="collapsed" ng-repeat="product in vm.productList | filter: vm.filter">
+                    <checkbox ng-model="vm.selectedProducts[product.id]"></checkbox>
                     <header>
                         <div class="column">
                             <fa name="angle-right"></fa>
                             <fa name="angle-down"></fa>
                             {{ product.name }}
                         </div>
-                        <div class="column">TODO: Vendor Name{{ product.vendor.name }}</div>
+                        <div class="column">{{ product.vendor.name }}</div>
                         <div class="column">
-                            <span class="price">${{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price }}</span>
+                            <span ng-if="product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased" class="price">{{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price | currency }}</span>
                         </div>
                     </header>
                     <div class="content">
@@ -59,20 +60,30 @@
                             </div>
                         </div>
                         <div class="column">
-                            <label>Selected Price</label>
-                            <select ng-model="product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased">
-                                <option>--</option>
-                                <option ng-value="'2014-11-18'">${{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price }}</option>
-                                <option ng-value="null">Remove</option>
-                            </select>
+                            <div ng-if="!product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased">
+                                {{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price | currency }}
+                                <a ng-click="vm.purchaseProduct(product);" class="carli-button">Purchase</a>
+                            </div>
+                            <a ng-if="product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased" ng-click="vm.cancelPurchase(product);" class="carli-button">Remove</a>
                         </div>
                     </div>
 
                 </li>
+                <li class="summary-row">
+                    <div class="column"></div>
+                    <div class="column">Total</div>
+                    <div class="column">{{ vm.computeTotalPurchasesAmount() | currency}}</div>
+                </li>
             </ul>
 
+            <div class="notifications">
+                <header>Notifications</header>
+                <a ng-click="vm.invoiceProducts()" class="carli-button"> Invoice: Checked Products <i class="fa fa-check-square-o"></i></a>
+                <a ng-click="vm.reportProducts()" class="carli-button"> Report: Checked Products<i class="fa fa-check-square-o"></i></a>
+            </div>
         </section>
-
-
     </form>
 </section>
+
+<hr>
+Selected Products: {{ vm.selectedProducts }}

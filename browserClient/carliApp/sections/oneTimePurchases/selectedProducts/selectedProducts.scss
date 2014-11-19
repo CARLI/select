@@ -10,6 +10,24 @@
         menu {
             margin-top: 2.5rem;
             margin-bottom: 1rem;
+
+            menuitem:first-child {
+                margin-right: 1.5rem;
+            }
+        }
+
+        .notifications {
+            margin-top: 2rem;
+
+            header {
+                @extend label;
+                display: block;
+            }
+
+            .carli-button {
+                margin-top: 0;
+                margin-right: .5rem;
+            }
         }
     }
 
@@ -19,6 +37,7 @@
         li {
             display: block;
             border-left: 3px solid $purple;
+            position: relative;
 
             &.collapsed {
                 border-left: $default-border;
@@ -44,11 +63,26 @@
                 padding-left: 2px;
             }
 
+            .column {
+                flex-basis: 40%;
+            }
+
+            .column:last-child {
+                flex-basis: 20%;
+            }
+
+            checkbox {
+                position: absolute;
+                left: -2rem;
+                top: 1.25rem;
+            }
+
             header {
                 position: relative;
                 cursor: pointer;
 
-                .fa {
+                .fa-angle-down,
+                .fa-angle-right {
                     position: absolute;
                     top: .75rem;
                     left: 1rem;
@@ -93,6 +127,7 @@
                 .comments {
                     border: $default-border;
                     min-height: 4rem;
+                    background-color: $white;
                 }
 
                 .content-item-group {
@@ -100,6 +135,7 @@
 
                     .content-item {
                         display: inline-block;
+                        vertical-align: top;
 
                         p {
                             @extend .h3;
@@ -117,6 +153,29 @@
                     @include body-text;
                     font-weight: bold;
                     color: $purple;
+                }
+            }
+
+            &.summary-row {
+                @include flexbox;
+                border-left: $default-border;
+                padding-left: 2px;
+                background-color: $light-gray;
+
+                .column:nth-child(2) {
+                    border-left: 0;
+                    text-align: right;
+                    font-family: 'Dosis';
+                    font-weight: bold;
+                    @include font-size(17);
+                    color: $black;
+                    text-transform: uppercase;
+                }
+
+                .column:last-child {
+                    color: $green;
+                    background-color: $white;
+                    font-weight: bold;
                 }
             }
         }
