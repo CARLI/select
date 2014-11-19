@@ -20,7 +20,10 @@ function productController( $sce, productService ){
         },
         {
             label: "Vendor",
-            contentFunction: function(product) { return product.vendor.name; }
+            contentFunction: function(product) {
+                var vendor = product.vendor || {};
+                return vendor.name || "";
+            }
         },
         {
             label: "Cycle",
