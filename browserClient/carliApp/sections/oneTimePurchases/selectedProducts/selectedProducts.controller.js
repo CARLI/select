@@ -4,7 +4,7 @@ angular.module('carli.sections.oneTimePurchases.selectedProducts')
 function selectedProductsController($routeParams, libraryService, productService) {
     var vm = this;
     vm.libraryId = $routeParams.libraryId;
-
+    vm.productList = [];
     vm.filterState = 'all';
 
     vm.filter = function( value ){
@@ -47,6 +47,20 @@ function selectedProductsController($routeParams, libraryService, productService
             //TODO: notification of failure (inline?)
             product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased = oldDate;
         });
+    };
+
+    vm.computeTotalPurchasesAmount = function() {
+        var totalAmount = 0;
+        var product;
+
+        for (i=0; i<vm.productList.length; i++) {
+            product = vm.productList[i];
+            if (vm.filter(product) &&
+                product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased) {
+                totalAmount += product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price;
+            }
+        }
+        return totalAmount;
     };
 
 

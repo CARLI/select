@@ -35,7 +35,7 @@
                         </div>
                         <div class="column">{{ product.vendor.name }}</div>
                         <div class="column">
-                            <span ng-if="product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased" class="price">{{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price | currency:undefined:0 }}</span>
+                            <span ng-if="product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased" class="price">{{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price | currency }}</span>
                         </div>
                     </header>
                     <div class="content">
@@ -61,13 +61,20 @@
                         </div>
                         <div class="column">
                             <div ng-if="!product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased">
-                                {{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price | currency:undefined:0 }}
+                                {{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price | currency }}
                                 <a ng-click="vm.purchaseProduct(product);" class="carli-button">Purchase</a>
                             </div>
                             <a ng-if="product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased" ng-click="vm.cancelPurchase(product);" class="carli-button">Remove</a>
                         </div>
                     </div>
 
+                </li>
+                <li class="summary-row">
+                    <div class="column"></div>
+                    <div class="column">Total</div>
+                    <div class="column">
+                        {{ vm.computeTotalPurchasesAmount() | currency}}
+                    </div>
                 </li>
             </ul>
         </section>

@@ -140,6 +140,16 @@
                     color: $purple;
                 }
             }
+
+            &.summary-row {
+                @include flexbox;
+                border-left: $default-border;
+                padding-left: 2px;
+                .column:nth-child(2) {
+                    border-left: 0;
+                    text-align: right;
+                }
+            }
         }
     }
 }
