@@ -35,7 +35,7 @@
                         </div>
                         <div class="column">{{ product.vendor.name }}</div>
                         <div class="column">
-                            <span class="price">{{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price | currency:undefined:0 }}</span>
+                            <span ng-if="product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased" class="price">{{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price | currency:undefined:0 }}</span>
                         </div>
                     </header>
                     <div class="content">
@@ -60,12 +60,11 @@
                             </div>
                         </div>
                         <div class="column">
-                            <label>Selected Price</label>
-                            <select ng-model="product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased">
-                                <option>--</option>
-                                <option ng-value="'2014-11-18'">${{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price }}</option>
-                                <option ng-value="null">Remove</option>
-                            </select>
+                            <div ng-if="!product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased">
+                                {{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price | currency:undefined:0 }}
+                                <a ng-click="vm.purchaseProduct(product);" class="carli-button">Purchase</a>
+                            </div>
+                            <a ng-if="product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased" ng-click="vm.cancelPurchase(product);" class="carli-button">Remove</a>
                         </div>
                     </div>
 
