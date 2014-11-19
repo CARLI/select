@@ -19,6 +19,7 @@
         li {
             display: block;
             border-left: 3px solid $purple;
+            position: relative;
 
             &.collapsed {
                 border-left: $default-border;
@@ -44,11 +45,18 @@
                 padding-left: 2px;
             }
 
+            checkbox {
+                position: absolute;
+                left: -2rem;
+                top: 1.25rem;
+            }
+
             header {
                 position: relative;
                 cursor: pointer;
 
-                .fa {
+                .fa-angle-down,
+                .fa-angle-right {
                     position: absolute;
                     top: .75rem;
                     left: 1rem;
