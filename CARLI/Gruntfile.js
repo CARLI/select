@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 module.exports = function(grunt) {
     require('../grunt/subdir')(grunt);
     require('../grunt/jsenv')(grunt);
