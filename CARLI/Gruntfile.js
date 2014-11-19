@@ -3,9 +3,7 @@ var fs = require('fs');
 module.exports = function(grunt) {
     require('../grunt/subdir')(grunt);
     require('../grunt/jsenv')(grunt);
-    require('../grunt/couchDbConfig')(grunt);
-
-    grunt.registerTask('ensure-local-config', ensureLocalConfigExists);
+    require('../grunt/carliConfig')(grunt);
 
     grunt.registerTask('npm-test', function(arg) {
         grunt.task.run(['subdir-exec:.:npm test']);
@@ -16,8 +14,4 @@ module.exports = function(grunt) {
         'jsenv:node',
         'npm-test'
     ]);
-
-    function ensureLocalConfigExists() {
-        fs.closeSync(fs.openSync(localConfigFile, 'a'));
-    }
 };
