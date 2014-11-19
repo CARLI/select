@@ -1,7 +1,7 @@
 angular.module('carli.sections.products.edit')
     .controller('editProductController', editProductController);
 
-function editProductController( $location, $routeParams, libraryService, productService, alertService ) {
+function editProductController( $location, $routeParams, libraryService, productService, vendorService, alertService ) {
     var vm = this;
     var productId = $routeParams.id;
 
@@ -10,6 +10,10 @@ function editProductController( $location, $routeParams, libraryService, product
 
     libraryService.list().then( function( libraryList ){
         vm.libraryList = libraryList;
+    });
+
+    vendorService.list().then( function( vendorList ){
+       vm.vendorList = vendorList;
     });
 
     //TODO: Move to someplace common since it's on Product, Library, and Product now

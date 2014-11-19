@@ -28,9 +28,10 @@
         <fieldset>
             <div class="column">
                 <label for="productVendor">Vendor</label>
-                <view-edit-text-field ng-model="vm.product.vendor" edit-mode="vm.editable">
-                    {{ vm.product.vendor }}
-                </view-edit-text-field>
+                <div class="view-edit-select" ng-show="vm.editable">
+                    <select ng-model="vm.product.vendor" ng-options="vendor.name for vendor in vm.vendorList"></select>
+                </div>
+                <div ng-show="!vm.editable">{{ vm.product.vendor.name }}</div>
 
                 <label for="productUrl">Product URL <aside>(Vendor can provide)</aside></label>
                 <view-edit-text-field ng-model="vm.product.productUrl" edit-mode="vm.editable">
