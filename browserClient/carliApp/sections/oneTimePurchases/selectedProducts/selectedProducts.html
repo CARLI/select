@@ -34,7 +34,7 @@
                         </div>
                         <div class="column">{{ product.vendor.name }}</div>
                         <div class="column">
-                            <span class="price">${{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price }}</span>
+                            <span class="price">{{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price | currency:undefined:0 }}</span>
                         </div>
                     </header>
                     <div class="content">

@@ -86,7 +86,7 @@
                             <span class="column">{{ library.name }}</span>
                             <span class="column">
                                 <view-edit-text-field ng-model="vm.product.oneTimePurchase.libraryPurchaseData[library.id].price" edit-mode="vm.editable && !vm.product.oneTimePurchase.libraryPurchaseData[library.id].datePurchased">
-                                {{ vm.product.oneTimePurchase.libraryPurchaseData[library.id].price }}
+                                {{ vm.product.oneTimePurchase.libraryPurchaseData[library.id].price | currency:undefined:0 }}
                                 </view-edit-text-field>
                             </span>
                             <span class="column text-center">
