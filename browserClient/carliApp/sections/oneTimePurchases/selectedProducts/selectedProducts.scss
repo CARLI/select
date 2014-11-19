@@ -10,6 +10,10 @@
         menu {
             margin-top: 2.5rem;
             margin-bottom: 1rem;
+
+            menuitem:first-child {
+                margin-right: 1.5rem;
+            }
         }
     }
 
@@ -43,6 +47,14 @@
                 @include flexbox;
                 border-left: $default-border;
                 padding-left: 2px;
+            }
+
+            .column {
+                flex-basis: 40%;
+            }
+
+            .column:last-child {
+                flex-basis: 20%;
             }
 
             checkbox {
