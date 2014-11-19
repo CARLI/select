@@ -145,9 +145,22 @@
                 @include flexbox;
                 border-left: $default-border;
                 padding-left: 2px;
+                background-color: $light-gray;
+
                 .column:nth-child(2) {
                     border-left: 0;
                     text-align: right;
+                    font-family: 'Dosis';
+                    font-weight: bold;
+                    @include font-size(17);
+                    color: $black;
+                    text-transform: uppercase;
+                }
+
+                .column:last-child {
+                    color: $green;
+                    background-color: $white;
+                    font-weight: bold;
                 }
             }
         }
