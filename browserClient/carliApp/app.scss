@@ -199,6 +199,8 @@ i.fa {
 
 @import "carliApp/components/alerts/alerts";
 @import "carliApp/components/buttons/buttons";
+@import "carliApp/components/collapsible/collapsible";
+@import "carliApp/components/checkbox/checkbox";
 @import "carliApp/components/carliHeader/carliHeader";
 @import "carliApp/components/entityList/entityList";
 @import "carliApp/components/filterByActive/filterByActive";
@@ -207,7 +209,6 @@ i.fa {
 @import "carliApp/components/viewEditDirectives/viewEditCheckbox/viewEditCheckbox";
 @import "carliApp/components/viewEditDirectives/viewEditContact/viewEditContact";
 @import "carliApp/components/viewEditDirectives/viewEditRadios/viewEditRadios";
-@import "carliApp/components/collapsible/collapsible";
 
 @import "carliApp/sections/libraries/libraries";
 @import "carliApp/sections/licenses/licenses";
