@@ -23,6 +23,7 @@ angular.module('carli.mockVendorService', [])
                 var deferred = $q.defer();
                 deferred.resolve(
                     {
+                        type: 'Vendor',
                         name: 'Test Vendor',
                         contacts: [
                             {
