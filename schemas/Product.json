@@ -12,7 +12,8 @@
             "type": "string"
         },
         "vendor": {
-            "$ref": "./Vendor.json"
+            "description": "UUID of a Vendor document",
+            "type": "string"
         },
         "productUrl": {
             "$ref": "./WebAddress.json"
@@ -75,6 +76,6 @@
         "oneTimePurchase": {
             "$ref": "./OneTimePurchase.json"
         },
-        "required": [ "name" ]
+        "required": [ "name", "vendor" ]
     }
 }
