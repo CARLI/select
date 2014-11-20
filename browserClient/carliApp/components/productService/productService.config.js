@@ -1,3 +1,4 @@
 angular.module('carli.productService',[
-    'carli.carliModules'
+    'carli.carliModules',
+    'carli.vendorService'
 ]);
