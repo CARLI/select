@@ -18,7 +18,9 @@ angular.module('carli.mockLicenseService', [])
                 var deferred = $q.defer();
                 deferred.resolve(
                     {
-                        name: 'Test License'
+                        type: 'License',
+                        name: 'Test License',
+                        isActive: true
                     }
                 );
                 return deferred.promise;
