@@ -4,14 +4,6 @@ angular.module('carli.sections.oneTimePurchases')
 function oneTimePurchasesController( $sce, libraryService ){
     var vm = this;
 
-    activate();
-
-    function activate() {
-        libraryService.list().then( function(libraryList){
-            vm.libraryList = libraryList;
-        });
-    }
-    
     vm.libraryListColumns = [
         {
             label: "Library",
@@ -34,4 +26,12 @@ function oneTimePurchasesController( $sce, libraryService ){
             }
         }
     ];
+
+    activate();
+
+    function activate() {
+        libraryService.list().then( function(libraryList){
+            vm.libraryList = libraryList;
+        });
+    }
 }
