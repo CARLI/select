@@ -76,11 +76,7 @@ angular.module('carli.mockProductService', [])
             },
             load: function () {
                 var deferred = $q.defer();
-                deferred.resolve(
-                    {
-                        name: 'Test Product'
-                    }
-                );
+                deferred.resolve( mockProductList[0] );
                 return deferred.promise;
             },
             listOneTimePurchaseProducts: function () {
