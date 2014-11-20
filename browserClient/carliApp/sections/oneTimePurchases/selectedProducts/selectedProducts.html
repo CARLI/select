@@ -25,7 +25,7 @@
                     <div class="column">Vendor</div>
                     <div class="column">Cost</div>
                 </li>
-                <li collapsible class="collapsed" ng-repeat="product in vm.productList | filter: vm.filter">
+                <li collapsible class="collapsed" ng-repeat="product in vm.productList | filter: vm.filter track by product.id">
                     <checkbox ng-model="vm.selectedProducts[product.id]"></checkbox>
                     <header>
                         <div class="column">
