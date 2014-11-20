@@ -37,6 +37,11 @@ generateVendorFixtures().then( function( results ){
     console.log('Done creating Vendors');
 });
 
+function addIds(things) {
+    things.forEach(function (thing) {
+        thing.id = thing.name;
+    });
+}
 
 function generateLibraryFixtures() {
     var entityCreationPromises = [];
@@ -49,6 +54,7 @@ function generateLibraryFixtures() {
         {"type":"Library", "isActive":true, "name":"Test Library with a much longer name than usual", "institutionYears":"4 Year", "institutionType":"Public", "contacts":[]},
         {"type":"Library", "isActive":true, "name":"Test Library 5", "institutionYears":"4 Year", "institutionType":"Private", "contacts":[]}
     ];
+    addIds(testLibraries);
     testLibraries.forEach(function (l) {
         entityCreationPromises.push( CARLI.Library.create(l) );
     });
@@ -67,6 +73,8 @@ function generateLicenseFixtures() {
         {"type": "License", "name": "Foobar License 1", "contractNumber": "Contract Number 1", "vendor": {"type": "Vendor", "name": "Foobar Publishing", "contacts": [], "websiteUrl": "http://www.foobar.com", "isActive": true, "comments": "foobar"} }
 
     ];
+    addIds(testLicenses);
+
     testLicenses.forEach(function (v) {
         entityCreationPromises.push( CARLI.License.create(v) );
     });
@@ -87,6 +95,8 @@ function generateVendorFixtures() {
         {"type": "Vendor", "name": "Ipsum Lorem", "contacts": [], "websiteUrl": "http://www.ipsum.com", "isActive": true, "comments": "foobar"},
         {"type": "Vendor", "name": "FOOBAR of New York", "contacts": [], "websiteUrl": "http://www.foobarny.com", "isActive": true, "comments": "acme"}
     ];
+    addIds(testVendors);
+
     testVendors.forEach(function (v) {
         entityCreationPromises.push( CARLI.Vendor.create(v) );
     });
@@ -99,19 +109,20 @@ function generateProductFixtures() {
     console.log("Generate Products");
 
     var testProducts = [
-        {"type": "Product", "isActive": true, "name": "Fiscal Year Product", "cycleType": "Fiscal Year" },
-        {"type": "Product", "isActive": true, "name": "Calendar Year Product", "cycleType": "Calendar Year" },
-        {"type": "Product", "isActive": true, "name": "Alternative Cycle Product", "cycleType": "Alternative Cycle" },
-        {"type": "Product", "isActive": false, "name": "Fiscal Year Product Inactive", "cycleType": "Fiscal Year" },
-        {"type": "Product", "isActive": false, "name": "Calendar Year Product Inactive", "cycleType": "Calendar Year" },
-        {"type": "Product", "isActive": false, "name": "Alternative Cycle Produc Inactivet", "cycleType": "Alternative Cycle" },
-        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 1", "cycleType": "One-Time Purchase", "oneTimePurchase": {} },
-        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 2", "cycleType": "One-Time Purchase", "oneTimePurchase": {}  },
-        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 3", "cycleType": "One-Time Purchase", "oneTimePurchase": {}  },
-        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 4", "cycleType": "One-Time Purchase", "oneTimePurchase": {}  },
-        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 5", "cycleType": "One-Time Purchase", "oneTimePurchase": {}  },
-        {"type": "Product", "isActive": false, "name": "One-Time Purchase Inactive", "cycleType": "One-Time Purchase", "oneTimePurchase": {}  }
+        {"type": "Product", "isActive": true, "name": "Fiscal Year Product", "cycleType": "Fiscal Year", vendor: "ACME Publishing" },
+        {"type": "Product", "isActive": true, "name": "Calendar Year Product", "cycleType": "Calendar Year", vendor: "ACME Publishing" },
+        {"type": "Product", "isActive": true, "name": "Alternative Cycle Product", "cycleType": "Alternative Cycle", vendor: "ACME Publishing" },
+        {"type": "Product", "isActive": false, "name": "Fiscal Year Product Inactive", "cycleType": "Fiscal Year", vendor: "ACME Publishing" },
+        {"type": "Product", "isActive": false, "name": "Calendar Year Product Inactive", "cycleType": "Calendar Year", vendor: "ACME Publishing" },
+        {"type": "Product", "isActive": false, "name": "Alternative Cycle Product Inactive", "cycleType": "Alternative Cycle", vendor: "ACME Publishing" },
+        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 1", "cycleType": "One-Time Purchase", vendor: "ACME Publishing", "oneTimePurchase": {} },
+        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 2", "cycleType": "One-Time Purchase", vendor: "ACME Publishing", "oneTimePurchase": {}  },
+        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 3", "cycleType": "One-Time Purchase", vendor: "ACME Publishing", "oneTimePurchase": {}  },
+        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 4", "cycleType": "One-Time Purchase", vendor: "ACME Publishing", "oneTimePurchase": {}  },
+        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 5", "cycleType": "One-Time Purchase", vendor: "ACME Publishing", "oneTimePurchase": {}  },
+        {"type": "Product", "isActive": false, "name": "One-Time Purchase Inactive", "cycleType": "One-Time Purchase", vendor: "ACME Publishing", "oneTimePurchase": {}  }
     ];
+    addIds(testProducts);
 
     var listLibrariesPromise = CARLI.Library.list();
 
