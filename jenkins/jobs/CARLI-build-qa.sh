@@ -5,6 +5,7 @@ cd `git rev-parse --show-toplevel`
 
 SCRIPTS=./jenkins/scripts
 
+$SCRIPTS/merge-develop-into-qa.sh &&
 $SCRIPTS/add-build-number.sh qa &&
 $SCRIPTS/build-container.sh couchdb &&
 $SCRIPTS/build-container.sh grunt &&
