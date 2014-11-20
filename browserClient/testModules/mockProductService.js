@@ -27,6 +27,11 @@ angular.module('carli.mockProductService', [])
                     }
                 );
                 return deferred.promise;
+            },
+            listOneTimePurchaseProducts: function () {
+                var deferred = $q.defer();
+                deferred.resolve([]);
+                return deferred.promise;
             }
         };
     });
