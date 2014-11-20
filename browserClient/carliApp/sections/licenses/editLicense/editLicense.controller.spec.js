@@ -1,109 +1,80 @@
 
 describe('The Edit License Controller', function(){
 
-    var mockLocation, mockLicenseService, mockDependenciesForNewLicense, mockDependenciesForEditLicense;
+    var newCtrl, editCtrl, mockDependenciesForNewLicense, mockDependenciesForEditLicense;
 
-    beforeEach(module('carli.sections.licenses.edit'));
+    beforeEach(function(){
+        module('carli.sections.licenses.edit');
+        module('carli.mockServices');
 
-    beforeEach(inject( function($q) {
-        mockLocation = {
-            path: function(){}
-        };
+        inject(function($controller, $rootScope, $q, mockLocationService, mockLicenseService, mockAlertService) {
+            mockDependenciesForNewLicense = {
+                $location: mockLocationService,
+                $routeParams: {
+                    id: 'new'
+                },
+                licenseService: mockLicenseService,
+                alertService: mockAlertService
+            };
 
-        mockLicenseService = {
-            createOrUpdate: 'neither',
-            create: function(){
-                var deferred = $q.defer();
-                this.createOrUpdate = 'create';
-                deferred.resolve();
-                return deferred.promise;
-            },
-            update: function(){
-                var deferred = $q.defer();
-                this.createOrUpdate = 'update';
-                deferred.resolve();
-                return deferred.promise;
-            },
-            load: function(){
-                var deferred = $q.defer();
-                deferred.resolve( 
-                    {
-                        name: 'Test License',
-                        "contacts": [
-                            {
-                                "contactType": "Billing",
-                                "name": "Bob Martin",
-                                "email": "bob@cleancode.org",
-                                "phoneNumber": "123-555-1234"
-                            }
-                        ]
-                    }
-                );
-                return deferred.promise;
-            },
-            reset: function(){
-                this.createOrUpdate = 'neither';
-            }
-        };
+            mockDependenciesForEditLicense = {
+                $location: mockLocationService,
+                $routeParams: {
+                    id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+                },
+                licenseService: mockLicenseService,
+                alertService: mockAlertService
+            };
 
-        mockDependenciesForNewLicense = {
-            $location: mockLocation,
-            $routeParams: {
-                id: 'new'
-            },
-            licenseService: mockLicenseService
-        };
-
-        mockDependenciesForEditLicense = {
-            $location: mockLocation,
-            $routeParams: {
-                id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
-            },
-            licenseService: mockLicenseService
-        };
-    } ));
-
-    afterEach(function(){
-        mockLicenseService.reset();
+            newCtrl  = $controller('editLicenseController', mockDependenciesForNewLicense);
+            editCtrl = $controller('editLicenseController', mockDependenciesForEditLicense);
+            $rootScope.$digest();
+        });
     });
 
-    it('should have a default, editable License on the New License screen', inject(function($controller){
-        var editCtrl = $controller('editLicenseController', mockDependenciesForNewLicense);
-        expect( editCtrl.license.isActive ).to.equal(true);
-        expect( editCtrl.editable ).to.equal(true);
-        expect( editCtrl.newLicense ).to.equal(true);
-    }));
+    it('should have a default, editable License on the New License screen', function(){
+        expect( newCtrl.license.isActive ).to.equal(true);
+        expect( newCtrl.editable ).to.equal(true);
+        expect( newCtrl.newLicense ).to.equal(true);
+    });
 
-    it('should call licenseService.create when saving a new License', inject(function($controller, $rootScope){
-        var editCtrl = $controller('editLicenseController', mockDependenciesForNewLicense);
+    it('should call licenseService.create when saving a new License', function(){
         expect( mockDependenciesForNewLicense.licenseService.createOrUpdate ).to.equal('neither');
-        editCtrl.saveLicense();
-        $rootScope.$digest();
+        newCtrl.saveLicense();
         expect( mockDependenciesForNewLicense.licenseService.createOrUpdate ).to.equal('create');
+    });
+
+    it('should add an alert when saving a new License', inject(function($rootScope){
+        expect( mockDependenciesForNewLicense.alertService.alertCount ).to.equal( 0 );
+        newCtrl.saveLicense();
+        $rootScope.$digest();
+        expect( mockDependenciesForNewLicense.alertService.alertCount ).to.equal( 1 );
     }));
 
-    it('should have a known, non-editable License on the Edit License screen', inject(function($controller, $rootScope){
-        var editCtrl = $controller('editLicenseController', mockDependenciesForEditLicense);
-        $rootScope.$digest();
+    it('should have a known, non-editable License on the Edit License screen', function(){
         expect( editCtrl.license.name ).to.equal('Test License');
         expect( editCtrl.editable ).to.equal(false);
         expect( editCtrl.newLicense ).to.equal(false);
-    }));
+    });
 
-    it('should call licenseService.update when saving an existing License', inject(function($controller, $rootScope){
-        var editCtrl = $controller('editLicenseController', mockDependenciesForEditLicense);
+    it('should call licenseService.update when saving an existing License', function(){
         expect( mockDependenciesForEditLicense.licenseService.createOrUpdate ).to.equal('neither');
         editCtrl.saveLicense();
-        $rootScope.$digest();
         expect( mockDependenciesForEditLicense.licenseService.createOrUpdate ).to.equal('update');
+    });
+
+    it('should add an alert when saving an existing License', inject(function($rootScope){
+        expect( mockDependenciesForEditLicense.alertService.alertCount ).to.equal( 0 );
+        editCtrl.saveLicense();
+        $rootScope.$digest();
+        expect( mockDependenciesForEditLicense.alertService.alertCount ).to.equal( 1 );
     }));
 
-    it('should toggle the editable variable when calling toggleEditable()', inject(function($controller){
-        var editCtrl = $controller('editLicenseController', mockDependenciesForEditLicense);
+    it('should toggle the editable variable when calling toggleEditable()', function(){
         expect( editCtrl.editable ).to.equal(false);
         editCtrl.toggleEditable();
         expect( editCtrl.editable ).to.equal(true);
-    }));
+    });
 
 });
 

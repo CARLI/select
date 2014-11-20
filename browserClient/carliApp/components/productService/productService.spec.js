@@ -20,4 +20,9 @@ describe('The Product service', function() {
     it( 'should provide a load method', inject( function(productService) {
         expect(productService.load).to.be.a('Function');
     }));
+
+    it( 'should provide a listOneTimePurchaseProducts method', inject( function(productService) {
+        expect(productService.listOneTimePurchaseProducts).to.be.a('Function');
+    }));
+
 });

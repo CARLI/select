@@ -40,7 +40,7 @@ module.exports = {
      * This is a collection of files used during testing only.
      */
     test_files: {
-        js: ['bower_modules/angular-mocks/angular-mocks.js']
+        js: ['bower_modules/angular-mocks/angular-mocks.js', 'testModules/*.js']
     },
 
     /**
