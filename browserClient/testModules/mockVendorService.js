@@ -4,7 +4,7 @@ angular.module('carli.mockVendorService', [])
             createOrUpdate: 'neither',
             list: function () {
                 var deferred = $q.defer();
-                deferred.resolve();
+                deferred.resolve([]);
                 return deferred.promise;
             },
             create: function () {

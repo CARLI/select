@@ -5,7 +5,7 @@ angular.module('carli.mockLicenseService', [])
             create: function(){
                 var deferred = $q.defer();
                 this.createOrUpdate = 'create';
-                deferred.resolve();
+                deferred.resolve([]);
                 return deferred.promise;
             },
             update: function(){
