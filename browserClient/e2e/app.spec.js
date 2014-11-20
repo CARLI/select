@@ -1,6 +1,9 @@
 var ip = require('ip');
 var devServerUrl = 'http://' + ip.address() + ':8000';
 
+require('jasmine-bail-fast');
+jasmine.getEnv().bailFast();
+
 var CarliApp = function () {
     this.navBar = {
         dashboard: element(by.id('nav-dashboard')),

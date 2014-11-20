@@ -26,6 +26,7 @@
     "grunt-protractor-runner": "^1.1.4",
     "grunt-protractor-webdriver": "^0.1.9",
     "ip": "^0.3.2",
+    "jasmine-bail-fast": "0.0.1",
     "jasmine-reporters": "^1.0.1",
     "jasmine-spec-reporter": "^0.6.0",
     "karma": "^0.12.23",
