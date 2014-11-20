@@ -13,6 +13,10 @@ exports.config = {
         jasmine.getEnv().addReporter(new jasmine.SpecReporter({displayStacktrace: true}));
         require('jasmine-reporters');
         jasmine.getEnv().addReporter(new jasmine.JUnitXmlReporter('../artifacts/test-results', true, true));
+        var ScreenShotReporter = require('protractor-html-screenshot-reporter');
+        jasmine.getEnv().addReporter(new ScreenShotReporter({
+            baseDirectory: '../artifacts/test-results/screenshots'
+        }));
     },
     jasmineNodeOpts: {
         silent: true

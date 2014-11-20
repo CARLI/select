@@ -37,6 +37,7 @@
     "karma-phantomjs-launcher": "^0.1.4",
     "load-grunt-tasks": "^0.6.0",
     "lodash": "^2.4.1",
-    "mocha": "^1.21.4"
+    "mocha": "^1.21.4",
+    "protractor-html-screenshot-reporter": "0.0.17"
   }
 }
