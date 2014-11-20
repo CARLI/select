@@ -64,10 +64,10 @@ describe('The Edit Vendor Controller', function(){
     });
 
     it('should add an alert when saving an existing Vendor', inject(function($rootScope){
-        expect( mockDependenciesForNewVendor.alertService.alertCount ).to.equal( 0 );
+        expect( mockDependenciesForEditVendor.alertService.alertCount ).to.equal( 0 );
         editCtrl.saveVendor();
         $rootScope.$digest();
-        expect( mockDependenciesForNewVendor.alertService.alertCount ).to.equal( 1 );
+        expect( mockDependenciesForEditVendor.alertService.alertCount ).to.equal( 1 );
     }));
 
     it('should toggle the editable variable when calling toggleEditable()', function(){

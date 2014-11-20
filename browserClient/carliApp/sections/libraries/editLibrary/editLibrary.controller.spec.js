@@ -7,13 +7,14 @@ describe('The Edit Library Controller', function(){
         module('carli.sections.libraries.edit');
         module('carli.mockServices');
 
-        inject( function($controller, $rootScope, $q, mockLocationService, mockLibraryService ) {
+        inject( function($controller, $rootScope, $q, mockLocationService, mockLibraryService, mockAlertService ) {
             mockDependenciesForNewLibrary = {
                 $location: mockLocationService,
                 $routeParams: {
                     id: 'new'
                 },
-                libraryService: mockLibraryService
+                libraryService: mockLibraryService,
+                alertService: mockAlertService
             };
 
             mockDependenciesForEditLibrary = {
@@ -21,7 +22,8 @@ describe('The Edit Library Controller', function(){
                 $routeParams: {
                     id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
                 },
-                libraryService: mockLibraryService
+                libraryService: mockLibraryService,
+                alertService: mockAlertService
             };
 
             newCtrl  = $controller('editLibraryController', mockDependenciesForNewLibrary);
@@ -48,17 +50,31 @@ describe('The Edit Library Controller', function(){
         expect( mockDependenciesForNewLibrary.libraryService.createOrUpdate ).to.equal('create');
     });
 
-    it('should have a known, non-editable library on the Edit library screen', function(){
+    it('should add an alert when saving a new Library', inject(function($rootScope){
+        expect( mockDependenciesForNewLibrary.alertService.alertCount ).to.equal( 0 );
+        newCtrl.saveLibrary();
+        $rootScope.$digest();
+        expect( mockDependenciesForNewLibrary.alertService.alertCount ).to.equal( 1 );
+    }));
+
+    it('should have a known, non-editable library on the Edit Library screen', function(){
         expect( editCtrl.library.name ).to.equal( 'Test Library');
         expect( editCtrl.editable ).to.equal(false);
         expect( editCtrl.newLibrary ).to.equal(false);
     });
 
-    it('should call libraryService.update when saving an existing library', function(){
+    it('should call libraryService.update when saving an existing Library', function(){
         expect( mockDependenciesForEditLibrary.libraryService.createOrUpdate ).to.equal('neither');
         editCtrl.saveLibrary();
         expect( mockDependenciesForEditLibrary.libraryService.createOrUpdate ).to.equal('update');
     });
+
+    it('should add an alert when saving an existing Library', inject(function($rootScope){
+        expect( mockDependenciesForEditLibrary.alertService.alertCount ).to.equal( 0 );
+        editCtrl.saveLibrary();
+        $rootScope.$digest();
+        expect( mockDependenciesForEditLibrary.alertService.alertCount ).to.equal( 1 );
+    }));
 
     it('should toggle the editable variable when calling toggleEditable()', function(){
         expect( editCtrl.editable ).to.equal(false);

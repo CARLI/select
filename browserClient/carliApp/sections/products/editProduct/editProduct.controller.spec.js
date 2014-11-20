@@ -7,7 +7,7 @@ describe('The Edit Product Controller', function(){
         module('carli.sections.products.edit');
         module('carli.mockServices');
 
-        inject(function ($controller, $rootScope, $q, mockLocationService, mockLibraryService, mockProductService, mockVendorService) {
+        inject(function ($controller, $rootScope, $q, mockLocationService, mockLibraryService, mockProductService, mockVendorService, mockAlertService) {
             mockDependenciesForNewProduct = {
                 $location: mockLocationService,
                 $routeParams: {
@@ -15,7 +15,8 @@ describe('The Edit Product Controller', function(){
                 },
                 productService: mockProductService,
                 libraryService: mockLibraryService,
-                vendorService: mockVendorService
+                vendorService: mockVendorService,
+                alertService: mockAlertService
             };
 
             mockDependenciesForEditProduct = {
@@ -25,7 +26,8 @@ describe('The Edit Product Controller', function(){
                 },
                 productService: mockProductService,
                 libraryService: mockLibraryService,
-                vendorService: mockVendorService
+                vendorService: mockVendorService,
+                alertService: mockAlertService
             };
 
             newCtrl  = $controller('editProductController', mockDependenciesForNewProduct);
@@ -46,6 +48,13 @@ describe('The Edit Product Controller', function(){
         expect( mockDependenciesForNewProduct.productService.createOrUpdate ).to.equal('create');
     });
 
+    it('should add an alert when saving a new Product', inject(function($rootScope){
+        expect( mockDependenciesForNewProduct.alertService.alertCount ).to.equal( 0 );
+        newCtrl.saveProduct();
+        $rootScope.$digest();
+        expect( mockDependenciesForNewProduct.alertService.alertCount ).to.equal( 1 );
+    }));
+
     it('should have a known, non-editable Product on the Edit Product screen', function(){
         expect( editCtrl.product.name ).to.equal('Test Product 0');
         expect( editCtrl.editable ).to.equal(false);
@@ -57,6 +66,13 @@ describe('The Edit Product Controller', function(){
         editCtrl.saveProduct();
         expect( mockDependenciesForEditProduct.productService.createOrUpdate ).to.equal('update');
     });
+
+    it('should add an alert when saving an existing Product', inject(function($rootScope){
+        expect( mockDependenciesForEditProduct.alertService.alertCount ).to.equal( 0 );
+        editCtrl.saveProduct();
+        $rootScope.$digest();
+        expect( mockDependenciesForEditProduct.alertService.alertCount ).to.equal( 1 );
+    }));
 
     it('should toggle the editable variable when calling toggleEditable()', function(){
         expect( editCtrl.editable ).to.equal(false);
