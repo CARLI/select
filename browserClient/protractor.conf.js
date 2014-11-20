@@ -7,6 +7,8 @@ exports.config = {
     seleniumAddress: 'http://' + seleniumHost + ':' + seleniumPort + '/wd/hub',
     specs: buildConfig.carliApp_files.jsE2e,
     onPrepare: function() {
+        require('jasmine-bail-fast');
+        jasmine.getEnv().bailFast();
         require('jasmine-spec-reporter');
         jasmine.getEnv().addReporter(new jasmine.SpecReporter({displayStacktrace: true}));
         require('jasmine-reporters');
