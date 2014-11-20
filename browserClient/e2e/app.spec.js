@@ -4,6 +4,7 @@ var devServerUrl = 'http://' + ip.address() + ':8000';
 var CarliApp = function () {
     this.navBar = {
         dashboard: element(by.id('nav-dashboard')),
+        oneTimePurchases: element(by.id('nav-one-time-purchases')),
         vendors: element(by.id('nav-vendors')),
         libraries: element(by.id('nav-libraries')),
         styleGuide: element(by.id('nav-style-guide'))
@@ -22,6 +23,11 @@ describe('The CARLI App', function() {
         expect(carliApp.navBar.dashboard.isPresent()).toBe(true);
         expect(carliApp.navBar.dashboard.getTagName()).toBe('a');
         //expect(carliApp.navBar.dashboard.getAttribute('href')).toBe('/dashboard');
+    });
+
+    it('should have a One-Time Purchases link in the navBar', function() {
+        expect(carliApp.navBar.oneTimePurchases.isPresent()).toBe(true);
+        expect(carliApp.navBar.oneTimePurchases.getTagName()).toBe('a');
     });
 
     it('should have a Vendors link in the navBar', function() {
