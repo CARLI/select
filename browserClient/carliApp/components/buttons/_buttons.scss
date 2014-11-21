@@ -73,3 +73,32 @@ $button-height: 40px;
 .list-button {
     @include list-button;
 }
+
+
+@mixin ask-button-hover {
+    color: $gray;
+    background-color: $purple;
+}
+
+.ask-button {
+    background-color: $purple;
+    border: 1px solid $dark-purple;
+    color: $white;
+    &:hover {
+        @include ask-button-hover;
+    }
+}
+
+@mixin remove-button-hover {
+    color: $gray;
+    background-color: $red;
+}
+
+.remove-button {
+    background-color: $red;
+    border: 1px solid $dark-red;
+    color: $white;
+    &:hover {
+        @include remove-button-hover;
+    }
+}

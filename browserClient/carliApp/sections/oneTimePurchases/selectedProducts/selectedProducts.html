@@ -61,10 +61,13 @@
                         </div>
                         <div class="column">
                             <div ng-if="!product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased">
-                                {{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price | currency }}
-                                <a ng-click="vm.purchaseProduct(product);" class="carli-button">Purchase</a>
+                                <div class="label">Add Product</div>
+                                <div ng-click="vm.purchaseProduct(product);" class="carli-button ask-button">{{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price | currency }} <fa name="plus-circle"></fa></div>
                             </div>
-                            <a ng-if="product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased" ng-click="vm.cancelPurchase(product);" class="carli-button">Remove</a>
+                            <div ng-if="product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased">
+                                <div class="label">Remove Product</div>
+                                <div ng-click="vm.cancelPurchase(product);" class="carli-button remove-button">Remove <fa name="remove"></fa></div>
+                            </div>
                         </div>
                     </div>
 
