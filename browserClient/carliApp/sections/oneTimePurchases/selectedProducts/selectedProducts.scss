@@ -124,6 +124,13 @@
                     margin: 0;
                 }
 
+                .label {
+                    @extend label;
+                    display: block;
+                    padding: 0;
+                    text-align: left;
+                }
+
                 .comments {
                     border: $default-border;
                     min-height: 4rem;
