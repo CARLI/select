@@ -7,10 +7,16 @@ exports.config = {
     seleniumAddress: 'http://' + seleniumHost + ':' + seleniumPort + '/wd/hub',
     specs: buildConfig.carliApp_files.jsE2e,
     onPrepare: function() {
+        require('jasmine-bail-fast');
+        jasmine.getEnv().bailFast();
         require('jasmine-spec-reporter');
         jasmine.getEnv().addReporter(new jasmine.SpecReporter({displayStacktrace: true}));
         require('jasmine-reporters');
         jasmine.getEnv().addReporter(new jasmine.JUnitXmlReporter('../artifacts/test-results', true, true));
+        var ScreenShotReporter = require('protractor-html-screenshot-reporter');
+        jasmine.getEnv().addReporter(new ScreenShotReporter({
+            baseDirectory: '../artifacts/test-results/screenshots'
+        }));
     },
     jasmineNodeOpts: {
         silent: true
