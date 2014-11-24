@@ -8,6 +8,7 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask('npm-install', function() {
+        grunt.task.run(['subdir-exec:.:npm install']);
         grunt.task.run(['subdir-exec:browserClient:npm install']);
         grunt.task.run(['subdir-exec:browserClient/e2e:npm install']);
         grunt.task.run(['subdir-exec:CARLI:npm install']);
