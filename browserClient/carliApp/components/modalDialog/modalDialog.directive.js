@@ -6,7 +6,8 @@ angular.module('carli.modalDialog')
             scope: {
                 title: '=',
                 submitFn: '&',
-                modalId: '='
+                modalId: '=',
+                modalSize: '@'
             },
             transclude: true,
             controller: modalDialogController
@@ -14,9 +15,27 @@ angular.module('carli.modalDialog')
     });
 
 function modalDialogController($scope) {
+    $scope.modalClass = getModalClass($scope.modalSize);
 
     $scope.closeDialog = function() {
         $('#' + $scope.id).modal('hide');
     };
 
+    function getModalClass(size) {
+        var modalClass;
+        switch (size) {
+            case 'large':
+                modalClass = 'modal-lg';
+                break;
+            case 'small':
+                modalClass = 'modal-sm';
+                break;
+            case 'medium':
+                modalClass = '';
+                break;
+            default:
+                modalClass = '';
+        }
+        return modalClass;
+    }
 }
