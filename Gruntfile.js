@@ -19,6 +19,9 @@ module.exports = function(grunt) {
     grunt.registerTask('deploy-db', function() {
         grunt.task.run(['subdir-exec:db:./deploy']);
     });
+    grunt.registerTask('fixture-data', function() {
+        grunt.task.run(['subdir-exec:db:./fixtures.js']);
+    });
 
     grunt.registerTask('install-deps', [
         'npm-install',
