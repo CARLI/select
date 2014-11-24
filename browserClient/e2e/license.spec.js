@@ -1,4 +1,7 @@
-var macro = require('./protractorMacros');
+var config = require('./utils/baseConfig');
+config.getDefaultAppPage();
+
+var macro = require('./utils/protractorMacros');
 elementById = macro.elementById;
 ensureFormElementIsPresentAndBlank = macro.ensureFormElementIsPresentAndBlank;
 setFormElementValue = macro.setFormElementValue;

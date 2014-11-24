@@ -1,3 +1,6 @@
+var config = require('./utils/baseConfig');
+config.getDefaultAppPage();
+
 var StyleGuidePage = function () {
 };
 
