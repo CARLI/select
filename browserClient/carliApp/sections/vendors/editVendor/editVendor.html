@@ -86,6 +86,5 @@
         </section>
     </form>
 
-    <hr>
-    <debug-panel>{{ vm.vendor | json }}</debug-panel>
+    <debug-panel ng-show="!vm.isModal">{{ vm.vendor | json }}</debug-panel>
 </section>
