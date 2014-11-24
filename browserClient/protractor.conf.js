@@ -21,11 +21,11 @@ exports.config = {
     jasmineNodeOpts: {
         silent: true
     }
-    /*
     , capabilities: {
-        browserName: 'chrome'
+        browserName: 'chrome',
+        shardTestFiles: true,
+        maxInstances: 4
     }
-    */
     /*
     , multiCapabilities: [
         { 'browserName': 'firefox' },
