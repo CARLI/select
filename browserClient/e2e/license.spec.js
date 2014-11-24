@@ -273,12 +273,16 @@ describe('The New License screen', function () {
 
 describe('Creating a New License', function(){
     it('should save a new License when filling in the form and clicking save', function() {
-        var licenseList;
-
         pageConfig.fillInLicenseWithTestData();
 
         pageConfig.submit.click();
+    });
 
+    it('should go back to the list screen after submitting', function() {
+        expect( browser.getLocationAbsUrl() ).toBe('/license');
+    });
+
+    it('should find the new License in the list screen', function(){
         pageConfig.listFilterShowAll.click();
 
         element.all(by.repeater('entity in values'))
@@ -298,7 +302,7 @@ describe('Creating a New License', function(){
 describe('Viewing an existing License in read only mode', function () {
     var row, config, formElement;
 
-    it('should be routed to the screen for the test license', function () {
+    it('should find the License entry on the list screen', function () {
 
         //Don't need to call these as long as the previous test left us on the list page with 'All' showing
         //browser.setLocation('/license');
@@ -347,7 +351,7 @@ describe('Viewing an existing License in edit mode', function () {
 describe('Making changes to an existing License', function(){
     var config, formElement;
 
-    it('should change the entry on the License list screen when changing the name', function () {
+    it('should find the License entry on the list screen', function () {
         browser.setLocation('/license');
 
         pageConfig.listFilterShowAll.click();
@@ -361,15 +365,21 @@ describe('Making changes to an existing License', function(){
             .then(function (licenseList) {
                 licenseList[0].element(by.tagName('a')).click();
             });
+    });
 
+    it('should save changes to the License entity and go back to the list screen', function () {
         pageConfig.editButton.click();
 
         pageConfig.fillInLicenseWithTestData('editedValue');
 
         pageConfig.submit.click();
 
-        pageConfig.listFilterShowAll.click();
+        expect( browser.getLocationAbsUrl() ).toBe('/license');
 
+        pageConfig.listFilterShowAll.click();
+    });
+
+    it('should change the entry on the License list screen when changing the name', function () {
         element.all(by.repeater('entity in values'))
             .filter(function (el, index) {
                 return el.getText().then(function (text) {
