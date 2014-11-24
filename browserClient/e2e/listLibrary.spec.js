@@ -1,4 +1,16 @@
-var ListLibraryPage = require('./ListLibraryPage.spec');
+var config = require('./utils/baseConfig');
+config.getDefaultAppPage();
+
+var ListLibraryPage = function () {
+
+    this.updateFteButton = element(by.id('update-fte'));
+    this.editFteModal = element(by.id('edit-fte-modal'));
+
+    this.testLibrary = {
+        name: 'Test Library 1',
+        fte: '0'
+    };
+};
 
 describe('The List Library screen', function () {
     var listLibraryPage = new ListLibraryPage();

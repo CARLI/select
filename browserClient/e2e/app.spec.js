@@ -1,5 +1,5 @@
-var ip = require('ip');
-var devServerUrl = 'http://' + ip.address() + ':8000';
+var config = require('./utils/baseConfig');
+config.getDefaultAppPage();
 
 var CarliApp = function () {
     this.navBar = {
@@ -7,16 +7,11 @@ var CarliApp = function () {
         vendors: element(by.id('nav-vendors')),
         libraries: element(by.id('nav-libraries')),
         styleGuide: element(by.id('nav-style-guide'))
-    };  
-        
-    this.getDefaultAppPage = function () {
-        browser.get(devServerUrl);
     };
 };
 
 describe('The CARLI App', function() {
     var carliApp = new CarliApp();
-    carliApp.getDefaultAppPage();
 
     it('should have a Dashboard link in the navBar', function() {
         expect(carliApp.navBar.dashboard.isPresent()).toBe(true);

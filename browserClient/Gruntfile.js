@@ -505,23 +505,32 @@ module.exports = function ( grunt ) {
         'karma:continuous'
     ]);
 
-    grunt.registerTask( 'test:e2e', [
-        'clean',
-        'build',
-        'protractor_webdriver',
-        'connect:tests',
-        'protractor'
-    ]);
+    grunt.registerTask( 'test:e2e', 'Run the end-to-end tests', function(){
+        grunt.task.run([
+            'clean',
+            'build'
+        ]);
+
+        if( !this.flags.jenkins ){
+            grunt.task.run('protractor_webdriver');
+        }
+
+        if ( this.args && this.args.length > 0 ){
+            var specFiles = this.args.map( function(name){
+                return 'e2e/' + name + '.spec.js';
+            });
+            grunt.config('protractor.options.args.specs', specFiles);
+        }
+
+        grunt.task.run([
+            'connect:tests',
+            'protractor'
+        ]);
+    });
 
     grunt.registerTask( 'test:jenkins', [
         'test:unit',
         'test:e2e:jenkins'
-    ]);
-    grunt.registerTask( 'test:e2e:jenkins', [
-        'clean',
-        'build',
-        'connect:tests',
-        'protractor'
     ]);
 
     /*
@@ -530,7 +539,6 @@ module.exports = function ( grunt ) {
     grunt.registerTask( 'serve', [
         'build',
         'karma:unit',
-        //'protractor_webdriver',
         'connect:serve',
         'watch'
     ]);
@@ -539,6 +547,18 @@ module.exports = function ( grunt ) {
      */
     grunt.registerTask( 'serve:jenkins', [
         'build',
+        'connect:serve',
+        'watch'
+    ]);
+
+    /*
+     * The `serve:protractor` task is used to start the selenium server along with a dev server to run Protractor tests
+     * against. (Use this if you want to manually run Protractor).
+     */
+    grunt.registerTask( 'serve:protractor', [
+        'build',
+        'karma:unit',
+        'protractor_webdriver',
         'connect:serve',
         'watch'
     ]);
