@@ -6,7 +6,7 @@ angular.module('carli.modalDialog')
             scope: {
                 title: '=',
                 submitFn: '&',
-                id: '='
+                modalId: '='
             },
             transclude: true,
             controller: modalDialogController
