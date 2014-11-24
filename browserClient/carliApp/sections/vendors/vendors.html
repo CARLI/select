@@ -2,7 +2,7 @@
     <div class="list-page-header">
         <h1>Vendors</h1>
         <div class="button-container">
-            <a id="new-vendor" href="/vendor/new" class="carli-button">New Vendor <i class="fa fa-plus-circle"></i></a>
+            <a id="new-vendor" href="#" class="carli-button" data-toggle="modal" data-target="#new-vendor-modal">New Vendor <i class="fa fa-plus-circle"></i></a>
         </div>
     </div>
 
@@ -10,3 +10,7 @@
         <entity-list values="vm.vendorList" columns="vm.vendorListColumns" entity-label="vendors"></entity-list>
     </section>
 </section>
+
+<modal-dialog title="'New Vendor'" modal-id="'new-vendor-modal'" submit-fn="vm.newVendorSubmit()">
+    <ng-include ng-controller="editVendorController as vm" src="'carliApp/sections/vendors/editVendor/editVendor.html'"></ng-include>
+</modal-dialog>

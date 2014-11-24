@@ -24,7 +24,7 @@ function editVendorController( $location, $routeParams, vendorService, alertServ
     activate();
 
     function activate() {
-        if (vendorId === 'new') {
+        if (vendorId === undefined || vendorId === 'new') {
             initializeForNewVendor();
         }
         else {
