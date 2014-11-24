@@ -505,23 +505,32 @@ module.exports = function ( grunt ) {
         'karma:continuous'
     ]);
 
-    grunt.registerTask( 'test:e2e', [
-        'clean',
-        'build',
-        'protractor_webdriver',
-        'connect:tests',
-        'protractor'
-    ]);
+    grunt.registerTask( 'test:e2e', 'Run the end-to-end tests', function(){
+        grunt.task.run([
+            'clean',
+            'build'
+        ]);
+
+        if( !this.flags.jenkins ){
+            grunt.task.run('protractor_webdriver');
+        }
+
+        if ( this.args && this.args.length > 0 ){
+            var specFiles = this.args.map( function(name){
+                return 'e2e/' + name + '.spec.js';
+            });
+            grunt.config('protractor.options.args.specs', specFiles);
+        }
+
+        grunt.task.run([
+            'connect:tests',
+            'protractor'
+        ]);
+    });
 
     grunt.registerTask( 'test:jenkins', [
         'test:unit',
         'test:e2e:jenkins'
-    ]);
-    grunt.registerTask( 'test:e2e:jenkins', [
-        'clean',
-        'build',
-        'connect:tests',
-        'protractor'
     ]);
 
     /*
