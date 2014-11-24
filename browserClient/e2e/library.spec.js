@@ -289,7 +289,7 @@ describe('Viewing an existing Library in read only mode', function () {
 
     var row, config, formElement, contactEditor;
 
-    it('should be routed to the screen for the test library', function () {
+    it('should find the Library entry on the Library list screen', function () {
 
         //Don't need to call these as long as the previous test left us on the list page with 'All' showing
         //browser.setLocation('/library');
@@ -352,7 +352,7 @@ describe('Viewing an existing Library in edit mode', function () {
 describe('Making changes to an existing Library', function(){
     var config, formElement, contactEditor;
 
-    it('should change the entry on the Library list screen when changing the name', function () {
+    it('should find the Library entry on the Library list screen', function () {
         browser.setLocation('/library');
 
         pageConfig.listFilterShowAll.click();
@@ -366,16 +366,22 @@ describe('Making changes to an existing Library', function(){
             .then(function (libraryList) {
                 libraryList[0].element(by.tagName('a')).click();
             });
+    });
 
+    it('should save changes to the Library entity and go back to the list screen', function () {
         pageConfig.editButton.click();
 
         pageConfig.fillInLibraryWithTestData('editedValue');
 
         pageConfig.submit.click();
 
-        pageConfig.listFilterShowAll.click();
+        expect( browser.getLocationAbsUrl() ).toBe('/library');
 
-        element.all(by.repeater('entity in values'))
+        pageConfig.listFilterShowAll.click();
+    });
+
+    it('should change the entry on the Library list screen when changing the name', function () {
+            element.all(by.repeater('entity in values'))
             .filter(function (el, index) {
                 return el.getText().then(function (text) {
                     return (text.search(testLibraryEditedName) > -1);
