@@ -1,5 +1,12 @@
+var testData = require('./oneTimePurchaseFixtures');
 
-var testLibrary;
+var dataLoader = require('./fixtureDataLoader');
+
+dataLoader.createLibrary(testData.activeLibrary1);
+
+var nameColIndex=0;
+var fteColIndex=1;
+var instTypeColIndex=2;
 
 describe('The One-Time Purchases screen', function () {
 
@@ -11,58 +18,58 @@ describe('The One-Time Purchases screen', function () {
         expect(element(by.repeater('entity in values')).isPresent()).toBe(true);
     });
 
-    it("should have a library called 'Test Library 5' in the fixture data/entity list", function () {
+    it("should have a library " + testData.activeLibrary1.name + " in the entity list with FTE and Institution Type columns", function () {
         element.all(by.repeater('entity in values'))
             .filter( function(el, index) {
                 return el.getText().then(function(text){
-                    return (text.search('Test Library 5') > -1);
+                    return (text.search(testData.activeLibrary1.name) > -1);
                 });
             })
             .then( function( libraryList ) {
-                expect( libraryList.length ).toBe(1);
-                testLibrary = libraryList[0];
+
+                libraryList[0].all(by.repeater('column in columns'))
+                    .then (function(colList) {
+                        expect( colList[nameColIndex].getText()).toBe(testData.activeLibrary1.name);
+                        expect( colList[fteColIndex].getText()).toBe(testData.activeLibrary1.fte.toString());
+                        expect( colList[instTypeColIndex].getText()).toBe(testData.activeLibrary1.institutionType);
+                });
+
             });
     });
 
-    it("should have a View button for Test Library 5", function () {
+    it("should go to the One-Time Purchase select product page when the View button is clicked", function () {
         element.all(by.repeater('entity in values'))
             .filter( function(el, index) {
                 return el.getText().then(function(text){
-                    return (text.search('Test Library 5') > -1);
+                    return (text.search(testData.activeLibrary1.name) > -1);
                 });
             })
             .then( function( libraryList ) {
-                expect( libraryList[0].element(by.css('.carli-button')).isPresent()).toBe(true);
-            });
-    });
-
-    it("should go to the One-Time Purchase select product page when the 'Test Library 5' View button is clicked", function () {
-        element.all(by.repeater('entity in values'))
-            .filter( function(el, index) {
-                return el.getText().then(function(text){
-                    return (text.search('Test Library 5') > -1);
+                libraryList[0].element(by.css('.carli-button')).click()
+                    .then(function() {
+                        expect(element(by.id('one-time-purchase-products')).isPresent()).toBe(true);
                 });
-            })
-            .then( function( libraryList ) {
-                var testLibraryViewButton = libraryList[0].element(by.css('.carli-button'));
 
-                var libraryId = testLibraryViewButton.getAttribute('href').then(function (url) {
-
-                    testLibraryViewButton.click();
-
-                    // This is a bit contrived, but we are finding the URL specified in the button, which
-                    // contains the library id of the selected library, to verify that we are going to
-                    // that URL (the select product page).  However, this is the only place this library Id is,
-                    // so we have to trust it's right, and then use that to make sure the data in the
-                    // select product page is correct.
-                    var location = '\/' + url.match('http:\/\/[^\/]+\/(.*)')[1];  // Location part of URL
-                    expect(browser.getLocationAbsUrl() ).toBe(location);
-
-                    // extract the library Id
-                    id = location.match('(.*?\/){2}(.*)')[2];
-                    return id;
-                });
             });
     });
 
 });
+
+/*
+describe('The One-Time Purchases Select Product screen', function () {
+
+    it('should only contain products of type cycleType One-Time Purchase', function(){
+        element.all(by.repeater('product in vm.productList'))
+            .then( function( productList ) {
+                console.log("productList=" + JSON.stringify(productList));
+                for (var i=0; i<productList.length; i++) {
+                    console.log("product=" + JSON.stringify(productList[i]));
+                    console.log("product.cycleType=" + productList[i].cycleType);
+                    expect( productList[i].cycleType ).toBe("One-Time Purchase");
+                }
+            });
+
+    });
+
+});
+    */
