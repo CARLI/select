@@ -1,12 +1,10 @@
 
-var CARLI  = require( '../../CARLI'),
-    dbUrl  = CARLI.config.storeOptions.couchDbUrl,
-    dbName = CARLI.config.storeOptions.couchDbName
+var CARLI  = require( '../../CARLI')
     ;
 
 var storeOptions = {
-    couchDbUrl: dbUrl,
-    couchDbName: dbName
+    couchDbUrl: CARLI.config.storeOptions.couchDbUrl,
+    couchDbName: CARLI.config.storeOptions.couchDbName
 };
 var store = CARLI.Store( CARLI.CouchDbStore(storeOptions) );
 
@@ -20,4 +18,4 @@ module.exports = {
     createLibrary : function (libData) {
         CARLI.Library.create(libData);
     }
-}
+};

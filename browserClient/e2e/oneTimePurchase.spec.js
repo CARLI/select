@@ -6,9 +6,9 @@ dataLoader.createLibrary(testData.activeLibrary1);
 dataLoader.createLibrary(testData.inactiveLibrary2);
 dataLoader.createLibrary(testData.activeLibrary3);
 
-var nameColIndex=0;
-var fteColIndex=1;
-var instTypeColIndex=2;
+var NAME_COLUMN_INDEX=0;
+var FTE_COLUMN_INDEX=1;
+var INSTITUTION_TYPE_COLUMN_INDEX=2;
 
 describe('The One-Time Purchases screen', function () {
 
@@ -40,9 +40,9 @@ describe('The One-Time Purchases screen', function () {
 
                 libraryList[0].all(by.repeater('column in columns'))
                     .then (function(colList) {
-                        expect( colList[nameColIndex].getText()).toBe(testData.activeLibrary1.name);
-                        expect( colList[fteColIndex].getText()).toBe(testData.activeLibrary1.fte.toString());
-                        expect( colList[instTypeColIndex].getText()).toBe(testData.activeLibrary1.institutionType);
+                        expect( colList[NAME_COLUMN_INDEX].getText()).toBe(testData.activeLibrary1.name);
+                        expect( colList[FTE_COLUMN_INDEX].getText()).toBe(testData.activeLibrary1.fte.toString());
+                        expect( colList[INSTITUTION_TYPE_COLUMN_INDEX].getText()).toBe(testData.activeLibrary1.institutionType);
                 });
 
             });
