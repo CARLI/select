@@ -530,7 +530,6 @@ module.exports = function ( grunt ) {
     grunt.registerTask( 'serve', [
         'build',
         'karma:unit',
-        //'protractor_webdriver',
         'connect:serve',
         'watch'
     ]);
@@ -539,6 +538,18 @@ module.exports = function ( grunt ) {
      */
     grunt.registerTask( 'serve:jenkins', [
         'build',
+        'connect:serve',
+        'watch'
+    ]);
+
+    /*
+     * The `serve:protractor` task is used to start the selenium server along with a dev server to run Protractor tests
+     * against. (Use this if you want to manually run Protractor).
+     */
+    grunt.registerTask( 'serve:protractor', [
+        'build',
+        'karma:unit',
+        'protractor_webdriver',
         'connect:serve',
         'watch'
     ]);

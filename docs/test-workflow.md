@@ -56,16 +56,13 @@ Follow the directions from [the JetBrains docs](https://www.jetbrains.com/idea/w
 ## Browser Client - Section End-To-End Tests
 
 * To run all end-to-end tests once: `grunt test:e2e`
-* To run end-to-end tests against an already running server: `grunt protractor`
+* To run individual end-to-end tests against an already running server: `protractor --specs <files>`
 
-### Grunt Serve
-The `grunt serve` command automatically starts a background Protractor (webdriver-manager) server. To run end-to-end tests once, run `grunt protractor` in a different terminal.
+### Grunt Protractor Server
+The `grunt serve:protractor` command automatically starts a background Protractor (webdriver-manager) server. To run specific end-to-end tests, run `protractor --specs <files>` in the browserClient directory.
 
 ### Single Run
 You can just run `grunt test:e2e` to build the project and run the end-to-end tests once.
-
-
-
 
 
 ## ABOUT
