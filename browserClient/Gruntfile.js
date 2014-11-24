@@ -506,15 +506,6 @@ module.exports = function ( grunt ) {
     ]);
 
     grunt.registerTask( 'test:e2e', 'Run the end-to-end tests', function(){
-        grunt.task.run([
-            'clean',
-            'build'
-        ]);
-
-        if( !this.flags.jenkins ){
-            grunt.task.run('protractor_webdriver');
-        }
-
         if ( this.args && this.args.length > 0 ){
             var specFiles = this.args.map( function(name){
                 return 'e2e/' + name + '.spec.js';
@@ -523,14 +514,24 @@ module.exports = function ( grunt ) {
         }
 
         grunt.task.run([
+            'clean',
+            'build',
+            'protractor_webdriver',
             'connect:tests',
             'protractor'
         ]);
     });
 
+    grunt.registerTask( 'test:e2eJenkins', [
+        'clean',
+        'build',
+        'connect:tests',
+        'protractor'
+    ]);
+
     grunt.registerTask( 'test:jenkins', [
         'test:unit',
-        'test:e2e:jenkins'
+        'test:e2eJenkins'
     ]);
 
     /*
