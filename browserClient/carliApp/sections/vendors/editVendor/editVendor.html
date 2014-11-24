@@ -3,7 +3,7 @@
     <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="vendorForm" ng-submit="vm.saveVendor()">
 
         <header class="page-header">
-            <h1 ng-show="vm.newVendor">New Vendor</h1>
+            <h1 ng-show="vm.newVendor && !vm.isModal">New Vendor</h1>
 
             <div class="name">
                 <label for="vendorName">Vendor Name</label>
@@ -79,7 +79,7 @@
                 </div>
             </fieldset>
 
-            <footer ng-show="vm.editable">
+            <footer ng-show="vm.editable && !vm.isModal">
                 <a class="carli-button cancel-button" href="/vendor">Cancel</a>
                 <input class="carli-button save-button" ng-disabled="!vm.editable" id="vendor-submit" type="submit">
             </footer>

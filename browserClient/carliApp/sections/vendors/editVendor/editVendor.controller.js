@@ -30,6 +30,7 @@ function editVendorController( $location, $routeParams, vendorService, alertServ
         else {
             initializeForExistingVendor();
         }
+        vm.isModal = vm.newVendor;
     }
     function initializeForNewVendor() {
         vm.vendor = {
