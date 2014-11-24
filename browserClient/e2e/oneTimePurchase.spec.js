@@ -3,6 +3,8 @@ var testData = require('./oneTimePurchaseFixtures');
 var dataLoader = require('./fixtureDataLoader');
 
 dataLoader.createLibrary(testData.activeLibrary1);
+dataLoader.createLibrary(testData.inactiveLibrary2);
+dataLoader.createLibrary(testData.activeLibrary3);
 
 var nameColIndex=0;
 var fteColIndex=1;
@@ -16,6 +18,15 @@ describe('The One-Time Purchases screen', function () {
 
     it('should have an Entity List', function () {
         expect(element(by.repeater('entity in values')).isPresent()).toBe(true);
+    });
+
+    it("should only display active libraries", function () {
+        element.all(by.repeater('entity in values'))
+            .then( function( libraryList ) {
+                for (i=0; i<libraryList.length; i++) {
+                    expect(libraryList[i].getText()).toNotContain(testData.inactiveLibrary2.name);
+                }
+            });
     });
 
     it("should have a library " + testData.activeLibrary1.name + " in the entity list with FTE and Institution Type columns", function () {
