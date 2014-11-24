@@ -3,7 +3,7 @@
 var CARLI  = require( '../CARLI'),
     dbUrl  = CARLI.config.storeOptions.couchDbUrl,
     dbName = CARLI.config.storeOptions.couchDbName,
-    Q = require('Q')
+    Q = require('q')
 ;
 
 var storeOptions = {
