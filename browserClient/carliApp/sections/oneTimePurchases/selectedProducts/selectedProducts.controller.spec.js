@@ -30,7 +30,8 @@ describe('The One-time Purchases Selected-Products Controller', function(){
 
     it('should expose VM functions', function(){
         expect(vm.filter).to.be.a('Function');
-        expect(vm.setShowSelectedProducts).to.be.a('Function');
+        expect(vm.setShowPurchasedProducts).to.be.a('Function');
+        expect(vm.setShowNotPurchasedProducts).to.be.a('Function');
         expect(vm.setShowAllProducts).to.be.a('Function');
         expect(vm.purchaseProduct).to.be.a('Function');
         expect(vm.cancelPurchase).to.be.a('Function');
@@ -39,20 +40,33 @@ describe('The One-time Purchases Selected-Products Controller', function(){
         expect(vm.reportProducts).to.be.a('Function');
     });
 
-    it('should filter the list of Products', function(){
-        var filteredList = vm.productList.filter( vm.filter );
-        expect(filteredList.length).to.equal(2);
-    });
-
     it('should toggle the filter state', function(){
         expect(vm.filterState).to.equal('all');
 
-        vm.setShowSelectedProducts();
-        expect(vm.filterState).to.equal('selected');
+        // There are 3 one-time purchase products in the list
+        var filteredList = vm.productList.filter( vm.filter );
+        expect(filteredList.length).to.equal(3);
 
+        // There are 2 that have been purchased
+        vm.setShowPurchasedProducts();
+        expect(vm.filterState).to.equal('purchased');
+        filteredList = vm.productList.filter( vm.filter );
+        expect(filteredList.length).to.equal(2);
+
+        // There is 1 that has not been purchased
+        vm.setShowNotPurchasedProducts();
+        expect(vm.filterState).to.equal('not-purchased');
+        filteredList = vm.productList.filter( vm.filter );
+        expect(filteredList.length).to.equal(1);
+
+        // verify the resetting makes it go back to 3
         vm.setShowAllProducts();
         expect(vm.filterState).to.equal('all');
+        filteredList = vm.productList.filter( vm.filter );
+        expect(filteredList.length).to.equal(3);
     });
+
+
 
     it('should call productService.update when purchasing a Product', function(){
         var mockProduct = vm.productList[5];
