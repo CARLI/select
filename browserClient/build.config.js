@@ -23,7 +23,8 @@ module.exports = {
         scss: ['carliApp/app.scss' ],
         watchSass: [ 'carliApp/**/*.scss' ],
         images: ['carliApp/**/*.png'],
-        json: ['resources/**/*.json']
+        json: ['resources/**/*.json'],
+        helper_scripts: [ 'e2e/utils/jQueryHelpers.js' ]
     },
 
     /**
