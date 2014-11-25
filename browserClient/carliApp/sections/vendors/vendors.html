@@ -11,6 +11,14 @@
     </section>
 </section>
 
-<modal-dialog title="'New Vendor'" modal-id="'new-vendor-modal'" modal-class="modal-lg">
-    <ng-include ng-controller="editVendorController as vm" src="'carliApp/sections/vendors/editVendor/editVendor.html'"></ng-include>
-</modal-dialog>
+<div class="modal fade" id="new-vendor-modal" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><fa aria-hidden="true" name="remove"></fa><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="modal-label">New Vendor</h4>
+            </div>
+            <edit-vendor></edit-vendor>
+        </div>
+    </div>
+</div>
