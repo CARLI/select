@@ -6,7 +6,8 @@ angular.module('carli.entityList')
         scope: {
             values: '=',
             columns: '=',
-            entityLabel: '@'
+            entityLabel: '@',
+            orderBy: '='
         },
         controller: function($scope){
             $scope.activeFilterState = 'Active';
