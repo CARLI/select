@@ -484,7 +484,8 @@ module.exports = function ( grunt ) {
         'newer:copy:build_json',
         'browserify:build',
         'sass:build',
-        'index:build' 
+        'index:build',
+        'jsenv:node'
     ]);
 
     /**
