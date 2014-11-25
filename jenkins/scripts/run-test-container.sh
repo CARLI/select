@@ -1,6 +1,7 @@
 #!/bin/sh
 
 instance=$1
+tag=$2
 
 sudo docker run --detach=true --name=carli-selenium --privileged -p 4444 -p 5900 elgalu/docker-selenium
 
@@ -10,7 +11,7 @@ sudo docker run \
     --link=carli-selenium:selenium \
     --link=carli-couchdb-$instance:couchdb \
     -e "CARLI_DEV_SERVER_URL=$CARLI_DEV_SERVER_URL" \
-    carli-grunt /carli-select/docker/grunt/test.sh
+    carli-grunt:$tag /carli-select/docker/grunt/test.sh
 rc=$?
 
 mkdir -p artifacts/test-results
