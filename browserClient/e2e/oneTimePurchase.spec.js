@@ -1,4 +1,4 @@
-var testData = require('./oneTimePurchaseFixtures');
+var testData = require('./oneTimePurchase.fixtures');
 
 var dataLoader = require('./fixtureDataLoader');
 
