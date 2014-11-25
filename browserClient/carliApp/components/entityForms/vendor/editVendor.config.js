@@ -1,4 +1,4 @@
-angular.module('carli.editVendor',[
+angular.module('carli.entityForms.vendor',[
     'carli.alerts',
     'carli.vendorService',
     'carli.viewEditDirectives'

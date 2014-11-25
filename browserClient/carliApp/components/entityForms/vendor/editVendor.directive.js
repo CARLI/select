@@ -1,16 +1,16 @@
-angular.module('carli.editVendor')
+angular.module('carli.entityForms.vendor')
     .directive('editVendor', editVendor)
     .directive('editVendorModal', editVendorModal);
 
 function editVendor() {
     var directive = _editVendorBaseDirective();
-    directive.templateUrl = 'carliApp/components/editVendor/editVendor.html';
+    directive.templateUrl = 'carliApp/components/entityForms/vendor/editVendor.html';
     return directive;
 }
 
 function editVendorModal() {
     var directive = _editVendorBaseDirective();
-    directive.templateUrl = 'carliApp/components/editVendor/editVendorModal.html';
+    directive.templateUrl = 'carliApp/components/entityForms/vendor/editVendorModal.html';
     return directive;
 }
 
