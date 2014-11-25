@@ -1,11 +1,23 @@
 angular.module('carli.editVendor')
-    .directive('editVendor', editVendor);
+    .directive('editVendor', editVendor)
+    .directive('editVendorModal', editVendorModal);
 
 function editVendor() {
+    var directive = _editVendorBaseDirective();
+    directive.templateUrl = 'carliApp/components/editVendor/editVendor.html';
+    return directive;
+}
+
+function editVendorModal() {
+    var directive = _editVendorBaseDirective();
+    directive.templateUrl = 'carliApp/components/editVendor/editVendorModal.html';
+    return directive;
+}
+
+function _editVendorBaseDirective() {
     return {
         restrict: 'E',
-        scope: { vendorId: '=' },
-        templateUrl: 'carliApp/components/editVendor/editVendor.html',
+        scope: { vendorId: '='  },
         controller: editVendorController,
         controllerAs: 'vm',
         bindToController: true
@@ -60,7 +72,6 @@ function editVendorController( $location, vendorService, alertService ) {
     }
     function initializeForExistingVendor() {
         vendorService.load(vm.vendorId).then( function( vendor ) {
-            console.log(vendor);
             vm.vendor = vendor;
         } );
         vm.editable = false;
