@@ -52,6 +52,18 @@ angular.module('carli.mockProductService', [])
                         }
                     }
                 }
+            },
+            {
+                type: 'Product',
+                name: 'Test Product 6 Unpurchased',
+                cycleType: 'One-Time Purchase',
+                isActive: true,
+                oneTimePurchase: {
+                    libraryPurchaseData: {
+                        testLibraryId: {
+                        }
+                    }
+                }
             }
         ];
 

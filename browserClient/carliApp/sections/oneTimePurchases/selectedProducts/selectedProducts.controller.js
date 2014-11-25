@@ -9,7 +9,8 @@ function selectedProductsController($routeParams, libraryService, productService
     vm.selectedProducts = {};
 
     vm.filter = filter;
-    vm.setShowSelectedProducts = setShowSelectedProducts;
+    vm.setShowPurchasedProducts = setShowPurchasedProducts;
+    vm.setShowNotPurchasedProducts = setShowNotPurchasedProducts;
     vm.setShowAllProducts = setShowAllProducts;
     vm.purchaseProduct = purchaseProduct;
     vm.cancelPurchase = cancelPurchase;
@@ -30,15 +31,21 @@ function selectedProductsController($routeParams, libraryService, productService
     }
 
     function filter( value ){
-        return (
+         return (
             value.cycleType === 'One-Time Purchase' &&
             value.isActive === true &&
-            (vm.filterState === 'all' || value.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased)
+            ((vm.filterState === 'all') ||
+             (vm.filterState === 'purchased' && value.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased) ||
+             (vm.filterState === 'not-purchased' && !value.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased))
         );
     }
 
-    function setShowSelectedProducts() {
-        vm.filterState = 'selected';
+    function setShowPurchasedProducts() {
+        vm.filterState = 'purchased';
+    }
+
+    function setShowNotPurchasedProducts() {
+        vm.filterState = 'not-purchased';
     }
 
     function setShowAllProducts() {
