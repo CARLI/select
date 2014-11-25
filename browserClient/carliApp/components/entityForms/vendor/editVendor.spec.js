@@ -1,27 +1,21 @@
 
-describe('The Edit Vendor Controller', function(){
+describe('The Edit Vendor Directive', function(){
 
     var newCtrl, editCtrl, mockDependenciesForNewVendor, mockDependenciesForEditVendor;
 
     beforeEach(function(){
-        module('carli.sections.vendors.edit');
+        module('carli.entityForms.vendor');
         module('carli.mockServices');
 
         inject( function($controller, $rootScope, $q, mockLocationService, mockVendorService, mockAlertService ) {
             mockDependenciesForNewVendor = {
                 $location: mockLocationService,
-                $routeParams: {
-                    id: 'new'
-                },
                 vendorService: mockVendorService,
                 alertService: mockAlertService
             };
 
             mockDependenciesForEditVendor = {
                 $location: mockLocationService,
-                $routeParams: {
-                    id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
-                },
                 vendorService: mockVendorService,
                 alertService: mockAlertService
             };

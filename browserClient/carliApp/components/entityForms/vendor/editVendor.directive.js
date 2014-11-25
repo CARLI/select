@@ -1,4 +1,5 @@
 angular.module('carli.entityForms.vendor')
+    .controller('editVendorController', editVendorController)
     .directive('editVendor', editVendor)
     .directive('editVendorModal', editVendorModal);
 
@@ -18,7 +19,7 @@ function _editVendorBaseDirective() {
     return {
         restrict: 'E',
         scope: { vendorId: '=', afterSubmitFn: '=' },
-        controller: editVendorController,
+        controller: 'editVendorController',
         controllerAs: 'vm',
         bindToController: true
     };
@@ -91,9 +92,9 @@ function editVendorController( $location, vendorService, alertService ) {
                     vm.afterSubmitFn();
                 }
             })
-            .catch(function(error) {
-                alertService.putAlert(error, {severity: 'danger'});
-            });
+                .catch(function(error) {
+                    alertService.putAlert(error, {severity: 'danger'});
+                });
         }
         else {
             vendorService.create( vm.vendor ).then(function(){
@@ -103,9 +104,9 @@ function editVendorController( $location, vendorService, alertService ) {
                     vm.afterSubmitFn();
                 }
             })
-            .catch(function(error) {
-                alertService.putAlert(error, {severity: 'danger'});
-            });
+                .catch(function(error) {
+                    alertService.putAlert(error, {severity: 'danger'});
+                });
         }
     }
 
