@@ -1,5 +1,7 @@
-var testData = require('./oneTimePurchase.fixtures');
+var config = require('./utils/baseConfig');
+config.getDefaultAppPage();
 
+var testData = require('./oneTimePurchase.fixtures');
 var dataLoader = require('./fixtureDataLoader');
 
 dataLoader.createLibrary(testData.activeLibrary1);
