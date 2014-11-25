@@ -17,7 +17,7 @@ function editVendorModal() {
 function _editVendorBaseDirective() {
     return {
         restrict: 'E',
-        scope: { vendorId: '='  },
+        scope: { vendorId: '=', afterSubmitFn: '=' },
         controller: editVendorController,
         controllerAs: 'vm',
         bindToController: true
@@ -87,6 +87,9 @@ function editVendorController( $location, vendorService, alertService ) {
             vendorService.update( vm.vendor ).then(function(){
                 alertService.putAlert('Vendor updated', {severity: 'success'});
                 $location.path('/vendor');
+                if (vm.afterSubmitFn !== undefined) {
+                    vm.afterSubmitFn();
+                }
             })
             .catch(function(error) {
                 alertService.putAlert(error, {severity: 'danger'});
@@ -96,6 +99,9 @@ function editVendorController( $location, vendorService, alertService ) {
             vendorService.create( vm.vendor ).then(function(){
                 alertService.putAlert('Vendor added', {severity: 'success'});
                 $location.path('/vendor');
+                if (vm.afterSubmitFn !== undefined) {
+                    vm.afterSubmitFn();
+                }
             })
             .catch(function(error) {
                 alertService.putAlert(error, {severity: 'danger'});
