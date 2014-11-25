@@ -13,7 +13,8 @@ $SCRIPTS/tag-container.sh grunt "latest" &&
 $SCRIPTS/run-db-container.sh dev latest 9091 &&
 $SCRIPTS/run-test-container.sh dev latest &&
 $SCRIPTS/tag-container.sh couchdb "last-good" &&
-$SCRIPTS/tag-container.sh grunt "last-good" &&
+$SCRIPTS/tag-container.sh grunt "last-good"
+
 $SCRIPTS/run-serve-container.sh dev latest 9090
  
 # It isn't necessary to export the image right now, because we 
