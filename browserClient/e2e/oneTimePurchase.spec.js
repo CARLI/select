@@ -1,8 +1,8 @@
-var config = require('./utils/baseConfig');
-config.getDefaultAppPage();
+var config = require('./utils/baseConfig'),
+    dataLoader = require('./utils/fixtureDataLoader'),
+    testData = require('./oneTimePurchase.fixtures');
 
-var testData = require('./oneTimePurchase.fixtures');
-var dataLoader = require('./fixtureDataLoader');
+config.getDefaultAppPage();
 
 dataLoader.createLibrary(testData.activeLibrary1);
 dataLoader.createLibrary(testData.inactiveLibrary2);

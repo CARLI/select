@@ -1,5 +1,5 @@
 
-var CARLI  = require( '../../CARLI')
+var CARLI  = require( '../../../CARLI')
     ;
 
 var storeOptions = {
