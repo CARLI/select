@@ -21,11 +21,18 @@ function selectedProductsController($routeParams, libraryService, productService
     activate();
 
     function activate(){
-        libraryService.load(vm.libraryId).then( function( library ) {
-            vm.library = library;
-        } );
+        loadLibrary();
+        loadProductList();
+    }
 
-        productService.listOneTimePurchaseProducts().then( function(productList){
+    function loadLibrary() {
+        libraryService.load(vm.libraryId).then(function (library) {
+            vm.library = library;
+        });
+    }
+
+    function loadProductList() {
+        productService.listOneTimePurchaseProducts().then(function (productList) {
             vm.productList = productList;
         });
     }
@@ -60,9 +67,7 @@ function selectedProductsController($routeParams, libraryService, productService
         })
         .catch(function(error){
             alertService.putAlert(error, {severity: 'danger'});
-            productService.listOneTimePurchaseProducts().then( function(productList){
-                vm.productList = productList;
-            });
+            loadProductList();
         });
     }
 
@@ -76,9 +81,7 @@ function selectedProductsController($routeParams, libraryService, productService
         })
         .catch(function(error){
             alertService.putAlert(error, {severity: 'danger'});
-            productService.listOneTimePurchaseProducts().then( function(productList){
-                vm.productList = productList;
-            });
+            loadProductList();
         });
     }
 
