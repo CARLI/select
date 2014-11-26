@@ -8,9 +8,12 @@
     var CARLI = window.CARLI || {};
     CARLI.test = {
         elementIsPresent: elementIsPresent,
+        inputIsHidden: inputIsHidden,
         inputHasValue: inputHasValue,
         elementHasText: elementHasText,
-        contactEditorHasValues: contactEditorHasValues
+        contactEditorIsHidden: contactEditorIsHidden,
+        contactEditorHasValues: contactEditorHasValues,
+        contactEditorDisplaysText: contactEditorDisplaysText
     };
 
 
@@ -68,6 +71,11 @@
 
     function elementIsPresent( id ){
         return ( $('#'+id).length > 0 );
+    }
+
+    function inputIsHidden( config ){
+        var input = getViewEditInputForConfig(config);
+        return !input.is(':visible');
     }
 
     function inputHasValue( config, expectedValue ) {
@@ -147,6 +155,15 @@
         };
     }
 
+    function getDisplayTextForRow( contactRow ){
+        var row = $(contactRow);
+        return {
+            name: row.find('.contact-name').text().trim(),
+            email: row.find('.contact-email').text().trim(),
+            phoneNumber: row.find('.contact-phone').text().trim()
+        }
+    }
+
     /**
      * @param contactType - the String that Angular is using to filter the ng-repeat by contact type
      * @param values an array of objects that should match what's in the contact editor fields
@@ -179,6 +196,64 @@
 
             if ( !result ){
                 return contactType + 'Contact Editor row ' + i + ' did not match';
+            }
+        }
+
+        return result;
+    }
+
+    function contactEditorIsHidden( contactType ){
+        var result = true;
+        var rows = getContactEditorRowsForType(contactType);
+
+        if ( !rows || !rows.length ){
+            return 'contactEditorIsHidden for type ' + contactType + ': no rows found';
+        }
+
+        for ( i = 0 ; i < rows.length ; i++ ){
+            inputGroup = getContactEditorInputs( rows[i] );
+
+            result = result && (
+                    !inputGroup.name.is(':visible') &&
+                    !inputGroup.email.is(':visible') &&
+                    !inputGroup.phoneNumber.is(':visible')
+                );
+
+            if ( !result ){
+                return contactType + 'Contact Editor row ' + i + ' is visible';
+            }
+        }
+
+        return result;
+    }
+
+    function contactEditorDisplaysText( contactType, values ){
+        var i, row, text,
+            result = true,
+            rows = getContactEditorRowsForType(contactType);
+
+        if( !values || !values.length ){
+            return 'contactEditorDisplaysText: bad values';
+        }
+
+        if ( !rows || !rows.length ){
+            return 'contactEditorDisplaysText for type ' + contactType + ': no rows found';
+        }
+
+        if ( values.length < rows.length ){
+            return 'contactEditorDisplaysText: not enough values (' + values.length + '+ for rows (' + rows.length + ')';
+        }
+        for ( i = 0 ; i < rows.length ; i++ ){
+            text = getDisplayTextForRow( rows[i] );
+
+            result = result && (
+                text.name === values[i].name &&
+                    text.email === values[i].email &&
+                    text.phoneNumber === values[i].phoneNumber
+                );
+
+            if ( !result ){
+                return contactType + 'Contact Editor row ' + i + ' text did not match';
             }
         }
 

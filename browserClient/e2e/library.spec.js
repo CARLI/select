@@ -5,9 +5,12 @@ var macro = require('./utils/protractorMacros');
 var contactEditorMacro = require('./utils/protractorContactEditorMacros');
 
 var browserEnsureElementIsPresentbyId = macro.browserEnsureElementIsPresentbyId;
+var browserEnsureInputIsHidden = macro.browserEnsureInputIsHidden;
 var browserEnsureInputHasValue = macro.browserEnsureInputHasValue;
 var browserEnsureComponentHasText = macro.browserEnsureComponentHasText;
+var browserEnsureContactEditorIsHidden = contactEditorMacro.browserEnsureContactEditorIsHidden;
 var browserEnsureContactEditorHasValues = contactEditorMacro.browserEnsureContactEditorHasValues;
+var browserEnsureContactEditorDisplaysText = contactEditorMacro.browserEnsureContactEditorDisplaysText;
 
 /**
  * The configuration below is used by the macros to generate tests. They take the following form:
@@ -342,24 +345,20 @@ describe('Viewing an existing Library in read only mode', function () {
     });
 
     for ( formElement in formInputsTestConfig ){
-        macro.ensureFormElementIsHidden( formInputsTestConfig[formElement] );
+        browserEnsureInputIsHidden( formInputsTestConfig[formElement] );
     }
 
     for ( contactEditor in contactEditorsTestConfig ){
-        contactEditorMacro.ensureContactEditorIsHidden( contactEditorsTestConfig[contactEditor] );
+        browserEnsureContactEditorIsHidden( contactEditorsTestConfig[contactEditor].contactType );
     }
 
     for ( formElement in formInputsTestConfig ){
-        config = formInputsTestConfig[formElement];
-        browserEnsureComponentHasText( config, 'initialValue' );
+        browserEnsureComponentHasText( formInputsTestConfig[formElement], 'initialValue' );
     }
 
     for ( contactEditor in contactEditorsTestConfig ){
         config = contactEditorsTestConfig[contactEditor];
-
-        for ( row = 0 ; row < config.initialValue.length ; row++ ){
-            contactEditorMacro.ensureContactRowDisplaysValues( config, row, config.initialValue[row] );
-        }
+        browserEnsureContactEditorDisplaysText( config.contactType, config.initialValue );
     }
 });
 

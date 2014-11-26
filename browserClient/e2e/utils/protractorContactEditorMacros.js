@@ -103,6 +103,12 @@ function ensureContactRowDisplaysValues( config, row, data ){
     });
 }
 
+function callHelperContactEditorIsHidden(){
+    var contactType = arguments[0] || '';
+
+    return CARLI.test.contactEditorIsHidden( contactType );
+}
+
 function callHelperContactEditorHasValues(){
     var contactType = arguments[0] || '';
     var values = arguments[1] || [];
@@ -110,9 +116,29 @@ function callHelperContactEditorHasValues(){
     return CARLI.test.contactEditorHasValues( contactType, values );
 }
 
+function callHelperContactEditorDisplaysText(){
+    var contactType = arguments[0] || '';
+    var values = arguments[1] || [];
+
+    return CARLI.test.contactEditorDisplaysText( contactType, values );
+}
+
+
+function browserEnsureContactEditorIsHidden( contactType ){
+    it( contactType + ' Contact Editor inputs should be hidden', function(){
+        expect( browser.executeScript( callHelperContactEditorIsHidden, contactType)).toBe(true);
+    });
+}
+
 function browserEnsureContactEditorHasValues( contactType, data ){
     it( contactType + ' Contact Editor should have expected values', function(){
         expect( browser.executeScript( callHelperContactEditorHasValues, contactType, data)).toBe(true);
+    });
+}
+
+function browserEnsureContactEditorDisplaysText( contactType, data ){
+    it( contactType + ' Contact Editor should display expected values', function(){
+        expect( browser.executeScript( callHelperContactEditorDisplaysText, contactType, data)).toBe(true);
     });
 }
 
@@ -135,5 +161,7 @@ module.exports = {
 
     fillInContactRow: fillInContactRow,
 
-    browserEnsureContactEditorHasValues: browserEnsureContactEditorHasValues
+    browserEnsureContactEditorIsHidden: browserEnsureContactEditorIsHidden,
+    browserEnsureContactEditorHasValues: browserEnsureContactEditorHasValues,
+    browserEnsureContactEditorDisplaysText: browserEnsureContactEditorDisplaysText
 };

@@ -298,6 +298,11 @@ function callHelperElementIsPresent(){
     return CARLI.test.elementIsPresent(id);
 }
 
+function callHelperInputIsHidden(){
+    var config = arguments[0] || {};
+    return CARLI.test.inputIsHidden(config);
+}
+
 function callHelperInputHasValue(){
     var config = arguments[0] || {},
         configPropertyForValue = arguments[1] || 'defaultValue',
@@ -319,6 +324,12 @@ function callHelperComponentHasText(){
 function browserEnsureElementIsPresentbyId( id, description ){
     it('should have a ' + description, function(){
         expect(browser.executeScript( callHelperElementIsPresent, id)).toBe(true);
+    });
+}
+
+function browserEnsureInputIsHidden( config ){
+    it(config.description + ' ' + config.type + ' should be hidden', function () {
+        expect(browser.executeScript( callHelperInputIsHidden, config )).toBe(true);
     });
 }
 
@@ -366,6 +377,7 @@ module.exports = {
     ensureFormElementHasValue: ensureFormElementHasValue,
 
     browserEnsureElementIsPresentbyId: browserEnsureElementIsPresentbyId,
+    browserEnsureInputIsHidden: browserEnsureInputIsHidden,
     browserEnsureInputHasValue: browserEnsureInputHasValue,
     browserEnsureComponentHasText: browserEnsureComponentHasText
 };
