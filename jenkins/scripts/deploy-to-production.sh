@@ -8,5 +8,5 @@ rm /home/jenkins/carli-grunt.tgz
 cat /home/jenkins/carli-couchdb.tgz | gunzip | sudo docker load
 rm /home/jenkins/carli-couchdb.tgz
 
-/home/jenkins/scripts/run-db-container.sh prod 5984
-/home/jenkins/scripts/run-serve-container.sh prod 80
+/home/jenkins/scripts/run-db-container.sh prod last-good 5984
+/home/jenkins/scripts/run-serve-container.sh prod last-good 80
