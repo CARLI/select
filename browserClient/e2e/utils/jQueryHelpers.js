@@ -7,9 +7,15 @@
 (function ( window, undefined ) {
     var CARLI = window.CARLI || {};
     CARLI.test = {
-        inputHasValue: inputHasValue
+        inputHasValue: inputHasValue,
+        elementHasText: elementHasText
     };
 
+
+    function toString( val ){
+        var string = ''+val;
+        return string.trim();
+    }
 
     /**
      * Find a View-Edit component by
@@ -44,6 +50,19 @@
         }
     }
 
+    /**
+     * Get the display portion of a View-Edit component, by Angular ng-model
+     */
+    function getViewEditDisplayForConfig( config ){
+        var viewEditComponent = getViewEditComponentForConfig(config);
+
+        if ( viewEditComponent ){
+            return viewEditComponent.children(":visible");
+        }
+        else {
+            return null;
+        }
+    }
 
     function inputHasValue( config, expectedValue ) {
         var input = getViewEditInputForConfig(config),
@@ -58,11 +77,11 @@
             case 'input':
             case 'textarea':
                 value = input.val();
-                result = (expectedValue+'' === value);
+                result = (toString(expectedValue) === value);
                 break;
             case 'select':
                 value = input.find('option:selected').text();
-                result = (expectedValue+'' === value);
+                result = (toString(expectedValue) === value);
                 break;
             case 'checkbox':
                 value = input.is(':checked');
@@ -80,8 +99,29 @@
             return true;
         }
         else {
-            return '(' + expectedValue + ' == ' + value + ')';
+            return '(' + toString(expectedValue) + ' == ' + value + ')';
         }
+    }
+
+    function elementHasText( config, expectedValue ) {
+        var display = getViewEditDisplayForConfig(config),
+            value = '',
+            result = false;
+
+        if ( !display ){
+            return 'elementHasText: component not found with ng-model: '+config.model;
+        }
+
+        value = display.text().trim();
+        result = ( value === toString(expectedValue) );
+
+        if ( result ){
+            return true;
+        }
+        else {
+            return '(' + toString(expectedValue) + ' == ' + value + ')';
+        }
+
     }
 
 })( window );

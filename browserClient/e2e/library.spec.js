@@ -257,15 +257,15 @@ describe('The New Library screen', function () {
     });
 
     for ( formElement in formInputsTestConfig ){
-        macro.browserEnsureInputHasDefaultValue( formInputsTestConfig[formElement] );
+        config = formInputsTestConfig[formElement];
+        macro.browserEnsureInputHasDefaultValue( config );
     }
-/*
+
     for ( contactEditor in contactEditorsTestConfig ){
         config = contactEditorsTestConfig[contactEditor];
         macro.ensureElementIsPresent( config.addContactLink, 'Add Contact Link for ' + config.description );
         ensureContactEditorIsPresentAndBlank( config );
     }
-    */
 });
 
 describe('Creating a New Library', function(){
@@ -326,9 +326,9 @@ describe('Viewing an existing Library in read only mode', function () {
 
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
-        macro.ensureFormElementDisplaysText( config, config.initialValue );
+        macro.browserEnsureComponentHasText( config, 'initialValue' );
     }
-/*
+
     for ( contactEditor in contactEditorsTestConfig ){
         config = contactEditorsTestConfig[contactEditor];
 
@@ -336,7 +336,6 @@ describe('Viewing an existing Library in read only mode', function () {
             ensureContactRowDisplaysValues( config, row, config.initialValue[row] );
         }
     }
-    */
 });
 
 describe('Viewing an existing Library in edit mode', function () {
@@ -348,10 +347,9 @@ describe('Viewing an existing Library in edit mode', function () {
 
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
-        //macro.ensureFormElementHasValue( config, config.initialValue );
         macro.browserEnsureInputHasInitialValue( formInputsTestConfig[formElement] );
     }
-/*
+
     for (contactEditor in contactEditorsTestConfig) {
         config = contactEditorsTestConfig[contactEditor];
 
@@ -359,7 +357,6 @@ describe('Viewing an existing Library in edit mode', function () {
             ensureContactRowHasValues(config, row, config.initialValue[row] );
         }
     }
-    */
 });
 
 describe('Making changes to an existing Library', function(){
@@ -409,10 +406,9 @@ describe('Making changes to an existing Library', function(){
 
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
-        macro.ensureFormElementDisplaysText( config, config.editedValue );
-        //macro.browserEnsureInputHasEditedValue( config );
+        macro.browserEnsureComponentHasText( config, 'editedValue' );
     }
-/*
+
     for (contactEditor in contactEditorsTestConfig) {
         config = contactEditorsTestConfig[contactEditor];
 
@@ -420,5 +416,4 @@ describe('Making changes to an existing Library', function(){
             ensureContactRowHasValues(config, row, config.editedValue[row] );
         }
     }
-    */
 });

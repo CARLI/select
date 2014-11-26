@@ -294,18 +294,26 @@ function ensureFormElementHasValue( config, value ){
  * to be read from the `arguments` object.
  */
 function callHelperInputHasDefaultValue(){
-    var config = arguments[0];
+    var config = arguments[0] || {};
     return CARLI.test.inputHasValue(config, config.defaultValue);
 }
 
 function callHelperInputHasInitialValue(){
-    var config = arguments[0];
+    var config = arguments[0] || {};
     return CARLI.test.inputHasValue(config, config.initialValue);
 }
 
 function callHelperInputHasEditedValue(){
-    var config = arguments[0];
+    var config = arguments[0] || {};
     return CARLI.test.inputHasValue(config, config.editedValue);
+}
+
+function callHelperComponentHasText(){
+    var config = arguments[0] || {},
+        configPropertyForText = arguments[1] || 'defaultValue',
+        expectedValue = config[configPropertyForText];
+
+    return CARLI.test.elementHasText( config, expectedValue );
 }
 
 /*
@@ -326,6 +334,12 @@ function browserEnsureInputHasInitialValue( config ){
 function browserEnsureInputHasEditedValue( config ){
     it(config.description + ' ' + config.type + ' should have value ' + config.editedValue + '"', function () {
         expect(browser.executeScript( callHelperInputHasEditedValue, config)).toBe(true);
+    });
+}
+
+function browserEnsureComponentHasText( config, configPropertyForText ){
+    it(config.description + ' should display "' + config[configPropertyForText] + '"', function () {
+        expect(browser.executeScript( callHelperComponentHasText, config, configPropertyForText)).toBe(true);
     });
 }
 
@@ -362,5 +376,7 @@ module.exports = {
 
     browserEnsureInputHasDefaultValue: browserEnsureInputHasDefaultValue,
     browserEnsureInputHasInitialValue: browserEnsureInputHasInitialValue,
-    browserEnsureInputHasEditedValue: browserEnsureInputHasEditedValue
+    browserEnsureInputHasEditedValue: browserEnsureInputHasEditedValue,
+
+    browserEnsureComponentHasText: browserEnsureComponentHasText
 };
