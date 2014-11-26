@@ -300,7 +300,7 @@ describe('Creating a New License', function(){
 
 
 describe('Viewing an existing License in read only mode', function () {
-    var row, config, formElement;
+    var value, config, formElement;
 
     it('should find the License entry on the list screen', function () {
 
@@ -325,10 +325,7 @@ describe('Viewing an existing License in read only mode', function () {
 
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
-        value = config.initialText;
-        if (!value) {
-            value = config.initialValue;
-        }
+        value = config.initialText || config.initialValue;
         macro.ensureFormElementDisplaysText( config, value );
     }
 
