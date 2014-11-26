@@ -286,6 +286,49 @@ function ensureFormElementHasValue( config, value ){
     }
 }
 
+
+/* ---------- Shortcuts for calling jQuery helper verions of the test functions ---------- */
+/*
+ * These are the functions that Protractor runs in the browser to invoke the jQuery helpers.
+ * They have a weird signature because it stringifies the function and parameters have
+ * to be read from the `arguments` object.
+ */
+function callHelperInputHasDefaultValue(){
+    var config = arguments[0];
+    return CARLI.test.inputHasValue(config, config.defaultValue);
+}
+
+function callHelperInputHasInitialValue(){
+    var config = arguments[0];
+    return CARLI.test.inputHasValue(config, config.initialValue);
+}
+
+function callHelperInputHasEditedValue(){
+    var config = arguments[0];
+    return CARLI.test.inputHasValue(config, config.editedValue);
+}
+
+/*
+ * These are convenience methods to wrap browser helper calls in expects
+ */
+function browserEnsureInputHasDefaultValue( config ){
+    it(config.description + ' ' + config.type + ' should have default value "' + config.defaultValue + '"', function () {
+        expect(browser.executeScript( callHelperInputHasDefaultValue, config)).toBe(true);
+    });
+}
+
+function browserEnsureInputHasInitialValue( config ){
+    it(config.description + ' ' + config.type + ' should have value ' + config.initialValue + '"', function () {
+        expect(browser.executeScript( callHelperInputHasInitialValue, config)).toBe(true);
+    });
+}
+
+function browserEnsureInputHasEditedValue( config ){
+    it(config.description + ' ' + config.type + ' should have value ' + config.editedValue + '"', function () {
+        expect(browser.executeScript( callHelperInputHasEditedValue, config)).toBe(true);
+    });
+}
+
 /* ---------------------- Exports ------------------------- */
 
 module.exports = {
@@ -315,5 +358,9 @@ module.exports = {
     ensureFormElementIsHidden: ensureFormElementIsHidden,
     ensureFormElementDisplaysText: ensureFormElementDisplaysText,
     setFormElementValue: setFormElementValue,
-    ensureFormElementHasValue: ensureFormElementHasValue
+    ensureFormElementHasValue: ensureFormElementHasValue,
+
+    browserEnsureInputHasDefaultValue: browserEnsureInputHasDefaultValue,
+    browserEnsureInputHasInitialValue: browserEnsureInputHasInitialValue,
+    browserEnsureInputHasEditedValue: browserEnsureInputHasEditedValue
 };

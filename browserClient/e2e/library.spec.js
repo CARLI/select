@@ -30,6 +30,7 @@ var formInputsTestConfig = {
         type: 'input',
         description: 'Name',
         model: 'vm.library.name',
+        defaultValue: '',
         initialValue: 'New Test Library 1',
         editedValue: 'New Test Library Edit 1'
     },
@@ -37,6 +38,7 @@ var formInputsTestConfig = {
         type: 'input',
         description: 'Full Time Enrollment',
         model: 'vm.library.fte',
+        defaultValue: '',
         initialValue: 1000,
         editedValue: 1001
     },
@@ -44,6 +46,7 @@ var formInputsTestConfig = {
         type: 'select',
         description: 'Institution Years',
         model: 'vm.library.institutionYears',
+        defaultValue: '',
         initialValue: '2 Year',
         editedValue: '4 Year'
     },
@@ -51,6 +54,7 @@ var formInputsTestConfig = {
         type: 'select',
         description: 'Institution Type',
         model: 'vm.library.institutionType',
+        defaultValue: '',
         initialValue: 'Public',
         editedValue: 'Private'
     },
@@ -58,6 +62,7 @@ var formInputsTestConfig = {
         type: 'textarea',
         description: 'IP Adresses',
         model: 'vm.library.ipAddresses',
+        defaultValue: '',
         initialValue: '192.168.0.1',
         editedValue: '192.168.0.2'
     },
@@ -65,6 +70,7 @@ var formInputsTestConfig = {
         type: 'select',
         description: 'Membership Level',
         model: 'vm.library.membershipLevel',
+        defaultValue: '',
         initialValue: 'Governing',
         editedValue: 'Affiliate'
     },
@@ -72,6 +78,7 @@ var formInputsTestConfig = {
         type: 'checkbox',
         description: 'iShare',
         model: 'vm.library.isIshareMember',
+        defaultValue: false,
         initialValue: true,
         editedValue: false
     },
@@ -79,6 +86,7 @@ var formInputsTestConfig = {
         type: 'input',
         description: 'GAR',
         model: 'vm.library.gar',
+        defaultValue: '',
         initialValue: 'Test GAR Value',
         editedValue: 'Test Edit GAR Value'
     },
@@ -86,6 +94,7 @@ var formInputsTestConfig = {
         type: 'radio',
         description: 'isActive',
         model: 'vm.library.isActive',
+        defaultValue: 'Active',
         initialValue: 'Inactive',
         editedValue: 'Active',
         valueToIndex: {
@@ -248,14 +257,15 @@ describe('The New Library screen', function () {
     });
 
     for ( formElement in formInputsTestConfig ){
-        ensureFormElementIsPresentAndBlank( formInputsTestConfig[formElement] );
+        macro.browserEnsureInputHasDefaultValue( formInputsTestConfig[formElement] );
     }
-
+/*
     for ( contactEditor in contactEditorsTestConfig ){
         config = contactEditorsTestConfig[contactEditor];
         macro.ensureElementIsPresent( config.addContactLink, 'Add Contact Link for ' + config.description );
         ensureContactEditorIsPresentAndBlank( config );
     }
+    */
 });
 
 describe('Creating a New Library', function(){
@@ -318,7 +328,7 @@ describe('Viewing an existing Library in read only mode', function () {
         config = formInputsTestConfig[formElement];
         macro.ensureFormElementDisplaysText( config, config.initialValue );
     }
-
+/*
     for ( contactEditor in contactEditorsTestConfig ){
         config = contactEditorsTestConfig[contactEditor];
 
@@ -326,6 +336,7 @@ describe('Viewing an existing Library in read only mode', function () {
             ensureContactRowDisplaysValues( config, row, config.initialValue[row] );
         }
     }
+    */
 });
 
 describe('Viewing an existing Library in edit mode', function () {
@@ -337,9 +348,10 @@ describe('Viewing an existing Library in edit mode', function () {
 
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
-        macro.ensureFormElementHasValue( config, config.initialValue );
+        //macro.ensureFormElementHasValue( config, config.initialValue );
+        macro.browserEnsureInputHasInitialValue( formInputsTestConfig[formElement] );
     }
-
+/*
     for (contactEditor in contactEditorsTestConfig) {
         config = contactEditorsTestConfig[contactEditor];
 
@@ -347,6 +359,7 @@ describe('Viewing an existing Library in edit mode', function () {
             ensureContactRowHasValues(config, row, config.initialValue[row] );
         }
     }
+    */
 });
 
 describe('Making changes to an existing Library', function(){
@@ -397,8 +410,9 @@ describe('Making changes to an existing Library', function(){
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
         macro.ensureFormElementDisplaysText( config, config.editedValue );
+        //macro.browserEnsureInputHasEditedValue( config );
     }
-
+/*
     for (contactEditor in contactEditorsTestConfig) {
         config = contactEditorsTestConfig[contactEditor];
 
@@ -406,4 +420,5 @@ describe('Making changes to an existing Library', function(){
             ensureContactRowHasValues(config, row, config.editedValue[row] );
         }
     }
+    */
 });

@@ -7,10 +7,7 @@
 (function ( window, undefined ) {
     var CARLI = window.CARLI || {};
     CARLI.test = {
-
-        ensureInputIsPresentAndBlank: function( config ){
-            return inputIsBlank( config );
-        }
+        inputHasValue: inputHasValue
     };
 
 
@@ -37,6 +34,9 @@
         var viewEditComponent = getViewEditComponentForConfig(config);
 
         if ( viewEditComponent ){
+            if ( config.type === 'checkbox' || config.type === 'radio' ){
+                return viewEditComponent.find('input[type="'+config.type+'"]');
+            }
             return viewEditComponent.find(config.type);
         }
         else {
@@ -44,29 +44,43 @@
         }
     }
 
-    function inputIsBlank( config ) {
-        var input = getViewEditInputForConfig(config);
+
+    function inputHasValue( config, expectedValue ) {
+        var input = getViewEditInputForConfig(config),
+            value = '',
+            result = false;
 
         if ( !input ){
-            return 'inputIsBlank: component not found with ng-model: '+config.model;
+            return 'inputHasValue: component not found with ng-model: '+config.model;
         }
 
         switch (config.type) {
             case 'input':
             case 'textarea':
-                return input.val() === '';
-                break;
-            case 'checkbox':
-                return !input.is(':checked');
+                value = input.val();
+                result = (expectedValue+'' === value);
                 break;
             case 'select':
-                return input.val() === '?'; //because that's the default Angular thing...
+                value = input.find('option:selected').text();
+                result = (expectedValue+'' === value);
+                break;
+            case 'checkbox':
+                value = input.is(':checked');
+                result = ( expectedValue === value );
                 break;
             case 'radio':
-                return true; //TODO: check default state
+                value = input.index(input.filter(':checked'));
+                result = (value === config.valueToIndex[expectedValue]);
                 break;
             default:
-                return 'inputIsBlank unknown type: ' + config.type;
+                return 'inputHasValue unknown type: ' + config.type;
+        }
+
+        if ( result ){
+            return true;
+        }
+        else {
+            return '(' + expectedValue + ' == ' + value + ')';
         }
     }
 
