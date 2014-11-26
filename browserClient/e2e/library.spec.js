@@ -2,15 +2,11 @@ var config = require('./utils/baseConfig');
 config.getDefaultAppPage();
 
 var macro = require('./utils/protractorMacros');
-elementById = macro.elementById;
-ensureFormElementIsPresentAndBlank = macro.ensureFormElementIsPresentAndBlank;
-setFormElementValue = macro.setFormElementValue;
-
 var contactEditorMacro = require('./utils/protractorContactEditorMacros');
-ensureContactEditorIsPresentAndBlank = contactEditorMacro.ensureContactEditorIsPresentAndBlank;
-ensureContactEditorIsHidden = contactEditorMacro.ensureContactEditorIsHidden;
-ensureContactRowHasValues = contactEditorMacro.ensureContactRowHasValues;
-ensureContactRowDisplaysValues = contactEditorMacro.ensureContactRowDisplaysValues;
+
+var browserEnsureElementIsPresentbyId = macro.browserEnsureElementIsPresentbyId;
+var browserEnsureInputHasValue = macro.browserEnsureInputHasValue;
+var browserEnsureComponentHasText = macro.browserEnsureComponentHasText;
 
 /**
  * The configuration below is used by the macros to generate tests. They take the following form:
@@ -236,7 +232,7 @@ var pageConfig = {
         for ( formElement in formInputsTestConfig ){
             config = formInputsTestConfig[formElement];
 
-            setFormElementValue( config, config[dataSet] );
+            macro.setFormElementValue( config, config[dataSet] );
         }
 
         for ( contactEditor  in contactEditorsTestConfig ){
@@ -258,13 +254,13 @@ describe('The New Library screen', function () {
 
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
-        macro.browserEnsureInputHasValue( config, 'defaultValue' );
+        browserEnsureInputHasValue( config, 'defaultValue' );
     }
 
     for ( contactEditor in contactEditorsTestConfig ){
         config = contactEditorsTestConfig[contactEditor];
-        macro.browserEnsureElementIsPresentbyId(config.addContactLinkId, 'Add Contact Link for ' + config.description);
-        ensureContactEditorIsPresentAndBlank( config );
+        browserEnsureElementIsPresentbyId(config.addContactLinkId, 'Add Contact Link for ' + config.description);
+        contactEditorMacro.ensureContactEditorIsPresentAndBlank( config );
     }
 });
 
@@ -321,19 +317,19 @@ describe('Viewing an existing Library in read only mode', function () {
     }
 
     for ( contactEditor in contactEditorsTestConfig ){
-        ensureContactEditorIsHidden( contactEditorsTestConfig[contactEditor] );
+        contactEditorMacro.ensureContactEditorIsHidden( contactEditorsTestConfig[contactEditor] );
     }
 
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
-        macro.browserEnsureComponentHasText( config, 'initialValue' );
+        browserEnsureComponentHasText( config, 'initialValue' );
     }
 
     for ( contactEditor in contactEditorsTestConfig ){
         config = contactEditorsTestConfig[contactEditor];
 
         for ( row = 0 ; row < config.initialValue.length ; row++ ){
-            ensureContactRowDisplaysValues( config, row, config.initialValue[row] );
+            contactEditorMacro.ensureContactRowDisplaysValues( config, row, config.initialValue[row] );
         }
     }
 });
@@ -347,14 +343,14 @@ describe('Viewing an existing Library in edit mode', function () {
 
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
-        macro.browserEnsureInputHasInitialValue( formInputsTestConfig[formElement] );
+        browserEnsureInputHasValue( config, 'initialValue' );
     }
 
     for (contactEditor in contactEditorsTestConfig) {
         config = contactEditorsTestConfig[contactEditor];
 
         for (row = 0; row < config.initialValue.length; row++) {
-            ensureContactRowHasValues(config, row, config.initialValue[row] );
+            contactEditorMacro.ensureContactRowHasValues(config, row, config.initialValue[row] );
         }
     }
 });
@@ -406,14 +402,14 @@ describe('Making changes to an existing Library', function(){
 
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
-        macro.browserEnsureComponentHasText( config, 'editedValue' );
+        browserEnsureComponentHasText( config, 'editedValue' );
     }
 
     for (contactEditor in contactEditorsTestConfig) {
         config = contactEditorsTestConfig[contactEditor];
 
         for (row = 0; row < config.editedValue.length; row++) {
-            ensureContactRowHasValues(config, row, config.editedValue[row] );
+            contactEditorMacro.ensureContactRowHasValues(config, row, config.editedValue[row] );
         }
     }
 });
