@@ -7,7 +7,76 @@ describe('The One-time Purchases Selected-Products Controller', function(){
         module('carli.sections.oneTimePurchases.selectedProducts');
         module('carli.mockServices');
 
+        var mockProductList = [
+            {
+                type: 'Product',
+                name: 'Test Product 0',
+                cycleType: 'Fiscal Year',
+                isActive: true
+            },
+            {
+                type: 'Product',
+                name: 'Test Product 1',
+                cycleType: 'Calendar Year',
+                isActive: true
+            },
+            {
+                type: 'Product',
+                name: 'Test Product 2',
+                cycleType: 'Fiscal Year',
+                isActive: false
+            },
+            {
+                type: 'Product',
+                name: 'Test Product 3',
+                cycleType: 'Calendar Year',
+                isActive: false
+            },
+            {
+                type: 'Product',
+                name: 'Test Product 4',
+                cycleType: 'One-Time Purchase',
+                isActive: true,
+                oneTimePurchase: {
+                    libraryPurchaseData: {
+                        testLibraryId: {
+                            datePurchased: '2015-01-01',
+                            price: 100
+                        }
+                    }
+                }
+            },
+            {
+                type: 'Product',
+                name: 'Test Product 5',
+                cycleType: 'One-Time Purchase',
+                isActive: true,
+                oneTimePurchase: {
+                    libraryPurchaseData: {
+                        testLibraryId: {
+                            datePurchased: '2015-01-01',
+                            price: 100
+                        }
+                    }
+                }
+            },
+            {
+                type: 'Product',
+                name: 'Test Product 6 Unpurchased',
+                cycleType: 'One-Time Purchase',
+                isActive: true,
+                oneTimePurchase: {
+                    libraryPurchaseData: {
+                        testLibraryId: {
+                        }
+                    }
+                }
+            }
+        ];
+
         inject(function ($controller, $rootScope, $q, mockLibraryService, mockProductService) {
+            mockProductService.setTestData(mockProductList);
+            
             mockDependenciesForOneTimePurchase = {
                 $routeParams: {
                     libraryId: 'testLibraryId'

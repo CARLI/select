@@ -3,11 +3,22 @@ describe('The Edit Product Controller', function(){
 
     var newCtrl, editCtrl, mockDependenciesForNewProduct, mockDependenciesForEditProduct;
 
+    var mockProductList = [
+        {
+            type: 'Product',
+            name: 'Test Product 0',
+            cycleType: 'Fiscal Year',
+            isActive: true
+        }
+    ];
+
     beforeEach(function(){
         module('carli.sections.products.edit');
         module('carli.mockServices');
 
         inject(function ($controller, $rootScope, $q, mockLocationService, mockLibraryService, mockProductService, mockVendorService, mockAlertService) {
+            mockProductService.setTestData(mockProductList);
+
             mockDependenciesForNewProduct = {
                 $location: mockLocationService,
                 $routeParams: {
