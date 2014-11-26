@@ -5,7 +5,7 @@
 cat /home/jenkins/carli-grunt.tgz | gunzip | sudo docker load
 rm /home/jenkins/carli-grunt.tgz
 
-cat /home/jenkins/carli-counchdb.tgz | gunzip | sudo docker load
+cat /home/jenkins/carli-couchdb.tgz | gunzip | sudo docker load
 rm /home/jenkins/carli-couchdb.tgz
 
 /home/jenkins/scripts/run-db-container.sh prod 5984
