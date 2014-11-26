@@ -68,7 +68,9 @@ function productService( CarliModules, $q, vendorService ) {
     };
 
     function transformObjectsToReferences(product) {
-        product.vendor = product.vendor.id;
+        if (product.vendor.id) {
+            product.vendor = product.vendor.id;
+        }
     }
 
     function transformReferencesToObjects(product, object) {
