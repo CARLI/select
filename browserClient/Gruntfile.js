@@ -159,11 +159,20 @@ module.exports = function ( grunt ) {
                 }
             },
 
+            serveJenkins: {
+                options: {
+                    open: false,
+                    livereload: false
+                }
+            },
+
             tests: {
                 options: {
-                    open: false
+                    open: false,
+                    livereload: false
                 }
             }
+
         },
 
         /**
@@ -549,7 +558,8 @@ module.exports = function ( grunt ) {
      */
     grunt.registerTask( 'serve:jenkins', [
         'build',
-        'connect:serve',
+        'connect:serveJenkins',
+        // Leave `watch` here -- otherwise the server just exits immediately
         'watch'
     ]);
 
