@@ -7,6 +7,7 @@
 (function ( window, undefined ) {
     var CARLI = window.CARLI || {};
     CARLI.test = {
+        elementIsPresent: elementIsPresent,
         inputHasValue: inputHasValue,
         elementHasText: elementHasText
     };
@@ -62,6 +63,10 @@
         else {
             return null;
         }
+    }
+
+    function elementIsPresent( id ){
+        return ( $('#'+id).length > 0 );
     }
 
     function inputHasValue( config, expectedValue ) {

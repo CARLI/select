@@ -293,6 +293,11 @@ function ensureFormElementHasValue( config, value ){
  * They have a weird signature because it stringifies the function and parameters have
  * to be read from the `arguments` object.
  */
+function callHelperElementIsPresent(){
+    var id = arguments[0] || '';
+    return CARLI.test.elementIsPresent(id);
+}
+
 function callHelperInputHasValue(){
     var config = arguments[0] || {},
         configPropertyForValue = arguments[1] || 'defaultValue',
@@ -311,6 +316,12 @@ function callHelperComponentHasText(){
 /*
  * These are convenience methods to wrap browser helper calls in expects
  */
+function browserEnsureElementIsPresentbyId( id, description ){
+    it('should have a ' + description, function(){
+        expect(browser.executeScript( callHelperElementIsPresent, id)).toBe(true);
+    });
+}
+
 function browserEnsureInputHasValue( config, configPropertyForValue ){
     it(config.description + ' ' + config.type + ' should have default value "' + config[configPropertyForValue] + '"', function () {
         expect(browser.executeScript( callHelperInputHasValue, config, configPropertyForValue)).toBe(true);
@@ -354,6 +365,7 @@ module.exports = {
     setFormElementValue: setFormElementValue,
     ensureFormElementHasValue: ensureFormElementHasValue,
 
+    browserEnsureElementIsPresentbyId: browserEnsureElementIsPresentbyId,
     browserEnsureInputHasValue: browserEnsureInputHasValue,
     browserEnsureComponentHasText: browserEnsureComponentHasText
 };

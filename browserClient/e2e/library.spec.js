@@ -121,7 +121,7 @@ var contactEditorsTestConfig = {
         description: 'Director Contacts',
         model: 'vm.library.contacts',
         filterString: 'Director',
-        addContactLink: elementById('add-director-contact'),
+        addContactLinkId: 'add-director-contact',
         initialValue: [
             {
                 name: 'Director Contact 1',
@@ -151,7 +151,7 @@ var contactEditorsTestConfig = {
         description: 'E-Resource Liaison Contacts',
         model: 'vm.library.contacts',
         filterString: 'E-Resources Liaison',
-        addContactLink: elementById('add-e-resources-liaison-contact'),
+        addContactLinkId: 'add-e-resources-liaison-contact',
         initialValue: [
             {
                 name: 'Liaison Contact 1',
@@ -171,7 +171,7 @@ var contactEditorsTestConfig = {
         description: 'Other Contacts',
         model: 'vm.library.contacts',
         filterString: 'Other',
-        addContactLink: elementById('add-other-contact'),
+        addContactLinkId: 'add-other-contact',
         initialValue: [
             {
                 name: 'Other Contact 1',
@@ -191,7 +191,7 @@ var contactEditorsTestConfig = {
         description: 'Notification Only Contacts',
         model: 'vm.library.contacts',
         filterString: 'Notification Only',
-        addContactLink: elementById('add-notification-only-contact'),
+        addContactLinkId: 'add-notification-only-contact',
         initialValue: [
             {
                 name: 'Billing Contact 1',
@@ -224,7 +224,7 @@ var pageConfig = {
             config = contactEditorsTestConfig[contactEditor];
 
             for ( i = 0 ; i < config.initialValue.length -1 ; i++ ){
-                config.addContactLink.click();
+                macro.elementById(config.addContactLinkId).click();
             }
         }
     },
@@ -263,7 +263,7 @@ describe('The New Library screen', function () {
 
     for ( contactEditor in contactEditorsTestConfig ){
         config = contactEditorsTestConfig[contactEditor];
-        macro.ensureElementIsPresent( config.addContactLink, 'Add Contact Link for ' + config.description );
+        macro.browserEnsureElementIsPresentbyId(config.addContactLinkId, 'Add Contact Link for ' + config.description);
         ensureContactEditorIsPresentAndBlank( config );
     }
 });

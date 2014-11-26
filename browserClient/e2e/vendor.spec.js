@@ -62,7 +62,7 @@ var contactEditorsTestConfig = {
         description: 'Billing Contacts',
         model: 'vm.vendor.contacts',
         filterString: 'Billing',
-        addContactLink: elementById('add-billing-contact'),
+        addContactLinkId: elementById('add-billing-contact'),
         initialValue: [
             {
                 name: 'Billing Contact 1',
@@ -92,7 +92,7 @@ var contactEditorsTestConfig = {
         description: 'Sales Contacts',
         model: 'vm.vendor.contacts',
         filterString: 'Sales',
-        addContactLink: elementById('add-sales-contact'),
+        addContactLinkId: elementById('add-sales-contact'),
         initialValue: [
             {
                 name: 'Sales Contact 1',
@@ -112,7 +112,7 @@ var contactEditorsTestConfig = {
         description: 'Technical Contacts',
         model: 'vm.vendor.contacts',
         filterString: 'Technical',
-        addContactLink: elementById('add-technical-contact'),
+        addContactLinkId: elementById('add-technical-contact'),
         initialValue: [
             {
                 name: 'Technical Contact 1',
@@ -144,7 +144,7 @@ var pageConfig = {
             config = contactEditorsTestConfig[contactEditor];
 
             for ( i = 0 ; i < config.initialValue.length -1 ; i++ ){
-                config.addContactLink.click();
+                config.addContactLinkId.click();
             }
         }
     },
