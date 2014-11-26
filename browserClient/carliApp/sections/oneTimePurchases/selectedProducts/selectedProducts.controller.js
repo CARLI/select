@@ -1,7 +1,7 @@
 angular.module('carli.sections.oneTimePurchases.selectedProducts')
     .controller('selectedProductsController', selectedProductsController);
 
-function selectedProductsController($routeParams, libraryService, productService) {
+function selectedProductsController($routeParams, libraryService, productService, alertService) {
     var vm = this;
     vm.libraryId = $routeParams.libraryId;
     vm.productList = [];
@@ -55,12 +55,14 @@ function selectedProductsController($routeParams, libraryService, productService
     function purchaseProduct(product) {
         product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased = new Date().toJSON().slice(0,10);
         productService.update(product).then(function(){
-            //TODO: add notification of success (inline?)
+            alertService.putAlert(product.name + " purchased", {severity: 'success'});
             //TODO: add audit trail entry (in service)
         })
-        .catch(function(){
-            //TODO: notification of failure (inline?)
-            product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased = null;
+        .catch(function(error){
+            alertService.putAlert(error, {severity: 'danger'});
+            productService.listOneTimePurchaseProducts().then( function(productList){
+                vm.productList = productList;
+            });
         });
     }
 
@@ -69,12 +71,14 @@ function selectedProductsController($routeParams, libraryService, productService
 
         product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased = null;
         productService.update(product).then(function(){
-            //TODO: add notification of success (inline?)
+            alertService.putAlert(product.name + " purchase cancelled", {severity: 'success'});
             //TODO: add audit trail entry (in service)
         })
-        .catch(function(){
-            //TODO: notification of failure (inline?)
-            product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased = oldDate;
+        .catch(function(error){
+            alertService.putAlert(error, {severity: 'danger'});
+            productService.listOneTimePurchaseProducts().then( function(productList){
+                vm.productList = productList;
+            });
         });
     }
 
@@ -85,8 +89,9 @@ function selectedProductsController($routeParams, libraryService, productService
         for (var i=0; i<vm.productList.length; i++) {
             product = vm.productList[i];
             if (vm.filter(product) &&
+                product.oneTimePurchase.libraryPurchaseData[vm.libraryId] &&
                 product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased) {
-                totalAmount += product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price;
+                    totalAmount += product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price;
             }
         }
         return totalAmount;
