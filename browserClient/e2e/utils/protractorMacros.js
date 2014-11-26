@@ -293,19 +293,11 @@ function ensureFormElementHasValue( config, value ){
  * They have a weird signature because it stringifies the function and parameters have
  * to be read from the `arguments` object.
  */
-function callHelperInputHasDefaultValue(){
-    var config = arguments[0] || {};
-    return CARLI.test.inputHasValue(config, config.defaultValue);
-}
-
-function callHelperInputHasInitialValue(){
-    var config = arguments[0] || {};
-    return CARLI.test.inputHasValue(config, config.initialValue);
-}
-
-function callHelperInputHasEditedValue(){
-    var config = arguments[0] || {};
-    return CARLI.test.inputHasValue(config, config.editedValue);
+function callHelperInputHasValue(){
+    var config = arguments[0] || {},
+        configPropertyForValue = arguments[1] || 'defaultValue',
+        expectedValue = config[configPropertyForValue];
+    return CARLI.test.inputHasValue(config, expectedValue);
 }
 
 function callHelperComponentHasText(){
@@ -319,21 +311,9 @@ function callHelperComponentHasText(){
 /*
  * These are convenience methods to wrap browser helper calls in expects
  */
-function browserEnsureInputHasDefaultValue( config ){
-    it(config.description + ' ' + config.type + ' should have default value "' + config.defaultValue + '"', function () {
-        expect(browser.executeScript( callHelperInputHasDefaultValue, config)).toBe(true);
-    });
-}
-
-function browserEnsureInputHasInitialValue( config ){
-    it(config.description + ' ' + config.type + ' should have value ' + config.initialValue + '"', function () {
-        expect(browser.executeScript( callHelperInputHasInitialValue, config)).toBe(true);
-    });
-}
-
-function browserEnsureInputHasEditedValue( config ){
-    it(config.description + ' ' + config.type + ' should have value ' + config.editedValue + '"', function () {
-        expect(browser.executeScript( callHelperInputHasEditedValue, config)).toBe(true);
+function browserEnsureInputHasValue( config, configPropertyForValue ){
+    it(config.description + ' ' + config.type + ' should have default value "' + config[configPropertyForValue] + '"', function () {
+        expect(browser.executeScript( callHelperInputHasValue, config, configPropertyForValue)).toBe(true);
     });
 }
 
@@ -374,9 +354,6 @@ module.exports = {
     setFormElementValue: setFormElementValue,
     ensureFormElementHasValue: ensureFormElementHasValue,
 
-    browserEnsureInputHasDefaultValue: browserEnsureInputHasDefaultValue,
-    browserEnsureInputHasInitialValue: browserEnsureInputHasInitialValue,
-    browserEnsureInputHasEditedValue: browserEnsureInputHasEditedValue,
-
+    browserEnsureInputHasValue: browserEnsureInputHasValue,
     browserEnsureComponentHasText: browserEnsureComponentHasText
 };

@@ -258,7 +258,7 @@ describe('The New Library screen', function () {
 
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
-        macro.browserEnsureInputHasDefaultValue( config );
+        macro.browserEnsureInputHasValue( config, 'defaultValue' );
     }
 
     for ( contactEditor in contactEditorsTestConfig ){
