@@ -24,10 +24,12 @@ function _editVendorBaseDirective() {
     };
 }
 
-function editVendorController( $scope, $location, vendorService, alertService ) {
+function editVendorController( $scope, vendorService, alertService ) {
     var vm = this;
 
     vm.vendorId = $scope.vendorId;
+    var afterSubmitCallback = $scope.afterSubmitFn || function() {};
+
     vm.toggleEditable = toggleEditable;
     vm.saveVendor = saveVendor;
     vm.addContact = addContact;
@@ -88,7 +90,7 @@ function editVendorController( $scope, $location, vendorService, alertService ) 
             vendorService.update(vm.vendor)
                 .then(function () {
                     alertService.putAlert('Vendor updated', {severity: 'success'});
-                    $location.path('/vendor');
+                    afterSubmitCallback();
                 })
                 .catch(function (error) {
                     alertService.putAlert(error, {severity: 'danger'});
@@ -98,9 +100,7 @@ function editVendorController( $scope, $location, vendorService, alertService ) 
             vendorService.create(vm.vendor)
                 .then(function () {
                     alertService.putAlert('Vendor added', {severity: 'success'});
-                    if ($scope.afterSubmitFn !== undefined) {
-                        $scope.afterSubmitFn();
-                    }
+                    afterSubmitCallback();
                 })
                 .catch(function (error) {
                     alertService.putAlert(error, {severity: 'danger'});
