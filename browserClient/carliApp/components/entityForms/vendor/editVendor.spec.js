@@ -9,12 +9,16 @@ describe('The Edit Vendor Directive', function(){
 
         inject( function($controller, $rootScope, $q, mockLocationService, mockVendorService, mockAlertService ) {
             mockDependenciesForNewVendor = {
+                $scope: {},
                 $location: mockLocationService,
                 vendorService: mockVendorService,
                 alertService: mockAlertService
             };
 
             mockDependenciesForEditVendor = {
+                $scope: {
+                    vendorId: 'xxxxx'
+                },
                 $location: mockLocationService,
                 vendorService: mockVendorService,
                 alertService: mockAlertService

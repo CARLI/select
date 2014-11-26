@@ -20,14 +20,14 @@ function _editVendorBaseDirective() {
         restrict: 'E',
         scope: { vendorId: '=', afterSubmitFn: '=' },
         controller: 'editVendorController',
-        controllerAs: 'vm',
-        bindToController: true
+        controllerAs: 'vm'
     };
 }
 
-function editVendorController( $location, vendorService, alertService ) {
+function editVendorController( $scope, $location, vendorService, alertService ) {
     var vm = this;
 
+    vm.vendorId = $scope.vendorId;
     vm.toggleEditable = toggleEditable;
     vm.saveVendor = saveVendor;
     vm.addContact = addContact;
