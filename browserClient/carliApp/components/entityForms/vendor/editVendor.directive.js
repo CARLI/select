@@ -83,28 +83,26 @@ function editVendorController( $scope, $location, vendorService, alertService ) 
         vm.editable = !vm.editable;
     }
 
-    function saveVendor(){
-        if ( vm.vendorId !== undefined ){
-            vendorService.update( vm.vendor ).then(function(){
-                alertService.putAlert('Vendor updated', {severity: 'success'});
-                $location.path('/vendor');
-                if (vm.afterSubmitFn !== undefined) {
-                    vm.afterSubmitFn();
-                }
-            })
-                .catch(function(error) {
+    function saveVendor() {
+        if (vm.vendorId !== undefined) {
+            vendorService.update(vm.vendor)
+                .then(function () {
+                    alertService.putAlert('Vendor updated', {severity: 'success'});
+                    $location.path('/vendor');
+                })
+                .catch(function (error) {
                     alertService.putAlert(error, {severity: 'danger'});
                 });
         }
         else {
-            vendorService.create( vm.vendor ).then(function(){
-                alertService.putAlert('Vendor added', {severity: 'success'});
-                $location.path('/vendor');
-                if (vm.afterSubmitFn !== undefined) {
-                    vm.afterSubmitFn();
-                }
-            })
-                .catch(function(error) {
+            vendorService.create(vm.vendor)
+                .then(function () {
+                    alertService.putAlert('Vendor added', {severity: 'success'});
+                    if ($scope.afterSubmitFn !== undefined) {
+                        $scope.afterSubmitFn();
+                    }
+                })
+                .catch(function (error) {
                     alertService.putAlert(error, {severity: 'danger'});
                 });
         }
