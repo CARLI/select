@@ -323,7 +323,7 @@ function browserEnsureElementIsPresentbyId( id, description ){
 }
 
 function browserEnsureInputHasValue( config, configPropertyForValue ){
-    it(config.description + ' ' + config.type + ' should have default value "' + config[configPropertyForValue] + '"', function () {
+    it(config.description + ' ' + config.type + ' should have value "' + config[configPropertyForValue] + '"', function () {
         expect(browser.executeScript( callHelperInputHasValue, config, configPropertyForValue)).toBe(true);
     });
 }

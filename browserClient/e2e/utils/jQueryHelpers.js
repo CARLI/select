@@ -9,7 +9,8 @@
     CARLI.test = {
         elementIsPresent: elementIsPresent,
         inputHasValue: inputHasValue,
-        elementHasText: elementHasText
+        elementHasText: elementHasText,
+        contactEditorHasValues: contactEditorHasValues
     };
 
 
@@ -129,6 +130,59 @@
 
     }
 
+
+    /**
+     * Contact Editor Stuff
+     */
+    function getContactEditorRowsForType( contactType ){
+        return $('.contact-list-item[ng-repeat*="' + contactType + '"]');
+    }
+
+    function getContactEditorInputs( contactRow ){
+        var row = $(contactRow);
+        return {
+            name: row.find('input[ng-model="contact.name"]'),
+            email: row.find('input[ng-model="contact.email"]'),
+            phoneNumber: row.find('input[ng-model="contact.phoneNumber"]')
+        };
+    }
+
+    /**
+     * @param contactType - the String that Angular is using to filter the ng-repeat by contact type
+     * @param values an array of objects that should match what's in the contact editor fields
+     */
+    function contactEditorHasValues( contactType, values ){
+        var i, row,
+            inputGroup,
+            result = true,
+            rows = getContactEditorRowsForType(contactType);
+
+        if( !values || !values.length ){
+            return 'contactEditorHasValues: bad values';
+        }
+
+        if ( !rows || !rows.length ){
+            return 'contactEditorHasValues for type ' + contactType + ': no rows found';
+        }
+
+        if ( values.length < rows.length ){
+            return 'contactEditorHasValues: not enough values (' + values.length + '+ for rows (' + rows.length + ')';
+        }
+        for ( i = 0 ; i < rows.length ; i++ ){
+            inputGroup = getContactEditorInputs( rows[i] );
+
+            result = result && (
+                    inputGroup.name.val() === values[i].name &&
+                    inputGroup.email.val() === values[i].email &&
+                    inputGroup.phoneNumber.val() === values[i].phoneNumber
+                );
+
+            if ( !result ){
+                return contactType + 'Contact Editor row ' + i + ' did not match';
+            }
+        }
+
+        return result;
+    }
+
 })( window );
-
-

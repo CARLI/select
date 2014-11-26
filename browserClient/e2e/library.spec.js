@@ -7,6 +7,7 @@ var contactEditorMacro = require('./utils/protractorContactEditorMacros');
 var browserEnsureElementIsPresentbyId = macro.browserEnsureElementIsPresentbyId;
 var browserEnsureInputHasValue = macro.browserEnsureInputHasValue;
 var browserEnsureComponentHasText = macro.browserEnsureComponentHasText;
+var browserEnsureContactEditorHasValues = contactEditorMacro.browserEnsureContactEditorHasValues;
 
 /**
  * The configuration below is used by the macros to generate tests. They take the following form:
@@ -110,14 +111,21 @@ testLibraryEditedName = formInputsTestConfig.name.editedValue;
  *  model: the value from the Controller that appears in the ng-repeat
  *  initialValue: the value used when creating the test entity
  *  editedValue: the value used when testing editing the entity
- *  filterString: which 'filter' value is used to get the list of contacts by repeater
+ *  contactType: which 'filter' value is used to get the list of contacts by repeater
  */
 var contactEditorsTestConfig = {
     directorContacts: {
         description: 'Director Contacts',
         model: 'vm.library.contacts',
-        filterString: 'Director',
+        contactType: 'Director',
         addContactLinkId: 'add-director-contact',
+        defaultValues: [
+            {
+                name: '',
+                email: '',
+                phoneNumber: ''
+            }
+        ],
         initialValue: [
             {
                 name: 'Director Contact 1',
@@ -146,8 +154,15 @@ var contactEditorsTestConfig = {
     eResourceLiaisonContacts: {
         description: 'E-Resource Liaison Contacts',
         model: 'vm.library.contacts',
-        filterString: 'E-Resources Liaison',
+        contactType: 'E-Resources Liaison',
         addContactLinkId: 'add-e-resources-liaison-contact',
+        defaultValues: [
+            {
+                name: '',
+                email: '',
+                phoneNumber: ''
+            }
+        ],
         initialValue: [
             {
                 name: 'Liaison Contact 1',
@@ -166,8 +181,15 @@ var contactEditorsTestConfig = {
     otherContacts: {
         description: 'Other Contacts',
         model: 'vm.library.contacts',
-        filterString: 'Other',
+        contactType: 'Other',
         addContactLinkId: 'add-other-contact',
+        defaultValues: [
+            {
+                name: '',
+                email: '',
+                phoneNumber: ''
+            }
+        ],
         initialValue: [
             {
                 name: 'Other Contact 1',
@@ -186,8 +208,15 @@ var contactEditorsTestConfig = {
     notificationOnlyContacts: {
         description: 'Notification Only Contacts',
         model: 'vm.library.contacts',
-        filterString: 'Notification Only',
+        contactType: 'Notification Only',
         addContactLinkId: 'add-notification-only-contact',
+        defaultValues: [
+            {
+                name: '',
+                email: '',
+                phoneNumber: ''
+            }
+        ],
         initialValue: [
             {
                 name: 'Billing Contact 1',
@@ -260,7 +289,7 @@ describe('The New Library screen', function () {
     for ( contactEditor in contactEditorsTestConfig ){
         config = contactEditorsTestConfig[contactEditor];
         browserEnsureElementIsPresentbyId(config.addContactLinkId, 'Add Contact Link for ' + config.description);
-        contactEditorMacro.ensureContactEditorIsPresentAndBlank( config );
+        browserEnsureContactEditorHasValues( config.contactType, config.defaultValues );
     }
 });
 
@@ -346,12 +375,9 @@ describe('Viewing an existing Library in edit mode', function () {
         browserEnsureInputHasValue( config, 'initialValue' );
     }
 
-    for (contactEditor in contactEditorsTestConfig) {
+    for ( contactEditor in contactEditorsTestConfig ){
         config = contactEditorsTestConfig[contactEditor];
-
-        for (row = 0; row < config.initialValue.length; row++) {
-            contactEditorMacro.ensureContactRowHasValues(config, row, config.initialValue[row] );
-        }
+        browserEnsureContactEditorHasValues( config.contactType, config.initialValue );
     }
 });
 
@@ -405,11 +431,8 @@ describe('Making changes to an existing Library', function(){
         browserEnsureComponentHasText( config, 'editedValue' );
     }
 
-    for (contactEditor in contactEditorsTestConfig) {
+    for ( contactEditor in contactEditorsTestConfig ){
         config = contactEditorsTestConfig[contactEditor];
-
-        for (row = 0; row < config.editedValue.length; row++) {
-            contactEditorMacro.ensureContactRowHasValues(config, row, config.editedValue[row] );
-        }
+        browserEnsureContactEditorHasValues( config.contactType, config.editedValue );
     }
 });

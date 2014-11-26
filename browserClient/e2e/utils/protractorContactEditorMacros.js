@@ -51,7 +51,7 @@ function ensureContactEditorIsPresentAndBlank(config) {
     var numberOfRowsToCheck = config.rows || 1;
 
     for (row = 0; row < numberOfRowsToCheck; row++) {
-        elementFinder = contactEditorRowElementFinder(config.model, config.filterString, row);
+        elementFinder = contactEditorRowElementFinder(config.model, config.contactType, row);
         ensureContactEditorRowIsPresent(elementFinder, config);
         ensureContactEditorRowIsBlank(elementFinder, config);
     }
@@ -62,13 +62,13 @@ function ensureContactEditorIsHidden(config) {
     var numberOfRowsToCheck = config.rows || 1;
 
     for (row = 0; row < numberOfRowsToCheck; row++) {
-        elementFinder = contactEditorRowElementFinder(config.model, config.filterString, row);
+        elementFinder = contactEditorRowElementFinder(config.model, config.contactType, row);
         ensureContactEditorRowIsHidden(elementFinder, config);
     }
 }
 
 function fillInContactRow( config, row, data ){
-    var elementFinder = contactEditorRowElementFinder(config.model, config.filterString, row);
+    var elementFinder = contactEditorRowElementFinder(config.model, config.contactType, row);
     var inputs = contactEditorInputGroupElementFinder( elementFinder );
 
     inputs.name.clear();
@@ -82,7 +82,7 @@ function fillInContactRow( config, row, data ){
 }
 
 function ensureContactRowHasValues( config, row, data ){
-    var elementFinder = contactEditorRowElementFinder(config.model, config.filterString, row);
+    var elementFinder = contactEditorRowElementFinder(config.model, config.contactType, row);
     var inputs = contactEditorInputGroupElementFinder( elementFinder );
 
     it(config.description + ' editor ' + row + ' should have values', function(){
@@ -93,13 +93,26 @@ function ensureContactRowHasValues( config, row, data ){
 }
 
 function ensureContactRowDisplaysValues( config, row, data ){
-    var elementFinder = contactEditorRowElementFinder(config.model, config.filterString, row);
+    var elementFinder = contactEditorRowElementFinder(config.model, config.contactType, row);
     var display = contactEditorDisplayGroupElementFinder( elementFinder );
 
     it(config.description + ' row ' + row + ' should display values', function(){
         expect(display.name.getText()).toBe(data.name);
         expect(display.email.getText()).toBe(data.email);
         expect(display.phoneNumber.getText()).toBe(data.phoneNumber);
+    });
+}
+
+function callHelperContactEditorHasValues(){
+    var contactType = arguments[0] || '';
+    var values = arguments[1] || [];
+
+    return CARLI.test.contactEditorHasValues( contactType, values );
+}
+
+function browserEnsureContactEditorHasValues( contactType, data ){
+    it( contactType + ' Contact Editor should have expected values', function(){
+        expect( browser.executeScript( callHelperContactEditorHasValues, contactType, data)).toBe(true);
     });
 }
 
@@ -120,5 +133,7 @@ module.exports = {
     ensureContactRowHasValues: ensureContactRowHasValues,
     ensureContactRowDisplaysValues: ensureContactRowDisplaysValues,
 
-    fillInContactRow: fillInContactRow
+    fillInContactRow: fillInContactRow,
+
+    browserEnsureContactEditorHasValues: browserEnsureContactEditorHasValues
 };
