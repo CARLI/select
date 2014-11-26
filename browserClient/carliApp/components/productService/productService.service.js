@@ -45,8 +45,21 @@ function productService( CarliModules, $q, vendorService ) {
             return $q.when( productModule.create(product) );
         },
         update: function(product) {
+            var deferred = $q.defer();
+
+            var savedVendorObject = product.vendor;
             transformObjectsToReferences(product);
-            return $q.when( productModule.update(product) );
+
+            productModule.update(product)
+                .then (function(product) {
+                    product.vendor = savedVendorObject;
+                    deferred.resolve(product);
+                })
+                .catch(function (err) {
+                    deferred.reject(err);
+                });
+
+            return deferred.promise;
         },
         load: function(id) {
             var deferred = $q.defer();
