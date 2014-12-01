@@ -52,11 +52,13 @@ function productService( CarliModules, $q, vendorService ) {
 
             productModule.update(product)
                 .then (function(product) {
-                    product.vendor = savedVendorObject;
                     deferred.resolve(product);
                 })
                 .catch(function (err) {
                     deferred.reject(err);
+                })
+                .finally(function(){
+                    product.vendor = savedVendorObject;
                 });
 
             return deferred.promise;
