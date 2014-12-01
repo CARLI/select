@@ -335,6 +335,17 @@ function browserEnsureInputIsHidden( config ){
 
 function browserEnsureInputHasValue( config, configPropertyForValue ){
     it(config.description + ' ' + config.type + ' should have value "' + config[configPropertyForValue] + '"', function () {
+
+        /**
+         * Workaround for an apparent bug in the Firefox WebDriver.
+         * It does not correctly pass in Objects that are properties of an argument Object
+         * to the browser.executeScript call.
+         */
+        if ( config.type === 'radio' ){
+            var expectedValue = config[configPropertyForValue];
+            config[configPropertyForValue] = config.valueToIndex[expectedValue];
+        }
+
         expect(browser.executeScript( callHelperInputHasValue, config, configPropertyForValue)).toBe(true);
     });
 }

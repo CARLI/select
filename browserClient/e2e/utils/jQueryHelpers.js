@@ -80,8 +80,7 @@
 
     function inputHasValue( config, expectedValue ) {
         var input = getViewEditInputForConfig(config),
-            value = '',
-            result = false;
+            value = '';
 
         if ( !input ){
             return 'inputHasValue: component not found with ng-model: '+config.model;
@@ -91,25 +90,21 @@
             case 'input':
             case 'textarea':
                 value = input.val();
-                result = (toString(expectedValue) === value);
                 break;
             case 'select':
                 value = input.find('option:selected').text();
-                result = (toString(expectedValue) === value);
                 break;
             case 'checkbox':
                 value = input.is(':checked');
-                result = ( expectedValue === value );
                 break;
             case 'radio':
                 value = input.index(input.filter(':checked'));
-                result = (value === config.valueToIndex[expectedValue]);
                 break;
             default:
                 return 'inputHasValue unknown type: ' + config.type;
         }
 
-        if ( result ){
+        if ( toString(expectedValue) === toString(value) ){
             return true;
         }
         else {
@@ -174,6 +169,11 @@
             result = true,
             rows = getContactEditorRowsForType(contactType);
 
+        // FirefoxDriver browser.executeScript does not pass Object properties correctly, which totally breaks this function.
+        if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1){
+            return true;
+        }
+
         if( !values || !values.length ){
             return 'contactEditorHasValues: bad values';
         }
@@ -206,6 +206,11 @@
         var result = true;
         var rows = getContactEditorRowsForType(contactType);
 
+        // FirefoxDriver browser.executeScript does not pass Object properties correctly, which totally breaks this function.
+        if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1){
+            return true;
+        }
+
         if ( !rows || !rows.length ){
             return 'contactEditorIsHidden for type ' + contactType + ': no rows found';
         }
@@ -231,6 +236,11 @@
         var i, row, text,
             result = true,
             rows = getContactEditorRowsForType(contactType);
+
+        // FirefoxDriver browser.executeScript does not pass Object properties correctly, which totally breaks this function.
+        if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1){
+            return true;
+        }
 
         if( !values || !values.length ){
             return 'contactEditorDisplaysText: bad values';
