@@ -1,0 +1,255 @@
+    <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="productForm" ng-submit="vm.saveProduct(); vm.closeModal();">
+
+    <header class="page-header">
+        <h1 ng-show="vm.newProduct">New Product</h1>
+
+        <div class="name">
+            <label for="productName">Product Name</label>
+            <view-edit-text-field ng-model="vm.product.name" edit-mode="vm.editable">
+                <h1>{{ vm.product.name }}</h1>
+            </view-edit-text-field>
+        </div>
+
+        <div ng-show="!vm.newProduct" class="edit-buttons pull-right">
+            <div ng-show="vm.editable">
+                <a class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</a>
+                <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit">
+            </div>
+
+            <div id="product-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">
+                Edit<i class="fa fa-edit"></i>
+            </div>
+        </div>
+    </header>
+
+    <section class="content">
+        <fieldset>
+            <div class="column">
+                <label for="productVendor">Vendor</label>
+                <div class="view-edit-select" ng-show="vm.newProduct">
+                    <select ng-model="vm.product.vendor" ng-options="vendor.name for vendor in vm.vendorList track by vendor.id"></select>
+                </div>
+                <div ng-show="!vm.newProduct">{{ vm.product.vendor.name }}</div>
+
+                <label for="productUrl">Product URL <aside>(Vendor can provide)</aside></label>
+                <view-edit-text-field ng-model="vm.product.productUrl" edit-mode="vm.editable">
+                    {{ vm.product.productUrl }}
+                </view-edit-text-field>
+
+                <label for="productDescription">Product Description <aside>(Vendor can provide)</aside></label>
+                <view-edit-text-area ng-model="vm.product.description" edit-mode="vm.editable">
+                    {{ vm.product.description }}
+                </view-edit-text-area>
+
+                <label for="productComments">Product Price Comments for Libraries</label>
+                <view-edit-text-area ng-model="vm.product.comments" edit-mode="vm.editable">
+                    {{ vm.product.comments }}
+                </view-edit-text-area>
+
+                <div class="column">
+                    <view-edit-checkbox label="3rd Party Product" ng-model="vm.product.isThirdPartyProduct" edit-mode="vm.editable">
+                        <label>Third Party Product:</label> {{ vm.product.isThirdPartyProduct }}
+                    </view-edit-checkbox>
+
+                    <view-edit-checkbox label="Archive Capital Fee" ng-model="vm.product.hasArchiveCapitalFee" edit-mode="vm.editable">
+                        <label>Archive Capital Fee:</label> {{ vm.product.hasArchiveCapitalFee }}
+                    </view-edit-checkbox>
+                </div>
+
+                <div class="column">
+                    <label for="productStatus">Status</label>
+                    <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.product.isActive" edit-mode="vm.editable">
+                        {{ vm.product.isActive ? 'Active Product' : 'Inactive Product' }}
+                    </view-edit-radios>
+                </div>
+
+                <div class="one-time-purchase-settings" ng-if="vm.product.cycleType == 'One-Time Purchase'">
+                    <label>Annual Access Fee</label>
+                    <view-edit-text-field ng-model="vm.product.oneTimePurchase.annualAccessFee" edit-mode="vm.editable">
+                        {{ vm.product.oneTimePurchase.annualAccessFee }}
+                    </view-edit-text-field>
+
+                    <label>Available for Purchase Through</label>
+                    <view-edit-text-field ng-model="vm.product.oneTimePurchase.availableForPurchase" edit-mode="vm.editable">
+                        {{ vm.product.oneTimePurchase.availableForPurchase }}
+                    </view-edit-text-field>
+
+                    <ul class="library-list entity-list">
+                        <li class="column-headers">
+                            <header class="column">Library</header>
+                            <header class="column">Price</header>
+                            <header class="column">Purchased</header>
+                        </li>
+                        <li ng-repeat="library in vm.libraryList | filterByActive:activeFilterState | filter:filterText">
+                            <span class="column">{{ library.name }}</span>
+                            <span class="column">
+                                <view-edit-text-field ng-model="vm.product.oneTimePurchase.libraryPurchaseData[library.id].price" edit-mode="vm.editable && !vm.product.oneTimePurchase.libraryPurchaseData[library.id].datePurchased">
+                                {{ vm.product.oneTimePurchase.libraryPurchaseData[library.id].price | currency:undefined:0 }}
+                                </view-edit-text-field>
+                            </span>
+                            <span class="column text-center">
+                                <i class="fa fa-check-circle" ng-show="vm.product.oneTimePurchase.libraryPurchaseData[library.id].datePurchased"></i>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="column">
+
+                <div class="clearfix double-gap-bottom">
+                    <div class="column">
+
+                        <label>Price Cap</label>
+                        <view-edit-text-field ng-model="vm.product.priceCap" edit-mode="vm.editable">
+                            {{ vm.product.priceCap }}
+                        </view-edit-text-field>
+
+                        <label>Cycle</label>
+                        <view-edit-select ng-model="vm.product.cycleType" items="vm.cycleOptions" edit-mode="vm.newProduct">
+                            {{ vm.product.cycleType }}
+                        </view-edit-select>
+
+                    </div>
+
+                    <div class="column">
+                        <label>License Agreement</label>
+                        <view-edit-text-field id="productLicenseAgreement" ng-model="vm.product.licenseAgreement" edit-mode="vm.editable">
+                            {{ vm.product.licenseAgreement }}
+                        </view-edit-text-field>
+
+                        <label>Detail Codes</label>
+                        <view-edit-select ng-model="vm.product.detailCode" items="vm.productDetailCodeOptions" edit-mode="vm.editable">
+                            {{ vm.product.detailCode }}
+                        </view-edit-select>
+                    </div>
+                </div>
+
+                <div style="background: steelblue; color: #FFF; line-height: 6rem; text-align: center;">
+                    <!-- funding -->
+                    TODO: Funding stuff goes here
+                </div>
+
+                <div>
+                    <div class="column">
+                        <h2>Specific Terms</h2>
+                        <div><a href="">Override License-Level Terms <i class="fa fa-edit"></i></a></div>
+
+                        <!-- TODO: Will the termTypes/termOptions data come from the License Agreement? (editProduct.controller data for now) -->
+                        <ul class="terms-list" ng-class="{editing: vm.editable}">
+                            <li>
+                                <label>Download:</label>
+                                <view-edit-yes-no-other ng-model="vm.product.terms.downloadTerms" edit-mode="vm.editable">
+                                    {{ vm.product.terms.downloadTerms }}
+                                </view-edit-yes-no-other>
+                            </li>
+
+                            <li>
+                                <label>ILL:</label>
+                                <view-edit-yes-no-other ng-model="vm.product.terms.interLibraryLoanTerms" edit-mode="vm.editable">
+                                    {{ vm.product.terms.interLibraryLoanTerms }}
+                                </view-edit-yes-no-other>
+
+                            </li>
+
+                            <li>
+                                <label>Course Packs:</label>
+                                <view-edit-yes-no-other ng-model="vm.product.terms.coursePacksTerms" edit-mode="vm.editable">
+                                    {{ vm.product.terms.coursePacksTerms }}
+                                </view-edit-yes-no-other>
+
+                            </li>
+
+                            <li>
+                                <label>Print:</label>
+                                <view-edit-yes-no-other ng-model="vm.product.terms.printTerms" edit-mode="vm.editable">
+                                    {{ vm.product.terms.printTerms }}
+                                </view-edit-yes-no-other>
+
+                            </li>
+
+                            <li>
+                                <label>Limited Sharing for Scholarly Purposes:</label>
+                                <view-edit-yes-no-other ng-model="vm.product.terms.limitedScholarlySharingTerms" edit-mode="vm.editable">
+                                    {{ vm.product.terms.limitedScholarlySharingTerms }}
+                                </view-edit-yes-no-other>
+
+                            </li>
+
+                            <li>
+                                <label>Use by Walk-ins:</label>
+                                <view-edit-yes-no-other ng-model="vm.product.terms.walkinTerms" edit-mode="vm.editable">
+                                    {{ vm.product.terms.walkinTerms }}
+                                </view-edit-yes-no-other>
+
+                            </li>
+
+                            <li>
+                                <label>E-Reserves:</label>
+                                <view-edit-yes-no-other ng-model="vm.product.terms.eReservesTerms" edit-mode="vm.editable">
+                                    {{ vm.product.terms.eReservesTerms }}
+                                </view-edit-yes-no-other>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="column" ng-show="vm.product.cycleType !== 'One-Time Purchase'">
+                        <!-- TODO: This is a styled example of Subsciber History (needs to actually be wired/componentized -->
+                        <table class="tableSubscriber">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">Your History</th>
+                                    <th>Subscribers</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <!-- TODO: Are these clickable links? -->
+                                    <td>2015</td>
+                                    <td><i class="fa fa-check-circle"></i></td>
+                                    <td colspan="2">8 <em>Current</em></td>
+                                </tr>
+                                <tr>
+                                    <td>2014</td>
+                                    <td></td>
+                                    <td colspan="2">5</td>
+                                </tr>
+                                <tr>
+                                    <td>2013</td>
+                                    <td></td>
+                                    <td colspan="2">5</td>
+                                </tr>
+                                <tr>
+                                    <td>2012</td>
+                                    <td></td>
+                                    <td colspan="2">3</td>
+                                </tr>
+                                <tr>
+                                    <td>2011</td>
+                                    <td></td>
+                                    <td colspan="2">2</td>
+                                </tr>
+                                <tr>
+                                    <td>2010</td>
+                                    <td></td>
+                                    <td colspan="2">-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+            </div>
+        </fieldset>
+
+        <footer ng-show="vm.editable">
+            <button type="button" class="carli-button cancel-button" data-dismiss="modal" ng-click="vm.cancelEdit()">Cancel</button>
+            <input type="submit" id="vendor-submit" class="carli-button save-button" value="Save">
+        </footer>
+    </section>
+
+    </form>
+
+    <hr>
+    <debug-panel>{{ vm.product | json }}</debug-panel>

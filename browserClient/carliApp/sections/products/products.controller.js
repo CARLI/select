@@ -3,9 +3,16 @@ angular.module('carli.sections.products')
 
 function productController( $sce, productService ){
     var vm = this;
+    vm.afterProductSubmit = populateProductList;
     activate();
 
     function activate() {
+        productService.list().then( function(productList){
+            vm.productList = productList;
+        });
+    }
+
+    function populateProductList() {
         productService.list().then( function(productList){
             vm.productList = productList;
         });
