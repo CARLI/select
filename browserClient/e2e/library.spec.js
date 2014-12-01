@@ -282,6 +282,7 @@ describe('The New Library screen', function () {
 
     it('should be routed at /library/new', function(){
         browser.setLocation('/library/new');
+        browser.waitForAngular();
     });
 
     for ( formElement in formInputsTestConfig ){

@@ -293,6 +293,7 @@ describe('The New License screen', function () {
 
     it('should be routed at /license/new', function(){
         browser.setLocation('/license/new');
+        browser.waitForAngular();
     });
 
     for ( formElement in formInputsTestConfig ){
