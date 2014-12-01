@@ -134,6 +134,8 @@ var pageConfig = {
     listFilterShowAll: element(by.id('filter-all')),
     submit: element(by.id('vendor-submit')),
     editButton: element(by.id('vendor-edit')),
+    newButton: element(by.id('new-vendor')),
+    newVendorModal: element(by.id('new-vendor-modal')),
 
     addEmptyContactsForTestData: function(){
         var i, config;
@@ -169,13 +171,19 @@ var pageConfig = {
 
 
 
-describe('The New Vendor screen', function () {
+describe('The New Vendor Modal', function () {
     var formElement, contactEditor;
 
-    it('should be routed at /vendor/new', function(){
-        browser.setLocation('/vendor/new');
+    it('should be routed at /vendor', function(){
+        browser.setLocation('/vendor');
     });
+    macro.ensureElementIsPresent( pageConfig.newButton, 'New Vendor button' );
 
+    it('should be displayed by clicking the New Vendor button', function () {
+        pageConfig.newButton.click();
+        browser.sleep(500);
+        expect(pageConfig.newVendorModal.isDisplayed()).toBe(true);
+    });
     for ( formElement in formInputsTestConfig ){
         ensureFormElementIsPresentAndBlank( formInputsTestConfig[formElement] );
     }

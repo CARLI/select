@@ -3,9 +3,14 @@ angular.module('carli.sections.vendors')
 
 function vendorController( $sce, vendorService ){
     var vm = this;
+    vm.afterVendorSubmit = populateVendorList;
     activate();
 
     function activate() {
+        populateVendorList();
+    }
+
+    function populateVendorList() {
         vendorService.list().then( function(vendorList){
             vm.vendorList = vendorList;
         });

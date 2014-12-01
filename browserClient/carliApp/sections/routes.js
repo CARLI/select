@@ -42,7 +42,7 @@ angular.module('carli.routes',[
     })
     .when('/vendor/:id', {
         templateUrl: '/carliApp/sections/vendors/editVendor/editVendor.html',
-        controller:  'editVendorController',
+        controller:  'editVendorPageController',
         controllerAs:'vm'
     })
     .when('/product', {
