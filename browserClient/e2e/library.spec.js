@@ -325,7 +325,7 @@ describe('Creating a New Library', function(){
 
 describe('Viewing an existing Library in read only mode', function () {
 
-    var row, config, formElement, contactEditor;
+    var value, config, formElement, contactEditor;
 
     it('should find the Library entry on the Library list screen', function () {
 
@@ -363,7 +363,7 @@ describe('Viewing an existing Library in read only mode', function () {
 });
 
 describe('Viewing an existing Library in edit mode', function () {
-    var row, config, formElement, contactEditor;
+    var config, formElement, contactEditor;
 
     it('should be in edit mode', function () {
         pageConfig.editButton.click();
