@@ -45,8 +45,23 @@ function productService( CarliModules, $q, vendorService ) {
             return $q.when( productModule.create(product) );
         },
         update: function(product) {
+            var deferred = $q.defer();
+
+            var savedVendorObject = product.vendor;
             transformObjectsToReferences(product);
-            return $q.when( productModule.update(product) );
+
+            productModule.update(product)
+                .then (function(product) {
+                    deferred.resolve(product);
+                })
+                .catch(function (err) {
+                    deferred.reject(err);
+                })
+                .finally(function(){
+                    product.vendor = savedVendorObject;
+                });
+
+            return deferred.promise;
         },
         load: function(id) {
             var deferred = $q.defer();
@@ -68,7 +83,9 @@ function productService( CarliModules, $q, vendorService ) {
     };
 
     function transformObjectsToReferences(product) {
-        product.vendor = product.vendor.id;
+        if (typeof product.vendor === 'object') {
+            product.vendor = product.vendor.id;
+        }
     }
 
     function transformReferencesToObjects(product, object) {
