@@ -116,6 +116,13 @@ module.exports = function ( grunt ) {
                     dest: '<%= build_dir %>/',
                     expand: true
                 }]
+            },
+            build_helper_scripts: {
+                files: [{
+                    src: ['<%= carliApp_files.helper_scripts %>'],
+                    dest: '<%= build_dir %>/',
+                    expand: true
+                }]
             }
         },
 
@@ -398,7 +405,7 @@ module.exports = function ( grunt ) {
             /**
              * During development, we don't want to have wait for compilation,
              * concatenation, minification, etc. So to avoid these steps, we simply
-             * add all script files directly to the `<head>` of `index.html`. The
+             * add all script files directly to the `<body>` of `index.html`. The
              * `src` property contains the list of included files.
              */
             build: {
@@ -407,6 +414,7 @@ module.exports = function ( grunt ) {
                     '<%= vendor_files.js %>',
                     '<%= build_dir %>/<%= logic_files.build %>',
                     '<%= build_dir %>/<%= carliApp_files.jsAll %>',
+                    '<%= build_dir %>/<%= carliApp_files.helper_scripts %>',
                     '<%= build_dir %>/css/*.css'
                 ]
             },
@@ -491,6 +499,7 @@ module.exports = function ( grunt ) {
         'newer:copy:build_images',
         'newer:copy:build_html',
         'newer:copy:build_json',
+        'newer:copy:build_helper_scripts',
         'browserify:build',
         'sass:build',
         'index:build',

@@ -2,15 +2,16 @@ var config = require('./utils/baseConfig');
 config.getDefaultAppPage();
 
 var macro = require('./utils/protractorMacros');
-elementById = macro.elementById;
-ensureFormElementIsPresentAndBlank = macro.ensureFormElementIsPresentAndBlank;
-setFormElementValue = macro.setFormElementValue;
+var browserEnsureInputIsHidden = macro.browserEnsureInputIsHidden;
+var browserEnsureInputHasValue = macro.browserEnsureInputHasValue;
+var browserEnsureComponentHasText = macro.browserEnsureComponentHasText;
 
 var formInputsTestConfig = {
     name: {
         type: 'input',
         description: 'Name',
         model: 'vm.license.name',
+        defaultValue: '',
         initialValue: 'Test License 1',
         editedValue: 'Change License Name'
     },
@@ -18,6 +19,7 @@ var formInputsTestConfig = {
         type: 'input',
         description: 'Contract Number',
         model: 'vm.license.contractNumber',
+        defaultValue: '',
         initialValue: 'Contract #1',
         editedValue: 'Contract #1.1'
     },
@@ -25,6 +27,7 @@ var formInputsTestConfig = {
         type: 'input',
         description: 'Redacted License',
         model: 'vm.license.redactedLicenseFile',
+        defaultValue: '',
         initialValue: 'This will be a redacted file upload',
         editedValue: 'This will be a different redacted file upload'
     },
@@ -32,6 +35,7 @@ var formInputsTestConfig = {
         type: 'input',
         description: 'Full License',
         model: 'vm.license.fullLicenseFile',
+        defaultValue: '',
         initialValue: 'This will be a full license file upload',
         editedValue: 'This will be a different full license file upload'
     },
@@ -39,6 +43,7 @@ var formInputsTestConfig = {
         type: 'textarea',
         description: 'Internal E-Resource Comments',
         model: 'vm.license.eResourceComments',
+        defaultValue: '',
         initialValue: 'This is an Internal E-Resource Comment',
         editedValue: 'This is an edited Internal E-Resource Comment'
     },
@@ -46,6 +51,7 @@ var formInputsTestConfig = {
         type: 'textarea',
         description: 'Internal Business Services',
         model: 'vm.license.businessComments',
+        defaultValue: '',
         initialValue: 'This is an Internal Business Services',
         editedValue: 'This is an edited Internal Business Services'
     },
@@ -53,6 +59,7 @@ var formInputsTestConfig = {
         type: 'radio',
         description: 'isActive',
         model: 'vm.license.isActive',
+        defaultValue: 'Active',
         initialValue: 'Inactive',
         editedValue: 'Active',
         valueToIndex: {
@@ -64,6 +71,7 @@ var formInputsTestConfig = {
         type: 'input',
         description: 'Effective Date',
         model: 'vm.license.effectiveDate',
+        defaultValue: '',
         initialValue: '10/31/14',
         editedValue: '12/25/14'
     },
@@ -71,6 +79,7 @@ var formInputsTestConfig = {
         type: 'input',
         description: 'Total Contract Term Start',
         model: 'vm.license.totalTermStartDate',
+        defaultValue: '',
         initialValue: '10/31/14',
         editedValue: '12/25/14'
     },
@@ -78,6 +87,7 @@ var formInputsTestConfig = {
         type: 'input',
         description: 'Total Contract Term End',
         model: 'vm.license.totalTermEndDate',
+        defaultValue: '',
         initialValue: '10/31/17',
         editedValue: '12/25/17'
     },
@@ -85,6 +95,7 @@ var formInputsTestConfig = {
         type: 'input',
         description: 'Total Current Term Start',
         model: 'vm.license.currentTermStartDate',
+        defaultValue: '',
         initialValue: '10/31/14',
         editedValue: '12/25/14'
     },
@@ -92,6 +103,7 @@ var formInputsTestConfig = {
         type: 'input',
         description: 'Total Current Term End',
         model: 'vm.license.currentTermEndDate',
+        defaultValue: '',
         initialValue: '10/31/15',
         editedValue: '12/25/15'
     }, /* -- TODO when we figure out what to do with viewEditNumber
@@ -106,6 +118,7 @@ var formInputsTestConfig = {
         type: 'select',
         description: 'Download Terms',
         model: 'vm.license.terms.downloadTerms',
+        defaultValue: '',
         initialValue: 'Yes',
         editedValue: 'Other'
     },
@@ -113,6 +126,7 @@ var formInputsTestConfig = {
         type: 'select',
         description: 'Course Pack  Terms',
         model: 'vm.license.terms.coursePacksTerms',
+        defaultValue: '',
         initialValue: 'No',
         editedValue: 'Other'
     },
@@ -120,6 +134,7 @@ var formInputsTestConfig = {
         type: 'select',
         description: 'Interlibrary Loan Terms',
         model: 'vm.license.terms.interLibraryLoanTerms',
+        defaultValue: '',
         initialValue: 'Yes',
         editedValue: 'No'
     },
@@ -127,6 +142,7 @@ var formInputsTestConfig = {
         type: 'select',
         description: 'Print Terms',
         model: 'vm.license.terms.printTerms',
+        defaultValue: '',
         initialValue: 'No',
         editedValue: 'Yes'
     },
@@ -134,6 +150,7 @@ var formInputsTestConfig = {
         type: 'select',
         description: 'Limited Scholarly Sharing Terms',
         model: 'vm.license.terms.limitedScholarlySharingTerms',
+        defaultValue: '',
         initialValue: 'Yes',
         editedValue: 'Other'
     },
@@ -141,6 +158,7 @@ var formInputsTestConfig = {
         type: 'select',
         description: 'Use by Walkin Terms',
         model: 'vm.license.terms.walkinTerms',
+        defaultValue: '',
         initialValue: 'Other',
         editedValue: 'No'
     },
@@ -148,6 +166,7 @@ var formInputsTestConfig = {
         type: 'select',
         description: 'E-Reserve Terms',
         model: 'vm.license.terms.eReservesTerms',
+        defaultValue: '',
         initialValue: 'Other',
         editedValue: 'Yes'
     },
@@ -155,6 +174,7 @@ var formInputsTestConfig = {
         type: 'select',
         description: 'Has Confidentiality Language',
         model: 'vm.license.terms.hasConfidentialityLanguage',
+        defaultValue: '',
         initialValue: "Yes",
         editedValue: "No"
     },
@@ -162,6 +182,7 @@ var formInputsTestConfig = {
         type: 'input',
         description: 'PO Number',
         model: 'vm.license.purchaseOrderNumber',
+        defaultValue: '',
         initialValue: '20,000',
         editedValue: '30,000'
     },
@@ -169,6 +190,7 @@ var formInputsTestConfig = {
         type: 'input',
         description: 'PO Amount',
         model: 'vm.license.purchaseOrderAmount',
+        defaultValue: '',
         initialValue: '20,000',
         editedValue: '30,000'
     },
@@ -176,6 +198,7 @@ var formInputsTestConfig = {
         type: 'input',
         description: 'Banner ID',
         model: 'vm.license.bannerId',
+        defaultValue: '',
         initialValue: 'Banner ID X',
         editedValue: 'Banner ID 11343'
     },
@@ -183,6 +206,7 @@ var formInputsTestConfig = {
         type: 'checkbox',
         description: 'Is RFP Type',
         model: 'vm.license.isRfp',
+        defaultValue: false,
         initialValue: true,
         initialText: 'RFP: Yes',
         editedValue: false,
@@ -192,6 +216,7 @@ var formInputsTestConfig = {
         type: 'checkbox',
         description: 'Is Sole Source',
         model: 'vm.license.isSoleSource',
+        defaultValue: false,
         initialValue: false,
         initialText: 'Sole Source: No',
         editedValue: true,
@@ -201,6 +226,7 @@ var formInputsTestConfig = {
         type: 'checkbox',
         description: 'Is Sealed Bid',
         model: 'vm.license.isSealedBid',
+        defaultValue: false,
         initialValue: true,
         initialText: 'Sealed Bid: Yes',
         editedValue: false,
@@ -210,6 +236,7 @@ var formInputsTestConfig = {
         type: 'checkbox',
         description: 'Is Other Type',
         model: 'vm.license.isOtherType',
+        defaultValue: false,
         initialValue: false,
         initialText: 'Other: No',
         editedValue: true,
@@ -219,6 +246,7 @@ var formInputsTestConfig = {
         type: 'input',
         description: 'Other Type text',
         model: 'vm.license.otherType',
+        defaultValue: '',
         initialValue: 'Other',
         editedValue: 'Other Other'
     },
@@ -226,6 +254,7 @@ var formInputsTestConfig = {
         type: 'radio',
         description: 'Offering Type (Product/Service)',
         model: 'vm.license.offeringType',
+        defaultValue: 'Product',
         initialValue: 'Product',
         editedValue: 'Service',
         valueToIndex: {
@@ -246,13 +275,13 @@ var pageConfig = {
 
 
     fillInLicenseWithTestData: function( useEditData ){
-        var row, formElement;
+        var config, formElement;
         var dataSet = useEditData || 'initialValue';
 
         for ( formElement in formInputsTestConfig ){
             config = formInputsTestConfig[formElement];
 
-            setFormElementValue( config, config[dataSet] );
+            macro.setFormElementValue( config, config[dataSet] );
         }
     }
 };
@@ -264,10 +293,11 @@ describe('The New License screen', function () {
 
     it('should be routed at /license/new', function(){
         browser.setLocation('/license/new');
+        browser.waitForAngular();
     });
 
     for ( formElement in formInputsTestConfig ){
-        ensureFormElementIsPresentAndBlank( formInputsTestConfig[formElement] );
+        browserEnsureInputHasValue( formInputsTestConfig[formElement], 'defaultValue' );
     }
 });
 
@@ -300,7 +330,7 @@ describe('Creating a New License', function(){
 
 
 describe('Viewing an existing License in read only mode', function () {
-    var row, config, formElement;
+    var value, config, formElement;
 
     it('should find the License entry on the list screen', function () {
 
@@ -320,22 +350,18 @@ describe('Viewing an existing License in read only mode', function () {
     });
 
     for ( formElement in formInputsTestConfig ){
-        macro.ensureFormElementIsHidden( formInputsTestConfig[formElement] );
+        browserEnsureInputIsHidden( formInputsTestConfig[formElement] );
     }
 
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
-        value = config.initialText;
-        if (!value) {
-            value = config.initialValue;
-        }
-        macro.ensureFormElementDisplaysText( config, value );
+        value = config.initialText ? 'initialText' : 'initialValue';
+        browserEnsureComponentHasText( formInputsTestConfig[formElement], value );
     }
-
 });
 
 describe('Viewing an existing License in edit mode', function () {
-    var row, config, formElement;
+    var config, formElement;
 
     it('should be in edit mode', function () {
         pageConfig.editButton.click();
@@ -343,13 +369,12 @@ describe('Viewing an existing License in edit mode', function () {
 
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
-        macro.ensureFormElementHasValue( config, config.initialValue );
+        browserEnsureInputHasValue( config, 'initialValue' );
     }
-
 });
 
 describe('Making changes to an existing License', function(){
-    var config, formElement;
+    var config, value, formElement;
 
     it('should find the License entry on the list screen', function () {
         browser.setLocation('/license');
@@ -394,7 +419,7 @@ describe('Making changes to an existing License', function(){
 
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
-        var value = config.editedText || config.editedValue;
-        macro.ensureFormElementDisplaysText( config, value );
+        value = config.initialText ? 'editedText' : 'editedValue';
+        browserEnsureComponentHasText( formInputsTestConfig[formElement], value );
     }
 });

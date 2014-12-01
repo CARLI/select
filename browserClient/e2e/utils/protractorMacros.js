@@ -286,6 +286,65 @@ function ensureFormElementHasValue( config, value ){
     }
 }
 
+
+/* ---------- Shortcuts for calling jQuery helper verions of the test functions ---------- */
+/*
+ * These are the functions that Protractor runs in the browser to invoke the jQuery helpers.
+ * They have a weird signature because it stringifies the function and parameters have
+ * to be read from the `arguments` object.
+ */
+function callHelperElementIsPresent(){
+    var id = arguments[0] || '';
+    return CARLI.test.elementIsPresent(id);
+}
+
+function callHelperInputIsHidden(){
+    var config = arguments[0] || {};
+    return CARLI.test.inputIsHidden(config);
+}
+
+function callHelperInputHasValue(){
+    var config = arguments[0] || {},
+        configPropertyForValue = arguments[1] || 'defaultValue',
+        expectedValue = config[configPropertyForValue];
+    return CARLI.test.inputHasValue(config, expectedValue);
+}
+
+function callHelperComponentHasText(){
+    var config = arguments[0] || {},
+        configPropertyForText = arguments[1] || 'defaultValue',
+        expectedValue = config[configPropertyForText];
+
+    return CARLI.test.elementHasText( config, expectedValue );
+}
+
+/*
+ * These are convenience methods to wrap browser helper calls in expects
+ */
+function browserEnsureElementIsPresentbyId( id, description ){
+    it('should have a ' + description, function(){
+        expect(browser.executeScript( callHelperElementIsPresent, id)).toBe(true);
+    });
+}
+
+function browserEnsureInputIsHidden( config ){
+    it(config.description + ' ' + config.type + ' should be hidden', function () {
+        expect(browser.executeScript( callHelperInputIsHidden, config )).toBe(true);
+    });
+}
+
+function browserEnsureInputHasValue( config, configPropertyForValue ){
+    it(config.description + ' ' + config.type + ' should have value "' + config[configPropertyForValue] + '"', function () {
+        expect(browser.executeScript( callHelperInputHasValue, config, configPropertyForValue)).toBe(true);
+    });
+}
+
+function browserEnsureComponentHasText( config, configPropertyForText ){
+    it(config.description + ' should display "' + config[configPropertyForText] + '"', function () {
+        expect(browser.executeScript( callHelperComponentHasText, config, configPropertyForText)).toBe(true);
+    });
+}
+
 /* ---------------------- Exports ------------------------- */
 
 module.exports = {
@@ -315,5 +374,10 @@ module.exports = {
     ensureFormElementIsHidden: ensureFormElementIsHidden,
     ensureFormElementDisplaysText: ensureFormElementDisplaysText,
     setFormElementValue: setFormElementValue,
-    ensureFormElementHasValue: ensureFormElementHasValue
+    ensureFormElementHasValue: ensureFormElementHasValue,
+
+    browserEnsureElementIsPresentbyId: browserEnsureElementIsPresentbyId,
+    browserEnsureInputIsHidden: browserEnsureInputIsHidden,
+    browserEnsureInputHasValue: browserEnsureInputHasValue,
+    browserEnsureComponentHasText: browserEnsureComponentHasText
 };
