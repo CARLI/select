@@ -2,21 +2,22 @@ var config = require('./utils/baseConfig');
 config.getDefaultAppPage();
 
 var macro = require('./utils/protractorMacros');
-elementById = macro.elementById;
-ensureFormElementIsPresentAndBlank = macro.ensureFormElementIsPresentAndBlank;
-setFormElementValue = macro.setFormElementValue;
-
 var contactEditorMacro = require('./utils/protractorContactEditorMacros');
-ensureContactEditorIsPresentAndBlank = contactEditorMacro.ensureContactEditorIsPresentAndBlank;
-ensureContactEditorIsHidden = contactEditorMacro.ensureContactEditorIsHidden;
-ensureContactRowHasValues = contactEditorMacro.ensureContactRowHasValues;
-ensureContactRowDisplaysValues = contactEditorMacro.ensureContactRowDisplaysValues;
+
+var browserEnsureElementIsPresentbyId = macro.browserEnsureElementIsPresentbyId;
+var browserEnsureInputIsHidden = macro.browserEnsureInputIsHidden;
+var browserEnsureInputHasValue = macro.browserEnsureInputHasValue;
+var browserEnsureComponentHasText = macro.browserEnsureComponentHasText;
+var browserEnsureContactEditorIsHidden = contactEditorMacro.browserEnsureContactEditorIsHidden;
+var browserEnsureContactEditorHasValues = contactEditorMacro.browserEnsureContactEditorHasValues;
+var browserEnsureContactEditorDisplaysText = contactEditorMacro.browserEnsureContactEditorDisplaysText;
 
 var formInputsTestConfig = {
     name: {
         type: 'input',
         description: 'Name',
         model: 'vm.vendor.name',
+        defaultValue: '',
         initialValue: 'Test Vendor 1',
         editedValue: 'Change Vendor Name'
     },
@@ -24,6 +25,7 @@ var formInputsTestConfig = {
         type: 'input',
         description: 'Website URL',
         model: 'vm.vendor.websiteUrl',
+        defaultValue: '',
         initialValue: 'http://www.example.com',
         editedValue: 'http://www.example.net'
     },
@@ -31,6 +33,7 @@ var formInputsTestConfig = {
         type: 'textarea',
         description: 'Admin Module',
         model: 'vm.vendor.adminModule',
+        defaultValue: '',
         initialValue: 'This is an admin module comment',
         editedValue: 'This is an edited admin module comment'
     },
@@ -38,6 +41,7 @@ var formInputsTestConfig = {
         type: 'textarea',
         description: 'Comments',
         model: 'vm.vendor.comments',
+        defaultValue: '',
         initialValue: 'This is a comment',
         editedValue: 'This is an edited comment'
     },
@@ -45,6 +49,7 @@ var formInputsTestConfig = {
         type: 'radio',
         description: 'isActive',
         model: 'vm.vendor.isActive',
+        defaultValue: 'Active',
         initialValue: 'Inactive',
         editedValue: 'Active',
         valueToIndex: {
@@ -61,8 +66,15 @@ var contactEditorsTestConfig = {
     billingContacts: {
         description: 'Billing Contacts',
         model: 'vm.vendor.contacts',
-        filterString: 'Billing',
-        addContactLinkId: elementById('add-billing-contact'),
+        contactType: 'Billing',
+        addContactLinkId: 'add-billing-contact',
+        defaultValues: [
+            {
+                name: '',
+                email: '',
+                phoneNumber: ''
+            }
+        ],
         initialValue: [
             {
                 name: 'Billing Contact 1',
@@ -91,8 +103,15 @@ var contactEditorsTestConfig = {
     salesContacts: {
         description: 'Sales Contacts',
         model: 'vm.vendor.contacts',
-        filterString: 'Sales',
-        addContactLinkId: elementById('add-sales-contact'),
+        contactType: 'Sales',
+        addContactLinkId: 'add-sales-contact',
+        defaultValues: [
+            {
+                name: '',
+                email: '',
+                phoneNumber: ''
+            }
+        ],
         initialValue: [
             {
                 name: 'Sales Contact 1',
@@ -111,8 +130,15 @@ var contactEditorsTestConfig = {
     technicalContacts: {
         description: 'Technical Contacts',
         model: 'vm.vendor.contacts',
-        filterString: 'Technical',
-        addContactLinkId: elementById('add-technical-contact'),
+        contactType: 'Technical',
+        addContactLinkId: 'add-technical-contact',
+        defaultValues: [
+            {
+                name: '',
+                email: '',
+                phoneNumber: ''
+            }
+        ],
         initialValue: [
             {
                 name: 'Technical Contact 1',
@@ -144,7 +170,7 @@ var pageConfig = {
             config = contactEditorsTestConfig[contactEditor];
 
             for ( i = 0 ; i < config.initialValue.length -1 ; i++ ){
-                config.addContactLinkId.click();
+                macro.elementById(config.addContactLinkId).click();
             }
         }
     },
@@ -156,7 +182,7 @@ var pageConfig = {
         for ( formElement in formInputsTestConfig ){
             config = formInputsTestConfig[formElement];
 
-            setFormElementValue( config, config[dataSet] );
+            macro.setFormElementValue( config, config[dataSet] );
         }
 
         for ( contactEditor  in contactEditorsTestConfig ){
@@ -170,9 +196,8 @@ var pageConfig = {
 };
 
 
-
 describe('The New Vendor Modal', function () {
-    var formElement, contactEditor;
+    var config, formElement, contactEditor;
 
     it('should be routed at /vendor', function(){
         browser.setLocation('/vendor');
@@ -185,13 +210,14 @@ describe('The New Vendor Modal', function () {
         expect(pageConfig.newVendorModal.isDisplayed()).toBe(true);
     });
     for ( formElement in formInputsTestConfig ){
-        ensureFormElementIsPresentAndBlank( formInputsTestConfig[formElement] );
+        config = formInputsTestConfig[formElement];
+        browserEnsureInputHasValue( config, 'defaultValue' );
     }
 
     for ( contactEditor in contactEditorsTestConfig ){
         config = contactEditorsTestConfig[contactEditor];
-        macro.ensureElementIsPresent( config.addContactLink, 'Add Contact Link for ' + config.description );
-        ensureContactEditorIsPresentAndBlank( config );
+        browserEnsureElementIsPresentbyId(config.addContactLinkId, 'Add Contact Link for ' + config.description);
+        browserEnsureContactEditorHasValues( config.contactType, config.defaultValues );
     }
 });
 
@@ -245,29 +271,25 @@ describe('Viewing an existing Vendor in read only mode', function () {
     });
 
     for ( formElement in formInputsTestConfig ){
-        macro.ensureFormElementIsHidden( formInputsTestConfig[formElement] );
+        browserEnsureInputIsHidden( formInputsTestConfig[formElement] );
     }
 
     for ( contactEditor in contactEditorsTestConfig ){
-        ensureContactEditorIsHidden( contactEditorsTestConfig[contactEditor] );
+        browserEnsureContactEditorIsHidden( contactEditorsTestConfig[contactEditor].contactType );
     }
 
     for ( formElement in formInputsTestConfig ){
-        config = formInputsTestConfig[formElement];
-        macro.ensureFormElementDisplaysText( config, config.initialValue );
+        browserEnsureComponentHasText( formInputsTestConfig[formElement], 'initialValue' );
     }
 
     for ( contactEditor in contactEditorsTestConfig ){
         config = contactEditorsTestConfig[contactEditor];
-
-        for ( row = 0 ; row < config.initialValue.length ; row++ ){
-            ensureContactRowDisplaysValues( config, row, config.initialValue[row] );
-        }
+        browserEnsureContactEditorDisplaysText( config.contactType, config.initialValue );
     }
 });
 
 describe('Viewing an existing Vendor in edit mode', function () {
-    var row, config, formElement, contactEditor;
+    var config, formElement, contactEditor;
 
     it('should be in edit mode', function () {
         pageConfig.editButton.click();
@@ -275,15 +297,12 @@ describe('Viewing an existing Vendor in edit mode', function () {
 
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
-        macro.ensureFormElementHasValue( config, config.initialValue );
+        browserEnsureInputHasValue( config, 'initialValue' );
     }
 
-    for (contactEditor in contactEditorsTestConfig) {
+    for ( contactEditor in contactEditorsTestConfig ){
         config = contactEditorsTestConfig[contactEditor];
-
-        for (row = 0; row < config.initialValue.length; row++) {
-            ensureContactRowHasValues(config, row, config.initialValue[row] );
-        }
+        browserEnsureContactEditorHasValues( config.contactType, config.initialValue );
     }
 });
 
@@ -333,14 +352,11 @@ describe('Making changes to an existing Vendor', function(){
 
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
-        macro.ensureFormElementDisplaysText( config, config.editedValue );
+        browserEnsureComponentHasText( config, 'editedValue' );
     }
 
-    for (contactEditor in contactEditorsTestConfig) {
+    for ( contactEditor in contactEditorsTestConfig ){
         config = contactEditorsTestConfig[contactEditor];
-
-        for (row = 0; row < config.editedValue.length; row++) {
-            ensureContactRowHasValues(config, row, config.editedValue[row] );
-        }
+        browserEnsureContactEditorHasValues( config.contactType, config.editedValue );
     }
 });
