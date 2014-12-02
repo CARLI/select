@@ -2,7 +2,7 @@
     <div class="list-page-header">
         <h1>Licenses</h1>
         <div class="button-container">
-            <a id="new-license" href="/license/new" class="carli-button">New License <i class="fa fa-plus-circle"></i></a>
+            <a id="new-license" class="carli-button" data-toggle="modal" data-target="#new-license-modal">New License <i class="fa fa-plus-circle"></i></a>
         </div>
     </div>
 
@@ -10,3 +10,5 @@
         <entity-list values="vm.licenseList" columns="vm.licenseListColumns" entity-label="licenses"></entity-list>
     </section>
 </section>
+
+<edit-license-modal after-submit-fn="vm.afterLicenseSubmit"></edit-license-modal>

@@ -72,7 +72,7 @@ angular.module('carli.routes',[
     })
     .when('/license/:id', {
         templateUrl: '/carliApp/sections/licenses/editLicense/editLicense.html',
-        controller:  'editLicenseController',
+        controller:  'editLicensePageController',
         controllerAs:'vm'
     })
     .when('/styleGuide', {

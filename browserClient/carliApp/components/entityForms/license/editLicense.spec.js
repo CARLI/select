@@ -4,24 +4,22 @@ describe('The Edit License Controller', function(){
     var newCtrl, editCtrl, mockDependenciesForNewLicense, mockDependenciesForEditLicense;
 
     beforeEach(function(){
-        module('carli.sections.licenses.edit');
+        module('carli.entityForms.license');
         module('carli.mockServices');
 
         inject(function($controller, $rootScope, $q, mockLocationService, mockLicenseService, mockAlertService) {
             mockDependenciesForNewLicense = {
+                $scope: {},
                 $location: mockLocationService,
-                $routeParams: {
-                    id: 'new'
-                },
                 licenseService: mockLicenseService,
                 alertService: mockAlertService
             };
 
             mockDependenciesForEditLicense = {
-                $location: mockLocationService,
-                $routeParams: {
-                    id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+                $scope: {
+                    licenseId: 'xxxxx'
                 },
+                $location: mockLocationService,
                 licenseService: mockLicenseService,
                 alertService: mockAlertService
             };
