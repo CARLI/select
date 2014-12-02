@@ -3,6 +3,8 @@ var config = require('./utils/baseConfig'),
     testData = require('./oneTimePurchase.fixtures'),
     macro = require('./utils/protractorMacros');
 
+browserEnsureElementIsPresentByTagName = macro.browserEnsureElementIsPresentByTagName;
+
 config.getDefaultAppPage();
 
 dataLoader.createLibrary(testData.activeLibrary1);
@@ -19,11 +21,10 @@ describe('The One-Time Purchases screen', function () {
 
     it('should be routed at /oneTimePurchases', function(){
         browser.setLocation('/oneTimePurchases');
+        browser.waitForAngular();
     });
 
-    it('should have an Entity List', function () {
-        expect(element(by.repeater('entity in values')).isPresent()).toBe(true);
-    });
+    browserEnsureElementIsPresentByTagName('entity-list', 'n Entity List' );
 
     it("should only display active libraries", function () {
         element.all(by.repeater('entity in values'))

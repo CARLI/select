@@ -4,7 +4,7 @@ config.getDefaultAppPage();
 var macro = require('./utils/protractorMacros');
 var contactEditorMacro = require('./utils/protractorContactEditorMacros');
 
-var browserEnsureElementIsPresentbyId = macro.browserEnsureElementIsPresentbyId;
+var browserEnsureElementIsPresentById = macro.browserEnsureElementIsPresentById;
 var browserEnsureInputIsHidden = macro.browserEnsureInputIsHidden;
 var browserEnsureInputHasValue = macro.browserEnsureInputHasValue;
 var browserEnsureComponentHasText = macro.browserEnsureComponentHasText;
@@ -160,7 +160,7 @@ var pageConfig = {
     listFilterShowAll: element(by.id('filter-all')),
     submit: element(by.id('vendor-submit')),
     editButton: element(by.id('vendor-edit')),
-    newButton: element(by.id('new-vendor')),
+    newButtonId: 'new-vendor',
     newVendorModal: element(by.id('new-vendor-modal')),
 
     addEmptyContactsForTestData: function(){
@@ -201,14 +201,17 @@ describe('The New Vendor Modal', function () {
 
     it('should be routed at /vendor', function(){
         browser.setLocation('/vendor');
+        browser.waitForAngular();
     });
-    macro.ensureElementIsPresent( pageConfig.newButton, 'New Vendor button' );
+
+    browserEnsureElementIsPresentById( pageConfig.newButtonId, 'New Vendor button' );
 
     it('should be displayed by clicking the New Vendor button', function () {
-        pageConfig.newButton.click();
+        element(by.id(pageConfig.newButtonId)).click();
         browser.sleep(500);
         expect(pageConfig.newVendorModal.isDisplayed()).toBe(true);
     });
+
     for ( formElement in formInputsTestConfig ){
         config = formInputsTestConfig[formElement];
         browserEnsureInputHasValue( config, 'defaultValue' );
@@ -216,7 +219,7 @@ describe('The New Vendor Modal', function () {
 
     for ( contactEditor in contactEditorsTestConfig ){
         config = contactEditorsTestConfig[contactEditor];
-        browserEnsureElementIsPresentbyId(config.addContactLinkId, 'Add Contact Link for ' + config.description);
+        browserEnsureElementIsPresentById(config.addContactLinkId, 'Add Contact Link for ' + config.description);
         browserEnsureContactEditorHasValues( config.contactType, config.defaultValues );
     }
 });
