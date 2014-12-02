@@ -1,6 +1,9 @@
-.modal-lg {
-    width: (960px + 2*40);
+@media (min-width: (960px + 2*40)) {
+    .modal-lg {
+        width: (960px + 2*40);
+    }
 }
+
 .modal-dialog {
     $modal-padding: 40px;
     $modal-line-height: 4rem;
