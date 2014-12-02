@@ -1,5 +1,9 @@
-modal-dialog {
-    $height: 4rem;
+.modal-lg {
+    width: (960px + 2*40);
+}
+.modal-dialog {
+    $modal-padding: 40px;
+    $modal-line-height: 4rem;
 
     .modal-content {
         border-radius: 0;
@@ -12,7 +16,7 @@ modal-dialog {
         
         button.close {
             color: #fff;
-            line-height: $height;
+            line-height: $modal-line-height;
             opacity: 1;
             text-shadow: none;
             
@@ -24,15 +28,32 @@ modal-dialog {
         h4 {
             color: #fff;
             font-family: 'Dosis' sans-serif;
-            line-height: $height;
+            line-height: $modal-line-height;
             text-transform: uppercase;
         }
     }
     
     .modal-footer {
         background: $light-gray;
-        line-height: $height;
+        line-height: $modal-line-height;
         padding-top: 0;
         padding-bottom: 0;
+    }
+
+    .page-header, {
+        padding-top: 15px;
+        padding-left: $modal-padding;
+        padding-right: $modal-padding;
+    }
+
+    section.content {
+        padding-left: $modal-padding;
+        padding-right: $modal-padding;
+
+        footer {
+            margin-left: -$modal-padding;
+            margin-right: -$modal-padding;
+            max-width: none;
+        }
     }
 }
