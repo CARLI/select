@@ -10,6 +10,8 @@
     <section class="content list-content">
         <entity-list values="vm.libraryList" columns="vm.entityListColumns" entity-label="libraries"></entity-list>
     </section>
+
+    <edit-library-modal after-submit-fn="vm.afterLibrarySubmit"></edit-library-modal>
 </section>
 
 <modal-dialog title="'Update Full Time Enrollment (FTE)'" modal-id="'edit-fte-modal'" submit-fn="vm.fteModalSubmit()">
@@ -25,5 +27,3 @@
         </li>
     </ul>
 </modal-dialog>
-
-<edit-library-modal after-submit-fn="vm.afterLibrarySubmit"></edit-library-modal>

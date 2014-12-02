@@ -9,6 +9,7 @@
     <section class="content list-content">
         <entity-list values="vm.vendorList" columns="vm.vendorListColumns" entity-label="vendors" order-by="'name'"></entity-list>
     </section>
+
+    <edit-vendor-modal after-submit-fn="vm.afterVendorSubmit"></edit-vendor-modal>
 </section>
 
-<edit-vendor-modal after-submit-fn="vm.afterVendorSubmit"></edit-vendor-modal>
