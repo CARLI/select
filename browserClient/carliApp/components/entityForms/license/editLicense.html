@@ -11,8 +11,8 @@
 
             <div ng-show="!vm.newLicense" class="edit-buttons pull-right">
                 <div ng-show="vm.editable">
-                    <a class="carli-button cancel-button" href="/license">Cancel</a>
-                    <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit">
+                    <a class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</a>
+                    <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit" value="Save">
                 </div>
 
                 <div id="license-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></div>
@@ -154,7 +154,7 @@
             </fieldset>
 
             <footer ng-show="vm.editable">
-                <button type="button" class="carli-button cancel-button" data-dismiss="modal">Cancel</button>
+                <button type="button" class="carli-button cancel-button" data-dismiss="modal" ng-click="vm.cancelEdit()">Cancel</button>
                 <input type="submit" id="license-submit" class="carli-button save-button" value="Save"></input>
             </footer>
         </section>
