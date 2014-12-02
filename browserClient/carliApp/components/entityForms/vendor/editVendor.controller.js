@@ -65,6 +65,7 @@ function editVendorController( $scope, vendorService, alertService ) {
 
     function cancelEdit() {
         vm.editable = false;
+        activate();
     }
 
     function saveVendor() {
@@ -83,6 +84,7 @@ function editVendorController( $scope, vendorService, alertService ) {
                 .then(function () {
                     alertService.putAlert('Vendor added', {severity: 'success'});
                     afterSubmitCallback();
+                    initializeForNewVendor();
                 })
                 .catch(function (error) {
                     alertService.putAlert(error, {severity: 'danger'});

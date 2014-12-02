@@ -109,7 +109,7 @@ function editProductController( $scope, libraryService, productService, vendorSe
 
     function cancelEdit() {
         vm.editable = false;
-        initializeForExistingProduct();
+        activate();
     }
 
     function saveProduct(){
@@ -126,6 +126,7 @@ function editProductController( $scope, libraryService, productService, vendorSe
             productService.create( vm.product ).then(function(){
                 alertService.putAlert('Product added', {severity: 'success'});
                 afterSubmitCallback();
+                initializeForNewProduct();
             })
             .catch(function(error) {
                 alertService.putAlert(error, {severity: 'danger'});

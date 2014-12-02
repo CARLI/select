@@ -71,7 +71,7 @@ function editLibraryController( $scope, libraryService, alertService ) {
 
     function cancelEdit(){
         vm.editable = false;
-        initializeForExistingLibrary();
+        activate();
     }
 
     function saveLibrary(){
@@ -88,6 +88,7 @@ function editLibraryController( $scope, libraryService, alertService ) {
             libraryService.create( vm.library ).then(function(){
                 alertService.putAlert('Library created', {severity: 'success'});
                 afterSubmitCallback();
+                initializeForNewLibrary();
             })
             .catch(function(error) {
                 alertService.putAlert(error, {severity: 'danger'});
