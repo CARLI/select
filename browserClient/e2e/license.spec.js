@@ -272,7 +272,8 @@ var pageConfig = {
     listFilterShowAll: element(by.id('filter-all')),
     submit: element(by.id('license-submit')),
     editButton: element(by.id('license-edit')),
-
+    newButton: element(by.id('new-license')),
+    newLicenseModal: element(by.id('new-license-modal')),
 
     fillInLicenseWithTestData: function( useEditData ){
         var config, formElement;
@@ -288,12 +289,19 @@ var pageConfig = {
 
 
 
-describe('The New License screen', function () {
+describe('The New License Modal', function () {
     var formElement;
 
-    it('should be routed at /license/new', function(){
-        browser.setLocation('/license/new');
+    it('should be routed at /license', function(){
+        browser.setLocation('/license');
         browser.waitForAngular();
+    });
+    macro.ensureElementIsPresent( pageConfig.newButton, 'New License button' );
+
+    it('should be displayed by clicking the New License button', function () {
+        pageConfig.newButton.click();
+        browser.sleep(500);
+        expect(pageConfig.newLicenseModal.isDisplayed()).toBe(true);
     });
 
     for ( formElement in formInputsTestConfig ){

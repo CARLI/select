@@ -52,7 +52,7 @@ angular.module('carli.routes',[
     })
     .when('/product/:id', {
         templateUrl: '/carliApp/sections/products/editProduct/editProduct.html',
-        controller:  'editProductController',
+        controller:  'editProductPageController',
         controllerAs:'vm'
     })
     .when('/library', {
@@ -62,7 +62,7 @@ angular.module('carli.routes',[
     })
     .when('/library/:id', {
         templateUrl: '/carliApp/sections/libraries/editLibrary/editLibrary.html',
-        controller:  'editLibraryController',
+        controller:  'editLibraryPageController',
         controllerAs:'vm'
     })
     .when('/license', {
@@ -72,7 +72,7 @@ angular.module('carli.routes',[
     })
     .when('/license/:id', {
         templateUrl: '/carliApp/sections/licenses/editLicense/editLicense.html',
-        controller:  'editLicenseController',
+        controller:  'editLicensePageController',
         controllerAs:'vm'
     })
     .when('/styleGuide', {

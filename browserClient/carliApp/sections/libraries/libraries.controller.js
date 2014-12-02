@@ -3,17 +3,23 @@ angular.module('carli.sections.libraries')
 
 function libraryController( $sce, libraryService ){
     var vm = this;
-
+    vm.afterLibrarySubmit = populateLibraryList;
     vm.mostRecentFteUpdateDate = libraryService.getMostRecentFteUpdateDate();
     vm.saveAllLibraries = saveAllLibraries;
-    vm.fteModalId = 'edit-fte-modal';
     vm.fteModalSubmit = function() {
         vm.saveAllLibraries();
     };
+    activate();
 
-    libraryService.list().then( function( libraryList ){
-        vm.libraryList = libraryList;
-    });
+    function activate(){
+        populateLibraryList();
+    }
+
+    function populateLibraryList() {
+        libraryService.list().then( function( libraryList ){
+            vm.libraryList = libraryList;
+        });
+    }
 
     vm.entityListColumns = [
         {

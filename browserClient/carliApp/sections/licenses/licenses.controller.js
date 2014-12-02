@@ -3,9 +3,14 @@ angular.module('carli.sections.licenses')
 
 function licensesController( $sce, licenseService ){
     var vm = this;
+    vm.afterLicenseSubmit = populateLicenseList;
     activate();
 
     function activate() {
+        populateLicenseList();
+    }
+
+    function populateLicenseList() {
         licenseService.list().then( function(licenseList){
             vm.licenseList = licenseList;
         });

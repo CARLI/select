@@ -2,7 +2,7 @@
     <div class="list-page-header">
         <h1>Products</h1>
         <div class="button-container">
-            <a id="new-product" href="/product/new" class="carli-button">New Product <i class="fa fa-plus-circle"></i></a>
+            <a id="new-product" class="carli-button" data-toggle="modal" data-target="#new-product-modal">New Product <i class="fa fa-plus-circle"></i></a>
         </div>
     </div>
 
@@ -10,3 +10,5 @@
         <entity-list values="vm.productList" columns="vm.productListColumns" entity-label="products"></entity-list>
     </section>
 </section>
+
+<edit-product-modal after-submit-fn="vm.afterProductSubmit"></edit-product-modal>

@@ -8,6 +8,7 @@ function editVendorController( $scope, vendorService, alertService ) {
     var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
     vm.toggleEditable = toggleEditable;
+    vm.cancelEdit = cancelEdit;
     vm.saveVendor = saveVendor;
     vm.addContact = addContact;
     vm.deleteContact = deleteContact;
@@ -60,6 +61,10 @@ function editVendorController( $scope, vendorService, alertService ) {
 
     function toggleEditable(){
         vm.editable = !vm.editable;
+    }
+
+    function cancelEdit() {
+        vm.editable = false;
     }
 
     function saveVendor() {

@@ -1,10 +1,3 @@
 angular.module('carli.sections.products.edit',[
-    'carli.alerts',
-    'carli.libraryService',
-    'carli.productService',
-    'carli.viewEditDirectives.viewEditCheckbox',
-    'carli.viewEditDirectives.viewEditYesNoOther',
-    'carli.viewEditDirectives.viewEditTextField',
-    'carli.viewEditDirectives.viewEditTextArea',
-    'carli.viewEditDirectives.viewEditRadios'
+    'carli.entityForms.product'
 ]);
