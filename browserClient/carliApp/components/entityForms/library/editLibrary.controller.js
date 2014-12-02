@@ -40,7 +40,7 @@ function editLibraryController( $scope, libraryService, alertService ) {
         else {
             initializeForExistingLibrary();
         }
-        vm.isModal = vm.newVendor;
+        vm.isModal = vm.newLibrary;
     }
     function initializeForNewLibrary() {
         vm.library = {
