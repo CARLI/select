@@ -3,6 +3,8 @@ var uuid = require('node-uuid');
 var lib1_uuid = uuid.v4();
 var lib2_uuid = uuid.v4();
 var lib3_uuid = uuid.v4();
+var prod1_uuid = uuid.v4();
+var vendor1_uuid = uuid.v4();
 
 var activeLibrary1 = {
     id: lib1_uuid,
@@ -37,8 +39,42 @@ var activeLibrary3 = {
     contacts: []
 };
 
+var activeVendor1 = {
+    id: vendor1_uuid,
+    name: vendor1_uuid
+}
+
+var activePurchasedProduct1 = {
+    id: prod1_uuid,
+    name: prod1_uuid,
+    type: "Product",
+    cycleType: "One-Time Purchase",
+    isActive: true,
+    vendor: vendor1_uuid,
+    productURL: "http://product1.vendor.com",
+    description: "The Description",
+    comments: "These are comments",
+    oneTimePurchase:  {
+            annualAccessFee: 250,
+            availableForPurchase: "2014-12-01",
+            libraryPurchaseData: {}
+        }
+};
+
+activePurchasedProduct1.oneTimePurchase.libraryPurchaseData[lib1_uuid] = {
+    price: 2500,
+    datePurchased: "2014-02-04"
+};
+
+activePurchasedProduct1.oneTimePurchase.libraryPurchaseData[lib2_uuid] = {
+    price: 3500,
+    datePurchased: null
+};
+
 module.exports = {
     activeLibrary1: activeLibrary1,
     inactiveLibrary2: inactiveLibrary2,
-    activeLibrary3: activeLibrary3
+    activeLibrary3: activeLibrary3,
+    activeVendor1: activeVendor1,
+    activePurchasedProduct1 : activePurchasedProduct1
 };
