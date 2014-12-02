@@ -244,6 +244,8 @@ var pageConfig = {
     listFilterShowAll: element(by.id('filter-all')),
     submit: element(by.id('library-submit')),
     editButton: element(by.id('library-edit')),
+    newButton: element(by.id('new-library')),
+    newLibraryModal: element(by.id('new-library-modal')),
 
     addEmptyContactsForTestData: function(){
         var i, config, contactEditor;
@@ -277,12 +279,20 @@ var pageConfig = {
     }
 };
 
-describe('The New Library screen', function () {
+describe('The New Library Modal', function () {
     var config, formElement, contactEditor;
 
-    it('should be routed at /library/new', function(){
-        browser.setLocation('/library/new');
+    it('should be routed at /library', function(){
+        browser.setLocation('/library');
         browser.waitForAngular();
+    });
+
+    macro.ensureElementIsPresent( pageConfig.newButton, 'New Library button' );
+
+    it('should be displayed by clicking the New Library button', function () {
+        pageConfig.newButton.click();
+        browser.sleep(500);
+        expect(pageConfig.newLibraryModal.isDisplayed()).toBe(true);
     });
 
     for ( formElement in formInputsTestConfig ){

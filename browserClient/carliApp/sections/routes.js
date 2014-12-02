@@ -62,7 +62,7 @@ angular.module('carli.routes',[
     })
     .when('/library/:id', {
         templateUrl: '/carliApp/sections/libraries/editLibrary/editLibrary.html',
-        controller:  'editLibraryController',
+        controller:  'editLibraryPageController',
         controllerAs:'vm'
     })
     .when('/license', {

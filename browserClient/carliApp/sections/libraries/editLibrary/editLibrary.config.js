@@ -1,11 +1,3 @@
 angular.module('carli.sections.libraries.edit',[
-    'carli.alerts',
-    'carli.libraryService',
-    'carli.viewEditDirectives.viewEditCheckbox',
-    'carli.viewEditDirectives.viewEditContact',
-    'carli.viewEditDirectives.viewEditRadios',
-    'carli.viewEditDirectives.viewEditSelect',
-    'carli.viewEditDirectives.viewEditTextArea',
-    'carli.viewEditDirectives.viewEditTextField',
-    'carli.viewEditDirectives.viewEditNumberField'
+    'carli.entityForms.library'
 ]);

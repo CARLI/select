@@ -2,8 +2,8 @@
     <div class="list-page-header">
         <h1>Libraries</h1>
         <div class="button-container">
-            <a id="update-fte" href="#" class="carli-button" data-toggle="modal" data-target="{{ '#' + vm.fteModalId }}">Update FTE</a>
-            <a id="new-library" href="/library/new" class="carli-button">New Library <i class="fa fa-plus-circle"></i></a>
+            <a id="update-fte"  href="#" class="carli-button" data-toggle="modal" data-target="#edit-fte-modal">Update FTE</a>
+            <a id="new-library" href="#" class="carli-button" data-toggle="modal" data-target="#new-library-modal">New Library <i class="fa fa-plus-circle"></i></a>
         </div>
     </div>
 
@@ -12,7 +12,7 @@
     </section>
 </section>
 
-<modal-dialog title="'Update Full Time Enrollment (FTE)'" modal-id="vm.fteModalId" submit-fn="vm.fteModalSubmit()">
+<modal-dialog title="'Update Full Time Enrollment (FTE)'" modal-id="'edit-fte-modal'" submit-fn="vm.fteModalSubmit()">
     <div>
         Last Updated: {{ vm.mostRecentFteUpdateDate }}
     </div>
@@ -25,3 +25,5 @@
         </li>
     </ul>
 </modal-dialog>
+
+<edit-library-modal after-submit-fn="vm.afterLibrarySubmit"></edit-library-modal>
