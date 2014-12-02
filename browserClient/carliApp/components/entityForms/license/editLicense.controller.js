@@ -5,10 +5,10 @@ function editLicenseController( $scope, licenseService, alertService ) {
     var vm = this;
 
     vm.licenseId = $scope.licenseId;
-    console.log(vm.licenseId);
     var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
     vm.toggleEditable = toggleEditable;
+    vm.cancelEdit = cancelEdit;
     vm.saveLicense = saveLicense;
     vm.closeModal = function() {
         $('#new-license-modal').modal('hide');
@@ -73,6 +73,11 @@ function editLicenseController( $scope, licenseService, alertService ) {
         vm.editable = !vm.editable;
     }
 
+    function cancelEdit() {
+        vm.editable = false;
+        activate();
+    }
+
     function saveLicense(){
         if ( vm.licenseId !== undefined ){
             licenseService.update( vm.license )
@@ -88,6 +93,7 @@ function editLicenseController( $scope, licenseService, alertService ) {
             licenseService.create( vm.license )
                 .then(function(){
                     alertService.putAlert('License added', {severity: 'success'});
+                    initializeForNewLicense();
                     afterSubmitCallback();
                 })
                 .catch(function(error) {
