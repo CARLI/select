@@ -1,26 +1,22 @@
 
-describe('The Edit Library Controller', function(){
+describe('The Edit Library Directive', function(){
 
     var newCtrl, editCtrl, mockDependenciesForNewLibrary, mockDependenciesForEditLibrary;
 
     beforeEach(function(){
-        module('carli.sections.libraries.edit');
+        module('carli.entityForms.library');
         module('carli.mockServices');
 
         inject( function($controller, $rootScope, $q, mockLocationService, mockLibraryService, mockAlertService ) {
             mockDependenciesForNewLibrary = {
-                $location: mockLocationService,
-                $routeParams: {
-                    id: 'new'
-                },
+                $scope: {},
                 libraryService: mockLibraryService,
                 alertService: mockAlertService
             };
 
             mockDependenciesForEditLibrary = {
-                $location: mockLocationService,
-                $routeParams: {
-                    id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+                $scope: {
+                    libraryId: 'xxxxx'
                 },
                 libraryService: mockLibraryService,
                 alertService: mockAlertService
