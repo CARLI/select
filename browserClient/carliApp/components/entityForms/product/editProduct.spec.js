@@ -13,17 +13,14 @@ describe('The Edit Product Controller', function(){
     ];
 
     beforeEach(function(){
-        module('carli.sections.products.edit');
+        module('carli.entityForms.product');
         module('carli.mockServices');
 
-        inject(function ($controller, $rootScope, $q, mockLocationService, mockLibraryService, mockProductService, mockVendorService, mockAlertService) {
+        inject(function ($controller, $rootScope, $q, mockLibraryService, mockProductService, mockVendorService, mockAlertService) {
             mockProductService.setTestData(mockProductList);
 
             mockDependenciesForNewProduct = {
-                $location: mockLocationService,
-                $routeParams: {
-                    id: 'new'
-                },
+                $scope: {},
                 productService: mockProductService,
                 libraryService: mockLibraryService,
                 vendorService: mockVendorService,
@@ -31,9 +28,8 @@ describe('The Edit Product Controller', function(){
             };
 
             mockDependenciesForEditProduct = {
-                $location: mockLocationService,
-                $routeParams: {
-                    id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+                $scope: {
+                    productId: 'yyyy'
                 },
                 productService: mockProductService,
                 libraryService: mockLibraryService,

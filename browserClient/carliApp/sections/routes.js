@@ -52,7 +52,7 @@ angular.module('carli.routes',[
     })
     .when('/product/:id', {
         templateUrl: '/carliApp/sections/products/editProduct/editProduct.html',
-        controller:  'editProductController',
+        controller:  'editProductPageController',
         controllerAs:'vm'
     })
     .when('/library', {
