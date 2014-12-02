@@ -12,7 +12,7 @@
             <div ng-show="!vm.newLicense" class="edit-buttons pull-right">
                 <div ng-show="vm.editable">
                     <a class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</a>
-                    <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit">
+                    <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit" value="Save">
                 </div>
 
                 <div id="license-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></div>
