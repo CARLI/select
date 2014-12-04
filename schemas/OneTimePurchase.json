@@ -4,7 +4,7 @@
     "schemaType": "OneTimePurchase",
     "type": "object",
     "properties": {
-        "annualAccessFee": { "type": "integer" },
+        "annualAccessFee": { "type": "number" },
         "availableForPurchase": { "$ref": "./Date.json" },
         "libraryPurchaseData": {
             "type": "object",
@@ -12,7 +12,7 @@
             "additionalProperties": {
                 "type": "object",
                 "properties": {
-                    "price": {"type": "integer"},
+                    "price": {"type": "number"},
                     "datePurchased": {"$ref": "./Date.json"}
                 }
             }
