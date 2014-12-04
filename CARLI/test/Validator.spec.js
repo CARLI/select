@@ -77,6 +77,11 @@ describe( 'The Validator Module', function() {
             return expect( Validator.validate({ type: 'Vendor', name: 'Example Vendor', websiteUrl: 'http://www.examplevendor.com' }) )
               .to.be.fullfilled
         });
+
+        it( 'should throw a validation error for a Product without a Vendor reference', function() {
+            return expect( Validator.validate({ type:'Product', name: 'Test Product' }) )
+              .to.be.rejectedWith(/Product validation error:/);
+        });
     });
 
     it( 'should have a list method', function() {
