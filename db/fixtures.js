@@ -133,7 +133,7 @@ function generateProductFixtures() {
             if ( product.cycleType === "One-Time Purchase" ){
                 product.oneTimePurchase = {
                     annualAccessFee: 5000,
-                    availableForPurchase: "2014-06-01",
+                    availableForPurchaseThrough: "2015-06-01",
                     libraryPurchaseData: {}
                 };
                 for ( i = 0 ; i < libraryList.length ; i++ ){
