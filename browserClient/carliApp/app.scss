@@ -97,12 +97,6 @@ label {
 }
 
 input[type=number],
-input {
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-}
-
 input[type=text],
 textarea {
     border: $default-border;
