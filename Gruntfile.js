@@ -4,8 +4,8 @@ module.exports = function(grunt) {
     require('./grunt/db')(grunt);
 
     grunt.registerTask('test', function(arg) {
-        grunt.task.run(['subdir-grunt:browserClient:test:' + arg]);
         grunt.task.run(['subdir-grunt:CARLI:test:' + arg]);
+        grunt.task.run(['subdir-grunt:browserClient:test:' + arg]);
     });
 
     grunt.registerTask('npm-install', function() {
