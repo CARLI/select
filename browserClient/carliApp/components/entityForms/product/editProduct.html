@@ -65,9 +65,9 @@
 
                 <div class="one-time-purchase-settings" ng-if="vm.product.cycleType == 'One-Time Purchase'">
                     <label>Annual Access Fee</label>
-                    <view-edit-text-field ng-model="vm.product.oneTimePurchase.annualAccessFee" edit-mode="vm.editable">
-                        {{ vm.product.oneTimePurchase.annualAccessFee }}
-                    </view-edit-text-field>
+                    <view-edit-number-field ng-model="vm.product.oneTimePurchase.annualAccessFee" edit-mode="vm.editable">
+                        {{ vm.product.oneTimePurchase.annualAccessFee | currency }}
+                    </view-edit-number-field>
 
                     <label>Available for Purchase Through</label>
                     <view-edit-text-field ng-model="vm.product.oneTimePurchase.availableForPurchase" edit-mode="vm.editable">
@@ -83,9 +83,9 @@
                         <li ng-repeat="library in vm.libraryList | filterByActive:activeFilterState | filter:filterText">
                             <span class="column">{{ library.name }}</span>
                             <span class="column">
-                                <view-edit-text-field ng-model="vm.product.oneTimePurchase.libraryPurchaseData[library.id].price" edit-mode="vm.editable && !vm.product.oneTimePurchase.libraryPurchaseData[library.id].datePurchased">
-                                {{ vm.product.oneTimePurchase.libraryPurchaseData[library.id].price | currency:undefined:0 }}
-                                </view-edit-text-field>
+                                <view-edit-number-field ng-model="vm.product.oneTimePurchase.libraryPurchaseData[library.id].price" edit-mode="vm.editable && !vm.product.oneTimePurchase.libraryPurchaseData[library.id].datePurchased">
+                                {{ vm.product.oneTimePurchase.libraryPurchaseData[library.id].price | currency }}
+                                </view-edit-number-field>
                             </span>
                             <span class="column text-center">
                                 <i class="fa fa-check-circle" ng-show="vm.product.oneTimePurchase.libraryPurchaseData[library.id].datePurchased"></i>
@@ -101,9 +101,9 @@
                     <div class="column">
 
                         <label>Price Cap</label>
-                        <view-edit-text-field ng-model="vm.product.priceCap" edit-mode="vm.editable">
-                            {{ vm.product.priceCap }}
-                        </view-edit-text-field>
+                        <view-edit-percentage-field ng-model="vm.product.priceCap" edit-mode="vm.editable">
+                            {{ vm.product.priceCap }}%
+                        </view-edit-percentage-field>
 
                         <label>Cycle</label>
                         <view-edit-select ng-model="vm.product.cycleType" items="vm.cycleOptions" edit-mode="vm.newProduct">

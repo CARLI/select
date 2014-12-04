@@ -63,7 +63,7 @@
             "$ref": "./LicenseTerms.json"
         },
         "priceCap": {
-            "$ref": "./PriceCap.json"
+            "type": "number"
         },
         "detailCode": {
             "$ref": "./product-detail-code.json"

@@ -139,8 +139,7 @@ function generateProductFixtures() {
                 for ( i = 0 ; i < libraryList.length ; i++ ){
                     libraryId = libraryList[i].id;
                     product.oneTimePurchase.libraryPurchaseData[libraryId] = {
-                        price: 5000,
-                        datePurchased: null
+                        price: 5000
                     }
                 }
             }

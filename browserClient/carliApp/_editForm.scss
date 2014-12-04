@@ -40,10 +40,6 @@
             width: 100%;
         }
 
-        [type=number] {
-            width: auto;
-        }
-
         .contacts-header {
             @extend .h3;
             color: black;

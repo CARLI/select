@@ -1,15 +1,20 @@
 {
+    "$schema": "json-schema.org/draft-04/schema",
     "title": "One Time Purchase",
     "schemaType": "OneTimePurchase",
     "type": "object",
     "properties": {
-        "annualAccessFee": { "type": "integer" },
+        "annualAccessFee": { "type": "number" },
         "availableForPurchase": { "$ref": "./Date.json" },
         "libraryPurchaseData": {
             "type": "object",
-            "items": {
-                "price": { "type": "integer" },
-                "datePurchased": { "$ref": "./Date.json" }
+            "properties": {},
+            "additionalProperties": {
+                "type": "object",
+                "properties": {
+                    "price": {"type": "number"},
+                    "datePurchased": {"$ref": "./Date.json"}
+                }
             }
         }
     },
