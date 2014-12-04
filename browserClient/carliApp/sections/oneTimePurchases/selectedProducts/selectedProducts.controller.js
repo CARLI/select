@@ -32,18 +32,16 @@ function selectedProductsController($routeParams, libraryService, productService
     }
 
     function loadProductList() {
-        productService.listOneTimePurchaseProducts().then(function (productList) {
+        productService.listAvailableOneTimePurchaseProducts().then(function (productList) {
             vm.productList = productList;
         });
     }
 
     function filter( value ){
          return (
-            value.cycleType === 'One-Time Purchase' &&
-            value.isActive === true &&
-            ((vm.filterState === 'all') ||
+             (vm.filterState === 'all') ||
              (vm.filterState === 'purchased' && value.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased) ||
-             (vm.filterState === 'not-purchased' && !value.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased))
+             (vm.filterState === 'not-purchased' && !value.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased)
         );
     }
 
