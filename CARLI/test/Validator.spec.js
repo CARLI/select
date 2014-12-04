@@ -77,6 +77,34 @@ describe( 'The Validator Module', function() {
             return expect( Validator.validate({ type: 'Vendor', name: 'Example Vendor', websiteUrl: 'http://www.examplevendor.com' }) )
               .to.be.fullfilled
         });
+
+        it( 'should throw a validation error for a One-Time Purchase Product with a non-integer Annual Access Fee', function() {
+            var testProduct = {
+                type: "Product",
+                name: "Test Product",
+                oneTimePurchase: {
+                    annualAccessFee: "bad value"
+                }
+            };
+
+            return expect( Validator.validate(testProduct) ).to.be.rejectedWith(/Product validation error:/ );
+        });
+
+        it( 'should throw a validation error for a One-Time Purchase Product with a non-integer Library price', function() {
+            var testProduct = {
+                type: "Product",
+                name: "Test Product",
+                oneTimePurchase: {
+                    libraryPurchaseData: {
+                        'id': {
+                            price: "ffff123"
+                        }
+                    }
+                }
+            };
+
+            return expect( Validator.validate(testProduct) ).to.be.rejectedWith(/Product validation error:/ );
+        });
     });
 
     it( 'should have a list method', function() {

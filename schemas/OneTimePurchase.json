@@ -1,4 +1,5 @@
 {
+    "$schema": "json-schema.org/draft-04/schema",
     "title": "One Time Purchase",
     "schemaType": "OneTimePurchase",
     "type": "object",
@@ -7,9 +8,13 @@
         "availableForPurchase": { "$ref": "./Date.json" },
         "libraryPurchaseData": {
             "type": "object",
-            "items": {
-                "price": { "type": "integer" },
-                "datePurchased": { "$ref": "./Date.json" }
+            "properties": {},
+            "additionalProperties": {
+                "type": "object",
+                "properties": {
+                    "price": {"type": "integer"},
+                    "datePurchased": {"$ref": "./Date.json"}
+                }
             }
         }
     },
