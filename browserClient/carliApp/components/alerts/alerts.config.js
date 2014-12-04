@@ -1,2 +1,3 @@
-angular.module('carli.alerts', [])
-    .value('alertTimeout', 2000);
+angular.module('carli.alerts', [
+    'carli.config'
+]);
