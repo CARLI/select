@@ -1,15 +1,13 @@
 angular.module('carli.sections.styleGuide',
     [
         'carli.componentGatherer',
-        'carli.viewEditDirectives.viewEditContact',
-        'carli.viewEditDirectives.viewEditTextField',
-        'carli.viewEditDirectives.viewEditTextArea',
-        'carli.viewEditDirectives.viewEditRadios',
-        'carli.viewEditDirectives.viewEditNumberField',
-        'carli.viewEditDirectives.viewEditCheckbox'
+
+        'carli.alerts',
+        'carli.viewEditDirectives'
     ]
 )
     .value('componentExamples', {
+        'Alerts': 'alerts.html',
         'Filter by Active': 'filter-active.html',
         'View Edit Contact': 'view-edit-contact.html',
         'View Edit Text Field': 'view-edit-text-field.html',
