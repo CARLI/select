@@ -4,10 +4,20 @@ var localConfigFile = __dirname + '/../CARLI/config/local.js';
 
 module.exports = function (grunt) {
     grunt.registerTask('ensure-local-config', ensureLocalConfigExists);
-    grunt.registerTask('generate-couch-config', generateCouchConfig);
+    grunt.registerTask('generate-config', generateConfig);
 
     function ensureLocalConfigExists() {
         fs.closeSync(fs.openSync(localConfigFile, 'a'));
+    }
+
+    function generateConfig(instance) {
+        if (instance === 'test') {
+            var cfg = readExistingConfig();
+            cfg.alertTimeout = 1000;
+            fs.writeFileSync(localConfigFile, stringifyConfig(cfg));
+        }
+
+        generateCouchConfig(instance);
     }
 
     function generateCouchConfig(instance) {
