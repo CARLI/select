@@ -15,7 +15,7 @@ var tomorrow = moment().add(1, 'week');
 function validProductData() {
     return {
         type: 'Product',
-        name: 'foo',
+        name: 'Valid Product',
         isActive: true,
         vendor: 'fake-vendor-id'
     };
