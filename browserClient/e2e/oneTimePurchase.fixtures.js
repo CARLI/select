@@ -4,6 +4,8 @@ var lib1_uuid = uuid.v4();
 var lib2_uuid = uuid.v4();
 var lib3_uuid = uuid.v4();
 var prod1_uuid = uuid.v4();
+var prod2_uuid = uuid.v4();
+var prod3_uuid = uuid.v4();
 var vendor1_uuid = uuid.v4();
 
 var activeLibrary1 = {
@@ -61,6 +63,24 @@ var activePurchasedProduct1 = {
         }
 };
 
+var inactiveProduct2 = {
+    id: prod2_uuid,
+    name: prod2_uuid,
+    type: "Product",
+    cycleType: "One-Time Purchase",
+    isActive: false,
+    vendor: vendor1_uuid
+};
+
+var activeFiscalYearProduct3 = {
+    id: prod3_uuid,
+    name: prod3_uuid,
+    type: "Product",
+    cycleType: "Fiscal Year",
+    isActive: true,
+    vendor: vendor1_uuid
+}
+
 activePurchasedProduct1.oneTimePurchase.libraryPurchaseData[lib1_uuid] = {
     price: 2500,
     datePurchased: "2014-02-04"
@@ -76,5 +96,7 @@ module.exports = {
     inactiveLibrary2: inactiveLibrary2,
     activeLibrary3: activeLibrary3,
     activeVendor1: activeVendor1,
-    activePurchasedProduct1 : activePurchasedProduct1
+    activePurchasedProduct1 : activePurchasedProduct1,
+    inactiveProduct2 : inactiveProduct2,
+    activeFiscalYearProduct3 : activeFiscalYearProduct3
 };
