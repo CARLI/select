@@ -6,6 +6,7 @@ describe('The Edit Library Directive', function(){
     var mockLibraryList = [
         {
             name: 'Test Library',
+            type: 'Library',
             contacts: [
                 {
                     "contactType": "Additional Empty"
@@ -21,11 +22,12 @@ describe('The Edit Library Directive', function(){
                     "name": "Han Solo",
                     "email": "han@falcon.org",
                     "phoneNumber": "123-555-1234"
-                },                {
-                    "contactType": "Other"
                 },
                 {
                     "contactType": "Other"
+                },
+                {
+                    "contactType": "E-Resources"
                 }
             ]
         }
@@ -37,7 +39,7 @@ describe('The Edit Library Directive', function(){
 
         inject( function($controller, $rootScope, $q, mockLocationService, mockLibraryService, mockAlertService ) {
 
-            mockLibraryService.setTestData(mockLibraryList);
+            mockLibraryService.setTestData(angular.copy(mockLibraryList));
 
             mockDependenciesForNewLibrary = {
                 $scope: {},
@@ -71,18 +73,16 @@ describe('The Edit Library Directive', function(){
         expect( newCtrl.newLibrary ).to.equal(true);
     });
 
-    it('should remove empty contacts', function(){
-        expect( mockLibraryList[0].contacts.length ).to.equal(5);
-        editCtrl.removeEmptyContactsFromEntity(mockLibraryList[0]);
-        expect( mockLibraryList[0].contacts.length ).to.equal(2);
+    it('should remove empty contacts when saving a new library', function(){
+        expect( newCtrl.library.contacts.length ).to.equal(4);
+        newCtrl.saveLibrary();
+        expect( newCtrl.library.contacts.length ).to.equal(0);
     });
 
     it('should call libraryService.create when saving a new Library', function(){
-
         expect( mockDependenciesForNewLibrary.libraryService.createOrUpdate ).to.equal('neither');
         newCtrl.saveLibrary();
         expect( mockDependenciesForNewLibrary.libraryService.createOrUpdate ).to.equal('create');
-
     });
 
     it('should add an alert when saving a new Library', inject(function($rootScope){
@@ -96,6 +96,12 @@ describe('The Edit Library Directive', function(){
         expect( editCtrl.library.name ).to.equal( 'Test Library');
         expect( editCtrl.editable ).to.equal(false);
         expect( editCtrl.newLibrary ).to.equal(false);
+    });
+
+    it('should remove empty contacts when editing a library', function(){
+        expect( editCtrl.library.contacts.length ).to.equal(5);
+        editCtrl.saveLibrary();
+        expect( editCtrl.library.contacts.length ).to.equal(2);
     });
 
     it('should call libraryService.update when saving an existing Library', function(){

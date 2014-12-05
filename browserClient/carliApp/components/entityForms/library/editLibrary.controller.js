@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.library')
     .controller('editLibraryController', editLibraryController);
 
-function editLibraryController( $scope, libraryService, alertService ) {
+function editLibraryController( $scope, entityBaseService, libraryService, alertService ) {
     var vm = this;
 
     vm.libraryId = $scope.libraryId;
@@ -12,7 +12,6 @@ function editLibraryController( $scope, libraryService, alertService ) {
     vm.saveLibrary = saveLibrary;
     vm.addContact = addContact;
     vm.deleteContact = deleteContact;
-    vm.removeEmptyContactsFromEntity = removeEmptyContactsFromEntity;
     vm.closeModal = function() {
         $('#new-library-modal').modal('hide');
     };
@@ -77,7 +76,7 @@ function editLibraryController( $scope, libraryService, alertService ) {
 
     function saveLibrary(){
 
-        removeEmptyContactsFromEntity(vm.library);
+        entityBaseService.removeEmptyContactsFromEntity(vm.library);
 
         if (vm.libraryId !== undefined){
             libraryService.update( vm.library ).then(function(){
@@ -113,19 +112,5 @@ function editLibraryController( $scope, libraryService, alertService ) {
         }
     }
 
-    function removeEmptyContactsFromEntity(entity) {
-        var noEmptiesContactList = [];
 
-        for (var i = 0; i < entity.contacts.length; i++) {
-            contact = entity.contacts[i];
-
-            if ((contact.name && contact.name.length > 0) ||
-                (contact.email && contact.email  > 0) ||
-                (contact.phoneNumber && contact.phoneNumber  > 0)) {
-
-                noEmptiesContactList.push(contact);
-            }
-        }
-        entity.contacts = noEmptiesContactList;
-    }
 }
