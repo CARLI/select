@@ -1,5 +1,6 @@
 var fs = require('fs');
 var _ = require('lodash');
+var defaultsConfigFile = __dirname + '/../CARLI/config/index.js';
 var localConfigFile = __dirname + '/../CARLI/config/local.js';
 
 module.exports = function (grunt) {
@@ -12,7 +13,7 @@ module.exports = function (grunt) {
 
     function generateConfig(instance) {
         if (instance === 'test') {
-            var cfg = readExistingConfig();
+            var cfg = readLocalConfig();
             cfg.alertTimeout = 1000;
             fs.writeFileSync(localConfigFile, stringifyConfig(cfg));
         }
@@ -21,19 +22,21 @@ module.exports = function (grunt) {
     }
 
     function generateCouchConfig(instance) {
-        var cfg = readExistingConfig();
-        var storeOptions = cfg.storeOptions || {};
+        var cfg = readConfig();
+        var localCfg = readLocalConfig();
+
+        var storeOptions = localCfg.storeOptions || {};
 
         if (instance == 'test') {
-            cfg.storeOptions = _.extend(storeOptions, getContainerCouchConfig(cfg));
+            localCfg.storeOptions = _.extend(storeOptions, getContainerCouchConfig(cfg));
         } else {
-            cfg.storeOptions = _.extend(storeOptions, getPublicCouchConfig(instance, cfg));
+            localCfg.storeOptions = _.extend(storeOptions, getPublicCouchConfig(instance, cfg));
         }
 
-        fs.writeFileSync(localConfigFile, stringifyConfig(cfg));
+        fs.writeFileSync(localConfigFile, stringifyConfig(localCfg));
     }
 
-    function readExistingConfig() {
+    function readLocalConfig() {
         var cfg;
         try {
             var cfgString = fs.readFileSync(localConfigFile, { encoding: 'utf-8' });
@@ -42,6 +45,13 @@ module.exports = function (grunt) {
             cfg = {};
         }
         return cfg;
+    }
+    function readConfig() {
+        var cfg, localCfg;
+        var cfgString = fs.readFileSync(defaultsConfigFile, { encoding: 'utf-8' });
+        cfg = JSON.parse(cfgString);
+        localCfg = readLocalConfig();
+        return _.extend(cfg, localCfg);;
     }
 
     function stringifyConfig(cfg) {
