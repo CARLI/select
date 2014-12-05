@@ -15,7 +15,7 @@ function test( storeTypeName, options ) {
     function makeValidObject() {
         return {
             id:     uuid.v4(),
-            type:   'testy'
+            type:   'testType'
         }
     };
 
@@ -53,12 +53,12 @@ function test( storeTypeName, options ) {
 
             it( 'should save data and return id', function() {
                 var id = uuid.v4();
-                return expect( DataStore.save( { id: id, type: 'testy' } ) ).to.eventually.have.deep.property( 'id', id );
+                return expect( DataStore.save( { id: id, type: 'testType' } ) ).to.eventually.have.deep.property( 'id', id );
             } );
 
             it( 'should be able to save document twice (update)', function() {
                 var id = uuid.v4();
-                return DataStore.save( { id: id, type: 'testy' } )
+                return DataStore.save( { id: id, type: 'testType' } )
                 .then( function( new_doc ) {
                     return expect( DataStore.save( new_doc ) ).to.eventually.have.deep.property( 'id', id );
                 } );
@@ -112,7 +112,7 @@ function test( storeTypeName, options ) {
             } );
 
             it( 'should fail when an id not found', function() {
-                return expect( DataStore.get( { id: uuid.v4(), type: 'testy' } )).to.be.rejectedWith( /Id not found/ );
+                return expect( DataStore.get( { id: uuid.v4(), type: 'testType' } )).to.be.rejectedWith( /Id not found/ );
             } );
 
             it( 'should return stored data for id', function() {
@@ -255,7 +255,7 @@ function test( storeTypeName, options ) {
             } );
 
             it( 'should fail when an id not found', function() {
-                expect( DataStore.delete( { id: uuid.v4(), type: 'testy' } ) )
+                expect( DataStore.delete( { id: uuid.v4(), type: 'testType' } ) )
                   .to.be.rejectedWith( /Id not found/ );
             } );
 

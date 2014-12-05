@@ -25,9 +25,9 @@ module.exports = function (grunt) {
         var storeOptions = cfg.storeOptions || {};
 
         if (instance == 'test') {
-            cfg.storeOptions = _.extend(storeOptions, getContainerCouchConfig());
+            cfg.storeOptions = _.extend(storeOptions, getContainerCouchConfig(cfg));
         } else {
-            cfg.storeOptions = _.extend(storeOptions, getPublicCouchConfig(instance));
+            cfg.storeOptions = _.extend(storeOptions, getPublicCouchConfig(instance, cfg));
         }
 
         fs.writeFileSync(localConfigFile, stringifyConfig(cfg));
@@ -48,7 +48,7 @@ module.exports = function (grunt) {
         return 'module.exports = ' + JSON.stringify(cfg, null, '    ') + ';';
     }
 
-    function getContainerCouchConfig() {
+    function getContainerCouchConfig(cfg) {
         var host = process.env.COUCHDB_PORT_5984_TCP_ADDR;
         var port = process.env.COUCHDB_PORT_5984_TCP_PORT;
 
@@ -56,14 +56,14 @@ module.exports = function (grunt) {
             throw new Error('Couch container link not found');
         }
 
-        return _storeOptions('http://' + host + ':' + port, 'testy');
+        return _storeOptions('http://' + host + ':' + port, cfg.storeOptions.couchDbName);
     }
 
-    function getPublicCouchConfig(instance) {
+    function getPublicCouchConfig(instance, cfg) {
         if (instance === undefined) {
             instance = 'dev';
         }
-        return _storeOptions(getPublicCouchDbUrlFor(instance), 'testy');
+        return _storeOptions(getPublicCouchDbUrlFor(instance), cfg.storeOptions.couchDbName);
     }
 
     function getPublicCouchDbUrlFor(instance) {

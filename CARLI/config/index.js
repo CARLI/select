@@ -5,7 +5,7 @@ var defaults = {
     alertTimeout: 10000,
     storeOptions: {
         couchDbUrl: 'http://localhost:5984',
-        couchDbName: 'testy'
+        couchDbName: 'carli'
     },
     request: require('../carliRequest'),
     store: 'CouchDbStore'
