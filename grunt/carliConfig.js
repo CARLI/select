@@ -48,8 +48,7 @@ module.exports = function (grunt) {
     }
     function readConfig() {
         var cfg, localCfg;
-        var cfgString = fs.readFileSync(defaultsConfigFile, { encoding: 'utf-8' });
-        cfg = JSON.parse(cfgString);
+        var cfg = require(defaultsConfigFile);
         localCfg = readLocalConfig();
         return _.extend(cfg, localCfg);;
     }
