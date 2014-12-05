@@ -1,6 +1,7 @@
 module.exports = function(grunt) {
     require('./grunt/subdir')(grunt);
     require('./grunt/jsenv')(grunt);
+    require('./grunt/db')(grunt);
 
     grunt.registerTask('test', function(arg) {
         grunt.task.run(['subdir-grunt:browserClient:test:' + arg]);
@@ -16,13 +17,6 @@ module.exports = function(grunt) {
     });
     grunt.registerTask('bower-install', function() {
         grunt.task.run(['subdir-exec:browserClient:bower --allow-root install']);
-    });
-
-    grunt.registerTask('deploy-db', function() {
-        grunt.task.run(['subdir-exec:db:./deploy']);
-    });
-    grunt.registerTask('fixture-data', function() {
-        grunt.task.run(['subdir-exec:db:./fixtures.js']);
     });
 
     grunt.registerTask('install-deps', [

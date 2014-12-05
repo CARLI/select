@@ -11,6 +11,7 @@ module.exports = function ( grunt ) {
     require('load-grunt-tasks')(grunt);
     require('../grunt/jsenv')(grunt);
     require('../grunt/subdir')(grunt);
+    require('../grunt/db')(grunt);
 
     /**
      * Load in our build configuration file.
@@ -537,6 +538,7 @@ module.exports = function ( grunt ) {
             'build',
             'protractor_webdriver',
             'connect:tests',
+            'deploy-db',
             'protractor'
         ]);
     });
@@ -545,6 +547,7 @@ module.exports = function ( grunt ) {
         'clean',
         'build',
         'connect:tests',
+        'deploy-db',
         'protractor'
     ]);
 
