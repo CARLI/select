@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.library')
     .controller('editLibraryController', editLibraryController);
 
-function editLibraryController( $scope, libraryService, alertService ) {
+function editLibraryController( $scope, entityBaseService, libraryService, alertService ) {
     var vm = this;
 
     vm.libraryId = $scope.libraryId;
@@ -75,6 +75,9 @@ function editLibraryController( $scope, libraryService, alertService ) {
     }
 
     function saveLibrary(){
+
+        entityBaseService.removeEmptyContactsFromEntity(vm.library);
+
         if (vm.libraryId !== undefined){
             libraryService.update( vm.library ).then(function(){
                 alertService.putAlert('Library updated', {severity: 'success'});
@@ -108,4 +111,6 @@ function editLibraryController( $scope, libraryService, alertService ) {
             vm.library.contacts.splice(contactIndex, 1);
         }
     }
+
+
 }

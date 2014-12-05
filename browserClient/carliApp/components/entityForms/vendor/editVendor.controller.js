@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.vendor')
     .controller('editVendorController', editVendorController);
 
-function editVendorController( $scope, vendorService, alertService ) {
+function editVendorController( $scope, entityBaseService, vendorService, alertService ) {
     var vm = this;
 
     vm.vendorId = $scope.vendorId;
@@ -69,6 +69,9 @@ function editVendorController( $scope, vendorService, alertService ) {
     }
 
     function saveVendor() {
+
+        entityBaseService.removeEmptyContactsFromEntity(vm.vendor);
+
         if (vm.vendorId !== undefined) {
             vendorService.update(vm.vendor)
                 .then(function () {
