@@ -1,7 +1,13 @@
 angular.module('carli.mockLibraryService', [])
     .factory('mockLibraryService', function mockLibraryService($q) {
+
+        var mockLibraryList = [];
+
         return {
             createOrUpdate: 'neither',
+            setTestData: function (data) {
+                mockLibraryList = data;
+            },
             list: function () {
                 var deferred = $q.defer();
                 deferred.resolve([]);
@@ -21,20 +27,7 @@ angular.module('carli.mockLibraryService', [])
             },
             load: function () {
                 var deferred = $q.defer();
-                deferred.resolve(
-                    {
-                        name: 'Test Library',
-                        contacts: [
-                            {
-                                "contactType": "Director",
-                                "name": "Bob Martin",
-                                "email": "bob@cleancode.org",
-                                "phoneNumber": "123-555-1234"
-                            }
-                        ]
-
-                    }
-                );
+                deferred.resolve( mockLibraryList[0] );
                 return deferred.promise;
             },
             getInstitutionYearsOptions: function(){ return []; },

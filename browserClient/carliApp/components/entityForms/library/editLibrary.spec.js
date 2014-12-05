@@ -3,11 +3,42 @@ describe('The Edit Library Directive', function(){
 
     var newCtrl, editCtrl, mockDependenciesForNewLibrary, mockDependenciesForEditLibrary;
 
+    var mockLibraryList = [
+        {
+            name: 'Test Library',
+            contacts: [
+                {
+                    "contactType": "Additional Empty"
+                },
+                {
+                    "contactType": "Director",
+                    "name": "Bob Martin",
+                    "email": "bob@cleancode.org",
+                    "phoneNumber": "123-555-1234"
+                },
+                {
+                    "contactType": "Director",
+                    "name": "Han Solo",
+                    "email": "han@falcon.org",
+                    "phoneNumber": "123-555-1234"
+                },                {
+                    "contactType": "Other"
+                },
+                {
+                    "contactType": "Other"
+                }
+            ]
+        }
+    ];
+
     beforeEach(function(){
         module('carli.entityForms.library');
         module('carli.mockServices');
 
         inject( function($controller, $rootScope, $q, mockLocationService, mockLibraryService, mockAlertService ) {
+
+            mockLibraryService.setTestData(mockLibraryList);
+
             mockDependenciesForNewLibrary = {
                 $scope: {},
                 libraryService: mockLibraryService,
@@ -40,10 +71,18 @@ describe('The Edit Library Directive', function(){
         expect( newCtrl.newLibrary ).to.equal(true);
     });
 
+    it('should remove empty contacts', function(){
+        expect( mockLibraryList[0].contacts.length ).to.equal(5);
+        editCtrl.removeEmptyContactsFromEntity(mockLibraryList[0]);
+        expect( mockLibraryList[0].contacts.length ).to.equal(2);
+    });
+
     it('should call libraryService.create when saving a new Library', function(){
+
         expect( mockDependenciesForNewLibrary.libraryService.createOrUpdate ).to.equal('neither');
         newCtrl.saveLibrary();
         expect( mockDependenciesForNewLibrary.libraryService.createOrUpdate ).to.equal('create');
+
     });
 
     it('should add an alert when saving a new Library', inject(function($rootScope){
