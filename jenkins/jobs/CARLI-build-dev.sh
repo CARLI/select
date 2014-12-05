@@ -15,5 +15,8 @@ $SCRIPTS/run-test-container.sh dev latest &&
 $SCRIPTS/tag-container.sh couchdb last-good &&
 $SCRIPTS/tag-container.sh grunt last-good
 
+rc=$?
+
 $SCRIPTS/run-serve-container.sh dev latest 9090
 
+exit $rc
