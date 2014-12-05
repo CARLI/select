@@ -3,11 +3,33 @@ describe('The Edit Vendor Directive', function(){
 
     var newCtrl, editCtrl, mockDependenciesForNewVendor, mockDependenciesForEditVendor;
 
+    var mockVendorList = [
+        {
+            type: 'Vendor',
+            name: 'Test Vendor',
+            contacts: [
+                {
+                    "contactType": "Billing",
+                    "name": "Bob Martin",
+                    "email": "bob@cleancode.org",
+                    "phoneNumber": "123-555-1234"
+                },
+                {
+                    "contactType": "Empty"
+                }
+            ]
+
+        }
+    ];
+
     beforeEach(function(){
         module('carli.entityForms.vendor');
         module('carli.mockServices');
 
         inject( function($controller, $rootScope, $q, mockLocationService, mockVendorService, mockAlertService ) {
+
+            mockVendorService.setTestData(angular.copy(mockVendorList));
+
             mockDependenciesForNewVendor = {
                 $scope: {},
                 $location: mockLocationService,
@@ -36,6 +58,12 @@ describe('The Edit Vendor Directive', function(){
         expect( newCtrl.newVendor ).to.equal(true);
     });
 
+    it('should remove empty contacts when saving a new vendor', function(){
+        expect( newCtrl.vendor.contacts.length ).to.equal(3);
+        newCtrl.saveVendor();
+        expect( newCtrl.vendor.contacts.length ).to.equal(0);
+    });
+
     it('should call vendorService.create when saving a new Vendor', function(){
         expect( mockDependenciesForNewVendor.vendorService.createOrUpdate ).to.equal('neither');
         newCtrl.saveVendor();
@@ -53,6 +81,12 @@ describe('The Edit Vendor Directive', function(){
         expect( editCtrl.vendor.name ).to.equal('Test Vendor');
         expect( editCtrl.editable ).to.equal(false);
         expect( editCtrl.newVendor ).to.equal(false);
+    });
+
+    it('should remove empty contacts when editing a vendor', function(){
+        expect( editCtrl.vendor.contacts.length ).to.equal(2);
+        editCtrl.saveVendor();
+        expect( editCtrl.vendor.contacts.length ).to.equal(1);
     });
 
     it('should call vendorService.update when saving an existing Vendor', function(){

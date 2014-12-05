@@ -1,7 +1,13 @@
 angular.module('carli.mockVendorService', [])
     .factory('mockVendorService', function mockVendorService($q) {
+
+        var mockVendorList = [];
+
         return {
             createOrUpdate: 'neither',
+            setTestData: function (data) {
+                mockVendorList = data;
+            },
             list: function () {
                 var deferred = $q.defer();
                 deferred.resolve([]);
@@ -21,21 +27,7 @@ angular.module('carli.mockVendorService', [])
             },
             load: function () {
                 var deferred = $q.defer();
-                deferred.resolve(
-                    {
-                        type: 'Vendor',
-                        name: 'Test Vendor',
-                        contacts: [
-                            {
-                                "contactType": "Billing",
-                                "name": "Bob Martin",
-                                "email": "bob@cleancode.org",
-                                "phoneNumber": "123-555-1234"
-                            }
-                        ]
-
-                    }
-                );
+                deferred.resolve(mockVendorList[0]);
                 return deferred.promise;
             }
         };
