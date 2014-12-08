@@ -5,6 +5,7 @@ var macro = require('./utils/protractorMacros');
 var browserEnsureInputIsHidden = macro.browserEnsureInputIsHidden;
 var browserEnsureInputHasValue = macro.browserEnsureInputHasValue;
 var browserEnsureComponentHasText = macro.browserEnsureComponentHasText;
+var browserGetFirstEntityListRowContainingText = macro.browserGetFirstEntityListRowContainingText;
 
 var formInputsTestConfig = {
     name: {
@@ -111,6 +112,7 @@ var formInputsTestConfig = {
         type: 'input',
         description: 'Remaining Renewals',
         model: 'vm.license.remainingRenewals',
+        defaultValue: '',
         initialValue: '12',
         editedValue: '32'
     }, */
@@ -262,7 +264,6 @@ var formInputsTestConfig = {
             'Service': 1
         }
     }
-
 };
 
 testLicenseName = formInputsTestConfig.name.initialValue;
@@ -323,19 +324,12 @@ describe('Creating a New License', function(){
     it('should find the new License in the list screen', function(){
         pageConfig.listFilterShowAll.click();
 
-        element.all(by.repeater('entity in values'))
-        .filter( function(el, index) {
-            return el.getText().then(function(text){
-                return (text.search(testLicenseName) > -1);
-            });
-        })
-        .then( function( licenseList ) {
-            expect( licenseList.length ).toBe(1);
+        var browserResult = browserGetFirstEntityListRowContainingText( testLicenseName );
+        browserResult.then(function( testRow ){
+            expect( testRow.isDisplayed()).toBe(true);
         });
     });
-
 });
-
 
 describe('Viewing an existing License in read only mode', function () {
     var value, config, formElement;
@@ -346,15 +340,12 @@ describe('Viewing an existing License in read only mode', function () {
         //browser.setLocation('/license');
         //pageConfig.listFilterShowAll.click();
 
-        element.all(by.repeater('entity in values'))
-            .filter(function (el, index) {
-                return el.getText().then(function (text) {
-                    return (text.search(testLicenseName) > -1);
-                });
-            })
-            .then(function (licenseList) {
-                licenseList[0].element(by.tagName('a')).click();
+        var browserResult = browserGetFirstEntityListRowContainingText( testLicenseName );
+        browserResult.then(function( testRow ){
+            testRow.findElement(by.tagName('a')).then(function(link){
+                link.click();
             });
+        });
     });
 
     for ( formElement in formInputsTestConfig ){
@@ -389,16 +380,13 @@ describe('Making changes to an existing License', function(){
 
         pageConfig.listFilterShowAll.click();
 
-        element.all(by.repeater('entity in values'))
-            .filter(function (el, index) {
-                return el.getText().then(function (text) {
-                    return (text.search(testLicenseName) > -1);
-                });
-            })
-            .then(function (licenseList) {
-                licenseList[0].element(by.tagName('a')).click();
+        var browserResult = browserGetFirstEntityListRowContainingText( testLicenseName );
+        browserResult.then(function( testRow ){
+            testRow.findElement(by.tagName('a')).then(function(link){
+                link.click();
             });
-    }, 60000);
+        });
+    });
 
     it('should save changes to the License entity and go back to the list screen', function () {
         pageConfig.editButton.click();
@@ -413,16 +401,12 @@ describe('Making changes to an existing License', function(){
     });
 
     it('should change the entry on the License list screen when changing the name', function () {
-        element.all(by.repeater('entity in values'))
-            .filter(function (el, index) {
-                return el.getText().then(function (text) {
-                    return (text.search(testLicenseEditedName) > -1);
-                });
-            })
-            .then(function (licenseList) {
-                expect( licenseList.length ).toBe(1);
-                licenseList[0].element(by.tagName('a')).click();
+        var browserResult = browserGetFirstEntityListRowContainingText( testLicenseEditedName );
+        browserResult.then(function( testRow ){
+            testRow.findElement(by.tagName('a')).then(function(link){
+                link.click();
             });
+        });
     });
 
     for ( formElement in formInputsTestConfig ){

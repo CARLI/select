@@ -34,7 +34,8 @@ exports.config = {
         }
     },
     jasmineNodeOpts: {
-        silent: true
+        silent: true,
+        defaultTimeoutInterval: 60000
     },
     multiCapabilities: multiCapabilities
 };
