@@ -1,6 +1,5 @@
 {
     "title": "Web Address (URL)",
     "schemaType": "WebAddress",
-    "type": "string",
-    "pattern": "^(https?://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]"
+    "type": "string"
 }
