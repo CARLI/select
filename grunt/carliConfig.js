@@ -42,6 +42,11 @@ module.exports = function (grunt) {
         var cfg;
         try {
             var cfgString = fs.readFileSync(localConfigFile, { encoding: 'utf-8' });
+            var startJson = cfgString.indexOf('{');
+            var endJson = cfgString.lastIndexOf('}');
+            if (startJson != -1 || endJson != -1) {
+                cfgString = cfgString.substring(startJson, endJson + 1);
+            }
             cfg = JSON.parse(cfgString);
         } catch (e) {
             cfg = {};
