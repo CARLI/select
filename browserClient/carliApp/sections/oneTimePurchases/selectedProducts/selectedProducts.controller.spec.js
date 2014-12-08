@@ -10,30 +10,6 @@ describe('The One-time Purchases Selected-Products Controller', function(){
         var mockProductList = [
             {
                 type: 'Product',
-                name: 'Test Product 0',
-                cycleType: 'Fiscal Year',
-                isActive: true
-            },
-            {
-                type: 'Product',
-                name: 'Test Product 1',
-                cycleType: 'Calendar Year',
-                isActive: true
-            },
-            {
-                type: 'Product',
-                name: 'Test Product 2',
-                cycleType: 'Fiscal Year',
-                isActive: false
-            },
-            {
-                type: 'Product',
-                name: 'Test Product 3',
-                cycleType: 'Calendar Year',
-                isActive: false
-            },
-            {
-                type: 'Product',
                 name: 'Test Product 4',
                 cycleType: 'One-Time Purchase',
                 isActive: true,
@@ -138,7 +114,7 @@ describe('The One-time Purchases Selected-Products Controller', function(){
 
 
     it('should call productService.update when purchasing a Product', function(){
-        var mockProduct = vm.productList[5];
+        var mockProduct = vm.productList[2];
 
         expect( mockDependenciesForOneTimePurchase.productService.createOrUpdate ).to.equal('neither');
         vm.purchaseProduct( mockProduct );
@@ -147,7 +123,7 @@ describe('The One-time Purchases Selected-Products Controller', function(){
     });
 
     it('should call productService.update when canceling a purchasing', function(){
-        var mockProduct = vm.productList[5];
+        var mockProduct = vm.productList[2];
 
         expect( mockDependenciesForOneTimePurchase.productService.createOrUpdate ).to.equal('neither');
         vm.cancelPurchase( mockProduct );

@@ -5,7 +5,7 @@
     "type": "object",
     "properties": {
         "annualAccessFee": { "type": "number" },
-        "availableForPurchase": { "$ref": "./Date.json" },
+        "availableForPurchaseThrough": { "$ref": "./Date.json" },
         "libraryPurchaseData": {
             "type": "object",
             "properties": {},
