@@ -1,7 +1,7 @@
 angular.module('carli.productService')
     .service('productService', productService);
 
-function productService( CarliModules, $q, vendorService ) {
+function productService( CarliModules, $q, entityBaseService, vendorService ) {
 
     var productModule = CarliModules.Product;
 
@@ -19,7 +19,7 @@ function productService( CarliModules, $q, vendorService ) {
         p.then(function (products) {
             productList = products;
             products.forEach(function (product) {
-                var p = fetchObjectsForReferences(product);
+                var p = fetchAndTransformObjectsForReferences(product);
                 p.then(function (vendor) {
                     transformReferencesToObjects(product, vendor);
                 }).catch(function (err) {
@@ -67,10 +67,9 @@ function productService( CarliModules, $q, vendorService ) {
             var deferred = $q.defer();
 
             productModule.load(id)
-                .then(function(product){
-                    fetchObjectsForReferences(product)
-                        .then( function( vendor ){
-                            transformReferencesToObjects(product, vendor);
+                .then(function (product) {
+                    fetchAndTransformObjectsForReferences(product)
+                        .then(function (product) {
                             deferred.resolve(product);
                         });
                 })
@@ -83,16 +82,15 @@ function productService( CarliModules, $q, vendorService ) {
     };
 
     function transformObjectsToReferences(product) {
-        if (typeof product.vendor === 'object') {
-            product.vendor = product.vendor.id;
-        }
+        entityBaseService.transformObjectsToReferences(product, [ 'vendor' ]);
     }
 
-    function transformReferencesToObjects(product, object) {
-        product.vendor = object;
+    function fetchAndTransformObjectsForReferences(product) {
+        return entityBaseService.fetchObjectsForReferences(product, { 'vendor': vendorService })
+            .then( function( resolvedObjects ){
+                entityBaseService.transformReferencesToObjects(product, resolvedObjects);
+                return product;
+            });
     }
 
-    function fetchObjectsForReferences(product) {
-        return vendorService.load( product.vendor );
-    }
 }
