@@ -23,7 +23,10 @@
             <fieldset>
                 <div class="column">
                     <label>Vendor</label>
-                    <view-edit-text-field ng-model="vm.license.vendor.name"  edit-mode="vm.editable">{{ vm.license.vendor.name }}</view-edit-text-field>
+                    <div class="view-edit-select" ng-show="vm.newLicense">
+                        <select ng-model="vm.license.vendor" ng-options="vendor.name for vendor in vm.vendorList track by vendor.id"></select>
+                    </div>
+                    <div ng-show="!vm.newLicense">{{ vm.license.vendor.name }}</div>
 
                     <label>Contract Number</label>
                     <view-edit-text-field ng-model="vm.license.contractNumber"  edit-mode="vm.editable">{{ vm.license.contractNumber }}</view-edit-text-field>
