@@ -87,8 +87,7 @@ activePurchasedProduct1.oneTimePurchase.libraryPurchaseData[lib1_uuid] = {
 };
 
 activePurchasedProduct1.oneTimePurchase.libraryPurchaseData[lib2_uuid] = {
-    price: 3500,
-    datePurchased: null
+    price: 3500
 };
 
 module.exports = {
