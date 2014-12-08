@@ -12,27 +12,24 @@ module.exports = function (grunt) {
     }
 
     function generateConfig(instance) {
-        ensureLocalConfigExists();
+        var cfg = {};
 
         if (instance === 'test') {
-            var cfg = readLocalConfig();
             cfg.alertTimeout = 1000;
-            fs.writeFileSync(localConfigFile, stringifyConfig(cfg));
         }
 
-        generateCouchConfig(instance);
+        generateCouchConfig(instance, cfg);
+
+        fs.writeFileSync(localConfigFile, stringifyConfig(cfg));
     }
 
-    function generateCouchConfig(instance) {
-        var cfg = readConfig();
-        var localCfg = readLocalConfig();
-
+    function generateCouchConfig(instance, localCfg) {
         var storeOptions = localCfg.storeOptions || {};
 
         if (instance == 'test') {
-            localCfg.storeOptions = _.extend(storeOptions, getContainerCouchConfig(cfg));
+            localCfg.storeOptions = _.extend(storeOptions, getContainerCouchConfig());
         } else {
-            localCfg.storeOptions = _.extend(storeOptions, getPublicCouchConfig(instance, cfg));
+            localCfg.storeOptions = _.extend(storeOptions, getPublicCouchConfig(instance));
         }
 
         fs.writeFileSync(localConfigFile, stringifyConfig(localCfg));
@@ -64,7 +61,7 @@ module.exports = function (grunt) {
         return 'module.exports = ' + JSON.stringify(cfg, null, '    ') + ';';
     }
 
-    function getContainerCouchConfig(cfg) {
+    function getContainerCouchConfig() {
         var host = process.env.COUCHDB_PORT_5984_TCP_ADDR;
         var port = process.env.COUCHDB_PORT_5984_TCP_PORT;
 
@@ -72,14 +69,14 @@ module.exports = function (grunt) {
             throw new Error('Couch container link not found');
         }
 
-        return _storeOptions('http://' + host + ':' + port, cfg.storeOptions.couchDbName);
+        return _storeOptions('http://' + host + ':' + port, 'carli');
     }
 
-    function getPublicCouchConfig(instance, cfg) {
+    function getPublicCouchConfig(instance) {
         if (instance === undefined) {
             instance = 'dev';
         }
-        return _storeOptions(getPublicCouchDbUrlFor(instance), cfg.storeOptions.couchDbName);
+        return _storeOptions(getPublicCouchDbUrlFor(instance), 'carli');
     }
 
     function getPublicCouchDbUrlFor(instance) {
