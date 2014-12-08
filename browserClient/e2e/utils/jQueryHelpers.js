@@ -7,7 +7,9 @@
 (function ( window, undefined ) {
     var CARLI = window.CARLI || {};
     CARLI.test = {
-        elementIsPresent: elementIsPresent,
+        elementIsPresentById: elementIsPresentById,
+        elementIsPresentByClass: elementIsPresentByClass,
+        elementIsPresentByTagName: elementIsPresentByTagName,
         inputIsHidden: inputIsHidden,
         inputHasValue: inputHasValue,
         elementHasText: elementHasText,
@@ -69,8 +71,16 @@
         }
     }
 
-    function elementIsPresent( id ){
+    function elementIsPresentById( id ){
         return ( $('#'+id).length > 0 );
+    }
+
+    function elementIsPresentByClass( className ){
+        return ( $('.'+className).length > 0 );
+    }
+
+    function elementIsPresentByTagName( tagName ){
+        return ( $(tagName).length > 0 );
     }
 
     function inputIsHidden( config ){

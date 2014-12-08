@@ -293,9 +293,19 @@ function ensureFormElementHasValue( config, value ){
  * They have a weird signature because it stringifies the function and parameters have
  * to be read from the `arguments` object.
  */
-function callHelperElementIsPresent(){
+function callHelperElementIsPresentById(){
     var id = arguments[0] || '';
-    return CARLI.test.elementIsPresent(id);
+    return CARLI.test.elementIsPresentById(id);
+}
+
+function callHelperElementIsPresentByClass(){
+    var className = arguments[0] || '';
+    return CARLI.test.elementIsPresentByClass(className);
+}
+
+function callHelperElementIsPresentByTagName(){
+    var tagName = arguments[0] || '';
+    return CARLI.test.elementIsPresentByTagName(tagName);
 }
 
 function callHelperInputIsHidden(){
@@ -321,9 +331,21 @@ function callHelperComponentHasText(){
 /*
  * These are convenience methods to wrap browser helper calls in expects
  */
-function browserEnsureElementIsPresentbyId( id, description ){
+function browserEnsureElementIsPresentById( id, description ){
     it('should have a ' + description, function(){
-        expect(browser.executeScript( callHelperElementIsPresent, id)).toBe(true);
+        expect(browser.executeScript( callHelperElementIsPresentById, id)).toBe(true);
+    });
+}
+
+function browserEnsureElementIsPresentByClass( className, description ){
+    it('should have a ' + description, function(){
+        expect(browser.executeScript( callHelperElementIsPresentByClass, className)).toBe(true);
+    });
+}
+
+function browserEnsureElementIsPresentByTagName( tagName, description ){
+    it('should have a ' + description, function(){
+        expect(browser.executeScript( callHelperElementIsPresentByTagName, tagName)).toBe(true);
     });
 }
 
@@ -387,7 +409,9 @@ module.exports = {
     setFormElementValue: setFormElementValue,
     ensureFormElementHasValue: ensureFormElementHasValue,
 
-    browserEnsureElementIsPresentbyId: browserEnsureElementIsPresentbyId,
+    browserEnsureElementIsPresentById: browserEnsureElementIsPresentById,
+    browserEnsureElementIsPresentByClass: browserEnsureElementIsPresentByClass,
+    browserEnsureElementIsPresentByTagName: browserEnsureElementIsPresentByTagName,
     browserEnsureInputIsHidden: browserEnsureInputIsHidden,
     browserEnsureInputHasValue: browserEnsureInputHasValue,
     browserEnsureComponentHasText: browserEnsureComponentHasText
