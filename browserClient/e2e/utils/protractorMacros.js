@@ -328,6 +328,11 @@ function callHelperComponentHasText(){
     return CARLI.test.elementHasText( config, expectedValue );
 }
 
+function callHelperGetFirstEntityListRowContainingText(){
+    var searchText = arguments[0] || '';
+    return CARLI.test.getFirstEntityListRowContainingText( searchText );
+}
+
 /*
  * These are convenience methods to wrap browser helper calls in expects
  */
@@ -378,6 +383,10 @@ function browserEnsureComponentHasText( config, configPropertyForText ){
     });
 }
 
+function browserGetFirstEntityListRowContainingText( searchText ){
+    return browser.executeScript(callHelperGetFirstEntityListRowContainingText, searchText);
+}
+
 /* ---------------------- Exports ------------------------- */
 
 module.exports = {
@@ -414,5 +423,6 @@ module.exports = {
     browserEnsureElementIsPresentByTagName: browserEnsureElementIsPresentByTagName,
     browserEnsureInputIsHidden: browserEnsureInputIsHidden,
     browserEnsureInputHasValue: browserEnsureInputHasValue,
-    browserEnsureComponentHasText: browserEnsureComponentHasText
+    browserEnsureComponentHasText: browserEnsureComponentHasText,
+    browserGetFirstEntityListRowContainingText: browserGetFirstEntityListRowContainingText
 };

@@ -13,6 +13,7 @@
         inputIsHidden: inputIsHidden,
         inputHasValue: inputHasValue,
         elementHasText: elementHasText,
+        getFirstEntityListRowContainingText: getFirstEntityListRowContainingText,
         contactEditorIsHidden: contactEditorIsHidden,
         contactEditorHasValues: contactEditorHasValues,
         contactEditorDisplaysText: contactEditorDisplaysText
@@ -143,6 +144,16 @@
 
     }
 
+
+    /**
+     * Entity List helpers - assume only one EntityList per page
+     */
+    function getFirstEntityListRowContainingText( searchText ){
+        var entityListItems = $('entity-list li[ng-repeat*="entity in values"]');
+        return entityListItems.filter(function(i, el){
+            return $(el).text().search(searchText) > -1;
+        }).get(0);
+    }
 
     /**
      * Contact Editor Stuff
