@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.license')
     .controller('editLicenseController', editLicenseController);
 
-function editLicenseController( $scope, licenseService, alertService ) {
+function editLicenseController( $scope, licenseService, vendorService, alertService ) {
     var vm = this;
 
     vm.licenseId = $scope.licenseId;
@@ -13,6 +13,10 @@ function editLicenseController( $scope, licenseService, alertService ) {
     vm.closeModal = function() {
         $('#new-license-modal').modal('hide');
     };
+
+    vendorService.list().then( function( vendorList ){
+        vm.vendorList = vendorList;
+    });
 
     vm.termOptions = [
         "Yes",

@@ -1,7 +1,7 @@
 angular.module('carli.licenseService')
     .service('licenseService', licenseService);
 
-function licenseService( CarliModules, $q ) {
+function licenseService( CarliModules, $q, entityBaseService, vendorService ) {
 
     var licenseModule = CarliModules.License;
 
@@ -9,10 +9,86 @@ function licenseService( CarliModules, $q ) {
 
     licenseModule.setStore( licenseStore );
 
+    function listLicenses() {
+        var licenseList;
+        var deferred = $q.defer();
+
+        var p = $q.when(licenseModule.list());
+        var promises = [ p ];
+
+        p.then(function (licenses) {
+            licenseList = licenses;
+            licenses.forEach(function (license) {
+                var p = fetchAndTransformObjectsForReferences(license);
+                p.then(function (vendor) {
+                    transformReferencesToObjects(license, vendor);
+                }).catch(function (err) {
+                    deferred.reject(err);
+                });
+                promises.push(p);
+            });
+        }).catch(function (err) {
+            deferred.reject(err);
+        });
+
+        $q.all(promises).then(function () {
+            deferred.resolve(licenseList);
+        });
+        return deferred.promise;
+    }
     return {
-        list:   function() { return $q.when( licenseModule.list() ); },
-        create: function() { return $q.when( licenseModule.create.apply(this, arguments) ); },
-        update: function() { return $q.when( licenseModule.update.apply(this, arguments) ); },
-        load:   function() { return $q.when( licenseModule.load.apply(this, arguments) ); }
+        list:   listLicenses,
+        create: function(license) {
+            transformObjectsToReferences(license);
+            return $q.when( licenseModule.create(license) );
+        },
+        update: function(license) {
+            var deferred = $q.defer();
+
+            var savedVendorObject = license.vendor;
+            transformObjectsToReferences(license);
+
+            licenseModule.update(license)
+                .then (function(license) {
+                deferred.resolve(license);
+            })
+                .catch(function (err) {
+                    deferred.reject(err);
+                })
+                .finally(function(){
+                    license.vendor = savedVendorObject;
+                });
+
+            return deferred.promise;
+        },
+        load:   function(id) {
+            var deferred = $q.defer();
+
+            licenseModule.load(id)
+                .then(function (license) {
+                    fetchAndTransformObjectsForReferences(license)
+                        .then(function (license) {
+                            deferred.resolve(license);
+                        });
+                })
+                .catch(function (err) {
+                    deferred.reject(err);
+                });
+
+            return deferred.promise;
+        }
     };
+
+
+    function transformObjectsToReferences(license) {
+        entityBaseService.transformObjectsToReferences(license, [ 'vendor' ]);
+    }
+
+    function fetchAndTransformObjectsForReferences(license) {
+        return entityBaseService.fetchObjectsForReferences(license, { 'vendor': vendorService })
+            .then( function( resolvedObjects ){
+                entityBaseService.transformReferencesToObjects(license, resolvedObjects);
+                return license;
+            });
+    }
 }
