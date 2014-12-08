@@ -11,9 +11,7 @@ $SCRIPTS/build-container.sh grunt &&
 $SCRIPTS/tag-container.sh couchdb latest &&
 $SCRIPTS/tag-container.sh grunt latest &&
 $SCRIPTS/run-db-container.sh dev latest 9091 &&
-$SCRIPTS/run-test-container.sh dev latest
-# temporarily break the chain here so that QA will be updated
-# even though the protractor tests are timing out
+$SCRIPTS/run-test-container.sh dev latest &&
 $SCRIPTS/tag-container.sh couchdb last-good &&
 $SCRIPTS/tag-container.sh grunt last-good
 
