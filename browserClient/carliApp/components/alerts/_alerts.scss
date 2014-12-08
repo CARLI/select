@@ -1,5 +1,9 @@
 alerts {
     div {
         @include vendor-prefix(transition, opacity 2s);
+        text-align: center;
+        font-family: 'Verdana';
+        font-weight: 400;
+        @include font-size(15);
     }
 }
