@@ -1,0 +1,17 @@
+.library-list  {
+        .column:first-child {
+            flex: 2 1 75%;
+            padding-bottom: 0;
+        }
+
+        .column {
+            flex: 1 1 10%;
+        }
+
+        .column:last-child {
+            flex: 0 0 90px;
+            padding: 4px;
+        }
+    }
+
+
