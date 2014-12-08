@@ -12,6 +12,8 @@ module.exports = function (grunt) {
     }
 
     function generateConfig(instance) {
+        ensureLocalConfigExists();
+
         if (instance === 'test') {
             var cfg = readLocalConfig();
             cfg.alertTimeout = 1000;
