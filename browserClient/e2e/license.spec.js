@@ -398,7 +398,7 @@ describe('Making changes to an existing License', function(){
             .then(function (licenseList) {
                 licenseList[0].element(by.tagName('a')).click();
             });
-    });
+    }, 60000);
 
     it('should save changes to the License entity and go back to the list screen', function () {
         pageConfig.editButton.click();
