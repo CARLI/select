@@ -132,8 +132,8 @@ describe('The One-Time Purchases Select Product screen', function () {
             .then( function( productList ) {
 
 
-                // This attempts to find the columns in the product list and verify each field contains what the fixture
-                // data says it should.  I think name currently works, but the others don't.
+                // Find the columns in the product list and verify each field contains what the fixture
+                // data says it should.
                 productList[0].all(by.className('column'))
                     .then (function(colList) {
 

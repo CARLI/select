@@ -4,7 +4,7 @@ config.getDefaultAppPage();
 var StyleGuidePage = function () {
 };
 
-describe('CARLI Style Guide', function () {
+xdescribe('CARLI Style Guide', function () {
 
     var styleGuidePage = new StyleGuidePage();
 

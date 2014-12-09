@@ -10,10 +10,10 @@ function productService( CarliModules, $q, entityBaseService, vendorService ) {
     productModule.setStore( productStore );
 
     function listProducts() {
-        expandReferencesToObjects($q.when(productModule.list()));
+        return expandReferencesToObjects($q.when(productModule.list()));
     }
     function listAvailableOneTimePurchaseProducts() {
-        expandReferencesToObjects($q.when(productModule.listAvailableOneTimePurchaseProducts()));
+        return expandReferencesToObjects($q.when(productModule.listAvailableOneTimePurchaseProducts()));
     }
 
     return {
