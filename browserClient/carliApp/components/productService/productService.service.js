@@ -1,7 +1,7 @@
 angular.module('carli.productService')
     .service('productService', productService);
 
-function productService( CarliModules, $q, vendorService ) {
+function productService( CarliModules, $q, entityBaseService, vendorService ) {
 
     var productModule = CarliModules.Product;
 
@@ -10,16 +10,15 @@ function productService( CarliModules, $q, vendorService ) {
     productModule.setStore( productStore );
 
     function listProducts() {
-        return expandReferencesToObjects( $q.when(productModule.list()) );
+        expandReferencesToObjects($q.when(productModule.list()));
     }
-
-    function listAvailableOneTimePurchaseProducts() {
-        return expandReferencesToObjects( $q.when(productModule.listAvailableOneTimePurchaseProducts()) );
+    function listOneTimePurchaseProducts() {
+        expandReferencesToObjects($q.when(productModule.listAvailableOneTimePurchaseProducts()));
     }
 
     return {
         list: listProducts,
-        listAvailableOneTimePurchaseProducts: listAvailableOneTimePurchaseProducts,
+        listOneTimePurchaseProducts: listOneTimePurchaseProducts,
         create: function(product) {
             transformObjectsToReferences(product);
             return $q.when( productModule.create(product) );
@@ -47,10 +46,9 @@ function productService( CarliModules, $q, vendorService ) {
             var deferred = $q.defer();
 
             productModule.load(id)
-                .then(function(product){
-                    fetchObjectsForReferences(product)
-                        .then( function( vendor ){
-                            transformReferencesToObjects(product, vendor);
+                .then(function (product) {
+                    fetchAndTransformObjectsForReferences(product)
+                        .then(function (product) {
                             deferred.resolve(product);
                         });
                 })
@@ -63,28 +61,27 @@ function productService( CarliModules, $q, vendorService ) {
     };
 
     function transformObjectsToReferences(product) {
-        if (typeof product.vendor === 'object') {
-            product.vendor = product.vendor.id;
-        }
+        entityBaseService.transformObjectsToReferences(product, [ 'vendor' ]);
     }
 
-    function transformReferencesToObjects(product, object) {
-        product.vendor = object;
+    function fetchAndTransformObjectsForReferences(product) {
+        return entityBaseService.fetchObjectsForReferences(product, { 'vendor': vendorService })
+            .then( function( resolvedObjects ){
+                entityBaseService.transformReferencesToObjects(product, resolvedObjects);
+                return product;
+            });
     }
-
-    function fetchObjectsForReferences(product) {
-        return vendorService.load( product.vendor );
-    }
-
-    function expandReferencesToObjects(listPromise) {
-        var list;
+    
+    function expandReferencesToObjects(p) {
+        var productList;
         var deferred = $q.defer();
-        var promises = [ listPromise ];
 
-        listPromise.then(function (products) {
-            list = products;
+        var promises = [ p ];
+
+        p.then(function (products) {
+            productList = products;
             products.forEach(function (product) {
-                var p = fetchObjectsForReferences(product);
+                var p = fetchAndTransformObjectsForReferences(product);
                 p.then(function (vendor) {
                     transformReferencesToObjects(product, vendor);
                 }).catch(function (err) {
@@ -97,7 +94,7 @@ function productService( CarliModules, $q, vendorService ) {
         });
 
         $q.all(promises).then(function () {
-            deferred.resolve(list);
+            deferred.resolve(productList);
         });
         return deferred.promise;
     }

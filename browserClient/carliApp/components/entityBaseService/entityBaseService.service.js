@@ -20,6 +20,26 @@ function entityBaseService( CarliModules, $q ) {
                 }
             }
             entity.contacts = noEmptiesContactList;
+        },
+        transformObjectsToReferences: function (entity, propertyList) {
+            for (var i in propertyList) {
+                var prop = propertyList[i];
+                if (typeof entity[prop] === 'object') {
+                    entity[prop] = entity[prop].id;
+                }
+            }
+        },
+        fetchObjectsForReferences: function (entity, servicesByProperty) {
+            var promises = {};
+            for (var prop in servicesByProperty) {
+                promises[prop] = servicesByProperty[prop].load(entity[prop]);
+            }
+            return $q.all(promises);
+        },
+        transformReferencesToObjects: function (entity, resolvedObjects) {
+            for (var prop in resolvedObjects) {
+                entity[prop] = resolvedObjects[prop];
+            }
         }
     };
 }

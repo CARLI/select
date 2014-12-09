@@ -1,5 +1,11 @@
-var config = require('./utils/baseConfig');
+var config = require('./utils/baseConfig'),
+    dataLoader = require('./utils/fixtureDataLoader'),
+    testData = require('./license.fixtures');
+
 config.getDefaultAppPage();
+
+dataLoader.createVendor(testData.vendor1);
+dataLoader.createVendor(testData.vendor2);
 
 var macro = require('./utils/protractorMacros');
 var browserEnsureInputIsHidden = macro.browserEnsureInputIsHidden;
@@ -312,9 +318,11 @@ describe('The New License Modal', function () {
 
 describe('Creating a New License', function(){
     it('should save a new License when filling in the form and clicking save', function() {
-        pageConfig.fillInLicenseWithTestData();
+        macro.setSelectValue(element(by.model('vm.license.vendor')), testData.vendor1.name);
+        pageConfig.fillInLicenseWithTestData('initialValue');
 
         pageConfig.submit.click();
+
     });
 
     it('should go back to the list screen after submitting', function() {
@@ -357,6 +365,9 @@ describe('Viewing an existing License in read only mode', function () {
         value = config.initialText ? 'initialText' : 'initialValue';
         browserEnsureComponentHasText( formInputsTestConfig[formElement], value );
     }
+    it ('should have the non-editable vendor name', function() {
+        expect(element(by.id('license-vendor-name')).getText()).toEqual(testData.vendor1.name);
+    });
 });
 
 describe('Viewing an existing License in edit mode', function () {
@@ -370,6 +381,9 @@ describe('Viewing an existing License in edit mode', function () {
         config = formInputsTestConfig[formElement];
         browserEnsureInputHasValue( config, 'initialValue' );
     }
+    it ('should have the non-editable vendor name', function() {
+        expect(element(by.id('license-vendor-name')).getText()).toEqual(testData.vendor1.name);
+    });
 });
 
 describe('Making changes to an existing License', function(){

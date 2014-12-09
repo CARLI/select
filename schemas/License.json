@@ -13,8 +13,8 @@
             "type": "string"
         },
         "vendor": {
-            "description": "The Vendor associated with this License",
-            "$ref": "./Vendor.json"
+            "description": "UUID of a Vendor document",
+            "type": "string"
         },
         "contractNumber": {
             "description": "Name of License Agreement",
@@ -109,5 +109,5 @@
             "type": "string"
         }
     },
-    "required": [ "name" ]
+    "required": [ "name", "vendor" ]
 }
