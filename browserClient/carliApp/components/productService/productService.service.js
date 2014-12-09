@@ -4,17 +4,8 @@ angular.module('carli.productService')
 function productService( CarliModules, $q, entityBaseService, licenseService, vendorService ) {
 
     var productModule = CarliModules.Product;
-
     var productStore = CarliModules.Store( CarliModules[CarliModules.config.store]( CarliModules.config.storeOptions ) );
-
     productModule.setStore( productStore );
-
-    function listProducts() {
-        return expandReferencesToObjects($q.when(productModule.list()));
-    }
-    function listAvailableOneTimePurchaseProducts() {
-        return expandReferencesToObjects($q.when(productModule.listAvailableOneTimePurchaseProducts()));
-    }
 
     return {
         list: listProducts,
@@ -60,6 +51,14 @@ function productService( CarliModules, $q, entityBaseService, licenseService, ve
         }
     };
 
+    function listProducts() {
+        return expandReferencesToObjects($q.when(productModule.list()));
+    }
+
+    function listAvailableOneTimePurchaseProducts() {
+        return expandReferencesToObjects($q.when(productModule.listAvailableOneTimePurchaseProducts()));
+    }
+
     function transformObjectsToReferences(product) {
         entityBaseService.transformObjectsToReferences(product, [ 'vendor', 'license' ]);
     }
@@ -73,15 +72,15 @@ function productService( CarliModules, $q, entityBaseService, licenseService, ve
     }
 
     function expandReferencesToObjects(p) {
-        var productList;
+        var list;
         var deferred = $q.defer();
 
         var promises = [ p ];
 
-        p.then(function (products) {
-            productList = products;
-            products.forEach(function (product) {
-                var p = fetchAndTransformObjectsForReferences(product);
+        p.then(function (entities) {
+            list = entities;
+            entities.forEach(function (entity) {
+                var p = fetchAndTransformObjectsForReferences(entity);
                 promises.push(p);
             });
         }).catch(function (err) {
@@ -89,7 +88,7 @@ function productService( CarliModules, $q, entityBaseService, licenseService, ve
         });
 
         $q.all(promises).then(function () {
-            deferred.resolve(productList);
+            deferred.resolve(list);
         });
         return deferred.promise;
     }
