@@ -57,7 +57,10 @@
         },
         "license": {
             "description": "UUID of a License",
-            "type": "string"
+            "anyOf": [
+                { "type": "string" },
+                { "type": "null" }
+            ]
         },
         "terms": {
             "description": "Terms of the license that this Product overrides",

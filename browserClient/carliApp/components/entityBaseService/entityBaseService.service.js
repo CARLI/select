@@ -4,6 +4,10 @@ angular.module('carli.entityBaseService')
 
 function entityBaseService( CarliModules, $q ) {
 
+    function isNonNullObject(entity, prop) {
+        return (entity[prop] && typeof entity[prop] === 'object');
+    }
+
     return {
         removeEmptyContactsFromEntity: function (entity) {
 
@@ -24,7 +28,7 @@ function entityBaseService( CarliModules, $q ) {
         transformObjectsToReferences: function (entity, propertyList) {
             for (var i in propertyList) {
                 var prop = propertyList[i];
-                if (typeof entity[prop] === 'object') {
+                if (isNonNullObject(entity, prop)) {
                     entity[prop] = entity[prop].id;
                 }
             }
@@ -32,7 +36,7 @@ function entityBaseService( CarliModules, $q ) {
         fetchObjectsForReferences: function (entity, servicesByProperty) {
             var promises = {};
             for (var prop in servicesByProperty) {
-                if (entity[prop] !== undefined) {
+                if (entity[prop]) {
                     promises[prop] = servicesByProperty[prop].load(entity[prop]);
                 }
             }

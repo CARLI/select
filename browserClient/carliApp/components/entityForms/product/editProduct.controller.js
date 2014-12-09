@@ -118,6 +118,9 @@ function editProductController( $scope, libraryService, licenseService, productS
     }
 
     function saveProduct(){
+        if (vm.product.license === undefined) {
+            vm.product.license = null;
+        }
         if ( vm.productId !== undefined){
             productService.update( vm.product ).then(function(){
                 alertService.putAlert('Product updated', {severity: 'success'});
