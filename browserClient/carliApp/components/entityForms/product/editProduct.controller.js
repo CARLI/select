@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.product')
     .controller('editProductController', editProductController);
 
-function editProductController( $scope, libraryService, productService, vendorService, alertService ) {
+function editProductController( $scope, libraryService, licenseService, productService, vendorService, alertService ) {
     var vm = this;
 
     vm.productId = $scope.productId;
@@ -22,6 +22,11 @@ function editProductController( $scope, libraryService, productService, vendorSe
     vendorService.list().then( function( vendorList ){
        vm.vendorList = vendorList;
     });
+
+    licenseService.list().then( function( licenseList ){
+        vm.licenseList = licenseList;
+    });
+
 
     //TODO: Move to someplace common since it's on Product, Library, and Product now
     vm.statusOptions = [

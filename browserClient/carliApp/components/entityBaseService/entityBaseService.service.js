@@ -32,7 +32,9 @@ function entityBaseService( CarliModules, $q ) {
         fetchObjectsForReferences: function (entity, servicesByProperty) {
             var promises = {};
             for (var prop in servicesByProperty) {
-                promises[prop] = servicesByProperty[prop].load(entity[prop]);
+                if (entity[prop] !== undefined) {
+                    promises[prop] = servicesByProperty[prop].load(entity[prop]);
+                }
             }
             return $q.all(promises);
         },

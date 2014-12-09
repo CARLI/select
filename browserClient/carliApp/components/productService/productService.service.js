@@ -1,7 +1,7 @@
 angular.module('carli.productService')
     .service('productService', productService);
 
-function productService( CarliModules, $q, entityBaseService, vendorService ) {
+function productService( CarliModules, $q, entityBaseService, licenseService, vendorService ) {
 
     var productModule = CarliModules.Product;
 
@@ -61,11 +61,11 @@ function productService( CarliModules, $q, entityBaseService, vendorService ) {
     };
 
     function transformObjectsToReferences(product) {
-        entityBaseService.transformObjectsToReferences(product, [ 'vendor' ]);
+        entityBaseService.transformObjectsToReferences(product, [ 'vendor', 'license' ]);
     }
 
     function fetchAndTransformObjectsForReferences(product) {
-        return entityBaseService.fetchObjectsForReferences(product, { 'vendor': vendorService })
+        return entityBaseService.fetchObjectsForReferences(product, { 'vendor': vendorService, 'license': licenseService })
             .then( function( resolvedObjects ){
                 entityBaseService.transformReferencesToObjects(product, resolvedObjects);
                 return product;

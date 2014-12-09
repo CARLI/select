@@ -10,4 +10,19 @@ angular.module('carli.viewEditDirectives.viewEditSelect')
             },
             transclude: true
         };
-    });
+    })
+    .directive('viewEditSelectObject', function() {
+        return {
+            restrict: 'E',
+            templateUrl: '/carliApp/components/viewEditDirectives/viewEditSelect/viewEditSelectObject.html',
+            scope: {
+                ngModel: '=',
+                editMode: '=',
+                objects: '=',
+                labelProperty: '@',
+                trackBy: '@'
+            },
+            transclude: true
+        };
+    })
+;
