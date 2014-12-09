@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.product')
     .controller('editProductController', editProductController);
 
-function editProductController( $scope, libraryService, licenseService, productService, vendorService, alertService ) {
+function editProductController( $scope, $filter, libraryService, licenseService, productService, vendorService, alertService ) {
     var vm = this;
 
     vm.productId = $scope.productId;
@@ -23,10 +23,8 @@ function editProductController( $scope, libraryService, licenseService, productS
        vm.vendorList = vendorList;
     });
 
-    licenseService.list().then( function( licenseList ){
-        vm.licenseList = licenseList;
-    });
-
+    refreshLicenseList();
+    $scope.$watch('vm.product.vendor', refreshLicenseList);
 
     //TODO: Move to someplace common since it's on Product, Library, and Product now
     vm.statusOptions = [
@@ -154,6 +152,22 @@ function editProductController( $scope, libraryService, licenseService, productS
             .catch(function (error) {
                 alertService.putAlert(error, {severity: 'danger'});
             });
+    }
+
+    function filterLicensesBelongingToVendor(vendor) {
+        return function(license) {
+            return vendor.id === license.vendor;
+        };
+    }
+
+    function refreshLicenseList() {
+        if (vm.product && vm.product.vendor) {
+            licenseService.list().then(function (licenseList) {
+                vm.licenseList = $filter('filter')(licenseList, filterLicensesBelongingToVendor(vm.product.vendor));
+                vm.noLicensesMessage = vm.licenseList.length > 0 ? '' : 'Selected vendor has no licenses';
+            });
+        } else {
+            vm.noLicensesMessage = 'Please select a vendor first';
         }
     }
 }
