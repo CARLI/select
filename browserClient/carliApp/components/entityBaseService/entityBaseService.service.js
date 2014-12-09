@@ -4,10 +4,6 @@ angular.module('carli.entityBaseService')
 
 function entityBaseService( CarliModules, $q ) {
 
-    function isNonNullObject(entity, prop) {
-        return (entity[prop] && typeof entity[prop] === 'object');
-    }
-
     return {
         removeEmptyContactsFromEntity: function (entity) {
 
@@ -25,27 +21,72 @@ function entityBaseService( CarliModules, $q ) {
             }
             entity.contacts = noEmptiesContactList;
         },
-        transformObjectsToReferences: function (entity, propertyList) {
-            for (var i in propertyList) {
-                var prop = propertyList[i];
-                if (isNonNullObject(entity, prop)) {
-                    entity[prop] = entity[prop].id;
+        transformObjectsToReferences: function (entity, references) {
+            for (var property in references) {
+                if (isNonNullObject(entity, property)) {
+                    entity[property] = entity[property].id;
                 }
             }
         },
-        fetchObjectsForReferences: function (entity, servicesByProperty) {
-            var promises = {};
-            for (var prop in servicesByProperty) {
-                if (entity[prop]) {
-                    promises[prop] = servicesByProperty[prop].load(entity[prop]);
-                }
-            }
-            return $q.all(promises);
+        fetchAndTransformObjectsFromReferences: function (entity, references) {
+            return fetchObjectsForReferences(entity, references)
+                .then( function( resolvedObjects ){
+                    transformReferencesToObjects(entity, resolvedObjects);
+                    return entity;
+                });
         },
-        transformReferencesToObjects: function (entity, resolvedObjects) {
-            for (var prop in resolvedObjects) {
-                entity[prop] = resolvedObjects[prop];
+        expandReferencesToObjects: function (promise, references) {
+            var list;
+            var deferred = $q.defer();
+
+            var promises = [ promise ];
+
+            promise.then(function (entities) {
+                list = entities;
+                entities.forEach(function (entity) {
+                    var p = entityBaseService.fetchAndTransformObjectsForReferences(entity, references);
+                    promises.push(p);
+                });
+            }).catch(function (err) {
+                deferred.reject(err);
+            });
+
+            $q.all(promises).then(function () {
+                deferred.resolve(list);
+            });
+            return deferred.promise;
+        },
+        saveReferences: function (entity, references) {
+            var savedObjects = {};
+            for (var property in references) {
+                savedObjects[property] = entity[property];
+            }
+            return savedObjects;
+        },
+        restoreReferences: function (entity, savedObjects) {
+            for (var property in references) {
+                entity[property] = savedObjects[property];
             }
         }
     };
+
+    function isNonNullObject(entity, prop) {
+        return (entity[prop] && typeof entity[prop] === 'object');
+    }
+
+    function fetchObjectsForReferences(entity, references) {
+        var promises = {};
+        for (var property in references) {
+            if (entity[property]) {
+                promises[property] = references[property].load(entity[property]);
+            }
+        }
+        return $q.all(promises);
+    }
+
+    function transformReferencesToObjects(entity, resolvedObjects) {
+        for (var prop in resolvedObjects) {
+            entity[prop] = resolvedObjects[prop];
+        }
+    }
 }
