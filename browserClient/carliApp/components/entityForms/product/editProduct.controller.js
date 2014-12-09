@@ -118,25 +118,40 @@ function editProductController( $scope, libraryService, licenseService, productS
     }
 
     function saveProduct(){
+        translateOptionalSelections();
+
+        if (vm.productId === undefined) {
+            saveNewProduct();
+        } else {
+            saveExistingProduct();
+        }
+    }
+
+    function translateOptionalSelections() {
         if (vm.product.license === undefined) {
             vm.product.license = null;
         }
-        if ( vm.productId !== undefined){
-            productService.update( vm.product ).then(function(){
+    }
+
+    function saveExistingProduct() {
+        productService.update(vm.product)
+            .then(function () {
                 alertService.putAlert('Product updated', {severity: 'success'});
                 afterSubmitCallback();
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 alertService.putAlert(error, {severity: 'danger'});
             });
-        }
-        else {
-            productService.create( vm.product ).then(function(){
+    }
+
+    function saveNewProduct() {
+        productService.create(vm.product)
+            .then(function () {
                 alertService.putAlert('Product added', {severity: 'success'});
                 afterSubmitCallback();
                 initializeForNewProduct();
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 alertService.putAlert(error, {severity: 'danger'});
             });
         }
