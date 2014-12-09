@@ -82,11 +82,6 @@ function productService( CarliModules, $q, entityBaseService, vendorService ) {
             productList = products;
             products.forEach(function (product) {
                 var p = fetchAndTransformObjectsForReferences(product);
-                p.then(function (vendor) {
-                    transformReferencesToObjects(product, vendor);
-                }).catch(function (err) {
-                    deferred.reject(err);
-                });
                 promises.push(p);
             });
         }).catch(function (err) {

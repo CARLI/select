@@ -20,11 +20,6 @@ function licenseService( CarliModules, $q, entityBaseService, vendorService ) {
             licenseList = licenses;
             licenses.forEach(function (license) {
                 var p = fetchAndTransformObjectsForReferences(license);
-                p.then(function (vendor) {
-                    transformReferencesToObjects(license, vendor);
-                }).catch(function (err) {
-                    deferred.reject(err);
-                });
                 promises.push(p);
             });
         }).catch(function (err) {
