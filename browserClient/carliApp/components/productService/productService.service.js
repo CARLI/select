@@ -12,13 +12,13 @@ function productService( CarliModules, $q, entityBaseService, vendorService ) {
     function listProducts() {
         expandReferencesToObjects($q.when(productModule.list()));
     }
-    function listOneTimePurchaseProducts() {
+    function listAvailableOneTimePurchaseProducts() {
         expandReferencesToObjects($q.when(productModule.listAvailableOneTimePurchaseProducts()));
     }
 
     return {
         list: listProducts,
-        listOneTimePurchaseProducts: listOneTimePurchaseProducts,
+        listAvailableOneTimePurchaseProducts: listAvailableOneTimePurchaseProducts,
         create: function(product) {
             transformObjectsToReferences(product);
             return $q.when( productModule.create(product) );
@@ -71,7 +71,7 @@ function productService( CarliModules, $q, entityBaseService, vendorService ) {
                 return product;
             });
     }
-    
+
     function expandReferencesToObjects(p) {
         var productList;
         var deferred = $q.defer();

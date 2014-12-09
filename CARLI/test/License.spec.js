@@ -4,7 +4,8 @@ var test = require( './Entity/EntityInterface.spec' )
 function validLicenseData() {
     return {
         type: 'License',
-        name: 'foo' 
+        name: 'foo',
+	vendor: 'vendor1'
     };
 };
 function invalidLicenseData() {
