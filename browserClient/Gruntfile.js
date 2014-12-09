@@ -552,8 +552,8 @@ module.exports = function ( grunt ) {
     ]);
 
     grunt.registerTask( 'test:jenkins', [
-        'test:unit'
-        // , 'test:e2eJenkins'
+        'test:unit',
+        'test:e2eJenkins'
     ]);
 
     /*
