@@ -511,8 +511,8 @@ module.exports = function ( grunt ) {
      * Use `grunt test` to run ALL tests once
      */
     grunt.registerTask( 'test', [
-        'test:unit'
-        // , 'test:e2e'
+        'test:unit',
+        'test:e2e'
     ]);
 
     /**
@@ -552,8 +552,8 @@ module.exports = function ( grunt ) {
     ]);
 
     grunt.registerTask( 'test:jenkins', [
-        'test:unit',
-        'test:e2eJenkins'
+        'test:unit'
+        // , 'test:e2eJenkins'
     ]);
 
     /*
