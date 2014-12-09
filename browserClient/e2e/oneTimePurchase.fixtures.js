@@ -44,7 +44,7 @@ var activeLibrary3 = {
 var activeVendor1 = {
     id: vendor1_uuid,
     name: vendor1_uuid
-}
+};
 
 var activePurchasedProduct1 = {
     id: prod1_uuid,
