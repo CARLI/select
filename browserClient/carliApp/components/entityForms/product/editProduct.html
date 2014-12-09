@@ -115,7 +115,7 @@
                     <div class="column">
                         <label>License Agreement</label>
                         <div class="view-edit-select" ng-show="vm.noLicensesMessage">
-                            <select disabled="disabled"><option>{{ vm .noLicensesMessage }}</option></select>
+                            <select ng-show="vm.editable" disabled="disabled"><option>{{ vm.noLicensesMessage }}</option></select>
                         </div>
                         <view-edit-select-object ng-show="!vm.noLicensesMessage" ng-model="vm.product.license" objects="vm.licenseList" label-property="name" track-by="id" edit-mode="vm.editable">
                             {{ vm.product.license.name }}

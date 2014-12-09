@@ -164,7 +164,7 @@ function editProductController( $scope, $filter, libraryService, licenseService,
         if (vm.product && vm.product.vendor) {
             licenseService.list().then(function (licenseList) {
                 vm.licenseList = $filter('filter')(licenseList, filterLicensesBelongingToVendor(vm.product.vendor));
-                vm.noLicensesMessage = vm.licenseList.length > 0 ? '' : 'Selected vendor has no licenses';
+                vm.noLicensesMessage = vm.licenseList.length > 0 ? '' : 'No license agreements for vendor';
             });
         } else {
             vm.noLicensesMessage = 'Please select a vendor first';
