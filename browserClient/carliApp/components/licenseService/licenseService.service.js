@@ -48,7 +48,7 @@ function licenseService( CarliModules, $q, entityBaseService, vendorService ) {
 
         licenseModule.load(id)
             .then(function (license) {
-                entityBaseService.fetchAndTransformObjectsForReferences(license, references)
+                entityBaseService.fetchAndTransformObjectsFromReferences(license, references)
                     .then(function (license) {
                         deferred.resolve(license);
                     });
