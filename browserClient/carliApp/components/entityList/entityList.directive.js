@@ -11,6 +11,7 @@ angular.module('carli.entityList')
         },
         controller: function($scope){
             $scope.activeFilterState = 'Active';
+            $scope.filterText = '';
         } 
     };
 });
