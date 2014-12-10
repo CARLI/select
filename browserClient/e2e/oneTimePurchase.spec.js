@@ -11,6 +11,7 @@ dataLoader.createLibrary(testData.activeLibrary1);
 dataLoader.createLibrary(testData.inactiveLibrary2);
 dataLoader.createLibrary(testData.activeLibrary3);
 dataLoader.createVendor(testData.activeVendor1);
+dataLoader.createLicense(testData.activeLicense1);
 dataLoader.createProduct(testData.activePurchasedProduct1);
 dataLoader.createProduct(testData.inactiveProduct2);
 dataLoader.createProduct(testData.activeFiscalYearProduct3);
