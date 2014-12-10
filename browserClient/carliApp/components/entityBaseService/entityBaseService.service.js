@@ -71,7 +71,7 @@ function entityBaseService( CarliModules, $q ) {
         }
         return savedObjects;
     }
-    function restoreReferences(entity, savedObjects) {
+    function restoreReferences(entity, savedObjects, references) {
         for (var property in references) {
             entity[property] = savedObjects[property];
         }

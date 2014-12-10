@@ -37,7 +37,7 @@ function licenseService( CarliModules, $q, entityBaseService, vendorService ) {
                 deferred.reject(err);
             })
             .finally(function () {
-                entityBaseService.restoreReferences(license, savedObjects);
+                entityBaseService.restoreReferences(license, savedObjects, references);
             });
 
         return deferred.promise;

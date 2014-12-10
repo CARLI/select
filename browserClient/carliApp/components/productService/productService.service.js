@@ -43,7 +43,7 @@ function productService( CarliModules, $q, entityBaseService, licenseService, ve
                 deferred.reject(err);
             })
             .finally(function(){
-                entityBaseService.restoreReferences(product, savedObjects);
+                entityBaseService.restoreReferences(product, savedObjects, references);
             });
 
         return deferred.promise;
