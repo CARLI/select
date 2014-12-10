@@ -38,23 +38,38 @@ function selectedProductsController($routeParams, libraryService, productService
     }
 
     function filter( value ){
-         return (
-             (vm.filterState === 'all') ||
-             (vm.filterState === 'purchased' && value.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased) ||
-             (vm.filterState === 'not-purchased' && !value.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased)
-        );
+        var isProductPurchased = value.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased;
+
+        filterValue =   (vm.filterState === 'all') ||
+                        (vm.filterState === 'purchased' && isProductPurchased) ||
+                        (vm.filterState === 'not-purchased' && !isProductPurchased);
+
+        return filterValue;
     }
 
     function setShowPurchasedProducts() {
         vm.filterState = 'purchased';
+        unselectHiddenProducts();
     }
 
     function setShowNotPurchasedProducts() {
         vm.filterState = 'not-purchased';
+        unselectHiddenProducts();
     }
 
     function setShowAllProducts() {
         vm.filterState = 'all';
+        unselectHiddenProducts();
+    }
+
+    function unselectHiddenProducts() {
+        var key, product;
+        for ( key in vm.productList ){
+            product = vm.productList[key];
+            if ( !filter(product) ){
+                vm.selectedProducts[product.id] = false;
+            }
+        }
     }
 
     function purchaseProduct(product) {
