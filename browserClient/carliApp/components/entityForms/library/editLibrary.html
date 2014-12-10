@@ -65,6 +65,10 @@
                         {{ vm.library.outstandingBalances }}
                     </view-edit-text-field>
                     -->
+                    <div class="placeholder">
+                        TODO: Outstanding Balances Editor
+                    </div>
+
                 </div>
 
                 <div class="column">
@@ -79,6 +83,10 @@
                             <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
                             <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
                         </div>
+
+                        <div class="placeholder">
+                            TODO: Include in Billing Messages checkbox
+                        </div>
                     </div>
 
                     <div class="contact-list">
@@ -88,6 +96,10 @@
                         <div class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'E-Resources Liaison' }">
                             <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
                             <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
+                        </div>
+
+                        <div class="placeholder">
+                            TODO: Include in Billing Messages checkbox
                         </div>
                     </div>
 
@@ -99,6 +111,10 @@
                             <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
                             <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
                         </div>
+
+                        <div class="placeholder">
+                            TODO: Permissions checkboxes
+                        </div>
                     </div>
 
                     <div class="contact-list">
@@ -108,6 +124,10 @@
                         <div class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Notification Only' }">
                             <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
                             <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
+                        </div>
+
+                        <div class="placeholder">
+                            TODO: Permissions checkboxes
                         </div>
                     </div>
 

@@ -173,6 +173,16 @@ section.content {
     }
 }
 
+.placeholder {
+    background: steelblue;
+    color: #FFF;
+    font-weight: bold;
+    line-height: 2rem;
+    padding: 1rem;
+    text-align: center;
+    margin-top: 1rem;
+}
+
 /* set the default icon properties for font awesome */
 i.fa {
     font-size: 17px;

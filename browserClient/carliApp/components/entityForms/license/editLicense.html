@@ -34,8 +34,16 @@
                     <label>Redacted License</label>
                     <view-edit-text-field ng-model="vm.license.redactedLicenseFile"  edit-mode="vm.editable">{{ vm.license.redactedLicenseFile }}</view-edit-text-field>
 
+                    <div class="placeholder">
+                        TODO: File upload
+                    </div>
+
                     <label>Full License</label>
                     <view-edit-text-field ng-model="vm.license.fullLicenseFile"  edit-mode="vm.editable">{{ vm.license.fullLicenseFile }}</view-edit-text-field>
+
+                    <div class="placeholder">
+                        TODO: File upload
+                    </div>
 
                     <label for="eResourceComments">Internal E-Resource Comments</label>
                     <view-edit-text-area class="e-resource-comments" ng-model="vm.license.eResourceComments" edit-mode="vm.editable">{{ vm.license.eResourceComments }}</view-edit-text-area>
@@ -131,6 +139,10 @@
                     <view-edit-text-field ng-model="vm.license.purchaseOrderAmount"  edit-mode="vm.editable">{{ vm.license.purchaseOrderAmount }}</view-edit-text-field>
                     <label ng-show="!vm.newLicense">PO Balance</label>
                     <div>{{ vm.license.purchaseOrderBalance }}</div>
+
+                    <div class="placeholder">
+                        TODO: PO Balance
+                    </div>
 
                     <label>Banner ID</label>
                     <view-edit-text-field ng-model="vm.license.bannerId"  edit-mode="vm.editable">{{ vm.license.bannerId }}</view-edit-text-field>
