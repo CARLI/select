@@ -3,23 +3,25 @@
     <header class="page-header">
         <h1 ng-show="vm.newProduct">New Product</h1>
 
-        <div class="name">
-            <label for="productName">Product Name</label>
-            <view-edit-text-field ng-model="vm.product.name" edit-mode="vm.editable">
-                <h1>{{ vm.product.name }}</h1>
-            </view-edit-text-field>
-        </div>
-
-        <div ng-show="!vm.newProduct" class="edit-buttons pull-right">
-            <div ng-show="vm.editable">
-                <a class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</a>
-                <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit" value="Save">
+        <fieldset>
+            <div class="name">
+                <label for="productName">Product Name</label>
+                <view-edit-text-field ng-model="vm.product.name" edit-mode="vm.editable">
+                    <h1>{{ vm.product.name }}</h1>
+                </view-edit-text-field>
             </div>
 
-            <div id="product-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">
-                Edit<i class="fa fa-edit"></i>
+            <div ng-show="!vm.newProduct" class="edit-buttons pull-right">
+                <div ng-show="vm.editable">
+                    <a class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</a>
+                    <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit" value="Save">
+                </div>
+
+                <div id="product-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">
+                    Edit<i class="fa fa-edit"></i>
+                </div>
             </div>
-        </div>
+        </fieldset>
     </header>
 
     <section class="content">
@@ -253,14 +255,16 @@
 
             </div>
         </fieldset>
-
-        <footer ng-show="vm.editable">
-            <button type="button" class="carli-button cancel-button" data-dismiss="modal" ng-click="vm.cancelEdit()">Cancel</button>
-            <input type="submit" id="vendor-submit" class="carli-button save-button" value="Save">
-        </footer>
     </section>
 
-    </form>
+    <footer ng-show="vm.editable">
+        <fieldset>
+            <button type="button" class="carli-button cancel-button" data-dismiss="modal" ng-click="vm.cancelEdit()">Cancel</button>
+            <input type="submit" id="vendor-submit" class="carli-button save-button" value="Save">
+        </fieldset>
+    </footer>
+
+</form>
 
     <hr>
     <debug-panel>{{ vm.product | json }}</debug-panel>
