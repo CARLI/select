@@ -7,6 +7,7 @@ var prod1_uuid = uuid.v4();
 var prod2_uuid = uuid.v4();
 var prod3_uuid = uuid.v4();
 var vendor1_uuid = uuid.v4();
+var license1_uuid = uuid.v4();
 
 var activeLibrary1 = {
     id: lib1_uuid,
@@ -43,7 +44,15 @@ var activeLibrary3 = {
 
 var activeVendor1 = {
     id: vendor1_uuid,
-    name: vendor1_uuid
+    name: vendor1_uuid,
+    isActive: true
+};
+
+var activeLicense1 = {
+    id: license1_uuid,
+    name: license1_uuid,
+    isActive: true,
+    vendor: vendor1_uuid
 };
 
 var activePurchasedProduct1 = {
@@ -56,6 +65,7 @@ var activePurchasedProduct1 = {
     productURL: "http://product1.vendor.com",
     description: "The Description",
     comments: "These are comments",
+    license: license1_uuid,
     oneTimePurchase:  {
             annualAccessFee: 250,
             availableForPurchase: "2014-12-01",
@@ -95,6 +105,7 @@ module.exports = {
     inactiveLibrary2: inactiveLibrary2,
     activeLibrary3: activeLibrary3,
     activeVendor1: activeVendor1,
+    activeLicense1: activeLicense1,
     activePurchasedProduct1 : activePurchasedProduct1,
     inactiveProduct2 : inactiveProduct2,
     activeFiscalYearProduct3 : activeFiscalYearProduct3

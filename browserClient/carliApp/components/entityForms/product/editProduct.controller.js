@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.product')
     .controller('editProductController', editProductController);
 
-function editProductController( $scope, libraryService, productService, vendorService, alertService ) {
+function editProductController( $scope, $filter, libraryService, licenseService, productService, vendorService, alertService ) {
     var vm = this;
 
     vm.productId = $scope.productId;
@@ -22,6 +22,9 @@ function editProductController( $scope, libraryService, productService, vendorSe
     vendorService.list().then( function( vendorList ){
        vm.vendorList = vendorList;
     });
+
+    refreshLicenseList();
+    $scope.$watch('vm.product.vendor', refreshLicenseList);
 
     //TODO: Move to someplace common since it's on Product, Library, and Product now
     vm.statusOptions = [
@@ -113,24 +116,58 @@ function editProductController( $scope, libraryService, productService, vendorSe
     }
 
     function saveProduct(){
-        if ( vm.productId !== undefined){
-            productService.update( vm.product ).then(function(){
+        translateOptionalSelections();
+
+        if (vm.productId === undefined) {
+            saveNewProduct();
+        } else {
+            saveExistingProduct();
+        }
+    }
+
+    function translateOptionalSelections() {
+        if (vm.product.license === undefined) {
+            vm.product.license = null;
+        }
+    }
+
+    function saveExistingProduct() {
+        productService.update(vm.product)
+            .then(function () {
                 alertService.putAlert('Product updated', {severity: 'success'});
                 afterSubmitCallback();
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 alertService.putAlert(error, {severity: 'danger'});
             });
-        }
-        else {
-            productService.create( vm.product ).then(function(){
+    }
+
+    function saveNewProduct() {
+        productService.create(vm.product)
+            .then(function () {
                 alertService.putAlert('Product added', {severity: 'success'});
                 afterSubmitCallback();
                 initializeForNewProduct();
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 alertService.putAlert(error, {severity: 'danger'});
             });
+    }
+
+    function filterLicensesBelongingToVendor(vendor) {
+        return function(license) {
+            return vendor.id === license.vendor;
+        };
+    }
+
+    function refreshLicenseList() {
+        if (vm.product && vm.product.vendor) {
+            licenseService.list().then(function (licenseList) {
+                vm.licenseList = $filter('filter')(licenseList, filterLicensesBelongingToVendor(vm.product.vendor));
+                vm.noLicensesMessage = vm.licenseList.length > 0 ? '' : 'No license agreements for vendor';
+            });
+        } else {
+            vm.noLicensesMessage = 'Please select a vendor first';
         }
     }
 }

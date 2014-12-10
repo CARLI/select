@@ -45,5 +45,80 @@ describe('The Entity Base Service', function() {
         }));
     });
 
+
+
+
+    describe('The transformObjectsToReferences function', function() {
+        it('should be a function', inject(function (entityBaseService) {
+            expect(entityBaseService.transformObjectsToReferences).to.be.a('Function');
+        }));
+
+        it('should replace an Object property with the Objects ID', inject(function (entityBaseService){
+            var testEntity = {
+                name: 'testEntity',
+                testProperty: {
+                    id: 'foo',
+                    other_property: "hello"
+                },
+                another: {
+                    id: 'another',
+                    foo: "bar"
+                }
+            };
+
+            entityBaseService.transformObjectsToReferences( testEntity, {'testProperty':{}, 'another': {}} );
+            expect(testEntity.testProperty).to.equal('foo');
+            expect(testEntity.another).to.equal('another');
+        }));
+    });
+
+    describe('The  fetchAndTransformObjectsFromReferences function', function() {
+        it('should be a function', inject(function (entityBaseService) {
+            expect(entityBaseService.fetchAndTransformObjectsFromReferences).to.be.a('Function');
+        }));
+    });
+
+
+    describe('The expandReferencesToObjects function', function() {
+        it('should be a function', inject(function (entityBaseService) {
+            expect(entityBaseService.expandReferencesToObjects).to.be.a('Function');
+        }));
+    });
+
+    describe('The saveReferences function', function() {
+        it('should be a function', inject(function (entityBaseService) {
+            expect(entityBaseService.saveReferences).to.be.a('Function');
+        }));
+    });
+
+    describe('The restoreReferences, function', function() {
+        it('should be a function', inject(function (entityBaseService) {
+            expect(entityBaseService.restoreReferences).to.be.a('Function');
+        }));
+
+        it('should turn references back into saved objects', inject(function (entityBaseService) {
+            var savedEntity = {
+                name: 'testEntity',
+                testProperty: {
+                    id: 'foo',
+                    other_property: "hello"
+                },
+                another: {
+                    id: 'another',
+                    foo: "bar"
+                }
+            };
+            var contractedEntity = {
+                name: 'testEntity',
+                testProperty: 'foo',
+                another:'another'
+            };
+            entityBaseService.restoreReferences(contractedEntity, savedEntity, {'testProperty':{}, 'another': {}});
+            expect(contractedEntity.testProperty.id).to.equal('foo');
+            expect(contractedEntity.another.id).to.equal('another');
+        }));
+    });
+
+
 });
 

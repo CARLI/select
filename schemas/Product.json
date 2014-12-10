@@ -56,7 +56,11 @@
             "type": "boolean"
         },
         "license": {
-            "$ref": "./License.json"
+            "description": "UUID of a License",
+            "anyOf": [
+                { "type": "string" },
+                { "type": "null" }
+            ]
         },
         "terms": {
             "description": "Terms of the license that this Product overrides",

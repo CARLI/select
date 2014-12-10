@@ -1,96 +1,68 @@
 angular.module('carli.productService')
     .service('productService', productService);
 
-function productService( CarliModules, $q, entityBaseService, vendorService ) {
+function productService( CarliModules, $q, entityBaseService, licenseService, vendorService ) {
+
+    var references = { vendor: vendorService, license: licenseService };
 
     var productModule = CarliModules.Product;
-
     var productStore = CarliModules.Store( CarliModules[CarliModules.config.store]( CarliModules.config.storeOptions ) );
-
     productModule.setStore( productStore );
-
-    function listProducts() {
-        return expandReferencesToObjects($q.when(productModule.list()));
-    }
-    function listAvailableOneTimePurchaseProducts() {
-        return expandReferencesToObjects($q.when(productModule.listAvailableOneTimePurchaseProducts()));
-    }
 
     return {
         list: listProducts,
         listAvailableOneTimePurchaseProducts: listAvailableOneTimePurchaseProducts,
-        create: function(product) {
-            transformObjectsToReferences(product);
-            return $q.when( productModule.create(product) );
-        },
-        update: function(product) {
-            var deferred = $q.defer();
-
-            var savedVendorObject = product.vendor;
-            transformObjectsToReferences(product);
-
-            productModule.update(product)
-                .then (function(product) {
-                    deferred.resolve(product);
-                })
-                .catch(function (err) {
-                    deferred.reject(err);
-                })
-                .finally(function(){
-                    product.vendor = savedVendorObject;
-                });
-
-            return deferred.promise;
-        },
-        load: function(id) {
-            var deferred = $q.defer();
-
-            productModule.load(id)
-                .then(function (product) {
-                    fetchAndTransformObjectsForReferences(product)
-                        .then(function (product) {
-                            deferred.resolve(product);
-                        });
-                })
-                .catch(function (err) {
-                    deferred.reject(err);
-                });
-
-            return deferred.promise;
-        }
+        create: createProduct,
+        update: updateProduct,
+        load: loadProduct
     };
 
-    function transformObjectsToReferences(product) {
-        entityBaseService.transformObjectsToReferences(product, [ 'vendor' ]);
+    function listProducts() {
+        return entityBaseService.expandReferencesToObjects($q.when(productModule.list()), references);
     }
 
-    function fetchAndTransformObjectsForReferences(product) {
-        return entityBaseService.fetchObjectsForReferences(product, { 'vendor': vendorService })
-            .then( function( resolvedObjects ){
-                entityBaseService.transformReferencesToObjects(product, resolvedObjects);
-                return product;
+    function listAvailableOneTimePurchaseProducts() {
+        return entityBaseService.expandReferencesToObjects($q.when(productModule.listAvailableOneTimePurchaseProducts()), references);
+    }
+
+    function createProduct(product) {
+        entityBaseService.transformObjectsToReferences(product, references);
+        return $q.when( productModule.create(product) );
+    }
+
+    function updateProduct(product) {
+        var deferred = $q.defer();
+        var savedObjects = entityBaseService.saveReferences(product, references);
+        entityBaseService.transformObjectsToReferences(product, references);
+
+        productModule.update(product)
+            .then(function(product) {
+                deferred.resolve(product);
+            })
+            .catch(function (err) {
+                deferred.reject(err);
+            })
+            .finally(function(){
+                entityBaseService.restoreReferences(product, savedObjects, references);
             });
+
+        return deferred.promise;
     }
 
-    function expandReferencesToObjects(p) {
-        var productList;
+    function loadProduct(id) {
         var deferred = $q.defer();
 
-        var promises = [ p ];
-
-        p.then(function (products) {
-            productList = products;
-            products.forEach(function (product) {
-                var p = fetchAndTransformObjectsForReferences(product);
-                promises.push(p);
+        productModule.load(id)
+            .then(function (product) {
+                entityBaseService.fetchAndTransformObjectsFromReferences(product, references)
+                    .then(function (product) {
+                        deferred.resolve(product);
+                    });
+            })
+            .catch(function (err) {
+                deferred.reject(err);
             });
-        }).catch(function (err) {
-            deferred.reject(err);
-        });
 
-        $q.all(promises).then(function () {
-            deferred.resolve(productList);
-        });
         return deferred.promise;
     }
 }

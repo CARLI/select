@@ -114,9 +114,13 @@
 
                     <div class="column">
                         <label>License Agreement</label>
-                        <view-edit-text-field id="productLicenseAgreement" ng-model="vm.product.licenseAgreement" edit-mode="vm.editable">
-                            {{ vm.product.licenseAgreement }}
-                        </view-edit-text-field>
+                        <div class="view-edit-select" ng-show="vm.noLicensesMessage">
+                            <select ng-show="vm.editable" disabled="disabled"><option>{{ vm.noLicensesMessage }}</option></select>
+                        </div>
+                        <view-edit-select-object ng-show="!vm.noLicensesMessage" ng-model="vm.product.license" objects="vm.licenseList" label-property="name" track-by="id" edit-mode="vm.editable">
+                            {{ vm.product.license.name }}
+                        </view-edit-select-object>
+
 
                         <label>Detail Codes</label>
                         <view-edit-select ng-model="vm.product.detailCode" items="vm.productDetailCodeOptions" edit-mode="vm.editable">

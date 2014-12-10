@@ -20,7 +20,9 @@ describe('The Edit Product Controller', function(){
             mockProductService.setTestData(mockProductList);
 
             mockDependenciesForNewProduct = {
-                $scope: {},
+                $scope: {
+                    $watch: function() {}
+                },
                 productService: mockProductService,
                 libraryService: mockLibraryService,
                 vendorService: mockVendorService,
@@ -29,6 +31,7 @@ describe('The Edit Product Controller', function(){
 
             mockDependenciesForEditProduct = {
                 $scope: {
+                    $watch: function() {},
                     productId: 'yyyy'
                 },
                 productService: mockProductService,
