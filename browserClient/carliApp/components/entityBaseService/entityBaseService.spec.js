@@ -93,7 +93,29 @@ describe('The Entity Base Service', function() {
 
     describe('The restoreReferences, function', function() {
         it('should be a function', inject(function (entityBaseService) {
-            expect(entityBaseService.removeEmptyContactsFromEntity).to.be.a('Function');
+            expect(entityBaseService.restoreReferences).to.be.a('Function');
+        }));
+
+        it('should turn references back into saved objects', inject(function (entityBaseService) {
+            var savedEntity = {
+                name: 'testEntity',
+                testProperty: {
+                    id: 'foo',
+                    other_property: "hello"
+                },
+                another: {
+                    id: 'another',
+                    foo: "bar"
+                }
+            };
+            var contractedEntity = {
+                name: 'testEntity',
+                testProperty: 'foo',
+                another:'another'
+            };
+            entityBaseService.restoreReferences(contractedEntity, savedEntity, {'testProperty':{}, 'another': {}});
+            expect(contractedEntity.testProperty.id).to.equal('foo');
+            expect(contractedEntity.another.id).to.equal('another');
         }));
     });
 
