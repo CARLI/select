@@ -75,56 +75,53 @@
                     <view-edit-number-field ng-model="vm.license.remainingRenewals"  edit-mode="vm.editable">{{ vm.license.remainingRenewals }}</view-edit-number-field>
 
                     <h2>Specific Terms</h2>
-                    <div class="terms-row">
-                        <div class="terms-col">
+                    <div class="terms-overrides">
+                        <div class="term">
                             <label>Download</label>
                             <view-edit-select ng-model="vm.license.terms.downloadTerms" items="vm.termOptions" edit-mode="vm.editable">
                                 {{ vm.license.terms.downloadTerms }}
                             </view-edit-select>
                         </div>
-                        <div class="terms-col">
+                        <div class="term">
                             <label>Course Packs</label>
                             <view-edit-select ng-model="vm.license.terms.coursePacksTerms" items="vm.termOptions" edit-mode="vm.editable">
                                 {{ vm.license.terms.coursePacksTerms }}
                             </view-edit-select>
                         </div>
-                    </div>
-                    <div class="terms-row">
-                        <div class="terms-col">
+
+                        <div class="term">
                             <label>ILL</label>
                             <view-edit-select ng-model="vm.license.terms.interLibraryLoanTerms" items="vm.termOptions" edit-mode="vm.editable">
                                 {{ vm.license.terms.interLibraryLoanTerms }}
                             </view-edit-select>
                         </div>
-                        <div class="terms-col">
+                        <div class="term">
                             <label>Print (in accordance with the Copyright Act)</label>
                             <view-edit-select ng-model="vm.license.terms.printTerms" items="vm.termOptions" edit-mode="vm.editable">
                                 {{ vm.license.terms.printTerms }}
                             </view-edit-select>
                         </div>
-                    </div>
-                    <div class="terms-row">
-                        <div class="terms-col">
+
+                        <div class="term">
                             <label>Limited Sharing for Scholarly Purposes</label>
                             <view-edit-select ng-model="vm.license.terms.limitedScholarlySharingTerms" items="vm.termOptions" edit-mode="vm.editable">
                                 {{ vm.license.terms.limitedScholarlySharingTerms }}
                             </view-edit-select>
                         </div>
-                        <div class="terms-col">
+                        <div class="term">
                             <label>Use by Walk-ins</label>
                             <view-edit-select ng-model="vm.license.terms.walkinTerms" items="vm.termOptions" edit-mode="vm.editable">
                                 {{ vm.license.terms.walkinTerms }}
                             </view-edit-select>
                         </div>
-                    </div>
-                    <div class="terms-row">
-                        <div class="terms-col">
+
+                        <div class="term">
                             <label>E-Reserves</label>
                             <view-edit-select ng-model="vm.license.terms.eReservesTerms" items="vm.termOptions" edit-mode="vm.editable">
                                 {{ vm.license.terms.eReservesTerms }}
                             </view-edit-select>
                         </div>
-                        <div class="terms-col">
+                        <div class="term">
                             <label>Confidentiality Language</label>
                             <view-edit-select ng-model="vm.license.terms.hasConfidentialityLanguage" items="vm.termOptions" edit-mode="vm.editable">
                                 {{ vm.license.terms.hasConfidentialityLanguage }}
