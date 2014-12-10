@@ -127,9 +127,9 @@
     }
 
     footer {
-        margin-top: 50px;
-        padding: 7px 9px 8px;
-        max-width: $edit-form-width;
+        @extend .container-fluid;
+        padding-top: 7px;
+        padding-bottom: 8px;
         background-color: $light-gray;
         border: $default-border;
         position: relative;
