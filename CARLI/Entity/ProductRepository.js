@@ -23,17 +23,16 @@ function listProducts(){
 }
 
 function loadProduct( productId ){
+    var deferred = Q.defer();
 
-    //var deferred = $q.defer();
-
-    return ProductRepository.load( productId );
-
-/*
     ProductRepository.load( productId )
         .then(function (product) {
-
-            entityBaseService.fetchAndTransformObjectsFromReferences(product, references)
+            return EntityTransform.expandObjectFromPersistence( product, ['vendor','license'] )
                 .then(function (product) {
+                    deferred.resolve(product);
+                })
+                .catch(function(err){
+                    // WARNING: this suppresses errors for entity references that are not found in the store
                     deferred.resolve(product);
                 });
         })
@@ -42,8 +41,6 @@ function loadProduct( productId ){
         });
 
     return deferred.promise;
-*/
-
 }
 
 function listAvailableOneTimePurchaseProducts(){
