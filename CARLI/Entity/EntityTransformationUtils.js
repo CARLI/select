@@ -1,3 +1,13 @@
+var Q = require('q')
+    ,VendorR = require('./VendorRepository')
+;
+
+var repositories = {
+    library : require('./LibraryRepository'),
+    license : require('./LicenseRepository'),
+    product : require('./ProductRepository'),
+    vendor : VendorR
+};
 
 function removeEmptyContactsFromEntity(entity) {
 
@@ -42,7 +52,47 @@ function _isNonNullObject(entity, prop) {
     return (entity[prop] && typeof entity[prop] === 'object');
 }
 
+
+
+function expandObjectFromPersistence(entity, referencesToExpand, functionsToAdd) {
+    return _fetchAndTransformObjectsFromReferences(entity, referencesToExpand);
+}
+
+function _fetchAndTransformObjectsFromReferences(entity, references) {
+    return _fetchAllObjectsFromReferences(entity, references)
+        .then( function( resolvedObjects ){
+            _transformReferencesToObjects(entity, resolvedObjects);
+            return entity;
+        });
+}
+
+function _fetchAllObjectsFromReferences(entity, referencesArray) {
+    var promises = [];
+
+    for (var i in referencesArray) {
+        var property = referencesArray[i];
+
+        if (entity[property]) {
+            promises.push( repositories[property].load(entity[property]) );
+        }
+    }
+
+    return Q.all(promises);
+}
+
+function _transformReferencesToObjects(entity, resolvedObjects) {
+    for (var i in resolvedObjects) {
+        var object = resolvedObjects[i];
+        for ( var property in entity ){
+            if ( entity[property] === object.id){
+                entity[property] = object;
+            }
+        }
+    }
+}
+
 module.exports = {
     removeEmptyContactsFromEntity: removeEmptyContactsFromEntity,
-    transformObjectForPersistence: transformObjectForPersistence
+    transformObjectForPersistence: transformObjectForPersistence,
+    expandObjectFromPersistence: expandObjectFromPersistence
 };

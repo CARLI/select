@@ -1,7 +1,9 @@
 var chai   = require( 'chai' )
     , expect = chai.expect
-    , chaiAsPromised = require( 'chai-as-promised' )
+    , chaiAsPromised = require( 'chai-as-promised')
+    , VendorRepository = require('../Entity/VendorRepository')
     , EntityTransform = require( '../Entity/EntityTransformationUtils.js' )
+    , uuid   = require( 'node-uuid' )
     ;
 
 chai.use( chaiAsPromised );
@@ -92,5 +94,24 @@ describe('The transformObjectForPersistence function', function(){
         expect(testEntity.filterFunction).to.not.exist;
         expect(testEntity.filterFunction2).to.not.exist;
     });
+});
 
+
+describe('The expandObjectFromPersistence function', function(){
+    it('should be a function', function () {
+        expect(EntityTransform.expandObjectFromPersistence).to.be.a('Function');
+    });
+
+    it('should expand references to objects in entities', function(){
+        var vendor = { id: uuid.v4(), type: "Vendor", name: "my vendor name"};
+        var product = { id: "product1", type: "Product", name: "my product name", vendor: vendor.id };
+
+        return VendorRepository.create( vendor )
+            .then( function(vendor) {
+                return EntityTransform.expandObjectFromPersistence( product, ['vendor'] );
+            })
+            .then( function ( productEntity ) {
+                return expect( productEntity.vendor ).to.be.an('object').and.have.property('name');
+            });
+    });
 });
