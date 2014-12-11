@@ -18,13 +18,22 @@ function removeEmptyContactsFromEntity(entity) {
 
 
 function transformObjectForPersistence(entity, propertiesToTransform) {
-    _transformObjectsToReferences(entity, propertiesToTransform);
+    _replaceObjectsWithIds(entity, propertiesToTransform);
+    _removeHelperFunctions(entity);
 }
 
-function _transformObjectsToReferences(entity, propertiesToTransform) {
+function _replaceObjectsWithIds(entity, propertiesToTransform) {
     for (var property in propertiesToTransform) {
         if (_isNonNullObject(entity, property)) {
             entity[property] = entity[property].id;
+        }
+    }
+}
+
+function _removeHelperFunctions(entity){
+    for (property in entity){
+        if( entity.hasOwnProperty(property) && typeof(entity[property]) === 'function') {
+            delete entity[property];
         }
     }
 }

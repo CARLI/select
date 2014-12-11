@@ -77,4 +77,20 @@ describe('The transformObjectForPersistence function', function(){
         expect(testEntity.testProperty).to.equal('foo');
         expect(testEntity.another).to.equal('another');
     });
+
+
+    it('should remove helper functions from the entity', function (){
+        var testEntity = {
+            name: 'testEntity',
+            filterFunction: function () { var a=0 },
+            filterFunction2: function () { var b=0 },
+            prop1: 'value'
+        };
+
+        expect(testEntity.filterFunction).to.exist;
+        EntityTransform.transformObjectForPersistence( testEntity, {} );
+        expect(testEntity.filterFunction).to.not.exist;
+        expect(testEntity.filterFunction2).to.not.exist;
+    });
+
 });
