@@ -1,21 +1,23 @@
     <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="libraryForm" ng-submit="vm.saveLibrary(); vm.closeModal();">
 
         <header class="page-header">
-            <div class="name">
-                <label for="libraryName">Library Name</label>
-                <view-edit-text-field ng-model="vm.library.name" edit-mode="vm.editable">
-                    <h1>{{ vm.library.name }}</h1>
-                </view-edit-text-field>
-            </div>
-
-            <div ng-show="!vm.newLibrary" class="edit-buttons pull-right">
-                <div ng-show="vm.editable">
-                    <a class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</a>
-                    <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit" value="Save">
+            <fieldset>
+                <div class="name">
+                    <label for="libraryName">Library Name</label>
+                    <view-edit-text-field ng-model="vm.library.name" edit-mode="vm.editable">
+                        <h1>{{ vm.library.name }}</h1>
+                    </view-edit-text-field>
                 </div>
 
-                <div id="library-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></div>
-            </div>
+                <div ng-show="!vm.newLibrary" class="edit-buttons pull-right">
+                    <div ng-show="vm.editable">
+                        <a class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</a>
+                        <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit" value="Save">
+                    </div>
+
+                    <div id="library-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></div>
+                </div>
+            </fieldset>
         </header>
 
         <section class="content">
@@ -65,7 +67,7 @@
                         {{ vm.library.outstandingBalances }}
                     </view-edit-text-field>
                     -->
-                    <div class="placeholder">
+                    <div class="placeholder" ng-show="vm.editable">
                         TODO: Outstanding Balances Editor
                     </div>
 
@@ -84,7 +86,7 @@
                             <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
                         </div>
 
-                        <div class="placeholder">
+                        <div class="placeholder" ng-show="vm.editable">
                             TODO: Include in Billing Messages checkbox
                         </div>
                     </div>
@@ -98,7 +100,7 @@
                             <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
                         </div>
 
-                        <div class="placeholder">
+                        <div class="placeholder" ng-show="vm.editable">
                             TODO: Include in Billing Messages checkbox
                         </div>
                     </div>
@@ -112,7 +114,7 @@
                             <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
                         </div>
 
-                        <div class="placeholder">
+                        <div class="placeholder" ng-show="vm.editable">
                             TODO: Permissions checkboxes
                         </div>
                     </div>
@@ -126,19 +128,21 @@
                             <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
                         </div>
 
-                        <div class="placeholder">
+                        <div class="placeholder" ng-show="vm.editable">
                             TODO: Permissions checkboxes
                         </div>
                     </div>
 
                 </div>
             </fieldset>
+        </section>
 
-            <footer ng-show="vm.editable">
+        <footer ng-show="vm.editable">
+            <fieldset>
                 <button type="button" class="carli-button cancel-button" data-dismiss="modal" ng-click="vm.cancelEdit()">Cancel</button>
                 <input type="submit" id="library-submit" class="carli-button save-button" value="Save">
-            </footer>
-        </section>
+            </fieldset>
+        </footer>
     </form>
 
     <debug-panel ng-show="!vm.isModal">{{ vm.library | json }}</debug-panel>

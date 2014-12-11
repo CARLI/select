@@ -3,20 +3,22 @@
         <header class="page-header">
             <h1 ng-show="vm.newLicense">New License</h1>
 
-            <div class="name">
-                <label for="licenseName">License Name</label>
-                <view-edit-text-field ng-model="vm.license.name" edit-mode="vm.editable"><h1>{{ vm.license.name }}</h1>
-                </view-edit-text-field>
-            </div>
-
-            <div ng-show="!vm.newLicense" class="edit-buttons pull-right">
-                <div ng-show="vm.editable">
-                    <a class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</a>
-                    <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit" value="Save">
+            <fieldset>
+                <div class="name">
+                    <label for="licenseName">License Name</label>
+                    <view-edit-text-field ng-model="vm.license.name" edit-mode="vm.editable"><h1>{{ vm.license.name }}</h1>
+                    </view-edit-text-field>
                 </div>
 
-                <div id="license-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></div>
-            </div>
+                <div ng-show="!vm.newLicense" class="edit-buttons pull-right">
+                    <div ng-show="vm.editable">
+                        <a class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</a>
+                        <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit" value="Save">
+                    </div>
+
+                    <div id="license-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></div>
+                </div>
+            </fieldset>
         </header>
 
         <section class="content">
@@ -164,12 +166,14 @@
 
                 </div>
             </fieldset>
+        </section>
 
-            <footer ng-show="vm.editable">
+        <footer ng-show="vm.editable">
+            <fieldset>
                 <button type="button" class="carli-button cancel-button" data-dismiss="modal" ng-click="vm.cancelEdit()">Cancel</button>
                 <input type="submit" id="license-submit" class="carli-button save-button" value="Save"></input>
-            </footer>
-        </section>
+            </fieldset>
+        </footer>
     </form>
 
     <hr>
