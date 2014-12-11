@@ -2,6 +2,7 @@ var chai   = require( 'chai' )
     , expect = chai.expect
     , chaiAsPromised = require( 'chai-as-promised')
     , VendorRepository = require('../Entity/VendorRepository')
+    , LicenseRepository = require('../Entity/LicenseRepository')
     , EntityTransform = require( '../Entity/EntityTransformationUtils.js' )
     , uuid   = require( 'node-uuid' )
     ;
@@ -104,14 +105,23 @@ describe('The expandObjectFromPersistence function', function(){
 
     it('should expand references to objects in entities', function(){
         var vendor = { id: uuid.v4(), type: "Vendor", name: "my vendor name"};
-        var product = { id: "product1", type: "Product", name: "my product name", vendor: vendor.id };
+        var license = {id: uuid.v4(), type: "License", name: "my license name", vendor: 'Some Bogus Vendor'};
+        var product = { id: "product1", type: "Product", name: "my product name", vendor: vendor.id, license: license.id };
+
+        var referencesToExpand = ['vendor', 'license'];
 
         return VendorRepository.create( vendor )
-            .then( function(vendor) {
-                return EntityTransform.expandObjectFromPersistence( product, ['vendor'] );
+            .then( function(){
+                return LicenseRepository.create( license );
             })
-            .then( function ( productEntity ) {
-                return expect( productEntity.vendor ).to.be.an('object').and.have.property('name');
+            .then( function() {
+                return EntityTransform.expandObjectFromPersistence( product, referencesToExpand );
+            })
+            .then( function () {
+                return expect( product.vendor ).to.be.an('object').and.have.property('name');
+            })
+            .then( function(){
+                return expect( product.license ).to.be.an('object').and.have.property('name');
             });
     });
 });
