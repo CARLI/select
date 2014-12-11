@@ -1,6 +1,7 @@
 .carli-select {
     $height: 32px;
     position: relative;
+    display: inline-block;
     
     select {
         @include vendor-prefix('appearance', 'none');
