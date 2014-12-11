@@ -27,7 +27,7 @@ function loadProduct( productId ){
 
     ProductRepository.load( productId )
         .then(function (product) {
-            return EntityTransform.expandObjectFromPersistence( product, ['vendor','license'] )
+            return EntityTransform.expandObjectFromPersistence( product, ['vendor','license'], {'getIsActive': getIsActive} )
                 .then(function (product) {
                     deferred.resolve(product);
                 })
@@ -71,6 +71,14 @@ function isAvailableToday( product ){
     var lastMidnight = moment().startOf('day');
     return throughDate.isAfter(lastMidnight);
 }
+
+/* functions that get added as instance methods on loaded Products */
+var getIsActive = function(){
+    if ( this.vendor && this.vendor.isActive != undefined) {
+        return this.isActive && this.vendor.isActive;
+    }
+    return this.isActive;
+};
 
 module.exports = {
     setStore: ProductRepository.setStore,

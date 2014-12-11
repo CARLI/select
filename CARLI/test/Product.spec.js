@@ -4,6 +4,7 @@ var chai   = require( 'chai' )
     , chaiAsPromised = require( 'chai-as-promised' )
     , moment = require('moment')
     , test = require( './Entity/EntityInterface.spec' )
+    , ProductRepository = require('../Entity/ProductRepository' )
     ;
 
 chai.use( chaiAsPromised );
@@ -44,8 +45,6 @@ function unavailableOneTimePurchaseProduct() {
 }
 
 describe('ProductRepository.listOneTimePurchaseProducts()', function() {
-    var ProductRepository = require('../Entity/ProductRepository' );
-
     it('should list a product that is available through tomorrow', function () {
         var availableProduct = availableOneTimePurchaseProduct();
 
@@ -80,5 +79,19 @@ describe('ProductRepository.listOneTimePurchaseProducts()', function() {
             function catchList(err) {
                 console.log('listAvailableOneTimePurchaseProducts failed: ' + err);
             })
+    });
+});
+
+describe('Loading a Product', function(){
+    it('should add a getIsActive method to instances of Product', function(){
+        var product = validProductData();
+
+        return ProductRepository.create( product )
+            .then( function() {
+                return ProductRepository.load( product.id );
+            }).
+            then( function( loadedProduct ){
+                return expect( loadedProduct.getIsActive).to.be.a('function');
+            });
     });
 });
