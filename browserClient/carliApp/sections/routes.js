@@ -75,10 +75,10 @@ angular.module('carli.routes',[
         controller:  'editLicensePageController',
         controllerAs:'vm'
     })
-    //.when('/styleGuide', {
-    //    templateUrl: '/carliApp/sections/styleGuide/styleGuide.html',
-    //    controller:  'styleGuideController',
-    //    controllerAs:'vm'
-    //})
+    .when('/styleGuide', {
+        templateUrl: '/carliApp/sections/styleGuide/styleGuide.html',
+        controller:  'styleGuideController',
+        controllerAs:'vm'
+    })
     ;
 });

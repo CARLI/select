@@ -8,7 +8,9 @@ angular.module('carli.sections.styleGuide',
 )
     .value('componentExamples', {
         'Alerts': 'alerts.html',
+        'Buttons': 'buttons.html',
         'Filter by Active': 'filter-active.html',
+        'Select': 'select.html',
         'View Edit Contact': 'view-edit-contact.html',
         'View Edit Text Field': 'view-edit-text-field.html',
         'View Edit Text Area': 'view-edit-text-area.html',
