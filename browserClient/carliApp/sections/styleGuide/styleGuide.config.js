@@ -3,13 +3,16 @@ angular.module('carli.sections.styleGuide',
         'carli.componentGatherer',
         'carli.alerts',
         'carli.viewEditDirectives',
-        'carli.goodSelect'
+        'carli.goodSelect',
+        'carli.checkbox',
+        'carli.radio'
     ]
 )
     .value('componentExamples', {
         'Alerts': 'alerts.html',
         'Buttons': 'buttons.html',
         'Checkbox': 'checkbox.html',
+        'Radio': 'radio.html',
         'Select': 'select.html',
         'Filter by Active': 'filter-active.html',
         'View Edit Contact': 'view-edit-contact.html',
