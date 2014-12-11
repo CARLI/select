@@ -124,4 +124,15 @@ describe('The expandObjectFromPersistence function', function(){
                 return expect( product.license ).to.be.an('object').and.have.property('name');
             });
     });
+
+    it('should add functions to instances of entities', function () {
+        var entity = {};
+        var testFunction = function(){};
+        var functionsToAdd = { 'testFunction': testFunction };
+
+        EntityTransform.expandObjectFromPersistence(entity, [], functionsToAdd);
+
+        expect(entity.testFunction).to.be.a('Function');
+    });
+
 });

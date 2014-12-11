@@ -55,7 +55,14 @@ function _isNonNullObject(entity, prop) {
 
 
 function expandObjectFromPersistence(entity, referencesToExpand, functionsToAdd) {
+    _addFunctionsToEntityInstance(entity, functionsToAdd);
     return _fetchAndTransformObjectsFromReferences(entity, referencesToExpand);
+}
+
+function _addFunctionsToEntityInstance(entity, functionsToAdd) {
+    for ( var functionName in functionsToAdd ){
+        entity[functionName] = functionsToAdd[functionName];
+    }
 }
 
 function _fetchAndTransformObjectsFromReferences(entity, references) {
