@@ -48,7 +48,7 @@ module.exports = function (type) {
                 return dataStore.save( data )
             } )
             .then( function( savedData ) {
-                deferred.resolve( _cloneData( savedData ) );
+                deferred.resolve( data.id );
             } )
             .catch( function( err ) {
                 deferred.reject( err );
