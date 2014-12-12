@@ -79,6 +79,11 @@ function _fetchAllObjectsFromReferences(entity, referencesArray) {
     for (var i in referencesArray) {
         var property = referencesArray[i];
 
+        /*********
+         * NOTE: If we ever need 2-way references (e.g., a product contains a vendor and a vendor contains a product list)
+         * the load call here will recurse forever.  Will need to impose a recursion limit so that we only dive down
+         * one level deep to expand references into objects. (or, we only want to expand one type of object once)
+         *********/
         if (entity[property]) {
             promises.push( repositories[property].load(entity[property]) );
         }
