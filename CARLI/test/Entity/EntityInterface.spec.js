@@ -182,7 +182,7 @@ function test( entityTypeName, validData, invalidData ) {
 
         describe( entityTypeName + '.list', function(){
             it( 'should return an array', function() {
-                expect( EntityRepository.list() ).to.eventually.be.an('Array');
+                return expect( EntityRepository.list() ).to.eventually.be.an('Array');
             } );
 
             // KLUDGE:  We really need to destroy all items and start over in each test
