@@ -38,10 +38,8 @@ module.exports = function (type) {
         create: function( originalData, transformFunction ) {
             validateCreateData( originalData );
 
-            //clone
             var data = _cloneData( originalData );
 
-            //transform
             data.id = data.id || uuid.v4();
             data.type = type;
 
@@ -64,15 +62,23 @@ module.exports = function (type) {
             return deferred.promise;
         },
 
-        update: function( data ){
-            validateUpdateData( data );
+        update: function( originalData, transformFunction ){
+            validateUpdateData( originalData );
+
+            var data = _cloneData( originalData );
+
+            if ( transformFunction && typeof(transformFunction) === 'function' ){
+                transformFunction(data);
+            }
+
             var deferred = Q.defer();
+
             Validator.validate( data )
             .then( function() {
                 return dataStore.save( data )
             } )
             .then( function( savedData ) {
-                deferred.resolve( _cloneData( savedData ) );
+                deferred.resolve( data.id );
             } )
             .catch( function( err ) {
                 deferred.reject( err );

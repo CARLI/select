@@ -153,8 +153,8 @@ function test( entityTypeName, validData, invalidData ) {
                         entity.foo = 'new value';
                         return EntityRepository.update( entity );
                     })
-                    .then ( function ( entity ) {
-                        return EntityRepository.load( entity.id );
+                    .then ( function ( entityId ) {
+                        return EntityRepository.load( entityId );
                     })
                     .then( function( entity ){
                         return expect( entity ).to.have.property( 'foo', 'new value' );
