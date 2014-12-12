@@ -1,12 +1,11 @@
 var Q = require('q')
-    ,VendorR = require('./VendorRepository')
 ;
 
 var repositories = {
     library : require('./LibraryRepository'),
     license : require('./LicenseRepository'),
     product : require('./ProductRepository'),
-    vendor : VendorR
+    vendor : require('./VendorRepository')
 };
 
 function removeEmptyContactsFromEntity(entity) {
@@ -52,7 +51,28 @@ function _isNonNullObject(entity, prop) {
     return (entity[prop] && typeof entity[prop] === 'object');
 }
 
+function expandListOfObjectsFromPersistence(objectListPromise, referencesToExpand, functionsToAdd) {
+    var deferred = Q.defer();
+    var list;
+    var promises = [];
 
+    objectListPromise.then(function (entities) {
+        list = entities;
+
+        entities.forEach(function (entity) {
+            var p = expandObjectFromPersistence(entity, referencesToExpand, functionsToAdd);
+            promises.push(p);
+        });
+
+        Q.allSettled(promises).then(function () {
+            deferred.resolve(list);
+        })
+    }).catch(function (err) {
+        deferred.reject(err);
+    });
+
+    return deferred.promise;
+}
 
 function expandObjectFromPersistence(entity, referencesToExpand, functionsToAdd) {
     _addFunctionsToEntityInstance(entity, functionsToAdd);
@@ -66,11 +86,13 @@ function _addFunctionsToEntityInstance(entity, functionsToAdd) {
 }
 
 function _fetchAndTransformObjectsFromReferences(entity, references) {
-    return _fetchAllObjectsFromReferences(entity, references)
-        .then( function( resolvedObjects ){
-            _transformReferencesToObjects(entity, resolvedObjects);
-            return entity;
-        });
+    var fetchPromise = _fetchAllObjectsFromReferences(entity, references);
+
+    fetchPromise.then( function( resolvedObjects ){
+        _transformReferencesToObjects(entity, resolvedObjects);
+    });
+
+    return fetchPromise;
 }
 
 function _fetchAllObjectsFromReferences(entity, referencesArray) {
@@ -85,7 +107,8 @@ function _fetchAllObjectsFromReferences(entity, referencesArray) {
          * one level deep to expand references into objects. (or, we only want to expand one type of object once)
          *********/
         if (entity[property]) {
-            promises.push( repositories[property].load(entity[property]) );
+            var p = repositories[property].load(entity[property]);
+            promises.push( p );
         }
     }
 
@@ -106,5 +129,6 @@ function _transformReferencesToObjects(entity, resolvedObjects) {
 module.exports = {
     removeEmptyContactsFromEntity: removeEmptyContactsFromEntity,
     transformObjectForPersistence: transformObjectForPersistence,
-    expandObjectFromPersistence: expandObjectFromPersistence
+    expandObjectFromPersistence: expandObjectFromPersistence,
+    expandListOfObjectsFromPersistence: expandListOfObjectsFromPersistence
 };

@@ -5,6 +5,7 @@ var chai   = require( 'chai' )
     , LicenseRepository = require('../Entity/LicenseRepository')
     , EntityTransform = require( '../Entity/EntityTransformationUtils.js' )
     , uuid   = require( 'node-uuid' )
+    , Q = require('q')
     ;
 
 chai.use( chaiAsPromised );
@@ -133,6 +134,43 @@ describe('The expandObjectFromPersistence function', function(){
         EntityTransform.expandObjectFromPersistence(entity, [], functionsToAdd);
 
         expect(entity.testFunction).to.be.a('Function');
+    });
+
+});
+
+describe('The expandListOfObjectsFromPersistence', function(){
+    it('should be a function', function(){
+        expect(EntityTransform.expandListOfObjectsFromPersistence).to.be.a('Function');
+    });
+
+    it('should expand references to objects in entities', function(){
+        var vendor = { id: uuid.v4(), type: "Vendor", name: "my vendor name"};
+        var license = {id: uuid.v4(), type: "License", name: "my license name", vendor: 'Some Bogus Vendor'};
+
+        var productList = [
+            { id: "product1", type: "Product", name: "my product name 1", vendor: vendor.id, license: license.id },
+            { id: "product2", type: "Product", name: "my product name 2", vendor: vendor.id, license: license.id },
+            { id: "product3", type: "Product", name: "my product name 3", vendor: vendor.id, license: license.id }
+        ];
+
+        var deferred = Q.defer();
+        deferred.resolve(productList);
+        var listPromise = deferred.promise;
+        var referencesToExpand = ['vendor', 'license'];
+
+        return VendorRepository.create( vendor )
+            .then( function() {
+                return LicenseRepository.create( license );
+            })
+            .then( function() {
+                return EntityTransform.expandListOfObjectsFromPersistence( listPromise, referencesToExpand, {} );
+            })
+            .then( function () {
+                return expect( productList[0].vendor ).to.be.an('object').and.have.property('name');
+            })
+            .then( function(){
+                return expect( productList[0].license ).to.be.an('object').and.have.property('name');
+            });
     });
 
 });
