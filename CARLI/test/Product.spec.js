@@ -46,7 +46,7 @@ function unavailableOneTimePurchaseProduct() {
 
 /* We changed the product create method to clone the object, so the test below need to change and not rely on
  * the original instance being modified by create() */
-xdescribe('ProductRepository.listOneTimePurchaseProducts()', function() {
+describe('ProductRepository.listOneTimePurchaseProducts()', function() {
     it('should list a product that is available through tomorrow', function () {
         var availableProduct = availableOneTimePurchaseProduct();
 
@@ -57,8 +57,22 @@ xdescribe('ProductRepository.listOneTimePurchaseProducts()', function() {
             function catchCreate(err) {
                 console.log('Create failed: ' + err);
             })
-            .then(function(otpList) {
-                return expect(otpList).to.deep.include.members([availableProduct]);
+            .then(function(oneTimePurchaseProductList) {
+
+                function findMatchingOneTimePurchase( productList ){
+                    var result = false;
+                    var productToMatch = availableProduct;
+
+                    productList.forEach(function( product ){
+                        if ( product.id === productToMatch.id ){
+                            result = true;
+                        }
+                    });
+
+                    return result;
+                }
+
+                return expect(oneTimePurchaseProductList).to.satisfy( findMatchingOneTimePurchase );
             },
             function catchList(err) {
                 console.log('listAvailableOneTimePurchaseProducts failed: ' + err);
@@ -75,8 +89,22 @@ xdescribe('ProductRepository.listOneTimePurchaseProducts()', function() {
             function catchCreate(err) {
                 console.log('Create failed: ' + err);
             })
-            .then(function (otpList) {
-                return expect(otpList).to.not.deep.include.members([unavailableProduct]);
+            .then(function (oneTimePurchaseProductList) {
+
+                function verifyNoMatchingOneTimePurchase( productList ){
+                    var found = false;
+                    var productToMatch = unavailableProduct;
+
+                    productList.forEach(function( product ){
+                        if ( product.id === productToMatch.id ){
+                            found = true;
+                        }
+                    });
+
+                    return !found;
+                }
+
+                return expect(oneTimePurchaseProductList).to.satisfy( verifyNoMatchingOneTimePurchase );
             },
             function catchList(err) {
                 console.log('listAvailableOneTimePurchaseProducts failed: ' + err);
@@ -84,7 +112,7 @@ xdescribe('ProductRepository.listOneTimePurchaseProducts()', function() {
     });
 });
 
-describe('Loading a Product', function(){
+describe('Adding functions to Product instances', function(){
     it('should add a getIsActive method to instances of Product', function(){
         var product = validProductData();
 
