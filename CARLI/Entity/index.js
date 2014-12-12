@@ -35,11 +35,19 @@ module.exports = function (type) {
             dataStore = store;
         },
 
-        create: function( data ) {
-            validateCreateData( data );
+        create: function( originalData, transformFunction ) {
+            validateCreateData( originalData );
 
+            //clone
+            var data = _cloneData( originalData );
+
+            //transform
             data.id = data.id || uuid.v4();
             data.type = type;
+
+            if ( transformFunction && typeof(transformFunction) === 'function' ){
+                transformFunction(data);
+            }
 
             var deferred = Q.defer();
 

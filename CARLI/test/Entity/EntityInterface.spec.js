@@ -101,11 +101,23 @@ function test( entityTypeName, validData, invalidData ) {
 
             it( 'should return the object that was created', function() {
                 var entity_data = validData();
-                entity_data.id = 'thingy';
+                entity_data.id = uuid.v4();
                 entity_data.foo = 'bar';
-                var entity = EntityRepository.create( entity_data );
-                entity_data.type = entityTypeName;
-                expect( EntityRepository.load( 'thingy' ) ).to.eventually.deep.equal( entity_data );
+
+                var loaded_entity;
+
+                return EntityRepository.create( entity_data )
+                    .then(function( entityId ){
+                        entity_data.type = entityTypeName;
+                        return EntityRepository.load( entityId )
+                    })
+                    .then(function( entity ){
+                        loaded_entity = entity;
+                        return expect( loaded_entity.foo ).to.equal( entity_data.foo );
+                    })
+                    .then( function(){
+                        return expect( loaded_entity.id ).to.equal( entity_data.id );
+                    });
             } );
 
         } );
@@ -133,23 +145,33 @@ function test( entityTypeName, validData, invalidData ) {
             it( 'should update properties of a previously saved object', function(){
                 var entity_data = validData();
                 entity_data.foo = 'bar';
-                return EntityRepository.create( entity_data ).then( function ( entityId ) {
-                    entity_data.foo = 'new value';
-                    return EntityRepository.update( entity_data );
-                } )
-                .then ( function ( entity ) {
-                    return expect( EntityRepository.load( entity.id ) ).to.eventually.deep.have.property( 'foo', 'new value' );
-                } );
+                return EntityRepository.create( entity_data )
+                    .then( function ( entityId ) {
+                        return EntityRepository.load( entityId )
+                    })
+                    .then(function( entity ){
+                        entity.foo = 'new value';
+                        return EntityRepository.update( entity );
+                    })
+                    .then ( function ( entity ) {
+                        return EntityRepository.load( entity.id );
+                    })
+                    .then( function( entity ){
+                        return expect( entity ).to.have.property( 'foo', 'new value' );
+                    });
             } );
 
             it( 'should fail on update with invalid schema', function(){
                 var entity_data = validData();
                 entity_data.foo = 'bar';
-                return EntityRepository.create( entity_data ).then( function( entityId ) {
-                    entity_data.foo = 'new value';
-                    delete entity_data.name;
-                    return expect( EntityRepository.update( entity_data ) ).to.be.rejectedWith( /validation error/ );
-                } );
+                return EntityRepository.create( entity_data )
+                    .then( function( entityId ) {
+                        return EntityRepository.load(entityId);
+                    })
+                    .then( function (loaded_entity) {
+                        delete loaded_entity.name;
+                        return expect( EntityRepository.update( loaded_entity ) ).to.be.rejectedWith( /validation error/ );
+                    });
             } );
 
         } );

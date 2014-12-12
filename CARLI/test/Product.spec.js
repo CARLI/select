@@ -89,8 +89,8 @@ describe('Loading a Product', function(){
         var product = validProductData();
 
         return ProductRepository.create( product )
-            .then( function() {
-                return ProductRepository.load( product.id );
+            .then( function( productId) {
+                return ProductRepository.load( productId );
             }).
             then( function( loadedProduct ){
                 return expect( loadedProduct.getIsActive).to.be.a('function');
