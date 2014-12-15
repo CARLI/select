@@ -6,11 +6,9 @@ radio {
 
     input[type="radio"]  {
         margin: 0;
-        opacity: 0;
         pointer-events: none;
         position: absolute;
         visibility: hidden;
-        z-index: 1;
 
         & + label .radio-display:before {
             content: "\f10c";

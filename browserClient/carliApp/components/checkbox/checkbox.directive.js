@@ -6,12 +6,9 @@ angular.module('carli.checkbox')
             restrict: 'E',
             templateUrl: 'carliApp/components/checkbox/checkbox.html',
             scope: {
-                ngModel: '='
+                ngModel: '=',
+                id: '='
             },
-            link: function postLink(scope, element, attrs) {
-                element.on('click', function(event){
-                    element.find('input').click();
-                });
-            }
+            transclude: true
         };
     }
