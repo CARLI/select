@@ -2,28 +2,27 @@ radio {
     cursor: pointer;
     font-size: 14px;
     display: inline-block;
-    position: relative;
-    width: 1.1em;
-    height: 1em;
-
-    .radio-display {
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
+    line-height: 1em;
 
     input[type="radio"]  {
         margin: 0;
         opacity: 0;
+        pointer-events: none;
         position: absolute;
+        visibility: hidden;
+        z-index: 1;
 
-        & + .radio-display:before {
+        & + label .radio-display:before {
             content: "\f10c";
         }
 
-        &:checked + .radio-display:before {
+        &:checked + label .radio-display:before {
             content: "\f192";
         }
+    }
+    
+    label {
+        font-weight: normal;
     }
 }
 

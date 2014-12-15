@@ -6,15 +6,11 @@ angular.module('carli.radio')
             restrict: 'E',
             templateUrl: 'carliApp/components/radio/radio.html',
             scope: {
-                ngModel: '='
+                ngModel: '=',
+                name: '=',
+                value: '=',
+                id: '='
             },
-            link: function postLink(scope, element, attrs) {
-                console.log('radio link');
-                element.on('click', function(event){
-                    console.log('radio clicked', event.currentTarget);
-                    console.log(element.find('input'));
-                    element.find('input').click();
-                });
-            }
+            transclude: true
         };
     }
