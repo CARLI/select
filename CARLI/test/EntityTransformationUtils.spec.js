@@ -143,14 +143,13 @@ describe('The expandListOfObjectsFromPersistence', function(){
         expect(EntityTransform.expandListOfObjectsFromPersistence).to.be.a('Function');
     });
 
-    
+    //Shared between the next two tests to verify that we load it correctly once and then load the changed values
+    var vendor1 = { id: uuid.v4(), type: "Vendor", name: "my vendor name"};
+    var license1 = {id: uuid.v4(), type: "License", name: "my license name", vendor: vendor1.id};
+    var vendor2 = { id: uuid.v4(), type: "Vendor", name: "my other vendor name"};
+    var license2 = {id: uuid.v4(), type: "License", name: "my other license name", vendor: vendor2.id};
 
     it('should expand references to objects in entities', function(){
-        var vendor1 = { id: uuid.v4(), type: "Vendor", name: "my vendor name"};
-        var license1 = {id: uuid.v4(), type: "License", name: "my license name", vendor: vendor1.id};
-        var vendor2 = { id: uuid.v4(), type: "Vendor", name: "my other vendor name"};
-        var license2 = {id: uuid.v4(), type: "License", name: "my other license name", vendor: vendor2.id};
-
         var productList = [
             { id: "product1", type: "Product", name: "my product name 1", vendor: vendor1.id, license: license1.id },
             { id: "product2", type: "Product", name: "my product name 2", vendor: vendor2.id, license: license2.id },
@@ -198,7 +197,51 @@ describe('The expandListOfObjectsFromPersistence', function(){
             })
             .then( function () {
                 return expect( productList[2].license.id ).to.equal(license2.id);
-            })
+            });
     });
 
+    it('should load the latest Entity values', function(){
+        var productList = [
+            { id: "product1", type: "Product", name: "my product name 1", vendor: vendor1.id, license: license1.id },
+            { id: "product2", type: "Product", name: "my product name 2", vendor: vendor2.id, license: license2.id },
+            { id: "product3", type: "Product", name: "my product name 3", vendor: vendor2.id, license: license2.id }
+        ];
+
+        var deferred = Q.defer();
+        deferred.resolve(productList);
+        var listPromise = deferred.promise;
+        var referencesToExpand = ['vendor', 'license'];
+
+        var newVendorName = "A different vendor name";
+        var newlicenseName = "A different license name";
+
+        return VendorRepository.load( vendor1.id )
+            .then( function( vendor ) {
+                vendor.name = newVendorName;
+                return VendorRepository.update( vendor );
+            })
+            .then( function() {
+                return LicenseRepository.load( license1.id );
+            })
+            .then( function( license ) {
+                license.name = newlicenseName;
+                return LicenseRepository.update( license );
+            })
+            .then( function() {
+                return EntityTransform.expandListOfObjectsFromPersistence( listPromise, referencesToExpand, {} );
+            })
+            .then( function () {
+                return expect( productList[0].vendor ).to.be.an('object').and.have.property('name');
+            })
+            .then( function () {
+                return expect( productList[0].vendor.name ).to.equal(newVendorName);
+            })
+            .then( function(){
+                return expect( productList[0].license ).to.be.an('object').and.have.property('name');
+            })
+            .then( function () {
+                return expect( productList[0].license.name ).to.equal(newlicenseName);
+            })
+
+    });
 });
