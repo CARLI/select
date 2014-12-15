@@ -11,6 +11,9 @@ angular.module('carli.radio')
                 value: '=',
                 id: '='
             },
-            transclude: true
+            transclude: true,
+            link: function (scope, element, attrs) {
+                scope.radioId = scope.id ? scope.id : uuid.generateCssId();
+            }
         };
     }

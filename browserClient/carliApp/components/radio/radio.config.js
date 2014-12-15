@@ -1,1 +1,3 @@
-angular.module('carli.radio', []);
+angular.module('carli.radio', [
+    'carli.uuid'
+]);
