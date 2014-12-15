@@ -10,9 +10,11 @@ var Entity = require('../Entity')
 var ProductRepository = Entity('Product');
 ProductRepository.setStore( Store( StoreModule ) );
 
-var transformFunction = function( product ){
+var propertiesToTransform = ['vendor', 'license'];
+
+function transformFunction( product ){
     EntityTransform.transformObjectForPersistence(product, propertiesToTransform);
-};
+}
 
 function createProduct( product ){
     return ProductRepository.create( product, transformFunction );
@@ -31,13 +33,13 @@ function loadProduct( productId ){
 
     ProductRepository.load( productId )
         .then(function (product) {
-            return EntityTransform.expandObjectFromPersistence( product, propertiesToTransform, functionsToAdd )
-                .then(function (product) {
+            EntityTransform.expandObjectFromPersistence( product, propertiesToTransform, functionsToAdd )
+                .then(function () {
                     deferred.resolve(product);
                 })
                 .catch(function(err){
                     // WARNING: this suppresses errors for entity references that are not found in the store
-                    //console.warn('Cannot find reference in database to either vendor or license in product ', product);
+                    console.warn('*** Cannot find reference in database to either vendor or license in product ', err);
                     deferred.resolve(product);
                 });
         })
@@ -84,8 +86,6 @@ var getIsActive = function(){
     }
     return this.isActive;
 };
-
-var propertiesToTransform = ['vendor', 'license'];
 
 var functionsToAdd = {
     'getIsActive': getIsActive
