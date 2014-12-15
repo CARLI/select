@@ -1,11 +1,12 @@
 var Entity = require('../Entity')
     , config = require( '../config' )
+    , StoreOptions = config.storeOptions
     , Store = require( '../Store' )
-    , StoreModule = require( '../Store/' + config.store )( config.storeOptions )
+    , StoreModule = require( '../Store/CouchDbStore')
     ;
 
 var LibraryRepository = Entity('Library');
-LibraryRepository.setStore( Store( StoreModule ) );
+LibraryRepository.setStore( Store( StoreModule(StoreOptions) ) );
 
 LibraryRepository.publicFunc = function(){};
 

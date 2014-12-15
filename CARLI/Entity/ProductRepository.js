@@ -1,14 +1,15 @@
 var Entity = require('../Entity')
   , EntityTransform = require( './EntityTransformationUtils')
   , config = require( '../config' )
+  , StoreOptions = config.storeOptions
   , Store = require( '../Store' )
-  , StoreModule = require( '../Store/' + config.store )( config.storeOptions )
+  , StoreModule = require( '../Store/CouchDbStore')
   , moment = require('moment')
   , Q = require('q')
   ;
 
 var ProductRepository = Entity('Product');
-ProductRepository.setStore( Store( StoreModule ) );
+ProductRepository.setStore( Store( StoreModule(StoreOptions) ) );
 
 var propertiesToTransform = ['vendor', 'license'];
 
