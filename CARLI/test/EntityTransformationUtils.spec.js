@@ -77,7 +77,7 @@ describe('The transformObjectForPersistence function', function(){
             }
         };
 
-        EntityTransform.transformObjectForPersistence( testEntity, {'testProperty':{}, 'another': {}} );
+        EntityTransform.transformObjectForPersistence( testEntity, ['testProperty', 'another'] );
         expect(testEntity.testProperty).to.equal('foo');
         expect(testEntity.another).to.equal('another');
     });

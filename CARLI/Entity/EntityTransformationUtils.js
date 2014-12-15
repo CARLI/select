@@ -32,7 +32,8 @@ function transformObjectForPersistence(entity, propertiesToTransform) {
 }
 
 function _replaceObjectsWithIds(entity, propertiesToTransform) {
-    for (var property in propertiesToTransform) {
+    for (var i in propertiesToTransform) {
+        var property = propertiesToTransform[i];
         if (_isNonNullObject(entity, property)) {
             entity[property] = entity[property].id;
         }
