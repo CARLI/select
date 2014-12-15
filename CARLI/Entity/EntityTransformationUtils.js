@@ -9,6 +9,9 @@ var repositories = {
 };
 
 function removeEmptyContactsFromEntity(entity) {
+    if ( !entity.contacts ){
+        return;
+    }
 
     var noEmptiesContactList = [];
 
@@ -29,6 +32,7 @@ function removeEmptyContactsFromEntity(entity) {
 function transformObjectForPersistence(entity, propertiesToTransform) {
     _replaceObjectsWithIds(entity, propertiesToTransform);
     _removeHelperFunctions(entity);
+    removeEmptyContactsFromEntity(entity);
 }
 
 function _replaceObjectsWithIds(entity, propertiesToTransform) {
