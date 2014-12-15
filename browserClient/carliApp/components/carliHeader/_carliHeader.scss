@@ -3,8 +3,6 @@ $bg-color: $purple;
 $fg-color: $white;
 
 $height: 110px;
-$logo-width: 243px;
-$logo-height: 59px;
 
 header.carli-header {
     color: $fg-color;
@@ -13,23 +11,14 @@ header.carli-header {
     background-repeat: no-repeat;
     height: 110px;
 
-    .carli-logo {
-        margin-top: 20px;
-        margin-left: $page-gutter;
-        width: $logo-width;
-        height: $logo-height;
-        background-image: url('/images/carli-logo.png');
-        background-repeat: no-repeat;
-        float: left;
-        text-indent: -9999px;
-    }
     .app-name {
-        float: left;
-        margin-top: 37px;
-        margin-left: 18px;
-        font-family: 'Merriweather', serif;
-        font-weight: 300;
-        @include font-size(16);
-        line-height: 20px;
+        font-family: 'Dosis';
+        font-weight: 400;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        @include font-size(30);
+        color: $fg-color;
+        padding-top: 50px;
+        padding-left: $page-gutter;
     }
 }
