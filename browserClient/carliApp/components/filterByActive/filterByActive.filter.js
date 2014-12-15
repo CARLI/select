@@ -12,9 +12,9 @@ angular.module('carli.filterByActive')
             return $filter('filter')(values, function (value) {
                 switch (activeFilterState) {
                     case "Active":
-                        return value.isActive;
+                        return typeof(value.getIsActive) === 'function' ? value.getIsActive() : value.isActive;
                     case "Inactive":
-                        return !value.isActive;
+                        return typeof(value.getIsActive) === 'function' ? !value.getIsActive() : !value.isActive;
                     default:
                         return true;
                 }
