@@ -126,6 +126,9 @@ describe('The expandObjectFromPersistence function', function(){
             });
     });
 
+    it('should load the latest Entity values');
+    //For now the list test also exercises the method this would test.
+
     it('should add functions to instances of entities', function () {
         var entity = {};
         var testFunction = function(){};
