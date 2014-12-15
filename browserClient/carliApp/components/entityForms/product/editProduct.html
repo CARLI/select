@@ -29,7 +29,7 @@
             <div class="column">
                 <label for="productVendor">Vendor</label>
                 <div class="view-edit-select" ng-show="vm.newProduct">
-                    <select ng-model="vm.product.vendor" ng-options="vendor.name for vendor in vm.vendorList track by vendor.id"></select>
+                    <input type="text" ng-model="vm.product.vendor" typeahead="vendor as vendor.name for vendor in vm.vendorList | filter:$viewValue">
                 </div>
                 <div ng-show="!vm.newProduct">{{ vm.product.vendor.name }}</div>
 
