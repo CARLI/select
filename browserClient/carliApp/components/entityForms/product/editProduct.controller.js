@@ -4,14 +4,22 @@ angular.module('carli.entityForms.product')
 function editProductController( $scope, $filter, libraryService, licenseService, productService, vendorService, alertService ) {
     var vm = this;
 
+    var templates = {
+        productFields: 'carliApp/components/entityForms/product/editProduct.html',
+        oneTimePurchaseFields: 'carliApp/components/entityForms/product/editOneTimePurchase.html'
+    };
+    vm.currentTemplate = templates.productFields;
+
     vm.productId = $scope.productId;
     var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
     vm.toggleEditable = toggleEditable;
     vm.cancelEdit = cancelEdit;
     vm.saveProduct = saveProduct;
+    vm.submitAction = submitAction;
+    vm.submitLabel = submitLabel;
 
-    vm.closeModal = function() {
+    vm.closeModal = function closeModal() {
         $('#new-product-modal').modal('hide');
     };
 
@@ -115,6 +123,32 @@ function editProductController( $scope, $filter, libraryService, licenseService,
         activate();
     }
 
+    function isWizardComplete() {
+        if (vm.product.cycleType != 'One-Time Purchase') {
+            return true;
+        }
+        if (vm.currentTemplate == templates.oneTimePurchaseFields) {
+            return true;
+        }
+        return false;
+    }
+
+    function submitAction() {
+        if (!vm.newProduct || isWizardComplete()) {
+            saveProduct();
+            vm.closeModal();
+        } else {
+            vm.currentTemplate = templates.oneTimePurchaseFields;
+        }
+    }
+
+    function submitLabel() {
+        if (!vm.newProduct || isWizardComplete()) {
+            return 'Save';
+        }
+        return 'Next';
+    }
+
     function saveProduct(){
         translateOptionalSelections();
 
@@ -156,7 +190,7 @@ function editProductController( $scope, $filter, libraryService, licenseService,
 
     function filterLicensesBelongingToVendor(vendor) {
         return function(license) {
-            return vendor.id === license.vendor;
+            return vendor.id === license.vendor.id;
         };
     }
 

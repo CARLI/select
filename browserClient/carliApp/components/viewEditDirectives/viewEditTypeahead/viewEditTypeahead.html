@@ -1,4 +1,4 @@
 <div ng-show="editMode">
-    <input type="text" ng-model="ngModel" typeahead="option as option.name for option in options | filter:$viewValue">
+    <input type="text" ng-model="ngModel" typeahead="option as option.name for option in options | filter:{ name: $viewValue }">
 </div>
 <div ng-show="!editMode" ng-transclude></div>

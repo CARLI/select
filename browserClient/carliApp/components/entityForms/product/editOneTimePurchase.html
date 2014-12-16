@@ -1,0 +1,55 @@
+<form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="productForm">
+
+    <header class="page-header">
+        <h1 ng-show="vm.newProduct">{{ vm.product.name }}</h1>
+    </header>
+
+    <section class="content">
+        <fieldset>
+
+            <div class="one-time-purchase-settings">
+                <label>Annual Access Fee</label>
+                <view-edit-number-field ng-model="vm.product.oneTimePurchase.annualAccessFee" edit-mode="vm.editable">
+                    {{ vm.product.oneTimePurchase.annualAccessFee | currency }}
+                </view-edit-number-field>
+
+                <label>Available for Purchase Through</label>
+                <view-edit-text-field ng-model="vm.product.oneTimePurchase.availableForPurchaseThrough" edit-mode="vm.editable">
+                    {{ vm.product.oneTimePurchase.availableForPurchaseThrough }}
+                </view-edit-text-field>
+
+                <ul class="library-list entity-list">
+                    <li class="column-headers">
+                        <header class="column">Library</header>
+                        <header class="column">Price</header>
+                        <header class="column">Purchased</header>
+                    </li>
+                    <li ng-repeat="library in vm.libraryList | filterByActive:activeFilterState | filter:filterText">
+                        <span class="column">{{ library.name }}</span>
+                            <span class="column">
+                                <view-edit-number-field ng-model="vm.product.oneTimePurchase.libraryPurchaseData[library.id].price" edit-mode="vm.editable && !vm.product.oneTimePurchase.libraryPurchaseData[library.id].datePurchased">
+                                    {{ vm.product.oneTimePurchase.libraryPurchaseData[library.id].price | currency }}
+                                </view-edit-number-field>
+                            </span>
+                            <span class="column text-center">
+                                <i class="fa fa-check-circle" ng-show="vm.product.oneTimePurchase.libraryPurchaseData[library.id].datePurchased"></i>
+                            </span>
+                    </li>
+                </ul>
+            </div>
+
+        </fieldset>
+    </section>
+    <footer ng-show="vm.editable">
+        <fieldset>
+            <button type="button" class="carli-button cancel-button" data-dismiss="modal" ng-click="vm.cancelEdit()">
+                Cancel
+            </button>
+            <input type="button" id="vendor-submit" class="carli-button save-button" value="{{ vm.submitLabel() }}" ng-click="vm.submitAction()">
+        </fieldset>
+    </footer>
+
+</form>
+
+<hr>
+<debug-panel>{{ vm.product | json }}</debug-panel>
