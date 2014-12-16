@@ -64,5 +64,5 @@ module.exports = {
     create: createVendor,
     update: updateVendor,
     list: listVendors,
-    load: loadVendor,
+    load: loadVendor
 };
