@@ -1,6 +1,7 @@
 angular.module('carli.viewEditDirectives', [
     'carli.viewEditDirectives.viewEditCheckbox',
     'carli.viewEditDirectives.viewEditContact',
+    'carli.viewEditDirectives.viewEditDate',
     'carli.viewEditDirectives.viewEditNumberField',
     'carli.viewEditDirectives.viewEditPercentageField',
     'carli.viewEditDirectives.viewEditRadios',

@@ -1,0 +1,14 @@
+view-edit-date {
+    display: block;
+    position: relative;
+
+    input[type="text"] {
+        padding-right: 26px;
+    }
+
+    .fa-calendar {
+        position: absolute;
+        right: 6px;
+        top: 6px;
+    }
+}
