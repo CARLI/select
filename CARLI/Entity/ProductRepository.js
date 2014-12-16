@@ -54,7 +54,7 @@ function loadProduct( productId ){
 function listAvailableOneTimePurchaseProducts(){
     var deferred = Q.defer();
 
-    ProductRepository.list()
+    listProducts()
         .then(function (allProducts) {
             var p = allProducts
                 .filter(isOneTimePurchaseProduct)
@@ -72,7 +72,7 @@ function isOneTimePurchaseProduct( product ){
     return product.cycleType === 'One-Time Purchase';
 }
 function isActive( product ){
-    return product.isActive === true;
+    return product.getIsActive();
 }
 function isAvailableToday( product ){
     var throughDate = moment(product.oneTimePurchase.availableForPurchaseThrough);
