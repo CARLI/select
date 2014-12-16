@@ -189,7 +189,7 @@ function editProductController( $scope, $filter, libraryService, licenseService,
 
     function filterLicensesBelongingToVendor(vendor) {
         return function(license) {
-            return vendor.id === license.vendor;
+            return vendor.id === license.vendor.id;
         };
     }
 
