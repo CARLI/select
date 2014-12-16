@@ -76,8 +76,6 @@ function editLibraryController( $scope, entityBaseService, libraryService, alert
 
     function saveLibrary(){
 
-        entityBaseService.removeEmptyContactsFromEntity(vm.library);
-
         if (vm.libraryId !== undefined){
             libraryService.update( vm.library ).then(function(){
                 alertService.putAlert('Library updated', {severity: 'success'});

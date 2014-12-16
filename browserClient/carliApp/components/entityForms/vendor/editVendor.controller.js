@@ -70,8 +70,6 @@ function editVendorController( $scope, entityBaseService, vendorService, alertSe
 
     function saveVendor() {
 
-        entityBaseService.removeEmptyContactsFromEntity(vm.vendor);
-
         if (vm.vendorId !== undefined) {
             vendorService.update(vm.vendor)
                 .then(function () {

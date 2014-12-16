@@ -144,28 +144,6 @@ function test( storeTypeName, options ) {
                     done();
                 } );
             } );
-
-            it.skip('should save objects with differing types and same id separately', function( done ){
-                var sharedId = uuid.v4();
-
-                var objectWithType = makeValidObject();
-                objectWithType.id = sharedId;
-
-                var objectWithNewType = makeValidObject();
-                objectWithNewType.type = 'new_type';
-                objectWithNewType.id = sharedId;
-
-                Q.all([
-                  DataStore.save( objectWithType ),
-                  DataStore.save( objectWithNewType )
-                ])
-                .then( function() {
-                   expect( DataStore.get( {id: sharedId, type: objectWithType.type} ) ).to.eventually.deep.equal( objectWithType );
-                   expect( DataStore.get( {id: sharedId, type: objectWithNewType.type} ) ).to.eventually.deep.equal( objectWithNewType );
-                    done();
-                } );
-
-            } );
         } );
 
         it( 'should have a list function', function() {

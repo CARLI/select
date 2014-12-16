@@ -41,39 +41,35 @@ function test( entityTypeName, validData, invalidData ) {
                 function badSaveNoData(){
                     EntityRepository.create();
                 }
-                expect( badSaveNoData ).to.throw( 'Data Required' );
+                return expect( badSaveNoData ).to.throw( 'Data Required' );
             } );
 
             it( 'should be rejected on an invalid schema', function() {
                 return expect( EntityRepository.create( invalidData() ) ).to.be.rejectedWith( /validation error:/ );
             } );
 
-            it( 'should return an object with an id', function() {
-                expect( EntityRepository.create( validData() ) ).to.eventually.be.an('object').and.have.property('id');
-            } );
-
-            it( 'should return an object with type of "'+ entityTypeName +'"', function() {
-                expect( EntityRepository.create( validData() ) ).to.eventually.have.property('type').to.equal(entityTypeName);
+            it( 'should return an id string', function() {
+                return expect( EntityRepository.create( validData() ) ).to.eventually.be.an('string');
             } );
 
             it( 'should use a new id for new objects', function() {
-                var entity1, entity2;
+                var entity1Id, entity2Id;
                 return EntityRepository.create( validData() )
                 .then( function( data ) {
-                    entity1 = data;
+                    entity1Id = data;
                     return EntityRepository.create( validData() );
                 } )
                 .then( function ( data ) {
-                    entity2 = data;
-                    return expect( entity1.id ).to.not.equal( entity2.id );
+                    entity2Id = data;
+                    return expect( entity1Id ).to.not.equal( entity2Id );
                 } );
             } );
 
             it( 'should use an id if provided', function() {
                 var entityData = validData();
                 entityData.id = uuid.v4();
-                return EntityRepository.create( entityData ).then( function ( entity ) {
-                    expect( entity.id ).to.equal( entityData.id );
+                return EntityRepository.create( entityData ).then( function ( entityId ) {
+                    expect( entityId ).to.equal( entityData.id );
                 } );
             } );
 
@@ -87,7 +83,7 @@ function test( entityTypeName, validData, invalidData ) {
             it( 'should fail if no id string is provided', function() {
                 function badLoadNoId() {
                     EntityRepository.load();
-                };
+                }
                 expect( badLoadNoId ).to.throw( 'Id Required' );
             } );
 
@@ -97,19 +93,31 @@ function test( entityTypeName, validData, invalidData ) {
 
 
             it( 'should return an object', function() {
-                return EntityRepository.create( validData() ).then( function( entity ) {
-                    return expect( EntityRepository.load( entity.id ) )
-                      .to.eventually.be.an('object').with.property('id');
-                } );
+                return EntityRepository.create( validData() )
+                    .then( function( entityId ) {
+                        return expect( EntityRepository.load( entityId ) ).to.eventually.be.an('object').with.property('id');
+                    } );
             } );
 
             it( 'should return the object that was created', function() {
                 var entity_data = validData();
-                entity_data.id = 'thingy';
+                entity_data.id = uuid.v4();
                 entity_data.foo = 'bar';
-                var entity = EntityRepository.create( entity_data );
-                entity_data.type = entityTypeName;
-                expect( EntityRepository.load( 'thingy' ) ).to.eventually.deep.equal( entity_data );
+
+                var loaded_entity;
+
+                return EntityRepository.create( entity_data )
+                    .then(function( entityId ){
+                        entity_data.type = entityTypeName;
+                        return EntityRepository.load( entityId )
+                    })
+                    .then(function( entity ){
+                        loaded_entity = entity;
+                        return expect( loaded_entity.foo ).to.equal( entity_data.foo );
+                    })
+                    .then( function(){
+                        return expect( loaded_entity.id ).to.equal( entity_data.id );
+                    });
             } );
 
         } );
@@ -134,43 +142,36 @@ function test( entityTypeName, validData, invalidData ) {
                 expect( badSaveNoId ).to.throw( 'Id Required' );
             } );
 
-            it( "shouldn't have a false positive because of update with object reference bugs", function() {
-                var entity_data = validData();
-                entity_data.foo = 'bar';
-                return EntityRepository.create( entity_data )
-                .then( function( entity ) {
-                    entity.foo = 'new value';
-                    return EntityRepository.update( entity );
-                } )
-                .then( function( entity ) {
-                    entity.foo = 'garbage';
-                    return EntityRepository.load( entity.id );
-                } )
-                .then( function( entity ) {
-                    return expect( entity ).to.not.deep.equal( entity_data );
-                } );
-            } );
-
             it( 'should update properties of a previously saved object', function(){
                 var entity_data = validData();
                 entity_data.foo = 'bar';
-                return EntityRepository.create( entity_data ).then( function ( entity ) {
-                    entity.foo = 'new value';
-                    return EntityRepository.update( entity );
-                } )
-                .then ( function ( entity ) {
-                    return expect( EntityRepository.load( entity.id ) ).to.eventually.deep.have.property( 'foo', 'new value' );
-                } );
+                return EntityRepository.create( entity_data )
+                    .then( function ( entityId ) {
+                        return EntityRepository.load( entityId )
+                    })
+                    .then(function( entity ){
+                        entity.foo = 'new value';
+                        return EntityRepository.update( entity );
+                    })
+                    .then ( function ( entityId ) {
+                        return EntityRepository.load( entityId );
+                    })
+                    .then( function( entity ){
+                        return expect( entity ).to.have.property( 'foo', 'new value' );
+                    });
             } );
 
             it( 'should fail on update with invalid schema', function(){
                 var entity_data = validData();
                 entity_data.foo = 'bar';
-                return EntityRepository.create( entity_data ).then( function( entity ) {
-                    entity.foo = 'new value';
-                    delete entity.name;
-                    return expect( EntityRepository.update( entity ) ).to.be.rejectedWith( /validation error/ );
-                } );
+                return EntityRepository.create( entity_data )
+                    .then( function( entityId ) {
+                        return EntityRepository.load(entityId);
+                    })
+                    .then( function (loaded_entity) {
+                        delete loaded_entity.name;
+                        return expect( EntityRepository.update( loaded_entity ) ).to.be.rejectedWith( /validation error/ );
+                    });
             } );
 
         } );
@@ -181,7 +182,7 @@ function test( entityTypeName, validData, invalidData ) {
 
         describe( entityTypeName + '.list', function(){
             it( 'should return an array', function() {
-                expect( EntityRepository.list() ).to.eventually.be.an('Array');
+                return expect( EntityRepository.list() ).to.eventually.be.an('Array');
             } );
 
             // KLUDGE:  We really need to destroy all items and start over in each test

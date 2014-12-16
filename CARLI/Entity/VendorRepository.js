@@ -1,8 +1,68 @@
 var Entity = require('../Entity')
+    , EntityTransform = require( './EntityTransformationUtils')
+    , config = require( '../config' )
+    , StoreOptions = config.storeOptions
+    , Store = require( '../Store' )
+    , StoreModule = require( '../Store/CouchDbStore')
+    , moment = require('moment')
+    , Q = require('q')
     ;
 
 var VendorRepository = Entity('Vendor');
-
-VendorRepository.publicFunc = function(){};
+VendorRepository.setStore( Store( StoreModule(StoreOptions) ) );
 
 module.exports = VendorRepository;
+
+var propertiesToTransform = [];
+
+function transformFunction( vendor ){
+    EntityTransform.transformObjectForPersistence(vendor, propertiesToTransform);
+}
+
+function createVendor( vendor ){
+    return VendorRepository.create( vendor, transformFunction );
+}
+
+function updateVendor( vendor ){
+    return VendorRepository.update( vendor, transformFunction );
+}
+
+function listVendors(){
+    return EntityTransform.expandListOfObjectsFromPersistence( VendorRepository.list(), propertiesToTransform, functionsToAdd);
+}
+
+function loadVendor( vendorId ){
+    var deferred = Q.defer();
+
+    VendorRepository.load( vendorId )
+        .then(function (vendor) {
+            EntityTransform.expandObjectFromPersistence( vendor, propertiesToTransform, functionsToAdd )
+                .then(function () {
+                    deferred.resolve(vendor);
+                })
+                .catch(function(err){
+                    // WARNING: this suppresses errors for entity references that are not found in the store
+                    console.warn('*** Cannot find reference in database ', err);
+                    deferred.resolve(vendor);
+                });
+        })
+        .catch(function (err) {
+            deferred.reject(err);
+        });
+
+    return deferred.promise;
+}
+
+
+/* functions that get added as instance methods on loaded Vendors */
+
+var functionsToAdd = {
+};
+
+module.exports = {
+    setStore: VendorRepository.setStore,
+    create: createVendor,
+    update: updateVendor,
+    list: listVendors,
+    load: loadVendor
+};
