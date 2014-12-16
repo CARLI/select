@@ -121,11 +121,11 @@
                     <div class="column">
                         <label>License Agreement</label>
                         <div class="view-edit-select" ng-show="vm.noLicensesMessage">
-                            <select ng-show="vm.editable" disabled="disabled"><option>{{ vm.noLicensesMessage }}</option></select>
+                            <input type="text" ng-show="vm.editable" disabled="disabled" readonly="readonly" value="{{ vm.noLicensesMessage }}">
                         </div>
-                        <view-edit-select-object ng-show="!vm.noLicensesMessage" ng-model="vm.product.license" objects="vm.licenseList" label-property="name" track-by="id" edit-mode="vm.editable">
-                            {{ vm.product.license.name }}
-                        </view-edit-select-object>
+                        <div class="view-edit-select" ng-show="!vm.noLicensesMessage">
+                            <input type="text" ng-model="vm.product.license" typeahead="license as license.name for license in vm.licenseList | filter:$viewValue">
+                        </div>
 
 
                         <label>Detail Codes</label>
