@@ -133,7 +133,7 @@ function editProductController( $scope, $filter, libraryService, licenseService,
     }
 
     function submitAction() {
-        if (isWizardComplete()) {
+        if (!vm.newProduct || isWizardComplete()) {
             saveProduct();
             vm.closeModal();
         } else {
@@ -142,7 +142,7 @@ function editProductController( $scope, $filter, libraryService, licenseService,
     }
 
     function submitLabel() {
-        if (isWizardComplete()) {
+        if (!vm.newProduct || isWizardComplete()) {
             return 'Save';
         }
         return 'Next';
