@@ -73,12 +73,6 @@ describe('The Edit Library Directive', function(){
         expect( newCtrl.newLibrary ).to.equal(true);
     });
 
-    it('should remove empty contacts when saving a new library', function(){
-        expect( newCtrl.library.contacts.length ).to.equal(4);
-        newCtrl.saveLibrary();
-        expect( newCtrl.library.contacts.length ).to.equal(0);
-    });
-
     it('should call libraryService.create when saving a new Library', function(){
         expect( mockDependenciesForNewLibrary.libraryService.createOrUpdate ).to.equal('neither');
         newCtrl.saveLibrary();
@@ -96,12 +90,6 @@ describe('The Edit Library Directive', function(){
         expect( editCtrl.library.name ).to.equal( 'Test Library');
         expect( editCtrl.editable ).to.equal(false);
         expect( editCtrl.newLibrary ).to.equal(false);
-    });
-
-    it('should remove empty contacts when editing a library', function(){
-        expect( editCtrl.library.contacts.length ).to.equal(5);
-        editCtrl.saveLibrary();
-        expect( editCtrl.library.contacts.length ).to.equal(2);
     });
 
     it('should call libraryService.update when saving an existing Library', function(){
