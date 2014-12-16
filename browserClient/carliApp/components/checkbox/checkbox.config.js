@@ -1,1 +1,3 @@
-angular.module('carli.checkbox', []);
+angular.module('carli.checkbox', [
+    'carli.uuid'
+]);

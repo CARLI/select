@@ -1,25 +1,26 @@
-checkbox {
+radio {
     cursor: pointer;
     font-size: 14px;
     display: inline-block;
     line-height: 1em;
 
-    input[type="checkbox"]  {
+    input[type="radio"]  {
         margin: 0;
         pointer-events: none;
         position: absolute;
         visibility: hidden;
 
-        & + label .checkbox-display:before {
-            content: "\f096";
+        & + label .radio-display:before {
+            content: "\f10c";
         }
 
-        &:checked + label .checkbox-display:before {
-            content: "\f14a";
+        &:checked + label .radio-display:before {
+            content: "\f192";
         }
     }
-
+    
     label {
         font-weight: normal;
     }
 }
+

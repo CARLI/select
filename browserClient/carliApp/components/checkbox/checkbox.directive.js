@@ -1,17 +1,17 @@
 angular.module('carli.checkbox')
     .directive('checkbox', checkbox);
 
-    function checkbox() {
+    function checkbox(uuid) {
         return {
             restrict: 'E',
             templateUrl: 'carliApp/components/checkbox/checkbox.html',
             scope: {
-                ngModel: '='
+                ngModel: '=',
+                id: '='
             },
-            link: function postLink(scope, element, attrs) {
-                element.on('click', function(event){
-                    element.find('input').click();
-                });
+            transclude: true,
+            link: function (scope, element, attrs) {
+                    scope.checkboxId = scope.id ? scope.id : uuid.generateCssId();
             }
         };
     }

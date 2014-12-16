@@ -75,6 +75,9 @@
                 position: absolute;
                 left: -2rem;
                 top: 1.25rem;
+                label {
+                    margin-top: 0;
+                }
             }
 
             header {
