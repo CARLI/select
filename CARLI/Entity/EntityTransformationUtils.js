@@ -1,11 +1,12 @@
 var Q = require('q')
+  , Entity = require('../Entity')
 ;
 
 var repositories = {
-    library : require('./LibraryRepository'),
-    license : require('./LicenseRepository'),
-    product : require('./ProductRepository'),
-    vendor : require('./VendorRepository')
+    library : Entity('Library'),
+    license : Entity('License'),
+    product : Entity('Product'),
+    vendor : Entity('Vendor')
 };
 
 function removeEmptyContactsFromEntity(entity) {
