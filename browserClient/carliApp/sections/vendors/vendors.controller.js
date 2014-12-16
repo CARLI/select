@@ -1,7 +1,7 @@
 angular.module('carli.sections.vendors')
 .controller('vendorsController', vendorController);
 
-function vendorController( $sce, vendorService ){
+function vendorController( $sce, $filter, vendorService ){
     var vm = this;
     vm.afterVendorSubmit = populateVendorList;
     activate();
@@ -25,7 +25,9 @@ function vendorController( $sce, vendorService ){
         },
         {
             label: "Vendor Website",
-            contentFunction: function(vendor) { return vendor.websiteUrl; }
+            contentFunction: function(vendor) {
+                return $filter('linky')(vendor.websiteUrl, '_blank');
+            }
         },
         {
             label: "Comments",
