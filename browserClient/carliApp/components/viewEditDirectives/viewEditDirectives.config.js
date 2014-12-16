@@ -7,5 +7,6 @@ angular.module('carli.viewEditDirectives', [
     'carli.viewEditDirectives.viewEditSelect',
     'carli.viewEditDirectives.viewEditTextArea',
     'carli.viewEditDirectives.viewEditTextField',
+    'carli.viewEditDirectives.viewEditTypeahead',
     'carli.viewEditDirectives.viewEditYesNoOther'
 ]);
