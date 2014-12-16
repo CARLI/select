@@ -15,6 +15,7 @@ function editProductController( $scope, $filter, libraryService, licenseService,
 
     vm.toggleEditable = toggleEditable;
     vm.cancelEdit = cancelEdit;
+    vm.saveProduct = saveProduct;
     vm.submitAction = submitAction;
     vm.submitLabel = submitLabel;
 
