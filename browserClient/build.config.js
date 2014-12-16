@@ -64,7 +64,9 @@ module.exports = {
             'bower_modules/angular-resource/angular-resource.js',
             'bower_modules/angular-sanitize/angular-sanitize.js',
             'bower_modules/angular-fontawesome/dist/angular-fontawesome.js',
-            'bower_modules/bootstrap-sass-official/assets/javascripts/bootstrap.js'
+            'bower_modules/bootstrap-sass-official/assets/javascripts/bootstrap.js',
+            'bower_modules/angular-bootstrap/ui-bootstrap.js',
+            'bower_modules/angular-bootstrap/ui-bootstrap-tpls.js'
         ],
         css: [
             'bower_modules/font-awesome/css/font-awesome.min.css'

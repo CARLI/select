@@ -199,6 +199,15 @@ i.fa {
     margin-bottom: 22px;
 }
 
+.dropdown-menu {
+    a {
+        color: #333 !important;
+    }
+    .active a {
+        color: #fff !important;
+    }
+}
+
 @import "editForm";
 
 @import "carliApp/components/alerts/alerts";

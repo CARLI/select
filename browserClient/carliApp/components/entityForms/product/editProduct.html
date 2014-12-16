@@ -28,9 +28,7 @@
         <fieldset>
             <div class="column">
                 <label for="productVendor">Vendor</label>
-                <div class="view-edit-select" ng-show="vm.newProduct">
-                    <select ng-model="vm.product.vendor" ng-options="vendor.name for vendor in vm.vendorList track by vendor.id"></select>
-                </div>
+                <view-edit-typeahead ng-show="vm.newProduct" ng-model="vm.product.vendor" options="vm.vendorList" edit-mode="vm.editable"></view-edit-typeahead>
                 <div ng-show="!vm.newProduct">{{ vm.product.vendor.name }}</div>
 
                 <label for="productUrl">Product URL <aside>(Vendor can provide)</aside></label>
@@ -120,13 +118,12 @@
 
                     <div class="column">
                         <label>License Agreement</label>
-                        <div class="view-edit-select" ng-show="vm.noLicensesMessage">
-                            <select ng-show="vm.editable" disabled="disabled"><option>{{ vm.noLicensesMessage }}</option></select>
+                        <div ng-show="vm.noLicensesMessage">
+                            <input type="text" ng-show="vm.editable" disabled="disabled" readonly="readonly" value="{{ vm.noLicensesMessage }}">
                         </div>
-                        <view-edit-select-object ng-show="!vm.noLicensesMessage" ng-model="vm.product.license" objects="vm.licenseList" label-property="name" track-by="id" edit-mode="vm.editable">
+                        <view-edit-typeahead ng-show="!vm.noLicensesMessage" ng-model="vm.product.license" options="vm.licenseList" edit-mode="vm.editable">
                             {{ vm.product.license.name }}
-                        </view-edit-select-object>
-
+                        </view-edit-typeahead>
 
                         <label>Detail Codes</label>
                         <view-edit-select ng-model="vm.product.detailCode" items="vm.productDetailCodeOptions" edit-mode="vm.editable">
