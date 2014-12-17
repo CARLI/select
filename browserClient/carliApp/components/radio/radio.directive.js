@@ -1,7 +1,7 @@
 angular.module('carli.radio')
     .directive('radio', radio);
 
-    function radio() {
+    function radio( uuid ) {
         return {
             restrict: 'E',
             templateUrl: 'carliApp/components/radio/radio.html',
