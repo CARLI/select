@@ -70,7 +70,7 @@ body {
                 position: relative;
                 cursor: pointer;
 
-                &:after {
+                &.sortable:after {
                     color: $table-header-fg-color;
                     content: "\f0dc"; //fa-sort
                     font-family: "FontAwesome";
@@ -79,11 +79,11 @@ body {
                     right: $filter-input-spacing;
                 }
 
-                &.activeSort:after {
+                &.sortable.activeSort:after {
                     content: "\f0de"; //fa-sort-asc
                 }
 
-                &.activeSort.reversedSort:after {
+                &.sortable.activeSort.reversedSort:after {
                     content: "\f0dd"; //fa-sort-desc
                 }
 

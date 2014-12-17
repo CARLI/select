@@ -8,7 +8,7 @@
 </div>
 <ul class="entity-list">
     <li class="column-headers">
-        <div class="column" ng-class="{ activeSort: vm.orderBy === column.orderByProperty, reversedSort: vm.reverse }" ng-repeat="column in columns" ng-click="vm.sort(column.orderByProperty)">{{ column.label }}</div>
+        <div class="column" ng-class="{ sortable: column.orderByProperty, activeSort: vm.orderBy === column.orderByProperty, reversedSort: vm.reverse }" ng-repeat="column in columns" ng-click="vm.sort(column.orderByProperty)">{{ column.label }}</div>
     </li>
     <li ng-repeat="entity in values | filterByActive:vm.activeFilterState | filter:{ name: vm.filterText } | orderBy:vm.orderBy:vm.reverse">
         <div class="column" ng-repeat="column in columns" ng-bind-html="column.contentFunction(entity)"></div>
