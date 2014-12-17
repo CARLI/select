@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.license')
     .controller('editLicenseController', editLicenseController);
 
-function editLicenseController( $scope, licenseService, productService, vendorService, alertService ) {
+function editLicenseController( $scope, $location, licenseService, productService, vendorService, alertService ) {
     var vm = this;
     var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
@@ -13,7 +13,8 @@ function editLicenseController( $scope, licenseService, productService, vendorSe
     vm.cancelEdit = cancelEdit;
     vm.saveLicense = saveLicense;
     vm.showProductsModal = showProductsModal;
-    vm.closeModal = function() {
+    vm.closeProductsModalAndGoTo = closeProductsModalAndGoTo;
+    vm.closeNewLicenseModal = function() {
         $('#new-license-modal').modal('hide');
     };
 
@@ -110,17 +111,24 @@ function editLicenseController( $scope, licenseService, productService, vendorSe
     }
 
     function getProducts() {
-        /*
-        productService.listProductsForLicense(vm.licenseId).then ( function ( productList ) {
+        productService.listProductsForLicenseId(vm.licenseId).then ( function ( productList ) {
             vm.productList = productList;
         });
-        */
-        vm.productList= [ {name: "hello"} ];
     }
 
     function showProductsModal() {
         getProducts();
         $('#products-modal').modal();
+    }
+
+    function closeProductsModalAndGoTo(path) {
+        $('#products-modal').modal('hide');
+        $('#products-modal').on('hidden.bs.modal', function () {
+            console.log("going to ", path);
+            $scope.$apply(function() {
+                $location.path(path);
+            });
+        });
     }
 }
 

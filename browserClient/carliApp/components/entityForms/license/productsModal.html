@@ -1,5 +1,10 @@
 <ul>
     <li ng-repeat="product in vm.productList">
-        {{ product.name }}
+        <div class="column"><a ng-click="vm.closeProductsModalAndGoTo('/product/'+product.id)">{{ product.name }}</a></div>
     </li>
+
 </ul>
+
+<div class="modal-footer">
+    <button type="button" class="carli-button cancel-button" data-dismiss="modal">Close</button>
+</div>
