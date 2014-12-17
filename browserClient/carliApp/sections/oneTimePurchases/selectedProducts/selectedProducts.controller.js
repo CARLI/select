@@ -6,6 +6,8 @@ function selectedProductsController($routeParams, libraryService, productService
     vm.libraryId = $routeParams.libraryId;
     vm.productList = [];
     vm.filterState = 'all';
+    vm.orderBy = 'name';
+    vm.reverse = false;
     vm.selectedProducts = {};
 
     vm.filter = filter;
@@ -17,6 +19,7 @@ function selectedProductsController($routeParams, libraryService, productService
     vm.computeTotalPurchasesAmount = computeTotalPurchasesAmount;
     vm.invoiceProducts = invoiceProducts;
     vm.reportProducts = reportProducts;
+    vm.sort = sort;
 
     activate();
 
@@ -119,5 +122,19 @@ function selectedProductsController($routeParams, libraryService, productService
 
     function reportProducts() {
         alert("Report Products:" + JSON.stringify(vm.selectedProducts));
+    }
+
+    function sort( newOrderBy ){
+        if ( !newOrderBy ){
+            return;
+        }
+
+        if ( vm.orderBy === newOrderBy){
+            vm.reverse = !vm.reverse;
+        }
+        else {
+            vm.orderBy = newOrderBy;
+            vm.reverse = false;
+        }
     }
 }
