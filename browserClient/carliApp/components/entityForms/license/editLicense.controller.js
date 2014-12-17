@@ -1,15 +1,18 @@
 angular.module('carli.entityForms.license')
     .controller('editLicenseController', editLicenseController);
 
-function editLicenseController( $scope, licenseService, vendorService, alertService ) {
+function editLicenseController( $scope, licenseService, productService, vendorService, alertService ) {
     var vm = this;
+    var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
     vm.licenseId = $scope.licenseId;
-    var afterSubmitCallback = $scope.afterSubmitFn || function() {};
+    vm.vendorList = [];
+    vm.productList = [];
 
     vm.toggleEditable = toggleEditable;
     vm.cancelEdit = cancelEdit;
     vm.saveLicense = saveLicense;
+    vm.showProductsModal = showProductsModal;
     vm.closeModal = function() {
         $('#new-license-modal').modal('hide');
     };
@@ -104,6 +107,20 @@ function editLicenseController( $scope, licenseService, vendorService, alertServ
                     alertService.putAlert(error, {severity: 'danger'});
                 });
         }
+    }
+
+    function getProducts() {
+        /*
+        productService.listProductsForLicense(vm.licenseId).then ( function ( productList ) {
+            vm.productList = productList;
+        });
+        */
+        vm.productList= [ {name: "hello"} ];
+    }
+
+    function showProductsModal() {
+        getProducts();
+        $('#products-modal').modal();
     }
 }
 
