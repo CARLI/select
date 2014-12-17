@@ -11,8 +11,6 @@ function entityListController($scope) {
     vm.filterText = '';
 
     vm.sort = function sort( newOrderBy ){
-        console.log('Change sort order: ', newOrderBy);
-
         if ( vm.orderBy === newOrderBy){
             vm.reverse = !vm.reverse;
         }
