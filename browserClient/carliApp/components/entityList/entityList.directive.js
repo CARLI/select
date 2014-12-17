@@ -9,9 +9,7 @@ angular.module('carli.entityList')
             entityLabel: '@',
             orderBy: '='
         },
-        controller: function($scope){
-            $scope.activeFilterState = 'Active';
-            $scope.filterText = '';
-        } 
+        controller: 'entityListController',
+        controllerAs: 'vm'
     };
 });
