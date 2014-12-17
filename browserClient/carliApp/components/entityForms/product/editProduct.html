@@ -82,6 +82,7 @@
                         <view-edit-select ng-model="vm.product.cycleType" items="vm.cycleOptions" edit-mode="vm.newProduct">
                             {{ vm.product.cycleType }}
                         </view-edit-select>
+                        <a data-toggle="modal" data-target="#otp-modal" ng-show="vm.shouldShowOtpEditLink()">Edit One-Time Purchases <fa name="edit"></fa></a>
 
                     </div>
 
@@ -112,7 +113,7 @@
                 <div>
                     <div class="column">
                         <h2>Specific Terms</h2>
-                        <div><a href="">Override License-Level Terms <i class="fa fa-edit"></i></a></div>
+                        <div><a href="">Override License-Level Terms <fa name="edit"></fa></a></div>
 
                         <!-- TODO: Will the termTypes/termOptions data come from the License Agreement? (editProduct.controller data for now) -->
                         <ul class="terms-list" ng-class="{editing: vm.editable}">
@@ -234,3 +235,16 @@
 
     <hr>
     <debug-panel>{{ vm.product | json }}</debug-panel>
+
+    <!------- Modal ------>
+    <div class="modal fade" id="otp-modal" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><fa aria-hidden="true" name="remove"></fa><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="modal-label">One-Time Purchase</h4>
+                </div>
+                <ng-include src="'carliApp/components/entityForms/product/editOneTimePurchase.html'"></ng-include>
+            </div>
+        </div>
+    </div>

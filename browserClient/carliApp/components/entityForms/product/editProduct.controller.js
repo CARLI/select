@@ -3,6 +3,7 @@ angular.module('carli.entityForms.product')
 
 function editProductController( $scope, $filter, libraryService, licenseService, productService, vendorService, alertService ) {
     var vm = this;
+    var otpFieldsCopy = {};
 
     var templates = {
         productFields: 'carliApp/components/entityForms/product/editProduct.html',
@@ -15,12 +16,18 @@ function editProductController( $scope, $filter, libraryService, licenseService,
 
     vm.toggleEditable = toggleEditable;
     vm.cancelEdit = cancelEdit;
+    vm.cancelOtpEdit = revertOtpFields;
+    vm.rememberOtpFields = rememberOtpFields;
     vm.saveProduct = saveProduct;
     vm.submitAction = submitAction;
     vm.submitLabel = submitLabel;
 
     vm.closeModal = function closeModal() {
         $('#new-product-modal').modal('hide');
+    };
+
+    vm.shouldShowOtpEditLink = function() {
+        return vm.editable && vm.product.cycleType == 'One-Time Purchase' && !vm.newProduct;
     };
 
     libraryService.list().then( function( libraryList ){
@@ -109,9 +116,16 @@ function editProductController( $scope, $filter, libraryService, licenseService,
     function initializeForExistingProduct() {
         productService.load(vm.productId).then( function( product ) {
             vm.product = product;
+            rememberOtpFields();
         } );
         vm.editable = false;
         vm.newProduct = false;
+    }
+    function revertOtpFields() {
+        angular.copy(otpFieldsCopy, vm.product.oneTimePurchase);
+    }
+    function rememberOtpFields() {
+        angular.copy(vm.product.oneTimePurchase, otpFieldsCopy);
     }
 
     function toggleEditable(){
