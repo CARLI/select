@@ -41,11 +41,19 @@
         </fieldset>
     </section>
     <footer ng-show="vm.editable">
-        <fieldset>
+        <fieldset ng-show="vm.newProduct">
             <button type="button" class="carli-button cancel-button" data-dismiss="modal" ng-click="vm.cancelEdit()">
                 Cancel
             </button>
             <input type="button" id="vendor-submit" class="carli-button save-button" value="{{ vm.submitLabel() }}" ng-click="vm.submitAction()">
+        </fieldset>
+        <fieldset ng-show="!vm.newProduct">
+            <button type="button" class="carli-button cancel-button" data-dismiss="modal" ng-click="vm.cancelOtpEdit()">
+                Cancel
+            </button>
+            <button type="button" class="carli-button save-button" data-dismiss="modal" ng-click="vm.rememberOtpFields()">
+                Ok
+            </button>
         </fieldset>
     </footer>
 
