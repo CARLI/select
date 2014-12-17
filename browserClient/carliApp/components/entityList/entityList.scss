@@ -67,6 +67,26 @@ body {
                 font-weight: 700;
                 @include font-size(11);
                 padding: .5rem 1rem;
+                position: relative;
+                cursor: pointer;
+
+                &:after {
+                    color: $table-header-fg-color;
+                    content: "\f0dc"; //fa-sort
+                    font-family: "FontAwesome";
+                    position: absolute;
+                    top: .5rem;
+                    right: $filter-input-spacing;
+                }
+
+                &.activeSort:after {
+                    content: "\f0de"; //fa-sort-asc
+                }
+
+                &.activeSort.reversedSort:after {
+                    content: "\f0dd"; //fa-sort-desc
+                }
+
             }
         }
 
