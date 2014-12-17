@@ -83,7 +83,7 @@ function initViewEditTextFieldExample(vm) {
 }
 function initViewEditYesNoOtherExample(vm) {
     vm.yesNoOtherEditable = false;
-    vm.defaultYesNoOtherValue = "";
+    vm.defaultYesNoOtherValue = "Yes";
     vm.toggleYesNoOtherEditable = function toggleTextFieldEditable() {
         vm.yesNoOtherEditable = !vm.yesNoOtherEditable;
     };

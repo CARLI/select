@@ -7,6 +7,25 @@ angular.module('carli.viewEditDirectives.viewEditYesNoOther')
                 ngModel: '=',
                 editMode: '='
             },
-            transclude: true
+            transclude: true,
+            link: linkYesNoOther
         };
     });
+
+function linkYesNoOther($scope, iElement, iAttrs){
+    var scope = $scope;
+    var select = iElement.find('select');
+
+    if ( scope.ngModel === 'Yes' || scope.ngModel === 'No' ){
+        scope.selectedValue = scope.ngModel;
+    }
+    else {
+        scope.selectedValue = 'Other';
+    }
+
+    select.on('change', function(e){
+        scope.$apply(function(){
+            scope.ngModel = select.val();
+        });
+    });
+}
