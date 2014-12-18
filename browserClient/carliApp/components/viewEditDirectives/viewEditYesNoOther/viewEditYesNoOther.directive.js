@@ -16,12 +16,16 @@ function linkYesNoOther($scope, iElement, iAttrs){
     var scope = $scope;
     var select = iElement.find('select');
 
-    if ( scope.ngModel === 'Yes' || scope.ngModel === 'No' ){
-        scope.selectedValue = scope.ngModel;
-    }
-    else {
-        scope.selectedValue = 'Other';
-    }
+    scope.$watch('ngModel', function(newValue, oldValue) {
+        if (newValue !== undefined) {
+            if (newValue === 'Yes' || newValue === 'No') {
+                scope.selectedValue = scope.ngModel;
+            }
+            else {
+                scope.selectedValue = 'Other';
+            }
+        }
+    });
 
     select.on('change', function(e){
         scope.$apply(function(){
