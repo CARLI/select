@@ -1,5 +1,5 @@
 <div ng-show="editMode">
-    <input type="text" datepicker-popup="{{format}}" ng-model="ngModel" is-open="opened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
+    <input type="text" datepicker-popup="{{format}}" ng-model="ngModel" is-open="opened" show-weeks="false" show-button-bar="false" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" ng-required="true" close-text="Close" />
     <fa name="calendar" ng-click="open($event)"></fa>
 </div>
 <div ng-show="!editMode" ng-transclude></div>
