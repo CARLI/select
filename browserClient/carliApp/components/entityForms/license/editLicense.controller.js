@@ -122,9 +122,9 @@ function editLicenseController( $scope, $location, licenseService, productServic
     }
 
     function closeProductsModalAndGoTo(path) {
-        $('#products-modal').modal('hide');
-        $('#products-modal').on('hidden.bs.modal', function () {
-            console.log("going to ", path);
+        var $productsModal = $('#products-modal');
+        $productsModal.modal('hide');
+        $productsModal.on('hidden.bs.modal', function () {
             $scope.$apply(function() {
                 $location.path(path);
             });

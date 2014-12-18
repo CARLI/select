@@ -1,8 +1,10 @@
-<ul>
+<ul class="entity-list">
+    <li class="column-headers">
+        <div class="column">Product Name</div>
+    </li>
     <li ng-repeat="product in vm.productList">
         <div class="column"><a ng-click="vm.closeProductsModalAndGoTo('/product/'+product.id)">{{ product.name }}</a></div>
     </li>
-
 </ul>
 
 <div class="modal-footer">
