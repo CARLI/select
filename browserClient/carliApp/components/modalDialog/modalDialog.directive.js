@@ -5,17 +5,9 @@ angular.module('carli.modalDialog')
             templateUrl: '/carliApp/components/modalDialog/modalDialog.html',
             scope: {
                 title: '=',
-                submitFn: '&',
                 modalId: '=',
                 modalClass: '@'
             },
-            transclude: true,
-            controller: modalDialogController
+            transclude: true
         };
     });
-
-function modalDialogController($scope) {
-    $scope.closeDialog = function() {
-        $('#' + $scope.modalId).modal('hide');
-    };
-}

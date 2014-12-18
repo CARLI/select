@@ -9,6 +9,9 @@ function libraryController( $sce, libraryService ){
     vm.fteModalSubmit = function() {
         vm.saveAllLibraries();
     };
+    vm.closeModal = function closeModal() {
+        $('#edit-fte-modal').modal('hide');
+    };
     activate();
 
     function activate(){

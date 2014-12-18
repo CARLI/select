@@ -20,6 +20,12 @@
         }
     }
 
+    a {
+        color: $orange;
+        cursor: pointer;
+    }
+
+    .unlabeled-element,
     label {
         margin-top: $label-margin-top;
     }

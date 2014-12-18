@@ -116,11 +116,16 @@ textarea {
 a {
     color: $purple;
     text-decoration: none;
+    cursor: pointer;
 
     &:hover {
         text-decoration: underline;
         color: $dark-purple;
     }
+}
+
+ul {
+    margin-bottom: 0;
 }
 
 

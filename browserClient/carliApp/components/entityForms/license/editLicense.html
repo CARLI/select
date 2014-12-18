@@ -1,4 +1,4 @@
-    <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="licenseForm" ng-submit="vm.saveLicense(); vm.closeModal();">
+    <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="licenseForm" ng-submit="vm.saveLicense(); vm.closeNewLicenseModal();">
 
         <header class="page-header">
             <h1 ng-show="vm.newLicense">New License</h1>
@@ -52,6 +52,10 @@
 
                     <label for="businessComments">Internal Business Services Comments</label>
                     <view-edit-text-area class="business-comments" ng-model="vm.license.businessComments" edit-mode="vm.editable">{{ vm.license.businessComments }}</view-edit-text-area>
+
+                    <div class="unlabeled-element">
+                        <a ng-click="vm.showProductsModal()" ng-show="!vm.newLicense">View all Products attached​ to this License Agreement</a>
+                    </div>
 
                     <label for="vendorStatus">Status</label>
                     <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.license.isActive" edit-mode="vm.editable"><h3>{{ vm.license.isActive ? 'Active' : 'Inactive' }}</h3></view-edit-radios>
@@ -175,6 +179,11 @@
             </fieldset>
         </footer>
     </form>
+
+
+    <modal-dialog modal-id="'products-modal'" title="'Products'">
+        <ng-include src="'carliApp/components/entityForms/license/productsModal.html'"></ng-include>
+    </modal-dialog>
 
     <hr>
     <debug-panel>{{ vm.license | json }}</debug-panel>

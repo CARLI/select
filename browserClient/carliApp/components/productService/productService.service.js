@@ -12,6 +12,9 @@ function productService( CarliModules, $q, entityBaseService, licenseService, ve
         load:   function() { return $q.when( productModule.load.apply(this, arguments) ); },
         listAvailableOneTimePurchaseProducts: function(){
             return $q.when( productModule.listAvailableOneTimePurchaseProducts.apply(this, arguments) );
+        },
+        listProductsForLicenseId: function(){
+            return $q.when( productModule.listProductsForLicenseId.apply(this, arguments) );
         }
     };
 }

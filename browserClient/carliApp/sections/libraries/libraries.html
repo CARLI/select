@@ -14,16 +14,24 @@
     <edit-library-modal after-submit-fn="vm.afterLibrarySubmit"></edit-library-modal>
 </section>
 
-<modal-dialog title="'Update Full Time Enrollment (FTE)'" modal-id="'edit-fte-modal'" submit-fn="vm.fteModalSubmit()">
-    <div>
-        Last Updated: {{ vm.mostRecentFteUpdateDate }}
-    </div>
-    <ul class="fte-list">
-        <li >
-            <div class="column" ng-repeat="library in vm.libraryList">
-                {{ library.name }}:
-                <input type="number" ng-model="library.fte">
+<modal-dialog title="'Update Full Time Enrollment (FTE)'" modal-id="'edit-fte-modal'" submit-fn="">
+    <form name="modal-form" ng-submit="vm.fteModalSubmit(); vm.closeModal() ">
+        <div class="modal-body">
+            <div>
+                Last Updated: {{ vm.mostRecentFteUpdateDate }}
             </div>
-        </li>
-    </ul>
+            <ul class="fte-list">
+                <li >
+                    <div class="column" ng-repeat="library in vm.libraryList">
+                        {{ library.name }}:
+                        <input type="number" ng-model="library.fte">
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="carli-button cancel-button" data-dismiss="modal">Close</button>
+            <button type="submit" class="carli-button save-button">Save changes</button>
+        </div>
+    </form>
 </modal-dialog>

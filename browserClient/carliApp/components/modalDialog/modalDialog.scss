@@ -10,6 +10,12 @@
 
     .modal-content {
         border-radius: 0;
+
+        .entity-list {
+            li.column-headers {
+                border: 0;
+            }
+        }
     }
     
     .modal-header {

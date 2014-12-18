@@ -6,15 +6,7 @@
                 <button type="button" class="close" data-dismiss="modal"><fa aria-hidden="true" name="remove"></fa><span class="sr-only">Close</span></button>
                 <h4 class="modal-title" id="modal-label">{{ title }}</h4>
             </div>
-            <form name="modal-form" ng-submit="submitFn(); closeDialog() ">
-                <div class="modal-body">
-                    <ng-transclude></ng-transclude>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="carli-button cancel-button" data-dismiss="modal">Close</button>
-                    <button type="submit" class="carli-button save-button">Save changes</button>
-                </div>
-            </form>
+            <ng-transclude></ng-transclude>
         </div>
     </div>
 </div>

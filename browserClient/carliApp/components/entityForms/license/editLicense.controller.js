@@ -1,16 +1,20 @@
 angular.module('carli.entityForms.license')
     .controller('editLicenseController', editLicenseController);
 
-function editLicenseController( $scope, licenseService, vendorService, alertService ) {
+function editLicenseController( $scope, $location, licenseService, productService, vendorService, alertService ) {
     var vm = this;
+    var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
     vm.licenseId = $scope.licenseId;
-    var afterSubmitCallback = $scope.afterSubmitFn || function() {};
+    vm.vendorList = [];
+    vm.productList = [];
 
     vm.toggleEditable = toggleEditable;
     vm.cancelEdit = cancelEdit;
     vm.saveLicense = saveLicense;
-    vm.closeModal = function() {
+    vm.showProductsModal = showProductsModal;
+    vm.closeProductsModalAndGoTo = closeProductsModalAndGoTo;
+    vm.closeNewLicenseModal = function() {
         $('#new-license-modal').modal('hide');
     };
 
@@ -98,6 +102,27 @@ function editLicenseController( $scope, licenseService, vendorService, alertServ
                     alertService.putAlert(error, {severity: 'danger'});
                 });
         }
+    }
+
+    function getProducts() {
+        productService.listProductsForLicenseId(vm.licenseId).then ( function ( productList ) {
+            vm.productList = productList;
+        });
+    }
+
+    function showProductsModal() {
+        getProducts();
+        $('#products-modal').modal();
+    }
+
+    function closeProductsModalAndGoTo(path) {
+        var $productsModal = $('#products-modal');
+        $productsModal.modal('hide');
+        $productsModal.on('hidden.bs.modal', function () {
+            $scope.$apply(function() {
+                $location.path(path);
+            });
+        });
     }
 }
 
