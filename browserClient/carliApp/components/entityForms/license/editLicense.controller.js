@@ -18,12 +18,6 @@ function editLicenseController( $scope, licenseService, vendorService, alertServ
         vm.vendorList = vendorList;
     });
 
-    vm.termOptions = [
-        "Yes",
-        "No",
-        "Other"
-    ];
-
     vm.statusOptions = [
         {
             label: 'Active',
