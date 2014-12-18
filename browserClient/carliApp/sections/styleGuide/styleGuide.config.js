@@ -19,5 +19,6 @@ angular.module('carli.sections.styleGuide',
         'View Edit Text Field': 'view-edit-text-field.html',
         'View Edit Text Area': 'view-edit-text-area.html',
         'View Edit Number Field ': 'view-edit-number-field.html',
-        'View Edit Checkbox ': 'view-edit-checkbox.html'
+        'View Edit Checkbox ': 'view-edit-checkbox.html',
+        'View Edit Yes/No/Other': 'view-edit-yes-no-other.html'
     });

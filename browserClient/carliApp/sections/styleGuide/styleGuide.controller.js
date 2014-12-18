@@ -14,6 +14,7 @@ function styleGuideController(componentExamples, componentGatherer, alertService
     initViewEditNumberExample(vm);
     initViewEditTextAreaExample(vm);
     initViewEditTextFieldExample(vm);
+    initViewEditYesNoOtherExample(vm);
 }
 
 function initAlertsExample(vm, alertService) {
@@ -78,5 +79,12 @@ function initViewEditTextFieldExample(vm) {
     vm.defaultTextEditValue = "Default Text Field Value";
     vm.toggleTextFieldEditable = function toggleTextFieldEditable() {
         vm.textFieldEditable = !vm.textFieldEditable;
+    };
+}
+function initViewEditYesNoOtherExample(vm) {
+    vm.yesNoOtherEditable = false;
+    vm.defaultYesNoOtherValue = "Yes";
+    vm.toggleYesNoOtherEditable = function toggleTextFieldEditable() {
+        vm.yesNoOtherEditable = !vm.yesNoOtherEditable;
     };
 }
