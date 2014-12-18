@@ -1,12 +1,15 @@
 var Entity = require('../Entity')
   , EntityTransform = require( './EntityTransformationUtils')
   , config = require( '../config' )
+  , request = config.request
   , StoreOptions = config.storeOptions
   , Store = require( '../Store' )
   , StoreModule = require( '../Store/CouchDbStore')
   , moment = require('moment')
   , Q = require('q')
   ;
+
+var dbHost = db_host = StoreOptions.couchDbUrl + '/' + StoreOptions.couchDbName;
 
 var ProductRepository = Entity('Product');
 ProductRepository.setStore( Store( StoreModule(StoreOptions) ) );
@@ -70,13 +73,25 @@ function listAvailableOneTimePurchaseProducts(){
 
 function listProductsForLicenseId( licenseId ) {
     var deferred = Q.defer();
-    deferred.resolve([
-        { id: 'Alternative%20Cycle%20Product', name: 'hello' },
-        { id: '12345678190', name: 'hello1' },
-        { id: '12345637890', name: 'hello2' },
-        { id: '123456f7890', name: 'hello3' },
-        { id: '12345657890', name: 'hello4' },
-    ]);
+    //deferred.resolve([
+    //    { id: 'Alternative%20Cycle%20Product', name: 'hello' },
+    //    { id: '12345678190', name: 'hello1' },
+    //    { id: '12345637890', name: 'hello2' },
+    //    { id: '123456f7890', name: 'hello3' },
+    //    { id: '12345657890', name: 'hello4' },
+    //]);
+    request({ url: dbHost + '/' + '_design/CARLI/_view/listProductsForLicenseId?key="' + licenseId + '"' },
+        function ( err, response, body ) {
+            var data = JSON.parse( body );
+            var error = err || data.error;
+            if( error ) {
+                deferred.reject( error );
+            }
+            else {
+                deferred.resolve( data );
+            }
+        }
+    );
     return deferred.promise;
 }
 
