@@ -73,22 +73,28 @@ function listAvailableOneTimePurchaseProducts(){
 
 function listProductsForLicenseId( licenseId ) {
     var deferred = Q.defer();
-    //deferred.resolve([
-    //    { id: 'Alternative%20Cycle%20Product', name: 'hello' },
-    //    { id: '12345678190', name: 'hello1' },
-    //    { id: '12345637890', name: 'hello2' },
-    //    { id: '123456f7890', name: 'hello3' },
-    //    { id: '12345657890', name: 'hello4' },
-    //]);
-    request({ url: dbHost + '/' + '_design/CARLI/_view/listProductsForLicenseId?key="' + licenseId + '"' },
+
+    var url = dbHost + '/' + '_design/CARLI/_view/listProductsByLicenseId?key="' + licenseId + '"';
+    var results = [];
+    request({ url: url },
         function ( err, response, body ) {
             var data = JSON.parse( body );
+
             var error = err || data.error;
             if( error ) {
                 deferred.reject( error );
             }
+            else if (data.rows) {
+                data.rows.forEach(function (row) {
+                    if (row.value) {
+                        results.push(row.value);
+                    }
+                });
+                console.log("---results=", results);
+                deferred.resolve(results);
+            }
             else {
-                deferred.resolve( data );
+                deferred.reject();
             }
         }
     );
