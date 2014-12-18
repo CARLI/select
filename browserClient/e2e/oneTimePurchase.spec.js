@@ -64,7 +64,7 @@ describe('The One-Time Purchases screen', function () {
     it("should search by name only, (not include other field values)", function () {
 
         // activeLibrary3 has "Other" in a non-name field -- should not appear in list if searching on Other
-        inputSearch = macro.elementByModel("filterText");
+        inputSearch = macro.elementByModel("vm.filterText");
         macro.setInputValue(inputSearch, "Other");
         element.all(by.repeater('entity in values'))
             .then( function( libraryList ) {
