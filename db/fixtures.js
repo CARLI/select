@@ -114,10 +114,10 @@ function generateProductFixtures() {
         {"type": "Product", "isActive": false, "name": "Fiscal Year Product Inactive", "cycleType": "Fiscal Year", vendor: "ACME Publishing" },
         {"type": "Product", "isActive": false, "name": "Calendar Year Product Inactive", "cycleType": "Calendar Year", vendor: "ACME Publishing" },
         {"type": "Product", "isActive": false, "name": "Alternative Cycle Product Inactive", "cycleType": "Alternative Cycle", vendor: "ACME Publishing" },
-        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 1", "cycleType": "One-Time Purchase", vendor: "ACME Publishing", "oneTimePurchase": {} },
-        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 2", "cycleType": "One-Time Purchase", vendor: "ACME Publishing", "oneTimePurchase": {}  },
-        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 3", "cycleType": "One-Time Purchase", vendor: "ACME Publishing", "oneTimePurchase": {}  },
-        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 4", "cycleType": "One-Time Purchase", vendor: "ACME Publishing", "oneTimePurchase": {}  },
+        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 1", "cycleType": "One-Time Purchase", vendor: "Fonts Inc.", "oneTimePurchase": {} },
+        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 2", "cycleType": "One-Time Purchase", vendor: "Times New Roman", "oneTimePurchase": {}  },
+        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 3", "cycleType": "One-Time Purchase", vendor: "Ipsum Lorem", "oneTimePurchase": {}  },
+        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 4", "cycleType": "One-Time Purchase", vendor: "Baskerville", "oneTimePurchase": {}  },
         {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 5", "cycleType": "One-Time Purchase", vendor: "ACME Publishing", "oneTimePurchase": {}  },
         {"type": "Product", "isActive": false, "name": "One-Time Purchase Inactive", "cycleType": "One-Time Purchase", vendor: "ACME Publishing", "oneTimePurchase": {}  }
     ];
@@ -126,6 +126,8 @@ function generateProductFixtures() {
     var listLibrariesPromise = CARLI.Library.list();
 
     listLibrariesPromise.then(function( libraryList ){
+        var offset = 0;
+
         testProducts.forEach(function (product) {
             var i, libraryId;
 
@@ -138,7 +140,7 @@ function generateProductFixtures() {
                 for ( i = 0 ; i < libraryList.length ; i++ ){
                     libraryId = libraryList[i].id;
                     product.oneTimePurchase.libraryPurchaseData[libraryId] = {
-                        price: 5000
+                        price: 5000 + (++offset*100)
                     }
                 }
             }

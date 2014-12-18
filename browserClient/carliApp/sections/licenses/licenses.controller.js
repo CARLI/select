@@ -19,16 +19,19 @@ function licensesController( $sce, licenseService ){
     vm.licenseListColumns = [
         {
             label: "License Agreement",
+            orderByProperty: 'name',
             contentFunction: function(license) {
                 return $sce.trustAsHtml('<a href="license/' + license.id + '">' + license.name + '</a>');
             }
         },
         {
             label: "Vendor",
+            orderByProperty: 'vendor.name',
             contentFunction: function(license) { return license.vendor.name; }
         },
         {
             label: "Contract Number",
+            orderByProperty: 'contractNumber',
             contentFunction: function(license) { return license.contractNumber; }
         }
     ];

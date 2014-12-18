@@ -24,14 +24,17 @@ function libraryController( $sce, libraryService ){
     vm.entityListColumns = [
         {
             'label': 'Library Name',
+            orderByProperty: 'name',
             'contentFunction': function(library) { return $sce.trustAsHtml('<a href="/library/' + library.id +'">' + library.name + '</a>'); }
         },
         {
             'label': 'Institution Years',
+            orderByProperty: 'institutionYears',
             'contentFunction': function(library) { return library.institutionYears; }
         },
         {
             'label': 'Institution Type',
+            orderByProperty: 'institutionType',
             'contentFunction': function(library) { return library.institutionType; }
         }
     ];

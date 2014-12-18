@@ -24,11 +24,11 @@
 
             <ul class="entity-list">
                 <li class="column-headers">
-                    <div class="column">Product </div>
-                    <div class="column">Vendor</div>
-                    <div class="column">Cost</div>
+                    <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'name', reversedSort: vm.reverse }" ng-click="vm.sort('name')">Product</div>
+                    <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'vendor.name', reversedSort: vm.reverse }" ng-click="vm.sort('vendor.name')">Vendor</div>
+                    <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'oneTimePurchase.libraryPurchaseData[vm.libraryId].price', reversedSort: vm.reverse }" ng-click="vm.sort('oneTimePurchase.libraryPurchaseData[\''+vm.libraryId+'\'].price')">Cost</div>
                 </li>
-                <li collapsible class="collapsed" ng-repeat="product in vm.productList | filter: vm.filter track by product.id">
+                <li collapsible class="collapsed" ng-repeat="product in vm.productList | filter: vm.filter | orderBy: vm.orderBy:vm.reverse track by product.id ">
                     <checkbox ng-model="vm.selectedProducts[product.id]"></checkbox>
                     <header>
                         <div class="column">
@@ -92,7 +92,7 @@
                 </div>
             </div>
 
-            <div class="placeholder">
+            <div class="placeholder" style="width: 350px;">
                 TODO: Invoice: Annual Access Fees Button
             </div>
 
