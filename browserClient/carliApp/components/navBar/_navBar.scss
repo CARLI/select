@@ -6,6 +6,8 @@ $bg-color: $white;
 
 $height: 54px;
 $border: 1px solid $border-color;
+$border-top-width: 3px;
+$nav-button-width: 138px;
 
 nav[nav-bar] {
     border: 0;
@@ -36,16 +38,16 @@ nav[nav-bar] {
         padding: 0;
         text-align: center;
         height: $height;
-        width: 138px;
+        width: $nav-button-width;
         border-right: $border;
-        border-top: 3px solid transparent;
+        border-top: $border-top-width solid transparent;
 
         a {
             color: $inactive-fg-color;
             display: table-cell;
             vertical-align: middle;
-            height: 51px;
-            width: 138px;
+            height: $height - $border-top-width;
+            width: $nav-button-width;
             text-decoration: none;
         }
         &.active {
