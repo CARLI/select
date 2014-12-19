@@ -18,7 +18,7 @@ body {
 }
 
 @mixin body-text {
-    font-family: Verdana, Helvetica, Arial, sans-serif;
+    font-family: 'Verdana', 'Helvetica', 'Arial', sans-serif;
     font-size: 12px;
     font-weight: normal;
     text-decoration: none;
@@ -91,7 +91,7 @@ h4 {
 
 
 label {
-    font-family: Verdana, Helvetica, Arial, sans-serif;
+    font-family: 'Verdana', 'Helvetica', 'Arial', sans-serif;
     font-size: 12px;
     font-weight: bold;
     color: $black;
