@@ -1,0 +1,71 @@
+view-edit-date {
+    display: block;
+    position: relative;
+
+    input[type="text"] {
+        padding-right: 26px;
+    }
+
+    .fa-calendar {
+        cursor: pointer;
+        position: absolute;
+        right: 6px;
+        top: 6px;
+    }
+
+    .dropdown-menu {
+        border-radius: 0;
+        margin: 0;
+        padding: 8px;
+
+        table {
+            outline: none;
+        }
+
+        tr {
+            @include flexbox;
+            @include vendor-prefix('align-items', 'center');
+        }
+
+        th[colspan="6"],
+        thead > tr:nth-child(2) > th {
+            flex-grow: 1;
+        }
+
+        [role="heading"] {
+            color: $purple;
+        }
+
+        /* There is a directive option for hiding the weeks but it does not appear to work */
+        th[ng-show="showWeeks"],
+        td[ng-show="showWeeks"] {
+            display: none;
+        }
+
+        .glyphicon {
+            font-family: "FontAwesome";
+            font-size: 1.5rem;
+
+            &.glyphicon-chevron-left:before {
+                content: "\f0d9";
+            }
+
+            &.glyphicon-chevron-right:before {
+                content: "\f0da";
+            }
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 0;
+
+            &.active {
+                background: $purple;
+
+                .text-info {
+                    color: $white;
+                }
+            }
+        }
+    }
+}

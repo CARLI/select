@@ -15,6 +15,7 @@ function styleGuideController(componentExamples, componentGatherer, alertService
     initViewEditTextAreaExample(vm);
     initViewEditTextFieldExample(vm);
     initViewEditYesNoOtherExample(vm);
+    initViewEditDate(vm);
 }
 
 function initAlertsExample(vm, alertService) {
@@ -86,5 +87,12 @@ function initViewEditYesNoOtherExample(vm) {
     vm.defaultYesNoOtherValue = "Yes";
     vm.toggleYesNoOtherEditable = function toggleTextFieldEditable() {
         vm.yesNoOtherEditable = !vm.yesNoOtherEditable;
+    };
+}
+function initViewEditDate(vm, $scope) {
+    vm.dateEditable = false;
+
+    vm.toggleDateEditable = function toggleDateEditable() {
+        vm.dateEditable = !vm.dateEditable;
     };
 }

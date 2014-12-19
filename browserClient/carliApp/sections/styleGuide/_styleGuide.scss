@@ -1,7 +1,6 @@
 section.style-guide {
     .component {
         margin-top: 10px;
-        overflow: hidden;
 
         .example {
             @include grid-row();
