@@ -10,6 +10,7 @@ $border-top-width: 3px;
 $nav-button-width: 138px;
 
 nav[nav-bar] {
+    background: $bg-color;
     border: 0;
     border-bottom: $border;
     font-family: 'Dosis', sans-serif;
@@ -17,14 +18,11 @@ nav[nav-bar] {
     @include font-size(15);
     line-height: 18px;
     text-transform: uppercase;
-    height: $height;
-    background: $bg-color;
 
     ul {
-        display: table;
+        @include flexbox;
         list-style: outside none none;
-        margin: 0;
-        margin-left: $page-gutter;
+        margin: 0 $page-gutter;
         padding: 0;
     }
 
@@ -32,26 +30,32 @@ nav[nav-bar] {
         border-left: $border;
     }
     li {
-        display: table-cell;
-        vertical-align: middle;
+        border-right: $border;
+        @include flex(1 1 auto);
         margin: 0;
         padding: 0;
         text-align: center;
-        height: $height;
+        vertical-align: middle;
         width: $nav-button-width;
-        border-right: $border;
-        border-top: $border-top-width solid transparent;
         a {
+            @include vendor-prefix('align-items', 'center');
+            border-top: $border-top-width solid transparent;
             color: $inactive-fg-color;
-            display: table-cell;
-            vertical-align: middle;
-            height: $height - $border-top-width;
-            width: $nav-button-width;
+            @include flexbox;
+            height: $height;
+            padding: 0 1em;
             text-decoration: none;
+
+            span {
+                display: block;
+                @include flex(1 1 auto);
+            }
         }
         &.active {
-            border-top-color: $active-fg-color;
-            a { color: $active-fg-color; }
+            a {
+                border-top-color: $active-fg-color;
+                color: $active-fg-color;
+            }
         }
     }
 }
