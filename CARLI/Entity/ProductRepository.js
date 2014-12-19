@@ -1,15 +1,13 @@
 var Entity = require('../Entity')
   , EntityTransform = require( './EntityTransformationUtils')
   , config = require( '../config' )
-  , request = config.request
   , StoreOptions = config.storeOptions
   , Store = require( '../Store' )
   , StoreModule = require( '../Store/CouchDbStore')
+  , CouchViewUtils = require( '../Store/CouchViewUtils')
   , moment = require('moment')
   , Q = require('q')
   ;
-
-var dbHost = db_host = StoreOptions.couchDbUrl + '/' + StoreOptions.couchDbName;
 
 var ProductRepository = Entity('Product');
 ProductRepository.setStore( Store( StoreModule(StoreOptions) ) );
@@ -72,33 +70,8 @@ function listAvailableOneTimePurchaseProducts(){
 }
 
 function listProductsForLicenseId( licenseId ) {
-    var deferred = Q.defer();
 
-    var url = dbHost + '/' + '_design/CARLI/_view/listProductsByLicenseId?key="' + licenseId + '"';
-    var results = [];
-    request({ url: url },
-        function ( err, response, body ) {
-            var data = JSON.parse( body );
-
-            var error = err || data.error;
-            if( error ) {
-                deferred.reject( error );
-            }
-            else if (data.rows) {
-                data.rows.forEach(function (row) {
-                    if (row.value) {
-                        results.push(row.value);
-                    }
-                });
-                console.log("---results=", results);
-                deferred.resolve(results);
-            }
-            else {
-                deferred.reject();
-            }
-        }
-    );
-    return deferred.promise;
+    return CouchViewUtils.getCouchViewResults('listProductsByLicenseId', licenseId);
 }
 
 function isOneTimePurchaseProduct( product ){
