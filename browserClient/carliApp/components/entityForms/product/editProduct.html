@@ -110,6 +110,10 @@
                     TODO: Funded for Governing: X%
                 </div>
 
+                <div class="placeholder" ng-show="vm.product.cycleType !== 'One-Time Purchase'">
+                    TODO: Table of Subscriber History
+                </div>
+
                 <div>
                     <div class="column">
                         <h2>Specific Terms</h2>
@@ -172,52 +176,6 @@
                             </li>
                         </ul>
                     </div>
-
-                    <!--
-                    <div class="column" ng-show="vm.product.cycleType !== 'One-Time Purchase'">
-                        <table class="tableSubscriber">
-                            <thead>
-                                <tr>
-                                    <th colspan="2">Your History</th>
-                                    <th>Subscribers</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>2015</td>
-                                    <td><i class="fa fa-check-circle"></i></td>
-                                    <td colspan="2">8 <em>Current</em></td>
-                                </tr>
-                                <tr>
-                                    <td>2014</td>
-                                    <td></td>
-                                    <td colspan="2">5</td>
-                                </tr>
-                                <tr>
-                                    <td>2013</td>
-                                    <td></td>
-                                    <td colspan="2">5</td>
-                                </tr>
-                                <tr>
-                                    <td>2012</td>
-                                    <td></td>
-                                    <td colspan="2">3</td>
-                                </tr>
-                                <tr>
-                                    <td>2011</td>
-                                    <td></td>
-                                    <td colspan="2">2</td>
-                                </tr>
-                                <tr>
-                                    <td>2010</td>
-                                    <td></td>
-                                    <td colspan="2">-</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    -->
-
                 </div>
 
             </div>
