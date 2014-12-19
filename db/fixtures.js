@@ -108,16 +108,16 @@ function generateProductFixtures() {
     console.log("Generate Products");
 
     var testProducts = [
-        {"type": "Product", "isActive": true, "name": "Fiscal Year Product", "cycleType": "Fiscal Year", vendor: "ACME Publishing" },
-        {"type": "Product", "isActive": true, "name": "Calendar Year Product", "cycleType": "Calendar Year", vendor: "ACME Publishing" },
-        {"type": "Product", "isActive": true, "name": "Alternative Cycle Product", "cycleType": "Alternative Cycle", vendor: "ACME Publishing" },
+        {"type": "Product", "isActive": true, "name": "Fiscal Year Product", "cycleType": "Fiscal Year", vendor: "ACME Publishing", license: "ACME License 1" },
+        {"type": "Product", "isActive": true, "name": "Calendar Year Product", "cycleType": "Calendar Year", vendor: "ACME Publishing", license: "ACME License 2" },
+        {"type": "Product", "isActive": true, "name": "Alternative Cycle Product", "cycleType": "Alternative Cycle", vendor: "ACME Publishing", license: "ACME License 3" },
         {"type": "Product", "isActive": false, "name": "Fiscal Year Product Inactive", "cycleType": "Fiscal Year", vendor: "ACME Publishing" },
         {"type": "Product", "isActive": false, "name": "Calendar Year Product Inactive", "cycleType": "Calendar Year", vendor: "ACME Publishing" },
         {"type": "Product", "isActive": false, "name": "Alternative Cycle Product Inactive", "cycleType": "Alternative Cycle", vendor: "ACME Publishing" },
-        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 1", "cycleType": "One-Time Purchase", vendor: "Fonts Inc.", "oneTimePurchase": {} },
-        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 2", "cycleType": "One-Time Purchase", vendor: "Times New Roman", "oneTimePurchase": {}  },
-        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 3", "cycleType": "One-Time Purchase", vendor: "Ipsum Lorem", "oneTimePurchase": {}  },
-        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 4", "cycleType": "One-Time Purchase", vendor: "Baskerville", "oneTimePurchase": {}  },
+        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 1", "cycleType": "One-Time Purchase", vendor: "Fonts Inc.", "oneTimePurchase": {}, license: "ACME License 1" },
+        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 2", "cycleType": "One-Time Purchase", vendor: "Times New Roman", "oneTimePurchase": {}, license: "ACME License 1"  },
+        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 3", "cycleType": "One-Time Purchase", vendor: "Ipsum Lorem", "oneTimePurchase": {}, license: "ACME License 1"  },
+        {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 4", "cycleType": "One-Time Purchase", vendor: "Baskerville", "oneTimePurchase": {}, license: "ACME License 1"  },
         {"type": "Product", "isActive": true, "name": "One-Time Purchase Product 5", "cycleType": "One-Time Purchase", vendor: "ACME Publishing", "oneTimePurchase": {}  },
         {"type": "Product", "isActive": false, "name": "One-Time Purchase Inactive", "cycleType": "One-Time Purchase", vendor: "ACME Publishing", "oneTimePurchase": {}  }
     ];

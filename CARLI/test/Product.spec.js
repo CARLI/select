@@ -161,6 +161,49 @@ describe('ProductRepository.listOneTimePurchaseProducts()', function() {
     });
 });
 
+describe('ListProductsForLicenseId View', function () {
+    var license1 = { id: uuid.v4(), type: "License", name: "my license 1 name", isActive: true};
+    var license2 = { id: uuid.v4(), type: "License", name: "my license 2 name", isActive: true};
+    var product1 = { id: uuid.v4(), type: "Product", name: "my product 1 name", isActive: true, license: license1.id, vendor: "bogus"};
+    var product2 = { id: uuid.v4(), type: "Product", name: "my product 2 name", isActive: true, license: license1.id, vendor: "bogus"};
+    var product3 = { id: uuid.v4(), type: "Product", name: "my product 3 name", isActive: true, license: license2.id, vendor: "bogus"};
+    var product4 = { id: uuid.v4(), type: "Product", name: "my product 3 name", isActive: true, vendor: "bogus"};
+
+    it('should return products associated with a license', function(){
+        return ProductRepository.create( product1 )
+            .then( function() {
+                return ProductRepository.create( product2 );
+            })
+            .then (function () {
+                return ProductRepository.create( product3 );
+            })
+            .then (function () {
+                return ProductRepository.create( product4 );
+            })
+            .then(function(){
+                return ProductRepository.listProductsForLicenseId( license1.id );
+            })
+            .then(function ( productList ) {
+
+                function verifyAllProductsHaveLicense( productList ){
+                    var match = true;
+                    var licenseToMatch = license1;
+
+                    productList.forEach(function( product ){
+                        if ( product.license !== licenseToMatch.id ){
+                            match = true;
+                        }
+                    });
+
+                    return match;
+                }
+
+                return expect(productList).to.be.an('array').and.have.length(2).and.satisfy( verifyAllProductsHaveLicense);
+            });
+    });
+});
+
+
 describe('Adding functions to Product instances', function(){
     it('should add a getIsActive method to instances of Product', function(){
         var product = validProductData();
