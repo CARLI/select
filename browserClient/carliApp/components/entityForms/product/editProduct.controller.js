@@ -4,6 +4,7 @@ angular.module('carli.entityForms.product')
 function editProductController( $scope, $filter, libraryService, licenseService, productService, vendorService, alertService ) {
     var vm = this;
     var otpFieldsCopy = {};
+    var termFieldsCopy = {};
 
     var templates = {
         productFields: 'carliApp/components/entityForms/product/editProduct.html',
@@ -18,6 +19,8 @@ function editProductController( $scope, $filter, libraryService, licenseService,
     vm.cancelEdit = cancelEdit;
     vm.cancelOtpEdit = revertOtpFields;
     vm.rememberOtpFields = rememberOtpFields;
+    vm.cancelTermsEdit = revertTermFields;
+    vm.rememberTermFields = rememberTermFields;
     vm.saveProduct = saveProduct;
     vm.submitAction = submitAction;
     vm.submitLabel = submitLabel;
@@ -28,6 +31,10 @@ function editProductController( $scope, $filter, libraryService, licenseService,
 
     vm.shouldShowOtpEditLink = function() {
         return vm.editable && vm.product.cycleType == 'One-Time Purchase' && !vm.newProduct;
+    };
+
+    vm.shouldShowTermsEditLink = function() {
+        return vm.editable && !vm.newProduct;
     };
 
     libraryService.list().then( function( libraryList ){
@@ -117,6 +124,7 @@ function editProductController( $scope, $filter, libraryService, licenseService,
         productService.load(vm.productId).then( function( product ) {
             vm.product = product;
             rememberOtpFields();
+            rememberTermFields();
         } );
         vm.editable = false;
         vm.newProduct = false;
@@ -126,6 +134,12 @@ function editProductController( $scope, $filter, libraryService, licenseService,
     }
     function rememberOtpFields() {
         angular.copy(vm.product.oneTimePurchase, otpFieldsCopy);
+    }
+    function revertTermFields() {
+        vm.product.terms = angular.copy(termFieldsCopy, {});
+    }
+    function rememberTermFields() {
+        angular.copy(vm.product.terms, termFieldsCopy);
     }
 
     function toggleEditable(){
