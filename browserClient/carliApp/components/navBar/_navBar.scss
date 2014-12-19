@@ -35,13 +35,17 @@ nav[nav-bar] {
         margin: 0;
         padding: 0;
         text-align: center;
-        height: $height; // - 2; /* account for borders */ No need with box-sizing: border-box
+        height: $height;
         width: 138px;
         border-right: $border;
         border-top: 3px solid transparent;
 
         a {
             color: $inactive-fg-color;
+            display: table-cell;
+            vertical-align: middle;
+            height: 51px;
+            width: 138px;
             text-decoration: none;
         }
         &.active {
