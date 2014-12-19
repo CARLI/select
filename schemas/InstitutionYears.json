@@ -1,5 +1,6 @@
 {
     "type": "string",
+    "schemaType": "InstitutionYears",
     "enum": [
         "4 Year",
         "2 Year",
