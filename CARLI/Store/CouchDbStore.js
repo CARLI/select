@@ -1,8 +1,8 @@
 var Q = require('q')
   , config = require( '../config' )
   , request = config.request
-
   , db_host = undefined
+  , CouchViewUtils = require( './CouchViewUtils')
 ;
 
 function _cloneData( data ) {
@@ -85,24 +85,7 @@ function storeData( data ) {
 }
 
 function listDataFor( type ) {
-    var deferred = Q.defer();
-    request({ url: db_host + '/_design/CARLI/_view/listByType?key="' + type + '"' },
-        function ( err, response, body ) {
-            var data = JSON.parse( body );
-            var error = err || data.error;
-            if( error ) {
-                deferred.reject( error );
-            }
-            else {
-                var results = [];
-                data.rows.forEach( function( row ) {
-                    results.push( row.value );
-                } );
-                deferred.resolve( results );
-            }
-        }
-    );
-    return deferred.promise;
+    return CouchViewUtils.getCouchViewResults('listByType', type);
 }
 
 function deleteDataFor( type, id ) {
