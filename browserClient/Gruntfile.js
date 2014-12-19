@@ -167,7 +167,7 @@ module.exports = function ( grunt ) {
                 }
             },
 
-            serveJenkins: {
+            serveHeadless: {
                 options: {
                     open: false,
                     livereload: false
@@ -566,11 +566,11 @@ module.exports = function ( grunt ) {
         'watch'
     ]);
     /*
-     * The `serve:jenkins` task is spawned by jenkins in a container to serve carli.dev.pixotech.com
+     * The `serve:headless` task runs serve without opening the browser, and without livereload
      */
-    grunt.registerTask( 'serve:jenkins', [
+    grunt.registerTask( 'serve:headless', [
         'build',
-        'connect:serveJenkins',
+        'connect:serveHeadless',
         // Leave `watch` here -- otherwise the server just exits immediately
         'watch'
     ]);
