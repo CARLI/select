@@ -3,6 +3,10 @@ module.exports = function(grunt) {
     require('./grunt/jsenv')(grunt);
     require('./grunt/db')(grunt);
 
+    grunt.registerTask('serve', function(arg) {
+        grunt.task.run(['subdir-grunt:browserClient:serve:' + arg]);
+    });
+
     grunt.registerTask('test', function(arg) {
         grunt.task.run(['subdir-grunt:CARLI:test:' + arg]);
         grunt.task.run(['subdir-grunt:browserClient:test:' + arg]);
