@@ -5,7 +5,6 @@
 @import "mixins";
 @import "helpers";
 @import "gridAdapter";
-@import "tableSubscriber";
 
 * {
     box-sizing: border-box;
@@ -197,15 +196,6 @@ i.fa {
     display: inline-block;
 }
 
-.subtitle {
-    font-weight: normal;
-    display: block;
-}
-
-.row {
-    margin-bottom: 22px;
-}
-
 .dropdown-menu {
     a {
         color: #333 !important;
@@ -215,12 +205,12 @@ i.fa {
     }
 }
 
-@import "editForm";
 
 @import "carliApp/components/alerts/alerts";
 @import "carliApp/components/buttons/buttons";
 @import "carliApp/components/collapsible/collapsible";
 @import "carliApp/components/checkbox/checkbox";
+@import "carliApp/components/entityForms/editForm";
 @import "carliApp/components/goodSelect/goodSelect";
 @import "carliApp/components/carliHeader/carliHeader";
 @import "carliApp/components/entityForms/product/editProduct";
