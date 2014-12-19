@@ -113,61 +113,59 @@
                 <div>
                     <div class="column">
                         <h2>Specific Terms</h2>
-                        <div><a href="">Override License-Level Terms <fa name="edit"></fa></a></div>
-
-                        <!-- TODO: Will the termTypes/termOptions data come from the License Agreement? (editProduct.controller data for now) -->
-                        <ul class="terms-list" ng-class="{editing: vm.editable}">
+                        <div><a data-toggle="modal" data-target="#terms-modal" ng-show="vm.shouldShowTermsEditLink()">Override License-Level Terms<fa name="edit"></fa></a></div>
+                        <ul class="terms-list">
                             <li>
                                 <label>Download:</label>
-                                <view-edit-yes-no-other ng-model="vm.product.terms.downloadTerms" edit-mode="vm.editable">
-                                    {{ vm.product.terms.downloadTerms }}
+                                <view-edit-yes-no-other ng-model="vm.product.terms.downloadTerms" edit-mode="false">
+                                    {{ vm.product.terms.downloadTerms || vm.product.license.terms.downloadTerms }}
                                 </view-edit-yes-no-other>
                             </li>
 
                             <li>
                                 <label>ILL:</label>
-                                <view-edit-yes-no-other ng-model="vm.product.terms.interLibraryLoanTerms" edit-mode="vm.editable">
-                                    {{ vm.product.terms.interLibraryLoanTerms }}
+                                <view-edit-yes-no-other ng-model="vm.product.terms.interLibraryLoanTerms" edit-mode="false">
+                                    {{ vm.product.terms.interLibraryLoanTerms || vm.product.license.terms.interLibraryLoanTerms }}
                                 </view-edit-yes-no-other>
 
                             </li>
 
                             <li>
                                 <label>Course Packs:</label>
-                                <view-edit-yes-no-other ng-model="vm.product.terms.coursePacksTerms" edit-mode="vm.editable">
-                                    {{ vm.product.terms.coursePacksTerms }}
+                                <view-edit-yes-no-other ng-model="vm.product.terms.coursePacksTerms" edit-mode="false">
+                                    {{ vm.product.terms.coursePacksTerms || vm.product.license.terms.coursePacksTerms }}
                                 </view-edit-yes-no-other>
 
                             </li>
 
                             <li>
                                 <label>Print:</label>
-                                <view-edit-yes-no-other ng-model="vm.product.terms.printTerms" edit-mode="vm.editable">
-                                    {{ vm.product.terms.printTerms }}
+                                <view-edit-yes-no-other ng-model="vm.product.terms.printTerms" edit-mode="false">
+                                    {{ vm.product.terms.printTerms || vm.product.license.terms.printTerms}}
                                 </view-edit-yes-no-other>
 
                             </li>
 
                             <li>
                                 <label>Limited Sharing for Scholarly Purposes:</label>
-                                <view-edit-yes-no-other ng-model="vm.product.terms.limitedScholarlySharingTerms" edit-mode="vm.editable">
-                                    {{ vm.product.terms.limitedScholarlySharingTerms }}
+                                <view-edit-yes-no-other ng-model="vm.product.terms.limitedScholarlySharingTerms" edit-mode="false">
+                                    {{ vm.product.terms.limitedScholarlySharingTerms || vm.product.license.terms.limitedScholarlySharingTerms}}
                                 </view-edit-yes-no-other>
 
                             </li>
 
                             <li>
                                 <label>Use by Walk-ins:</label>
-                                <view-edit-yes-no-other ng-model="vm.product.terms.walkinTerms" edit-mode="vm.editable">
-                                    {{ vm.product.terms.walkinTerms }}
+                                <view-edit-yes-no-other ng-model="vm.product.terms.walkinTerms" edit-mode="false">
+                                    {{ vm.product.terms.walkinTerms || vm.product.license.terms.walkinTerms}}
                                 </view-edit-yes-no-other>
 
                             </li>
 
                             <li>
                                 <label>E-Reserves:</label>
-                                <view-edit-yes-no-other ng-model="vm.product.terms.eReservesTerms" edit-mode="vm.editable">
-                                    {{ vm.product.terms.eReservesTerms }}
+                                <view-edit-yes-no-other ng-model="vm.product.terms.eReservesTerms" edit-mode="false">
+                                    {{ vm.product.terms.eReservesTerms || vm.product.license.terms.eReservesTerms}}
                                 </view-edit-yes-no-other>
                             </li>
                         </ul>
@@ -235,6 +233,10 @@
 
     <modal-dialog modal-id="'otp-modal'" title="'One-Time Purchase'">
         <ng-include src="'carliApp/components/entityForms/product/editOneTimePurchase.html'"></ng-include>
+    </modal-dialog>
+
+    <modal-dialog modal-id="'terms-modal'" title="'Override License-Level Terms'">
+        <ng-include src="'carliApp/components/entityForms/product/editTerms.html'"></ng-include>
     </modal-dialog>
 
     <hr>
