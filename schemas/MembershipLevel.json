@@ -1,5 +1,6 @@
 {
     "type": "string",
+    "schemaType": "MembershipLevel",
     "enum": [
         "Governing",
         "Affiliate",
