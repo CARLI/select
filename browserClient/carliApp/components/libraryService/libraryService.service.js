@@ -19,28 +19,8 @@ function libraryService( CarliModules, $q ) {
             return "Jan 1, 1970";
         },
 
-        getInstitutionYearsOptions: function(){
-            return [
-                "4 Year",
-                "2 Year",
-                "Other"
-            ];
-        },
-
-        getInstitutionTypeOptions: function(){
-            return [
-                "Private",
-                "Public",
-                "Other"
-            ];
-        },
-
-        getMembershipLevelOptions: function(){
-            return [
-                "Governing",
-                "Affiliate",
-                "Non-Member"
-            ];
-        }
+        getInstitutionTypeOptions: libraryModule.getInstitutionTypeOptions,
+        getInstitutionYearsOptions: libraryModule.getInstitutionYearsOptions,
+        getMembershipLevelOptions: libraryModule.getMembershipLevelOptions
     };
 }
