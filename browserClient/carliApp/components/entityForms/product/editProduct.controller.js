@@ -58,20 +58,7 @@ function editProductController( $scope, $filter, entityBaseService, libraryServi
         "Alternative Cycle"
     ];
 
-    vm.productDetailCodeOptions = [
-        "USIA - Membership",
-        "USIB - Database",
-        "USIE - Misc.",
-        "USIF - I-Share",
-        "USIG - Chronicle of Higher Education",
-        "USIH - OED",
-        "USII - Spring Database",
-        "USIJ - Fall Database",
-        "USIK - SFX",
-        "USIL - SFX",
-        "USIM - I-Share Pre-Pay",
-        "USIN - Database Pre-Pay"
-    ];
+    vm.productDetailCodeOptions = productService.getProductDetailCodeOptions();
 
     activate();
 

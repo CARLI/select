@@ -15,6 +15,7 @@ function productService( CarliModules, $q, entityBaseService, licenseService, ve
         },
         listProductsForLicenseId: function(){
             return $q.when( productModule.listProductsForLicenseId.apply(this, arguments) );
-        }
+        },
+        getProductDetailCodeOptions: productModule.getProductDetailCodeOptions
     };
 }
