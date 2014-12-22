@@ -55,3 +55,21 @@ describe('Converting referenced entities', function() {
         });
     });
 });
+
+describe('Helper functions for getting Enum values from the License Schema', function(){
+
+    it('should have a getOfferingTypeOptions function', function(){
+        expect(LicenseRepository.getOfferingTypeOptions).to.be.a('function');
+    });
+
+    describe('the getOfferingTypeOptions function', function(){
+        it('should return expected values', function(){
+            var testData = [
+                "Product",
+                "Service"
+            ];
+
+            expect(LicenseRepository.getOfferingTypeOptions()).to.have.members(testData);
+        });
+    });
+});

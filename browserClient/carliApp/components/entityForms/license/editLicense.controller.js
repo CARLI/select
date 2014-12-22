@@ -23,16 +23,7 @@ function editLicenseController( $scope, $location, entityBaseService, licenseSer
     });
 
     vm.statusOptions = entityBaseService.getStatusOptions();
-    vm.offeringTypeOptions = [
-        {
-            label: 'Product',
-            value: "'Product'"
-        },
-        {
-            label: 'Service',
-            value: "'Service'"
-        }
-    ];
+    vm.offeringTypeOptions = licenseService.getOfferingTypeOptions();
 
     activate();
 

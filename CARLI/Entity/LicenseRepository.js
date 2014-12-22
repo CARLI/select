@@ -4,6 +4,7 @@ var Entity = require('../Entity')
     , Store = require( '../Store' )
     , StoreModule = require( '../Store/CouchDbStore')
     , EntityTransform = require( './EntityTransformationUtils')
+    , Validator = require('../Validator')
     ;
 
 var LicenseRepository = Entity('License');
@@ -63,10 +64,15 @@ function loadLicense( licenseId ){
     return deferred.promise;
 }
 
+function getOfferingTypeOptions(){
+    return Validator.getEnumValuesFor('License', 'offeringType');
+}
+
 module.exports = {
     setStore: LicenseRepository.setStore,
     create: createLicense,
     update: updateLicense,
     list: listLicenses,
-    load: loadLicense
+    load: loadLicense,
+    getOfferingTypeOptions: getOfferingTypeOptions
 };
