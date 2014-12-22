@@ -73,22 +73,6 @@ function editProductController( $scope, $filter, entityBaseService, libraryServi
         "USIN - Database Pre-Pay"
     ];
 
-    vm.termTypes = [
-        "Download",
-        "ILL",
-        "Course Packs",
-        "Print",
-        "Limited Sharing for Scholarly Purposes",
-        "Use by Walk-ins",
-        "E-Reserves"
-    ];
-
-    vm.termOptions = [
-        "Yes",
-        "No",
-        "Other"
-    ];
-
     activate();
 
     function activate() {
