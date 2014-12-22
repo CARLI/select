@@ -70,7 +70,7 @@
             "type": "number"
         },
         "detailCode": {
-            "$ref": "./product-detail-code.json"
+            "$ref": "./ProductDetailCodes.json"
         },
         "librariesThatHavePaidAcf": {
             "type": "array",

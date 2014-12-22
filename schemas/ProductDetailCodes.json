@@ -1,0 +1,18 @@
+{
+    "type": "string",
+    "schemaType": "ProductDetailCodes",
+    "enum": [
+        "USIA - Membership",
+        "USIB - Database",
+        "USIE - Misc.",
+        "USIF - I-Share",
+        "USIG - Chronicle of Higher Education",
+        "USIH - OED",
+        "USII - Spring Database",
+        "USIJ - Fall Database",
+        "USIK - SFX",
+        "USIL - SFX",
+        "USIM - I-Share Pre-Pay",
+        "USIN - Database Pre-Pay"
+    ]
+}

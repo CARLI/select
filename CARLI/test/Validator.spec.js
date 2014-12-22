@@ -18,6 +18,7 @@ var validTypes = [
     'OneTimePurchase',
     'PriceCap',
     'Product',
+    'ProductDetailCodes',
     'Vendor',
     'WebAddress'
 ];

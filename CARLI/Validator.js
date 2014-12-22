@@ -14,6 +14,7 @@ var schemas = {
     OneTimePurchase: require('../schemas/OneTimePurchase.json'),
     PriceCap: require('../schemas/PriceCap.json'),
     Product: require('../schemas/Product.json'),
+    ProductDetailCodes: require('../schemas/ProductDetailCodes.json'),
     Vendor: require('../schemas/Vendor.json'),
     WebAddress: require('../schemas/WebAddress.json')
 };
