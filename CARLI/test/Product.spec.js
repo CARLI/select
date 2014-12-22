@@ -293,3 +293,31 @@ describe('Adding functions to Product instances', function(){
         it('should return true for an active Product with an empty Vendor');
     });
 });
+
+describe('Helper functions for getting Enum values from the Product Schema', function(){
+
+    it('should have a getProductDetailCodeOptions function', function(){
+        expect(ProductRepository.getProductDetailCodeOptions).to.be.a('function');
+    });
+
+    describe('the getProductDetailCodeOptions function', function(){
+        it('should return expected values', function(){
+            var testData = [
+                "USIA - Membership",
+                "USIB - Database",
+                "USIE - Misc.",
+                "USIF - I-Share",
+                "USIG - Chronicle of Higher Education",
+                "USIH - OED",
+                "USII - Spring Database",
+                "USIJ - Fall Database",
+                "USIK - SFX",
+                "USIL - SFX",
+                "USIM - I-Share Pre-Pay",
+                "USIN - Database Pre-Pay"
+            ];
+
+            expect(ProductRepository.getProductDetailCodeOptions()).to.have.members(testData);
+        });
+    });
+});
