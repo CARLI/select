@@ -16,6 +16,7 @@ function styleGuideController(componentExamples, componentGatherer, alertService
     initViewEditTextFieldExample(vm);
     initViewEditYesNoOtherExample(vm);
     initViewEditDate(vm);
+    initExampleForm(vm);
 }
 
 function initAlertsExample(vm, alertService) {
@@ -94,5 +95,10 @@ function initViewEditDate(vm, $scope) {
 
     vm.toggleDateEditable = function toggleDateEditable() {
         vm.dateEditable = !vm.dateEditable;
+    };
+}
+function initExampleForm(vm){
+    vm.exampleFormModel = {
+        name: ''
     };
 }

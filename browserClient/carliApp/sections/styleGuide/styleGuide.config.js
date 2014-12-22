@@ -5,7 +5,8 @@ angular.module('carli.sections.styleGuide',
         'carli.viewEditDirectives',
         'carli.goodSelect',
         'carli.checkbox',
-        'carli.radio'
+        'carli.radio',
+        'carli.warnIfUnsaved'
     ]
 )
     .value('componentExamples', {
@@ -21,5 +22,6 @@ angular.module('carli.sections.styleGuide',
         'View Edit Number Field ': 'view-edit-number-field.html',
         'View Edit Checkbox ': 'view-edit-checkbox.html',
         'View Edit Yes/No/Other': 'view-edit-yes-no-other.html',
-        'View Edit Date': 'view-edit-date.html'
+        'View Edit Date': 'view-edit-date.html',
+        'Warning for Unsaved Form Changes': 'warn-if-unsaved.html'
     });
