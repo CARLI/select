@@ -6,12 +6,11 @@ var Entity = require('../Entity')
     , StoreModule = require( '../Store/CouchDbStore')
     , moment = require('moment')
     , Q = require('q')
+    , Validator = require('../Validator')
     ;
 
 var LibraryRepository = Entity('Library');
 LibraryRepository.setStore( Store( StoreModule(StoreOptions) ) );
-
-module.exports = LibraryRepository;
 
 var propertiesToTransform = [];
 
@@ -59,10 +58,25 @@ function loadLibrary( libraryId ){
 var functionsToAdd = {
 };
 
+function getInstitutionTypeOptions(){
+    return Validator.getEnumValuesFor('InstitutionType');
+}
+
+function getInstitutionYearsOptions(){
+    return Validator.getEnumValuesFor('InstitutionYears');
+}
+
+function getMembershipLevelOptions(){
+    return Validator.getEnumValuesFor('MembershipLevel');
+}
+
 module.exports = {
     setStore: LibraryRepository.setStore,
     create: createLibrary,
     update: updateLibrary,
     list: listLibraries,
-    load: loadLibrary
+    load: loadLibrary,
+    getInstitutionTypeOptions: getInstitutionTypeOptions,
+    getInstitutionYearsOptions: getInstitutionYearsOptions,
+    getMembershipLevelOptions: getMembershipLevelOptions
 };
