@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.license')
     .controller('editLicenseController', editLicenseController);
 
-function editLicenseController( $scope, $location, licenseService, productService, vendorService, alertService ) {
+function editLicenseController( $scope, $location, entityBaseService, licenseService, productService, vendorService, alertService ) {
     var vm = this;
     var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
@@ -22,16 +22,7 @@ function editLicenseController( $scope, $location, licenseService, productServic
         vm.vendorList = vendorList;
     });
 
-    vm.statusOptions = [
-        {
-            label: 'Active',
-            value: true
-        },
-        {
-            label: 'Inactive',
-            value: false
-        }
-    ];
+    vm.statusOptions = entityBaseService.getStatusOptions();
     vm.offeringTypeOptions = [
         {
             label: 'Product',
