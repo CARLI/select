@@ -26,7 +26,7 @@ describe('The Edit Vendor Directive', function(){
         module('carli.entityForms.vendor');
         module('carli.mockServices');
 
-        inject( function($controller, $rootScope, $q, mockLocationService, mockVendorService, mockAlertService, mockProductService ) {
+        inject( function($controller, $rootScope, $q, mockLocationService, mockVendorService, mockAlertService, mockProductService, mockLicenseService ) {
 
             mockVendorService.setTestData(angular.copy(mockVendorList));
 
@@ -35,6 +35,7 @@ describe('The Edit Vendor Directive', function(){
                 $location: mockLocationService,
                 vendorService: mockVendorService,
                 productService: mockProductService,
+                licenseService: mockLicenseService,
                 alertService: mockAlertService
             };
 
@@ -45,6 +46,7 @@ describe('The Edit Vendor Directive', function(){
                 $location: mockLocationService,
                 vendorService: mockVendorService,
                 productService: mockProductService,
+                licenseService: mockLicenseService,
                 alertService: mockAlertService
             };
 
@@ -78,6 +80,12 @@ describe('The Edit Vendor Directive', function(){
         expect( editCtrl.editable ).to.equal(false);
         expect( editCtrl.newVendor ).to.equal(false);
     });
+
+    it('should load Products and Licenses for the Vendor on the Edit Vendor screen', inject(function($rootScope){
+        $rootScope.$digest();
+        expect( editCtrl.productList ).to.be.an('array');
+        expect( editCtrl.licenseList ).to.be.an('array');
+    }));
 
     it('should call vendorService.update when saving an existing Vendor', function(){
         expect( mockDependenciesForEditVendor.vendorService.createOrUpdate ).to.equal('neither');

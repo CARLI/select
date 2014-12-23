@@ -20,4 +20,8 @@ describe('The License Service', function() {
     it( 'should provide a load method', inject( function(licenseService) {
         expect(licenseService.load).to.be.a('Function');
     }));
+
+    it( 'should provide a listLicensesForVendorId method', inject( function(licenseService) {
+        expect(licenseService.listLicensesForVendorId).to.be.a('Function');
+    }));
 });

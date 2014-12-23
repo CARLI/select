@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.vendor')
     .controller('editVendorController', editVendorController);
 
-function editVendorController( $scope, entityBaseService, vendorService, productService, alertService ) {
+function editVendorController( $scope, entityBaseService, vendorService, productService, licenseService, alertService ) {
     var vm = this;
 
     vm.vendorId = $scope.vendorId;
@@ -56,6 +56,7 @@ function editVendorController( $scope, entityBaseService, vendorService, product
             vm.vendor = vendor;
         } );
         getProducts();
+        getLicenses();
         vm.editable = false;
         vm.newVendor = false;
     }
@@ -97,6 +98,12 @@ function editVendorController( $scope, entityBaseService, vendorService, product
     function getProducts() {
         productService.listProductsForVendorId(vm.vendorId).then ( function ( productList ) {
             vm.productList = productList;
+        });
+    }
+
+    function getLicenses() {
+        licenseService.listLicensesForVendorId(vm.vendorId).then ( function ( licenseList ) {
+            vm.licenseList = licenseList;
         });
     }
 

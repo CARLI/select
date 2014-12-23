@@ -47,6 +47,15 @@
                             </li>
                         </ul>
                     </div>
+
+                    <div class="license-list" ng-hide="vm.editable">
+                        <div class="label">License Agreements</div>
+                        <ul class="zebra-table">
+                            <li ng-repeat="license in vm.licenseList">
+                                <a ng-href="/license/{{ license.id }}">{{ license.name }}</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="column">
 

@@ -1,7 +1,7 @@
 angular.module('carli.licenseService')
     .service('licenseService', licenseService);
 
-function licenseService( CarliModules, $q, entityBaseService, vendorService ) {
+function licenseService( CarliModules, $q, entityBaseService ) {
 
     var licenseModule = CarliModules.License;
 
@@ -10,5 +10,8 @@ function licenseService( CarliModules, $q, entityBaseService, vendorService ) {
         create: function() { return $q.when( licenseModule.create.apply(this, arguments) ); },
         update: function() { return $q.when( licenseModule.update.apply(this, arguments) ); },
         load:   function() { return $q.when( licenseModule.load.apply(this, arguments) ); },
+        listLicensesForVendorId: function(){
+            return $q.when( licenseModule.listLicensesForVendorId.apply(this, arguments) );
+        }
     };
 }
