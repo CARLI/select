@@ -7,12 +7,10 @@ body {
 
     $controls-background: $light-gray;
     $icon-color: $orange;
-    $zebra-table-color: $light-gray;
     $table-header-fg-color: $black;
     $table-content-fg-color: $purple;
 
     .entity-list-controls {
-
         @include flexbox;
         border-top: $controls-top-border;
         background: $controls-background;
@@ -60,6 +58,8 @@ body {
         padding: 0;
         clear: both;
 
+        @extend .zebra-table;
+
         li.column-headers {
             .column, .column:first-child {
                 color: $table-header-fg-color;
@@ -92,19 +92,9 @@ body {
 
         li {
             @include flexbox;
-            background: $white;
-            border: $default-border;
-            border-bottom: 0;
             font-family: 'Verdana', sans-serif;
             @include font-size(15);
-
-            &:nth-child(2n+1) {
-                background: $zebra-table-color;
-            }
-
-            &:last-child {
-                border-bottom: $default-border;
-            }
+            padding: 0;
 
             .column {
                 @include flex(1 1 auto);
@@ -113,9 +103,7 @@ body {
                 width: $column-percent;
 
                 &:first-child {
-                    @include font-size(17);
-                    font-family: 'Merriweather', serif;
-                    font-weight: 700;
+                    @extend .zebra-table-header;
                     border-left: 0;
                 }
                 .list-button {

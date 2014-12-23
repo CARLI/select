@@ -1,0 +1,26 @@
+.zebra-table {
+    $zebra-table-color: $light-gray;
+
+    li {
+        background: $white;
+        border: $default-border;
+        border-bottom: 0;
+        list-style: outside none none;
+        padding: 1rem;
+
+        &:nth-child(2n+1) {
+            background: $zebra-table-color;
+        }
+
+        &:last-child {
+            border-bottom: $default-border;
+        }
+    }
+}
+
+.zebra-table-header {
+    color: $purple;
+    @include font-size(17);
+    font-family: 'Merriweather', serif;
+    font-weight: 700;
+}
