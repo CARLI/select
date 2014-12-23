@@ -12,8 +12,10 @@ function styleGuideController(componentExamples, componentGatherer, alertService
     initViewEditCheckboxExample(vm);
     initViewEditContactExample(vm);
     initViewEditNumberExample(vm);
+    initViewEditPercentageExample(vm);
     initViewEditTextAreaExample(vm);
     initViewEditTextFieldExample(vm);
+    initViewEditTypeaheadExample(vm);
     initViewEditYesNoOtherExample(vm);
     initViewEditDate(vm);
 }
@@ -67,6 +69,12 @@ function initViewEditNumberExample(vm) {
     vm.toggleNumberFieldEditable = function toggleNumberFieldEditable() {
         vm.numberFieldEditable = !vm.numberFieldEditable;
     };
+}function initViewEditPercentageExample(vm) {
+    vm.percentageFieldEditable = false;
+    vm.defaultPercentageEditValue = 55;
+    vm.togglePercentageFieldEditable = function togglePercentageFieldEditable() {
+        vm.percentageFieldEditable = !vm.percentageFieldEditable;
+    };
 }
 function initViewEditTextAreaExample(vm) {
     vm.textAreaEditable = false;
@@ -80,6 +88,19 @@ function initViewEditTextFieldExample(vm) {
     vm.defaultTextEditValue = "Default Text Field Value";
     vm.toggleTextFieldEditable = function toggleTextFieldEditable() {
         vm.textFieldEditable = !vm.textFieldEditable;
+    };
+}
+function initViewEditTypeaheadExample(vm) {
+    vm.typeaheadEditable = false;
+    vm.typeaheadExampleValue = "";
+    vm.exampleOptionsList = [
+        { 'name': 'Option 1' },
+        { 'name': 'Another Option' },
+        { 'name': 'Lorem Ipsum' },
+        { 'name': 'Foobar' }
+    ];
+    vm.toggleTypeaheadEditable = function toggleTypeaheadEditable() {
+        vm.typeaheadEditable = !vm.typeaheadEditable;
     };
 }
 function initViewEditYesNoOtherExample(vm) {
