@@ -162,12 +162,16 @@ describe('ProductRepository.listOneTimePurchaseProducts()', function() {
 });
 
 describe('ListProductsForLicenseId View', function () {
+    it('should have a listProductsForLicenseId method', function(){
+        expect(ProductRepository.listProductsForLicenseId).to.be.a('function');
+    });
+
     var license1 = { id: uuid.v4(), type: "License", name: "my license 1 name", isActive: true};
     var license2 = { id: uuid.v4(), type: "License", name: "my license 2 name", isActive: true};
     var product1 = { id: uuid.v4(), type: "Product", name: "my product 1 name", isActive: true, license: license1.id, vendor: "bogus"};
     var product2 = { id: uuid.v4(), type: "Product", name: "my product 2 name", isActive: true, license: license1.id, vendor: "bogus"};
     var product3 = { id: uuid.v4(), type: "Product", name: "my product 3 name", isActive: true, license: license2.id, vendor: "bogus"};
-    var product4 = { id: uuid.v4(), type: "Product", name: "my product 3 name", isActive: true, vendor: "bogus"};
+    var product4 = { id: uuid.v4(), type: "Product", name: "my product 4 name", isActive: true, vendor: "bogus"};
 
     it('should return products associated with a license', function(){
         return ProductRepository.create( product1 )
@@ -203,6 +207,52 @@ describe('ListProductsForLicenseId View', function () {
     });
 });
 
+
+describe('listProductsForVendorId View', function () {
+    it('should have a listProductsForVendorId method', function(){
+        expect(ProductRepository.listProductsForVendorId).to.be.a('function');
+    });
+
+    var vendor1 = { id: uuid.v4(), type: "Vendor", name: "my vendor 1 name", isActive: true};
+    var vendor2 = { id: uuid.v4(), type: "Vendor", name: "my vendor 2 name", isActive: true};
+    var product1 = { id: uuid.v4(), type: "Product", name: "my product 1 name", isActive: true, license: "bogus", vendor: vendor1.id };
+    var product2 = { id: uuid.v4(), type: "Product", name: "my product 2 name", isActive: true, license: "bogus", vendor: vendor1.id };
+    var product3 = { id: uuid.v4(), type: "Product", name: "my product 3 name", isActive: true, license: "bogus", vendor: vendor2.id };
+    var product4 = { id: uuid.v4(), type: "Product", name: "my product 4 name", isActive: true, license: "bogus", vendor: "bogus" };
+
+    it('should return products associated with a vendor', function(){
+        return ProductRepository.create( product1 )
+            .then( function() {
+                return ProductRepository.create( product2 );
+            })
+            .then (function () {
+            return ProductRepository.create( product3 );
+        })
+            .then (function () {
+            return ProductRepository.create( product4 );
+        })
+            .then(function(){
+                return ProductRepository.listProductsForVendorId( vendor1.id );
+            })
+            .then(function ( productList ) {
+
+                function verifyAllProductsHaveVendor( productList ){
+                    var match = true;
+                    var vendorToMatch = vendor1;
+
+                    productList.forEach(function( product ){
+                        if ( product.vendor !== vendorToMatch.id ){
+                            match = true;
+                        }
+                    });
+
+                    return match;
+                }
+
+                return expect(productList).to.be.an('array').and.have.length(2).and.satisfy(verifyAllProductsHaveVendor);
+            });
+    });
+});
 
 describe('Adding functions to Product instances', function(){
     it('should add a getIsActive method to instances of Product', function(){

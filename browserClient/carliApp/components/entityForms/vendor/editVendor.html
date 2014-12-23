@@ -39,7 +39,23 @@
             <fieldset>
 
                 <div class="column">
-                    <div class="placeholder" ng-hide="vm.editable">Product List</div>
+                    <div class="product-list" ng-hide="vm.editable">
+                        <div class="label">Products</div>
+                        <ul class="zebra-table">
+                            <li ng-repeat="product in vm.productList">
+                                <a ng-disabled="!product.isActive" ng-href="/product/{{ product.id }}">{{ product.name }}</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="license-list" ng-hide="vm.editable">
+                        <div class="label">License Agreements</div>
+                        <ul class="zebra-table">
+                            <li ng-repeat="license in vm.licenseList">
+                                <a ng-disabled="!license.isActive" ng-href="/license/{{ license.id }}">{{ license.name }}</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="column">
 

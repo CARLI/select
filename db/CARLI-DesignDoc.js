@@ -17,6 +17,20 @@ ddoc = {
                     emit( doc.license, doc );
                 }
             }
+        },
+        listProductsForVendorId: {
+            map: function ( doc ) {
+                if ( doc.type === 'Product' ) {
+                    emit( doc.vendor, doc );
+                }
+            }
+        },
+        listLicensesForVendorId: {
+            map: function ( doc ) {
+                if ( doc.type === 'License' ) {
+                    emit( doc.vendor, doc );
+                }
+            }
         }
     }
 };

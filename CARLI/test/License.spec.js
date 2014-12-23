@@ -55,3 +55,50 @@ describe('Converting referenced entities', function() {
         });
     });
 });
+
+describe('listLicensesForVendorId View', function(){
+
+    it('should provide a listLicensesForVendorId method', function(){
+       expect(LicenseRepository.listLicensesForVendorId).to.be.a('function');
+    });
+
+    var vendor1 = { id: uuid.v4(), type: "Vendor", name: "my vendor 1 name", isActive: true};
+    var vendor2 = { id: uuid.v4(), type: "Vendor", name: "my vendor 2 name", isActive: true};
+    var license1 = { id: uuid.v4(), type: "License", name: "my license 1 name", isActive: true, vendor: vendor1.id };
+    var license2 = { id: uuid.v4(), type: "License", name: "my license 2 name", isActive: true, vendor: vendor1.id };
+    var license3 = { id: uuid.v4(), type: "License", name: "my license 3 name", isActive: true, vendor: vendor2.id };
+    var license4 = { id: uuid.v4(), type: "License", name: "my license 4 name", isActive: true, vendor: "bogus" };
+
+    it('should return licenses associated with a vendor', function(){
+        return LicenseRepository.create( license1 )
+            .then( function() {
+                return LicenseRepository.create( license2 );
+            })
+            .then (function () {
+            return LicenseRepository.create( license3 );
+            })
+            .then (function () {
+            return LicenseRepository.create( license4 );
+            })
+            .then(function(){
+                return LicenseRepository.listLicensesForVendorId( vendor1.id );
+            })
+            .then(function ( licenseList ) {
+
+                function verifyAllLicensesHaveVendor( licenseList ){
+                    var match = true;
+                    var vendorToMatch = vendor1;
+
+                    licenseList.forEach(function( license ){
+                        if ( license.vendor !== vendorToMatch.id ){
+                            match = true;
+                        }
+                    });
+
+                    return match;
+                }
+
+                return expect(licenseList).to.be.an('array').and.have.length(2).and.satisfy(verifyAllLicensesHaveVendor);
+            });
+    });
+});

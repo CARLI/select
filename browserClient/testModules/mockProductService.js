@@ -34,6 +34,16 @@ angular.module('carli.mockProductService', [])
                 var deferred = $q.defer();
                 deferred.resolve(mockProductList);
                 return deferred.promise;
+            },
+            listProductsForLicenseId: function () {
+                var deferred = $q.defer();
+                deferred.resolve(mockProductList);
+                return deferred.promise;
+            },
+            listProductsForVendorId: function () {
+                var deferred = $q.defer();
+                deferred.resolve(mockProductList);
+                return deferred.promise;
             }
         };
     });
