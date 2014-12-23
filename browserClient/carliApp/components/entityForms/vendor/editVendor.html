@@ -39,7 +39,14 @@
             <fieldset>
 
                 <div class="column">
-                    <div class="placeholder" ng-hide="vm.editable">Product List</div>
+                    <div class="product-list" ng-hide="vm.editable">
+                        <span class="label">Products</span>
+                        <ul class="zebra-table">
+                            <li ng-repeat="product in vm.productList">
+                                {{ product.name }}
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="column">
 
