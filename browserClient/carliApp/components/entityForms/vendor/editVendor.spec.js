@@ -26,7 +26,7 @@ describe('The Edit Vendor Directive', function(){
         module('carli.entityForms.vendor');
         module('carli.mockServices');
 
-        inject( function($controller, $rootScope, $q, mockLocationService, mockVendorService, mockAlertService ) {
+        inject( function($controller, $rootScope, $q, mockLocationService, mockVendorService, mockAlertService, mockProductService ) {
 
             mockVendorService.setTestData(angular.copy(mockVendorList));
 
@@ -34,6 +34,7 @@ describe('The Edit Vendor Directive', function(){
                 $scope: {},
                 $location: mockLocationService,
                 vendorService: mockVendorService,
+                productService: mockProductService,
                 alertService: mockAlertService
             };
 
@@ -43,6 +44,7 @@ describe('The Edit Vendor Directive', function(){
                 },
                 $location: mockLocationService,
                 vendorService: mockVendorService,
+                productService: mockProductService,
                 alertService: mockAlertService
             };
 
