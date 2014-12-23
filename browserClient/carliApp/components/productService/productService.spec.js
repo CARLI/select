@@ -25,4 +25,8 @@ describe('The Product service', function() {
         expect(productService.listAvailableOneTimePurchaseProducts).to.be.a('Function');
     }));
 
+    it( 'should provide a listProductsForVendorId method', inject( function(productService) {
+        expect(productService.listProductsForVendorId).to.be.a('Function');
+    }));
+
 });

@@ -69,11 +69,6 @@ function listAvailableOneTimePurchaseProducts(){
     return deferred.promise;
 }
 
-function listProductsForLicenseId( licenseId ) {
-
-    return CouchViewUtils.getCouchViewResults('listProductsByLicenseId', licenseId);
-}
-
 function isOneTimePurchaseProduct( product ){
     return product.cycleType === 'One-Time Purchase';
 }
@@ -85,6 +80,16 @@ function isAvailableToday( product ){
     var lastMidnight = moment().startOf('day');
     return throughDate.isAfter(lastMidnight);
 }
+
+
+function listProductsForLicenseId( licenseId ) {
+    return CouchViewUtils.getCouchViewResults('listProductsByLicenseId', licenseId);
+}
+
+function listProductsForVendorId( vendorId ) {
+    return CouchViewUtils.getCouchViewResults('listProductsForVendorId', vendorId);
+}
+
 
 /* functions that get added as instance methods on loaded Products */
 var getIsActive = function(){
@@ -105,5 +110,6 @@ module.exports = {
     list: listProducts,
     load: loadProduct,
     listAvailableOneTimePurchaseProducts: listAvailableOneTimePurchaseProducts,
-    listProductsForLicenseId: listProductsForLicenseId
+    listProductsForLicenseId: listProductsForLicenseId,
+    listProductsForVendorId: listProductsForVendorId
 };
