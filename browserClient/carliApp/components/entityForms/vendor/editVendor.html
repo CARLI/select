@@ -40,10 +40,10 @@
 
                 <div class="column">
                     <div class="product-list" ng-hide="vm.editable">
-                        <span class="label">Products</span>
+                        <div class="label">Products</div>
                         <ul class="zebra-table">
                             <li ng-repeat="product in vm.productList">
-                                {{ product.name }}
+                                <a ng-href="/product/{{ product.id }}">{{ product.name }}</a>
                             </li>
                         </ul>
                     </div>

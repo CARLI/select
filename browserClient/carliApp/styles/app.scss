@@ -89,12 +89,16 @@ h4 {
     font-weight: 700;
 }
 
-
+.label,
 label {
+    display: inline-block;
     font-family: 'Verdana', 'Helvetica', 'Arial', sans-serif;
     font-size: 12px;
     font-weight: bold;
     color: $black;
+    padding: 0;
+    margin-top: $label-margin-top;
+    margin-bottom: $label-margin-bottom;
 }
 
 input[type=number],
