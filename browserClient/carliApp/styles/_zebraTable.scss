@@ -24,3 +24,12 @@
     font-family: 'Merriweather', serif;
     font-weight: 700;
 }
+
+.zebra-table li > a {
+    @extend .zebra-table-header;
+}
+
+.zebra-table li > a[disabled] {
+    color: $gray;
+    pointer-events: none;
+}
