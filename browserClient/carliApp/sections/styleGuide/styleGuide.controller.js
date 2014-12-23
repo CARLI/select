@@ -18,6 +18,7 @@ function styleGuideController(componentExamples, componentGatherer, alertService
     initViewEditTypeaheadExample(vm);
     initViewEditYesNoOtherExample(vm);
     initViewEditDate(vm);
+    initEntityList(vm);
 }
 
 function initAlertsExample(vm, alertService) {
@@ -116,4 +117,59 @@ function initViewEditDate(vm, $scope) {
     vm.toggleDateEditable = function toggleDateEditable() {
         vm.dateEditable = !vm.dateEditable;
     };
+}
+function initEntityList(vm){
+    vm.exampleEntities = [
+        {
+            name: 'Entity 1',
+            url: 'entity1.example.com',
+            isActive: true,
+            property: 'An example property'
+        },
+        {
+            name: 'Entity 2',
+            url: 'entity2.example.com',
+            isActive: true,
+            property: 'Example property two'
+        },
+        {
+            name: 'Another Entity',
+            url: 'www.example.com',
+            isActive: true,
+            property: 'Another example property'
+        },
+        {
+            name: 'Inactive Entity',
+            url: 'www.example.com/inactive',
+            isActive: false,
+            property: 'Another example property'
+        },
+        {
+            name: 'Lorem Upsum',
+            url: 'aaa.example.com',
+            isActive: true,
+            property: 'Property for example'
+        }
+    ];
+    vm.exampleColumnConfig = [
+        {
+            label: "Entity Name",
+            orderByProperty: 'name',
+            contentFunction: function(entity) {
+                return entity.name;
+            }
+        },
+        {
+            label: "Entity URL",
+            orderByProperty: 'url',
+            contentFunction: function(entity) {
+                return entity.url;
+            }
+        },
+        {
+            label: "Other Property",
+            orderByProperty: 'property',
+            contentFunction: function(entity) { return entity.property; }
+        }
+    ];
 }

@@ -2,6 +2,7 @@ angular.module('carli.sections.styleGuide',
     [
         'carli.componentGatherer',
         'carli.alerts',
+        'carli.entityList',
         'carli.viewEditDirectives',
         'carli.goodSelect',
         'carli.checkbox',
@@ -23,5 +24,6 @@ angular.module('carli.sections.styleGuide',
         'View Edit Text Area': 'view-edit-text-area.html',
         'View Edit Text Field': 'view-edit-text-field.html',
         'View Edit Typeahead': 'view-edit-typeahead.html',
-        'View Edit Yes/No/Other': 'view-edit-yes-no-other.html'
+        'View Edit Yes/No/Other': 'view-edit-yes-no-other.html',
+        'Entity List': 'entity-list.html'
     });
