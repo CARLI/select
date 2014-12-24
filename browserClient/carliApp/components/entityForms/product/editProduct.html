@@ -5,7 +5,7 @@
 
         <fieldset>
             <div class="name">
-                <label for="productName">Product Name</label>
+                <label>Product Name</label>
                 <view-edit-text-field ng-model="vm.product.name" edit-mode="vm.editable">
                     <h1>{{ vm.product.name }}</h1>
                 </view-edit-text-field>
@@ -27,21 +27,22 @@
     <section class="content">
         <fieldset>
             <div class="column">
-                <label for="productVendor">Vendor</label>
-                <view-edit-typeahead ng-show="vm.newProduct" ng-model="vm.product.vendor" options="vm.vendorList" edit-mode="vm.editable"></view-edit-typeahead>
-                <div ng-show="!vm.newProduct">{{ vm.product.vendor.name }}</div>
+                <label>Vendor</label>
+                <view-edit-typeahead ng-model="vm.product.vendor" options="vm.vendorList" edit-mode="vm.newProduct">
+                    {{ vm.product.vendor.name }}
+                </view-edit-typeahead>
 
-                <label for="productUrl">Product URL <aside>(Vendor can provide)</aside></label>
+                <label>Product URL <aside>(Vendor can provide)</aside></label>
                 <view-edit-text-field ng-model="vm.product.productUrl" edit-mode="vm.editable">
                     {{ vm.product.productUrl }}
                 </view-edit-text-field>
 
-                <label for="productDescription">Product Description <aside>(Vendor can provide)</aside></label>
+                <label>Product Description <aside>(Vendor can provide)</aside></label>
                 <view-edit-text-area ng-model="vm.product.description" edit-mode="vm.editable">
                     {{ vm.product.description }}
                 </view-edit-text-area>
 
-                <label for="productComments">Product Price Comments for Libraries</label>
+                <label>Product Price Comments for Libraries</label>
                 <view-edit-text-area ng-model="vm.product.comments" edit-mode="vm.editable">
                     {{ vm.product.comments }}
                 </view-edit-text-area>
@@ -57,7 +58,7 @@
                 </div>
 
                 <div class="column">
-                    <label for="productStatus">Status</label>
+                    <label>Status</label>
                     <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.product.isActive" edit-mode="vm.editable">
                         {{ vm.product.isActive ? 'Active Product' : 'Inactive Product' }}
                     </view-edit-radios>
@@ -91,7 +92,7 @@
                         <div ng-show="vm.noLicensesMessage">
                             <input type="text" ng-show="vm.editable" disabled="disabled" readonly="readonly" value="{{ vm.noLicensesMessage }}">
                         </div>
-                        <view-edit-typeahead ng-show="!vm.noLicensesMessage" ng-model="vm.product.license" options="vm.licenseList" edit-mode="vm.editable">
+                        <view-edit-typeahead ng-show="!vm.noLicensesMessage" ng-model="vm.product.license" options="vm.licenseList" edit-mode="vm.newProduct">
                             {{ vm.product.license.name }}
                         </view-edit-typeahead>
 
@@ -183,7 +184,7 @@
     <footer ng-show="vm.editable">
         <fieldset>
             <button type="button" class="carli-button cancel-button" data-dismiss="modal" ng-click="vm.cancelEdit()">Cancel</button>
-            <input type="button" id="vendor-submit" class="carli-button save-button" value="{{ vm.submitLabel() }}" ng-click="vm.submitAction()">
+            <input type="button" id="product-submit" class="carli-button save-button" value="{{ vm.submitLabel() }}" ng-click="vm.submitAction()">
         </fieldset>
     </footer>
 
