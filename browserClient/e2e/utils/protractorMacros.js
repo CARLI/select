@@ -40,6 +40,12 @@ function setInputValue( elementFinder, value ){
     elementFinder.sendKeys( value );
 }
 
+function setTypeaheadValue( elementFinder, value ){
+    elementFinder.clear();
+    elementFinder.sendKeys( value );
+    elementFinder.sendKeys(protractor.Key.ENTER);
+}
+
 function setCheckboxValue( elementFinder, newCheckedState ){
     elementFinder.getAttribute('checked').then( function(checkedState){
         var checkboxIsChecked = !(checkedState === null);
@@ -180,6 +186,7 @@ function _elementFinderForConfig( config ){
 
     switch( config.type ){
         case 'input':
+        case 'typeahead':
         case 'checkbox':
             return inputByModelElementFinder( config.model );
             break;
@@ -209,6 +216,7 @@ function ensureFormElementIsPresentAndBlank( config ){
 
     switch( config.type ){
         case 'input':
+        case 'typeahead':
         case 'textarea':
             ensureInputIsBlank( elementFinder, config.description + ' input field');
             break;
@@ -250,6 +258,8 @@ function setFormElementValue( config, value ){
         case 'textarea':
             setInputValue( elementFinder, value );
             break;
+        case 'typeahead':
+            setTypeaheadValue( elementFinder, value );
         case 'checkbox':
             setCheckboxValue( elementFinder, value );
             break;
@@ -269,6 +279,7 @@ function ensureFormElementHasValue( config, value ){
 
     switch( config.type ){
         case 'input':
+        case 'typeahead':
         case 'textarea':
             ensureInputHasValue( elementFinder, config.description, value );
             break;

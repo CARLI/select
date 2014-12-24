@@ -37,7 +37,7 @@ function productController( $sce, productService ){
         {
             label: "Cycle",
             orderByProperty: 'cycle',
-            contentFunction: function(product) { return product.cycle; }
+            contentFunction: function(product) { return product.cycleType; }
         }
     ];
 }
