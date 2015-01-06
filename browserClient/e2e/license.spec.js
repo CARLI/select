@@ -13,6 +13,17 @@ var browserEnsureInputHasValue = macro.browserEnsureInputHasValue;
 var browserEnsureComponentHasText = macro.browserEnsureComponentHasText;
 var browserGetFirstEntityListRowContainingText = macro.browserGetFirstEntityListRowContainingText;
 
+/* These are special form elements because they aren't editable after creating the license */
+var newLicenseOnlyFormInputsTestConfig = {
+    vendorFormInput: {
+        type: 'typeahead',
+        description: 'Vendor Name',
+        model: 'vm.license.vendor',
+        defaultValue: '',
+        initialValue: testData.vendor1.name
+    }
+};
+
 var formInputsTestConfig = {
     name: {
         type: 'input',
@@ -282,6 +293,13 @@ var pageConfig = {
     newButton: element(by.id('new-license')),
     newLicenseModal: element(by.id('new-license-modal')),
 
+    fillInNewLicenseWithTestData: function(){
+        for ( var formElement in newLicenseOnlyFormInputsTestConfig ){
+            config = newLicenseOnlyFormInputsTestConfig[formElement];
+            macro.setFormElementValue( config, config['initialValue'] );
+        }
+    },
+
     fillInLicenseWithTestData: function( useEditData ){
         var config, formElement;
         var dataSet = useEditData || 'initialValue';
@@ -318,11 +336,9 @@ describe('The New License Modal', function () {
 
 describe('Creating a New License', function(){
     it('should save a new License when filling in the form and clicking save', function() {
-        macro.setSelectValue(element(by.model('vm.license.vendor')), testData.vendor1.name);
+        pageConfig.fillInNewLicenseWithTestData();
         pageConfig.fillInLicenseWithTestData('initialValue');
-
         pageConfig.submit.click();
-
     });
 
     it('should go back to the list screen after submitting', function() {
@@ -365,9 +381,11 @@ describe('Viewing an existing License in read only mode', function () {
         value = config.initialText ? 'initialText' : 'initialValue';
         browserEnsureComponentHasText( formInputsTestConfig[formElement], value );
     }
-    it ('should have the non-editable vendor name', function() {
-        expect(element(by.id('license-vendor-name')).getText()).toEqual(testData.vendor1.name);
-    });
+
+    for ( formElement in newLicenseOnlyFormInputsTestConfig ){
+        config = newLicenseOnlyFormInputsTestConfig[formElement];
+        browserEnsureComponentHasText( config, 'initialValue' );
+    }
 });
 
 describe('Viewing an existing License in edit mode', function () {
@@ -381,9 +399,6 @@ describe('Viewing an existing License in edit mode', function () {
         config = formInputsTestConfig[formElement];
         browserEnsureInputHasValue( config, 'initialValue' );
     }
-    it ('should have the non-editable vendor name', function() {
-        expect(element(by.id('license-vendor-name')).getText()).toEqual(testData.vendor1.name);
-    });
 });
 
 describe('Making changes to an existing License', function(){
