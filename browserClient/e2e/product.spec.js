@@ -274,6 +274,7 @@ describe('Making changes to an existing Product', function(){
         browserResult.then(function( testRow ){
             testRow.findElement(by.tagName('a')).then(function(link){
                 link.click();
+                browser.waitForAngular();
             });
         });
     });
