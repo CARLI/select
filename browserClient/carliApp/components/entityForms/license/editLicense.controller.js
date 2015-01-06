@@ -78,6 +78,10 @@ function editLicenseController( $scope, $location, licenseService, productServic
     function cancelEdit() {
         vm.editable = false;
         activate();
+
+        if ( $scope.licenseForm ){
+            $scope.licenseForm.$setPristine();
+        }
     }
 
     function saveLicense(){

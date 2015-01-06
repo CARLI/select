@@ -149,6 +149,10 @@ function editProductController( $scope, $filter, libraryService, licenseService,
     function cancelEdit() {
         vm.editable = false;
         activate();
+
+        if ( $scope.productForm ){
+            $scope.productForm.$setPristine();
+        }
     }
 
     function isWizardComplete() {
