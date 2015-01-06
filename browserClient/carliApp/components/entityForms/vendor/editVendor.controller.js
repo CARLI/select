@@ -55,8 +55,8 @@ function editVendorController( $scope, entityBaseService, vendorService, product
         vendorService.load(vm.vendorId).then( function( vendor ) {
             vm.vendor = vendor;
         } );
-        getProducts();
-        getLicenses();
+        getActiveProducts();
+        getActiveLicenses();
         vm.editable = false;
         vm.newVendor = false;
     }
@@ -95,15 +95,15 @@ function editVendorController( $scope, entityBaseService, vendorService, product
         }
     }
 
-    function getProducts() {
+    function getActiveProducts() {
         productService.listProductsForVendorId(vm.vendorId).then ( function ( productList ) {
-            vm.productList = productList;
+            vm.productList = productList.filter(_entityIsActive);
         });
     }
 
-    function getLicenses() {
+    function getActiveLicenses() {
         licenseService.listLicensesForVendorId(vm.vendorId).then ( function ( licenseList ) {
-            vm.licenseList = licenseList;
+            vm.licenseList = licenseList.filter(_entityIsActive);
         });
     }
 
@@ -118,5 +118,9 @@ function editVendorController( $scope, entityBaseService, vendorService, product
         if (contactIndex >= 0) {
             vm.vendor.contacts.splice(contactIndex, 1);
         }
+    }
+
+    function _entityIsActive( entity ){
+        return entity && entity.isActive;
     }
 }

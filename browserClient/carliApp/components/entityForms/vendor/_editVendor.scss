@@ -1,0 +1,7 @@
+.license-list > ul > li {
+    a {
+        font-family: 'Verdana', 'Helvetica', 'Arial', sans-serif;
+        font-weight: normal;
+        @include font-size(15);
+    }
+}

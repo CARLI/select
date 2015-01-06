@@ -25,7 +25,7 @@
                 <div class="column">
 
                     <label for="vendorWebsite">Vendor Website</label>
-                    <view-edit-text-field ng-model="vm.vendor.websiteUrl" edit-mode="vm.editable"><span class="h3" ng-bind-html="vm.vendor.websiteUrl | linky"></span></view-edit-text-field>
+                    <view-edit-text-field ng-model="vm.vendor.websiteUrl" edit-mode="vm.editable"><span class="h3" ng-bind-html="vm.vendor.websiteUrl | linky:'_blank'"></span></view-edit-text-field>
                     <label for="vendorStatus">Status</label>
                     <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.vendor.isActive" edit-mode="vm.editable"><span class="h3">{{ vm.vendor.isActive ? 'Active' : 'Inactive' }}</span></view-edit-radios>
                     <label for="vendorAdminModule">Admin Module</label>
@@ -43,7 +43,7 @@
                         <div class="label">Products</div>
                         <ul class="zebra-table">
                             <li ng-repeat="product in vm.productList">
-                                <a ng-disabled="!product.isActive" ng-href="/product/{{ product.id }}">{{ product.name }}</a>
+                                <a ng-href="/product/{{ product.id }}">{{ product.name }}</a>
                             </li>
                         </ul>
                     </div>
@@ -52,14 +52,14 @@
                         <div class="label">License Agreements</div>
                         <ul class="zebra-table">
                             <li ng-repeat="license in vm.licenseList">
-                                <a ng-disabled="!license.isActive" ng-href="/license/{{ license.id }}">{{ license.name }}</a>
+                                <a ng-href="/license/{{ license.id }}">{{ license.name }}</a>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <div class="column">
 
-                    <div class="contacts-header">Contacts</div>
+                    <div class="label">Contacts</div>
 
                     <div class="contact-list">
                         <label><em>Billing</em></label>

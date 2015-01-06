@@ -25,6 +25,10 @@
         cursor: pointer;
     }
 
+    .label {
+        margin-bottom: $label-margin-bottom + 3;
+    }
+
     .unlabeled-element {
         margin-top: $label-margin-top;
     }
