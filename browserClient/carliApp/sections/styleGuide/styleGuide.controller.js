@@ -18,7 +18,8 @@ function styleGuideController(componentExamples, componentGatherer, alertService
     initViewEditTypeaheadExample(vm);
     initViewEditYesNoOtherExample(vm);
     initViewEditDate(vm);
-    initEntityList(vm);
+    initExampleForm(vm);
+	initEntityList(vm);
 }
 
 function initAlertsExample(vm, alertService) {
@@ -70,7 +71,8 @@ function initViewEditNumberExample(vm) {
     vm.toggleNumberFieldEditable = function toggleNumberFieldEditable() {
         vm.numberFieldEditable = !vm.numberFieldEditable;
     };
-}function initViewEditPercentageExample(vm) {
+}
+function initViewEditPercentageExample(vm) {
     vm.percentageFieldEditable = false;
     vm.defaultPercentageEditValue = 55;
     vm.togglePercentageFieldEditable = function togglePercentageFieldEditable() {
@@ -172,4 +174,9 @@ function initEntityList(vm){
             contentFunction: function(entity) { return entity.property; }
         }
     ];
+}
+function initExampleForm(vm){
+    vm.exampleFormModel = {
+        name: ''
+    };
 }
