@@ -43,7 +43,9 @@
                         <div class="label">Products</div>
                         <ul class="zebra-table">
                             <li ng-repeat="product in vm.productList">
-                                <a ng-href="/product/{{ product.id }}">{{ product.name }}</a>
+                                <div class="column">
+                                    <a ng-href="/product/{{ product.id }}">{{ product.name }}</a>
+                                </div>
                             </li>
                         </ul>
                     </div>
@@ -52,7 +54,9 @@
                         <div class="label">License Agreements</div>
                         <ul class="zebra-table">
                             <li ng-repeat="license in vm.licenseList">
-                                <a ng-href="/license/{{ license.id }}">{{ license.name }}</a>
+                                <div class="column">
+                                    <a ng-href="/license/{{ license.id }}">{{ license.name }}</a>
+                                </div>
                             </li>
                         </ul>
                     </div>
