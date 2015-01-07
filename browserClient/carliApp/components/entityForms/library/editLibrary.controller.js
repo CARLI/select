@@ -20,7 +20,7 @@ function editLibraryController( $scope, entityBaseService, libraryService, alert
     vm.institutionTypeOptions = libraryService.getInstitutionTypeOptions();
     vm.membershipLevelOptions = libraryService.getMembershipLevelOptions();
 
-    vm.statusOptions = entityBaseService.getStatusOptions;
+    vm.statusOptions = entityBaseService.getStatusOptions();
 
     activate();
 

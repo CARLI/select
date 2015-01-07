@@ -100,6 +100,9 @@ describe('listLicensesForVendorId View', function(){
 
                 return expect(licenseList).to.be.an('array').and.have.length(2).and.satisfy(verifyAllLicensesHaveVendor);
             });
+    });
+});
+
 describe('Helper functions for getting Enum values from the License Schema', function(){
 
     it('should have a getOfferingTypeOptions function', function(){
