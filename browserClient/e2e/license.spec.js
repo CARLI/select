@@ -124,7 +124,7 @@ var formInputsTestConfig = {
         defaultValue: '',
         initialValue: '10/31/15',
         editedValue: '12/25/15'
-    }, /* -- TODO when we figure out what to do with viewEditNumber
+    },
     remainingRenewals: {
         type: 'input',
         description: 'Remaining Renewals',
@@ -132,7 +132,7 @@ var formInputsTestConfig = {
         defaultValue: '',
         initialValue: '12',
         editedValue: '32'
-    }, */
+    },
     downloadTerms: {
         type: 'select',
         description: 'Download Terms',
@@ -347,7 +347,7 @@ describe('Creating a New License', function(){
 
     it('should find the new License in the list screen', function(){
         pageConfig.listFilterShowAll.click();
-
+        browser.waitForAngular();
         var browserResult = browserGetFirstEntityListRowContainingText( testLicenseName );
         browserResult.then(function( testRow ){
             expect( testRow.isDisplayed()).toBe(true);
@@ -363,11 +363,12 @@ describe('Viewing an existing License in read only mode', function () {
         //Don't need to call these as long as the previous test left us on the list page with 'All' showing
         //browser.setLocation('/license');
         //pageConfig.listFilterShowAll.click();
-
+        //browser.waitForAngular();
         var browserResult = browserGetFirstEntityListRowContainingText( testLicenseName );
         browserResult.then(function( testRow ){
             testRow.findElement(by.tagName('a')).then(function(link){
                 link.click();
+                browser.waitForAngular();
             });
         });
     });
@@ -408,11 +409,12 @@ describe('Making changes to an existing License', function(){
         browser.setLocation('/license');
 
         pageConfig.listFilterShowAll.click();
-
+        browser.waitForAngular();
         var browserResult = browserGetFirstEntityListRowContainingText( testLicenseName );
         browserResult.then(function( testRow ){
             testRow.findElement(by.tagName('a')).then(function(link){
                 link.click();
+                browser.waitForAngular();
             });
         });
     });
