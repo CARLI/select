@@ -11,6 +11,7 @@ var browserEnsureComponentHasText = macro.browserEnsureComponentHasText;
 var browserEnsureContactEditorIsHidden = contactEditorMacro.browserEnsureContactEditorIsHidden;
 var browserEnsureContactEditorHasValues = contactEditorMacro.browserEnsureContactEditorHasValues;
 var browserEnsureContactEditorDisplaysText = contactEditorMacro.browserEnsureContactEditorDisplaysText;
+var browserGetFirstEntityListRowContainingText = macro.browserGetFirstEntityListRowContainingText;
 
 var formInputsTestConfig = {
     name: {
@@ -238,15 +239,10 @@ describe('Creating a New Vendor', function(){
 
     it('should find the new Vendor in the list screen', function(){
         pageConfig.listFilterShowAll.click();
-
-        element.all(by.repeater('entity in values'))
-        .filter( function(el, index) {
-            return el.getText().then(function(text){
-                return (text.search(testVendorName) > -1);
-            });
-        })
-        .then( function( vendorList ) {
-            expect( vendorList.length ).toBe(1);
+        browser.waitForAngular();
+        var browserResult = browserGetFirstEntityListRowContainingText( testVendorName );
+        browserResult.then(function( testRow ){
+            expect( testRow.isDisplayed()).toBe(true);
         });
     });
 
@@ -261,16 +257,14 @@ describe('Viewing an existing Vendor in read only mode', function () {
         //Don't need to call these as long as the previous test left us on the list page with 'All' showing
         //browser.setLocation('/vendor');
         //pageConfig.listFilterShowAll.click();
-
-        element.all(by.repeater('entity in values'))
-            .filter(function (el, index) {
-                return el.getText().then(function (text) {
-                    return (text.search(testVendorName) > -1);
-                });
-            })
-            .then(function (vendorList) {
-                vendorList[0].element(by.tagName('a')).click();
+        //browser.waitForAngular();
+        var browserResult = browserGetFirstEntityListRowContainingText( testVendorName );
+        browserResult.then(function( testRow ){
+            testRow.findElement(by.tagName('a')).then(function(link){
+                link.click();
+                browser.waitForAngular();
             });
+        });
     });
 
     for ( formElement in formInputsTestConfig ){
@@ -296,6 +290,7 @@ describe('Viewing an existing Vendor in edit mode', function () {
 
     it('should be in edit mode', function () {
         pageConfig.editButton.click();
+        browser.waitForAngular();
     });
 
     for ( formElement in formInputsTestConfig ){
@@ -316,16 +311,14 @@ describe('Making changes to an existing Vendor', function(){
         browser.setLocation('/vendor');
 
         pageConfig.listFilterShowAll.click();
-
-        element.all(by.repeater('entity in values'))
-            .filter(function (el, index) {
-                return el.getText().then(function (text) {
-                    return (text.search(testVendorName) > -1);
-                });
-            })
-            .then(function (vendorList) {
-                vendorList[0].element(by.tagName('a')).click();
+        browser.waitForAngular();
+        var browserResult = browserGetFirstEntityListRowContainingText( testVendorName );
+        browserResult.then(function( testRow ){
+            testRow.findElement(by.tagName('a')).then(function(link){
+                link.click();
+                browser.waitForAngular();
             });
+        });
     });
 
     it('should save changes to the Vendor entity and go back to the list screen', function () {
@@ -341,16 +334,15 @@ describe('Making changes to an existing Vendor', function(){
     });
 
     it('should change the entry on the Vendor list screen when changing the name', function () {
-        element.all(by.repeater('entity in values'))
-            .filter(function (el, index) {
-                return el.getText().then(function (text) {
-                    return (text.search(testVendorEditedName) > -1);
-                });
-            })
-            .then(function (vendorList) {
-                expect( vendorList.length ).toBe(1);
-                vendorList[0].element(by.tagName('a')).click();
+        browser.waitForAngular();
+        var browserResult = browserGetFirstEntityListRowContainingText( testVendorEditedName );
+        browserResult.then(function( testRow ){
+            testRow.findElement(by.tagName('a')).then(function(link){
+                link.click();
+                browser.waitForAngular();
             });
+        });
+
     });
 
     for ( formElement in formInputsTestConfig ){

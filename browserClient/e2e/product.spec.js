@@ -186,7 +186,7 @@ describe('Creating a New Product', function(){
 
     it('should find the new Product in the list screen', function(){
         pageConfig.listFilterShowAll.click();
-
+        browser.waitForAngular();
         var browserResult = browserGetFirstEntityListRowContainingText( testProductName );
         browserResult.then(function( testRow ){
             expect( testRow.isDisplayed()).toBe(true);
@@ -203,11 +203,12 @@ describe('Viewing an existing Product in read only mode', function () {
         //Don't need to call these as long as the previous test left us on the list page with 'All' showing
         //browser.setLocation('/product');
         //pageConfig.listFilterShowAll.click();
-
+        //browser.waitForAngular();
         var browserResult = browserGetFirstEntityListRowContainingText( testProductName );
         browserResult.then(function( testRow ){
             testRow.findElement(by.tagName('a')).then(function(link){
                 link.click();
+                browser.waitForAngular();
             });
         });
     });
@@ -233,6 +234,7 @@ describe('Viewing an existing Product in edit mode', function () {
 
     it('should be in edit mode', function () {
         pageConfig.editButton.click();
+        browser.waitForAngular();
     });
 
     for ( formElement in formInputsTestConfig ){
@@ -248,7 +250,7 @@ describe('Making changes to an existing Product', function(){
         browser.setLocation('/product');
 
         pageConfig.listFilterShowAll.click();
-
+        browser.waitForAngular();
         var browserResult = browserGetFirstEntityListRowContainingText( testProductName );
         browserResult.then(function( testRow ){
             testRow.findElement(by.tagName('a')).then(function(link){
@@ -270,6 +272,7 @@ describe('Making changes to an existing Product', function(){
     });
 
     it('should change the entry on the Product list screen when changing the name', function () {
+        browser.waitForAngular();
         var browserResult = browserGetFirstEntityListRowContainingText( testProductEditedName );
         browserResult.then(function( testRow ){
             testRow.findElement(by.tagName('a')).then(function(link){

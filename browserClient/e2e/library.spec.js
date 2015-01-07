@@ -11,6 +11,7 @@ var browserEnsureComponentHasText = macro.browserEnsureComponentHasText;
 var browserEnsureContactEditorIsHidden = contactEditorMacro.browserEnsureContactEditorIsHidden;
 var browserEnsureContactEditorHasValues = contactEditorMacro.browserEnsureContactEditorHasValues;
 var browserEnsureContactEditorDisplaysText = contactEditorMacro.browserEnsureContactEditorDisplaysText;
+var browserGetFirstEntityListRowContainingText = macro.browserGetFirstEntityListRowContainingText;
 
 /**
  * The configuration below is used by the macros to generate tests. They take the following form:
@@ -321,15 +322,10 @@ describe('Creating a New Library', function(){
 
     it('should find the new Library in the list screen', function(){
         pageConfig.listFilterShowAll.click();
-
-        element.all(by.repeater('entity in values'))
-        .filter( function(el, index) {
-            return el.getText().then(function(text){
-                return (text.search(testLibraryName) > -1);
-            });
-        })
-        .then( function( libraryList ) {
-            expect( libraryList.length ).toBe(1);
+        browser.waitForAngular();
+        var browserResult = browserGetFirstEntityListRowContainingText( testLibraryName );
+        browserResult.then(function( testRow ){
+            expect( testRow.isDisplayed()).toBe(true);
         });
     });
 });
@@ -343,16 +339,14 @@ describe('Viewing an existing Library in read only mode', function () {
         //Don't need to call these as long as the previous test left us on the list page with 'All' showing
         //browser.setLocation('/library');
         //pageConfig.listFilterShowAll.click();
-
-        element.all(by.repeater('entity in values'))
-            .filter(function (el, index) {
-                return el.getText().then(function (text) {
-                    return (text.search(testLibraryName) > -1);
-                });
-            })
-            .then(function (libraryList) {
-                libraryList[0].element(by.tagName('a')).click();
+        //browser.waitForAngular();
+        var browserResult = browserGetFirstEntityListRowContainingText( testLibraryName );
+        browserResult.then(function( testRow ){
+            testRow.findElement(by.tagName('a')).then(function(link){
+                link.click();
+                browser.waitForAngular();
             });
+        });
     });
 
     for ( formElement in formInputsTestConfig ){
@@ -378,6 +372,7 @@ describe('Viewing an existing Library in edit mode', function () {
 
     it('should be in edit mode', function () {
         pageConfig.editButton.click();
+        browser.waitForAngular();
     });
 
     for ( formElement in formInputsTestConfig ){
@@ -398,16 +393,14 @@ describe('Making changes to an existing Library', function(){
         browser.setLocation('/library');
 
         pageConfig.listFilterShowAll.click();
-
-        element.all(by.repeater('entity in values'))
-            .filter(function (el, index) {
-                return el.getText().then(function (text) {
-                    return (text.search(testLibraryName) > -1);
-                });
-            })
-            .then(function (libraryList) {
-                libraryList[0].element(by.tagName('a')).click();
+        browser.waitForAngular();
+        var browserResult = browserGetFirstEntityListRowContainingText( testLibraryName );
+        browserResult.then(function( testRow ){
+            testRow.findElement(by.tagName('a')).then(function(link){
+                link.click();
+                browser.waitForAngular();
             });
+        });
     });
 
     it('should save changes to the Library entity and go back to the list screen', function () {
@@ -423,17 +416,14 @@ describe('Making changes to an existing Library', function(){
     });
 
     it('should change the entry on the Library list screen when changing the name', function () {
-            element.all(by.repeater('entity in values'))
-            .filter(function (el, index) {
-                return el.getText().then(function (text) {
-                    return (text.search(testLibraryEditedName) > -1);
-                });
-            })
-            .then(function (libraryList) {
-                expect( libraryList.length ).toBe(1);
-                libraryList[0].element(by.tagName('a')).click();
+        browser.waitForAngular();
+        var browserResult = browserGetFirstEntityListRowContainingText( testLibraryEditedName );
+        browserResult.then(function( testRow ){
+            testRow.findElement(by.tagName('a')).then(function(link){
+                link.click();
+                browser.waitForAngular();
             });
-
+        });
     });
 
     for ( formElement in formInputsTestConfig ){
