@@ -1,3 +1,34 @@
 <modal-dialog title="'Create New Cycle'" modal-id="'new-cycle-modal'" modal-class="">
-    This is the New Cycle Form
+    <form class="edit-form" name="newCycleForm" ng-submit="vm.saveCycle(); vm.closeModal();" warn-if-unsaved>
+        <section class="content">
+            <fieldset>
+                <div class="column">
+                    <label for="xxx">Cycle Type</label>
+                    <div>
+                        <good-select>
+                            <select ng-model="vm.cycle.type">
+                                <option>Fiscal Year</option>
+                                <option>Calendar Year</option>
+                                <option>Alternative Cycle</option>
+                            </select>
+                        </good-select>
+                        <input type="text" ng-show="vm.cycle.type == 'Alternative Cycle'" ng-model="vm.cycle.description">
+                    </div>
+
+                    <label for="xxx">Year</label>
+                    <view-edit-text-field ng-model="vm.cycle.year" edit-mode="true"></view-edit-text-field>
+
+                    <label for="xxx">Selections Available</label>
+                    <p>
+                        <em>Libraries will see this date range <strong>estimate</strong> indicating when they can make selections.</em>
+                    </p>
+                    <view-edit-date ng-model="vm.cycle.startDateForSelections" edit-mode="true"></view-edit-date> to
+                    <view-edit-date ng-model="vm.cycle.endDateForSelections" edit-mode="true"></view-edit-date>
+
+                    <label for="xxx">Products Available to Patrons</label>
+                    <view-edit-date ng-model="vm.cycle.productsAvailableDate" edit-mode="true"></view-edit-date>
+                </div>
+            </fieldset>
+        </section>
+    </form>
 </modal-dialog>

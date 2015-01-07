@@ -3,4 +3,6 @@ angular.module('carli.newCycleForm')
 
 function newCycleFormController( $scope, alertService ) {
     var vm = this;
+
+    vm.cycle = {};
 }
