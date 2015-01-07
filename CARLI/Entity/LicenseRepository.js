@@ -6,6 +6,7 @@ var Entity = require('../Entity')
     , EntityTransform = require( './EntityTransformationUtils')
     , CouchViewUtils = require( '../Store/CouchViewUtils')
     , Q = require('q')
+    , Validator = require('../Validator')
     ;
 
 var LicenseRepository = Entity('License');
@@ -68,6 +69,9 @@ function loadLicense( licenseId ){
 function listLicensesForVendorId( vendorId ){
     return CouchViewUtils.getCouchViewResults('listLicensesForVendorId', vendorId);
 }
+function getOfferingTypeOptions(){
+    return Validator.getEnumValuesFor('License', 'offeringType');
+}
 
 module.exports = {
     setStore: LicenseRepository.setStore,
@@ -75,5 +79,6 @@ module.exports = {
     update: updateLicense,
     list: listLicenses,
     load: loadLicense,
-    listLicensesForVendorId: listLicensesForVendorId
+    listLicensesForVendorId: listLicensesForVendorId,
+    getOfferingTypeOptions: getOfferingTypeOptions
 };

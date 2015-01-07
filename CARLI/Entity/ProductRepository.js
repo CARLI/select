@@ -5,6 +5,7 @@ var Entity = require('../Entity')
   , Store = require( '../Store' )
   , StoreModule = require( '../Store/CouchDbStore')
   , CouchViewUtils = require( '../Store/CouchViewUtils')
+  , Validator = require('../Validator')
   , moment = require('moment')
   , Q = require('q')
   ;
@@ -103,6 +104,10 @@ var functionsToAdd = {
     'getIsActive': getIsActive
 };
 
+function getProductDetailCodeOptions(){
+    return Validator.getEnumValuesFor('ProductDetailCodes');
+}
+
 module.exports = {
     setStore: ProductRepository.setStore,
     create: createProduct,
@@ -111,5 +116,6 @@ module.exports = {
     load: loadProduct,
     listAvailableOneTimePurchaseProducts: listAvailableOneTimePurchaseProducts,
     listProductsForLicenseId: listProductsForLicenseId,
-    listProductsForVendorId: listProductsForVendorId
+    listProductsForVendorId: listProductsForVendorId,
+    getProductDetailCodeOptions: getProductDetailCodeOptions
 };

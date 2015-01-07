@@ -29,6 +29,9 @@ angular.module('carli.mockLicenseService', [])
                 var deferred = $q.defer();
                 deferred.resolve([]);
                 return deferred.promise;
+            },
+            getOfferingTypeOptions: function(){
+                return [];
             }
         };
     });

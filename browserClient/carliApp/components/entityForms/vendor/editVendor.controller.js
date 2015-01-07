@@ -16,16 +16,7 @@ function editVendorController( $scope, entityBaseService, vendorService, product
         $('#new-vendor-modal').modal('hide');
     };
 
-    vm.statusOptions = [
-        {
-            label: 'Active',
-            value: true
-        },
-        {
-            label: 'Inactive',
-            value: false
-        }
-    ];
+    vm.statusOptions = entityBaseService.getStatusOptions();
 
     activate();
 

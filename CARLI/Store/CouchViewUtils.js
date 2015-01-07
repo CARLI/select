@@ -1,6 +1,7 @@
 var config = require( '../config'),
     request = config.request,
-    StoreOptions = config.storeOptions
+    StoreOptions = config.storeOptions,
+    Q = require('q')
 ;
 
 var dbHost = db_host = StoreOptions.couchDbUrl + '/' + StoreOptions.couchDbName;

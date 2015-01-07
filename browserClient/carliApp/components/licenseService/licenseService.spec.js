@@ -24,4 +24,20 @@ describe('The License Service', function() {
     it( 'should provide a listLicensesForVendorId method', inject( function(licenseService) {
         expect(licenseService.listLicensesForVendorId).to.be.a('Function');
     }));
+
+    it( 'should provide a getOfferingTypeOptions method', inject( function(licenseService) {
+        var testData = [
+            {
+                label: 'Product',
+                value: "'Product'"
+            },
+            {
+                label: 'Service',
+                value: "'Service'"
+            }
+        ];
+
+        expect(licenseService.getOfferingTypeOptions).to.be.a('Function');
+        expect(licenseService.getOfferingTypeOptions()).to.deep.include.members(testData);
+    }));
 });

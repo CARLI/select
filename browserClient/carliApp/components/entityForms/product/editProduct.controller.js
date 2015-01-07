@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.product')
     .controller('editProductController', editProductController);
 
-function editProductController( $scope, $filter, libraryService, licenseService, productService, vendorService, alertService ) {
+function editProductController( $scope, $filter, entityBaseService, libraryService, licenseService, productService, vendorService, alertService ) {
     var vm = this;
     var otpFieldsCopy = {};
     var termFieldsCopy = {};
@@ -48,17 +48,7 @@ function editProductController( $scope, $filter, libraryService, licenseService,
     refreshLicenseList();
     $scope.$watch('vm.product.vendor', refreshLicenseList);
 
-    //TODO: Move to someplace common since it's on Product, Library, and Product now
-    vm.statusOptions = [
-        {
-            label: 'Active Product',
-            value: true
-        },
-        {
-            label: 'Inactive Product',
-            value: false
-        }
-    ];
+    vm.statusOptions = entityBaseService.getStatusOptions();
 
     //TODO: Move this someplace more common than here (Cycle Service?)
     vm.cycleOptions = [
@@ -68,36 +58,7 @@ function editProductController( $scope, $filter, libraryService, licenseService,
         "Alternative Cycle"
     ];
 
-    vm.productDetailCodeOptions = [
-        "USIA - Membership",
-        "USIB - Database",
-        "USIE - Misc.",
-        "USIF - I-Share",
-        "USIG - Chronicle of Higher Education",
-        "USIH - OED",
-        "USII - Spring Database",
-        "USIJ - Fall Database",
-        "USIK - SFX",
-        "USIL - SFX",
-        "USIM - I-Share Pre-Pay",
-        "USIN - Database Pre-Pay"
-    ];
-
-    vm.termTypes = [
-        "Download",
-        "ILL",
-        "Course Packs",
-        "Print",
-        "Limited Sharing for Scholarly Purposes",
-        "Use by Walk-ins",
-        "E-Reserves"
-    ];
-
-    vm.termOptions = [
-        "Yes",
-        "No",
-        "Other"
-    ];
+    vm.productDetailCodeOptions = productService.getProductDetailCodeOptions();
 
     activate();
 

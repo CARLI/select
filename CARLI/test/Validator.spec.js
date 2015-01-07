@@ -10,11 +10,15 @@ var validTypes = [
     'Contact',
     'CycleType',
     'Date',
+    'InstitutionType',
+    'InstitutionYears',
     'Library',
     'License',
+    'MembershipLevel',
     'OneTimePurchase',
     'PriceCap',
     'Product',
+    'ProductDetailCodes',
     'Vendor',
     'WebAddress'
 ];
@@ -109,7 +113,16 @@ describe( 'The Validator Module', function() {
             };
 
             return expect( Validator.validate(testProduct) ).to.be.rejectedWith(/Product validation error:/ );
+        });
 
+        it( 'should fail for an invalid Library Institution Type', function(){
+            var testLibrary = {
+                type: 'Library',
+                name: 'Test Library',
+                institutionType: 'A Clearly Invalid Institution Type' 
+            };
+
+            return expect( Validator.validate(testLibrary) ).to.be.rejectedWith(/validation error:/);
         });
     });
 
@@ -127,4 +140,58 @@ describe( 'The Validator Module', function() {
         });
     });
 
+    it( 'should have a getEnumValuesFor function', function() {
+        expect( Validator.getEnumValuesFor ).to.be.a('function');
+    });
+
+    describe( 'Validator.getEnumValuesFor', function(){
+        it( 'should fail without a type', function(){
+            function badDataNoType(){
+                Validator.getEnumValuesFor();
+            }
+
+            expect( badDataNoType ).to.throw(/Type Required/);
+        });
+
+        it( 'should fail for an unknown schema type', function(){
+            function badDataUnknownType(){
+                Validator.getEnumValuesFor('Unknown Type');
+            }
+
+            expect( badDataUnknownType ).to.throw(/Unknown Type/);
+        });
+
+        it( 'should fail without a property name if the schema type is not an enum', function(){
+            function badDataNoProperty(){
+                Validator.getEnumValuesFor( 'Product' );
+            }
+
+            expect( badDataNoProperty ).to.throw(/Property Required/);
+        });
+
+        it( 'should return enum values for a schema type that is an enum', function(){
+            var expectedValues = [
+                "Private",
+                "Public",
+                "Other"
+            ];
+
+            expect( Validator.getEnumValuesFor('InstitutionType') ).to.have.members( expectedValues );
+        });
+
+        it( 'should return expected values for an enum property of a schema', function(){
+            var expectedValues = [
+                "Billing",
+                "Sales",
+                "Technical",
+                "Director",
+                "E-Resources Liaison",
+                "Other",
+                "Notification Only"
+            ];
+
+            expect( Validator.getEnumValuesFor('Contact', 'contactType') ).to.have.members( expectedValues );
+        });
+
+    });
 });

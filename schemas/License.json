@@ -106,7 +106,8 @@
         },
         "offeringType": {
             "description": "Type of offering, e.g. product or service",
-            "type": "string"
+            "type": "string",
+            "enum": ["Product","Service"]
         }
     },
     "required": [ "name", "vendor" ]

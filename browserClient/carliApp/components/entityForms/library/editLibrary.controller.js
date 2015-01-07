@@ -20,16 +20,7 @@ function editLibraryController( $scope, entityBaseService, libraryService, alert
     vm.institutionTypeOptions = libraryService.getInstitutionTypeOptions();
     vm.membershipLevelOptions = libraryService.getMembershipLevelOptions();
 
-    vm.statusOptions = [
-        {
-            label: 'Active',
-            value: true
-        },
-        {
-            label: 'Inactive',
-            value: false
-        }
-    ];
+    vm.statusOptions = entityBaseService.getStatusOptions;
 
     activate();
 

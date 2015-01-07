@@ -1,5 +1,6 @@
 {
     "type": "string",
+    "schemaType": "InstitutionType",
     "enum": [
         "Private",
         "Public",
