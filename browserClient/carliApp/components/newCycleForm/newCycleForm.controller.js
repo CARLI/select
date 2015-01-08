@@ -16,7 +16,7 @@ function newCycleFormController( $scope, $location, alertService, cycleService )
         initializeEmptyCycle();
     }
     function initializeEmptyCycle() {
-        vm.cycle = {};
+        vm.cycle = cycleService.cycleDefaults();
     }
     function saveCycle() {
         cycleService.create(vm.cycle)
