@@ -1,0 +1,37 @@
+{
+  "$schema": "json-schema.org/draft-04/schema",
+  "title": "Cycle",
+  "schemaType": "Cycle",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique identifier for the Cycle record",
+      "type": "string"
+    },
+    "name": {
+      "description": "Name of Cycle",
+      "type": "string"
+    },
+    "cycleType": {
+      "description": "Type of Cycle",
+      "$ref": "./CycleType.json"
+    },
+    "year": {
+      "description": "Year of Cycle",
+      "type": "integer"
+    },
+    "startDateForSelections": {
+      "description": "When Libraries can begin making selections",
+      "$ref": "./Date.json"
+    },
+    "endDateForSelections": {
+      "description": "Last day that Libraries can make selections",
+      "$ref": "./Date.json"
+    },
+    "productsAvailableDate": {
+      "description": "Date on which products become available for patrons",
+      "$ref": "./Date.json"
+    }
+  },
+  "required": [ "name", "cycleType", "year" ]
+}

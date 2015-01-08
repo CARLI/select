@@ -40,4 +40,8 @@ describe( 'CARLI', function() {
     it( 'should export the Validator module', function() {
         expect(CARLI.Validator).to.be.an('Object');
     } );
+
+    it( 'should export the Cycle module', function() {
+        expect(CARLI.Cycle).to.be.an('Object');
+    } );
 } );

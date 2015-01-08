@@ -6,13 +6,13 @@
                     <label for="xxx">Cycle Type</label>
                     <div>
                         <good-select>
-                            <select ng-model="vm.cycle.type">
+                            <select ng-model="vm.cycle.cycleType">
                                 <option>Fiscal Year</option>
                                 <option>Calendar Year</option>
                                 <option>Alternative Cycle</option>
                             </select>
                         </good-select>
-                        <input type="text" ng-show="vm.cycle.type == 'Alternative Cycle'" ng-model="vm.cycle.description">
+                        <input type="text" ng-show="vm.cycle.cycleType == 'Alternative Cycle'" ng-model="vm.cycle.description">
                     </div>
 
                     <label for="xxx">Year</label>

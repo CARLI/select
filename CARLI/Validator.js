@@ -4,6 +4,7 @@ var tv4 = require('tv4')
 
 var schemas = {
     Contact: require('../schemas/Contact.json'),
+    Cycle: require('../schemas/Cycle.json'),
     CycleType: require('../schemas/CycleType.json'),
     Date: require('../schemas/Date.json'),
     Library: require('../schemas/Library.json'),
