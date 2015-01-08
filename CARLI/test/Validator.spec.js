@@ -8,6 +8,7 @@ chai.use( chaiAsPromised );
 
 var validTypes = [
     'Contact',
+    'Cycle',
     'CycleType',
     'Date',
     'InstitutionType',

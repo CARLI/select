@@ -1,14 +1,9 @@
 body {
-    $num-columns: 3;
-    $column-percent: 100% / $num-columns;
-
     $filter-input-spacing: 0.57rem;
     $filter-by-active-inner-spacing: 1.5em;
 
     $controls-background: $light-gray;
     $icon-color: $orange;
-    $table-header-fg-color: $black;
-    $table-content-fg-color: $purple;
 
     .entity-list-controls {
         @include flexbox;
@@ -16,7 +11,7 @@ body {
         background: $controls-background;
 
         .filter-input-container {
-            @include flex(1 1 $column-percent);
+            @include flex(1 1 33%);
             border-left: $default-border;
             font-size: 1.28rem;
             line-height: 1;
@@ -40,7 +35,7 @@ body {
         }
 
         .filter-by-active-container {
-            @include flex(1 1 2*$column-percent);
+            @include flex(1 1 66%);
             border-right: $default-border;
             .filter-by-active {
                 @include font-size(14);
@@ -54,65 +49,14 @@ body {
     }
 
     ul.entity-list {
-        list-style: none inside;
-        padding: 0;
-        clear: both;
-
         @extend .zebra-table;
 
-        li.column-headers {
-            .column, .column:first-child {
-                color: $table-header-fg-color;
-                font-family: 'Verdana';
-                font-weight: 700;
-                @include font-size(11);
-                padding: .5rem 1rem;
-                position: relative;
-                cursor: pointer;
-
-                &.sortable:after {
-                    color: $table-header-fg-color;
-                    content: "\f0dc"; //fa-sort
-                    font-family: "FontAwesome";
-                    position: absolute;
-                    top: .5rem;
-                    right: $filter-input-spacing;
-                }
-
-                &.sortable.activeSort:after {
-                    content: "\f0de"; //fa-sort-asc
-                }
-
-                &.sortable.activeSort.reversedSort:after {
-                    content: "\f0dd"; //fa-sort-desc
-                }
-
-            }
-        }
+        clear: both;
 
         li {
-            @include flexbox;
-            font-family: 'Verdana', sans-serif;
-            @include font-size(15);
             padding: 0;
-
-            .column {
-                @include flex(1 1 auto);
-                border-left: $default-border;
-                padding: 1rem;
-                width: $column-percent;
-
-                &:first-child {
-                    @extend .zebra-table-header;
-                    border-left: 0;
-                }
-                .list-button {
-                    @include list-button;
-                }
-            }
-
-            .column, .column a {
-                color: $table-content-fg-color;
+            .column .list-button {
+                @include list-button;
             }
         }
     }

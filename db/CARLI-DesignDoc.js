@@ -11,6 +11,13 @@ ddoc = {
             map: function( doc ) { if ( doc.type ) { emit( doc.type, doc ) } },
             reduce: function( key, values ) { emit( null ); }
         },
+        listActiveCycles: {
+            map: function ( doc ) {
+                if (doc.type === 'Cycle' && !doc.isArchived) {
+                    emit(doc.id, doc);
+                }
+            }
+        },
         listProductsByLicenseId: {
             map: function ( doc ) {
                 if ( doc.type === 'Product' ) {

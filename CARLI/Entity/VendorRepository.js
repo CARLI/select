@@ -11,8 +11,6 @@ var Entity = require('../Entity')
 var VendorRepository = Entity('Vendor');
 VendorRepository.setStore( Store( StoreModule(StoreOptions) ) );
 
-module.exports = VendorRepository;
-
 var propertiesToTransform = [];
 
 function transformFunction( vendor ){

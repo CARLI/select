@@ -3,7 +3,7 @@
     $column-gutter: 20px;
 
     .edit-form {
-        div.column {
+        fieldset > div.column {
             @include grid-column(6);
             &:nth-child(1) {
                 padding-right: $column-gutter / 2;
