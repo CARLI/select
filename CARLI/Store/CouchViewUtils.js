@@ -9,7 +9,10 @@ var dbHost = db_host = StoreOptions.couchDbUrl + '/' + StoreOptions.couchDbName;
 function getCouchViewResults( viewName, key) {
     var deferred = Q.defer();
 
-    var url = dbHost + '/' + '_design/CARLI/_view/' + viewName + '?key="' + key + '"';
+    var url = dbHost + '/' + '_design/CARLI/_view/' + viewName;
+    if (key) {
+        url += '?key="' + key + '"';
+    }
     var results = [];
     request({ url: url },
         function ( err, response, body ) {
