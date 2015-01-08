@@ -11,7 +11,8 @@ function cycleService( CarliModules, $q ) {
 
     return {
         cycleDefaults: cycleDefaults,
-        list:   function() { return $q.when( cycleModule.list() ); },
+        list: function() { return $q.when( cycleModule.list() ); },
+        listActiveCycles:  function() { return $q.when( cycleModule.listActiveCycles() ); },
         create: function(newCycle) {
             newCycle.name = generateCycleName(newCycle);
             delete newCycle.description;

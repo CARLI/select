@@ -22,6 +22,10 @@ var statusLabels = [
 ];
 var propertiesToTransform = [];
 
+function expandCycles(result) {
+    return EntityTransform.expandListOfObjectsFromPersistence(result, propertiesToTransform, functionsToAdd);
+}
+
 function transformFunction( cycle ){
     EntityTransform.transformObjectForPersistence(cycle, propertiesToTransform);
 }
@@ -35,7 +39,7 @@ function updateCycle( cycle ){
 }
 
 function listCycles(){
-    return EntityTransform.expandListOfObjectsFromPersistence( CycleRepository.list(), propertiesToTransform, functionsToAdd);
+    return expandCycles( CycleRepository.list() );
 }
 
 function loadCycle( cycleId ){
@@ -61,7 +65,7 @@ function loadCycle( cycleId ){
 }
 
 function listActiveCycles() {
-    return CouchViewUtils.getCouchViewResults('listActiveCycles');
+    return expandCycles( CouchViewUtils.getCouchViewResults('listActiveCycles') );
 }
 
 /* functions that get added as instance methods on loaded Cycles */
