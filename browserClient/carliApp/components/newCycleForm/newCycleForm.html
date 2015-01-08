@@ -1,5 +1,5 @@
 <modal-dialog title="'Create New Cycle'" modal-id="'new-cycle-modal'" modal-class="">
-    <form class="edit-form" name="newCycleForm" ng-submit="vm.saveCycle(); vm.closeModal();" warn-if-unsaved>
+    <form class="edit-form" name="newCycleForm" ng-submit="vm.saveCycle()" warn-if-unsaved>
         <section class="content">
             <fieldset>
                 <div class="column">
@@ -16,7 +16,7 @@
                     </div>
 
                     <label for="xxx">Year</label>
-                    <view-edit-text-field ng-model="vm.cycle.year" edit-mode="true"></view-edit-text-field>
+                    <view-edit-number-field ng-model="vm.cycle.year" edit-mode="true"></view-edit-number-field>
 
                     <label for="xxx">Selections Available</label>
                     <p>
@@ -32,5 +32,11 @@
                 <div class="placeholder">Manage Surcharge</div>
             </fieldset>
         </section>
+        <footer>
+            <fieldset>
+                <button type="button" class="carli-button cancel-button" data-dismiss="modal" ng-click="vm.cancelEdit()">Cancel</button>
+                <input type="submit" id="cycle-submit" class="carli-button save-button" value="Save">
+            </fieldset>
+        </footer>
     </form>
 </modal-dialog>

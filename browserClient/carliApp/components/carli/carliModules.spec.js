@@ -6,6 +6,10 @@ describe('The CarliModules Service', function(){
         expect(CarliModules).to.be.an('Object');
     }));
 
+    it( 'should export the Cycle module', inject( function(CarliModules) {
+        expect(CarliModules.Cycle).to.be.an('Object');
+    }));
+
     it( 'should export the Vendor module', inject( function(CarliModules) {
         expect(CarliModules.Vendor).to.be.an('Object');
     }));

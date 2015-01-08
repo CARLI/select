@@ -1,8 +1,47 @@
 angular.module('carli.newCycleForm')
     .controller('newCycleFormController', newCycleFormController);
 
-function newCycleFormController( $scope, alertService ) {
+function newCycleFormController( $scope, $location, alertService, cycleService ) {
     var vm = this;
 
-    vm.cycle = {};
+    vm.cycle = null;
+    vm.saveCycle = saveCycle;
+    vm.cancelEdit = cancelEdit;
+    vm.closeModal = function() {
+        $('#new-cycle-modal').modal('hide');
+    };
+
+    activate();
+    function activate() {
+        initializeEmptyCycle();
+    }
+    function initializeEmptyCycle() {
+        vm.cycle = {};
+    }
+    function saveCycle() {
+        vm.cycle.name = (vm.cycle.cycleType == 'Alternative Cycle') ?
+            vm.cycle.description + ' ' + vm.cycle.year :
+            vm.cycle.cycleType + ' ' + vm.cycle.year;
+
+        cycleService.create(vm.cycle)
+            .then(function (cycleId) {
+                vm.closeModal();
+                $('#new-cycle-modal').on('hidden.bs.modal', function (e) {
+                    $scope.$apply(function() {
+                        $location.url('/subscription/' + cycleId);
+                    });
+                });
+                initializeEmptyCycle();
+                alertService.putAlert('Cycle added', {severity: 'success'});
+            })
+            .catch(function (error) {
+                alertService.putAlert(error, {severity: 'danger'});
+            });
+    }
+    function cancelEdit() {
+        initializeEmptyCycle();
+        if ( $scope.newCycleForm ){
+            $scope.newCycleForm.$setPristine();
+        }
+    }
 }
