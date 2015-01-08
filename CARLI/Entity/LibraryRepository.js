@@ -11,8 +11,6 @@ var Entity = require('../Entity')
 var LibraryRepository = Entity('Library');
 LibraryRepository.setStore( Store( StoreModule(StoreOptions) ) );
 
-module.exports = LibraryRepository;
-
 var propertiesToTransform = [];
 
 function transformFunction( library ){
