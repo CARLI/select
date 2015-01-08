@@ -7,7 +7,7 @@
         <ul class="zebra-table">
             <li ng-repeat="cycle in vm.cycles">
                 <div class="column">
-                    <a ng-href="">{{ cycle.name }}</a>
+                    <a ng-href="/subscription/{{ cycle.id }}">{{ cycle.name }}</a>
                 </div>
                 <div class="column">
                     {{ cycle.getStatusLabel() }}
