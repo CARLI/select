@@ -19,10 +19,6 @@ function newCycleFormController( $scope, $location, alertService, cycleService )
         vm.cycle = {};
     }
     function saveCycle() {
-        vm.cycle.name = (vm.cycle.cycleType == 'Alternative Cycle') ?
-            vm.cycle.description + ' ' + vm.cycle.year :
-            vm.cycle.cycleType + ' ' + vm.cycle.year;
-
         cycleService.create(vm.cycle)
             .then(function (cycleId) {
                 vm.closeModal();

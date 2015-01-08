@@ -11,8 +11,18 @@ function cycleService( CarliModules, $q ) {
 
     return {
         list:   function() { return $q.when( cycleModule.list() ); },
-        create: function() { return $q.when( cycleModule.create.apply( this, arguments) ); },
+        create: function(newCycle) {
+            newCycle.name = generateCycleName(newCycle);
+            delete newCycle.description;
+            return $q.when(cycleModule.create(newCycle));
+        },
         update: function() { return $q.when( cycleModule.update.apply( this, arguments) ); },
         load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ); }
     };
+    
+    function generateCycleName(cycle) {
+        return (cycle.cycleType == 'Alternative Cycle') ?
+            cycle.description + ' ' + cycle.year :
+            cycle.cycleType + ' ' + cycle.year;
+    }
 }
