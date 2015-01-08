@@ -1,6 +1,7 @@
 var Entity = require('../Entity')
     , EntityTransform = require( './EntityTransformationUtils')
     , config = require( '../config' )
+    , CouchViewUtils = require( '../Store/CouchViewUtils')
     , StoreOptions = config.storeOptions
     , Store = require( '../Store' )
     , StoreModule = require( '../Store/CouchDbStore')
@@ -11,6 +12,14 @@ var Entity = require('../Entity')
 var CycleRepository = Entity('Cycle');
 CycleRepository.setStore( Store( StoreModule(StoreOptions) ) );
 
+var statusLabels = [
+    "CARLI Editing Product List",
+    "Vendors Setting Prices",
+    "CARLI Checking Prices",
+    "Libraries Selecting Products",
+    "Products Available",
+    "Archived"
+];
 var propertiesToTransform = [];
 
 function transformFunction( cycle ){
@@ -51,10 +60,16 @@ function loadCycle( cycleId ){
     return deferred.promise;
 }
 
+function listActiveCycles() {
+    return CouchViewUtils.getCouchViewResults('listActiveCycles');
+}
 
 /* functions that get added as instance methods on loaded Cycles */
 
 var functionsToAdd = {
+    getStatusLabel: function () {
+        return this.isArchived ? 'Archived' : statusLabels[this.status];
+    }
 };
 
 module.exports = {
@@ -62,5 +77,7 @@ module.exports = {
     create: createCycle,
     update: updateCycle,
     list: listCycles,
-    load: loadCycle
+    load: loadCycle,
+    statusLabels: statusLabels,
+    listActiveCycles: listActiveCycles
 };

@@ -9,16 +9,19 @@
       "type": "string"
     },
     "name": {
-      "description": "Name of Cycle",
       "type": "string"
     },
     "cycleType": {
-      "description": "Type of Cycle",
       "$ref": "./CycleType.json"
     },
     "year": {
-      "description": "Year of Cycle",
       "type": "integer"
+    },
+    "status": {
+      "$ref": "./CycleStatus.json"
+    },
+    "isArchived": {
+      "type": "boolean"
     },
     "startDateForSelections": {
       "description": "When Libraries can begin making selections",
@@ -33,5 +36,5 @@
       "$ref": "./Date.json"
     }
   },
-  "required": [ "name", "cycleType", "year" ]
+  "required": [ "name", "cycleType", "year", "status", "isArchived" ]
 }
