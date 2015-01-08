@@ -60,6 +60,10 @@ function editLicenseController( $scope, $location, entityBaseService, licenseSer
     function cancelEdit() {
         vm.editable = false;
         activate();
+
+        if ( $scope.licenseForm ){
+            $scope.licenseForm.$setPristine();
+        }
     }
 
     function saveLicense(){

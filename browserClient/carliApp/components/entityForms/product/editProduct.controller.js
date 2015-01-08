@@ -110,6 +110,10 @@ function editProductController( $scope, $filter, entityBaseService, libraryServi
     function cancelEdit() {
         vm.editable = false;
         activate();
+
+        if ( $scope.productForm ){
+            $scope.productForm.$setPristine();
+        }
     }
 
     function isWizardComplete() {

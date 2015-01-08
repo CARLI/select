@@ -63,6 +63,10 @@ function editLibraryController( $scope, entityBaseService, libraryService, alert
     function cancelEdit(){
         vm.editable = false;
         activate();
+
+        if ( $scope.libraryForm ){
+            $scope.libraryForm.$setPristine();
+        }
     }
 
     function saveLibrary(){

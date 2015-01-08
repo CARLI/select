@@ -4,16 +4,25 @@ angular.module('carli.warnIfUnsaved')
     function warnIfUnsaved() {
         return {
             restrict: 'A',
-            scope: true,
+            scope: {},
             link: function($scope, elem, attrs) {
-                var formName  = elem.attr('name');
-
                 $(window).bind('beforeunload', function(){
-                    if ( $scope[formName].$dirty ){
+                    if ( formHasUnsavedChanges(elem) ){
                         return "You have unsaved changes that will be lost if you continue.";
+                    }
+                });
+
+                $scope.$on('$locationChangeStart', function(event, next, current) {
+                    if ( formHasUnsavedChanges(elem) ){
+                        if ( !confirm("You have unsaved changes that will be lost if you continue.") ) {
+                            event.preventDefault();
+                        }
                     }
                 });
             }
         };
     }
 
+    function formHasUnsavedChanges( formElement ){
+        return formElement.hasClass('ng-dirty');
+    }

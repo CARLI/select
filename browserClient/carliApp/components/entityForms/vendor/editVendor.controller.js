@@ -59,6 +59,10 @@ function editVendorController( $scope, entityBaseService, vendorService, product
     function cancelEdit() {
         vm.editable = false;
         activate();
+
+        if ( $scope.vendorForm ){
+            $scope.vendorForm.$setPristine();
+        }
     }
 
     function saveVendor() {
