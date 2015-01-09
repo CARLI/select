@@ -14,7 +14,7 @@ var activeLibrary1 = {
     type: "Library",
     isActive: true,
     fte: 1231,
-    name: lib1_uuid,
+    name: 'One-Time-Purchase Active Library 1',
     institutionYears: "2 Year",
     institutionType: "Public",
     contacts: []
@@ -25,7 +25,7 @@ var inactiveLibrary2 = {
     type: "Library",
     isActive: false,
     fte: 31,
-    name: lib2_uuid,
+    name: 'One-Time-Purchase Inactive Library 2',
     institutionYears: "Other",
     institutionType: "Private",
     contacts: []
@@ -36,7 +36,7 @@ var activeLibrary3 = {
     type: "Library",
     isActive: true,
     fte: 999,
-    name: lib3_uuid,
+    name: 'One-Time-Purchase Active Library 3',
     institutionYears: "4 Year",
     institutionType: "Other",
     contacts: []
@@ -44,20 +44,20 @@ var activeLibrary3 = {
 
 var activeVendor1 = {
     id: vendor1_uuid,
-    name: vendor1_uuid,
+    name: 'One-Time-Purchase Active Vendor 1',
     isActive: true
 };
 
 var activeLicense1 = {
     id: license1_uuid,
-    name: license1_uuid,
+    name: 'One-Time-Purchase Active License 1',
     isActive: true,
     vendor: vendor1_uuid
 };
 
 var activePurchasedProduct1 = {
     id: prod1_uuid,
-    name: prod1_uuid,
+    name: 'One-Time-Purchase Active Purchased Product 1',
     type: "Product",
     cycleType: "One-Time Purchase",
     isActive: true,
@@ -75,7 +75,7 @@ var activePurchasedProduct1 = {
 
 var inactiveProduct2 = {
     id: prod2_uuid,
-    name: prod2_uuid,
+    name: 'One-Time-Purchase Inactive Product 2',
     type: "Product",
     cycleType: "One-Time Purchase",
     isActive: false,
@@ -84,12 +84,12 @@ var inactiveProduct2 = {
 
 var activeFiscalYearProduct3 = {
     id: prod3_uuid,
-    name: prod3_uuid,
+    name: 'One-Time-Purchase Active Fiscal Year Product 3',
     type: "Product",
     cycleType: "Fiscal Year",
     isActive: true,
     vendor: vendor1_uuid
-}
+};
 
 activePurchasedProduct1.oneTimePurchase.libraryPurchaseData[lib1_uuid] = {
     price: 2500,

@@ -148,13 +148,13 @@ describe('The One-Time Purchases Select Product screen', function () {
                     */
 
                     expect( colList[PRODUCT_COLUMN_INDEX].getText()).toBe(testData.activePurchasedProduct1.name);
-                    expect( colList[VENDOR_COLUMN_INDEX].getText()).toBe(testData.activePurchasedProduct1.vendor);
+                    expect( colList[VENDOR_COLUMN_INDEX].getText()).toBe(testData.activeVendor1.name);
                     colList[PRICE_COLUMN_INDEX].getText().then( function ( text ) {
                         // Price is formatted as currency (e.g., $2500.00), so need to convert to the actual number value
                         var priceText = text.replace(/[$,]+/g,"");
                         var price = parseFloat(priceText);
-                        var lib1Name =  testData.activeLibrary1.name;
-                        expect (price).toEqual(testData.activePurchasedProduct1.oneTimePurchase.libraryPurchaseData[lib1Name].price);
+                        var lib1Id =  testData.activeLibrary1.id;
+                        expect (price).toEqual(testData.activePurchasedProduct1.oneTimePurchase.libraryPurchaseData[lib1Id].price);
                     });
 
                 });
