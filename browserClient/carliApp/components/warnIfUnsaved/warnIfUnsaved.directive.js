@@ -9,7 +9,7 @@ angular.module('carli.warnIfUnsaved')
             },
             link: function($scope, elem, attrs) {
 
-                var formName = $scope.warnIfUnsaved;
+                var formName = elem.attr('name');
 
                 $scope.$watch( function() {
                     return $scope.$parent[formName];
