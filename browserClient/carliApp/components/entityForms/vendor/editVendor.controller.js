@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.vendor')
     .controller('editVendorController', editVendorController);
 
-function editVendorController( $scope, entityBaseService, vendorService, productService, licenseService, alertService ) {
+function editVendorController( $scope, $rootScope, entityBaseService, vendorService, productService, licenseService, alertService ) {
     var vm = this;
 
     vm.vendorId = $scope.vendorId;
@@ -41,6 +41,7 @@ function editVendorController( $scope, entityBaseService, vendorService, product
         };
         vm.editable = true;
         vm.newVendor = true;
+        setVendorFormPristine();
     }
     function initializeForExistingVendor() {
         vendorService.load(vm.vendorId).then( function( vendor ) {
@@ -59,9 +60,15 @@ function editVendorController( $scope, entityBaseService, vendorService, product
     function cancelEdit() {
         vm.editable = false;
         activate();
+        setVendorFormPristine();
+    }
 
-        if ( $scope.vendorForm ){
+    function setVendorFormPristine() {
+        if ($scope.vendorForm) {
             $scope.vendorForm.$setPristine();
+        }
+        else if ($rootScope.forms && $rootScope.forms.vendorForm) {
+            $rootScope.forms.vendorForm.$setPristine();
         }
     }
 
@@ -71,6 +78,7 @@ function editVendorController( $scope, entityBaseService, vendorService, product
             vendorService.update(vm.vendor)
                 .then(function () {
                     alertService.putAlert('Vendor updated', {severity: 'success'});
+                    setVendorFormPristine();
                     afterSubmitCallback();
                 })
                 .catch(function (error) {
@@ -81,8 +89,8 @@ function editVendorController( $scope, entityBaseService, vendorService, product
             vendorService.create(vm.vendor)
                 .then(function () {
                     alertService.putAlert('Vendor added', {severity: 'success'});
-                    afterSubmitCallback();
                     initializeForNewVendor();
+                    afterSubmitCallback();
                 })
                 .catch(function (error) {
                     alertService.putAlert(error, {severity: 'danger'});

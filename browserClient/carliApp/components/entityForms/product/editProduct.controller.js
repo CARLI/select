@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.product')
     .controller('editProductController', editProductController);
 
-function editProductController( $scope, $filter, entityBaseService, libraryService, licenseService, productService, vendorService, alertService ) {
+function editProductController( $scope, $rootScope, $filter, entityBaseService, libraryService, licenseService, productService, vendorService, alertService ) {
     var vm = this;
     var otpFieldsCopy = {};
     var termFieldsCopy = {};
@@ -80,6 +80,7 @@ function editProductController( $scope, $filter, entityBaseService, libraryServi
         };
         vm.editable = true;
         vm.newProduct = true;
+        setProductFormPristine();
     }
     function initializeForExistingProduct() {
         productService.load(vm.productId).then( function( product ) {
@@ -110,9 +111,15 @@ function editProductController( $scope, $filter, entityBaseService, libraryServi
     function cancelEdit() {
         vm.editable = false;
         activate();
+        setProductFormPristine();
+    }
 
-        if ( $scope.productForm ){
+    function setProductFormPristine() {
+        if ($scope.productForm) {
             $scope.productForm.$setPristine();
+        }
+        else if ($rootScope.forms && $rootScope.forms.productForm) {
+            $rootScope.forms.productForm.$setPristine();
         }
     }
 
@@ -162,6 +169,7 @@ function editProductController( $scope, $filter, entityBaseService, libraryServi
         productService.update(vm.product)
             .then(function () {
                 alertService.putAlert('Product updated', {severity: 'success'});
+                setProductFormPristine();
                 afterSubmitCallback();
             })
             .catch(function (error) {
@@ -173,8 +181,8 @@ function editProductController( $scope, $filter, entityBaseService, libraryServi
         productService.create(vm.product)
             .then(function () {
                 alertService.putAlert('Product added', {severity: 'success'});
-                afterSubmitCallback();
                 initializeForNewProduct();
+                afterSubmitCallback();
             })
             .catch(function (error) {
                 alertService.putAlert(error, {severity: 'danger'});

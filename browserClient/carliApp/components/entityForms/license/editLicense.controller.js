@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.license')
     .controller('editLicenseController', editLicenseController);
 
-function editLicenseController( $scope, $location, entityBaseService, licenseService, productService, vendorService, alertService ) {
+function editLicenseController( $scope, $rootScope, $location, entityBaseService, licenseService, productService, vendorService, alertService ) {
     var vm = this;
     var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
@@ -44,6 +44,7 @@ function editLicenseController( $scope, $location, entityBaseService, licenseSer
         };
         vm.editable = true;
         vm.newLicense = true;
+        setLicenseFormPristine();
     }
     function initializeForExistingLicense() {
         licenseService.load(vm.licenseId).then( function( license ) {
@@ -60,9 +61,15 @@ function editLicenseController( $scope, $location, entityBaseService, licenseSer
     function cancelEdit() {
         vm.editable = false;
         activate();
+        setLicenseFormPristine();
+    }
 
-        if ( $scope.licenseForm ){
+    function setLicenseFormPristine() {
+        if ($scope.licenseForm) {
             $scope.licenseForm.$setPristine();
+        }
+        else if ($rootScope.forms && $rootScope.forms.licenseForm) {
+            $rootScope.forms.licenseForm.$setPristine();
         }
     }
 
@@ -71,6 +78,7 @@ function editLicenseController( $scope, $location, entityBaseService, licenseSer
             licenseService.update( vm.license )
                 .then(function(){
                     alertService.putAlert('License updated', {severity: 'success'});
+                    setLicenseFormPristine();
                     afterSubmitCallback();
                 })
                 .catch(function(error) {

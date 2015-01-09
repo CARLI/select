@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.library')
     .controller('editLibraryController', editLibraryController);
 
-function editLibraryController( $scope, entityBaseService, libraryService, alertService ) {
+function editLibraryController( $scope, $rootScope, entityBaseService, libraryService, alertService ) {
     var vm = this;
 
     vm.libraryId = $scope.libraryId;
@@ -46,6 +46,7 @@ function editLibraryController( $scope, entityBaseService, libraryService, alert
         };
         vm.editable = true;
         vm.newLibrary = true;
+        setLibraryFormPristine();
     }
  
     function initializeForExistingLibrary() {
@@ -63,9 +64,15 @@ function editLibraryController( $scope, entityBaseService, libraryService, alert
     function cancelEdit(){
         vm.editable = false;
         activate();
+        setLibraryFormPristine();
+    }
 
-        if ( $scope.libraryForm ){
+    function setLibraryFormPristine() {
+        if ($scope.libraryForm) {
             $scope.libraryForm.$setPristine();
+        }
+        else if ($rootScope.forms && $rootScope.forms.libraryForm) {
+            $rootScope.forms.libraryForm.$setPristine();
         }
     }
 
@@ -74,6 +81,7 @@ function editLibraryController( $scope, entityBaseService, libraryService, alert
         if (vm.libraryId !== undefined){
             libraryService.update( vm.library ).then(function(){
                 alertService.putAlert('Library updated', {severity: 'success'});
+                setLibraryFormPristine();
                 afterSubmitCallback();
             })
             .catch(function(error) {
