@@ -42,24 +42,24 @@ describe('The One-Time Purchases screen', function () {
             });
     });
 
-    it("should have a library " + testData.activeLibrary1.name + " in the entity list with FTE and Institution Type columns", function () {
-        element.all(by.repeater('entity in values'))
-            .filter( function(el, index) {
-                return el.getText().then(function(text){
-                    return (text.search(testData.activeLibrary1.name) > -1);
-                });
-            })
-            .then( function( libraryList ) {
-
-                libraryList[0].all(by.repeater('column in columns'))
-                    .then (function(colList) {
-                        expect( colList[NAME_COLUMN_INDEX].getText()).toBe(testData.activeLibrary1.name);
-                        expect( colList[FTE_COLUMN_INDEX].getText()).toBe(testData.activeLibrary1.fte.toString());
-                        expect( colList[INSTITUTION_TYPE_COLUMN_INDEX].getText()).toBe(testData.activeLibrary1.institutionType);
-                });
-
-            });
-    });
+    //it("should have a library " + testData.activeLibrary1.name + " in the entity list with FTE and Institution Type columns", function () {
+    //    element.all(by.repeater('entity in values'))
+    //        .filter( function(el, index) {
+    //            return el.getText().then(function(text){
+    //                return (text.search(testData.activeLibrary1.name) > -1);
+    //            });
+    //        })
+    //        .then( function( libraryList ) {
+    //
+    //            libraryList[0].all(by.repeater('column in columns'))
+    //                .then (function(colList) {
+    //                    expect( colList[NAME_COLUMN_INDEX].getText()).toBe(testData.activeLibrary1.name);
+    //                    expect( colList[FTE_COLUMN_INDEX].getText()).toBe(testData.activeLibrary1.fte.toString());
+    //                    expect( colList[INSTITUTION_TYPE_COLUMN_INDEX].getText()).toBe(testData.activeLibrary1.institutionType);
+    //            });
+    //
+    //        });
+    //});
 
     it("should search by name only, (not include other field values)", function () {
 
@@ -123,7 +123,7 @@ describe('The One-Time Purchases Select Product screen', function () {
             });
     });
 
-    it("should contain the correct field values for 'activePurchasedProduct1' in the fixture data", function(){
+    it("should contain the correct field values for '"+testData.activePurchasedProduct1.name+"' in the fixture data", function(){
         element.all(by.repeater('product in vm.productList'))
             .filter( function(el, index) {
                 return el.getText().then(function(text){
