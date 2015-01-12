@@ -18,7 +18,8 @@
       "type": "integer"
     },
     "status": {
-      "$ref": "./CycleStatus.json"
+      "description": "State of the cycle.  Human readable values are defined in the Cycle Repository",
+      "type": "integer"
     },
     "isArchived": {
       "type": "boolean"
