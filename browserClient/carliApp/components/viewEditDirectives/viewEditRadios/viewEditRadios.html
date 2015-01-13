@@ -1,7 +1,6 @@
 <div class="view-edit-radios" ng-show="editMode">
     <span ng-repeat="item in items">
-        <input type="radio" ng-value="{{ item.value }}" ng-model="$parent.ngModel" name="{{ radioGroupName }}">
-        <label>{{ item.label }}</label>
+        <radio value="item.value" ng-model="$parent.ngModel" name="radioGroupName">{{ item.label }}</radio>
     </span>
 </div>
 <div ng-show="!editMode" ng-transclude></div>

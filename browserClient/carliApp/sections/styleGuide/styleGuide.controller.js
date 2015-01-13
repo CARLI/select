@@ -13,6 +13,7 @@ function styleGuideController(componentExamples, componentGatherer, alertService
     initViewEditContactExample(vm);
     initViewEditNumberExample(vm);
     initViewEditPercentageExample(vm);
+    initViewEditRadiosExample(vm);
     initViewEditTextAreaExample(vm);
     initViewEditTextFieldExample(vm);
     initViewEditTypeaheadExample(vm);
@@ -78,6 +79,31 @@ function initViewEditPercentageExample(vm) {
     vm.togglePercentageFieldEditable = function togglePercentageFieldEditable() {
         vm.percentageFieldEditable = !vm.percentageFieldEditable;
     };
+}
+function initViewEditRadiosExample(vm) {
+    vm.percentageFieldEditable = false;
+    vm.defaultRadiosValue = 0;
+    vm.toggleRadiosEditable = function toggleRadiosEditable() {
+        vm.radiosEditable = !vm.radiosEditable;
+    };
+    vm.exampleRadioOptions = [
+        {
+            label: 'Zero',
+            value: '0'
+        },
+        {
+            label: 'One',
+            value: '1'
+        },
+        {
+            label: 'Two',
+            value: '2'
+        },
+        {
+            label: 'Three',
+            value: '3'
+        }
+    ];
 }
 function initViewEditTextAreaExample(vm) {
     vm.textAreaEditable = false;
