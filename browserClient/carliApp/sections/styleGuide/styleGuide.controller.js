@@ -13,6 +13,8 @@ function styleGuideController(componentExamples, componentGatherer, alertService
     initViewEditContactExample(vm);
     initViewEditNumberExample(vm);
     initViewEditPercentageExample(vm);
+    initViewEditRadiosExample(vm);
+    initViewEditSelectExample(vm);
     initViewEditTextAreaExample(vm);
     initViewEditTextFieldExample(vm);
     initViewEditTypeaheadExample(vm);
@@ -78,6 +80,44 @@ function initViewEditPercentageExample(vm) {
     vm.togglePercentageFieldEditable = function togglePercentageFieldEditable() {
         vm.percentageFieldEditable = !vm.percentageFieldEditable;
     };
+}
+function initViewEditRadiosExample(vm) {
+    vm.radiosEditable = false;
+    vm.defaultRadiosValue = 0;
+    vm.toggleRadiosEditable = function toggleRadiosEditable() {
+        vm.radiosEditable = !vm.radiosEditable;
+    };
+    vm.exampleRadioOptions = [
+        {
+            label: 'Zero',
+            value: '0'
+        },
+        {
+            label: 'One',
+            value: '1'
+        },
+        {
+            label: 'Two',
+            value: '2'
+        },
+        {
+            label: 'Three',
+            value: '3'
+        }
+    ];
+}
+function initViewEditSelectExample(vm) {
+    vm.selectEditable = false;
+    vm.defaultSelectValue = 'Zero';
+    vm.toggleSelectEditable = function toggleSelectEditable() {
+        vm.selectEditable = !vm.selectEditable;
+    };
+    vm.exampleSelectOptions = [
+        'Zero',
+        'One',
+        'Two',
+        'Three'
+    ];
 }
 function initViewEditTextAreaExample(vm) {
     vm.textAreaEditable = false;
