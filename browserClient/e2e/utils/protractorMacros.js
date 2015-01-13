@@ -29,7 +29,7 @@ function textareaByModelElementFinder( modelName ){
 }
 
 function radioGroupInputsByModelElementFinder( modelName ){
-    return element.all(by.model( modelName )).all(by.tagName('input'))
+    return element.all(by.model( modelName )).all(by.tagName('radio'))
 }
 
 
