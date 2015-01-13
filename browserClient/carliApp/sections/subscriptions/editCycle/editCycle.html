@@ -1,0 +1,20 @@
+<div class="page-header">
+    <h1>{{ cycleRouter.cycle.name }}</h1>
+</div>
+<section class="content" ng-switch on="cycleRouter.cycle.status">
+
+    <div ng-switch-when="0">CARLI Editing Product List</div>
+
+    <div ng-switch-when="1">Vendors Setting Prices</div>
+
+    <div ng-switch-when="2">CARLI Checking Prices</div>
+
+    <div ng-switch-when="3">Libraries Selecting Products</div>
+
+    <div ng-switch-when="4">Products Available</div>
+
+    <div ng-switch-default>LOADING...</div>
+
+    <hr>
+    <debug-panel>{{ cycleRouter.cycle | json }}</debug-panel>
+</section>
