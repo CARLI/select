@@ -42,19 +42,6 @@
             &.collapsed {
                 border-left: $default-border;
                 padding-left: 2px;
-
-                header {
-                    .fa {
-                        color: $gray;
-                    }
-
-                    .fa-angle-down {
-                        display: none;
-                    }
-                    .fa-angle-right {
-                        display: inline-block;
-                    }
-                }
             }
 
             &.column-headers {
@@ -81,37 +68,9 @@
             }
 
             header {
-                position: relative;
-                cursor: pointer;
-
-                .fa-angle-down,
-                .fa-angle-right {
-                    position: absolute;
-                    top: .75rem;
-                    left: 1rem;
-                    font-size: 2rem;
-                }
-
-                .fa-angle-down {
-                    display: inline-block;
-                }
-                .fa-angle-right {
-                    display: none;
-                }
-
                 .price {
                     font-weight: bold;
                     color: $black;
-                }
-            }
-
-            header,
-            div.content {
-                @include flexbox;
-                width: 100%;
-
-                .column:first-child {
-                    padding-left: $default-spacing;
                 }
             }
 

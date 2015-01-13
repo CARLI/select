@@ -1,6 +1,35 @@
 [collapsible] {
+    $default-spacing: 36px;
 
+    header,
+    div.content {
+        @include flexbox;
+        width: 100%;
+        .column:first-child {
+            padding-left: $default-spacing;
+        }
+    }
     header {
+        position: relative;
+        cursor: pointer;
+
+        .fa-angle-down,
+        .fa-angle-right {
+            position: absolute;
+            top: .75rem;
+            left: 1rem;
+            font-size: 2rem;
+        }
+
+        .fa-angle-down {
+            display: inline-block;
+        }
+        .fa-angle-right {
+            display: none;
+        }
+    }
+
+    .content {
     }
 
 }
@@ -8,6 +37,16 @@
 [collapsible].collapsed {
 
     header {
+        .fa {
+            color: $gray;
+        }
+
+        .fa-angle-down {
+            display: none;
+        }
+        .fa-angle-right {
+            display: inline-block;
+        }
     }
 
     .content {
