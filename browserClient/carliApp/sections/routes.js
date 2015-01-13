@@ -30,6 +30,11 @@ angular.module('carli.routes',[
         controller:  'editCycleController',
         controllerAs:'cycleRouter'
     })
+    .when('/subscription/:id/reviewProducts', {
+        templateUrl: '/carliApp/sections/subscriptions/reviewProducts/reviewProducts.html',
+        controller:  'reviewProductsController',
+        controllerAs:'vm'
+    })
     .when('/oneTimePurchases', {
         templateUrl: '/carliApp/sections/oneTimePurchases/oneTimePurchases.html',
         controller:  'oneTimePurchasesController',

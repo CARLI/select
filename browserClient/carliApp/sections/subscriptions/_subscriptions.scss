@@ -2,4 +2,20 @@
     .zebra-table {
         margin-bottom: 30px;
     }
+
+    .vendor-accordion {
+        list-style: outside none none;
+
+        header {
+            color: $purple;
+            @include font-size(17);
+            font-family: 'Merriweather', serif;
+            font-weight: 700;
+
+            background: $white;
+            border: $default-border;
+            border-bottom: 0;
+            padding: 1rem;
+        }
+    }
 }
