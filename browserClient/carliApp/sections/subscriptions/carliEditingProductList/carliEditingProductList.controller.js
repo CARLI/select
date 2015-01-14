@@ -1,7 +1,7 @@
-angular.module('carli.sections.subscriptions.placeholder')
-    .controller('reviewProductsController', reviewProductsController);
+angular.module('carli.sections.subscriptions.carliEditingProductList')
+    .controller('carliEditingProductListController', carliEditingProductListController);
 
-function reviewProductsController( $routeParams, cycleService, productService, vendorService ) {
+function carliEditingProductListController( $routeParams, cycleService, productService, vendorService ) {
     var vm = this;
     vm.cycleId = $routeParams.id;
 

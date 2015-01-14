@@ -1,0 +1,37 @@
+<ul class="vendor-accordion" ng-repeat="vendor in vm.vendors">
+    <li collapsible class="collapsed">
+        <header>
+            <div class="column">
+                <fa name="angle-right"></fa>
+                <fa name="angle-down"></fa>
+                {{ vendor.name }}
+            </div>
+        </header>
+        <div class="content">
+            <ul class="entity-list">
+                <li class="column-headers">
+                    <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'name', reversedSort: vm.reverse }" ng-click="vm.sort('name')">
+                        Product
+                    </div>
+                    <div class="column" ng-repeat="year in vm.yearsToDisplay">{{ year }}</div>
+                    <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'lastPrice', reversedSort: vm.reverse }" ng-click="vm.sort('lastPrice')">
+                        Last Price
+                    </div>
+                    <div class="column">Funded</div>
+                    <div class="column">Remove</div>
+                </li>
+                <li class="entity-list" ng-repeat="product in vm.products">
+                    <div class="column">{{ product.name }}</div>
+                    <div class="column" ng-repeat="year in vm.yearsToDisplay">{{ product.selectionHistory[year] }}</div>
+                    <div class="column">$123,456</div>
+                    <div class="column">✓</div>
+                    <div class="column">
+                        <button class="carli-button remove-button">Remove</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </li>
+</ul>
+<hr>
+<debug-panel>{{ vm.products | json }}</debug-panel>
