@@ -16,6 +16,10 @@ function inputByModelElementFinder( modelName ){
     return elementByModel( modelName ).element(by.tagName('input'));
 }
 
+function checkboxByModelElementFinder( modelName ){
+    return elementByModel( modelName );
+}
+
 function selectByModelElementFinder( modelName ){
     return elementByModel( modelName ).element(by.tagName('select'));
 }
@@ -47,14 +51,14 @@ function setTypeaheadValue( elementFinder, value ){
 }
 
 function setCheckboxValue( elementFinder, newCheckedState ){
-    elementFinder.getAttribute('checked').then( function(checkedState){
+    elementFinder.element(by.tagName('input')).getAttribute('checked').then( function(checkedState){
         var checkboxIsChecked = !(checkedState === null);
 
         // Only click the checkbox if it's already checked and we want it un-checked,
         // or it's not already checked but it should be.
         if( checkboxIsChecked && !newCheckedState ||
            !checkboxIsChecked &&  newCheckedState){
-            elementFinder.click();
+            elementFinder.element(by.tagName('label')).click();
         }
         // Otherwise it's already in the appropriate state. Leave it alone.
     });
@@ -187,8 +191,10 @@ function _elementFinderForConfig( config ){
     switch( config.type ){
         case 'input':
         case 'typeahead':
-        case 'checkbox':
             return inputByModelElementFinder( config.model );
+            break;
+        case 'checkbox':
+            return checkboxByModelElementFinder( config.model );
             break;
         case 'textarea':
             return textareaByModelElementFinder( config.model );
