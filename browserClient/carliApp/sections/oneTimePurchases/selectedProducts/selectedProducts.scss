@@ -74,6 +74,12 @@
                 }
             }
 
+            header,
+            div.content {
+                @include flexbox;
+                width: 100%;
+            }
+
             div.content {
                 border-top: $default-border;
 

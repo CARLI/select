@@ -3,8 +3,6 @@
 
     header,
     div.content {
-        @include flexbox;
-        width: 100%;
         .column:first-child {
             padding-left: $default-spacing;
         }

@@ -17,5 +17,23 @@
             border-bottom: 0;
             padding: 1rem;
         }
+
+        .column:nth-child(1) {
+            flex-basis: 40%;
+        }
+        .column:nth-child(2),
+        .column:nth-child(3),
+        .column:nth-child(4),
+        .column:nth-child(5),
+        .column:nth-child(6),
+        .column:nth-child(8) {
+            flex-basis: 5%;
+        }
+        .column:nth-child(7) {
+            flex-basis: 15%;
+        }
+        .column:nth-child(9) {
+            flex-basis: 15%;
+        }
     }
 }
