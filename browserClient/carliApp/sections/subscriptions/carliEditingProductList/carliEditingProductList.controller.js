@@ -9,6 +9,7 @@ function carliEditingProductListController( $routeParams, cycleService, productS
 
     function activate () {
         initYearsToDisplay();
+        initSortable();
         loadCycle();
         loadProducts();
         loadVendors();
@@ -19,6 +20,25 @@ function carliEditingProductListController( $routeParams, cycleService, productS
         for (var y = 2010; y < 2015; y++) {
             vm.yearsToDisplay.push(y);
         }
+    }
+
+    function initSortable() {
+        vm.orderBy = vm.orderBy || 'name';
+        vm.reverse = false;
+
+        vm.sort = function sort( newOrderBy ){
+            if ( !newOrderBy ){
+                return;
+            }
+
+            if ( vm.orderBy === newOrderBy){
+                vm.reverse = !vm.reverse;
+            }
+            else {
+                vm.orderBy = newOrderBy;
+                vm.reverse = false;
+            }
+        };
     }
 
     function loadCycle() {
@@ -41,6 +61,7 @@ function carliEditingProductListController( $routeParams, cycleService, productS
                 for (var i = 0; i < vm.yearsToDisplay.length; i++) {
                     var y = vm.yearsToDisplay[i];
                     product.selectionHistory[y] = _pickRandomSelectionHistory();
+                    product.lastPrice = '$123,456';
                 }
             });
         });

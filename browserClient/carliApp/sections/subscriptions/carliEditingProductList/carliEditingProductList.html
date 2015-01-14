@@ -20,10 +20,10 @@
                     <div class="column">Funded</div>
                     <div class="column">Remove</div>
                 </li>
-                <li class="entity-list" ng-repeat="product in vm.products">
+                <li class="entity-list" ng-repeat="product in vm.products | orderBy:vm.orderBy:vm.reverse">
                     <div class="column">{{ product.name }}</div>
                     <div class="column" ng-repeat="year in vm.yearsToDisplay">{{ product.selectionHistory[year] }}</div>
-                    <div class="column">$123,456</div>
+                    <div class="column">{{ product.lastPrice }}</div>
                     <div class="column">✓</div>
                     <div class="column">
                         <button class="carli-button remove-button">Remove</button>
