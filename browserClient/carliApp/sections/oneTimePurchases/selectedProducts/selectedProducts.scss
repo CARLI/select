@@ -83,6 +83,9 @@
             div.content {
                 border-top: $default-border;
 
+                .column:first-child {
+                    padding-left: $default-spacing;
+                }
                 .column:nth-child(2) {
                     border-left: none;
                     padding-left: 0;
