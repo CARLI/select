@@ -39,24 +39,6 @@
             border-left: 3px solid $purple;
             position: relative;
 
-            &.collapsed {
-                border-left: $default-border;
-                padding-left: 2px;
-
-                header {
-                    .fa {
-                        color: $gray;
-                    }
-
-                    .fa-angle-down {
-                        display: none;
-                    }
-                    .fa-angle-right {
-                        display: inline-block;
-                    }
-                }
-            }
-
             &.column-headers {
                 @include flexbox;
                 border-left: $default-border;
@@ -163,6 +145,28 @@
                     @include body-text;
                     font-weight: bold;
                     color: $purple;
+                }
+            }
+
+            &.collapsed {
+                border-left: $default-border;
+                padding-left: 2px;
+
+                header {
+                    .fa {
+                        color: $gray;
+                    }
+
+                    .fa-angle-down {
+                        display: none;
+                    }
+                    .fa-angle-right {
+                        display: inline-block;
+                    }
+                }
+
+                checkbox {
+                    left: unquote("calc(-2rem + 2px)");
                 }
             }
 
