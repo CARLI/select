@@ -9,7 +9,6 @@ function carliEditingProductListController( $routeParams, alertService, productS
     function activate () {
         initYearsToDisplay();
         initSortable();
-        loadProducts();
         loadVendors();
     }
 
@@ -42,12 +41,15 @@ function carliEditingProductListController( $routeParams, alertService, productS
     function loadVendors() {
         vendorService.list().then(function (vendors) {
             vm.vendors = vendors;
+            angular.forEach(vendors, function (vendor) {
+                loadProductsForVendor(vendor);
+            });
         });
     }
 
-    function loadProducts() {
-        productService.list().then(function (products) {
-            vm.products = products;
+    function loadProductsForVendor(vendor) {
+        productService.listProductsForVendorId(vendor.id).then(function (products) {
+            vendor.products = products;
             angular.forEach(products, function (product) {
                 product.selectionHistory = {};
                 for (var i = 0; i < vm.yearsToDisplay.length; i++) {
@@ -69,7 +71,6 @@ function carliEditingProductListController( $routeParams, alertService, productS
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
     function removeProduct( product ){
-        vm.products.splice(vm.products.indexOf(product), 1);
         product.isActive = false;
         productService.update( product).then( function(){
             alertService.putAlert('Product Removed', {severity: 'success'});
