@@ -62,19 +62,19 @@
                 </div>
                 <div class="column">
                     <label>Date Effective</label>
-                    <view-edit-date ng-model="vm.license.effectiveDate" edit-mode="vm.editable">{{ vm.license.effectiveDate }}</view-edit-date>
+                    <view-edit-date ng-model="vm.license.effectiveDate" edit-mode="vm.editable">{{ vm.license.effectiveDate | date:'MM/d/yy' }}</view-edit-date>
                     <label>Total Contract Term</label>
                     <div class="date-range">
-                        <view-edit-date class="start-date" ng-model="vm.license.totalTermStartDate" edit-mode="vm.editable">{{ vm.license.totalTermStartDate }}</view-edit-date>
+                        <view-edit-date class="start-date" ng-model="vm.license.totalTermStartDate" edit-mode="vm.editable">{{ vm.license.totalTermStartDate | date:'MM/d/yy' }}</view-edit-date>
                         <span class="separator"> to </span>
-                        <view-edit-date class="end-date" ng-model="vm.license.totalTermEndDate" edit-mode="vm.editable">{{ vm.license.totalTermEndDate }}</view-edit-date>
+                        <view-edit-date class="end-date" ng-model="vm.license.totalTermEndDate" edit-mode="vm.editable">{{ vm.license.totalTermEndDate | date:'MM/d/yy' }}</view-edit-date>
                     </div>
                     <label>Current Term</label>
 
                     <div class="date-range">
-                        <view-edit-date class="start-date" ng-model="vm.license.currentTermStartDate" edit-mode="vm.editable">{{ vm.license.currentTermStartDate }}</view-edit-date>
+                        <view-edit-date class="start-date" ng-model="vm.license.currentTermStartDate" edit-mode="vm.editable">{{ vm.license.currentTermStartDate | date:'MM/d/yy' }}</view-edit-date>
                         <span class="separator"> to </span>
-                        <view-edit-date class="end-date" ng-model="vm.license.currentTermEndDate" edit-mode="vm.editable">{{ vm.license.currentTermEndDate }}</view-edit-date>
+                        <view-edit-date class="end-date" ng-model="vm.license.currentTermEndDate" edit-mode="vm.editable">{{ vm.license.currentTermEndDate | date:'MM/d/yy' }}</view-edit-date>
                         <label>Remaining Renewals</label>
                     </div>
                     <view-edit-number-field ng-model="vm.license.remainingRenewals"  edit-mode="vm.editable">{{ vm.license.remainingRenewals }}</view-edit-number-field>

@@ -266,6 +266,7 @@ function setFormElementValue( config, value ){
             break;
         case 'typeahead':
             setTypeaheadValue( elementFinder, value );
+            break;
         case 'checkbox':
             setCheckboxValue( elementFinder, value );
             break;
