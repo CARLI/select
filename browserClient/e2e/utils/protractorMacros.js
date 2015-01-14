@@ -79,7 +79,7 @@ function setSelectValue( elementFinder, optionText ){
 }
 
 function setRadioGroupValueByIndex( elementFinder, index ){
-    elementFinder.get(index).click();
+    elementFinder.get(index).element(by.tagName('label')).click();
 }
 
 
