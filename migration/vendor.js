@@ -1,16 +1,18 @@
 #!/usr/local/bin/node
 
 // dependencies
-var CONFIG = require('./config');
+var migrationConfig = require('./config');
 var mysql = require('mysql');
 var Vendor = require('../CARLI').Vendor;
-var FileStore = require('../CARLI').FileStore;
+var CouchDbStore = require('../CARLI').CouchDbStore;
+var carliConfig = require('../CARLI').config;
+var StoreOptions = carliConfig.storeOptions;
 var Store = require('../CARLI').Store;
 
-Vendor.setStore( Store(FileStore) );
+Vendor.setStore(Store(CouchDbStore(StoreOptions)));
 
 // establish the connection
-var connection = mysql.createConnection( CONFIG.dsn );
+var connection = mysql.createConnection( migrationConfig.dsn );
 connection.connect();
 
 getVendors( function(err, rows, fields) {
@@ -30,7 +32,14 @@ function getVendors(callback) {
 function extractVendors(vendors) {
     for (var i in vendors) {
         var vendor = extractVendor(vendors[i]);
-        Vendor.create( vendor );
+        console.log('creating: ' + vendor.name);
+        Vendor.create( vendor )
+            .then(function(id) {
+                console.log('ok: ' + id);
+            })
+            .catch(function(err) {
+                console.log(err);
+            });
     }
 }
 
@@ -38,7 +47,7 @@ function extractVendor(v) {
     return {
         name: v.name,
         previousName: "",
-        websiteUrl: v.info_url,
+        websiteUrl: v.info_url || '',
         contacts: extractVendorContacts(v),
         comments: "",
         adminModule: v.admin_module_url || '',
@@ -69,8 +78,8 @@ function extractVendorContacts(vendor) {
 function extractSalesContact(vendor, prefix) {
     return {
         name: vendor[prefix + '_name'],
-        email: vendor[prefix + '_email'],
-        phoneNumber: vendor[prefix + '_phone'],
+        email: vendor[prefix + '_email'] || '',
+        phoneNumber: vendor[prefix + '_phone'] || '',
         contactType: "Sales"
     };
 }
@@ -78,8 +87,8 @@ function extractSalesContact(vendor, prefix) {
 function extractTechnicalContact(vendor, prefix) {
     return {
         name: vendor[prefix + '_name'],
-        email: vendor[prefix + '_email'],
-        phoneNumber: vendor[prefix + '_phone'],
+        email: vendor[prefix + '_email'] || 'x',
+        phoneNumber: vendor[prefix + '_phone'] || '',
         contactType: "Technical"
     };
 }
