@@ -1,6 +1,13 @@
 [collapsible] {
 
     header {
+
+    }
+
+    .content {
+        height: 120px;
+        overflow: hidden;
+        transition: height .4s;
     }
 
 }
@@ -8,9 +15,10 @@
 [collapsible].collapsed {
 
     header {
+
     }
 
     .content {
-        display: none !important;
+        height: 0px;
     }
 }

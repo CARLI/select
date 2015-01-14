@@ -6,7 +6,7 @@ angular.module('carli.collapsible')
             restrict: 'A',
             link: function postLink(scope, element, attrs) {
                 element.on('click', 'header', function(event){
-                   element.toggleClass('collapsed');
+                    element.toggleClass('collapsed');
                 });
             }
         };
