@@ -1,8 +1,7 @@
 [collapsible] {
     $default-spacing: 36px;
 
-    header,
-    div.content {
+    header {
         .column:first-child {
             padding-left: $default-spacing;
         }
