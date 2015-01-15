@@ -1,6 +1,11 @@
 [collapsible] {
 
     header {
+
+    }
+
+    .content {
+        overflow: hidden;
     }
 
 }
@@ -8,9 +13,10 @@
 [collapsible].collapsed {
 
     header {
+
     }
 
     .content {
-        display: none !important;
+
     }
 }

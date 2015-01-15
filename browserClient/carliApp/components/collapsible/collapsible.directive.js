@@ -5,8 +5,11 @@ angular.module('carli.collapsible')
         return {
             restrict: 'A',
             link: function postLink(scope, element, attrs) {
+                var $content = element.children('.content');
+                $content.css('display', 'none');
                 element.on('click', 'header', function(event){
-                   element.toggleClass('collapsed');
+                    $content.slideToggle();
+                    element.toggleClass('collapsed');
                 });
             }
         };
