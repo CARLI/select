@@ -13,13 +13,13 @@
 
             <div ng-show="!vm.newProduct" class="edit-buttons pull-right">
                 <div ng-show="vm.editable">
-                    <a class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</a>
+                    <button type="button" class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</button>
                     <input class="carli-button save-button" ng-disabled="!vm.editable" type="button" value="{{ vm.submitLabel() }}" ng-click="vm.submitAction()" >
                 </div>
 
-                <div id="product-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">
+                <button type="button" id="product-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">
                     Edit<i class="fa fa-edit"></i>
-                </div>
+                </button>
             </div>
         </fieldset>
     </header>

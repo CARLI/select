@@ -24,14 +24,14 @@ $button-height: 40px;
     min-width: 110px;
     display: inline-block;
 
-    i {
+    i.fa, span.fa {
         margin: 10px 0px 10px 10px;
         @include font-size(22);
         vertical-align: bottom;
         line-height: 0px;
     }
 
-    &:hover {
+    &:hover, &:focus {
         @include carli-button-hover;
     }
 }
@@ -42,7 +42,7 @@ $button-height: 40px;
 .cancel-button {
     background-color: $white;
     color: $purple;
-    &:hover {
+    &:hover, &:focus {
         @include cancel-button-hover;
     }
 }
@@ -54,7 +54,7 @@ $button-height: 40px;
 .save-button {
     background-color: $orange;
     color: $white;
-    &:hover {
+    &:hover, &:focus {
         @include save-button-hover;
     }
 }
@@ -66,7 +66,7 @@ $button-height: 40px;
 @mixin list-button {
     background-color: $white;
     color: $gray;
-    &:hover {
+    &:hover, &:focus {
         @include list-button-hover;
     }
 }
@@ -84,7 +84,7 @@ $button-height: 40px;
     background-color: $purple;
     border: 1px solid $dark-purple;
     color: $white;
-    &:hover {
+    &:hover, &:focus {
         @include ask-button-hover;
     }
 }
@@ -98,7 +98,7 @@ $button-height: 40px;
     background-color: $red;
     border: 1px solid $dark-red;
     color: $white;
-    &:hover {
+    &:hover, &:focus {
         @include remove-button-hover;
     }
 }
