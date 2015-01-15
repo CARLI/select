@@ -15,7 +15,6 @@ function migrateVendors(connection) {
         if(err) { console.log(err); }
         vendors = rows;
 
-        connection.end();
         extractVendors(rows).then(function(idMap){
             resultsPromise.resolve(idMap);
         });
@@ -25,7 +24,7 @@ function migrateVendors(connection) {
 }
 
 function extractVendors(vendors) {
-    var couchIdsToIdalIds = {};
+    var idalIdsToCouchIds = {};
     var extractVendorsPromises = [];
     var resultsPromise = Q.defer();
 
@@ -35,12 +34,12 @@ function extractVendors(vendors) {
         extractVendorsPromises.push(createVendorPromise);
 
         createVendorPromise.then(function(resultObj){
-            couchIdsToIdalIds[resultObj.couchId] = resultObj.idalLegacyId;
+            idalIdsToCouchIds[resultObj.idalLegacyId] = resultObj.couchId;
         });
     }
 
     Q.all(extractVendorsPromises).then(function(){
-        resultsPromise.resolve(couchIdsToIdalIds);
+        resultsPromise.resolve(idalIdsToCouchIds);
     });
 
     return resultsPromise.promise;
@@ -54,7 +53,6 @@ function createVendor(vendorRow){
 
     VendorRepository.create( vendor )
         .then(function(id) {
-            console.log('ok: ' + id);
             couchIdPromise.resolve({
                 couchId: id,
                 idalLegacyId: vendorRow.id
