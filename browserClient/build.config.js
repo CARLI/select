@@ -66,7 +66,9 @@ module.exports = {
             'bower_modules/angular-fontawesome/dist/angular-fontawesome.js',
             'bower_modules/bootstrap-sass-official/assets/javascripts/bootstrap.js',
             'bower_modules/angular-bootstrap/ui-bootstrap.js',
-            'bower_modules/angular-bootstrap/ui-bootstrap-tpls.js'
+            'bower_modules/angular-bootstrap/ui-bootstrap-tpls.js',
+            'bower_modules/gsap/src/minified/TweenMax.min.js',
+            'bower_modules/gsap/src/minified/jquery.gsap.min.js'
         ],
         css: [
             'bower_modules/font-awesome/css/font-awesome.min.css'
