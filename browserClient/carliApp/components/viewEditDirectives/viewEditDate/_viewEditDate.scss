@@ -29,7 +29,8 @@ view-edit-date {
 
         th[colspan="6"],
         thead > tr:nth-child(2) > th {
-            flex-grow: 1;
+            display: block; /* Firefox ignores flex properties if display is table related */
+            @include flex(1 1 auto);
         }
 
         [role="heading"] {
@@ -39,7 +40,7 @@ view-edit-date {
         /* There is a directive option for hiding the weeks but it does not appear to work */
         th[ng-show="showWeeks"],
         td[ng-show="showWeeks"] {
-            display: none;
+            display: none !important;
         }
 
         .glyphicon {
