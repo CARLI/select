@@ -10,6 +10,7 @@
         border-radius: .33rem;
         font-family: 'Verdana', sans-serif;
         @include font-size(15);
+        height: $height; //Firefox needs this defined because it ignores line-height
         line-height: $height;
         outline: none;
         padding: 0 3rem 0 1rem;
