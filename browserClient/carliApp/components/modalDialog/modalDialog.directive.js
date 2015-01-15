@@ -4,7 +4,7 @@ angular.module('carli.modalDialog')
             restrict: 'E',
             templateUrl: '/carliApp/components/modalDialog/modalDialog.html',
             scope: {
-                title: '=',
+                modalTitle: '=',
                 modalId: '=',
                 modalClass: '@'
             },
