@@ -1,3 +1,3 @@
 module.exports = {
-  "dsn": {"host": "localhost", "database" : "carli_idal" }
+  "dsn": {"host": "localhost", "database" : "idal_reference" }
 };

@@ -1,46 +1,71 @@
-#!/usr/local/bin/node
-
-// dependencies
-var migrationConfig = require('./config');
-var mysql = require('mysql');
-var Vendor = require('../CARLI').Vendor;
+var VendorRepository = require('../CARLI').Vendor;
 var CouchDbStore = require('../CARLI').CouchDbStore;
 var carliConfig = require('../CARLI').config;
 var StoreOptions = carliConfig.storeOptions;
 var Store = require('../CARLI').Store;
+var Q = require('q');
+VendorRepository.setStore(Store(CouchDbStore(StoreOptions)));
 
-Vendor.setStore(Store(CouchDbStore(StoreOptions)));
 
-// establish the connection
-var connection = mysql.createConnection( migrationConfig.dsn );
-connection.connect();
+function migrateVendors(connection) {
+    var resultsPromise = Q.defer();
 
-getVendors( function(err, rows, fields) {
-    if(err) { console.log(err); }
-    vendors = rows;
-
-    connection.end();
-    extractVendors(rows);
-});
-
-function getVendors(callback) {
     var query = "select * from vendor";
-    connection.query(query, callback);
+    connection.query(query, function(err, rows, fields) {
+        if(err) { console.log(err); }
+        vendors = rows;
+
+        connection.end();
+        extractVendors(rows).then(function(idMap){
+            resultsPromise.resolve(idMap);
+        });
+    });
+
+    return resultsPromise.promise;
 }
 
-
 function extractVendors(vendors) {
+    var couchIdsToIdalIds = {};
+    var extractVendorsPromises = [];
+    var resultsPromise = Q.defer();
+
     for (var i in vendors) {
-        var vendor = extractVendor(vendors[i]);
-        console.log('creating: ' + vendor.name);
-        Vendor.create( vendor )
-            .then(function(id) {
-                console.log('ok: ' + id);
-            })
-            .catch(function(err) {
-                console.log(err);
-            });
+        var createVendorPromise = createVendor(vendors[i]);
+
+        extractVendorsPromises.push(createVendorPromise);
+
+        createVendorPromise.then(function(resultObj){
+            couchIdsToIdalIds[resultObj.couchId] = resultObj.legacyId;
+        });
     }
+
+    Q.all(extractVendorsPromises).then(function(){
+        resultsPromise.resolve(couchIdsToIdalIds);
+    });
+
+    return resultsPromise.promise;
+}
+
+function createVendor(vendorRow){
+    console.log('creating: ' + vendor.name);
+
+    var couchIdPromise = Q.defer();
+    var vendor = extractVendor(vendorRow);
+
+    VendorRepository.create( vendor )
+        .then(function(id) {
+            console.log('ok: ' + id);
+            couchIdPromise.resolve({
+                couchId: id,
+                legacyId: vendorRow.id
+            });
+        })
+        .catch(function(err) {
+            console.log(err);
+            couchIdPromise.reject();
+        });
+
+    return couchIdPromise.promise;
 }
 
 function extractVendor(v) {
@@ -51,9 +76,7 @@ function extractVendor(v) {
         contacts: extractVendorContacts(v),
         comments: "",
         adminModule: v.admin_module_url || '',
-        isActive: true,
-        licenseAgreements: extractVendorLicenseAgreements(v),
-        products: extractVendorProducts(v)
+        isActive: true
     };
 }
 
@@ -93,10 +116,6 @@ function extractTechnicalContact(vendor, prefix) {
     };
 }
 
-function extractVendorLicenseAgreements(vendor) {
-    return [];
-}
-
-function extractVendorProducts(vendor) {
-    return [];
-}
+module.exports = {
+    migrateVendors: migrateVendors
+};
