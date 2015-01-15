@@ -36,16 +36,6 @@
         "isActive": {
             "description": "Is this vendor active?",
             "type": "boolean"
-        },
-        "products": {
-            "description": "Products offered by this vendor",
-            "type": "array",
-            "items": { "$ref": "./Product.json" }
-        },
-        "license": {
-            "description": "License agreements used by this vendor",
-            "type": "array",
-            "items": { "$ref": "./License.json" }
         }
     },
     "required": [ "name" ]
