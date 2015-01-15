@@ -35,7 +35,7 @@ function extractVendors(vendors) {
         extractVendorsPromises.push(createVendorPromise);
 
         createVendorPromise.then(function(resultObj){
-            couchIdsToIdalIds[resultObj.couchId] = resultObj.legacyId;
+            couchIdsToIdalIds[resultObj.couchId] = resultObj.idalLegacyId;
         });
     }
 
@@ -47,7 +47,7 @@ function extractVendors(vendors) {
 }
 
 function createVendor(vendorRow){
-    console.log('creating: ' + vendor.name);
+    console.log('creating: ' + vendorRow.name);
 
     var couchIdPromise = Q.defer();
     var vendor = extractVendor(vendorRow);
@@ -57,7 +57,7 @@ function createVendor(vendorRow){
             console.log('ok: ' + id);
             couchIdPromise.resolve({
                 couchId: id,
-                legacyId: vendorRow.id
+                idalLegacyId: vendorRow.id
             });
         })
         .catch(function(err) {

@@ -7,13 +7,12 @@ var vendorMigration = require('./vendor');
 var migrateVendors = vendorMigration.migrateVendors;
 
 
-
 doMigration();
 
 
 function doMigration(){
     var connection = initMySQL();
-    connection.connect();
+
 
     vendorIdMapping = {};
 
@@ -24,8 +23,8 @@ function doMigration(){
 }
 
 
-
-
 function initMySQL(){
-    return connection = mysql.createConnection( migrationConfig.dsn );
+    var connection = mysql.createConnection( migrationConfig.dsn );
+    connection.connect();
+    return connection;
 }
