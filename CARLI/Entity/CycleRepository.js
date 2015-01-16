@@ -1,15 +1,17 @@
 var Entity = require('../Entity')
     , EntityTransform = require( './EntityTransformationUtils')
     , config = require( '../config' )
-    , CouchViewUtils = require( '../Store/CouchViewUtils')
+    , CouchUtils = require( '../Store/CouchDb/Utils')
     , StoreOptions = config.storeOptions
     , Store = require( '../Store' )
-    , StoreModule = require( '../Store/CouchDbStore')
+    , StoreModule = require( '../Store/CouchDb/Store')
     , moment = require('moment')
     , Q = require('q')
     ;
 
 var CycleRepository = Entity('Cycle');
+
+// var stores = {};
 CycleRepository.setStore( Store( StoreModule(StoreOptions) ) );
 
 var statusLabels = [
@@ -65,7 +67,7 @@ function loadCycle( cycleId ){
 }
 
 function listActiveCycles() {
-    return expandCycles( CouchViewUtils.getCouchViewResults('listActiveCycles') );
+    return expandCycles( CouchUtils.getCouchViewResults('listActiveCycles') );
 }
 
 /* functions that get added as instance methods on loaded Cycles */

@@ -2,4 +2,4 @@ var test   = require( './Store/StoreInterface.spec' )
   , config = require( '../config' )
 ;
 
-test.run( 'CouchDbStore', config.storeOptions );
+test.run( 'CouchDb/Store', config.storeOptions );

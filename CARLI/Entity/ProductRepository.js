@@ -3,8 +3,8 @@ var Entity = require('../Entity')
   , config = require( '../config' )
   , StoreOptions = config.storeOptions
   , Store = require( '../Store' )
-  , StoreModule = require( '../Store/CouchDbStore')
-  , CouchViewUtils = require( '../Store/CouchViewUtils')
+  , StoreModule = require( '../Store/CouchDb/Store')
+  , CouchUtils = require( '../Store/CouchDb/Utils')
   , Validator = require('../Validator')
   , moment = require('moment')
   , Q = require('q')
@@ -84,11 +84,11 @@ function isAvailableToday( product ){
 
 
 function listProductsForLicenseId( licenseId ) {
-    return CouchViewUtils.getCouchViewResults('listProductsByLicenseId', licenseId);
+    return CouchUtils.getCouchViewResults('listProductsByLicenseId', licenseId);
 }
 
 function listProductsForVendorId( vendorId ) {
-    return CouchViewUtils.getCouchViewResults('listProductsForVendorId', vendorId);
+    return CouchUtils.getCouchViewResults('listProductsForVendorId', vendorId);
 }
 
 

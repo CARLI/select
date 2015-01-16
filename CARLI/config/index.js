@@ -8,7 +8,7 @@ var defaults = {
         couchDbName: 'carli'
     },
     request: require('../carliRequest'),
-    store: 'CouchDbStore'
+    store: 'CouchDb/Store'
 };
 
 module.exports = _.extend(defaults, localConfig);

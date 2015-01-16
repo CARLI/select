@@ -8,6 +8,6 @@ module.exports = {
     Store: require('./Store'),
     MemoryStore: require('./Store/MemoryStore'),
     FileStore: require('./Store/FileStore'),
-    CouchDbStore: require('./Store/CouchDbStore'),
+    CouchDbStore: require('./Store/CouchDb/Store'),
     Validator: require('./Validator')
 };

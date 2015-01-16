@@ -2,9 +2,9 @@ var Entity = require('../Entity')
     , config = require( '../config' )
     , StoreOptions = config.storeOptions
     , Store = require( '../Store' )
-    , StoreModule = require( '../Store/CouchDbStore')
+    , StoreModule = require( '../Store/CouchDb/Store')
     , EntityTransform = require( './EntityTransformationUtils')
-    , CouchViewUtils = require( '../Store/CouchViewUtils')
+    , CouchUtils = require( '../Store/CouchDb/Utils')
     , Q = require('q')
     , Validator = require('../Validator')
     ;
@@ -67,7 +67,7 @@ function loadLicense( licenseId ){
 }
 
 function listLicensesForVendorId( vendorId ){
-    return CouchViewUtils.getCouchViewResults('listLicensesForVendorId', vendorId);
+    return CouchUtils.getCouchViewResults('listLicensesForVendorId', vendorId);
 }
 function getOfferingTypeOptions(){
     return Validator.getEnumValuesFor('License', 'offeringType');

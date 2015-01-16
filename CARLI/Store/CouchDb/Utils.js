@@ -1,4 +1,4 @@
-var config = require( '../config'),
+var config = require( '../../config/index'),
     Q = require('q'),
     request = config.request,
     StoreOptions = config.storeOptions,
