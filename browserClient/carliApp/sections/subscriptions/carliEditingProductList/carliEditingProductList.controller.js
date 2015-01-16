@@ -1,9 +1,10 @@
 angular.module('carli.sections.subscriptions.carliEditingProductList')
     .controller('carliEditingProductListController', carliEditingProductListController);
 
-function carliEditingProductListController( $routeParams, alertService, productService, vendorService ) {
+function carliEditingProductListController( $scope, alertService, productService, vendorService ) {
     var vm = this;
     vm.removeProduct = removeProduct;
+    vm.openVendorPricing = openVendorPricing;
     activate();
 
     function activate () {
@@ -75,5 +76,10 @@ function carliEditingProductListController( $routeParams, alertService, productS
         productService.update( product).then( function(){
             alertService.putAlert('Product Removed', {severity: 'success'});
         });
+    }
+
+    function openVendorPricing(){
+        $scope.cycle.proceedToNextStep();
+        //TODO: persist the cycle and add a success alert when it's saved
     }
 }

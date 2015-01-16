@@ -42,8 +42,8 @@ describe('Adding functions to Cycle instances', function() {
             });
     });
 
-    describe('the Cycle.getIsActive method', function () {
-        it('should return true for an active Product with an active Vendor', function () {
+    describe('the Cycle.getStatusLabel method', function () {
+        it('should return the label for the cycles current status', function () {
             var cycle = validCycleData();
 
             return CycleRepository.create(cycle)
@@ -66,6 +66,88 @@ describe('Adding functions to Cycle instances', function() {
                 })
                 .then(function (loadedCycle) {
                     return expect(loadedCycle.getStatusLabel()).to.equal('Archived');
+                });
+        });
+    });
+
+    it('should add a proceedToNextStep method to instances of Cycle', function(){
+        var cycle = validCycleData();
+
+        return CycleRepository.create(cycle)
+            .then(function (cycleId) {
+                return CycleRepository.load(cycleId);
+            })
+            .then(function (loadedCycle) {
+                return expect(loadedCycle.proceedToNextStep).to.be.a('function');
+            });
+    });
+
+    describe('the Cycle.proceedToNextStep method', function () {
+        it('should increment the status for the cycle', function () {
+            var cycle = validCycleData();
+
+            return CycleRepository.create(cycle)
+                .then(function (cycleId) {
+                    return CycleRepository.load(cycleId);
+                })
+                .then(function (loadedCycle) {
+                    loadedCycle.proceedToNextStep();
+                    return expect(loadedCycle.status).to.equal(1);
+                });
+        });
+
+        it('should not increment the status past 5', function () {
+            var cycle = validCycleData();
+            cycle.status = 5;
+
+            return CycleRepository.create(cycle)
+                .then(function (cycleId) {
+                    return CycleRepository.load(cycleId);
+                })
+                .then(function (loadedCycle) {
+                    loadedCycle.proceedToNextStep();
+                    return expect(loadedCycle.status).to.equal(5);
+                });
+        });
+    });
+
+    it('should add a returnToPreviousStep method to instances of Cycle', function(){
+        var cycle = validCycleData();
+
+        return CycleRepository.create(cycle)
+            .then(function (cycleId) {
+                return CycleRepository.load(cycleId);
+            })
+            .then(function (loadedCycle) {
+                return expect(loadedCycle.returnToPreviousStep).to.be.a('function');
+            });
+    });
+
+    describe('the Cycle.returnToPreviousStep method', function () {
+        it('should decrement the status for the cycle', function () {
+            var cycle = validCycleData();
+            cycle.status = 4;
+
+            return CycleRepository.create(cycle)
+                .then(function (cycleId) {
+                    return CycleRepository.load(cycleId);
+                })
+                .then(function (loadedCycle) {
+                    loadedCycle.returnToPreviousStep();
+                    return expect(loadedCycle.status).to.equal(3);
+                });
+        });
+
+        it('should not decrement the status less than 0', function () {
+            var cycle = validCycleData();
+
+            return CycleRepository.create(cycle)
+                .then(function (cycleId) {
+                    return CycleRepository.load(cycleId);
+                })
+                .then(function (loadedCycle) {
+                    loadedCycle.returnToPreviousStep();
+                    return expect(loadedCycle.status).to.equal(0);
                 });
         });
     });

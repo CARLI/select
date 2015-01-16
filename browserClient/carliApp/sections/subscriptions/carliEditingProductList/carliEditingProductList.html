@@ -1,9 +1,10 @@
 <ul class="vendor-accordion" ng-repeat="vendor in vm.vendors">
-    <li collapsible class="collapsed">
+    <li carli-accordion>
         <header>
             <fa name="angle-right"></fa>
             <fa name="angle-down"></fa>
             {{ vendor.name }}
+            <span class="reviewed-message" ng-show="vendor.reviewed">Products reviewed</span>
         </header>
         <div class="content">
             <ul class="entity-list">
@@ -30,6 +31,12 @@
                     </div>
                 </li>
             </ul>
+            <footer>
+                <checkbox ng-model="vendor.reviewed">Mark products as reviewed</checkbox>
+                <div class="placeholder" style="width: 300px;">Print / Export / Email</div>
+            </footer>
         </div>
     </li>
 </ul>
+
+<button type="button" class="carli-button pull-right" ng-click="vm.openVendorPricing()">Open Vendor Pricing</button>

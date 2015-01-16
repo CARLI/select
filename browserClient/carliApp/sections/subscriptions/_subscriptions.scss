@@ -12,10 +12,6 @@
 
         ul.entity-list {
             margin-bottom: 0;
-
-            li:last-child {
-                border-bottom: 0;
-            }
         }
 
         header {
@@ -28,6 +24,10 @@
             border: $default-border;
             border-bottom: 0;
             padding: 1rem 1rem 1rem 42px;
+
+            .reviewed-message {
+                float: right;
+            }
         }
 
         .column {
@@ -63,6 +63,16 @@
             padding: 0;
             text-align: center;
             width: 118px;
+        }
+
+        footer {
+            border-left: $default-border;
+            border-right: $default-border;
+            padding: 1rem;
+
+            checkbox {
+                float: right;
+            }
         }
     }
 }

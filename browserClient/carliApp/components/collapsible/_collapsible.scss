@@ -1,4 +1,5 @@
-[collapsible] {
+[collapsible],
+[carli-accordion] {
 
     header {
         cursor: pointer;
@@ -21,12 +22,13 @@
     }
 
     .content {
+
     }
 
 }
 
-[collapsible].collapsed {
-
+[collapsible].collapsed,
+[carli-accordion].collapsed {
     header {
         .fa {
             color: $gray;
@@ -41,6 +43,6 @@
     }
 
     .content {
-        display: none !important;
+
     }
 }
