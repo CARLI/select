@@ -54,6 +54,10 @@
                 flex-basis: 40%;
             }
 
+            .column:first-child {
+                padding-left: 36px;
+            }
+
             .column:last-child {
                 flex-basis: 20%;
             }

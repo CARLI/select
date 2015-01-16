@@ -27,28 +27,39 @@
             background: $white;
             border: $default-border;
             border-bottom: 0;
-            padding: 1rem;
+            padding: 1rem 1rem 1rem 42px;
+        }
+
+        .column {
+            //padding: 0;
         }
 
         .column:nth-child(1) {
-            flex-basis: 40%;
+            @include vendor-prefix('flex-basis', '40%');
         }
         .column:nth-child(2),
         .column:nth-child(3),
         .column:nth-child(4),
         .column:nth-child(5),
         .column:nth-child(6) {
-            flex-basis: 5%;
+            @include vendor-prefix('flex-basis', '5%');
             text-align: center;
         }
-        .column:nth-child(8) {
-            flex-basis: 7%;
+
+        .column.funded {
+            @include vendor-prefix('flex-basis', '7%');
+            text-align: center;
+            .fa {
+                color: $orange;
+                @include font-size(22);
+            }
         }
         .column:nth-child(7) {
-            flex-basis: 15%;
+            @include vendor-prefix('flex-basis', '15%');
         }
         .column:nth-child(9) {
-            flex-basis: 15%;
+            @include vendor-prefix('flex-basis', '15%');
+            padding: .25rem;
         }
     }
 }

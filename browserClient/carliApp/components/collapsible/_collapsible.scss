@@ -1,14 +1,8 @@
 [collapsible] {
-    $default-spacing: 36px;
 
     header {
-        .column:first-child {
-            padding-left: $default-spacing;
-        }
-    }
-    header {
-        position: relative;
         cursor: pointer;
+        position: relative;
 
         .fa-angle-down,
         .fa-angle-right {
