@@ -110,6 +110,47 @@ describe('Adding functions to Cycle instances', function() {
                 });
         });
     });
+
+    it('should add a returnToPreviousStep method to instances of Cycle', function(){
+        var cycle = validCycleData();
+
+        return CycleRepository.create(cycle)
+            .then(function (cycleId) {
+                return CycleRepository.load(cycleId);
+            })
+            .then(function (loadedCycle) {
+                return expect(loadedCycle.returnToPreviousStep).to.be.a('function');
+            });
+    });
+
+    describe('the Cycle.returnToPreviousStep method', function () {
+        it('should decrement the status for the cycle', function () {
+            var cycle = validCycleData();
+            cycle.status = 4;
+
+            return CycleRepository.create(cycle)
+                .then(function (cycleId) {
+                    return CycleRepository.load(cycleId);
+                })
+                .then(function (loadedCycle) {
+                    loadedCycle.returnToPreviousStep();
+                    return expect(loadedCycle.status).to.equal(3);
+                });
+        });
+
+        it('should not decrement the status less than 0', function () {
+            var cycle = validCycleData();
+
+            return CycleRepository.create(cycle)
+                .then(function (cycleId) {
+                    return CycleRepository.load(cycleId);
+                })
+                .then(function (loadedCycle) {
+                    loadedCycle.returnToPreviousStep();
+                    return expect(loadedCycle.status).to.equal(0);
+                });
+        });
+    });
 });
 
 describe('listActiveCycles View', function () {

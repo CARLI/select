@@ -78,6 +78,11 @@ var functionsToAdd = {
         if (this.status < statusLabels.length - 1){
             ++this.status;
         }
+    },
+    returnToPreviousStep: function() {
+        if (this.status > 0){
+            --this.status;
+        }
     }
 };
 
