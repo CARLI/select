@@ -4,6 +4,7 @@
             <fa name="angle-right"></fa>
             <fa name="angle-down"></fa>
             {{ vendor.name }}
+            <span class="reviewed-message" ng-show="vendor.reviewed">Products reviewed</span>
         </header>
         <div class="content">
             <ul class="entity-list">
@@ -30,6 +31,10 @@
                     </div>
                 </li>
             </ul>
+            <footer>
+                <checkbox ng-model="vendor.reviewed">Mark products as reviewed</checkbox>
+                <div class="placeholder" style="width: 300px;">Print / Export / Email</div>
+            </footer>
         </div>
     </li>
 </ul>
