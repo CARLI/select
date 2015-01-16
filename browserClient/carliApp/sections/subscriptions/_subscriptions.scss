@@ -1,10 +1,22 @@
 #subscriptions {
+    padding-top: 1rem;
+
     .zebra-table {
         margin-bottom: 30px;
     }
 
     .vendor-accordion {
+        border-bottom: $default-border;
+        margin-bottom: 1rem;
         list-style: outside none none;
+
+        ul.entity-list {
+            margin-bottom: 0;
+
+            li:last-child {
+                border-bottom: 0;
+            }
+        }
 
         header {
             color: $purple;
@@ -25,9 +37,12 @@
         .column:nth-child(3),
         .column:nth-child(4),
         .column:nth-child(5),
-        .column:nth-child(6),
-        .column:nth-child(8) {
+        .column:nth-child(6) {
             flex-basis: 5%;
+            text-align: center;
+        }
+        .column:nth-child(8) {
+            flex-basis: 7%;
         }
         .column:nth-child(7) {
             flex-basis: 15%;

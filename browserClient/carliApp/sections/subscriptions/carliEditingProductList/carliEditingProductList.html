@@ -20,9 +20,11 @@
                     <div class="column">Funded</div>
                     <div class="column">Remove</div>
                 </li>
-                <li class="entity-list" ng-repeat="product in vendor.products | filter:{isActive:true} | orderBy:vm.orderBy:vm.reverse track by product.id">
+                <li class="" ng-repeat="product in vendor.products | filter:{isActive:true} | orderBy:vm.orderBy:vm.reverse track by product.id">
                     <div class="column">{{ product.name }} <em ng-if="product.isThirdPartyProduct">(3<sup>rd</sup> Party Product)</em></div>
-                    <div class="column" ng-repeat="year in vm.yearsToDisplay">{{ product.selectionHistory[year] }}</div>
+                    <div class="column" ng-repeat="year in vm.yearsToDisplay">
+                        <product-selection-history-icon selected="{{ product.selectionHistory[year] }}"></product-selection-history-icon>
+                    </div>
                     <div class="column">{{ product.lastPrice }}</div>
                     <div class="column">✓</div>
                     <div class="column">
@@ -33,5 +35,3 @@
         </div>
     </li>
 </ul>
-<hr>
-<debug-panel>{{ vm.products | json }}</debug-panel>

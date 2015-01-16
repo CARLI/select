@@ -62,9 +62,9 @@ function carliEditingProductListController( $routeParams, alertService, productS
     }
     function _pickRandomSelectionHistory() {
         switch (getRandomInt(0, 2)) {
-            case 0: return '-';
-            case 1: return '×';
-            case 2: return '✓';
+            case 0: return 'not offered';
+            case 1: return 'not selected';
+            case 2: return 'selected';
         }
     }
     function getRandomInt(min, max) {
