@@ -1,7 +1,6 @@
 .edit-form {
     $add-contact-color: $orange;
     $plus-icon-padding: .5em;
-    $edit-form-width: 960px;
 
     .page-header {
         h1 {
@@ -41,8 +40,6 @@
 
     fieldset {
         @include grid-row();
-
-        max-width: $edit-form-width;
 
         input[type=text],
         textarea {
