@@ -39,6 +39,14 @@ function getCouchViewResults( viewName, key) {
     return deferred.promise;
 }
 
+function makeValidCouchDbName(name) {
+    name = name.toLowerCase();
+    name = name.replace(/[ /]/g, '-');
+    name = name.replace(/[^a-z0-9_$()+-]/g, '');
+    return name;
+}
+
 module.exports = {
-    getCouchViewResults: getCouchViewResults
+    getCouchViewResults: getCouchViewResults,
+    makeValidCouchDbName: makeValidCouchDbName
 };
