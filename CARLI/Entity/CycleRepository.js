@@ -73,6 +73,11 @@ function listActiveCycles() {
 var functionsToAdd = {
     getStatusLabel: function () {
         return this.isArchived ? 'Archived' : statusLabels[this.status];
+    },
+    proceedToNextStep: function() {
+        if (this.status < statusLabels.length - 1){
+            ++this.status;
+        }
     }
 };
 
