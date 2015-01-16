@@ -8,24 +8,24 @@
         <div class="content">
             <ul class="entity-list">
                 <li class="column-headers">
-                    <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'name', reversedSort: vm.reverse }" ng-click="vm.sort('name')">
+                    <div class="sortable column product-name" ng-class="{ activeSort: vm.orderBy === 'name', reversedSort: vm.reverse }" ng-click="vm.sort('name')">
                         Product
                     </div>
-                    <div class="column" ng-repeat="year in vm.yearsToDisplay">{{ year }}</div>
-                    <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'lastPrice', reversedSort: vm.reverse }" ng-click="vm.sort('lastPrice')">
+                    <div class="column selection-history" ng-repeat="year in vm.yearsToDisplay">{{ year }}</div>
+                    <div class="sortable column last-price" ng-class="{ activeSort: vm.orderBy === 'lastPrice', reversedSort: vm.reverse }" ng-click="vm.sort('lastPrice')">
                         Last Price
                     </div>
                     <div class="column funded">Funded</div>
-                    <div class="column">Remove</div>
+                    <div class="column remove">Remove</div>
                 </li>
                 <li class="" ng-repeat="product in vendor.products | filter:{isActive:true} | orderBy:vm.orderBy:vm.reverse track by product.id">
-                    <div class="column">{{ product.name }} <em ng-if="product.isThirdPartyProduct">(3<sup>rd</sup> Party Product)</em></div>
-                    <div class="column" ng-repeat="year in vm.yearsToDisplay">
+                    <div class="column product-name">{{ product.name }} <em ng-if="product.isThirdPartyProduct">(3<sup>rd</sup> Party Product)</em></div>
+                    <div class="column selection-history" ng-repeat="year in vm.yearsToDisplay">
                         <product-selection-history-icon selected="{{ product.selectionHistory[year] }}"></product-selection-history-icon>
                     </div>
-                    <div class="column">{{ product.lastPrice }}</div>
+                    <div class="column last-price">{{ product.lastPrice }}</div>
                     <div class="column funded"><fa name="check-circle"></fa></div>
-                    <div class="column">
+                    <div class="column remove">
                         <button class="carli-button subdued-remove-button" ng-click="vm.removeProduct(product)">Remove <fa name="times"></fa></button>
                     </div>
                 </li>
