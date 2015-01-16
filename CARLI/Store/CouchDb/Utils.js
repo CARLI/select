@@ -1,8 +1,7 @@
 var config = require( '../../config/index'),
     Q = require('q'),
     request = config.request,
-    StoreOptions = config.storeOptions,
-    Q = require('q')
+    StoreOptions = config.storeOptions
 ;
 
 var dbHost = db_host = StoreOptions.couchDbUrl + '/' + StoreOptions.couchDbName;
@@ -46,7 +45,24 @@ function makeValidCouchDbName(name) {
     return name;
 }
 
+function createDatabase(dbName) {
+    var deferred = Q.defer();
+
+    request.put(StoreOptions.couchDbUrl + '/' + dbName,  function(error, response, body) {
+        if (error) {
+            deferred.reject(error);
+        } else if (response.statusCode >= 200 && response.statusCode <= 299) {
+            deferred.resolve();
+        } else {
+            console.log(body);
+            deferred.reject("Could not create database " + dbName + " statusCode=" + response.statusCode);
+        }
+    });
+    return deferred.promise;
+}
+
 module.exports = {
     getCouchViewResults: getCouchViewResults,
-    makeValidCouchDbName: makeValidCouchDbName
+    makeValidCouchDbName: makeValidCouchDbName,
+    createDatabase: createDatabase
 };

@@ -11,6 +11,9 @@
     "name": {
       "type": "string"
     },
+    "databaseName": {
+      "type": "string"
+    },
     "cycleType": {
       "$ref": "./CycleType.json"
     },
