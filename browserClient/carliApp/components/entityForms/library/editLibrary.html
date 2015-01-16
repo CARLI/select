@@ -11,11 +11,11 @@
 
                 <div ng-show="!vm.newLibrary" class="edit-buttons pull-right">
                     <div ng-show="vm.editable">
-                        <a class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</a>
+                        <button type="button"  class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</button>
                         <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit" value="Save">
                     </div>
 
-                    <div id="library-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></div>
+                    <button type="button"  id="library-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></button>
                 </div>
             </fieldset>
         </header>
