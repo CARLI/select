@@ -4,12 +4,17 @@ var test = require( './Entity/EntityInterface.spec' )
     , uuid = require( 'node-uuid' )
     , chaiAsPromised = require( 'chai-as-promised' )
     , CycleRepository = require( '../Entity/CycleRepository' )
+    , config = require('../config')
+    , request = config.request
+    , storeOptions = config.storeOptions
 ;
 
+var lastValidCycleYear = 3000;
 function validCycleData() {
+    lastValidCycleYear++;
     return {
         type: 'Cycle', 
-        name: 'Fiscal Year 3001',
+        name: 'carli-test Fiscal Year ' + lastValidCycleYear,
         cycleType: 'Fiscal Year',
         year: 3001,
         status: 0,
@@ -25,8 +30,46 @@ function invalidCycleData() {
 
 test.run('Cycle', validCycleData, invalidCycleData);
 
-
 describe('Additional Repository Functions', function() {
+    describe('createCycle', function () {
+        it ('should have created a new couch database', function(done) {
+            request(storeOptions.couchDbUrl + '/cycle-carli-test-fiscal-year-' + lastValidCycleYear,  function(error, response, body) {
+                expect(response.statusCode).to.equal(200);
+                done();
+            });
+        });
+    });
+
+    describe('listActiveCycles View', function () {
+        it('should have a listActiveCycles method', function(){
+            expect(CycleRepository.listActiveCycles).to.be.a('function');
+        });
+
+        var cycle1 = validCycleData();
+        var cycle2 = validCycleData();
+        cycle2.status = 3;
+        var cycle3 = validCycleData();
+        cycle3.isArchived = true;
+
+        it('should return Cycles that are not archived');
+        /* This test would depend on starting with no cycles in the database, which is not currently the case */
+        /*
+         function(){
+         return CycleRepository.create( cycle1 )
+         .then( function() {
+         return CycleRepository.create( cycle2 );
+         })
+         .then (function () {
+         return CycleRepository.create( cycle3 );
+         })
+         .then(function(){
+         return CycleRepository.listActiveCycles();
+         })
+         .then(function ( cycleList ) {
+         return expect(cycleList).to.be.an('array').and.have.length(2);
+         });
+         */
+    });
 });
 
 describe('Adding functions to Cycle instances', function() {
@@ -69,35 +112,4 @@ describe('Adding functions to Cycle instances', function() {
                 });
         });
     });
-});
-
-describe('listActiveCycles View', function () {
-    it('should have a listActiveCycles method', function(){
-        expect(CycleRepository.listActiveCycles).to.be.a('function');
-    });
-
-    var cycle1 = validCycleData();
-    var cycle2 = validCycleData();
-    cycle2.status = 3;
-    var cycle3 = validCycleData();
-    cycle3.isArchived = true;
-
-    it('should return Cycles that are not archived');
-    /* This test would depend on starting with no cycles in the database, which is not currently the case */
-    /*
-    function(){
-        return CycleRepository.create( cycle1 )
-            .then( function() {
-                return CycleRepository.create( cycle2 );
-            })
-            .then (function () {
-                return CycleRepository.create( cycle3 );
-            })
-            .then(function(){
-                return CycleRepository.listActiveCycles();
-            })
-            .then(function ( cycleList ) {
-                return expect(cycleList).to.be.an('array').and.have.length(2);
-            });
-        */
 });

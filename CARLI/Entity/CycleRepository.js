@@ -7,11 +7,11 @@ var Entity = require('../Entity')
     , StoreModule = require( '../Store/CouchDb/Store')
     , moment = require('moment')
     , Q = require('q')
+    , _ = require('underscore')
     ;
 
 var CycleRepository = Entity('Cycle');
 
-// var stores = {};
 CycleRepository.setStore( Store( StoreModule(StoreOptions) ) );
 
 var statusLabels = [
@@ -32,8 +32,40 @@ function transformFunction( cycle ){
     EntityTransform.transformObjectForPersistence(cycle, propertiesToTransform);
 }
 
-function createCycle( cycle ){
-    return CycleRepository.create( cycle, transformFunction );
+/*
+var stores = {};
+function _initForCycle(cycle) {
+    CycleRepository.setStore( _getStoreForCycle(cycle) );
+}
+function _getStoreForCycle(cycle) {
+    var store = stores[cycle.id];
+    if (!store) {
+        var opts = _.extend({}, StoreOptions, { couchDbName: cycle.databaseName });
+        stores[cycle.id] = Store( StoreModule(opts) );
+    }
+    return store;
+}
+*/
+
+function createCycle( cycle ) {
+    var cycleDocPromise = CycleRepository.create(cycle, transformFunction);
+    createDatabase(cycle, cycleDocPromise);
+    return cycleDocPromise;
+}
+
+function createDatabase( cycle, docPromise ) {
+    docPromise.then(function(cycleId) {
+        cycle.id = cycleId;
+        cycle.databaseName = CouchUtils.makeValidCouchDbName(cycle.name);
+
+        CouchUtils.createDatabase('cycle-' + cycle.databaseName)
+            .then(function commit() {
+                updateCycle( cycle );
+            })
+            .catch(function rollback() {
+                CycleRepository.delete( cycle.id );
+            });
+    });
 }
 
 function updateCycle( cycle ){

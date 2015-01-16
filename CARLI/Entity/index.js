@@ -95,7 +95,15 @@ module.exports = function (type) {
                 throw new Error('Id Required');
             }
             return dataStore.get( { id: id, type: type } );
+        },
+
+        delete: function( id ){
+            if ( !id ){
+                throw new Error('Id Required');
+            }
+            return dataStore.delete( { id: id, type: type } );
         }
+
     };
 };
 
