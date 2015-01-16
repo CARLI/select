@@ -102,3 +102,16 @@ $button-height: 40px;
         @include remove-button-hover;
     }
 }
+
+@mixin subdued-remove-button-hover {
+    color: $red;
+    background-color: $white;
+}
+
+.subdued-remove-button {
+    background-color: $white;
+    color: $gray;
+    &:hover {
+        @include subdued-remove-button-hover;
+    }
+}
