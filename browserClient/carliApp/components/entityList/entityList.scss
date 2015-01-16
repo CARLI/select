@@ -43,6 +43,9 @@ body {
                 margin: .714rem;
                 menuitem {
                     margin-right: $filter-by-active-inner-spacing;
+                    .fa {
+                        @include font-size(17);
+                    }
                 }
             }
         }

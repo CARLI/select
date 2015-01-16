@@ -2,6 +2,7 @@
 @import "typefaces";
 @import "bower_modules/bootstrap-sass-official/assets/stylesheets/bootstrap";
 @import "variables";
+@import "colors";
 @import "mixins";
 @import "helpers";
 @import "gridAdapter";
@@ -193,11 +194,6 @@ section.content {
     margin-top: 1rem;
 }
 
-.fa {
-    font-size: 17px;
-    vertical-align: middle;
-}
-
 .dropdown-menu {
     a {
         color: #333 !important;
@@ -221,6 +217,7 @@ section.content {
 @import "carliApp/components/filterByActive/filterByActive";
 @import "carliApp/components/navBar/navBar";
 @import "carliApp/components/modalDialog/modalDialog";
+@import "carliApp/components/productSelectionHistoryIcon/productSelectionHistoryIcon";
 @import "carliApp/components/radio/radio";
 @import "carliApp/components/viewEditDirectives/viewEditCheckbox/viewEditCheckbox";
 @import "carliApp/components/viewEditDirectives/viewEditContact/viewEditContact";

@@ -22,4 +22,8 @@ checkbox {
     label {
         font-weight: normal;
     }
+
+    .fa {
+        @include font-size(17);
+    }
 }
