@@ -4,19 +4,21 @@ angular.module('carli.productSelectionHistoryIcon')
     function productSelectionHistoryIcon() {
         return {
             restrict: 'E',
-            template: '<fa name="{{ iconName }}"></fa>',
+            template: '<fa class="{{ color }}" name="{{ iconName }}"></fa>',
             scope: {
                 selected: '@'
             },
             link: function (scope, element, attrs) {
-                console.log(scope.selected);
                 if ( scope.selected === 'selected' ){
+                    scope.color = "orange";
                     scope.iconName = 'check-circle';
                 }
                 else if ( scope.selected === 'not selected' ){
+                    scope.color = "black";
                     scope.iconName = 'times-circle';
                 }
                 else {
+                    scope.color = "black";
                     scope.iconName = 'minus';
                 }
             }
