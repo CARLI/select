@@ -3,6 +3,7 @@ radio {
     font-size: 14px;
     display: inline-block;
     line-height: 1em;
+    position: relative;
 
     input[type="radio"]  {
         margin: 0;
@@ -21,10 +22,15 @@ radio {
     
     label {
         font-weight: normal;
+        margin: 0;
+        padding-left: 1.5em;
     }
 
     .fa {
         @include font-size(17);
+        left: 0;
+        position: absolute;
+        top: 0;
     }
 }
 
