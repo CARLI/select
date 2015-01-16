@@ -7,7 +7,8 @@ angular.module('carli.collapsible')
             link: function postLink(scope, element, attrs) {
                 var $content = element.children('.content');
                 $content.css('display', 'none');
-                element.on('click', 'header', function(event){
+
+                element.addClass('collapsed').on('click', 'header', function(event){
                     $content.slideToggle();
                     element.toggleClass('collapsed');
                 });
