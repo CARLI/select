@@ -416,7 +416,8 @@ module.exports = function ( grunt ) {
                     '<%= build_dir %>/<%= logic_files.build %>',
                     '<%= build_dir %>/<%= carliApp_files.jsAll %>',
                     '<%= build_dir %>/<%= carliApp_files.helper_scripts %>',
-                    '<%= build_dir %>/css/*.css'
+                    '<%= build_dir %>/css/*.css',
+                    '!<%= build_dir %>/css/app.css'
                 ]
             },
 

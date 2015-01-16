@@ -1,11 +1,26 @@
 [collapsible] {
 
     header {
+        cursor: pointer;
+        position: relative;
 
+        .fa-angle-down,
+        .fa-angle-right {
+            position: absolute;
+            top: .75rem;
+            left: 1rem;
+            font-size: 2rem;
+        }
+
+        .fa-angle-down {
+            display: inline-block;
+        }
+        .fa-angle-right {
+            display: none;
+        }
     }
 
     .content {
-        overflow: hidden;
     }
 
 }
@@ -13,10 +28,19 @@
 [collapsible].collapsed {
 
     header {
+        .fa {
+            color: $gray;
+        }
 
+        .fa-angle-down {
+            display: none;
+        }
+        .fa-angle-right {
+            display: inline-block;
+        }
     }
 
     .content {
-
+        display: none !important;
     }
 }

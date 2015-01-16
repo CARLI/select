@@ -16,6 +16,11 @@ CARLI.Library.setStore( store );
 CARLI.License.setStore( store );
 CARLI.Vendor.setStore( store );
 CARLI.Product.setStore( store );
+CARLI.Cycle.setStore( store );
+
+generateCycleFixtures().then( function(){
+    console.log('Done creating Cycles');
+});
 
 generateLibraryFixtures().then( function( results ){
     console.log('Done creating Libraries');
@@ -41,6 +46,28 @@ function addIds(things) {
     things.forEach(function (thing) {
         thing.id = thing.name;
     });
+}
+
+function generateCycleFixtures() {
+    var entityCreationPromises = [];
+    console.log("Generate Cycles");
+
+    var testCycles = [
+        {"type":"Cycle", "name":"Calendar Year 2013", "cycleType":"Calendar Year", "year":2013, "status":4, "isArchived":true},
+        {"type":"Cycle", "name":"Calendar Year 2014", "cycleType":"Calendar Year", "year":2014, "status":4, "isArchived":false},
+        {"type":"Cycle", "name":"Calendar Year 2015", "cycleType":"Calendar Year", "year":2015, "status":2, "isArchived":false},
+        {"type":"Cycle", "name":"Fiscal Year 2013", "cycleType":"Fiscal Year", "year":2013, "status":4, "isArchived":true},
+        {"type":"Cycle", "name":"Fiscal Year 2014", "cycleType":"Fiscal Year", "year":2014, "status":4, "isArchived":false},
+        {"type":"Cycle", "name":"Fiscal Year 2015", "cycleType":"Fiscal Year", "year":2015, "status":1, "isArchived":false},
+        {"type":"Cycle", "name":"Alternative Cycle 2013", "cycleType":"Alternative Cycle", "year":2013, "status":4, "isArchived":true},
+        {"type":"Cycle", "name":"Alternative Cycle 2014", "cycleType":"Alternative Cycle", "year":2014, "status":4, "isArchived":false},
+        {"type":"Cycle", "name":"Alternative Cycle 2015", "cycleType":"Alternative Cycle", "year":2015, "status":3, "isArchived":false}
+    ];
+    testCycles.forEach(function (cycle) {
+        entityCreationPromises.push( CARLI.Cycle.create(cycle) );
+    });
+
+    return Q.all( entityCreationPromises );
 }
 
 function generateLibraryFixtures() {

@@ -26,9 +26,9 @@ angular.module('carli.routes',[
         controllerAs:'vm'
     })
     .when('/subscription/:id', {
-        templateUrl: '/carliApp/sections/subscriptions/placeholder/placeholder.html',
-        controller:  'placeholderController',
-        controllerAs:'vm'
+        templateUrl: '/carliApp/sections/subscriptions/editCycle/editCycle.html',
+        controller:  'editCycleController',
+        controllerAs:'cycleRouter'
     })
     .when('/oneTimePurchases', {
         templateUrl: '/carliApp/sections/oneTimePurchases/oneTimePurchases.html',
