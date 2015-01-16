@@ -1,3 +1,7 @@
 product-selection-history-icon {
     font-size: 22px;
+
+    .fa-minus:before {
+        content: "-";
+    }
 }
