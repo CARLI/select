@@ -3,7 +3,7 @@ var chai   = require( 'chai' )
   , uuid   = require( 'node-uuid' )
   , Store = require( '../../Store' )
   , config = require( '../../config' )
-  , StoreModule = require( '../../Store/' + config.store )( config.storeOptions )
+  , StoreModule = require( '../../Store/' + config.storePath )( config.storeOptions )
   , chaiAsPromised = require( 'chai-as-promised' )
   , Q     = require( 'q' )
 ;

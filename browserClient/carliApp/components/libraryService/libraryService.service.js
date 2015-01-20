@@ -5,10 +5,6 @@ function libraryService( CarliModules, $q ) {
 
     var libraryModule = CarliModules.Library;
 
-    var libraryStore = CarliModules.Store( CarliModules[CarliModules.config.store]( CarliModules.config.storeOptions ) );
-
-    libraryModule.setStore( libraryStore );
-
     return {
         list:   function() { return $q.when( libraryModule.list() ); },
         create: function() { return $q.when( libraryModule.create.apply( this, arguments) ); },

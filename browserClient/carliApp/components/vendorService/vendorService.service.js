@@ -5,10 +5,6 @@ function vendorService( CarliModules, $q ) {
 
     var vendorModule = CarliModules.Vendor;
 
-    var vendorStore = CarliModules.Store( CarliModules[CarliModules.config.store]( CarliModules.config.storeOptions ) );
-
-    vendorModule.setStore( vendorStore );
-
     return {
         list:   function() { return $q.when( vendorModule.list() ); },
         create: function() { return $q.when( vendorModule.create.apply(this, arguments) ); },
