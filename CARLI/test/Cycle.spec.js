@@ -7,6 +7,7 @@ var test = require( './Entity/EntityInterface.spec' )
     , config = require('../config')
     , request = config.request
     , storeOptions = config.storeOptions
+    , testUtils = require('./utils')
 ;
 
 var lastValidCycleYear = 3000;
@@ -14,7 +15,7 @@ function validCycleData() {
     lastValidCycleYear++;
     return {
         type: 'Cycle', 
-        name: 'carli-test Fiscal Year ' + lastValidCycleYear,
+        name: testUtils.testDbMarker + ' Fiscal Year ' + lastValidCycleYear,
         cycleType: 'Fiscal Year',
         year: 3001,
         status: 0,
@@ -33,7 +34,7 @@ test.run('Cycle', validCycleData, invalidCycleData);
 describe('Additional Repository Functions', function() {
     describe('createCycle', function () {
         it ('should have created a new couch database', function(done) {
-            request(storeOptions.couchDbUrl + '/cycle-carli-test-fiscal-year-' + lastValidCycleYear,  function(error, response, body) {
+            request(storeOptions.couchDbUrl + '/cycle-'+ testUtils.testDbMarker +'-fiscal-year-' + lastValidCycleYear,  function(error, response, body) {
                 expect(response.statusCode).to.equal(200);
                 done();
             });

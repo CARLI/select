@@ -14,6 +14,7 @@ module.exports = function(grunt) {
         'ensure-local-config',
         'jsenv:node',
         'deploy-db',
-        'npm-test'
+        'npm-test',
+        'delete-test-dbs'
     ]);
 };
