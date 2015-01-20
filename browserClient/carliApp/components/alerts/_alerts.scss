@@ -1,9 +1,35 @@
 alerts {
-    div {
-        @include vendor-prefix(transition, opacity 2s);
-        text-align: center;
+    bottom: 2rem;
+    right: 2rem;
+    position: fixed;
+    z-index: 999;
+
+    .alert {
+        @include vendor-prefix(transition, all .4s);
         font-family: 'Verdana';
         font-weight: 400;
         @include font-size(15);
+        text-align: center;
+        width: 12rem;
+
+        button.close {
+            outline: none;
+        }
+
+        &.ng-enter {
+            @include vendor-prefix(transform, 'translateX( calc(2rem + 100%) )');
+        }
+
+        &.ng-enter-active {
+            @include vendor-prefix(transform, 'translateX(0px)');
+        }
+
+        &.ng-leave {
+            opacity: 1;
+        }
+
+        &.ng-leave-active {
+            opacity: 0;
+        }
     }
 }
