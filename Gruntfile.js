@@ -2,6 +2,7 @@ module.exports = function(grunt) {
     require('./grunt/subdir')(grunt);
     require('./grunt/jsenv')(grunt);
     require('./grunt/db')(grunt);
+    require('./grunt/carliConfig')(grunt);
 
     grunt.registerTask('serve', function(arg) {
         grunt.task.run(['subdir-grunt:browserClient:serve:' + arg]);
@@ -24,6 +25,7 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask('install-deps', [
+        'ensure-local-config',
         'npm-install',
         'bower-install'
     ]);
