@@ -47,24 +47,37 @@ function _getStoreForCycle(cycle) {
 */
 
 function createCycle( cycle ) {
+    var deferred = Q.defer();
+
     var cycleDocPromise = CycleRepository.create(cycle, transformFunction);
-    createDatabase(cycle, cycleDocPromise);
-    return cycleDocPromise;
+    var databasePromise = createDatabaseForCycle(cycleDocPromise);
+    Q.all([cycleDocPromise,databasePromise])
+    .then(function(results) {
+        deferred.resolve(results[0]);
+    })
+    .catch(function(err){
+        deferred.reject(err);
+    });
+
+    return deferred.promise;
 }
 
-function createDatabase( cycle, docPromise ) {
-    docPromise.then(function(cycleId) {
-        cycle.id = cycleId;
-        cycle.databaseName = CouchUtils.makeValidCouchDbName(cycle.name);
+function createDatabaseForCycle( docPromise ) {
+    var deferred = Q.defer();
 
-        CouchUtils.createDatabase('cycle-' + cycle.databaseName)
+    docPromise.then(loadCycle).then(function (cycle) {
+        cycle.databaseName = CouchUtils.makeValidCouchDbName('cycle-' + cycle.name);
+
+        CouchUtils.createDatabase(cycle.databaseName)
             .then(function commit() {
-                updateCycle( cycle );
+                deferred.resolve( updateCycle( cycle ) );
             })
             .catch(function rollback() {
-                CycleRepository.delete( cycle.id );
+                deferred.resolve( CycleRepository.delete( cycle.id ) );
             });
     });
+
+    return deferred.promise;
 }
 
 function updateCycle( cycle ){

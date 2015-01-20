@@ -39,6 +39,20 @@ describe('Additional Repository Functions', function() {
                 done();
             });
         });
+        it ('should have saved the databaseName to the cycle document', function () {
+            return CycleRepository.list().then(function(cycleList) {
+                function allCyclesHaveDatabaseName(cycles) {
+                    var result = true;
+                    cycles.forEach(function (cycle) {
+                        if (!cycle.hasOwnProperty('databaseName')) {
+                            result = false;
+                        }
+                    });
+                    return result;
+                }
+                return expect(cycleList).to.satisfy( allCyclesHaveDatabaseName );
+            });
+        });
     });
 
     describe('listActiveCycles View', function () {
