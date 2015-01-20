@@ -7,7 +7,6 @@ var Entity = require('../Entity')
     , StoreModule = require( '../Store/CouchDb/Store')
     , moment = require('moment')
     , Q = require('q')
-    , _ = require('underscore')
     ;
 
 var CycleRepository = Entity('Cycle');
