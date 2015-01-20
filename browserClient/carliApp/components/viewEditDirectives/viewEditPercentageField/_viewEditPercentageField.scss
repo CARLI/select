@@ -1,0 +1,29 @@
+$input-width: 3.5em;
+
+.percentage-field {
+    position: relative;
+
+    input {
+        @include vendor-prefix('appearance', 'textfield');
+        width: $input-width;
+
+        &::-webkit-inner-spin-button,
+        &::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+        }
+    }
+
+    &:after {
+        background: $gray;
+        border-radius: 0 4px 4px 0;
+        content: '%';
+        left: $input-width;
+        line-height: 19px;
+        height: 100%;
+        padding: $default-input-padding-top 0;
+        position: absolute;
+        text-align: center;
+        top: 0;
+        width: 2em;
+    }
+}
