@@ -3,6 +3,9 @@ angular.module('carli.goodSelect')
         return {
             restrict: 'EA',
             templateUrl: '/carliApp/components/goodSelect/goodSelect.html',
-            transclude: true
+            scope: {
+                ngModel: '=',
+                items: '='
+            }
         };
     });
