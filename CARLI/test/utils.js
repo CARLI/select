@@ -1,7 +1,20 @@
 var config = require('../config');
 var request = config.request;
-var testDbMarker = 'mocha-unit-test';
+var Store = require( '../Store' );
 var Q = require('q');
+
+var testDbName = 'mocha-tests';
+var testDbMarker = 'mocha-unit-test';
+
+function getTestStoreOptions() {
+    return {
+        couchDbUrl: config.storeOptions.couchDbUrl,
+        couchDbName: testDbName
+    };
+}
+var storeOptions = getTestStoreOptions();
+var StoreModule = require( '../Store/' + config.storePath )( storeOptions );
+var testStore = Store( StoreModule );
 
 function _deleteDb(dbName) {
     var deferred = Q.defer();
@@ -11,8 +24,24 @@ function _deleteDb(dbName) {
     return deferred.promise;
 }
 
+var createdDb = false;
+function _createMainTestDb () {
+    if (!createdDb) {
+        request.put(config.storeOptions.couchDbUrl + '/' + testDbName);
+        createdDb = true;
+    }
+}
+
 module.exports = {
+    testDbName: testDbName,
     testDbMarker: testDbMarker,
+    getTestDbStoreOptions: getTestStoreOptions,
+    getTestDbStore: function () {
+        return testStore;
+    },
+    setupTestDb: function () {
+        //_createMainTestDb();
+    },
     deleteTestDbs: function() {
         var deferred = Q.defer();
 
@@ -23,6 +52,7 @@ module.exports = {
             var dbList = JSON.parse(body);
             var count = 0;
             var promises = [];
+            promises.push(_deleteDb(testDbName));
             dbList.forEach(function (dbName) {
                 if (dbName.indexOf(testDbMarker) >= 0) {
                     count++;

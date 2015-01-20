@@ -4,7 +4,7 @@ var config = require( '../../config/index'),
     StoreOptions = config.storeOptions
 ;
 
-var dbHost = db_host = StoreOptions.couchDbUrl + '/' + StoreOptions.couchDbName;
+var dbHost = StoreOptions.couchDbUrl + '/' + StoreOptions.couchDbName;
 
 function getCouchViewResults( viewName, key) {
     var deferred = Q.defer();
@@ -62,6 +62,9 @@ function createDatabase(dbName) {
 }
 
 module.exports = {
+    setStoreOptions: function(opts) {
+        dbHost = opts.couchDbUrl + '/' + opts.couchDbName;
+    },
     getCouchViewResults: getCouchViewResults,
     makeValidCouchDbName: makeValidCouchDbName,
     createDatabase: createDatabase

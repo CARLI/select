@@ -1,14 +1,14 @@
 var chai   = require( 'chai' )
   , expect = chai.expect
   , uuid   = require( 'node-uuid' )
-  , Store = require( '../../Store' )
-  , config = require( '../../config' )
-  , StoreModule = require( '../../Store/' + config.storePath )( config.storeOptions )
   , chaiAsPromised = require( 'chai-as-promised' )
-  , Q     = require( 'q' )
+  , Q     = require( 'q')
+  , utils = require('../utils')
 ;
 
 chai.use( chaiAsPromised );
+
+utils.setupTestDb();
 
 /**
   * Type Name
@@ -29,7 +29,7 @@ function test( entityTypeName, validData, invalidData ) {
             expect( EntityRepository.setStore ).to.be.a( 'function' );
         } );
 
-        EntityRepository.setStore( Store( StoreModule ) );
+        EntityRepository.setStore( utils.getTestDbStore() );
 
         it( 'should have a create function', function() {
             expect(EntityRepository.create).to.be.a('function');

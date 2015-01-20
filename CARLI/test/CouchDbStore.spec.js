@@ -1,5 +1,9 @@
 var test   = require( './Store/StoreInterface.spec' )
-  , config = require( '../config' )
+  , testUtils = require( './utils' )
+  , couchUtils = require('../Store/CouchDb/Utils')
 ;
 
-test.run( 'CouchDb/Store', config.storeOptions );
+var testOptions = testUtils.getTestDbStoreOptions();
+couchUtils.setStoreOptions(testOptions);
+
+test.run( 'CouchDb/Store', testOptions);
