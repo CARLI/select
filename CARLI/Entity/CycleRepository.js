@@ -1,15 +1,16 @@
 var Entity = require('../Entity')
     , EntityTransform = require( './EntityTransformationUtils')
     , config = require( '../config' )
-    , CouchViewUtils = require( '../Store/CouchViewUtils')
+    , CouchUtils = require( '../Store/CouchDb/Utils')
     , StoreOptions = config.storeOptions
     , Store = require( '../Store' )
-    , StoreModule = require( '../Store/CouchDbStore')
+    , StoreModule = require( '../Store/CouchDb/Store')
     , moment = require('moment')
     , Q = require('q')
     ;
 
 var CycleRepository = Entity('Cycle');
+
 CycleRepository.setStore( Store( StoreModule(StoreOptions) ) );
 
 var statusLabels = [
@@ -30,8 +31,53 @@ function transformFunction( cycle ){
     EntityTransform.transformObjectForPersistence(cycle, propertiesToTransform);
 }
 
-function createCycle( cycle ){
-    return CycleRepository.create( cycle, transformFunction );
+/*
+var stores = {};
+function _initForCycle(cycle) {
+    CycleRepository.setStore( _getStoreForCycle(cycle) );
+}
+function _getStoreForCycle(cycle) {
+    var store = stores[cycle.id];
+    if (!store) {
+        var opts = _.extend({}, StoreOptions, { couchDbName: cycle.databaseName });
+        stores[cycle.id] = Store( StoreModule(opts) );
+    }
+    return store;
+}
+*/
+
+function createCycle( cycle ) {
+    var deferred = Q.defer();
+
+    var cycleDocPromise = CycleRepository.create(cycle, transformFunction);
+    var databasePromise = createDatabaseForCycle(cycleDocPromise);
+    Q.all([cycleDocPromise,databasePromise])
+    .then(function(results) {
+        deferred.resolve(results[0]);
+    })
+    .catch(function(err){
+        deferred.reject(err);
+    });
+
+    return deferred.promise;
+}
+
+function createDatabaseForCycle( docPromise ) {
+    var deferred = Q.defer();
+
+    docPromise.then(loadCycle).then(function (cycle) {
+        cycle.databaseName = CouchUtils.makeValidCouchDbName('cycle-' + cycle.name);
+
+        CouchUtils.createDatabase(cycle.databaseName)
+            .then(function commit() {
+                deferred.resolve( updateCycle( cycle ) );
+            })
+            .catch(function rollback() {
+                deferred.resolve( CycleRepository.delete( cycle.id ) );
+            });
+    });
+
+    return deferred.promise;
 }
 
 function updateCycle( cycle ){
@@ -65,7 +111,7 @@ function loadCycle( cycleId ){
 }
 
 function listActiveCycles() {
-    return expandCycles( CouchViewUtils.getCouchViewResults('listActiveCycles') );
+    return expandCycles( CouchUtils.getCouchViewResults('listActiveCycles') );
 }
 
 /* functions that get added as instance methods on loaded Cycles */

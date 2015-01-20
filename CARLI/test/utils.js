@@ -1,0 +1,69 @@
+var config = require('../config');
+var request = config.request;
+var Store = require( '../Store' );
+var Q = require('q');
+
+var testDbName = 'mocha-tests';
+var testDbMarker = 'mocha-unit-test';
+
+function getTestStoreOptions() {
+    return {
+        couchDbUrl: config.storeOptions.couchDbUrl,
+        couchDbName: testDbName
+    };
+}
+var storeOptions = getTestStoreOptions();
+var StoreModule = require( '../Store/' + config.storePath )( storeOptions );
+var testStore = Store( StoreModule );
+
+function _deleteDb(dbName) {
+    var deferred = Q.defer();
+    request.del(config.storeOptions.couchDbUrl + '/' + dbName, function() {
+        deferred.resolve();
+    });
+    return deferred.promise;
+}
+
+var createdDb = false;
+function _createMainTestDb () {
+    if (!createdDb) {
+        request.put(config.storeOptions.couchDbUrl + '/' + testDbName);
+        createdDb = true;
+    }
+}
+
+module.exports = {
+    testDbName: testDbName,
+    testDbMarker: testDbMarker,
+    getTestDbStoreOptions: getTestStoreOptions,
+    getTestDbStore: function () {
+        return testStore;
+    },
+    setupTestDb: function () {
+        //_createMainTestDb();
+    },
+    deleteTestDbs: function() {
+        var deferred = Q.defer();
+
+        request.get(config.storeOptions.couchDbUrl + '/_all_dbs', function (error, response, body) {
+            if (error) {
+                deferred.reject(error);
+            }
+            var dbList = JSON.parse(body);
+            var count = 0;
+            var promises = [];
+            promises.push(_deleteDb(testDbName));
+            dbList.forEach(function (dbName) {
+                if (dbName.indexOf(testDbMarker) >= 0) {
+                    count++;
+                    request.del(config.storeOptions.couchDbUrl + '/' + dbName);
+                    promises.push(_deleteDb(dbName));
+                }
+            });
+            console.log('Deleted ' + count + ' databases');
+            Q.all(promises).then(deferred.resolve);
+        });
+
+        return deferred.promise;
+    }
+};

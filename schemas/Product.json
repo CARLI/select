@@ -34,18 +34,6 @@
         "cycleType": {
             "$ref": "./CycleType.json"
         },
-        "priceList": {
-            "type": "array",
-            "items": {
-                "$ref": "./price.json"
-            }
-        },
-        "lastYearsPriceList": {
-            "type": "array",
-            "items": {
-                "$ref": "./price.json"
-            }
-        },
         "fundings": {
             "type": "array",
             "items": {

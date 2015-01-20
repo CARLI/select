@@ -1,8 +1,8 @@
 var Q = require('q')
-  , config = require( '../config' )
+  , config = require( '../../config/index' )
   , request = config.request
   , db_host = undefined
-  , CouchViewUtils = require( './CouchViewUtils')
+  , CouchUtils = require( './Utils')
 ;
 
 function _cloneData( data ) {
@@ -85,7 +85,7 @@ function storeData( data ) {
 }
 
 function listDataFor( type ) {
-    return CouchViewUtils.getCouchViewResults('listByType', type);
+    return CouchUtils.getCouchViewResults('listByType', type);
 }
 
 function deleteDataFor( type, id ) {
@@ -126,4 +126,4 @@ module.exports = function ( options ) {
         listDataFor: listDataFor,
         deleteDataFor: deleteDataFor
     }
-}
+};

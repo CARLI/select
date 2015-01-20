@@ -5,10 +5,6 @@ function cycleService( CarliModules, $q ) {
 
     var cycleModule = CarliModules.Cycle;
 
-    var cycleStore = CarliModules.Store( CarliModules[CarliModules.config.store]( CarliModules.config.storeOptions ) );
-
-    cycleModule.setStore( cycleStore );
-
     return {
         cycleDefaults: cycleDefaults,
         list: function() { return $q.when( cycleModule.list() ); },

@@ -48,11 +48,6 @@
             "type": "array",
             "items":  { "$ref": "./OutstandingBalances.json" }
         },
-        "products": {
-            "description": "Products offered by this library",
-            "type": "array",
-            "items": { "$ref": "./Product.json" }
-        },
         "contacts": {
             "description": "List of library contacts",
             "type": "array",
