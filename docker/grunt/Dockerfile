@@ -23,5 +23,5 @@ COPY . /carli-select
 EXPOSE 8000
 
 # Install project dependencies
-RUN cd /carli-select/ && npm install && grunt jsenv:node && grunt install-deps
+RUN cd /carli-select/CARLI && npm install && cd /carli-select/ && npm install && grunt jsenv:node && grunt install-deps
 
