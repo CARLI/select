@@ -5,6 +5,9 @@ cd `git rev-parse --show-toplevel`
 
 SCRIPTS=./jenkins/scripts
 
+# test jenkins voodoo
+touch ./CARLI/config/local.js
+
 $SCRIPTS/add-build-number.sh dev &&
 $SCRIPTS/build-container.sh couchdb &&
 $SCRIPTS/build-container.sh grunt &&
