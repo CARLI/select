@@ -17,17 +17,17 @@ var cyclesToMigrate = [
         startDateForSelections: '2013-10-15',
         endDateForSelections: '2013-11-15',
         productsAvailableDate: '2014-01-01'
-    //},
-    //{
-    //    idalId: 190,
-    //    name: 'Fiscal Year 2014',
-    //    cycleType: 'Fiscal Year',
-    //    year: 2014,
-    //    status: 4,
-    //    isArchived: false,
-    //    startDateForSelections: '2013-04-22',
-    //    endDateForSelections: '2013-05-31',
-    //    productsAvailableDate: '2014-07-01'
+    },
+    {
+        idalId: 190,
+        name: 'Fiscal Year 2014',
+        cycleType: 'Fiscal Year',
+        year: 2014,
+        status: 4,
+        isArchived: false,
+        startDateForSelections: '2013-04-22',
+        endDateForSelections: '2013-05-31',
+        productsAvailableDate: '2014-07-01'
     }
 ];
 
