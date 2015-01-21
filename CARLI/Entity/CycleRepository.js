@@ -7,6 +7,7 @@ var Entity = require('../Entity')
     , StoreModule = require( '../Store/CouchDb/Store')
     , moment = require('moment')
     , Q = require('q')
+    , _ = require('lodash')
     ;
 
 var CycleRepository = Entity('Cycle');
@@ -114,6 +115,10 @@ function listActiveCycles() {
     return expandCycles( CouchUtils.getCouchViewResults('listActiveCycles') );
 }
 
+function getStoreForCycle(cycle) {
+    return Store( StoreModule(_.extend({}, StoreOptions, { couchDbName: cycle.databaseName })) );
+}
+
 /* functions that get added as instance methods on loaded Cycles */
 
 var functionsToAdd = {
@@ -139,5 +144,6 @@ module.exports = {
     list: listCycles,
     load: loadCycle,
     statusLabels: statusLabels,
-    listActiveCycles: listActiveCycles
+    listActiveCycles: listActiveCycles,
+    getStoreForCycle: getStoreForCycle
 };

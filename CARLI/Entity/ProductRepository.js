@@ -1,9 +1,7 @@
 var Entity = require('../Entity')
   , EntityTransform = require( './EntityTransformationUtils')
+  , CycleRepository = require('./CycleRepository')
   , config = require( '../config' )
-  , StoreOptions = config.storeOptions
-  , Store = require( '../Store' )
-  , StoreModule = require( '../Store/CouchDb/Store')
   , CouchUtils = require( '../Store/CouchDb/Utils')
   , Validator = require('../Validator')
   , moment = require('moment')
@@ -11,7 +9,6 @@ var Entity = require('../Entity')
   ;
 
 var ProductRepository = Entity('Product');
-ProductRepository.setStore( Store( StoreModule(StoreOptions) ) );
 
 var propertiesToTransform = ['vendor', 'license'];
 
@@ -82,13 +79,16 @@ function isAvailableToday( product ){
     return throughDate.isAfter(lastMidnight);
 }
 
-
 function listProductsForLicenseId( licenseId ) {
     return CouchUtils.getCouchViewResults('listProductsByLicenseId', licenseId);
 }
 
 function listProductsForVendorId( vendorId ) {
     return CouchUtils.getCouchViewResults('listProductsForVendorId', vendorId);
+}
+
+function setCycle(cycle) {
+    ProductRepository.setStore(CycleRepository.getStoreForCycle(cycle));
 }
 
 
@@ -110,6 +110,7 @@ function getProductDetailCodeOptions(){
 
 module.exports = {
     setStore: ProductRepository.setStore,
+    setCycle: setCycle,
     create: createProduct,
     update: updateProduct,
     list: listProducts,

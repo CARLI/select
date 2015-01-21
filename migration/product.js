@@ -1,10 +1,5 @@
 var ProductRepository = require('../CARLI').Product;
-var CouchDbStore = require('../CARLI').CouchDbStore;
-var carliConfig = require('../CARLI').config;
-var StoreOptions = carliConfig.storeOptions;
-var Store = require('../CARLI').Store;
 var Q = require('q');
-ProductRepository.setStore(Store(CouchDbStore(StoreOptions)));
 
 var printedWarning = false;
 
@@ -72,7 +67,8 @@ function createProduct( productRow, cycle, vendorIdMapping ) {
 
     var couchIdPromise = Q.defer();
     var product = extractProduct(productRow, cycle, vendorIdMapping);
-
+    
+    ProductRepository.setCycle(cycle);
     ProductRepository.create( product )
         .then(function(id) {
             console.log('ok: ' + id);
