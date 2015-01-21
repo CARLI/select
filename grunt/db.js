@@ -17,4 +17,9 @@ module.exports = function (grunt) {
         var done = this.async();
         testUtils.deleteTestDbs().then(done);
     });
+    grunt.registerTask('nuke-couch', function() {
+        var testUtils = require(projectRoot + '/CARLI/test/utils.js');
+        var done = this.async();
+        testUtils.nukeCouch().then(done);
+    });
 };
