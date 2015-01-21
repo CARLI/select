@@ -5,6 +5,7 @@ var Q = require('q');
 
 var testDbName = 'mocha-tests';
 var testDbMarker = 'mocha-unit-test';
+var testStore = null;
 
 function getTestStoreOptions() {
     return {
@@ -12,9 +13,6 @@ function getTestStoreOptions() {
         couchDbName: testDbName
     };
 }
-var storeOptions = getTestStoreOptions();
-var StoreModule = require( '../Store/' + config.storePath )( storeOptions );
-var testStore = Store( StoreModule );
 
 function _deleteDb(dbName) {
     var deferred = Q.defer();
@@ -37,6 +35,11 @@ module.exports = {
     testDbMarker: testDbMarker,
     getTestDbStoreOptions: getTestStoreOptions,
     getTestDbStore: function () {
+        if (!testStore) {
+            var storeOptions = getTestStoreOptions();
+            var storeModule = require( '../Store/' + config.storePath )( storeOptions );
+            testStore = Store( storeModule );
+        }
         return testStore;
     },
     setupTestDb: function () {
