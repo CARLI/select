@@ -1,4 +1,5 @@
 var config = require( '../../config/index'),
+    couchapp = require('couchapp'),
     Q = require('q'),
     request = config.request,
     StoreOptions = config.storeOptions
@@ -52,12 +53,29 @@ function createDatabase(dbName) {
         if (error) {
             deferred.reject(error);
         } else if (response.statusCode >= 200 && response.statusCode <= 299) {
-            deferred.resolve();
+            putDesignDoc(dbName).then(function () {
+                deferred.resolve();
+            });
         } else {
             console.log(body);
             deferred.reject("Could not create database " + dbName + " statusCode=" + response.statusCode);
         }
     });
+    return deferred.promise;
+}
+
+function putDesignDoc(dbName) {
+    var deferred = Q.defer();
+
+    var docName = 'CARLI-DesignDoc.js';
+    var designDoc = require('../../../db/' + docName);
+
+    var url = StoreOptions.couchDbUrl + '/' + dbName + '/_design/CARLI';
+    couchapp.createApp(designDoc, url, function(app) {
+        app.push();
+        deferred.resolve();
+    });
+
     return deferred.promise;
 }
 
@@ -67,5 +85,6 @@ module.exports = {
     },
     getCouchViewResults: getCouchViewResults,
     makeValidCouchDbName: makeValidCouchDbName,
-    createDatabase: createDatabase
+    createDatabase: createDatabase,
+    putDesignDoc: putDesignDoc
 };
