@@ -94,7 +94,7 @@ function test( entityTypeName, validData, invalidData, cycle ) {
 
 
             it( 'should return an object', function() {
-                return EntityRepository.create( validData() )
+                return EntityRepository.create( validData(), cycle )
                     .then( function( entityId ) {
                         return expect( EntityRepository.load( entityId, cycle ) ).to.eventually.be.an('object').with.property('id');
                     } );
@@ -107,7 +107,7 @@ function test( entityTypeName, validData, invalidData, cycle ) {
 
                 var loaded_entity;
 
-                return EntityRepository.create( entity_data )
+                return EntityRepository.create( entity_data, cycle )
                     .then(function( entityId ){
                         entity_data.type = entityTypeName;
                         return EntityRepository.load( entityId, cycle )
