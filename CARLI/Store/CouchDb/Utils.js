@@ -5,12 +5,10 @@ var config = require( '../../config/index'),
     StoreOptions = config.storeOptions
 ;
 
-var dbHost = StoreOptions.couchDbUrl + '/' + StoreOptions.couchDbName;
-
-function getCouchViewResults( viewName, key) {
+function getCouchViewResults( dbName, viewName, key) {
     var deferred = Q.defer();
 
-    var url = dbHost + '/' + '_design/CARLI/_view/' + viewName;
+    var url = StoreOptions.couchDbUrl + '/' + dbName + '/' + '_design/CARLI/_view/' + viewName;
     if (key) {
         url += '?key="' + key + '"';
     }
@@ -80,9 +78,6 @@ function putDesignDoc(dbName) {
 }
 
 module.exports = {
-    setStoreOptions: function(opts) {
-        dbHost = opts.couchDbUrl + '/' + opts.couchDbName;
-    },
     getCouchViewResults: getCouchViewResults,
     makeValidCouchDbName: makeValidCouchDbName,
     createDatabase: createDatabase,

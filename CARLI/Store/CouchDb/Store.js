@@ -2,6 +2,7 @@ var Q = require('q')
   , config = require( '../../config/index' )
   , request = config.request
   , db_host = undefined
+  , defaultCollection = undefined
   , CouchUtils = require( './Utils')
 ;
 
@@ -84,8 +85,11 @@ function storeData( data ) {
     return deferred.promise;
 }
 
-function listDataFor( type ) {
-    return CouchUtils.getCouchViewResults('listByType', type);
+function listDataFor( type, collection ) {
+    if (collection === undefined) {
+        collection = defaultCollection;
+    }
+    return CouchUtils.getCouchViewResults(collection, 'listByType', type);
 }
 
 function deleteDataFor( type, id ) {
@@ -118,6 +122,7 @@ function deleteDataFor( type, id ) {
 
 module.exports = function ( options ) {
     db_host = options.couchDbUrl + '/' + options.couchDbName;
+    defaultCollection = options.couchDbName;
     return {
         typeExistsInStore: typeExistsInStore,
         idForTypeExistsInStore: idForTypeExistsInStore,

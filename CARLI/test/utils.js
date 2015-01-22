@@ -43,6 +43,7 @@ module.exports = {
         return testStore;
     },
     setupTestDb: function () {
+        config.setDbName(testDbName);
         //_createMainTestDb();
     },
     deleteTestDbs: function() {

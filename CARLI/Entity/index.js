@@ -86,8 +86,8 @@ module.exports = function (type) {
             return deferred.promise; 
         },
 
-        list: function() {
-            return dataStore.list( type );
+        list: function(collection) {
+            return dataStore.list( type, collection );
         },
 
         load: function( id ){

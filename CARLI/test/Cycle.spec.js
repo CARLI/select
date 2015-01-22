@@ -10,6 +10,8 @@ var test = require( './Entity/EntityInterface.spec' )
     , testUtils = require('./utils')
 ;
 
+testUtils.setupTestDb();
+
 var lastValidCycleYear = 3000;
 function validCycleData() {
     lastValidCycleYear++;
