@@ -112,7 +112,7 @@ function loadCycle( cycleId ){
 }
 
 function listActiveCycles() {
-    return expandCycles( CouchUtils.getCouchViewResults('listActiveCycles') );
+    return expandCycles( CouchUtils.getCouchViewResults(config.getDbName(), 'listActiveCycles') );
 }
 
 function getStoreForCycle(cycle) {

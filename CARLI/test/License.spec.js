@@ -5,9 +5,11 @@ var chai   = require( 'chai' )
     , LicenseRepository = require('../Entity/LicenseRepository' )
     , uuid   = require( 'node-uuid' )
     , test = require( './Entity/EntityInterface.spec' )
-;
+    , testUtils = require('./utils')
+    ;
 
 chai.use( chaiAsPromised );
+testUtils.setupTestDb();
 
 function validLicenseData() {
     return {

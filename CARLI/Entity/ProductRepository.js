@@ -28,7 +28,7 @@ function updateProduct( product, cycle ){
 
 function listProducts(cycle){
     setCycle(cycle);
-    return EntityTransform.expandListOfObjectsFromPersistence( ProductRepository.list(), propertiesToTransform, functionsToAdd);
+    return EntityTransform.expandListOfObjectsFromPersistence( ProductRepository.list(cycle.databaseName), propertiesToTransform, functionsToAdd);
 }
 
 function loadProduct( productId, cycle ){
@@ -54,10 +54,10 @@ function loadProduct( productId, cycle ){
     return deferred.promise;
 }
 
-function listAvailableOneTimePurchaseProducts(){
+function listAvailableOneTimePurchaseProducts(cycle){
     var deferred = Q.defer();
 
-    listProducts()
+    listProducts(cycle)
         .then(function (allProducts) {
             var p = allProducts
                 .filter(isOneTimePurchaseProduct)
@@ -85,12 +85,12 @@ function isAvailableToday( product ){
 
 function listProductsForLicenseId( licenseId, cycle ) {
     setCycle(cycle);
-    return CouchUtils.getCouchViewResults('listProductsByLicenseId', licenseId);
+    return CouchUtils.getCouchViewResults(cycle.databaseName, 'listProductsByLicenseId', licenseId);
 }
 
 function listProductsForVendorId( vendorId, cycle ) {
     setCycle(cycle);
-    return CouchUtils.getCouchViewResults('listProductsForVendorId', vendorId);
+    return CouchUtils.getCouchViewResults(cycle.databaseName, 'listProductsForVendorId', vendorId);
 }
 
 function setCycle(cycle) {
