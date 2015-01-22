@@ -16,21 +16,25 @@ function transformFunction( product ){
     EntityTransform.transformObjectForPersistence(product, propertiesToTransform);
 }
 
-function createProduct( product ){
+function createProduct( product, cycle ){
+    setCycle(cycle);
     return ProductRepository.create( product, transformFunction );
 }
 
-function updateProduct( product ){
+function updateProduct( product, cycle ){
+    setCycle(cycle);
     return ProductRepository.update( product, transformFunction );
 }
 
-function listProducts(){
+function listProducts(cycle){
+    setCycle(cycle);
     return EntityTransform.expandListOfObjectsFromPersistence( ProductRepository.list(), propertiesToTransform, functionsToAdd);
 }
 
-function loadProduct( productId ){
+function loadProduct( productId, cycle ){
     var deferred = Q.defer();
 
+    setCycle(cycle);
     ProductRepository.load( productId )
         .then(function (product) {
             EntityTransform.expandObjectFromPersistence( product, propertiesToTransform, functionsToAdd )
@@ -79,15 +83,20 @@ function isAvailableToday( product ){
     return throughDate.isAfter(lastMidnight);
 }
 
-function listProductsForLicenseId( licenseId ) {
+function listProductsForLicenseId( licenseId, cycle ) {
+    setCycle(cycle);
     return CouchUtils.getCouchViewResults('listProductsByLicenseId', licenseId);
 }
 
-function listProductsForVendorId( vendorId ) {
+function listProductsForVendorId( vendorId, cycle ) {
+    setCycle(cycle);
     return CouchUtils.getCouchViewResults('listProductsForVendorId', vendorId);
 }
 
 function setCycle(cycle) {
+    if (cycle === undefined) {
+        throw Error("Cycle is required");
+    }
     ProductRepository.setStore(CycleRepository.getStoreForCycle(cycle));
 }
 

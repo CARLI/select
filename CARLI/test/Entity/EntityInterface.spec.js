@@ -14,8 +14,9 @@ utils.setupTestDb();
   * Type Name
   * Valid data
   * Invalid data
+  * Cycle - Cycle may be undefined, as not all entities are tied to a cycle
  */
-function test( entityTypeName, validData, invalidData ) {
+function test( entityTypeName, validData, invalidData, cycle ) {
 
     var EntityRepository = require('../../Entity/'+entityTypeName+'Repository' );
 
@@ -39,25 +40,25 @@ function test( entityTypeName, validData, invalidData ) {
 
             it( 'should fail without data', function() {
                 function badSaveNoData(){
-                    EntityRepository.create();
+                    EntityRepository.create(null, cycle);
                 }
                 return expect( badSaveNoData ).to.throw( 'Data Required' );
             } );
 
             it( 'should be rejected on an invalid schema', function() {
-                return expect( EntityRepository.create( invalidData() ) ).to.be.rejectedWith( /validation error:/ );
+                return expect( EntityRepository.create( invalidData(), cycle ) ).to.be.rejectedWith( /validation error:/ );
             } );
 
             it( 'should return an id string', function() {
-                return expect( EntityRepository.create( validData() ) ).to.eventually.be.an('string');
+                return expect( EntityRepository.create( validData(), cycle ) ).to.eventually.be.an('string');
             } );
 
             it( 'should use a new id for new objects', function() {
                 var entity1Id, entity2Id;
-                return EntityRepository.create( validData() )
+                return EntityRepository.create( validData(), cycle )
                 .then( function( data ) {
                     entity1Id = data;
-                    return EntityRepository.create( validData() );
+                    return EntityRepository.create( validData(), cycle );
                 } )
                 .then( function ( data ) {
                     entity2Id = data;
@@ -68,7 +69,7 @@ function test( entityTypeName, validData, invalidData ) {
             it( 'should use an id if provided', function() {
                 var entityData = validData();
                 entityData.id = uuid.v4();
-                return EntityRepository.create( entityData ).then( function ( entityId ) {
+                return EntityRepository.create( entityData, cycle ).then( function ( entityId ) {
                     expect( entityId ).to.equal( entityData.id );
                 } );
             } );
@@ -82,20 +83,20 @@ function test( entityTypeName, validData, invalidData ) {
         describe( entityTypeName + '.load', function() {
             it( 'should fail if no id string is provided', function() {
                 function badLoadNoId() {
-                    EntityRepository.load();
+                    EntityRepository.load(null, cycle);
                 }
                 expect( badLoadNoId ).to.throw( 'Id Required' );
             } );
 
             it( 'should be rejected if id not found', function() {
-                return expect( EntityRepository.load( uuid.v4() ) ).to.be.rejectedWith( 'Id not found' );
+                return expect( EntityRepository.load( uuid.v4(), cycle ) ).to.be.rejectedWith( 'Id not found' );
             } );
 
 
             it( 'should return an object', function() {
                 return EntityRepository.create( validData() )
                     .then( function( entityId ) {
-                        return expect( EntityRepository.load( entityId ) ).to.eventually.be.an('object').with.property('id');
+                        return expect( EntityRepository.load( entityId, cycle ) ).to.eventually.be.an('object').with.property('id');
                     } );
             } );
 
@@ -109,7 +110,7 @@ function test( entityTypeName, validData, invalidData ) {
                 return EntityRepository.create( entity_data )
                     .then(function( entityId ){
                         entity_data.type = entityTypeName;
-                        return EntityRepository.load( entityId )
+                        return EntityRepository.load( entityId, cycle )
                     })
                     .then(function( entity ){
                         loaded_entity = entity;
@@ -130,14 +131,14 @@ function test( entityTypeName, validData, invalidData ) {
         describe( entityTypeName + '.update', function(){
             it( 'should fail without data', function(){
                 function badSaveNoData(){
-                    EntityRepository.update();
+                    EntityRepository.update(null, cycle);
                 }
                 expect( badSaveNoData ).to.throw( 'Data Required' );
             } );
 
             it( 'should fail without an id in data', function(){
                 function badSaveNoId(){
-                    EntityRepository.update({});
+                    EntityRepository.update({}, cycle);
                 }
                 expect( badSaveNoId ).to.throw( 'Id Required' );
             } );
@@ -145,16 +146,16 @@ function test( entityTypeName, validData, invalidData ) {
             it( 'should update properties of a previously saved object', function(){
                 var entity_data = validData();
                 entity_data.foo = 'bar';
-                return EntityRepository.create( entity_data )
+                return EntityRepository.create( entity_data, cycle )
                     .then( function ( entityId ) {
-                        return EntityRepository.load( entityId )
+                        return EntityRepository.load( entityId, cycle )
                     })
                     .then(function( entity ){
                         entity.foo = 'new value';
-                        return EntityRepository.update( entity );
+                        return EntityRepository.update( entity, cycle );
                     })
                     .then ( function ( entityId ) {
-                        return EntityRepository.load( entityId );
+                        return EntityRepository.load( entityId, cycle );
                     })
                     .then( function( entity ){
                         return expect( entity ).to.have.property( 'foo', 'new value' );
@@ -164,13 +165,13 @@ function test( entityTypeName, validData, invalidData ) {
             it( 'should fail on update with invalid schema', function(){
                 var entity_data = validData();
                 entity_data.foo = 'bar';
-                return EntityRepository.create( entity_data )
+                return EntityRepository.create( entity_data, cycle )
                     .then( function( entityId ) {
-                        return EntityRepository.load(entityId);
+                        return EntityRepository.load(entityId, cycle);
                     })
                     .then( function (loaded_entity) {
                         delete loaded_entity.name;
-                        return expect( EntityRepository.update( loaded_entity ) ).to.be.rejectedWith( /validation error/ );
+                        return expect( EntityRepository.update( loaded_entity, cycle ) ).to.be.rejectedWith( /validation error/ );
                     });
             } );
 
@@ -182,13 +183,13 @@ function test( entityTypeName, validData, invalidData ) {
 
         describe( entityTypeName + '.list', function(){
             it( 'should return an array', function() {
-                return expect( EntityRepository.list() ).to.eventually.be.an('Array');
+                return expect( EntityRepository.list(cycle) ).to.eventually.be.an('Array');
             } );
 
             // KLUDGE:  We really need to destroy all items and start over in each test
             //          group once we have a destroy();  THis is the number of items up to this point
             it( 'should return an array with 10 elements', function() {
-                expect( EntityRepository.list() ).to.eventually.be.an('Array').of.length( 10 );
+                expect( EntityRepository.list(cycle) ).to.eventually.be.an('Array').of.length( 10 );
             } );
         } );
 
@@ -198,4 +199,4 @@ function test( entityTypeName, validData, invalidData ) {
 
 module.exports = {
     run: test
-}
+};
