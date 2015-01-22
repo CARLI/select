@@ -43,13 +43,14 @@ function recreateDb(dbName) {
     });
 }
 
-function main() {
-    recreateDb('carli').then(putDesignDoc('carli'));
+function deployDb(dbName) {
+    return recreateDb(dbName).then(putDesignDoc(dbName));
 }
 
 if (require.main === module) {
     // called directly
-    main();
+    deployDb('carli');
 } else {
     // required as a module
+    module.exports = deployDb;
 }
