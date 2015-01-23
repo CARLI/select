@@ -19,9 +19,11 @@ var repositories = {
     vendor : Entity('Vendor')
 };
 
-repositories.library.setStore( Store( StoreModule(StoreOptions) ) );
-repositories.license.setStore( Store( StoreModule(StoreOptions) ) );
-repositories.vendor.setStore( Store( StoreModule(StoreOptions) ) );
+function setEntityLookupStores( newStore ){
+    repositories.library.setStore( newStore );
+    repositories.license.setStore( newStore );
+    repositories.vendor.setStore( newStore );
+}
 
 function removeEmptyContactsFromEntity(entity) {
     if ( !entity.contacts ){
@@ -141,9 +143,13 @@ function _transformReferencesToObjects(entity, resolvedObjects) {
     }
 }
 
+
+setEntityLookupStores( Store( StoreModule(StoreOptions) ) );
+
 module.exports = {
     removeEmptyContactsFromEntity: removeEmptyContactsFromEntity,
     transformObjectForPersistence: transformObjectForPersistence,
     expandObjectFromPersistence: expandObjectFromPersistence,
-    expandListOfObjectsFromPersistence: expandListOfObjectsFromPersistence
+    expandListOfObjectsFromPersistence: expandListOfObjectsFromPersistence,
+    setEntityLookupStores: setEntityLookupStores
 };

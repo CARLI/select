@@ -6,7 +6,10 @@ var chai   = require( 'chai' )
     , EntityTransform = require( '../Entity/EntityTransformationUtils.js' )
     , uuid   = require( 'node-uuid' )
     , Q = require('q')
+    , utils = require('./utils')
     ;
+
+EntityTransform.setEntityLookupStores( utils.getTestDbStore() );
 
 chai.use( chaiAsPromised );
 
