@@ -10,15 +10,15 @@
         <section class="content">
             <a href="/oneTimePurchases" class="carli-button"> <i class="fa fa-chevron-circle-left"></i> Back to Libraries</a>
 
-            <menu class="pull-right filter-by-purchased">
+            <menu class="pull-right filter-by-purchased" role="radiogroup">
                 <menuitem ng-click="vm.setShowPurchasedProducts()">
-                    <i class="fa" ng-class="{ 'fa-dot-circle-o': vm.filterState === 'purchased', 'fa-circle-o': vm.filterState != 'purchased' }"></i> Show <b>purchased</b> products
+                    <span tabindex="0" role="radio" class="fa" ng-class="{ 'fa-dot-circle-o': vm.filterState === 'purchased', 'fa-circle-o': vm.filterState != 'purchased' }"></span> Show <strong>purchased</strong> products
                 </menuitem>
                 <menuitem ng-click="vm.setShowNotPurchasedProducts()">
-                    <i class="fa" ng-class="{ 'fa-dot-circle-o': vm.filterState === 'not-purchased', 'fa-circle-o': vm.filterState != 'not-purchased' }"></i> Show <b>not purchased</b> products
+                    <span tabindex="0" role="radio" class="fa" ng-class="{ 'fa-dot-circle-o': vm.filterState === 'not-purchased', 'fa-circle-o': vm.filterState != 'not-purchased' }"></span> Show <strong>not purchased</strong> products
                 </menuitem>
                 <menuitem ng-click="vm.setShowAllProducts()" id="filter-all">
-                    <i class="fa" ng-class="{ 'fa-dot-circle-o': vm.filterState === 'all', 'fa-circle-o': vm.filterState != 'all' }"></i> Show <b>all</b> products
+                    <span tabindex="0" role="radio" class="fa" ng-class="{ 'fa-dot-circle-o': vm.filterState === 'all', 'fa-circle-o': vm.filterState != 'all' }"></span> Show <strong>all</strong> products
                 </menuitem>
             </menu>
 
