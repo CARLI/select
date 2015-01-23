@@ -3,7 +3,7 @@ angular.module('carli.sections.products')
 
 function productController( $sce, cycleService, productService ){
     var vm = this;
-    vm.currentCycle = null;
+    vm.currentCycle = cycleService.getCurrentCycle();
     vm.activeCycles = [];
     vm.setCurrentCycle = setCurrentCycle;
     vm.afterProductSubmit = populateProductList;
