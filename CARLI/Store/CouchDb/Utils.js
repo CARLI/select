@@ -63,18 +63,16 @@ function createDatabase(dbName) {
 }
 
 function putDesignDoc(dbName) {
-    /* TODO: Fix this function (don't use couchapp because it doesn't Browserify) */return;
-
     var deferred = Q.defer();
 
     var docName = 'CARLI-DesignDoc.js';
     var designDoc = require('../../../db/' + docName);
 
     var url = StoreOptions.couchDbUrl + '/' + dbName + '/_design/CARLI';
-    couchapp.createApp(designDoc, url, function(app) {
-        app.push();
+//    couchapp.createApp(designDoc, url, function(app) {
+//        app.push();
         deferred.resolve();
-    });
+//    });
 
     return deferred.promise;
 }
