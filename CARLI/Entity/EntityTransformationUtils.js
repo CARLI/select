@@ -15,14 +15,13 @@ var Q = require('q')
 var repositories = {
     library : Entity('Library'),
     license : Entity('License'),
-    //product : Entity('Product'),
+    //product : Entity('Product'), //TODO: how to set this one for the correct Cycle as well?
     vendor : Entity('Vendor')
 };
 
 repositories.library.setStore( Store( StoreModule(StoreOptions) ) );
 repositories.license.setStore( Store( StoreModule(StoreOptions) ) );
 repositories.vendor.setStore( Store( StoreModule(StoreOptions) ) );
-
 
 function removeEmptyContactsFromEntity(entity) {
     if ( !entity.contacts ){
