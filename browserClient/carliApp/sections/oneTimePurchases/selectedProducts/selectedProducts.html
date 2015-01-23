@@ -11,10 +11,10 @@
             <a href="/oneTimePurchases" class="carli-button"> <i class="fa fa-chevron-circle-left"></i> Back to Libraries</a>
 
             <menu class="pull-right filter-by-purchased" role="radiogroup">
-                <menuitem ng-click="vm.setShowPurchasedProducts()">
+                <menuitem ng-click="vm.setShowPurchasedProducts()" id="filter-purchased">
                     <span tabindex="0" role="radio" class="fa" ng-class="{ 'fa-dot-circle-o': vm.filterState === 'purchased', 'fa-circle-o': vm.filterState != 'purchased' }"></span> Show <strong>purchased</strong> products
                 </menuitem>
-                <menuitem ng-click="vm.setShowNotPurchasedProducts()">
+                <menuitem ng-click="vm.setShowNotPurchasedProducts()" id="filter-not-purchased">
                     <span tabindex="0" role="radio" class="fa" ng-class="{ 'fa-dot-circle-o': vm.filterState === 'not-purchased', 'fa-circle-o': vm.filterState != 'not-purchased' }"></span> Show <strong>not purchased</strong> products
                 </menuitem>
                 <menuitem ng-click="vm.setShowAllProducts()" id="filter-all">
