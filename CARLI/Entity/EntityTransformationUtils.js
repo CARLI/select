@@ -1,6 +1,10 @@
 var Q = require('q')
   , Entity = require('../Entity')
-;
+  , config = require( '../config' )
+  , StoreOptions = config.storeOptions
+  , Store = require( '../Store' )
+  , StoreModule = require( '../Store/CouchDb/Store')
+  ;
 
 /**
  * These are the basic Entity interactors rather than the full Repositories to avoid circular dependencies in Node, and
@@ -11,9 +15,14 @@ var Q = require('q')
 var repositories = {
     library : Entity('Library'),
     license : Entity('License'),
-    product : Entity('Product'),
+    //product : Entity('Product'),
     vendor : Entity('Vendor')
 };
+
+repositories.library.setStore( Store( StoreModule(StoreOptions) ) );
+repositories.license.setStore( Store( StoreModule(StoreOptions) ) );
+repositories.vendor.setStore( Store( StoreModule(StoreOptions) ) );
+
 
 function removeEmptyContactsFromEntity(entity) {
     if ( !entity.contacts ){
