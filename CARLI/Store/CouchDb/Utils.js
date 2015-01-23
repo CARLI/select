@@ -1,5 +1,5 @@
 var config = require( '../../config/index'),
-    couchapp = require('couchapp'),
+    //couchapp = require('couchapp'),
     Q = require('q'),
     request = config.request,
     StoreOptions = config.storeOptions
@@ -63,6 +63,8 @@ function createDatabase(dbName) {
 }
 
 function putDesignDoc(dbName) {
+    /* TODO: Fix this function (don't use couchapp because it doesn't Browserify) */return;
+
     var deferred = Q.defer();
 
     var docName = 'CARLI-DesignDoc.js';
