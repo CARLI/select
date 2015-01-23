@@ -4,8 +4,6 @@ var uuid  = require( 'node-uuid' )
   , Q = require( 'q' )
 ;
 
-var dataStore;
-
 function throwIfDataIsEmpty ( data ) {
     if ( !data ){
         throw new Error( 'Data Required' );
@@ -29,6 +27,7 @@ function _cloneData ( data ) {
 }
 
 module.exports = function (type) {
+    var dataStore;
     return {
 
         setStore: function( store ){
