@@ -67,9 +67,7 @@ function createProduct( productRow, cycle, vendorIdMapping ) {
 
     var couchIdPromise = Q.defer();
     var product = extractProduct(productRow, cycle, vendorIdMapping);
-    
-    ProductRepository.setCycle(cycle);
-    ProductRepository.create( product )
+    ProductRepository.create( product, cycle )
         .then(function(id) {
             console.log('ok: ' + id);
             couchIdPromise.resolve({

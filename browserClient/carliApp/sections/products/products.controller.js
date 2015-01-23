@@ -1,14 +1,18 @@
 angular.module('carli.sections.products')
 .controller('productsController', productController);
 
-function productController( $sce, productService ){
+function productController( $sce, cycleService, productService ){
     var vm = this;
+    vm.currentCycle = null;
+    vm.activeCycles = [];
+    vm.setCurrentCycle = setCurrentCycle;
     vm.afterProductSubmit = populateProductList;
     activate();
 
     function activate() {
-        productService.list().then( function(productList){
-            vm.productList = productList;
+        cycleService.listActiveCycles().then(function(activeCycles) {
+            vm.activeCycles = activeCycles;
+            console.log('cycles', activeCycles);
         });
     }
 
@@ -40,5 +44,15 @@ function productController( $sce, productService ){
             contentFunction: function(product) { return product.cycleType; }
         }
     ];
+
+    function setCurrentCycle(){
+        console.log('current cycle: ',vm.currentCycle);
+
+        cycleService.setCurrentCycle( vm.currentCycle );
+
+        productService.list().then( function(productList){
+            vm.productList = productList;
+        });
+    }
 }
 
