@@ -14,6 +14,13 @@
             menuitem {
                 margin-left: 1.5rem;
             }
+
+            &.filter-by-purchased {
+                @include font-size(14);
+                .fa {
+                    @include font-size(16);
+                }
+            }
         }
 
         .notifications {
