@@ -1,12 +1,12 @@
-<menu class="filter-by-active">
+<menu class="filter-by-active" role="radiogroup">
     <menuitem ng-click="setShowActive()" id="filter-active">
-        <i class="fa" ng-class="{ 'fa-dot-circle-o': isShowActive(), 'fa-circle-o': !isShowActive() }"></i> Active {{ entityLabel }}
+        <span tabindex="0" role="radio" class="fa" ng-class="{ 'fa-dot-circle-o': isShowActive(), 'fa-circle-o': !isShowActive() }"></span> Active {{ entityLabel }}
     </menuitem>
     <menuitem ng-click="setShowInactive()" id="filter-inactive">
-        <i class="fa" ng-class="{ 'fa-dot-circle-o': isShowInactive(), 'fa-circle-o': !isShowInactive() }"></i> Inactive {{ entityLabel }}
+        <span tabindex="0" role="radio" class="fa" ng-class="{ 'fa-dot-circle-o': isShowInactive(), 'fa-circle-o': !isShowInactive() }"></span> Inactive {{ entityLabel }}
     </menuitem>
     <menuitem ng-click="setShowAll()" id="filter-all">
-        <i class="fa" ng-class="{ 'fa-dot-circle-o': isShowAll(), 'fa-circle-o': !isShowAll() }"></i> All {{ entityLabel }}
+        <span tabindex="0" role="radio" class="fa" ng-class="{ 'fa-dot-circle-o': isShowAll(), 'fa-circle-o': !isShowAll() }"></span> All {{ entityLabel }}
     </menuitem>
 
     <div ng-transclude></div>
