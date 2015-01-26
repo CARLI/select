@@ -6,7 +6,7 @@
                     <label for="xxx">Cycle Type</label>
                     <div>
                         <good-select ng-model="vm.cycle.cycleType" items="['Fiscal Year', 'Calendar Year', 'Alternative Cycle']"></good-select>
-                        <input type="text" ng-show="vm.cycle.cycleType == 'Alternative Cycle'" ng-model="vm.cycle.description">
+                        <input type="text" ng-show="vm.cycle.cycleType == 'Alternative Cycle'" ng-model="vm.cycle.description" class="gap-top">
                     </div>
 
                     <label for="xxx">Year</label>
@@ -26,11 +26,11 @@
                 <div class="placeholder">Manage Surcharge</div>
             </fieldset>
         </section>
-        <footer>
+        <div class="footer">
             <fieldset>
                 <button type="button" class="carli-button cancel-button" data-dismiss="modal" ng-click="vm.cancelEdit()">Cancel</button>
                 <input type="submit" id="cycle-submit" class="carli-button save-button" value="Save">
             </fieldset>
-        </footer>
+        </div>
     </form>
 </modal-dialog>

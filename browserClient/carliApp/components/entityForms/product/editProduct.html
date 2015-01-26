@@ -181,12 +181,12 @@
         </fieldset>
     </section>
 
-    <footer ng-show="vm.editable">
+    <div class="footer" ng-show="vm.editable">
         <fieldset>
             <button type="button" class="carli-button cancel-button" data-dismiss="modal" ng-click="vm.cancelEdit()">Cancel</button>
             <input type="button" id="product-submit" class="carli-button save-button" value="{{ vm.submitLabel() }}" ng-click="vm.submitAction()">
         </fieldset>
-    </footer>
+    </div>
 
 </form>
 

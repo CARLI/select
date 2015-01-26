@@ -3,7 +3,13 @@ angular.module('carli.viewEditDirectives.viewEditDate')
         return {
             restrict: 'E',
             templateUrl: '/carliApp/components/viewEditDirectives/viewEditDate/viewEditDate.html',
-            scope: { ngModel: '=', editMode: '=', label: '@' },
+            scope: {
+                ngModel: '=',
+                editMode: '=',
+                label: '@',
+                minDate: '@',
+                maxDate: '@'
+            },
             transclude: true,
             controller: 'viewEditDateController',
             controllerAs: 'vm'

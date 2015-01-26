@@ -1,1 +1,3 @@
-angular.module('carli.viewEditDirectives.viewEditSelect', []);
+angular.module('carli.viewEditDirectives.viewEditSelect', [
+    'carli.goodSelect'
+]);
