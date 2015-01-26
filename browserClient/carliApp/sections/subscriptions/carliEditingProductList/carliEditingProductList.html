@@ -1,8 +1,9 @@
 <ul class="vendor-accordion" ng-repeat="vendor in vm.vendors">
     <li carli-accordion>
         <header>
-            <fa name="angle-right"></fa>
-            <fa name="angle-down"></fa>
+            <button type="button" class="angle-icon-container">
+                <fa name="angle-down"></fa>
+            </button>
             {{ vendor.name }}
             <span class="reviewed-message" ng-show="vendor.reviewed">Products reviewed</span>
         </header>
