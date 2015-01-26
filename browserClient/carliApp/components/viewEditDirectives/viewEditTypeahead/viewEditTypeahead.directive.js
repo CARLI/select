@@ -3,7 +3,12 @@ angular.module('carli.viewEditDirectives.viewEditTypeahead')
         return {
             restrict: 'E',
             templateUrl: '/carliApp/components/viewEditDirectives/viewEditTypeahead/viewEditTypeahead.html',
-            scope: { ngModel: '=', options: '=', editMode: '=' },
+            scope: {
+                ngModel: '=',
+                options: '=',
+                editMode: '=',
+                inputId: '@'
+            },
             transclude: true
         };
     });

@@ -5,7 +5,8 @@ angular.module('carli.goodSelect')
             templateUrl: '/carliApp/components/goodSelect/goodSelect.html',
             scope: {
                 ngModel: '=',
-                items: '='
+                items: '=',
+                inputId: '@'
             }
         };
     });

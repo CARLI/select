@@ -3,7 +3,11 @@ angular.module('carli.viewEditDirectives.viewEditNumberField')
         return {
             restrict: 'E',
             templateUrl: '/carliApp/components/viewEditDirectives/viewEditNumberField/viewEditNumberField.html',
-            scope: { ngModel: '=', editMode: '=' },
+            scope: {
+                ngModel: '=',
+                editMode: '=',
+                inputId: '@'
+            },
             transclude: true
         };
     });

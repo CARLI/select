@@ -6,7 +6,8 @@ angular.module('carli.viewEditDirectives.viewEditSelect')
             scope: {
                 ngModel: '=',
                 editMode: '=',
-                items: '='
+                items: '=',
+                inputId: '@'
             },
             transclude: true
         };
@@ -20,7 +21,8 @@ angular.module('carli.viewEditDirectives.viewEditSelect')
                 editMode: '=',
                 objects: '=',
                 labelProperty: '@',
-                trackBy: '@'
+                trackBy: '@',
+                inputId: '@'
             },
             transclude: true
         };
