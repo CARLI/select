@@ -14,10 +14,10 @@
         line-height: $height;
         padding: 0 3rem 0 1rem;
         width: 100%;
-    }
 
-    &::-ms-expand {
-        display: none;
+        &::-ms-expand {
+            display: none;
+        }
     }
     
     &:after {
