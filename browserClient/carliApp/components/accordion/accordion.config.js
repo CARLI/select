@@ -1,1 +1,1 @@
-angular.module('carli.accordion', []);
+angular.module('carli.accordion', ['carli.collapsible']);

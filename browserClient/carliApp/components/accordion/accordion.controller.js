@@ -14,7 +14,11 @@ function accordionController($scope) {
     $scope.$on('accordion', function(evt, id) {
 
         if ($scope.accordionId === id){
-            open();
+            if ($scope.element.hasClass('collapsed')) {
+                open();
+            } else {
+                close();
+            }
         }
         else {
             close();
