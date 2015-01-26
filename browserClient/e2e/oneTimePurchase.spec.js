@@ -12,9 +12,16 @@ dataLoader.createLibrary(testData.inactiveLibrary2);
 dataLoader.createLibrary(testData.activeLibrary3);
 dataLoader.createVendor(testData.activeVendor1);
 dataLoader.createLicense(testData.activeLicense1);
-dataLoader.createProduct(testData.activePurchasedProduct1);
-dataLoader.createProduct(testData.inactiveProduct2);
-dataLoader.createProduct(testData.activeFiscalYearProduct3);
+console.log("creating test cycle");
+dataLoader.createTestCycle().done(function() {
+    console.log('------------------- creating products now');
+    dataLoader.createProduct(testData.activePurchasedProduct1);
+    dataLoader.createProduct(testData.inactiveProduct2);
+    dataLoader.createProduct(testData.activeFiscalYearProduct3);
+}) /*.catch (function(err) {
+    console.log("----errror = ", err);
+    throw new Error(err);
+})*/;
 
 var NAME_COLUMN_INDEX=0;
 var FTE_COLUMN_INDEX=1;
@@ -124,6 +131,7 @@ describe('The One-Time Purchases Select Product screen', function () {
     });
 
     it("should contain the correct field values for '"+testData.activePurchasedProduct1.name+"' in the fixture data", function(){
+
         element.all(by.repeater('product in vm.productList'))
             .filter( function(el, index) {
                 return el.getText().then(function(text){

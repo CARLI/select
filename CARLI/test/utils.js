@@ -4,7 +4,7 @@ var Store = require( '../Store' );
 var Q = require('q');
 
 var testDbName = 'mocha-tests';
-var testDbMarker = 'mocha-unit-test';
+var testDbMarker = 'test-db-marker';
 var testStore = null;
 
 function getTestStoreOptions() {
