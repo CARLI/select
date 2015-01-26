@@ -5,19 +5,21 @@
         cursor: pointer;
         position: relative;
 
-        .fa-angle-down,
-        .fa-angle-right {
+        .angle-icon-container {
+            @include vendor-prefix(appearance, 'none');
+            background: none;
+            border: 0;
             position: absolute;
+            text-align: left;
             top: .75rem;
             left: 1rem;
-            font-size: 2rem;
-        }
 
-        .fa-angle-down {
-            display: inline-block;
-        }
-        .fa-angle-right {
-            display: none;
+            .fa {
+                font-size: 2rem;
+            }
+            .fa-angle-down {
+                @include vendor-prefix(transition, 'all .4s');
+            }
         }
     }
 
@@ -30,15 +32,13 @@
 [collapsible].collapsed,
 [carli-accordion].collapsed {
     header {
-        .fa {
-            color: $gray;
-        }
-
-        .fa-angle-down {
-            display: none;
-        }
-        .fa-angle-right {
-            display: inline-block;
+        .angle-icon-container {
+            .fa {
+                color: $gray;
+            }
+            .fa-angle-down {
+                @include vendor-prefix(transform, 'rotate(-90deg)');
+            }
         }
     }
 
