@@ -50,15 +50,17 @@ describe('The One-time Purchases Selected-Products Controller', function(){
             }
         ];
 
-        inject(function ($controller, $rootScope, $q, mockLibraryService, mockProductService) {
+        inject(function ($controller, $rootScope, $q, mockLibraryService, mockProductService, mockAlertService) {
             mockProductService.setTestData(mockProductList);
             
             mockDependenciesForOneTimePurchase = {
+                $scope: {},
                 $routeParams: {
                     libraryId: 'testLibraryId'
                 },
                 libraryService: mockLibraryService,
-                productService: mockProductService
+                productService: mockProductService,
+                alertService: mockAlertService
             };
 
             vm = $controller('selectedProductsController', mockDependenciesForOneTimePurchase);
