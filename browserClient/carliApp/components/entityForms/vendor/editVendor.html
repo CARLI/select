@@ -75,31 +75,31 @@
 
                     <div class="contact-list">
                         <label><em>Billing</em></label>
-                        <span class="pull-right add-contact" id="add-billing-contact" ng-show="vm.editable" ng-click="vm.addContact('Billing')">Add Contact</span>
+                        <button type="button" class="pull-right add-contact" id="add-billing-contact" ng-show="vm.editable" ng-click="vm.addContact('Billing')">Add Contact</button>
 
                         <div class="contact-list-item" ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Billing' }">
                             <view-edit-contact contact="contact" edit-mode="vm.editable" input-id="billing{{ $index }}"></view-edit-contact>
-                            <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
+                            <button type="button" class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</button>
                         </div>
                     </div>
 
                     <div class="contact-list">
                         <label><em>Sales</em></label>
-                        <span class="pull-right add-contact" id="add-sales-contact" ng-show="vm.editable" ng-click="vm.addContact('Sales')">Add Contact</span>
+                        <button type="button" class="pull-right add-contact" id="add-sales-contact" ng-show="vm.editable" ng-click="vm.addContact('Sales')">Add Contact</button>
 
                         <div class="contact-list-item" ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Sales' }">
                             <view-edit-contact contact="contact" edit-mode="vm.editable" input-id="sales{{ $index }}"></view-edit-contact>
-                            <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
+                            <button type="button" class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</button>
                         </div>
                     </div>
 
                     <div class="contact-list">
                         <label><em>Technical</em></label>
-                        <span class="pull-right add-contact" id="add-technical-contact" ng-show="vm.editable" ng-click="vm.addContact('Technical')">Add Contact</span>
+                        <button type="button" class="pull-right add-contact" id="add-technical-contact" ng-show="vm.editable" ng-click="vm.addContact('Technical')">Add Contact</button>
 
                         <div class="contact-list-item" ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Technical' }">
                             <view-edit-contact contact="contact" edit-mode="vm.editable" input-id="technical{{ $index }}"></view-edit-contact>
-                            <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
+                            <button type="button" class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</button>
                         </div>
                     </div>
                 </div>

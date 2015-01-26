@@ -64,6 +64,14 @@
             em {
                 color: $purple;
             }
+
+            .add-contact,
+            .delete-contact {
+                @include vendor-prefix(appearance, 'none');
+                background: none;
+                border: 0;
+            }
+
             .add-contact {
                 cursor: pointer;
                 margin-top: $label-margin-top;
