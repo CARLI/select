@@ -1,0 +1,60 @@
+#licenses {
+    $column-gutter: 20px;
+
+    .edit-form {
+        div.column {
+            @include grid-column(4);
+            @include grid-gutter($column-gutter);
+        }
+        .e-resource-comments textarea {
+            height: 120px;
+        }
+        .business-comments textarea {
+            height: 120px;
+        }
+
+
+
+        .terms-overrides,
+        .date-range {
+            display: flex;
+            flex-flow: row wrap;
+            align-items: flex-end;
+
+            .term,
+            .date-group {
+                flex: 1 1 50%;
+
+                label {
+                    font-weight: normal;
+                }
+
+                &:nth-child(odd) {
+                    .view-edit-yes-no-other {
+                        padding-right: 12px;
+                    }
+                }
+
+                select {
+                    width: 100%;
+                }
+            }
+
+            .date-group {
+                label {
+                    margin-top: 0;
+                }
+
+                &:nth-child(odd) {
+                    view-edit-date {
+                        margin-right: 12px;
+                    }
+                }
+            }
+        }
+        view-edit-checkbox label {
+            font-weight: normal;
+            margin-top: 0;
+        }
+    }
+}
