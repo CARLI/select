@@ -54,20 +54,23 @@ function loadProduct( productId, cycle ){
     return deferred.promise;
 }
 
-function listAvailableOneTimePurchaseProducts(cycle){
+function listAvailableOneTimePurchaseProducts(){
     var deferred = Q.defer();
 
-    listProducts(cycle)
-        .then(function (allProducts) {
-            var p = allProducts
-                .filter(isOneTimePurchaseProduct)
-                .filter(isActive)
-                .filter(isAvailableToday);
-            deferred.resolve(p);
-        })
-        .catch(function (err) {
-            deferred.reject(err);
-        });
+    CycleRepository.load('one-time-purchase-product-cycle').then(function (cycle) {
+        listProducts(cycle)
+            .then(function (allProducts) {
+                var p = allProducts
+                    .filter(isOneTimePurchaseProduct)
+                    .filter(isActive)
+                    .filter(isAvailableToday);
+                deferred.resolve(p);
+            })
+            .catch(function (err) {
+                deferred.reject(err);
+            });
+    });
+
     return deferred.promise;
 }
 
