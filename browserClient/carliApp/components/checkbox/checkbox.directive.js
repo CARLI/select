@@ -14,25 +14,11 @@ angular.module('carli.checkbox')
             transclude: true,
             link: function (scope, element, attrs) {
                 scope.checkboxId = scope.id ? scope.id : uuid.generateCssId();
-                makeKeyboardAccessible();
-
-                function makeKeyboardAccessible() {
-                    element.attr('tabindex', 0);
-                    // Must use keydown to prevent scrolling the page when toggling the checkbox.
-                    element.on('keydown', toggleWithSpacebar);
-                }
-                function toggleWithSpacebar(e) {
-                    if (e.keyCode == keyCode.SPACE) {
-                        preventScrolling(e);
-                        scope.$apply(toggleNgModel);
-                    }
-                }
-                function preventScrolling(e) {
-                    e.preventDefault();
-                }
-                function toggleNgModel() {
-                    scope.ngModel = !scope.ngModel;
-                }
+                element.find('input[type="checkbox"]').on('focus', function(evt) {
+                    element.addClass('focused');
+                }).on('blur', function(evt) {
+                    element.removeClass('focused');
+                });
             }
         };
     }

@@ -6,6 +6,12 @@ angular.module('carli.goodSelect')
             scope: {
                 ngModel: '=',
                 items: '='
+            },
+            link: function(scope, element, attrs) {
+                var select = element.find('select');
+                select.on('change', function(e){
+                    scope.$emit('goodSelectChange', select.val());
+                });
             }
         };
     });

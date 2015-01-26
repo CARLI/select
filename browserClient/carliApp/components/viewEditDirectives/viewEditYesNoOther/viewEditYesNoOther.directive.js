@@ -14,7 +14,7 @@ angular.module('carli.viewEditDirectives.viewEditYesNoOther')
 
 function linkYesNoOther($scope, iElement, iAttrs){
     var scope = $scope;
-    var select = iElement.find('select');
+    scope.items = ['Yes','No','Other'];
 
     scope.$watch('ngModel', function(newValue, oldValue) {
         if (newValue !== undefined) {
@@ -27,9 +27,7 @@ function linkYesNoOther($scope, iElement, iAttrs){
         }
     });
 
-    select.on('change', function(e){
-        scope.$apply(function(){
-            scope.ngModel = select.val();
-        });
+    $scope.$on('goodSelectChange', function(event, value) {
+        scope.ngModel = scope.items[value];
     });
 }

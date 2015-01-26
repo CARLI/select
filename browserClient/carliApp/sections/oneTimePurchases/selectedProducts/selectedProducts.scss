@@ -149,19 +149,6 @@
                 border-left: $default-border;
                 padding-left: 2px;
 
-                header {
-                    .fa {
-                        color: $gray;
-                    }
-
-                    .fa-angle-down {
-                        display: none;
-                    }
-                    .fa-angle-right {
-                        display: inline-block;
-                    }
-                }
-
                 checkbox {
                     left: unquote("calc(-2rem + 2px)");
                 }

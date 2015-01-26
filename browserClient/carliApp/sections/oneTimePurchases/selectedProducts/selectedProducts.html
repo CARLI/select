@@ -32,8 +32,9 @@
                     <checkbox ng-model="vm.selectedProducts[product.id]"></checkbox>
                     <header>
                         <div class="column">
-                            <fa name="angle-right"></fa>
-                            <fa name="angle-down"></fa>
+                            <button type="button" class="angle-icon-container">
+                                <fa name="angle-down"></fa>
+                            </button>
                             {{ product.name }}
                         </div>
                         <div class="column">{{ product.vendor.name }}</div>
