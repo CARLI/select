@@ -8,10 +8,7 @@ var defaults = {
     middleware: {
         protocol: 'http',
         hostname: 'localhost',
-        port: 3000,
-        getUrl: function() {
-            return protocol + '://' + hostname + ':' + port;
-        }
+        port: 3000
     },
     storeOptions: {
         couchDbUrl: 'http://localhost:5984',
@@ -25,6 +22,10 @@ var defaults = {
     getDbName: function() {
         return couchDbName;
     }
+};
+
+defaults.middleware.getUrl = function() {
+    return defaults.middleware.protocol + '://' + defaults.middleware.hostname + ':' + defaults.middleware.port;
 };
 
 module.exports = _.extend(defaults, localConfig);
