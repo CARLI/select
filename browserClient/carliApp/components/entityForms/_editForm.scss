@@ -132,7 +132,7 @@
         }
     }
 
-    footer {
+    .footer {
         @extend .container-fluid;
         padding-top: 7px;
         padding-bottom: 8px;
@@ -144,4 +144,8 @@
             margin-right: 3px;
         }
     }
+}
+
+.modal .edit-form .footer {
+    padding-right: 8px;
 }

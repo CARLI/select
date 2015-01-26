@@ -137,12 +137,12 @@
             </fieldset>
         </section>
 
-        <footer ng-show="vm.editable">
+        <div class="footer" ng-show="vm.editable">
             <fieldset>
                 <button type="button" class="carli-button cancel-button" data-dismiss="modal" ng-click="vm.cancelEdit()">Cancel</button>
                 <input type="submit" id="library-submit" class="carli-button save-button" value="Save">
             </fieldset>
-        </footer>
+        </div>
     </form>
 
     <debug-panel ng-show="!vm.isModal">{{ vm.library | json }}</debug-panel>
