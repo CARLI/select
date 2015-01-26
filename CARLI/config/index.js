@@ -5,6 +5,14 @@ var couchDbName = 'carli';
 
 var defaults = {
     alertTimeout: 10000,
+    middleware: {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: 3000,
+        getUrl: function() {
+            return protocol + '://' + hostname + ':' + port;
+        }
+    },
     storeOptions: {
         couchDbUrl: 'http://localhost:5984',
         couchDbName: couchDbName

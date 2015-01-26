@@ -1,5 +1,4 @@
 var config = require( '../../config/index'),
-    //couchapp = require('couchapp'),
     Q = require('q'),
     request = config.request,
     StoreOptions = config.storeOptions
@@ -64,16 +63,13 @@ function createDatabase(dbName) {
 
 function putDesignDoc(dbName) {
     var deferred = Q.defer();
-
-    var docName = 'CARLI-DesignDoc.js';
-    var designDoc = require('../../../db/' + docName);
-
-    var url = StoreOptions.couchDbUrl + '/' + dbName + '/_design/CARLI';
-//    couchapp.createApp(designDoc, url, function(app) {
-//        app.push();
-        deferred.resolve();
-//    });
-
+    request.put(config.middleware.getUrl() + '/design-doc/' + dbName, function(error, response, body) {
+        if (error) {
+            deferred.reject(error);
+        } else {
+            deferred.resolve();
+        }
+    });
     return deferred.promise;
 }
 
