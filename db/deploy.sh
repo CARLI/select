@@ -1,4 +1,5 @@
 #!/bin/sh
+exit
 
 db_name=carli
 if [ ! -z "$1" ]; then
