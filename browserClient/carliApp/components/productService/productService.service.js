@@ -1,7 +1,7 @@
 angular.module('carli.productService')
     .service('productService', productService);
 
-function productService( CarliModules, $q, cycleService, entityBaseService, licenseService, vendorService ) {
+function productService( CarliModules, $q, cycleService ) {
 
     var productModule = CarliModules.Product;
 

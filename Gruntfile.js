@@ -2,6 +2,7 @@ module.exports = function(grunt) {
     require('./grunt/subdir')(grunt);
     require('./grunt/jsenv')(grunt);
     require('./grunt/db')(grunt);
+    require('./grunt/test-db')(grunt);
     require('./grunt/carliConfig')(grunt);
     require('load-grunt-tasks')(grunt);
 
