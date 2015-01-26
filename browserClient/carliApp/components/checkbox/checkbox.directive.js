@@ -11,7 +11,12 @@ angular.module('carli.checkbox')
             },
             transclude: true,
             link: function (scope, element, attrs) {
-                    scope.checkboxId = scope.id ? scope.id : uuid.generateCssId();
+                scope.checkboxId = scope.id ? scope.id : uuid.generateCssId();
+                element.find('input[type="checkbox"]').on('focus', function(evt) {
+                    element.addClass('focused');
+                }).on('blur', function(evt) {
+                    element.removeClass('focused');
+                });
             }
         };
     }
