@@ -1,9 +1,5 @@
 <div class="view-edit-yes-no-other" ng-show="editMode">
-    <select ng-model="selectedValue">
-        <option>Yes</option>
-        <option>No</option>
-        <option>Other</option>
-    </select>
-    <input type="text" ng-model="ngModel" ng-show="selectedValue == 'Other'">
+    <good-select ng-model="selectedValue" items="items"></good-select>
+    <input type="text" ng-model="ngModel" ng-show="selectedValue === 'Other'">
 </div>
 <div ng-show="!editMode" ng-transclude></div>
