@@ -57,7 +57,7 @@ function loadProduct( productId, cycle ){
 function listAvailableOneTimePurchaseProducts(){
     var deferred = Q.defer();
 
-    CycleRepository.load('one-time-purchase-product-cycle').then(function (cycle) {
+    CycleRepository.load(config.oneTimePurchaseProductsCycleDocId).then(function (cycle) {
         listProducts(cycle)
             .then(function (allProducts) {
                 var p = allProducts

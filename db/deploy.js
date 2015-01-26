@@ -57,7 +57,7 @@ if (require.main === module) {
     deployDb('carli').done(createOneTimePurchaseCycle);
 } else {
     // required as a module
-    module.exports = function(dbName) {
-        return deployDb(dbName).then(createOneTimePurchaseCycle);
+    module.exports = function() {
+        return deployDb('carli').then(createOneTimePurchaseCycle);
     };
 }

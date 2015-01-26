@@ -63,7 +63,7 @@ function createDatabase(dbName) {
 
 function putDesignDoc(dbName) {
     var deferred = Q.defer();
-    request.put(config.middleware.getUrl() + '/design-doc/' + dbName, function(error, response, body) {
+    request.put(config.getMiddlewareUrl() + '/design-doc/' + dbName, function(error, response, body) {
         if (error) {
             deferred.reject(error);
         } else {

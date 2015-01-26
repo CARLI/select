@@ -3,7 +3,7 @@ var request = config.request;
 var Store = require( '../Store' );
 var Q = require('q');
 
-var testDbName = 'mocha-tests';
+var testDbName = 'test-db';
 var testDbMarker = 'test-db-marker';
 var testStore = null;
 

@@ -1,6 +1,7 @@
 
 var CARLI  = require( '../../../CARLI');
 var testUtils = require('../../../CARLI/test/utils');
+testUtils.setupTestDb();
 
 var storeOptions = {
     couchDbUrl: CARLI.config.storeOptions.couchDbUrl,
@@ -12,28 +13,6 @@ CARLI.Cycle.setStore( store );
 CARLI.Library.setStore( store );
 CARLI.License.setStore( store );
 CARLI.Vendor.setStore( store );
-
-function testCycleData() {
-    return {
-        idalId: 200,
-        name: testUtils.testDbMarker + ' E2E Tests 2014',
-        cycleType: 'Calendar Year',
-        year: 2014,
-        status: 5,
-        isArchived: true,
-        startDateForSelections: '2013-10-15',
-        endDateForSelections: '2013-11-15',
-        productsAvailableDate: '2014-01-01'
-    };
-}
-var testCycle = null;
-function createTestCycle() {
-    return CARLI.Cycle.create(testCycleData())
-        .then(CARLI.Cycle.load)
-        .then(function (cycle) {
-            testCycle = cycle;
-        });
-}
 
 module.exports = {
     createLibrary : function (data) {
@@ -48,15 +27,10 @@ module.exports = {
         });
     },
 
-    createProduct : function (data) {
-        if (testCycle == null) {
-            throw new Error("-------------this isn't going to work");
-        } else {
-            console.log("+++++++++Creating product");
-            CARLI.Product.create(data, testCycle).catch(function(err){
-                console.log("Creating Fixture Product failed ", err, data);
-            });
-        }
+    createProduct : function (data, cycle) {
+        CARLI.Product.create(data, cycle).catch(function(err){
+            console.log("Creating Fixture Product failed ", err, data);
+        });
     },
 
     createLicense : function (data) {
@@ -64,6 +38,4 @@ module.exports = {
             console.log("Creating Fixture License failed ", err, data);
         });
     },
-
-    createTestCycle: createTestCycle
 };

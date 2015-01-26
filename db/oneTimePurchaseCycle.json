@@ -1,6 +1,6 @@
 {
-    "id": "one-time-purchase-product-cycle",
-    "name": "One-Time Purchase Product Cycle",
+    "id": "one-time-purchase-products-cycle",
+    "name": "One-Time Purchase Products",
     "cycleType": "One-Time Purchase",
     "year": 0,
     "status": 4,

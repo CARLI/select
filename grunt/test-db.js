@@ -5,9 +5,9 @@ module.exports = function (grunt) {
     var deployDb = require(projectRoot+'/db/deploy.js');
 
     grunt.registerTask('deploy-test-db', function() {
-        //var done = this.async();
-        //deployDb(testUtils.testDbName).then(done);
-        grunt.task.run(['subdir-exec:'+projectRoot+'/db:./deploy ' + testUtils.testDbName ]);
+        var done = this.async();
+        deployDb(testUtils.testDbName).then(done);
+        //grunt.task.run(['subdir-exec:'+projectRoot+'/db:./deploy.sh ' + testUtils.testDbName ]);
     });
     grunt.registerTask('delete-test-dbs', function() {
         var done = this.async();
