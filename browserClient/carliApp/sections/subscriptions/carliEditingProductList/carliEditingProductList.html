@@ -1,4 +1,4 @@
-<ul class="vendor-accordion" ng-repeat="vendor in vm.vendors">
+<ul class="vendor-accordion" ng-repeat="vendor in vm.vendors" ng-show="vendor.products.length > 0">
     <li carli-accordion>
         <header>
             <fa name="angle-right"></fa>
