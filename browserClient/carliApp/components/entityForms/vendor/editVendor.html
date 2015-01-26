@@ -4,7 +4,7 @@
             <fieldset>
                 <div class="name">
                     <label for="vendorName">Vendor Name</label>
-                    <view-edit-text-field ng-model="vm.vendor.name" edit-mode="vm.editable">
+                    <view-edit-text-field ng-model="vm.vendor.name" edit-mode="vm.editable" input-id="vendorName">
                         <h1>{{ vm.vendor.name }}</h1>
                     </view-edit-text-field>
                 </div>
@@ -25,15 +25,23 @@
                 <div class="column">
 
                     <label for="vendorWebsite">Vendor Website</label>
-                    <view-edit-text-field ng-model="vm.vendor.websiteUrl" edit-mode="vm.editable"><span class="h3" ng-bind-html="vm.vendor.websiteUrl | linky:'_blank'"></span></view-edit-text-field>
+                    <view-edit-text-field ng-model="vm.vendor.websiteUrl" edit-mode="vm.editable" input-id="vendorWebsite">
+                        <span class="h3" ng-bind-html="vm.vendor.websiteUrl | linky:'_blank'"></span>
+                    </view-edit-text-field>
                     <label for="vendorStatus">Status</label>
-                    <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.vendor.isActive" edit-mode="vm.editable"><span class="h3">{{ vm.vendor.isActive ? 'Active' : 'Inactive' }}</span></view-edit-radios>
+                    <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.vendor.isActive" edit-mode="vm.editable" input-id="vendorStatus">
+                        <span class="h3">{{ vm.vendor.isActive ? 'Active' : 'Inactive' }}</span>
+                    </view-edit-radios>
                     <label for="vendorAdminModule">Admin Module</label>
-                    <view-edit-text-area class="admin-module" ng-model="vm.vendor.adminModule" edit-mode="vm.editable">{{ vm.vendor.adminModule }}</view-edit-text-area>
+                    <view-edit-text-area class="admin-module" ng-model="vm.vendor.adminModule" edit-mode="vm.editable" input-id="vendorAdminModule">
+                        {{ vm.vendor.adminModule }}
+                    </view-edit-text-area>
                 </div>
                 <div class="column">
                     <label for="vendorComments">Comments</label>
-                    <view-edit-text-area class="comments" ng-model="vm.vendor.comments" edit-mode="vm.editable">{{ vm.vendor.comments }}</view-edit-text-area>
+                    <view-edit-text-area class="comments" ng-model="vm.vendor.comments" edit-mode="vm.editable" input-id="vendorComments">
+                        {{ vm.vendor.comments }}
+                    </view-edit-text-area>
                 </div>
             </fieldset>
             <fieldset>
