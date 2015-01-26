@@ -1,4 +1,5 @@
 var config = require('../CARLI/config');
+var CycleRepository = require('../CARLI/Entity/CycleRepository');
 var couchapp = require('couchapp');
 var fs = require('fs');
 var Q = require('q');
@@ -47,10 +48,16 @@ function deployDb(dbName) {
     return recreateDb(dbName).then(putDesignDoc(dbName));
 }
 
+function createOneTimePurchaseCycle() {
+    return CycleRepository.create(require('./oneTimePurchaseCycle.json'));
+}
+
 if (require.main === module) {
     // called directly
-    deployDb('carli');
+    deployDb('carli').done(createOneTimePurchaseCycle);
 } else {
     // required as a module
-    module.exports = deployDb;
+    module.exports = function(dbName) {
+        return deployDb(dbName).then(createOneTimePurchaseCycle);
+    };
 }
