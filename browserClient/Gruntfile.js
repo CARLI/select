@@ -9,7 +9,7 @@ module.exports = function ( grunt ) {
      * load-grunt-tasks parses package.json and loads everything matching 'grunt-*'
      */
     require('load-grunt-tasks')(grunt);
-    require('../grunt/jsenv')(grunt);
+    require('../config/Gruntfile')(grunt);
     require('../grunt/subdir')(grunt);
     require('../grunt/db')(grunt);
     require('../grunt/test-db')(grunt);

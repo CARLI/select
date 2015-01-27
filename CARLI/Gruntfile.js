@@ -2,7 +2,7 @@ var fs = require('fs');
 
 module.exports = function(grunt) {
     require('../grunt/subdir')(grunt);
-    require('../grunt/jsenv')(grunt);
+    require('../config/Gruntfile')(grunt);
     require('../grunt/db')(grunt);
     require('../grunt/test-db')(grunt);
 
