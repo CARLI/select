@@ -1,3 +1,50 @@
-<div class="placeholder">Vendors Setting Prices</div>
-
+<ul class="vendor-accordion" ng-repeat="vendor in vm.vendors">
+    <li carli-accordion>
+        <header>
+            <button type="button" class="angle-icon-container">
+                <fa name="angle-down"></fa>
+            </button>
+            {{ vendor.name }}
+        </header>
+        <div class="content">
+            <ul class="product-content">
+                <li ng-repeat="product in vendor.products | filter:{isActive:true} track by product.id">
+                    <div class="product-header">
+                        {{ product.name }}
+                        <span class="price-cap">Price Cap: <strong>{{ product.priceCap }}</strong></span>
+                    </div>
+                    <ul class="offerings-list">
+                        <li class="column-headers">
+                            <div class="column library sortable">Library</div>
+                            <div class="column library-view">Library View</div>
+                            <div class="column site-license-price sortable">Site License Price</div>
+                            <div class="column flag sortable">Flag</div>
+                        </li>
+                        <li class="offering" ng-repeat="offering in product.offerings">
+                            <div class="column library">
+                                <h3>{{ offering.library.name }}</h3>
+                                <p><span class="label">Pricing Info</span><br>
+                                Size (FTE): <span class="purple">{{ offering.library.fte }}</span><br>
+                                Institution: <span class="purple">{{ offering.library.institutionYears }}</span><br>
+                                Type: <span class="purple">{{ offering.library.institutionType }}</span></p>
+                            </div>
+                            <div class="column library-view">
+                                <div class="placeholder">Library View</div>
+                            </div>
+                            <div class="column site-license-price">
+                                <div class="placeholder">Site License Price</div>
+                            </div>
+                            <div class="column flag">
+                                <div class="placeholder">Flag</div>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="footer">
+                        <div class="placeholder">Print Email Export</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </li>
+</ul>
 <button type="button" class="carli-button pull-left" ng-click="vm.closeVendorPricing()">Undo Open Vendor Pricing</button>

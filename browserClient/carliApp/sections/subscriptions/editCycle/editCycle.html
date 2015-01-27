@@ -1,5 +1,6 @@
 <div class="page-header">
-    <h1>{{ cycleRouter.cycle.name }}</h1>
+    <h2>{{ cycleRouter.cycle.name }}</h2>
+    <h4>{{ cycleRouter.cycle.getStatusLabel() }}</h4>
 </div>
 <section id="subscriptions" class="content" ng-switch on="cycleRouter.cycle.status">
 

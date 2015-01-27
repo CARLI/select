@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.vendorsSettingPrices')
     .controller('vendorsSettingPricesController', vendorsSettingPricesController);
 
-function vendorsSettingPricesController( $scope, alertService, productService, vendorService ) {
+function vendorsSettingPricesController( $scope, alertService, libraryService, productService, vendorService ) {
     var vm = this;
     vm.closeVendorPricing = closeVendorPricing;
     activate();
@@ -42,6 +42,26 @@ function vendorsSettingPricesController( $scope, alertService, productService, v
     function loadProductsForVendor(vendor) {
         productService.listProductsForVendorId(vendor.id).then(function (products) {
             vendor.products = products;
+
+            //generate fake offerings data
+            angular.forEach(products, function (product) {
+                mockupOfferingsForLibraries( product );
+            });
+        });
+    }
+
+    function mockupOfferingsForLibraries( product ){
+        product.offerings = [];
+
+        libraryService.list().then(function(libraryList){
+            angular.forEach(libraryList, function (library) {
+                product.offerings.push({
+                    library: library,
+                    pricing: {
+                        site: 1000
+                    }
+                });
+            });
         });
     }
 
