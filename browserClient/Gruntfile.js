@@ -494,7 +494,7 @@ module.exports = function ( grunt ) {
     grunt.registerTask( 'build', [
         'clean',
         'jsenv:browser',
-        'subdir-grunt:../CARLI:ensure-local-config',
+        'ensure-local-config',
         'newer:jshint',
         'newer:copy:build_appjs', 
         'newer:copy:build_vendorjs',

@@ -3,7 +3,6 @@ var fs = require('fs');
 module.exports = function(grunt) {
     require('../grunt/subdir')(grunt);
     require('../grunt/jsenv')(grunt);
-    require('../grunt/carliConfig')(grunt);
     require('../grunt/db')(grunt);
     require('../grunt/test-db')(grunt);
 

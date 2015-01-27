@@ -4,12 +4,7 @@ var defaultsConfigFile = __dirname + '/../config/index.js';
 var localConfigFile = __dirname + '/../config/local.js';
 
 module.exports = function (grunt) {
-    grunt.registerTask('ensure-local-config', ensureLocalConfigExists);
     grunt.registerTask('generate-config', generateConfig);
-
-    function ensureLocalConfigExists() {
-        fs.closeSync(fs.openSync(localConfigFile, 'a'));
-    }
 
     function generateConfig(instance) {
         var cfg = {};
