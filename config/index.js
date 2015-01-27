@@ -15,7 +15,7 @@ var defaults = {
         couchDbName: couchDbName
     },
     oneTimePurchaseProductsCycleDocId: 'one-time-purchase-products-cycle',
-    request: require('../CARLI/carliRequest'),
+    request: require('./environmentDependentModules').request,
     storePath: 'CouchDb/Store'
 };
 

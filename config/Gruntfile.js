@@ -12,10 +12,10 @@ module.exports = function (grunt) {
     function setJsEnv(env) {
         switch (env) {
             case 'browser':
-                writeCarliRequestModule('browser-request');
+                writeEnvironmentRequestModule('browser');
                 break;
             case 'node':
-                writeCarliRequestModule('request');
+                writeEnvironmentRequestModule('node');
                 break;
             default:
                 throw Error('Invalid environment: ' + env + ', valid options are "node" and "browser"');
@@ -23,7 +23,7 @@ module.exports = function (grunt) {
     }
 };
 
-function writeCarliRequestModule(module) {
-    fs.writeFileSync(__dirname + '/../CARLI/carliRequest.js', "module.exports = require('"+ module +"');\n");
+function writeEnvironmentRequestModule(module) {
+    fs.writeFileSync(__dirname + '/environmentDependentModules.js', "module.exports = require('./"+ module +"Environment');\n");
 }
 

@@ -10,14 +10,13 @@
 # Run `grunt generate-karmaconf` to generate it.
 /browserClient/karma.conf.js
 
-# Grunt chooses the implementation of `request` as appropriate
+# Ignore CARLI local config, which can be used to override the default configuration that is in the repository.
+# Grunt chooses the implementation of some modules, including `request` as appropriate
 # for the environment (node vs browser).
 # Run `grunt jsenv:node` or `grunt jsenv:browser` to manually
-# set the desired environment.
-/CARLI/carliRequest.js
-# Ignore CARLI local config, which can be used to override the
-# default configuration that is in the repository
+# set the desired environment. Ignore that file too since it is generated.
 /config/local.js
+/config/environmentDependentModules.js
 
 #Couch
 couchdb.stderr
