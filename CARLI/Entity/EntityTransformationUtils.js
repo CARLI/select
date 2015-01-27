@@ -1,6 +1,6 @@
 var Q = require('q')
   , Entity = require('../Entity')
-  , config = require( '../config' )
+  , config = require( '../../config' )
   , StoreOptions = config.storeOptions
   , Store = require( '../Store' )
   , StoreModule = require( '../Store/CouchDb/Store')

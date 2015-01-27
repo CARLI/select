@@ -1,6 +1,6 @@
 var Entity = require('../Entity')
     , EntityTransform = require( './EntityTransformationUtils')
-    , config = require( '../config' )
+    , config = require( '../../config' )
     , CouchUtils = require( '../Store/CouchDb/Utils')
     , StoreOptions = config.storeOptions
     , Store = require( '../Store' )

@@ -1,4 +1,4 @@
-var config = require('../config');
+var config = require('../../config');
 var request = config.request;
 var Store = require( '../Store' );
 var Q = require('q');

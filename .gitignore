@@ -17,7 +17,7 @@
 /CARLI/carliRequest.js
 # Ignore CARLI local config, which can be used to override the
 # default configuration that is in the repository
-/CARLI/config/local.js
+/config/local.js
 
 #Couch
 couchdb.stderr

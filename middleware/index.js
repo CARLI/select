@@ -1,4 +1,4 @@
-var config = require('../CARLI/config');
+var config = require('../config');
 var express = require('express');
 var Q = require('q');
 var couchapp = require('couchapp');

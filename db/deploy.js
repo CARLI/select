@@ -1,4 +1,4 @@
-var config = require('../CARLI/config');
+var config = require('../config');
 var CycleRepository = require('../CARLI/Entity/CycleRepository');
 var couchapp = require('couchapp');
 var fs = require('fs');

@@ -1,5 +1,5 @@
 var Q = require('q')
-  , config = require( '../../config/index' )
+  , config = require( '../../../config' )
   , request = config.request
   , CouchUtils = require( './Utils')
 ;

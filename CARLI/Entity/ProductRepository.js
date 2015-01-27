@@ -1,7 +1,7 @@
 var Entity = require('../Entity')
   , EntityTransform = require( './EntityTransformationUtils')
   , CycleRepository = require('./CycleRepository')
-  , config = require( '../config' )
+  , config = require( '../../config' )
   , CouchUtils = require( '../Store/CouchDb/Utils')
   , Validator = require('../Validator')
   , moment = require('moment')
