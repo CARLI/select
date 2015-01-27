@@ -540,8 +540,10 @@ module.exports = function ( grunt ) {
             'build',
             'protractor_webdriver',
             'connect:tests',
-            'deploy-db',
-            'protractor'
+            'deploy-test-db',
+            'deploy-test-otp-cycle',
+            'protractor',
+            'delete-test-dbs'
         ]);
     });
 

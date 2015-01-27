@@ -4,6 +4,7 @@ var couchapp = require('couchapp');
 var fs = require('fs');
 var Q = require('q');
 
+var projectRoot = __dirname + '/..';
 var request = config.request;
 
 function getDbUrl(dbName) {
@@ -24,8 +25,7 @@ function putDesignDoc(dbName) {
             var url = getDbUrl(dbName) + '/_design/CARLI';
             couchapp.createApp(designDoc, url, function(app) {
                 console.log("Putting design doc for " + dbName);
-                app.push();
-                deferred.resolve();
+                app.push(deferred.resolve);
             });
         });
     }
@@ -45,19 +45,31 @@ function recreateDb(dbName) {
 }
 
 function deployDb(dbName) {
+    if (!dbName) {
+        dbName = config.storeOptions.couchDbName;
+    }
     return recreateDb(dbName).then(putDesignDoc(dbName));
 }
 
-function createOneTimePurchaseCycle() {
-    return CycleRepository.create(require('./oneTimePurchaseCycle.json'));
+function createOneTimePurchaseCycle(cycleName, store) {
+    var otpCycle = require(projectRoot + '/db/oneTimePurchaseCycle.json');
+    if (cycleName) {
+        otpCycle.name = cycleName;
+    }
+    if (store) {
+        CycleRepository.setStore(store);
+    }
+
+    return CycleRepository.create(otpCycle);
 }
 
 if (require.main === module) {
     // called directly
-    deployDb('carli').done(createOneTimePurchaseCycle);
+    deployDb().done(createOneTimePurchaseCycle);
 } else {
     // required as a module
-    module.exports = function() {
-        return deployDb('carli').then(createOneTimePurchaseCycle);
+    module.exports = {
+        deployDb: deployDb,
+        createOneTimePurchaseCycle: createOneTimePurchaseCycle
     };
 }

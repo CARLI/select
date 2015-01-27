@@ -7,7 +7,7 @@ browserEnsureElementIsPresentByTagName = macro.browserEnsureElementIsPresentByTa
 
 config.getDefaultAppPage();
 
-var otpCycle = { id: 'one-time-purchase-products-cycle', databaseName: 'cycle-one-time-purchase-products' };
+var otpCycle = { databaseName: 'cycle-test-db-marker-otp-tests' };
 
 dataLoader.createLibrary(testData.activeLibrary1);
 dataLoader.createLibrary(testData.inactiveLibrary2);
