@@ -1,12 +1,13 @@
 
 var CARLI  = require( '../../../CARLI');
 var testUtils = require('../../../CARLI/test/utils');
-testUtils.setupTestDb();
+//testUtils.setupTestDb();
 
 var storeOptions = {
     couchDbUrl: CARLI.config.storeOptions.couchDbUrl,
-    couchDbName: CARLI.config.storeOptions.couchDbName
+    couchDbName: CARLI.config.getDbName()
 };
+console.log(storeOptions);
 var store = CARLI.Store( CARLI.CouchDbStore(storeOptions) );
 
 CARLI.Cycle.setStore( store );
@@ -37,5 +38,5 @@ module.exports = {
         CARLI.License.create(data).catch(function(err){
             console.log("Creating Fixture License failed ", err, data);
         });
-    },
+    }
 };
