@@ -12,6 +12,5 @@ angular.module('carli.app', [
     $locationProvider.html5Mode(true);
 })
 .run(function(cycleService){
-    console.log('In app.run');
     cycleService.initCurrentCycle();
 });
