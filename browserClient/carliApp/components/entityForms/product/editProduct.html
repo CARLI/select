@@ -18,7 +18,7 @@
                 </div>
 
                 <button type="button" id="product-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">
-                    Edit<i class="fa fa-edit"></i>
+                    Edit<fa name="edit"></fa>
                 </button>
             </div>
         </fieldset>
@@ -79,10 +79,10 @@
                             TODO: Manage Price Cap Popup
                         </div>
 
-                        <label for="cycleType">Cycle</label>
-                        <view-edit-select ng-model="vm.product.cycleType" items="vm.cycleOptions" edit-mode="vm.newProduct" input-id="cycleType">
-                            {{ vm.product.cycleType }}
-                        </view-edit-select>
+                        <label for="cycle">Cycle</label>
+                        <view-edit-select-object ng-model="vm.product.cycle" objects="vm.activeCycles" label-property="name" track-by="id" edit-mode="vm.newProduct" input-id="cycle">
+                            {{ vm.product.cycle }}
+                        </view-edit-select-object>
                         <a data-toggle="modal" data-target="#otp-modal" ng-show="vm.shouldShowOtpEditLink()">Edit One-Time Purchases <fa name="edit"></fa></a>
 
                     </div>
@@ -111,7 +111,7 @@
                     TODO: Funded for Governing: X%
                 </div>
 
-                <div class="placeholder" ng-show="vm.product.cycleType !== 'One-Time Purchase'">
+                <div class="placeholder" ng-show="vm.product.cycle.cycleType !== 'One-Time Purchase'">
                     TODO: Table of Subscriber History
                 </div>
 
