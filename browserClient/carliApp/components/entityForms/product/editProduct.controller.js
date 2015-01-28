@@ -69,8 +69,6 @@ function editProductController( $scope, $rootScope, $filter, entityBaseService, 
         vm.isModal = vm.newProduct;
     }
     function initializeForNewProduct() {
-        console.log('current cycle: ',cycleService.getCurrentCycle());
-
         vm.product = {
             type: 'Product',
             cycle: cycleService.getCurrentCycle() || { cycleType: '' },

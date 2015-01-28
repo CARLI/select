@@ -1,9 +1,9 @@
 angular.module('carli.sections.products')
 .controller('productsController', productController);
 
-function productController( $sce, cycleService, productService ){
+function productController( $scope, $sce, cycleService, productService ){
     var vm = this;
-    vm.currentCycle = cycleService.getCurrentCycle();
+    vm.currentCycle = null;
     vm.activeCycles = [];
     vm.setCurrentCycle = setCurrentCycle;
     vm.afterProductSubmit = populateProductList;
@@ -12,6 +12,17 @@ function productController( $sce, cycleService, productService ){
     function activate() {
         cycleService.listActiveCycles().then(function(activeCycles) {
             vm.activeCycles = activeCycles;
+        });
+        initPageForCurrentCycle();
+    }
+
+    function initPageForCurrentCycle() {
+        var stopWatching = $scope.$watch(cycleService.getCurrentCycle, function (newValue) {
+            if (newValue) {
+                vm.currentCycle = newValue;
+                setCurrentCycle();
+                stopWatching();
+            }
         });
     }
 
@@ -47,9 +58,7 @@ function productController( $sce, cycleService, productService ){
     function setCurrentCycle(){
         cycleService.setCurrentCycle( vm.currentCycle );
 
-        productService.list().then( function(productList){
-            vm.productList = productList;
-        });
+        populateProductList();
     }
 }
 
