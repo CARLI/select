@@ -31,7 +31,7 @@ function productController( $sce, cycleService, productService ){
         },
         {
             label: "Vendor",
-            orderByProperty: 'vendor',
+            orderByProperty: 'vendor.name',
             contentFunction: function(product) {
                 var vendor = product.vendor || {};
                 return vendor.name || "";
