@@ -1,15 +1,10 @@
 var fs = require('fs');
 var _ = require('lodash');
-var defaultsConfigFile = __dirname + '/../CARLI/config/index.js';
-var localConfigFile = __dirname + '/../CARLI/config/local.js';
+var defaultsConfigFile = __dirname + '/../config/index.js';
+var localConfigFile = __dirname + '/../config/local.js';
 
 module.exports = function (grunt) {
-    grunt.registerTask('ensure-local-config', ensureLocalConfigExists);
     grunt.registerTask('generate-config', generateConfig);
-
-    function ensureLocalConfigExists() {
-        fs.closeSync(fs.openSync(localConfigFile, 'a'));
-    }
 
     function generateConfig(instance) {
         var cfg = {};

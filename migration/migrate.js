@@ -1,35 +1,60 @@
 #!/usr/local/bin/node
 
-// dependencies
+var CycleRepository = require('../CARLI').Cycle;
+var cycleMigration = require('./cycle');
 var migrationConfig = require('./config');
 var mysql = require('mysql');
-var vendorMigration = require('./vendor');
 var productMigration = require('./product');
-var migrateVendors = vendorMigration.migrateVendors;
-var migrateProducts = productMigration.migrateProducts;
+var Q = require('q');
+var vendorMigration = require('./vendor');
 
 doMigration();
 
 function doMigration(){
     var connection = initMySQL();
-    var cycle = {
-        idalId: 200,
-        type: 'Calendar Year',
-        year: 2015
-    };
 
     vendorIdMapping = {};
 
-    migrateVendors(connection).then(function(vendorIds){
-        vendorIdMapping = vendorIds;
-        console.log('Done migrating Vendors: ',vendorIds);
-        migrateProducts(connection, cycle, vendorIdMapping).then(function(productIds){
-            productIdMapping = productIds;
-            console.log('Done migrating Products: ',productIds);
+    migrateVendors()
+        .then(migrateCyclesAndProducts)
+        .then(closeConnection);
 
-            connection.end();
+    function migrateVendors () {
+        console.log("+++ Migrating Vendors");
+        return vendorMigration.migrateVendors(connection);
+    }
+
+    function migrateCyclesAndProducts(vendorIdMapping) {
+        console.log("+++ Migrating Cycles");
+        var deferred = Q.defer();
+        var promises = [];
+
+        cycleMigration.migrateCycles().then(function (cycleIdMapping) {
+            for (var idalId in cycleIdMapping) {
+                var cycleId = cycleIdMapping[idalId];
+                promises.push(migrateProductsForCycle(cycleId, vendorIdMapping));
+            }
+            Q.all(promises).then(function (results) {
+                deferred.resolve(results);
+            });
         });
-    });
+
+        return deferred.promise;
+    }
+
+    function migrateProductsForCycle(cycleId, vendorIdMapping) {
+        console.log("+++ Migrating Products for Cycle " + cycleId);
+
+        return CycleRepository.load(cycleId).then(function (cycle) {
+            return productMigration.migrateProducts(connection, cycle, vendorIdMapping);
+        });
+    }
+
+    function closeConnection() {
+        console.log('Closing the database connection');
+        connection.end();
+        console.log('All done!');
+    }
 }
 
 

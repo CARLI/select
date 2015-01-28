@@ -1,10 +1,7 @@
 var ProductRepository = require('../CARLI').Product;
-var CouchDbStore = require('../CARLI').CouchDbStore;
-var carliConfig = require('../CARLI').config;
-var StoreOptions = carliConfig.storeOptions;
-var Store = require('../CARLI').Store;
 var Q = require('q');
-ProductRepository.setStore(Store(CouchDbStore(StoreOptions)));
+
+var printedWarning = false;
 
 function migrateProducts(connection, cycle, vendorIdMapping){
     var resultsPromise = Q.defer();
@@ -24,14 +21,19 @@ function migrateProducts(connection, cycle, vendorIdMapping){
         "GROUP BY product_name " +
         "ORDER BY vendor_name, product_name";
 
-    console.log('Go check your email or something, this query is slow...');
+    if (!printedWarning) {
+        console.log('Go check your email or something, this query is slow...');
+        console.log(query);
+        printedWarning = true;
+    }
 
     connection.query(query, function(err, rows, fields) {
+        console.log('queried ' + rows.length + ' products');
         if(err) { console.log(err); }
         products = rows;
 
         extractProducts(rows, cycle, vendorIdMapping).then(function(idMap){
-            extractProducts.resolve(idMap);
+            resultsPromise.resolve(idMap);
         });
     });
 
@@ -65,8 +67,7 @@ function createProduct( productRow, cycle, vendorIdMapping ) {
 
     var couchIdPromise = Q.defer();
     var product = extractProduct(productRow, cycle, vendorIdMapping);
-
-    ProductRepository.create( product )
+    ProductRepository.create( product, cycle )
         .then(function(id) {
             console.log('ok: ' + id);
             couchIdPromise.resolve({
@@ -91,7 +92,7 @@ function extractProduct( row, cycle, vendorIdMapping ){
         comments: '',
         isThirdPartyProduct: false,
         hasArchiveCapitalFee: false,
-        cycleType: cycle.type,
+        cycleType: cycle.cycleType,
         isActive: true
 //        fundings: '',
 //        license: '',

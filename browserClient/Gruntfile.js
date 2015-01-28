@@ -9,9 +9,10 @@ module.exports = function ( grunt ) {
      * load-grunt-tasks parses package.json and loads everything matching 'grunt-*'
      */
     require('load-grunt-tasks')(grunt);
-    require('../grunt/jsenv')(grunt);
+    require('../config/Gruntfile')(grunt);
     require('../grunt/subdir')(grunt);
     require('../grunt/db')(grunt);
+    require('../grunt/test-db')(grunt);
 
     /**
      * Load in our build configuration file.
@@ -493,7 +494,7 @@ module.exports = function ( grunt ) {
     grunt.registerTask( 'build', [
         'clean',
         'jsenv:browser',
-        'subdir-grunt:../CARLI:ensure-local-config',
+        'ensure-local-config',
         'newer:jshint',
         'newer:copy:build_appjs', 
         'newer:copy:build_vendorjs',
@@ -539,8 +540,9 @@ module.exports = function ( grunt ) {
             'build',
             'protractor_webdriver',
             'connect:tests',
-            'deploy-db',
-            'protractor'
+            // 'deploy-test-db',
+            'protractor'// ,
+            // 'delete-test-dbs'
         ]);
     });
 

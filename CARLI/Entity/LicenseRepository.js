@@ -1,5 +1,5 @@
 var Entity = require('../Entity')
-    , config = require( '../config' )
+    , config = require( '../../config' )
     , StoreOptions = config.storeOptions
     , Store = require( '../Store' )
     , StoreModule = require( '../Store/CouchDb/Store')
@@ -67,7 +67,7 @@ function loadLicense( licenseId ){
 }
 
 function listLicensesForVendorId( vendorId ){
-    return CouchUtils.getCouchViewResults('listLicensesForVendorId', vendorId);
+    return CouchUtils.getCouchViewResults(config.getDbName(), 'listLicensesForVendorId', vendorId);
 }
 function getOfferingTypeOptions(){
     return Validator.getEnumValuesFor('License', 'offeringType');

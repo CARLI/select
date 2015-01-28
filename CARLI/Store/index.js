@@ -99,11 +99,11 @@ module.exports = function( storeType ) {
             return deferred.promise;
         },
 
-        list: function( type ) {
+        list: function( type, collection ) {
             if( ! type ) {
                 throw new Error( 'Must Specify Type' );
             }
-            return myStore.listDataFor( type );
+            return myStore.listDataFor( type, collection );
         },
 
         delete: function( options ) {

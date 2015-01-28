@@ -1,15 +1,13 @@
-var config = require( '../../config/index'),
+var middleware = require('../../../config/environmentDependentModules').middleware,
     Q = require('q'),
-    request = config.request,
-    StoreOptions = config.storeOptions
+    request = require('../../../config/environmentDependentModules').request,
+    StoreOptions = require( '../../../config').storeOptions
 ;
 
-var dbHost = StoreOptions.couchDbUrl + '/' + StoreOptions.couchDbName;
-
-function getCouchViewResults( viewName, key) {
+function getCouchViewResults( dbName, viewName, key) {
     var deferred = Q.defer();
 
-    var url = dbHost + '/' + '_design/CARLI/_view/' + viewName;
+    var url = StoreOptions.couchDbUrl + '/' + dbName + '/' + '_design/CARLI/_view/' + viewName;
     if (key) {
         url += '?key="' + key + '"';
     }
@@ -52,7 +50,9 @@ function createDatabase(dbName) {
         if (error) {
             deferred.reject(error);
         } else if (response.statusCode >= 200 && response.statusCode <= 299) {
-            deferred.resolve();
+            middleware.putDesignDoc(dbName).then(function () {
+                deferred.resolve();
+            });
         } else {
             console.log(body);
             deferred.reject("Could not create database " + dbName + " statusCode=" + response.statusCode);
@@ -61,10 +61,9 @@ function createDatabase(dbName) {
     return deferred.promise;
 }
 
+
+
 module.exports = {
-    setStoreOptions: function(opts) {
-        dbHost = opts.couchDbUrl + '/' + opts.couchDbName;
-    },
     getCouchViewResults: getCouchViewResults,
     makeValidCouchDbName: makeValidCouchDbName,
     createDatabase: createDatabase

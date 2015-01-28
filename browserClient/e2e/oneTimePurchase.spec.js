@@ -7,14 +7,17 @@ browserEnsureElementIsPresentByTagName = macro.browserEnsureElementIsPresentByTa
 
 config.getDefaultAppPage();
 
+//var otpCycle = { databaseName: 'cycle-test-db-marker-otp-tests' };
+var otpCycle = { databaseName: 'cycle-one-time-purchase-products' };
+
 dataLoader.createLibrary(testData.activeLibrary1);
 dataLoader.createLibrary(testData.inactiveLibrary2);
 dataLoader.createLibrary(testData.activeLibrary3);
 dataLoader.createVendor(testData.activeVendor1);
 dataLoader.createLicense(testData.activeLicense1);
-dataLoader.createProduct(testData.activePurchasedProduct1);
-dataLoader.createProduct(testData.inactiveProduct2);
-dataLoader.createProduct(testData.activeFiscalYearProduct3);
+dataLoader.createProduct(testData.activePurchasedProduct1, otpCycle);
+dataLoader.createProduct(testData.inactiveProduct2, otpCycle);
+dataLoader.createProduct(testData.activeFiscalYearProduct3, otpCycle);
 
 var NAME_COLUMN_INDEX=0;
 var FTE_COLUMN_INDEX=1;
@@ -124,6 +127,7 @@ describe('The One-Time Purchases Select Product screen', function () {
     });
 
     it("should contain the correct field values for '"+testData.activePurchasedProduct1.name+"' in the fixture data", function(){
+
         element.all(by.repeater('product in vm.productList'))
             .filter( function(el, index) {
                 return el.getText().then(function(text){

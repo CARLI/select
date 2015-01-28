@@ -4,11 +4,13 @@ var test = require( './Entity/EntityInterface.spec' )
     , uuid = require( 'node-uuid' )
     , chaiAsPromised = require( 'chai-as-promised' )
     , CycleRepository = require( '../Entity/CycleRepository' )
-    , config = require('../config')
-    , request = config.request
+    , config = require('../../config')
+    , request = require('../../config/environmentDependentModules').request
     , storeOptions = config.storeOptions
     , testUtils = require('./utils')
 ;
+
+testUtils.setupTestDb();
 
 var lastValidCycleYear = 3000;
 function validCycleData() {

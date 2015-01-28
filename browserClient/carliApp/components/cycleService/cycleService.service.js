@@ -5,6 +5,8 @@ function cycleService( CarliModules, $q ) {
 
     var cycleModule = CarliModules.Cycle;
 
+    var currentCycle = null;
+
     return {
         cycleDefaults: cycleDefaults,
         list: function() { return $q.when( cycleModule.list() ); },
@@ -15,7 +17,9 @@ function cycleService( CarliModules, $q ) {
             return $q.when(cycleModule.create(newCycle));
         },
         update: function() { return $q.when( cycleModule.update.apply( this, arguments) ); },
-        load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ); }
+        load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ); },
+        getCurrentCycle: getCurrentCycle,
+        setCurrentCycle: setCurrentCycle
     };
 
     function cycleDefaults() {
@@ -28,5 +32,13 @@ function cycleService( CarliModules, $q ) {
         return (cycle.cycleType == 'Alternative Cycle') ?
             cycle.description + ' ' + cycle.year :
             cycle.cycleType + ' ' + cycle.year;
+    }
+
+    function getCurrentCycle() {
+        return currentCycle;
+    }
+
+    function setCurrentCycle(cycleObject) {
+        currentCycle = cycleObject;
     }
 }

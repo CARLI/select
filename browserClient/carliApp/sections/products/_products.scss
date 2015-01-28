@@ -2,6 +2,11 @@
 #products {
     $column-gutter: 20px;
 
+    #currentCycleSelect {
+        display: inline-block;
+        margin-right: 2rem;
+    }
+
     .edit-form {
         div.column {
             @include grid-column(6);

@@ -1,6 +1,10 @@
 var Q = require('q')
   , Entity = require('../Entity')
-;
+  , config = require( '../../config' )
+  , StoreOptions = config.storeOptions
+  , Store = require( '../Store' )
+  , StoreModule = require( '../Store/CouchDb/Store')
+  ;
 
 /**
  * These are the basic Entity interactors rather than the full Repositories to avoid circular dependencies in Node, and
@@ -11,9 +15,15 @@ var Q = require('q')
 var repositories = {
     library : Entity('Library'),
     license : Entity('License'),
-    product : Entity('Product'),
+    //product : Entity('Product'), //TODO: how to set this one for the correct Cycle as well?
     vendor : Entity('Vendor')
 };
+
+function setEntityLookupStores( newStore ){
+    repositories.library.setStore( newStore );
+    repositories.license.setStore( newStore );
+    repositories.vendor.setStore( newStore );
+}
 
 function removeEmptyContactsFromEntity(entity) {
     if ( !entity.contacts ){
@@ -133,9 +143,13 @@ function _transformReferencesToObjects(entity, resolvedObjects) {
     }
 }
 
+
+setEntityLookupStores( Store( StoreModule(StoreOptions) ) );
+
 module.exports = {
     removeEmptyContactsFromEntity: removeEmptyContactsFromEntity,
     transformObjectForPersistence: transformObjectForPersistence,
     expandObjectFromPersistence: expandObjectFromPersistence,
-    expandListOfObjectsFromPersistence: expandListOfObjectsFromPersistence
+    expandListOfObjectsFromPersistence: expandListOfObjectsFromPersistence,
+    setEntityLookupStores: setEntityLookupStores
 };

@@ -8,6 +8,10 @@
       "description": "Unique identifier for the Cycle record",
       "type": "string"
     },
+    "idalId": {
+      "description": "Legacy Id from IDAL mysql database",
+      "type": "integer"
+    },
     "name": {
       "type": "string"
     },

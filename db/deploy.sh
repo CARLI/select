@@ -13,3 +13,4 @@ fi
 curl -X DELETE $couchdb_url
 curl -X PUT $couchdb_url
 ./node_modules/.bin/couchapp push CARLI-DesignDoc.js $couchdb_url
+

@@ -1,18 +1,19 @@
 
-var CARLI  = require( '../../../CARLI')
-    ;
+var CARLI  = require( '../../../CARLI');
+var testUtils = require('../../../CARLI/test/utils');
+//testUtils.setupTestDb();
 
 var storeOptions = {
     couchDbUrl: CARLI.config.storeOptions.couchDbUrl,
-    couchDbName: CARLI.config.storeOptions.couchDbName
+    couchDbName: CARLI.config.getDbName()
 };
+console.log(storeOptions);
 var store = CARLI.Store( CARLI.CouchDbStore(storeOptions) );
 
+CARLI.Cycle.setStore( store );
 CARLI.Library.setStore( store );
 CARLI.License.setStore( store );
 CARLI.Vendor.setStore( store );
-CARLI.Product.setStore( store );
-
 
 module.exports = {
     createLibrary : function (data) {
@@ -27,8 +28,8 @@ module.exports = {
         });
     },
 
-    createProduct : function (data) {
-        CARLI.Product.create(data).catch(function(err){
+    createProduct : function (data, cycle) {
+        CARLI.Product.create(data, cycle).catch(function(err){
             console.log("Creating Fixture Product failed ", err, data);
         });
     },
