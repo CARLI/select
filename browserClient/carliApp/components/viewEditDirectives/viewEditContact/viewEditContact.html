@@ -1,15 +1,15 @@
 <div class="edit-contact" ng-show="editMode">
     <div class="form-group">
-        <label for="contactName">Name</label>
-        <input type="text" name="contactName" ng-model="contact.name">
+        <label for="{{ inputId }}Name">Name</label>
+        <input type="text" name="contactName" ng-model="contact.name" id="{{ inputId }}Name">
     </div>
     <div class="form-group">
-        <label for="contactEmail">Email</label>
-        <input type="text" name="contactName" ng-model="contact.email">
+        <label for="{{ inputId }}Email">Email</label>
+        <input type="text" name="contactName" ng-model="contact.email" id="{{ inputId }}Email">
     </div>
     <div class="form-group">
-        <label for="contactPhone">Phone</label>
-        <input type="text" name="contactName" ng-model="contact.phoneNumber">
+        <label for="{{ inputId }}Phone">Phone</label>
+        <input type="text" name="contactName" ng-model="contact.phoneNumber" id="{{ inputId }}Phone">
     </div>
 </div>
 <div class="view-contact" ng-show="!editMode">

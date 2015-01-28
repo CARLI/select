@@ -3,7 +3,11 @@ angular.module('carli.viewEditDirectives.viewEditTextArea')
         return {
             restrict: 'E',
             templateUrl: '/carliApp/components/viewEditDirectives/viewEditTextArea/viewEditTextArea.html',
-            scope: { ngModel: '=', editMode: '=' },
+            scope: {
+                ngModel: '=',
+                editMode: '=',
+                inputId: '@'
+            },
             transclude: true
         };
     });

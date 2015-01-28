@@ -5,7 +5,8 @@ angular.module('carli.viewEditDirectives.viewEditYesNoOther')
             templateUrl: '/carliApp/components/viewEditDirectives/viewEditYesNoOther/viewEditYesNoOther.html',
             scope: {
                 ngModel: '=',
-                editMode: '='
+                editMode: '=',
+                inputId: '@'
             },
             transclude: true,
             link: linkYesNoOther

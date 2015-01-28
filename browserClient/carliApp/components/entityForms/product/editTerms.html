@@ -9,56 +9,56 @@
 
             <ul class="terms-list">
                 <li>
-                    <label>Download:</label>
-                    <view-edit-yes-no-other ng-model="vm.product.terms.downloadTerms" edit-mode="true">
-                        {{ vm.product.terms.downloadTerms }}
+                    <label for="downloadTerms">Download:</label>
+                    <view-edit-yes-no-other ng-model="vm.product.terms.downloadTerms" edit-mode="true" input-id="downloadTerms">
+                        {{ vm.product.terms.downloadTerms || vm.product.license.terms.downloadTerms }}
                     </view-edit-yes-no-other>
                 </li>
 
                 <li>
-                    <label>ILL:</label>
-                    <view-edit-yes-no-other ng-model="vm.product.terms.interLibraryLoanTerms" edit-mode="true">
-                        {{ vm.product.terms.interLibraryLoanTerms }}
-                    </view-edit-yes-no-other>
-
-                </li>
-
-                <li>
-                    <label>Course Packs:</label>
-                    <view-edit-yes-no-other ng-model="vm.product.terms.coursePacksTerms" edit-mode="true">
-                        {{ vm.product.terms.coursePacksTerms }}
+                    <label for="interLibraryLoanTerms">ILL:</label>
+                    <view-edit-yes-no-other ng-model="vm.product.terms.interLibraryLoanTerms" edit-mode="true" input-id="interLibraryLoanTerms">
+                        {{ vm.product.terms.interLibraryLoanTerms || vm.product.license.terms.interLibraryLoanTerms }}
                     </view-edit-yes-no-other>
 
                 </li>
 
                 <li>
-                    <label>Print:</label>
-                    <view-edit-yes-no-other ng-model="vm.product.terms.printTerms" edit-mode="true">
-                        {{ vm.product.terms.printTerms }}
+                    <label for="coursePacksTerms">Course Packs:</label>
+                    <view-edit-yes-no-other ng-model="vm.product.terms.coursePacksTerms" edit-mode="true" input-id="coursePacksTerms">
+                        {{ vm.product.terms.coursePacksTerms || vm.product.license.terms.coursePacksTerms }}
                     </view-edit-yes-no-other>
 
                 </li>
 
                 <li>
-                    <label>Limited Sharing for Scholarly Purposes:</label>
-                    <view-edit-yes-no-other ng-model="vm.product.terms.limitedScholarlySharingTerms" edit-mode="true">
-                        {{ vm.product.terms.limitedScholarlySharingTerms }}
+                    <label for="printTerms">Print:</label>
+                    <view-edit-yes-no-other ng-model="vm.product.terms.printTerms" edit-mode="true" input-id="printTerms">
+                        {{ vm.product.terms.printTerms || vm.product.license.terms.printTerms}}
                     </view-edit-yes-no-other>
 
                 </li>
 
                 <li>
-                    <label>Use by Walk-ins:</label>
-                    <view-edit-yes-no-other ng-model="vm.product.terms.walkinTerms" edit-mode="true">
-                        {{ vm.product.terms.walkinTerms }}
+                    <label for="limitedScholarlySharingTerms">Limited Sharing for Scholarly Purposes:</label>
+                    <view-edit-yes-no-other ng-model="vm.product.terms.limitedScholarlySharingTerms" edit-mode="true" input-id="limitedScholarlySharingTerms">
+                        {{ vm.product.terms.limitedScholarlySharingTerms || vm.product.license.terms.limitedScholarlySharingTerms}}
                     </view-edit-yes-no-other>
 
                 </li>
 
                 <li>
-                    <label>E-Reserves:</label>
-                    <view-edit-yes-no-other ng-model="vm.product.terms.eReservesTerms" edit-mode="true">
-                        {{ vm.product.terms.eReservesTerms }}
+                    <label for="walkinTerms">Use by Walk-ins:</label>
+                    <view-edit-yes-no-other ng-model="vm.product.terms.walkinTerms" edit-mode="true" input-id="walkinTerms">
+                        {{ vm.product.terms.walkinTerms || vm.product.license.terms.walkinTerms}}
+                    </view-edit-yes-no-other>
+
+                </li>
+
+                <li>
+                    <label for="eReservesTerms">E-Reserves:</label>
+                    <view-edit-yes-no-other ng-model="vm.product.terms.eReservesTerms" edit-mode="true" input-id="eReservesTerms">
+                        {{ vm.product.terms.eReservesTerms || vm.product.license.terms.eReservesTerms}}
                     </view-edit-yes-no-other>
                 </li>
             </ul>

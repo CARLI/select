@@ -8,11 +8,13 @@
         <% }); %>
         <link type="text/css" rel="stylesheet" href="/css/app.css">
     </head>
-    <body role="application">
+    <body>
         <header carli-header role="banner"></header>
         <nav nav-bar role="navigation"></nav>
         <alerts></alerts>
-        <main ng-view role="main"></main>
+        <main role="main">
+            <div ng-view role="application"></div>
+        </main>
 
         <!-- compiled JavaScript -->
         <% scripts.forEach( function ( file ) { %>

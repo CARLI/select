@@ -3,7 +3,11 @@ angular.module('carli.viewEditDirectives.viewEditPercentageField')
         return {
             restrict: 'E',
             templateUrl: '/carliApp/components/viewEditDirectives/viewEditPercentageField/viewEditPercentageField.html',
-            scope: { ngModel: '=', editMode: '=' },
+            scope: {
+                ngModel: '=',
+                editMode: '=',
+                inputId: '@'
+            },
             transclude: true
         };
     });

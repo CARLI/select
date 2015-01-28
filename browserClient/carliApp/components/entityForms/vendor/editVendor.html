@@ -4,7 +4,7 @@
             <fieldset>
                 <div class="name">
                     <label for="vendorName">Vendor Name</label>
-                    <view-edit-text-field ng-model="vm.vendor.name" edit-mode="vm.editable">
+                    <view-edit-text-field ng-model="vm.vendor.name" edit-mode="vm.editable" input-id="vendorName">
                         <h1>{{ vm.vendor.name }}</h1>
                     </view-edit-text-field>
                 </div>
@@ -25,15 +25,23 @@
                 <div class="column">
 
                     <label for="vendorWebsite">Vendor Website</label>
-                    <view-edit-text-field ng-model="vm.vendor.websiteUrl" edit-mode="vm.editable"><span class="h3" ng-bind-html="vm.vendor.websiteUrl | linky:'_blank'"></span></view-edit-text-field>
+                    <view-edit-text-field ng-model="vm.vendor.websiteUrl" edit-mode="vm.editable" input-id="vendorWebsite">
+                        <span class="h3" ng-bind-html="vm.vendor.websiteUrl | linky:'_blank'"></span>
+                    </view-edit-text-field>
                     <label for="vendorStatus">Status</label>
-                    <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.vendor.isActive" edit-mode="vm.editable"><span class="h3">{{ vm.vendor.isActive ? 'Active' : 'Inactive' }}</span></view-edit-radios>
+                    <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.vendor.isActive" edit-mode="vm.editable" input-id="vendorStatus">
+                        <span class="h3">{{ vm.vendor.isActive ? 'Active' : 'Inactive' }}</span>
+                    </view-edit-radios>
                     <label for="vendorAdminModule">Admin Module</label>
-                    <view-edit-text-area class="admin-module" ng-model="vm.vendor.adminModule" edit-mode="vm.editable">{{ vm.vendor.adminModule }}</view-edit-text-area>
+                    <view-edit-text-area class="admin-module" ng-model="vm.vendor.adminModule" edit-mode="vm.editable" input-id="vendorAdminModule">
+                        {{ vm.vendor.adminModule }}
+                    </view-edit-text-area>
                 </div>
                 <div class="column">
                     <label for="vendorComments">Comments</label>
-                    <view-edit-text-area class="comments" ng-model="vm.vendor.comments" edit-mode="vm.editable">{{ vm.vendor.comments }}</view-edit-text-area>
+                    <view-edit-text-area class="comments" ng-model="vm.vendor.comments" edit-mode="vm.editable" input-id="vendorComments">
+                        {{ vm.vendor.comments }}
+                    </view-edit-text-area>
                 </div>
             </fieldset>
             <fieldset>
@@ -67,31 +75,31 @@
 
                     <div class="contact-list">
                         <label><em>Billing</em></label>
-                        <span class="pull-right add-contact" id="add-billing-contact" ng-show="vm.editable" ng-click="vm.addContact('Billing')">Add Contact</span>
+                        <button type="button" class="pull-right add-contact" id="add-billing-contact" ng-show="vm.editable" ng-click="vm.addContact('Billing')">Add Contact</button>
 
                         <div class="contact-list-item" ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Billing' }">
-                            <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
-                            <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
+                            <view-edit-contact contact="contact" edit-mode="vm.editable" input-id="billing{{ $index }}"></view-edit-contact>
+                            <button type="button" class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</button>
                         </div>
                     </div>
 
                     <div class="contact-list">
                         <label><em>Sales</em></label>
-                        <span class="pull-right add-contact" id="add-sales-contact" ng-show="vm.editable" ng-click="vm.addContact('Sales')">Add Contact</span>
+                        <button type="button" class="pull-right add-contact" id="add-sales-contact" ng-show="vm.editable" ng-click="vm.addContact('Sales')">Add Contact</button>
 
                         <div class="contact-list-item" ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Sales' }">
-                            <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
-                            <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
+                            <view-edit-contact contact="contact" edit-mode="vm.editable" input-id="sales{{ $index }}"></view-edit-contact>
+                            <button type="button" class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</button>
                         </div>
                     </div>
 
                     <div class="contact-list">
                         <label><em>Technical</em></label>
-                        <span class="pull-right add-contact" id="add-technical-contact" ng-show="vm.editable" ng-click="vm.addContact('Technical')">Add Contact</span>
+                        <button type="button" class="pull-right add-contact" id="add-technical-contact" ng-show="vm.editable" ng-click="vm.addContact('Technical')">Add Contact</button>
 
                         <div class="contact-list-item" ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Technical' }">
-                            <view-edit-contact contact="contact" edit-mode="vm.editable"></view-edit-contact>
-                            <span class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</span>
+                            <view-edit-contact contact="contact" edit-mode="vm.editable" input-id="technical{{ $index }}"></view-edit-contact>
+                            <button type="button" class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</button>
                         </div>
                     </div>
                 </div>

@@ -3,6 +3,10 @@ angular.module('carli.viewEditDirectives.viewEditContact')
         return {
             restrict: 'E',
             templateUrl: '/carliApp/components/viewEditDirectives/viewEditContact/viewEditContact.html',
-            scope: { contact: '=', editMode: '=' }
+            scope: {
+                contact: '=',
+                editMode: '=',
+                inputId: '@'
+            }
         };
     });

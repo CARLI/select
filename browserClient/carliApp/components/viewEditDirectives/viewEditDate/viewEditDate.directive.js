@@ -7,6 +7,7 @@ angular.module('carli.viewEditDirectives.viewEditDate')
                 ngModel: '=',
                 editMode: '=',
                 label: '@',
+                inputId: '@',
                 minDate: '@',
                 maxDate: '@'
             },
