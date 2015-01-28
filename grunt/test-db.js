@@ -16,7 +16,7 @@ module.exports = function (grunt) {
     });
     grunt.registerTask('deploy-test-otp-cycle', function() {
         var done = this.async();
-        var cycleName = testUtils.testDbMarker + ' otp-tests';
+        var cycleName = testUtils.testDbMarker + ' otp-cycle-tests';
         testUtils.setupTestDb();
         deployDb.createOneTimePurchaseCycle(cycleName, testUtils.getTestDbStore()).then(done);
         //grunt.task.run(['subdir-exec:'+projectRoot+'/db:./deploy.sh ' + testUtils.testDbName ]);

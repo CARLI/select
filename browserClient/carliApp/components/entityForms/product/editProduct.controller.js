@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.product')
     .controller('editProductController', editProductController);
 
-function editProductController( $scope, $rootScope, $filter, entityBaseService, libraryService, licenseService, productService, vendorService, alertService ) {
+function editProductController( $scope, $rootScope, $filter, entityBaseService, cycleService, libraryService, licenseService, productService, vendorService, alertService ) {
     var vm = this;
     var otpFieldsCopy = {};
     var termFieldsCopy = {};
@@ -15,6 +15,7 @@ function editProductController( $scope, $rootScope, $filter, entityBaseService, 
     vm.productId = $scope.productId;
     var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
+    vm.activeCycles = [];
     vm.toggleEditable = toggleEditable;
     vm.cancelEdit = cancelEdit;
     vm.cancelOtpEdit = revertOtpFields;
@@ -30,12 +31,16 @@ function editProductController( $scope, $rootScope, $filter, entityBaseService, 
     };
 
     vm.shouldShowOtpEditLink = function() {
-        return vm.editable && vm.product.cycleType == 'One-Time Purchase' && !vm.newProduct;
+        return vm.editable && vm.product.cycle.cycleType == 'One-Time Purchase' && !vm.newProduct;
     };
 
     vm.shouldShowTermsEditLink = function() {
         return vm.editable && !vm.newProduct;
     };
+
+    cycleService.listActiveCycles().then(function(activeCycles) {
+        vm.activeCycles = activeCycles;
+    });
 
     libraryService.list().then( function( libraryList ){
         vm.libraryList = libraryList;
@@ -49,14 +54,6 @@ function editProductController( $scope, $rootScope, $filter, entityBaseService, 
     $scope.$watch('vm.product.vendor', refreshLicenseList);
 
     vm.statusOptions = entityBaseService.getStatusOptions();
-
-    //TODO: Move this someplace more common than here (Cycle Service?)
-    vm.cycleOptions = [
-        "Fiscal Year",
-        "Calendar Year",
-        "One-Time Purchase",
-        "Alternative Cycle"
-    ];
 
     vm.productDetailCodeOptions = productService.getProductDetailCodeOptions();
 
@@ -74,6 +71,7 @@ function editProductController( $scope, $rootScope, $filter, entityBaseService, 
     function initializeForNewProduct() {
         vm.product = {
             type: 'Product',
+            cycle: cycleService.getCurrentCycle() || { cycleType: '' },
             isActive: true,
             contacts: [],
             libraryPrices: {}
@@ -124,7 +122,7 @@ function editProductController( $scope, $rootScope, $filter, entityBaseService, 
     }
 
     function isWizardComplete() {
-        if (vm.product.cycleType != 'One-Time Purchase') {
+        if (vm.product.cycle.cycleType != 'One-Time Purchase') {
             return true;
         }
         if (vm.currentTemplate == templates.oneTimePurchaseFields) {

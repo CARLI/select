@@ -40,7 +40,6 @@ function newCycleFormController( $scope, $rootScope, $location, alertService, cy
     }
 
     function setFormPristine(){
-        console.log('set pristine: ', $rootScope.forms ? $rootScope.forms.newCycleForm : $rootScope.forms);
         if ( $rootScope.forms && $rootScope.forms.newCycleForm ){
             $rootScope.forms.newCycleForm.$setPristine();
         }

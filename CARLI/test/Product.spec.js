@@ -1,4 +1,5 @@
 var chai   = require( 'chai' )
+    , config = require('../../config')
     , expect = chai.expect
     , uuid   = require( 'node-uuid' )
     , chaiAsPromised = require( 'chai-as-promised' )
@@ -15,14 +16,15 @@ chai.use( chaiAsPromised );
 
 var yesterday = moment().subtract(1, 'week');
 var tomorrow = moment().add(1, 'week');
-
+var testCycleId = uuid.v4();
 
 function validProductData() {
     return {
         type: 'Product',
         name: 'Valid Product',
         isActive: true,
-        vendor: 'fake-vendor-id'
+        vendor: 'fake-vendor-id',
+        cycle: testCycleId
     };
 }
 function invalidProductData() {
@@ -32,6 +34,7 @@ function invalidProductData() {
 }
 function testCycleData() {
     return {
+        id: testCycleId,
         idalId: 200,
         name: testUtils.testDbMarker + ' Product Tests 2014',
         cycleType: 'Calendar Year',
@@ -47,25 +50,32 @@ function testCycleData() {
 function availableOneTimePurchaseProduct() {
     var product = validProductData();
     product.id = uuid.v4();
-    product.cycleType = 'One-Time Purchase';
+    product.cycle = config.oneTimePurchaseProductsCycleDocId;
     product.oneTimePurchase = { availableForPurchaseThrough: tomorrow.toISOString() };
     return product;
 }
 function unavailableOneTimePurchaseProduct() {
     var product = validProductData();
     product.id = uuid.v4();
-    product.cycleType = 'One-Time Purchase';
+    product.cycle = config.oneTimePurchaseProductsCycleDocId;
     product.oneTimePurchase = { availableForPurchaseThrough: yesterday.toISOString() };
     return product;
 }
 
 describe('Run the product tests', function () {
-    it ('runs tests', function (done) {
+    it ('runs product tests', function (done) {
         return CycleRepository.create(testCycleData())
             .then(CycleRepository.load)
             .then(function (testCycle) {
                 test.run('Product', validProductData, invalidProductData, testCycle);
                 runProductSpecificTests(testCycle);
+                done();
+            });
+    });
+    it ('also runs one time purchase product tests', function (done) {
+         return CycleRepository.load(config.oneTimePurchaseProductsCycleDocId)
+            .then(function (testCycle) {
+                runOneTimePurchaseProductTests(testCycle);
                 done();
             });
     });
@@ -127,8 +137,283 @@ function runProductSpecificTests(testCycle) {
         });
     });
 
+    describe('ListProductsForLicenseId View', function () {
+        it('should have a listProductsForLicenseId method', function () {
+            expect(ProductRepository.listProductsForLicenseId).to.be.a('function');
+        });
 
-    xdescribe('ProductRepository.listOneTimePurchaseProducts()', function () {
+        var license1 = {id: uuid.v4(), type: "License", name: "my license 1 name", isActive: true};
+        var license2 = {id: uuid.v4(), type: "License", name: "my license 2 name", isActive: true};
+        var product1 = {
+            id: uuid.v4(),
+            type: "Product",
+            name: "my product 1 name",
+            isActive: true,
+            license: license1.id,
+            vendor: "bogus",
+            cycle: testCycleId
+        };
+        var product2 = {
+            id: uuid.v4(),
+            type: "Product",
+            name: "my product 2 name",
+            isActive: true,
+            license: license1.id,
+            vendor: "bogus",
+            cycle: testCycleId
+        };
+        var product3 = {
+            id: uuid.v4(),
+            type: "Product",
+            name: "my product 3 name",
+            isActive: true,
+            license: license2.id,
+            vendor: "bogus",
+            cycle: testCycleId
+        };
+        var product4 = {
+            id: uuid.v4(),
+            type: "Product",
+            name: "my product 4 name",
+            isActive: true,
+            vendor: "bogus",
+            cycle: testCycleId
+        };
+
+        it('should return products associated with a license', function () {
+            return ProductRepository.create(product1, testCycle)
+                .then(function () {
+                    return ProductRepository.create(product2, testCycle);
+                })
+                .then(function () {
+                return ProductRepository.create(product3, testCycle);
+            })
+                .then(function () {
+                return ProductRepository.create(product4, testCycle);
+            })
+                .then(function () {
+                    return ProductRepository.listProductsForLicenseId(license1.id, testCycle);
+                })
+                .then(function (productList) {
+
+                    function verifyAllProductsHaveLicense(productList) {
+                        var match = true;
+                        var licenseToMatch = license1;
+
+                        productList.forEach(function (product) {
+                            if (product.license !== licenseToMatch.id) {
+                                match = true;
+                            }
+                        });
+
+                        return match;
+                    }
+
+                    return expect(productList).to.be.an('array').and.have.length(2).and.satisfy(verifyAllProductsHaveLicense);
+                });
+        });
+    });
+
+
+    describe('listProductsForVendorId View', function () {
+        it('should have a listProductsForVendorId method', function () {
+            expect(ProductRepository.listProductsForVendorId).to.be.a('function');
+        });
+
+        var vendor1 = {id: uuid.v4(), type: "Vendor", name: "my vendor 1 name", isActive: true};
+        var vendor2 = {id: uuid.v4(), type: "Vendor", name: "my vendor 2 name", isActive: true};
+        var product1 = {
+            id: uuid.v4(),
+            type: "Product",
+            name: "my product 1 name",
+            isActive: true,
+            license: "bogus",
+            vendor: vendor1.id,
+            cycle: testCycleId
+        };
+        var product2 = {
+            id: uuid.v4(),
+            type: "Product",
+            name: "my product 2 name",
+            isActive: true,
+            license: "bogus",
+            vendor: vendor1.id,
+            cycle: testCycleId
+        };
+        var product3 = {
+            id: uuid.v4(),
+            type: "Product",
+            name: "my product 3 name",
+            isActive: true,
+            license: "bogus",
+            vendor: vendor2.id,
+            cycle: testCycleId
+        };
+        var product4 = {
+            id: uuid.v4(),
+            type: "Product",
+            name: "my product 4 name",
+            isActive: true,
+            license: "bogus",
+            vendor: "bogus",
+            cycle: testCycleId
+        };
+
+        it('should return products associated with a vendor', function () {
+            return ProductRepository.create(product1, testCycle)
+                .then(function () {
+                    return ProductRepository.create(product2, testCycle);
+                })
+                .then(function () {
+                return ProductRepository.create(product3, testCycle);
+            })
+                .then(function () {
+                return ProductRepository.create(product4, testCycle);
+            })
+                .then(function () {
+                    return ProductRepository.listProductsForVendorId(vendor1.id, testCycle);
+                })
+                .then(function (productList) {
+
+                    function verifyAllProductsHaveVendor(productList) {
+                        var match = true;
+                        var vendorToMatch = vendor1;
+
+                        productList.forEach(function (product) {
+                            if (product.vendor !== vendorToMatch.id) {
+                                match = true;
+                            }
+                        });
+
+                        return match;
+                    }
+
+                    return expect(productList).to.be.an('array').and.have.length(2).and.satisfy(verifyAllProductsHaveVendor);
+                });
+        });
+    });
+
+    describe('Adding functions to Product instances', function () {
+        it('should add a getIsActive method to instances of Product', function () {
+            var product = validProductData();
+
+            return ProductRepository.create(product, testCycle)
+                .then(function (productId) {
+                    return ProductRepository.load(productId, testCycle);
+                })
+                .then(function (loadedProduct) {
+                    return expect(loadedProduct.getIsActive).to.be.a('function');
+                });
+        });
+
+        describe('the Product.getIsActive method', function () {
+            it('should return true for an active Product with an active Vendor', function () {
+                var vendor = {id: uuid.v4(), type: "Vendor", name: "my vendor name", isActive: true};
+                var product = {id: uuid.v4(), type: "Product", name: "my product name", isActive: true, cycle: testCycleId };
+
+                return VendorRepository.create(vendor)
+                    .then(function () {
+                        product.vendor = vendor;
+                        return ProductRepository.create(product, testCycle);
+                    })
+                    .then(function () {
+                    return ProductRepository.load(product.id, testCycle);
+                })
+                    .then(function (loadedProduct) {
+                    return expect(loadedProduct.getIsActive()).to.equal(true);
+                });
+            });
+
+            it('should return false for an active Product with an inactive Vendor', function () {
+
+                var vendor = {id: uuid.v4(), type: "Vendor", name: "my vendor name", isActive: false};
+                var product = {id: uuid.v4(), type: "Product", name: "my product name", isActive: true, cycle: testCycleId};
+
+                return VendorRepository.create(vendor)
+                    .then(function () {
+                        product.vendor = vendor;
+                        return ProductRepository.create(product, testCycle);
+                    })
+                    .then(function () {
+                    return ProductRepository.load(product.id, testCycle);
+                })
+                    .then(function (loadedProduct) {
+                    return expect(loadedProduct.getIsActive()).to.equal(false);
+                });
+            });
+
+            it('should return false for an inactive Product with an inactive Vendor', function () {
+
+                var vendor = {id: uuid.v4(), type: "Vendor", name: "my vendor name", isActive: false};
+                var product = {id: uuid.v4(), type: "Product", name: "my product name", isActive: false, cycle: testCycleId};
+
+                return VendorRepository.create(vendor)
+                    .then(function () {
+                        product.vendor = vendor;
+                        return ProductRepository.create(product, testCycle);
+                    })
+                    .then(function () {
+                    return ProductRepository.load(product.id, testCycle);
+                })
+                    .then(function (loadedProduct) {
+                    return expect(loadedProduct.getIsActive()).to.equal(false);
+                });
+            });
+
+            it('should return false for an inactive Product with an active Vendor', function () {
+                var vendor = {id: uuid.v4(), type: "Vendor", name: "my vendor name", isActive: true};
+                var product = {id: uuid.v4(), type: "Product", name: "my product name", isActive: false, cycle: testCycleId};
+
+                return VendorRepository.create(vendor)
+                    .then(function () {
+                        product.vendor = vendor;
+                        return ProductRepository.create(product, testCycle);
+                    })
+                    .then(function () {
+                    return ProductRepository.load(product.id, testCycle);
+                })
+                    .then(function (loadedProduct) {
+                    return expect(loadedProduct.getIsActive()).to.equal(false);
+                });
+            });
+
+            //The Repository call will fail when trying to load a Product with no Vendor, but the Vendor should fail
+            it('should return false for an inactive Product with an empty Vendor');
+            it('should return true for an active Product with an empty Vendor');
+        });
+    });
+
+    describe('Helper functions for getting Enum values from the Product Schema', function () {
+
+        it('should have a getProductDetailCodeOptions function', function () {
+            expect(ProductRepository.getProductDetailCodeOptions).to.be.a('function');
+        });
+
+        describe('the getProductDetailCodeOptions function', function () {
+            it('should return expected values', function () {
+                var testData = [
+                    "USIA - Membership",
+                    "USIB - Database",
+                    "USIE - Misc.",
+                    "USIF - I-Share",
+                    "USIG - Chronicle of Higher Education",
+                    "USIH - OED",
+                    "USII - Spring Database",
+                    "USIJ - Fall Database",
+                    "USIK - SFX",
+                    "USIL - SFX",
+                    "USIM - I-Share Pre-Pay",
+                    "USIN - Database Pre-Pay"
+                ];
+
+                expect(ProductRepository.getProductDetailCodeOptions()).to.have.members(testData);
+            });
+        });
+    });
+}
+
+function runOneTimePurchaseProductTests(testCycle) {
+    describe('ProductRepository.listOneTimePurchaseProducts()', function (done) {
         it('should list a product that is available through tomorrow', function () {
             var availableProduct = availableOneTimePurchaseProduct();
 
@@ -185,266 +470,6 @@ function runProductSpecificTests(testCycle) {
                 function catchList(err) {
                     console.log('listAvailableOneTimePurchaseProducts failed: ' + err);
                 })
-        });
-    });
-
-    describe('ListProductsForLicenseId View', function () {
-        it('should have a listProductsForLicenseId method', function () {
-            expect(ProductRepository.listProductsForLicenseId).to.be.a('function');
-        });
-
-        var license1 = {id: uuid.v4(), type: "License", name: "my license 1 name", isActive: true};
-        var license2 = {id: uuid.v4(), type: "License", name: "my license 2 name", isActive: true};
-        var product1 = {
-            id: uuid.v4(),
-            type: "Product",
-            name: "my product 1 name",
-            isActive: true,
-            license: license1.id,
-            vendor: "bogus"
-        };
-        var product2 = {
-            id: uuid.v4(),
-            type: "Product",
-            name: "my product 2 name",
-            isActive: true,
-            license: license1.id,
-            vendor: "bogus"
-        };
-        var product3 = {
-            id: uuid.v4(),
-            type: "Product",
-            name: "my product 3 name",
-            isActive: true,
-            license: license2.id,
-            vendor: "bogus"
-        };
-        var product4 = {id: uuid.v4(), type: "Product", name: "my product 4 name", isActive: true, vendor: "bogus"};
-
-        it('should return products associated with a license', function () {
-            return ProductRepository.create(product1, testCycle)
-                .then(function () {
-                    return ProductRepository.create(product2, testCycle);
-                })
-                .then(function () {
-                return ProductRepository.create(product3, testCycle);
-            })
-                .then(function () {
-                return ProductRepository.create(product4, testCycle);
-            })
-                .then(function () {
-                    return ProductRepository.listProductsForLicenseId(license1.id, testCycle);
-                })
-                .then(function (productList) {
-
-                    function verifyAllProductsHaveLicense(productList) {
-                        var match = true;
-                        var licenseToMatch = license1;
-
-                        productList.forEach(function (product) {
-                            if (product.license !== licenseToMatch.id) {
-                                match = true;
-                            }
-                        });
-
-                        return match;
-                    }
-
-                    return expect(productList).to.be.an('array').and.have.length(2).and.satisfy(verifyAllProductsHaveLicense);
-                });
-        });
-    });
-
-
-    describe('listProductsForVendorId View', function () {
-        it('should have a listProductsForVendorId method', function () {
-            expect(ProductRepository.listProductsForVendorId).to.be.a('function');
-        });
-
-        var vendor1 = {id: uuid.v4(), type: "Vendor", name: "my vendor 1 name", isActive: true};
-        var vendor2 = {id: uuid.v4(), type: "Vendor", name: "my vendor 2 name", isActive: true};
-        var product1 = {
-            id: uuid.v4(),
-            type: "Product",
-            name: "my product 1 name",
-            isActive: true,
-            license: "bogus",
-            vendor: vendor1.id
-        };
-        var product2 = {
-            id: uuid.v4(),
-            type: "Product",
-            name: "my product 2 name",
-            isActive: true,
-            license: "bogus",
-            vendor: vendor1.id
-        };
-        var product3 = {
-            id: uuid.v4(),
-            type: "Product",
-            name: "my product 3 name",
-            isActive: true,
-            license: "bogus",
-            vendor: vendor2.id
-        };
-        var product4 = {
-            id: uuid.v4(),
-            type: "Product",
-            name: "my product 4 name",
-            isActive: true,
-            license: "bogus",
-            vendor: "bogus"
-        };
-
-        it('should return products associated with a vendor', function () {
-            return ProductRepository.create(product1, testCycle)
-                .then(function () {
-                    return ProductRepository.create(product2, testCycle);
-                })
-                .then(function () {
-                return ProductRepository.create(product3, testCycle);
-            })
-                .then(function () {
-                return ProductRepository.create(product4, testCycle);
-            })
-                .then(function () {
-                    return ProductRepository.listProductsForVendorId(vendor1.id, testCycle);
-                })
-                .then(function (productList) {
-
-                    function verifyAllProductsHaveVendor(productList) {
-                        var match = true;
-                        var vendorToMatch = vendor1;
-
-                        productList.forEach(function (product) {
-                            if (product.vendor !== vendorToMatch.id) {
-                                match = true;
-                            }
-                        });
-
-                        return match;
-                    }
-
-                    return expect(productList).to.be.an('array').and.have.length(2).and.satisfy(verifyAllProductsHaveVendor);
-                });
-        });
-    });
-
-    describe('Adding functions to Product instances', function () {
-        it('should add a getIsActive method to instances of Product', function () {
-            var product = validProductData();
-
-            return ProductRepository.create(product, testCycle)
-                .then(function (productId) {
-                    return ProductRepository.load(productId, testCycle);
-                })
-                .then(function (loadedProduct) {
-                    return expect(loadedProduct.getIsActive).to.be.a('function');
-                });
-        });
-
-        describe('the Product.getIsActive method', function () {
-            it('should return true for an active Product with an active Vendor', function () {
-                var vendor = {id: uuid.v4(), type: "Vendor", name: "my vendor name", isActive: true};
-                var product = {id: uuid.v4(), type: "Product", name: "my product name", isActive: true};
-
-                return VendorRepository.create(vendor)
-                    .then(function () {
-                        product.vendor = vendor;
-                        return ProductRepository.create(product, testCycle);
-                    })
-                    .then(function () {
-                    return ProductRepository.load(product.id, testCycle);
-                })
-                    .then(function (loadedProduct) {
-                    return expect(loadedProduct.getIsActive()).to.equal(true);
-                });
-            });
-
-            it('should return false for an active Product with an inactive Vendor', function () {
-
-                var vendor = {id: uuid.v4(), type: "Vendor", name: "my vendor name", isActive: false};
-                var product = {id: uuid.v4(), type: "Product", name: "my product name", isActive: true};
-
-                return VendorRepository.create(vendor)
-                    .then(function () {
-                        product.vendor = vendor;
-                        return ProductRepository.create(product, testCycle);
-                    })
-                    .then(function () {
-                    return ProductRepository.load(product.id, testCycle);
-                })
-                    .then(function (loadedProduct) {
-                    return expect(loadedProduct.getIsActive()).to.equal(false);
-                });
-            });
-
-            it('should return false for an inactive Product with an inactive Vendor', function () {
-
-                var vendor = {id: uuid.v4(), type: "Vendor", name: "my vendor name", isActive: false};
-                var product = {id: uuid.v4(), type: "Product", name: "my product name", isActive: false};
-
-                return VendorRepository.create(vendor)
-                    .then(function () {
-                        product.vendor = vendor;
-                        return ProductRepository.create(product, testCycle);
-                    })
-                    .then(function () {
-                    return ProductRepository.load(product.id, testCycle);
-                })
-                    .then(function (loadedProduct) {
-                    return expect(loadedProduct.getIsActive()).to.equal(false);
-                });
-            });
-
-            it('should return false for an inactive Product with an active Vendor', function () {
-                var vendor = {id: uuid.v4(), type: "Vendor", name: "my vendor name", isActive: true};
-                var product = {id: uuid.v4(), type: "Product", name: "my product name", isActive: false};
-
-                return VendorRepository.create(vendor)
-                    .then(function () {
-                        product.vendor = vendor;
-                        return ProductRepository.create(product, testCycle);
-                    })
-                    .then(function () {
-                    return ProductRepository.load(product.id, testCycle);
-                })
-                    .then(function (loadedProduct) {
-                    return expect(loadedProduct.getIsActive()).to.equal(false);
-                });
-            });
-
-            //The Repository call will fail when trying to load a Product with no Vendor, but the Vendor should fail
-            it('should return false for an inactive Product with an empty Vendor');
-            it('should return true for an active Product with an empty Vendor');
-        });
-    });
-
-    describe('Helper functions for getting Enum values from the Product Schema', function () {
-
-        it('should have a getProductDetailCodeOptions function', function () {
-            expect(ProductRepository.getProductDetailCodeOptions).to.be.a('function');
-        });
-
-        describe('the getProductDetailCodeOptions function', function () {
-            it('should return expected values', function () {
-                var testData = [
-                    "USIA - Membership",
-                    "USIB - Database",
-                    "USIE - Misc.",
-                    "USIF - I-Share",
-                    "USIG - Chronicle of Higher Education",
-                    "USIH - OED",
-                    "USII - Spring Database",
-                    "USIJ - Fall Database",
-                    "USIK - SFX",
-                    "USIL - SFX",
-                    "USIM - I-Share Pre-Pay",
-                    "USIN - Database Pre-Pay"
-                ];
-
-                expect(ProductRepository.getProductDetailCodeOptions()).to.have.members(testData);
-            });
         });
     });
 }

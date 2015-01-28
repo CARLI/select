@@ -12,6 +12,10 @@
             "description": "Name of the product",
             "type": "string"
         },
+        "cycle": {
+            "description": "UUID of a Cycle document",
+            "type": "string"
+        },
         "vendor": {
             "description": "UUID of a Vendor document",
             "type": "string"
@@ -30,9 +34,6 @@
         },
         "hasArchiveCapitalFee": {
             "type": "boolean"
-        },
-        "cycleType": {
-            "$ref": "./CycleType.json"
         },
         "fundings": {
             "type": "array",
@@ -70,5 +71,5 @@
             "$ref": "./OneTimePurchase.json"
         }
     },
-    "required": [ "name", "vendor" ]
+    "required": [ "name", "cycle", "vendor" ]
 }
