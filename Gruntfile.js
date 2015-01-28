@@ -37,6 +37,8 @@ module.exports = function(grunt) {
         grunt.task.run(['subdir-exec:browserClient/e2e:npm install']);
         grunt.task.run(['subdir-exec:CARLI:npm install']);
         grunt.task.run(['subdir-exec:db:npm install']);
+        grunt.task.run(['subdir-exec:middleware:npm install']);
+        grunt.task.run(['subdir-exec:config:npm install']);
     });
     grunt.registerTask('bower-install', function() {
         grunt.task.run(['subdir-exec:browserClient:bower --allow-root install']);
