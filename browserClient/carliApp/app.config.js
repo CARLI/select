@@ -1,5 +1,6 @@
 angular.module('carli.app', [
     'ngRoute',
+    'carli.cycleService',
     'carli.carliHeader',
     'carli.debugPanel',
     'carli.fa',
@@ -8,5 +9,9 @@ angular.module('carli.app', [
     'carli.routes'
 ])
 .config(function($locationProvider){
-    $locationProvider.html5Mode(true);    
+    $locationProvider.html5Mode(true);
+})
+.run(function(cycleService){
+    console.log('In app.run');
+    cycleService.initCurrentCycle();
 });
