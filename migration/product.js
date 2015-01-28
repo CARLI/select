@@ -87,12 +87,12 @@ function extractProduct( row, cycle, vendorIdMapping ){
     return {
         name: row.product_name,
         vendor: vendorIdMapping[row.vendor_id],
+        cycle: cycle,
         productUrl: '',
         description: '',
         comments: '',
         isThirdPartyProduct: false,
         hasArchiveCapitalFee: false,
-        cycleType: cycle.cycleType,
         isActive: true
 //        fundings: '',
 //        license: '',
