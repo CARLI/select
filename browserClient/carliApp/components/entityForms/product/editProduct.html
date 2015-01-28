@@ -81,7 +81,7 @@
 
                         <label for="cycle">Cycle</label>
                         <view-edit-select-object ng-model="vm.product.cycle" objects="vm.activeCycles" label-property="name" track-by="id" edit-mode="vm.newProduct" input-id="cycle">
-                            {{ vm.product.cycle }}
+                            {{ vm.product.cycle.name }}
                         </view-edit-select-object>
                         <a data-toggle="modal" data-target="#otp-modal" ng-show="vm.shouldShowOtpEditLink()">Edit One-Time Purchases <fa name="edit"></fa></a>
 
