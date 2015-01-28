@@ -12,7 +12,6 @@ function productController( $sce, cycleService, productService ){
     function activate() {
         cycleService.listActiveCycles().then(function(activeCycles) {
             vm.activeCycles = activeCycles;
-            console.log('cycles', activeCycles);
         });
     }
 
@@ -46,8 +45,6 @@ function productController( $sce, cycleService, productService ){
     ];
 
     function setCurrentCycle(){
-        console.log('current cycle: ',vm.currentCycle);
-
         cycleService.setCurrentCycle( vm.currentCycle );
 
         productService.list().then( function(productList){
