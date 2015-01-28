@@ -13,6 +13,7 @@ var Q = require('q')
  * If you want a fully expanded Entity, use the Repository load function explicitly.
  */
 var repositories = {
+    cycle : Entity('Cycle'),
     library : Entity('Library'),
     license : Entity('License'),
     //product : Entity('Product'), //TODO: how to set this one for the correct Cycle as well?
@@ -20,6 +21,7 @@ var repositories = {
 };
 
 function setEntityLookupStores( newStore ){
+    repositories.cycle.setStore( newStore );
     repositories.library.setStore( newStore );
     repositories.license.setStore( newStore );
     repositories.vendor.setStore( newStore );

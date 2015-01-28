@@ -10,7 +10,7 @@ var Entity = require('../Entity')
 
 var ProductRepository = Entity('Product');
 
-var propertiesToTransform = ['vendor', 'license'];
+var propertiesToTransform = ['cycle', 'vendor', 'license'];
 
 function transformFunction( product ){
     EntityTransform.transformObjectForPersistence(product, propertiesToTransform);
@@ -61,7 +61,6 @@ function listAvailableOneTimePurchaseProducts(){
         listProducts(cycle)
             .then(function (allProducts) {
                 var p = allProducts
-                    .filter(isOneTimePurchaseProduct)
                     .filter(isActive)
                     .filter(isAvailableToday);
                 deferred.resolve(p);
@@ -74,9 +73,6 @@ function listAvailableOneTimePurchaseProducts(){
     return deferred.promise;
 }
 
-function isOneTimePurchaseProduct( product ){
-    return product.cycleType === 'One-Time Purchase';
-}
 function isActive( product ){
     return product.getIsActive();
 }
