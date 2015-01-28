@@ -4,32 +4,6 @@ var Q = require('q');
 var couchapp = require('couchapp');
 var domain = require('domain');
 
-var carliMiddleware = express();
-
-carliMiddleware.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
-
-carliMiddleware.put('/design-doc/:dbName', function (req, res) {
-    putDesignDoc(req.params.dbName).then(function() {
-        res.send({ status: 'Ok' });
-    }).catch(function (err) {
-        res.send( { error: err } );
-    });
-});
-
-var server = carliMiddleware.listen(config.middleware.port, function () {
-
-    var host = server.address().address;
-    var port = server.address().port;
-
-    console.log('CARLI Middleware listening at http://%s:%s', host, port);
-
-});
-
 function putDesignDoc(dbName) {
     var deferred = Q.defer();
 
@@ -53,4 +27,44 @@ function putDesignDoc(dbName) {
     });
 
     return deferred.promise;
+}
+
+function _enableCors(carliMiddleware) {
+    carliMiddleware.use(function (req, res, next) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        next();
+    });
+}
+
+function runMiddlewareServer(){
+    var carliMiddleware = express();
+    _enableCors(carliMiddleware);
+    carliMiddleware.put('/design-doc/:dbName', function (req, res) {
+        putDesignDoc(req.params.dbName).then(function() {
+            res.send({ status: 'Ok' });
+        }).catch(function (err) {
+            res.send( { error: err } );
+        });
+    });
+
+    var server = carliMiddleware.listen(config.middleware.port, function () {
+
+        var host = server.address().address;
+        var port = server.address().port;
+
+        console.log('CARLI Middleware listening at http://%s:%s', host, port);
+
+    });
+}
+
+
+if (require.main === module) {
+    runMiddlewareServer();
+}
+else {
+    module.exports = {
+        putDesignDoc: putDesignDoc
+    }
 }

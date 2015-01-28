@@ -1,7 +1,7 @@
-var config = require( '../../../config'),
+var middleware = require('../../../config/environmentDependentModules').middleware,
     Q = require('q'),
-    request = config.request,
-    StoreOptions = config.storeOptions
+    request = require('../../../config/environmentDependentModules').request,
+    StoreOptions = require( '../../../config').storeOptions
 ;
 
 function getCouchViewResults( dbName, viewName, key) {
@@ -50,7 +50,7 @@ function createDatabase(dbName) {
         if (error) {
             deferred.reject(error);
         } else if (response.statusCode >= 200 && response.statusCode <= 299) {
-            putDesignDoc(dbName).then(function () {
+            middleware.putDesignDoc(dbName).then(function () {
                 deferred.resolve();
             });
         } else {
@@ -61,21 +61,10 @@ function createDatabase(dbName) {
     return deferred.promise;
 }
 
-function putDesignDoc(dbName) {
-    var deferred = Q.defer();
-    request.put(config.getMiddlewareUrl() + '/design-doc/' + dbName, function(error, response, body) {
-        if (error) {
-            deferred.reject(error);
-        } else {
-            deferred.resolve();
-        }
-    });
-    return deferred.promise;
-}
+
 
 module.exports = {
     getCouchViewResults: getCouchViewResults,
     makeValidCouchDbName: makeValidCouchDbName,
-    createDatabase: createDatabase,
-    putDesignDoc: putDesignDoc
+    createDatabase: createDatabase
 };

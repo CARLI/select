@@ -15,7 +15,6 @@ var defaults = {
         couchDbName: couchDbName
     },
     oneTimePurchaseProductsCycleDocId: 'one-time-purchase-products-cycle',
-    request: require('./environmentDependentModules').request,
     storePath: 'CouchDb/Store'
 };
 

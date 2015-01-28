@@ -5,7 +5,7 @@ var test = require( './Entity/EntityInterface.spec' )
     , chaiAsPromised = require( 'chai-as-promised' )
     , CycleRepository = require( '../Entity/CycleRepository' )
     , config = require('../../config')
-    , request = config.request
+    , request = require('../../config/environmentDependentModules').request
     , storeOptions = config.storeOptions
     , testUtils = require('./utils')
 ;

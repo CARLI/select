@@ -1,3 +1,4 @@
 module.exports = {
-    request: require('browser-request')
+    request: require('browser-request'),
+    middleware: require('../middleware/browserAdapter')
 };

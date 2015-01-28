@@ -1,3 +1,4 @@
 module.exports = {
-    request: require('request')
+    request: require('request'),
+    middleware: require('../middleware')
 };

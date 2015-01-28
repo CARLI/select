@@ -1,6 +1,5 @@
 var Q = require('q')
-  , config = require( '../../../config' )
-  , request = config.request
+  , request = require('../../../config/environmentDependentModules').request
   , CouchUtils = require( './Utils')
 ;
 
