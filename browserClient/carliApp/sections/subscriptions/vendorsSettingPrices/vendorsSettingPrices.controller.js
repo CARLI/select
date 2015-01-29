@@ -4,6 +4,20 @@ angular.module('carli.sections.subscriptions.vendorsSettingPrices')
 function vendorsSettingPricesController( $scope, alertService, libraryService, productService, vendorService ) {
     var vm = this;
     vm.closeVendorPricing = closeVendorPricing;
+    vm.offeringDisplayOptions = [
+        {
+            label: 'Display with price',
+            value: 'with-price'
+        },
+        {
+            label: 'Display without price',
+            value: 'without-price'
+        },
+        {
+            label: 'Do not display',
+            value: 'none'
+        }
+    ];
     activate();
 
     function activate () {
@@ -55,12 +69,21 @@ function vendorsSettingPricesController( $scope, alertService, libraryService, p
 
         libraryService.list().then(function(libraryList){
             angular.forEach(libraryList, function (library) {
-                product.offerings.push({
-                    library: library,
-                    pricing: {
-                        site: 1000
+                product.offerings.push(
+                    {
+                        library: library,
+                        display: "with-price",
+                        internalComments: "",
+                        pricing: {
+                            site: 1000,
+                            su: {
+                                1: 500,
+                                2: 1000,
+                                4: 2000
+                            }
+                        }
                     }
-                });
+                );
             });
         });
     }
