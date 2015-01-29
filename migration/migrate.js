@@ -27,7 +27,8 @@ function doMigration(){
         .then(migrateProducts)
         .then(migrateOfferings)
         .then(finishMigration)
-        .then(closeConnection);
+        .then(closeConnection)
+        .done();
 
 
     function migrateLibraries(){

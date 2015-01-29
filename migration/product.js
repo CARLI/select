@@ -23,7 +23,6 @@ function migrateProducts(connection, cycle, vendorIdMapping){
     connection.query(query, function(err, rows, fields) {
         console.log('  Migrating products for cycle "' + cycle.name + '" - got ' + rows.length + ' products');
         if(err) { console.log(err); }
-        products = rows;
 
         extractProducts(rows, cycle, vendorIdMapping).then(function(idMap){
             resultsPromise.resolve(idMap);
@@ -38,7 +37,7 @@ function extractProducts(productRows, cycle, vendorIdMapping){
     var extractProductsPromises = [];
     var resultsPromise = Q.defer();
 
-    for (var i in products) {
+    for (var i in productRows) {
         var createProductPromise = createProduct(productRows[i], cycle, vendorIdMapping);
 
         extractProductsPromises.push(createProductPromise);
