@@ -1,4 +1,4 @@
-    #!/bin/sh
+#!/bin/sh
 
 instance=$1
 tag=$2

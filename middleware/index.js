@@ -16,8 +16,9 @@ function putDesignDoc(dbName) {
 
     d.run(function() {
         couchapp.createApp(designDoc, url, function(app) {
-            app.push();
-            deferred.resolve();
+            app.push(function() {
+                deferred.resolve();
+            });
         });
     });
 
