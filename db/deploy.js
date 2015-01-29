@@ -12,30 +12,31 @@ function getDbUrl(dbName) {
     return config.storeOptions.couchDbUrl + '/' + dbName;
 }
 
-function makePromise(fun) {
-    var deferred = Q.defer();
-    fun(deferred);
-    return deferred.promise;
-}
-
 function recreateDb(dbName) {
+    var deferred = Q.defer();
     var dbUrl = getDbUrl(dbName);
 
-    return makePromise(function(deferred) {
-        request.del(dbUrl, function () {
-            request.put(dbUrl, function () {
+    request.del(dbUrl, function () {
+        request.put(dbUrl, function (err) {
+            if (err) {
+                console.log("Error creating database '"+dbName+"':" + err);
+                deferred.reject(err);
+            } else {
                 console.log("Created database " + dbName);
                 deferred.resolve();
-            });
+            }
         });
     });
+    return deferred.promise;
 }
 
 function deployDb(dbName) {
     if (!dbName) {
         dbName = config.storeOptions.couchDbName;
     }
-    return recreateDb(dbName).then(middleware.putDesignDoc(dbName));
+    return recreateDb(dbName).then(function() {
+        return middleware.putDesignDoc(dbName)
+    });
 }
 
 function createOneTimePurchaseCycle(cycleName, store) {
