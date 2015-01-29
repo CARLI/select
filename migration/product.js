@@ -8,7 +8,8 @@ function migrateProducts(connection, cycle, vendorIdMapping){
 
     var query = "SELECT v.id AS vendor_id, " +
         "v.name AS vendor_name, " +
-        "d.name AS product_name " +
+        "d.name AS product_name, " +
+        "d.id AS product_id " +
         "FROM vendor v, vendor_db vd, db d, vendor_db_su vds, collections c " +
         "WHERE " +
         "c.id = "+cycle.idalId+" AND " +
@@ -51,7 +52,7 @@ function extractProducts(productRows, cycle, vendorIdMapping){
         extractProductsPromises.push(createProductPromise);
 
         createProductPromise.then(function(resultObj){
-            couchIdsToIdalIds[resultObj.couchId] = resultObj.idalLegacyId;
+            couchIdsToIdalIds[resultObj.idalLegacyId] = resultObj.couchId;
         });
     }
 
@@ -69,14 +70,13 @@ function createProduct( productRow, cycle, vendorIdMapping ) {
     var product = extractProduct(productRow, cycle, vendorIdMapping);
     ProductRepository.create( product, cycle )
         .then(function(id) {
-            console.log('ok: ' + id);
             couchIdPromise.resolve({
-                couchId: id,
-                idalLegacyId: productRow.id
+                idalLegacyId: productRow.product_id,
+                couchId: id
             });
         })
         .catch(function(err) {
-            console.log(err);
+            console.log('Error creating product: ', err);
             couchIdPromise.reject();
         });
 
