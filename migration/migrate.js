@@ -2,11 +2,13 @@
 
 var CycleRepository = require('../CARLI').Cycle;
 var cycleMigration = require('./cycle');
+var libraryMigration = require('./library');
 var migrationConfig = require('./config');
 var mysql = require('mysql');
 var productMigration = require('./product');
 var Q = require('q');
 var vendorMigration = require('./vendor');
+
 
 doMigration();
 
@@ -14,17 +16,32 @@ function doMigration(){
     var connection = initMySQL();
 
     vendorIdMapping = {};
+    libraryIdMapping = {};
 
-    migrateVendors()
+    migrateLibraries()
+        .then(migrateVendors)
         .then(migrateCyclesAndProducts)
         .then(closeConnection);
 
-    function migrateVendors () {
+
+    function migrateLibraries(){
+        console.log("+++ Migrating Libraries");
+
+        return libraryMigration.migrateLibraries(connection);
+    }
+
+    function migrateVendors(libraryMapping) {
+        libraryIdMapping = libraryMapping;
+        console.log('Migrated ' + Object.keys(libraryMapping).length + ' libraries');
+
         console.log("+++ Migrating Vendors");
         return vendorMigration.migrateVendors(connection);
     }
 
-    function migrateCyclesAndProducts(vendorIdMapping) {
+    function migrateCyclesAndProducts(vendorMapping) {
+        vendorIdMapping = vendorMapping;
+        console.log('Migrated ' + Object.keys(vendorMapping).length + ' vendors');
+
         console.log("+++ Migrating Cycles");
         var deferred = Q.defer();
         var promises = [];
