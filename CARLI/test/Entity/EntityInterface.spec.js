@@ -170,8 +170,10 @@ function test( entityTypeName, validData, invalidData, cycle ) {
                         return EntityRepository.load(entityId, cycle);
                     })
                     .then( function (loaded_entity) {
-                        delete loaded_entity.name;
-                        return expect( EntityRepository.update( loaded_entity, cycle ) ).to.be.rejectedWith( /validation error/ );
+                        var bad_data = invalidData();
+                        bad_data.id = loaded_entity.id;
+                        bad_data._rev = loaded_entity._rev; //this is bad but pretty much just as bad as the previous test - make it not couch specific
+                        return expect( EntityRepository.update( bad_data, cycle ) ).to.be.rejectedWith( /validation error/ );
                     });
             } );
 
