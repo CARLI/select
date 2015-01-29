@@ -16,6 +16,7 @@ var validTypes = [
     'Library',
     'License',
     'MembershipLevel',
+    'Offering',
     'OneTimePurchase',
     'PriceCap',
     'Product',
