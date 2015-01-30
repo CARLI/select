@@ -64,7 +64,7 @@ function createCycles(cycles) {
 }
 
 function createCycle(cycle){
-    console.log('creating: ' + cycle.name);
+    console.log('  creating cycle: ' + cycle.name);
 
     var couchIdPromise = Q.defer();
 

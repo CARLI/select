@@ -1,14 +1,13 @@
 var ProductRepository = require('../CARLI').Product;
 var Q = require('q');
 
-var printedWarning = false;
-
 function migrateProducts(connection, cycle, vendorIdMapping){
     var resultsPromise = Q.defer();
 
     var query = "SELECT v.id AS vendor_id, " +
         "v.name AS vendor_name, " +
-        "d.name AS product_name " +
+        "d.name AS product_name, " +
+        "d.id AS product_id " +
         "FROM vendor v, vendor_db vd, db d, vendor_db_su vds, collections c " +
         "WHERE " +
         "c.id = "+cycle.idalId+" AND " +
@@ -21,16 +20,9 @@ function migrateProducts(connection, cycle, vendorIdMapping){
         "GROUP BY product_name " +
         "ORDER BY vendor_name, product_name";
 
-    if (!printedWarning) {
-        console.log('Go check your email or something, this query is slow...');
-        console.log(query);
-        printedWarning = true;
-    }
-
     connection.query(query, function(err, rows, fields) {
-        console.log('queried ' + rows.length + ' products');
+        console.log('  Migrating products for cycle "' + cycle.name + '" - got ' + rows.length + ' products');
         if(err) { console.log(err); }
-        products = rows;
 
         extractProducts(rows, cycle, vendorIdMapping).then(function(idMap){
             resultsPromise.resolve(idMap);
@@ -45,13 +37,13 @@ function extractProducts(productRows, cycle, vendorIdMapping){
     var extractProductsPromises = [];
     var resultsPromise = Q.defer();
 
-    for (var i in products) {
+    for (var i in productRows) {
         var createProductPromise = createProduct(productRows[i], cycle, vendorIdMapping);
 
         extractProductsPromises.push(createProductPromise);
 
         createProductPromise.then(function(resultObj){
-            couchIdsToIdalIds[resultObj.couchId] = resultObj.idalLegacyId;
+            couchIdsToIdalIds[resultObj.idalLegacyId] = resultObj.couchId;
         });
     }
 
@@ -63,20 +55,19 @@ function extractProducts(productRows, cycle, vendorIdMapping){
 }
 
 function createProduct( productRow, cycle, vendorIdMapping ) {
-    console.log('creating: ' + productRow.product_name);
+    //console.log('  creating: ' + productRow.product_name);
 
     var couchIdPromise = Q.defer();
     var product = extractProduct(productRow, cycle, vendorIdMapping);
     ProductRepository.create( product, cycle )
         .then(function(id) {
-            console.log('ok: ' + id);
             couchIdPromise.resolve({
-                couchId: id,
-                idalLegacyId: productRow.id
+                idalLegacyId: productRow.product_id,
+                couchId: id
             });
         })
         .catch(function(err) {
-            console.log(err);
+            console.log('Error creating product: ', err);
             couchIdPromise.reject();
         });
 

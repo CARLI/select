@@ -13,7 +13,6 @@ function migrateVendors(connection) {
     var query = "select * from vendor";
     connection.query(query, function(err, rows, fields) {
         if(err) { console.log(err); }
-        vendors = rows;
 
         extractVendors(rows).then(function(idMap){
             resultsPromise.resolve(idMap);
@@ -46,7 +45,7 @@ function extractVendors(vendors) {
 }
 
 function createVendor(vendorRow){
-    console.log('creating: ' + vendorRow.name);
+    //console.log('  creating vendor ' + vendorRow.name);
 
     var couchIdPromise = Q.defer();
     var vendor = extractVendor(vendorRow);

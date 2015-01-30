@@ -1,0 +1,41 @@
+{
+    "$schema": "json-schema.org/draft-04/schema",
+    "title": "Offering",
+    "schemaType": "Offering",
+    "type": "object",
+    "properties": {
+        "id" : {
+            "description": "Unique identifier",
+            "type": "string"
+        },
+        "cycle": {
+            "description": "UUID of a Cycle document",
+            "type": "string"
+        },
+        "library": {
+            "description": "UUID of a Library document",
+            "type": "string"
+        },
+        "product": {
+            "description": "UUID of a Product document",
+            "type": "string"
+        },
+        "display": {
+            "description": "Controls how the offer is shown to the library",
+            "type": "string",
+            "enum": [
+                "with-price",
+                "without-price",
+                "none"
+            ]
+        },
+        "internalComments": {
+            "description": "Comments on the offering for internal staff use",
+            "type": "string"
+        },
+        "pricing": {
+            "description": "An object with a site-license price and a map of su numbers to prices"
+        }
+    },
+    "required": [ "cycle", "library", "product" ]
+}

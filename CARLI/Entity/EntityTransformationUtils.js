@@ -4,6 +4,7 @@ var Q = require('q')
   , StoreOptions = config.storeOptions
   , Store = require( '../Store' )
   , StoreModule = require( '../Store/CouchDb/Store')
+  , _ = require('lodash')
   ;
 
 /**
@@ -16,8 +17,10 @@ var repositories = {
     cycle : Entity('Cycle'),
     library : Entity('Library'),
     license : Entity('License'),
-    //product : Entity('Product'), //TODO: how to set this one for the correct Cycle as well?
     vendor : Entity('Vendor')
+};
+var cycleBoundRepositories = {
+    product : Entity('Product')
 };
 
 function setEntityLookupStores( newStore ){
@@ -25,6 +28,10 @@ function setEntityLookupStores( newStore ){
     repositories.library.setStore( newStore );
     repositories.license.setStore( newStore );
     repositories.vendor.setStore( newStore );
+}
+
+function getStoreForCycle(cycle) {
+    return Store( StoreModule(_.extend({}, StoreOptions, { couchDbName: cycle.databaseName })) );
 }
 
 function removeEmptyContactsFromEntity(entity) {
@@ -126,7 +133,19 @@ function _fetchAllObjectsFromReferences(entity, referencesArray) {
         var property = referencesArray[i];
 
         if (entity[property]) {
-            var p = repositories[property].load(entity[property]);
+            var p = null;
+
+            if (repositories[property]) {
+                p = repositories[property].load(entity[property]);
+            }
+            else if (cycleBoundRepositories[property]) {
+                /* This is for loading reference entities that are tied to a cycle (i.e. products).
+                 * We assume that entity.cycle is a fully-loaded cycle object, not just an ID.
+                 */
+                var repo = cycleBoundRepositories[property];
+                repo.setStore( getStoreForCycle(entity.cycle) );
+                p = repo.load(entity[property]);
+            }
             promises.push( p );
         }
     }
