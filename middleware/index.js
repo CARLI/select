@@ -5,28 +5,36 @@ var couchapp = require('couchapp');
 var domain = require('domain');
 
 function putDesignDoc(dbName) {
-    var deferred = Q.defer();
+    var putDocPromise = Q.defer();
 
     var docName = 'CARLI-DesignDoc.js';
     var designDoc = require('../db/' + docName);
 
-    var d = domain.create();
+    var couchAppDomain = domain.create();
 
     var url = config.storeOptions.couchDbUrl + '/' + dbName + '/_design/CARLI';
 
-    d.run(function() {
+    /*
+     *  Running couchApp in its own domain allows you to actually see and deal with errors that it throws.
+     *  The negative side effect is that any code that follows the putDocPromise will also be error-handled by this domain,
+     *  because all code executed from this promise's .then() and afterwards is run inside that domain as well.
+     */
+
+    //couchAppDomain.run(function() {
         couchapp.createApp(designDoc, url, function(app) {
-            app.push();
-            deferred.resolve();
+            app.push(function() {
+                console.log("Finished putting design doc");
+                putDocPromise.resolve();
+            });
         });
-    });
+    //});
 
-    d.on('error', function(err) {
-        console.log("Error Putting Design Document:", err);
-        deferred.reject("Error Putting Design Document: " + err);
-    });
+    //couchAppDomain.on('error', function(err) {
+    //    console.log("Error Putting Design Document:", err);
+    //    putDocPromise.reject("Error Putting Design Document: " + err);
+    //});
 
-    return deferred.promise;
+    return putDocPromise.promise;
 }
 
 function _enableCors(carliMiddleware) {
