@@ -1,11 +1,11 @@
 var OfferingRepository = require('../CARLI').Offering;
 var Q = require('q');
 
-function migrateOfferings(connection, cycle, libraryIdMapping, offeringIdMapping){
+function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping){
     var resultsPromise = Q.defer();
 
     var query = "SELECT " +
-    "    vds.id as id " +
+    "    vds.id as id, " +
     "    vd.library_id, " +
     "    d.id as product_id, " +
     "    num_su as su, " +
@@ -19,51 +19,78 @@ function migrateOfferings(connection, cycle, libraryIdMapping, offeringIdMapping
     "vd.db_id = d.id AND " +
     "vds.vendor_db_id = vd.id AND " +
     "vds.price > 0 " +
-    "ORDER BY product_id, library_id;"
+    "ORDER BY product_id, library_id;";
 
     connection.query(query, function(err, rows, fields) {
+        // rows = rows.slice(0, 10000);
+
         console.log('  Migrating offerings for cycle "' + cycle.name + '" - got ' + rows.length + ' offerings');
         if(err) { console.log(err); }
 
-        extractOfferings(rows, cycle, libraryIdMapping, productIdMapping).then(function(idMap){
-            resultsPromise.resolve(idMap);
+        var uniqueOfferings = extractUniqueProductLibraryOfferings(rows, cycle, libraryIdMapping, productIdMapping);
+
+        console.log('Extracted '+ Object.keys(uniqueOfferings).length +' unique Offerings');
+        var offeringsList = extractPricingForOfferings(uniqueOfferings, rows, cycle, libraryIdMapping, productIdMapping);
+
+        createOfferings(offeringsList, cycle, libraryIdMapping, productIdMapping).then(function(){
+            resultsPromise.resolve(offeringsList.length);
         });
     });
 
     return resultsPromise.promise;
 }
 
-function extractOfferings(offeringRows, cycle, libraryIdMapping, productIdMapping){
-    var couchIdsToIdalIds = {};
-    var extractOfferingsPromises = [];
-    var resultsPromise = Q.defer();
+function extractUniqueProductLibraryOfferings(offeringRows, cycle, libraryIdMapping, productIdMapping) {
+    var uniqueOfferings = {};
 
     for (var i in offeringRows) {
-        var createOfferingPromise = createOffering(offeringRows[i], cycle, libraryIdMapping, productIdMapping);
+        var row = offeringRows[i];
+        if (uniqueOfferings[offeringKey(row)]) {
+            continue;
+        }
+        uniqueOfferings[offeringKey(row)] = extractNascentOffering(row, cycle, libraryIdMapping, productIdMapping);
+    }
+    
+    return uniqueOfferings;
+}
 
-        extractOfferingsPromises.push(createOfferingPromise);
+function extractPricingForOfferings(uniqueOfferings, offeringRows) {
+    for (var i in offeringRows) {
+        var row = offeringRows[i];
+        var key = offeringKey(row);
+        if (row.su == 0) {
+            uniqueOfferings[key].pricing.site = row.price;
+        } else {
+            uniqueOfferings[key].pricing.su[row.su] = row.price;
+        }
+    }
+    return Object.keys(uniqueOfferings).map(function(k) {
+        return uniqueOfferings[k];
+    });
+}
 
-        createOfferingPromise.then(function(resultObj){
-            couchIdsToIdalIds[resultObj.idalLegacyId] = resultObj.couchId;
-        });
+function createOfferings(offeringsList, cycle){
+    var createPromises = [];
+    var resultsPromise = Q.defer();
+
+    for (var i in offeringsList) {
+        var createOfferingPromise = createOffering(offeringsList[i], cycle);
+
+        createPromises.push(createOfferingPromise);
     }
 
-    Q.all(extractOfferingsPromises).then(function(){
-        resultsPromise.resolve(couchIdsToIdalIds);
+    Q.all(createPromises).then(function(){
+        resultsPromise.resolve();
     });
 
     return resultsPromise.promise;
 }
 
-function createOffering( offeringRow, cycle, libraryIdMapping, productIdMapping ) {
+function createOffering( offering, cycle ) {
     var couchIdPromise = Q.defer();
-    var offering = extractOffering(offeringRow, cycle, libraryIdMapping, productIdMapping);
     OfferingRepository.create( offering, cycle )
         .then(function(id) {
-            couchIdPromise.resolve({
-                idalLegacyId: offeringRow.id,
-                couchId: id
-            });
+            couchIdPromise.resolve();
         })
         .catch(function(err) {
             console.log('Error creating offering: ', err);
@@ -73,8 +100,8 @@ function createOffering( offeringRow, cycle, libraryIdMapping, productIdMapping 
     return couchIdPromise.promise;
 }
 
-function extractOffering( row, cycle, libraryIdMapping, productIdMapping ){
-    var offering = {
+function extractNascentOffering( row, cycle, libraryIdMapping, productIdMapping ){
+    return {
         library: libraryIdMapping[row.library_id],
         product: productIdMapping[row.product_id],
         cycle: cycle,
@@ -82,9 +109,10 @@ function extractOffering( row, cycle, libraryIdMapping, productIdMapping ){
             su : {}
         }
     };
+}
 
-    offering.pricing.su[row.su] = row.price;
-    return offering;
+function offeringKey(o) {
+    return o.product_id + '-' + o.library_id;
 }
 
 module.exports = {
