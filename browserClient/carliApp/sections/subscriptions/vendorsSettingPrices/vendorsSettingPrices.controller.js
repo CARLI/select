@@ -1,28 +1,17 @@
 angular.module('carli.sections.subscriptions.vendorsSettingPrices')
     .controller('vendorsSettingPricesController', vendorsSettingPricesController);
 
-function vendorsSettingPricesController( $scope, alertService, libraryService, productService, vendorService ) {
+function vendorsSettingPricesController( $scope, alertService, vendorService, offeringService ) {
     var vm = this;
     vm.closeVendorPricing = closeVendorPricing;
-    vm.offeringDisplayOptions = [
-        {
-            label: 'Display with price',
-            value: 'with-price'
-        },
-        {
-            label: 'Display without price',
-            value: 'without-price'
-        },
-        {
-            label: 'Do not display',
-            value: 'none'
-        }
-    ];
+    vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
+    vm.vendors = [];
+
     activate();
 
     function activate () {
         initSortable();
-        loadVendors();
+        loadOfferings();
     }
 
     function initSortable() {
@@ -44,6 +33,37 @@ function vendorsSettingPricesController( $scope, alertService, libraryService, p
         };
     }
 
+    function loadOfferings() {
+        offeringService.list().then(function (offerings) {
+            var productsByVendor = {};
+            var offeringsByProduct = {};
+
+            offerings.forEach(function(offering) {
+                var vendorId = offering.product.vendor;
+                var productId = offering.product.id;
+
+                productsByVendor[vendorId] = productsByVendor[vendorId] || [];
+                offeringsByProduct[productId] = offeringsByProduct[productId] || [];
+
+                productsByVendor[vendorId].push(offering.product);
+                offeringsByProduct[productId].push(offering);
+            });
+
+            var vendors = [];
+            for (var vendorId in productsByVendor) {
+                for (var productId in offeringsByProduct) {
+                    productsByVendor[vendorId].offerings = offeringsByProduct[productId];
+                }
+                vendors.push({
+                    id: vendorId,
+                    name: "Who knows",
+                    products: productsByVendor[vendorId]
+                });
+            }
+        });
+    }
+
+    /*
     function loadVendors() {
         vendorService.list().then(function (vendors) {
             vm.vendors = vendors;
@@ -87,6 +107,7 @@ function vendorsSettingPricesController( $scope, alertService, libraryService, p
             });
         });
     }
+    */
 
     function closeVendorPricing(){
         $scope.cycle.returnToPreviousStep();

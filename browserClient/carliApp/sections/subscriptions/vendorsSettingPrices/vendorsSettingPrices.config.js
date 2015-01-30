@@ -1,6 +1,6 @@
 angular.module('carli.sections.subscriptions.vendorsSettingPrices', [
     'carli.cycleService',
-    'carli.productService',
+    'carli.offeringService',
     'carli.vendorService',
     'carli.accordion',
     'carli.viewEditDirectives'
