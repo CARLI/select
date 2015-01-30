@@ -6,5 +6,6 @@ function editCycleController( $routeParams, $location, cycleService ) {
     cycleRouter.cycleId = $routeParams.id;
     cycleService.load(cycleRouter.cycleId).then( function( cycle ) {
         cycleRouter.cycle = cycle;
+        cycleService.setCurrentCycle(cycle);
     } );
 }
