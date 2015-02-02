@@ -1,17 +1,18 @@
 angular.module('carli.sections.subscriptions.vendorsSettingPrices')
     .controller('vendorsSettingPricesController', vendorsSettingPricesController);
 
-function vendorsSettingPricesController( $scope, alertService, vendorService, offeringService ) {
+function vendorsSettingPricesController( $scope, alertService, vendorService, offeringService, productService ) {
     var vm = this;
     vm.closeVendorPricing = closeVendorPricing;
     vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
+    vm.loadProductsForVendor = loadProductsForVendor;
     vm.vendors = [];
 
     activate();
 
     function activate () {
         initSortable();
-        loadOfferings();
+        loadVendors();
     }
 
     function initSortable() {
@@ -33,47 +34,12 @@ function vendorsSettingPricesController( $scope, alertService, vendorService, of
         };
     }
 
-    function loadOfferings() {
-        offeringService.list().then(function (offerings) {
-            var productsByVendor = {};
-            var offeringsByProduct = {};
-
-            offerings.forEach(function(offering) {
-                var vendorId = offering.product.vendor;
-                var productId = offering.product.id;
-
-                productsByVendor[vendorId] = productsByVendor[vendorId] || {};
-                offeringsByProduct[productId] = offeringsByProduct[productId] || [];
-
-                productsByVendor[vendorId][offering.product.id] = offering.product;
-                offeringsByProduct[productId].push(offering);
-            });
-
-            for (var vendorId in productsByVendor) {
-                for (var productId in offeringsByProduct) {
-                    productsByVendor[vendorId][productId].offerings = offeringsByProduct[productId];
-                }
-                vm.vendors.push({
-                    id: vendorId,
-                    name: "Who knows",
-                    products: objectToArray(productsByVendor[vendorId])
-                });
-            }
-        });
-    }
-
-    function objectToArray(obj) {
-        return Object.keys(obj).map(function(key) {
-            return obj[key];
-        });
-    }
-    /*
     function loadVendors() {
         vendorService.list().then(function (vendors) {
             vm.vendors = vendors;
-            angular.forEach(vendors, function (vendor) {
-                loadProductsForVendor(vendor);
-            });
+            //angular.forEach(vendors, function (vendor) {
+            //    loadProductsForVendor(vendor);
+            //});
         });
     }
 
@@ -81,37 +47,13 @@ function vendorsSettingPricesController( $scope, alertService, vendorService, of
         productService.listProductsForVendorId(vendor.id).then(function (products) {
             vendor.products = products;
 
-            //generate fake offerings data
             angular.forEach(products, function (product) {
-                mockupOfferingsForLibraries( product );
+                offeringService.listOfferingsForProductId(product.id).then(function(offerings) {
+                    product.offerings = offerings;
+                });
             });
         });
     }
-
-    function mockupOfferingsForLibraries( product ){
-        product.offerings = [];
-
-        libraryService.list().then(function(libraryList){
-            angular.forEach(libraryList, function (library) {
-                product.offerings.push(
-                    {
-                        library: library,
-                        display: "with-price",
-                        internalComments: "",
-                        pricing: {
-                            site: 1000,
-                            su: {
-                                1: 500,
-                                2: 1000,
-                                4: 2000
-                            }
-                        }
-                    }
-                );
-            });
-        });
-    }
-    */
 
     function closeVendorPricing(){
         $scope.cycle.returnToPreviousStep();

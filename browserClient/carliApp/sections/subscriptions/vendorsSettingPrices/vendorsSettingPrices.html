@@ -1,6 +1,6 @@
 <ul class="vendor-accordion" ng-repeat="vendor in vm.vendors">
     <li carli-accordion>
-        <header>
+        <header ng-click="vm.loadProductsForVendor(vendor)">
             <button type="button" class="angle-icon-container">
                 <fa name="angle-down"></fa>
             </button>
