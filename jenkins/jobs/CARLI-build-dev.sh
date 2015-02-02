@@ -10,6 +10,7 @@ $SCRIPTS/build-container.sh couchdb &&
 $SCRIPTS/build-container.sh grunt &&
 $SCRIPTS/tag-container.sh couchdb latest &&
 $SCRIPTS/tag-container.sh grunt latest &&
+$SCRIPTS/run-data-container.sh dev latest &&
 $SCRIPTS/run-db-container.sh dev latest 9091 &&
 $SCRIPTS/run-test-container.sh dev latest &&
 $SCRIPTS/tag-container.sh couchdb last-good &&
