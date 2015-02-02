@@ -1,4 +1,4 @@
-var memoryStore = {}
+var memoryStore = {},
     Q = require('q')
 ;
 
@@ -20,7 +20,14 @@ function idForTypeExistsInStore( type, id ) {
 
 function getDataFor( type, id ) {
     var deferred = Q.defer();
-    deferred.resolve( JSON.parse( JSON.stringify( memoryStore[type][id] ) ) );
+
+    if ( memoryStore[type] && memoryStore[type][id] ){
+        deferred.resolve( _cloneData(memoryStore[type][id]) );
+    }
+    else {
+        deferred.reject( 'not_found' );
+    }
+
     return deferred.promise;
 }
 

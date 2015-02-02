@@ -17,7 +17,7 @@ function test( storeTypeName, options ) {
             id:     uuid.v4(),
             type:   'testType'
         }
-    };
+    }
 
     describe( storeTypeName, function() {
         var DataStore = store( storeType );
@@ -25,7 +25,6 @@ function test( storeTypeName, options ) {
         it( 'should be a module', function() {
             expect(DataStore).to.be.an('object');
         } );
-
 
         it( 'should have a save function', function() {
             expect(DataStore.save).to.be.a('function');
@@ -42,13 +41,6 @@ function test( storeTypeName, options ) {
                     DataStore.save( { type: 'test'} );
                 }
                 expect( saveMissingIdProperty ).to.throw( /Requires id property/ );
-            } );
-
-            it( 'should fail without a type property in the data', function() {
-                function saveMissingTypeProperty() {
-                    DataStore.save( { id: '0' } );
-                }
-                expect( saveMissingTypeProperty ).to.throw( /Requires type property/ );
             } );
 
             it( 'should save data and return id', function() {
@@ -77,8 +69,6 @@ function test( storeTypeName, options ) {
             simpleObject.foo = 'bar';
             var simpleObjectSaveId  = null;
 
-
-
             var objectWithId = makeValidObject();
             objectWithId.id = uuid.v4();
             objectWithId.foo = 'baz';
@@ -99,20 +89,8 @@ function test( storeTypeName, options ) {
                 expect( DataStore.get ).to.throw( /Requires an id/ );
             } );
 
-            function badGetNoType(){
-                DataStore.get({ id: 'foo' });
-            }
-
-            it( 'should fail without a type argument', function(){
-               expect( badGetNoType ).to.throw( /Requires a type/ );
-            } );
-
-            it( 'should fail when the type is not in the store', function() {
-                return expect( DataStore.get({ id: uuid.v4(), type: uuid.v4() })).to.be.rejectedWith( /Type not found/ );
-            } );
-
             it( 'should fail when an id not found', function() {
-                return expect( DataStore.get( { id: uuid.v4(), type: 'testType' } )).to.be.rejectedWith( /Id not found/ );
+                return expect( DataStore.get( { id: uuid.v4(), type: 'testType' } )).to.be.rejectedWith( /not_found/ );
             } );
 
             it( 'should return stored data for id', function() {
@@ -219,22 +197,9 @@ function test( storeTypeName, options ) {
                 expect( DataStore.delete ).to.throw( /Requires an id/ );
             } );
 
-            function badGetNoType(){
-                DataStore.delete({ id: 'foo' });
-            }
-
-            it( 'should fail without a type argument', function(){
-                expect( badGetNoType ).to.throw( /Requires a type/ );
-            } );
-
-            it( 'should fail when the type is not in the store', function() {
-                expect( DataStore.delete({ id: uuid.v4(), type: uuid.v4() }) )
-                  .to.be.rejectedWith( /Type not found/ );
-            } );
-
             it( 'should fail when an id not found', function() {
                 expect( DataStore.delete( { id: uuid.v4(), type: 'testType' } ) )
-                  .to.be.rejectedWith( /Id not found/ );
+                  .to.be.rejectedWith( /not_found/ );
             } );
 
             it('should delete a valid object', function () {

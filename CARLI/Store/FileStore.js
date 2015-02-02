@@ -43,7 +43,7 @@ function getDataFor( type, id ) {
 
     fs.readFile( resourcePath + '/' + type + '/' + id + '.json', function( err, data ) {
         err
-            ? deferred.reject( err )
+            ? deferred.reject( 'not_found' )
             : deferred.resolve( JSON.parse( data ) );
     } );
 
@@ -67,8 +67,8 @@ function _ensureStoreTypeExists( type ) {
         if ( err.code == 'EEXIST' ) {
             return true;
         }
-        throw new Error(err);
-    };
+        throw new Error('not_found');
+    }
 }
 
 function _cloneData( data ) {
