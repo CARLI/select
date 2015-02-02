@@ -50,7 +50,9 @@ function test( entityTypeName, validData, invalidData, cycle ) {
             } );
 
             it( 'should return an id string', function() {
-                return expect( EntityRepository.create( validData(), cycle ) ).to.eventually.be.an('string');
+                return EntityRepository.create( validData(), cycle ).then(function( entityId ){
+                    return expect( entityId ).to.be.a('string');
+                });
             } );
 
             it( 'should use a new id for new objects', function() {
@@ -89,7 +91,7 @@ function test( entityTypeName, validData, invalidData, cycle ) {
             } );
 
             it( 'should be rejected if id not found', function() {
-                return expect( EntityRepository.load( uuid.v4(), cycle ) ).to.be.rejectedWith( 'Id not found' );
+                return expect( EntityRepository.load( uuid.v4(), cycle ) ).to.be.rejectedWith( 'not_found' );
             } );
 
 

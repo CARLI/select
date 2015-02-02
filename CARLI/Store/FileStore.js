@@ -1,140 +1,102 @@
-var memoryStore = {}
-  , fs   = require( 'fs' )
-  , resourcePath = undefined
-  , Q = require( 'q' )
-;
+var fs = require('fs');
+var Q = require('q');
 
-function typeExistsInStore( type ) {
-    var deferred = Q.defer();
-
-    fs.stat( resourcePath + '/' + type, function( err, stats ) {
-        if ( err ) {
-            deferred.reject();
-        }
-        else {
-            stats.isDirectory()
-                ? deferred.resolve()
-                : deferred.reject();
-        }
-    } );
-
-    return deferred.promise;
+function _cloneData(data) {
+    return JSON.parse(JSON.stringify(data));
 }
 
-function idForTypeExistsInStore( type, id ) {
-    var deferred = Q.defer();
-
-    fs.stat( resourcePath + '/' + type + '/' + id + '.json', function( err, stats ) {
-        if ( err ) {
-            deferred.reject();
-        }
-        else {
-            stats.isFile()
-                ? deferred.resolve()
-                : deferred.reject();
-        }
-    } );
-
-    return deferred.promise;
-}
-
-function getDataFor( type, id ) {
-    var deferred = Q.defer();
-
-    fs.readFile( resourcePath + '/' + type + '/' + id + '.json', function( err, data ) {
-        err
-            ? deferred.reject( err )
-            : deferred.resolve( JSON.parse( data ) );
-    } );
-
-    return deferred.promise;
-}
-
-function _ensureStoreTypeExists( type ) {
+function _ensureStoreDirectoryExists(path) {
     try {
-        fs.mkdirSync( resourcePath, '0777' )
+        fs.mkdirSync(path, '0777')
     }
-    catch(err){
-        if ( err.code !== 'EEXIST' ) {
+    catch (err) {
+        if (err.code !== 'EEXIST') {
             throw new Error(err);
         }
     }
-
-    try {
-        fs.mkdirSync( resourcePath + '/' + type, '0777' );
-    }
-    catch(err) { 
-        if ( err.code == 'EEXIST' ) {
-            return true;
-        }
-        throw new Error(err);
-    };
 }
 
-function _cloneData( data ) {
-    return JSON.parse( JSON.stringify( data ) );
-}
+module.exports = function (options) {
+    var resourcePath = options.resourcePath;
 
-function storeData( data ) {
-    _ensureStoreTypeExists( data.type );
+    _ensureStoreDirectoryExists(resourcePath);
 
-    var deferred = Q.defer();
-
-    fs.writeFile(
-        resourcePath + '/' + data.type + '/' + data.id + '.json',
-        JSON.stringify(data),
-        function( err ) {
-            err
-                ? deferred.reject()
-                : deferred.resolve( _cloneData( data ) );
-        }
-    ); 
-
-    return deferred.promise; 
-}
-
-function listDataFor( type ) {
-    var deferred = Q.defer();
-
-    fs.readdir( resourcePath + '/' + type, function( err, files ) {
-        if ( err ) {
-            deferred.resolve( [] );
-        }
-        else {
-            var promises = [];
-            files.forEach( function( id ) {
-                promises.push( getDataFor( type, id.slice(0,-5) ) );
-            } );
-            Q.all(promises).then(function (list) {
-                deferred.resolve( list );
-            });
-        }
-    } );
-
-    return deferred.promise;
-}
-
-function deleteDataFor( type, id ) {
-    var deferred = Q.defer();
-
-    fs.unlink( resourcePath + '/' + type + '/' + id + '.json', function( err ) {
-        err
-            ? deferred.reject()
-            : deferred.resolve();
-    } );
-
-    return deferred.promise;
-}
-
-
-module.exports = function( options ) {
-    resourcePath = options.resourcePath;
     return {
-        typeExistsInStore: typeExistsInStore,
-        idForTypeExistsInStore: idForTypeExistsInStore,
         getDataFor: getDataFor,
         storeData: storeData,
         listDataFor: listDataFor,
         deleteDataFor: deleteDataFor
+    };
+
+
+    function getDataFor(id) {
+        var deferred = Q.defer();
+
+        fs.readFile(resourcePath + '/' + id + '.json', function (err, data) {
+            if (err) {
+                deferred.reject('not_found')
+            }
+            else {
+                deferred.resolve(JSON.parse(data));
+            }
+        });
+
+        return deferred.promise;
     }
-}
+
+    function storeData(data) {
+        var deferred = Q.defer();
+
+        fs.writeFile(
+            resourcePath + '/' + data.id + '.json', JSON.stringify(data), function (err) {
+                if (err) {
+                    deferred.reject(err);
+                }
+                else {
+                    deferred.resolve(_cloneData(data));
+                }
+            }
+        );
+
+        return deferred.promise;
+    }
+
+    function listDataFor(type) {
+        var deferred = Q.defer();
+
+        fs.readdir(resourcePath + '/', function (err, files) {
+            if (err) {
+                deferred.resolve([]);
+            }
+            else {
+                var promises = [];
+                files.forEach(function (id) {
+                    promises.push(getDataFor(id.slice(0, -5)));
+                });
+                Q.all(promises).then(function (list) {
+                    var listByType = list.filter(function (entity) {
+                        return entity.type && entity.type === type;
+                    });
+                    deferred.resolve(listByType);
+                });
+            }
+        });
+
+        return deferred.promise;
+    }
+
+    function deleteDataFor(id) {
+        var deferred = Q.defer();
+
+        fs.unlink(resourcePath + '/' + id + '.json', function (err) {
+            if (err) {
+                deferred.reject(err);
+            }
+            else {
+                deferred.resolve();
+            }
+        });
+
+        return deferred.promise;
+    }
+};

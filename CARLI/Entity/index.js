@@ -93,14 +93,14 @@ module.exports = function (type) {
             if ( !id ){
                 throw new Error('Id Required');
             }
-            return dataStore.get( { id: id, type: type } );
+            return dataStore.get( id );
         },
 
         delete: function( id ){
             if ( !id ){
                 throw new Error('Id Required');
             }
-            return dataStore.delete( { id: id, type: type } );
+            return dataStore.delete( id );
         }
 
     };

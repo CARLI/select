@@ -42,7 +42,7 @@ function loadOffering( offeringId, cycle ){
                 })
                 .catch(function(err){
                     // WARNING: this suppresses errors for entity references that are not found in the store
-                    console.warn('*** Cannot find reference in database to either cycle, library, or product in offering ', err);
+                    //console.warn('*** Cannot find reference in database to either cycle, library, or product in offering ', err);
                     deferred.resolve(offering);
                 });
         })
