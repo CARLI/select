@@ -55,7 +55,7 @@ function loadLicense( licenseId ){
                 })
                 .catch(function(err){
                     // WARNING: this suppresses errors for entity references that are not found in the store
-                    console.warn('*** Cannot find reference in database to vendor in license', err);
+                    //console.warn('*** Cannot find reference in database to vendor in license', err);
                     deferred.resolve(license);
                 });
         })
