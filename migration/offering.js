@@ -95,7 +95,10 @@ function extractPricingForOfferings(uniqueOfferings, offeringRows) {
         if (row.su == 0) {
             uniqueOfferings[key].pricing.site = row.price;
         } else {
-            uniqueOfferings[key].pricing.su[row.su] = row.price;
+            uniqueOfferings[key].pricing.su.push({
+                users: row.su,
+                price: row.price
+            });
         }
     }
     return Object.keys(uniqueOfferings).map(function(k) {
@@ -140,7 +143,7 @@ function extractNascentOffering( row, cycle, libraryIdMapping, productIdMapping 
         product: productIdMapping[row.product_id],
         cycle: cycle,
         pricing: {
-            su : {}
+            su : []
         }
     };
 }

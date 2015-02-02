@@ -24,7 +24,7 @@
             @include sortable-column-header;
         }
 
-        li {
+        & > li {
             @include flexbox;
 
             &:not(.column-headers) {

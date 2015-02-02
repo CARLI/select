@@ -48,7 +48,12 @@
                                 </div>
                             </div>
                             <div class="column site-license-price">
-                                <div class="placeholder">Site License Price</div>
+                                <ul class="su-pricing">
+                                    <li>Site License: {{ offering.pricing.site | currency }}</li>
+                                    <li ng-repeat="offer in offering.pricing.su | orderBy:'users'">
+                                        <span>{{ offer.users }}</span>:<span>{{ offer.price | currency }}</span>
+                                    </li>
+                                </ul>
                             </div>
                             <div class="column flag">
                                 <div class="placeholder">Flag</div>

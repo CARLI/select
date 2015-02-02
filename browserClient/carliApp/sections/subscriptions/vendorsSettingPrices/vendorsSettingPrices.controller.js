@@ -42,27 +42,31 @@ function vendorsSettingPricesController( $scope, alertService, vendorService, of
                 var vendorId = offering.product.vendor;
                 var productId = offering.product.id;
 
-                productsByVendor[vendorId] = productsByVendor[vendorId] || [];
+                productsByVendor[vendorId] = productsByVendor[vendorId] || {};
                 offeringsByProduct[productId] = offeringsByProduct[productId] || [];
 
-                productsByVendor[vendorId].push(offering.product);
+                productsByVendor[vendorId][offering.product.id] = offering.product;
                 offeringsByProduct[productId].push(offering);
             });
 
-            var vendors = [];
             for (var vendorId in productsByVendor) {
                 for (var productId in offeringsByProduct) {
-                    productsByVendor[vendorId].offerings = offeringsByProduct[productId];
+                    productsByVendor[vendorId][productId].offerings = offeringsByProduct[productId];
                 }
-                vendors.push({
+                vm.vendors.push({
                     id: vendorId,
                     name: "Who knows",
-                    products: productsByVendor[vendorId]
+                    products: objectToArray(productsByVendor[vendorId])
                 });
             }
         });
     }
 
+    function objectToArray(obj) {
+        return Object.keys(obj).map(function(key) {
+            return obj[key];
+        });
+    }
     /*
     function loadVendors() {
         vendorService.list().then(function (vendors) {
