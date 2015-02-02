@@ -2,6 +2,7 @@ var Entity = require('../Entity')
   , EntityTransform = require( './EntityTransformationUtils')
   , config = require( '../../config' )
   , CycleRepository = require('./CycleRepository')
+  , CouchUtils = require( '../Store/CouchDb/Utils')
   , Validator = require('../Validator')
   , Q = require('q')
   ;
@@ -71,6 +72,10 @@ function loadOffering( offeringId, cycle ){
     return deferred.promise;
 }
 
+function listOfferingsForProductId( productId, cycle ) {
+    setCycle(cycle);
+    return CouchUtils.getCouchViewResults(cycle.databaseName, 'listOfferingsForProductId', productId);
+}
 
 function setCycle(cycle) {
     if (cycle === undefined) {
@@ -95,5 +100,6 @@ module.exports = {
     update: updateOffering,
     list: listOfferings,
     load: loadOffering,
+    listOfferingsForProductId: listOfferingsForProductId,
     getOfferingDisplayOptions: getOfferingDisplayOptions
 };

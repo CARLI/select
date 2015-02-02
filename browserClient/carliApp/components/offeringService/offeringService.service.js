@@ -18,6 +18,9 @@ function offeringService( CarliModules, $q, cycleService ) {
         load:   function( offeringId ) {
             return $q.when( offeringModule.load( offeringId, cycleService.getCurrentCycle()) );
         },
+        listOfferingsForProductId: function ( productId ) {
+            return $q.when( offeringModule.listOfferingsForProductId( productId, cycleService.getCurrentCycle()) );
+        },
         getOfferingDisplayOptions: function() {
             var values = offeringModule.getOfferingDisplayOptions();
             var options = [];
