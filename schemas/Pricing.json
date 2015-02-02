@@ -1,0 +1,24 @@
+{
+  "$schema": "json-schema.org/draft-04/schema",
+  "title": "Pricing",
+  "schemaType": "Pricing",
+  "type": "object",
+  "properties": {
+    "site" : {
+      "description": "Price for a site-wide subscription",
+      "type": "number"
+    },
+    "su" : {
+      "description": "Prices for a per-user subscriptions",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "users": {"type": "number"},
+          "price": {"type": "number"}
+        }
+      }
+    }
+  },
+  "required": []
+}

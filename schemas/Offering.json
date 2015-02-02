@@ -34,7 +34,8 @@
             "type": "string"
         },
         "pricing": {
-            "description": "An object with a site-license price and a map of su numbers to prices"
+            "description": "An object with a site-license price and a map of su numbers to prices",
+            "$ref": "./Pricing.json"
         }
     },
     "required": [ "cycle", "library", "product" ]

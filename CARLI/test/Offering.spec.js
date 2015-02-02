@@ -15,9 +15,16 @@ var testCycleId = uuid.v4();
 function validOfferingData() {
     return {
         type: 'Offering',
-        cycle: testCycleId,
-        library: uuid.v4(),
-        product: uuid.v4()
+        cycle: { id: testCycleId },
+        library: { id: uuid.v4() },
+        product: { id: uuid.v4() },
+        pricing: {
+            site: 1200,
+            su: [{
+                users: 2,
+                price: 700
+            }]
+        }
     };
 }
 function invalidOfferingData() {
