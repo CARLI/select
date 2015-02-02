@@ -1,86 +1,83 @@
-var Q = require( 'q' )
-;
+var Q = require('q');
 
-function ensureGetOptionsExist( options ){
-    if( !options || !options.id ) {
-        throw new Error( 'Requires an id' );
-    };
-}
 
-function ensureGetOptionsHastype( options ){
-    if ( !options.type ){
-        throw new Error( 'Requires a type' );
+function ensureSaveDataArgumentExists(data) {
+    if (!data) {
+        throw new Error('Requires Data');
     }
 }
 
-function ensureGetOptionsAreValid( options ){
-    ensureGetOptionsExist( options );
-    ensureGetOptionsHastype( options );
-}
-
-function ensureSaveDataArgumentExists( data ) {
-    if ( !data ) {
-        throw new Error( 'Requires Data' );
-    };
-}
-
-function ensureSaveDataHasId( data ) {
-    if ( !data.id ){
-        throw new Error( 'Requires id property' );
+function ensureSaveDataHasId(data) {
+    if (!data.id) {
+        throw new Error('Requires id property');
     }
-};
-
-function ensureSaveDataIsValid( data ) {
-    ensureSaveDataArgumentExists( data );
-    ensureSaveDataHasId( data );
 }
 
-function toGetOrDelete( myStore, options, toDelete ) {
-    ensureGetOptionsAreValid( options );
-
-    return toDelete
-            ? myStore.deleteDataFor( options.type, options.id )
-            : myStore.getDataFor( options.type, options.id )
+function ensureSaveDataIsValid(data) {
+    ensureSaveDataArgumentExists(data);
+    ensureSaveDataHasId(data);
 }
 
-module.exports = function( storeType ) {
+
+module.exports = function (storeType) {
 
     var myStore = storeType;
 
     return {
 
-        get: function( options ) {
+        get: function (id) {
             var deferred = Q.defer();
-            toGetOrDelete( myStore, options )
-            .then( function( result ) {
-                deferred.resolve( result );
-            } )
-            .catch( function( result ) {
-                deferred.reject( result );
-            } );
+
+            if ( !id ){
+                deferred.reject('Requires id property');
+            }
+            else {
+                deferred.resolve( myStore.getDataFor(id) );
+            }
+
             return deferred.promise;
         },
 
-        save: function( data ) {
+        save: function (data) {
             var deferred = Q.defer();
-            try {
-                ensureSaveDataIsValid( data );
-                deferred.resolve( myStore.storeData( data ) );
-            } catch( err ) {
-                throw err;
+
+            if (!data){
+                deferred.reject('Requires Data');
             }
+            else if (!data.id) {
+                deferred.reject('Requires id property');
+            }
+            else {
+                deferred.resolve(myStore.storeData(data));
+            }
+
             return deferred.promise;
         },
 
-        list: function( type, collection ) {
-            if( ! type ) {
-                throw new Error( 'Must Specify Type' );
+        list: function (type, collection) {
+            var deferred = Q.defer();
+
+            if ( !type ){
+                deferred.reject('Must Specify Type');
             }
-            return myStore.listDataFor( type, collection );
+            else {
+                deferred.resolve( myStore.listDataFor(type, collection) );
+            }
+
+            return deferred.promise;
         },
 
-        delete: function( options ) {
-            return toGetOrDelete( myStore, options, true );
+        delete: function (id) {
+            var deferred = Q.defer();
+
+            if ( !id ){
+                deferred.reject('Requires id property');
+            }
+            else {
+                deferred.resolve( myStore.deleteDataFor(id) );
+            }
+
+            return deferred.promise;
         }
 
     };
