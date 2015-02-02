@@ -8,25 +8,43 @@ var Entity = require('../Entity')
 
 var OfferingRepository = Entity('Offering');
 
-var propertiesToTransform = ['cycle', 'library', 'product'];
+var propertiesToTransform = ['library', 'product'];
 
 function transformFunction( offering ){
     EntityTransform.transformObjectForPersistence(offering, propertiesToTransform);
 }
 
+function transformCycleReference( offering, cycle ) {
+    if (offering) {
+        offering.cycle = cycle.id; //manually transform cycle property from object to reference
+    }
+}
+
 function createOffering( offering, cycle ){
     setCycle(cycle);
+    transformCycleReference(offering, cycle);
     return OfferingRepository.create( offering, transformFunction );
 }
 
 function updateOffering( offering, cycle ){
     setCycle(cycle);
+    transformCycleReference(offering, cycle);
     return OfferingRepository.update( offering, transformFunction );
+}
+
+//Manually transform cycle references to object
+function listOfferingsWithCyclesAttached(cycle) {
+    return OfferingRepository.list(cycle.databaseName).then(function (offerings) {
+        offerings.forEach(function (offering) {
+            offering.cycle = cycle;
+        });
+        return offerings;
+    });
 }
 
 function listOfferings(cycle){
     setCycle(cycle);
-    return EntityTransform.expandListOfObjectsFromPersistence( OfferingRepository.list(cycle.databaseName), propertiesToTransform, functionsToAdd);
+    return EntityTransform.expandListOfObjectsFromPersistence( listOfferingsWithCyclesAttached(cycle), propertiesToTransform, functionsToAdd);
 }
 
 function loadOffering( offeringId, cycle ){
@@ -35,7 +53,7 @@ function loadOffering( offeringId, cycle ){
     setCycle(cycle);
     OfferingRepository.load( offeringId )
         .then(function (offering) {
-            offering.cycle = cycle;
+            offering.cycle = cycle; //Manually transform cycle reference to object
             EntityTransform.expandObjectFromPersistence( offering, propertiesToTransform, functionsToAdd )
                 .then(function () {
                     deferred.resolve(offering);
