@@ -1,24 +1,5 @@
 var Q = require('q');
 
-
-function ensureSaveDataArgumentExists(data) {
-    if (!data) {
-        throw new Error('Requires Data');
-    }
-}
-
-function ensureSaveDataHasId(data) {
-    if (!data.id) {
-        throw new Error('Requires id property');
-    }
-}
-
-function ensureSaveDataIsValid(data) {
-    ensureSaveDataArgumentExists(data);
-    ensureSaveDataHasId(data);
-}
-
-
 module.exports = function (storeType) {
 
     var myStore = storeType;
