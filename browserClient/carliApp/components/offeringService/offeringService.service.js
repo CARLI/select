@@ -35,6 +35,7 @@ function offeringService( CarliModules, $q, cycleService ) {
                     value: value
                 });
             });
+            return options;
         }
     };
 }
