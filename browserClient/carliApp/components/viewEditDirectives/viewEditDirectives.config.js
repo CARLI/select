@@ -6,6 +6,7 @@ angular.module('carli.viewEditDirectives', [
     'carli.viewEditDirectives.viewEditPercentageField',
     'carli.viewEditDirectives.viewEditRadios',
     'carli.viewEditDirectives.viewEditSelect',
+    'carli.viewEditDirectives.viewEditSuPricing',
     'carli.viewEditDirectives.viewEditTextArea',
     'carli.viewEditDirectives.viewEditTextField',
     'carli.viewEditDirectives.viewEditTypeahead',
