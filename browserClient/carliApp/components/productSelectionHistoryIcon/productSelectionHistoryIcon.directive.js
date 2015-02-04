@@ -4,7 +4,7 @@ angular.module('carli.productSelectionHistoryIcon')
     function productSelectionHistoryIcon() {
         return {
             restrict: 'E',
-            template: '<fa class="{{ color }}" name="{{ iconName }}"></fa>',
+            template: '<span class="fa fa-{{iconName}} {{ color }}"></span>',
             scope: {
                 selected: '@'
             },
