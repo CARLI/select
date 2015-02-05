@@ -1,8 +1,8 @@
 alerts {
-    bottom: 2rem;
+    top: 2rem;
     right: 2rem;
     position: fixed;
-    z-index: 999;
+    z-index: 10000;
 
     .alert {
         @include vendor-prefix(transition, all .4s);
@@ -10,7 +10,8 @@ alerts {
         font-weight: 400;
         @include font-size(15);
         text-align: center;
-        width: 12rem;
+        min-width: 60rem;
+        box-shadow: 2px 2px 12px black;
 
         button.close {
             outline: none;

@@ -5,16 +5,13 @@ function editVendorController( $scope, $rootScope, entityBaseService, vendorServ
     var vm = this;
 
     vm.vendorId = $scope.vendorId;
-    var afterSubmitCallback = $scope.afterSubmitFn || function() {};
+    var afterSubmitCallback;
 
     vm.toggleEditable = toggleEditable;
     vm.cancelEdit = cancelEdit;
     vm.saveVendor = saveVendor;
     vm.addContact = addContact;
     vm.deleteContact = deleteContact;
-    vm.closeModal = function() {
-        $('#new-vendor-modal').modal('hide');
-    };
 
     vm.statusOptions = entityBaseService.getStatusOptions();
 
@@ -27,7 +24,20 @@ function editVendorController( $scope, $rootScope, entityBaseService, vendorServ
         else {
             initializeForExistingVendor();
         }
+        initializeSubmitCallback();
         vm.isModal = vm.newVendor;
+    }
+    function initializeSubmitCallback() {
+        if ($scope.afterSubmitFn !== undefined) {
+            afterSubmitCallback = function() {
+                $scope.afterSubmitFn();
+                closeModal();
+            };
+        } else {
+            afterSubmitCallback = function() {
+                closeModal();
+            };
+        }
     }
     function initializeForNewVendor() {
         vm.vendor = {
@@ -55,6 +65,10 @@ function editVendorController( $scope, $rootScope, entityBaseService, vendorServ
 
     function toggleEditable(){
         vm.editable = !vm.editable;
+    }
+
+    function closeModal() {
+        $('#new-vendor-modal').modal('hide');
     }
 
     function cancelEdit() {
