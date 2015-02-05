@@ -26,28 +26,35 @@ describe('The Edit Vendor Directive', function(){
         module('carli.entityForms.vendor');
         module('carli.mockServices');
 
-        inject( function($controller, $rootScope, $q, mockLocationService, mockVendorService, mockAlertService, mockProductService, mockLicenseService ) {
+        inject( function($controller, $rootScope, $q, mockEntityBaseService, mockAlertService, mockCycleService, mockLicenseService, mockProductService, mockVendorService ) {
 
             mockVendorService.setTestData(angular.copy(mockVendorList));
 
             mockDependenciesForNewVendor = {
                 $scope: {},
-                $location: mockLocationService,
-                vendorService: mockVendorService,
-                productService: mockProductService,
+                $rootScope: {},
+                alertService: mockAlertService,
+                entityBaseService: mockEntityBaseService,
+                cycleService: mockCycleService,
                 licenseService: mockLicenseService,
-                alertService: mockAlertService
+                productService: mockProductService,
+                vendorService: mockVendorService
             };
 
             mockDependenciesForEditVendor = {
                 $scope: {
-                    vendorId: 'xxxxx'
+                    vendorId: 'xxxxx',
+                    $watch: function(thing, callback){
+                        callback(true);
+                    }
                 },
-                $location: mockLocationService,
-                vendorService: mockVendorService,
-                productService: mockProductService,
+                $rootScope: {},
+                alertService: mockAlertService,
+                entityBaseService: mockEntityBaseService,
+                cycleService: mockCycleService,
                 licenseService: mockLicenseService,
-                alertService: mockAlertService
+                productService: mockProductService,
+                vendorService: mockVendorService
             };
 
             newCtrl  = $controller('editVendorController', mockDependenciesForNewVendor);
