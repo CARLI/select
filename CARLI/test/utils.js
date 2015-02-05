@@ -14,9 +14,9 @@ function getTestStoreOptions() {
     };
 }
 
-function _deleteDb(dbName) {
+function _deleteDb(couchDbUrl, dbName) {
     var deferred = Q.defer();
-    request.del(config.storeOptions.couchDbUrl + '/' + dbName, function() {
+    request.del(couchDbUrl + '/' + dbName, function() {
         deferred.resolve();
     });
     return deferred.promise;
@@ -56,12 +56,12 @@ module.exports = {
             var dbList = JSON.parse(body);
             var count = 0;
             var promises = [];
-            promises.push(_deleteDb(testDbName));
+            promises.push(_deleteDb(config.storeOptions.couchDbUrl, testDbName));
             dbList.forEach(function (dbName) {
                 if (dbName.indexOf(testDbMarker) >= 0) {
                     count++;
-                    request.del(config.storeOptions.couchDbUrl + '/' + dbName);
-                    promises.push(_deleteDb(dbName));
+                    // request.del(config.storeOptions.couchDbUrl + '/' + dbName);
+                    promises.push(_deleteDb(config.storeOptions.couchDbUrl, dbName));
                 }
             });
             console.log('Deleted ' + count + ' databases');
@@ -83,12 +83,12 @@ module.exports = {
             var dbList = JSON.parse(body);
             var count = 0;
             var promises = [];
-            promises.push(_deleteDb(testDbName));
+            promises.push(_deleteDb(couchDbUrl, testDbName));
             dbList.forEach(function (dbName) {
                 if (dbName.indexOf('_') != 0) {
                     count++;
-                    request.del(config.storeOptions.couchDbUrl + '/' + dbName);
-                    promises.push(_deleteDb(dbName));
+                    //request.del(couchDbUrl + '/' + dbName);
+                    promises.push(_deleteDb(couchDbUrl, dbName));
                 }
             });
             console.log('Deleted ' + count + ' databases');
