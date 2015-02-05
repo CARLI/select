@@ -1,5 +1,6 @@
 var OfferingRepository = require('../CARLI').Offering;
 var Q = require('q');
+var _ = require('lodash');
 
 function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping){
     var resultsPromise = Q.defer();
@@ -22,7 +23,7 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping)
     "ORDER BY product_id, library_id;";
 
     connection.query(query, function(err, rows, fields) {
-        // rows = rows.slice(0, 10000);
+        // rows = rows.slice(0, 1000);
 
         console.log('  Migrating offerings for cycle "' + cycle.name + '" - got ' + rows.length + ' offerings');
         if(err) { console.log(err); }
@@ -31,13 +32,46 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping)
 
         console.log('Extracted '+ Object.keys(uniqueOfferings).length +' unique Offerings');
         var offeringsList = extractPricingForOfferings(uniqueOfferings, rows, cycle, libraryIdMapping, productIdMapping);
+        console.log('Extracted pricing lists for offerings');
 
-        createOfferings(offeringsList, cycle, libraryIdMapping, productIdMapping).then(function(){
-            resultsPromise.resolve(offeringsList.length);
-        });
+        var offeringsPartitions = partitionOfferingsList(offeringsList, 5);
+
+        createOfferings(offeringsPartitions[0], cycle, libraryIdMapping, productIdMapping)
+            .then(function() {
+                console.log('Created offerings 1/5');
+                return createOfferings(offeringsPartitions[1], cycle, libraryIdMapping, productIdMapping)
+            })
+            .then(function() {
+                console.log('Created offerings 2/5');
+                return createOfferings(offeringsPartitions[2], cycle, libraryIdMapping, productIdMapping)
+            })
+            .then(function() {
+                console.log('Created offerings 3/5');
+                return createOfferings(offeringsPartitions[3], cycle, libraryIdMapping, productIdMapping)
+            })
+            .then(function() {
+                console.log('Created offerings 4/5');
+                return createOfferings(offeringsPartitions[4], cycle, libraryIdMapping, productIdMapping)
+            })
+            .then(function(){
+                console.log('Created offerings 5/5');
+                resultsPromise.resolve(offeringsList.length);
+            });
     });
 
     return resultsPromise.promise;
+}
+
+/*
+ * http://stackoverflow.com/questions/11345296/partitioning-in-javascript/11345570#11345570
+ */
+function partitionOfferingsList( list, numParts ){
+    var partLength = Math.floor(list.length / numParts);
+
+    var result = _.groupBy(list, function(item , i) {
+        return Math.floor(i/partLength);
+    });
+    return _.values(result);
 }
 
 function extractUniqueProductLibraryOfferings(offeringRows, cycle, libraryIdMapping, productIdMapping) {
