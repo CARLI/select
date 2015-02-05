@@ -70,10 +70,13 @@ module.exports = {
 
         return deferred.promise;
     },
-    nukeCouch: function() {
+    nukeCouch: function(couchDbUrl) {
         var deferred = Q.defer();
+        if (couchDbUrl === undefined) {
+            couchDbUrl = config.storeOptions.couchDbUrl;
+        }
 
-        request.get(config.storeOptions.couchDbUrl + '/_all_dbs', function (error, response, body) {
+        request.get(couchDbUrl + '/_all_dbs', function (error, response, body) {
             if (error) {
                 deferred.reject(error);
             }
