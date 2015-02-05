@@ -1,6 +1,7 @@
 angular.module('carli.app', [
     'ngRoute',
     'carli.cycleService',
+    'ngAnimate',
     'carli.carliHeader',
     'carli.debugPanel',
     'carli.fa',
