@@ -3,9 +3,7 @@ angular.module('carli.sections.products')
 
 function productController( $scope, $sce, cycleService, productService ){
     var vm = this;
-    vm.currentCycle = null;
     vm.activeCycles = [];
-    vm.setCurrentCycle = setCurrentCycle;
     vm.afterProductSubmit = populateProductList;
     activate();
 
@@ -13,15 +11,13 @@ function productController( $scope, $sce, cycleService, productService ){
         cycleService.listActiveCycles().then(function(activeCycles) {
             vm.activeCycles = activeCycles;
         });
-        initPageForCurrentCycle();
+        watchCurrentCycle();
     }
 
-    function initPageForCurrentCycle() {
-        var stopWatching = $scope.$watch(cycleService.getCurrentCycle, function (newValue) {
+    function watchCurrentCycle() {
+        $scope.$watch(cycleService.getCurrentCycle, function (newValue) {
             if (newValue) {
-                vm.currentCycle = newValue;
-                setCurrentCycle();
-                stopWatching();
+                populateProductList();
             }
         });
     }
@@ -55,10 +51,5 @@ function productController( $scope, $sce, cycleService, productService ){
         }
     ];
 
-    function setCurrentCycle(){
-        cycleService.setCurrentCycle( vm.currentCycle );
-
-        populateProductList();
-    }
 }
 

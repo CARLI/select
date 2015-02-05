@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.license')
     .controller('editLicenseController', editLicenseController);
 
-function editLicenseController( $scope, $rootScope, $location, entityBaseService, licenseService, productService, vendorService, alertService ) {
+function editLicenseController( $scope, $rootScope, $location, cycleService, entityBaseService, licenseService, productService, vendorService, alertService ) {
     var vm = this;
     var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
@@ -50,8 +50,17 @@ function editLicenseController( $scope, $rootScope, $location, entityBaseService
         licenseService.load(vm.licenseId).then( function( license ) {
             vm.license = license;
         } );
+        watchCurrentCycle();
         vm.editable = false;
         vm.newLicense = false;
+    }
+
+    function watchCurrentCycle() {
+        $scope.$watch(cycleService.getCurrentCycle, function (newValue) {
+            if (newValue) {
+                getProducts();
+            }
+        });
     }
 
     function toggleEditable(){
@@ -105,7 +114,6 @@ function editLicenseController( $scope, $rootScope, $location, entityBaseService
     }
 
     function showProductsModal() {
-        getProducts();
         $('#products-modal').modal();
     }
 
