@@ -4,20 +4,22 @@ var test = require( './Entity/EntityInterface.spec' )
     , uuid = require( 'node-uuid' )
     , chaiAsPromised = require( 'chai-as-promised' )
     , CycleRepository = require( '../Entity/CycleRepository' )
+    , ProductRepository = require( '../Entity/ProductRepository' )
     , config = require('../../config')
     , request = require('../../config/environmentDependentModules').request
     , storeOptions = config.storeOptions
     , testUtils = require('./utils')
+    , Q = require('q')
 ;
 
 testUtils.setupTestDb();
 
-var lastValidCycleYear = 3000;
+var uniqueCycleNameSuffix = 3000;
 function validCycleData() {
-    lastValidCycleYear++;
+    uniqueCycleNameSuffix++;
     return {
         type: 'Cycle', 
-        name: testUtils.testDbMarker + ' Fiscal Year ' + lastValidCycleYear,
+        name: testUtils.testDbMarker + ' Fiscal Year ' + uniqueCycleNameSuffix,
         cycleType: 'Fiscal Year',
         year: 3001,
         status: 0,
@@ -35,8 +37,9 @@ test.run('Cycle', validCycleData, invalidCycleData);
 
 describe('Additional Repository Functions', function() {
     describe('createCycle', function () {
-        it ('should have created a new couch database', function(done) {
-            request(storeOptions.couchDbUrl + '/cycle-'+ testUtils.testDbMarker +'-fiscal-year-' + lastValidCycleYear,  function(error, response, body) {
+        //'it' refers to the test.run() block above. At least one of those should have created a cycle DB
+        it('should have created a new couch database', function(done) {
+            request(storeOptions.couchDbUrl + '/cycle-'+ testUtils.testDbMarker +'-fiscal-year-' + uniqueCycleNameSuffix,  function(error, response, body) {
                 expect(response.statusCode).to.equal(200);
                 done();
             });
@@ -55,6 +58,55 @@ describe('Additional Repository Functions', function() {
                 return expect(cycleList).to.satisfy( allCyclesHaveDatabaseName );
             });
         });
+    });
+
+    describe('createCycleFrom', function(){
+        it('should copy cycle data from the specified cycle', function(){
+            var sourceCycleData = validCycleData();
+
+            var newCycleData = {
+                name: 'Copy of ' + sourceCycleData.name,
+                year: 3002
+            };
+
+            return CycleRepository.createCycleFrom(sourceCycleData, newCycleData).then(CycleRepository.load).then(function(newCycle){
+                return Q.all([
+                    expect(newCycle).to.have.property('year',3002),
+                    expect(newCycle).to.have.property('cycleType',sourceCycleData.cycleType)
+                ]);
+            });
+        });
+
+        it('should copy cycle contents from the specified cycle db', function(){
+            var sourceCycleData = validCycleData();
+            var productId = uuid.v4();
+
+            var newCycleData = {
+                name: 'Copy of ' + sourceCycleData.name
+            };
+
+            return CycleRepository.create(sourceCycleData)
+                .then(CycleRepository.load)
+                .then(function(sourceCycle){
+                    var productData = {
+                        id: productId,
+                        name: 'Copy Cycle Test Product',
+                        type: "Product",
+                        vendor: 'bogus',
+                        cycle: sourceCycle
+                    };
+
+                    return ProductRepository.create( productData, sourceCycle);
+                })
+                .then(function(){
+                    return CycleRepository.createCycleFrom(sourceCycleData, newCycleData);
+                })
+                .then(CycleRepository.load)
+                .then(function(newCycle){
+                    return expect(ProductRepository.load(productId, newCycle)).to.be.fulfilled;
+                });
+        });
+
     });
 
     describe('listActiveCycles View', function () {

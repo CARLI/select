@@ -32,20 +32,17 @@ function transformFunction( cycle ){
     EntityTransform.transformObjectForPersistence(cycle, propertiesToTransform);
 }
 
-/*
-var stores = {};
-function _initForCycle(cycle) {
-    CycleRepository.setStore( _getStoreForCycle(cycle) );
+function createCycleFrom( sourceCycle, newCycleData ) {
+    var deferred = Q.defer();
+
+    var newCycle = _.extend({}, sourceCycle, newCycleData);
+    createCycle(newCycle).then(function (newCycleId) {
+
+        deferred.resolve(newCycleId);
+    });
+
+    return deferred.promise;
 }
-function _getStoreForCycle(cycle) {
-    var store = stores[cycle.id];
-    if (!store) {
-        var opts = _.extend({}, StoreOptions, { couchDbName: cycle.databaseName });
-        stores[cycle.id] = Store( StoreModule(opts) );
-    }
-    return store;
-}
-*/
 
 function createCycle( cycle ) {
     var deferred = Q.defer();
@@ -140,6 +137,7 @@ var functionsToAdd = {
 module.exports = {
     setStore: CycleRepository.setStore,
     create: createCycle,
+    createCycleFrom: createCycleFrom,
     update: updateCycle,
     list: listCycles,
     load: loadCycle,
