@@ -3,5 +3,6 @@ angular.module('carli.sections.products', [
     'carli.sections.products.edit',
     'carli.entityForms.product',
     'carli.productService',
-    'carli.entityList'
+    'carli.entityList',
+    'carli.selectCycle'
 ]);
