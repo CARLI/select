@@ -59,13 +59,28 @@
             }
 
             &.flag {
+                align-self: center;
                 border-right: 0;
                 width: 70px;
+                text-align: center;
+
+                .fa {
+                    @include font-size(22);
+
+                    &.fa-flag {
+                        color: $orange;
+                    }
+
+                    &.fa-flag-o {
+                        color: $gray;
+                    }
+                }
             }
 
 
             .carli-button {
                 border: 0 none;
+                height: auto;
                 padding: 0;
                 text-align: left;
             }
@@ -73,6 +88,7 @@
     }
 
     .footer {
+        border-top: $default-border;
         border-right: $default-border;
         border-left: $default-border;
     }
