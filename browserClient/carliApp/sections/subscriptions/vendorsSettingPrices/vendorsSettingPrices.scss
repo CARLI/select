@@ -62,7 +62,6 @@
                 }
 
                 &.library-view {
-                    padding: 0;
                     width: 380px;
 
                     .display {
@@ -72,7 +71,7 @@
 
                     .comments {
                         display: flex;
-                        padding: .5rem 1rem;
+                        padding: .5rem 1rem 1rem;
 
                         .column {
                             @include flex(0 0 50%);
@@ -89,7 +88,7 @@
                 }
 
                 &.site-license-price {
-                    min-width: 315px;
+                    width: 380px;
                 }
 
                 &.flag {
