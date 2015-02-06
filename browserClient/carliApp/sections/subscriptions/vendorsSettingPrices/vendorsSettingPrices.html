@@ -28,8 +28,8 @@
                                 Institution: <span class="purple">{{ offering.library.institutionYears }}</span><br>
                                 Type: <span class="purple">{{ offering.library.institutionType }}</span></p>
 
-                                <button ng-show="!vm.isEditing[offering.id]" type="button" class="edit" ng-click="vm.setOfferingEditable(offering)">Edit</button>
-                                <button ng-show="vm.isEditing[offering.id]" type="button" class="save" ng-click="vm.saveOffering(offering)">Save</button>
+                                <button ng-show="!vm.isEditing[offering.id]" type="button" class="carli-button edit" ng-click="vm.setOfferingEditable(offering)">Edit <fa name="pencil-square-o "></fa></button>
+                                <button ng-show="vm.isEditing[offering.id]" type="button" class="carli-button save" ng-click="vm.saveOffering(offering)">Save <fa name="floppy-o"></fa></button>
                             </div>
                             <div class="column library-view">
                                 <div class="display">
