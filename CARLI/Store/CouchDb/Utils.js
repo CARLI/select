@@ -81,11 +81,52 @@ function createDatabase(dbName) {
     return deferred.promise;
 }
 
+/**
+ * Note 1: Only supports the case where target and source are the same couch instance.
+ *         (Specifically, the one configured in config.storeOptions)
+ * Note 2: Will *not* automatically create the database if it doesn't exist.
+ *         Attempting to replicate to a nonexistent database is an error.
+ *
+ * replicateFrom('some-database').to('another-database');
+ */
+function replicateFrom(sourceDbName) {
+    return { to: replicateTo };
 
+    function replicateTo(targetDbName) {
+        var deferred = Q.defer();
+        var requestOptions = _couchReplicationOptions(sourceDbName, targetDbName);
+
+        couchRequest(requestOptions)
+            .then(function resolveReplication(data) {
+                if (data.ok) {
+                    // console.log("OK: Replicated " + sourceDbName + " to " + targetDbName);
+                    deferred.resolve();
+                } else {
+                    deferred.reject('replication failed ['+sourceDbName+' -> '+targetDbName+']');
+                }
+            })
+            .catch(function(error) {
+                deferred.reject(error);
+            });
+
+        return deferred.promise;
+    }
+}
+function _couchReplicationOptions(sourceDbName, targetDbName) {
+    return {
+        url: StoreOptions.couchDbUrl + '/_replicate',
+        method: 'post',
+        json: {
+            source: sourceDbName,
+            target: targetDbName
+        }
+    };
+}
 
 module.exports = {
     createDatabase: createDatabase,
     couchRequest: couchRequest,
     getCouchViewResults: getCouchViewResults,
-    makeValidCouchDbName: makeValidCouchDbName
+    makeValidCouchDbName: makeValidCouchDbName,
+    replicateFrom: replicateFrom
 };
