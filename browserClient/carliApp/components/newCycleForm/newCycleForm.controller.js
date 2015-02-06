@@ -5,6 +5,11 @@ function newCycleFormController( $scope, $rootScope, $location, alertService, cy
     var vm = this;
 
     vm.cycle = null;
+    vm.sourceCycle = null;
+    vm.cycleTypeOptions = ['Calendar Year','Fiscal Year','Alternative Cycle'];
+    vm.updateCopyFromOptions = updateCopyFromOptions;
+    vm.populateFormForSourceCycle = populateFormForSourceCycle;
+    vm.resetSourceCycle = resetSourceCycle;
     vm.saveCycle = saveCycle;
     vm.cancelEdit = cancelEdit;
     vm.closeModal = function() {
@@ -16,12 +21,18 @@ function newCycleFormController( $scope, $rootScope, $location, alertService, cy
         initializeEmptyCycle();
     }
     function initializeEmptyCycle() {
+        resetSourceCycle();
         vm.cycle = cycleService.cycleDefaults();
         setFormPristine();
     }
     function saveCycle() {
-        cycleService.create(vm.cycle)
-            .then(function (cycleId) {
+        var creationPromise;
+        if (vm.sourceCycle) {
+            creationPromise = cycleService.createCycleFrom(vm.sourceCycle, vm.cycle);
+        } else {
+            creationPromise = cycleService.create(vm.cycle);
+        }
+        creationPromise.then(function (cycleId) {
                 vm.closeModal();
                 initializeEmptyCycle();
                 $('#new-cycle-modal').on('hidden.bs.modal', function (e) {
@@ -37,6 +48,21 @@ function newCycleFormController( $scope, $rootScope, $location, alertService, cy
     }
     function cancelEdit() {
         initializeEmptyCycle();
+    }
+
+    function updateCopyFromOptions(){
+        cycleService.listActiveCyclesOfType(vm.cycle.cycleType)
+            .then(function(matchingCycles){
+                vm.matchingCyclesOfType = matchingCycles;
+            });
+    }
+
+    function resetSourceCycle() {
+        vm.sourceCycle = null;
+    }
+
+    function populateFormForSourceCycle() {
+        vm.cycle.year = vm.sourceCycle.year + 1;
     }
 
     function setFormPristine(){

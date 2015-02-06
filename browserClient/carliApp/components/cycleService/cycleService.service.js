@@ -11,10 +11,14 @@ function cycleService( CarliModules, $q ) {
         cycleDefaults: cycleDefaults,
         list: function() { return $q.when( cycleModule.list() ); },
         listActiveCycles: listActiveCycles,
+        listActiveCyclesOfType: listActiveCyclesOfType,
         create: function(newCycle) {
-            newCycle.name = generateCycleName(newCycle);
-            delete newCycle.description;
+            fixCycleName(newCycle);
             return $q.when(cycleModule.create(newCycle));
+        },
+        createCycleFrom: function( sourceCycle, newCycle ) {
+            fixCycleName(newCycle);
+            return $q.when(cycleModule.createCycleFrom(sourceCycle,newCycle));
         },
         update: function() { return $q.when( cycleModule.update.apply( this, arguments) ); },
         load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ); },
@@ -27,10 +31,15 @@ function cycleService( CarliModules, $q ) {
         }
     };
 
+    function fixCycleName(newCycle) {
+        newCycle.name = generateCycleName(newCycle);
+        delete newCycle.description;
+    }
+
     function cycleDefaults() {
         return  {
             status: 0,
-                isArchived: false
+            isArchived: false
         };
     }
     function generateCycleName(cycle) {
@@ -41,6 +50,16 @@ function cycleService( CarliModules, $q ) {
 
     function listActiveCycles() {
         return $q.when( cycleModule.listActiveCycles() );
+    }
+
+    function listActiveCyclesOfType(type){
+        function filterMatchingType(cycle) {
+            return (cycle.cycleType == type);
+        }
+
+        return listActiveCycles().then(function(activeCycleList){
+            return activeCycleList.filter(filterMatchingType);
+        });
     }
 
     function getCurrentCycle() {
