@@ -4,36 +4,56 @@ var middleware = require('../../../config/environmentDependentModules').middlewa
     StoreOptions = require( '../../../config').storeOptions
 ;
 
-function getCouchViewResults( dbName, viewName, key) {
+function couchRequest(requestOptions) {
     var deferred = Q.defer();
 
+    request(requestOptions, handleCouchResponse);
+
+    function handleCouchResponse(error, response, body) {
+        var data = (typeof body === 'string') ? JSON.parse(body) : body;
+        var err = error || data.error;
+
+        if (err) {
+            deferred.reject(err);
+        } else {
+            deferred.resolve(data);
+        }
+    }
+
+    return deferred.promise;
+}
+
+function getCouchViewResults( dbName, viewName, key) {
+    var deferred = Q.defer();
+    var url = _assembleCouchViewUrl(dbName, viewName, key);
+
+    function rowHasValue(row) {
+        return row.value ? true : false;
+    }
+    function getRowValue(row) {
+        return row.value;
+    }
+
+    couchRequest({ url: url }).then(function (data) {
+        if (data.rows) {
+            var results = data.rows.filter(rowHasValue).map(getRowValue);
+            deferred.resolve(results);
+        } else {
+            // "this will never happen"
+            deferred.reject('failed to get results for ' + viewName);
+        }
+    }).catch(function(error) {
+        deferred.reject(error);
+    });
+
+    return deferred.promise;
+}
+function _assembleCouchViewUrl(dbName, viewName, key) {
     var url = StoreOptions.couchDbUrl + '/' + dbName + '/' + '_design/CARLI/_view/' + viewName;
     if (key) {
         url += '?key="' + key + '"';
     }
-    var results = [];
-    request({ url: url },
-        function ( err, response, body ) {
-            var data = JSON.parse( body );
-
-            var error = err || data.error;
-            if( error ) {
-                deferred.reject( error );
-            }
-            else if (data.rows) {
-                data.rows.forEach(function (row) {
-                    if (row.value) {
-                        results.push(row.value);
-                    }
-                });
-                deferred.resolve(results);
-            }
-            else {
-                deferred.reject();
-            }
-        }
-    );
-    return deferred.promise;
+    return url;
 }
 
 function makeValidCouchDbName(name) {
@@ -64,7 +84,8 @@ function createDatabase(dbName) {
 
 
 module.exports = {
+    createDatabase: createDatabase,
+    couchRequest: couchRequest,
     getCouchViewResults: getCouchViewResults,
-    makeValidCouchDbName: makeValidCouchDbName,
-    createDatabase: createDatabase
+    makeValidCouchDbName: makeValidCouchDbName
 };
