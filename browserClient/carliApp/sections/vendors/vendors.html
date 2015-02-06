@@ -7,7 +7,7 @@
     </div>
 
     <section class="content list-content">
-        <entity-list values="vm.vendorList" columns="vm.vendorListColumns" entity-label="vendors" order-by="'name'"></entity-list>
+        <entity-list values="vm.vendorList" columns="vm.vendorListColumns" entity-label="vendors" order-by="'name'" loading-promise="vm.loadingPromise"></entity-list>
     </section>
 
     <edit-vendor-modal after-submit-fn="vm.afterVendorSubmit"></edit-vendor-modal>

@@ -6,7 +6,7 @@
         <filter-by-active-toggle entity-label="entityLabel" active-filter-state="vm.activeFilterState"></filter-by-active-toggle>
     </div>
 </div>
-<ul class="entity-list" cg-busy="values">
+<ul class="entity-list" cg-busy="loadingPromise">
     <li class="column-headers">
         <div class="column" ng-class="{ sortable: column.orderByProperty, activeSort: vm.orderBy === column.orderByProperty, reversedSort: vm.reverse }" ng-repeat="column in columns" ng-click="vm.sort(column.orderByProperty)">{{ column.label }}</div>
     </li>

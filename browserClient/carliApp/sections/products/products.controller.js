@@ -23,7 +23,7 @@ function productController( $scope, $sce, cycleService, productService ){
     }
 
     function populateProductList() {
-        productService.list().then( function(productList){
+        vm.loadingPromise = productService.list().then( function(productList){
             vm.productList = productList;
         });
     }

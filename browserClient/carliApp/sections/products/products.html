@@ -8,7 +8,7 @@
     </div>
 
     <section class="content list-content">
-        <entity-list values="vm.productList" columns="vm.productListColumns" entity-label="products"></entity-list>
+        <entity-list values="vm.productList" columns="vm.productListColumns" entity-label="products" loading-promise="vm.loadingPromise"></entity-list>
     </section>
 
     <edit-product-modal after-submit-fn="vm.afterProductSubmit"></edit-product-modal>

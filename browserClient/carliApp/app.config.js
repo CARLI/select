@@ -15,3 +15,11 @@ angular.module('carli.app', [
 .run(function(cycleService){
     cycleService.initCurrentCycle();
 });
+.value('cgBusyDefaults',{
+    //message:'Loading Stuff',
+    //backdrop: false,
+    templateUrl: '/carliApp/angular-busy.html'
+    //delay: 300,
+    //minDuration: 700,
+    //wrapperClass: 'my-class my-class2'
+});

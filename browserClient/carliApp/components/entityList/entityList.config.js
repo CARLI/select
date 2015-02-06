@@ -1,4 +1,4 @@
-angular.module('carli.entityList', [ 
+angular.module('carli.entityList', [
     'cgBusy',
     'carli.filterByActive'
 ]);
