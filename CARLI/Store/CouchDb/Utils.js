@@ -25,16 +25,15 @@ function couchRequest(requestOptions) {
 
 function getCouchViewResults( dbName, viewName, key) {
     var deferred = Q.defer();
-    var url = _assembleCouchViewUrl(dbName, viewName, key);
+    var url = _couchViewUrl(dbName, viewName, key);
 
-    function rowHasValue(row) {
-        return row.value ? true : false;
-    }
-    function getRowValue(row) {
-        return row.value;
-    }
+    couchRequest({ url: url })
+        .then(resolveWithRowValues)
+        .catch(function(error) {
+            deferred.reject(error);
+        });
 
-    couchRequest({ url: url }).then(function (data) {
+    function resolveWithRowValues(data) {
         if (data.rows) {
             var results = data.rows.filter(rowHasValue).map(getRowValue);
             deferred.resolve(results);
@@ -42,13 +41,17 @@ function getCouchViewResults( dbName, viewName, key) {
             // "this will never happen"
             deferred.reject('failed to get results for ' + viewName);
         }
-    }).catch(function(error) {
-        deferred.reject(error);
-    });
+    }
+    function rowHasValue(row) {
+        return row.value ? true : false;
+    }
+    function getRowValue(row) {
+        return row.value;
+    }
 
     return deferred.promise;
 }
-function _assembleCouchViewUrl(dbName, viewName, key) {
+function _couchViewUrl(dbName, viewName, key) {
     var url = StoreOptions.couchDbUrl + '/' + dbName + '/' + '_design/CARLI/_view/' + viewName;
     if (key) {
         url += '?key="' + key + '"';
