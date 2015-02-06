@@ -12,6 +12,7 @@ function vendorsSettingPricesController( $scope, alertService, cycleService, lib
     vm.vendors = [];
     vm.isEditing = {};
     vm.cycle = {};
+    vm.lastYear = '';
 
     activate();
 
@@ -19,6 +20,7 @@ function vendorsSettingPricesController( $scope, alertService, cycleService, lib
         initSortable();
 
         vm.cycle = cycleService.getCurrentCycle();
+        vm.lastYear = vm.cycle.year - 1;
 
         libraryService.list()
             .then(initLibraryList)
