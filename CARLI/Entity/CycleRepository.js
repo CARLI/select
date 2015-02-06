@@ -1,7 +1,7 @@
 var Entity = require('../Entity')
     , EntityTransform = require( './EntityTransformationUtils')
     , config = require( '../../config' )
-    , CouchUtils = require( '../Store/CouchDb/Utils')
+    , couchUtils = require( '../Store/CouchDb/Utils')
     , StoreOptions = config.storeOptions
     , Store = require( '../Store' )
     , StoreModule = require( '../Store/CouchDb/Store')
@@ -32,20 +32,29 @@ function transformFunction( cycle ){
     EntityTransform.transformObjectForPersistence(cycle, propertiesToTransform);
 }
 
-/*
-var stores = {};
-function _initForCycle(cycle) {
-    CycleRepository.setStore( _getStoreForCycle(cycle) );
+function createCycleFrom( sourceCycle, newCycleData ) {
+    var deferred = Q.defer();
+    var newCycleId = null;
+    var mergedCycle = _.extend({}, sourceCycle, newCycleData);
+
+    createCycle(mergedCycle)
+        .then(function(id) {
+            //noinspection ReuseOfLocalVariableJS
+            newCycleId = id;
+            return CycleRepository.load(id);
+        })
+        .then(function (newCycle) {
+            return couchUtils.replicateFrom(sourceCycle.databaseName).to(newCycle.databaseName);
+        })
+        .then(function() {
+            deferred.resolve(newCycleId);
+        })
+        .catch(function(error) {
+            deferred.reject(error);
+        });
+
+    return deferred.promise;
 }
-function _getStoreForCycle(cycle) {
-    var store = stores[cycle.id];
-    if (!store) {
-        var opts = _.extend({}, StoreOptions, { couchDbName: cycle.databaseName });
-        stores[cycle.id] = Store( StoreModule(opts) );
-    }
-    return store;
-}
-*/
 
 function createCycle( cycle ) {
     var deferred = Q.defer();
@@ -67,9 +76,9 @@ function createDatabaseForCycle( docPromise ) {
     var deferred = Q.defer();
 
     docPromise.then(loadCycle).then(function (cycle) {
-        cycle.databaseName = CouchUtils.makeValidCouchDbName('cycle-' + cycle.name);
+        cycle.databaseName = couchUtils.makeValidCouchDbName('cycle-' + cycle.name);
 
-        CouchUtils.createDatabase(cycle.databaseName)
+        couchUtils.createDatabase(cycle.databaseName)
             .then(function commit() {
                 deferred.resolve( updateCycle( cycle ) );
             })
@@ -112,7 +121,7 @@ function loadCycle( cycleId ){
 }
 
 function listActiveCycles() {
-    return expandCycles( CouchUtils.getCouchViewResults(config.getDbName(), 'listActiveCycles') );
+    return expandCycles( couchUtils.getCouchViewResults(config.getDbName(), 'listActiveCycles') );
 }
 
 function getStoreForCycle(cycle) {
@@ -140,6 +149,7 @@ var functionsToAdd = {
 module.exports = {
     setStore: CycleRepository.setStore,
     create: createCycle,
+    createCycleFrom: createCycleFrom,
     update: updateCycle,
     list: listCycles,
     load: loadCycle,

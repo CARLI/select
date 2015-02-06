@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.license')
     .controller('editLicenseController', editLicenseController);
 
-function editLicenseController( $scope, $rootScope, $location, cycleService, entityBaseService, licenseService, productService, vendorService, alertService ) {
+function editLicenseController( $scope, $rootScope, $location, alertService, cycleService, entityBaseService, licenseService, productService, vendorService ) {
     var vm = this;
     var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 

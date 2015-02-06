@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.vendor')
     .controller('editVendorController', editVendorController);
 
-function editVendorController( $scope, $rootScope, cycleService, entityBaseService, vendorService, productService, licenseService, alertService ) {
+function editVendorController( $scope, $rootScope, entityBaseService, alertService, cycleService, licenseService, productService, vendorService ) {
     var vm = this;
 
     vm.vendorId = $scope.vendorId;

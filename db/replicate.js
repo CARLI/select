@@ -8,6 +8,11 @@ var dbInfo = {
         mainDbName: config.storeOptions.couchDbName,
         mainDbUrl: config.storeOptions.couchDbUrl + '/' + config.storeOptions.couchDbName
     },
+    dev: {
+        baseUrl: 'http://carli-db.dev.pixotech.com',
+        mainDbName: 'carli',
+        mainDbUrl: 'http://carli-db.dev.pixotech.com/carli'
+    },
     qa: {
         baseUrl: 'http://carli-db.qa.pixotech.com',
         mainDbName: 'carli',
@@ -146,9 +151,21 @@ function replicateLocalToQa() {
         .done();
 }
 
+function replicateLocalToDev() {
+    replicateAllFrom('local').to('dev')
+        .then(function() {
+            console.log("Finished");
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+        .done();
+}
+
 module.exports = {
     replicateQaToLocal: replicateQaToLocal,
-    replicateLocalToQa: replicateLocalToQa
+    replicateLocalToQa: replicateLocalToQa,
+    replicateLocalToDev: replicateLocalToDev
 };
 
 if (require.main === module) {
