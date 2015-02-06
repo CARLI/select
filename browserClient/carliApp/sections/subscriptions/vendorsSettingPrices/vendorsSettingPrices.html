@@ -50,8 +50,42 @@
                                 </div>
                             </div>
                             <div class="column site-license-price">
-                                <div>Site License: {{ offering.pricing.site | currency }}</div>
-                                <view-edit-su-pricing year="vm.cycle.year" edit-mode="vm.isEditing[offering.id]" ng-model="offering.pricing.su" input-id="offering.id"></view-edit-su-pricing>
+                                <div class="site-pricing">
+                                    <div class="column">
+                                        <div class="header"><strong>{{ ::vm.lastYear }}</strong> Price</div>
+                                        <div class="row"> $TODO.00 </div>
+                                    </div>
+                                    <div class="column">
+                                        <div class="header"><strong>{{ ::vm.cycle.year }}</strong> Price</div>
+                                        <div class="row">{{ offering.pricing.site | currency }}</div>
+                                    </div>
+                                </div>
+                                <div class="su-pricing">
+                                    <div class="header"><strong>Simultaneous User Price</strong></div>
+
+                                    <div class="pricing-container">
+                                        <div class="column">
+                                            <div class="edit-su-pricing">
+                                                <table>
+                                                    <thead>
+                                                    <tr>
+                                                        <th><strong>{{ ::vm.lastYear }}</strong> Price</th>
+                                                        <th>User(s)</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr><td>TODO</td><td>4</td></tr>
+                                                        <tr><td>TODO</td><td>2</td></tr>
+                                                        <tr><td>TODO</td><td>1</td></tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="column">
+                                            <view-edit-su-pricing year="vm.cycle.year" edit-mode="vm.isEditing[offering.id]" ng-model="offering.pricing.su" input-id="offering.id"></view-edit-su-pricing>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="column flag">
                                 <fa name="{{ offering.flagged ? 'flag' : 'flag-o' }}"></fa>
@@ -59,7 +93,8 @@
                         </li>
                     </ul>
                     <div class="footer">
-                        <div class="placeholder">Print Email Export</div>
+                        <div class="placeholder pull-left" style="width: 250px;">Print Email Export</div>
+                        <div class="placeholder pull-right" style="width: 250px;">Vendor Pricing Entry</div>
                     </div>
                 </li>
             </ul>

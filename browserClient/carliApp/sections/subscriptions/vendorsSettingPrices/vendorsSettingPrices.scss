@@ -1,4 +1,6 @@
 .product-content {
+    $table-padding: .5rem 1rem;
+
     list-style: none inside;
     min-width: 960px;
 
@@ -67,7 +69,7 @@
 
                     .display {
                         border-bottom: $default-border;
-                        padding: .5rem 1rem;
+                        padding: $table-padding;
                     }
 
                     .comments {
@@ -90,6 +92,60 @@
 
                 &.site-license-price {
                     width: 380px;
+
+                    .site-pricing {
+                        display: flex;
+                    }
+
+                    .su-pricing {
+                        border-top: $default-border;
+
+                        .pricing-container {
+                            display: flex;
+                        }
+                    }
+
+                    .column {
+                        &:first-child {
+                            border-right: $default-border;
+                        }
+
+                        @include flex(0 0 50%);
+                    }
+
+                    .header {
+                        background: $light-gray;
+                        border-bottom: $default-border;
+                    }
+
+                    .header,
+                    .row {
+                        padding: $table-padding;
+                    }
+
+                    .edit-su-pricing {
+                        .header {
+                            border-bottom: 0;
+                        }
+
+                        table {
+                            border-width: 0 0 1px 0;
+                        }
+
+                        th {
+                            background: $light-gray;
+                        }
+
+                        th, td {
+                            padding: $table-padding;
+                        }
+
+                        input {
+                            border: 0;
+                            margin: 0;
+                            padding: 0;
+                        }
+                    }
                 }
 
                 &.flag {
@@ -113,7 +169,7 @@
 
 
                 .carli-button {
-                    border: 0 none;
+                    border: 0;
                     height: auto;
                     padding: 0;
                     text-align: left;
@@ -123,6 +179,7 @@
     }
 
     .footer {
+        @include clearfix;
         border-top: $default-border;
         border-right: $default-border;
         border-left: $default-border;
