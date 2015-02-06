@@ -29,4 +29,12 @@ module.exports = function (grunt) {
         var done = this.async();
         testUtils.nukeCouch().then(done);
     });
+    grunt.registerTask('nuke-couch-dev', function() {
+        var done = this.async();
+        testUtils.nukeCouch('http://carli-db.dev.pixotech.com').then(done);
+    });
+    grunt.registerTask('nuke-couch-qa', function() {
+        var done = this.async();
+        testUtils.nukeCouch('http://carli-db.qa.pixotech.com').then(done);
+    });
 };
