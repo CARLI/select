@@ -1,5 +1,6 @@
 .product-content {
     list-style: none inside;
+    min-width: 960px;
 
     .product-header {
         background: $purple;
@@ -44,7 +45,7 @@
                 }
 
                 &.library {
-                    @include flex(1 0 30%);
+                    @include flex(1 0 10%);
                     padding: 1rem;
                     position: relative;
 
