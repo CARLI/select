@@ -29,6 +29,10 @@
 
             &:not(.column-headers) {
                 border-top: 3px solid $purple;
+
+                &.edit-mode {
+                    border-color: $orange;
+                }
             }
         }
 
