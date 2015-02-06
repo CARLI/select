@@ -4,7 +4,13 @@ angular.module('carli.newCycleForm')
 function newCycleFormController( $scope, $rootScope, $location, alertService, cycleService ) {
     var vm = this;
 
-    vm.cycle = null;
+    vm.cycle = {};
+    vm.sourceCycle = {};
+    vm.matchingCyclesOfType = [];
+    vm.cycleTypeOptions = ['Calendar Year','Fiscal Year','Alternative Cycle'];
+    vm.updateCopyFromOptions = updateCopyFromOptions;
+    vm.populateFormForSourceCycle = populateFormForSourceCycle;
+    vm.resetSourceCycle = resetSourceCycle;
     vm.saveCycle = saveCycle;
     vm.cancelEdit = cancelEdit;
     vm.closeModal = function() {
@@ -16,12 +22,19 @@ function newCycleFormController( $scope, $rootScope, $location, alertService, cy
         initializeEmptyCycle();
     }
     function initializeEmptyCycle() {
+        resetSourceCycle();
         vm.cycle = cycleService.cycleDefaults();
+        vm.matchingCyclesOfType = [];
         setFormPristine();
     }
     function saveCycle() {
-        cycleService.create(vm.cycle)
-            .then(function (cycleId) {
+        var creationPromise;
+        if (vm.sourceCycle && vm.sourceCycle.databaseName) {
+            creationPromise = cycleService.createCycleFrom(vm.sourceCycle, vm.cycle);
+        } else {
+            creationPromise = cycleService.create(vm.cycle);
+        }
+        creationPromise.then(function (cycleId) {
                 vm.closeModal();
                 initializeEmptyCycle();
                 $('#new-cycle-modal').on('hidden.bs.modal', function (e) {
@@ -37,6 +50,28 @@ function newCycleFormController( $scope, $rootScope, $location, alertService, cy
     }
     function cancelEdit() {
         initializeEmptyCycle();
+    }
+
+    function updateCopyFromOptions(){
+        cycleService.listActiveCyclesOfType(vm.cycle.cycleType)
+            .then(function(matchingCycles){
+                vm.matchingCyclesOfType = matchingCycles;
+                if ( vm.cycle.cycleType === 'Alternative Cycle'){
+                    vm.matchingCyclesOfType.unshift({
+                        name: 'None'
+                    });
+                }
+            });
+
+    }
+
+    function resetSourceCycle() {
+        vm.sourceCycle = null;
+        vm.cycle.year = '';
+    }
+
+    function populateFormForSourceCycle() {
+        vm.cycle.year = vm.sourceCycle.year + 1;
     }
 
     function setFormPristine(){

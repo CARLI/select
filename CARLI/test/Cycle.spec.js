@@ -61,34 +61,13 @@ describe('Additional Repository Functions', function() {
     });
 
     describe('createCycleFrom', function(){
-        it('should copy cycle data from the specified cycle', function() {
-            var sourceCycleData = validCycleData();
-
-            var newCycleData = {
-                name: 'Copy of ' + sourceCycleData.name,
-                year: 3002
-            };
-
-            return CycleRepository.create(sourceCycleData)
-                .then(CycleRepository.load)
-                .then(function (sourceCycle) {
-                    CycleRepository.createCycleFrom(sourceCycle, newCycleData).then(CycleRepository.load).then(function (newCycle) {
-                        return Q.all([
-                            expect(newCycle).to.have.property('year', 3002),
-                            expect(newCycle).to.have.property('cycleType', sourceCycleData.cycleType)
-                        ]);
-                    });
-                });
-        });
-
         it('should copy cycle contents from the specified cycle db', function(){
             var sourceCycleData = validCycleData();
             var sourceCycle = null;
             var productId = uuid.v4();
 
-            var newCycleData = {
-                name: 'Copy of ' + sourceCycleData.name
-            };
+            var newCycleData = validCycleData();
+            newCycleData.name = 'Copy of ' + sourceCycleData.name;
 
             return CycleRepository.create(sourceCycleData)
                 .then(CycleRepository.load)

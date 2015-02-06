@@ -1,16 +1,35 @@
 <modal-dialog modal-title="'Create New Cycle'" modal-id="'new-cycle-modal'" modal-class="">
-    <form class="edit-form" name="newCycleForm" ng-submit="vm.saveCycle()" warn-if-unsaved>
+    <form id="new-cycle-form" class="edit-form" name="newCycleForm" ng-submit="vm.saveCycle()" warn-if-unsaved>
         <section class="content">
             <fieldset>
                 <div class="column">
-                    <label for="xxx">Cycle Type</label>
+                    <label for="cycleType">Cycle Type</label>
                     <div>
-                        <good-select ng-model="vm.cycle.cycleType" items="['Fiscal Year', 'Calendar Year', 'Alternative Cycle']"></good-select>
-                        <input type="text" ng-show="vm.cycle.cycleType == 'Alternative Cycle'" ng-model="vm.cycle.description" class="gap-top">
+                        <div class="carli-select">
+                            <select id="cycleType"
+                                    ng-model="vm.cycle.cycleType"
+                                    ng-options="option for option in vm.cycleTypeOptions"
+                                    ng-change="vm.updateCopyFromOptions(); vm.resetSourceCycle()"></select>
+                        </div>
+                    </div>
+                    <div ng-show="vm.matchingCyclesOfType && vm.matchingCyclesOfType.length > 0">
+                        <label for="copyFrom">Copy Cycle Data From</label>
+                        <div>
+                            <div class="carli-select">
+                                <select id="copyFrom"
+                                        ng-model="vm.sourceCycle"
+                                        ng-options="option.name for option in vm.matchingCyclesOfType"
+                                        ng-change="vm.populateFormForSourceCycle()"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-show="vm.cycle.cycleType == 'Alternative Cycle'">
+                        <label for="cycleDescription">Description for Alternative Cycle</label>
+                        <input id="cycleDescription" type="text" ng-model="vm.cycle.description">
                     </div>
 
-                    <label for="xxx">Year</label>
-                    <view-edit-number-field ng-model="vm.cycle.year" edit-mode="true"></view-edit-number-field>
+                    <label for="cycleYear">Year</label>
+                    <view-edit-number-field input-id="cycleYear" ng-model="vm.cycle.year" edit-mode="true"></view-edit-number-field>
 
                     <label for="xxx">Selections Available</label>
                     <p>
@@ -19,8 +38,8 @@
                     <view-edit-date ng-model="vm.cycle.startDateForSelections" edit-mode="true"></view-edit-date> to
                     <view-edit-date ng-model="vm.cycle.endDateForSelections" edit-mode="true"></view-edit-date>
 
-                    <label for="xxx">Products Available to Patrons</label>
-                    <view-edit-date ng-model="vm.cycle.productsAvailableDate" edit-mode="true"></view-edit-date>
+                    <label for="productsAvailableDate">Products Available to Patrons</label>
+                    <view-edit-date input-id="productsAvailableDate" ng-model="vm.cycle.productsAvailableDate" edit-mode="true"></view-edit-date>
                 </div>
 
                 <div class="placeholder">Manage Surcharge</div>
