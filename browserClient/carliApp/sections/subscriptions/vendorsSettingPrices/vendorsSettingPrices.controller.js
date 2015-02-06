@@ -5,6 +5,7 @@ function vendorsSettingPricesController( $scope, alertService, cycleService, lib
     var vm = this;
     vm.closeVendorPricing = closeVendorPricing;
     vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
+    vm.offeringDisplayLabels = offeringService.getOfferingDisplayLabels();
     vm.loadProductsForVendor = loadProductsForVendor;
     vm.setOfferingEditable = setOfferingEditable;
     vm.saveOffering = saveOffering;
@@ -69,6 +70,7 @@ function vendorsSettingPricesController( $scope, alertService, cycleService, lib
                     product.offerings = offerings;
 
                     offerings.forEach(function(offering){
+                        offering.display = offering.display || "with-price";
                         /*XXX*/offering.flagged = Math.random() > 0.5;
                         offering.library = vm.libraryMap[offering.library];
                         if (!offering.libraryComments) {

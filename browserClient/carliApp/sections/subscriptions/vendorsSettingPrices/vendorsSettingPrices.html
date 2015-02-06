@@ -33,9 +33,9 @@
                             </div>
                             <div class="column library-view">
                                 <div class="display">
-                                    <label for="offering-display">Display:</label>
+                                    <label for="offering-display" ng-show="vm.isEditing[offering.id]">Display:</label>
                                     <view-edit-radios ng-model="offering.display" input-id="offering-display" edit-mode="vm.isEditing[offering.id]" items="vm.offeringDisplayOptions" radio-group-name="offering-{{offering.library.name}}-display">
-                                        {{ offering.display }}
+                                        <strong class="purple">{{ vm.offeringDisplayLabels[offering.display] }}</strong>
                                     </view-edit-radios>
                                 </div>
                                 <div class="comments">

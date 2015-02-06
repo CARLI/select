@@ -5,6 +5,12 @@ function offeringService( CarliModules, $q, cycleService ) {
 
     var offeringModule = CarliModules.Offering;
 
+    var offeringDisplayLabels = {
+        'with-price': 'Display with price',
+        'without-price': 'Display without price',
+        'none': 'Do not display'
+    };
+
     return {
         list:   function() {
             return $q.when( offeringModule.list( cycleService.getCurrentCycle() ) );
@@ -24,11 +30,7 @@ function offeringService( CarliModules, $q, cycleService ) {
         getOfferingDisplayOptions: function() {
             var values = offeringModule.getOfferingDisplayOptions();
             var options = [];
-            var offeringDisplayLabels = {
-                'with-price': 'Display with price',
-                'without-price': 'Display without price',
-                'none': 'Do not display'
-            };
+
             values.forEach(function(value) {
                 options.push({
                     label: offeringDisplayLabels[value] || 'Unknown',
@@ -36,6 +38,9 @@ function offeringService( CarliModules, $q, cycleService ) {
                 });
             });
             return options;
+        },
+        getOfferingDisplayLabels: function(){
+            return offeringDisplayLabels;
         }
     };
 }

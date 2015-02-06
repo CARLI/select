@@ -139,6 +139,7 @@ function createOffering( offering, cycle ) {
 
 function extractNascentOffering( row, cycle, libraryIdMapping, productIdMapping ){
     return {
+        display: 'with-price',
         library: libraryIdMapping[row.library_id],
         product: productIdMapping[row.product_id],
         cycle: cycle,
