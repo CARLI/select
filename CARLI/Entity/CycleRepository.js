@@ -1,7 +1,7 @@
 var Entity = require('../Entity')
     , EntityTransform = require( './EntityTransformationUtils')
     , config = require( '../../config' )
-    , CouchUtils = require( '../Store/CouchDb/Utils')
+    , couchUtils = require( '../Store/CouchDb/Utils')
     , StoreOptions = config.storeOptions
     , Store = require( '../Store' )
     , StoreModule = require( '../Store/CouchDb/Store')
@@ -34,12 +34,24 @@ function transformFunction( cycle ){
 
 function createCycleFrom( sourceCycle, newCycleData ) {
     var deferred = Q.defer();
+    var newCycleId = null;
+    var mergedCycle = _.extend({}, sourceCycle, newCycleData);
 
-    var newCycle = _.extend({}, sourceCycle, newCycleData);
-    createCycle(newCycle).then(function (newCycleId) {
-
-        deferred.resolve(newCycleId);
-    });
+    createCycle(mergedCycle)
+        .then(function(id) {
+            //noinspection ReuseOfLocalVariableJS
+            newCycleId = id;
+            return CycleRepository.load(id);
+        })
+        .then(function (newCycle) {
+            return couchUtils.replicateFrom(sourceCycle.databaseName).to(newCycle.databaseName);
+        })
+        .then(function() {
+            deferred.resolve(newCycleId);
+        })
+        .catch(function(error) {
+            deferred.reject(error);
+        });
 
     return deferred.promise;
 }
@@ -64,9 +76,9 @@ function createDatabaseForCycle( docPromise ) {
     var deferred = Q.defer();
 
     docPromise.then(loadCycle).then(function (cycle) {
-        cycle.databaseName = CouchUtils.makeValidCouchDbName('cycle-' + cycle.name);
+        cycle.databaseName = couchUtils.makeValidCouchDbName('cycle-' + cycle.name);
 
-        CouchUtils.createDatabase(cycle.databaseName)
+        couchUtils.createDatabase(cycle.databaseName)
             .then(function commit() {
                 deferred.resolve( updateCycle( cycle ) );
             })
@@ -109,7 +121,7 @@ function loadCycle( cycleId ){
 }
 
 function listActiveCycles() {
-    return expandCycles( CouchUtils.getCouchViewResults(config.getDbName(), 'listActiveCycles') );
+    return expandCycles( couchUtils.getCouchViewResults(config.getDbName(), 'listActiveCycles') );
 }
 
 function getStoreForCycle(cycle) {

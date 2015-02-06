@@ -61,7 +61,7 @@ describe('Additional Repository Functions', function() {
     });
 
     describe('createCycleFrom', function(){
-        it('should copy cycle data from the specified cycle', function(){
+        it('should copy cycle data from the specified cycle', function() {
             var sourceCycleData = validCycleData();
 
             var newCycleData = {
@@ -69,16 +69,21 @@ describe('Additional Repository Functions', function() {
                 year: 3002
             };
 
-            return CycleRepository.createCycleFrom(sourceCycleData, newCycleData).then(CycleRepository.load).then(function(newCycle){
-                return Q.all([
-                    expect(newCycle).to.have.property('year',3002),
-                    expect(newCycle).to.have.property('cycleType',sourceCycleData.cycleType)
-                ]);
-            });
+            return CycleRepository.create(sourceCycleData)
+                .then(CycleRepository.load)
+                .then(function (sourceCycle) {
+                    CycleRepository.createCycleFrom(sourceCycle, newCycleData).then(CycleRepository.load).then(function (newCycle) {
+                        return Q.all([
+                            expect(newCycle).to.have.property('year', 3002),
+                            expect(newCycle).to.have.property('cycleType', sourceCycleData.cycleType)
+                        ]);
+                    });
+                });
         });
 
         it('should copy cycle contents from the specified cycle db', function(){
             var sourceCycleData = validCycleData();
+            var sourceCycle = null;
             var productId = uuid.v4();
 
             var newCycleData = {
@@ -87,7 +92,9 @@ describe('Additional Repository Functions', function() {
 
             return CycleRepository.create(sourceCycleData)
                 .then(CycleRepository.load)
-                .then(function(sourceCycle){
+                .then(function(loadedCycle){
+                    //noinspection ReuseOfLocalVariableJS
+                    sourceCycle = loadedCycle;
                     var productData = {
                         id: productId,
                         name: 'Copy Cycle Test Product',
@@ -99,7 +106,7 @@ describe('Additional Repository Functions', function() {
                     return ProductRepository.create( productData, sourceCycle);
                 })
                 .then(function(){
-                    return CycleRepository.createCycleFrom(sourceCycleData, newCycleData);
+                    return CycleRepository.createCycleFrom(sourceCycle, newCycleData);
                 })
                 .then(CycleRepository.load)
                 .then(function(newCycle){
