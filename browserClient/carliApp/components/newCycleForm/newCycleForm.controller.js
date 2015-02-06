@@ -4,8 +4,9 @@ angular.module('carli.newCycleForm')
 function newCycleFormController( $scope, $rootScope, $location, alertService, cycleService ) {
     var vm = this;
 
-    vm.cycle = null;
-    vm.sourceCycle = null;
+    vm.cycle = {};
+    vm.sourceCycle = {};
+    vm.matchingCyclesOfType = [];
     vm.cycleTypeOptions = ['Calendar Year','Fiscal Year','Alternative Cycle'];
     vm.updateCopyFromOptions = updateCopyFromOptions;
     vm.populateFormForSourceCycle = populateFormForSourceCycle;
@@ -23,11 +24,12 @@ function newCycleFormController( $scope, $rootScope, $location, alertService, cy
     function initializeEmptyCycle() {
         resetSourceCycle();
         vm.cycle = cycleService.cycleDefaults();
+        vm.matchingCyclesOfType = [];
         setFormPristine();
     }
     function saveCycle() {
         var creationPromise;
-        if (vm.sourceCycle) {
+        if (vm.sourceCycle && vm.sourceCycle.databaseName) {
             creationPromise = cycleService.createCycleFrom(vm.sourceCycle, vm.cycle);
         } else {
             creationPromise = cycleService.create(vm.cycle);
@@ -54,11 +56,18 @@ function newCycleFormController( $scope, $rootScope, $location, alertService, cy
         cycleService.listActiveCyclesOfType(vm.cycle.cycleType)
             .then(function(matchingCycles){
                 vm.matchingCyclesOfType = matchingCycles;
+                if ( vm.cycle.cycleType === 'Alternative Cycle'){
+                    vm.matchingCyclesOfType.unshift({
+                        name: 'None'
+                    });
+                }
             });
+
     }
 
     function resetSourceCycle() {
         vm.sourceCycle = null;
+        vm.cycle.year = '';
     }
 
     function populateFormForSourceCycle() {
