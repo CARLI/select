@@ -3,21 +3,24 @@
         <section class="content">
             <fieldset>
                 <div class="column">
+                    <label for="cycleType">Cycle Type</label>
                     <div>
-                        <label for="cycleType">Cycle Type</label>
                         <div class="carli-select">
                             <select id="cycleType"
                                     ng-model="vm.cycle.cycleType"
                                     ng-options="option for option in vm.cycleTypeOptions"
                                     ng-change="vm.updateCopyFromOptions(); vm.resetSourceCycle()"></select>
                         </div>
-
+                    </div>
+                    <div ng-show="vm.matchingCyclesOfType && vm.matchingCyclesOfType.length > 0">
                         <label for="copyFrom">Copy Cycle Data From</label>
-                        <div class="carli-select">
-                            <select id="copyFrom"
-                                    ng-model="vm.sourceCycle"
-                                    ng-options="option.name for option in vm.matchingCyclesOfType"
-                                    ng-change="vm.populateFormForSourceCycle()"></select>
+                        <div>
+                            <div class="carli-select">
+                                <select id="copyFrom"
+                                        ng-model="vm.sourceCycle"
+                                        ng-options="option.name for option in vm.matchingCyclesOfType"
+                                        ng-change="vm.populateFormForSourceCycle()"></select>
+                            </div>
                         </div>
                     </div>
                     <div ng-show="vm.cycle.cycleType == 'Alternative Cycle'">
