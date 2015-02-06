@@ -18,6 +18,13 @@ ddoc = {
                 }
             }
         },
+        listOfferingsForProductId: {
+            map: function ( doc ) {
+                if ( doc.type === 'Offering' ) {
+                    emit( doc.product, doc );
+                }
+            }
+        },
         listProductsByLicenseId: {
             map: function ( doc ) {
                 if ( doc.type === 'Product' ) {

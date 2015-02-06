@@ -5,6 +5,7 @@ var chai   = require( 'chai' )
     , chaiAsPromised = require( 'chai-as-promised' )
     , test = require( './Entity/EntityInterface.spec' )
     , CycleRepository = require('../Entity/CycleRepository' )
+    , OfferingRepository = require('../Entity/OfferingRepository' )
     , testUtils = require('./utils')
     ;
 
@@ -15,9 +16,16 @@ var testCycleId = uuid.v4();
 function validOfferingData() {
     return {
         type: 'Offering',
-        cycle: testCycleId,
-        library: uuid.v4(),
-        product: uuid.v4()
+        cycle: { id: testCycleId },
+        library: { id: uuid.v4() },
+        product: { id: uuid.v4() },
+        pricing: {
+            site: 1200,
+            su: [{
+                users: 2,
+                price: 700
+            }]
+        }
     };
 }
 function invalidOfferingData() {
@@ -46,7 +54,7 @@ describe('Run the Offering tests', function () {
             .then(CycleRepository.load)
             .then(function (testCycle) {
                 test.run('Offering', validOfferingData, invalidOfferingData, testCycle);
-                //runOfferingSpecificTests(testCycle);
+                runOfferingSpecificTests(testCycle);
                 done();
             }).done();
     });
@@ -55,5 +63,12 @@ describe('Run the Offering tests', function () {
 
 function runOfferingSpecificTests(testCycle) {
     describe('Offering Specific Tests', function () {
+        describe('listOfferingsForProductId View', function () {
+            it('should have a listOfferingsForProductId method', function () {
+                expect(OfferingRepository.listOfferingsForProductId).to.be.a('function');
+            });
+
+            it('should list offerings for a specific product');
+        });
     });
 }

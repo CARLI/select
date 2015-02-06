@@ -19,6 +19,7 @@ var validTypes = [
     'Offering',
     'OneTimePurchase',
     'PriceCap',
+    'Pricing',
     'Product',
     'ProductDetailCodes',
     'Vendor',

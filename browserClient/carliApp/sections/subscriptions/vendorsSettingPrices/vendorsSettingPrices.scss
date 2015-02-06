@@ -1,0 +1,187 @@
+.product-content {
+    $table-padding: .5rem 1rem;
+
+    list-style: none inside;
+    min-width: 960px;
+
+    .product-header {
+        background: $purple;
+        color: #fff;
+        @include font-size(17);
+        font-family: 'Merriweather';
+        padding: 1rem;
+
+        .price-cap {
+            float: right;
+            @include font-size(14);
+            font-family: 'Verdana';
+        }
+    }
+
+    .offerings-list {
+        border-right: $default-border;
+        border-left: $default-border;
+        list-style: none inside;
+
+        .column-headers {
+            @include sortable-column-header;
+        }
+
+        & > li {
+            @include flexbox;
+
+            &:not(.column-headers) {
+                border-top: 3px solid $purple;
+
+                &.edit-mode {
+                    border-color: $orange;
+                }
+            }
+
+            & > .column {
+                border-right: $default-border;
+                @include flex(0 0 auto);
+
+                label, .label {
+                    margin-top: 0;
+                }
+
+                &.library {
+                    @include flex(1 0 10%);
+                    padding: 1rem;
+                    position: relative;
+
+                    h3 {
+                        font-weight: 700;
+                        margin-top: 0;
+                    }
+
+                    button.save,
+                    button.edit {
+                        bottom: 1rem;
+                        left: 1rem;
+                        position: absolute;
+                    }
+                }
+
+                &.library-view {
+                    width: 380px;
+
+                    .display {
+                        border-bottom: $default-border;
+                        padding: $table-padding;
+                    }
+
+                    .comments {
+                        display: flex;
+                        padding: .5rem 1rem 1rem;
+
+                        .column {
+                            @include flex(0 0 50%);
+                        }
+
+                        .internal-comments {
+                            padding-right: .5rem;
+                        }
+
+                        .library-comments {
+                            padding-left: .5rem;
+                        }
+                    }
+                }
+
+                &.site-license-price {
+                    width: 380px;
+
+                    .site-pricing {
+                        display: flex;
+                    }
+
+                    .su-pricing {
+                        border-top: $default-border;
+
+                        .pricing-container {
+                            display: flex;
+                        }
+                    }
+
+                    .column {
+                        &:first-child {
+                            border-right: $default-border;
+                        }
+
+                        @include flex(0 0 50%);
+                    }
+
+                    .header {
+                        background: $light-gray;
+                        border-bottom: $default-border;
+                    }
+
+                    .header,
+                    .row {
+                        padding: $table-padding;
+                    }
+
+                    .edit-su-pricing {
+                        .header {
+                            border-bottom: 0;
+                        }
+
+                        table {
+                            border-width: 0 0 1px 0;
+                        }
+
+                        th {
+                            background: $light-gray;
+                        }
+
+                        th, td {
+                            padding: $table-padding;
+                        }
+
+                        input {
+                            border: 0;
+                            margin: 0;
+                            padding: 0;
+                        }
+                    }
+                }
+
+                &.flag {
+                    align-self: center;
+                    border-right: 0;
+                    width: 70px;
+                    text-align: center;
+
+                    .fa {
+                        @include font-size(22);
+
+                        &.fa-flag {
+                            color: $orange;
+                        }
+
+                        &.fa-flag-o {
+                            color: $gray;
+                        }
+                    }
+                }
+
+
+                .carli-button {
+                    border: 0;
+                    height: auto;
+                    padding: 0;
+                    text-align: left;
+                }
+            }
+        }
+    }
+
+    .footer {
+        @include clearfix;
+        border-top: $default-border;
+        border-right: $default-border;
+        border-left: $default-border;
+    }
+}

@@ -49,7 +49,20 @@ function cycleService( CarliModules, $q ) {
     }
 
     function listActiveCycles() {
-        return $q.when( cycleModule.listActiveCycles() );
+        var deferred = $q.defer();
+
+        cycleModule.listActiveCycles().then(function(cycleList){
+            var filteredList = cycleList.filter(function(cycle){
+                return cycle.cycleType !== 'One-Time Purchase';
+            });
+
+            deferred.resolve(filteredList);
+        })
+        .catch(function(err){
+            deferred.reject(err);
+        });
+
+        return deferred.promise;
     }
 
     function listActiveCyclesOfType(type){

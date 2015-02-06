@@ -33,8 +33,13 @@
             "description": "Comments on the offering for internal staff use",
             "type": "string"
         },
+        "libraryComments": {
+            "description": "Comes from the product by default",
+            "type": "string"
+        },
         "pricing": {
-            "description": "An object with a site-license price and a map of su numbers to prices"
+            "description": "An object with a site-license price and a map of su numbers to prices",
+            "$ref": "./Pricing.json"
         }
     },
     "required": [ "cycle", "library", "product" ]
