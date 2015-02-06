@@ -33,27 +33,16 @@ function transformFunction( cycle ){
 }
 
 function createCycleFrom( sourceCycle, newCycleData ) {
-    var deferred = Q.defer();
-    var newCycleId = null;
-    var mergedCycle = _.extend({}, sourceCycle, newCycleData);
-
-    createCycle(mergedCycle)
-        .then(function(id) {
-            //noinspection ReuseOfLocalVariableJS
-            newCycleId = id;
-            return CycleRepository.load(id);
-        })
-        .then(function (newCycle) {
-            return couchUtils.replicateFrom(sourceCycle.databaseName).to(newCycle.databaseName);
-        })
-        .then(function() {
-            deferred.resolve(newCycleId);
-        })
-        .catch(function(error) {
-            deferred.reject(error);
+    return createCycle(newCycleData)
+        .then(function(newCycleId) {
+            return CycleRepository.load(newCycleId)
+                .then(function (newCycle) {
+                    return couchUtils.replicateFrom(sourceCycle.databaseName).to(newCycle.databaseName);
+                })
+                .then(function() {
+                    return newCycleId;
+                });
         });
-
-    return deferred.promise;
 }
 
 function createCycle( cycle ) {
