@@ -34,55 +34,90 @@
                     border-color: $orange;
                 }
             }
-        }
 
-        .column {
-            border-right: $default-border;
-            @include flex(0 0 auto);
+            & > .column {
+                border-right: $default-border;
+                @include flex(0 0 auto);
 
-            &.library {
-                @include flex(1 0 30%);
-                padding: 1rem;
-
-                h3 {
-                    font-weight: 700;
+                label, .label {
+                    margin-top: 0;
                 }
-            }
 
-            &.library-view {
-                padding: 1rem;
-                width: 380px;
-            }
+                &.library {
+                    @include flex(1 0 30%);
+                    padding: 1rem;
+                    position: relative;
 
-            &.site-license-price {
-                min-width: 315px;
-            }
-
-            &.flag {
-                align-self: center;
-                border-right: 0;
-                width: 70px;
-                text-align: center;
-
-                .fa {
-                    @include font-size(22);
-
-                    &.fa-flag {
-                        color: $orange;
+                    h3 {
+                        font-weight: 700;
+                        margin-top: 0;
                     }
 
-                    &.fa-flag-o {
-                        color: $gray;
+                    button.save,
+                    button.edit {
+                        bottom: 1rem;
+                        left: 1rem;
+                        position: absolute;
                     }
                 }
-            }
+
+                &.library-view {
+                    padding: 0;
+                    width: 380px;
+
+                    .display {
+                        border-bottom: $default-border;
+                        padding: .5rem 1rem;
+                    }
+
+                    .comments {
+                        display: flex;
+                        padding: .5rem 1rem;
+
+                        .column {
+                            @include flex(0 0 50%);
+                        }
+
+                        .internal-comments {
+                            padding-right: .5rem;
+                        }
+
+                        .library-comments {
+                            padding-left: .5rem;
+                        }
+                    }
+                }
+
+                &.site-license-price {
+                    min-width: 315px;
+                }
+
+                &.flag {
+                    align-self: center;
+                    border-right: 0;
+                    width: 70px;
+                    text-align: center;
+
+                    .fa {
+                        @include font-size(22);
+
+                        &.fa-flag {
+                            color: $orange;
+                        }
+
+                        &.fa-flag-o {
+                            color: $gray;
+                        }
+                    }
+                }
 
 
-            .carli-button {
-                border: 0 none;
-                height: auto;
-                padding: 0;
-                text-align: left;
+                .carli-button {
+                    border: 0 none;
+                    height: auto;
+                    padding: 0;
+                    text-align: left;
+                }
             }
         }
     }

@@ -41,15 +41,11 @@
                                 <div class="comments">
                                     <div class="column internal-comments">
                                         <label for="internal-comments">Internal Comments</label>
-                                        <view-edit-text-area ng-model="offering.internalComments" input-id="internal-comments" edit-mode="vm.isEditing[offering.id]">
-                                            {{ offering.internalComments }}
-                                        </view-edit-text-area>
+                                        <textarea id="internal-comments" ng-model="offering.internalComments" ng-readonly="!vm.isEditing[offering.id]">{{ offering.internalComments }}</textarea>
                                     </div>
                                     <div class="column library-comments">
                                         <label for="library-comments">Comments for Libraries</label>
-                                        <view-edit-text-area ng-model="offering.libraryComments" input-id="library-comments" edit-mode="vm.isEditing[offering.id]">
-                                            {{ offering.libraryComments }}
-                                        </view-edit-text-area>
+                                        <textarea id="library-comments" ng-model="offering.libraryComments" ng-readonly="!vm.isEditing[offering.id]">{{ offering.libraryComments }}</textarea>
                                     </div>
                                 </div>
                             </div>
