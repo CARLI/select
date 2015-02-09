@@ -14,7 +14,7 @@ angular.module('carli.app', [
 })
 .run(function(cycleService){
     cycleService.initCurrentCycle();
-});
+})
 .value('cgBusyDefaults',{
     //message:'Loading Stuff',
     //backdrop: false,
