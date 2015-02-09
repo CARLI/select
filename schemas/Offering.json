@@ -40,6 +40,10 @@
         "pricing": {
             "description": "An object with a site-license price and a map of su numbers to prices",
             "$ref": "./Pricing.json"
+        },
+        "flagged": {
+            "description": "If this is persisted it means the flag was cleared manually. If the property is absent the app computes the state.",
+            "type": "boolean"
         }
     },
     "required": [ "cycle", "library", "product" ]
