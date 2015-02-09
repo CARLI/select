@@ -20,4 +20,8 @@ describe('The Vendor Service', function() {
     it( 'should provide a load method', inject( function(vendorService) {
         expect(vendorService.load).to.be.a('Function');
     }));
+
+    it( 'should provide a getVendorsById method', inject( function(vendorService) {
+        expect(vendorService.getVendorsById).to.be.a('Function');
+    }));
 });

@@ -55,12 +55,14 @@ function vendorsSettingPricesController( $scope, alertService, cycleService, lib
     }
 
     function loadVendors() {
-        vendorService.list().then(function (vendors) {
-            vm.vendors = vendors;
-            //angular.forEach(vendors, function (vendor) {
-            //    loadProductsForVendor(vendor);
-            //});
-        });
+        productService.listProductCountsByVendorId()
+            .then(function( productsByVendorId ){
+                return Object.keys(productsByVendorId);
+            })
+            .then(vendorService.getVendorsById)
+            .then(function (vendors) {
+                vm.vendors = vendors;
+            });
     }
 
     function loadProductsForVendor(vendor) {

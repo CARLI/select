@@ -1,6 +1,7 @@
 var Entity = require('../Entity')
     , EntityTransform = require( './EntityTransformationUtils')
     , config = require( '../../config' )
+    , couchUtils = require('../Store/CouchDb/Utils')
     , StoreOptions = config.storeOptions
     , Store = require( '../Store' )
     , StoreModule = require( '../Store/CouchDb/Store')
@@ -51,6 +52,9 @@ function loadVendor( vendorId ){
     return deferred.promise;
 }
 
+function getVendorsById( ids ){
+    return couchUtils.getCouchDocuments(StoreOptions.couchDbName,ids);
+}
 
 /* functions that get added as instance methods on loaded Vendors */
 
@@ -62,5 +66,6 @@ module.exports = {
     create: createVendor,
     update: updateVendor,
     list: listVendors,
-    load: loadVendor
+    load: loadVendor,
+    getVendorsById: getVendorsById
 };
