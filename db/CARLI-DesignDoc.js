@@ -18,27 +18,6 @@ ddoc = {
                 }
             }
         },
-        listOfferingsForProductId: {
-            map: function ( doc ) {
-                if ( doc.type === 'Offering' ) {
-                    emit( doc.product, doc );
-                }
-            }
-        },
-        listProductsByLicenseId: {
-            map: function ( doc ) {
-                if ( doc.type === 'Product' ) {
-                    emit( doc.license, doc );
-                }
-            }
-        },
-        listProductsForVendorId: {
-            map: function ( doc ) {
-                if ( doc.type === 'Product' ) {
-                    emit( doc.vendor, doc );
-                }
-            }
-        },
         listLicensesForVendorId: {
             map: function ( doc ) {
                 if ( doc.type === 'License' ) {
