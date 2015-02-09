@@ -4,6 +4,7 @@ var couchUtils = require('../Store/CouchDb/Utils');
 var testUtils = require('./utils');
 var Q = require('q');
 var storeOptions = require( '../../config').storeOptions;
+var uuid = require('node-uuid');
 
 describe('Couch utilities', function () {
     describe('makeCouchDbName', function() {
@@ -12,6 +13,7 @@ describe('Couch utilities', function () {
             expect(couchUtils.makeValidCouchDbName('Space Should Be Dash')).to.equal('space-should-be-dash');
             expect(couchUtils.makeValidCouchDbName('slash/Should/Be/Dash')).to.equal('slash-should-be-dash');
             expect(couchUtils.makeValidCouchDbName("Some characters aren\'t allowed:&*@#¥∆ø∂˜∫")).to.equal('some-characters-arent-allowed');
+            expect(couchUtils.makeValidCouchDbName(testUtils.testDbMarker + '-couch-docs')).to.equal(testUtils.testDbMarker + '-couch-docs');
         });
 
     });
@@ -43,6 +45,40 @@ describe('Couch utilities', function () {
                     return expect(requestPromise).to.be.fulfilled
                         .and.eventually.be.an('object')
                         .and.have.property('id').equal(testDocId);
+                });
+        });
+    });
+
+    describe('getCouchDocuments', function(){
+        it('should return documents for a set of ids', function(){
+            var testDbName = testUtils.testDbMarker + '-couch-docs';
+            var testIds = [ uuid.v4(), uuid.v4(), uuid.v4() ];
+
+            return couchUtils.createDatabase(testDbName)
+                .then(function () {
+                    return couchUtils.couchRequest({
+                        url: storeOptions.couchDbUrl + '/' + testDbName + '/' + testIds[0],
+                        method: 'put',
+                        json: { id: testIds[0] }
+                    });
+                })
+                .then(function () {
+                    return couchUtils.couchRequest({
+                        url: storeOptions.couchDbUrl + '/' + testDbName + '/' + testIds[1],
+                        method: 'put',
+                        json: { id: testIds[1] }
+                    });
+                })
+                .then(function () {
+                    return couchUtils.couchRequest({
+                        url: storeOptions.couchDbUrl + '/' + testDbName + '/' + testIds[2],
+                        method: 'put',
+                        json: { id: testIds[2] }
+                    });
+                })
+                .then(function(){
+                    return expect( couchUtils.getCouchDocuments(testDbName,testIds)).and.eventually.be.an('array')
+                        .and.have.property('length').equal(testIds.length);
                 });
         });
     });

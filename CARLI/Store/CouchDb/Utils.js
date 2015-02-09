@@ -24,6 +24,20 @@ function couchRequest(requestOptions) {
     return deferred.promise;
 }
 
+function getCouchDocuments(dbName, ids) {
+    var url = StoreOptions.couchDbUrl + '/' + dbName + '/' + '_all_docs?include_docs=true';
+
+    return couchRequest({
+        url: url,
+        method: 'post',
+        json: { keys: ids }
+    }).then(function processResults(results){
+        return results.rows.map(function(row){
+            return row.doc;
+        });
+    });
+}
+
 function getCouchViewResultObject( dbName, viewName, key, group) {
     var deferred = Q.defer();
     var url = couchViewUrl(dbName, viewName, key, group);
@@ -171,6 +185,7 @@ module.exports = {
     couchViewUrl: couchViewUrl,
     createDatabase: createDatabase,
     couchRequest: couchRequest,
+    getCouchDocuments: getCouchDocuments,
     getCouchViewResultObject: getCouchViewResultObject,
     getCouchViewResultValues: getCouchViewResultValues,
     makeValidCouchDbName: makeValidCouchDbName,
