@@ -7,6 +7,10 @@ module.exports = function (grunt) {
         'deploy-app-db',
         'deploy-otp-cycle'
     ]);
+    grunt.registerTask('deploy-design-docs', [
+        'deploy-app-design-doc',
+        'deploy-cycle-design-docs'
+    ]);
     grunt.registerTask('deploy-app-db', function() {
         var done = this.async();
         deployDb.deployDb().then(done);
@@ -16,6 +20,14 @@ module.exports = function (grunt) {
         var done = this.async();
         deployDb.createOneTimePurchaseCycle().then(done);
         //grunt.task.run(['subdir-exec:'+projectRoot+'/db:./deploy.sh ' + testUtils.testDbName ]);
+    });
+    grunt.registerTask('deploy-app-design-doc', function() {
+        var done = this.async();
+        deployDb.deployAppDesignDoc().then(done);
+    });
+    grunt.registerTask('deploy-cycle-design-docs', function() {
+        var done = this.async();
+        deployDb.deployCycleDesignDocs().then(done);
     });
     grunt.registerTask('fixture-data', function() {
         grunt.task.run(['subdir-exec:'+projectRoot+'/db:./fixtures.js']);
