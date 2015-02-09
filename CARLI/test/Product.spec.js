@@ -293,7 +293,45 @@ function runProductSpecificTests(testCycle) {
         });
     });
 
-    describe('Adding functions to Product instances', function () {
+    describe('listProductCountsByVendorId View', function () {
+        var vendor1 = {id: uuid.v4(), type: "Vendor", name: "test product counts vendor", isActive: true};
+        var product1 = {
+            id: uuid.v4(),
+            type: "Product",
+            name: "my product 1 name",
+            isActive: true,
+            license: "bogus",
+            vendor: vendor1.id,
+            cycle: testCycleId
+        };
+        var product2 = {
+            id: uuid.v4(),
+            type: "Product",
+            name: "my product 2 name",
+            isActive: true,
+            license: "bogus",
+            vendor: vendor1.id,
+            cycle: testCycleId
+        };
+        it('should have a listProductCountsByVendorId method', function () {
+            expect(ProductRepository.listProductCountsByVendorId).to.be.a('function');
+        });
+        it('should return products associated with a vendor', function () {
+            return ProductRepository.create(product1, testCycle)
+                .then(function () {
+                    return ProductRepository.create(product2, testCycle);
+                })
+                .then(function () {
+                    return ProductRepository.listProductCountsByVendorId(testCycle);
+                })
+                .then(function (countsByVendorId) {
+                    return expect(countsByVendorId).to.have.property(vendor1.id, 2);
+                });
+        });
+
+    });
+
+        describe('Adding functions to Product instances', function () {
         it('should add a getIsActive method to instances of Product', function () {
             var product = validProductData();
 

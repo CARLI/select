@@ -84,12 +84,17 @@ function isAvailableToday( product ){
 
 function listProductsForLicenseId( licenseId, cycle ) {
     setCycle(cycle);
-    return CouchUtils.getCouchViewResults(cycle.databaseName, 'listProductsByLicenseId', licenseId);
+    return CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listProductsByLicenseId', licenseId);
 }
 
 function listProductsForVendorId( vendorId, cycle ) {
     setCycle(cycle);
-    return CouchUtils.getCouchViewResults(cycle.databaseName, 'listProductsForVendorId', vendorId);
+    return CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listProductsForVendorId', vendorId);
+}
+
+function listProductCountsByVendorId(cycle){
+    setCycle(cycle);
+    return CouchUtils.getCouchViewResultObject(cycle.databaseName, 'listProductCountsByVendorId', null, true);
 }
 
 function setCycle(cycle) {
@@ -126,5 +131,6 @@ module.exports = {
     listAvailableOneTimePurchaseProducts: listAvailableOneTimePurchaseProducts,
     listProductsForLicenseId: listProductsForLicenseId,
     listProductsForVendorId: listProductsForVendorId,
+    listProductCountsByVendorId: listProductCountsByVendorId,
     getProductDetailCodeOptions: getProductDetailCodeOptions
 };
