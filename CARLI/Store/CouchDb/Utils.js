@@ -24,7 +24,33 @@ function couchRequest(requestOptions) {
     return deferred.promise;
 }
 
-function getCouchViewResults( dbName, viewName, key, group) {
+function getCouchViewResultObject( dbName, viewName, key, group) {
+    var deferred = Q.defer();
+    var url = couchViewUrl(dbName, viewName, key, group);
+
+    couchRequest({ url: url })
+        .then(resolveWithRowValues)
+        .catch(function(error) {
+            deferred.reject(error);
+        });
+
+    function resolveWithRowValues(data) {
+        if (data.rows) {
+            var resultObject = {};
+            data.rows.forEach(function (row) {
+                resultObject[row.key] = row.value;
+            });
+            deferred.resolve(resultObject);
+        } else {
+            // "this will never happen"
+            deferred.reject('failed to get results for ' + viewName);
+        }
+    }
+
+    return deferred.promise;
+}
+
+function getCouchViewResultValues( dbName, viewName, key, group) {
     var deferred = Q.defer();
     var url = couchViewUrl(dbName, viewName, key, group);
 
@@ -145,7 +171,8 @@ module.exports = {
     couchViewUrl: couchViewUrl,
     createDatabase: createDatabase,
     couchRequest: couchRequest,
-    getCouchViewResults: getCouchViewResults,
+    getCouchViewResultObject: getCouchViewResultObject,
+    getCouchViewResultValues: getCouchViewResultValues,
     makeValidCouchDbName: makeValidCouchDbName,
     replicateFrom: replicateFrom
 };

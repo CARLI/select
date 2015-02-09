@@ -67,7 +67,7 @@ function loadLicense( licenseId ){
 }
 
 function listLicensesForVendorId( vendorId ){
-    return CouchUtils.getCouchViewResults(config.getDbName(), 'listLicensesForVendorId', vendorId);
+    return CouchUtils.getCouchViewResultValues(config.getDbName(), 'listLicensesForVendorId', vendorId);
 }
 function getOfferingTypeOptions(){
     return Validator.getEnumValuesFor('License', 'offeringType');
