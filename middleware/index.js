@@ -4,10 +4,10 @@ var Q = require('q');
 var couchapp = require('couchapp');
 var domain = require('domain');
 
-function putDesignDoc(dbName) {
+function putDesignDoc(dbName, dbType) {
     var putDocPromise = Q.defer();
 
-    var docName = 'CARLI-DesignDoc.js';
+    var docName = dbType + '-DesignDoc.js';
     var designDoc = require('../db/' + docName);
 
     var couchAppDomain = domain.create();
@@ -49,7 +49,7 @@ function runMiddlewareServer(){
     var carliMiddleware = express();
     _enableCors(carliMiddleware);
     carliMiddleware.put('/design-doc/:dbName', function (req, res) {
-        putDesignDoc(req.params.dbName).then(function() {
+        putDesignDoc(req.params.dbName, 'Cycle').then(function() {
             res.send({ status: 'Ok' });
         }).catch(function (err) {
             res.send( { error: err } );

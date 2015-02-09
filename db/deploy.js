@@ -35,7 +35,7 @@ function deployDb(dbName) {
         dbName = config.storeOptions.couchDbName;
     }
     return recreateDb(dbName).then(function() {
-        return middleware.putDesignDoc(dbName)
+        return middleware.putDesignDoc(dbName, 'CARLI');
     });
 }
 
