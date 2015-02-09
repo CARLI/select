@@ -35,7 +35,7 @@ function deployDb(dbName) {
         dbName = config.storeOptions.couchDbName;
     }
     return recreateDb(dbName).then(function() {
-        return middleware.putDesignDoc(dbName)
+        return middleware.putDesignDoc(dbName, 'CARLI');
     });
 }
 
@@ -51,6 +51,20 @@ function createOneTimePurchaseCycle(cycleName, store) {
     return CycleRepository.create(otpCycle);
 }
 
+function deployAppDesignDoc() {
+    return middleware.putDesignDoc(config.storeOptions.couchDbName, 'CARLI');
+}
+
+function deployCycleDesignDocs() {
+    return CycleRepository.list().then(function (cycles) {
+        var promises = [];
+        cycles.forEach(function (cycle) {
+            promises.push( middleware.putDesignDoc(cycle.databaseName, 'Cycle') );
+        });
+        return Q.all(promises);
+    });
+}
+
 if (require.main === module) {
     // called directly
     deployDb().done(createOneTimePurchaseCycle);
@@ -58,6 +72,8 @@ if (require.main === module) {
     // required as a module
     module.exports = {
         deployDb: deployDb,
-        createOneTimePurchaseCycle: createOneTimePurchaseCycle
+        createOneTimePurchaseCycle: createOneTimePurchaseCycle,
+        deployAppDesignDoc: deployAppDesignDoc,
+        deployCycleDesignDocs: deployCycleDesignDocs
     };
 }

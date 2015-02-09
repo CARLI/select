@@ -69,11 +69,13 @@ function makeValidCouchDbName(name) {
 function createDatabase(dbName) {
     var deferred = Q.defer();
 
+    var dbType = (dbName == StoreOptions.couchDbName) ? 'CARLI' : 'Cycle';
+
     request.put(StoreOptions.couchDbUrl + '/' + dbName,  function(error, response, body) {
         if (error) {
             deferred.reject(error);
         } else if (response.statusCode >= 200 && response.statusCode <= 299) {
-            middleware.putDesignDoc(dbName).then(function () {
+            middleware.putDesignDoc(dbName, dbType).then(function () {
                 deferred.resolve();
             });
         } else {
