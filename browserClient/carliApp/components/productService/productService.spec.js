@@ -29,6 +29,10 @@ describe('The Product service', function() {
         expect(productService.listProductsForVendorId).to.be.a('Function');
     }));
 
+    it( 'should provide a listProductCountsByVendorId method', inject( function(productService) {
+        expect(productService.listProductCountsByVendorId).to.be.a('Function');
+    }));
+
     it( 'should provide a getProductDetailCodeOptions method', inject( function(productService) {
         expect(productService.getProductDetailCodeOptions).to.be.a('Function');
         expect(productService.getProductDetailCodeOptions()).to.be.an('Array');
