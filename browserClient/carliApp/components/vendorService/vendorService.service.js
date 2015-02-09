@@ -9,6 +9,9 @@ function vendorService( CarliModules, $q ) {
         list:   function() { return $q.when( vendorModule.list() ); },
         create: function() { return $q.when( vendorModule.create.apply(this, arguments) ); },
         update: function() { return $q.when( vendorModule.update.apply(this, arguments) ); },
-        load:   function() { return $q.when( vendorModule.load.apply(this, arguments) ); }
+        load:   function() { return $q.when( vendorModule.load.apply(this, arguments) ); },
+        getVendorsById: function(ids) {
+            return $q.when( vendorModule.getVendorsById(ids) );
+        }
     };
 }

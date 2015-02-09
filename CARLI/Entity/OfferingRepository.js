@@ -74,7 +74,7 @@ function loadOffering( offeringId, cycle ){
 
 function listOfferingsForProductId( productId, cycle ) {
     setCycle(cycle);
-    return CouchUtils.getCouchViewResults(cycle.databaseName, 'listOfferingsForProductId', productId);
+    return CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForProductId', productId);
 }
 
 function setCycle(cycle) {

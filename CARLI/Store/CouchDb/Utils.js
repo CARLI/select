@@ -1,7 +1,8 @@
 var middleware = require('../../../config/environmentDependentModules').middleware,
     Q = require('q'),
     request = require('../../../config/environmentDependentModules').request,
-    StoreOptions = require( '../../../config').storeOptions
+    StoreOptions = require( '../../../config').storeOptions,
+    queryString = require('query-string')
 ;
 
 function couchRequest(requestOptions) {
@@ -23,9 +24,49 @@ function couchRequest(requestOptions) {
     return deferred.promise;
 }
 
-function getCouchViewResults( dbName, viewName, key) {
+function getCouchDocuments(dbName, ids) {
+    var url = StoreOptions.couchDbUrl + '/' + dbName + '/' + '_all_docs?include_docs=true';
+
+    return couchRequest({
+        url: url,
+        method: 'post',
+        json: { keys: ids }
+    }).then(function processResults(results){
+        return results.rows.map(function(row){
+            return row.doc;
+        });
+    });
+}
+
+function getCouchViewResultObject( dbName, viewName, key, group) {
     var deferred = Q.defer();
-    var url = _couchViewUrl(dbName, viewName, key);
+    var url = couchViewUrl(dbName, viewName, key, group);
+
+    couchRequest({ url: url })
+        .then(resolveWithRowValues)
+        .catch(function(error) {
+            deferred.reject(error);
+        });
+
+    function resolveWithRowValues(data) {
+        if (data.rows) {
+            var resultObject = {};
+            data.rows.forEach(function (row) {
+                resultObject[row.key] = row.value;
+            });
+            deferred.resolve(resultObject);
+        } else {
+            // "this will never happen"
+            deferred.reject('failed to get results for ' + viewName);
+        }
+    }
+
+    return deferred.promise;
+}
+
+function getCouchViewResultValues( dbName, viewName, key, group) {
+    var deferred = Q.defer();
+    var url = couchViewUrl(dbName, viewName, key, group);
 
     couchRequest({ url: url })
         .then(resolveWithRowValues)
@@ -51,11 +92,23 @@ function getCouchViewResults( dbName, viewName, key) {
 
     return deferred.promise;
 }
-function _couchViewUrl(dbName, viewName, key) {
+
+function couchViewUrl(dbName, viewName, key, group) {
     var url = StoreOptions.couchDbUrl + '/' + dbName + '/' + '_design/CARLI/_view/' + viewName;
+
+    var queryParams = {};
     if (key) {
-        url += '?key="' + key + '"';
+        queryParams.key = '"' + key + '"';
     }
+    if (group) {
+        queryParams.group = true;
+    }
+
+    var str = queryString.stringify(queryParams);
+    if (str) {
+        url += '?' + str;
+    }
+
     return url;
 }
 
@@ -129,9 +182,12 @@ function _couchReplicationOptions(sourceDbName, targetDbName) {
 }
 
 module.exports = {
+    couchViewUrl: couchViewUrl,
     createDatabase: createDatabase,
     couchRequest: couchRequest,
-    getCouchViewResults: getCouchViewResults,
+    getCouchDocuments: getCouchDocuments,
+    getCouchViewResultObject: getCouchViewResultObject,
+    getCouchViewResultValues: getCouchViewResultValues,
     makeValidCouchDbName: makeValidCouchDbName,
     replicateFrom: replicateFrom
 };

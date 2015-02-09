@@ -65,7 +65,7 @@ module.exports = function (inputOptions) {
         if (collection === undefined) {
             collection = defaultCollection;
         }
-        return CouchUtils.getCouchViewResults(collection, 'listByType', type);
+        return CouchUtils.getCouchViewResultValues(collection, 'listByType', type);
     }
 
     function deleteDataFor(id) {
