@@ -137,7 +137,7 @@
                         }
 
                         &.edit-mode {
-                            td {
+                            td:not(.add-su-pricing) {
                                 padding: .5rem 0;
 
                                 input {
@@ -191,6 +191,10 @@
                     height: auto;
                     padding: 0;
                     text-align: left;
+
+                    &:hover {
+                        background: $white;
+                    }
                 }
             }
         }
