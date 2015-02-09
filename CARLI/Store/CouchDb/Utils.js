@@ -1,7 +1,8 @@
 var middleware = require('../../../config/environmentDependentModules').middleware,
     Q = require('q'),
     request = require('../../../config/environmentDependentModules').request,
-    StoreOptions = require( '../../../config').storeOptions
+    StoreOptions = require( '../../../config').storeOptions,
+    queryString = require('query-string')
 ;
 
 function couchRequest(requestOptions) {
@@ -23,9 +24,9 @@ function couchRequest(requestOptions) {
     return deferred.promise;
 }
 
-function getCouchViewResults( dbName, viewName, key) {
+function getCouchViewResults( dbName, viewName, key, group) {
     var deferred = Q.defer();
-    var url = _couchViewUrl(dbName, viewName, key);
+    var url = couchViewUrl(dbName, viewName, key, group);
 
     couchRequest({ url: url })
         .then(resolveWithRowValues)
@@ -51,11 +52,23 @@ function getCouchViewResults( dbName, viewName, key) {
 
     return deferred.promise;
 }
-function _couchViewUrl(dbName, viewName, key) {
+
+function couchViewUrl(dbName, viewName, key, group) {
     var url = StoreOptions.couchDbUrl + '/' + dbName + '/' + '_design/CARLI/_view/' + viewName;
+
+    var queryParams = {};
     if (key) {
-        url += '?key="' + key + '"';
+        queryParams.key = '"' + key + '"';
     }
+    if (group) {
+        queryParams.group = true;
+    }
+
+    var str = queryString.stringify(queryParams);
+    if (str) {
+        url += '?' + str;
+    }
+
     return url;
 }
 
@@ -129,6 +142,7 @@ function _couchReplicationOptions(sourceDbName, targetDbName) {
 }
 
 module.exports = {
+    couchViewUrl: couchViewUrl,
     createDatabase: createDatabase,
     couchRequest: couchRequest,
     getCouchViewResults: getCouchViewResults,

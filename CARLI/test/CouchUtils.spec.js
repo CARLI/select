@@ -46,4 +46,33 @@ describe('Couch utilities', function () {
                 });
         });
     });
+
+    describe('couchViewUrl', function(){
+        var testDbName = 'testDb';
+        var testViewName = 'testView';
+        var testUrl = storeOptions.couchDbUrl + '/' + testDbName + '/' + '_design/CARLI/_view/' + testViewName;
+
+        it('should return the base for the correct database and view if given no additional arguments', function(){
+            expect(couchUtils.couchViewUrl(testDbName, testViewName)).to.equal(testUrl);
+        });
+
+        it ('should return the base url with a quoted key in the query string if given a key', function() {
+            var testKey = 'testKey';
+            var urlWithKey = testUrl + '?key=%22' + testKey + '%22';
+
+            expect(couchUtils.couchViewUrl(testDbName, testViewName, testKey)).to.equal(urlWithKey);
+        });
+        it ('should return the base url with group=true in the query string if given a truthy group argument', function() {
+            var urlWithGroup = testUrl + '?group=true';
+            expect(couchUtils.couchViewUrl(testDbName, testViewName, null, true)).to.equal(urlWithGroup);
+        });
+        it ('should return the base url with both a quoted key and the group=true in the query string if given both a key and group arguments', function() {
+            var testKey = 'testKey';
+            var urlWithKeyAndGroup = testUrl + '?key=%22' + testKey + '%22&group=true';
+
+            expect(couchUtils.couchViewUrl(testDbName, testViewName, testKey, true)).to.equal(urlWithKeyAndGroup);
+        });
+
+
+    });
 });
