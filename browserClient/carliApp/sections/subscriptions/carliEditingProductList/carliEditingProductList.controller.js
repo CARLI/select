@@ -40,12 +40,18 @@ function carliEditingProductListController( $scope, alertService, productService
     }
 
     function loadVendors() {
-        vendorService.list().then(function (vendors) {
-            vm.vendors = vendors;
-            angular.forEach(vendors, function (vendor) {
-                loadProductsForVendor(vendor);
+        productService.listProductCountsByVendorId()
+            .then(function( productsByVendorId ){
+                return Object.keys(productsByVendorId);
+            })
+            .then(vendorService.getVendorsById)
+            .then(function (vendors) {
+                vm.vendors = vendors;
+
+                angular.forEach(vendors, function (vendor) {
+                    loadProductsForVendor(vendor);
+                });
             });
-        });
     }
 
     function loadProductsForVendor(vendor) {
