@@ -1,0 +1,7 @@
+.cg-busy-animation.ng-hide-remove {
+    @include vendor-prefix(transform, translate(0px,0px));
+}
+
+.cg-busy-animation.ng-hide-add.ng-hide-add-active {
+    @include vendor-prefix(transform, translate(0px,0px));
+}
