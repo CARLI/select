@@ -7,6 +7,7 @@ function vendorsSettingPricesController( $scope, $q, alertService, cycleService,
     vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
     vm.offeringDisplayLabels = offeringService.getOfferingDisplayLabels();
     vm.loadProductsForVendor = loadProductsForVendor;
+    vm.getVendorPricingStatus = getVendorPricingStatus;
     vm.loadingPromise = {};
     vm.setOfferingEditable = setOfferingEditable;
     vm.saveOffering = saveOffering;
@@ -93,6 +94,10 @@ function vendorsSettingPricesController( $scope, $q, alertService, cycleService,
             });
             return $q.all(promises);
         });
+    }
+
+    function getVendorPricingStatus(vendor) {
+        return "No activity";
     }
 
     function setOfferingEditable( offering ){

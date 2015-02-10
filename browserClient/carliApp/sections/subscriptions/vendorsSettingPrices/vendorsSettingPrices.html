@@ -5,6 +5,7 @@
                 <fa name="angle-down"></fa>
             </button>
             {{ vendor.name }}
+            <span class="vendor-status">{{ vm.getVendorPricingStatus(vendor) }}</span>
         </header>
         <div class="content">
             <ul class="product-content">

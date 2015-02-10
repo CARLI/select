@@ -60,7 +60,9 @@
             border-bottom: 0;
             padding: 1rem 1rem 1rem 42px;
 
-            .reviewed-message {
+            .vendor-status {
+                @include body-text();
+                line-height: 1.21429rem;
                 float: right;
             }
         }
