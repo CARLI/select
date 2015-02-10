@@ -18,7 +18,7 @@ angular.module('carli.app', [
 .value('cgBusyDefaults',{
     //message:'Loading Stuff',
     //backdrop: false,
-    templateUrl: '/carliApp/angular-busy.html'
+    templateUrl: '/carliApp/components/spinner/spinner.html'
     //delay: 300,
     //minDuration: 700,
     //wrapperClass: 'my-class my-class2'
