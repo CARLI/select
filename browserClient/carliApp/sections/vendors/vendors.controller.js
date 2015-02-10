@@ -11,7 +11,7 @@ function vendorController( $sce, $filter, vendorService ){
     }
 
     function populateVendorList() {
-        vendorService.list().then( function(vendorList){
+        vm.loadingPromise = vendorService.list().then( function(vendorList){
             vm.vendorList = vendorList;
         });
     }

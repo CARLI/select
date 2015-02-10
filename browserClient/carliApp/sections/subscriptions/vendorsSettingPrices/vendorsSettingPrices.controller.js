@@ -1,12 +1,13 @@
 angular.module('carli.sections.subscriptions.vendorsSettingPrices')
     .controller('vendorsSettingPricesController', vendorsSettingPricesController);
 
-function vendorsSettingPricesController( $scope, alertService, cycleService, libraryService, vendorService, offeringService, productService ) {
+function vendorsSettingPricesController( $scope, $q, alertService, cycleService, libraryService, vendorService, offeringService, productService ) {
     var vm = this;
     vm.closeVendorPricing = closeVendorPricing;
     vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
     vm.offeringDisplayLabels = offeringService.getOfferingDisplayLabels();
     vm.loadProductsForVendor = loadProductsForVendor;
+    vm.loadingPromise = {};
     vm.setOfferingEditable = setOfferingEditable;
     vm.saveOffering = saveOffering;
     vm.debounceSaveOffering = debounceSaveOffering;
@@ -67,11 +68,15 @@ function vendorsSettingPricesController( $scope, alertService, cycleService, lib
     }
 
     function loadProductsForVendor(vendor) {
-        productService.listProductsForVendorId(vendor.id).then(function (products) {
+        if (vendor.products) {
+            return;
+        }
+        vm.loadingPromise[vendor.id] = productService.listProductsForVendorId(vendor.id).then(function (products) {
             vendor.products = products;
 
+            var promises = [];
             angular.forEach(products, function (product) {
-                offeringService.listOfferingsForProductId(product.id).then(function(offerings) {
+                var offeringPromise = offeringService.listOfferingsForProductId(product.id).then(function(offerings) {
                     product.offerings = offerings;
 
                     offerings.forEach(function(offering){
@@ -82,8 +87,11 @@ function vendorsSettingPricesController( $scope, alertService, cycleService, lib
                             offering.libraryComments = offering.product.comments;
                         }
                     });
+                    return offerings;
                 });
+                promises.push(offeringPromise);
             });
+            return $q.all(promises);
         });
     }
 

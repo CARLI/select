@@ -8,7 +8,7 @@
     </div>
 
     <section class="content list-content">
-        <entity-list values="vm.libraryList" columns="vm.entityListColumns" entity-label="libraries"></entity-list>
+        <entity-list values="vm.libraryList" columns="vm.entityListColumns" entity-label="libraries" loading-promise="vm.loadingPromise"></entity-list>
     </section>
 
     <edit-library-modal after-submit-fn="vm.afterLibrarySubmit"></edit-library-modal>

@@ -7,7 +7,8 @@ angular.module('carli.entityList')
             values: '=',
             columns: '=',
             entityLabel: '@',
-            orderBy: '='
+            orderBy: '=',
+            loadingPromise: '='
         },
         controller: 'entityListController',
         controllerAs: 'vm'

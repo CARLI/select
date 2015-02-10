@@ -19,7 +19,7 @@ function libraryController( $sce, libraryService ){
     }
 
     function populateLibraryList() {
-        libraryService.list().then( function( libraryList ){
+        vm.loadingPromise = libraryService.list().then( function( libraryList ){
             vm.libraryList = libraryList;
         });
     }

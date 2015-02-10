@@ -33,8 +33,10 @@ function editCycleController( $routeParams, alertService, cycleService ) {
 
     function saveCycleAndUpdateStatus(){
         cycleService.update(cycleRouter.cycle)
-            .then(function () {
-                cycleRouter.status = cycleRouter.cycle.status;
+            .then(cycleService.load)
+            .then(function (cycle) {
+                cycleRouter.cycle = cycle;
+                cycleRouter.status = cycle.status;
             })
             .catch(function(err){
                 alertService.putAlert(err, {severity: 'danger'});
