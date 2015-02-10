@@ -9,6 +9,7 @@ function vendorsSettingPricesController( $scope, alertService, cycleService, lib
     vm.loadProductsForVendor = loadProductsForVendor;
     vm.setOfferingEditable = setOfferingEditable;
     vm.saveOffering = saveOffering;
+    vm.debounceSaveOffering = debounceSaveOffering;
     vm.vendors = [];
     vm.isEditing = {};
     vm.cycle = {};
@@ -88,6 +89,12 @@ function vendorsSettingPricesController( $scope, alertService, cycleService, lib
 
     function setOfferingEditable( offering ){
         vm.isEditing[offering.id] = true;
+    }
+
+    function debounceSaveOffering($event, offering, productOfferings, offeringIndex) {
+        if ($event.target.tagName === 'INPUT') {
+            saveOffering( offering, productOfferings, offeringIndex );
+        }
     }
 
     function saveOffering( offering, productOfferings, offeringIndex ) {

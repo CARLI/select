@@ -88,7 +88,7 @@
                                 </div>
                             </div>
                             <div class="column flag">
-                                <checkbox ng-model="offering.flagged" class="flag"></checkbox>
+                                <checkbox ng-click="vm.debounceSaveOffering($event, offering, product.offerings, $index)" ng-model="offering.flagged" class="flag"></checkbox>
                             </div>
                         </li>
                     </ul>
