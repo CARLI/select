@@ -90,20 +90,20 @@ function vendorsSettingPricesController( $scope, alertService, cycleService, lib
         vm.isEditing[offering.id] = true;
     }
 
-    function saveOffering( offering ) {
+    function saveOffering( offering, productOfferings, offeringIndex ) {
         if (offering.libraryComments === offering.product.comments) {
             delete offering.libraryComments;
         }
-        /*
-        offeringService.update(offering).then(function(result){
-            //alert(?)
-            console.log(result);
-            vm.isEditing[offering.id] = false;
-        }).catch(function(err) {
-            console.log('failed', err);
-        });
-        */
-        /*XXX*/vm.isEditing[offering.id] = false;
+        offeringService.update(offering)
+            .then(offeringService.load)
+            .then(function(updatedOffering){
+                productOfferings[offeringIndex] = updatedOffering;
+                alertService.putAlert('Offering updated', {severity: 'success'});
+                vm.isEditing[offering.id] = false;
+            }).catch(function(err) {
+                alertService.putAlert(err, {severity: 'danger'});
+                console.log('failed', err);
+            });
     }
 
     function closeVendorPricing(){
