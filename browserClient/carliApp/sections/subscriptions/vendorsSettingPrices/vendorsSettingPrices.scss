@@ -172,15 +172,30 @@
                     width: 70px;
                     text-align: center;
 
-                    .fa {
-                        @include font-size(22);
+                    checkbox {
+                        .checkbox-display {
+                            cursor: pointer;
+                        }
+                        input[type="checkbox"] {
+                            & + label {
+                                user-select: none;
+                                color: $gray;
+                            }
 
-                        &.fa-flag {
-                            color: $orange;
+                            &:checked + label {
+                                color: $orange;
+                            }
                         }
 
-                        &.fa-flag-o {
-                            color: $gray;
+                        .fa {
+                            @include font-size(22);
+                        }
+
+                        &.focused {
+                            background: transparent;
+                            .checkbox-display {
+                                outline: $light-purple auto 5px;
+                            }
                         }
                     }
                 }
