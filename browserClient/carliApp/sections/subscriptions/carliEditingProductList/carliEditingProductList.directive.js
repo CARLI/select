@@ -4,9 +4,10 @@ angular.module('carli.sections.subscriptions.carliEditingProductList')
             restrict: 'E',
             templateUrl: '/carliApp/sections/subscriptions/carliEditingProductList/carliEditingProductList.html',
             scope: {
-                cycle: '='
+                cycleRouter: '='
             },
             controller: 'carliEditingProductListController',
-            controllerAs: 'vm'
+            controllerAs: 'vm',
+            bindToController: true
         };
     });

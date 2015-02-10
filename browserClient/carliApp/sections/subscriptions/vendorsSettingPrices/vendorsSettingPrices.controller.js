@@ -107,8 +107,7 @@ function vendorsSettingPricesController( $scope, alertService, cycleService, lib
     }
 
     function closeVendorPricing(){
-        $scope.cycle.returnToPreviousStep();
-        //TODO: persist the cycle and add a success alert when it's saved
+        vm.cycleRouter.previous();
     }
 
 }
