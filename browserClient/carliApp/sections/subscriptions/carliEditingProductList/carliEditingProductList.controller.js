@@ -5,6 +5,8 @@ function carliEditingProductListController( $scope, alertService, productService
     var vm = this;
     vm.removeProduct = removeProduct;
     vm.openVendorPricing = openVendorPricing;
+    vm.loadProductsForVendor = loadProductsForVendor;
+    vm.loadingPromise = {};
     activate();
 
     function activate () {
@@ -47,15 +49,14 @@ function carliEditingProductListController( $scope, alertService, productService
             .then(vendorService.getVendorsById)
             .then(function (vendors) {
                 vm.vendors = vendors;
-
-                angular.forEach(vendors, function (vendor) {
-                    loadProductsForVendor(vendor);
-                });
             });
     }
 
     function loadProductsForVendor(vendor) {
-        productService.listProductsForVendorId(vendor.id).then(function (products) {
+        if (vendor.products) {
+            return;
+        }
+        vm.loadingPromise[vendor.id] = productService.listProductsForVendorId(vendor.id).then(function (products) {
             vendor.products = products;
             angular.forEach(products, function (product) {
                 product.selectionHistory = {};
