@@ -15,12 +15,12 @@
                     </div>
                     <ul class="offerings-list">
                         <li class="column-headers">
-                            <div class="column library sortable">Library</div>
+                            <div class="sortable column library" ng-class="{ activeSort: vm.orderBy === 'library.name', reversedSort: vm.reverse }" ng-click="vm.sort('library.name')">Library</div>
                             <div class="column library-view">Library View</div>
-                            <div class="column site-license-price sortable">Site License Price</div>
-                            <div class="column flag sortable">Flag</div>
+                            <div class="sortable column site-license-price" ng-class="{activeSort: vm.orderBy === 'pricing.site', reversedSort: vm.reverse }" ng-click="vm.sort('pricing.site')">Site License Price</div>
+                            <div class="sortable column flag" ng-class="{ activeSort: vm.orderBy === 'flagged', reversedSort: vm.reverse }" ng-click="vm.sort('flagged')">Flag</div>
                         </li>
-                        <li class="offering" ng-class="{ 'edit-mode': vm.isEditing[offering.id] }" ng-repeat="offering in product.offerings track by offering.id">
+                        <li class="offering" ng-class="{ 'edit-mode': vm.isEditing[offering.id] }" ng-repeat="offering in product.offerings | orderBy:vm.orderBy:vm.reverse track by offering.id">
                             <div class="column library">
                                 <h3>{{ ::offering.library.name }}</h3>
                                 <p><span class="label">Pricing Info</span><br>

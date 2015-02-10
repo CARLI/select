@@ -30,7 +30,7 @@ function vendorsSettingPricesController( $scope, $q, alertService, cycleService,
     }
 
     function initSortable() {
-        vm.orderBy = vm.orderBy || 'name';
+        vm.orderBy = vm.orderBy || 'library.name';
         vm.reverse = false;
 
         vm.sort = function sort( newOrderBy ){
