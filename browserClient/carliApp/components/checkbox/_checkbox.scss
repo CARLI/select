@@ -21,6 +21,18 @@ checkbox {
         }
     }
 
+    &.flag {
+        input[type="checkbox"]  {
+            & + label .checkbox-display:before {
+                content: "\f11d"; //flag-o
+            }
+
+            &:checked + label .checkbox-display:before {
+                content: "\f024"; //flag
+            }
+        }
+    }
+
     label {
         font-weight: normal;
         margin: 0;

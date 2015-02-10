@@ -9,6 +9,7 @@ function vendorsSettingPricesController( $scope, alertService, cycleService, lib
     vm.loadProductsForVendor = loadProductsForVendor;
     vm.setOfferingEditable = setOfferingEditable;
     vm.saveOffering = saveOffering;
+    vm.debounceSaveOffering = debounceSaveOffering;
     vm.vendors = [];
     vm.isEditing = {};
     vm.cycle = {};
@@ -90,25 +91,30 @@ function vendorsSettingPricesController( $scope, alertService, cycleService, lib
         vm.isEditing[offering.id] = true;
     }
 
-    function saveOffering( offering ) {
+    function debounceSaveOffering($event, offering, productOfferings, offeringIndex) {
+        if ($event.target.tagName === 'INPUT') {
+            saveOffering( offering, productOfferings, offeringIndex );
+        }
+    }
+
+    function saveOffering( offering, productOfferings, offeringIndex ) {
         if (offering.libraryComments === offering.product.comments) {
             delete offering.libraryComments;
         }
-        /*
-        offeringService.update(offering).then(function(result){
-            //alert(?)
-            console.log(result);
-            vm.isEditing[offering.id] = false;
-        }).catch(function(err) {
-            console.log('failed', err);
-        });
-        */
-        /*XXX*/vm.isEditing[offering.id] = false;
+        offeringService.update(offering)
+            .then(offeringService.load)
+            .then(function(updatedOffering){
+                productOfferings[offeringIndex] = updatedOffering;
+                alertService.putAlert('Offering updated', {severity: 'success'});
+                vm.isEditing[offering.id] = false;
+            }).catch(function(err) {
+                alertService.putAlert(err, {severity: 'danger'});
+                console.log('failed', err);
+            });
     }
 
     function closeVendorPricing(){
-        $scope.cycle.returnToPreviousStep();
-        //TODO: persist the cycle and add a success alert when it's saved
+        vm.cycleRouter.previous();
     }
 
 }

@@ -4,9 +4,10 @@ angular.module('carli.sections.subscriptions.vendorsSettingPrices')
             restrict: 'E',
             templateUrl: '/carliApp/sections/subscriptions/vendorsSettingPrices/vendorsSettingPrices.html',
             scope: {
-                cycle: '='
+                cycleRouter: '='
             },
             controller: 'vendorsSettingPricesController',
-            controllerAs: 'vm'
+            controllerAs: 'vm',
+            bindToController: true
         };
     });

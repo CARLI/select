@@ -86,12 +86,32 @@ function setCycle(cycle) {
 
 
 /* functions that get added as instance methods on loaded Offerings */
+var getFlaggedState = function(){
+    if ( this.flagged === true || this.flagged === false ){
+        return this.flagged;
+    }
 
-var functionsToAdd = {};
+    if ( this.pricing && this.pricing.su ){
+        var sitePrice = this.pricing.site || 0;
+
+        for ( var i in this.pricing.su ){
+            if ( this.pricing.su[i].price > sitePrice ){
+                return true;
+            }
+        }
+    }
+
+    return false;
+};
+
+var functionsToAdd = {
+    getFlaggedState: getFlaggedState
+};
 
 function getOfferingDisplayOptions(){
     return Validator.getEnumValuesFor('Offering','display');
 }
+
 
 module.exports = {
     setStore: OfferingRepository.setStore,

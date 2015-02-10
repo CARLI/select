@@ -136,6 +136,23 @@
                             background: $light-gray;
                         }
 
+                        &.edit-mode {
+                            td:not(.add-su-pricing) {
+                                padding: .5rem 0;
+
+                                input {
+                                    margin-left: 1rem;
+                                }
+
+                                .price input {
+                                    width: 80px;
+                                }
+                                .users input {
+                                    width: 50px;
+                                }
+                            }
+                        }
+
                         th, td {
                             padding: $table-padding;
                         }
@@ -146,6 +163,7 @@
                             padding: 0;
                         }
                     }
+
                 }
 
                 &.flag {
@@ -154,15 +172,30 @@
                     width: 70px;
                     text-align: center;
 
-                    .fa {
-                        @include font-size(22);
+                    checkbox {
+                        .checkbox-display {
+                            cursor: pointer;
+                        }
+                        input[type="checkbox"] {
+                            & + label {
+                                user-select: none;
+                                color: $gray;
+                            }
 
-                        &.fa-flag {
-                            color: $orange;
+                            &:checked + label {
+                                color: $orange;
+                            }
                         }
 
-                        &.fa-flag-o {
-                            color: $gray;
+                        .fa {
+                            @include font-size(22);
+                        }
+
+                        &.focused {
+                            background: transparent;
+                            .checkbox-display {
+                                outline: $light-purple auto 5px;
+                            }
                         }
                     }
                 }
@@ -173,6 +206,10 @@
                     height: auto;
                     padding: 0;
                     text-align: left;
+
+                    &:hover {
+                        background: $white;
+                    }
                 }
             }
         }
