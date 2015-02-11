@@ -72,6 +72,14 @@
                 }
             }
 
+            &.product {
+                @include flex(1 0 10%);
+            }
+
+            &.vendor {
+                @include flex(1 0 10%);
+            }
+
             &.library-view {
                 width: 380px;
 
@@ -219,6 +227,14 @@
                     background: $white;
                 }
             }
+        }
+    }
+}
+
+.library-accordion {
+    .column-headers {
+        .column {
+            border-top: $default-border;
         }
     }
 }

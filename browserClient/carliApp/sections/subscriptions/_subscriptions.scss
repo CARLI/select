@@ -42,6 +42,7 @@
         }
 
         .footer {
+            @include clearfix;
             background: $light-gray;
             border-left: $default-border;
             border-right: $default-border;

@@ -22,8 +22,6 @@ function vendorsSettingPricesByLibraryController( $scope, $q, alertService, cycl
     activate();
 
     function activate () {
-        console.log('vendorsSettingPricesByLibraryController activate');
-
         initSortable();
 
         vm.cycle = cycleService.getCurrentCycle();
@@ -33,9 +31,7 @@ function vendorsSettingPricesByLibraryController( $scope, $q, alertService, cycl
     }
 
     function initLibraryList(){
-        console.log('initLibraryList');
         libraryService.list().then(function(libraryList){
-            console.log(libraryList);
             vm.libraryList = libraryList;
         });
     }
