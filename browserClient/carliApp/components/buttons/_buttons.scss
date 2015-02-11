@@ -115,3 +115,12 @@ $button-height: 40px;
         @include subdued-remove-button-hover;
     }
 }
+
+.toggle-button {
+    @extend .carli-button;
+    &.active {
+        border-color: $dark-orange;
+        background-color: $orange;
+        color: $white;
+    }
+}

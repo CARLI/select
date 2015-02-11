@@ -4,21 +4,29 @@ angular.module('carli.sections.subscriptions.editCycle')
 function editCycleController( $routeParams, alertService, cycleService ) {
     var cycleRouter = this;
     cycleRouter.cycleId = $routeParams.id;
+    cycleRouter.shouldShowGroupByToggle = shouldShowGroupByToggle;
 
     activate();
 
     function activate(){
+        cycleRouter.groupBy = 'vendor';
+
         cycleService.load(cycleRouter.cycleId).then( function( cycle ) {
             cycleRouter.cycle = cycle;
             cycleRouter.status = cycle.status;
 
             cycleRouter.cycleRouter = {
                 next: cycleRouterNext,
-                previous: cycleRouterPrevious
+                previous: cycleRouterPrevious,
+                groupBy: cycleRouter.groupBy
             };
 
             cycleService.setCurrentCycle(cycle);
         } );
+    }
+
+    function shouldShowGroupByToggle() {
+        return (cycleRouter.status === 1);
     }
 
     function cycleRouterNext(){

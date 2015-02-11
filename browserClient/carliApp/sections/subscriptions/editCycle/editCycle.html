@@ -1,6 +1,18 @@
-<div class="page-header">
-    <h2>{{ cycleRouter.cycle.name }}</h2>
-    <h4>{{ cycleRouter.cycle.getStatusLabel() }}</h4>
+<div class="subscription page-header">
+    <div class="headings">
+        <h2>{{ cycleRouter.cycle.name }}</h2>
+        <h4>{{ cycleRouter.cycle.getStatusLabel() }}</h4>
+    </div>
+    <div class="controls group-by-toggle" ng-if="cycleRouter.shouldShowGroupByToggle()">
+        <button type="button"
+                class="toggle-button"
+                ng-class="{ 'active': cycleRouter.cycleRouter.groupBy === 'vendor' }"
+                ng-click="cycleRouter.cycleRouter.groupBy = 'vendor'">Vendor</button
+        ><button type="button"
+                 class="toggle-button"
+                 ng-class="{ 'active': cycleRouter.cycleRouter.groupBy === 'library' }"
+                 type="button" ng-click="cycleRouter.cycleRouter.groupBy = 'library'">Library</button>
+    </div>
 </div>
 
 <section id="subscriptions" class="content" ng-switch on="cycleRouter.status">
