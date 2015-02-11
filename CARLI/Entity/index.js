@@ -2,6 +2,7 @@ var uuid  = require( 'node-uuid' )
   , tv4   = require( 'tv4' )
   , Validator = require( '../Validator' )
   , Q = require( 'q' )
+  , entityCache = require('./entityCache')
 ;
 
 function throwIfDataIsEmpty ( data ) {
@@ -26,8 +27,13 @@ function _cloneData ( data ) {
     return JSON.parse( JSON.stringify( data ) );
 }
 
-module.exports = function (type) {
+module.exports = function (type, timeout) {
     var dataStore;
+    if (timeout === undefined) {
+        // timeout = entityCache.INFINITE_TIMEOUT;
+        timeout = entityCache.INSTANT_TIMEOUT;
+    }
+    var cache = entityCache.createCache(timeout);
     return {
 
         setStore: function( store ){
@@ -53,6 +59,7 @@ module.exports = function (type) {
                 return dataStore.save( data )
             } )
             .then( function( savedData ) {
+                cache.add(data);
                 deferred.resolve( data.id );
             } )
             .catch( function( err ) {
@@ -63,6 +70,7 @@ module.exports = function (type) {
 
         update: function( originalData, transformFunction ){
             validateUpdateData( originalData );
+            cache.delete(originalData.id);
 
             var data = _cloneData( originalData );
 
@@ -77,6 +85,7 @@ module.exports = function (type) {
                 return dataStore.save( data )
             } )
             .then( function( savedData ) {
+                cache.add(data);
                 deferred.resolve( data.id );
             } )
             .catch( function( err ) {
@@ -93,16 +102,18 @@ module.exports = function (type) {
             if ( !id ){
                 throw new Error('Id Required');
             }
-            return dataStore.get( id );
+            return cache.get(id) ? cache.get(id) : dataStore.get(id);
         },
 
         delete: function( id ){
             if ( !id ){
                 throw new Error('Id Required');
             }
+            cache.delete(id);
             return dataStore.delete( id );
         }
 
     };
+
 };
 
