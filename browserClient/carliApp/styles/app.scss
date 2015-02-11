@@ -137,6 +137,8 @@ ul {
 
 .page-header {
     @extend .container-fluid;
+    @include flexbox;
+
     margin-top: 0;
     margin-bottom: 0;
     padding-top: 30px;
@@ -151,6 +153,16 @@ ul {
 
     .name {
         margin-top: 10px;
+    }
+
+    .headings {
+        @include flex(1 1 auto);
+    }
+
+    .controls {
+        @include flex(1 1 auto);
+        text-align: right;
+        align-content: center;
     }
 }
 section.content {

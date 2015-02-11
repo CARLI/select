@@ -72,6 +72,11 @@ function loadOffering( offeringId, cycle ){
     return deferred.promise;
 }
 
+function listOfferingsForLibraryId( libraryId, cycle ) {
+    setCycle(cycle);
+    return CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForLibraryId', libraryId);
+}
+
 function listOfferingsForProductId( productId, cycle ) {
     setCycle(cycle);
     return CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForProductId', productId);
@@ -120,6 +125,7 @@ module.exports = {
     update: updateOffering,
     list: listOfferings,
     load: loadOffering,
+    listOfferingsForLibraryId: listOfferingsForLibraryId,
     listOfferingsForProductId: listOfferingsForProductId,
     getOfferingDisplayOptions: getOfferingDisplayOptions
 };

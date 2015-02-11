@@ -21,6 +21,14 @@ describe('The Offering service', function() {
         expect(offeringService.load).to.be.a('Function');
     }));
 
+    it( 'should provide a listOfferingsForLibraryId method', inject( function(offeringService) {
+        expect(offeringService.listOfferingsForLibraryId).to.be.a('Function');
+    }));
+
+    it( 'should provide a listOfferingsForProductId method', inject( function(offeringService) {
+        expect(offeringService.listOfferingsForProductId).to.be.a('Function');
+    }));
+
     it( 'should provide a getOfferingDisplayOptions method', inject( function(offeringService) {
         expect(offeringService.getOfferingDisplayOptions).to.be.a('Function');
         expect(offeringService.getOfferingDisplayOptions()).to.be.an('Array');
