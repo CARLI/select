@@ -9,17 +9,6 @@ function vendorsSettingPricesController( libraryService ) {
 
     function activate () {
         vm.groupBy = 'vendor';
-
-        libraryService.list()
-            .then(initLibraryList);
-    }
-
-    function initLibraryList( libraryList ){
-        vm.libraryMap = {};
-
-        libraryList.forEach(function(library){
-            vm.libraryMap[library.id] = library;
-        });
     }
 
     function closeVendorPricing(){

@@ -3,9 +3,7 @@ angular.module('carli.sections.subscriptions.vendorsSettingPrices')
         return {
             restrict: 'E',
             templateUrl: '/carliApp/sections/subscriptions/vendorsSettingPrices/vendorsSettingPricesByVendor.html',
-            scope: {
-                cycleRouter: '='
-            },
+            scope: {},
             controller: 'vendorsSettingPricesByVendorController',
             controllerAs: 'vm',
             bindToController: true

@@ -3,7 +3,6 @@ angular.module('carli.sections.subscriptions.vendorsSettingPrices')
 
 function vendorsSettingPricesByVendorController( $scope, $q, alertService, cycleService, libraryService, vendorService, offeringService, productService ) {
     var vm = this;
-    vm.closeVendorPricing = closeVendorPricing;
     vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
     vm.offeringDisplayLabels = offeringService.getOfferingDisplayLabels();
     vm.loadProductsForVendor = loadProductsForVendor;
@@ -125,9 +124,4 @@ function vendorsSettingPricesByVendorController( $scope, $q, alertService, cycle
                 console.log('failed', err);
             });
     }
-
-    function closeVendorPricing(){
-        vm.cycleRouter.previous();
-    }
-
 }

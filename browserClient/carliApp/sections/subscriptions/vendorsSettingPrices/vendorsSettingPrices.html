@@ -1,7 +1,7 @@
 <button type="button" ng-click="vm.groupBy = 'vendor'">Vendor</button>
 <button type="button" ng-click="vm.groupBy = 'library'">Library</button>
 
-<vendors-setting-prices-by-vendor ng-if="vm.groupBy === 'vendor'" cycleRouter="vm.cycleRouter"></vendors-setting-prices-by-vendor>
-<vendors-setting-prices-by-library ng-if="vm.groupBy === 'library'" cycleRouter="vm.cycleRouter"></vendors-setting-prices-by-library>
+<vendors-setting-prices-by-vendor ng-if="vm.groupBy === 'vendor'"></vendors-setting-prices-by-vendor>
+<vendors-setting-prices-by-library ng-if="vm.groupBy === 'library'"></vendors-setting-prices-by-library>
 
 <button type="button" class="carli-button pull-left" ng-click="vm.closeVendorPricing()">Undo Open Vendor Pricing</button>
