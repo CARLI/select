@@ -49,6 +49,20 @@
                 line-height: 1.21429rem;
                 float: right;
             }
+
+            .library-info {
+                @include body-text();
+
+                margin-left: 1rem;
+
+                .label {
+                    color: $black;
+                }
+
+                .value {
+                    color: $purple
+                }
+            }
         }
 
         .footer {

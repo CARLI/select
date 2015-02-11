@@ -1,3 +1,4 @@
+<div cg-busy="vm.libraryLoadingPromise"></div>
 <ul class="library-accordion" ng-repeat="library in vm.libraryList">
     <li carli-accordion>
         <header ng-click="vm.loadOfferingsForLibrary(library)" cg-busy="vm.loadingPromise[library.id]">
@@ -5,10 +6,10 @@
                 <fa name="angle-down"></fa>
             </button>
             {{ ::library.name }}
-            <span>
-              FTE: <span class="purple"></span>
-              Institution: <span class="purple"></span>
-              Type: <span class="purple"></span>
+            <span class="library-info">
+              <span class="key">FTE:</span> <span class="value">{{ ::library.fte }}</span>,
+              <span class="key">Institution:</span> <span class="value">{{ ::library.institutionYears }}</span>,
+              <span class="key">Type:</span> <span class="value">{{ ::library.institutionType }}</span>
             </span>
         </header>
         <div class="content">
