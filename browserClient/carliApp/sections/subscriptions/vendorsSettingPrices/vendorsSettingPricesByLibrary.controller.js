@@ -74,19 +74,22 @@ function vendorsSettingPricesByLibraryController( $scope, $q, alertService, cycl
         vm.isEditing[offering.id] = true;
     }
 
-    function debounceSaveOffering($event, offering, libraryId, offeringIndex) {
+    function debounceSaveOffering($event, offering, libraryId) {
         if ($event.target.tagName === 'INPUT') {
-            saveOffering( offering, libraryId, offeringIndex );
+            saveOffering( offering, libraryId );
         }
     }
 
-    function saveOffering( offering, libraryId, offeringIndex ) {
+    function saveOffering( offering, libraryId ) {
+        console.log('saveOffering('+offering.id+','+libraryId);
+
         if (offering.libraryComments === offering.product.comments) {
             delete offering.libraryComments;
         }
         offeringService.update(offering)
             .then(offeringService.load)
             .then(function(updatedOffering){
+                var offeringIndex = vm.offerings[libraryId].indexOf(offering);
                 vm.offerings[libraryId][offeringIndex] = updatedOffering;
                 alertService.putAlert('Offering updated', {severity: 'success'});
                 vm.isEditing[offering.id] = false;

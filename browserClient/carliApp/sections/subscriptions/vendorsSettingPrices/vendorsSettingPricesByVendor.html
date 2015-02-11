@@ -30,7 +30,7 @@
                                     Type: <span class="purple">{{ ::offering.library.institutionType }}</span></p>
 
                                 <button ng-show="!vm.isEditing[offering.id]" type="button" class="carli-button edit" ng-click="vm.setOfferingEditable(offering)">Edit <fa name="pencil-square-o "></fa></button>
-                                <button ng-show="vm.isEditing[offering.id]" type="button" class="carli-button save" ng-click="vm.saveOffering(offering, product.offerings, $index)">Save <fa name="floppy-o"></fa></button>
+                                <button ng-show="vm.isEditing[offering.id]" type="button" class="carli-button save" ng-click="vm.saveOffering(offering, product.offerings)">Save <fa name="floppy-o"></fa></button>
                             </div>
                             <div class="column library-view">
                                 <div class="display">
@@ -89,7 +89,7 @@
                                 </div>
                             </div>
                             <div class="column flag">
-                                <checkbox ng-click="vm.debounceSaveOffering($event, offering, product.offerings, $index)" ng-model="offering.flagged" class="flag"></checkbox>
+                                <checkbox ng-click="vm.debounceSaveOffering($event, offering, product.offerings)" ng-model="offering.flagged" class="flag"></checkbox>
                             </div>
                         </li>
                     </ul>

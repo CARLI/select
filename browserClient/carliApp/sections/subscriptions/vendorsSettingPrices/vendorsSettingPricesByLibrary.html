@@ -24,7 +24,7 @@
                     <div class="column product">
                         <h3>{{ ::offering.product.name }}</h3>
                         <button ng-show="!vm.isEditing[offering.id]" type="button" class="carli-button edit" ng-click="vm.setOfferingEditable(offering)">Edit <fa name="pencil-square-o "></fa></button>
-                        <button ng-show="vm.isEditing[offering.id]" type="button" class="carli-button save" ng-click="vm.saveOffering(offering, library.id, $index)">Save <fa name="floppy-o"></fa></button>
+                        <button ng-show="vm.isEditing[offering.id]" type="button" class="carli-button save" ng-click="vm.saveOffering(offering, library.id)">Save <fa name="floppy-o"></fa></button>
                     </div>
                     <div class="column vendor">
                         <h3>{{ ::offering.product.vendor.name }}</h3>
@@ -86,7 +86,7 @@
                         </div>
                     </div>
                     <div class="column flag">
-                        <checkbox ng-click="vm.debounceSaveOffering($event, offering, library.id, $index)" ng-model="offering.flagged" class="flag"></checkbox>
+                        <checkbox ng-click="vm.debounceSaveOffering($event, offering, library.id)" ng-model="offering.flagged" class="flag"></checkbox>
                     </div>
                 </li>
             </ul>

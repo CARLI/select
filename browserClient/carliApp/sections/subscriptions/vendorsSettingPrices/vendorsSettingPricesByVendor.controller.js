@@ -103,19 +103,20 @@ function vendorsSettingPricesByVendorController( $scope, $q, alertService, cycle
         vm.isEditing[offering.id] = true;
     }
 
-    function debounceSaveOffering($event, offering, productOfferings, offeringIndex) {
+    function debounceSaveOffering($event, offering, productOfferings) {
         if ($event.target.tagName === 'INPUT') {
-            saveOffering( offering, productOfferings, offeringIndex );
+            saveOffering( offering, productOfferings );
         }
     }
 
-    function saveOffering( offering, productOfferings, offeringIndex ) {
+    function saveOffering( offering, productOfferings ) {
         if (offering.libraryComments === offering.product.comments) {
             delete offering.libraryComments;
         }
         offeringService.update(offering)
             .then(offeringService.load)
             .then(function(updatedOffering){
+                var offeringIndex = productOfferings.indexOf(offering);
                 productOfferings[offeringIndex] = updatedOffering;
                 alertService.putAlert('Offering updated', {severity: 'success'});
                 vm.isEditing[offering.id] = false;
