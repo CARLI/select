@@ -63,6 +63,13 @@ describe('Run the Offering tests', function () {
 
 function runOfferingSpecificTests(testCycle) {
     describe('Offering Specific Tests', function () {
+        describe('listOfferingsForLibraryId View', function () {
+            it('should have a listOfferingsForLibraryId method', function () {
+                expect(OfferingRepository.listOfferingsForLibraryId).to.be.a('function');
+            });
+
+            it('should list offerings for a specific library');
+        });
         describe('listOfferingsForProductId View', function () {
             it('should have a listOfferingsForProductId method', function () {
                 expect(OfferingRepository.listOfferingsForProductId).to.be.a('function');
