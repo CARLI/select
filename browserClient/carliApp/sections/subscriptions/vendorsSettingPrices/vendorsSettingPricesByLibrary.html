@@ -1,0 +1,99 @@
+<ul class="library-accordion" ng-repeat="library in vm.libraryList">
+    <li carli-accordion>
+        <header ng-click="vm.loadOfferingsForLibrary(library)" cg-busy="vm.loadingPromise[library.id]">
+            <button type="button" class="angle-icon-container">
+                <fa name="angle-down"></fa>
+            </button>
+            {{ ::library.name }}
+            <span>
+              FTE: <span class="purple"></span>
+              Institution: <span class="purple"></span>
+              Type: <span class="purple"></span>
+            </span>
+        </header>
+        <div class="content">
+            <ul class="offerings-list">
+                <li class="column-headers">
+                    <div class="sortable column product" ng-class="{ activeSort: vm.orderBy === 'product.name', reversedSort: vm.reverse }" ng-click="vm.sort('product.name')">Library</div>
+                    <div class="sortable column vendor" ng-class="{ activeSort: vm.orderBy === 'product.vendor.name', reversedSort: vm.reverse }" ng-click="vm.sort('product.vendor.name')">Vendor</div>
+                    <div class="column library-view">Library View</div>
+                    <div class="sortable column site-license-price" ng-class="{activeSort: vm.orderBy === 'pricing.site', reversedSort: vm.reverse }" ng-click="vm.sort('pricing.site')">Site License Price</div>
+                    <div class="sortable column flag" ng-class="{ activeSort: vm.orderBy === 'flagged', reversedSort: vm.reverse }" ng-click="vm.sort('flagged')">Flag</div>
+                </li>
+                <li class="offering" ng-class="{ 'edit-mode': vm.isEditing[offering.id] }" ng-repeat="offering in vm.offerings[library.id] | orderBy:vm.orderBy:vm.reverse track by offering.id">
+                    <div class="column product">
+                        <h3>{{ ::offering.product.name }}</h3>
+                        <button ng-show="!vm.isEditing[offering.id]" type="button" class="carli-button edit" ng-click="vm.setOfferingEditable(offering)">Edit <fa name="pencil-square-o "></fa></button>
+                        <button ng-show="vm.isEditing[offering.id]" type="button" class="carli-button save" ng-click="vm.saveOffering(offering, library.id, $index)">Save <fa name="floppy-o"></fa></button>
+                    </div>
+                    <div class="column vendor">
+                        <h3>{{ ::offering.product.vendor.name }}</h3>
+                    </div>
+                    <div class="column library-view">
+                        <div class="display">
+                            <label for="offering-display" ng-show="vm.isEditing[offering.id]">Display:</label>
+                            <view-edit-radios ng-model="offering.display" input-id="offering-display" edit-mode="vm.isEditing[offering.id]" items="vm.offeringDisplayOptions" radio-group-name="offering-{{offering.library.name}}-display">
+                                <strong class="purple">{{ vm.offeringDisplayLabels[offering.display] }}</strong>
+                            </view-edit-radios>
+                        </div>
+                        <div class="comments">
+                            <div class="column internal-comments">
+                                <label for="internal-comments">Internal Comments</label>
+                                <textarea id="internal-comments" ng-model="offering.internalComments" ng-readonly="!vm.isEditing[offering.id]">{{ offering.internalComments }}</textarea>
+                            </div>
+                            <div class="column library-comments">
+                                <label for="library-comments">Comments for Libraries</label>
+                                <textarea id="library-comments" ng-model="offering.libraryComments" ng-readonly="!vm.isEditing[offering.id]">{{ offering.libraryComments }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column site-license-price">
+                        <div class="site-pricing">
+                            <div class="column">
+                                <div class="header"><strong>{{ ::vm.lastYear }}</strong> Price</div>
+                                <div class="row"> $TODO.00 </div>
+                            </div>
+                            <div class="column">
+                                <div class="header"><strong>{{ ::vm.cycle.year }}</strong> Price</div>
+                                <div class="row">{{ offering.pricing.site | currency }}</div>
+                            </div>
+                        </div>
+                        <div class="su-pricing">
+                            <div class="header"><strong>Simultaneous User Price</strong></div>
+
+                            <div class="pricing-container">
+                                <div class="column">
+                                    <div class="edit-su-pricing">
+                                        <table>
+                                            <thead>
+                                            <tr>
+                                                <th><strong>{{ ::vm.lastYear }}</strong> Price</th>
+                                                <th>User(s)</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr><td>TODO</td><td>4</td></tr>
+                                            <tr><td>TODO</td><td>2</td></tr>
+                                            <tr><td>TODO</td><td>1</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <view-edit-su-pricing year="vm.cycle.year" edit-mode="vm.isEditing[offering.id]" ng-model="offering.pricing.su" input-id="offering.id"></view-edit-su-pricing>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column flag">
+                        <checkbox ng-click="vm.debounceSaveOffering($event, offering, library.id, $index)" ng-model="offering.flagged" class="flag"></checkbox>
+                    </div>
+                </li>
+            </ul>
+            <div class="footer">
+                <div class="placeholder pull-left" style="width: 250px;">Print Email Export</div>
+                <div class="placeholder pull-right" style="width: 250px;">Vendor Pricing Entry</div>
+            </div>
+        </div>
+    </li>
+</ul>
