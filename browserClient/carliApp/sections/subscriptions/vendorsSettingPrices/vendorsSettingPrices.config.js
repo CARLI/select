@@ -4,5 +4,6 @@ angular.module('carli.sections.subscriptions.vendorsSettingPrices', [
     'carli.productService',
     'carli.vendorService',
     'carli.accordion',
-    'carli.viewEditDirectives'
+    'carli.viewEditDirectives',
+    'carli.notificationService'
 ]);

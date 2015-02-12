@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.vendorsSettingPrices')
     .controller('vendorsSettingPricesController', vendorsSettingPricesController);
 
-function vendorsSettingPricesController( $q ) {
+function vendorsSettingPricesController( $q, notificationService ) {
     var vm = this;
     vm.closeVendorPricing = closeVendorPricing;
     vm.openSystem = openSystem;
@@ -19,6 +19,10 @@ function vendorsSettingPricesController( $q ) {
 
     function openSystemDialogComplete(){
         //do great and terrible things with vm.openSystemMessage
+
+        if (!vm.openSystemMessage.doNotSend) {
+            notificationService.sendNotification(vm.openSystemMessage);
+        }
 
         closeModal().then(vm.cycleRouter.next);
     }
