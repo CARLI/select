@@ -78,7 +78,9 @@ function vendorsSettingPricesByLibraryController( $scope, $q, alertService, cycl
                 offeringsForLibrary.forEach(function(offering){
                     offering.product.vendor = vm.vendorMap[offering.product.vendor];
                     offering.display = offering.display || "with-price";
-                    offering.flagged = offering.getFlaggedState();
+
+                    updateOfferingFlaggedStatus(offering);
+
                     if (!offering.libraryComments) {
                         offering.libraryComments = offering.product.comments;
                     }
@@ -91,19 +93,27 @@ function vendorsSettingPricesByLibraryController( $scope, $q, alertService, cycl
     }
 
     function debounceSaveOffering($event, offering, libraryId) {
+        offering.userTouchedFlag = true;
+        if (vm.isEditing[offering.id]) {
+            return;
+        }
         if ($event.target.tagName === 'INPUT') {
             saveOffering( offering, libraryId );
         }
     }
 
     function saveOffering( offering, libraryId ) {
-        console.log('saveOffering('+offering.id+','+libraryId);
-
         if (offering.libraryComments === offering.product.comments) {
             delete offering.libraryComments;
         }
+        if (!offering.userTouchedFlag) {
+            delete offering.flagged;
+        }
+        delete offering.userTouchedFlag;
+
         offeringService.update(offering)
             .then(offeringService.load)
+            .then(updateOfferingFlaggedStatus)
             .then(function(updatedOffering){
                 var offeringIndex = vm.offerings[libraryId].indexOf(offering);
                 vm.offerings[libraryId][offeringIndex] = updatedOffering;
@@ -113,5 +123,10 @@ function vendorsSettingPricesByLibraryController( $scope, $q, alertService, cycl
                 alertService.putAlert(err, {severity: 'danger'});
                 console.log('failed', err);
             });
+    }
+
+    function updateOfferingFlaggedStatus( offering ){
+        offering.flagged = offering.getFlaggedState();
+        return offering;
     }
 }

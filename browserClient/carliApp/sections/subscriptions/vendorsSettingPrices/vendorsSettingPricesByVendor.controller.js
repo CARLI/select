@@ -24,9 +24,7 @@ function vendorsSettingPricesByVendorController( $scope, $q, alertService, cycle
         vm.cycle = cycleService.getCurrentCycle();
         vm.lastYear = vm.cycle.year - 1;
 
-        libraryService.list()
-            .then(initLibraryList)
-            .then(loadVendors);
+        loadVendors();
     }
 
     function initSortable() {
@@ -46,14 +44,6 @@ function vendorsSettingPricesByVendorController( $scope, $q, alertService, cycle
                 vm.reverse = false;
             }
         };
-    }
-
-    function initLibraryList( libraryList ){
-        vm.libraryMap = {};
-
-        libraryList.forEach(function(library){
-            vm.libraryMap[library.id] = library;
-        });
     }
 
     function loadVendors() {
@@ -81,8 +71,9 @@ function vendorsSettingPricesByVendorController( $scope, $q, alertService, cycle
 
                     offerings.forEach(function(offering){
                         offering.display = offering.display || "with-price";
-                        offering.flagged = offering.getFlaggedState();
-                        offering.library = vm.libraryMap[offering.library];
+
+                        updateOfferingFlaggedStatus(offering);
+
                         if (!offering.libraryComments) {
                             offering.libraryComments = offering.product.comments;
                         }
@@ -104,6 +95,10 @@ function vendorsSettingPricesByVendorController( $scope, $q, alertService, cycle
     }
 
     function debounceSaveOffering($event, offering, productOfferings) {
+        offering.userTouchedFlag = true;
+        if (vm.isEditing[offering.id]) {
+            return;
+        }
         if ($event.target.tagName === 'INPUT') {
             saveOffering( offering, productOfferings );
         }
@@ -113,8 +108,14 @@ function vendorsSettingPricesByVendorController( $scope, $q, alertService, cycle
         if (offering.libraryComments === offering.product.comments) {
             delete offering.libraryComments;
         }
+        if (!offering.userTouchedFlag) {
+            delete offering.flagged;
+        }
+        delete offering.userTouchedFlag;
+
         offeringService.update(offering)
             .then(offeringService.load)
+            .then(updateOfferingFlaggedStatus)
             .then(function(updatedOffering){
                 var offeringIndex = productOfferings.indexOf(offering);
                 productOfferings[offeringIndex] = updatedOffering;
@@ -124,5 +125,10 @@ function vendorsSettingPricesByVendorController( $scope, $q, alertService, cycle
                 alertService.putAlert(err, {severity: 'danger'});
                 console.log('failed', err);
             });
+    }
+
+    function updateOfferingFlaggedStatus( offering ){
+        offering.flagged = offering.getFlaggedState();
+        return offering;
     }
 }
