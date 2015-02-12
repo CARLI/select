@@ -81,7 +81,7 @@ function vendorsSettingPricesByVendorController( $scope, $q, alertService, cycle
 
                     offerings.forEach(function(offering){
                         offering.display = offering.display || "with-price";
-                        /*XXX*/offering.flagged = Math.random() > 0.5;
+                        offering.flagged = offering.getFlaggedState();
                         offering.library = vm.libraryMap[offering.library];
                         if (!offering.libraryComments) {
                             offering.libraryComments = offering.product.comments;

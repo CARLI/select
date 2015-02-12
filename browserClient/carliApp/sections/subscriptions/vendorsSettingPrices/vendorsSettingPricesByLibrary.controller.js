@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.vendorsSettingPrices')
     .controller('vendorsSettingPricesByLibraryController', vendorsSettingPricesByLibraryController);
 
-function vendorsSettingPricesByLibraryController( $scope, $q, alertService, cycleService, libraryService, offeringService ) {
+function vendorsSettingPricesByLibraryController( $scope, $q, alertService, cycleService, libraryService, offeringService, vendorService ) {
     var vm = this;
 
     vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
@@ -15,6 +15,8 @@ function vendorsSettingPricesByLibraryController( $scope, $q, alertService, cycl
     vm.saveOffering = saveOffering;
     vm.debounceSaveOffering = debounceSaveOffering;
 
+    vm.vendorMap = {};
+
     vm.isEditing = {};
     vm.cycle = {};
     vm.lastYear = '';
@@ -27,12 +29,21 @@ function vendorsSettingPricesByLibraryController( $scope, $q, alertService, cycl
         vm.cycle = cycleService.getCurrentCycle();
         vm.lastYear = vm.cycle.year - 1;
 
-        initLibraryList();
+        initVendorMap().then(initLibraryList);
     }
 
     function initLibraryList(){
         vm.libraryLoadingPromise = libraryService.list().then(function(libraryList){
             vm.libraryList = libraryList;
+        });
+    }
+
+    function initVendorMap(){
+        return vendorService.list().then(function(vendorList){
+            vendorList.forEach(function(vendor){
+                vm.vendorMap[vendor.id] = vendor;
+            });
+            return vendorList;
         });
     }
 
@@ -63,6 +74,15 @@ function vendorsSettingPricesByLibraryController( $scope, $q, alertService, cycl
         vm.loadingPromise[library.id] = offeringService.listOfferingsForLibraryId(library.id)
             .then(function(offeringsForLibrary){
                 vm.offerings[library.id] = offeringsForLibrary;
+
+                offeringsForLibrary.forEach(function(offering){
+                    offering.product.vendor = vm.vendorMap[offering.product.vendor];
+                    offering.display = offering.display || "with-price";
+                    offering.flagged = offering.getFlaggedState();
+                    if (!offering.libraryComments) {
+                        offering.libraryComments = offering.product.comments;
+                    }
+                });
             });
     }
 
