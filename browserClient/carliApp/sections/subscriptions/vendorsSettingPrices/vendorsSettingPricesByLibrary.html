@@ -28,7 +28,7 @@
                         <button ng-show="vm.isEditing[offering.id]" type="button" class="carli-button save" ng-click="vm.saveOffering(offering, library.id)">Save <fa name="floppy-o"></fa></button>
                     </div>
                     <div class="column vendor">
-                        <h3>{{ ::offering.product.vendor.name }}</h3>
+                        <h3>{{ offering.product.vendor.name }}</h3>
                     </div>
                     <div class="column library-view">
                         <div class="display">
@@ -56,7 +56,11 @@
                             </div>
                             <div class="column">
                                 <div class="header"><strong>{{ ::vm.cycle.year }}</strong> Price</div>
-                                <div class="row">{{ offering.pricing.site | currency }}</div>
+                                <div class="row">
+                                    <view-edit-number-field ng-model="offering.pricing.site" input-id="offering-pricing-site" edit-mode="vm.isEditing[offering.id]">
+                                        {{ offering.pricing.site | currency }}
+                                    </view-edit-number-field>
+                                </div>
                             </div>
                         </div>
                         <div class="su-pricing">

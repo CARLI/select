@@ -15,6 +15,16 @@ function transformFunction( offering ){
     EntityTransform.transformObjectForPersistence(offering, propertiesToTransform);
 }
 
+function expandOfferings( offeringsListPromise, cycle ){
+    var attachCyclesPromise = offeringsListPromise.then(function(offerings) {
+        offerings.forEach(function (offering) {
+            offering.cycle = cycle;
+        });
+        return offerings;
+    });
+    return EntityTransform.expandListOfObjectsFromPersistence( attachCyclesPromise, propertiesToTransform, functionsToAdd);
+}
+
 function transformCycleReference( offering, cycle ) {
     if (offering) {
         offering.cycle = cycle.id; //manually transform cycle property from object to reference
@@ -33,19 +43,9 @@ function updateOffering( offering, cycle ){
     return OfferingRepository.update( offering, transformFunction );
 }
 
-//Manually transform cycle references to object
-function listOfferingsWithCyclesAttached(cycle) {
-    return OfferingRepository.list(cycle.databaseName).then(function (offerings) {
-        offerings.forEach(function (offering) {
-            offering.cycle = cycle;
-        });
-        return offerings;
-    });
-}
-
 function listOfferings(cycle){
     setCycle(cycle);
-    return EntityTransform.expandListOfObjectsFromPersistence( listOfferingsWithCyclesAttached(cycle), propertiesToTransform, functionsToAdd);
+    return expandOfferings( OfferingRepository.list(cycle.databaseName), cycle);
 }
 
 function loadOffering( offeringId, cycle ){
@@ -74,12 +74,12 @@ function loadOffering( offeringId, cycle ){
 
 function listOfferingsForLibraryId( libraryId, cycle ) {
     setCycle(cycle);
-    return CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForLibraryId', libraryId);
+    return expandOfferings( CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForLibraryId', libraryId), cycle );
 }
 
 function listOfferingsForProductId( productId, cycle ) {
     setCycle(cycle);
-    return CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForProductId', productId);
+    return expandOfferings( CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForProductId', productId), cycle );
 }
 
 function setCycle(cycle) {

@@ -46,38 +46,46 @@
             }
         }
 
+        &.offering > .column {
+            &.product,
+            &.vendor,
+            &.library {
+                padding: 1rem;
+            }
+        }
+
         & > .column {
             border-right: $default-border;
             @include flex(0 0 auto);
+            position: relative;
 
             label, .label {
                 margin-top: 0;
             }
 
+            button.save,
+            button.edit {
+                bottom: 1rem;
+                left: 1rem;
+                position: absolute;
+            }
+
             &.library {
                 @include flex(1 0 10%);
-                padding: 1rem;
-                position: relative;
 
                 h3 {
                     font-weight: 700;
                     margin-top: 0;
                 }
-
-                button.save,
-                button.edit {
-                    bottom: 1rem;
-                    left: 1rem;
-                    position: absolute;
-                }
             }
 
-            &.product {
-                @include flex(1 0 10%);
-            }
-
+            &.product,
             &.vendor {
                 @include flex(1 0 10%);
+
+                h3 {
+                    margin: 0;
+                }
             }
 
             &.library-view {

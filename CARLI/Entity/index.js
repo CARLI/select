@@ -3,6 +3,7 @@ var uuid  = require( 'node-uuid' )
   , Validator = require( '../Validator' )
   , Q = require( 'q' )
   , entityCache = require('./entityCache')
+  , config = require( '../../config' )
 ;
 
 function throwIfDataIsEmpty ( data ) {
@@ -30,8 +31,7 @@ function _cloneData ( data ) {
 module.exports = function (type, timeout) {
     var dataStore;
     if (timeout === undefined) {
-        // timeout = entityCache.INFINITE_TIMEOUT;
-        timeout = entityCache.INSTANT_TIMEOUT;
+        timeout = config.defaultEntityCacheTimeToLive;
     }
     var cache = entityCache.createCache(timeout);
     return {
@@ -59,7 +59,6 @@ module.exports = function (type, timeout) {
                 return dataStore.save( data )
             } )
             .then( function( savedData ) {
-                cache.add(data);
                 deferred.resolve( data.id );
             } )
             .catch( function( err ) {
@@ -85,7 +84,6 @@ module.exports = function (type, timeout) {
                 return dataStore.save( data )
             } )
             .then( function( savedData ) {
-                cache.add(data);
                 deferred.resolve( data.id );
             } )
             .catch( function( err ) {
@@ -102,7 +100,9 @@ module.exports = function (type, timeout) {
             if ( !id ){
                 throw new Error('Id Required');
             }
-            return cache.get(id) ? cache.get(id) : dataStore.get(id);
+            var data = cache.get(id) ? cache.get(id) : dataStore.get(id);
+            cache.add(data);
+            return data;
         },
 
         delete: function( id ){

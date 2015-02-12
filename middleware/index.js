@@ -1,8 +1,10 @@
 var config = require('../config');
 var express = require('express');
+var bodyParser = require('body-parser');
 var Q = require('q');
 var couchapp = require('couchapp');
 var domain = require('domain');
+var request = require('request');
 
 function putDesignDoc(dbName, dbType) {
     var putDocPromise = Q.defer();
@@ -47,6 +49,7 @@ function _enableCors(carliMiddleware) {
 
 function runMiddlewareServer(){
     var carliMiddleware = express();
+    carliMiddleware.use(bodyParser.json());
     _enableCors(carliMiddleware);
     carliMiddleware.put('/design-doc/:dbName', function (req, res) {
         putDesignDoc(req.params.dbName, 'Cycle').then(function() {
@@ -54,6 +57,10 @@ function runMiddlewareServer(){
         }).catch(function (err) {
             res.send( { error: err } );
         });
+    });
+    carliMiddleware.put('/tell-pixobot', function (req, res) {
+        tellPixobot(req.body);
+        res.send(req.body);
     });
 
     var server = carliMiddleware.listen(config.middleware.port, function () {
@@ -66,12 +73,20 @@ function runMiddlewareServer(){
     });
 }
 
+function tellPixobot(envelope) {
+    request({
+        url: 'http://pixobot.herokuapp.com/hubot/message-room/37097_carli@conf.hipchat.com',
+        method: 'post',
+        json: envelope
+    });
+}
 
 if (require.main === module) {
     runMiddlewareServer();
 }
 else {
     module.exports = {
-        putDesignDoc: putDesignDoc
+        putDesignDoc: putDesignDoc,
+        tellPixobot: tellPixobot
     }
 }
