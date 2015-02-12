@@ -58,7 +58,7 @@ describe( 'The Validator Module', function() {
         });
 
         it( 'should reject with a validation error for an invalid Vendor object', function() {
-            return expect( Validator.validate( { type: 'Vendor' } ) ).to.be.rejectedWith( /Vendor validation error:/ );
+            return expect( Validator.validate( { type: 'Vendor' } ) ).to.be.rejectedWith( /Missing required property:/ );
         });
 
         it( 'should return true for a valid Vendor object', function() {
@@ -77,7 +77,7 @@ describe( 'The Validator Module', function() {
 
         it.skip( 'should throw a validation error for a Vendor object with an invalid websiteUrl', function() {
             return expect( Validator.validate({ type: 'Vendor', name: 'Example Vendor', websiteUrl: 'this is an invalid url' }) )
-              .to.be.rejectedWith(/Vendor validation error:/ );
+              .to.be.rejectedWith(/Missing required property:/ );
         });
 
         it( 'should return true for a Vendor object with a valid websiteUrl', function() {
@@ -87,25 +87,29 @@ describe( 'The Validator Module', function() {
 
         it( 'should throw a validation error for a Product without a Vendor reference', function() {
             return expect(Validator.validate({ type: 'Product', name: 'Test Product' }))
-                .to.be.rejectedWith(/Product validation error:/);
+                .to.be.rejectedWith(/Missing required property:/);
         });
 
         it( 'should throw a validation error for a One-Time Purchase Product with a non-integer Annual Access Fee', function() {
             var testProduct = {
                 type: "Product",
                 name: "Test Product",
+                cycle: 'my-cycle-id',
+                vendor: 'my-vendor-id',
                 oneTimePurchase: {
                     annualAccessFee: "bad value"
                 }
             };
 
-            return expect( Validator.validate(testProduct) ).to.be.rejectedWith(/Product validation error:/ );
+            return expect( Validator.validate(testProduct) ).to.be.rejectedWith(/Invalid type: string \(expected number\)/ );
         });
 
         it( 'should throw a validation error for a One-Time Purchase Product with a non-integer Library price', function() {
             var testProduct = {
                 type: "Product",
                 name: "Test Product",
+                cycle: 'my-cycle-id',
+                vendor: 'my-vendor-id',
                 oneTimePurchase: {
                     libraryPurchaseData: {
                         'id': {
@@ -115,7 +119,7 @@ describe( 'The Validator Module', function() {
                 }
             };
 
-            return expect( Validator.validate(testProduct) ).to.be.rejectedWith(/Product validation error:/ );
+            return expect( Validator.validate(testProduct) ).to.be.rejectedWith(/Invalid type: string \(expected number\)/ );
         });
 
         it( 'should fail for an invalid Library Institution Type', function(){
@@ -125,7 +129,7 @@ describe( 'The Validator Module', function() {
                 institutionType: 'A Clearly Invalid Institution Type' 
             };
 
-            return expect( Validator.validate(testLibrary) ).to.be.rejectedWith(/validation error:/);
+            return expect( Validator.validate(testLibrary) ).to.be.rejectedWith(/No enum match for/);
         });
     });
 
