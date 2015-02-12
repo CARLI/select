@@ -1,3 +1,4 @@
+var config = require('../../../config');
 var middleware = require('../../../config/environmentDependentModules').middleware,
     Q = require('q'),
     request = require('../../../config/environmentDependentModules').request,
@@ -15,7 +16,7 @@ function couchRequest(requestOptions) {
         var err = error || data.error;
 
         if (err) {
-            deferred.reject(err);
+            deferred.reject(config.errorMessages.fatal);
         } else {
             deferred.resolve(data);
         }

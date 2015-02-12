@@ -1,3 +1,4 @@
+var config = require('../../../config');
 var Q = require('q');
 var request = require('../../../config/environmentDependentModules').request;
 var CouchUtils = require('./Utils');
@@ -49,7 +50,7 @@ module.exports = function (inputOptions) {
         }, function (err, response, body) {
             var error = err || body.error;
             if (error) {
-                deferred.reject(error);
+                deferred.reject(config.errorMessages.fatal);
             }
             else {
                 data._id = body.id;
