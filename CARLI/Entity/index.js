@@ -59,7 +59,6 @@ module.exports = function (type, timeout) {
                 return dataStore.save( data )
             } )
             .then( function( savedData ) {
-                cache.add(data);
                 deferred.resolve( data.id );
             } )
             .catch( function( err ) {
@@ -85,7 +84,6 @@ module.exports = function (type, timeout) {
                 return dataStore.save( data )
             } )
             .then( function( savedData ) {
-                cache.add(data);
                 deferred.resolve( data.id );
             } )
             .catch( function( err ) {
@@ -102,7 +100,9 @@ module.exports = function (type, timeout) {
             if ( !id ){
                 throw new Error('Id Required');
             }
-            return cache.get(id) ? cache.get(id) : dataStore.get(id);
+            var data = cache.get(id) ? cache.get(id) : dataStore.get(id);
+            cache.add(data);
+            return data;
         },
 
         delete: function( id ){
