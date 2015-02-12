@@ -1,3 +1,4 @@
+<div cg-busy="vm.vendorLoadingPromise"></div>
 <ul class="vendor-accordion" ng-repeat="vendor in vm.vendors">
     <li carli-accordion>
         <header ng-click="vm.loadProductsForVendor(vendor)" cg-busy="vm.loadingPromise[vendor.id]">

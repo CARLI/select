@@ -47,7 +47,7 @@ function vendorsSettingPricesByVendorController( $scope, $q, alertService, cycle
     }
 
     function loadVendors() {
-        productService.listProductCountsByVendorId()
+        vm.vendorLoadingPromise = productService.listProductCountsByVendorId()
             .then(function( productsByVendorId ){
                 return Object.keys(productsByVendorId);
             })
