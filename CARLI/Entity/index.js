@@ -3,6 +3,7 @@ var uuid  = require( 'node-uuid' )
   , Validator = require( '../Validator' )
   , Q = require( 'q' )
   , entityCache = require('./entityCache')
+  , config = require( '../../config' )
 ;
 
 function throwIfDataIsEmpty ( data ) {
@@ -30,8 +31,7 @@ function _cloneData ( data ) {
 module.exports = function (type, timeout) {
     var dataStore;
     if (timeout === undefined) {
-        // timeout = entityCache.INFINITE_TIMEOUT;
-        timeout = entityCache.INSTANT_TIMEOUT;
+        timeout = config.defaultEntityCacheTimeToLive;
     }
     var cache = entityCache.createCache(timeout);
     return {

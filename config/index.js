@@ -15,7 +15,8 @@ var defaults = {
         couchDbName: couchDbName
     },
     oneTimePurchaseProductsCycleDocId: 'one-time-purchase-products-cycle',
-    storePath: 'CouchDb/Store'
+    storePath: 'CouchDb/Store',
+    defaultEntityCacheTimeToLive: 60 * 1000
 };
 
 defaults.setDbName = function(name) {
