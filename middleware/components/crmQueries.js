@@ -9,7 +9,6 @@ function listLibraries() {
 
     connection.query(
         'SELECT m.institution_name, m.fte, m.library_type, m.membership_lvl, ' +
-        '(md.ishare_begin_date < CURDATE() AND (md.ishare_end_date IS NULL OR md.ishare_end_date > CURDATE())) AS is_ishare_member ' +
         'FROM members AS m ' +
         'JOIN member_detail AS md ON m.member_id = md.member_id',
         null,
@@ -67,6 +66,16 @@ function extractRowsFromResponse(err, rows, processCallback) {
     return false;
 }
 
+function convertCrmIntitutionYearsFromType(crmType) {
+    switch (crmType) {
+        case 'OTH': return 'Other';
+        case 'PRI': return '4 Year';
+        case 'CC': return '2 Year';
+        case 'PUB': return '4 Year';
+        default: return 'Other';
+    };
+}
+
 function convertCrmInstitutionType(crmType) {
     switch (crmType) {
         case 'OTH': return 'Other';
@@ -92,15 +101,14 @@ function convertCrmLibrary(crm) {
         type: 'Library',
         crmId: crm.member_id,
         name: crm.institution_name,
-        // institutionYears: null,
+        institutionYears: convertCrmIntitutionYearsFromType(crm.libary_type),
         institutionType: convertCrmInstitutionType(crm.library_type),
-        ipAddresses: "",
+        // ipAddresses: "", // Stored in Select database
         "membershipLevel": convertCrmMembershipLevel(crm.membership_lvl),
-        "isIshareMember": crm.is_share_member ? true : false,
-        "gar": "",
+        // "isIshareMember": crm.is_share_member ? true : false,
+        // "gar": "",
         "isActive": true,
         "outstandingBalances": [],
-        "products": [],
         "contacts": []
     };
     if (crm.fte) {
