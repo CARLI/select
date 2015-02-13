@@ -25,10 +25,25 @@ function listLibraries() {
 }
 
 function loadLibrary(id) {
-    return Q({
-        name: 'Fake Library',
-        type: 'Library'
-    });
+    var deferred = Q.defer();
+    var connection = mysql.createConnection(config.memberDb);
+    connection.connect();
+
+    connection.query(
+        'SELECT m.institution_name, m.fte, m.library_type, m.membership_lvl, ' +
+        'FROM members AS m ' +
+        'JOIN member_detail AS md ON m.member_id = md.member_id ' +
+        'WHERE m.member_id = ?',
+        [ id ],
+        function(err, rows, fields) {
+            var libraries = extractRowsFromResponse(err, rows, convertCrmLibrary);
+            deferred.resolve(libraries);
+        }
+    );
+
+    connection.end();
+
+    return deferred.promise;
 }
 
 function extractRowsFromResponse(err, rows, processCallback) {
