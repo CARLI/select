@@ -13,6 +13,7 @@ module.exports = function(grunt) {
     grunt.registerTask('test', [
         'ensure-local-config',
         'jsenv:node',
+        'delete-test-dbs',
         'deploy-test-db',
         'npm-test',
         'delete-test-dbs'
