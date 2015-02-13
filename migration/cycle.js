@@ -28,6 +28,16 @@ var cyclesToMigrate = [
         startDateForSelections: '2013-04-22',
         endDateForSelections: '2013-05-31',
         productsAvailableDate: '2014-07-01'
+    },
+    {
+        id: 'one-time-purchase-products-cycle',
+        idalId: 100,
+        databaseName: 'cycle-one-time-purchase-products',
+        name: 'One Time Purchases',
+        cycleType: 'One-Time Purchase',
+        year: 0,
+        status: 4,
+        isArchived: false
     }
 ];
 
