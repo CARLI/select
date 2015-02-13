@@ -8,7 +8,7 @@ function listLibraries() {
     connection.connect();
 
     connection.query(
-        'SELECT m.institution_name, m.fte, m.library_type, m.membership_lvl ' +
+        'SELECT m.institution_name, m.member_id, m.fte, m.library_type, m.membership_lvl ' +
         'FROM members AS m',
         null,
         function(err, rows, fields) {
@@ -28,13 +28,13 @@ function loadLibrary(id) {
     connection.connect();
 
     connection.query(
-        'SELECT m.institution_name, m.fte, m.library_type, m.membership_lvl ' +
+        'SELECT m.institution_name, m.member_id, m.fte, m.library_type, m.membership_lvl ' +
         'FROM members AS m ' +
         'WHERE m.member_id = ?',
         [ id ],
         function(err, rows, fields) {
             var libraries = extractRowsFromResponse(err, rows, convertCrmLibrary);
-            deferred.resolve(libraries);
+            deferred.resolve(libraries[0]);
         }
     );
 
