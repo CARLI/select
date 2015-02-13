@@ -1,50 +1,11 @@
 var config = require('../config');
 var express = require('express');
 var bodyParser = require('body-parser');
-var Q = require('q');
-var couchapp = require('couchapp');
-var domain = require('domain');
-var request = require('request');
+var _ = require('lodash');
 
-function putDesignDoc(dbName, dbType) {
-    var putDocPromise = Q.defer();
-
-    var docName = dbType + '-DesignDoc.js';
-    var designDoc = require('../db/' + docName);
-
-    var couchAppDomain = domain.create();
-
-    var url = config.storeOptions.couchDbUrl + '/' + dbName + '/_design/CARLI';
-
-    /*
-     *  Running couchApp in its own domain allows you to actually see and deal with errors that it throws.
-     *  The negative side effect is that any code that follows the putDocPromise will also be error-handled by this domain,
-     *  because all code executed from this promise's .then() and afterwards is run inside that domain as well.
-     */
-
-    //couchAppDomain.run(function() {
-        couchapp.createApp(designDoc, url, function(app) {
-            app.push(function() {
-                putDocPromise.resolve();
-            });
-        });
-    //});
-
-    //couchAppDomain.on('error', function(err) {
-    //    console.log("Error Putting Design Document:", err);
-    //    putDocPromise.reject("Error Putting Design Document: " + err);
-    //});
-
-    return putDocPromise.promise;
-}
-
-function tellPixobot(envelope) {
-    request({
-        url: 'http://pixobot.herokuapp.com/hubot/message-room/37097_carli@conf.hipchat.com',
-        method: 'post',
-        json: envelope
-    });
-}
+var couchUtils = require('./components/couchUtils');
+var crmQueries = require('./components/crmQueries');
+var notifications = require('./components/notifications');
 
 function _enableCors(carliMiddleware) {
     carliMiddleware.use(function (req, res, next) {
@@ -60,15 +21,29 @@ function runMiddlewareServer(){
     carliMiddleware.use(bodyParser.json());
     _enableCors(carliMiddleware);
     carliMiddleware.put('/design-doc/:dbName', function (req, res) {
-        putDesignDoc(req.params.dbName, 'Cycle').then(function() {
+        couchUtils.putDesignDoc(req.params.dbName, 'Cycle').then(function() {
             res.send({ status: 'Ok' });
         }).catch(function (err) {
             res.send( { error: err } );
         });
     });
     carliMiddleware.put('/tell-pixobot', function (req, res) {
-        tellPixobot(req.body);
+        notifications.tellPixobot(req.body);
         res.send(req.body);
+    });
+    carliMiddleware.get('/library', function (req, res) {
+        crmQueries.listLibraries().then(function(libraries) {
+            res.send(libraries);
+        }).catch(function (err) {
+            res.send( { error: err } );
+        });
+    });
+    carliMiddleware.get('/library/:id', function (req, res) {
+        crmQueries.loadLibrary(req.params.id).then(function(library) {
+            res.send(library);
+        }).catch(function (err) {
+            res.send( { error: err } );
+        });
     });
 
     var server = carliMiddleware.listen(config.middleware.port, function () {
@@ -85,8 +60,5 @@ if (require.main === module) {
     runMiddlewareServer();
 }
 else {
-    module.exports = {
-        putDesignDoc: putDesignDoc,
-        tellPixobot: tellPixobot
-    }
+    module.exports = _.extend({}, couchUtils, notifications, crmQueries);
 }
