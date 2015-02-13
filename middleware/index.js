@@ -38,6 +38,14 @@ function putDesignDoc(dbName, dbType) {
     return putDocPromise.promise;
 }
 
+function tellPixobot(envelope) {
+    request({
+        url: 'http://pixobot.herokuapp.com/hubot/message-room/37097_carli@conf.hipchat.com',
+        method: 'post',
+        json: envelope
+    });
+}
+
 function _enableCors(carliMiddleware) {
     carliMiddleware.use(function (req, res, next) {
         res.header("Access-Control-Allow-Origin", "*");
@@ -70,14 +78,6 @@ function runMiddlewareServer(){
 
         console.log('CARLI Middleware listening at http://%s:%s', host, port);
 
-    });
-}
-
-function tellPixobot(envelope) {
-    request({
-        url: 'http://pixobot.herokuapp.com/hubot/message-room/37097_carli@conf.hipchat.com',
-        method: 'post',
-        json: envelope
     });
 }
 

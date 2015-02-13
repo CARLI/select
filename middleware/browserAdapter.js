@@ -15,5 +15,6 @@ function putDesignDoc(dbName) {
 }
 
 module.exports = {
-    putDesignDoc: putDesignDoc
+    putDesignDoc: putDesignDoc,
+    tellPixobot: function() {}
 };
