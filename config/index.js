@@ -14,6 +14,12 @@ var defaults = {
         couchDbUrl: 'http://localhost:5984',
         couchDbName: couchDbName
     },
+    memberDb: {
+        host: 'localhost',
+        user: 'root',
+        password: '',
+        database: 'carli_crm'
+    },
     oneTimePurchaseProductsCycleDocId: 'one-time-purchase-products-cycle',
     storePath: 'CouchDb/Store',
     defaultEntityCacheTimeToLive: 60 * 1000,

@@ -8,7 +8,6 @@
   "author": "",
   "dependencies": {
     "lodash": "^2.4.1",
-    "mysql": "^2.5.4",
     "node-uuid": "^1.4.1",
     "q": "^1.0.1",
     "query-string": "^1.0.0",
