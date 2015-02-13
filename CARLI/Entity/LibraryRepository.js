@@ -1,6 +1,7 @@
 var Entity = require('../Entity')
     , EntityTransform = require( './EntityTransformationUtils')
     , config = require( '../../config' )
+    , middleware = require('../../config/environmentDependentModules').middleware
     , StoreOptions = config.storeOptions
     , Store = require( '../Store' )
     , StoreModule = require( '../Store/CouchDb/Store')
@@ -27,10 +28,18 @@ function updateLibrary( library ){
 }
 
 function listLibraries(){
-    return EntityTransform.expandListOfObjectsFromPersistence( LibraryRepository.list(), propertiesToTransform, functionsToAdd);
+    return middleware.listLibraries().then(function(libraries) {
+        return libraries.map(function (library) {
+            library.id = library.crmId;
+            return library;
+        });
+    });
+    //return EntityTransform.expandListOfObjectsFromPersistence( LibraryRepository.list(), propertiesToTransform, functionsToAdd);
 }
 
-function loadLibrary( libraryId ){
+function loadLibrary( libraryCrmId ){
+    return middleware.loadLibrary(libraryCrmId);
+    /*
     var deferred = Q.defer();
 
     LibraryRepository.load( libraryId )
@@ -50,6 +59,7 @@ function loadLibrary( libraryId ){
         });
 
     return deferred.promise;
+    */
 }
 
 

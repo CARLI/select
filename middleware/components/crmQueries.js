@@ -8,9 +8,8 @@ function listLibraries() {
     connection.connect();
 
     connection.query(
-        'SELECT m.institution_name, m.fte, m.library_type, m.membership_lvl, ' +
-        'FROM members AS m ' +
-        'JOIN member_detail AS md ON m.member_id = md.member_id',
+        'SELECT m.institution_name, m.fte, m.library_type, m.membership_lvl ' +
+        'FROM members AS m',
         null,
         function(err, rows, fields) {
             var libraries = extractRowsFromResponse(err, rows, convertCrmLibrary);
@@ -29,9 +28,8 @@ function loadLibrary(id) {
     connection.connect();
 
     connection.query(
-        'SELECT m.institution_name, m.fte, m.library_type, m.membership_lvl, ' +
+        'SELECT m.institution_name, m.fte, m.library_type, m.membership_lvl ' +
         'FROM members AS m ' +
-        'JOIN member_detail AS md ON m.member_id = md.member_id ' +
         'WHERE m.member_id = ?',
         [ id ],
         function(err, rows, fields) {
@@ -66,7 +64,7 @@ function extractRowsFromResponse(err, rows, processCallback) {
     return false;
 }
 
-function convertCrmIntitutionYearsFromType(crmType) {
+function convertCrmInstitutionYearsFromType(crmType) {
     switch (crmType) {
         case 'OTH': return 'Other';
         case 'PRI': return '4 Year';
@@ -101,7 +99,7 @@ function convertCrmLibrary(crm) {
         type: 'Library',
         crmId: crm.member_id,
         name: crm.institution_name,
-        institutionYears: convertCrmIntitutionYearsFromType(crm.libary_type),
+        institutionYears: convertCrmInstitutionYearsFromType(crm.library_type),
         institutionType: convertCrmInstitutionType(crm.library_type),
         // ipAddresses: "", // Stored in Select database
         "membershipLevel": convertCrmMembershipLevel(crm.membership_lvl),
@@ -112,7 +110,7 @@ function convertCrmLibrary(crm) {
         "contacts": []
     };
     if (crm.fte) {
-        library.fte = crm.fte;
+        library.fte = parseInt(crm.fte);
     }
     return library;
 }

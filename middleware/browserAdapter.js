@@ -27,13 +27,15 @@ function putDesignDoc(dbName) {
 function listLibraries() {
     return middlewareRequest({
         path: '/library/',
-        method: 'get'
+        method: 'get',
+        json: true
     });
 }
 function loadLibrary(id) {
     return middlewareRequest({
         path: '/library/' + id,
-        method: 'get'
+        method: 'get',
+        json: true
     });
 }
 
