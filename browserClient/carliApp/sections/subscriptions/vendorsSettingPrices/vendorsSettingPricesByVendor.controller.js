@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.vendorsSettingPrices')
     .controller('vendorsSettingPricesByVendorController', vendorsSettingPricesByVendorController);
 
-function vendorsSettingPricesByVendorController( $scope, $q, alertService, cycleService, libraryService, vendorService, offeringService, productService ) {
+function vendorsSettingPricesByVendorController( $scope, $q, alertService, controllerBaseService, cycleService, libraryService, vendorService, offeringService, productService ) {
     var vm = this;
     vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
     vm.offeringDisplayLabels = offeringService.getOfferingDisplayLabels();
@@ -19,31 +19,12 @@ function vendorsSettingPricesByVendorController( $scope, $q, alertService, cycle
     activate();
 
     function activate () {
-        initSortable();
+        controllerBaseService.addSortable(vm, 'library.name');
 
         vm.cycle = cycleService.getCurrentCycle();
         vm.lastYear = vm.cycle.year - 1;
 
         loadVendors();
-    }
-
-    function initSortable() {
-        vm.orderBy = vm.orderBy || 'library.name';
-        vm.reverse = false;
-
-        vm.sort = function sort( newOrderBy ){
-            if ( !newOrderBy ){
-                return;
-            }
-
-            if ( vm.orderBy === newOrderBy){
-                vm.reverse = !vm.reverse;
-            }
-            else {
-                vm.orderBy = newOrderBy;
-                vm.reverse = false;
-            }
-        };
     }
 
     function loadVendors() {
