@@ -5,7 +5,7 @@ describe('The controller Base Service', function() {
         expect(controllerBaseService).to.be.an('object');
     }));
 
-    it('should provide the controller active/inactive status options', inject(function (controllerBaseService) {
+    it('should provide a mixin to add sortablity to a controller', inject(function (controllerBaseService) {
         expect(controllerBaseService.addSortable).to.be.a('function');
     }));
 
