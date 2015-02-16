@@ -16,7 +16,7 @@ function invalidLibraryData() {
     };
 }
 
-test.run('Library', validLibraryData, invalidLibraryData);
+// test.run('Library', validLibraryData, invalidLibraryData);
 
 describe('Helper functions for getting Enum values from the Library Schema', function(){
 

@@ -5,7 +5,6 @@ var Entity = require('../Entity')
     , StoreOptions = config.storeOptions
     , Store = require( '../Store' )
     , StoreModule = require( '../Store/CouchDb/Store')
-    , moment = require('moment')
     , Q = require('q')
     , Validator = require('../Validator')
     ;
