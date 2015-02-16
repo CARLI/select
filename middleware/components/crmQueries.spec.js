@@ -1,20 +1,20 @@
 var chai = require('chai')
     , chaiAsPromised = require('chai-as-promised')
     , expect = chai.expect
-    , MemberDB = require('../MemberDB')
+    , crm = require('./crmQueries')
     , Q = require('q')
-    , Validator = require('../Validator')
+    , Validator = require('../../CARLI/Validator')
     ;
 
 chai.use(chaiAsPromised);
 
-describe('The Member Database Adaptor', function () {
+describe('The CRM Adaptor', function () {
     it('should expose a listLibraries method', function () {
-        return expect(MemberDB.listLibraries).to.be.a('function');
+        return expect(crm.listLibraries).to.be.a('function');
     });
 
-    describe('MemberDB.listLibraries', function () {
-        var listPromise = MemberDB.listLibraries();
+    describe('crmQueries.listLibraries', function () {
+        var listPromise = crm.listLibraries();
         it('should return an array', function () {
             return expect(listPromise).to.eventually.be.an('Array');
         });
