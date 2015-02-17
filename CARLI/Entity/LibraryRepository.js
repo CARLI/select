@@ -5,12 +5,14 @@ var Entity = require('../Entity')
     , StoreOptions = config.storeOptions
     , Store = require( '../Store' )
     , StoreModule = require( '../Store/CouchDb/Store')
+    , CouchUtils = require( '../Store/CouchDb/Utils')
     , Q = require('q')
     , Validator = require('../Validator')
+    , _ = require('lodash')
     ;
 
-var LibraryRepository = Entity('Library');
-LibraryRepository.setStore( Store( StoreModule(StoreOptions) ) );
+var localLibraryRepository = Entity('LibraryNonCrm');
+localLibraryRepository.setStore( Store( StoreModule(StoreOptions) ) );
 
 var propertiesToTransform = [];
 
@@ -18,12 +20,13 @@ function transformFunction( library ){
     EntityTransform.transformObjectForPersistence(library, propertiesToTransform);
 }
 
-function createLibrary( library ){
-    return LibraryRepository.create( library, transformFunction );
-}
-
 function updateLibrary( library ){
-    return LibraryRepository.update( library, transformFunction );
+    var localData = EntityTransform.extractValuesForSchema(library, 'LibraryNonCrm');
+    return loadNonCrmLibraryForCrmId(library.id).then(function (libraryNonCrm) {
+        localData = _.extend({}, libraryNonCrm, localData);
+        localData.crmId = library.id;
+        return localLibraryRepository.update( localData, transformFunction );
+    });
 }
 
 function listLibraries(){
@@ -33,7 +36,7 @@ function listLibraries(){
             return library;
         });
     });
-    //return EntityTransform.expandListOfObjectsFromPersistence( LibraryRepository.list(), propertiesToTransform, functionsToAdd);
+    //return EntityTransform.expandListOfObjectsFromPersistence( localLibraryRepository.list(), propertiesToTransform, functionsToAdd);
 }
 
 function loadLibrary( libraryCrmId ){
@@ -41,7 +44,7 @@ function loadLibrary( libraryCrmId ){
     /*
     var deferred = Q.defer();
 
-    LibraryRepository.load( libraryId )
+    localLibraryRepository.load( libraryId )
         .then(function (library) {
             EntityTransform.expandObjectFromPersistence( library, propertiesToTransform, functionsToAdd )
                 .then(function () {
@@ -79,8 +82,12 @@ function getMembershipLevelOptions(){
     return Validator.getEnumValuesFor('MembershipLevel');
 }
 
+function loadNonCrmLibraryForCrmId( crmId ){
+    return CouchUtils.getCouchViewResultValues(config.getDbName(), 'loadNonCrmLibraryForCrmId', crmId);
+}
+
 module.exports = {
-    setStore: LibraryRepository.setStore,
+    setStore: localLibraryRepository.setStore,
     create: createLibrary,
     update: updateLibrary,
     list: listLibraries,
