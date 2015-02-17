@@ -20,48 +20,37 @@ function transformFunction( library ){
     EntityTransform.transformObjectForPersistence(library, propertiesToTransform);
 }
 
+function fillInNonCrmData( library ){
+    return loadNonCrmLibraryForCrmId(library.crmId).then(function (libraryNonCrm) {
+        var result = _.extend({}, library, libraryNonCrm);
+        result.id = library.crmId;
+        return result;
+    });
+}
+
 function updateLibrary( library ){
     var localData = EntityTransform.extractValuesForSchema(library, 'LibraryNonCrm');
     return loadNonCrmLibraryForCrmId(library.id).then(function (libraryNonCrm) {
         localData = _.extend({}, libraryNonCrm, localData);
         localData.crmId = library.id;
-        return localLibraryRepository.update( localData, transformFunction );
+
+        if ( localData.id ){
+            return localLibraryRepository.update( localData, transformFunction );
+        }
+        else {
+            return localLibraryRepository.create( localData, transformFunction );
+        }
     });
 }
 
 function listLibraries(){
     return middleware.listLibraries().then(function(libraries) {
-        return libraries.map(function (library) {
-            library.id = library.crmId;
-            return library;
-        });
+        return Q.all( libraries.map(fillInNonCrmData) );
     });
-    //return EntityTransform.expandListOfObjectsFromPersistence( localLibraryRepository.list(), propertiesToTransform, functionsToAdd);
 }
 
 function loadLibrary( libraryCrmId ){
-    return middleware.loadLibrary(libraryCrmId);
-    /*
-    var deferred = Q.defer();
-
-    localLibraryRepository.load( libraryId )
-        .then(function (library) {
-            EntityTransform.expandObjectFromPersistence( library, propertiesToTransform, functionsToAdd )
-                .then(function () {
-                    deferred.resolve(library);
-                })
-                .catch(function(err){
-                    // WARNING: this suppresses errors for entity references that are not found in the store
-                    console.warn('*** Cannot find reference in database ', err);
-                    deferred.resolve(library);
-                });
-        })
-        .catch(function (err) {
-            deferred.reject(err);
-        });
-
-    return deferred.promise;
-    */
+    return middleware.loadLibrary(libraryCrmId).then(fillInNonCrmData);
 }
 
 
