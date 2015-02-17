@@ -10,6 +10,7 @@ var schemas = {
     InstitutionType: require('../schemas/InstitutionType.json'),
     InstitutionYears: require('../schemas/InstitutionYears.json'),
     Library: require('../schemas/Library.json'),
+    LibraryNonCrm: require('../schemas/LibraryNonCrm.json'),
     License: require('../schemas/License.json'),
     MembershipLevel: require('../schemas/MembershipLevel.json'),
     Offering: require('../schemas/Offering.json'),
@@ -80,8 +81,18 @@ function getEnumValuesFor( type, property ){
     return schema['properties'][property]['enum'];
 }
 
+function listNonIdPropertiesFor( schemaType ){
+    var schema = schemas[schemaType];
+    var properties = Object.keys(schema.properties);
+
+    return properties.filter(function(prop) {
+        return prop != 'id';
+    });
+}
+
 module.exports = {
     list: listValidTypes,
     validate: validate,
-    getEnumValuesFor: getEnumValuesFor
+    getEnumValuesFor: getEnumValuesFor,
+    listNonIdPropertiesFor: listNonIdPropertiesFor
 };
