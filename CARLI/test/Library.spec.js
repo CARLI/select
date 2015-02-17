@@ -1,8 +1,14 @@
 var chai   = require( 'chai' )
   , expect = chai.expect
   , test = require( './Entity/EntityInterface.spec' )
+  , config = require( '../../config' )
+  , Entity = require('../Entity')
   , LibraryRepository = require('../Entity/LibraryRepository' )
-;
+  , testUtils = require('./utils')
+  ;
+
+testUtils.setupTestDb();
+LibraryRepository.setStore( testUtils.getTestDbStore() );
 
 function validLibraryData() {
     return {
@@ -66,5 +72,31 @@ describe('Helper functions for getting Enum values from the Library Schema', fun
 
             expect(LibraryRepository.getMembershipLevelOptions()).to.have.members(testData);
         });
+    });
+});
+
+describe('the loadNonCrmLibraryForCrmId Couch view', function(){
+    it('should have a loadNonCrmLibraryForCrmId method', function(){
+        expect(LibraryRepository.loadNonCrmLibraryForCrmId).to.be.a('function');
+    });
+
+    it('should return a single LibraryNonCrm object for a crm id', function(){
+        var libraryNonCrmRepository = Entity('LibraryNonCrm');
+        libraryNonCrmRepository.setStore( testUtils.getTestDbStore() );
+
+        var testLibraryNonCrm = {
+            type: 'LibraryNonCrm',
+            crmId: 1,
+            ipAddresses: 'test'
+        };
+
+        return libraryNonCrmRepository.create(testLibraryNonCrm)
+            .then(function(){
+                return LibraryRepository.loadNonCrmLibraryForCrmId(testLibraryNonCrm.crmId);
+            })
+            .then(function( libraryNonCrm ){
+                return expect(libraryNonCrm).to.be.an('object')
+                    .and.have.property('ipAddresses',testLibraryNonCrm.ipAddresses);
+            });
     });
 });

@@ -83,16 +83,19 @@ function getMembershipLevelOptions(){
 }
 
 function loadNonCrmLibraryForCrmId( crmId ){
-    return CouchUtils.getCouchViewResultValues(config.getDbName(), 'loadNonCrmLibraryForCrmId', crmId);
+    return CouchUtils.getCouchViewResultValues(config.getDbName(), 'loadNonCrmLibraryForCrmId', crmId)
+        .then(function( resultsArray ){
+            return resultsArray[0] ? resultsArray[0] : {};
+        });
 }
 
 module.exports = {
     setStore: localLibraryRepository.setStore,
-    create: createLibrary,
     update: updateLibrary,
     list: listLibraries,
     load: loadLibrary,
     getInstitutionTypeOptions: getInstitutionTypeOptions,
     getInstitutionYearsOptions: getInstitutionYearsOptions,
-    getMembershipLevelOptions: getMembershipLevelOptions
+    getMembershipLevelOptions: getMembershipLevelOptions,
+    loadNonCrmLibraryForCrmId: loadNonCrmLibraryForCrmId
 };
