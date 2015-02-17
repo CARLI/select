@@ -99,7 +99,12 @@ function couchViewUrl(dbName, viewName, key, group) {
 
     var queryParams = {};
     if (key) {
-        queryParams.key = '"' + key + '"';
+        if (typeof key === 'number') {
+            queryParams.key = key;
+        }
+        else {
+            queryParams.key = '"' + key + '"';
+        }
     }
     if (group) {
         queryParams.group = true;
