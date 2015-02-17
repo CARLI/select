@@ -10,10 +10,10 @@ function productService( CarliModules, $q, cycleService ) {
             return $q.when( productModule.list( cycleService.getCurrentCycle() ) );
         },
         create: function( product ) {
-            return $q.when( productModule.create(product, cycleService.getCurrentCycle()) );
+            return $q.when( productModule.create(product, product.cycle) );
         },
         update: function( product ) {
-            return $q.when( productModule.update(product, cycleService.getCurrentCycle()) );
+            return $q.when( productModule.update(product, product.cycle) );
         },
         load:   function( productId ) {
             return $q.when( productModule.load( productId, cycleService.getCurrentCycle()) );
