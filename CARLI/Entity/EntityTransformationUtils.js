@@ -5,6 +5,7 @@ var Q = require('q')
   , Store = require( '../Store' )
   , StoreModule = require( '../Store/CouchDb/Store')
   , _ = require('lodash')
+  , Validator = require('../Validator')
   ;
 
 /**
@@ -164,6 +165,18 @@ function _transformReferencesToObjects(entity, resolvedObjects) {
     }
 }
 
+function extractValuesForProperties( entity, properties ){
+    var extracted = {};
+    properties.forEach(function (property) {
+        if (entity.hasOwnProperty(property)) {
+            extracted[property] = entity[property];
+        }
+    });
+    return extracted;
+}
+function extractValuesForSchema( entity, schemaType ){
+    return extractValuesForProperties( entity, Validator.listNonIdPropertiesFor(schemaType) );
+}
 
 setEntityLookupStores( Store( StoreModule(StoreOptions) ) );
 
@@ -172,5 +185,7 @@ module.exports = {
     transformObjectForPersistence: transformObjectForPersistence,
     expandObjectFromPersistence: expandObjectFromPersistence,
     expandListOfObjectsFromPersistence: expandListOfObjectsFromPersistence,
-    setEntityLookupStores: setEntityLookupStores
+    setEntityLookupStores: setEntityLookupStores,
+    extractValuesForProperties: extractValuesForProperties,
+    extractValuesForSchema: extractValuesForSchema
 };
