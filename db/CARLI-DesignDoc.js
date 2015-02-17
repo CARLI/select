@@ -24,6 +24,13 @@ ddoc = {
                     emit( doc.vendor, doc );
                 }
             }
+        },
+        loadNonCrmLibraryForCrmId: {
+            map: function( doc ) {
+                if ( doc.type === 'LibraryNonCrm' ){
+                    emit( doc.crmId, doc );
+                }
+            }
         }
     }
 };
