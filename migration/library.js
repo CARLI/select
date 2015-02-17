@@ -4,6 +4,7 @@ var carliConfig = require('../CARLI').config;
 var StoreOptions = carliConfig.storeOptions;
 var Store = require('../CARLI').Store;
 var Q = require('q');
+var uuid = require('node-uuid');
 LibraryRepository.setStore(Store(CouchDbStore(StoreOptions)));
 
 
@@ -50,17 +51,11 @@ function createLibrary(libraryRow){
     var couchIdPromise = Q.defer();
     var library = extractLibrary(libraryRow);
 
-    LibraryRepository.create( library )
-        .then(function(id) {
-            couchIdPromise.resolve({
-                couchId: id,
-                idalLegacyId: libraryRow.id
-            });
-        })
-        .catch(function(err) {
-            console.log(err);
-            couchIdPromise.reject();
-        });
+    //TODO: look up CRM id and use that for the "couch" id
+    couchIdPromise.resolve({
+        couchId: uuid.v4(),
+        idalLegacyId: libraryRow.id
+    });
 
     return couchIdPromise.promise;
 }
