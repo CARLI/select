@@ -1,10 +1,6 @@
 <section id="libraries">
     <div class="list-page-header">
         <h1>Libraries</h1>
-        <div class="button-container">
-            <button type="button" id="update-fte" class="carli-button" data-toggle="modal" data-target="#edit-fte-modal">Update FTE</button>
-            <button type="button" id="new-library" class="carli-button" data-toggle="modal" data-target="#new-library-modal">New Library <i class="fa fa-plus-circle"></i></button>
-        </div>
     </div>
 
     <section class="content list-content">
@@ -13,25 +9,3 @@
 
     <edit-library-modal after-submit-fn="vm.afterLibrarySubmit"></edit-library-modal>
 </section>
-
-<modal-dialog modal-title="'Update Full Time Enrollment (FTE)'" modal-id="'edit-fte-modal'">
-    <form name="modal-form" ng-submit="vm.fteModalSubmit(); vm.closeModal() ">
-        <div class="modal-body">
-            <div>
-                Last Updated: {{ vm.mostRecentFteUpdateDate }}
-            </div>
-            <ul class="fte-list">
-                <li >
-                    <div class="column" ng-repeat="library in vm.libraryList">
-                        {{ library.name }}:
-                        <input type="number" ng-model="library.fte">
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="carli-button cancel-button" data-dismiss="modal">Close</button>
-            <button type="submit" class="carli-button save-button">Save changes</button>
-        </div>
-    </form>
-</modal-dialog>
