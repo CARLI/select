@@ -6,7 +6,7 @@ function subscriptionsController(cycleService){
 
     activate();
     function activate() {
-        cycleService.listActiveCycles().then(function(activeCycles) {
+        cycleService.listActiveSubscriptionCycles().then(function(activeCycles) {
             vm.cycles = activeCycles;
         });
     }

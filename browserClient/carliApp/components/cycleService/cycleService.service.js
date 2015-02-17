@@ -12,6 +12,7 @@ function cycleService( CarliModules, $q ) {
         list: function() { return $q.when( cycleModule.list() ); },
         listActiveCycles: listActiveCycles,
         listActiveCyclesOfType: listActiveCyclesOfType,
+        listActiveSubscriptionCycles: listActiveSubscriptionCycles,
         create: function(newCycle) {
             fixCycleName(newCycle);
             return $q.when(cycleModule.create(newCycle));
@@ -49,20 +50,21 @@ function cycleService( CarliModules, $q ) {
     }
 
     function listActiveCycles() {
-        var deferred = $q.defer();
+        return $q.when( cycleModule.listActiveCycles() );
+    }
 
-        cycleModule.listActiveCycles().then(function(cycleList){
-            var filteredList = cycleList.filter(function(cycle){
-                return cycle.cycleType !== 'One-Time Purchase';
-            });
+    function listActiveSubscriptionCycles() {
+        return listActiveCyclesExcludingType('One-Time Purchase');
+    }
 
-            deferred.resolve(filteredList);
-        })
-        .catch(function(err){
-            deferred.reject(err);
+    function listActiveCyclesExcludingType(type){
+        function filterMatchingType(cycle) {
+            return (cycle.cycleType !== type);
+        }
+
+        return listActiveCycles().then(function(activeCycleList){
+            return activeCycleList.filter(filterMatchingType);
         });
-
-        return deferred.promise;
     }
 
     function listActiveCyclesOfType(type){

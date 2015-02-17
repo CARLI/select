@@ -121,10 +121,6 @@ function editProductController( $scope, $rootScope, $filter, entityBaseService, 
     function initializeCycles(){
         cycleService.listActiveCycles().then(function(activeCycles) {
             vm.activeCycles = activeCycles;
-
-            cycleService.load( config.oneTimePurchaseProductsCycleDocId).then(function(otpCycle){
-                vm.activeCycles.push(otpCycle);
-            });
         });
     }
 
