@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.product')
     .controller('editProductController', editProductController);
 
-function editProductController( $scope, $rootScope, $filter, entityBaseService, cycleService, libraryService, licenseService, productService, vendorService, alertService ) {
+function editProductController( $scope, $rootScope, $filter, entityBaseService, config, cycleService, libraryService, licenseService, productService, vendorService, alertService ) {
     var vm = this;
     var otpFieldsCopy = {};
     var termFieldsCopy = {};
@@ -38,10 +38,6 @@ function editProductController( $scope, $rootScope, $filter, entityBaseService, 
         return vm.editable && !vm.newProduct;
     };
 
-    cycleService.listActiveCycles().then(function(activeCycles) {
-        vm.activeCycles = activeCycles;
-    });
-
     libraryService.list().then( function( libraryList ){
         vm.libraryList = libraryList;
     });
@@ -67,6 +63,7 @@ function editProductController( $scope, $rootScope, $filter, entityBaseService, 
             initializeForExistingProduct();
         }
         vm.isModal = vm.newProduct;
+        initializeCycles();
     }
     function initializeForNewProduct() {
         vm.product = {
@@ -119,6 +116,16 @@ function editProductController( $scope, $rootScope, $filter, entityBaseService, 
         else if ($rootScope.forms && $rootScope.forms.productForm) {
             $rootScope.forms.productForm.$setPristine();
         }
+    }
+
+    function initializeCycles(){
+        cycleService.listActiveCycles().then(function(activeCycles) {
+            vm.activeCycles = activeCycles;
+
+            cycleService.load( config.oneTimePurchaseProductsCycleDocId).then(function(otpCycle){
+                vm.activeCycles.push(otpCycle);
+            });
+        });
     }
 
     function isWizardComplete() {
