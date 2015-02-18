@@ -4,7 +4,7 @@
             <fieldset>
                 <div class="name">
                     <label for="libraryName">Library Name</label>
-                    <view-edit-text-field ng-model="vm.library.name" edit-mode="vm.editable" input-id="libraryName">
+                    <view-edit-text-field ng-model="vm.library.name" edit-mode="false" input-id="libraryName">
                         <h1>{{ vm.library.name }}</h1>
                     </view-edit-text-field>
                 </div>
@@ -24,17 +24,17 @@
             <fieldset>
                 <div class="column">
                     <label for="libraryFte">Full Time Enrollment</label>
-                    <view-edit-number-field ng-model="vm.library.fte" edit-mode="vm.editable" input-id="libraryFte">
+                    <view-edit-number-field ng-model="vm.library.fte" edit-mode="false" input-id="libraryFte">
                         {{ vm.library.fte }}
                     </view-edit-number-field>
 
                     <label for="libraryInstitutionYears">Institution Type (2 year/4 year):</label>
-                    <view-edit-select ng-model="vm.library.institutionYears" items="vm.institutionYearsOptions" edit-mode="vm.editable" input-id="libraryInstitutionYears">
+                    <view-edit-select ng-model="vm.library.institutionYears" items="vm.institutionYearsOptions" edit-mode="false" input-id="libraryInstitutionYears">
                         {{ vm.library.institutionYears }}
                     </view-edit-select>
 
                     <label for="libraryInstitutionType">Institution Type (Private/Public):</label>
-                    <view-edit-select ng-model="vm.library.institutionType" items="vm.institutionTypeOptions" edit-mode="vm.editable" input-id="libraryInstitutionType">
+                    <view-edit-select ng-model="vm.library.institutionType" items="vm.institutionTypeOptions" edit-mode="false" input-id="libraryInstitutionType">
                         {{ vm.library.institutionType }}
                     </view-edit-select>
 
@@ -44,28 +44,28 @@
                     </view-edit-text-area>
 
                     <label for="libraryMembershipLevel">Membership Level</label>
-                    <view-edit-select ng-model="vm.library.membershipLevel" items="vm.membershipLevelOptions" edit-mode="vm.editable" input-id="libraryMembershipLevel">
+                    <view-edit-select ng-model="vm.library.membershipLevel" items="vm.membershipLevelOptions" edit-mode="false" input-id="libraryMembershipLevel">
                         {{ vm.library.membershipLevel }}
                     </view-edit-select>
 
                     <label for="libraryIshareMember">I-Share Member</label>
-                    <view-edit-checkbox ng-model="vm.library.isIshareMember" edit-mode="vm.editable" input-id="libraryIshareMember">
+                    <view-edit-checkbox ng-model="vm.library.isIshareMember" edit-mode="false" input-id="libraryIshareMember">
                         {{ vm.library.isIshareMember }}
                     </view-edit-checkbox>
 
                     <label for="libraryGar">General Account Receivable</label>
-                    <view-edit-text-field ng-model="vm.library.gar" edit-mode="vm.editable" input-id="libraryGar">
+                    <view-edit-text-field ng-model="vm.library.gar" edit-mode="false" input-id="libraryGar">
                         {{ vm.library.gar }}
                     </view-edit-text-field>
 
                     <div class="label">Library Status</div>
-                    <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.library.isActive" edit-mode="vm.editable" input-id="libraryIsActive">
+                    <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.library.isActive" edit-mode="false" input-id="libraryIsActive">
                         <h3>{{ vm.library.isActive ? 'Active' : 'Inactive' }}</h3>
                     </view-edit-radios>
 
                     <!--
                     <label for="libraryOutstandingBalances">Outstanding Balances</label>
-                    <view-edit-text-field ng-model="vm.library.outstandingBalances" edit-mode="vm.editable">
+                    <view-edit-text-field ng-model="vm.library.outstandingBalances" edit-mode="false">
                         {{ vm.library.outstandingBalances }}
                     </view-edit-text-field>
                     -->
@@ -81,56 +81,56 @@
 
                     <div class="contact-list">
                         <div class="label"><em>Director</em></div>
-                        <button type="button" class="pull-right add-contact" id="add-director-contact" ng-show="vm.editable" ng-click="vm.addContact('Director')">Add Contact</button>
+                        <button type="button" class="pull-right add-contact" id="add-director-contact" ng-show="false" ng-click="vm.addContact('Director')">Add Contact</button>
 
                         <div class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Director' }">
-                            <view-edit-contact contact="contact" edit-mode="vm.editable" input-id="director{{ $index }}"></view-edit-contact>
-                            <button type="button" class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</button>
+                            <view-edit-contact contact="contact" edit-mode="false" input-id="director{{ $index }}"></view-edit-contact>
+                            <button type="button" class="pull-right delete-contact" ng-show="false" ng-click="vm.deleteContact(contact)">Delete</button>
                         </div>
 
-                        <div class="placeholder" ng-show="vm.editable">
+                        <div class="placeholder" ng-show="false">
                             TODO: Include in Billing Messages checkbox
                         </div>
                     </div>
 
                     <div class="contact-list">
                         <div class="label"><em>E-Resources Liaison</em></div>
-                        <button type="button" class="pull-right add-contact" id="add-e-resources-liaison-contact" ng-show="vm.editable" ng-click="vm.addContact('E-Resources Liaison')">Add Contact</button>
+                        <button type="button" class="pull-right add-contact" id="add-e-resources-liaison-contact" ng-show="false" ng-click="vm.addContact('E-Resources Liaison')">Add Contact</button>
 
                         <div class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'E-Resources Liaison' }">
-                            <view-edit-contact contact="contact" edit-mode="vm.editable" input-id="eresource{{ $index }}"></view-edit-contact>
-                            <button type="button" class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</button>
+                            <view-edit-contact contact="contact" edit-mode="false" input-id="eresource{{ $index }}"></view-edit-contact>
+                            <button type="button" class="pull-right delete-contact" ng-show="false" ng-click="vm.deleteContact(contact)">Delete</button>
                         </div>
 
-                        <div class="placeholder" ng-show="vm.editable">
+                        <div class="placeholder" ng-show="false">
                             TODO: Include in Billing Messages checkbox
                         </div>
                     </div>
 
                     <div class="contact-list">
                         <div class="label"><em>Additional Users</em></div>
-                        <button type="button" class="pull-right add-contact" id="add-other-contact" ng-show="vm.editable" ng-click="vm.addContact('Other')">Add Contact</button>
+                        <button type="button" class="pull-right add-contact" id="add-other-contact" ng-show="false" ng-click="vm.addContact('Other')">Add Contact</button>
 
                         <div class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Other' }">
-                            <view-edit-contact contact="contact" edit-mode="vm.editable" input-id="other{{ $index }}"></view-edit-contact>
-                            <button type="button" class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</button>
+                            <view-edit-contact contact="contact" edit-mode="false" input-id="other{{ $index }}"></view-edit-contact>
+                            <button type="button" class="pull-right delete-contact" ng-show="false" ng-click="vm.deleteContact(contact)">Delete</button>
                         </div>
 
-                        <div class="placeholder" ng-show="vm.editable">
+                        <div class="placeholder" ng-show="false">
                             TODO: Permissions checkboxes
                         </div>
                     </div>
 
                     <div class="contact-list">
                         <div class="label"><em>Billing Staff</em></div>
-                        <button type="button" class="pull-right add-contact" id="add-notification-only-contact" ng-show="vm.editable" ng-click="vm.addContact('Notification Only')">Add Contact</button>
+                        <button type="button" class="pull-right add-contact" id="add-notification-only-contact" ng-show="false" ng-click="vm.addContact('Notification Only')">Add Contact</button>
 
                         <div class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Notification Only' }">
-                            <view-edit-contact contact="contact" edit-mode="vm.editable" input-id="notification{{ $index }}"></view-edit-contact>
-                            <button type="button" class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</button>
+                            <view-edit-contact contact="contact" edit-mode="false" input-id="notification{{ $index }}"></view-edit-contact>
+                            <button type="button" class="pull-right delete-contact" ng-show="false" ng-click="vm.deleteContact(contact)">Delete</button>
                         </div>
 
-                        <div class="placeholder" ng-show="vm.editable">
+                        <div class="placeholder" ng-show="false">
                             TODO: Permissions checkboxes
                         </div>
                     </div>
