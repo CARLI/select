@@ -1,18 +1,40 @@
-.library-list  {
-        .column:first-child {
-            flex: 2 1 75%;
-            padding-bottom: 0;
+#one-time-purchase-pricing {
+    @extend .zebra-table;
+    align-items: center;
+    margin-top: 1rem;
+
+    .column,
+    .column:first-child {
+        padding: 0.5rem;
+    }
+
+    .column.library {
+        flex: 1 1 75%;
+    }
+
+    .column.price {
+        flex: 1 0 150px;
+        padding: 7px;
+
+        input {
+            background: transparent;
+            border: 0 none;
         }
 
-        .column {
-            flex: 1 1 10%;
-        }
-
-        .column:last-child {
-            flex: 0 0 90px;
-            padding: 4px;
+        .price-display {
+            padding: 0.5rem;
         }
     }
+
+    .column.purchased {
+        flex: 0 0 90px;
+        padding: 4px;
+    }
+
+    label {
+        margin: 0;
+    }
+}
 
 .view-edit-select input:disabled {
     color: #666;

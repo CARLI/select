@@ -1,9 +1,9 @@
 angular.module('carli.entityForms.product')
     .controller('editProductController', editProductController);
 
-function editProductController( $scope, $rootScope, $filter, entityBaseService, config, cycleService, libraryService, licenseService, productService, vendorService, alertService ) {
+function editProductController( $q, $scope, $rootScope, $filter, entityBaseService, cycleService, licenseService, offeringService, productService, vendorService, alertService ) {
     var vm = this;
-    var otpFieldsCopy = {};
+    var otpFieldsCopy = [];
     var termFieldsCopy = {};
 
     var templates = {
@@ -16,6 +16,7 @@ function editProductController( $scope, $rootScope, $filter, entityBaseService, 
     var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
     vm.activeCycles = [];
+    vm.productOfferings = [];
     vm.toggleEditable = toggleEditable;
     vm.cancelEdit = cancelEdit;
     vm.cancelOtpEdit = revertOtpFields;
@@ -31,16 +32,12 @@ function editProductController( $scope, $rootScope, $filter, entityBaseService, 
     };
 
     vm.shouldShowOtpEditLink = function() {
-        return vm.editable && vm.product.cycle.cycleType == 'One-Time Purchase' && !vm.newProduct;
+        return vm.editable && !vm.newProduct && isOneTimePurchaseProduct(vm.product);
     };
 
     vm.shouldShowTermsEditLink = function() {
         return vm.editable && !vm.newProduct;
     };
-
-    libraryService.list().then( function( libraryList ){
-        vm.libraryList = libraryList;
-    });
 
     vendorService.list().then( function( vendorList ){
        vm.vendorList = vendorList;
@@ -70,8 +67,7 @@ function editProductController( $scope, $rootScope, $filter, entityBaseService, 
             type: 'Product',
             cycle: cycleService.getCurrentCycle() || { cycleType: '' },
             isActive: true,
-            contacts: [],
-            libraryPrices: {}
+            contacts: []
         };
         vm.editable = true;
         vm.newProduct = true;
@@ -82,21 +78,29 @@ function editProductController( $scope, $rootScope, $filter, entityBaseService, 
             vm.product = product;
             rememberOtpFields();
             rememberTermFields();
+
+            if ( isOneTimePurchaseProduct(product) ){
+                loadOfferingsForProduct(product);
+            }
         } );
+
         vm.editable = false;
         vm.newProduct = false;
     }
     function revertOtpFields() {
-        angular.copy(otpFieldsCopy, vm.product.oneTimePurchase);
+        angular.copy(otpFieldsCopy, vm.productOfferings);
     }
     function rememberOtpFields() {
-        angular.copy(vm.product.oneTimePurchase, otpFieldsCopy);
+        angular.copy(vm.productOfferings, otpFieldsCopy);
     }
     function revertTermFields() {
         vm.product.terms = angular.copy(termFieldsCopy, {});
     }
     function rememberTermFields() {
         angular.copy(vm.product.terms, termFieldsCopy);
+    }
+    function isOneTimePurchaseProduct(product){
+        return product.cycle.cycleType === 'One-Time Purchase';
     }
 
     function toggleEditable(){
@@ -116,6 +120,13 @@ function editProductController( $scope, $rootScope, $filter, entityBaseService, 
         else if ($rootScope.forms && $rootScope.forms.productForm) {
             $rootScope.forms.productForm.$setPristine();
         }
+
+        if ($scope.oneTimePurchasePricingForm) {
+            $scope.oneTimePurchasePricingForm.$setPristine();
+        }
+        else if ($rootScope.forms && $rootScope.forms.oneTimePurchasePricingForm) {
+            $rootScope.forms.oneTimePurchasePricingForm.$setPristine();
+        }
     }
 
     function initializeCycles(){
@@ -124,8 +135,14 @@ function editProductController( $scope, $rootScope, $filter, entityBaseService, 
         });
     }
 
+    function loadOfferingsForProduct( product ){
+        offeringService.listOfferingsForProductId(product.id).then(function(offerings){
+            vm.productOfferings = offerings;
+        });
+    }
+
     function isWizardComplete() {
-        if (vm.product.cycle.cycleType != 'One-Time Purchase') {
+        if ( !isOneTimePurchaseProduct(vm.product)) {
             return true;
         }
         if (vm.currentTemplate == templates.oneTimePurchaseFields) {
@@ -168,6 +185,7 @@ function editProductController( $scope, $rootScope, $filter, entityBaseService, 
 
     function saveExistingProduct() {
         productService.update(vm.product)
+            .then(saveOfferings)
             .then(function () {
                 alertService.putAlert('Product updated', {severity: 'success'});
                 setProductFormPristine();
@@ -188,6 +206,18 @@ function editProductController( $scope, $rootScope, $filter, entityBaseService, 
             .catch(function (error) {
                 alertService.putAlert(error, {severity: 'danger'});
             });
+    }
+
+    function saveOfferings(){
+        var savePromises = [];
+
+        if ( vm.productOfferings ){
+            vm.productOfferings.forEach(function(offering){
+                savePromises.push( offeringService.update(offering) );
+            });
+        }
+
+        return $q.all( savePromises );
     }
 
     function filterLicensesBelongingToVendor(vendor) {

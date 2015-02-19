@@ -50,19 +50,18 @@ entity-list {
             }
         }
     }
+}
 
-    ul.entity-list {
-        @extend .zebra-table;
+ul.entity-list {
+    @extend .zebra-table;
 
-        border-bottom: $default-border;
-        clear: both;
+    border-bottom: $default-border;
+    clear: both;
 
-        li {
-            padding: 0;
-            .column .list-button {
-                @include list-button;
-            }
+    li {
+        padding: 0;
+        .column .list-button {
+            @include list-button;
         }
     }
-
 }
