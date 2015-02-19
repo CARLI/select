@@ -9,5 +9,5 @@ sudo docker run \
     --name="carli-serve-$instance" \
     --detach=true \
     --link=carli-couchdb-$instance:couchdb \
-    -p $host_port:8000 \
+    -p $host_port:80 \
     carli-nginx:$tag
