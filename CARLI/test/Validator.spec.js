@@ -18,7 +18,6 @@ var validTypes = [
     'License',
     'MembershipLevel',
     'Offering',
-    'OneTimePurchase',
     'PriceCap',
     'Pricing',
     'Product',
