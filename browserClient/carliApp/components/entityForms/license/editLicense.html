@@ -1,26 +1,21 @@
     <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="licenseForm" ng-submit="vm.saveLicense(); vm.closeNewLicenseModal();" warn-if-unsaved>
 
-        <header class="page-header">
-            <h1 ng-show="vm.newLicense">New License</h1>
-
-            <fieldset>
-                <div class="name">
-                    <label for="licenseName">License Name</label>
-                    <view-edit-text-field ng-model="vm.license.name" edit-mode="vm.editable" input-id="licenseName">
-                        <h1>{{ vm.license.name }}</h1>
-                    </view-edit-text-field>
+        <div class="page-header">
+            <div class="headings">
+                <label for="licenseName">License Name</label>
+                <view-edit-text-field ng-model="vm.license.name" edit-mode="vm.editable" input-id="licenseName">
+                    <h1>{{ vm.license.name }}</h1>
+                </view-edit-text-field>
+            </div>
+            <div ng-show="!vm.newLicense" class="controls">
+                <div ng-show="vm.editable">
+                    <button type="button" class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</button>
+                    <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit" value="Save">
                 </div>
 
-                <div ng-show="!vm.newLicense" class="edit-buttons pull-right">
-                    <div ng-show="vm.editable">
-                        <button type="button" class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</button>
-                        <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit" value="Save">
-                    </div>
-
-                    <button type="button" id="license-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></button>
-                </div>
-            </fieldset>
-        </header>
+                <button type="button" id="license-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></button>
+            </div>
+        </div>
 
         <section class="content">
             <fieldset>
@@ -67,8 +62,8 @@
                         <a ng-click="vm.showProductsModal()" ng-show="!vm.newLicense">View all Products attached​ to this License Agreement</a>
                     </div>
 
-                    <label for="vendorStatus">Status</label>
-                    <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.license.isActive" edit-mode="vm.editable" input-id="vendorStatus">
+                    <div class="label">License Status</div>
+                    <view-edit-radios radio-group-name="isActive" radio-group-legend="License Status" items="vm.statusOptions" ng-model="vm.license.isActive" edit-mode="vm.editable" input-id="vendorStatus">
                         <h3>{{ vm.license.isActive ? 'Active' : 'Inactive' }}</h3>
                     </view-edit-radios>
 

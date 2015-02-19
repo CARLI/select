@@ -1,24 +1,22 @@
     <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="libraryForm" ng-submit="vm.saveLibrary(); vm.closeModal();" warn-if-unsaved>
 
-        <header class="page-header">
-            <fieldset>
-                <div class="name">
-                    <label for="libraryName">Library Name</label>
-                    <view-edit-text-field ng-model="vm.library.name" edit-mode="vm.editable" input-id="libraryName">
-                        <h1>{{ vm.library.name }}</h1>
-                    </view-edit-text-field>
+        <div class="page-header">
+            <div class="headings">
+                <label for="libraryName">Library Name</label>
+                <view-edit-text-field ng-model="vm.library.name" edit-mode="vm.editable" input-id="libraryName">
+                    <h1>{{ vm.library.name }}</h1>
+                </view-edit-text-field>
+            </div>
+
+            <div ng-show="!vm.newLibrary" class="controls">
+                <div ng-show="vm.editable">
+                    <button type="button"  class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</button>
+                    <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit" value="Save">
                 </div>
 
-                <div ng-show="!vm.newLibrary" class="edit-buttons pull-right">
-                    <div ng-show="vm.editable">
-                        <button type="button"  class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</button>
-                        <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit" value="Save">
-                    </div>
-
-                    <button type="button"  id="library-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></button>
-                </div>
-            </fieldset>
-        </header>
+                <button type="button"  id="library-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></button>
+            </div>
+        </div>
 
         <section class="content">
             <fieldset>
@@ -59,7 +57,7 @@
                     </view-edit-text-field>
 
                     <div class="label">Library Status</div>
-                    <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.library.isActive" edit-mode="vm.editable" input-id="libraryIsActive">
+                    <view-edit-radios radio-group-name="isActive" radio-group-legend="Library Status" items="vm.statusOptions" ng-model="vm.library.isActive" edit-mode="vm.editable" input-id="libraryIsActive">
                         <h3>{{ vm.library.isActive ? 'Active' : 'Inactive' }}</h3>
                     </view-edit-radios>
 

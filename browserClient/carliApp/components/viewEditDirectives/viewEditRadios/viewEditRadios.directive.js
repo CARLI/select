@@ -7,7 +7,8 @@ angular.module('carli.viewEditDirectives.viewEditRadios')
                 ngModel: '=',
                 editMode: '=',
                 items: '=',
-                radioGroupName: '@'
+                radioGroupName: '@',
+                radioGroupLegend: '@'
             },
             transclude: true
         };
