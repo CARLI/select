@@ -6,9 +6,6 @@ var chai   = require( 'chai' )
   , testUtils = require('./utils')
   ;
 
-testUtils.setupTestDb();
-LibraryRepository.setStore( testUtils.getTestDbStore() );
-
 function validLibraryData() {
     return {
         type: 'Library',
@@ -21,14 +18,34 @@ function invalidLibraryData() {
     };
 }
 
-// test.run('Library', validLibraryData, invalidLibraryData);
+//this is required if not running the generic entity interface tests
+testUtils.setupTestDb();
+LibraryRepository.setStore( testUtils.getTestDbStore() );
 
-describe('The special Library Entity', function(){
-    it('should load library data from MySql and Couch', function(){
-
+describe('The LibraryRepository', function(){
+    it('should have a load function', function() {
+        expect(LibraryRepository.load).to.be.a('function');
     });
 
-    it('have a list method');
+    describe('LibraryRepository.load', function() {
+        it('should have a load method that combines data from the CARLI CRM and the local database', function(){
+            return LibraryRepository.load(1).then(function(loadedLibrary){
+                return expect(loadedLibrary).to.be.an('object').and.have.property('id',1);
+            });
+        });
+    });
+
+    it('should have a list method', function() {
+        expect(LibraryRepository.list).to.be.a('function');
+    });
+
+    describe('LibraryRepository.list', function() {
+        it('should list Libraries from the CARLI CRM and the local database', function(){
+            return LibraryRepository.list().then(function(libraryList){
+                return expect(libraryList).to.be.an('array');
+            });
+        });
+    });
 });
 
 
