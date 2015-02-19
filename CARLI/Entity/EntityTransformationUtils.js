@@ -1,10 +1,12 @@
 var Q = require('q')
+  , CrmLibraryEntity = require('./CrmLibraryEntity')
   , Entity = require('../Entity')
   , config = require( '../../config' )
   , StoreOptions = config.storeOptions
   , Store = require( '../Store' )
   , StoreModule = require( '../Store/CouchDb/Store')
   , _ = require('lodash')
+  , Validator = require('../Validator')
   ;
 
 /**
@@ -15,7 +17,7 @@ var Q = require('q')
  */
 var repositories = {
     cycle : Entity('Cycle'),
-    library : Entity('Library'),
+    library : CrmLibraryEntity(),
     license : Entity('License'),
     vendor : Entity('Vendor')
 };
@@ -25,7 +27,6 @@ var cycleBoundRepositories = {
 
 function setEntityLookupStores( newStore ){
     repositories.cycle.setStore( newStore );
-    repositories.library.setStore( newStore );
     repositories.license.setStore( newStore );
     repositories.vendor.setStore( newStore );
 }
@@ -164,6 +165,18 @@ function _transformReferencesToObjects(entity, resolvedObjects) {
     }
 }
 
+function extractValuesForProperties( entity, properties ){
+    var extracted = {};
+    properties.forEach(function (property) {
+        if (entity.hasOwnProperty(property)) {
+            extracted[property] = entity[property];
+        }
+    });
+    return extracted;
+}
+function extractValuesForSchema( entity, schemaType ){
+    return extractValuesForProperties( entity, Validator.listNonIdPropertiesFor(schemaType) );
+}
 
 setEntityLookupStores( Store( StoreModule(StoreOptions) ) );
 
@@ -172,5 +185,7 @@ module.exports = {
     transformObjectForPersistence: transformObjectForPersistence,
     expandObjectFromPersistence: expandObjectFromPersistence,
     expandListOfObjectsFromPersistence: expandListOfObjectsFromPersistence,
-    setEntityLookupStores: setEntityLookupStores
+    setEntityLookupStores: setEntityLookupStores,
+    extractValuesForProperties: extractValuesForProperties,
+    extractValuesForSchema: extractValuesForSchema
 };

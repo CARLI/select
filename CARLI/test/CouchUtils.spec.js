@@ -98,10 +98,19 @@ describe('Couch utilities', function () {
 
             expect(couchUtils.couchViewUrl(testDbName, testViewName, testKey)).to.equal(urlWithKey);
         });
+
+        it ('should return the base url with an unquoted key in the query string if given an integer key', function() {
+            var testKey = 1;
+            var urlWithKey = testUrl + '?key='+testKey;
+
+            expect(couchUtils.couchViewUrl(testDbName, testViewName, testKey)).to.equal(urlWithKey);
+        });
+
         it ('should return the base url with group=true in the query string if given a truthy group argument', function() {
             var urlWithGroup = testUrl + '?group=true';
             expect(couchUtils.couchViewUrl(testDbName, testViewName, null, true)).to.equal(urlWithGroup);
         });
+
         it ('should return the base url with both a quoted key and the group=true in the query string if given both a key and group arguments', function() {
             var testKey = 'testKey';
             var urlWithKeyAndGroup = testUrl + '?key=%22' + testKey + '%22&group=true';

@@ -14,27 +14,37 @@ var _ = require('lodash');
 doMigration();
 
 function doMigration(){
-    var connection = initMySQL();
+    var connection = initMySQLForIdal();
+    var crmConnection = initMySQLForCrm();
 
     var vendorIdMapping = {};
     var libraryIdMapping = {};
+    var crmLibraryIdMapping = {};
     var cycleIdMapping = {};
     var productIdMapping = {};
 
-    migrateLibraries()
+    loadCrmLibraryMapping()
+        .then(migrateLibraries)
         .then(migrateVendors)
         .then(migrateCycles)
         .then(migrateProducts)
         .then(migrateOfferings)
         .then(finishMigration)
-        .then(closeConnection)
+        .then(closeIdalConnection)
+        .then(closeCrmConnection)
         .done();
 
+    function loadCrmLibraryMapping(){
+        console.log("Loading CRM library mapping");
 
-    function migrateLibraries(){
+        return libraryMigration.loadCrmLibraryMapping(crmConnection);
+    }
+
+    function migrateLibraries( crmLibraryMapping ){
+        crmLibraryIdMapping = crmLibraryMapping;
         console.log("Migrating libraries");
 
-        return libraryMigration.migrateLibraries(connection);
+        return libraryMigration.migrateLibraries(connection, crmLibraryIdMapping);
     }
 
     function migrateVendors(libraryMapping) {
@@ -105,20 +115,28 @@ function doMigration(){
 
     function finishMigration( offeringsResults ){
         //var offerings = flattenCycleMigrationResults( offeringsResults );
-
         console.log('Done with Migration');
     }
 
-    function closeConnection() {
-        console.log('Closing the database connection');
+    function closeIdalConnection() {
+        console.log('Closing the IDAL database connection');
         connection.end();
-        console.log('All done!');
+    }
+    function closeCrmConnection() {
+        console.log('Closing the CRM database connection');
+        crmConnection.end();
     }
 }
 
 
-function initMySQL(){
-    var connection = mysql.createConnection( migrationConfig.dsn );
+function initMySQLForIdal(){
+    var connection = mysql.createConnection( migrationConfig.idalDsn );
+    connection.connect();
+    return connection;
+}
+
+function initMySQLForCrm(){
+    var connection = mysql.createConnection( migrationConfig.crmDsn );
     connection.connect();
     return connection;
 }

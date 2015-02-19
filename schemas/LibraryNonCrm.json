@@ -1,0 +1,21 @@
+{
+    "$schema": "json-schema.org/draft-04/schema",
+    "title": "Library Non CRM",
+    "schemaType": "LibraryNonCrm",
+    "type": "object",
+    "properties": {
+        "id": {
+            "description": "Unique identifier for the Library record",
+            "type": "string"
+        },
+        "crmId": {
+            "description": "The id from the CRM database",
+            "type": "integer"
+        },
+        "ipAddresses": {
+            "description": "List of IP Addresses",
+            "type": "string"
+        }
+    },
+    "required": [ "crmId" ]
+}

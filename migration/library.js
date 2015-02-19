@@ -4,10 +4,12 @@ var carliConfig = require('../CARLI').config;
 var StoreOptions = carliConfig.storeOptions;
 var Store = require('../CARLI').Store;
 var Q = require('q');
+var staticIdalToCrmMap = require('./config/staticIdalToCrmMap');
+var idalBlacklist = require('./config/idalBlacklist');
+
 LibraryRepository.setStore(Store(CouchDbStore(StoreOptions)));
 
-
-function migrateLibraries(connection) {
+function migrateLibraries(connection, crmLibraryMapping) {
     var resultsPromise = Q.defer();
 
     var query = "select id, name from library";
@@ -20,58 +22,70 @@ function migrateLibraries(connection) {
     });
 
     return resultsPromise.promise;
-}
 
-function extractLibraries(libraries) {
-    var idalIdsToCouchIds = {};
-    var extractPromises = [];
-    var resultsPromise = Q.defer();
+    function extractLibraries(libraries) {
+        var idalIdsToCouchIds = {};
+        var extractPromises = [];
+        var resultsPromise = Q.defer();
 
-    for (var i in libraries) {
-        var createLibraryPromise = createLibrary(libraries[i]);
+        for (var i in libraries) {
+            var createLibraryPromise = createLibrary(libraries[i]);
 
-        extractPromises.push(createLibraryPromise);
+            extractPromises.push(createLibraryPromise);
 
-        createLibraryPromise.then(function(resultObj){
-            idalIdsToCouchIds[resultObj.idalLegacyId] = resultObj.couchId;
+            createLibraryPromise.then(function(resultObj){
+                idalIdsToCouchIds[resultObj.idalLegacyId] = resultObj.couchId;
+            });
+        }
+
+        Q.all(extractPromises).then(function(){
+            resultsPromise.resolve(idalIdsToCouchIds);
+        });
+
+        return resultsPromise.promise;
+    }
+
+    function createLibrary(libraryRow){
+        return Q({
+            couchId: getCrmId(libraryRow.name),
+            idalLegacyId: libraryRow.id
         });
     }
 
-    Q.all(extractPromises).then(function(){
-        resultsPromise.resolve(idalIdsToCouchIds);
+    function getCrmId(idalLibraryName) {
+        if (idalBlacklist.indexOf(idalLibraryName) !== -1) {
+            return null;
+        }
+        if (staticIdalToCrmMap[idalLibraryName]) {
+            return staticIdalToCrmMap[idalLibraryName].toString();
+        }
+        if (crmLibraryMapping[idalLibraryName.toLowerCase()]) {
+            return crmLibraryMapping[idalLibraryName.toLowerCase()].toString();
+        }
+        console.log("Error: '" + idalLibraryName + "' not found");
+    }
+}
+
+function loadCrmLibraryMapping(crmConnection) {
+    var resultsPromise = Q.defer();
+
+    var query = "select institution_name, member_id from members";
+    crmConnection.query(query, function (err, rows, fields) {
+        if (err) {
+            console.log(err);
+        }
+
+        var crmLibraryMapping = {};
+        rows.forEach(function (row) {
+            crmLibraryMapping[row.institution_name.toLowerCase()] = row.member_id;
+        });
+        resultsPromise.resolve(crmLibraryMapping);
     });
 
     return resultsPromise.promise;
 }
 
-function createLibrary(libraryRow){
-    //console.log('  creating library: ' + libraryRow.name);
-
-    var couchIdPromise = Q.defer();
-    var library = extractLibrary(libraryRow);
-
-    LibraryRepository.create( library )
-        .then(function(id) {
-            couchIdPromise.resolve({
-                couchId: id,
-                idalLegacyId: libraryRow.id
-            });
-        })
-        .catch(function(err) {
-            console.log(err);
-            couchIdPromise.reject();
-        });
-
-    return couchIdPromise.promise;
-}
-
-function extractLibrary(row) {
-    return {
-        name: row.name,
-        isActive: true
-    };
-}
-
 module.exports = {
-    migrateLibraries: migrateLibraries
+    migrateLibraries: migrateLibraries,
+    loadCrmLibraryMapping: loadCrmLibraryMapping
 };

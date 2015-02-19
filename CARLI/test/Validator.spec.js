@@ -14,6 +14,7 @@ var validTypes = [
     'InstitutionType',
     'InstitutionYears',
     'Library',
+    'LibraryNonCrm',
     'License',
     'MembershipLevel',
     'Offering',
@@ -199,6 +200,24 @@ describe( 'The Validator Module', function() {
 
             expect( Validator.getEnumValuesFor('Contact', 'contactType') ).to.have.members( expectedValues );
         });
-
     });
+
+    it( 'should have a listNonIdPropertiesFor function', function() {
+        expect( Validator.listNonIdPropertiesFor ).to.be.a('function');
+    });
+
+    describe( 'Validator.listNonIdPropertiesFor', function() {
+        it('should return an array of properties', function(){
+            expect( Validator.listNonIdPropertiesFor('LibraryNonCrm')).to.be.an('array');
+        });
+
+        it('should return the expected list of properties', function(){
+            var expectedValues = [
+                'crmId',
+                'ipAddresses'
+            ];
+            expect( Validator.listNonIdPropertiesFor('LibraryNonCrm')).to.have.members( expectedValues );
+        });
+    });
+
 });

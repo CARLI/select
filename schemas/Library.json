@@ -24,10 +24,6 @@
             "description": "public or private",
             "$ref": "./InstitutionType.json"
         },
-        "ipAddresses": {
-            "description": "List of IP Addresses",
-            "type": "string"
-        },
         "membershipLevel": {
             "description": "Governing, Affiliate, or Non-Member",
             "$ref": "./MembershipLevel.json"

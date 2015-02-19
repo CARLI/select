@@ -251,3 +251,29 @@ describe('The expandListOfObjectsFromPersistence', function(){
 
     });
 });
+
+describe('extractValuesForProperties', function(){
+    it('should be a function', function(){
+        expect(EntityTransform.extractValuesForProperties).to.be.a('function');
+    });
+    it('should return an object containing only the specified properties', function(){
+        var testObject = {
+            one: "fish",
+            two: "fish"
+        };
+        var expectedResult = {
+            one: "fish"
+        };
+        expect(EntityTransform.extractValuesForProperties(testObject, [ 'one' ])).to.deep.equal(expectedResult);
+    });
+});
+
+describe('extractValuesForSchema', function() {
+    it('should be a function', function () {
+        expect(EntityTransform.extractValuesForSchema).to.be.a('function');
+    });
+
+    it('should return an object', function() {
+        expect( EntityTransform.extractValuesForSchema({}, 'LibraryNonCrm')).to.be.an('object');
+    })
+});

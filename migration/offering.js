@@ -23,7 +23,7 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping)
     "ORDER BY product_id, library_id;";
 
     connection.query(query, function(err, rows, fields) {
-        // rows = rows.slice(0, 1000);
+        rows = rows.slice(0, 1000);
 
         console.log('  Migrating offerings for cycle "' + cycle.name + '" - got ' + rows.length + ' offerings');
         if(err) { console.log(err); }
@@ -111,9 +111,10 @@ function createOfferings(offeringsList, cycle){
     var resultsPromise = Q.defer();
 
     for (var i in offeringsList) {
-        var createOfferingPromise = createOffering(offeringsList[i], cycle);
-
-        createPromises.push(createOfferingPromise);
+        if (offeringsList[i].library) {
+            var createOfferingPromise = createOffering(offeringsList[i], cycle);
+            createPromises.push(createOfferingPromise);
+        }
     }
 
     Q.all(createPromises).then(function(){

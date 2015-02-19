@@ -6,6 +6,7 @@ var chai   = require( 'chai' )
     , test = require( './Entity/EntityInterface.spec' )
     , CycleRepository = require('../Entity/CycleRepository' )
     , OfferingRepository = require('../Entity/OfferingRepository' )
+    , ProductRepository = require('../Entity/ProductRepository' )
     , testUtils = require('./utils')
     ;
 
@@ -17,7 +18,7 @@ function validOfferingData() {
     return {
         type: 'Offering',
         cycle: { id: testCycleId },
-        library: { id: uuid.v4() },
+        library: { id: "1" },
         product: { id: uuid.v4() },
         pricing: {
             site: 1200,
@@ -63,6 +64,37 @@ describe('Run the Offering tests', function () {
 
 function runOfferingSpecificTests(testCycle) {
     describe('Offering Specific Tests', function () {
+
+        describe('Expanding referenced entities on load', function () {
+
+            var testOffering = validOfferingData();
+            testOffering.id = 'my-test-id';
+
+            var testProduct = {id: testOffering.product.id, cycle: testCycle, type: "Product", name: "offering test product name", vendor: uuid.v4() };
+
+            it('should expand references to products and libraries in Offerings', function () {
+                var loadedOffering;
+
+                return ProductRepository.create(testProduct, testCycle)
+                    .then(function() {
+                        return OfferingRepository.create(testOffering, testCycle);
+                    })
+                    .then(function( offeringId ){
+                        return OfferingRepository.load(offeringId, testCycle);
+                    })
+                    .then(function (loadedOfferingData) {
+                        loadedOffering = loadedOfferingData;
+
+                        console.log('LOADED OFFERING ',loadedOffering);
+
+                        return expect(loadedOffering.library).to.be.an('object').and.have.property('name');
+                    })
+                    .then(function () {
+                        return expect(loadedOffering.product).to.be.an('object').and.have.property('name');
+                    });
+            });
+        });
+
         describe('listOfferingsForLibraryId View', function () {
             it('should have a listOfferingsForLibraryId method', function () {
                 expect(OfferingRepository.listOfferingsForLibraryId).to.be.a('function');
@@ -146,7 +178,5 @@ function runOfferingSpecificTests(testCycle) {
                     });
             });
         });
-
-
     });
 }
