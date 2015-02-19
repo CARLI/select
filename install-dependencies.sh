@@ -1,7 +1,9 @@
 #!/bin/sh
 
 # Change to root directory of the project
-cd `git rev-parse --show-toplevel`
+if [ -d .git ]; then
+    cd `git rev-parse --show-toplevel`
+fi
 
 npm install
 cd ./browserClient && npm install && bower install && cd -

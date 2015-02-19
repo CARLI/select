@@ -7,5 +7,6 @@ sudo docker rm -f carli-middleware-$instance 2> /dev/null
 sudo docker run \
     --name="carli-middleware-$instance" \
     --detach=true \
+    --link=carli-couchdb-$instance:couchdb \
     -p 3000 \
     carli-middleware:$tag
