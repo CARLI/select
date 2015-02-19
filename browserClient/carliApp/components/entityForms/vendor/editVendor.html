@@ -26,7 +26,7 @@
                     <view-edit-text-field ng-model="vm.vendor.websiteUrl" edit-mode="vm.editable" input-id="vendorWebsite">
                         <span class="h3" ng-bind-html="vm.vendor.websiteUrl | linky:'_blank'"></span>
                     </view-edit-text-field>
-                    <label for="vendorStatus">Status</label>
+                    <div class="label">Status</div>
                     <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.vendor.isActive" edit-mode="vm.editable" input-id="vendorStatus">
                         <span class="h3">{{ vm.vendor.isActive ? 'Active' : 'Inactive' }}</span>
                     </view-edit-radios>

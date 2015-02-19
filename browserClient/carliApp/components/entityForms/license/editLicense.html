@@ -62,7 +62,7 @@
                         <a ng-click="vm.showProductsModal()" ng-show="!vm.newLicense">View all Products attached​ to this License Agreement</a>
                     </div>
 
-                    <label for="vendorStatus">Status</label>
+                    <div class="label">Status</div>
                     <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.license.isActive" edit-mode="vm.editable" input-id="vendorStatus">
                         <h3>{{ vm.license.isActive ? 'Active' : 'Inactive' }}</h3>
                     </view-edit-radios>
