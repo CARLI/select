@@ -1,4 +1,4 @@
-body {
+entity-list {
     $filter-input-spacing: 0.57rem;
     $filter-by-active-inner-spacing: 1.5em;
 
@@ -54,6 +54,7 @@ body {
     ul.entity-list {
         @extend .zebra-table;
 
+        border-bottom: $default-border;
         clear: both;
 
         li {

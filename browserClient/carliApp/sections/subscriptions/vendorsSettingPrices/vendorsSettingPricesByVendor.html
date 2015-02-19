@@ -59,9 +59,11 @@
                                     </div>
                                     <div class="column">
                                         <div class="header"><strong>{{ ::vm.cycle.year }}</strong> Price</div>
-                                        <view-edit-number-field ng-model="offering.pricing.site" input-id="offering-pricing-site" edit-mode="vm.isEditing[offering.id]">
-                                            {{ offering.pricing.site | currency }}
-                                        </view-edit-number-field>
+                                        <div class="row">
+                                            <view-edit-number-field ng-model="offering.pricing.site" input-id="offering-pricing-site" edit-mode="vm.isEditing[offering.id]">
+                                                {{ offering.pricing.site | currency }}
+                                            </view-edit-number-field>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="su-pricing">
