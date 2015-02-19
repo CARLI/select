@@ -27,7 +27,15 @@ module.exports = function (timeout) {
             if ( !id ){
                 throw new Error('Id Required');
             }
-            var data = cache.get(id) ? cache.get(id) : middleware.loadLibrary(id);
+
+            function loadLibrary(id){
+                return middleware.loadLibrary(id).then(function(library){
+                    library.id = library.crmId.toString();
+                    return library;
+                });
+            }
+
+            var data = cache.get(id) ? cache.get(id) : loadLibrary(id);
             cache.add(data);
             return data;
         },
