@@ -4,8 +4,7 @@
   "description": "",
   "main": "vendor.js",
   "dependencies": {
-    "mysql": "~2.1.1",
-    "node-uuid": "^1.4.2"
+    "mysql": "~2.1.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
