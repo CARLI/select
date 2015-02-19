@@ -18,6 +18,7 @@ module.exports = function (timeout) {
         setStore: noop,
         create: noop,
         update: noop,
+        delete: noop,
 
         list: function() {
             return middleware.listLibraries();
@@ -38,16 +39,7 @@ module.exports = function (timeout) {
             var data = cache.get(id) ? cache.get(id) : loadLibrary(id);
             cache.add(data);
             return data;
-        },
-
-        delete: function( id ){
-            if ( !id ){
-                throw new Error('Id Required');
-            }
-            cache.delete(id);
-            return dataStore.delete( id );
         }
-
     };
 
 };
