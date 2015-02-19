@@ -74,7 +74,7 @@ function loadOffering( offeringId, cycle ){
 
 function listOfferingsForLibraryId( libraryId, cycle ) {
     setCycle(cycle);
-    return expandOfferings( CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForLibraryId', libraryId), cycle );
+    return expandOfferings( CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForLibraryId', libraryId.toString()), cycle );
 }
 
 function listOfferingsForProductId( productId, cycle ) {
