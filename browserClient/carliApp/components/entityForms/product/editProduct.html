@@ -1,28 +1,23 @@
     <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="productForm" warn-if-unsaved>
 
-    <header class="page-header">
-        <h1 ng-show="vm.newProduct">New Product</h1>
-
-        <fieldset>
-            <div class="name">
-                <label for="name">Product Name</label>
-                <view-edit-text-field ng-model="vm.product.name" edit-mode="vm.editable" input-id="name">
-                    <h1>{{ vm.product.name }}</h1>
-                </view-edit-text-field>
+    <div class="page-header">
+        <div class="headings">
+            <label for="name">Product Name</label>
+            <view-edit-text-field ng-model="vm.product.name" edit-mode="vm.editable" input-id="name">
+                <h1>{{ vm.product.name }}</h1>
+            </view-edit-text-field>
+        </div>
+        <div ng-show="!vm.newProduct" class="controls">
+            <div ng-show="vm.editable">
+                <button type="button" class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</button>
+                <input class="carli-button save-button" ng-disabled="!vm.editable" type="button" value="{{ vm.submitLabel() }}" ng-click="vm.submitAction()" >
             </div>
 
-            <div ng-show="!vm.newProduct" class="edit-buttons pull-right">
-                <div ng-show="vm.editable">
-                    <button type="button" class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</button>
-                    <input class="carli-button save-button" ng-disabled="!vm.editable" type="button" value="{{ vm.submitLabel() }}" ng-click="vm.submitAction()" >
-                </div>
-
-                <button type="button" id="product-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">
-                    Edit<fa name="edit"></fa>
-                </button>
-            </div>
-        </fieldset>
-    </header>
+            <button type="button" id="product-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">
+                Edit<fa name="edit"></fa>
+            </button>
+        </div>
+    </div>
 
     <section class="content">
         <fieldset>

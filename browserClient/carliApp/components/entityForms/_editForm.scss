@@ -10,13 +10,6 @@
         label {
             margin-top: 0;
         }
-        .name {
-            @include grid-column(6);
-        }
-
-        .edit-buttons {
-            margin-top: 5px;
-        }
     }
 
     a {
