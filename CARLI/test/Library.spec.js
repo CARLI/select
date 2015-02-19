@@ -1,7 +1,6 @@
 var chai   = require( 'chai' )
   , expect = chai.expect
   , test = require( './Entity/EntityInterface.spec' )
-  , config = require( '../../config' )
   , Entity = require('../Entity')
   , LibraryRepository = require('../Entity/LibraryRepository' )
   , testUtils = require('./utils')
@@ -23,6 +22,15 @@ function invalidLibraryData() {
 }
 
 // test.run('Library', validLibraryData, invalidLibraryData);
+
+describe('The special Library Entity', function(){
+    it('should load library data from MySql and Couch', function(){
+
+    });
+
+    it('have a list method');
+});
+
 
 describe('Helper functions for getting Enum values from the Library Schema', function(){
 

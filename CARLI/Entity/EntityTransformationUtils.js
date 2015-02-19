@@ -1,4 +1,5 @@
 var Q = require('q')
+  , CrmLibraryEntity = require('./CrmLibraryEntity')
   , Entity = require('../Entity')
   , config = require( '../../config' )
   , StoreOptions = config.storeOptions
@@ -16,7 +17,7 @@ var Q = require('q')
  */
 var repositories = {
     cycle : Entity('Cycle'),
-    library : Entity('Library'),
+    library : CrmLibraryEntity(),
     license : Entity('License'),
     vendor : Entity('Vendor')
 };
@@ -26,7 +27,6 @@ var cycleBoundRepositories = {
 
 function setEntityLookupStores( newStore ){
     repositories.cycle.setStore( newStore );
-    repositories.library.setStore( newStore );
     repositories.license.setStore( newStore );
     repositories.vendor.setStore( newStore );
 }
@@ -186,6 +186,8 @@ module.exports = {
     expandObjectFromPersistence: expandObjectFromPersistence,
     expandListOfObjectsFromPersistence: expandListOfObjectsFromPersistence,
     setEntityLookupStores: setEntityLookupStores,
+
+    //need to separate these to avoid circular deps
     extractValuesForProperties: extractValuesForProperties,
     extractValuesForSchema: extractValuesForSchema
 };

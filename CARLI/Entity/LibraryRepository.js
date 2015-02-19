@@ -1,7 +1,7 @@
-var Entity = require('../Entity')
+var CrmLibraryEntity = require('./CrmLibraryEntity')
+    , Entity = require('../Entity')
     , EntityTransform = require( './EntityTransformationUtils')
     , config = require( '../../config' )
-    , middleware = require('../../config/environmentDependentModules').middleware
     , StoreOptions = config.storeOptions
     , Store = require( '../Store' )
     , StoreModule = require( '../Store/CouchDb/Store')
@@ -10,6 +10,8 @@ var Entity = require('../Entity')
     , Validator = require('../Validator')
     , _ = require('lodash')
     ;
+
+var crmLibraryRepository = CrmLibraryEntity();
 
 var localLibraryRepository = Entity('LibraryNonCrm');
 localLibraryRepository.setStore( Store( StoreModule(StoreOptions) ) );
@@ -44,13 +46,13 @@ function updateLibrary( library ){
 }
 
 function listLibraries(){
-    return middleware.listLibraries().then(function(libraries) {
+    return crmLibraryRepository.list().then(function(libraries) {
         return Q.all( libraries.map(fillInNonCrmData) );
     });
 }
 
 function loadLibrary( libraryCrmId ){
-    return middleware.loadLibrary(libraryCrmId).then(fillInNonCrmData);
+    return crmLibraryRepository.load(libraryCrmId).then(fillInNonCrmData);
 }
 
 
