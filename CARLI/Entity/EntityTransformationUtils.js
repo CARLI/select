@@ -186,8 +186,6 @@ module.exports = {
     expandObjectFromPersistence: expandObjectFromPersistence,
     expandListOfObjectsFromPersistence: expandListOfObjectsFromPersistence,
     setEntityLookupStores: setEntityLookupStores,
-
-    //need to separate these to avoid circular deps
     extractValuesForProperties: extractValuesForProperties,
     extractValuesForSchema: extractValuesForSchema
 };
