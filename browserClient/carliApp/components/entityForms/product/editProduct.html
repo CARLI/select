@@ -27,12 +27,12 @@
                     {{ vm.product.vendor.name }}
                 </view-edit-typeahead>
 
-                <label for="productUrl">Product URL <aside>(Vendor can provide)</aside></label>
+                <label for="productUrl">Product URL <aside role="note">(Vendor can provide)</aside></label>
                 <view-edit-text-field ng-model="vm.product.productUrl" edit-mode="vm.editable" input-id="productUrl">
                     {{ vm.product.productUrl }}
                 </view-edit-text-field>
 
-                <label for="description">Product Description <aside>(Vendor can provide)</aside></label>
+                <label for="description">Product Description <aside role="note">(Vendor can provide)</aside></label>
                 <view-edit-text-area ng-model="vm.product.description" edit-mode="vm.editable" input-id="description">
                     {{ vm.product.description }}
                 </view-edit-text-area>
@@ -53,8 +53,8 @@
                 </div>
 
                 <div class="column">
-                    <div class="label">Status</div>
-                    <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.product.isActive" edit-mode="vm.editable" input-id="isActive">
+                    <div class="label">Product Status</div>
+                    <view-edit-radios radio-group-name="isActive" radio-group-legend="Product Status" items="vm.statusOptions" ng-model="vm.product.isActive" edit-mode="vm.editable" input-id="isActive">
                         {{ vm.product.isActive ? 'Active Product' : 'Inactive Product' }}
                     </view-edit-radios>
                 </div>
