@@ -10,4 +10,4 @@ sudo docker run \
     --link=carli-couchdb-$instance:couchdb \
     -p 3000 \
     --workdir=/carli-select/middleware \
-    carli-grunt:$tag node index.js
+    carli-build:$tag node index.js

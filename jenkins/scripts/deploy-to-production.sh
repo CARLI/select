@@ -2,8 +2,8 @@
 
 ### This script is run on the production server, not in the Jenkin's build environment
 
-cat /home/jenkins/carli-grunt.tgz | gunzip | sudo docker load
-rm /home/jenkins/carli-grunt.tgz
+cat /home/jenkins/carli-build.tgz | gunzip | sudo docker load
+rm /home/jenkins/carli-build.tgz
 
 cat /home/jenkins/carli-couchdb.tgz | gunzip | sudo docker load
 rm /home/jenkins/carli-couchdb.tgz
