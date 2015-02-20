@@ -38,14 +38,7 @@
                             </view-edit-radios>
                         </div>
                         <div class="comments">
-                            <div class="column internal-comments">
-                                <label for="internal-comments">Internal Comments</label>
-                                <textarea id="internal-comments" ng-model="offering.internalComments" ng-readonly="!vm.isEditing[offering.id]">{{ offering.internalComments }}</textarea>
-                            </div>
-                            <div class="column library-comments">
-                                <label for="library-comments">Comments for Libraries</label>
-                                <textarea id="library-comments" ng-model="offering.libraryComments" ng-readonly="!vm.isEditing[offering.id]">{{ offering.libraryComments }}</textarea>
-                            </div>
+                            <offering-comments offering="offering" edit-mode="vm.isEditing[offering.id]"></offering-comments>
                         </div>
                     </div>
                     <div class="column site-license-price">
