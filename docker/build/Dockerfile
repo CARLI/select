@@ -26,4 +26,3 @@ EXPOSE 8000
 # Install project dependencies
 RUN touch /carli-select/config/local.js && touch /carli-select/config/environmentDependentModules.js
 RUN cd /carli-select && ./install-dependencies.sh
-RUN cd /carli-select/ && grunt jsenv:node
