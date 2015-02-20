@@ -17,6 +17,7 @@ $SCRIPTS/tag-container.sh nginx latest &&
 
 $SCRIPTS/run-data-container.sh dev latest &&
 $SCRIPTS/run-db-container.sh dev latest 9091 &&
+$SCRIPTS/run-content-container.sh dev latest &&
 $SCRIPTS/run-middleware-container.sh dev latest &&
 $SCRIPTS/run-test-container.sh dev latest &&
 

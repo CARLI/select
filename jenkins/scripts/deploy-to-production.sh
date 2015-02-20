@@ -13,5 +13,6 @@ rm /home/jenkins/carli-nginx.tgz
 
 /home/jenkins/scripts/run-data-container.sh prod last-good
 /home/jenkins/scripts/run-db-container.sh prod last-good 5984
+/home/jenkins/scripts/run-content-container.sh prod last-good
 /home/jenkins/scripts/run-middleware-container.sh prod last-good
 /home/jenkins/scripts/run-serve-container.sh prod last-good 80
