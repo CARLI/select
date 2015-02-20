@@ -1,5 +1,13 @@
-#one-time-purchase-products {
+#oneTimePurchaseSelections {
     $default-spacing: 36px;
+
+    .page-header {
+        display: block;
+        .label {
+            margin-top: 0;
+            text-align: left;
+        }
+    }
 
     section.content {
         .carli-button {

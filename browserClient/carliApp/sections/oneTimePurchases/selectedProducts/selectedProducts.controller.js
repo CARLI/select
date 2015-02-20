@@ -21,41 +21,30 @@
         activate();
 
         function activate(){
-            console.log('Controller active '+vm.libraryId);
-
-            setCycleToOneTimePurchase()
+            vm.loadingPromise = setCycleToOneTimePurchase()
             .then(loadLibrary)
             .then(loadOfferings);
         }
 
         function setCycleToOneTimePurchase(){
-            console.log('set one time purchase cycle');
             return cycleService.load(config.oneTimePurchaseProductsCycleDocId).then(function(oneTimePurchaseCycle){
                 cycleService.setCurrentCycle(oneTimePurchaseCycle);
-
-                console.log('  loaded cycle', oneTimePurchaseCycle);
-
                 return oneTimePurchaseCycle;
             });
         }
 
         function loadLibrary() {
-            console.log('load library', vm.libraryId);
             return libraryService.load(vm.libraryId).then(function(library){
                 vm.library = library;
-
-                console.log('  loaded library ',library);
-
                 return library;
             });
         }
 
         function loadOfferings( library ) {
-            console.log('load offerings for ',library.name);
-
-            offeringService.listOfferingsForLibraryId(library.id)
+            return offeringService.listOfferingsForLibraryId(library.id)
             .then(function (offeringList) {
                 vm.offeringList = offeringList;
+                return offeringList;
             });
         }
 

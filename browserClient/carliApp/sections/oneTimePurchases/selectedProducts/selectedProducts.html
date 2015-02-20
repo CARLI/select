@@ -1,11 +1,11 @@
-<section id="one-time-purchase-products">
+<section id="oneTimePurchaseSelections">
 
     <form class="edit-form" name="oneTimePurchaseForm" ng-submit="vm.savePurchase()">
 
-        <header class="page-header">
-            <label>One-Time Purchases</label>
+        <div class="page-header">
+            <div class="label">One-Time Purchases</div>
             <h1>{{ vm.library.name }}</h1>
-        </header>
+        </div>
 
         <section class="content">
             <a href="/oneTimePurchases" class="carli-button"> <i class="fa fa-chevron-circle-left"></i> Back to Libraries</a>
@@ -22,7 +22,7 @@
                 </menuitem>
             </menu>
 
-            <ul class="entity-list">
+            <ul class="entity-list" cg-busy="vm.loadingPromise">
                 <li class="column-headers">
                     <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'name', reversedSort: vm.reverse }" ng-click="vm.sort('name')">Product</div>
                     <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'vendor.name', reversedSort: vm.reverse }" ng-click="vm.sort('vendor.name')">Vendor</div>
