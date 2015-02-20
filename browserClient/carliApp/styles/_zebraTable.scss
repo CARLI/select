@@ -34,7 +34,7 @@ $table-content-fg-color: $purple;
 }
 
 .zebra-table {
-
+    border-bottom: $default-border;
     list-style: outside none none;
 
     li.column-headers {
@@ -53,10 +53,6 @@ $table-content-fg-color: $purple;
 
         &:nth-child(2n+1) {
             background: $zebra-table-color;
-        }
-
-        &:last-child {
-            border-bottom: $default-border;
         }
 
         .column {
