@@ -24,12 +24,7 @@
                         </li>
                         <li class="offering" ng-class="{ 'edit-mode': vm.isEditing[offering.id] }" ng-repeat="offering in product.offerings | orderBy:vm.orderBy:vm.reverse track by offering.id">
                             <div class="column library">
-                                <h3>{{ ::offering.library.name }}</h3>
-                                <p><span class="label">Pricing Info</span><br>
-                                    Size (FTE): <span class="purple">{{ ::offering.library.fte }}</span><br>
-                                    Institution: <span class="purple">{{ ::offering.library.institutionYears }}</span><br>
-                                    Type: <span class="purple">{{ ::offering.library.institutionType }}</span></p>
-
+                                <library-info library="offering.library"></library-info>
                                 <button ng-show="!vm.isEditing[offering.id]" type="button" class="carli-button edit" ng-click="vm.setOfferingEditable(offering)">Edit <fa name="pencil-square-o "></fa></button>
                                 <button ng-show="vm.isEditing[offering.id]" type="button" class="carli-button save" ng-click="vm.saveOffering(offering, product.offerings)">Save <fa name="floppy-o"></fa></button>
                             </div>

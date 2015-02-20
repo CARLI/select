@@ -6,5 +6,6 @@ angular.module('carli.sections.subscriptions.vendorsSettingPrices', [
     'carli.vendorService',
     'carli.accordion',
     'carli.viewEditDirectives',
-    'carli.notificationService'
+    'carli.notificationService',
+    'carli.subscriptionScreenComponents'
 ]);
