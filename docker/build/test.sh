@@ -2,7 +2,7 @@
 
 echo "Configuring CARLI for test instance"
 
-cd /carli-select && grunt jsenv:node
+cd /carli-select && ./install-dependencies.sh && grunt jsenv:node
 cd /carli-select/jenkins && grunt generate-config:test
 
 cd /carli-select &&
