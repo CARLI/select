@@ -7,7 +7,10 @@ describe('The Edit Product Controller', function(){
         {
             type: 'Product',
             name: 'Test Product 0',
-            cycleType: 'Fiscal Year',
+            cycle: {
+                id: '',
+                cycleType: 'Fiscal Year'
+            },
             isActive: true
         }
     ];
@@ -16,13 +19,15 @@ describe('The Edit Product Controller', function(){
         module('carli.entityForms.product');
         module('carli.mockServices');
 
-        inject(function ($controller, $rootScope, $q, mockLibraryService, mockProductService, mockVendorService, mockAlertService) {
+        inject(function ($controller, $rootScope, $q, mockCycleService, mockLibraryService, mockOfferingService, mockProductService, mockVendorService, mockAlertService) {
             mockProductService.setTestData(mockProductList);
 
             mockDependenciesForNewProduct = {
                 $scope: {
                     $watch: function() {}
                 },
+                cycleService: mockCycleService,
+                offeringService: mockOfferingService,
                 productService: mockProductService,
                 libraryService: mockLibraryService,
                 vendorService: mockVendorService,
@@ -34,6 +39,8 @@ describe('The Edit Product Controller', function(){
                     $watch: function() {},
                     productId: 'yyyy'
                 },
+                cycleService: mockCycleService,
+                offeringService: mockOfferingService,
                 productService: mockProductService,
                 libraryService: mockLibraryService,
                 vendorService: mockVendorService,

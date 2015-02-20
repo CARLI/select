@@ -2,10 +2,10 @@
     angular.module('carli.sections.oneTimePurchases.selectedProducts')
         .controller('selectedProductsController', selectedProductsController);
 
-    function selectedProductsController($scope, $routeParams, libraryService, productService, alertService) {
+    function selectedProductsController($scope, $routeParams, config, cycleService, libraryService, offeringService, alertService) {
         var vm = this;
         vm.libraryId = $routeParams.libraryId;
-        vm.productList = [];
+        vm.offeringList = [];
         vm.orderBy = 'name';
         vm.reverse = false;
         vm.selectedProducts = {};
@@ -21,58 +21,80 @@
         activate();
 
         function activate(){
-            loadLibrary();
-            loadProductList();
+            console.log('Controller active '+vm.libraryId);
+
+            setCycleToOneTimePurchase()
+            .then(loadLibrary)
+            .then(loadOfferings);
+        }
+
+        function setCycleToOneTimePurchase(){
+            console.log('set one time purchase cycle');
+            return cycleService.load(config.oneTimePurchaseProductsCycleDocId).then(function(oneTimePurchaseCycle){
+                cycleService.setCurrentCycle(oneTimePurchaseCycle);
+
+                console.log('  loaded cycle', oneTimePurchaseCycle);
+
+                return oneTimePurchaseCycle;
+            });
         }
 
         function loadLibrary() {
-            libraryService.load(vm.libraryId).then(function (library) {
+            console.log('load library', vm.libraryId);
+            return libraryService.load(vm.libraryId).then(function(library){
                 vm.library = library;
+
+                console.log('  loaded library ',library);
+
+                return library;
             });
         }
 
-        function loadProductList() {
-            productService.listAvailableOneTimePurchaseProducts().then(function (productList) {
-                vm.productList = productList;
+        function loadOfferings( library ) {
+            console.log('load offerings for ',library.name);
+
+            offeringService.listOfferingsForLibraryId(library.id)
+            .then(function (offeringList) {
+                vm.offeringList = offeringList;
             });
         }
 
-        function purchaseProduct(product) {
-            product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased = new Date().toJSON().slice(0,10);
-            productService.update(product).then(function(){
-                alertService.putAlert(product.name + " purchased", {severity: 'success'});
+        function purchaseProduct(offering) {
+            offering.datePurchased = new Date().toJSON().slice(0,10);
+            offeringService.update(offering)
+            .then(function(){
+                alertService.putAlert(offering.product.name + " purchased", {severity: 'success'});
                 //TODO: add audit trail entry (in service)
             })
-                .catch(function(error){
-                    alertService.putAlert(error, {severity: 'danger'});
-                    loadProductList();
-                });
+            .catch(function(error){
+                alertService.putAlert(error, {severity: 'danger'});
+                loadOfferings(vm.library);
+            });
         }
 
-        function cancelPurchase(product) {
-            var oldDate = product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased;
-
-            product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased = null;
-            productService.update(product).then(function(){
-                alertService.putAlert(product.name + " purchase cancelled", {severity: 'success'});
+        function cancelPurchase(offering) {
+            var oldDate = offering.datePurchased;
+            delete offering.datePurchased;
+            
+            offeringService.update(offering)
+            .then(function(){
+                alertService.putAlert(offering.product.name + " purchase cancelled", {severity: 'success'});
                 //TODO: add audit trail entry (in service)
             })
-                .catch(function(error){
-                    alertService.putAlert(error, {severity: 'danger'});
-                    loadProductList();
-                });
+            .catch(function(error){
+                alertService.putAlert(error, {severity: 'danger'});
+                loadOfferings(vm.library);
+            });
         }
 
         function computeTotalPurchasesAmount() {
             var totalAmount = 0;
-            var product;
+            var offering;
 
-            for (var i=0; i<vm.productList.length; i++) {
-                product = vm.productList[i];
-                if (vm.filter(product) &&
-                    product.oneTimePurchase.libraryPurchaseData[vm.libraryId] &&
-                    product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased) {
-                    totalAmount += product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price;
+            for (var i=0; i<vm.offeringList.length; i++) {
+                offering = vm.offeringList[i];
+                if (vm.filter(offering) && offering.datePurchased) {
+                    totalAmount += offering.pricing.site;
                 }
             }
             return totalAmount;
@@ -111,8 +133,8 @@
         var element = $('.filter-by-purchased');
         makeKeyboardAccessible();
 
-        function filter( value ){
-            var isProductPurchased = value.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased;
+        function filter( offering ){
+            var isProductPurchased = offering.datePurchased;
 
             filterValue =   (vm.filterState === 'all') ||
             (vm.filterState === 'purchased' && isProductPurchased) ||
@@ -138,10 +160,10 @@
 
         function unselectHiddenProducts() {
             var key, product;
-            for ( key in vm.productList ){
-                product = vm.productList[key];
-                if ( !filter(product) ){
-                    vm.selectedProducts[product.id] = false;
+            for ( key in vm.offeringList ){
+                offering = vm.offeringList[key];
+                if ( !filter(offering) ){
+                    vm.selectedProducts[offering.id] = false;
                 }
             }
         }

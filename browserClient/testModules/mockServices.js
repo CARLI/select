@@ -5,6 +5,7 @@ angular.module('carli.mockServices',[
     'carli.mockLibraryService',
     'carli.mockLicenseService',
     'carli.mockLocationService',
+    'carli.mockOfferingService',
     'carli.mockProductService',
     'carli.mockVendorService'
 ]);

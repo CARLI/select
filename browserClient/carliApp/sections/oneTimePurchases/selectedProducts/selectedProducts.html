@@ -1,6 +1,6 @@
 <section id="one-time-purchase-products">
 
-    <form class="edit-form" name="oneTimePurchaseProductForm" ng-submit="vm.savePurchase()">
+    <form class="edit-form" name="oneTimePurchaseForm" ng-submit="vm.savePurchase()">
 
         <header class="page-header">
             <label>One-Time Purchases</label>
@@ -28,18 +28,18 @@
                     <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'vendor.name', reversedSort: vm.reverse }" ng-click="vm.sort('vendor.name')">Vendor</div>
                     <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'oneTimePurchase.libraryPurchaseData[vm.libraryId].price', reversedSort: vm.reverse }" ng-click="vm.sort('oneTimePurchase.libraryPurchaseData[\''+vm.libraryId+'\'].price')">Cost</div>
                 </li>
-                <li collapsible class="collapsed" ng-repeat="product in vm.productList | filter: vm.filter | orderBy: vm.orderBy:vm.reverse track by product.id ">
-                    <checkbox ng-model="vm.selectedProducts[product.id]"></checkbox>
+                <li collapsible class="collapsed" ng-repeat="offering in vm.offeringList | filter: vm.filter | orderBy: vm.orderBy:vm.reverse track by offering.id ">
+                    <checkbox ng-model="vm.selectedProducts[offering.id]"></checkbox>
                     <header>
                         <div class="column">
                             <button type="button" class="angle-icon-container">
                                 <fa name="angle-down"></fa>
                             </button>
-                            {{ product.name }}
+                            {{ offering.product.name }}
                         </div>
-                        <div class="column">{{ product.vendor.name }}</div>
+                        <div class="column">{{ offering.product.vendor.name }}</div>
                         <div class="column">
-                            <span ng-if="product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased" class="price">{{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price | currency }}</span>
+                            <span ng-if="offering.datePurchased" class="price">{{ offering.pricing.site | currency }}</span>
                         </div>
                     </header>
                     <div class="content">
@@ -47,30 +47,30 @@
                             <div class="content-item-group">
                                 <div class="content-item">
                                     <label>Date Available Through:</label>
-                                    <p>{{ product.oneTimePurchase.availableForPurchaseThrough }}</p>
+                                    <p>{{ offering.availableForPurchaseThrough }}</p>
                                 </div>
                                 <div class="content-item">
                                     <label>Purchase Date:</label>
-                                    <p>{{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased }}</p>
+                                    <p>{{ offering.datePurchased }}</p>
                                 </div>
                             </div>
                             <div class="product-boolean-item" ng-show=""><fa name="check"></fa> Funded</div>
-                            <div class="product-boolean-item" ng-show="product.oneTimePurchase.annualAccessFee"><fa name="check"></fa> Requires Annual Access Fee</div>
+                            <div class="product-boolean-item" ng-show="offering.annualAccessFee"><fa name="check"></fa> Requires Annual Access Fee</div>
                         </div>
                         <div class="column">
                             <div class="content-item">
                                 <label>Comments for Library:</label>
-                                <p class="comments">{{ product.comments }}</p>
+                                <p class="comments">{{ offering.product.comments }}</p>
                             </div>
                         </div>
                         <div class="column">
-                            <div ng-if="!product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased">
+                            <div ng-if="!offering.datePurchased">
                                 <div class="label">Add Product</div>
-                                <div ng-click="vm.purchaseProduct(product);" class="carli-button ask-button">{{ product.oneTimePurchase.libraryPurchaseData[vm.libraryId].price | currency }} <fa name="plus-circle"></fa></div>
+                                <div ng-click="vm.purchaseProduct(offering)" class="carli-button ask-button">{{ offering.pricing.site | currency }} <fa name="plus-circle"></fa></div>
                             </div>
-                            <div ng-if="product.oneTimePurchase.libraryPurchaseData[vm.libraryId].datePurchased">
+                            <div ng-if="offering.datePurchased">
                                 <div class="label">Remove Product</div>
-                                <button type="button" ng-click="vm.cancelPurchase(product);" class="carli-button remove-button">Remove <fa name="remove"></fa></button>
+                                <button type="button" ng-click="vm.cancelPurchase(offering)" class="carli-button remove-button">Remove <fa name="remove"></fa></button>
                             </div>
                         </div>
                     </div>
@@ -102,4 +102,6 @@
 </section>
 
 <hr>
-Selected Products: {{ vm.selectedProducts }}
+<debug-panel>
+    {{ vm.offerings }}
+</debug-panel>
