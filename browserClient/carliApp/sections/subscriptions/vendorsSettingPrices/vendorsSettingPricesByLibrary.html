@@ -5,12 +5,7 @@
             <button type="button" class="angle-icon-container">
                 <fa name="angle-down"></fa>
             </button>
-            {{ ::library.name }}
-            <span class="library-info">
-              <span class="key">FTE:</span> <span class="value">{{ ::library.fte }}</span>,
-              <span class="key">Institution:</span> <span class="value">{{ ::library.institutionYears }}</span>,
-              <span class="key">Type:</span> <span class="value">{{ ::library.institutionType }}</span>
-            </span>
+            <library-info library="library" class="inline"></library-info>
         </header>
         <div class="content">
             <ul class="offerings-list">
