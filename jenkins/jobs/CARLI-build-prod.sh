@@ -7,3 +7,4 @@ SCRIPTS=./jenkins/scripts
 
 $SCRIPTS/export-image.sh nginx last-good
 $SCRIPTS/export-image.sh couchdb last-good
+$SCRIPTS/export-image.sh nginx last-good
