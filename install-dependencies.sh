@@ -6,7 +6,7 @@ if [ -d .git ]; then
 fi
 
 npm install
-cd ./browserClient && npm install && bower install && cd -
+cd ./browserClient && npm install && bower --allow-root install && cd -
 cd ./CARLI && npm install && cd -
 cd ./config && npm install && cd -
 cd ./db && npm install && cd -
