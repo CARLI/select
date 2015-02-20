@@ -11,4 +11,4 @@ sudo docker run \
     --volumes-from "carli-build-$instance" \
     -p 3000 \
     --workdir=/carli-select/middleware \
-    carli-build:$tag node index.js
+    carli-build:$tag /carli-select/docker/build/serve-middleware.sh
