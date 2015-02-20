@@ -34,6 +34,12 @@ $button-height: 40px;
     &:hover, &:focus {
         @include carli-button-hover;
     }
+
+    &.disabled {
+        color: gray;
+        background-color: $light-gray;
+        pointer-events: none;
+    }
 }
 
 @mixin cancel-button-hover {
