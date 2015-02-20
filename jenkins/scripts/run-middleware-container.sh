@@ -8,6 +8,7 @@ sudo docker run \
     --name="carli-middleware-$instance" \
     --detach=true \
     --link=carli-couchdb-$instance:couchdb \
+    --volumes-from "carli-build-$instance" \
     -p 3000 \
     --workdir=/carli-select/middleware \
     carli-build:$tag node index.js

@@ -10,5 +10,6 @@ sudo docker run \
     --detach=true \
     --link=carli-couchdb-$instance:couchdb \
     --link=carli-middleware-$instance:middleware \
+    --volumes-from "carli-build-$instance" \
     -p $host_port:80 \
     carli-nginx:$tag
