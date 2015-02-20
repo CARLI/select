@@ -7,59 +7,58 @@ describe('The One-time Purchases Selected-Products Controller', function(){
         module('carli.sections.oneTimePurchases.selectedProducts');
         module('carli.mockServices');
 
-        var mockProductList = [
+        var mockOfferingList = [
             {
-                type: 'Product',
-                name: 'Test Product 4',
-                cycleType: 'One-Time Purchase',
-                isActive: true,
-                oneTimePurchase: {
-                    libraryPurchaseData: {
-                        testLibraryId: {
-                            datePurchased: '2015-01-01',
-                            price: 100
-                        }
-                    }
+                type: 'Offering',
+                cycle: {
+                    cycleType: 'One-Time Purchase'
+                },
+                pricing: {
+                    site: 100
                 }
             },
             {
-                type: 'Product',
-                name: 'Test Product 5',
-                cycleType: 'One-Time Purchase',
-                isActive: true,
-                oneTimePurchase: {
-                    libraryPurchaseData: {
-                        testLibraryId: {
-                            datePurchased: '2015-01-01',
-                            price: 100
-                        }
-                    }
-                }
+                type: 'Offering',
+                cycle: {
+                    cycleType: 'One-Time Purchase'
+                },
+                pricing: {
+                    site: 100
+                },
+                datePurchased: '2015-01-01'
             },
             {
-                type: 'Product',
-                name: 'Test Product 6 Unpurchased',
-                cycleType: 'One-Time Purchase',
-                isActive: true,
-                oneTimePurchase: {
-                    libraryPurchaseData: {
-                        testLibraryId: {
-                        }
-                    }
-                }
+                type: 'Offering',
+                cycle: {
+                    cycleType: 'One-Time Purchase'
+                },
+                pricing: {
+                    site: 100
+                },
+                datePurchased: '2015-01-01'
             }
         ];
 
-        inject(function ($controller, $rootScope, $q, mockLibraryService, mockProductService, mockAlertService) {
-            mockProductService.setTestData(mockProductList);
+        var mockLibraryList = [
+            {
+                type: 'Library',
+                id: 'testLibraryId',
+                name: 'testLibrary'
+            }
+        ];
+
+        inject(function ($controller, $rootScope, $q, mockCycleService, mockLibraryService, mockOfferingService, mockAlertService) {
+            mockLibraryService.setTestData(mockLibraryList);
+            mockOfferingService.setTestData(mockOfferingList);
             
             mockDependenciesForOneTimePurchase = {
                 $scope: {},
                 $routeParams: {
                     libraryId: 'testLibraryId'
                 },
+                cycleService: mockCycleService,
                 libraryService: mockLibraryService,
-                productService: mockProductService,
+                offeringService: mockOfferingService,
                 alertService: mockAlertService
             };
 
@@ -70,7 +69,7 @@ describe('The One-time Purchases Selected-Products Controller', function(){
 
     it('should expose VM variables', function(){
         expect(vm.libraryId).to.be.a('String');
-        expect(vm.productList).to.be.an('Array');
+        expect(vm.offeringList).to.be.an('Array');
         expect(vm.filterState).to.be.a('String');
         expect(vm.selectedProducts).to.be.an('Object');
     });
@@ -90,47 +89,47 @@ describe('The One-time Purchases Selected-Products Controller', function(){
     it('should toggle the filter state', function(){
         expect(vm.filterState).to.equal('all');
 
-        // There are 3 one-time purchase products in the list
-        var filteredList = vm.productList.filter( vm.filter );
+        // There are 3 one-time purchase products offerings in the list
+        var filteredList = vm.offeringList.filter( vm.filter );
         expect(filteredList.length).to.equal(3);
 
         // There are 2 that have been purchased
         vm.setShowPurchasedProducts();
         expect(vm.filterState).to.equal('purchased');
-        filteredList = vm.productList.filter( vm.filter );
+        filteredList = vm.offeringList.filter( vm.filter );
         expect(filteredList.length).to.equal(2);
 
         // There is 1 that has not been purchased
         vm.setShowNotPurchasedProducts();
         expect(vm.filterState).to.equal('not-purchased');
-        filteredList = vm.productList.filter( vm.filter );
+        filteredList = vm.offeringList.filter( vm.filter );
         expect(filteredList.length).to.equal(1);
 
         // verify the resetting makes it go back to 3
         vm.setShowAllProducts();
         expect(vm.filterState).to.equal('all');
-        filteredList = vm.productList.filter( vm.filter );
+        filteredList = vm.offeringList.filter( vm.filter );
         expect(filteredList.length).to.equal(3);
     });
 
 
 
-    it('should call productService.update when purchasing a Product', function(){
-        var mockProduct = vm.productList[2];
+    it('should call offeringService.update when purchasing a Product', function(){
+        var mockOffering = vm.offeringList[2];
 
-        expect( mockDependenciesForOneTimePurchase.productService.createOrUpdate ).to.equal('neither');
-        vm.purchaseProduct( mockProduct );
-        expect( mockDependenciesForOneTimePurchase.productService.createOrUpdate ).to.equal('update');
-        expect( mockProduct.oneTimePurchase.libraryPurchaseData[mockDependenciesForOneTimePurchase.$routeParams.libraryId].datePurchased).to.be.a('String');
+        expect( mockDependenciesForOneTimePurchase.offeringService.createOrUpdate ).to.equal('neither');
+        vm.purchaseProduct( mockOffering );
+        expect( mockDependenciesForOneTimePurchase.offeringService.createOrUpdate ).to.equal('update');
+        expect( mockOffering.datePurchased).to.be.a('String');
     });
 
-    it('should call productService.update when canceling a purchasing', function(){
-        var mockProduct = vm.productList[2];
+    it('should call offeringService.update when canceling a purchasing', function(){
+        var mockOffering = vm.offeringList[2];
 
-        expect( mockDependenciesForOneTimePurchase.productService.createOrUpdate ).to.equal('neither');
-        vm.cancelPurchase( mockProduct );
-        expect( mockDependenciesForOneTimePurchase.productService.createOrUpdate ).to.equal('update');
-        expect( mockProduct.oneTimePurchase.libraryPurchaseData[mockDependenciesForOneTimePurchase.$routeParams.libraryId].datePurchased).to.be.a('null');
+        expect( mockDependenciesForOneTimePurchase.offeringService.createOrUpdate ).to.equal('neither');
+        vm.cancelPurchase( mockOffering );
+        expect( mockDependenciesForOneTimePurchase.offeringService.createOrUpdate ).to.equal('update');
+        expect( mockOffering.datePurchased).to.be.an('undefined');
     });
 
     it('should return the total price from computeTotalPurchasesAmount', function(){

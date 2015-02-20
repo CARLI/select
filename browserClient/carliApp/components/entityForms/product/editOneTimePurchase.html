@@ -1,46 +1,42 @@
-<form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="productForm" warn-if-unsaved>
+<form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="oneTimePurchasePricingForm" warn-if-unsaved>
 
-    <header class="page-header">
+    <div class="page-header">
         <h1 ng-show="vm.newProduct">{{ vm.product.name }}</h1>
-    </header>
+    </div>
 
     <section class="content">
-        <fieldset>
+        <div class="one-time-purchase-settings">
+            <label for="annualAccessFee">Annual Access Fee</label>
+            <view-edit-number-field ng-model="vm.product.oneTimePurchase.annualAccessFee" edit-mode="vm.editable" input-id="annualAccessFee">
+                {{ vm.product.oneTimePurchase.annualAccessFee | currency }}
+            </view-edit-number-field>
 
-            <div class="one-time-purchase-settings">
-                <label for="annualAccessFee">Annual Access Fee</label>
-                <view-edit-number-field ng-model="vm.product.oneTimePurchase.annualAccessFee" edit-mode="vm.editable" input-id="annualAccessFee">
-                    {{ vm.product.oneTimePurchase.annualAccessFee | currency }}
-                </view-edit-number-field>
+            <label for="availableForPurchaseThrough">Available for Purchase Through</label>
+            <view-edit-date ng-model="vm.product.oneTimePurchase.availableForPurchaseThrough" edit-mode="vm.editable" input-id="availableForPurchaseThrough">
+                {{ vm.product.oneTimePurchase.availableForPurchaseThrough }}
+            </view-edit-date>
 
-                <label for="availableForPurchaseThrough">Available for Purchase Through</label>
-                <view-edit-date ng-model="vm.product.oneTimePurchase.availableForPurchaseThrough" edit-mode="vm.editable" input-id="availableForPurchaseThrough">
-                    {{ vm.product.oneTimePurchase.availableForPurchaseThrough }}
-                </view-edit-date>
-
-                <ul class="library-list entity-list">
-                    <li class="column-headers">
-                        <header class="column">Library</header>
-                        <header class="column">Price</header>
-                        <header class="column">Purchased</header>
-                    </li>
-                    <li ng-repeat="library in vm.libraryList | filterByActive:activeFilterState | filter:filterText">
-                        <span class="column">
-                            <label for="oneTimePurchase_{{ library.name }}">{{ library.name }}</label>
-                        </span>
-                        <span class="column">
-                            <view-edit-number-field ng-model="vm.product.oneTimePurchase.libraryPurchaseData[library.id].price" edit-mode="vm.editable && !vm.product.oneTimePurchase.libraryPurchaseData[library.id].datePurchased" input-id="oneTimePurchase_{{ library.name }}">
-                                {{ vm.product.oneTimePurchase.libraryPurchaseData[library.id].price | currency }}
-                            </view-edit-number-field>
-                        </span>
-                        <span class="column text-center">
-                            <i class="fa fa-check-circle" ng-show="vm.product.oneTimePurchase.libraryPurchaseData[library.id].datePurchased"></i>
-                        </span>
-                    </li>
-                </ul>
-            </div>
-
-        </fieldset>
+            <ul id="one-time-purchase-pricing">
+                <li class="column-headers">
+                    <header class="column library">Library</header>
+                    <header class="column price">Price</header>
+                    <header class="column purchased">Purchased</header>
+                </li>
+                <li ng-repeat="offering in vm.productOfferings">
+                    <span class="column library">
+                        <label for="oneTimePurchase_{{ offering.library.name }}">{{ offering.library.name }}</label>
+                    </span>
+                    <span class="column price">
+                        <view-edit-number-field ng-model="offering.pricing.site" edit-mode="vm.editable && !offering.datePurchased" input-id="oneTimePurchase_{{ offering.library.name }}">
+                            <span class="price-display">{{ offering.pricing.site | currency }}</span>
+                        </view-edit-number-field>
+                    </span>
+                    <span class="column purchased">
+                        <i class="fa fa-check-circle" ng-show="offering.datePurchased"></i>
+                    </span>
+                </li>
+            </ul>
+        </div>
     </section>
     <div class="footer" ng-show="vm.editable">
         <fieldset ng-show="vm.newProduct">
@@ -58,8 +54,4 @@
             </button>
         </fieldset>
     </div>
-
 </form>
-
-<hr>
-<debug-panel>{{ vm.product | json }}</debug-panel>

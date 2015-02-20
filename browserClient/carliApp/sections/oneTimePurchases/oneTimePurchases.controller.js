@@ -34,7 +34,7 @@ function oneTimePurchasesController( $sce, libraryService ){
     activate();
 
     function activate() {
-        libraryService.list().then( function(libraryList){
+        vm.libraryLoadingPromise = libraryService.list().then( function(libraryList){
             vm.libraryList = libraryList;
         });
     }

@@ -14,7 +14,6 @@ var schemas = {
     License: require('../schemas/License.json'),
     MembershipLevel: require('../schemas/MembershipLevel.json'),
     Offering: require('../schemas/Offering.json'),
-    OneTimePurchase: require('../schemas/OneTimePurchase.json'),
     PriceCap: require('../schemas/PriceCap.json'),
     Pricing: require('../schemas/Pricing.json'),
     Product: require('../schemas/Product.json'),
