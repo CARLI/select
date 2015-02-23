@@ -80,6 +80,10 @@
 
                 &.site-license-price {
                     width: 380px;
+
+                    &.current-year-only {
+                        width: 190px;
+                    }
                 }
 
                 &.flag {

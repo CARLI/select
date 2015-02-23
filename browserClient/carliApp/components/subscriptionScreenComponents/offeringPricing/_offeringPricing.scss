@@ -3,6 +3,10 @@ offering-pricing {
 
     .site-pricing {
         display: flex;
+
+        &.single-column {
+            display: block;
+        }
     }
 
     .su-pricing {
@@ -10,6 +14,12 @@ offering-pricing {
 
         .pricing-container {
             display: flex;
+        }
+
+        &.single-column {
+            .pricing-container {
+                display: block;
+            }
         }
     }
 
@@ -19,6 +29,14 @@ offering-pricing {
         }
 
         @include flex(0 0 50%);
+    }
+
+    .single-column {
+        .column {
+            &:first-child {
+                border-right: none;
+            }
+        }
     }
 
     .header {

@@ -1,5 +1,5 @@
-<div class="site-pricing">
-    <div class="column">
+<div class="site-pricing" ng-class="{ 'single-column': !vm.showPreviousYear }">
+    <div class="column" ng-if="vm.showPreviousYear">
         <div class="header"><strong>{{ ::vm.year - 1 }}</strong> Price</div>
         <div class="row"> $TODO.00 </div>
     </div>
@@ -12,11 +12,11 @@
         </div>
     </div>
 </div>
-<div class="su-pricing">
+<div class="su-pricing" ng-class="{ 'single-column': !vm.showPreviousYear }">
     <div class="header"><strong>Simultaneous User Price</strong></div>
 
     <div class="pricing-container">
-        <div class="column">
+        <div class="column" ng-if="vm.showPreviousYear">
             <div class="edit-su-pricing">
                 <table>
                     <thead>

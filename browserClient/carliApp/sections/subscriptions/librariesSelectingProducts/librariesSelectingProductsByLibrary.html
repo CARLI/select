@@ -15,8 +15,7 @@
                         <div class="sortable column selected-last-year" ng-class="{ activeSort: vm.orderBy === 'selectedLastYear', reversedSort: vm.reverse }" ng-click="vm.sort('selectedLastYear')">Selected Last Year</div>
                         <div class="sortable column vendor" ng-class="{ activeSort: vm.orderBy === 'product.vendor.name', reversedSort: vm.reverse }" ng-click="vm.sort('product.vendor.name')">Vendor</div>
                         <div class="column library-view">Library View</div>
-                        <div class="sortable column site-license-price" ng-class="{activeSort: vm.orderBy === 'pricing.site', reversedSort: vm.reverse }" ng-click="vm.sort('pricing.site')">Site License Price</div>
-                        <div class="sortable column flag" ng-class="{ activeSort: vm.orderBy === 'flagged', reversedSort: vm.reverse }" ng-click="vm.sort('flagged')">Flag</div>
+                        <div class="sortable column site-license-price current-year-only" ng-class="{activeSort: vm.orderBy === 'pricing.site', reversedSort: vm.reverse }" ng-click="vm.sort('pricing.site')">Site License Price</div>
                     </li>
                     <li class="offering" ng-class="{ 'edit-mode': vm.isEditing[offering.id] }" ng-repeat="offering in vm.offerings[library.id] | orderBy:vm.orderBy:vm.reverse track by offering.id">
                         <div class="column product">
@@ -41,11 +40,8 @@
                                 <offering-comments offering="offering" edit-mode="vm.isEditing[offering.id]"></offering-comments>
                             </div>
                         </div>
-                        <div class="column site-license-price">
-                            <offering-pricing year="vm.cycle.year" offering="offering" edit-mode="vm.isEditing[offering.id]"></offering-pricing>
-                        </div>
-                        <div class="column flag">
-                            <checkbox ng-click="vm.debounceSaveOffering($event, offering, library.id)" ng-model="offering.flagged" class="flag"></checkbox>
+                        <div class="column site-license-price current-year-only">
+                            <offering-pricing year="vm.cycle.year" offering="offering" edit-mode="vm.isEditing[offering.id]" show-previous-year="false"></offering-pricing>
                         </div>
                     </li>
                 </ul>

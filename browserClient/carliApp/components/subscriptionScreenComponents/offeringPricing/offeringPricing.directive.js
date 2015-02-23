@@ -6,7 +6,8 @@ angular.module('carli.subscriptionScreenComponents.offeringPricing')
         scope: {
             year: '=',
             offering: '=',
-            editMode: '='
+            editMode: '=',
+            showPreviousYear: '='
         },
         controller: offeringPricingController,
         controllerAs: 'vm',
