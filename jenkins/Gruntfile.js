@@ -57,9 +57,9 @@ module.exports = function (grunt) {
             function getPublicCouchDbUrl() {
                 switch (instance) {
                     case 'dev':
-                        return 'http://carli-db.dev.pixotech.com';
+                        return 'http://carli.dev.pixotech.com/db';
                     case 'qa':
-                        return 'http://carli-db.qa.pixotech.com';
+                        return 'http://carli.qa.pixotech.com/db';
                     default:
                         throw new Error('Invalid instance: ' + instance);
                 }
@@ -69,9 +69,19 @@ module.exports = function (grunt) {
 
     function generateMiddlewareConfig(instance) {
         return {
-            protocol: 'http',
-            hostname: 'localhost',
-            port: 3000
+            url: getPublicMiddlewareUrl()
         };
+        
+        //noinspection FunctionWithMultipleReturnPointsJS
+        function getPublicMiddlewareUrl() {
+            switch (instance) {
+                case 'dev':
+                    return 'http://carli.dev.pixotech.com/api';
+                case 'qa':
+                    return 'http://carli.qa.pixotech.com/api';
+                default:
+                    throw new Error('Invalid instance: ' + instance);
+            }
+        }
     }
 };
