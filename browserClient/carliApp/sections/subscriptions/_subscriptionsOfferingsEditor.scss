@@ -25,7 +25,8 @@
             &.offering > .column {
                 &.product,
                 &.vendor,
-                &.library {
+                &.library,
+                &.selection {
                     padding: 1rem;
                 }
 
@@ -52,12 +53,12 @@
                 }
 
                 &.library {
-                    @include flex(1 0 10%);
+                    @include flex(2 0 10%);
                 }
 
                 &.product,
                 &.vendor {
-                    @include flex(1 0 10%);
+                    @include flex(2 0 10%);
 
                     h3 {
                         margin: 0;
@@ -119,6 +120,17 @@
                     }
                 }
 
+                &.selection {
+                    @include flex(1 1 5%);
+                    min-width: 60px;
+
+                    .selection-display {
+                        .price {
+                            color: $purple;
+                            font-weight: 700;
+                        }
+                    }
+                }
 
                 .carli-button {
                     border: 0;

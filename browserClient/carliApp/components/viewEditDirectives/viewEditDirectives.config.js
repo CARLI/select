@@ -3,6 +3,7 @@ angular.module('carli.viewEditDirectives', [
     'carli.viewEditDirectives.viewEditContact',
     'carli.viewEditDirectives.viewEditDate',
     'carli.viewEditDirectives.viewEditNumberField',
+    'carli.viewEditDirectives.viewEditOfferingSelection',
     'carli.viewEditDirectives.viewEditPercentageField',
     'carli.viewEditDirectives.viewEditRadios',
     'carli.viewEditDirectives.viewEditSelect',
