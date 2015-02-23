@@ -6,7 +6,7 @@ tag=$2
 sudo docker run \
     --name carli-build-test \
     --workdir=/carli-select \
-    --link=carli-couchdb-$instance:couchdb \
+    --link=carli-couchdb-$instance:carli-couchdb \
     -e "CARLI_DEV_SERVER_URL=$CARLI_DEV_SERVER_URL" \
     carli-build:$tag /carli-select/docker/build/test.sh
 rc=$?

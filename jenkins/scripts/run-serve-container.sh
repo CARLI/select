@@ -8,8 +8,8 @@ sudo docker rm -f carli-serve-$instance 2> /dev/null
 sudo docker run \
     --name="carli-serve-$instance" \
     --detach=true \
-    --link=carli-couchdb-$instance:couchdb \
-    --link=carli-middleware-$instance:middleware \
+    --link=carli-couchdb-$instance:carli-couchdb \
+    --link=carli-middleware-$instance:carli-middleware \
     --volumes-from "carli-build-$instance" \
     -p $host_port:80 \
     carli-nginx:$tag

@@ -35,8 +35,8 @@ module.exports = function (grunt) {
         return storeOptions;
 
         function getContainerCouchConfig() {
-            var host = process.env.COUCHDB_PORT_5984_TCP_ADDR;
-            var port = process.env.COUCHDB_PORT_5984_TCP_PORT;
+            var host = process.env.CARLI_COUCHDB_PORT_5984_TCP_ADDR;
+            var port = process.env.CARLI_COUCHDB_PORT_5984_TCP_PORT;
 
             if (host === undefined || port === undefined) {
                 throw new Error('Couch container link not found');
@@ -76,6 +76,8 @@ module.exports = function (grunt) {
         //noinspection FunctionWithMultipleReturnPointsJS
         function getPublicMiddlewareUrl() {
             switch (instance) {
+                case 'test':
+                    return 'http://carli-middleware/';
                 case 'dev':
                     return 'http://carli.dev.pixotech.com/api';
                 case 'qa':
