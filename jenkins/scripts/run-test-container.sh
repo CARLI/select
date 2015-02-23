@@ -7,7 +7,9 @@ sudo docker run \
     --name carli-build-test \
     --workdir=/carli-select \
     --link=carli-couchdb-$instance:carli-couchdb \
+    --volumes-from "carli-build-$instance" \
     -e "CARLI_DEV_SERVER_URL=$CARLI_DEV_SERVER_URL" \
+    -e "CARLI_CRM_MYSQL_PASSWORD=$CARLI_CRM_MYSQL_PASSWORD" \
     carli-build:$tag /carli-select/docker/build/test.sh
 rc=$?
 
