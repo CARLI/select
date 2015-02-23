@@ -19,7 +19,7 @@ sudo docker run \
 echo "Generating config for tests"
 sudo docker run --rm -t \
     --volumes-from=carli-build-dev \
-    --workdir=/carli-select/config \
+    --workdir=/carli-select/jenkins \
     carli-build grunt generate-config:test
 
 sudo docker run \

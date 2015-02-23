@@ -24,7 +24,7 @@ sudo docker run --rm -t \
 echo "Generating config for $instance"
 sudo docker run --rm -t \
     --volumes-from=carli-build-dev \
-    --workdir=/carli-select/config \
+    --workdir=/carli-select/jenkins \
     carli-build grunt generate-config:$instance
 
 echo "Building browser clients"
