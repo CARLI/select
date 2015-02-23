@@ -27,7 +27,7 @@
                         <div class="sortable column site-license-price current-year-only" ng-class="{activeSort: vm.orderBy === 'pricing.site', reversedSort: vm.reverse }" ng-click="vm.sort('pricing.site')">Site License Price</div>
                         <div class="column selection">Selection</div>
                     </li>
-                    <li class="offering" ng-class="{ 'edit-mode': vm.isEditing[offering.id] }" ng-repeat="offering in vm.offerings[library.id] | orderBy:vm.orderBy:vm.reverse track by offering.id">
+                    <li class="offering" ng-class="{ 'edit-mode': vm.isEditing[offering.id] }" ng-repeat="offering in vm.offerings[library.id] | filter:vm.filterOfferingBySelection | orderBy:vm.orderBy:vm.reverse track by offering.id">
                         <div class="column product">
                             <h3>{{ ::offering.product.name }}</h3>
                             <button ng-show="!vm.isEditing[offering.id]" type="button" class="carli-button edit" ng-click="vm.setOfferingEditable(offering)">Edit <fa name="pencil-square-o "></fa></button>

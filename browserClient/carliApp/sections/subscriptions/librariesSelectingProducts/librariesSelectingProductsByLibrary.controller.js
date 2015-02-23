@@ -17,6 +17,7 @@ function librariesSelectingProductsByLibraryController( $scope, $q, alertService
     vm.getLibraryPricingStatus = getLibraryPricingStatus;
 
     vm.offeringFilter = {};
+    vm.filterOfferingBySelection = filterOfferingBySelection;
 
     vm.vendorMap = {};
 
@@ -52,6 +53,27 @@ function librariesSelectingProductsByLibraryController( $scope, $q, alertService
 
     function getLibraryPricingStatus(library) {
         return "No activity";
+    }
+
+    function filterOfferingBySelection( offering ){
+        if ( !offering || !offering.library ){
+            return false;
+        }
+        var libraryId = typeof offering.library === 'string' ? offering.library : offering.library.id;
+        var filterStatus = vm.offeringFilter[libraryId] || 'all';
+
+        if ( filterStatus === 'all' ){
+            return true;
+        }
+        else if ( filterStatus === 'selected' && offering.selection ){
+            return true;
+        }
+        else if ( filterStatus === 'unselected' && !offering.selection ){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     function loadOfferingsForLibrary( library ){
