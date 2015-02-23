@@ -71,7 +71,7 @@ module.exports = function (grunt) {
         return {
             url: getPublicMiddlewareUrl()
         };
-        
+
         //noinspection FunctionWithMultipleReturnPointsJS
         function getPublicMiddlewareUrl() {
             switch (instance) {
