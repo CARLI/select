@@ -16,6 +16,8 @@ function librariesSelectingProductsByLibraryController( $scope, $q, alertService
     vm.debounceSaveOffering = debounceSaveOffering;
     vm.getLibraryPricingStatus = getLibraryPricingStatus;
 
+    vm.offeringFilter = {};
+
     vm.vendorMap = {};
 
     vm.isEditing = {};

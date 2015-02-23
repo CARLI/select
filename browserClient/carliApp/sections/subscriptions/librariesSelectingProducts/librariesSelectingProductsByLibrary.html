@@ -10,6 +10,14 @@
                 <div class="library-status">{{ vm.getLibraryPricingStatus(library) }}</div>
             </header>
             <div class="content">
+                <div class="filter-controls">
+                    <span ng-class="{ 'active-offering-filter': vm.offeringFilter[library.id] === 'selected' }"
+                          ng-click="vm.offeringFilter[library.id] = 'selected'">all selected products</span> |
+                    <span ng-class="{ 'active-offering-filter': vm.offeringFilter[library.id] === 'all' || !vm.offeringFilter[library.id] }"
+                          ng-click="vm.offeringFilter[library.id] = 'all'">all available products</span> |
+                    <span ng-class="{ 'active-offering-filter': vm.offeringFilter[library.id] === 'unselected' }"
+                          ng-click="vm.offeringFilter[library.id] = 'unselected'">all non-selected products</span>
+                </div>
                 <ul class="offerings-list">
                     <li class="column-headers">
                         <div class="sortable column product" ng-class="{ activeSort: vm.orderBy === 'product.name', reversedSort: vm.reverse }" ng-click="vm.sort('product.name')">Product</div>
