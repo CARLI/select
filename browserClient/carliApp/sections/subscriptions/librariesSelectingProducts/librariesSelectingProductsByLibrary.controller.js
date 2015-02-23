@@ -14,6 +14,7 @@ function librariesSelectingProductsByLibraryController( $scope, $q, alertService
     vm.setOfferingEditable = setOfferingEditable;
     vm.saveOffering = saveOffering;
     vm.debounceSaveOffering = debounceSaveOffering;
+    vm.getLibraryPricingStatus = getLibraryPricingStatus;
 
     vm.vendorMap = {};
 
@@ -45,6 +46,10 @@ function librariesSelectingProductsByLibraryController( $scope, $q, alertService
             });
             return vendorList;
         });
+    }
+
+    function getLibraryPricingStatus(library) {
+        return "No activity";
     }
 
     function loadOfferingsForLibrary( library ){
