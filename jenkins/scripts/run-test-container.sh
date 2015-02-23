@@ -1,5 +1,9 @@
 #!/bin/sh
 
+sudo docker rm -f carli-build-test 2> /dev/null
+sudo docker rm -f carli-middleware-test 2> /dev/null
+sudo docker rm -f carli-couchdb-test 2> /dev/null
+
 sudo docker run \
     --name="carli-couchdb-test" \
     --detach=true \
@@ -36,7 +40,7 @@ rc=$?
 mkdir -p artifacts/test-results
 sudo docker cp carli-build-test:/carli-select/artifacts/test-results artifacts
 
-sudo docker rm carli-build-test
+sudo docker rm -f carli-build-test 2> /dev/null
 sudo docker rm -f carli-middleware-test 2> /dev/null
 sudo docker rm -f carli-couchdb-test 2> /dev/null
 
