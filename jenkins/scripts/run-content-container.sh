@@ -18,7 +18,7 @@ sudo docker run --rm -t \
 echo "Configuring Javascript environment for node"
 sudo docker run --rm -t \
     --volumes-from=carli-build-$instance \
-    --workdir=/carli-select \
+    --workdir=/carli-select/config  \
     carli-build grunt jsenv:node
 
 echo "Generating config for $instance"
