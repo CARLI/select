@@ -11,18 +11,24 @@ sudo docker run \
 
 echo "Installing build dependencies"
 sudo docker run --rm -t \
-    --volumes-from=carli-build-dev \
+    --volumes-from=carli-build-$instance \
     --workdir=/carli-select \
     carli-build ./install-dependencies.sh
 
 echo "Configuring Javascript environment for node"
 sudo docker run --rm -t \
-    --volumes-from=carli-build-dev \
+    --volumes-from=carli-build-$instance \
     --workdir=/carli-select \
     carli-build grunt jsenv:node
 
-echo "Building browser clients"
+echo "Generating config for $instance"
 sudo docker run --rm -t \
     --volumes-from=carli-build-dev \
+    --workdir=/carli-select/config \
+    carli-build grunt generate-config:$instance
+
+echo "Building browser clients"
+sudo docker run --rm -t \
+    --volumes-from=carli-build-$instance \
     --workdir=/carli-select/browserClient \
     carli-build grunt build

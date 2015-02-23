@@ -12,4 +12,4 @@ sudo docker run \
     -e "CARLI_CRM_MYSQL_PASSWORD=$CARLI_CRM_MYSQL_PASSWORD" \
     -p 3000 \
     --workdir=/carli-select/middleware \
-    carli-build:$tag /carli-select/docker/build/serve-middleware.sh $instance
+    carli-build:$tag /carli-select/docker/build/serve-middleware.sh

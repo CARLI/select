@@ -15,7 +15,7 @@ $SCRIPTS/tag-container.sh couchdb latest &&
 $SCRIPTS/tag-container.sh build latest &&
 $SCRIPTS/tag-container.sh nginx latest &&
 
-$SCRIPTS/run-content-container.sh dev latest &&
+$SCRIPTS/run-content-container.sh test latest &&
 $SCRIPTS/run-test-container.sh &&
 
 $SCRIPTS/tag-container.sh couchdb last-good &&
@@ -26,6 +26,7 @@ rc=$?
 
 $SCRIPTS/run-data-container.sh dev latest &&
 $SCRIPTS/run-db-container.sh dev latest 9091 &&
+$SCRIPTS/run-content-container.sh dev latest &&
 $SCRIPTS/run-middleware-container.sh dev latest &&
 $SCRIPTS/run-serve-container.sh dev latest 9090
 
