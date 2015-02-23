@@ -14,6 +14,7 @@ module.exports = function (grunt) {
 
         cfg.storeOptions = generateCouchConfig(instance);
         cfg.middleware = generateMiddlewareConfig(instance);
+        cfg.memberDb = generateMemberDbConfig(instance);
 
         fs.writeFileSync(localConfigFile, stringifyConfig(cfg));
 
@@ -83,5 +84,14 @@ module.exports = function (grunt) {
                     throw new Error('Invalid instance: ' + instance);
             }
         }
+    }
+
+    function generateMemberDbConfig(instance) {
+        return {
+            host: 'mysql.carli.illinois.edu',
+            user: 'guest_pixo',
+            password: process.env.CARLI_CRM_MYSQL_PASSWORD,
+            database: 'carli_crm'
+        };
     }
 };
