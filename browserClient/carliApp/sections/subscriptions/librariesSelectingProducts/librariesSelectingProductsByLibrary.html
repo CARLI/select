@@ -12,6 +12,7 @@
                 <ul class="offerings-list">
                     <li class="column-headers">
                         <div class="sortable column product" ng-class="{ activeSort: vm.orderBy === 'product.name', reversedSort: vm.reverse }" ng-click="vm.sort('product.name')">Product</div>
+                        <div class="sortable column selected-last-year" ng-class="{ activeSort: vm.orderBy === 'selectedLastYear', reversedSort: vm.reverse }" ng-click="vm.sort('selectedLastYear')">Selected Last Year</div>
                         <div class="sortable column vendor" ng-class="{ activeSort: vm.orderBy === 'product.vendor.name', reversedSort: vm.reverse }" ng-click="vm.sort('product.vendor.name')">Vendor</div>
                         <div class="column library-view">Library View</div>
                         <div class="sortable column site-license-price" ng-class="{activeSort: vm.orderBy === 'pricing.site', reversedSort: vm.reverse }" ng-click="vm.sort('pricing.site')">Site License Price</div>
@@ -22,6 +23,9 @@
                             <h3>{{ ::offering.product.name }}</h3>
                             <button ng-show="!vm.isEditing[offering.id]" type="button" class="carli-button edit" ng-click="vm.setOfferingEditable(offering)">Edit <fa name="pencil-square-o "></fa></button>
                             <button ng-show="vm.isEditing[offering.id]" type="button" class="carli-button save" ng-click="vm.saveOffering(offering, library.id)">Save <fa name="floppy-o"></fa></button>
+                        </div>
+                        <div class="column selected-last-year">
+                            <fa name="star"></fa>
                         </div>
                         <div class="column vendor">
                             <h3>{{ offering.product.vendor.name }}</h3>

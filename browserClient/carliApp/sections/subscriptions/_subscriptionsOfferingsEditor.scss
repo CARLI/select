@@ -6,14 +6,15 @@
         border-left: $default-border;
         list-style: none inside;
 
-        .column-headers {
-            @include sortable-column-header;
-        }
-
         & > li {
             @include flexbox;
+            align-items: stretch;
 
-            &:not(.column-headers) {
+            &.column-headers {
+                @include sortable-column-header;
+            }
+
+            &.offering {
                 border-top: 3px solid $purple;
 
                 &.edit-mode {
@@ -26,6 +27,10 @@
                 &.vendor,
                 &.library {
                     padding: 1rem;
+                }
+
+                &.flag {
+                    align-self: center;
                 }
             }
 
@@ -59,6 +64,11 @@
                     }
                 }
 
+                &.selected-last-year {
+                    text-align: center;
+                    width: 70px;
+                }
+
                 &.library-view {
                     width: 380px;
 
@@ -73,7 +83,6 @@
                 }
 
                 &.flag {
-                    align-self: center;
                     border-right: 0;
                     width: 70px;
                     text-align: center;
