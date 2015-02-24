@@ -132,6 +132,11 @@
                     }
                 }
 
+                &.vendor-invoice {
+                    @include flex(1 1 5%);
+                    min-width: 60px;
+                }
+
                 .carli-button {
                     border: 0;
                     height: auto;
