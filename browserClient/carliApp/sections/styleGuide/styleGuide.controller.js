@@ -11,7 +11,8 @@ function styleGuideController(componentExamples, componentGatherer, alertService
     initFilterByActiveExample(vm);
     initViewEditCheckboxExample(vm);
     initViewEditContactExample(vm);
-    initViewEditNumberExample(vm);
+    initViewEditIntegerExample(vm);
+    initViewEditPriceExample(vm);
     initViewEditPercentageExample(vm);
     initViewEditRadiosExample(vm);
     initViewEditSelectExample(vm);
@@ -67,11 +68,18 @@ function initViewEditContactExample(vm) {
         vm.contactEditable = !vm.contactEditable;
     };
 }
-function initViewEditNumberExample(vm) {
-    vm.numberFieldEditable = false;
-    vm.defaultNumberEditValue = 123;
-    vm.toggleNumberFieldEditable = function toggleNumberFieldEditable() {
-        vm.numberFieldEditable = !vm.numberFieldEditable;
+function initViewEditIntegerExample(vm) {
+    vm.integerEditable = false;
+    vm.defaultIntegerEditValue = 123;
+    vm.toggleIntegerEditable = function toggleIntegerEditable() {
+        vm.integerEditable = !vm.integerEditable;
+    };
+}
+function initViewEditPriceExample(vm) {
+    vm.priceEditable = false;
+    vm.defaultPriceEditValue = 199.99;
+    vm.togglePriceEditable = function togglePriceEditable() {
+        vm.priceEditable = !vm.priceEditable;
     };
 }
 function initViewEditPercentageExample(vm) {
