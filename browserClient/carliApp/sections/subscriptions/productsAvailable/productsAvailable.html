@@ -1,15 +1,16 @@
-<products-available-by-vendor></products-available-by-vendor>
-<products-available-by-library></products-available-by-library>
+<products-available-by-vendor ng-if="vm.cycleRouter.groupBy === 'vendor'"></products-available-by-vendor>
+<products-available-by-library ng-if="vm.cycleRouter.groupBy === 'library'"></products-available-by-library>
 
-<div class="placeholder pull-left" style="width: 400px; margin-bottom: 1rem;">
+<div class="placeholder" style="width: 400px; margin-bottom: 1rem;">
     TODO: Notifications - Invoice Buttons
 </div>
 
-<div class="placeholder pull-left" style="width: 200px; margin-bottom: 1rem;">
+<div class="placeholder" style="width: 400px; margin-bottom: 1rem;">
     TODO: Create Banner Feed Button
 </div>
 
-<button type="button" class="carli-button pull-left" ng-click="vm.undoCloseSystem()">Undo Close System</button>
-<div class="placeholder pull-right" style="width: 200px; margin-bottom: 1rem;">
+<div class="placeholder" style="width: 400px; margin-bottom: 1rem;">
     TODO: Archive Button
 </div>
+
+<button type="button" class="carli-button pull-left" ng-click="vm.undoCloseSystem()">Undo Close System</button>
