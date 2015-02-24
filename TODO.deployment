@@ -1,0 +1,4 @@
+
+* Ensure that if middleware node process crashes, it is restarted.
+
+

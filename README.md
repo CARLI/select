@@ -16,7 +16,7 @@ See [Directory Layout] for a description of the top-level folders in the project
 Grunt is used as a task runner at the top level of the project.  The following tasks are available.
 
 * `grunt test`: Run all tests for the project.
-* `grunt install-deps`: Install all npm and bower dependencies for the project.
+* `./install-dependencies.sh`: Install all npm and bower dependencies for the project.
 
 View the [Full Documentation].
 

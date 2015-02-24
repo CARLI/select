@@ -1,6 +1,5 @@
 var fs = require('fs');
 var _ = require('lodash');
-var defaultsConfigFile = __dirname + '/../config/index.js';
 var localConfigFile = __dirname + '/../config/local.js';
 
 module.exports = function (grunt) {
@@ -13,82 +12,88 @@ module.exports = function (grunt) {
             cfg.alertTimeout = 1000;
         }
 
-        generateCouchConfig(instance, cfg);
+        cfg.storeOptions = generateCouchConfig(instance);
+        cfg.middleware = generateMiddlewareConfig(instance);
+        cfg.memberDb = generateMemberDbConfig(instance);
 
         fs.writeFileSync(localConfigFile, stringifyConfig(cfg));
+
+        function stringifyConfig(cfg) {
+            return 'module.exports = ' + JSON.stringify(cfg, null, '    ') + ';';
+        }
     }
 
-    function generateCouchConfig(instance, localCfg) {
-        var storeOptions = localCfg.storeOptions || {};
+    function generateCouchConfig(instance) {
+        var storeOptions;
 
         if (instance == 'test') {
-            localCfg.storeOptions = _.extend(storeOptions, getContainerCouchConfig());
+            storeOptions = getContainerCouchConfig(instance);
         } else {
-            localCfg.storeOptions = _.extend(storeOptions, getPublicCouchConfig(instance));
+            storeOptions = getPublicCouchConfig(instance);
         }
 
-        fs.writeFileSync(localConfigFile, stringifyConfig(localCfg));
-    }
+        return storeOptions;
 
-    function readLocalConfig() {
-        var cfg;
-        try {
-            var cfgString = fs.readFileSync(localConfigFile, { encoding: 'utf-8' });
-            var startJson = cfgString.indexOf('{');
-            var endJson = cfgString.lastIndexOf('}');
-            if (startJson != -1 || endJson != -1) {
-                cfgString = cfgString.substring(startJson, endJson + 1);
+        function getContainerCouchConfig() {
+            var host = process.env.CARLI_COUCHDB_PORT_5984_TCP_ADDR;
+            var port = process.env.CARLI_COUCHDB_PORT_5984_TCP_PORT;
+
+            if (host === undefined || port === undefined) {
+                throw new Error('Couch container link not found');
             }
-            cfg = JSON.parse(cfgString);
-        } catch (e) {
-            cfg = {};
-        }
-        return cfg;
-    }
-    function readConfig() {
-        var cfg, localCfg;
-        var cfg = require(defaultsConfigFile);
-        localCfg = readLocalConfig();
-        return _.extend(cfg, localCfg);;
-    }
 
-    function stringifyConfig(cfg) {
-        return 'module.exports = ' + JSON.stringify(cfg, null, '    ') + ';';
-    }
-
-    function getContainerCouchConfig() {
-        var host = process.env.COUCHDB_PORT_5984_TCP_ADDR;
-        var port = process.env.COUCHDB_PORT_5984_TCP_PORT;
-
-        if (host === undefined || port === undefined) {
-            throw new Error('Couch container link not found');
+            return {
+                couchDbUrl: 'http://' + host + ':' + port,
+                couchDbName: 'carli'
+            };
         }
 
-        return _storeOptions('http://' + host + ':' + port, 'carli');
-    }
+        function getPublicCouchConfig() {
+            return {
+                couchDbUrl: getPublicCouchDbUrl(instance),
+                couchDbName: 'carli'
+            };
 
-    function getPublicCouchConfig(instance) {
-        if (instance === undefined) {
-            instance = 'dev';
-        }
-        return _storeOptions(getPublicCouchDbUrlFor(instance), 'carli');
-    }
-
-    function getPublicCouchDbUrlFor(instance) {
-        switch (instance) {
-            case 'dev':
-                return 'http://carli-db.dev.pixotech.com';
-            case 'qa':
-                return 'http://carli-db.qa.pixotech.com';
-            default:
-                throw new Error('Invalid instance: ' + instance);
+            //noinspection FunctionWithMultipleReturnPointsJS
+            function getPublicCouchDbUrl() {
+                switch (instance) {
+                    case 'dev':
+                        return 'http://carli.dev.pixotech.com/db';
+                    case 'qa':
+                        return 'http://carli.qa.pixotech.com/db';
+                    default:
+                        throw new Error('Invalid instance: ' + instance);
+                }
+            }
         }
     }
 
-    function _storeOptions(url, dbName) {
+    function generateMiddlewareConfig(instance) {
         return {
-            couchDbUrl: url,
-            couchDbName: dbName
+            url: getPublicMiddlewareUrl()
+        };
+
+        //noinspection FunctionWithMultipleReturnPointsJS
+        function getPublicMiddlewareUrl() {
+            switch (instance) {
+                case 'test':
+                    return 'http://carli-middleware/';
+                case 'dev':
+                    return 'http://carli.dev.pixotech.com/api';
+                case 'qa':
+                    return 'http://carli.qa.pixotech.com/api';
+                default:
+                    throw new Error('Invalid instance: ' + instance);
+            }
+        }
+    }
+
+    function generateMemberDbConfig(instance) {
+        return {
+            host: 'mysql.carli.illinois.edu',
+            user: 'guest_pixo',
+            password: process.env.CARLI_CRM_MYSQL_PASSWORD,
+            database: 'carli_crm'
         };
     }
 };

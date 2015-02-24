@@ -19,17 +19,6 @@ RUN gem install sass
 
 # Copy in project files
 COPY . /carli-select
+VOLUME /carli-select
 
 EXPOSE 8000
-
-# Install project dependencies
-RUN touch /carli-select/config/local.js && touch /carli-select/config/environmentDependentModules.js
-RUN cd /carli-select/ && npm install
-RUN cd /carli-select/browserClient && npm install
-RUN cd /carli-select/CARLI && npm install
-RUN cd /carli-select/db && npm install
-RUN cd /carli-select/middleware && npm install
-RUN cd /carli-select/migration && npm install
-RUN cd /carli-select/config && npm install
-RUN cd /carli-select/ && grunt install-deps
-RUN cd /carli-select/ && grunt jsenv:node

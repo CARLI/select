@@ -1,10 +1,14 @@
 #!/bin/sh
 
 # Change to root directory of the project
-cd `git rev-parse --show-toplevel`
+if [ -d .git ]; then
+    cd `git rev-parse --show-toplevel`
+fi
+
+bower_options="--allow-root --config.interactive=false"
 
 npm install
-cd ./browserClient && npm install && bower install && cd -
+cd ./browserClient && npm install && bower $bower_options install && cd -
 cd ./CARLI && npm install && cd -
 cd ./config && npm install && cd -
 cd ./db && npm install && cd -
