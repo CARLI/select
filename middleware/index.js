@@ -38,7 +38,7 @@ function runMiddlewareServer(){
     carliMiddleware.use(bodyParser.json());
     _enableCors(carliMiddleware);
 
-    carliMiddleware.use(couchDbProxy(req, res));
+    carliMiddleware.use(couchDbProxy());
 
     carliMiddleware.get('/version', function () {
         res.send({ version: require('./package.json').version });
