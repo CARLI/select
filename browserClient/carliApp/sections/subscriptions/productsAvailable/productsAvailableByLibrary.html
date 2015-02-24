@@ -9,7 +9,7 @@
                 <library-info library="library" class="inline"></library-info>
                 <div class="library-status">{{ vm.getLibraryPricingStatus(library) }}</div>
             </header>
-            <div class="content">
+            <div class="content" ng-if="vm.offerings[library.id]">
                 <div class="filter-controls">
                     <span ng-class="{ 'active-offering-filter': vm.offeringFilter[library.id] === 'selected' }"
                           ng-click="vm.offeringFilter[library.id] = 'selected'">all selected products</span> |
@@ -29,6 +29,7 @@
                     </li>
                     <li class="offering" ng-class="{ 'edit-mode': vm.isEditing[offering.id] }" ng-repeat="offering in vm.offerings[library.id] | filter:vm.filterOfferingBySelection | orderBy:vm.orderBy:vm.reverse track by offering.id">
                         <div class="column product">
+                            <checkbox ng-model="vm.selectedOfferings[offering.id]"></checkbox>
                             <h3>{{ ::offering.product.name }}</h3>
                             <button ng-show="!vm.isEditing[offering.id]" type="button" class="carli-button edit" ng-click="vm.setOfferingEditable(offering)">Edit <fa name="pencil-square-o "></fa></button>
                             <button ng-show="vm.isEditing[offering.id]" type="button" class="carli-button save" ng-click="vm.saveOffering(offering, library.id)">Save <fa name="floppy-o"></fa></button>
@@ -65,6 +66,10 @@
                     </li>
                 </ul>
                 <div class="footer clearfix">
+                    <div class="total">
+                        <span class="label">Total:</span>
+                        <span>{{ vm.computeSelectionTotalForLibrary(library) | currency }}</span>
+                    </div>
                     <div class="placeholder pull-left" style="margin-left: 1rem; width: 400px;">TODO: Outstanding Balances</div>
                     <div class="placeholder pull-left" style="margin-left: 1rem; width: 400px;">TODO: Invoice All / Invoice Checked</div>
                     <div class="placeholder pull-left" style="margin-left: 1rem; width: 400px;">TODO: Library View Button</div>

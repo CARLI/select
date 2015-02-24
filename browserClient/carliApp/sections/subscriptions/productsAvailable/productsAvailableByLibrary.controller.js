@@ -15,6 +15,7 @@ function productsAvailableByLibraryController( $scope, $q, alertService, control
     vm.saveOffering = saveOffering;
     vm.debounceSaveOffering = debounceSaveOffering;
     vm.getLibraryPricingStatus = getLibraryPricingStatus;
+    vm.computeSelectionTotalForLibrary = computeSelectionTotalForLibrary;
 
     vm.offeringFilter = {};
     vm.filterOfferingBySelection = filterOfferingBySelection;
@@ -24,6 +25,7 @@ function productsAvailableByLibraryController( $scope, $q, alertService, control
     vm.isEditing = {};
     vm.cycle = {};
     vm.lastYear = '';
+    vm.selectedOfferings = {};
 
     activate();
 
@@ -78,7 +80,7 @@ function productsAvailableByLibraryController( $scope, $q, alertService, control
 
     function loadOfferingsForLibrary( library ){
         if ( vm.offerings[library.id] ){
-            return;
+            return $q.when(vm.offerings[library.id]);
         }
 
         vm.loadingPromise[library.id] = offeringService.listOfferingsForLibraryId(library.id)
@@ -95,7 +97,26 @@ function productsAvailableByLibraryController( $scope, $q, alertService, control
                         offering.libraryComments = offering.product.comments;
                     }
                 });
+
+                return offeringsForLibrary;
             });
+
+        return vm.loadingPromise[library.id];
+    }
+
+    function computeSelectionTotalForLibrary( library ){
+        if ( !vm.offerings[library.id] ){
+            return 0;
+        }
+
+        var offerings = vm.offerings[library.id];
+        var sum = 0;
+
+        offerings.forEach(function(offering){
+            sum += offering.selection ? offering.selection.price : 0;
+        });
+
+        return sum;
     }
 
     function setOfferingEditable( offering ){

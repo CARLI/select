@@ -7,6 +7,7 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
     vm.offeringDisplayLabels = offeringService.getOfferingDisplayLabels();
     vm.loadProductsForVendor = loadProductsForVendor;
     vm.getVendorPricingStatus = getVendorPricingStatus;
+    vm.computeSelectionTotalForVendor = computeSelectionTotalForVendor;
     vm.loadingPromise = {};
     vm.setOfferingEditable = setOfferingEditable;
     vm.saveOffering = saveOffering;
@@ -15,6 +16,7 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
     vm.isEditing = {};
     vm.cycle = {};
     vm.lastYear = '';
+    vm.selectedOfferings = {};
 
     activate();
 
@@ -69,6 +71,24 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
 
     function getVendorPricingStatus(vendor) {
         return "No activity";
+    }
+
+    function computeSelectionTotalForVendor( vendor ){
+        if ( !vendor.products ){
+            return 0;
+        }
+
+        var sum = 0;
+        var products = vendor.products;
+        products.forEach(function(product){
+            var offerings = product.offerings || [];
+
+            offerings.forEach(function(offering){
+                sum += offering.selection ? offering.selection.price : 0;
+            });
+        });
+
+        return sum;
     }
 
     function setOfferingEditable( offering ){
