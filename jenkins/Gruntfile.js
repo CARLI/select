@@ -70,7 +70,8 @@ module.exports = function (grunt) {
 
     function generateMiddlewareConfig(instance) {
         return {
-            url: getPublicMiddlewareUrl()
+            url: getPublicMiddlewareUrl(),
+            port: 3000
         };
 
         //noinspection FunctionWithMultipleReturnPointsJS

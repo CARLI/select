@@ -40,7 +40,7 @@ function runMiddlewareServer(){
 
     carliMiddleware.use(couchDbProxy());
 
-    carliMiddleware.get('/version', function () {
+    carliMiddleware.get('/version', function (req, res) {
         res.send({ version: require('./package.json').version });
     });
 
