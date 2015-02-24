@@ -34,6 +34,7 @@ echo "Generating config for test"
 sudo docker run --rm -t \
     --volumes-from=carli-build-test \
     --link=carli-couchdb-test:carli-couchdb \
+    -e "CARLI_CRM_MYSQL_PASSWORD=$CARLI_CRM_MYSQL_PASSWORD" \
     --workdir=/carli-select/jenkins \
     carli-build:latest grunt generate-config:test
 
@@ -43,7 +44,6 @@ sudo docker run \
     --detach=true \
     --link=carli-couchdb-test:carli-couchdb \
     --volumes-from "carli-build-test" \
-    -e "CARLI_CRM_MYSQL_PASSWORD=$CARLI_CRM_MYSQL_PASSWORD" \
     -p 3000 \
     --workdir=/carli-select/middleware \
     carli-build:latest /carli-select/docker/build/serve-middleware.sh
