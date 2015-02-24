@@ -3,6 +3,7 @@
 sudo docker rm -f carli-build-test 2> /dev/null
 sudo docker rm -f carli-middleware-test 2> /dev/null
 sudo docker rm -f carli-couchdb-test 2> /dev/null
+sudo docker rm -f carli-run-tests 2> /dev/null
 
 echo "Creating test build products container"
 sudo docker run \
@@ -70,5 +71,6 @@ sudo docker cp carli-build-test:/carli-select/artifacts/test-results artifacts
 sudo docker rm -f carli-build-test 2> /dev/null
 sudo docker rm -f carli-middleware-test 2> /dev/null
 sudo docker rm -f carli-couchdb-test 2> /dev/null
+sudo docker rm -f carli-run-tests 2> /dev/null
 
 exit $rc
