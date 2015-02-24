@@ -22,3 +22,4 @@ COPY . /carli-select
 VOLUME /carli-select
 
 EXPOSE 8000
+EXPOSE 3000
