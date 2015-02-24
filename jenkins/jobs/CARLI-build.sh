@@ -29,15 +29,6 @@ tag_and_run_tests () {
     tag_all_containers last-good
 }
 
-run_dev_instance () {
-    $SCRIPTS/run-data-container.sh dev latest &&
-    $SCRIPTS/run-db-container.sh dev latest 9091 &&
-    $SCRIPTS/run-content-container.sh dev latest &&
-    $SCRIPTS/run-middleware-container.sh dev latest &&
-    $SCRIPTS/run-serve-container.sh dev latest 9090
-}
-
 tag_and_run_tests
 rc=$?
-# run_dev_instance
 exit $rc
