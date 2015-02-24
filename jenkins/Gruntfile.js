@@ -27,7 +27,7 @@ module.exports = function (grunt) {
         var storeOptions;
 
         if (instance == 'test') {
-            storeOptions = getContainerCouchConfig();
+            storeOptions = getContainerCouchConfig(instance);
         } else {
             storeOptions = getPublicCouchConfig(instance);
         }

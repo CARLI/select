@@ -4,12 +4,39 @@ sudo docker rm -f carli-build-test 2> /dev/null
 sudo docker rm -f carli-middleware-test 2> /dev/null
 sudo docker rm -f carli-couchdb-test 2> /dev/null
 
+echo "Creating test build products container"
+sudo docker run \
+    --name "carli-build-test" \
+    carli-build:latest \
+    /bin/echo CARLI build products container
+
+echo "Installing build dependencies for tests"
+sudo docker run --rm -t \
+    --volumes-from=carli-build-test \
+    --workdir=/carli-select \
+    carli-build:latest ./install-dependencies.sh
+
+echo "Configuring Javascript environment for node"
+sudo docker run --rm -t \
+    --volumes-from=carli-build-test \
+    --workdir=/carli-select/config \
+    carli-build:latest grunt jsenv:node
+
+echo "Launching test CouchDb instance"
 sudo docker run \
     --name="carli-couchdb-test" \
     --detach=true \
     -p 5984 \
     carli-couchdb:latest
 
+echo "Generating config for test"
+sudo docker run --rm -t \
+    --volumes-from=carli-build-test \
+    --link=carli-couchdb-test:carli-couchdb \
+    --workdir=/carli-select/jenkins \
+    carli-build:latest grunt generate-config:test
+
+echo "Launching test Middleware instance"
 sudo docker run \
     --name="carli-middleware-test" \
     --detach=true \
@@ -20,11 +47,11 @@ sudo docker run \
     --workdir=/carli-select/middleware \
     carli-build:latest /carli-select/docker/build/serve-middleware.sh
 
-echo "Generating config for tests"
+echo "Building browser clients"
 sudo docker run --rm -t \
-    --volumes-from=carli-build-dev \
-    --workdir=/carli-select/jenkins \
-    carli-build grunt generate-config:test
+    --volumes-from=carli-build-test \
+    --workdir=/carli-select/browserClient \
+    carli-build:latest grunt build
 
 sudo docker run \
     --name carli-build-test \

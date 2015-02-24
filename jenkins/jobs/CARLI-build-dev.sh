@@ -5,29 +5,39 @@ cd `git rev-parse --show-toplevel`
 
 SCRIPTS=./jenkins/scripts
 
+all_containers="couchdb build nginx"
+
 $SCRIPTS/add-build-number.sh dev &&
 
-$SCRIPTS/build-container.sh couchdb &&
-$SCRIPTS/build-container.sh build &&
-$SCRIPTS/build-container.sh nginx &&
+build_all_containers () {
+    for container in $all_containers; do
+        $SCRIPTS/build-container.sh $container
+    done
+}
 
-$SCRIPTS/tag-container.sh couchdb latest &&
-$SCRIPTS/tag-container.sh build latest &&
-$SCRIPTS/tag-container.sh nginx latest &&
+tag_all_containers () {
+    tag=$1
+    for container in $all_containers; do
+        $SCRIPTS/tag-container.sh $container $tag
+    done
+}
 
-$SCRIPTS/run-content-container.sh test latest &&
-$SCRIPTS/run-test-container.sh &&
+tag_and_run_tests () {
+    build_all_containers &&
+    tag_all_containers latest &&
+    $SCRIPTS/run-test-container.sh &&
+    tag_all_containers last-good
+}
 
-$SCRIPTS/tag-container.sh couchdb last-good &&
-$SCRIPTS/tag-container.sh build last-good &&
-$SCRIPTS/tag-container.sh nginx last-good
+run_dev_instance () {
+    $SCRIPTS/run-data-container.sh dev latest &&
+    $SCRIPTS/run-db-container.sh dev latest 9091 &&
+    $SCRIPTS/run-content-container.sh dev latest &&
+    $SCRIPTS/run-middleware-container.sh dev latest &&
+    $SCRIPTS/run-serve-container.sh dev latest 9090
+}
 
+tag_and_run_tests
 rc=$?
-
-$SCRIPTS/run-data-container.sh dev latest &&
-$SCRIPTS/run-db-container.sh dev latest 9091 &&
-$SCRIPTS/run-content-container.sh dev latest &&
-$SCRIPTS/run-middleware-container.sh dev latest &&
-$SCRIPTS/run-serve-container.sh dev latest 9090
-
+# run_dev_instance
 exit $rc
