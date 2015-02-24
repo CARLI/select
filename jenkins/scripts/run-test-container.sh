@@ -42,7 +42,7 @@ sudo docker run \
     --name="carli-middleware-test" \
     --detach=true \
     --link=carli-couchdb-test:carli-couchdb \
-    --volumes-from "carli-build-dev" \
+    --volumes-from "carli-build-test" \
     -e "CARLI_CRM_MYSQL_PASSWORD=$CARLI_CRM_MYSQL_PASSWORD" \
     -p 3000 \
     --workdir=/carli-select/middleware \
@@ -55,11 +55,11 @@ sudo docker run --rm -t \
     carli-build:latest grunt build
 
 sudo docker run \
-    --name carli-build-test \
+    --name carli-run-tests \
     --workdir=/carli-select \
     --link=carli-couchdb-test:carli-couchdb \
     --link=carli-middleware-test:carli-middleware \
-    --volumes-from "carli-build-dev" \
+    --volumes-from "carli-build-test" \
     -e "CARLI_DEV_SERVER_URL=$CARLI_DEV_SERVER_URL" \
     -e "CARLI_CRM_MYSQL_PASSWORD=$CARLI_CRM_MYSQL_PASSWORD" \
     carli-build:latest /carli-select/docker/build/test.sh
