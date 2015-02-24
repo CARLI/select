@@ -230,6 +230,9 @@ section.content {
 @import "carliApp/components/productSelectionHistoryIcon/productSelectionHistoryIcon";
 @import "carliApp/components/radio/radio";
 @import "carliApp/components/spinner/spinner";
+@import "carliApp/components/subscriptionScreenComponents/libraryInfo/libraryInfo";
+@import "carliApp/components/subscriptionScreenComponents/offeringComments/offeringComments";
+@import "carliApp/components/subscriptionScreenComponents/offeringPricing/offeringPricing";
 @import "carliApp/components/viewEditDirectives/viewEditCheckbox/viewEditCheckbox";
 @import "carliApp/components/viewEditDirectives/viewEditContact/viewEditContact";
 @import "carliApp/components/viewEditDirectives/viewEditDate/viewEditDate";
@@ -244,6 +247,9 @@ section.content {
 @import "carliApp/sections/products/products";
 @import "carliApp/sections/styleGuide/styleGuide";
 @import "carliApp/sections/subscriptions/subscriptions";
-@import "carliApp/sections/subscriptions/vendorsSettingPrices/vendorsSettingPrices";
+@import "carliApp/sections/subscriptions/subscriptionsOfferingsEditor";
 @import "carliApp/sections/subscriptions/carliEditingProductList/carliEditingProductList";
+@import "carliApp/sections/subscriptions/librariesSelectingProducts/librariesSelectingProducts";
+@import "carliApp/sections/subscriptions/productsAvailable/productsAvailable";
+@import "carliApp/sections/subscriptions/vendorsSettingPrices/vendorsSettingPrices";
 @import "carliApp/sections/vendors/vendors";

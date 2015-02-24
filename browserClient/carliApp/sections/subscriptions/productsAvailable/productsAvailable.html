@@ -1,0 +1,20 @@
+<products-available-by-vendor ng-if="vm.cycleRouter.groupBy === 'vendor'"></products-available-by-vendor>
+<products-available-by-library ng-if="vm.cycleRouter.groupBy === 'library'"></products-available-by-library>
+
+<div class="placeholder" style="width: 400px; margin-bottom: 1rem;">
+    TODO: Archive Button
+</div>
+
+<div class="invoice-summary">
+    <div class="row">
+        <span class="label">Vendor Invoices Received Total:</span>
+    </div>
+    <div class="row">
+        <span class="label">Library Invoices Total:</span>
+    </div>
+    <div class="row">
+        <span class="label">Selection System Total:</span>
+    </div>
+</div>
+
+<button type="button" class="carli-button pull-left" ng-click="vm.undoCloseSystem()">Undo Close System</button>

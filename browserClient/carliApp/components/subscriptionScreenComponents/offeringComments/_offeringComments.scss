@@ -1,0 +1,16 @@
+offering-comments {
+    display: flex;
+    padding: .5rem 1rem 1rem;
+
+    .column {
+        @include flex(0 0 50%);
+    }
+
+    .internal-comments {
+        padding-right: .5rem;
+    }
+
+    .library-comments {
+        padding-left: .5rem;
+    }
+}

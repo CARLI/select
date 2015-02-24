@@ -1,0 +1,40 @@
+<div class="site-pricing" ng-class="{ 'single-column': !vm.showPreviousYear }">
+    <div class="column" ng-if="vm.showPreviousYear">
+        <div class="header"><strong>{{ ::vm.year - 1 }}</strong> Price</div>
+        <div class="row"> $TODO.00 </div>
+    </div>
+    <div class="column">
+        <div class="header"><strong>{{ ::vm.year }}</strong> Price</div>
+        <div class="row">
+            <view-edit-price ng-model="vm.offering.pricing.site" input-id="offering-pricing-site" edit-mode="vm.editMode">
+                {{ vm.offering.pricing.site | currency }}
+            </view-edit-price>
+        </div>
+    </div>
+</div>
+<div class="su-pricing" ng-class="{ 'single-column': !vm.showPreviousYear }">
+    <div class="header"><strong>Simultaneous User Price</strong></div>
+
+    <div class="pricing-container">
+        <div class="column" ng-if="vm.showPreviousYear">
+            <div class="edit-su-pricing">
+                <table>
+                    <thead>
+                    <tr>
+                        <th><strong>{{ ::vm.year - 1 }}</strong> Price</th>
+                        <th>User(s)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr><td>TODO</td><td>4</td></tr>
+                    <tr><td>TODO</td><td>2</td></tr>
+                    <tr><td>TODO</td><td>1</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="column">
+            <view-edit-su-pricing year="vm.year" edit-mode="vm.editMode" ng-model="vm.offering.pricing.su" input-id="offering.id"></view-edit-su-pricing>
+        </div>
+    </div>
+</div>

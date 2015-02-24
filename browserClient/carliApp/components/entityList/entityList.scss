@@ -55,7 +55,6 @@ entity-list {
 ul.entity-list {
     @extend .zebra-table;
 
-    border-bottom: $default-border;
     clear: both;
 
     li {

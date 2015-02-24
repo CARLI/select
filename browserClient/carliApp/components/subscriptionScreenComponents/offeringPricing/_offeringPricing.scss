@@ -1,0 +1,92 @@
+offering-pricing {
+    $table-padding: .5rem 1rem;
+
+    .site-pricing {
+        display: flex;
+
+        &.single-column {
+            display: block;
+        }
+    }
+
+    .su-pricing {
+        border-top: $default-border;
+
+        .pricing-container {
+            display: flex;
+        }
+
+        &.single-column {
+            .pricing-container {
+                display: block;
+            }
+        }
+    }
+
+    .column {
+        &:first-child {
+            border-right: $default-border;
+        }
+
+        @include flex(0 0 50%);
+    }
+
+    .single-column {
+        .column {
+            &:first-child {
+                border-right: none;
+            }
+        }
+    }
+
+    .header {
+        background: $light-gray;
+        border-bottom: $default-border;
+    }
+
+    .header,
+    .row {
+        padding: $table-padding;
+    }
+
+    .edit-su-pricing {
+        .header {
+            border-bottom: 0;
+        }
+
+        table {
+            border-width: 0 0 1px 0;
+        }
+
+        th {
+            background: $light-gray;
+        }
+
+        &.edit-mode {
+            td:not(.add-su-pricing) {
+                padding: .5rem 0;
+
+                input {
+                    margin-left: 1rem;
+                }
+
+                .price input {
+                    width: 80px;
+                }
+                .users input {
+                    width: 50px;
+                }
+            }
+        }
+
+        th, td {
+            padding: $table-padding;
+        }
+
+        input {
+            border: 0;
+            margin: 0;
+            padding: 0;
+        }
+    }
+}

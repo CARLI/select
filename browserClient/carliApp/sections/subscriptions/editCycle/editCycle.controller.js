@@ -26,7 +26,7 @@ function editCycleController( $routeParams, alertService, cycleService ) {
     }
 
     function shouldShowGroupByToggle() {
-        return (cycleRouter.status === 1);
+        return (cycleRouter.status === 1 || cycleRouter.status === 2 || cycleRouter.status === 4 );
     }
 
     function cycleRouterNext(){

@@ -19,9 +19,9 @@
             <fieldset>
                 <div class="column">
                     <label for="libraryFte">Full Time Enrollment</label>
-                    <view-edit-number-field ng-model="vm.library.fte" edit-mode="false" input-id="libraryFte">
+                    <view-edit-integer ng-model="vm.library.fte" edit-mode="false" input-id="libraryFte">
                         {{ vm.library.fte }}
-                    </view-edit-number-field>
+                    </view-edit-integer>
 
                     <label for="libraryInstitutionYears">Institution Type (2 year/4 year):</label>
                     <view-edit-select ng-model="vm.library.institutionYears" items="vm.institutionYearsOptions" edit-mode="false" input-id="libraryInstitutionYears">
@@ -54,11 +54,7 @@
                     </view-edit-text-field>
 
                     <div class="label">Library Status</div>
-<<<<<<< HEAD
-                    <view-edit-radios radio-group-name="isActive" radio-group-legend="Library Status" items="vm.statusOptions" ng-model="vm.library.isActive" edit-mode="vm.editable" input-id="libraryIsActive">
-=======
-                    <view-edit-radios radio-group-name="isActive" items="vm.statusOptions" ng-model="vm.library.isActive" edit-mode="false" input-id="libraryIsActive">
->>>>>>> CARLI-395-CrmLibraryEntity
+                    <view-edit-radios radio-group-name="isActive" radio-group-legend="Library Status" items="vm.statusOptions" ng-model="vm.library.isActive" edit-mode="false" input-id="libraryIsActive">
                         <h3>{{ vm.library.isActive ? 'Active' : 'Inactive' }}</h3>
                     </view-edit-radios>
 

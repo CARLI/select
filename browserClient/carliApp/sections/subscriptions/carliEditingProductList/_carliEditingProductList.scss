@@ -1,37 +1,39 @@
 #subscriptions {
-    .vendor-accordion {
-        ul.entity-list {
-            .column.product-name {
-                @include flex(1 0 10%);
-                @include vendor-prefix('justify-content', 'flex-start');
-            }
-            .column.selection-history {
-                text-align: center;
-                width: 60px;
-            }
+    carli-editing-product-list {
+        .vendor-accordion {
+            ul.entity-list {
+                .column.product-name {
+                    @include flex(1 0 10%);
+                    @include vendor-prefix('justify-content', 'flex-start');
+                }
+                .column.selection-history {
+                    text-align: center;
+                    width: 60px;
+                }
 
-            .column.funded {
-                text-align: center;
-                width: 80px;
-                .fa {
-                    color: $orange;
-                    @include font-size(22);
+                .column.funded {
+                    text-align: center;
+                    width: 80px;
+                    .fa {
+                        color: $orange;
+                        @include font-size(22);
+                    }
+                }
+                .column.last-price {
+                    @include flex(0 1 auto);
+                    width: 160px;
+                }
+                .column.remove {
+                    padding: 0;
+                    text-align: center;
+                    width: 118px;
                 }
             }
-            .column.last-price {
-                @include flex(0 1 auto);
-                width: 160px;
-            }
-            .column.remove {
-                padding: 0;
-                text-align: center;
-                width: 118px;
-            }
-        }
 
-        header {
-            .reviewed-message {
-                float: right;
+            header {
+                .reviewed-message {
+                    float: right;
+                }
             }
         }
     }

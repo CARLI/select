@@ -1,4 +1,4 @@
-
+/* Styles that apply to all of the subscription screens */
 .page-header.subscription {
     h2 {
         margin-top: 0;
@@ -20,6 +20,23 @@
         border-bottom: $default-border;
         margin-bottom: 1rem;
         list-style: outside none none;
+
+        .filter-controls {
+            border-left: $default-border;
+            border-right: $default-border;
+            border-top: $default-border;
+            padding: 0.5rem 1rem;
+
+            span {
+                color: $purple;
+                cursor: pointer;
+
+                &.active-offering-filter {
+                    font-weight: 600;
+                    cursor: auto;
+                }
+            }
+        }
 
         ul.entity-list {
             margin-bottom: 0;
@@ -44,24 +61,11 @@
             border-bottom: 0;
             padding: 1rem 1rem 1rem 42px;
 
-            .vendor-status {
+            .vendor-status,
+            .library-status {
                 @include body-text();
                 line-height: 1.21429rem;
                 float: right;
-            }
-
-            .library-info {
-                @include body-text();
-
-                margin-left: 1rem;
-
-                .label {
-                    color: $black;
-                }
-
-                .value {
-                    color: $purple
-                }
             }
         }
 
