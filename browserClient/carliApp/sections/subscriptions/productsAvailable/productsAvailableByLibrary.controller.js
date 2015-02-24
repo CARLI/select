@@ -26,6 +26,7 @@ function productsAvailableByLibraryController( $scope, $q, alertService, control
     vm.cycle = {};
     vm.lastYear = '';
     vm.selectedOfferings = {};
+    vm.invoiceCheckedProductsForLibrary = invoiceCheckedProductsForLibrary;
 
     activate();
 
@@ -159,5 +160,17 @@ function productsAvailableByLibraryController( $scope, $q, alertService, control
     function updateOfferingFlaggedStatus( offering ){
         offering.flagged = offering.getFlaggedState();
         return offering;
+    }
+
+    function invoiceCheckedProductsForLibrary( library ){
+        if ( !library || !vm.selectedOfferings[library.id] ){
+            return;
+        }
+
+        var offeringsToInvoice = Object.keys(vm.selectedOfferings[library.id]).filter(function(key){
+            return vm.selectedOfferings[library.id][key];
+        });
+
+        alert('invoice offerings '+offeringsToInvoice.join(','));
     }
 }

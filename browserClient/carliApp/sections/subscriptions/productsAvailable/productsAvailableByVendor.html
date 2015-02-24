@@ -27,7 +27,7 @@
                             </li>
                             <li class="offering" ng-class="{ 'edit-mode': vm.isEditing[offering.id] }" ng-repeat="offering in product.offerings | orderBy:vm.orderBy:vm.reverse track by offering.id">
                                 <div class="column library">
-                                    <checkbox ng-model="vm.selectedOfferings[offering.id]"></checkbox>
+                                    <checkbox ng-model="vm.selectedOfferings[vendor.id][offering.id]"></checkbox>
                                     <library-info library="offering.library"></library-info>
                                     <button ng-show="!vm.isEditing[offering.id]" type="button" class="carli-button edit" ng-click="vm.setOfferingEditable(offering)">Edit <fa name="pencil-square-o "></fa></button>
                                     <button ng-show="vm.isEditing[offering.id]" type="button" class="carli-button save" ng-click="vm.saveOffering(offering, product.offerings)">Save <fa name="floppy-o"></fa></button>
@@ -78,7 +78,8 @@
                         <span class="label">Total:</span>
                         <span>{{ vm.computeSelectionTotalForVendor(vendor) | currency }}</span>
                     </div>
-                    <div class="placeholder pull-left" style="width: 400px;">TODO: Report All Products / Report Checked Products</div>
+                    <button type="button" class="carli-button" ng-click="vm.reportCheckedProductsForVendor(vendor)">Report Checked Products</button>
+                    <div class="placeholder pull-left" style="width: 400px;">TODO: Report All Products</div>
                 </div>
             </div>
         </li>

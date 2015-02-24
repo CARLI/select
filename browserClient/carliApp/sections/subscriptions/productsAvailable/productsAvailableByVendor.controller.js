@@ -17,6 +17,7 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
     vm.cycle = {};
     vm.lastYear = '';
     vm.selectedOfferings = {};
+    vm.reportCheckedProductsForVendor = reportCheckedProductsForVendor;
 
     activate();
 
@@ -131,5 +132,17 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
     function updateOfferingFlaggedStatus( offering ){
         offering.flagged = offering.getFlaggedState();
         return offering;
+    }
+
+    function reportCheckedProductsForVendor( vendor ){
+        if ( !vendor || !vm.selectedOfferings[vendor.id] ){
+            return;
+        }
+
+        var offeringsToReport = Object.keys(vm.selectedOfferings[vendor.id]).filter(function(key){
+            return vm.selectedOfferings[vendor.id][key];
+        });
+
+        alert('report offerings '+offeringsToReport.join(','));
     }
 }
