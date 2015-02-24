@@ -38,7 +38,11 @@ function runMiddlewareServer(){
     carliMiddleware.use(bodyParser.json());
     _enableCors(carliMiddleware);
 
-    carliMiddleware.use(couchDbProxy());
+    carliMiddleware.use(couchDbProxy(req, res));
+
+    carliMiddleware.get('/version', function () {
+        res.send({ version: require('./package.json').version });
+    });
 
     carliMiddleware.put('/design-doc/:dbName', function (req, res) {
         couchUtils.putDesignDoc(req.params.dbName, 'Cycle').then(function() {
