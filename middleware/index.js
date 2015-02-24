@@ -1,6 +1,7 @@
 var config = require('../config');
 var express = require('express');
 var bodyParser = require('body-parser');
+var request = require('request');
 var _ = require('lodash');
 
 var couchUtils = require('./components/couchUtils');
@@ -16,10 +17,29 @@ function _enableCors(carliMiddleware) {
     });
 }
 
+function couchDbProxy() {
+    return function (req, res, next) {
+        var proxyPath = req.path.match(RegExp("^\\/db/(.*)$"));
+        if (proxyPath) {
+            var dbUrl = 'http://localhost:5984/' + proxyPath[1];
+            req.pipe(request({
+                uri: dbUrl,
+                method: req.method,
+                qs: req.query
+            })).pipe(res);
+        } else {
+            next();
+        }
+    };
+}
+
 function runMiddlewareServer(){
     var carliMiddleware = express();
     carliMiddleware.use(bodyParser.json());
     _enableCors(carliMiddleware);
+
+    carliMiddleware.use(couchDbProxy());
+
     carliMiddleware.put('/design-doc/:dbName', function (req, res) {
         couchUtils.putDesignDoc(req.params.dbName, 'Cycle').then(function() {
             res.send({ status: 'Ok' });
@@ -27,10 +47,12 @@ function runMiddlewareServer(){
             res.send( { error: err } );
         });
     });
+
     carliMiddleware.put('/tell-pixobot', function (req, res) {
         notifications.tellPixobot(req.body);
         res.send(req.body);
     });
+
     carliMiddleware.get('/library', function (req, res) {
         crmQueries.listLibraries().then(function(libraries) {
             res.send(libraries);
@@ -38,6 +60,7 @@ function runMiddlewareServer(){
             res.send( { error: err } );
         });
     });
+
     carliMiddleware.get('/library/:id', function (req, res) {
         crmQueries.loadLibrary(req.params.id).then(function(library) {
             res.send(library);
