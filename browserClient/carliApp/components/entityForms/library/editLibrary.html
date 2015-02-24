@@ -19,9 +19,9 @@
             <fieldset>
                 <div class="column">
                     <label for="libraryFte">Full Time Enrollment</label>
-                    <view-edit-number-field ng-model="vm.library.fte" edit-mode="false" input-id="libraryFte">
+                    <view-edit-integer ng-model="vm.library.fte" edit-mode="false" input-id="libraryFte">
                         {{ vm.library.fte }}
-                    </view-edit-number-field>
+                    </view-edit-integer>
 
                     <label for="libraryInstitutionYears">Institution Type (2 year/4 year):</label>
                     <view-edit-select ng-model="vm.library.institutionYears" items="vm.institutionYearsOptions" edit-mode="false" input-id="libraryInstitutionYears">

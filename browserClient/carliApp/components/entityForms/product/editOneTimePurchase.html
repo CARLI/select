@@ -7,9 +7,9 @@
     <section class="content">
         <div class="one-time-purchase-settings">
             <label for="annualAccessFee">Annual Access Fee</label>
-            <view-edit-number-field ng-model="vm.product.oneTimePurchase.annualAccessFee" edit-mode="vm.editable" input-id="annualAccessFee">
+            <view-edit-price ng-model="vm.product.oneTimePurchase.annualAccessFee" edit-mode="vm.editable" input-id="annualAccessFee">
                 {{ vm.product.oneTimePurchase.annualAccessFee | currency }}
-            </view-edit-number-field>
+            </view-edit-price>
 
             <label for="availableForPurchaseThrough">Available for Purchase Through</label>
             <view-edit-date ng-model="vm.product.oneTimePurchase.availableForPurchaseThrough" edit-mode="vm.editable" input-id="availableForPurchaseThrough">
@@ -27,9 +27,9 @@
                         <label for="oneTimePurchase_{{ offering.library.name }}">{{ offering.library.name }}</label>
                     </span>
                     <span class="column price">
-                        <view-edit-number-field ng-model="offering.pricing.site" edit-mode="vm.editable && !offering.datePurchased" input-id="oneTimePurchase_{{ offering.library.name }}">
+                        <view-edit-price ng-model="offering.pricing.site" edit-mode="vm.editable && !offering.datePurchased" input-id="oneTimePurchase_{{ offering.library.name }}">
                             <span class="price-display">{{ offering.pricing.site | currency }}</span>
-                        </view-edit-number-field>
+                        </view-edit-price>
                     </span>
                     <span class="column purchased">
                         <i class="fa fa-check-circle" ng-show="offering.datePurchased"></i>

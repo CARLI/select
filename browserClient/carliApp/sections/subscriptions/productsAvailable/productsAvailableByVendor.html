@@ -60,13 +60,13 @@
                                 </div>
                                 <div class="column vendor-invoice">
                                     <div class="label">Vendor Price</div>
-                                    <view-edit-number-field ng-model="offering.invoice.price" edit-mode="vm.isEditing[offering.id]">
+                                    <view-edit-price ng-model="offering.invoice.price" edit-mode="vm.isEditing[offering.id]">
                                         {{ offering.invoice.price | currency }}
-                                    </view-edit-number-field>
+                                    </view-edit-price>
                                     <div class="label">Invoice #</div>
-                                    <view-edit-number-field ng-model="offering.invoice.number" edit-mode="vm.isEditing[offering.id]">
+                                    <view-edit-integer ng-model="offering.invoice.number" edit-mode="vm.isEditing[offering.id]">
                                         {{ offering.invoice.number }}
-                                    </view-edit-number-field>
+                                    </view-edit-integer>
                                 </div>
                             </li>
                         </ul>
