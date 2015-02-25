@@ -113,10 +113,6 @@ function listActiveCycles() {
     return expandCycles( couchUtils.getCouchViewResultValues(config.getDbName(), 'listActiveCycles') );
 }
 
-function getStoreForCycle(cycle) {
-    return Store( StoreModule(_.extend({}, StoreOptions, { couchDbName: cycle.databaseName })) );
-}
-
 /* functions that get added as instance methods on loaded Cycles */
 
 var functionsToAdd = {
@@ -143,6 +139,5 @@ module.exports = {
     list: listCycles,
     load: loadCycle,
     statusLabels: statusLabels,
-    listActiveCycles: listActiveCycles,
-    getStoreForCycle: getStoreForCycle
+    listActiveCycles: listActiveCycles
 };

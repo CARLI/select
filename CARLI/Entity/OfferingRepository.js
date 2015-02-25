@@ -1,8 +1,8 @@
 var Entity = require('../Entity')
   , EntityTransform = require( './EntityTransformationUtils')
   , config = require( '../../config' )
-  , CycleRepository = require('./CycleRepository')
   , CouchUtils = require( '../Store/CouchDb/Utils')
+  , getStoreForCycle = require('./getStoreForCycle')
   , Validator = require('../Validator')
   , Q = require('q')
   ;
@@ -86,7 +86,7 @@ function setCycle(cycle) {
     if (cycle === undefined) {
         throw Error("Cycle is required");
     }
-    OfferingRepository.setStore(CycleRepository.getStoreForCycle(cycle));
+    OfferingRepository.setStore(getStoreForCycle(cycle));
 }
 
 

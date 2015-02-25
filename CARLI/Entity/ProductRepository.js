@@ -3,6 +3,7 @@ var Entity = require('../Entity')
   , CycleRepository = require('./CycleRepository')
   , config = require( '../../config' )
   , CouchUtils = require( '../Store/CouchDb/Utils')
+  , getStoreForCycle = require('./getStoreForCycle')
   , Validator = require('../Validator')
   , moment = require('moment')
   , Q = require('q')
@@ -101,7 +102,7 @@ function setCycle(cycle) {
     if (cycle === undefined) {
         throw Error("Cycle is required");
     }
-    ProductRepository.setStore(CycleRepository.getStoreForCycle(cycle));
+    ProductRepository.setStore(getStoreForCycle(cycle));
 }
 
 
