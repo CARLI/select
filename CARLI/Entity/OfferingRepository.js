@@ -5,6 +5,7 @@ var Entity = require('../Entity')
   , getStoreForCycle = require('./getStoreForCycle')
   , Validator = require('../Validator')
   , Q = require('q')
+  , _ = require('lodash')
   ;
 
 var OfferingRepository = Entity('Offering');
@@ -46,6 +47,24 @@ function updateOffering( offering, cycle ){
 function listOfferings(cycle){
     setCycle(cycle);
     return expandOfferings( OfferingRepository.list(cycle.databaseName), cycle);
+}
+
+function transformOfferingsForNewCycle(cycle) {
+    listOfferings().then(function(offerings) {
+        offerings.forEach(transformOfferingForNewCycle);
+    });
+}
+
+function transformOfferingForNewCycle(offering) {
+    var year = offering.cycle.year;
+    offering.history = offering.history || {};
+    offering.history[year] = {
+        pricing: _.clone(offering.pricing)
+    };
+    if (offering.selection ) {
+        offering.history[year].selection = _.clone(offering.selection);
+    }
+    return offering;
 }
 
 function loadOffering( offeringId, cycle ){
@@ -125,7 +144,10 @@ module.exports = {
     update: updateOffering,
     list: listOfferings,
     load: loadOffering,
+
     listOfferingsForLibraryId: listOfferingsForLibraryId,
     listOfferingsForProductId: listOfferingsForProductId,
-    getOfferingDisplayOptions: getOfferingDisplayOptions
+    getOfferingDisplayOptions: getOfferingDisplayOptions,
+    transformOfferingsForNewCycle: transformOfferingsForNewCycle,
+    transformOfferingForNewCycle: transformOfferingForNewCycle
 };
