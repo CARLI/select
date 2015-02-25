@@ -2,10 +2,10 @@ var Entity = require('../Entity')
     , EntityTransform = require( './EntityTransformationUtils')
     , config = require( '../../config' )
     , couchUtils = require( '../Store/CouchDb/Utils')
+    , offeringRepository = require('./OfferingRepository')
     , StoreOptions = config.storeOptions
     , Store = require( '../Store' )
     , StoreModule = require( '../Store/CouchDb/Store')
-    , moment = require('moment')
     , Q = require('q')
     , _ = require('lodash')
     ;
@@ -37,8 +37,9 @@ function createCycleFrom( sourceCycle, newCycleData ) {
         .then(function(newCycleId) {
             return CycleRepository.load(newCycleId)
                 .then(function (newCycle) {
-                    return couchUtils.replicateFrom(sourceCycle.databaseName).to(newCycle.databaseName);
+                    return couchUtils.replicateFrom(sourceCycle.databaseName).to(newCycle.databaseName).thenResolve(newCycle);
                 })
+                .then(offeringRepository.transformOfferingsForNewCycle)
                 .then(function() {
                     return newCycleId;
                 });

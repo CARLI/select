@@ -49,14 +49,22 @@ function listOfferings(cycle){
     return expandOfferings( OfferingRepository.list(cycle.databaseName), cycle);
 }
 
-function transformOfferingsForNewCycle(cycle) {
-    listOfferings().then(function(offerings) {
-        offerings.forEach(transformOfferingForNewCycle);
+function transformOfferingsForNewCycle(newCycle, sourceCycle) {
+    return listOfferings(newCycle).then(function(offerings) {
+        var promises = offerings.map(transformOffering).map(saveOffering);
+
+        return Q.all(promises);
+
+        function transformOffering(offering) {
+            saveOfferingHistoryForYear(offering, sourceCycle.year);
+        }
+        function saveOffering(offering) {
+            return updateOffering(offering, newCycle);
+        }
     });
 }
 
-function transformOfferingForNewCycle(offering) {
-    var year = offering.cycle.year;
+function saveOfferingHistoryForYear(offering, year) {
     offering.history = offering.history || {};
     offering.history[year] = {
         pricing: _.clone(offering.pricing)
@@ -149,5 +157,5 @@ module.exports = {
     listOfferingsForProductId: listOfferingsForProductId,
     getOfferingDisplayOptions: getOfferingDisplayOptions,
     transformOfferingsForNewCycle: transformOfferingsForNewCycle,
-    transformOfferingForNewCycle: transformOfferingForNewCycle
+    transformOfferingForNewCycle: saveOfferingHistoryForYear
 };
