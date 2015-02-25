@@ -112,7 +112,7 @@ function runOfferingSpecificTests(testCycle) {
             it('should list offerings for a specific product');
         });
 
-        describe('saveOfferingHistoryForYear', function() {
+        describe('saveOfferingHistoryForYear    ', function() {
             it('should copy the pricing data to a history property and preserve past history if it exists', function() {
                 var originalOffering = validOfferingData();
                 originalOffering.cycle = _.clone(testCycle);
