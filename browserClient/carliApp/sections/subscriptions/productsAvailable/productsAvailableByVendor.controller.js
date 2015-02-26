@@ -8,6 +8,7 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
     vm.loadProductsForVendor = loadProductsForVendor;
     vm.getVendorPricingStatus = getVendorPricingStatus;
     vm.computeSelectionTotalForVendor = computeSelectionTotalForVendor;
+    vm.computeInvoiceTotalForVendor = computeInvoiceTotalForVendor;
     vm.loadingPromise = {};
     vm.setOfferingEditable = setOfferingEditable;
     vm.saveOffering = saveOffering;
@@ -86,6 +87,26 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
 
             offerings.forEach(function(offering){
                 sum += offering.selection ? offering.selection.price : 0;
+            });
+        });
+
+        return sum;
+    }
+
+    function computeInvoiceTotalForVendor( vendor ){
+        if ( !vendor.products ){
+            return 0;
+        }
+
+        var sum = 0;
+        var products = vendor.products;
+        products.forEach(function(product){
+            var offerings = product.offerings || [];
+
+            offerings.forEach(function(offering){
+                if (offering.invoice) {
+                    sum += offering.invoice.price ? offering.invoice.price : 0;
+                }
             });
         });
 

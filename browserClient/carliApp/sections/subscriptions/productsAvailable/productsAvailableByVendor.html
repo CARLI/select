@@ -7,7 +7,7 @@
                     <fa name="angle-down"></fa>
                 </button>
                 {{ vendor.name }}
-                <span class="vendor-status">{{ vm.getVendorPricingStatus(vendor) }}</span>
+                <span class="vendor-status">{{ ::vm.getVendorPricingStatus(vendor) }}</span>
             </header>
             <div class="content" ng-if="vendor.products">
                 <ul class="product-content">
@@ -75,8 +75,10 @@
                 </ul>
                 <div class="vendor footer">
                     <div class="total">
-                        <span class="label">Total:</span>
+                        <span class="label">Selection Total:</span>
                         <span>{{ vm.computeSelectionTotalForVendor(vendor) | currency }}</span>
+                        <span class="label">Vendor Invoice Total:</span>
+                        <span>{{ vm.computeInvoiceTotalForVendor(vendor) | currency }}</span>
                     </div>
                     <button type="button" class="carli-button" ng-click="vm.reportCheckedProductsForVendor(vendor)">Report Checked Products</button>
                     <div class="placeholder pull-left" style="width: 400px;">TODO: Report All Products</div>
