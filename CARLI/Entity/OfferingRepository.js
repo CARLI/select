@@ -157,5 +157,5 @@ module.exports = {
     listOfferingsForProductId: listOfferingsForProductId,
     getOfferingDisplayOptions: getOfferingDisplayOptions,
     transformOfferingsForNewCycle: transformOfferingsForNewCycle,
-    transformOfferingForNewCycle: saveOfferingHistoryForYear
+    saveOfferingHistoryForYear: saveOfferingHistoryForYear
 };
