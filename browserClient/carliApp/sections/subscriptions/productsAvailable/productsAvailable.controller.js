@@ -5,6 +5,20 @@ function productsAvailableController( $q, alertService ) {
     var vm = this;
     vm.undoCloseSystem = undoCloseSystem;
 
+    vm.updateSelectionAndInvoiceTotals = updateSelectionAndInvoiceTotals;
+
+    activate();
+
+    function activate() {
+        updateSelectionAndInvoiceTotals();
+    }
+
+    function updateSelectionAndInvoiceTotals(){
+        vm.cycle.getCycleSelectionAndInvoiceTotals().then(function (cycleTotals) {
+           vm.cycleTotals = cycleTotals;
+        });
+    }
+
     function undoCloseSystem(){
         vm.cycleRouter.previous();
     }

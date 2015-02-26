@@ -131,7 +131,9 @@ var functionsToAdd = {
         }
     },
     getCycleSelectionAndInvoiceTotals: function getCycleSelectionAndInvoiceTotals() {
-        return couchUtils.getCouchViewResultValues(this.databaseName, 'getCycleSelectionAndInvoiceTotals');
+        return couchUtils.getCouchViewResultValues(this.databaseName, 'getCycleSelectionAndInvoiceTotals').then(function(resultArray){
+            return resultArray[0];
+        });
     }
 };
 
