@@ -26,9 +26,10 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr><td>TODO</td><td>4</td></tr>
-                    <tr><td>TODO</td><td>2</td></tr>
-                    <tr><td>TODO</td><td>1</td></tr>
+                    <tr ng-repeat="offer in vm.offering.history[vm.year - 1].pricing.su">
+                        <td>{{ ::offer.price | currency }}</td>
+                        <td>{{ ::offer.users }}</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
