@@ -7,6 +7,7 @@ var Q = require('q')
   , StoreModule = require( '../Store/CouchDb/Store')
   , _ = require('lodash')
   , Validator = require('../Validator')
+  , getStoreForCycle = require('./getStoreForCycle')
   ;
 
 /**
@@ -29,10 +30,6 @@ function setEntityLookupStores( newStore ){
     repositories.cycle.setStore( newStore );
     repositories.license.setStore( newStore );
     repositories.vendor.setStore( newStore );
-}
-
-function getStoreForCycle(cycle) {
-    return Store( StoreModule(_.extend({}, StoreOptions, { couchDbName: cycle.databaseName })) );
 }
 
 function removeEmptyContactsFromEntity(entity) {

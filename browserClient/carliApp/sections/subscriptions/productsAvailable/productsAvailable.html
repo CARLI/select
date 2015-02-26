@@ -1,5 +1,5 @@
-<products-available-by-vendor ng-if="vm.cycleRouter.groupBy === 'vendor'"></products-available-by-vendor>
-<products-available-by-library ng-if="vm.cycleRouter.groupBy === 'library'"></products-available-by-library>
+<products-available-by-vendor ng-if="vm.cycleRouter.groupBy === 'vendor'" on-offering-saved="vm.updateSelectionAndInvoiceTotals"></products-available-by-vendor>
+<products-available-by-library ng-if="vm.cycleRouter.groupBy === 'library'" on-offering-saved="vm.updateSelectionAndInvoiceTotals"></products-available-by-library>
 
 <div class="placeholder" style="width: 400px; margin-bottom: 1rem;">
     TODO: Archive Button
@@ -7,13 +7,13 @@
 
 <div class="invoice-summary">
     <div class="row">
-        <span class="label">Vendor Invoices Received Total:</span>
+        <span class="label">Vendor Invoices Received Total:</span> {{ vm.cycleTotals.invoicePrice | currency }}
     </div>
     <div class="row">
-        <span class="label">Library Invoices Total:</span>
+        <span class="label">Library Invoices Total:</span> {{ vm.cycleTotals.selectionPrice | currency }}
     </div>
     <div class="row">
-        <span class="label">Selection System Total:</span>
+        <span class="label">Selection System Total:</span> {{ vm.cycleTotals.invoicePrice - vm.cycleTotals.selectionPrice | currency }}
     </div>
 </div>
 

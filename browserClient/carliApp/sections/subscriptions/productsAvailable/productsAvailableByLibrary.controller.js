@@ -150,6 +150,7 @@ function productsAvailableByLibraryController( $scope, $q, alertService, control
                 var offeringIndex = vm.offerings[libraryId].indexOf(offering);
                 vm.offerings[libraryId][offeringIndex] = updatedOffering;
                 alertService.putAlert('Offering updated', {severity: 'success'});
+                vm.onOfferingSaved();
                 vm.isEditing[offering.id] = false;
             }).catch(function(err) {
                 alertService.putAlert(err, {severity: 'danger'});

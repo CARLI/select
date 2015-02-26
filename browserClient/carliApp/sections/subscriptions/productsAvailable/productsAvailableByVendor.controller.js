@@ -5,9 +5,10 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
     var vm = this;
     vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
     vm.offeringDisplayLabels = offeringService.getOfferingDisplayLabels();
-    vm.loadProductsForVendor = loadProductsForVendor;
+    vm.expandVendorAccordion = expandVendorAccordion;
     vm.getVendorPricingStatus = getVendorPricingStatus;
     vm.computeSelectionTotalForVendor = computeSelectionTotalForVendor;
+    vm.computeInvoiceTotalForVendor = computeInvoiceTotalForVendor;
     vm.loadingPromise = {};
     vm.setOfferingEditable = setOfferingEditable;
     vm.saveOffering = saveOffering;
@@ -41,9 +42,13 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
             });
     }
 
+    function expandVendorAccordion(vendor) {
+        loadProductsForVendor(vendor).then(updateVendorTotals);
+    }
+
     function loadProductsForVendor(vendor) {
         if (vendor.products) {
-            return;
+            return $q.when();
         }
         vm.loadingPromise[vendor.id] = productService.listProductsForVendorId(vendor.id).then(function (products) {
             vendor.products = products;
@@ -68,10 +73,22 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
             });
             return $q.all(promises);
         });
+
+        return vm.loadingPromise[vendor.id];
     }
 
     function getVendorPricingStatus(vendor) {
         return "No activity";
+    }
+
+    function updateVendorTotals() {
+        vm.selectionTotal = {};
+        vm.invoiceTotal = {};
+
+        vm.vendors.forEach(function (vendor) {
+            vm.selectionTotal[vendor.id] = computeSelectionTotalForVendor(vendor);
+            vm.invoiceTotal[vendor.id] = computeInvoiceTotalForVendor(vendor);
+        });
     }
 
     function computeSelectionTotalForVendor( vendor ){
@@ -86,6 +103,26 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
 
             offerings.forEach(function(offering){
                 sum += offering.selection ? offering.selection.price : 0;
+            });
+        });
+
+        return sum;
+    }
+
+    function computeInvoiceTotalForVendor( vendor ){
+        if ( !vendor.products ){
+            return 0;
+        }
+
+        var sum = 0;
+        var products = vendor.products;
+        products.forEach(function(product){
+            var offerings = product.offerings || [];
+
+            offerings.forEach(function(offering){
+                if (offering.invoice) {
+                    sum += offering.invoice.price ? offering.invoice.price : 0;
+                }
             });
         });
 
@@ -122,6 +159,8 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
                 var offeringIndex = productOfferings.indexOf(offering);
                 productOfferings[offeringIndex] = updatedOffering;
                 alertService.putAlert('Offering updated', {severity: 'success'});
+                updateVendorTotals();
+                vm.onOfferingSaved();
                 vm.isEditing[offering.id] = false;
             }).catch(function(err) {
                 alertService.putAlert(err, {severity: 'danger'});

@@ -48,6 +48,28 @@ ddoc = {
             reduce: function(key, values) {
                 return sum(values);
             }
+        },
+        getCycleSelectionAndInvoiceTotals: {
+            map: function(doc) {
+                if (doc.type == 'Offering') {
+                    selectionPrice = doc.selection ? doc.selection.price : 0;
+                    invoicePrice = doc.invoice ? doc.invoice.price || 0 : 0;
+
+                    emit(null, {
+                        selectionPrice: selectionPrice,
+                        invoicePrice: invoicePrice
+                    });
+                }
+            },
+            reduce: function(key, values, rereduce) {
+                var selectionPrices = values.map(function (v) { return v.selectionPrice; });
+                var invoicePrices = values.map(function (v) { return v.invoicePrice; });
+
+                return {
+                    selectionPrice: sum(selectionPrices),
+                    invoicePrice: sum(invoicePrices)
+                };
+            }
         }
     }
 };

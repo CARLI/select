@@ -4,7 +4,8 @@ angular.module('carli.sections.subscriptions.productsAvailable')
             restrict: 'E',
             templateUrl: '/carliApp/sections/subscriptions/productsAvailable/productsAvailable.html',
             scope: {
-                cycleRouter: '='
+                cycleRouter: '=',
+                cycle: '='
             },
             controller: 'productsAvailableController',
             controllerAs: 'vm',

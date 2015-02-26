@@ -2,12 +2,12 @@
 <div class="offerings-editor">
     <ul class="vendor-accordion" ng-repeat="vendor in vm.vendors">
         <li carli-accordion>
-            <header ng-click="vm.loadProductsForVendor(vendor)" cg-busy="vm.loadingPromise[vendor.id]">
+            <header ng-click="vm.expandVendorAccordion(vendor)" cg-busy="vm.loadingPromise[vendor.id]">
                 <button type="button" class="angle-icon-container">
                     <fa name="angle-down"></fa>
                 </button>
                 {{ vendor.name }}
-                <span class="vendor-status">{{ vm.getVendorPricingStatus(vendor) }}</span>
+                <span class="vendor-status">{{ ::vm.getVendorPricingStatus(vendor) }}</span>
             </header>
             <div class="content" ng-if="vendor.products">
                 <ul class="product-content">
@@ -44,10 +44,10 @@
                                     </div>
                                 </div>
                                 <div class="column selected-last-year">
-                                    <fa name="star"></fa>
+                                    <fa ng-if="::offering.history[vm.lastYear].selection" name="star"></fa>
                                 </div>
                                 <div class="column site-license-price">
-                                    <offering-pricing year="vm.cycle.year" offering="offering" edit-mode="vm.isEditing[offering.id]"></offering-pricing>
+                                    <offering-pricing year="vm.cycle.year" offering="offering" edit-mode="vm.isEditing[offering.id]" hide-previous-year="true"></offering-pricing>
                                 </div>
                                 <div class="column selection">
                                     <label for="{{ offering.id }}_selection" class="sr-only">Library Selection</label>
@@ -75,8 +75,10 @@
                 </ul>
                 <div class="vendor footer">
                     <div class="total">
-                        <span class="label">Total:</span>
-                        <span>{{ vm.computeSelectionTotalForVendor(vendor) | currency }}</span>
+                        <span class="label">Selection Total:</span>
+                        <span>{{ vm.selectionTotal[vendor.id] | currency }}</span>
+                        <span class="label">Vendor Invoice Total:</span>
+                        <span>{{ vm.invoiceTotal[vendor.id] | currency }}</span>
                     </div>
                     <button type="button" class="carli-button" ng-click="vm.reportCheckedProductsForVendor(vendor)">Report Checked Products</button>
                     <div class="placeholder pull-left" style="width: 400px;">TODO: Report All Products</div>

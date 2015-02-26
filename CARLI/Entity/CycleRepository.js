@@ -2,10 +2,10 @@ var Entity = require('../Entity')
     , EntityTransform = require( './EntityTransformationUtils')
     , config = require( '../../config' )
     , couchUtils = require( '../Store/CouchDb/Utils')
+    , offeringRepository = require('./OfferingRepository')
     , StoreOptions = config.storeOptions
     , Store = require( '../Store' )
     , StoreModule = require( '../Store/CouchDb/Store')
-    , moment = require('moment')
     , Q = require('q')
     , _ = require('lodash')
     ;
@@ -37,8 +37,9 @@ function createCycleFrom( sourceCycle, newCycleData ) {
         .then(function(newCycleId) {
             return CycleRepository.load(newCycleId)
                 .then(function (newCycle) {
-                    return couchUtils.replicateFrom(sourceCycle.databaseName).to(newCycle.databaseName);
+                    return couchUtils.replicateFrom(sourceCycle.databaseName).to(newCycle.databaseName).thenResolve(newCycle);
                 })
+                .then(offeringRepository.transformOfferingsForNewCycle)
                 .then(function() {
                     return newCycleId;
                 });
@@ -113,10 +114,6 @@ function listActiveCycles() {
     return expandCycles( couchUtils.getCouchViewResultValues(config.getDbName(), 'listActiveCycles') );
 }
 
-function getStoreForCycle(cycle) {
-    return Store( StoreModule(_.extend({}, StoreOptions, { couchDbName: cycle.databaseName })) );
-}
-
 /* functions that get added as instance methods on loaded Cycles */
 
 var functionsToAdd = {
@@ -132,6 +129,11 @@ var functionsToAdd = {
         if (this.status > 0){
             --this.status;
         }
+    },
+    getCycleSelectionAndInvoiceTotals: function getCycleSelectionAndInvoiceTotals() {
+        return couchUtils.getCouchViewResultValues(this.databaseName, 'getCycleSelectionAndInvoiceTotals').then(function(resultArray){
+            return resultArray[0];
+        });
     }
 };
 
@@ -143,6 +145,5 @@ module.exports = {
     list: listCycles,
     load: loadCycle,
     statusLabels: statusLabels,
-    listActiveCycles: listActiveCycles,
-    getStoreForCycle: getStoreForCycle
+    listActiveCycles: listActiveCycles
 };

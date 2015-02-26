@@ -1,10 +1,11 @@
 var Entity = require('../Entity')
   , EntityTransform = require( './EntityTransformationUtils')
   , config = require( '../../config' )
-  , CycleRepository = require('./CycleRepository')
   , CouchUtils = require( '../Store/CouchDb/Utils')
+  , getStoreForCycle = require('./getStoreForCycle')
   , Validator = require('../Validator')
   , Q = require('q')
+  , _ = require('lodash')
   ;
 
 var OfferingRepository = Entity('Offering');
@@ -48,6 +49,32 @@ function listOfferings(cycle){
     return expandOfferings( OfferingRepository.list(cycle.databaseName), cycle);
 }
 
+function transformOfferingsForNewCycle(newCycle, sourceCycle) {
+    return listOfferings(newCycle).then(function(offerings) {
+        var promises = offerings.map(transformOffering).map(saveOffering);
+
+        return Q.all(promises);
+
+        function transformOffering(offering) {
+            saveOfferingHistoryForYear(offering, sourceCycle.year);
+        }
+        function saveOffering(offering) {
+            return updateOffering(offering, newCycle);
+        }
+    });
+}
+
+function saveOfferingHistoryForYear(offering, year) {
+    offering.history = offering.history || {};
+    offering.history[year] = {
+        pricing: _.clone(offering.pricing)
+    };
+    if (offering.selection ) {
+        offering.history[year].selection = _.clone(offering.selection);
+    }
+    return offering;
+}
+
 function loadOffering( offeringId, cycle ){
     var deferred = Q.defer();
 
@@ -86,7 +113,7 @@ function setCycle(cycle) {
     if (cycle === undefined) {
         throw Error("Cycle is required");
     }
-    OfferingRepository.setStore(CycleRepository.getStoreForCycle(cycle));
+    OfferingRepository.setStore(getStoreForCycle(cycle));
 }
 
 
@@ -125,7 +152,10 @@ module.exports = {
     update: updateOffering,
     list: listOfferings,
     load: loadOffering,
+
     listOfferingsForLibraryId: listOfferingsForLibraryId,
     listOfferingsForProductId: listOfferingsForProductId,
-    getOfferingDisplayOptions: getOfferingDisplayOptions
+    getOfferingDisplayOptions: getOfferingDisplayOptions,
+    transformOfferingsForNewCycle: transformOfferingsForNewCycle,
+    saveOfferingHistoryForYear: saveOfferingHistoryForYear
 };
