@@ -128,6 +128,25 @@ describe('Additional Repository Functions', function() {
 });
 
 describe('Adding functions to Cycle instances', function() {
+
+    it('should add functions to cycle instances', function () {
+        var cycle = validCycleData();
+
+        return CycleRepository.create(cycle)
+            .then(function (cycleId) {
+                return CycleRepository.load(cycleId);
+            })
+            .then(function (loadedCycle) {
+                return Q.all([
+                    expect(loadedCycle.getStatusLabel).to.be.a('function'),
+                    expect(loadedCycle.proceedToNextStep).to.be.a('function'),
+                    expect(loadedCycle.returnToPreviousStep).to.be.a('function'),
+                    expect(loadedCycle.getCycleSelectionAndInvoiceTotals).to.be.a('function')
+                ]);
+            });
+    });
+
+
     it('should add a getStatusLabel method to instances of Cycle', function () {
         var cycle = validCycleData();
 

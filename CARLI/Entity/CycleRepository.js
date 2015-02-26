@@ -129,6 +129,9 @@ var functionsToAdd = {
         if (this.status > 0){
             --this.status;
         }
+    },
+    getCycleSelectionAndInvoiceTotals: function getCycleSelectionAndInvoiceTotals() {
+        return couchUtils.getCouchViewResultValues(this.databaseName, 'getCycleSelectionAndInvoiceTotals');
     }
 };
 
