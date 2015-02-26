@@ -5,7 +5,7 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
     var vm = this;
     vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
     vm.offeringDisplayLabels = offeringService.getOfferingDisplayLabels();
-    vm.loadProductsForVendor = loadProductsForVendor;
+    vm.expandVendorAccordion = expandVendorAccordion;
     vm.getVendorPricingStatus = getVendorPricingStatus;
     vm.computeSelectionTotalForVendor = computeSelectionTotalForVendor;
     vm.computeInvoiceTotalForVendor = computeInvoiceTotalForVendor;
@@ -42,9 +42,13 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
             });
     }
 
+    function expandVendorAccordion(vendor) {
+        loadProductsForVendor(vendor).then(updateVendorTotals);
+    }
+
     function loadProductsForVendor(vendor) {
         if (vendor.products) {
-            return;
+            return $q.when();
         }
         vm.loadingPromise[vendor.id] = productService.listProductsForVendorId(vendor.id).then(function (products) {
             vendor.products = products;
@@ -69,10 +73,22 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
             });
             return $q.all(promises);
         });
+
+        return vm.loadingPromise[vendor.id];
     }
 
     function getVendorPricingStatus(vendor) {
         return "No activity";
+    }
+
+    function updateVendorTotals() {
+        vm.selectionTotal = {};
+        vm.invoiceTotal = {};
+
+        vm.vendors.forEach(function (vendor) {
+            vm.selectionTotal[vendor.id] = computeSelectionTotalForVendor(vendor);
+            vm.invoiceTotal[vendor.id] = computeInvoiceTotalForVendor(vendor);
+        });
     }
 
     function computeSelectionTotalForVendor( vendor ){
@@ -144,6 +160,7 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
                 productOfferings[offeringIndex] = updatedOffering;
                 alertService.putAlert('Offering updated', {severity: 'success'});
                 vm.isEditing[offering.id] = false;
+                updateVendorTotals();
             }).catch(function(err) {
                 alertService.putAlert(err, {severity: 'danger'});
                 console.log('failed', err);
