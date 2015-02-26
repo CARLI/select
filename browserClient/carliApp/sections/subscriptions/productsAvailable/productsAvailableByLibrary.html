@@ -35,7 +35,7 @@
                             <button ng-show="vm.isEditing[offering.id]" type="button" class="carli-button save" ng-click="vm.saveOffering(offering, library.id)">Save <fa name="floppy-o"></fa></button>
                         </div>
                         <div class="column selected-last-year">
-                            <fa name="star"></fa>
+                            <fa ng-if="::offering.history[vm.lastYear].selection" name="star"></fa>
                         </div>
                         <div class="column vendor">
                             <h3>{{ offering.product.vendor.name }}</h3>
