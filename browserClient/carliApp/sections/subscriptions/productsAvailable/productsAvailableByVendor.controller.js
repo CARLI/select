@@ -159,8 +159,9 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
                 var offeringIndex = productOfferings.indexOf(offering);
                 productOfferings[offeringIndex] = updatedOffering;
                 alertService.putAlert('Offering updated', {severity: 'success'});
-                vm.isEditing[offering.id] = false;
                 updateVendorTotals();
+                vm.onOfferingSaved();
+                vm.isEditing[offering.id] = false;
             }).catch(function(err) {
                 alertService.putAlert(err, {severity: 'danger'});
                 console.log('failed', err);

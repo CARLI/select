@@ -3,8 +3,11 @@ angular.module('carli.sections.subscriptions.productsAvailable')
         return {
             restrict: 'E',
             templateUrl: '/carliApp/sections/subscriptions/productsAvailable/productsAvailableByLibrary.html',
-            scope: {},
+            scope: {
+                onOfferingSaved: '='
+            },
             controller: 'productsAvailableByLibraryController',
-            controllerAs: 'vm'
+            controllerAs: 'vm',
+            bindToController: true
         };
     });
