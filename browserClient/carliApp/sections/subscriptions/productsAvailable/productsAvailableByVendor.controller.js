@@ -5,7 +5,7 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
     var vm = this;
     vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
     vm.offeringDisplayLabels = offeringService.getOfferingDisplayLabels();
-    vm.expandVendorAccordion = expandVendorAccordion;
+    vm.toggleVendorAccordion = toggleVendorAccordion;
     vm.getVendorPricingStatus = getVendorPricingStatus;
     vm.computeSelectionTotalForVendor = computeSelectionTotalForVendor;
     vm.computeInvoiceTotalForVendor = computeInvoiceTotalForVendor;
@@ -42,8 +42,16 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
             });
     }
 
-    function expandVendorAccordion(vendor) {
-        loadProductsForVendor(vendor).then(updateVendorTotals);
+    function toggleVendorAccordion( vendor ){
+        if ( vm.openAccordion !== vendor.id ){
+            loadProductsForVendor(vendor)
+                .then(updateVendorTotals)
+                .then(function () {
+                    vm.openAccordion = vendor.id;
+                });
+        } else {
+            vm.openAccordion = null;
+        }
     }
 
     function loadProductsForVendor(vendor) {
