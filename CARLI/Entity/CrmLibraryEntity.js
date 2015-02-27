@@ -1,6 +1,6 @@
 var uuid  = require( 'node-uuid' )
   , Q = require( 'q' )
-  , middleware = require('../../config/environmentDependentModules').middleware
+  , crmQueries = require('../../config/environmentDependentModules').crmQueries
   , entityCache = require('./entityCache')
   , config = require( '../../config' )
 ;
@@ -21,7 +21,7 @@ module.exports = function (timeout) {
         delete: noop,
 
         list: function() {
-            return middleware.listLibraries();
+            return crmQueries.listLibraries();
         },
 
         load: function( id ){
@@ -30,7 +30,7 @@ module.exports = function (timeout) {
             }
 
             function loadLibrary(id){
-                return middleware.loadLibrary(id).then(function(library){
+                return crmQueries.loadLibrary(id).then(function(library){
                     library.id = library.crmId.toString();
                     return library;
                 });

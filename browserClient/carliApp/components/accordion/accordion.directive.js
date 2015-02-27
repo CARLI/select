@@ -15,10 +15,10 @@ angular.module('carli.accordion')
                 element.children('.content').css('display', 'none');
 
                 element.addClass('collapsed')
-                .attr('id',accordionId)
-                .on('click', 'header', function(event){
-                    $rootScope.$broadcast('accordion', accordionId);
-                });
+                    .attr('id',accordionId)
+                    .on('click', 'header', function(event){
+                        $rootScope.$broadcast('accordion', accordionId);
+                    });
             }
         };
     }

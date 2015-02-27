@@ -39,9 +39,18 @@ function loadLibrary(id) {
     });
 }
 
+function listProductsWithOfferingsForVendorId(vendorId, cycle) {
+    return middlewareRequest({
+        path: '/products-with-offerings-for-vendor/' + vendorId + '/for-cycle/' + cycle.id,
+        method: 'get',
+        json: true
+    });
+}
+
 module.exports = {
     putDesignDoc: putDesignDoc,
     tellPixobot: function() {},
     listLibraries: listLibraries,
-    loadLibrary: loadLibrary
+    loadLibrary: loadLibrary,
+    listProductsWithOfferingsForVendorId: listProductsWithOfferingsForVendorId
 };

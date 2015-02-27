@@ -7,6 +7,7 @@ var _ = require('lodash');
 var couchUtils = require('./components/couchUtils');
 var crmQueries = require('./components/crmQueries');
 var notifications = require('./components/notifications');
+var listProductsWithOfferingsForVendorId = require('./components/listProductsWithOfferingsForVendorId');
 
 function _enableCors(carliMiddleware) {
     carliMiddleware.use(function (req, res, next) {
@@ -73,6 +74,15 @@ function runMiddlewareServer(){
         });
     });
 
+    carliMiddleware.get('/products-with-offerings-for-vendor/:vendorId/for-cycle/:cycleId', function (req, res) {
+        listProductsWithOfferingsForVendorId.listProductsWithOfferingsForVendorId(req.params.vendorId, req.params.cycleId)
+            .then(function(products){
+                res.send(products);
+            }).catch(function (err) {
+                res.send( { error: err } );
+            });
+    });
+
     var server = carliMiddleware.listen(config.middleware.port, function () {
 
         var host = server.address().address;
@@ -87,5 +97,5 @@ if (require.main === module) {
     runMiddlewareServer();
 }
 else {
-    module.exports = _.extend({}, couchUtils, notifications, crmQueries);
+    module.exports = _.extend({}, couchUtils, notifications, crmQueries, listProductsWithOfferingsForVendorId);
 }

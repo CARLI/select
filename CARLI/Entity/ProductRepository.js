@@ -6,6 +6,7 @@ var Entity = require('../Entity')
   , getStoreForCycle = require('./getStoreForCycle')
   , Validator = require('../Validator')
   , moment = require('moment')
+  , listProductsWithOfferingsForVendorIdModule = require('../../config/environmentDependentModules').listProductsWithOfferingsForVendorId
   , Q = require('q')
   ;
 
@@ -93,6 +94,10 @@ function listProductsForVendorId( vendorId, cycle ) {
     return CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listProductsForVendorId', vendorId);
 }
 
+function listProductsWithOfferingsForVendorId( vendorId, cycle ) {
+    return listProductsWithOfferingsForVendorIdModule.listProductsWithOfferingsForVendorId(vendorId, cycle.id);
+}
+
 function listProductCountsByVendorId(cycle){
     setCycle(cycle);
     return CouchUtils.getCouchViewResultObject(cycle.databaseName, 'listProductCountsByVendorId', null, true);
@@ -132,6 +137,7 @@ module.exports = {
     listAvailableOneTimePurchaseProducts: listAvailableOneTimePurchaseProducts,
     listProductsForLicenseId: listProductsForLicenseId,
     listProductsForVendorId: listProductsForVendorId,
+    listProductsWithOfferingsForVendorId: listProductsWithOfferingsForVendorId,
     listProductCountsByVendorId: listProductCountsByVendorId,
     getProductDetailCodeOptions: getProductDetailCodeOptions
 };

@@ -1,7 +1,7 @@
 <div cg-busy="vm.libraryLoadingPromise"></div>
 <div class="offerings-editor">
-    <ul class="library-accordion" ng-repeat="library in vm.libraryList">
-        <li carli-accordion>
+    <ul class="library-accordion">
+        <li carli-accordion ng-repeat="library in vm.libraryList">
             <header ng-click="vm.loadOfferingsForLibrary(library)" cg-busy="vm.loadingPromise[library.id]">
                 <button type="button" class="angle-icon-container">
                     <fa name="angle-down"></fa>

@@ -5,7 +5,7 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
     var vm = this;
     vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
     vm.offeringDisplayLabels = offeringService.getOfferingDisplayLabels();
-    vm.expandVendorAccordion = expandVendorAccordion;
+    vm.toggleVendorAccordion = toggleVendorAccordion;
     vm.getVendorPricingStatus = getVendorPricingStatus;
     vm.computeSelectionTotalForVendor = computeSelectionTotalForVendor;
     vm.computeInvoiceTotalForVendor = computeInvoiceTotalForVendor;
@@ -42,36 +42,25 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
             });
     }
 
-    function expandVendorAccordion(vendor) {
-        loadProductsForVendor(vendor).then(updateVendorTotals);
+    function toggleVendorAccordion( vendor ){
+        if ( vm.openAccordion !== vendor.id ){
+            loadProductsForVendor(vendor)
+                .then(updateVendorTotals)
+                .then(function () {
+                    vm.openAccordion = vendor.id;
+                });
+        } else {
+            vm.openAccordion = null;
+        }
     }
 
     function loadProductsForVendor(vendor) {
         if (vendor.products) {
             return $q.when();
         }
-        vm.loadingPromise[vendor.id] = productService.listProductsForVendorId(vendor.id).then(function (products) {
+
+        vm.loadingPromise[vendor.id] = productService.listProductsWithOfferingsForVendorId(vendor.id).then(function(products) {
             vendor.products = products;
-
-            var promises = [];
-            angular.forEach(products, function (product) {
-                var offeringPromise = offeringService.listOfferingsForProductId(product.id).then(function(offerings) {
-                    product.offerings = offerings;
-
-                    offerings.forEach(function(offering){
-                        offering.display = offering.display || "with-price";
-
-                        updateOfferingFlaggedStatus(offering);
-
-                        if (!offering.libraryComments) {
-                            offering.libraryComments = offering.product.comments;
-                        }
-                    });
-                    return offerings;
-                });
-                promises.push(offeringPromise);
-            });
-            return $q.all(promises);
         });
 
         return vm.loadingPromise[vendor.id];
