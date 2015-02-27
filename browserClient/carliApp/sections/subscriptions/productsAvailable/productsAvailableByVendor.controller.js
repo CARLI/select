@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.productsAvailable')
     .controller('productsAvailableByVendorController', productsAvailableByVendorController);
 
-function productsAvailableByVendorController( $scope, $q, alertService, controllerBaseService, cycleService, libraryService, vendorService, offeringService, productService ) {
+function productsAvailableByVendorController( $scope, $q, $timeout, alertService, controllerBaseService, cycleService, libraryService, vendorService, offeringService, productService ) {
     var vm = this;
     vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
     vm.offeringDisplayLabels = offeringService.getOfferingDisplayLabels();
@@ -59,8 +59,14 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
             return $q.when();
         }
 
+        var start = new Date();
+
         vm.loadingPromise[vendor.id] = productService.listProductsWithOfferingsForVendorId(vendor.id).then(function(products) {
             vendor.products = products;
+            $timeout(function(){
+                var stop = new Date();
+                console.log('digest vendor data took '+ (stop-start)/1000 + 'ms');
+            });
         });
 
         return vm.loadingPromise[vendor.id];
