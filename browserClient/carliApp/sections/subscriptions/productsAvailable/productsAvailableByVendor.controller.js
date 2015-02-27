@@ -50,28 +50,9 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
         if (vendor.products) {
             return $q.when();
         }
-        vm.loadingPromise[vendor.id] = productService.listProductsForVendorId(vendor.id).then(function (products) {
+
+        vm.loadingPromise[vendor.id] = productService.listProductsWithOfferingsForVendorId(vendor.id).then(function(products) {
             vendor.products = products;
-
-            var promises = [];
-            angular.forEach(products, function (product) {
-                var offeringPromise = offeringService.listOfferingsForProductId(product.id).then(function(offerings) {
-                    product.offerings = offerings;
-
-                    offerings.forEach(function(offering){
-                        offering.display = offering.display || "with-price";
-
-                        updateOfferingFlaggedStatus(offering);
-
-                        if (!offering.libraryComments) {
-                            offering.libraryComments = offering.product.comments;
-                        }
-                    });
-                    return offerings;
-                });
-                promises.push(offeringPromise);
-            });
-            return $q.all(promises);
         });
 
         return vm.loadingPromise[vendor.id];

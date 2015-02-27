@@ -106,7 +106,21 @@ function listOfferingsForLibraryId( libraryId, cycle ) {
 
 function listOfferingsForProductId( productId, cycle ) {
     setCycle(cycle);
-    return expandOfferings( CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForProductId', productId), cycle );
+    return expandOfferings( CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForProductId', productId), cycle )
+        .then(initializeComputedValues);
+
+    function initializeComputedValues(offerings) {
+        offerings.forEach(function(offering){
+            offering.display = offering.display || "with-price";
+
+            offering.flagged = offering.getFlaggedState();
+
+            if (!offering.libraryComments) {
+                offering.libraryComments = offering.product.comments;
+            }
+        });
+        return offerings;
+    }
 }
 
 function setCycle(cycle) {
