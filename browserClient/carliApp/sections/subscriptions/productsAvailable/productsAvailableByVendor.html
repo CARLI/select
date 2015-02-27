@@ -6,15 +6,15 @@
                 <button type="button" class="angle-icon-container">
                     <fa name="angle-down"></fa>
                 </button>
-                {{ vendor.name }}
+                {{ ::vendor.name }}
                 <span class="vendor-status">{{ ::vm.getVendorPricingStatus(vendor) }}</span>
             </header>
             <div class="content" ng-if="vm.openAccordion === vendor.id">
                 <ul class="product-content">
-                    <li ng-repeat="product in vendor.products | filter:{isActive:true} track by product.id">
+                    <li ng-repeat="product in ::vendor.products | filter:{isActive:true} track by product.id">
                         <div class="product-header">
-                            {{ product.name }}
-                            <span class="price-cap">Price Cap: <strong>{{ product.priceCap }}%</strong></span>
+                            {{ ::product.name }}
+                            <span class="price-cap">Price Cap: <strong>{{ ::product.priceCap }}%</strong></span>
                         </div>
                         <ul class="offerings-list">
                             <li class="column-headers">
@@ -35,7 +35,7 @@
                                 <div class="column library-view">
                                     <div class="display">
                                         <label for="offering-display" ng-show="vm.isEditing[offering.id]">Display:</label>
-                                        <view-edit-radios ng-model="offering.display" input-id="offering-display" edit-mode="vm.isEditing[offering.id]" items="vm.offeringDisplayOptions" radio-group-name="offering-{{offering.library.name}}-display">
+                                        <view-edit-radios ng-model="offering.display" input-id="offering-display" edit-mode="vm.isEditing[offering.id]" items="vm.offeringDisplayOptions" radio-group-name="offering-{{::offering.library.name}}-display">
                                             <strong class="purple">{{ vm.offeringDisplayLabels[offering.display] }}</strong>
                                         </view-edit-radios>
                                     </div>
@@ -50,7 +50,7 @@
                                     <offering-pricing year="vm.cycle.year" offering="offering" edit-mode="vm.isEditing[offering.id]" hide-previous-year="true"></offering-pricing>
                                 </div>
                                 <div class="column selection">
-                                    <label for="{{ offering.id }}_selection" class="sr-only">Library Selection</label>
+                                    <label for="{{ ::offering.id }}_selection" class="sr-only">Library Selection</label>
                                     <view-edit-offering-selection ng-model="offering" edit-mode="vm.isEditing[offering.id]">
                                         <div class="selection-display" ng-show="offering.selection">
                                             <div class="users"><span class="label">Selection:</span> {{ offering.selection.users }} {{ offering.selection.users === 'site' ? '' : 'Users' }}</div>
