@@ -1,5 +1,5 @@
 var config = require('../../../config');
-var middleware = require('../../../config/environmentDependentModules').middleware,
+var couchUtils = require('../../../config/environmentDependentModules').couchUtils,
     Q = require('q'),
     request = require('../../../config/environmentDependentModules').request,
     StoreOptions = require( '../../../config').storeOptions,
@@ -134,7 +134,7 @@ function createDatabase(dbName) {
         if (error) {
             deferred.reject(error);
         } else if (response.statusCode >= 200 && response.statusCode <= 299) {
-            middleware.putDesignDoc(dbName, dbType).then(function () {
+            couchUtils.putDesignDoc(dbName, dbType).then(function () {
                 deferred.resolve();
             });
         } else {
