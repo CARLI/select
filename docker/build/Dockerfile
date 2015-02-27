@@ -12,7 +12,8 @@ RUN apt-get -qq install nodejs build-essential
 # Required for PhantomJS
 RUN apt-get -qq install libfreetype6 libfontconfig
 
-# Install convenient global npm packages
+# Install global packages
+RUN npm install -g forever
 RUN npm install -g grunt-cli
 RUN npm install -g bower
 RUN gem install sass
