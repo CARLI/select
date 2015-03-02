@@ -19,7 +19,7 @@ module.exports = {
         jsE2e: ['e2e/*.spec.js'],
         jsAll: ['carliApp/**/*.js'],
         index: ['carliApp/index.html'],
-        html: ['carliApp/**/*.html', '!carliApp/index.html'],
+        html: ['carliApp/**/*.html', '!carliApp/index.html', 'carliApp/**/*.handlebars'],
         scss: ['carliApp/styles/app.scss' ],
         watchSass: [ 'carliApp/**/*.scss' ],
         images: ['carliApp/**/*.png'],

@@ -12,7 +12,7 @@
         </div>
     </div>
     <button type="button" class="carli-button edit">Edit <span class="fa fa-pencil-square-o "></span></button>
-    <button type="button" style="display: none;" class="carli-button save"">Save <span class="fa fa-floppy-o"></span></button>
+    <button type="button" style="display: none;" class="carli-button save">Save <span class="fa fa-floppy-o"></span></button>
 </div>
 <div class="column library-view">
     <div class="display">
@@ -71,7 +71,7 @@
     <label for="{{ offering.id }}_selection" class="sr-only">Library Selection</label>
     {{#if offering.selection }}
     <div class="selection-display">
-        <div class="users"><span class="label">Selection:</span> {{ offering.selection.users }} {{ offering.selection.users === 'site' ? '' : 'Users' }}</div>
+        <div class="users"><span class="label">Selection:</span> {{ offering.selection.users }} {{ offering.selection.users }}</div>
         <div class="price"><span class="label">Price:</span> {{ offering.selection.price }}</div>
     </div>
     {{/if}}

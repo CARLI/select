@@ -7,8 +7,57 @@
         list-style: none inside;
 
         & > li {
-            @include flexbox;
-            align-items: stretch;
+
+            &.column-headers,
+            &.offering > render-offering {
+                @include flexbox;
+                align-items: stretch;
+
+                & > .column {
+                    border-right: $default-border;
+                    @include flex(0 0 auto);
+                    position: relative;
+
+                    &.library {
+                        @include flex(2 0 10%);
+                    }
+
+                    &.product,
+                    &.vendor {
+                        @include flex(2 0 10%);
+
+                        h3 {
+                            margin: 0;
+                        }
+                    }
+
+                    &.selected-last-year {
+                        width: 100px;
+                    }
+
+                    &.library-view {
+                        width: 380px;
+                    }
+
+                    &.site-license-price {
+                        width: 380px;
+
+                        &.current-year-only {
+                            width: 190px;
+                        }
+                    }
+
+                    &.flag {
+                        width: 70px;
+                    }
+
+                    &.selection,
+                    &.vendor-invoice {
+                        @include flex(1 1 5%);
+                        min-width: 60px;
+                    }
+                }
+            }
 
             &.column-headers {
                 @include sortable-column-header;
@@ -22,129 +71,106 @@
                 }
             }
 
-            &.offering > .column {
-                &.product,
-                &.vendor,
-                &.library,
-                &.selection {
-                    padding: 1rem;
-                }
+            &.offering > render-offering {
 
-                &.flag {
-                    align-self: center;
-                }
-            }
+                .column {
+                    &.product,
+                    &.vendor,
+                    &.library,
+                    &.selection {
+                        padding: 1rem;
+                    }
 
-            & > .column {
-                border-right: $default-border;
-                @include flex(0 0 auto);
-                position: relative;
-
-                label, .label {
-                    margin-top: 0;
-                }
-
-                button.save,
-                button.edit {
-                    bottom: 1rem;
-                    left: 1rem;
-                    position: absolute;
-                    min-width: 65px;
-                }
-
-                &.library {
-                    @include flex(2 0 10%);
-                }
-
-                &.product,
-                &.vendor {
-                    @include flex(2 0 10%);
-
-                    h3 {
-                        margin: 0;
+                    &.flag {
+                        align-self: center;
                     }
                 }
 
-                &.selected-last-year {
-                    text-align: center;
-                    width: 100px;
-                }
+                & > .column {
+                    border-right: $default-border;
+                    @include flex(0 0 auto);
+                    position: relative;
 
-                &.library-view {
-                    width: 380px;
-
-                    .display {
-                        border-bottom: $default-border;
-                        padding: .5rem 1rem;
+                    label, .label {
+                        margin-top: 0;
                     }
-                }
 
-                &.site-license-price {
-                    width: 380px;
-
-                    &.current-year-only {
-                        width: 190px;
+                    button.save,
+                    button.edit {
+                        bottom: 1rem;
+                        left: 1rem;
+                        position: absolute;
+                        min-width: 65px;
                     }
-                }
 
-                &.flag {
-                    border-right: 0;
-                    width: 70px;
-                    text-align: center;
-
-                    checkbox {
-                        .checkbox-display {
-                            cursor: pointer;
+                    &.product,
+                    &.vendor {
+                        h3 {
+                            margin: 0;
                         }
-                        input[type="checkbox"] {
-                            & + label {
-                                user-select: none;
-                                color: $gray;
-                            }
+                    }
 
-                            &:checked + label {
-                                color: $orange;
-                            }
+                    &.selected-last-year {
+                        text-align: center;
+                    }
+
+                    &.library-view {
+                        .display {
+                            border-bottom: $default-border;
+                            padding: .5rem 1rem;
                         }
+                    }
 
-                        .fa {
-                            @include font-size(22);
-                        }
+                    &.flag {
+                        border-right: 0;
+                        text-align: center;
 
-                        &.focused {
-                            background: transparent;
+                        checkbox {
                             .checkbox-display {
-                                outline: $light-purple auto 5px;
+                                cursor: pointer;
+                            }
+                            input[type="checkbox"] {
+                                & + label {
+                                    user-select: none;
+                                    color: $gray;
+                                }
+
+                                &:checked + label {
+                                    color: $orange;
+                                }
+                            }
+
+                            .fa {
+                                @include font-size(22);
+                            }
+
+                            &.focused {
+                                background: transparent;
+                                .checkbox-display {
+                                    outline: $light-purple auto 5px;
+                                }
                             }
                         }
                     }
-                }
 
-                &.selection {
-                    @include flex(1 1 5%);
-                    min-width: 60px;
-
-                    .selection-display {
-                        .price {
-                            color: $purple;
-                            font-weight: 700;
+                    &.selection {
+                        .selection-display {
+                            .price {
+                                color: $purple;
+                                font-weight: 700;
+                            }
                         }
                     }
-                }
 
-                &.vendor-invoice {
-                    @include flex(1 1 5%);
-                    min-width: 60px;
-                }
+                    .carli-button {
+                        border: 0;
+                        height: auto;
+                        padding: 0;
+                        text-align: left;
 
-                .carli-button {
-                    border: 0;
-                    height: auto;
-                    padding: 0;
-                    text-align: left;
-
-                    &:hover {
-                        background: $white;
+                        &:hover {
+                            background: $white;
+                        }
                     }
                 }
             }
