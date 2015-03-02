@@ -30,16 +30,16 @@
     </div>
 </div>
 <div class="column selected-last-year">
-    {{#if history}}
+    {{#if selectedLastYear}}
     <span class="fa fa-star"></span>
     {{/if}}
 </div>
 <div class="column site-license-price">
     <div class="site-pricing single-column">
         <div class="column">
-            <div class="header"><strong>{{ vm.year }}</strong> Price</div>
+            <div class="header"><strong>{{ lastYear }}</strong> Price</div>
             <div class="row">
-                {{ currency vm.offering.pricing.site }}
+                {{ currency offering.pricing.site }}
             </div>
         </div>
     </div>
@@ -50,7 +50,7 @@
                 <table>
                     <thead>
                     <tr>
-                        <th><strong>{{ vm.year }}</strong> Price</th>
+                        <th><strong>{{ thisYear }}</strong> Price</th>
                         <th>User(s)</th>
                     </tr>
                     </thead>

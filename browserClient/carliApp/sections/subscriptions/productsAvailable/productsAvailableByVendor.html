@@ -26,7 +26,7 @@
                                 <div class="column vendor-invoice">Vendor Invoice</div>
                             </li>
                             <li class="offering" ng-class="{ 'edit-mode': vm.isEditing[offering.id] }" ng-repeat="offering in product.offerings | orderBy:vm.orderBy:vm.reverse track by offering.id">
-                                <render-offering offering="::offering"></render-offering>
+                                <render-offering offering="::offering" cycle="::vm.cycle"></render-offering>
                             </li>
                         </ul>
                         <div class="product footer"></div>

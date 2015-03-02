@@ -9,7 +9,8 @@ function renderOfferingDirective( $http, $q, $filter, offeringService ) {
     return {
         restrict: 'E',
         scope: {
-            offering: '='
+            offering: '=',
+            cycle: '='
         },
         link: function postLink(scope, element, attrs) {
             scope.$watch('offering',renderOfferingWhenReady);
@@ -21,9 +22,23 @@ function renderOfferingDirective( $http, $q, $filter, offeringService ) {
             }
 
             function render(offering){
+                var lastYear = scope.cycle.year - 1;
+
                 getOfferingTemplate().then(function (template) {
-                    element.html( template({ offering: offering }) );
+                    var values = {
+                        thisYear: scope.cycle.year,
+                        lastYear: lastYear,
+                        selectedLastYear: selectedLastYear(),
+                        offering: offering
+                    };
+                    element.html( template(values) );
                 });
+
+                function selectedLastYear(){
+                    if ( offering.history && offering.history[lastYear] ){
+                        return offering.history[lastYear].selection;
+                    }
+                }
             }
 
             function getOfferingTemplate() {
