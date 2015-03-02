@@ -3,7 +3,9 @@ angular.module('carli.renderOffering')
 
 var offeringTemplatePromise;
 
-function renderOfferingDirective( $http, $q ) {
+function renderOfferingDirective( $http, $q, $filter, offeringService ) {
+    registerHandlebarsHelpers();
+
     return {
         restrict: 'E',
         scope: {
@@ -38,5 +40,28 @@ function renderOfferingDirective( $http, $q ) {
             }
         }
     };
+
+    function currency( number ) {
+        return $filter('currency')(number);
+    }
+
+    function displayLabel( display ) {
+        var offeringDisplayLabels = offeringService.getOfferingDisplayLabels();
+        return offeringDisplayLabels[display];
+    }
+
+    function formatSelection( users ) {
+        return users === 'site' ? 'Site' : users + usersLabel(users);
+
+        function usersLabel(users) {
+            return users === 1 ? ' User' : ' Users';
+        }
+    }
+
+    function registerHandlebarsHelpers() {
+        Handlebars.registerHelper('currency', currency);
+        Handlebars.registerHelper('displayLabel', displayLabel);
+        Handlebars.registerHelper('formatSelection', formatSelection);
+    }
 }
 

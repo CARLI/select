@@ -16,7 +16,7 @@
 </div>
 <div class="column library-view">
     <div class="display">
-            <strong class="purple">{{ offering.display }}</strong>
+            <strong class="purple">{{ displayLabel offering.display }}</strong>
     </div>
     <div class="comments">
         <div class="column internal-comments">
@@ -31,7 +31,7 @@
 </div>
 <div class="column selected-last-year">
     {{#if history}}
-    <span class="fa fa-star"></fa>
+    <span class="fa fa-star"></span>
     {{/if}}
 </div>
 <div class="column site-license-price">
@@ -39,7 +39,7 @@
         <div class="column">
             <div class="header"><strong>{{ vm.year }}</strong> Price</div>
             <div class="row">
-                {{ vm.offering.pricing.site }}
+                {{ currency vm.offering.pricing.site }}
             </div>
         </div>
     </div>
@@ -57,7 +57,7 @@
                     <tbody>
                     {{#each offering.pricing.su }}
                     <tr>
-                        <td>{{ price }}</td>
+                        <td>{{ currency price }}</td>
                         <td>{{ users }}</td>
                     </tr>
                     {{/each}}
@@ -71,12 +71,12 @@
     <label for="{{ offering.id }}_selection" class="sr-only">Library Selection</label>
     {{#if offering.selection }}
     <div class="selection-display">
-        <div class="users"><span class="label">Selection:</span> {{ offering.selection.users }} {{ offering.selection.users }}</div>
-        <div class="price"><span class="label">Price:</span> {{ offering.selection.price }}</div>
+        <div class="users"><span class="label">Selection:</span> {{ formatSelection offering.selection.users }}</div>
+        <div class="price"><span class="label">Price:</span> {{ currency offering.selection.price }}</div>
     </div>
     {{/if}}
 </div>
 <div class="column vendor-invoice">
-    <div class="label">Vendor Price</div> {{ offering.invoice.price }}
+    <div class="label">Vendor Price</div> {{ currency offering.invoice.price }}
     <div class="label">Invoice #</div> {{ offering.invoice.number }}
 </div>
