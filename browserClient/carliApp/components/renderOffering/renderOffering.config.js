@@ -1,1 +1,4 @@
-angular.module('carli.renderOffering', []);
+angular.module('carli.renderOffering', [
+    'carli.editOffering',
+    'carli.offeringService'
+]);

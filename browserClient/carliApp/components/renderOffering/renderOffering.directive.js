@@ -2,8 +2,9 @@ angular.module('carli.renderOffering')
     .directive('renderOffering', renderOfferingDirective);
 
 var offeringTemplatePromise;
+var editOfferingHandlerAttached;
 
-function renderOfferingDirective( $http, $q, $filter, offeringService ) {
+function renderOfferingDirective( $http, $q, $filter, offeringService, editOfferingService ) {
     registerHandlebarsHelpers();
 
     return {
@@ -13,6 +14,7 @@ function renderOfferingDirective( $http, $q, $filter, offeringService ) {
             cycle: '='
         },
         link: function postLink(scope, element, attrs) {
+            attachEditButtonHandlers();
             scope.$watch('offering',renderOfferingWhenReady);
 
             function renderOfferingWhenReady(newValue, oldValue) {
@@ -33,6 +35,7 @@ function renderOfferingDirective( $http, $q, $filter, offeringService ) {
                         offering: offering
                     };
                     element.html( template(values) );
+
                 });
 
                 function selectedLastYear(){
@@ -53,6 +56,25 @@ function renderOfferingDirective( $http, $q, $filter, offeringService ) {
                     });
                 }
                 return offeringTemplatePromise.promise;
+            }
+
+            function attachEditButtonHandlers() {
+                if (editOfferingHandlerAttached){
+                    return;
+                }
+
+                editOfferingHandlerAttached = true;
+                $('body').on('click', '.carli-button.edit', editOffering);
+
+                function editOffering() {
+                    var offeringId = $(this).data('offering-id');
+
+                    $(this).parents('li').append($('#offering-editor').show());
+
+                    scope.$apply(function() {
+                        editOfferingService.setCurrentOffering(offeringId);
+                    });
+                }
             }
         }
     };
