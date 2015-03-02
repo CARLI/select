@@ -23,6 +23,7 @@ function renderOfferingDirective( $http, $q, $filter, offeringService ) {
 
             function render(offering){
                 var lastYear = scope.cycle.year - 1;
+                offering.pricing.su = $filter('orderBy')(offering.pricing.su, 'users');
 
                 getOfferingTemplate().then(function (template) {
                     var values = {
