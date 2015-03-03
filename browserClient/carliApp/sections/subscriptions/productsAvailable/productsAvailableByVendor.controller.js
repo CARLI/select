@@ -6,11 +6,10 @@ function productsAvailableByVendorController( $scope, $q, $timeout, alertService
     vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
     vm.toggleVendorAccordion = toggleVendorAccordion;
     vm.getVendorPricingStatus = getVendorPricingStatus;
+    vm.stopEditing = stopEditing;
     vm.computeSelectionTotalForVendor = computeSelectionTotalForVendor;
     vm.computeInvoiceTotalForVendor = computeInvoiceTotalForVendor;
     vm.loadingPromise = {};
-    vm.setOfferingEditable = setOfferingEditable;
-    vm.saveOffering = saveOffering;
     vm.debounceSaveOffering = debounceSaveOffering;
     vm.vendors = [];
     vm.isEditing = {};
@@ -48,7 +47,7 @@ function productsAvailableByVendorController( $scope, $q, $timeout, alertService
 
         function watchCurrentOffering(newOffering, oldOffering) {
             if (newOffering) {
-                vm.isEditing[newOffering.id] = true;
+                setOfferingEditable(newOffering);
             }
         }
     }
@@ -149,6 +148,11 @@ function productsAvailableByVendorController( $scope, $q, $timeout, alertService
     function setOfferingEditable( offering ){
         vm.isEditing[offering.id] = true;
     }
+    function stopEditing(offering) {
+        vm.isEditing[offering.id] = false;
+        updateVendorTotals();
+        vm.notifyParentOfSave();
+    }
 
     function debounceSaveOffering($event, offering, productOfferings) {
         offering.userTouchedFlag = true;
@@ -158,36 +162,6 @@ function productsAvailableByVendorController( $scope, $q, $timeout, alertService
         if ($event.target.tagName === 'INPUT') {
             saveOffering( offering, productOfferings );
         }
-    }
-
-    function saveOffering( offering, productOfferings ) {
-        if (offering.libraryComments === offering.product.comments) {
-            delete offering.libraryComments;
-        }
-        if (!offering.userTouchedFlag) {
-            delete offering.flagged;
-        }
-        delete offering.userTouchedFlag;
-
-        offeringService.update(offering)
-            .then(offeringService.load)
-            .then(updateOfferingFlaggedStatus)
-            .then(function(updatedOffering){
-                var offeringIndex = productOfferings.indexOf(offering);
-                productOfferings[offeringIndex] = updatedOffering;
-                alertService.putAlert('Offering updated', {severity: 'success'});
-                updateVendorTotals();
-                vm.onOfferingSaved();
-                vm.isEditing[offering.id] = false;
-            }).catch(function(err) {
-                alertService.putAlert(err, {severity: 'danger'});
-                console.log('failed', err);
-            });
-    }
-
-    function updateOfferingFlaggedStatus( offering ){
-        offering.flagged = offering.getFlaggedState();
-        return offering;
     }
 
     function reportCheckedProductsForVendor( vendor ){

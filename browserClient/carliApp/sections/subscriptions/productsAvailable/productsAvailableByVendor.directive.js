@@ -4,7 +4,7 @@ angular.module('carli.sections.subscriptions.productsAvailable')
             restrict: 'E',
             templateUrl: '/carliApp/sections/subscriptions/productsAvailable/productsAvailableByVendor.html',
             scope: {
-                onOfferingSaved: '='
+                notifyParentOfSave: '=onOfferingSaved'
             },
             controller: 'productsAvailableByVendorController',
             controllerAs: 'vm',

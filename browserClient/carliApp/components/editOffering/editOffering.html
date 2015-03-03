@@ -30,7 +30,7 @@
 </div>
 <div class="column selection" ng-if="vm.shouldShowColumn('selection')">
     <label for="{{ vm.offering.id }}_selection" class="sr-only">Library Selection</label>
-    <view-edit-offering-selection ng-model="offering" edit-mode="true"></view-edit-offering-selection>
+    <view-edit-offering-selection ng-model="vm.offering" edit-mode="true"></view-edit-offering-selection>
 </div>
 <div class="column vendor-invoice" ng-if="vm.shouldShowColumn('vendor-invoice')">
     <div class="label">Vendor Price</div>

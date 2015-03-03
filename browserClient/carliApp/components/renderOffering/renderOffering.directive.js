@@ -15,7 +15,7 @@ function renderOfferingDirective( $http, $q, $filter, offeringService, editOffer
         },
         link: function postLink(scope, element, attrs) {
             attachEditButtonHandlers();
-            scope.$watch('offering',renderOfferingWhenReady);
+            scope.$watch('offering',renderOfferingWhenReady, true);
 
             function renderOfferingWhenReady(newValue, oldValue) {
                 if (newValue) {
