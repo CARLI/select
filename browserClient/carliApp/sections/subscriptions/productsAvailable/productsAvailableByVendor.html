@@ -27,6 +27,7 @@
                             </li>
                             <li class="offering" ng-class="{ 'edit-mode': vm.isEditing[offering.id] }" ng-repeat="offering in product.offerings | orderBy:vm.orderBy:vm.reverse track by offering.id">
                                 <render-offering offering="::offering" cycle="::vm.cycle"></render-offering>
+                                <edit-offering ng-if="vm.isEditing[offering.id]" id="offering-editor" cycle="cycle" offering="offering"></edit-offering>
                             </li>
                         </ul>
                         <div class="product footer"></div>
@@ -50,5 +51,3 @@
 <div class="notifications placeholder" style="width: 400px; margin-bottom: 1rem;">
     TODO: Report All Vendors
 </div>
-
-<edit-offering id="offering-editor" cycle="cycle"></edit-offering>

@@ -69,8 +69,6 @@ function renderOfferingDirective( $http, $q, $filter, offeringService, editOffer
                 function editOffering() {
                     var offeringId = $(this).data('offering-id');
 
-                    $(this).parents('li').append($('#offering-editor').show());
-
                     scope.$apply(function() {
                         editOfferingService.setCurrentOffering(offeringId);
                     });

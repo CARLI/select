@@ -8,5 +8,6 @@ angular.module('carli.sections.subscriptions.productsAvailable', [
     'carli.viewEditDirectives',
     'carli.notificationService',
     'carli.subscriptionScreenComponents',
-    'carli.renderOffering'
+    'carli.renderOffering',
+    'carli.editOffering'
 ]);

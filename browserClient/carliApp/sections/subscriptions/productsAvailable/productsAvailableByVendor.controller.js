@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.productsAvailable')
     .controller('productsAvailableByVendorController', productsAvailableByVendorController);
 
-function productsAvailableByVendorController( $scope, $q, $timeout, alertService, controllerBaseService, cycleService, libraryService, vendorService, offeringService, productService ) {
+function productsAvailableByVendorController( $scope, $q, $timeout, alertService, controllerBaseService, cycleService, libraryService, editOfferingService, vendorService, offeringService, productService ) {
     var vm = this;
     vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
     vm.toggleVendorAccordion = toggleVendorAccordion;
@@ -28,6 +28,21 @@ function productsAvailableByVendorController( $scope, $q, $timeout, alertService
         vm.lastYear = vm.cycle.year - 1;
 
         loadVendors();
+        connectEditButtons();
+    }
+
+    function connectEditButtons() {
+        $scope.$watch(getCurrentOffering, watchCurrentOffering);
+
+        function getCurrentOffering() {
+            return editOfferingService.getCurrentOffering();
+        }
+
+        function watchCurrentOffering(newOffering, oldOffering) {
+            if (newOffering) {
+                vm.isEditing[newOffering.id] = true;
+            }
+        }
     }
 
     function loadVendors() {
