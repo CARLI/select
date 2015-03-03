@@ -18,6 +18,14 @@ function productsAvailableByVendorController( $scope, $q, $timeout, alertService
     vm.lastYear = '';
     vm.selectedOfferings = {};
     vm.reportCheckedProductsForVendor = reportCheckedProductsForVendor;
+    vm.offeringColumns = [
+        'library',
+        'library-view',
+        'selected-last-year',
+        'site-license-price',
+        'selection',
+        'vendor-invoice'
+    ];
 
     activate();
 

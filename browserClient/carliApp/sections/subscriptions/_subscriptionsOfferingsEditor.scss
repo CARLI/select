@@ -9,7 +9,8 @@
         & > li {
 
             &.column-headers,
-            &.offering > render-offering {
+            &.offering > render-offering,
+            &.offering > edit-offering {
                 @include flexbox;
                 align-items: stretch;
 
@@ -42,9 +43,9 @@
                     &.site-license-price {
                         width: 380px;
 
-                        &.current-year-only {
-                            width: 190px;
-                        }
+//                        &.current-year-only {
+//                            width: 190px;
+//                        }
                     }
 
                     &.flag {
@@ -72,7 +73,8 @@
                 }
             }
 
-            &.offering > render-offering {
+            &.offering > render-offering,
+            &.offering > edit-offering {
                 .column {
                     &.product,
                     &.vendor,
@@ -88,7 +90,6 @@
 
                 & > .column {
                     border-right: $default-border;
-                    @include flex(0 0 auto);
                     position: relative;
 
                     label, .label {

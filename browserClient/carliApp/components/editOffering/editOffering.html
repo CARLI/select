@@ -1,1 +1,40 @@
-<p>{{ offering | json }}</p>
+<div class="column product" ng-if="vm.shouldShowColumn('product')">
+    <h3>{{ vm.offering.product.name }}</h3>
+    <button type="button" class="carli-button save" ng-click="vm.saveOffering()">Save
+        <fa name="floppy-o"></fa>
+    </button>
+</div>
+<div class="column vendor" ng-if="vm.shouldShowColumn('vendor')">
+    <h3>{{ vm.offering.product.vendor.name }}</h3>
+</div>
+<div class="column library" ng-if="vm.shouldShowColumn('library')">
+    <library-info library="vm.offering.library"></library-info>
+    <button type="button" class="carli-button save" ng-click="vm.saveOffering()">Save
+        <fa name="floppy-o"></fa>
+    </button>
+</div>
+<div class="column library-view" ng-if="vm.shouldShowColumn('library-view')">
+    <div class="display">
+        <label for="offering-display">Display:</label>
+        <view-edit-radios ng-model="vm.offering.display" input-id="offering-display" edit-mode="true" items="vm.offeringDisplayOptions" radio-group-name="offering-{{vm.offering.library.name}}-display"></view-edit-radios>
+    </div>
+    <div class="comments">
+        <offering-comments offering="offering" edit-mode="true"></offering-comments>
+    </div>
+</div>
+<div class="column selected-last-year" ng-if="vm.shouldShowColumn('selected-last-year')">
+    <fa ng-if="vm.offering.history[vm.lastYear].selection" name="star"></fa>
+</div>
+<div class="column site-license-price current-year-only" ng-if="vm.shouldShowColumn('site-license-price')">
+    <offering-pricing year="vm.cycle.year" offering="vm.offering" edit-mode="true" hide-previous-year="true"></offering-pricing>
+</div>
+<div class="column selection" ng-if="vm.shouldShowColumn('selection')">
+    <label for="{{ vm.offering.id }}_selection" class="sr-only">Library Selection</label>
+    <view-edit-offering-selection ng-model="offering" edit-mode="true"></view-edit-offering-selection>
+</div>
+<div class="column vendor-invoice" ng-if="vm.shouldShowColumn('vendor-invoice')">
+    <div class="label">Vendor Price</div>
+    <view-edit-price ng-model="offering.invoice.price" edit-mode="true"></view-edit-price>
+    <div class="label">Invoice #</div>
+    <view-edit-integer ng-model="offering.invoice.number" edit-mode="true"></view-edit-integer>
+</div>
