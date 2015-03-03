@@ -35,34 +35,36 @@
     {{/if}}
 </div>
 <div class="column site-license-price">
-    <div class="site-pricing single-column">
-        <div class="column">
-            <div class="header"><strong>{{ lastYear }}</strong> Price</div>
-            <div class="row">
-                {{ currency offering.pricing.site }}
+    <div class="offering-pricing">
+        <div class="site-pricing single-column">
+            <div class="column">
+                <div class="header"><strong>{{ lastYear }}</strong> Price</div>
+                <div class="row">
+                    {{ currency offering.pricing.site }}
+                </div>
             </div>
         </div>
-    </div>
-    <div class="su-pricing single-column">
-        <div class="header"><strong>Simultaneous User Price</strong></div>
-        <div class="column">
-            <div class="edit-su-pricing">
-                <table>
-                    <thead>
-                    <tr>
-                        <th><strong>{{ thisYear }}</strong> Price</th>
-                        <th>User(s)</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {{#each offering.pricing.su }}
-                    <tr>
-                        <td>{{ currency price }}</td>
-                        <td>{{ users }}</td>
-                    </tr>
-                    {{/each}}
-                    </tbody>
-                </table>
+        <div class="su-pricing single-column">
+            <div class="header"><strong>Simultaneous User Price</strong></div>
+            <div class="column">
+                <div class="edit-su-pricing">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th><strong>{{ thisYear }}</strong> Price</th>
+                            <th>User(s)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#each offering.pricing.su }}
+                        <tr>
+                            <td>{{ currency price }}</td>
+                            <td>{{ users }}</td>
+                        </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

@@ -8,6 +8,10 @@
 
         & > li {
 
+            &.offering > edit-offering + render-offering {
+                display: none;
+            }
+
             &.column-headers,
             &.offering > render-offering,
             &.offering > edit-offering {
