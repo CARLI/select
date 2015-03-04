@@ -84,11 +84,21 @@ function productsAvailableByVendorController( $scope, $q, $timeout, alertService
 
         vm.loadingPromise[vendor.id] = productService.listProductsWithOfferingsForVendorId(vendor.id).then(function(products) {
             vendor.products = products;
+            return products;
+        }).then(logLoadTime);
+
+        function logLoadTime(products) {
+            var numberOfOfferings = products.map(function(list){
+                return list.offerings.length;
+            }).reduce(function(previousValue, currentValue, index, array) {
+                return previousValue + currentValue;
+            });
+
             $timeout(function(){
                 var stop = new Date();
-                console.log('digest vendor data took '+ (stop-start)/1000 + 'ms');
+                console.log('digest ' + numberOfOfferings + ' vendor offerings took '+ (stop-start)/1000 + 's');
             });
-        });
+        };
 
         return vm.loadingPromise[vendor.id];
     }
