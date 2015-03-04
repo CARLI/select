@@ -24,6 +24,7 @@ sudo docker run --rm -t \
 echo "Generating config for $instance"
 sudo docker run --rm -t \
     --volumes-from=carli-build-$instance \
+    -e "CARLI_CRM_MYSQL_PASSWORD=$CARLI_CRM_MYSQL_PASSWORD" \
     --workdir=/carli-select/jenkins \
     carli-build grunt generate-config:$instance
 
