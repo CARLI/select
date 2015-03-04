@@ -1,6 +1,6 @@
 var uuid  = require( 'node-uuid' )
   , Q = require( 'q' )
-  , crmQueries = require('../../config/environmentDependentModules').crmQueries
+  , crmQueries = require('../../config/environmentDependentModules/crmQueries')
   , entityCache = require('./entityCache')
   , config = require( '../../config' )
 ;
@@ -43,4 +43,3 @@ module.exports = function (timeout) {
     };
 
 };
-

@@ -1,7 +1,7 @@
 var config = require('../../../config');
-var couchUtils = require('../../../config/environmentDependentModules').couchUtils,
+var couchApp = require('../../../config/environmentDependentModules/couchApp'),
     Q = require('q'),
-    request = require('../../../config/environmentDependentModules').request,
+    request = require('../../../config/environmentDependentModules/request'),
     StoreOptions = require( '../../../config').storeOptions,
     queryString = require('query-string')
 ;
@@ -134,7 +134,7 @@ function createDatabase(dbName) {
         if (error) {
             deferred.reject(error);
         } else if (response.statusCode >= 200 && response.statusCode <= 299) {
-            couchUtils.putDesignDoc(dbName, dbType).then(function () {
+            couchApp.putDesignDoc(dbName, dbType).then(function () {
                 deferred.resolve();
             });
         } else {
