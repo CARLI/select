@@ -33,7 +33,7 @@ module.exports = function (type, timeout) {
     if (timeout === undefined) {
         timeout = config.defaultEntityCacheTimeToLive;
     }
-    var cache = entityCache.createCache(timeout);
+    var cache = entityCache.getCacheFor(type, timeout);
     return {
 
         setStore: function( store ){
@@ -100,9 +100,17 @@ module.exports = function (type, timeout) {
             if ( !id ){
                 throw new Error('Id Required');
             }
-            var data = cache.get(id) ? cache.get(id) : dataStore.get(id);
-            cache.add(data);
-            return data;
+
+            var cachedResult = cache.get(id);
+            if (!cachedResult) {
+                var promise = dataStore.get(id).then(function (data) {
+                    return data;
+                });
+                cache.add({ id: id, promise: promise });
+                return promise;
+            } else {
+                return cachedResult.promise;
+            }
         },
 
         delete: function( id ){
