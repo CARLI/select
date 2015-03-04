@@ -12,6 +12,10 @@ describe('The entity cache factory', function() {
         expect(entityCache.createCache).to.be.a('function');
     });
 
+    it('should export a getCacheFor function', function() {
+        expect(entityCache.getCacheFor).to.be.a('function');
+    });
+
     describe('Entity cache', function() {
         var cache;
         beforeEach(function() {
@@ -60,6 +64,16 @@ describe('The entity cache factory', function() {
             });
         });
     });
-});
 
+    describe('Named caches', function() {
+        it('should return a cache for the specified timeout', function(){
+            expect( entityCache.getCacheFor('test', entityCache.INFINITE_TIMEOUT)).to.be.an('object').and.have.property('add');
+        });
+
+        it('should return the same cache for the same name', function(){
+            var cache1 = entityCache.getCacheFor('test');
+            expect( entityCache.getCacheFor('test')).to.deep.equal(cache1);
+        });
+    });
+});
 
