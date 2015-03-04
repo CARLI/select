@@ -14,6 +14,7 @@ var defaults = {
         couchDbName: couchDbName
     },
     memberDb: {
+        connectionLimit: 10,
         host: 'localhost',
         user: 'root',
         password: '',

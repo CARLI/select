@@ -91,6 +91,7 @@ module.exports = function (grunt) {
 
     function generateMemberDbConfig(instance) {
         return {
+            connectionLimit: 10,
             host: 'mysql.carli.illinois.edu',
             user: 'guest_pixo',
             password: process.env.CARLI_CRM_MYSQL_PASSWORD,

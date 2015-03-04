@@ -2,43 +2,44 @@ var config = require('../../config');
 var mysql = require('mysql');
 var Q = require('q');
 
+var pool = mysql.createPool(config.memberDb);
+
 function listLibraries() {
     var deferred = Q.defer();
-    var connection = mysql.createConnection(config.memberDb);
-    connection.connect();
+    pool.getConnection(function(err, connection) {
+        connection.query(
+            'SELECT m.institution_name, m.member_id, m.fte, m.library_type, m.membership_lvl ' +
+            'FROM members AS m',
+            null,
+            function(err, rows, fields) {
+                var libraries = extractRowsFromResponse(err, rows, convertCrmLibrary);
+                deferred.resolve(libraries);
+            }
+        );
 
-    connection.query(
-        'SELECT m.institution_name, m.member_id, m.fte, m.library_type, m.membership_lvl ' +
-        'FROM members AS m',
-        null,
-        function(err, rows, fields) {
-            var libraries = extractRowsFromResponse(err, rows, convertCrmLibrary);
-            deferred.resolve(libraries);
-        }
-    );
-
-    connection.end();
+        connection.release();
+    });
 
     return deferred.promise;
 }
 
 function loadLibrary(id) {
     var deferred = Q.defer();
-    var connection = mysql.createConnection(config.memberDb);
-    connection.connect();
+    pool.getConnection(function(err, connection) {
 
-    connection.query(
-        'SELECT m.institution_name, m.member_id, m.fte, m.library_type, m.membership_lvl ' +
-        'FROM members AS m ' +
-        'WHERE m.member_id = ?',
-        [ id ],
-        function(err, rows, fields) {
-            var libraries = extractRowsFromResponse(err, rows, convertCrmLibrary);
-            deferred.resolve(libraries[0]);
-        }
-    );
+        connection.query(
+            'SELECT m.institution_name, m.member_id, m.fte, m.library_type, m.membership_lvl ' +
+            'FROM members AS m ' +
+            'WHERE m.member_id = ?',
+            [id],
+            function (err, rows, fields) {
+                var libraries = extractRowsFromResponse(err, rows, convertCrmLibrary);
+                deferred.resolve(libraries[0]);
+            }
+        );
 
-    connection.end();
+        connection.release();
+    });
 
     return deferred.promise;
 }
