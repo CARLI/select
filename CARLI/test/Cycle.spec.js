@@ -168,7 +168,7 @@ describe('Adding functions to Cycle instances', function() {
                     return CycleRepository.load(cycleId);
                 })
                 .then(function (loadedCycle) {
-                    return expect(loadedCycle.getStatusLabel()).to.equal('CARLI Editing Product List');
+                    return expect(loadedCycle.getStatusLabel()).to.equal('Cycle Data Processing');
                 });
         });
 
@@ -213,9 +213,9 @@ describe('Adding functions to Cycle instances', function() {
                 });
         });
 
-        it('should not increment the status past 5', function () {
+        it('should not increment the status past 6', function () {
             var cycle = validCycleData();
-            cycle.status = 5;
+            cycle.status = 6;
 
             return CycleRepository.create(cycle)
                 .then(function (cycleId) {
@@ -223,7 +223,7 @@ describe('Adding functions to Cycle instances', function() {
                 })
                 .then(function (loadedCycle) {
                     loadedCycle.proceedToNextStep();
-                    return expect(loadedCycle.status).to.equal(5);
+                    return expect(loadedCycle.status).to.equal(6);
                 });
         });
     });
@@ -277,7 +277,7 @@ describe('Adding functions to Cycle instances', function() {
                 return CycleRepository.load(cycleId);
             })
             .then(function (loadedCycle) {
-                return expect(loadedCycle.getViewUpdateStatus).to.be.a('function');
+                return expect(loadedCycle.getViewUpdateProgress).to.be.a('function');
             });
     });
 });

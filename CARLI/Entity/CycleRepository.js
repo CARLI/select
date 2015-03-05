@@ -48,6 +48,7 @@ function createCycleFrom( sourceCycle, newCycleData ) {
 }
 
 function createCycle( cycle ) {
+
     return CycleRepository.create(cycle, transformFunction)
         .then(loadCycle)
         .then(createDatabaseForCycle)
@@ -58,7 +59,7 @@ function createCycle( cycle ) {
     function createDatabaseForCycle( cycle ) {
         cycle.databaseName = couchUtils.makeValidCouchDbName('cycle-' + cycle.name);
 
-        couchUtils.createDatabase(cycle.databaseName)
+        return couchUtils.createDatabase(cycle.databaseName)
             .then(function commit() {
                 return updateCycle( cycle );
             })
