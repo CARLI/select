@@ -193,6 +193,12 @@ function getRunningCouchJobs(){
     return couchRequest({ url: url });
 }
 
+function triggerViewIndexing(databaseName) {
+    var url = StoreOptions.couchDbUrl + '/' + databaseName + '/' + '_design/CARLI/_view/docTypes?stale=update_after';
+
+    couchRequest({url : url});
+}
+
 module.exports = {
     couchViewUrl: couchViewUrl,
     createDatabase: createDatabase,
@@ -202,5 +208,6 @@ module.exports = {
     getCouchViewResultValues: getCouchViewResultValues,
     makeValidCouchDbName: makeValidCouchDbName,
     replicateFrom: replicateFrom,
-    getRunningCouchJobs: getRunningCouchJobs
+    getRunningCouchJobs: getRunningCouchJobs,
+    triggerViewIndexing: triggerViewIndexing
 };
