@@ -11,10 +11,12 @@ function renderOfferingDirective( $http, $q, $filter, offeringService, editOffer
         restrict: 'E',
         scope: {
             offering: '=',
-            cycle: '='
+            cycle: '=',
+            columns: '='
         },
         link: function postLink(scope, element, attrs) {
             attachEditButtonHandlers();
+
             scope.$watch('offering',renderOfferingWhenReady, true);
 
             function renderOfferingWhenReady(newValue, oldValue) {
@@ -32,7 +34,8 @@ function renderOfferingDirective( $http, $q, $filter, offeringService, editOffer
                         thisYear: scope.cycle.year,
                         lastYear: lastYear,
                         selectedLastYear: selectedLastYear(),
-                        offering: offering
+                        offering: offering,
+                        columns: translateColumnArrayToObject(scope.columns)
                     };
                     element.html( template(values) );
 
@@ -94,10 +97,22 @@ function renderOfferingDirective( $http, $q, $filter, offeringService, editOffer
         }
     }
 
+
     function registerHandlebarsHelpers() {
         Handlebars.registerHelper('currency', currency);
         Handlebars.registerHelper('displayLabel', displayLabel);
         Handlebars.registerHelper('formatSelection', formatSelection);
+    }
+
+    function translateColumnArrayToObject( columns ){
+        var hash = {};
+
+        columns.forEach(function(column){
+            var columnName = column.replace(/-/g, '_');
+            hash[columnName] = true;
+        });
+
+        return hash;
     }
 }
 

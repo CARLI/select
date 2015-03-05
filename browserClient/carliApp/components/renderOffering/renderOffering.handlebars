@@ -1,3 +1,4 @@
+{{#if columns.library}}
 <div class="column library">
     <div class="library-info">
         <span class="name">{{ offering.library.name }}</span>
@@ -14,6 +15,14 @@
     <button type="button" class="carli-button edit" data-offering-id="{{ offering.id }}">Edit <span class="fa fa-pencil-square-o "></span></button>
     <button type="button" style="display: none;" class="carli-button save">Save <span class="fa fa-floppy-o"></span></button>
 </div>
+{{/if}}
+{{#if columns.product}}
+    <div class="column product">PRODUCT!</div>
+{{/if}}
+{{#if columns.vendor}}
+    <div class="column vendor">VENDOR!</div>
+{{/if}}
+{{#if columns.library_view }}
 <div class="column library-view">
     <div class="display">
             <strong class="purple">{{ displayLabel offering.display }}</strong>
@@ -29,11 +38,15 @@
         </div>
     </div>
 </div>
+{{/if}}
+{{#if columns.selected_last_year }}
 <div class="column selected-last-year">
     {{#if selectedLastYear}}
     <span class="fa fa-star"></span>
     {{/if}}
 </div>
+{{/if}}
+{{#if columns.site_license_price }}
 <div class="column site-license-price">
     <div class="offering-pricing">
         <div class="site-pricing single-column">
@@ -69,6 +82,8 @@
         </div>
     </div>
 </div>
+{{/if}}
+{{#if columns.selection}}
 <div class="column selection">
     <label for="{{ offering.id }}_selection" class="sr-only">Library Selection</label>
     {{#if offering.selection }}
@@ -78,7 +93,13 @@
     </div>
     {{/if}}
 </div>
+{{/if}}
+{{#if columns.vendor_invoice }}
 <div class="column vendor-invoice">
     <div class="label">Vendor Price</div> {{ currency offering.invoice.price }}
     <div class="label">Invoice #</div> {{ offering.invoice.number }}
 </div>
+{{/if}}
+{{#if columns.flag}}
+    <div class="column flag">FLAG!</div>
+{{/if}}
