@@ -23,7 +23,7 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping)
     "ORDER BY product_id, library_id;";
 
     connection.query(query, function(err, rows, fields) {
-        rows = rows.slice(0, 1000);
+        //rows = rows.slice(0, 30000);
 
         console.log('  Migrating offerings for cycle "' + cycle.name + '" - got ' + rows.length + ' offerings');
         if(err) { console.log(err); }

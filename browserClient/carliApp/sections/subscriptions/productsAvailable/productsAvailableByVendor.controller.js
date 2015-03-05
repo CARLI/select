@@ -98,7 +98,7 @@ function productsAvailableByVendorController( $scope, $q, $timeout, alertService
                 var stop = new Date();
                 console.log('digest ' + numberOfOfferings + ' vendor offerings took '+ (stop-start)/1000 + 's');
             });
-        };
+        }
 
         return vm.loadingPromise[vendor.id];
     }
