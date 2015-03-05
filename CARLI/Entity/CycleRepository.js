@@ -15,6 +15,7 @@ var CycleRepository = Entity('Cycle');
 CycleRepository.setStore( Store( StoreModule(StoreOptions) ) );
 
 var statusLabels = [
+    "Cycle Data Processing",
     "CARLI Editing Product List",
     "Vendors Setting Prices",
     "CARLI Checking Prices",
@@ -134,6 +135,27 @@ var functionsToAdd = {
         return couchUtils.getCouchViewResultValues(this.databaseName, 'getCycleSelectionAndInvoiceTotals').then(function(resultArray){
             return resultArray[0];
         });
+    },
+    getViewUpdateProgress: function getViewUpdateStatus(){
+        var database = this.databaseName;
+
+        return couchUtils.getRunningCouchJobs().then(filterIndexJobs).then(filterByCycle).then(resolveToProgress);
+
+        function filterIndexJobs( jobs ){
+            return jobs.filter(function(job){
+                return job.type === 'indexer';
+            });
+        }
+
+        function filterByCycle( jobs ){
+            return jobs.filter(function(job){
+                return job.database === database;
+            });
+        }
+
+        function resolveToProgress( jobs ){
+            return jobs.length ? jobs[0].progress : 100;
+        }
     }
 };
 

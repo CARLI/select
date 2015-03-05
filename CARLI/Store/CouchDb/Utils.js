@@ -187,6 +187,12 @@ function _couchReplicationOptions(sourceDbName, targetDbName) {
     };
 }
 
+function getRunningCouchJobs(){
+    var url = StoreOptions.couchDbUrl + '/_active_tasks/';
+
+    return couchRequest({ url: url });
+}
+
 module.exports = {
     couchViewUrl: couchViewUrl,
     createDatabase: createDatabase,
@@ -195,5 +201,6 @@ module.exports = {
     getCouchViewResultObject: getCouchViewResultObject,
     getCouchViewResultValues: getCouchViewResultValues,
     makeValidCouchDbName: makeValidCouchDbName,
-    replicateFrom: replicateFrom
+    replicateFrom: replicateFrom,
+    getRunningCouchJobs: getRunningCouchJobs
 };

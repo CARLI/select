@@ -17,15 +17,17 @@
 
 <section id="subscriptions" class="content" ng-switch on="cycleRouter.status">
 
-    <div ng-switch-when="0"><carli-editing-product-list cycle-router="cycleRouter.cycleRouter"></carli-editing-product-list></div>
+    <div ng-switch-when="0"><cycle-data-processing cycle-router="cycleRouter.cycleRouter"></cycle-data-processing></div>
 
-    <div ng-switch-when="1"><vendors-setting-prices cycle-router="cycleRouter.cycleRouter"></vendors-setting-prices></div>
+    <div ng-switch-when="1"><carli-editing-product-list cycle-router="cycleRouter.cycleRouter"></carli-editing-product-list></div>
 
-    <div ng-switch-when="2"><carli-checking-prices cycle-router="cycleRouter.cycleRouter"></carli-checking-prices></div>
+    <div ng-switch-when="2"><vendors-setting-prices cycle-router="cycleRouter.cycleRouter"></vendors-setting-prices></div>
 
-    <div ng-switch-when="3"><libraries-selecting-products cycle-router="cycleRouter.cycleRouter"></libraries-selecting-products></div>
+    <div ng-switch-when="3"><carli-checking-prices cycle-router="cycleRouter.cycleRouter"></carli-checking-prices></div>
 
-    <div ng-switch-when="4"><products-available cycle-router="cycleRouter.cycleRouter" cycle="cycleRouter.cycle"></products-available></div>
+    <div ng-switch-when="4"><libraries-selecting-products cycle-router="cycleRouter.cycleRouter"></libraries-selecting-products></div>
+
+    <div ng-switch-when="5"><products-available cycle-router="cycleRouter.cycleRouter" cycle="cycleRouter.cycle"></products-available></div>
 
     <div ng-switch-default>Cycle Not Found</div>
 
