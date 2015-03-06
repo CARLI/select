@@ -3,6 +3,7 @@ angular.module('carli.renderOffering')
 
 var offeringTemplatePromise;
 var editOfferingHandlerAttached;
+var flagOfferingHandlerAttached;
 
 function renderOfferingDirective( $http, $q, $filter, offeringService, editOfferingService ) {
     registerHandlebarsHelpers();
@@ -16,6 +17,7 @@ function renderOfferingDirective( $http, $q, $filter, offeringService, editOffer
         },
         link: function postLink(scope, element, attrs) {
             attachEditButtonHandlers();
+            attachFlagButtonHandlers();
 
             scope.$watch('offering',renderOfferingWhenReady, true);
 
@@ -30,6 +32,8 @@ function renderOfferingDirective( $http, $q, $filter, offeringService, editOffer
                 offering.pricing.su = $filter('orderBy')(offering.pricing.su, 'users');
 
                 getOfferingTemplate().then(function (template) {
+                    offering.flagged = offering.getFlaggedState();
+
                     var values = {
                         thisYear: scope.cycle.year,
                         lastYear: lastYear,
@@ -74,6 +78,26 @@ function renderOfferingDirective( $http, $q, $filter, offeringService, editOffer
 
                     scope.$apply(function() {
                         editOfferingService.setCurrentOffering(offeringId);
+                    });
+                }
+            }
+
+            function attachFlagButtonHandlers() {
+                if (flagOfferingHandlerAttached){
+                    return;
+                }
+
+                flagOfferingHandlerAttached = true;
+                $('body').on('click', 'render-offering .column.flag', flagOffering);
+
+                function flagOffering() {
+                    var offeringId = $(this).data('offering-id');
+
+                    scope.$apply(function() {
+                        editOfferingService.toggleOfferingUserFlaggedState(offeringId)
+                            .then(function(offeringId) {
+                                scope.offering.flagged = !scope.offering.getFlaggedState();
+                            });
                     });
                 }
             }

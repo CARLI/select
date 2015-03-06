@@ -24,15 +24,18 @@ angular.module('carli.editOffering')
             vm.saveOffering = saveOffering;
             vm.shouldShowColumn = shouldShowColumn;
             vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
+            vm.userClickedFlag = userClickedFlag;
+
+            var userTouchedFlag = false;
 
             function saveOffering() {
                 if (vm.offering.libraryComments === vm.offering.product.comments) {
                     delete vm.offering.libraryComments;
                 }
-                if (!vm.offering.userTouchedFlag) {
+                if (!userTouchedFlag) {
                     delete vm.offering.flagged;
                 }
-                delete vm.offering.userTouchedFlag;
+                userTouchedFlag = false;
 
                 offeringService.update(vm.offering)
                     .then(offeringService.load)
@@ -58,6 +61,10 @@ angular.module('carli.editOffering')
 
             function shouldShowColumn(columnName) {
                 return vm.columns.indexOf(columnName) !== -1;
+            }
+
+            function userClickedFlag() {
+                userTouchedFlag = true;
             }
         }
     });

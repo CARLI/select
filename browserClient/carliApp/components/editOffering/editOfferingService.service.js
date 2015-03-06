@@ -7,7 +7,8 @@ function editOfferingService( offeringService ) {
 
     return {
         getCurrentOffering: getCurrentOffering,
-        setCurrentOffering: setCurrentOffering
+        setCurrentOffering: setCurrentOffering,
+        toggleOfferingUserFlaggedState: toggleOfferingUserFlaggedState
     };
 
 
@@ -22,6 +23,17 @@ function editOfferingService( offeringService ) {
             });
         } else {
             currentOffering = offering;
+        }
+    }
+
+    function toggleOfferingUserFlaggedState(offeringId){
+        return offeringService.load(offeringId)
+            .then(toggleOfferingFlaggedState)
+            .then(offeringService.update);
+
+        function toggleOfferingFlaggedState( offering ){
+            offering.flagged = !offering.getFlaggedState();
+            return offering;
         }
     }
 }

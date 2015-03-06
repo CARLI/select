@@ -133,21 +133,31 @@ function setCycle(cycle) {
 
 /* functions that get added as instance methods on loaded Offerings */
 var getFlaggedState = function(){
-    if ( this.flagged === true || this.flagged === false ){
-        return this.flagged;
+    var offering = this;
+
+    if ( userFlaggedState() !== undefined ){
+        return userFlaggedState();
     }
 
-    if ( this.pricing && this.pricing.su ){
-        var sitePrice = this.pricing.site || 0;
+    return systemFlaggedState();
 
-        for ( var i in this.pricing.su ){
-            if ( this.pricing.su[i].price > sitePrice ){
-                return true;
+
+    function userFlaggedState(){
+        return offering.flagged;
+    }
+
+    function systemFlaggedState(){
+        if ( offering.pricing && offering.pricing.su ){
+            var sitePrice = offering.pricing.site || 0;
+
+            for ( var i in offering.pricing.su ){
+                if ( offering.pricing.su[i].price > sitePrice ){
+                    return true;
+                }
             }
         }
+        return false;
     }
-
-    return false;
 };
 
 var functionsToAdd = {
