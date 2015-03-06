@@ -24,6 +24,14 @@ function librariesSelectingProductsByLibraryController( $scope, $q, alertService
     vm.isEditing = {};
     vm.cycle = {};
     vm.lastYear = '';
+    vm.offeringColumns = [
+        'product',
+        'selected-last-year',
+        'vendor',
+        'library-view',
+        'site-license-price',
+        'selection'
+    ];
 
     activate();
 

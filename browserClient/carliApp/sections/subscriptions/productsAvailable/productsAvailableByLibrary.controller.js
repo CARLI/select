@@ -27,6 +27,14 @@ function productsAvailableByLibraryController( $scope, $q, alertService, control
     vm.lastYear = '';
     vm.selectedOfferings = {};
     vm.invoiceCheckedProductsForLibrary = invoiceCheckedProductsForLibrary;
+    vm.offeringColumns = [
+        'product',
+        'selected-last-year',
+        'vendor',
+        'library-view',
+        'site-license-price',
+        'selection'
+    ];
 
     activate();
 

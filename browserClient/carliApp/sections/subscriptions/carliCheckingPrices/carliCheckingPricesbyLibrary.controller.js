@@ -20,6 +20,13 @@ function carliCheckingPricesByLibraryController( $scope, $q, alertService, contr
     vm.isEditing = {};
     vm.cycle = {};
     vm.lastYear = '';
+    vm.offeringColumns = [
+        'product',
+        'vendor',
+        'library-view',
+        'site-license-price',
+        'flag'
+    ];
 
     activate();
 

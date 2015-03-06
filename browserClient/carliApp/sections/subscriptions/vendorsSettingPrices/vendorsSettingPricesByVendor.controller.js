@@ -15,6 +15,12 @@ function vendorsSettingPricesByVendorController( $scope, $q, alertService, contr
     vm.isEditing = {};
     vm.cycle = {};
     vm.lastYear = '';
+    vm.offeringColumns = [
+        'library',
+        'library-view',
+        'site-license-price',
+        'flag'
+    ];
 
     activate();
 
