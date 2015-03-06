@@ -86,9 +86,6 @@ function runOfferingSpecificTests(testCycle) {
                     })
                     .then(function (loadedOfferingData) {
                         loadedOffering = loadedOfferingData;
-
-                        console.log('LOADED OFFERING ',loadedOffering);
-
                         return expect(loadedOffering.library).to.be.an('object').and.have.property('name');
                     })
                     .then(function () {

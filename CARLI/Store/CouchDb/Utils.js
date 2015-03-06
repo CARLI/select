@@ -16,7 +16,6 @@ function couchRequest(requestOptions) {
         var err = error || data.error;
 
         if (err) {
-            console.log(requestOptions);
             deferred.reject( err /*config.errorMessages.fatal*/ );
         } else {
             deferred.resolve(data);
