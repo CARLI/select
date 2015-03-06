@@ -1,27 +1,20 @@
 angular.module('carli.sections.subscriptions.productsAvailable')
     .controller('productsAvailableByLibraryController', productsAvailableByLibraryController);
 
-function productsAvailableByLibraryController( $scope, $q, alertService, controllerBaseService, cycleService, libraryService, offeringService, vendorService ) {
+function productsAvailableByLibraryController( $scope, $q, controllerBaseService, cycleService, libraryService, offeringService, editOfferingService, vendorService ) {
     var vm = this;
 
     vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
     vm.offeringDisplayLabels = offeringService.getOfferingDisplayLabels();
-
     vm.loadOfferingsForLibrary = loadOfferingsForLibrary;
     vm.loadingPromise = {};
     vm.offerings = {};
-
-    vm.setOfferingEditable = setOfferingEditable;
-    vm.saveOffering = saveOffering;
-    vm.debounceSaveOffering = debounceSaveOffering;
+    vm.stopEditing = stopEditing;
     vm.getLibraryPricingStatus = getLibraryPricingStatus;
     vm.computeSelectionTotalForLibrary = computeSelectionTotalForLibrary;
-
     vm.offeringFilter = {};
     vm.filterOfferingBySelection = filterOfferingBySelection;
-
     vm.vendorMap = {};
-
     vm.isEditing = {};
     vm.cycle = {};
     vm.lastYear = '';
@@ -45,6 +38,21 @@ function productsAvailableByLibraryController( $scope, $q, alertService, control
         vm.lastYear = vm.cycle.year - 1;
 
         initVendorMap().then(initLibraryList);
+        connectEditButtons();
+    }
+
+    function connectEditButtons() {
+        $scope.$watch(getCurrentOffering, watchCurrentOffering);
+
+        function getCurrentOffering() {
+            return editOfferingService.getCurrentOffering();
+        }
+
+        function watchCurrentOffering(newOffering, oldOffering) {
+            if (newOffering) {
+                setOfferingEditable(newOffering);
+            }
+        }
     }
 
     function initLibraryList(){
@@ -131,39 +139,9 @@ function productsAvailableByLibraryController( $scope, $q, alertService, control
     function setOfferingEditable( offering ){
         vm.isEditing[offering.id] = true;
     }
-
-    function debounceSaveOffering($event, offering, libraryId) {
-        offering.userTouchedFlag = true;
-        if (vm.isEditing[offering.id]) {
-            return;
-        }
-        if ($event.target.tagName === 'INPUT') {
-            saveOffering( offering, libraryId );
-        }
-    }
-
-    function saveOffering( offering, libraryId ) {
-        if (offering.libraryComments === offering.product.comments) {
-            delete offering.libraryComments;
-        }
-        if (!offering.userTouchedFlag) {
-            delete offering.flagged;
-        }
-        delete offering.userTouchedFlag;
-
-        offeringService.update(offering)
-            .then(offeringService.load)
-            .then(updateOfferingFlaggedStatus)
-            .then(function(updatedOffering){
-                var offeringIndex = vm.offerings[libraryId].indexOf(offering);
-                vm.offerings[libraryId][offeringIndex] = updatedOffering;
-                alertService.putAlert('Offering updated', {severity: 'success'});
-                vm.notifyParentOfSave();
-                vm.isEditing[offering.id] = false;
-            }).catch(function(err) {
-                alertService.putAlert(err, {severity: 'danger'});
-                console.log('failed', err);
-            });
+    function stopEditing(offering) {
+        vm.isEditing[offering.id] = false;
+        vm.notifyParentOfSave();
     }
 
     function updateOfferingFlaggedStatus( offering ){

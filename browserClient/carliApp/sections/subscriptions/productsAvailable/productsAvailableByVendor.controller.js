@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.productsAvailable')
     .controller('productsAvailableByVendorController', productsAvailableByVendorController);
 
-function productsAvailableByVendorController( $scope, $q, $timeout, alertService, controllerBaseService, cycleService, libraryService, editOfferingService, vendorService, offeringService, productService ) {
+function productsAvailableByVendorController( $scope, $q, $timeout, controllerBaseService, cycleService, vendorService, offeringService, editOfferingService,  productService ) {
     var vm = this;
     vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
     vm.toggleVendorAccordion = toggleVendorAccordion;
@@ -10,7 +10,6 @@ function productsAvailableByVendorController( $scope, $q, $timeout, alertService
     vm.computeSelectionTotalForVendor = computeSelectionTotalForVendor;
     vm.computeInvoiceTotalForVendor = computeInvoiceTotalForVendor;
     vm.loadingPromise = {};
-    vm.debounceSaveOffering = debounceSaveOffering;
     vm.vendors = [];
     vm.isEditing = {};
     vm.cycle = {};
@@ -162,16 +161,6 @@ function productsAvailableByVendorController( $scope, $q, $timeout, alertService
         vm.isEditing[offering.id] = false;
         updateVendorTotals();
         vm.notifyParentOfSave();
-    }
-
-    function debounceSaveOffering($event, offering, productOfferings) {
-        offering.userTouchedFlag = true;
-        if (vm.isEditing[offering.id]) {
-            return;
-        }
-        if ($event.target.tagName === 'INPUT') {
-            saveOffering( offering, productOfferings );
-        }
     }
 
     function reportCheckedProductsForVendor( vendor ){
