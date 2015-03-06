@@ -1,6 +1,8 @@
 #!/bin/sh
 
 ### This script is run on the production server, not in the Jenkin's build environment
+. /home/jenkins/.carli-select.environment
+export CARLI_CRM_MYSQL_PASSWORD
 
 cat /home/jenkins/carli-build.tgz | gunzip | sudo docker load
 rm /home/jenkins/carli-build.tgz
