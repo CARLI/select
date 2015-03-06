@@ -3,7 +3,7 @@ angular.module('carli.sections.subscriptions.productsAvailable')
 
 function productsAvailableByVendorController( $scope, $q, $timeout, controllerBaseService, cycleService, vendorService, offeringService, editOfferingService,  productService ) {
     var vm = this;
-    vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
+
     vm.toggleVendorAccordion = toggleVendorAccordion;
     vm.getVendorPricingStatus = getVendorPricingStatus;
     vm.stopEditing = stopEditing;

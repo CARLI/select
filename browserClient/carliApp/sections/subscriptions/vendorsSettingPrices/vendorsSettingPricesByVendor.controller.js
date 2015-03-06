@@ -3,9 +3,7 @@ angular.module('carli.sections.subscriptions.vendorsSettingPrices')
 
 function vendorsSettingPricesByVendorController( $scope, $q, controllerBaseService, cycleService, vendorService, offeringService, editOfferingService, productService ) {
     var vm = this;
-
-    vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
-    vm.offeringDisplayLabels = offeringService.getOfferingDisplayLabels();
+    
     vm.loadProductsForVendor = loadProductsForVendor;
     vm.getVendorPricingStatus = getVendorPricingStatus;
     vm.loadingPromise = {};

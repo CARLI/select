@@ -4,8 +4,6 @@ angular.module('carli.sections.subscriptions.productsAvailable')
 function productsAvailableByLibraryController( $scope, $q, controllerBaseService, cycleService, libraryService, offeringService, editOfferingService, vendorService ) {
     var vm = this;
 
-    vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
-    vm.offeringDisplayLabels = offeringService.getOfferingDisplayLabels();
     vm.loadOfferingsForLibrary = loadOfferingsForLibrary;
     vm.loadingPromise = {};
     vm.offerings = {};

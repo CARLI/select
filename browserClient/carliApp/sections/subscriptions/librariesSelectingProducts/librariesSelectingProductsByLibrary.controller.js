@@ -4,8 +4,6 @@ angular.module('carli.sections.subscriptions.librariesSelectingProducts')
 function librariesSelectingProductsByLibraryController( $scope, controllerBaseService, cycleService, libraryService, offeringService, editOfferingService, vendorService ) {
     var vm = this;
 
-    vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
-    vm.offeringDisplayLabels = offeringService.getOfferingDisplayLabels();
     vm.loadOfferingsForLibrary = loadOfferingsForLibrary;
     vm.loadingPromise = {};
     vm.offerings = {};
