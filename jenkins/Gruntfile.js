@@ -61,6 +61,8 @@ module.exports = function (grunt) {
                         return 'http://carli.dev.pixotech.com/db';
                     case 'qa':
                         return 'http://carli.qa.pixotech.com/db';
+                    case 'prod':
+                        return 'http://select-prod.carli.illinois.edu/db';
                     default:
                         throw new Error('Invalid instance: ' + instance);
                 }
@@ -83,6 +85,8 @@ module.exports = function (grunt) {
                     return 'http://carli.dev.pixotech.com/api';
                 case 'qa':
                     return 'http://carli.qa.pixotech.com/api';
+                case 'prod':
+                    return 'http://select-prod.carli.illinois.edu/api';
                 default:
                     throw new Error('Invalid instance: ' + instance);
             }
