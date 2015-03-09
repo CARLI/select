@@ -32,7 +32,7 @@ function editOfferingService( offeringService ) {
             .then(offeringService.update);
 
         function toggleOfferingFlaggedState( offering ){
-            offering.flagged = !offering.getFlaggedState();
+            offering.flagged = !offeringService.getFlaggedState(offering);
             return offering;
         }
     }

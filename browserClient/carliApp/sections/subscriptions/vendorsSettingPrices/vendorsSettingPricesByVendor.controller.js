@@ -97,7 +97,7 @@ function vendorsSettingPricesByVendorController( $scope, $q, controllerBaseServi
     }
 
     function updateOfferingFlaggedStatus( offering ){
-        offering.flagged = offering.getFlaggedState();
+        offering.flagged = offeringService.getFlaggedState(offering);
         return offering;
     }
 }

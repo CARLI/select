@@ -143,7 +143,7 @@ function productsAvailableByLibraryController( $scope, $q, controllerBaseService
     }
 
     function updateOfferingFlaggedStatus( offering ){
-        offering.flagged = offering.getFlaggedState();
+        offering.flagged = offeringService.getFlaggedState(offering);
         return offering;
     }
 

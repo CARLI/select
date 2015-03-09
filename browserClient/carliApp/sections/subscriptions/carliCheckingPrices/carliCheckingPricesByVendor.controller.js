@@ -97,7 +97,7 @@ function carliCheckingPricesByVendorController( $scope, $q, controllerBaseServic
     }
 
     function updateOfferingFlaggedStatus( offering ){
-        offering.flagged = offering.getFlaggedState();
+        offering.flagged = offeringService.getFlaggedState(offering);
         return offering;
     }
 }

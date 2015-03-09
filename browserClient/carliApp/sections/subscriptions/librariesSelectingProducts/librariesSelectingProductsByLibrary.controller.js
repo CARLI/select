@@ -120,7 +120,7 @@ function librariesSelectingProductsByLibraryController( $scope, controllerBaseSe
     }
 
     function updateOfferingFlaggedStatus( offering ){
-        offering.flagged = offering.getFlaggedState();
+        offering.flagged = offeringService.getFlaggedState(offering);
         return offering;
     }
 }

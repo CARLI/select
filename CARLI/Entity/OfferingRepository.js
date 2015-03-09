@@ -113,7 +113,7 @@ function listOfferingsForProductId( productId, cycle ) {
         offerings.forEach(function(offering){
             offering.display = offering.display || "with-price";
 
-            offering.flagged = offering.getFlaggedState();
+            offering.flagged = getFlaggedState(offering);
 
             if (!offering.libraryComments) {
                 offering.libraryComments = offering.product.comments;
@@ -131,10 +131,7 @@ function setCycle(cycle) {
 }
 
 
-/* functions that get added as instance methods on loaded Offerings */
-var getFlaggedState = function(){
-    var offering = this;
-
+function getFlaggedState(offering){
     if ( userFlaggedState() !== undefined ){
         return userFlaggedState();
     }
@@ -158,10 +155,11 @@ var getFlaggedState = function(){
         }
         return false;
     }
-};
+}
 
+/* functions that get added as instance methods on loaded Offerings */
 var functionsToAdd = {
-    getFlaggedState: getFlaggedState
+    //warning: some Offering views are in the Middleware and cross the http layer, which strips these functions
 };
 
 function getOfferingDisplayOptions(){
@@ -181,5 +179,7 @@ module.exports = {
     listOfferingsForProductId: listOfferingsForProductId,
     getOfferingDisplayOptions: getOfferingDisplayOptions,
     transformOfferingsForNewCycle: transformOfferingsForNewCycle,
-    saveOfferingHistoryForYear: saveOfferingHistoryForYear
+    saveOfferingHistoryForYear: saveOfferingHistoryForYear,
+
+    getFlaggedState: getFlaggedState
 };

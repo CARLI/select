@@ -44,6 +44,9 @@ function offeringService( CarliModules, $q, cycleService ) {
         },
         getOfferingDisplayLabels: function(){
             return offeringDisplayLabels;
+        },
+        getFlaggedState: function (offering) {
+            return offeringModule.getFlaggedState(offering);
         }
     };
 }
