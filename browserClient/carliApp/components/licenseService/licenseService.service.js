@@ -13,7 +13,7 @@ function licenseService( CarliModules, $q, entityBaseService ) {
             results.push(
                 {
                     label: val,
-                    value: "'" + val + "'"
+                    value: val
                 }
             );
         });
