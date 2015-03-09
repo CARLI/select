@@ -5,7 +5,7 @@ var offeringTemplatePromise;
 var editOfferingHandlerAttached;
 var flagOfferingHandlerAttached;
 
-function renderOfferingDirective( $http, $q, $filter, offeringService, editOfferingService ) {
+function renderOfferingDirective( $http, $q, $filter, alertService, offeringService, editOfferingService ) {
     registerHandlebarsHelpers();
 
     return {
@@ -32,7 +32,7 @@ function renderOfferingDirective( $http, $q, $filter, offeringService, editOffer
                 offering.pricing.su = $filter('orderBy')(offering.pricing.su, 'users');
 
                 getOfferingTemplate().then(function (template) {
-                    offering.flagged = offering.getFlaggedState();
+                    offering.flagged = offeringService.getFlaggedState(offering);
 
                     var values = {
                         thisYear: scope.cycle.year,
@@ -95,10 +95,21 @@ function renderOfferingDirective( $http, $q, $filter, offeringService, editOffer
 
                     scope.$apply(function() {
                         editOfferingService.toggleOfferingUserFlaggedState(offeringId)
-                            .then(function(offeringId) {
-                                scope.offering.flagged = !scope.offering.getFlaggedState();
+                            .then(alertSuccess, alertError)
+                            .then(offeringService.load)
+                            .then(function(offering) {
+                                scope.offering = offering;
                             });
                     });
+
+                    function alertSuccess(offeringId) {
+                        alertService.putAlert('Offering updated', {severity: 'success'});
+                        return offeringId;
+                    }
+                    function alertError(err) {
+                        alertService.putAlert(err, {severity: 'danger'});
+                        console.log('failed', err);
+                    }
                 }
             }
         }
