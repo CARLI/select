@@ -87,7 +87,7 @@
                         <div ng-show="vm.noLicensesMessage">
                             <input type="text" ng-show="vm.editable" disabled="disabled" readonly="readonly" value="{{ vm.noLicensesMessage }}" id="noLicensesMessage">
                         </div>
-                        <view-edit-typeahead ng-show="!vm.noLicensesMessage" ng-model="vm.product.license" options="vm.licenseList" edit-mode="vm.newProduct" input-id="license">
+                        <view-edit-typeahead ng-show="!vm.noLicensesMessage" ng-model="vm.product.license" options="vm.licenseList" edit-mode="vm.editable" input-id="license">
                             {{ vm.product.license.name }}
                         </view-edit-typeahead>
 
