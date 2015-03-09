@@ -87,6 +87,10 @@ function productsAvailableByVendorController( $scope, $q, $timeout, controllerBa
         }).then(logLoadTime);
 
         function logLoadTime(products) {
+            if ( !products || !products.length ){
+                return;
+            }
+
             var numberOfOfferings = products.map(function(list){
                 return list.offerings.length;
             }).reduce(function(previousValue, currentValue, index, array) {

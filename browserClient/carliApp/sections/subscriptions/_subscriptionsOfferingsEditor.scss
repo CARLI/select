@@ -130,6 +130,19 @@
                         border-right: 0;
                         text-align: center;
 
+                        .fa {
+                            @include font-size(22);
+                            cursor: pointer;
+
+                            &.fa-flag-o {
+                                color: $gray;
+                            }
+
+                            &.fa-flag {
+                                color: $orange;
+                            }
+                        }
+
                         checkbox {
                             .checkbox-display {
                                 cursor: pointer;
@@ -143,10 +156,6 @@
                                 &:checked + label {
                                     color: $orange;
                                 }
-                            }
-
-                            .fa {
-                                @include font-size(22);
                             }
 
                             &.focused {
