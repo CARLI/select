@@ -35,6 +35,15 @@
         "hasArchiveCapitalFee": {
             "type": "boolean"
         },
+        "soleSource": {
+            "type": "boolean"
+        },
+        "sealedBid": {
+            "type": "boolean"
+        },
+        "consolidatedList": {
+            "type": "boolean"
+        },
         "fundings": {
             "type": "array",
             "items": {
