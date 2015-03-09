@@ -21,9 +21,9 @@
                 <ul class="offerings-list">
                     <li class="column-headers">
                         <div class="sortable column product" ng-class="{ activeSort: vm.orderBy === 'product.name', reversedSort: vm.reverse }" ng-click="vm.sort('product.name')">Product</div>
-                        <div class="sortable column selected-last-year" ng-class="{ activeSort: vm.orderBy === 'selectedLastYear', reversedSort: vm.reverse }" ng-click="vm.sort('selectedLastYear')">Selected Last Year</div>
                         <div class="sortable column vendor" ng-class="{ activeSort: vm.orderBy === 'product.vendor.name', reversedSort: vm.reverse }" ng-click="vm.sort('product.vendor.name')">Vendor</div>
                         <div class="column library-view">Library View</div>
+                        <div class="sortable column selected-last-year" ng-class="{ activeSort: vm.orderBy === 'selectedLastYear', reversedSort: vm.reverse }" ng-click="vm.sort('selectedLastYear')">Selected Last Year</div>
                         <div class="sortable column site-license-price current-year-only" ng-class="{activeSort: vm.orderBy === 'pricing.site', reversedSort: vm.reverse }" ng-click="vm.sort('pricing.site')">Site License Price</div>
                         <div class="column selection">Selection</div>
                     </li>

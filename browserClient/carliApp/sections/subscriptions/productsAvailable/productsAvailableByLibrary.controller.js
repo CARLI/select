@@ -20,9 +20,9 @@ function productsAvailableByLibraryController( $scope, $q, controllerBaseService
     vm.invoiceCheckedProductsForLibrary = invoiceCheckedProductsForLibrary;
     vm.offeringColumns = [
         'product',
-        'selected-last-year',
         'vendor',
         'library-view',
+        'selected-last-year',
         'site-license-price',
         'selection'
     ];

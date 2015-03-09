@@ -17,9 +17,9 @@ function librariesSelectingProductsByLibraryController( $scope, controllerBaseSe
     vm.lastYear = '';
     vm.offeringColumns = [
         'product',
-        'selected-last-year',
         'vendor',
         'library-view',
+        'selected-last-year',
         'site-license-price',
         'selection'
     ];
