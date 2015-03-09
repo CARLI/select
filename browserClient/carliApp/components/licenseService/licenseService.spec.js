@@ -29,11 +29,11 @@ describe('The License Service', function() {
         var testData = [
             {
                 label: 'Product',
-                value: "'Product'"
+                value: "Product"
             },
             {
                 label: 'Service',
-                value: "'Service'"
+                value: "Service"
             }
         ];
 
