@@ -44,11 +44,11 @@
 
                 <div class="column">
                     <view-edit-checkbox label="3rd Party Product" ng-model="vm.product.isThirdPartyProduct" edit-mode="vm.editable" input-id="isThirdPartyProduct">
-                        <label for="isThirdPartyProduct">Third Party Product:</label> {{ vm.product.isThirdPartyProduct }}
+                        <div ng-show="vm.product.isThirdPartyProduct" class="label">Third Party Product</div>
                     </view-edit-checkbox>
 
                     <view-edit-checkbox label="Archive Capital Fee" ng-model="vm.product.hasArchiveCapitalFee" edit-mode="vm.editable" input-id="hasArchiveCapitalFee">
-                        <label for="hasArchiveCapitalFee">Archive Capital Fee:</label> {{ vm.product.hasArchiveCapitalFee }}
+                        <div ng-show="vm.product.hasArchiveCapitalFee" class="label">Archive Capital Fee</div>
                     </view-edit-checkbox>
                 </div>
 
