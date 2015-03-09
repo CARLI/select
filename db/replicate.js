@@ -1,5 +1,5 @@
 var config = require('../config');
-var request = require('../config/environmentDependentModules').request;
+var request = require('../config/environmentDependentModules/request');
 var Q = require('q');
 
 var dbInfo = {

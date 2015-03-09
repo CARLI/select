@@ -12,7 +12,7 @@ var cyclesToMigrate = [
         name: 'Calendar Year 2014',
         cycleType: 'Calendar Year',
         year: 2014,
-        status: 5,
+        status: 6,
         isArchived: true,
         startDateForSelections: '2013-10-15',
         endDateForSelections: '2013-11-15',
@@ -23,7 +23,7 @@ var cyclesToMigrate = [
         name: 'Fiscal Year 2014',
         cycleType: 'Fiscal Year',
         year: 2014,
-        status: 4,
+        status: 5,
         isArchived: false,
         startDateForSelections: '2013-04-22',
         endDateForSelections: '2013-05-31',
@@ -36,7 +36,7 @@ var cyclesToMigrate = [
         name: 'One Time Purchases',
         cycleType: 'One-Time Purchase',
         year: 0,
-        status: 4,
+        status: 5,
         isArchived: false
     }
 ];

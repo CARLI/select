@@ -6,7 +6,7 @@ var Entity = require('../Entity')
   , getStoreForCycle = require('./getStoreForCycle')
   , Validator = require('../Validator')
   , moment = require('moment')
-  , listProductsWithOfferingsForVendorIdModule = require('../../config/environmentDependentModules').listProductsWithOfferingsForVendorId
+  , listProductsWithOfferingsForVendorIdModule = require('../../config/environmentDependentModules/listProductsWithOfferingsForVendorId')
   , Q = require('q')
   ;
 

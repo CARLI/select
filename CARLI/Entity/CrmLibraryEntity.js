@@ -1,6 +1,6 @@
 var uuid  = require( 'node-uuid' )
   , Q = require( 'q' )
-  , crmQueries = require('../../config/environmentDependentModules').crmQueries
+  , crmQueries = require('../../config/environmentDependentModules/crmQueries')
   , entityCache = require('./entityCache')
   , config = require( '../../config' )
 ;
@@ -10,7 +10,7 @@ module.exports = function (timeout) {
     if (timeout === undefined) {
         timeout = config.defaultEntityCacheTimeToLive;
     }
-    var cache = entityCache.createCache(timeout);
+    var cache = entityCache.getCacheFor('CrmLibrary',timeout);
 
     var noop = function(){};
 
@@ -36,11 +36,17 @@ module.exports = function (timeout) {
                 });
             }
 
-            var data = cache.get(id) ? cache.get(id) : loadLibrary(id);
-            cache.add(data);
-            return data;
+            var cachedResult = cache.get(id);
+            if (!cachedResult) {
+                var promise = loadLibrary(id).then(function (data) {
+                    return data;
+                });
+                cache.add({ id: id, promise: promise });
+                return promise;
+            } else {
+                return cachedResult.promise;
+            }
         }
     };
 
 };
-

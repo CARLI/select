@@ -130,7 +130,7 @@ function _fetchAllObjectsFromReferences(entity, referencesArray) {
     for (var i in referencesArray) {
         var property = referencesArray[i];
 
-        if (entity[property]) {
+        if (entity[property] && typeof entity[property] !== 'object') {
             var p = null;
 
             if (repositories[property]) {

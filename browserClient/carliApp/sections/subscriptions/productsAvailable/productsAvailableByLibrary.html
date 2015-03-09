@@ -21,48 +21,15 @@
                 <ul class="offerings-list">
                     <li class="column-headers">
                         <div class="sortable column product" ng-class="{ activeSort: vm.orderBy === 'product.name', reversedSort: vm.reverse }" ng-click="vm.sort('product.name')">Product</div>
-                        <div class="sortable column selected-last-year" ng-class="{ activeSort: vm.orderBy === 'selectedLastYear', reversedSort: vm.reverse }" ng-click="vm.sort('selectedLastYear')">Selected Last Year</div>
                         <div class="sortable column vendor" ng-class="{ activeSort: vm.orderBy === 'product.vendor.name', reversedSort: vm.reverse }" ng-click="vm.sort('product.vendor.name')">Vendor</div>
                         <div class="column library-view">Library View</div>
+                        <div class="sortable column selected-last-year" ng-class="{ activeSort: vm.orderBy === 'selectedLastYear', reversedSort: vm.reverse }" ng-click="vm.sort('selectedLastYear')">Selected Last Year</div>
                         <div class="sortable column site-license-price current-year-only" ng-class="{activeSort: vm.orderBy === 'pricing.site', reversedSort: vm.reverse }" ng-click="vm.sort('pricing.site')">Site License Price</div>
                         <div class="column selection">Selection</div>
                     </li>
                     <li class="offering" ng-class="{ 'edit-mode': vm.isEditing[offering.id] }" ng-repeat="offering in vm.offerings[library.id] | filter:vm.filterOfferingBySelection | orderBy:vm.orderBy:vm.reverse track by offering.id">
-                        <div class="column product">
-                            <checkbox ng-model="vm.selectedOfferings[library.id][offering.id]"></checkbox>
-                            <h3>{{ ::offering.product.name }}</h3>
-                            <button ng-show="!vm.isEditing[offering.id]" type="button" class="carli-button edit" ng-click="vm.setOfferingEditable(offering)">Edit <fa name="pencil-square-o "></fa></button>
-                            <button ng-show="vm.isEditing[offering.id]" type="button" class="carli-button save" ng-click="vm.saveOffering(offering, library.id)">Save <fa name="floppy-o"></fa></button>
-                        </div>
-                        <div class="column selected-last-year">
-                            <fa ng-if="::offering.history[vm.lastYear].selection" name="star"></fa>
-                        </div>
-                        <div class="column vendor">
-                            <h3>{{ offering.product.vendor.name }}</h3>
-                        </div>
-                        <div class="column library-view">
-                            <div class="display">
-                                <label for="offering-display" ng-show="vm.isEditing[offering.id]">Display:</label>
-                                <view-edit-radios ng-model="offering.display" input-id="offering-display" edit-mode="vm.isEditing[offering.id]" items="vm.offeringDisplayOptions" radio-group-name="offering-{{offering.library.name}}-display">
-                                    <strong class="purple">{{ vm.offeringDisplayLabels[offering.display] }}</strong>
-                                </view-edit-radios>
-                            </div>
-                            <div class="comments">
-                                <offering-comments offering="offering" edit-mode="vm.isEditing[offering.id]"></offering-comments>
-                            </div>
-                        </div>
-                        <div class="column site-license-price current-year-only">
-                            <offering-pricing year="vm.cycle.year" offering="offering" edit-mode="vm.isEditing[offering.id]" hide-previous-year="true"></offering-pricing>
-                        </div>
-                        <div class="column selection">
-                            <label for="{{ offering.id }}_selection" class="sr-only">Library Selection</label>
-                            <view-edit-offering-selection ng-model="offering" edit-mode="vm.isEditing[offering.id]">
-                                <div class="selection-display" ng-show="offering.selection">
-                                    <div class="users"><span class="label">Selection:</span> {{ offering.selection.users }} {{ offering.selection.users === 'site' ? '' : 'Users' }}</div>
-                                    <div class="price"><span class="label">Price:</span> {{ offering.selection.price | currency }}</div>
-                                </div>
-                            </view-edit-offering-selection>
-                        </div>
+                        <edit-offering ng-if="vm.isEditing[offering.id]" cycle="::cycle" offering="offering" columns="::vm.offeringColumns" on-offering-saved="::vm.stopEditing"></edit-offering>
+                        <render-offering offering="offering" cycle="::vm.cycle" columns="::vm.offeringColumns"></render-offering>
                     </li>
                 </ul>
                 <div class="footer clearfix">

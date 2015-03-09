@@ -1,7 +1,7 @@
 var config = require('../../../config');
-var couchUtils = require('../../../config/environmentDependentModules').couchUtils,
+var couchApp = require('../../../config/environmentDependentModules/couchApp'),
     Q = require('q'),
-    request = require('../../../config/environmentDependentModules').request,
+    request = require('../../../config/environmentDependentModules/request'),
     StoreOptions = require( '../../../config').storeOptions,
     queryString = require('query-string')
 ;
@@ -16,7 +16,7 @@ function couchRequest(requestOptions) {
         var err = error || data.error;
 
         if (err) {
-            deferred.reject(config.errorMessages.fatal);
+            deferred.reject( err /*config.errorMessages.fatal*/ );
         } else {
             deferred.resolve(data);
         }
@@ -134,7 +134,7 @@ function createDatabase(dbName) {
         if (error) {
             deferred.reject(error);
         } else if (response.statusCode >= 200 && response.statusCode <= 299) {
-            couchUtils.putDesignDoc(dbName, dbType).then(function () {
+            couchApp.putDesignDoc(dbName, dbType).then(function () {
                 deferred.resolve();
             });
         } else {
@@ -187,6 +187,18 @@ function _couchReplicationOptions(sourceDbName, targetDbName) {
     };
 }
 
+function getRunningCouchJobs(){
+    var url = StoreOptions.couchDbUrl + '/_active_tasks/';
+
+    return couchRequest({ url: url });
+}
+
+function triggerViewIndexing(databaseName) {
+    var url = StoreOptions.couchDbUrl + '/' + databaseName + '/' + '_design/CARLI/_view/docTypes?stale=update_after';
+
+    couchRequest({url : url});
+}
+
 module.exports = {
     couchViewUrl: couchViewUrl,
     createDatabase: createDatabase,
@@ -195,5 +207,7 @@ module.exports = {
     getCouchViewResultObject: getCouchViewResultObject,
     getCouchViewResultValues: getCouchViewResultValues,
     makeValidCouchDbName: makeValidCouchDbName,
-    replicateFrom: replicateFrom
+    replicateFrom: replicateFrom,
+    getRunningCouchJobs: getRunningCouchJobs,
+    triggerViewIndexing: triggerViewIndexing
 };

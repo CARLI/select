@@ -4,7 +4,7 @@ var bodyParser = require('body-parser');
 var request = require('request');
 var _ = require('lodash');
 
-var couchUtils = require('./components/couchUtils');
+var couchApp = require('./components/couchApp');
 var crmQueries = require('./components/crmQueries');
 var notifications = require('./components/notifications');
 var listProductsWithOfferingsForVendorId = require('./components/listProductsWithOfferingsForVendorId');
@@ -46,7 +46,7 @@ function runMiddlewareServer(){
     });
 
     carliMiddleware.put('/design-doc/:dbName', function (req, res) {
-        couchUtils.putDesignDoc(req.params.dbName, 'Cycle').then(function() {
+        couchApp.putDesignDoc(req.params.dbName, 'Cycle').then(function() {
             res.send({ status: 'Ok' });
         }).catch(function (err) {
             res.send( { error: err } );
@@ -97,5 +97,5 @@ if (require.main === module) {
     runMiddlewareServer();
 }
 else {
-    module.exports = _.extend({}, couchUtils, notifications, crmQueries, listProductsWithOfferingsForVendorId);
+    module.exports = _.extend({}, couchApp, notifications, crmQueries, listProductsWithOfferingsForVendorId);
 }

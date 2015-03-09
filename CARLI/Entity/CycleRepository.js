@@ -15,6 +15,7 @@ var CycleRepository = Entity('Cycle');
 CycleRepository.setStore( Store( StoreModule(StoreOptions) ) );
 
 var statusLabels = [
+    "Cycle Data Processing",
     "CARLI Editing Product List",
     "Vendors Setting Prices",
     "CARLI Checking Prices",
@@ -47,38 +48,37 @@ function createCycleFrom( sourceCycle, newCycleData ) {
 }
 
 function createCycle( cycle ) {
-    var deferred = Q.defer();
 
-    var cycleDocPromise = CycleRepository.create(cycle, transformFunction);
-    var databasePromise = createDatabaseForCycle(cycleDocPromise);
-    Q.all([cycleDocPromise,databasePromise])
-    .then(function(results) {
-        deferred.resolve(results[0]);
-    })
-    .catch(function(err){
-        deferred.reject(err);
-    });
+    return CycleRepository.create(cycle, transformFunction)
+        .then(loadCycle)
+        .then(createDatabaseForCycle)
+        .then(loadCycle)
+        .then(triggerViewIndexing)
+        .then(resolveCycleId);
 
-    return deferred.promise;
-}
-
-function createDatabaseForCycle( docPromise ) {
-    var deferred = Q.defer();
-
-    docPromise.then(loadCycle).then(function (cycle) {
+    function createDatabaseForCycle( cycle ) {
         cycle.databaseName = couchUtils.makeValidCouchDbName('cycle-' + cycle.name);
 
-        couchUtils.createDatabase(cycle.databaseName)
+        return couchUtils.createDatabase(cycle.databaseName)
             .then(function commit() {
-                deferred.resolve( updateCycle( cycle ) );
+                return updateCycle( cycle );
             })
-            .catch(function rollback() {
-                deferred.resolve( CycleRepository.delete( cycle.id ) );
+            .catch(function rollback(err) {
+                CycleRepository.delete( cycle.id );
+                throw new Error('createDatabase failed: ' + err);
             });
-    });
+    }
 
-    return deferred.promise;
+    function triggerViewIndexing(cycle) {
+        couchUtils.triggerViewIndexing();
+        return cycle;
+    }
+
+    function resolveCycleId(cycle){
+        return cycle.id;
+    }
 }
+
 
 function updateCycle( cycle ){
     return CycleRepository.update( cycle, transformFunction );
@@ -134,6 +134,27 @@ var functionsToAdd = {
         return couchUtils.getCouchViewResultValues(this.databaseName, 'getCycleSelectionAndInvoiceTotals').then(function(resultArray){
             return resultArray[0];
         });
+    },
+    getViewUpdateProgress: function getViewUpdateStatus(){
+        var database = this.databaseName;
+
+        return couchUtils.getRunningCouchJobs().then(filterIndexJobs).then(filterByCycle).then(resolveToProgress);
+
+        function filterIndexJobs( jobs ){
+            return jobs.filter(function(job){
+                return job.type === 'indexer';
+            });
+        }
+
+        function filterByCycle( jobs ){
+            return jobs.filter(function(job){
+                return job.database === database;
+            });
+        }
+
+        function resolveToProgress( jobs ){
+            return jobs.length ? jobs[0].progress : 100;
+        }
     }
 };
 

@@ -1,30 +1,43 @@
 var fs = require('fs');
 
 module.exports = function (grunt) {
-    grunt.registerTask('jsenv', setJsEnv);
 
     var localConfigFile = __dirname + '/../config/local.js';
-    var environmentDependentModulesFile = __dirname + '/environmentDependentModules.js';
+    var environmentDependentModulesDirectory = __dirname + '/environmentDependentModules';
+    var environmentDependentModules = [
+        'request',
+        'couchApp',
+        'crmQueries',
+        'listProductsWithOfferingsForVendorId',
+        'notifications'
+    ];
+
     grunt.registerTask('ensure-local-config', ensureLocalConfigExists);
+
     function ensureLocalConfigExists() {
-        fs.closeSync(fs.openSync(localConfigFile, 'a'));
-        fs.closeSync(fs.openSync(environmentDependentModulesFile, 'a'));
+        touch(localConfigFile);
+
+        environmentDependentModules.map(getModuleFilename).forEach(touch);
     }
+
+    grunt.registerTask('jsenv', setJsEnv);
 
     function setJsEnv(env) {
-        switch (env) {
-            case 'browser':
-                writeEnvironmentRequestModule('browser');
-                break;
-            case 'node':
-                writeEnvironmentRequestModule('node');
-                break;
-            default:
-                throw Error('Invalid environment: ' + env + ', valid options are "node" and "browser"');
-        }
+        environmentDependentModules.forEach(function (module) {
+            writeEnvironmentModule(env, module);
+        });
     }
 
-    function writeEnvironmentRequestModule(module) {
-        fs.writeFileSync(environmentDependentModulesFile, "module.exports = require('./"+ module +"Environment');\n");
+    function writeEnvironmentModule(environment, module) {
+        fs.writeFileSync(getModuleFilename(module),
+            "module.exports = require('./"+ environment +"/"+ module +"');\n");
+    }
+
+    function getModuleFilename(module) {
+        return environmentDependentModulesDirectory + '/' + module + '.js';
+    }
+
+    function touch(file) {
+        fs.closeSync(fs.openSync(file, 'a'));
     }
 };

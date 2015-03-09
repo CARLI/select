@@ -1,6 +1,8 @@
 var INSTANT_TIMEOUT = -1;
 var INFINITE_TIMEOUT = Infinity;
 
+var namedCache = {};
+
 function createCache(timeout) {
     var cache = {};
     var timeToLive = timeout || INSTANT_TIMEOUT;
@@ -33,8 +35,17 @@ function createCache(timeout) {
     };
 }
 
+function getCacheFor(name, timeout){
+    if ( !namedCache[name] ){
+        namedCache[name] = createCache(timeout);
+    }
+    return namedCache[name];
+}
+
+
 module.exports = {
     INFINITE_TIMEOUT: INFINITE_TIMEOUT,
     INSTANT_TIMEOUT: INSTANT_TIMEOUT,
-    createCache: createCache
+    createCache: createCache,
+    getCacheFor: getCacheFor
 };

@@ -1,24 +1,29 @@
 angular.module('carli.sections.subscriptions.productsAvailable')
     .controller('productsAvailableByVendorController', productsAvailableByVendorController);
 
-function productsAvailableByVendorController( $scope, $q, alertService, controllerBaseService, cycleService, libraryService, vendorService, offeringService, productService ) {
+function productsAvailableByVendorController( $scope, $q, $timeout, controllerBaseService, cycleService, vendorService, offeringService, editOfferingService,  productService ) {
     var vm = this;
-    vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
-    vm.offeringDisplayLabels = offeringService.getOfferingDisplayLabels();
+
     vm.toggleVendorAccordion = toggleVendorAccordion;
     vm.getVendorPricingStatus = getVendorPricingStatus;
+    vm.stopEditing = stopEditing;
     vm.computeSelectionTotalForVendor = computeSelectionTotalForVendor;
     vm.computeInvoiceTotalForVendor = computeInvoiceTotalForVendor;
     vm.loadingPromise = {};
-    vm.setOfferingEditable = setOfferingEditable;
-    vm.saveOffering = saveOffering;
-    vm.debounceSaveOffering = debounceSaveOffering;
     vm.vendors = [];
     vm.isEditing = {};
     vm.cycle = {};
     vm.lastYear = '';
     vm.selectedOfferings = {};
     vm.reportCheckedProductsForVendor = reportCheckedProductsForVendor;
+    vm.offeringColumns = [
+        'library',
+        'library-view',
+        'selected-last-year',
+        'site-license-price',
+        'selection',
+        'vendor-invoice'
+    ];
 
     activate();
 
@@ -29,6 +34,21 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
         vm.lastYear = vm.cycle.year - 1;
 
         loadVendors();
+        connectEditButtons();
+    }
+
+    function connectEditButtons() {
+        $scope.$watch(getCurrentOffering, watchCurrentOffering);
+
+        function getCurrentOffering() {
+            return editOfferingService.getCurrentOffering();
+        }
+
+        function watchCurrentOffering(newOffering, oldOffering) {
+            if (newOffering) {
+                setOfferingEditable(newOffering);
+            }
+        }
     }
 
     function loadVendors() {
@@ -59,9 +79,29 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
             return $q.when();
         }
 
+        var start = new Date();
+
         vm.loadingPromise[vendor.id] = productService.listProductsWithOfferingsForVendorId(vendor.id).then(function(products) {
             vendor.products = products;
-        });
+            return products;
+        }).then(logLoadTime);
+
+        function logLoadTime(products) {
+            if ( !products || !products.length ){
+                return;
+            }
+
+            var numberOfOfferings = products.map(function(list){
+                return list.offerings.length;
+            }).reduce(function(previousValue, currentValue, index, array) {
+                return previousValue + currentValue;
+            });
+
+            $timeout(function(){
+                var stop = new Date();
+                console.log('digest ' + numberOfOfferings + ' vendor offerings took '+ (stop-start)/1000 + 's');
+            });
+        }
 
         return vm.loadingPromise[vendor.id];
     }
@@ -121,45 +161,10 @@ function productsAvailableByVendorController( $scope, $q, alertService, controll
     function setOfferingEditable( offering ){
         vm.isEditing[offering.id] = true;
     }
-
-    function debounceSaveOffering($event, offering, productOfferings) {
-        offering.userTouchedFlag = true;
-        if (vm.isEditing[offering.id]) {
-            return;
-        }
-        if ($event.target.tagName === 'INPUT') {
-            saveOffering( offering, productOfferings );
-        }
-    }
-
-    function saveOffering( offering, productOfferings ) {
-        if (offering.libraryComments === offering.product.comments) {
-            delete offering.libraryComments;
-        }
-        if (!offering.userTouchedFlag) {
-            delete offering.flagged;
-        }
-        delete offering.userTouchedFlag;
-
-        offeringService.update(offering)
-            .then(offeringService.load)
-            .then(updateOfferingFlaggedStatus)
-            .then(function(updatedOffering){
-                var offeringIndex = productOfferings.indexOf(offering);
-                productOfferings[offeringIndex] = updatedOffering;
-                alertService.putAlert('Offering updated', {severity: 'success'});
-                updateVendorTotals();
-                vm.onOfferingSaved();
-                vm.isEditing[offering.id] = false;
-            }).catch(function(err) {
-                alertService.putAlert(err, {severity: 'danger'});
-                console.log('failed', err);
-            });
-    }
-
-    function updateOfferingFlaggedStatus( offering ){
-        offering.flagged = offering.getFlaggedState();
-        return offering;
+    function stopEditing(offering) {
+        vm.isEditing[offering.id] = false;
+        updateVendorTotals();
+        vm.notifyParentOfSave();
     }
 
     function reportCheckedProductsForVendor( vendor ){

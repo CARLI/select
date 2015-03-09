@@ -1,6 +1,6 @@
 var config = require('../../../config');
 var Q = require('q');
-var request = require('../../../config/environmentDependentModules').request;
+var request = require('../../../config/environmentDependentModules/request');
 var CouchUtils = require('./Utils');
 
 function _cloneData(data) {

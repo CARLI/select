@@ -6,7 +6,7 @@ var test = require( './Entity/EntityInterface.spec' )
     , CycleRepository = require( '../Entity/CycleRepository' )
     , ProductRepository = require( '../Entity/ProductRepository' )
     , config = require('../../config')
-    , request = require('../../config/environmentDependentModules').request
+    , request = require('../../config/environmentDependentModules/request')
     , storeOptions = config.storeOptions
     , testUtils = require('./utils')
     , Q = require('q')
@@ -168,7 +168,7 @@ describe('Adding functions to Cycle instances', function() {
                     return CycleRepository.load(cycleId);
                 })
                 .then(function (loadedCycle) {
-                    return expect(loadedCycle.getStatusLabel()).to.equal('CARLI Editing Product List');
+                    return expect(loadedCycle.getStatusLabel()).to.equal('Cycle Data Processing');
                 });
         });
 
@@ -213,9 +213,9 @@ describe('Adding functions to Cycle instances', function() {
                 });
         });
 
-        it('should not increment the status past 5', function () {
+        it('should not increment the status past 6', function () {
             var cycle = validCycleData();
-            cycle.status = 5;
+            cycle.status = 6;
 
             return CycleRepository.create(cycle)
                 .then(function (cycleId) {
@@ -223,7 +223,7 @@ describe('Adding functions to Cycle instances', function() {
                 })
                 .then(function (loadedCycle) {
                     loadedCycle.proceedToNextStep();
-                    return expect(loadedCycle.status).to.equal(5);
+                    return expect(loadedCycle.status).to.equal(6);
                 });
         });
     });
@@ -267,5 +267,17 @@ describe('Adding functions to Cycle instances', function() {
                     return expect(loadedCycle.status).to.equal(0);
                 });
         });
+    });
+
+    it('should add a getViewUpdateStatus method to instances of Cycle', function(){
+        var cycle = validCycleData();
+
+        return CycleRepository.create(cycle)
+            .then(function (cycleId) {
+                return CycleRepository.load(cycleId);
+            })
+            .then(function (loadedCycle) {
+                return expect(loadedCycle.getViewUpdateProgress).to.be.a('function');
+            });
     });
 });

@@ -1,25 +1,24 @@
 angular.module('carli.sections.subscriptions.vendorsSettingPrices')
     .controller('vendorsSettingPricesByLibraryController', vendorsSettingPricesByLibraryController);
 
-function vendorsSettingPricesByLibraryController( $scope, $q, alertService, controllerBaseService, cycleService, libraryService, offeringService, vendorService ) {
+function vendorsSettingPricesByLibraryController( $scope, controllerBaseService, cycleService, libraryService, offeringService, editOfferingService, vendorService ) {
     var vm = this;
-
-    vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
-    vm.offeringDisplayLabels = offeringService.getOfferingDisplayLabels();
 
     vm.loadOfferingsForLibrary = loadOfferingsForLibrary;
     vm.loadingPromise = {};
     vm.offerings = {};
-
-    vm.setOfferingEditable = setOfferingEditable;
-    vm.saveOffering = saveOffering;
-    vm.debounceSaveOffering = debounceSaveOffering;
-
+    vm.stopEditing = stopEditing;
     vm.vendorMap = {};
-
     vm.isEditing = {};
     vm.cycle = {};
     vm.lastYear = '';
+    vm.offeringColumns = [
+        'product',
+        'vendor',
+        'library-view',
+        'site-license-price',
+        'flag'
+    ];
 
     activate();
 
@@ -30,6 +29,21 @@ function vendorsSettingPricesByLibraryController( $scope, $q, alertService, cont
         vm.lastYear = vm.cycle.year - 1;
 
         initVendorMap().then(initLibraryList);
+        connectEditButtons();
+    }
+
+    function connectEditButtons() {
+        $scope.$watch(getCurrentOffering, watchCurrentOffering);
+
+        function getCurrentOffering() {
+            return editOfferingService.getCurrentOffering();
+        }
+
+        function watchCurrentOffering(newOffering, oldOffering) {
+            if (newOffering) {
+                setOfferingEditable(newOffering);
+            }
+        }
     }
 
     function initLibraryList(){
@@ -72,42 +86,12 @@ function vendorsSettingPricesByLibraryController( $scope, $q, alertService, cont
     function setOfferingEditable( offering ){
         vm.isEditing[offering.id] = true;
     }
-
-    function debounceSaveOffering($event, offering, libraryId) {
-        offering.userTouchedFlag = true;
-        if (vm.isEditing[offering.id]) {
-            return;
-        }
-        if ($event.target.tagName === 'INPUT') {
-            saveOffering( offering, libraryId );
-        }
-    }
-
-    function saveOffering( offering, libraryId ) {
-        if (offering.libraryComments === offering.product.comments) {
-            delete offering.libraryComments;
-        }
-        if (!offering.userTouchedFlag) {
-            delete offering.flagged;
-        }
-        delete offering.userTouchedFlag;
-
-        offeringService.update(offering)
-            .then(offeringService.load)
-            .then(updateOfferingFlaggedStatus)
-            .then(function(updatedOffering){
-                var offeringIndex = vm.offerings[libraryId].indexOf(offering);
-                vm.offerings[libraryId][offeringIndex] = updatedOffering;
-                alertService.putAlert('Offering updated', {severity: 'success'});
-                vm.isEditing[offering.id] = false;
-            }).catch(function(err) {
-                alertService.putAlert(err, {severity: 'danger'});
-                console.log('failed', err);
-            });
+    function stopEditing(offering) {
+        vm.isEditing[offering.id] = false;
     }
 
     function updateOfferingFlaggedStatus( offering ){
-        offering.flagged = offering.getFlaggedState();
+        offering.flagged = offeringService.getFlaggedState(offering);
         return offering;
     }
 }
