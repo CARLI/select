@@ -82,6 +82,7 @@ function editLibraryController( $scope, $rootScope, entityBaseService, librarySe
             libraryService.update( vm.library ).then(function(){
                 alertService.putAlert('Library updated', {severity: 'success'});
                 setLibraryFormPristine();
+                toggleEditable();
                 afterSubmitCallback();
             })
             .catch(function(error) {

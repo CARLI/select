@@ -4,9 +4,4 @@ angular.module('carli.sections.libraries.edit')
 function editLibraryPageController( $routeParams, $location ) {
     var vm = this;
     vm.libraryId = $routeParams.id;
-    vm.afterLibrarySubmit = routeToLibraryList;
-
-    function routeToLibraryList() {
-        $location.path('/library');
-    }
 }

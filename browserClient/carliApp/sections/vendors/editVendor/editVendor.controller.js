@@ -4,9 +4,4 @@ angular.module('carli.sections.vendors.edit')
 function editVendorPageController( $routeParams, $location ) {
     var vm = this;
     vm.vendorId = $routeParams.id;
-    vm.afterVendorSubmit = routeToVendorList;
-
-    function routeToVendorList() {
-        $location.path('/vendor');
-    }
 }

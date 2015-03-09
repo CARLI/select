@@ -189,6 +189,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
             .then(function () {
                 alertService.putAlert('Product updated', {severity: 'success'});
                 setProductFormPristine();
+                toggleEditable();
                 afterSubmitCallback();
             })
             .catch(function (error) {

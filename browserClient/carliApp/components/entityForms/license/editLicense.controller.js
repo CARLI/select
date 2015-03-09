@@ -88,6 +88,7 @@ function editLicenseController( $scope, $rootScope, $location, alertService, cyc
                 .then(function(){
                     alertService.putAlert('License updated', {severity: 'success'});
                     setLicenseFormPristine();
+                    toggleEditable();
                     afterSubmitCallback();
                 })
                 .catch(function(error) {

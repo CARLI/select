@@ -101,6 +101,7 @@ function editVendorController( $scope, $rootScope, entityBaseService, alertServi
                 .then(function () {
                     alertService.putAlert('Vendor updated', {severity: 'success'});
                     setVendorFormPristine();
+                    toggleEditable();
                     afterSubmitCallback();
                 })
                 .catch(function (error) {
