@@ -71,29 +71,12 @@ function vendorsSettingPricesByVendorController( $scope, $q, controllerBaseServi
         if (vendor.products) {
             return $q.when();
         }
-        vm.loadingPromise[vendor.id] = productService.listProductsForVendorId(vendor.id).then(function (products) {
-            vendor.products = products;
 
-            var promises = [];
-            angular.forEach(products, function (product) {
-                var offeringPromise = offeringService.listOfferingsForProductId(product.id).then(function(offerings) {
-                    product.offerings = offerings;
-
-                    offerings.forEach(function(offering){
-                        offering.display = offering.display || "with-price";
-
-                        updateOfferingFlaggedStatus(offering);
-
-                        if (!offering.libraryComments) {
-                            offering.libraryComments = offering.product.comments;
-                        }
-                    });
-                    return offerings;
-                });
-                promises.push(offeringPromise);
+        vm.loadingPromise[vendor.id] = productService.listProductsWithOfferingsForVendorId(vendor.id)
+            .then(function(products) {
+                vendor.products = products;
+                return products;
             });
-            return $q.all(promises);
-        });
 
         return vm.loadingPromise[vendor.id];
     }
@@ -107,10 +90,5 @@ function vendorsSettingPricesByVendorController( $scope, $q, controllerBaseServi
     }
     function stopEditing(offering) {
         vm.isEditing[offering.id] = false;
-    }
-
-    function updateOfferingFlaggedStatus( offering ){
-        offering.flagged = offeringService.getFlaggedState(offering);
-        return offering;
     }
 }

@@ -107,22 +107,22 @@ function librariesSelectingProductsByLibraryController( $scope, $q, controllerBa
         }
 
         vm.loadingPromise[library.id] = offeringService.listOfferingsForLibraryId(library.id)
-            .then(function(offeringsForLibrary){
-                vm.offerings[library.id] = offeringsForLibrary;
-
-                offeringsForLibrary.forEach(function(offering){
-                    offering.product.vendor = vm.vendorMap[offering.product.vendor];
-                    offering.display = offering.display || "with-price";
-
-                    updateOfferingFlaggedStatus(offering);
-
-                    if (!offering.libraryComments) {
-                        offering.libraryComments = offering.product.comments;
-                    }
-                });
-            });
+            .then(attachOfferingsToLibrary);
 
         return vm.loadingPromise[library.id];
+
+
+        function attachOfferingsToLibrary(offerings){
+            vm.offerings[library.id] = offerings;
+            offerings.forEach(attachProductVendorToOffering);
+            return offerings;
+        }
+
+        function attachProductVendorToOffering(offering){
+            var vendorId = offering.product.vendor;
+            offering.product.vendor = vm.vendorMap[vendorId];
+            return offering;
+        }
     }
 
     function setOfferingEditable( offering ){
@@ -130,10 +130,5 @@ function librariesSelectingProductsByLibraryController( $scope, $q, controllerBa
     }
     function stopEditing(offering) {
         vm.isEditing[offering.id] = false;
-    }
-
-    function updateOfferingFlaggedStatus( offering ){
-        offering.flagged = offeringService.getFlaggedState(offering);
-        return offering;
     }
 }

@@ -101,26 +101,27 @@ function loadOffering( offeringId, cycle ){
 
 function listOfferingsForLibraryId( libraryId, cycle ) {
     setCycle(cycle);
-    return expandOfferings( CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForLibraryId', libraryId.toString()), cycle );
+    return expandOfferings( CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForLibraryId', libraryId.toString()), cycle )
+        .then(initializeComputedValues);
 }
 
 function listOfferingsForProductId( productId, cycle ) {
     setCycle(cycle);
     return expandOfferings( CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForProductId', productId), cycle )
         .then(initializeComputedValues);
+}
 
-    function initializeComputedValues(offerings) {
-        offerings.forEach(function(offering){
-            offering.display = offering.display || "with-price";
+function initializeComputedValues(offerings) {
+    offerings.forEach(function(offering){
+        offering.display = offering.display || "with-price";
 
-            offering.flagged = getFlaggedState(offering);
+        offering.flagged = getFlaggedState(offering);
 
-            if (!offering.libraryComments) {
-                offering.libraryComments = offering.product.comments;
-            }
-        });
-        return offerings;
-    }
+        if (!offering.libraryComments) {
+            offering.libraryComments = offering.product.comments;
+        }
+    });
+    return offerings;
 }
 
 function setCycle(cycle) {
