@@ -79,29 +79,11 @@ function productsAvailableByVendorController( $scope, $q, $timeout, controllerBa
             return $q.when();
         }
 
-        var start = new Date();
-
-        vm.loadingPromise[vendor.id] = productService.listProductsWithOfferingsForVendorId(vendor.id).then(function(products) {
-            vendor.products = products;
-            return products;
-        }).then(logLoadTime);
-
-        function logLoadTime(products) {
-            if ( !products || !products.length ){
-                return;
-            }
-
-            var numberOfOfferings = products.map(function(list){
-                return list.offerings.length;
-            }).reduce(function(previousValue, currentValue, index, array) {
-                return previousValue + currentValue;
+        vm.loadingPromise[vendor.id] = productService.listProductsWithOfferingsForVendorId(vendor.id)
+            .then(function(products) {
+                vendor.products = products;
+                return products;
             });
-
-            $timeout(function(){
-                var stop = new Date();
-                console.log('digest ' + numberOfOfferings + ' vendor offerings took '+ (stop-start)/1000 + 's');
-            });
-        }
 
         return vm.loadingPromise[vendor.id];
     }

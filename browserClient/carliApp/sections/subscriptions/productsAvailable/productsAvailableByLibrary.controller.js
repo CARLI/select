@@ -4,7 +4,7 @@ angular.module('carli.sections.subscriptions.productsAvailable')
 function productsAvailableByLibraryController( $scope, $q, controllerBaseService, cycleService, libraryService, offeringService, editOfferingService, vendorService ) {
     var vm = this;
 
-    vm.loadOfferingsForLibrary = loadOfferingsForLibrary;
+    vm.toggleLibraryAccordion = toggleLibraryAccordion;
     vm.loadingPromise = {};
     vm.offerings = {};
     vm.stopEditing = stopEditing;
@@ -93,30 +93,39 @@ function productsAvailableByLibraryController( $scope, $q, controllerBaseService
         }
     }
 
+    function toggleLibraryAccordion( library ){
+        if ( vm.openAccordion !== library.id ){
+            loadOfferingsForLibrary(library)
+                .then(function () {
+                    vm.openAccordion = library.id;
+                });
+        } else {
+            vm.openAccordion = null;
+        }
+    }
+
     function loadOfferingsForLibrary( library ){
         if ( vm.offerings[library.id] ){
-            return $q.when(vm.offerings[library.id]);
+            return $q.when();
         }
 
         vm.loadingPromise[library.id] = offeringService.listOfferingsForLibraryId(library.id)
-            .then(function(offeringsForLibrary){
-                vm.offerings[library.id] = offeringsForLibrary;
-
-                offeringsForLibrary.forEach(function(offering){
-                    offering.product.vendor = vm.vendorMap[offering.product.vendor];
-                    offering.display = offering.display || "with-price";
-
-                    updateOfferingFlaggedStatus(offering);
-
-                    if (!offering.libraryComments) {
-                        offering.libraryComments = offering.product.comments;
-                    }
-                });
-
-                return offeringsForLibrary;
-            });
+            .then(attachOfferingsToLibrary);
 
         return vm.loadingPromise[library.id];
+
+
+        function attachOfferingsToLibrary(offerings){
+            vm.offerings[library.id] = offerings;
+            offerings.forEach(attachProductVendorToOffering);
+            return offerings;
+        }
+
+        function attachProductVendorToOffering(offering){
+            var vendorId = offering.product.vendor;
+            offering.product.vendor = vm.vendorMap[vendorId];
+            return offering;
+        }
     }
 
     function computeSelectionTotalForLibrary( library ){
@@ -140,11 +149,6 @@ function productsAvailableByLibraryController( $scope, $q, controllerBaseService
     function stopEditing(offering) {
         vm.isEditing[offering.id] = false;
         vm.notifyParentOfSave();
-    }
-
-    function updateOfferingFlaggedStatus( offering ){
-        offering.flagged = offeringService.getFlaggedState(offering);
-        return offering;
     }
 
     function invoiceCheckedProductsForLibrary( library ){

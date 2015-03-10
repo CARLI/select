@@ -127,6 +127,8 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
     }
 
     function setProductFormPristine() {
+        vm.currentTemplate = templates.productFields;
+        
         if ($scope.productForm) {
             $scope.productForm.$setPristine();
         }
@@ -146,6 +148,17 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
         cycleService.listActiveCycles().then(function(activeCycles) {
             vm.activeCycles = activeCycles;
         });
+
+        watchCurrentCycle();
+
+        function watchCurrentCycle() {
+            $scope.$watch(cycleService.getCurrentCycle, function (activeCycle) {
+                if (activeCycle) {
+                    console.log('new active cycle',activeCycle);
+                    vm.product.cycle = activeCycle;
+                }
+            });
+        }
     }
 
     function loadOfferingsForProduct( product ){

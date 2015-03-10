@@ -4,7 +4,7 @@ angular.module('carli.sections.subscriptions.carliCheckingPrices')
 function carliCheckingPricesByVendorController( $scope, $q, controllerBaseService, cycleService, vendorService, offeringService, editOfferingService, productService ) {
     var vm = this;
 
-    vm.loadProductsForVendor = loadProductsForVendor;
+    vm.toggleVendorAccordion = toggleVendorAccordion;
     vm.getVendorPricingStatus = getVendorPricingStatus;
     vm.loadingPromise = {};
     vm.stopEditing = stopEditing;
@@ -56,33 +56,29 @@ function carliCheckingPricesByVendorController( $scope, $q, controllerBaseServic
             });
     }
 
+    function toggleVendorAccordion( vendor ){
+        if ( vm.openAccordion !== vendor.id ){
+            loadProductsForVendor(vendor)
+                .then(function () {
+                    vm.openAccordion = vendor.id;
+                });
+        } else {
+            vm.openAccordion = null;
+        }
+    }
+
     function loadProductsForVendor(vendor) {
         if (vendor.products) {
-            return;
+            return $q.when();
         }
-        vm.loadingPromise[vendor.id] = productService.listProductsForVendorId(vendor.id).then(function (products) {
-            vendor.products = products;
 
-            var promises = [];
-            angular.forEach(products, function (product) {
-                var offeringPromise = offeringService.listOfferingsForProductId(product.id).then(function(offerings) {
-                    product.offerings = offerings;
-
-                    offerings.forEach(function(offering){
-                        offering.display = offering.display || "with-price";
-
-                        updateOfferingFlaggedStatus(offering);
-
-                        if (!offering.libraryComments) {
-                            offering.libraryComments = offering.product.comments;
-                        }
-                    });
-                    return offerings;
-                });
-                promises.push(offeringPromise);
+        vm.loadingPromise[vendor.id] = productService.listProductsWithOfferingsForVendorId(vendor.id)
+            .then(function(products) {
+                vendor.products = products;
+                return products;
             });
-            return $q.all(promises);
-        });
+
+        return vm.loadingPromise[vendor.id];
     }
 
     function getVendorPricingStatus(vendor) {
@@ -94,10 +90,5 @@ function carliCheckingPricesByVendorController( $scope, $q, controllerBaseServic
     }
     function stopEditing(offering) {
         vm.isEditing[offering.id] = false;
-    }
-
-    function updateOfferingFlaggedStatus( offering ){
-        offering.flagged = offeringService.getFlaggedState(offering);
-        return offering;
     }
 }

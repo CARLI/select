@@ -23,7 +23,7 @@
         function activate(){
             vm.loadingPromise = setCycleToOneTimePurchase()
             .then(loadLibrary)
-            .then(loadOfferings);
+            .then(loadOfferingsForLibrary);
         }
 
         function setCycleToOneTimePurchase(){
@@ -40,7 +40,7 @@
             });
         }
 
-        function loadOfferings( library ) {
+        function loadOfferingsForLibrary( library ) {
             return offeringService.listOfferingsForLibraryId(library.id)
             .then(function (offeringList) {
                 vm.offeringList = offeringList;
@@ -48,16 +48,20 @@
             });
         }
 
+        function refreshOfferingsForLibrary(library){
+            return loadOfferingsForLibrary(library);
+        }
+
         function purchaseProduct(offering) {
             offering.datePurchased = new Date().toJSON().slice(0,10);
             offeringService.update(offering)
             .then(function(){
                 alertService.putAlert(offering.product.name + " purchased", {severity: 'success'});
-                //TODO: add audit trail entry (in service)
+                refreshOfferingsForLibrary(vm.library);
             })
             .catch(function(error){
                 alertService.putAlert(error, {severity: 'danger'});
-                loadOfferings(vm.library);
+                refreshOfferingsForLibrary(vm.library);
             });
         }
 
@@ -68,11 +72,11 @@
             offeringService.update(offering)
             .then(function(){
                 alertService.putAlert(offering.product.name + " purchase cancelled", {severity: 'success'});
-                //TODO: add audit trail entry (in service)
+                refreshOfferingsForLibrary(vm.library);
             })
             .catch(function(error){
                 alertService.putAlert(error, {severity: 'danger'});
-                loadOfferings(vm.library);
+                refreshOfferingsForLibrary(vm.library);
             });
         }
 
