@@ -21,4 +21,12 @@ header.carli-header {
         padding-top: 50px;
         padding-left: $page-gutter;
     }
+
+    .demo-mode {
+        position: absolute;
+        top: 23px;
+        left: 263px;
+        font-size: 1.1rem;
+        color: #f57300;
+    }
 }
