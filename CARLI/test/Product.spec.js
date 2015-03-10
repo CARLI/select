@@ -10,6 +10,8 @@ var chai   = require( 'chai' )
     , VendorRepository = require('../Entity/VendorRepository' )
     , LicenseRepository = require('../Entity/LicenseRepository' )
     , testUtils = require('./utils')
+    , _ = require('lodash')
+    , Q = require('q')
     ;
 
 chai.use( chaiAsPromised );
@@ -196,7 +198,7 @@ function runProductSpecificTests(testCycle) {
                 })
                 .then(function (productList) {
 
-                    function verifyAllProductsHaveLicense(productList) {
+                    function allProductsHaveLicense(productList) {
                         var match = true;
                         var licenseToMatch = license1;
 
@@ -209,7 +211,7 @@ function runProductSpecificTests(testCycle) {
                         return match;
                     }
 
-                    return expect(productList).to.be.an('array').and.have.length(2).and.satisfy(verifyAllProductsHaveLicense);
+                    return expect(productList).to.be.an('array').and.have.length(2).and.satisfy(allProductsHaveLicense);
                 });
         });
     });
@@ -227,7 +229,6 @@ function runProductSpecificTests(testCycle) {
             type: "Product",
             name: "my product 1 name",
             isActive: true,
-            license: "bogus",
             vendor: vendor1.id,
             cycle: testCycleId
         };
@@ -236,7 +237,6 @@ function runProductSpecificTests(testCycle) {
             type: "Product",
             name: "my product 2 name",
             isActive: true,
-            license: "bogus",
             vendor: vendor1.id,
             cycle: testCycleId
         };
@@ -245,7 +245,6 @@ function runProductSpecificTests(testCycle) {
             type: "Product",
             name: "my product 3 name",
             isActive: true,
-            license: "bogus",
             vendor: vendor2.id,
             cycle: testCycleId
         };
@@ -254,42 +253,32 @@ function runProductSpecificTests(testCycle) {
             type: "Product",
             name: "my product 4 name",
             isActive: true,
-            license: "bogus",
             vendor: "bogus",
             cycle: testCycleId
         };
 
-        it('should return products associated with a vendor', function () {
-            return ProductRepository.create(product1, testCycle)
-                .then(function () {
-                    return ProductRepository.create(product2, testCycle);
-                })
-                .then(function () {
-                return ProductRepository.create(product3, testCycle);
+        it('should return expanded products associated with a vendor', function () {
+            return Q.all([
+                VendorRepository.create(vendor1),
+                ProductRepository.create(product1, testCycle),
+                ProductRepository.create(product2, testCycle),
+                ProductRepository.create(product3, testCycle),
+                ProductRepository.create(product4, testCycle)
+            ])
+            .then(function () {
+                return ProductRepository.listProductsForVendorId(vendor1.id, testCycle);
             })
-                .then(function () {
-                return ProductRepository.create(product4, testCycle);
-            })
-                .then(function () {
-                    return ProductRepository.listProductsForVendorId(vendor1.id, testCycle);
-                })
-                .then(function (productList) {
+            .then(function (productList) {
+                function allProductsHaveExpandedVendor(productList) {
+                    return _.every(productList, hasExpandedVendor);
 
-                    function verifyAllProductsHaveVendor(productList) {
-                        var match = true;
-                        var vendorToMatch = vendor1;
-
-                        productList.forEach(function (product) {
-                            if (product.vendor !== vendorToMatch.id) {
-                                match = true;
-                            }
-                        });
-
-                        return match;
+                    function hasExpandedVendor( product ){
+                        return typeof product.vendor === 'object' && product.vendor.id === vendor1.id;
                     }
+                }
 
-                    return expect(productList).to.be.an('array').and.have.length(2).and.satisfy(verifyAllProductsHaveVendor);
-                });
+                return expect(productList).to.be.an('array').and.have.length(2).and.satisfy(allProductsHaveExpandedVendor);
+            });
         });
     });
 
