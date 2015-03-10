@@ -16,7 +16,7 @@ angular.module('carli.accordion')
 
                 element.addClass('collapsed')
                     .attr('id',accordionId)
-                    .on('click', 'header', function(event){
+                    .on('click', 'div.accordion-header', function(event){
                         $rootScope.$broadcast('accordion', accordionId);
                     });
             }

@@ -2,13 +2,13 @@
 <div class="offerings-editor">
     <ul class="library-accordion">
         <li carli-accordion ng-repeat="library in vm.libraryList">
-            <header ng-click="vm.loadOfferingsForLibrary(library)" cg-busy="vm.loadingPromise[library.id]">
+            <div class="accordion-header" ng-click="vm.loadOfferingsForLibrary(library)" cg-busy="vm.loadingPromise[library.id]">
                 <button type="button" class="angle-icon-container">
                     <fa name="angle-down"></fa>
                 </button>
                 <library-info library="library" class="inline"></library-info>
                 <div class="library-status">{{ vm.getLibraryPricingStatus(library) }}</div>
-            </header>
+            </div>
             <div class="content">
                 <div class="filter-controls">
                     <span ng-class="{ 'active-offering-filter': vm.offeringFilter[library.id] === 'selected' }"
