@@ -127,6 +127,8 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
     }
 
     function setProductFormPristine() {
+        vm.currentTemplate = templates.productFields;
+        
         if ($scope.productForm) {
             $scope.productForm.$setPristine();
         }
