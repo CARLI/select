@@ -17,6 +17,11 @@ var dbInfo = {
         baseUrl: 'http://carli-db.qa.pixotech.com',
         mainDbName: 'carli',
         mainDbUrl: 'http://carli-db.qa.pixotech.com/carli'
+    },
+    prod: {
+        baseUrl: 'http://select-prod.carli.illinois.edu/db',
+        mainDbName: 'carli',
+        mainDbUrl: 'http://select-prod.carli.illinois.edu/db/carli'
     }
 };
 
@@ -162,10 +167,22 @@ function replicateLocalToDev() {
         .done();
 }
 
+function replicateLocalToProd() {
+    replicateAllFrom('local').to('prod')
+        .then(function() {
+            console.log("Finished");
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+        .done();
+}
+
 module.exports = {
     replicateQaToLocal: replicateQaToLocal,
     replicateLocalToQa: replicateLocalToQa,
-    replicateLocalToDev: replicateLocalToDev
+    replicateLocalToDev: replicateLocalToDev,
+    replicateLocalToProd: replicateLocalToProd
 };
 
 if (require.main === module) {
