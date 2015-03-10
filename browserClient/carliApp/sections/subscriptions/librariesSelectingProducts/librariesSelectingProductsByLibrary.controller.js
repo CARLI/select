@@ -1,10 +1,10 @@
 angular.module('carli.sections.subscriptions.librariesSelectingProducts')
     .controller('librariesSelectingProductsByLibraryController', librariesSelectingProductsByLibraryController);
 
-function librariesSelectingProductsByLibraryController( $scope, controllerBaseService, cycleService, libraryService, offeringService, editOfferingService, vendorService ) {
+function librariesSelectingProductsByLibraryController( $scope, $q, controllerBaseService, cycleService, libraryService, offeringService, editOfferingService, vendorService ) {
     var vm = this;
 
-    vm.loadOfferingsForLibrary = loadOfferingsForLibrary;
+    vm.toggleLibraryAccordion = toggleLibraryAccordion;
     vm.loadingPromise = {};
     vm.offerings = {};
     vm.stopEditing = stopEditing;
@@ -90,9 +90,20 @@ function librariesSelectingProductsByLibraryController( $scope, controllerBaseSe
         }
     }
 
+    function toggleLibraryAccordion( library ){
+        if ( vm.openAccordion !== library.id ){
+            loadOfferingsForLibrary(library)
+                .then(function () {
+                    vm.openAccordion = library.id;
+                });
+        } else {
+            vm.openAccordion = null;
+        }
+    }
+
     function loadOfferingsForLibrary( library ){
         if ( vm.offerings[library.id] ){
-            return;
+            return $q.when();
         }
 
         vm.loadingPromise[library.id] = offeringService.listOfferingsForLibraryId(library.id)
@@ -110,6 +121,8 @@ function librariesSelectingProductsByLibraryController( $scope, controllerBaseSe
                     }
                 });
             });
+
+        return vm.loadingPromise[library.id];
     }
 
     function setOfferingEditable( offering ){
