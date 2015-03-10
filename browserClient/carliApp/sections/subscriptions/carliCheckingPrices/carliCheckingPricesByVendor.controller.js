@@ -4,7 +4,7 @@ angular.module('carli.sections.subscriptions.carliCheckingPrices')
 function carliCheckingPricesByVendorController( $scope, $q, controllerBaseService, cycleService, vendorService, offeringService, editOfferingService, productService ) {
     var vm = this;
 
-    vm.loadProductsForVendor = loadProductsForVendor;
+    vm.toggleVendorAccordion = toggleVendorAccordion;
     vm.getVendorPricingStatus = getVendorPricingStatus;
     vm.loadingPromise = {};
     vm.stopEditing = stopEditing;
@@ -56,9 +56,20 @@ function carliCheckingPricesByVendorController( $scope, $q, controllerBaseServic
             });
     }
 
+    function toggleVendorAccordion( vendor ){
+        if ( vm.openAccordion !== vendor.id ){
+            loadProductsForVendor(vendor)
+                .then(function () {
+                    vm.openAccordion = vendor.id;
+                });
+        } else {
+            vm.openAccordion = null;
+        }
+    }
+
     function loadProductsForVendor(vendor) {
         if (vendor.products) {
-            return;
+            return $q.when();
         }
         vm.loadingPromise[vendor.id] = productService.listProductsForVendorId(vendor.id).then(function (products) {
             vendor.products = products;
@@ -83,6 +94,8 @@ function carliCheckingPricesByVendorController( $scope, $q, controllerBaseServic
             });
             return $q.all(promises);
         });
+
+        return vm.loadingPromise[vendor.id];
     }
 
     function getVendorPricingStatus(vendor) {

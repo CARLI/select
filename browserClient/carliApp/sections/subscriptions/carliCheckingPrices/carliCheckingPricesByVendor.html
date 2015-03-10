@@ -2,18 +2,18 @@
 <div class="offerings-editor">
     <ul class="vendor-accordion">
         <li carli-accordion ng-repeat="vendor in vm.vendors">
-            <header ng-click="vm.loadProductsForVendor(vendor)" cg-busy="vm.loadingPromise[vendor.id]">
+            <header ng-click="vm.toggleVendorAccordion(vendor)" cg-busy="vm.loadingPromise[vendor.id]">
                 <button type="button" class="angle-icon-container">
                     <fa name="angle-down"></fa>
                 </button>
-                {{ vendor.name }}
-                <span class="vendor-status">{{ vm.getVendorPricingStatus(vendor) }}</span>
+                {{ ::vendor.name }}
+                <span class="vendor-status">{{ ::vm.getVendorPricingStatus(vendor) }}</span>
             </header>
-            <div class="content">
+            <div class="content" ng-if="vm.openAccordion === vendor.id">
                 <ul class="product-content">
-                    <li ng-repeat="product in vendor.products | filter:{isActive:true} track by product.id">
+                    <li ng-repeat="product in ::vendor.products | filter:{isActive:true} track by product.id">
                         <div class="product-header">
-                            {{ product.name }}
+                            {{ ::product.name }}
                             <span class="price-cap">Price Cap: <strong>{{ product.priceCap }}%</strong></span>
                         </div>
                         <ul class="offerings-list">
