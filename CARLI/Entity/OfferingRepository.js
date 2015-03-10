@@ -56,7 +56,7 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
         return Q.all(promises);
 
         function transformOffering(offering) {
-            saveOfferingHistoryForYear(offering, sourceCycle.year);
+            return saveOfferingHistoryForYear(offering, sourceCycle.year);
         }
         function saveOffering(offering) {
             return updateOffering(offering, newCycle);

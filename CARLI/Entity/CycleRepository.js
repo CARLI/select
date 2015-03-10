@@ -40,7 +40,9 @@ function createCycleFrom( sourceCycle, newCycleData ) {
                 .then(function (newCycle) {
                     return couchUtils.replicateFrom(sourceCycle.databaseName).to(newCycle.databaseName).thenResolve(newCycle);
                 })
-                .then(offeringRepository.transformOfferingsForNewCycle)
+                .then(function(newCycle){
+                    return offeringRepository.transformOfferingsForNewCycle(newCycle, sourceCycle);
+                })
                 .then(function() {
                     return newCycleId;
                 });
@@ -70,7 +72,7 @@ function createCycle( cycle ) {
     }
 
     function triggerViewIndexing(cycle) {
-        couchUtils.triggerViewIndexing();
+        couchUtils.triggerViewIndexing(cycle.databaseName);
         return cycle;
     }
 
