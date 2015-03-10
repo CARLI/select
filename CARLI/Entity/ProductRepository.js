@@ -18,6 +18,11 @@ function transformFunction( product ){
     EntityTransform.transformObjectForPersistence(product, propertiesToTransform);
 }
 
+function expandProducts( listPromise, cycle ){
+    return EntityTransform.expandListOfObjectsFromPersistence( listPromise, propertiesToTransform, functionsToAdd);
+}
+
+
 function createProduct( product, cycle ){
     setCycle(cycle);
     return ProductRepository.create( product, transformFunction );
@@ -30,7 +35,7 @@ function updateProduct( product, cycle ){
 
 function listProducts(cycle){
     setCycle(cycle);
-    return EntityTransform.expandListOfObjectsFromPersistence( ProductRepository.list(cycle.databaseName), propertiesToTransform, functionsToAdd);
+    return expandProducts( ProductRepository.list(cycle.databaseName), cycle );
 }
 
 function loadProduct( productId, cycle ){
@@ -45,7 +50,7 @@ function loadProduct( productId, cycle ){
                 })
                 .catch(function(err){
                     // WARNING: this suppresses errors for entity references that are not found in the store
-                    //console.warn('*** Cannot find reference in database to either vendor or license in product ', err);
+                    console.warn('*** Cannot find reference in database to either vendor or license in product ', err);
                     deferred.resolve(product);
                 });
         })
@@ -86,12 +91,12 @@ function isAvailableToday( product ){
 
 function listProductsForLicenseId( licenseId, cycle ) {
     setCycle(cycle);
-    return CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listProductsByLicenseId', licenseId);
+    return expandProducts(CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listProductsByLicenseId', licenseId), cycle);
 }
 
 function listProductsForVendorId( vendorId, cycle ) {
     setCycle(cycle);
-    return CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listProductsForVendorId', vendorId);
+    return expandProducts(CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listProductsForVendorId', vendorId), cycle);
 }
 
 function listProductsWithOfferingsForVendorId( vendorId, cycle ) {
