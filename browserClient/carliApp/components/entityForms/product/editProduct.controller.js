@@ -5,6 +5,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
     var vm = this;
     var otpFieldsCopy = [];
     var termFieldsCopy = {};
+    var originalProductName = null;
 
     var templates = {
         productFields: 'carliApp/components/entityForms/product/editProduct.html',
@@ -76,6 +77,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
     function initializeForExistingProduct() {
         productService.load(vm.productId).then( function( product ) {
             vm.product = product;
+            initializeProductNameWatcher();
             rememberOtpFields();
             rememberTermFields();
 
@@ -86,6 +88,17 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
 
         vm.editable = false;
         vm.newProduct = false;
+    }
+    function initializeProductNameWatcher() {
+        originalProductName = vm.product.name;
+        if (vm.product.previousName) {
+            vm.shouldShowPreviousNameOption = true;
+        }
+        $scope.$watch('vm.product.name', function (newName, oldName) {
+            if (oldName && oldName != newName) {
+                vm.shouldShowPreviousNameOption = true;
+            }
+        });
     }
     function revertOtpFields() {
         angular.copy(otpFieldsCopy, vm.productOfferings);
@@ -173,6 +186,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
         if (vm.productId === undefined) {
             saveNewProduct();
         } else {
+            savePreviousName();
             saveExistingProduct();
         }
     }
@@ -180,6 +194,12 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
     function translateOptionalSelections() {
         if (vm.product.license === undefined) {
             vm.product.license = null;
+        }
+    }
+
+    function savePreviousName() {
+        if (originalProductName !== vm.product.name) {
+            vm.product.previousName = originalProductName;
         }
     }
 

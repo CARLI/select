@@ -4,8 +4,14 @@
         <div class="headings">
             <label for="name">Product Name</label>
             <view-edit-text-field ng-model="vm.product.name" edit-mode="vm.editable" input-id="name">
-                <h1>{{ vm.product.name }}</h1>
+                <h1>{{ vm.product.name }} <span ng-if="vm.product.showPreviousName">(formerly {{ vm.product.previousName }})</span></h1>
             </view-edit-text-field>
+            <view-edit-checkbox
+                    ng-show="vm.shouldShowPreviousNameOption"
+                    label="Display most recent previous name in addition to new name"
+                    ng-model="vm.product.showPreviousName"
+                    edit-mode="vm.editable"
+                    input-id="showPreviousName"></view-edit-checkbox>
         </div>
         <div ng-show="!vm.newProduct" class="controls">
             <div ng-show="vm.editable">
@@ -62,6 +68,13 @@
                     <view-edit-checkbox label="Consolidated List" ng-model="vm.product.consolidatedList" edit-mode="vm.editable" input-id="consolidatedList">
                         <div ng-show="vm.product.consolidatedList" class="label">Consolidated List</div>
                     </view-edit-checkbox>
+
+
+                    <div ng-show="vm.editable" class="placeholder" style="white-space: nowrap">
+                        TODO:<br>
+                        <div class="carli-button">Bulk Assign</div>
+                        <div class="carli-button">Bulk Remove</div>
+                    </div>
                 </div>
 
                 <div class="column">

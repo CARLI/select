@@ -1,81 +1,93 @@
 {
-    "$schema": "json-schema.org/draft-04/schema",
-    "title": "Product",
-    "schemaType": "Product",
-    "type": "object",
-    "properties": {
-        "id" : {
-            "description": "Unique identifier",
-            "type": "string"
-        },
-        "name": {
-            "description": "Name of the product",
-            "type": "string"
-        },
-        "cycle": {
-            "description": "UUID of a Cycle document",
-            "type": "string"
-        },
-        "vendor": {
-            "description": "UUID of a Vendor document",
-            "type": "string"
-        },
-        "productUrl": {
-            "$ref": "./WebAddress.json"
-        },
-        "description": {
-            "type": "string"
-        },
-        "comments": {
-            "type": "string"
-        },
-        "isThirdPartyProduct": {
-            "type": "boolean"
-        },
-        "hasArchiveCapitalFee": {
-            "type": "boolean"
-        },
-        "soleSource": {
-            "type": "boolean"
-        },
-        "sealedBid": {
-            "type": "boolean"
-        },
-        "consolidatedList": {
-            "type": "boolean"
-        },
-        "fundings": {
-            "type": "array",
-            "items": {
-                "$ref": "./funding.json"
-            }
-        },
-        "isActive": {
-            "type": "boolean"
-        },
-        "license": {
-            "description": "UUID of a License",
-            "anyOf": [
-                { "type": "string" },
-                { "type": "null" }
-            ]
-        },
-        "terms": {
-            "description": "Terms of the license that this Product overrides",
-            "$ref": "./LicenseTerms.json"
-        },
-        "priceCap": {
-            "type": "number"
-        },
-        "detailCode": {
-            "$ref": "./ProductDetailCodes.json"
-        },
-        "librariesThatHavePaidAcf": {
-            "type": "array",
-            "items": {
-                "$ref": "./Library.json"
-            }
-        }
+  "$schema": "json-schema.org/draft-04/schema",
+  "title": "Product",
+  "schemaType": "Product",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique identifier",
+      "type": "string"
     },
-    "required": [ "name", "cycle", "vendor" ]
+    "name": {
+      "description": "Name of the product",
+      "type": "string"
+    },
+    "previousName": {
+      "description": "Previous name of the product, if any (most recent only)",
+      "type": "string"
+    },
+    "showPreviousName": {
+      "description": "If true, the previous name will be shown where ever the product name appears",
+      "type": "booelan"
+    },
+    "cycle": {
+      "description": "UUID of a Cycle document",
+      "type": "string"
+    },
+    "vendor": {
+      "description": "UUID of a Vendor document",
+      "type": "string"
+    },
+    "productUrl": {
+      "$ref": "./WebAddress.json"
+    },
+    "description": {
+      "type": "string"
+    },
+    "comments": {
+      "type": "string"
+    },
+    "isThirdPartyProduct": {
+      "type": "boolean"
+    },
+    "hasArchiveCapitalFee": {
+      "type": "boolean"
+    },
+    "soleSource": {
+      "type": "boolean"
+    },
+    "sealedBid": {
+      "type": "boolean"
+    },
+    "consolidatedList": {
+      "type": "boolean"
+    },
+    "fundings": {
+      "type": "array",
+      "items": {
+        "$ref": "./funding.json"
+      }
+    },
+    "isActive": {
+      "type": "boolean"
+    },
+    "license": {
+      "description": "UUID of a License",
+      "anyOf": [
+        {"type": "string"},
+        {"type": "null"}
+      ]
+    },
+    "terms": {
+      "description": "Terms of the license that this Product overrides",
+      "$ref": "./LicenseTerms.json"
+    },
+    "priceCap": {
+      "type": "number"
+    },
+    "detailCode": {
+      "$ref": "./ProductDetailCodes.json"
+    },
+    "librariesThatHavePaidAcf": {
+      "type": "array",
+      "items": {
+        "$ref": "./Library.json"
+      }
+    }
+  },
+  "required": [
+    "name",
+    "cycle",
+    "vendor"
+  ]
 }
