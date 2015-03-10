@@ -4,7 +4,7 @@
         <li carli-accordion ng-repeat="vendor in vm.vendors">
             <div class="accordion-header" ng-click="vm.toggleVendorAccordion(vendor)" cg-busy="vm.loadingPromise[vendor.id]">
                 <button type="button" class="angle-icon-container">
-                    <fa name="angle-down"></fa>
+                    <fa name="angle-down"></fa><span class="sr-only">Open offerings for {{ vendor.name }}</span>
                 </button>
                 {{ ::vendor.name }}
                 <span class="vendor-status">{{ ::vm.getVendorPricingStatus(vendor) }}</span>
