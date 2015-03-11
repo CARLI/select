@@ -60,8 +60,9 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
         else {
             initializeForExistingProduct();
         }
+        setProductFormPristine();
+
         vm.isModal = vm.newProduct;
-        initializeCycles();
     }
     function initializeForNewProduct() {
         vm.product = {
@@ -72,7 +73,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
         };
         vm.editable = true;
         vm.newProduct = true;
-        setProductFormPristine();
+        initializeCycles();
     }
     function initializeForExistingProduct() {
         productService.load(vm.productId).then( function( product ) {
@@ -80,6 +81,8 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
             initializeProductNameWatcher();
             rememberOtpFields();
             rememberTermFields();
+
+            initializeCycles();
 
             if ( isOneTimePurchaseProduct(product) ){
                 loadOfferingsForProduct(product);
@@ -154,7 +157,6 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
         function watchCurrentCycle() {
             $scope.$watch(cycleService.getCurrentCycle, function (activeCycle) {
                 if (activeCycle) {
-                    console.log('new active cycle',activeCycle);
                     vm.product.cycle = activeCycle;
                 }
             });
@@ -221,9 +223,8 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
             .then(saveOfferings)
             .then(function () {
                 alertService.putAlert('Product updated', {severity: 'success'});
-                setProductFormPristine();
-                toggleEditable();
                 afterSubmitCallback();
+                initializeForExistingProduct();
             })
             .catch(function (error) {
                 alertService.putAlert(error, {severity: 'danger'});
@@ -234,8 +235,8 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
         productService.create(vm.product)
             .then(function () {
                 alertService.putAlert('Product added', {severity: 'success'});
-                initializeForNewProduct();
                 afterSubmitCallback();
+                initializeForNewProduct();
             })
             .catch(function (error) {
                 alertService.putAlert(error, {severity: 'danger'});
