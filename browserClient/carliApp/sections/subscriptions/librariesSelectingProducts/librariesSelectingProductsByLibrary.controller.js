@@ -46,6 +46,7 @@ function librariesSelectingProductsByLibraryController( $scope, $q, controllerBa
         function watchCurrentOffering(newOffering, oldOffering) {
             if (newOffering) {
                 setOfferingEditable(newOffering);
+                editOfferingService.setCurrentOffering(null);
             }
         }
     }
