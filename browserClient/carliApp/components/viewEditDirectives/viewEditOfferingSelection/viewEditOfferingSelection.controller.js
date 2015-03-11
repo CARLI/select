@@ -1,16 +1,21 @@
 angular.module('carli.viewEditDirectives.viewEditOfferingSelection')
     .controller('viewEditOfferingSelectionController', viewEditOfferingSelectionController);
 
-function viewEditOfferingSelectionController(){
+function viewEditOfferingSelectionController($scope){
     var vm = this;
 
-    vm.selectionOptions = makeSelectionOptions( vm.offering );
+    activate();
 
+    function activate() {
+        vm.selectionOptions = makeSelectionOptions(vm.offering);
+        $scope.$watchCollection('vm.offering.pricing.su', function() {
+            vm.selectionOptions = makeSelectionOptions(vm.offering);
+        });
+    }
 
     function makeSelectionOptions( offering ){
-        var result = {};
         if ( !offering ){
-            return result;
+            return {};
         }
 
         var siteOption = {
