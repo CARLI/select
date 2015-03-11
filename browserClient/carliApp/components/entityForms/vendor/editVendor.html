@@ -45,9 +45,10 @@
             <fieldset>
 
                 <div class="column">
-                    <div class="product-list" ng-hide="vm.editable">
+                    <div class="product-list" ng-if="!vm.editable">
                         <div class="label">Products</div>
-                        <select-cycle></select-cycle>
+                        <label for="currentCycle">View products from cycle:</label>
+                        <select-cycle input-id="currentCycle"></select-cycle>
                         <ul class="zebra-table">
                             <li ng-repeat="product in vm.productList">
                                 <div class="column">
@@ -57,7 +58,7 @@
                         </ul>
                     </div>
 
-                    <div class="license-list" ng-hide="vm.editable">
+                    <div class="license-list" ng-if="!vm.editable">
                         <div class="label">License Agreements</div>
                         <ul class="zebra-table">
                             <li ng-repeat="license in vm.licenseList">
@@ -111,7 +112,4 @@
                 <input type="submit" id="vendor-submit" class="carli-button save-button" value="Save">
             </fieldset>
         </div>
-
     </form>
-
-    <debug-panel ng-show="!vm.isModal">{{ vm.vendor | json }}</debug-panel>
