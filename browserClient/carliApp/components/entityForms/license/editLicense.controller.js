@@ -49,6 +49,7 @@ function editLicenseController( $scope, $rootScope, $location, alertService, cyc
     function initializeForExistingLicense() {
         licenseService.load(vm.licenseId).then( function( license ) {
             vm.license = license;
+            setLicenseFormPristine();
         } );
         watchCurrentCycle();
         vm.editable = false;
@@ -87,8 +88,7 @@ function editLicenseController( $scope, $rootScope, $location, alertService, cyc
             licenseService.update( vm.license )
                 .then(function(){
                     alertService.putAlert('License updated', {severity: 'success'});
-                    setLicenseFormPristine();
-                    toggleEditable();
+                    initializeForExistingLicense();
                     afterSubmitCallback();
                 })
                 .catch(function(error) {
