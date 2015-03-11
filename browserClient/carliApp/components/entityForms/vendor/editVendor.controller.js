@@ -56,6 +56,7 @@ function editVendorController( $scope, $rootScope, entityBaseService, alertServi
     function initializeForExistingVendor() {
         vendorService.load(vm.vendorId).then( function( vendor ) {
             vm.vendor = vendor;
+            setVendorFormPristine();
         } );
         watchCurrentCycle();
         vm.editable = false;
@@ -73,6 +74,7 @@ function editVendorController( $scope, $rootScope, entityBaseService, alertServi
 
     function toggleEditable(){
         vm.editable = !vm.editable;
+        setVendorFormPristine();
     }
 
     function closeModal() {
@@ -100,8 +102,7 @@ function editVendorController( $scope, $rootScope, entityBaseService, alertServi
             vendorService.update(vm.vendor)
                 .then(function () {
                     alertService.putAlert('Vendor updated', {severity: 'success'});
-                    setVendorFormPristine();
-                    toggleEditable();
+                    initializeForExistingVendor();
                     afterSubmitCallback();
                 })
                 .catch(function (error) {
