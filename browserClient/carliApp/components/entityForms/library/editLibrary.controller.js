@@ -52,6 +52,7 @@ function editLibraryController( $scope, $rootScope, entityBaseService, librarySe
     function initializeForExistingLibrary() {
         libraryService.load(vm.libraryId).then( function( library ) {
           vm.library = library;
+            setLibraryFormPristine();
         } );
         vm.editable = false;
         vm.newLibrary = false;
@@ -81,9 +82,8 @@ function editLibraryController( $scope, $rootScope, entityBaseService, librarySe
         if (vm.libraryId !== undefined){
             libraryService.update( vm.library ).then(function(){
                 alertService.putAlert('Library updated', {severity: 'success'});
-                setLibraryFormPristine();
-                toggleEditable();
                 afterSubmitCallback();
+                initializeForExistingLibrary();
             })
             .catch(function(error) {
                 alertService.putAlert(error, {severity: 'danger'});

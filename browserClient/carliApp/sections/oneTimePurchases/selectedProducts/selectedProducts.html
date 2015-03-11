@@ -30,7 +30,7 @@
                 </li>
                 <li collapsible class="collapsed" ng-repeat="offering in vm.offeringList | filter: vm.filter | orderBy: vm.orderBy:vm.reverse track by offering.id ">
                     <checkbox ng-model="vm.selectedProducts[offering.id]"></checkbox>
-                    <header>
+                    <div class="collapsible-header">
                         <div class="column">
                             <button type="button" class="angle-icon-container">
                                 <fa name="angle-down"></fa>
@@ -41,7 +41,7 @@
                         <div class="column">
                             <span ng-if="offering.datePurchased" class="price">{{ offering.pricing.site | currency }}</span>
                         </div>
-                    </header>
+                    </div>
                     <div class="content">
                         <div class="column">
                             <div class="content-item-group">

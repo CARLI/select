@@ -86,14 +86,14 @@
                 }
             }
 
-            header {
+            .collapsible-header {
                 .price {
                     font-weight: bold;
                     color: $black;
                 }
             }
 
-            header,
+            .collapsible-header,
             div.content {
                 @include flexbox;
                 width: 100%;

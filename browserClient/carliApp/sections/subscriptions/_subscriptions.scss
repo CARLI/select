@@ -50,7 +50,7 @@
             }
         }
 
-        header {
+        .accordion-header {
             color: $purple;
             @include font-size(17);
             font-family: 'Merriweather', serif;

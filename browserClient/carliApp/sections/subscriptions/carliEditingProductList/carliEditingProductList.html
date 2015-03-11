@@ -1,33 +1,33 @@
 <ul class="vendor-accordion">
     <li carli-accordion ng-repeat="vendor in vm.vendors">
-        <header ng-click="vm.loadProductsForVendor(vendor)" cg-busy="vm.loadingPromise[vendor.id]">
+        <div class="accordion-header" ng-click="vm.loadProductsForVendor(vendor)" cg-busy="vm.loadingPromise[vendor.id]">
             <button type="button" class="angle-icon-container">
-                <fa name="angle-down"></fa>
+                <fa name="angle-down"></fa><span class="sr-only">Open offering for {{vendor.name}}</span>
             </button>
             {{ vendor.name }}
             <span class="vendor-status reviewed-message" ng-show="vendor.reviewed">Products reviewed</span>
-        </header>
+        </div>
         <div class="content">
-            <ul class="entity-list">
-                <li class="column-headers">
-                    <div class="sortable column product-name" ng-class="{ activeSort: vm.orderBy === 'name', reversedSort: vm.reverse }" ng-click="vm.sort('name')">
+            <ul class="entity-list" role="grid">
+                <li class="column-headers" role="row">
+                    <div role="columnheader" id="product-name-column-header" class="sortable column product-name" ng-class="{ activeSort: vm.orderBy === 'name', reversedSort: vm.reverse }" ng-click="vm.sort('name')">
                         Product
                     </div>
-                    <div class="column selection-history" ng-repeat="year in vm.yearsToDisplay">{{ year }}</div>
-                    <div class="sortable column last-price" ng-class="{ activeSort: vm.orderBy === 'lastPrice', reversedSort: vm.reverse }" ng-click="vm.sort('lastPrice')">
+                    <div role="columnheader" id="selection-history-column-header" class="column selection-history" ng-repeat="year in vm.yearsToDisplay">{{ year }}</div>
+                    <div role="columnheader" id="last-price-column-header" class="sortable column last-price" ng-class="{ activeSort: vm.orderBy === 'lastPrice', reversedSort: vm.reverse }" ng-click="vm.sort('lastPrice')">
                         Last Price
                     </div>
-                    <div class="column funded">Funded</div>
-                    <div class="column remove">Remove</div>
+                    <div role="columnheader" id="funded-column-header" class="column funded">Funded</div>
+                    <div role="columnheader" id="remove-column-header" class="column remove">Remove</div>
                 </li>
-                <li class="" ng-repeat="product in vendor.products | filter:{isActive:true} | orderBy:vm.orderBy:vm.reverse track by product.id">
-                    <div class="column product-name">{{ product.name }} <em ng-if="product.isThirdPartyProduct">(3<sup>rd</sup> Party Product)</em></div>
-                    <div class="column selection-history" ng-repeat="year in vm.yearsToDisplay">
+                <li role="row" class="" ng-repeat="product in vendor.products | filter:{isActive:true} | orderBy:vm.orderBy:vm.reverse track by product.id">
+                    <div role="gridcell" aria-describedby="product-name-column-header" class="column product-name">{{ product.name }} <em ng-if="product.isThirdPartyProduct">(3<sup>rd</sup> Party Product)</em></div>
+                    <div role="gridcell" aria-describedby="selection-history-column-header" class="column selection-history" ng-repeat="year in vm.yearsToDisplay">
                         <product-selection-history-icon selected="{{ product.selectionHistory[year] }}"></product-selection-history-icon>
                     </div>
-                    <div class="column last-price">{{ product.lastPrice }}</div>
-                    <div class="column funded"><fa name="check-circle"></fa></div>
-                    <div class="column remove">
+                    <div role="gridcell" aria-describedby="last-price-column-header" class="column last-price">{{ product.lastPrice }}</div>
+                    <div role="gridcell" aria-describedby="funded-column-header" class="column funded"><fa name="check-circle"></fa></div>
+                    <div role="gridcell" aria-describedby="remove-column-header" class="column remove">
                         <button class="carli-button subdued-remove-button" ng-click="vm.removeProduct(product)">Remove <fa name="times"></fa></button>
                     </div>
                 </li>

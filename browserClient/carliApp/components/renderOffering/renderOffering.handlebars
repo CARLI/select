@@ -1,5 +1,5 @@
 {{#if columns.library}}
-<div class="column library">
+<div role="gridcell" aria-describedby="library-column-header" class="column library">
     <div class="library-info">
         <span class="name">{{ offering.library.name }}</span>
         <div>
@@ -17,20 +17,20 @@
 {{/if}}
 
 {{#if columns.product}}
-<div class="column product">
+<div role="gridcell" aria-describedby="product-column-header" class="column product">
     <h3>{{ offering.product.name }}</h3>
     <button type="button" class="carli-button edit" data-offering-id="{{ offering.id }}">Edit <span class="fa fa-pencil-square-o "></span></button>
 </div>
 {{/if}}
 
 {{#if columns.vendor}}
-<div class="column vendor">
+<div role="gridcell" aria-describedby="vendor-column-header" class="column vendor">
     <h3>{{ offering.product.vendor.name }}</h3>
 </div>
 {{/if}}
 
 {{#if columns.library_view }}
-<div class="column library-view">
+<div role="gridcell" aria-describedby="library-view-column-header" class="column library-view">
     <div class="display">
             <strong class="purple">{{ displayLabel offering.display }}</strong>
     </div>
@@ -48,7 +48,7 @@
 {{/if}}
 
 {{#if columns.selected_last_year }}
-<div class="column selected-last-year">
+<div role="gridcell" aria-describedby="selected-last-year-column-header" class="column selected-last-year">
     {{#if selectedLastYear}}
     <span class="fa fa-star"></span>
     {{/if}}
@@ -56,7 +56,7 @@
 {{/if}}
 
 {{#if columns.site_license_price }}
-<div class="column site-license-price">
+<div role="gridcell" aria-describedby="site-license-price-column-header" class="column site-license-price">
     <div class="offering-pricing">
         <div class="site-pricing single-column">
             <div class="column">
@@ -94,7 +94,7 @@
 {{/if}}
 
 {{#if columns.selection}}
-<div class="column selection">
+<div role="gridcell" aria-describedby="selection-column-header" class="column selection">
     <label for="{{ offering.id }}_selection" class="sr-only">Library Selection</label>
     {{#if offering.selection }}
     <div class="selection-display">
@@ -106,14 +106,14 @@
 {{/if}}
 
 {{#if columns.vendor_invoice }}
-<div class="column vendor-invoice">
+<div role="gridcell" aria-describedby="vendor-invoice-column-header" class="column vendor-invoice">
     <div class="label">Vendor Price</div> {{ currency offering.invoice.price }}
     <div class="label">Invoice #</div> {{ offering.invoice.number }}
 </div>
 {{/if}}
 
 {{#if columns.flag}}
-<div class="column flag" data-offering-id="{{ offering.id }}">
+<div role="gridcell" aria-describedby="flag-column-header" class="column flag" data-offering-id="{{ offering.id }}">
     {{#if offering.flagged }}
         <span class="fa fa-flag "></span>
     {{else}}

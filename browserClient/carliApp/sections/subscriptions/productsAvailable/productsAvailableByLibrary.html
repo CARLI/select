@@ -2,13 +2,13 @@
 <div class="offerings-editor">
     <ul class="library-accordion">
         <li carli-accordion ng-repeat="library in vm.libraryList">
-            <header ng-click="vm.toggleLibraryAccordion(library)" cg-busy="vm.loadingPromise[library.id]">
+            <div class="accordion-header" ng-click="vm.toggleLibraryAccordion(library)" cg-busy="vm.loadingPromise[library.id]">
                 <button type="button" class="angle-icon-container">
-                    <fa name="angle-down"></fa>
+                    <fa name="angle-down"></fa><span class="sr-only">Open offerings for {{ library.name }}</span>
                 </button>
                 <library-info library="library" class="inline"></library-info>
                 <div class="library-status">{{ ::vm.getLibraryPricingStatus(library) }}</div>
-            </header>
+            </div>
             <div class="content" ng-if="vm.openAccordion === library.id">
                 <div class="filter-controls">
                     <span ng-class="{ 'active-offering-filter': vm.offeringFilter[library.id] === 'selected' }"
@@ -18,16 +18,16 @@
                     <span ng-class="{ 'active-offering-filter': vm.offeringFilter[library.id] === 'unselected' }"
                           ng-click="vm.offeringFilter[library.id] = 'unselected'">all non-selected products</span>
                 </div>
-                <ul class="offerings-list">
-                    <li class="column-headers">
-                        <div class="sortable column product" ng-class="{ activeSort: vm.orderBy === 'product.name', reversedSort: vm.reverse }" ng-click="vm.sort('product.name')">Product</div>
-                        <div class="sortable column vendor" ng-class="{ activeSort: vm.orderBy === 'product.vendor.name', reversedSort: vm.reverse }" ng-click="vm.sort('product.vendor.name')">Vendor</div>
-                        <div class="column library-view">Library View</div>
-                        <div class="sortable column selected-last-year" ng-class="{ activeSort: vm.orderBy === 'selectedLastYear', reversedSort: vm.reverse }" ng-click="vm.sort('selectedLastYear')">Selected Last Year</div>
-                        <div class="sortable column site-license-price current-year-only" ng-class="{activeSort: vm.orderBy === 'pricing.site', reversedSort: vm.reverse }" ng-click="vm.sort('pricing.site')">Site License Price</div>
-                        <div class="column selection">Selection</div>
+                <ul class="offerings-list" role="grid">
+                    <li class="column-headers" role="row">
+                        <div role="columnheader" id="product-column-header" class="sortable column product" ng-class="{ activeSort: vm.orderBy === 'product.name', reversedSort: vm.reverse }" ng-click="vm.sort('product.name')">Product</div>
+                        <div role="columnheader" id="vendor-column-header" class="sortable column vendor" ng-class="{ activeSort: vm.orderBy === 'product.vendor.name', reversedSort: vm.reverse }" ng-click="vm.sort('product.vendor.name')">Vendor</div>
+                        <div role="columnheader" id="library-view-column-header" class="column library-view">Library View</div>
+                        <div role="columnheader" id="selected-last-year-column-header" class="sortable column selected-last-year" ng-class="{ activeSort: vm.orderBy === 'selectedLastYear', reversedSort: vm.reverse }" ng-click="vm.sort('selectedLastYear')">Selected Last Year</div>
+                        <div role="columnheader" id="site-license-price-column-header" class="sortable column site-license-price current-year-only" ng-class="{activeSort: vm.orderBy === 'pricing.site', reversedSort: vm.reverse }" ng-click="vm.sort('pricing.site')">Site License Price</div>
+                        <div role="columnheader" id="selection-column-header" class="column selection">Selection</div>
                     </li>
-                    <li class="offering" ng-class="{ 'edit-mode': vm.isEditing[offering.id] }" ng-repeat="offering in vm.offerings[library.id] | filter:vm.filterOfferingBySelection | orderBy:vm.orderBy:vm.reverse track by offering.id">
+                    <li role="row" class="offering" ng-class="{ 'edit-mode': vm.isEditing[offering.id] }" ng-repeat="offering in vm.offerings[library.id] | filter:vm.filterOfferingBySelection | orderBy:vm.orderBy:vm.reverse track by offering.id">
                         <edit-offering ng-if="vm.isEditing[offering.id]" cycle="::cycle" offering="offering" columns="::vm.offeringColumns" on-offering-saved="::vm.stopEditing"></edit-offering>
                         <render-offering offering="offering" cycle="::vm.cycle" columns="::vm.offeringColumns"></render-offering>
                     </li>

@@ -8,7 +8,7 @@ angular.module('carli.collapsible')
                 var $content = element.children('.content');
                 $content.css('display', 'none');
 
-                element.addClass('collapsed').on('click', 'header', function(event){
+                element.addClass('collapsed').on('click', '.collapsible-header', function(event){
                     $content.slideToggle();
                     element.toggleClass('collapsed');
                 });
