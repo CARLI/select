@@ -92,13 +92,43 @@ function librariesSelectingProductsByLibraryController( $scope, $q, controllerBa
     }
 
     function toggleLibraryAccordion( library ){
-        if ( vm.openAccordion !== library.id ){
+        var userSelectedCurrentlyOpenAccordion = vm.openAccordion === library.id;
+
+        if ( confirmCloseAccordion() ) {
+            closeAccordion();
+
+            if ( !userSelectedCurrentlyOpenAccordion ){
+                loadOfferingsThenOpenAccordion();
+            }
+        }
+
+        function confirmCloseAccordion() {
+            if (!accordionIsOpen()) {
+                return true;
+            }
+            if ( !formsAreDirty() ) {
+                return true;
+            }
+            return confirm("You have unsaved changes that will be lost if you continue.");
+
+            function accordionIsOpen() {
+                return vm.openAccordion ? true : false;
+            }
+
+            function formsAreDirty() {
+                return vm.anyFormsHaveUnsavedChanges();
+            }
+        }
+
+        function closeAccordion() {
+            vm.openAccordion = null;
+        }
+
+        function loadOfferingsThenOpenAccordion() {
             loadOfferingsForLibrary(library)
                 .then(function () {
                     vm.openAccordion = library.id;
                 });
-        } else {
-            vm.openAccordion = null;
         }
     }
 
