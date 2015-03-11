@@ -110,7 +110,7 @@
                     <div class="column">
                         <label for="license">License Agreement</label>
                         <div ng-show="vm.noLicensesMessage">
-                            <input type="text" ng-show="vm.editable" disabled="disabled" readonly="readonly" value="{{ vm.noLicensesMessage }}" id="noLicensesMessage">
+                            <div ng-show="vm.editable" class="readonly input">{{ vm.noLicensesMessage }}</div>
                         </div>
                         <view-edit-typeahead ng-show="!vm.noLicensesMessage" ng-model="vm.product.license" options="vm.licenseList" edit-mode="vm.editable" input-id="license">
                             {{ vm.product.license.name }}
@@ -217,6 +217,3 @@
     <modal-dialog modal-id="'terms-modal'" modal-title="'Override License-Level Terms'">
         <ng-include src="'carliApp/components/entityForms/product/editTerms.html'"></ng-include>
     </modal-dialog>
-
-    <hr>
-    <debug-panel>{{ vm.product | json }}</debug-panel>
