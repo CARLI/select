@@ -1,10 +1,11 @@
 angular.module('carli.sections.subscriptions.librariesSelectingProducts')
     .controller('librariesSelectingProductsByLibraryController', librariesSelectingProductsByLibraryController);
 
-function librariesSelectingProductsByLibraryController( $scope, $q, controllerBaseService, cycleService, libraryService, offeringService, editOfferingService, vendorService ) {
+function librariesSelectingProductsByLibraryController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, libraryService, offeringService, editOfferingService, vendorService ) {
     var vm = this;
 
-    vm.toggleLibraryAccordion = toggleLibraryAccordion;
+    accordionControllerMixin(vm, loadOfferingsForLibrary);
+
     vm.loadingPromise = {};
     vm.offerings = {};
     vm.stopEditing = stopEditing;
@@ -88,47 +89,6 @@ function librariesSelectingProductsByLibraryController( $scope, $q, controllerBa
         }
         else {
             return false;
-        }
-    }
-
-    function toggleLibraryAccordion( library ){
-        var userSelectedCurrentlyOpenAccordion = vm.openAccordion === library.id;
-
-        if ( confirmCloseAccordion() ) {
-            closeAccordion();
-
-            if ( !userSelectedCurrentlyOpenAccordion ){
-                loadOfferingsThenOpenAccordion();
-            }
-        }
-
-        function confirmCloseAccordion() {
-            if (!accordionIsOpen()) {
-                return true;
-            }
-            if ( !formsAreDirty() ) {
-                return true;
-            }
-            return confirm("You have unsaved changes that will be lost if you continue.");
-
-            function accordionIsOpen() {
-                return vm.openAccordion ? true : false;
-            }
-
-            function formsAreDirty() {
-                return vm.anyFormsHaveUnsavedChanges();
-            }
-        }
-
-        function closeAccordion() {
-            vm.openAccordion = null;
-        }
-
-        function loadOfferingsThenOpenAccordion() {
-            loadOfferingsForLibrary(library)
-                .then(function () {
-                    vm.openAccordion = library.id;
-                });
         }
     }
 
