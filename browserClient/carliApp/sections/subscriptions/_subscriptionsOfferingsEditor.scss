@@ -14,7 +14,7 @@
 
             &.column-headers,
             &.offering > render-offering,
-            &.offering > edit-offering {
+            &.offering > edit-offering > form {
                 @include flexbox;
                 align-items: stretch;
 
@@ -78,7 +78,7 @@
             }
 
             &.offering > render-offering,
-            &.offering > edit-offering {
+            &.offering > edit-offering > form {
                 .column {
                     &.product,
                     &.vendor,
