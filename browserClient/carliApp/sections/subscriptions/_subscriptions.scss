@@ -21,6 +21,14 @@
         margin-bottom: 1rem;
         list-style: outside none none;
 
+        li {
+            @extend [carli-accordion];
+
+            &.collapsed {
+                @extend [carli-accordion].collapsed;
+            }
+        }
+
         .filter-controls {
             border-left: $default-border;
             border-right: $default-border;
