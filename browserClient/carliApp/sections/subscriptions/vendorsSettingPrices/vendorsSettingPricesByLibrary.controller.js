@@ -1,10 +1,11 @@
 angular.module('carli.sections.subscriptions.vendorsSettingPrices')
     .controller('vendorsSettingPricesByLibraryController', vendorsSettingPricesByLibraryController);
 
-function vendorsSettingPricesByLibraryController( $scope, $q, controllerBaseService, cycleService, libraryService, offeringService, editOfferingService, vendorService ) {
+function vendorsSettingPricesByLibraryController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, libraryService, offeringService, editOfferingService, vendorService ) {
     var vm = this;
 
-    vm.toggleLibraryAccordion = toggleLibraryAccordion;
+    accordionControllerMixin(vm, loadOfferingsForLibrary);
+
     vm.loadingPromise = {};
     vm.offerings = {};
     vm.stopEditing = stopEditing;
@@ -59,17 +60,6 @@ function vendorsSettingPricesByLibraryController( $scope, $q, controllerBaseServ
             });
             return vendorList;
         });
-    }
-
-    function toggleLibraryAccordion( library ){
-        if ( vm.openAccordion !== library.id ){
-            loadOfferingsForLibrary(library)
-                .then(function () {
-                    vm.openAccordion = library.id;
-                });
-        } else {
-            vm.openAccordion = null;
-        }
     }
 
     function loadOfferingsForLibrary( library ){

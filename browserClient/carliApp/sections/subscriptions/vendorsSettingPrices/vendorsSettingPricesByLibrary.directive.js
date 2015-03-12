@@ -5,6 +5,12 @@ angular.module('carli.sections.subscriptions.vendorsSettingPrices')
             templateUrl: '/carliApp/sections/subscriptions/vendorsSettingPrices/vendorsSettingPricesByLibrary.html',
             scope: {},
             controller: 'vendorsSettingPricesByLibraryController',
-            controllerAs: 'vm'
+            controllerAs: 'vm',
+            link: postLink
         };
+
+        function postLink( scope, element, attributes, controller ){
+            $(window).bind('beforeunload', controller.warnIfUnsavedBeforeUnload);
+            scope.$on('$locationChangeStart', controller.warnIfUnsavedBeforeLocationChange);
+        }
     });

@@ -1,10 +1,11 @@
 angular.module('carli.sections.subscriptions.productsAvailable')
     .controller('productsAvailableByLibraryController', productsAvailableByLibraryController);
 
-function productsAvailableByLibraryController( $scope, $q, controllerBaseService, cycleService, libraryService, offeringService, editOfferingService, vendorService ) {
+function productsAvailableByLibraryController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, libraryService, offeringService, editOfferingService, vendorService ) {
     var vm = this;
 
-    vm.toggleLibraryAccordion = toggleLibraryAccordion;
+    accordionControllerMixin(vm, loadOfferingsForLibrary);
+
     vm.loadingPromise = {};
     vm.offerings = {};
     vm.stopEditing = stopEditing;
@@ -90,17 +91,6 @@ function productsAvailableByLibraryController( $scope, $q, controllerBaseService
         }
         else {
             return false;
-        }
-    }
-
-    function toggleLibraryAccordion( library ){
-        if ( vm.openAccordion !== library.id ){
-            loadOfferingsForLibrary(library)
-                .then(function () {
-                    vm.openAccordion = library.id;
-                });
-        } else {
-            vm.openAccordion = null;
         }
     }
 

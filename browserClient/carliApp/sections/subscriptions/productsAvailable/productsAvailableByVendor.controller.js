@@ -1,10 +1,11 @@
 angular.module('carli.sections.subscriptions.productsAvailable')
     .controller('productsAvailableByVendorController', productsAvailableByVendorController);
 
-function productsAvailableByVendorController( $scope, $q, $timeout, controllerBaseService, cycleService, vendorService, offeringService, editOfferingService,  productService ) {
+function productsAvailableByVendorController( $scope, $q, accordionControllerMixin, $timeout, controllerBaseService, cycleService, vendorService, offeringService, editOfferingService,  productService ) {
     var vm = this;
 
-    vm.toggleVendorAccordion = toggleVendorAccordion;
+    accordionControllerMixin(vm, loadProductsForVendor);
+
     vm.getVendorPricingStatus = getVendorPricingStatus;
     vm.stopEditing = stopEditing;
     vm.computeSelectionTotalForVendor = computeSelectionTotalForVendor;
@@ -62,20 +63,9 @@ function productsAvailableByVendorController( $scope, $q, $timeout, controllerBa
             });
     }
 
-    function toggleVendorAccordion( vendor ){
-        if ( vm.openAccordion !== vendor.id ){
-            loadProductsForVendor(vendor)
-                .then(updateVendorTotals)
-                .then(function () {
-                    vm.openAccordion = vendor.id;
-                });
-        } else {
-            vm.openAccordion = null;
-        }
-    }
-
     function loadProductsForVendor(vendor) {
         if (vendor.products) {
+            updateVendorTotals();
             return $q.when();
         }
 
@@ -85,6 +75,7 @@ function productsAvailableByVendorController( $scope, $q, $timeout, controllerBa
                 return products;
             });
 
+        vm.loadingPromise[vendor.id].then(updateVendorTotals);
         return vm.loadingPromise[vendor.id];
     }
 
