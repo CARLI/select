@@ -52,4 +52,8 @@ describe( 'CARLI', function() {
     it( 'should export the NotificationTemplate module', function() {
         expect(CARLI.NotificationTemplate).to.be.an('Object');
     } );
+
+    it( 'should export the Notification module', function() {
+        expect(CARLI.Notification).to.be.an('Object');
+    } );
 } );

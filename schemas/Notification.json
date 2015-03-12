@@ -34,5 +34,5 @@
       "items": { "type": "string" }
     }
   },
-  "required": [ "name", "subject" ]
+  "required": [ "subject", "emailBody", "to" ]
 }
