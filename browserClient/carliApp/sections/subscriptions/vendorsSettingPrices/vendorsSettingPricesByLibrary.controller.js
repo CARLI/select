@@ -43,6 +43,7 @@ function vendorsSettingPricesByLibraryController( $scope, $q, accordionControlle
         function watchCurrentOffering(newOffering, oldOffering) {
             if (newOffering) {
                 setOfferingEditable(newOffering);
+                editOfferingService.setCurrentOffering(null);
             }
         }
     }

@@ -43,6 +43,7 @@ function carliCheckingPricesByLibraryController( $scope, $q, accordionController
         function watchCurrentOffering(newOffering, oldOffering) {
             if (newOffering) {
                 setOfferingEditable(newOffering);
+                editOfferingService.setCurrentOffering(null);
             }
         }
     }

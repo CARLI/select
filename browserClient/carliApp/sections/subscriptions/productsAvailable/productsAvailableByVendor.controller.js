@@ -48,6 +48,7 @@ function productsAvailableByVendorController( $scope, $q, accordionControllerMix
         function watchCurrentOffering(newOffering, oldOffering) {
             if (newOffering) {
                 setOfferingEditable(newOffering);
+                editOfferingService.setCurrentOffering(null);
             }
         }
     }

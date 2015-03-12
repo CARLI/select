@@ -50,6 +50,7 @@ function productsAvailableByLibraryController( $scope, $q, accordionControllerMi
         function watchCurrentOffering(newOffering, oldOffering) {
             if (newOffering) {
                 setOfferingEditable(newOffering);
+                editOfferingService.setCurrentOffering(null);
             }
         }
     }
