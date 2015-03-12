@@ -6,17 +6,22 @@ function editOfferingService( offeringService ) {
     var currentOffering = null;
 
     return {
-        getCurrentOffering: getCurrentOffering,
-        setCurrentOffering: setCurrentOffering,
+        receiveOfferingEditableMessage: receiveOfferingEditableMessage,
+        acknowledgeOfferingMadeEditable: acknowledgeOfferingMadeEditable,
+        sendOfferingEditableMessage: sendOfferingEditableMessage,
         toggleOfferingUserFlaggedState: toggleOfferingUserFlaggedState
     };
 
 
-    function getCurrentOffering() {
+    function receiveOfferingEditableMessage() {
         return currentOffering;
     }
 
-    function setCurrentOffering(offering) {
+    function acknowledgeOfferingMadeEditable() {
+        currentOffering = null;
+    }
+
+    function sendOfferingEditableMessage(offering) {
         if ( typeof offering === 'string' ){
             offeringService.load(offering).then(function(o) {
                 currentOffering = o;

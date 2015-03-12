@@ -77,7 +77,7 @@ function renderOfferingDirective( $http, $q, $filter, alertService, offeringServ
                     var offeringId = $(this).data('offering-id');
 
                     scope.$apply(function() {
-                        editOfferingService.setCurrentOffering(offeringId);
+                        editOfferingService.sendOfferingEditableMessage(offeringId);
                     });
                 }
             }

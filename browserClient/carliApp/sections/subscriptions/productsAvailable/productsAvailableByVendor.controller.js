@@ -39,16 +39,12 @@ function productsAvailableByVendorController( $scope, $q, accordionControllerMix
     }
 
     function connectEditButtons() {
-        $scope.$watch(getCurrentOffering, watchCurrentOffering);
+        $scope.$watch(editOfferingService.receiveOfferingEditableMessage, receiveOfferingEditableMessage);
 
-        function getCurrentOffering() {
-            return editOfferingService.getCurrentOffering();
-        }
-
-        function watchCurrentOffering(newOffering, oldOffering) {
+        function receiveOfferingEditableMessage(newOffering, oldOffering) {
             if (newOffering) {
                 setOfferingEditable(newOffering);
-                editOfferingService.setCurrentOffering(null);
+                editOfferingService.acknowledgeOfferingMadeEditable();
             }
         }
     }
