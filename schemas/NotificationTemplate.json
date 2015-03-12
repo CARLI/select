@@ -1,0 +1,28 @@
+{
+  "$schema": "json-schema.org/draft-04/schema",
+  "title": "NotificationTemplate",
+  "schemaType": "NotificationTemplate",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique identifier for the NotificationTemplate record",
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "emailBody": {
+      "type": "string"
+    },
+    "pdfBody": {
+      "type": "string"
+    },
+    "pdfContentIsEditable": {
+      "type": "boolean"
+    }
+  },
+  "required": [ "name", "subject" ]
+}
