@@ -13,6 +13,8 @@ var schemas = {
     LibraryNonCrm: require('../schemas/LibraryNonCrm.json'),
     License: require('../schemas/License.json'),
     MembershipLevel: require('../schemas/MembershipLevel.json'),
+    Notification: require('../schemas/Notification.json'),
+    NotificationTemplate: require('../schemas/NotificationTemplate.json'),
     Offering: require('../schemas/Offering.json'),
     PriceCap: require('../schemas/PriceCap.json'),
     Pricing: require('../schemas/Pricing.json'),

@@ -1,0 +1,38 @@
+{
+  "$schema": "json-schema.org/draft-04/schema",
+  "title": "Notification",
+  "schemaType": "Notification",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique identifier for the Notification record",
+      "type": "string"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "emailBody": {
+      "type": "string"
+    },
+    "pdfBody": {
+      "type": "string"
+    },
+    "pdfContentIsEditable": {
+      "type": "boolean"
+    },
+    "targetEntity": {
+      "description": "The uuid of the recipient of this notification, either a library or vendor.",
+      "type": "string"
+    },
+    "to": {
+      "description": "Comma delimited list of e-mail addresses or contact groups.",
+      "type": "string"
+    },
+    "offerings": {
+      "description": "An array of offering uuids.  This data will be aggregated into the PDF Invoice or Report",
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "required": [ "subject", "emailBody", "to" ]
+}

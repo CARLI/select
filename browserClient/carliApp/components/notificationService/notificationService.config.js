@@ -1,3 +1,4 @@
 angular.module('carli.notificationService', [
-    'carli.config'
+    'carli.config',
+    'carli.carliModules'
 ]);

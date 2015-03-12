@@ -3,6 +3,8 @@ module.exports = {
     Cycle: require('./Entity/CycleRepository'),
     Library: require('./Entity/LibraryRepository'),
     License: require('./Entity/LicenseRepository'),
+    Notification: require('./Entity/NotificationRepository'),
+    NotificationTemplate: require('./Entity/NotificationTemplateRepository'),
     Offering: require('./Entity/OfferingRepository'),
     Product: require('./Entity/ProductRepository'),
     Vendor: require('./Entity/VendorRepository'),
