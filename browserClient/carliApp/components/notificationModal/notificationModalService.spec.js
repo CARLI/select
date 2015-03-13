@@ -6,14 +6,14 @@ describe('The Notification Modal Service', function() {
         expect(notificationModalService).to.be.an('object');
     }));
 
-    it( 'should provide a sendStartDraft method', inject( function(notificationCreationService) {
-        expect(notificationCreationService.sendStartDraft).to.be.a('Function');
+    it( 'should provide a sendStartDraftMessage method', inject( function(notificationModalService) {
+        expect(notificationModalService.sendStartDraftMessage).to.be.a('Function');
     }));
-    it( 'should provide a receiveStartDraft method', inject( function(notificationCreationService) {
-        expect(notificationCreationService.receiveStartDraft).to.be.a('Function');
+    it( 'should provide a receiveStartDraftMessage method', inject( function(notificationModalService) {
+        expect(notificationModalService.receiveStartDraftMessage).to.be.a('Function');
     }));
-    it( 'should provide a acknowledgeStartDraft method', inject( function(notificationCreationService) {
-        expect(notificationCreationService.acknowledgeStartDraft).to.be.a('Function');
+    it( 'should provide a acknowledgeStartDraftMessage method', inject( function(notificationModalService) {
+        expect(notificationModalService.acknowledgeStartDraftMessage).to.be.a('Function');
     }));
 
 });
