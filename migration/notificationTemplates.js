@@ -12,7 +12,7 @@ var notificationTemplates = [
         name: 'Library Invoices',
         subject: 'CARLI Database Invoices',
         emailBody: '',
-        pdfBody: '{ pdfContent }',
+        pdfBody: '{{ pdfContent }}',
         pdfContentIsEditable: true
     },
     {
@@ -20,7 +20,7 @@ var notificationTemplates = [
         name: 'Library Estimates - Open Cycle',
         subject: 'Estimate: LIBRARY Selections',
         emailBody: '',
-        pdfBody: '{ pdfContent }',
+        pdfBody: '{{ pdfContent }}',
         pdfContentIsEditable: true
     },
     {
@@ -35,7 +35,7 @@ var notificationTemplates = [
         name: 'Library Estimates - Closed Cycle',
         subject: 'Estimate: LIBRARY Selections',
         emailBody: '',
-        pdfBody: '{ pdfContent }',
+        pdfBody: '{{ pdfContent }}',
         pdfContentIsEditable: true
     },
     {
@@ -43,7 +43,7 @@ var notificationTemplates = [
         name: 'Vendor Reports',
         subject: 'Report: CARLI Library Selections',
         emailBody: '',
-        pdfBody: '{ pdfContent }',
+        pdfBody: '{{ pdfContent }}',
         pdfContentIsEditable: false
     },
     {
@@ -58,7 +58,7 @@ var notificationTemplates = [
         name: 'Annual Access Fee Invoices',
         subject: 'CARLI Annual Access Fee Invoices',
         emailBody: '',
-        pdfBody: '{ pdfContent }',
+        pdfBody: '{{ pdfContent }}',
         pdfContentIsEditable: false
     }
 ];
