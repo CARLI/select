@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.productsAvailable')
     .controller('productsAvailableByVendorController', productsAvailableByVendorController);
 
-function productsAvailableByVendorController( $scope, $q, accordionControllerMixin, $timeout, controllerBaseService, cycleService, vendorService, offeringService, editOfferingService,  productService ) {
+function productsAvailableByVendorController( $scope, $q, accordionControllerMixin, notificationModalService, controllerBaseService, cycleService, vendorService, offeringService, editOfferingService,  productService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadProductsForVendor);
@@ -17,6 +17,7 @@ function productsAvailableByVendorController( $scope, $q, accordionControllerMix
     vm.lastYear = '';
     vm.selectedOfferings = {};
     vm.reportCheckedProductsForVendor = reportCheckedProductsForVendor;
+    vm.reportAllVendors = reportAllVendors;
     vm.offeringColumns = [
         'library',
         'library-view',
@@ -147,5 +148,12 @@ function productsAvailableByVendorController( $scope, $q, accordionControllerMix
         });
 
         alert('report offerings '+offeringsToReport.join(','));
+    }
+
+    function reportAllVendors() {
+        notificationModalService.sendStartDraftMessage({
+            templateId: 'notification-template-vendor-reports',
+            cycleId: vm.cycle.id
+        });
     }
 }
