@@ -5,6 +5,7 @@ var cycleMigration = require('./cycle');
 var libraryMigration = require('./library');
 var migrationConfig = require('./config');
 var mysql = require('mysql');
+var notificationTemplates = require('./notificationTemplates');
 var offeringMigration = require('./offering');
 var productMigration = require('./product');
 var Q = require('q');
@@ -23,7 +24,8 @@ function doMigration(){
     var cycleIdMapping = {};
     var productIdMapping = {};
 
-    loadCrmLibraryMapping()
+    notificationTemplates.migrateNotificationTemplates()
+        .then(loadCrmLibraryMapping)
         .then(migrateLibraries)
         .then(migrateVendors)
         .then(migrateCycles)
