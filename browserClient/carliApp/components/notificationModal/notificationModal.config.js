@@ -1,3 +1,5 @@
 angular.module('carli.notificationModal', [
-    'carli.notificationCreationService'
+    'carli.notificationService',
+    'carli.notificationCreationService',
+    'carli.notificationTemplateService'
 ]);
