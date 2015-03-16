@@ -1,4 +1,8 @@
 menu.filter-by-active {
+    label {
+        margin-top: 0.5rem;
+    }
+
     menuitem[ng-click] {
         cursor: pointer;
     }
