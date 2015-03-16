@@ -27,6 +27,7 @@ function newCycleFormController( $scope, $rootScope, $location, alertService, cy
         vm.matchingCyclesOfType = [];
         setFormPristine();
     }
+
     function saveCycle() {
         var creationPromise;
         if (vm.sourceCycle && vm.sourceCycle.databaseName) {
@@ -47,6 +48,8 @@ function newCycleFormController( $scope, $rootScope, $location, alertService, cy
             .catch(function (error) {
                 alertService.putAlert(error, {severity: 'danger'});
             });
+
+        return creationPromise;
     }
     function cancelEdit() {
         initializeEmptyCycle();

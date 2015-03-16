@@ -1,5 +1,5 @@
 <modal-dialog modal-title="'Create New Cycle'" modal-id="'new-cycle-modal'" modal-class="">
-    <form id="new-cycle-form" class="edit-form" name="newCycleForm" ng-submit="vm.saveCycle()" warn-if-unsaved>
+    <form id="new-cycle-form" class="edit-form" name="newCycleForm" warn-if-unsaved>
         <section class="content">
             <fieldset>
                 <div class="column">
@@ -48,7 +48,7 @@
         <div class="footer">
             <fieldset>
                 <button type="button" class="carli-button cancel-button" data-dismiss="modal" ng-click="vm.cancelEdit()">Cancel</button>
-                <input type="submit" id="cycle-submit" class="carli-button save-button" value="Save">
+                <button type="button" class="carli-button save-button" id="cycle-submit" busy-click="vm.saveCycle()">Save</button>
             </fieldset>
         </div>
     </form>
