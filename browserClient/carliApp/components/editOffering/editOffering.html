@@ -1,14 +1,14 @@
 <form name="edit-offering-{{ vm.offering.id }}">
     <div role="gridcell" aria-describedby="library-column-header" class="column library" ng-if="vm.shouldShowColumn('library')">
         <library-info library="vm.offering.library"></library-info>
-        <button type="button" class="carli-button save" ng-click="vm.saveOffering()">Save
+        <button type="button" class="carli-button save" busy-click="vm.saveOffering()">Save
             <fa name="floppy-o"></fa>
         </button>
     </div>
 
     <div role="gridcell" aria-describedby="product-column-header" class="column product" ng-if="vm.shouldShowColumn('product')">
         <h3>{{ vm.offering.product.name }}</h3>
-        <button type="button" class="carli-button save" ng-click="vm.saveOffering()">Save
+        <button type="button" class="carli-button save" busy-click="vm.saveOffering()">Save
             <fa name="floppy-o"></fa>
         </button>
     </div>

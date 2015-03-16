@@ -1,8 +1,8 @@
 <carli-checking-prices-by-vendor ng-if="vm.cycleRouter.groupBy === 'vendor'"></carli-checking-prices-by-vendor>
 <carli-checking-prices-by-library ng-if="vm.cycleRouter.groupBy === 'library'"></carli-checking-prices-by-library>
 
-<button type="button" class="carli-button pull-left" ng-click="vm.undoCloseVendorPricing()">Undo Close Vendor Pricing</button>
-<button type="button" class="carli-button pull-right" ng-click="vm.openSystem()">Open System</button>
+<button type="button" class="carli-button pull-left" busy-click="vm.undoCloseVendorPricing()">Undo Close Vendor Pricing</button>
+<button type="button" class="carli-button pull-right" busy-click="vm.openSystem()">Open System</button>
 
 <modal-dialog modal-id="'open-system-modal'" modal-title="'Open System'">
     <form name="modal-form" ng-submit="vm.openSystemDialogComplete();">

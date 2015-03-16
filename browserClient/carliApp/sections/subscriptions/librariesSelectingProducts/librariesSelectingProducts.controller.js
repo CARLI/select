@@ -8,7 +8,7 @@ function librariesSelectingProductsController( $q, alertService ) {
     vm.closeSystemDialogComplete = closeSystemDialogComplete;
     
     function undoOpenSystem(){
-        vm.cycleRouter.previous();
+        return vm.cycleRouter.previous();
     }
 
     function closeSystem(){
@@ -17,7 +17,7 @@ function librariesSelectingProductsController( $q, alertService ) {
     }
 
     function closeSystemDialogComplete(){
-        closeModal().then(vm.cycleRouter.next);
+        return closeModal().then(vm.cycleRouter.next);
     }
 
     function closeModal() {

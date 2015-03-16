@@ -7,11 +7,11 @@ function vendorsSettingPricesController( $q, notificationService ) {
     vm.closeVendorPricing = closeVendorPricing;
 
     function undoOpenVendorPricing(){
-        vm.cycleRouter.previous();
+        return vm.cycleRouter.previous();
     }
 
     function closeVendorPricing(){
-        vm.cycleRouter.next();
+        return vm.cycleRouter.next();
     }
 
 }

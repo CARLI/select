@@ -80,12 +80,12 @@ function carliEditingProductListController( $scope, alertService, productService
     }
     function removeProduct( product ){
         product.isActive = false;
-        productService.update( product).then( function(){
+        return productService.update( product).then( function(){
             alertService.putAlert('Product Removed', {severity: 'success'});
         });
     }
 
     function openVendorPricing(){
-        vm.cycleRouter.next();
+        return vm.cycleRouter.next();
     }
 }

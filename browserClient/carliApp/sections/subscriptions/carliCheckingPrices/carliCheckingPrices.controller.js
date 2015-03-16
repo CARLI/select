@@ -9,7 +9,7 @@ function carliCheckingPricesController( $q, notificationService ) {
     vm.openSystemDialogComplete = openSystemDialogComplete;
 
     function undoCloseVendorPricing(){
-        vm.cycleRouter.previous();
+        return vm.cycleRouter.previous();
     }
 
     function openSystem(){
@@ -24,7 +24,7 @@ function carliCheckingPricesController( $q, notificationService ) {
             notificationService.sendNotification(vm.openSystemMessage);
         }
 
-        closeModal().then(vm.cycleRouter.next);
+        return closeModal().then(vm.cycleRouter.next);
     }
 
     function closeModal() {

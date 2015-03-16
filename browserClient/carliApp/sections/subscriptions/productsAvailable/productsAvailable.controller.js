@@ -20,6 +20,6 @@ function productsAvailableController( $q, alertService ) {
     }
 
     function undoCloseSystem(){
-        vm.cycleRouter.previous();
+        return vm.cycleRouter.previous();
     }
 }
