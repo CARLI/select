@@ -10,7 +10,7 @@ function validNotificationData() {
     return {
         subject: 'Test subject',
         emailBody: 'To whom it may concern: Hi there. Yours sincerely, CARLI',
-        to: 'carli@pixotech.com',
+        recipients: 'carli@pixotech.com',
         type: 'Notification'
     };
 }
