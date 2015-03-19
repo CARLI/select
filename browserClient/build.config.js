@@ -60,6 +60,7 @@ module.exports = {
         js: [
             'bower_modules/jquery/dist/jquery.js',
             'bower_modules/angular/angular.js',
+            'bower_modules/angular-busyclick/src/busyClick.directive.js',
             'bower_modules/angular-route/angular-route.js',
             'bower_modules/angular-resource/angular-resource.js',
             'bower_modules/angular-sanitize/angular-sanitize.js',

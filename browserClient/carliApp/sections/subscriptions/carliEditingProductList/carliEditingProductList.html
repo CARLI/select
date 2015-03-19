@@ -28,7 +28,7 @@
                     <div role="gridcell" aria-describedby="last-price-column-header" class="column last-price">{{ product.lastPrice }}</div>
                     <div role="gridcell" aria-describedby="funded-column-header" class="column funded"><fa name="check-circle"></fa></div>
                     <div role="gridcell" aria-describedby="remove-column-header" class="column remove">
-                        <button class="carli-button subdued-remove-button" ng-click="vm.removeProduct(product)">Remove <fa name="times"></fa></button>
+                        <button class="carli-button subdued-remove-button" busy-click="vm.removeProduct(product)">Remove <fa name="times"></fa></button>
                     </div>
                 </li>
             </ul>
@@ -40,4 +40,4 @@
     </li>
 </ul>
 
-<button type="button" class="carli-button pull-right" ng-click="vm.openVendorPricing()">Open Vendor Pricing</button>
+<button type="button" class="carli-button pull-right" busy-click="vm.openVendorPricing()">Open Vendor Pricing</button>

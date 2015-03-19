@@ -31,16 +31,17 @@ function editCycleController( $routeParams, alertService, cycleService ) {
 
     function cycleRouterNext(){
         cycleRouter.cycle.proceedToNextStep();
-        saveCycleAndUpdateStatus();
+        return saveCycleAndUpdateStatus();
     }
 
     function cycleRouterPrevious() {
         cycleRouter.cycle.returnToPreviousStep();
-        saveCycleAndUpdateStatus();
+        return saveCycleAndUpdateStatus();
     }
 
     function saveCycleAndUpdateStatus(){
-        cycleService.update(cycleRouter.cycle)
+        var copyOfCycle = angular.copy(cycleRouter.cycle);
+        return cycleService.update(copyOfCycle)
             .then(cycleService.load)
             .then(function (cycle) {
                 cycleRouter.cycle = cycle;

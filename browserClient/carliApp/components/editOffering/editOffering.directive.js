@@ -37,7 +37,7 @@ angular.module('carli.editOffering')
                 }
                 userTouchedFlag = false;
 
-                offeringService.update(vm.offering)
+                return offeringService.update(vm.offering)
                     .then(offeringService.load)
                     .then(updateOfferingFlaggedStatus)
                     .then(function(updatedOffering){
