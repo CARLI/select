@@ -310,6 +310,9 @@ module.exports = function ( grunt ) {
         },
 
         sass: {
+            options: {
+                loadPath: '.'
+            },
             build: {
                 files: [{
                     src: ['<%= carliApp_files.scss %>', '<%= vendor_files.css %>'],
