@@ -40,6 +40,12 @@ user-menu {
                     font-size: 15px;
                 }
             }
+
+            &.active {
+                a {
+                    color: $white;
+                }
+            }
         }
     }
 }

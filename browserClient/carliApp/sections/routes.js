@@ -80,6 +80,11 @@ angular.module('carli.routes',[
         controller:  'editLicensePageController',
         controllerAs:'vm'
     })
+    .when('/notifications', {
+        templateUrl: '/carliApp/sections/notifications/notifications.html',
+        controller:  'notificationsController',
+        controllerAs:'vm'
+    })
     .when('/styleGuide', {
         templateUrl: '/carliApp/sections/styleGuide/styleGuide.html',
         controller:  'styleGuideController',
