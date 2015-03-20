@@ -32,7 +32,17 @@
       "description": "An array of offering uuids.  This data will be aggregated into the PDF Invoice or Report",
       "type": "array",
       "items": { "type": "string" }
+    },
+    "draftStatus": {
+        "type": "string",
+        "enum": ["draft", "sent"]
+    },
+    "dateSent": {
+        "type": "string"
+    },
+    "summaryTotal": {
+        "type": "integer"
     }
   },
-  "required": [ "subject", "emailBody", "recipients" ]
+  "required": [ "subject", "emailBody", "recipients", "draftStatus" ]
 }
