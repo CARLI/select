@@ -8,7 +8,8 @@ angular.module('carli.app', [
     'carli.fa',
     'carli.navBar',
     'carli.alerts',
-    'carli.routes'
+    'carli.routes',
+    'carli.userMenu'
 ])
 .config(function($locationProvider){
     $locationProvider.html5Mode(true);
