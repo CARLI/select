@@ -3,6 +3,7 @@ angular.module('carli.routes',[
     'carli.sections.subscriptions',
     'carli.sections.oneTimePurchases',
     'carli.sections.vendors',
+    'carli.sections.notifications',
     'carli.sections.products',
     'carli.sections.libraries',
     'carli.sections.licenses',
