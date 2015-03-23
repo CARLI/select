@@ -11,6 +11,8 @@
         <h2>Drafts (not sent)</h2>
         <notification-list notifications="vm.draftNotifications"></notification-list>
 
+        <button type="button" id="sendAll" class="carli-button send-button" busy-click="vm.sendAllDrafts()">Send all drafts <fa name="paper-plane"></fa></button>
+
         <h2>Sent</h2>
         <notification-list notifications="vm.sentNotifications" mode="sent"></notification-list>
     </section>

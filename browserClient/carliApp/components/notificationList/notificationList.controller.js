@@ -3,6 +3,10 @@ angular.module('carli.notificationList')
 
 function notificationListController(controllerBaseService){
     var vm = this;
+    vm.previewNotification = previewNotification;
+    vm.previewPdf = previewPdf;
+    vm.removeDraft = removeDraft;
+    vm.sendNotification = sendNotification;
 
     controllerBaseService.addSortable(vm, vm.defaultSort || 'subject');
 
@@ -25,6 +29,22 @@ function notificationListController(controllerBaseService){
                 vm.sendLabel = 'Send';
             }
         }
+    }
+
+    function previewNotification( notification ){
+        console.log('preview notification', notification);
+    }
+
+    function previewPdf( notification ){
+        console.log('preview pdf for ',notification);
+    }
+
+    function removeDraft( notification ){
+        console.log('removeDraft ',notification);
+    }
+
+    function sendNotification( notification ){
+        console.log('send ',notification);
     }
 
 }

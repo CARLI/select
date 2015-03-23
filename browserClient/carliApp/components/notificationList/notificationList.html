@@ -2,19 +2,38 @@
     <li class="column-headers">
         <div class="sortable column subject" role="columnheader" id="notifications-list{{ listId }}-subject" ng-class="{ activeSort: vm.orderBy === 'subject', reversedSort: vm.reverse }" ng-click="vm.sort('subject')">Subject</div>
         <div class="sortable column total"   role="columnheader" id="notifications-list{{ listId }}-total"   ng-class="{ activeSort: vm.orderBy === 'total', reversedSort: vm.reverse }"   ng-click="vm.sort('total')">Total</div>
-        <div class="column preview" role="columnheader" id="notifications-list{{ listId }}-preview">View</div>
-        <div class="sortable column view-pdf" role="columnheader" id="notifications-list{{ listId }}-view-pdf">View PDF</div>
-        <div class="sortable column remove"   role="columnheader" id="notifications-list{{ listId }}-remove" ng-if="vm.showRemove">Remove</div>
+        <div class="column preview"  role="columnheader" id="notifications-list{{ listId }}-preview">View</div>
+        <div class="column view-pdf" role="columnheader" id="notifications-list{{ listId }}-view-pdf">View PDF</div>
+        <div class="column remove"   role="columnheader" id="notifications-list{{ listId }}-remove" ng-if="vm.showRemove">Remove</div>
         <div class="sortable column date-sent" role="columnheader" id="notifications-list{{ listId }}-date-sent" ng-class="{ activeSort: vm.orderBy === 'dateSent', reversedSort: vm.reverse }" ng-click="vm.sort('dateSent')" ng-if="vm.showDateSent">Date Sent</div>
         <div class="column send" role="columnheader" id="notifications-list{{ listId }}-send">{{ vm.sendLabel }}</div>
     </li>
-    <li ng-repeat="notification in vm.notifications | orderBy:vm.orderBy:vm.reverse track by notification.id">
+    <li class="notification-row" ng-repeat="notification in vm.notifications | orderBy:vm.orderBy:vm.reverse track by notification.id">
         <div class="column subject"   role="gridcell" aria-describedby="notifications-list{{ listId }}-subject">{{ notification.subject }}</div>
-        <div class="column total"     role="gridcell" aria-describedby="notifications-list{{ listId }}-total">{{ notification.summaryTotal }}</div>
-        <div class="column preview"   role="gridcell" aria-describedby="notifications-list{{ listId }}-preview">Preview {{ notification.id }}</div>
-        <div class="column view-pdf"  role="gridcell" aria-describedby="notifications-list{{ listId }}-view-pdf">View {{ notification.id }}</div>
-        <div class="column remove"    role="gridcell" aria-describedby="notifications-list{{ listId }}-remove" ng-if="vm.showRemove">Remove {{ notification.id }}</div>
-        <div class="column date-dent" role="gridcell" aria-describedby="notifications-list{{ listId }}-date-sent" ng-if="vm.showDateSent">{{ notification.dateSent }}</div>
-        <div class="column send"      role="gridcell" aria-describedby="notifications-list{{ listId }}-send">{{ vm.sendLabel }} {{ notification.id }}</div>
+        <div class="column total"     role="gridcell" aria-describedby="notifications-list{{ listId }}-total">{{ notification.summaryTotal | currency }}</div>
+
+        <div class="column preview" role="gridcell" aria-describedby="notifications-list{{ listId }}-preview">
+            <button type="button" class="carli-button" busy-click="vm.previewNotification(notification)">
+                Preview <span class="sr-only">notification for {{ notification.subject }}</span><fa name="eye"></fa>
+            </button>
+        </div>
+        <div class="column view-pdf" role="gridcell" aria-describedby="notifications-list{{ listId }}-view-pdf">
+            <button type="button" class="carli-button" busy-click="vm.previewPdf(notification)">
+                View PDF <span class="sr-only">for {{ notification.subject }}</span><fa name="paperclip"></fa>
+            </button>
+        </div>
+        <div class="column remove" role="gridcell" aria-describedby="notifications-list{{ listId }}-remove" ng-if="vm.showRemove">
+            <button type="button" class="carli-button remove-button" busy-click="vm.removeDraft(notification)">
+                Remove <span class="sr-only">draft for {{ notification.subject }}</span><fa name="remove"></fa>
+            </button>
+        </div>
+
+        <div class="column date-dent" role="gridcell" aria-describedby="notifications-list{{ listId }}-date-sent" ng-if="vm.showDateSent">{{ notification.dateSent | date }}</div>
+
+        <div class="column send" role="gridcell" aria-describedby="notifications-list{{ listId }}-send">
+            <button type="button" class="carli-button send-button" busy-click="vm.sendNotification(notification)">
+                {{ vm.sendLabel }} <span class="sr-only">{{ vm.sendLabel }} notification {{ notification.subject }}</span><fa name="paper-plane"></fa>
+            </button>
+        </div>
     </li>
 </ul>

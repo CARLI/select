@@ -2,6 +2,46 @@ notification-list {
     ul {
         @extend .zebra-table;
         border-top: $controls-top-border;
+
+        li {
+            .column {//rules here apply to all columns in headers and rows
+                flex-basis: 15%;
+
+                &.preview,
+                &.view-pdf,
+                &.remove,
+                &.send {
+                    @include flex(none);
+                    width: 11rem;
+                }
+            }
+
+            button {
+                @include vendor-prefix('appearance', 'none');
+                background: transparent;
+                border: none;
+                font-size: 2rem;
+            }
+        }
+
+        li.column-headers {
+            .column {
+            }
+        }
+
+        li.notification-row {
+            .column {
+                &.preview,
+                &.view-pdf,
+                &.remove,
+                &.send {
+                    padding-top: 0.5rem;
+                    padding-bottom: 0;
+                    text-align: center;
+                }
+            }
+        }
+
     }
 
 }
