@@ -1,6 +1,7 @@
 notification-list {
     ul {
         @extend .zebra-table;
+        border-top: $controls-top-border;
     }
 
 }

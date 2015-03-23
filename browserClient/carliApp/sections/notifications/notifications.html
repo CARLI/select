@@ -1,10 +1,18 @@
-<section class="content" id="notifications">
-    <h1>Notifications</h1>
+<section id="notifications">
+    <div class="list-page-header">
+        <h1>Notifications</h1>
+        <div class="button-container">
+            <a href="/notificationTemplates">Manage Notification Templates</a>
+            <button type="button" class="carli-button" id="new-notification">Draft a Notification <fa name="plus-circle"></fa></button>
+        </div>
+    </div>
 
-    <h2>Drafts</h2>
-    <notification-list notifications="vm.draftNotifications"></notification-list>
+    <section class="content list-content">
+        <h2>Drafts (not sent)</h2>
+        <notification-list notifications="vm.draftNotifications"></notification-list>
 
-    <h2>Sent</h2>
-    <notification-list notifications="vm.sentNotifications"></notification-list>
+        <h2>Sent</h2>
+        <notification-list notifications="vm.sentNotifications" mode="sent"></notification-list>
+    </section>
 
 </section>
