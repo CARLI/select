@@ -8,8 +8,8 @@ function notificationService($q, $http, CarliModules, config) {
     return {
         getBlankNotification: getBlankNotification,
         list:   function() { return $q.when( notificationModule.list() ); },
-        listDrafts: listDrafts,
-        listSent: listSent,
+        listDrafts: function() { return $q.when( notificationModule.listDrafts() ); },
+        listSent: function() { return $q.when( notificationModule.listSent() ); },
         create: function() { return $q.when( notificationModule.create.apply(this, arguments) ); },
         update: function() { return $q.when( notificationModule.update.apply(this, arguments) ); },
         load:   function() { return $q.when( notificationModule.load.apply(this, arguments) ); },
@@ -34,27 +34,5 @@ function notificationService($q, $http, CarliModules, config) {
     function sendNotification(envelope) {
         var url = config.getMiddlewareUrl() + '/tell-pixobot';
         $http.put(url, envelope);
-    }
-
-    function listDrafts(){
-        return notificationModule.list()
-            .then(keepUnsentNotifications);
-
-        function keepUnsentNotifications(notifications){
-            return notifications.filter(function(notification){
-                return notification.draftStatus === 'draft';
-            });
-        }
-    }
-
-    function listSent(){
-        return notificationModule.list()
-            .then(keepSentNotifications);
-
-        function keepSentNotifications(notifications){
-            return notifications.filter(function(notification){
-                return notification.draftStatus === 'sent';
-            });
-        }
     }
 }
