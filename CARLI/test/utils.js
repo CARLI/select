@@ -96,5 +96,14 @@ module.exports = {
         });
 
         return deferred.promise;
+    },
+    deleteDocumentsOfType: function(entityTypeName){
+        var EntityRepository = require('../Entity/'+entityTypeName+'Repository' );
+        return EntityRepository.list()
+            .then(function(entityList){
+                return Q.allSettled(entityList.map(function(entity){
+                    return EntityRepository.delete(entity.id);
+                }));
+            });
     }
 };
