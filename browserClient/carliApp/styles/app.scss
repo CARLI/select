@@ -228,6 +228,7 @@ section.content {
 @import "carliApp/components/navBar/navBar";
 @import "carliApp/components/modalDialog/modalDialog";
 @import "carliApp/components/newCycleForm/newCycleForm";
+@import "carliApp/components/notificationList/notificationList";
 @import "carliApp/components/productSelectionHistoryIcon/productSelectionHistoryIcon";
 @import "carliApp/components/radio/radio";
 @import "carliApp/components/spinner/spinner";
@@ -244,6 +245,7 @@ section.content {
 
 @import "carliApp/sections/libraries/libraries";
 @import "carliApp/sections/licenses/licenses";
+@import "carliApp/sections/notifications/notifications";
 @import "carliApp/sections/oneTimePurchases/oneTimePurchases";
 @import "carliApp/sections/oneTimePurchases/selectedProducts/selectedProducts";
 @import "carliApp/sections/products/products";

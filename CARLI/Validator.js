@@ -15,6 +15,7 @@ var schemas = {
     MembershipLevel: require('../schemas/MembershipLevel.json'),
     Notification: require('../schemas/Notification.json'),
     NotificationTemplate: require('../schemas/NotificationTemplate.json'),
+    NotificationType: require('../schemas/NotificationType.json'),
     Offering: require('../schemas/Offering.json'),
     PriceCap: require('../schemas/PriceCap.json'),
     Pricing: require('../schemas/Pricing.json'),

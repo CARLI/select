@@ -22,7 +22,10 @@
     },
     "pdfContentIsEditable": {
       "type": "boolean"
+    },
+    "notificationType": {
+      "$ref": "./NotificationType.json"
     }
   },
-  "required": [ "name", "subject" ]
+  "required": [ "name", "subject", "notificationType" ]
 }

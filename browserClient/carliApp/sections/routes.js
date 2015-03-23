@@ -3,6 +3,7 @@ angular.module('carli.routes',[
     'carli.sections.subscriptions',
     'carli.sections.oneTimePurchases',
     'carli.sections.vendors',
+    'carli.sections.notifications',
     'carli.sections.products',
     'carli.sections.libraries',
     'carli.sections.licenses',
@@ -78,6 +79,11 @@ angular.module('carli.routes',[
     .when('/license/:id', {
         templateUrl: '/carliApp/sections/licenses/editLicense/editLicense.html',
         controller:  'editLicensePageController',
+        controllerAs:'vm'
+    })
+    .when('/notifications', {
+        templateUrl: '/carliApp/sections/notifications/notifications.html',
+        controller:  'notificationsController',
         controllerAs:'vm'
     })
     .when('/styleGuide', {

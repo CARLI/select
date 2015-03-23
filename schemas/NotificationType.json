@@ -1,0 +1,5 @@
+{
+    "type": "string",
+    "schemaType": "NotificationType",
+    "enum": ["invoice", "report", "other"]
+}

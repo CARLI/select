@@ -8,9 +8,10 @@ testUtils.setupTestDb();
 
 function validNotificationTemplateData() {
     return {
+        type: 'NotificationTemplate',
         name: 'Test template',
         subject: 'Test subject',
-        type: 'NotificationTemplate'
+        notificationType: 'other'
     };
 }
 
