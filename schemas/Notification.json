@@ -42,7 +42,10 @@
     },
     "summaryTotal": {
         "type": "integer"
+    },
+    "notificationType": {
+        "$ref": "./NotificationType.json"
     }
   },
-  "required": [ "subject", "emailBody", "recipients", "draftStatus" ]
+  "required": [ "subject", "emailBody", "recipients", "draftStatus", "notificationType" ]
 }

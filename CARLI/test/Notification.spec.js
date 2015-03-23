@@ -14,7 +14,8 @@ function validNotificationData() {
         subject: 'Test subject',
         emailBody: 'To whom it may concern: Hi there. Yours sincerely, CARLI',
         recipients: 'carli@pixotech.com',
-        draftStatus: 'draft'
+        draftStatus: 'draft',
+        notificationType: 'other'
     };
 }
 

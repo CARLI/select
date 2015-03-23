@@ -13,7 +13,8 @@ var notificationTemplates = [
         subject: 'CARLI Database Invoices',
         emailBody: '',
         pdfBody: '{{ pdfContent }}',
-        pdfContentIsEditable: true
+        pdfContentIsEditable: true,
+        notificationType: 'invoice'
     },
     {
         id: 'notification-template-library-estimates-open',
@@ -21,14 +22,16 @@ var notificationTemplates = [
         subject: 'Estimate: LIBRARY Selections',
         emailBody: '',
         pdfBody: '{{ pdfContent }}',
-        pdfContentIsEditable: true
+        pdfContentIsEditable: true,
+        notificationType: 'other'
     },
     {
         id: 'notification-template-library-reminder',
         name: 'Library Reminder',
         subject: 'Reminder: CARLI Selection System Open',
         emailBody: '',
-        pdfContentIsEditable: false
+        pdfContentIsEditable: false,
+        notificationType: 'other'
     },
     {
         id: 'notification-template-library-estimates-closed',
@@ -36,7 +39,8 @@ var notificationTemplates = [
         subject: 'Estimate: LIBRARY Selections',
         emailBody: '',
         pdfBody: '{{ pdfContent }}',
-        pdfContentIsEditable: true
+        pdfContentIsEditable: true,
+        notificationType: 'other'
     },
     {
         id: 'notification-template-vendor-reports',
@@ -44,14 +48,16 @@ var notificationTemplates = [
         subject: 'Report: CARLI Library Selections',
         emailBody: '',
         pdfBody: '{{ pdfContent }}',
-        pdfContentIsEditable: false
+        pdfContentIsEditable: false,
+        notificationType: 'report'
     },
     {
         id: 'notification-template-contact-non-players',
         name: 'Contact Non-Players',
         subject: 'CARLI Selections',
         emailBody: '',
-        pdfContentIsEditable: false
+        pdfContentIsEditable: false,
+        notificationType: 'other'
     },
     {
         id: 'notification-template-annual-access-fee-invoices',
@@ -59,7 +65,8 @@ var notificationTemplates = [
         subject: 'CARLI Annual Access Fee Invoices',
         emailBody: '',
         pdfBody: '{{ pdfContent }}',
-        pdfContentIsEditable: false
+        pdfContentIsEditable: false,
+        notificationType: 'invoice'
     }
 ];
 

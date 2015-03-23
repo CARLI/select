@@ -19,6 +19,7 @@ var validTypes = [
     'MembershipLevel',
     'Notification',
     'NotificationTemplate',
+    'NotificationType',
     'Offering',
     'PriceCap',
     'Pricing',
