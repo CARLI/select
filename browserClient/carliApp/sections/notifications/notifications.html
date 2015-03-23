@@ -1,17 +1,10 @@
 <section class="content" id="notifications">
     <h1>Notifications</h1>
 
-    <ul class="zebra-table" ng-if="vm.draftNotifications.length">
-        <li ng-repeat="notification in vm.draftNotifications track by notification.id">
-            {{ notification.subject }}
-        </li>
-    </ul>
+    <h2>Drafts</h2>
+    <notification-list notifications="vm.draftNotifications"></notification-list>
 
-    <hr>
+    <h2>Sent</h2>
+    <notification-list notifications="vm.sentNotifications"></notification-list>
 
-    <ul class="zebra-table" ng-if="vm.sentNotifications.length">
-        <li ng-repeat="notification in vm.sentNotifications track by notification.id">
-            {{ notification.subject }}
-        </li>
-    </ul>
 </section>
