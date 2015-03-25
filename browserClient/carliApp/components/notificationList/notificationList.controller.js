@@ -3,6 +3,7 @@ angular.module('carli.notificationList')
 
 function notificationListController(controllerBaseService){
     var vm = this;
+    vm.filter = 'all';
     vm.previewNotification = previewNotification;
     vm.previewPdf = previewPdf;
     vm.removeDraft = removeDraft;
