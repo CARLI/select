@@ -32,6 +32,7 @@ function doMigration(){
         .then(migrateCycles)
         .then(migrateProducts)
         .then(migrateLicenses)
+        .then(associateLicensesWithVendorsAndProducts)
         .then(migrateOfferings)
         .then(finishMigration)
         .then(closeIdalConnection)
@@ -85,6 +86,13 @@ function doMigration(){
         });
 
         return deferred.promise;
+
+
+        function migrateProductsForCycle(cycleId) {
+            return CycleRepository.load(cycleId).then(function (cycle) {
+                return productMigration.migrateProducts(connection, cycle, vendorIdMapping);
+            });
+        }
     }
 
     function migrateLicenses(productMapping){
@@ -94,14 +102,19 @@ function doMigration(){
         return licenseMigration.migrateLicenses(connection);
     }
 
-    function migrateProductsForCycle(cycleId) {
-        return CycleRepository.load(cycleId).then(function (cycle) {
-            return productMigration.migrateProducts(connection, cycle, vendorIdMapping);
-        });
+    function associateLicensesWithVendorsAndProducts(licenseMapping){
+        console.log('Migrated ' + Object.keys(licenseMapping).length + ' licenses');
+
+        return Q.all([
+            licenseMigration.associateLicensesWithVendors(connection, licenseMapping, vendorIdMapping),
+            licenseMigration.associateLicensesWithProducts(connection, licenseMapping, productIdMapping)
+        ]);
     }
 
-    function migrateOfferings(licenseMapping){
-        console.log('Migrated ' + Object.keys(licenseMapping).length + ' licenses');
+
+
+    function migrateOfferings(){
+        console.log('Done associating Licenses with Vendors and Products');
 
         var deferred = Q.defer();
         var promises = [];

@@ -63,8 +63,8 @@ function extractLicense( licenseRow ){
         effectiveDate: licenseRow.purchase_date || '',
         totalTermStartDate: '',
         totalTermEndDate: licenseRow.extension_date || '',
-        currentTermStartDate: licenseRow.current_term || '',
-        currentTermEndDate: licenseRow.current_term || '',
+        currentTermStartDate: splitCurrentTerm(0),
+        currentTermEndDate: splitCurrentTerm(1),
         remainingRenewals: 0,
         terms: {
             downloadTerms: licenseRow.download || '',
@@ -87,8 +87,73 @@ function extractLicense( licenseRow ){
         otherType: '',
         offeringType: 'Product'
     };
+
+    function splitCurrentTerm( index ){
+        if ( licenseRow.current_term ){
+            return licenseRow.current_term.split('-')[index];
+        }
+        else {
+            return '';
+        }
+    }
+}
+
+
+function associateLicensesWithVendors( connection, licenseIdMapping, vendorIdMapping ){
+    var resultsPromise = Q.defer();
+
+    var query = "SELECT contract_id, vendor_id FROM contract_vendor_db GROUP BY contract_id;";
+    connection.query(query, function(err, rows, fields) {
+        if(err) { console.log(err); }
+
+        Q.all( rows.map(linkVendorToLicense))
+            .then(function(){
+                resultsPromise.resolve()
+            })
+            .catch(function(err){
+                console.error('Error associating Licenses with Vendors: ',err);
+            });
+    });
+
+    return resultsPromise.promise;
+
+
+    function linkVendorToLicense( associationRow ){
+        var licenseLegacyId = associationRow.contract_id;
+        var licenseCouchId = licenseIdMapping[licenseLegacyId];
+        var vendorLegacyId = associationRow.vendor_id;
+        var vendorCouchId = vendorIdMapping[vendorLegacyId];
+
+        console.log('  set vendor property of license '+licenseCouchId+' to '+vendorCouchId);
+
+        return LicenseRepository.load(licenseCouchId)
+            .then(setVendorPropertyOnLicense)
+            .then(LicenseRepository.update);
+
+
+        function setVendorPropertyOnLicense(license){
+            license.vendor = vendorCouchId;
+            return license;
+        }
+    }
+}
+
+function associateLicensesWithProducts( connection, licenseIdMapping, productIdMapping ){
+    var resultsPromise = Q.defer();
+
+    var query = "SELECT db_id, contract_id FROM contract_vendor_db GROUP BY db_id;";
+    connection.query(query, function(err, rows, fields) {
+        if(err) { console.log(err); }
+
+        //do stuff
+        resultsPromise.resolve();
+    });
+
+    return resultsPromise.promise;
 }
 
 module.exports = {
-    migrateLicenses: migrateLicenses
+    migrateLicenses: migrateLicenses,
+    associateLicensesWithVendors: associateLicensesWithVendors,
+    associateLicensesWithProducts: associateLicensesWithProducts
 };
