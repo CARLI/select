@@ -2,6 +2,14 @@
 #vendors {
     $column-gutter: 20px;
 
+    entity-list {
+        li:not(.column-headers){
+            div.column:nth-child(3){
+                @include body-text;
+            }
+        }
+    }
+
     .edit-form {
         fieldset > div.column {
             @include grid-column(6);
