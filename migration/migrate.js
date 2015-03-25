@@ -3,6 +3,7 @@
 var CycleRepository = require('../CARLI').Cycle;
 var cycleMigration = require('./cycle');
 var libraryMigration = require('./library');
+var licenseMigration = require('./license');
 var migrationConfig = require('./config');
 var mysql = require('mysql');
 var notificationTemplates = require('./notificationTemplates');
@@ -30,6 +31,7 @@ function doMigration(){
         .then(migrateVendors)
         .then(migrateCycles)
         .then(migrateProducts)
+        .then(migrateLicenses)
         .then(migrateOfferings)
         .then(finishMigration)
         .then(closeIdalConnection)
@@ -85,15 +87,21 @@ function doMigration(){
         return deferred.promise;
     }
 
+    function migrateLicenses(productMapping){
+        productIdMapping = flattenCycleMigrationResults(productMapping);
+        console.log('Migrated ' + Object.keys(productIdMapping).length + ' products');
+
+        return licenseMigration.migrateLicenses(connection);
+    }
+
     function migrateProductsForCycle(cycleId) {
         return CycleRepository.load(cycleId).then(function (cycle) {
             return productMigration.migrateProducts(connection, cycle, vendorIdMapping);
         });
     }
 
-    function migrateOfferings(productMapping){
-        productIdMapping = flattenCycleMigrationResults(productMapping);
-        console.log('Migrated ' + Object.keys(productIdMapping).length + ' products');
+    function migrateOfferings(licenseMapping){
+        console.log('Migrated ' + Object.keys(licenseMapping).length + ' licenses');
 
         var deferred = Q.defer();
         var promises = [];
