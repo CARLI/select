@@ -60,7 +60,6 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
         else {
             initializeForExistingProduct();
         }
-        setProductFormPristine();
 
         vm.isModal = vm.newProduct;
     }
@@ -74,6 +73,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
         vm.editable = true;
         vm.newProduct = true;
         initializeCycles();
+        setProductFormPristine();
     }
     function initializeForExistingProduct() {
         productService.load(vm.productId).then( function( product ) {
@@ -83,6 +83,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
             rememberTermFields();
 
             initializeCycles();
+            setProductFormPristine();
 
             if ( isOneTimePurchaseProduct(product) ){
                 loadOfferingsForProduct(product);
