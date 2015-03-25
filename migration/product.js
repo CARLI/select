@@ -1,7 +1,7 @@
 var ProductRepository = require('../CARLI').Product;
 var Q = require('q');
 
-function migrateProducts(connection, cycle, vendorIdMapping){
+function migrateProducts(connection, cycle, vendorIdMapping, productLicenseMapping){
     var resultsPromise = Q.defer();
 
     var query = "SELECT v.id AS vendor_id, " +
@@ -24,7 +24,7 @@ function migrateProducts(connection, cycle, vendorIdMapping){
         console.log('  Migrating products for cycle "' + cycle.name + '" - got ' + rows.length + ' products');
         if(err) { console.log(err); }
 
-        extractProducts(rows, cycle, vendorIdMapping).then(function(idMap){
+        extractProducts(rows, cycle, vendorIdMapping, productLicenseMapping).then(function(idMap){
             resultsPromise.resolve(idMap);
         });
     });
@@ -32,13 +32,13 @@ function migrateProducts(connection, cycle, vendorIdMapping){
     return resultsPromise.promise;
 }
 
-function extractProducts(productRows, cycle, vendorIdMapping){
+function extractProducts(productRows, cycle, vendorIdMapping, productLicenseMapping){
     var couchIdsToIdalIds = {};
     var extractProductsPromises = [];
     var resultsPromise = Q.defer();
 
     for (var i in productRows) {
-        var createProductPromise = createProduct(productRows[i], cycle, vendorIdMapping);
+        var createProductPromise = createProduct(productRows[i], cycle, vendorIdMapping, productLicenseMapping);
 
         extractProductsPromises.push(createProductPromise);
 
@@ -54,11 +54,11 @@ function extractProducts(productRows, cycle, vendorIdMapping){
     return resultsPromise.promise;   
 }
 
-function createProduct( productRow, cycle, vendorIdMapping ) {
+function createProduct( productRow, cycle, vendorIdMapping, productLicenseMapping ) {
     //console.log('  creating: ' + productRow.product_name);
 
     var couchIdPromise = Q.defer();
-    var product = extractProduct(productRow, cycle, vendorIdMapping);
+    var product = extractProduct(productRow, cycle, vendorIdMapping, productLicenseMapping);
     ProductRepository.create( product, cycle )
         .then(function(id) {
             couchIdPromise.resolve({
@@ -74,7 +74,7 @@ function createProduct( productRow, cycle, vendorIdMapping ) {
     return couchIdPromise.promise;
 }
 
-function extractProduct( row, cycle, vendorIdMapping ){
+function extractProduct( row, cycle, vendorIdMapping, productLicenseMapping ){
     return {
         name: row.product_name,
         vendor: vendorIdMapping[row.vendor_id],
@@ -84,14 +84,14 @@ function extractProduct( row, cycle, vendorIdMapping ){
         comments: '',
         isThirdPartyProduct: false,
         hasArchiveCapitalFee: false,
-        isActive: true
 //        fundings: '',
-//        license: '',
+        license: productLicenseMapping[row.product_id],
 //        terms: '',
 //        priceCap: '',
 //        detailCode: '',
 //        librariesThatHavePaidAcf: '',
 //        oneTimePurchase: ''
+        isActive: true
     };
 }
 

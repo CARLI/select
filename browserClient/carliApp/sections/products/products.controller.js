@@ -45,9 +45,12 @@ function productController( $scope, $sce, cycleService, productService ){
             }
         },
         {
-            label: "Cycle",
-            orderByProperty: 'cycle',
-            contentFunction: function(product) { return product.cycleType; }
+            label: "License",
+            orderByProperty: 'license.name',
+            contentFunction: function(product) {
+                var license = product.license || {};
+                return license.name || '';
+            }
         }
     ];
 
