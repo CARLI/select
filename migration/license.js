@@ -99,7 +99,7 @@ function extractLicense( licenseRow ){
 }
 
 
-function associateLicensesWithVendors( connection, licenseIdMapping, vendorIdMapping ){
+function attachVendorsToLicenses( connection, licenseIdMapping, vendorIdMapping ){
     var resultsPromise = Q.defer();
 
     var query = "SELECT contract_id, vendor_id FROM contract_vendor_db GROUP BY contract_id;";
@@ -108,7 +108,7 @@ function associateLicensesWithVendors( connection, licenseIdMapping, vendorIdMap
 
         Q.all( rows.map(linkVendorToLicense))
             .then(function(){
-                resultsPromise.resolve()
+                resultsPromise.resolve(rows.length);
             })
             .catch(function(err){
                 console.error('Error associating Licenses with Vendors: ',err);
@@ -124,8 +124,6 @@ function associateLicensesWithVendors( connection, licenseIdMapping, vendorIdMap
         var vendorLegacyId = associationRow.vendor_id;
         var vendorCouchId = vendorIdMapping[vendorLegacyId];
 
-        console.log('  set vendor property of license '+licenseCouchId+' to '+vendorCouchId);
-
         return LicenseRepository.load(licenseCouchId)
             .then(setVendorPropertyOnLicense)
             .then(LicenseRepository.update);
@@ -138,22 +136,35 @@ function associateLicensesWithVendors( connection, licenseIdMapping, vendorIdMap
     }
 }
 
-function associateLicensesWithProducts( connection, licenseIdMapping, productIdMapping ){
+function generateProductLicenseAssociations( connection, licenseIdMapping ){
     var resultsPromise = Q.defer();
+    var productIdalIdToLicenseCouchIdMap = {};
 
     var query = "SELECT db_id, contract_id FROM contract_vendor_db GROUP BY db_id;";
     connection.query(query, function(err, rows, fields) {
-        if(err) { console.log(err); }
+        if (err){
+            console.log(err);
+            resultsPromise.reject(err);
+        }
 
-        //do stuff
-        resultsPromise.resolve();
+        rows.forEach(mapProductIdalIdToLicenseCouchId);
+        resultsPromise.resolve( productIdalIdToLicenseCouchIdMap );
     });
 
     return resultsPromise.promise;
+
+
+    function mapProductIdalIdToLicenseCouchId( associationRow ){
+        var licenseLegacyId = associationRow.contract_id;
+        var licenseCouchId = licenseIdMapping[licenseLegacyId];
+        var productLegacyId = associationRow.db_id;
+
+        productIdalIdToLicenseCouchIdMap[productLegacyId] = licenseCouchId;
+    }
 }
 
 module.exports = {
     migrateLicenses: migrateLicenses,
-    associateLicensesWithVendors: associateLicensesWithVendors,
-    associateLicensesWithProducts: associateLicensesWithProducts
+    attachVendorsToLicenses: attachVendorsToLicenses,
+    generateProductLicenseAssociations: generateProductLicenseAssociations
 };
