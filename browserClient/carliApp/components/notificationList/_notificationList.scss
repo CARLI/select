@@ -1,4 +1,12 @@
 notification-list {
+    .controls {
+        margin: 0 0 0.5rem;
+
+        label {
+            font-weight: bold;
+        }
+    }
+
     ul {
         @extend .zebra-table;
         border-top: $controls-top-border;
