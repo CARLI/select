@@ -1,4 +1,4 @@
-    <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="licenseForm" ng-submit="vm.saveLicense(); vm.closeNewLicenseModal();" warn-if-unsaved>
+    <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="licenseForm" ng-submit="vm.saveLicense()" warn-if-unsaved>
 
         <div class="page-header">
             <div class="headings">
@@ -225,6 +225,3 @@
     <modal-dialog modal-id="'products-modal'" modal-title="'Products'">
         <ng-include src="'carliApp/components/entityForms/license/productsModal.html'"></ng-include>
     </modal-dialog>
-
-    <hr>
-    <debug-panel>{{ vm.license | json }}</debug-panel>

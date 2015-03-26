@@ -87,6 +87,7 @@ function editLicenseController( $scope, $rootScope, $location, alertService, cyc
         if ( vm.licenseId !== undefined ){
             licenseService.update( vm.license )
                 .then(function(){
+                    vm.closeNewLicenseModal();
                     alertService.putAlert('License updated', {severity: 'success'});
                     initializeForExistingLicense();
                     afterSubmitCallback();
@@ -98,6 +99,7 @@ function editLicenseController( $scope, $rootScope, $location, alertService, cyc
         else {
             licenseService.create( vm.license )
                 .then(function(){
+                    vm.closeNewLicenseModal();
                     alertService.putAlert('License added', {severity: 'success'});
                     initializeForNewLicense();
                     afterSubmitCallback();
