@@ -8,12 +8,27 @@
             <div class="modal-body">
                 <label for="templateMenu">Choose a template to edit:</label>
                 <div class="carli-select">
-                    <select ng-model="vm.templateToEdit" ng-options="template.name for template in vm.notificationTemplates" id="templateMenu"></select>
+                    <select ng-model="vm.templateToEdit" ng-options="template.name for template in vm.notificationTemplates" ng-change="vm.editingExistingTemplate()" id="templateMenu"></select>
                 </div>
 
+                <button type="button" class="carli-button" ng-click="vm.addNewTemplate()">New Template <fa name="plus-circle"></fa></button>
+
                 <form name="editTemplateForm" ng-if="vm.templateToEdit" warn-if-unsaved>
+                    <div ng-if="vm.newTemplate">
+                        <label for="templateName">Name:</label>
+                        <input  id="templateName" type="text" ng-model="vm.templateToEdit.name">
+                    </div>
+
                     <label for="templateSubject">Subject:</label>
                     <input  id="templateSubject" type="text" ng-model="vm.templateToEdit.subject">
+
+                    <label for="templateEmailBody">Email Text:</label>
+                    <textarea  id="templateEmailBody" ng-model="vm.templateToEdit.emailBody"></textarea>
+
+                    <div ng-if="vm.templateToEdit.pdfContentIsEditable">
+                        <label for="templatePdfBody">Invoice Text:</label>
+                        <textarea  id="templatePdfBody" ng-model="vm.templateToEdit.pdfBody"></textarea>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">

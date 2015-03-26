@@ -5,8 +5,11 @@ function manageNotificationTemplatesModalController( $scope, $rootScope, alertSe
     var vm = this;
     vm.notificationTemplates = [];
     vm.templateToEdit = null;
+    vm.newTemplate = false;
 
+    vm.addNewTemplate = addNewTemplate;
     vm.saveTemplate = save;
+    vm.editingExistingTemplate = editingExistingTemplate;
 
     activate();
 
@@ -27,12 +30,23 @@ function manageNotificationTemplatesModalController( $scope, $rootScope, alertSe
     }
 
     function save(){
-        notificationTemplateService.update(vm.templateToEdit)
-            .then(successfulSave)
-            .catch(errorSaving);
+        if ( vm.newTemplate ){
+            notificationTemplateService.create(vm.templateToEdit)
+                .then(function(){
+                    successfulSave('Template created');
+                })
+                .catch(errorSaving);
+        }
+        else {
+            notificationTemplateService.update(vm.templateToEdit)
+                .then(function(){
+                    successfulSave('Template updated');
+                })
+                .catch(errorSaving);
+        }
 
-        function successfulSave(){
-            alertService.putAlert('Template updated', {severity: 'success'});
+        function successfulSave(message){
+            alertService.putAlert(message, {severity: 'success'});
             resetTemplateForm();
             hideModal();
         }
@@ -45,6 +59,7 @@ function manageNotificationTemplatesModalController( $scope, $rootScope, alertSe
     function resetTemplateForm(){
         setTemplateFormPristine();
         vm.templateToEdit = null;
+        vm.newTemplate = false;
         loadNotificationTemplates();
     }
 
@@ -80,6 +95,22 @@ function manageNotificationTemplatesModalController( $scope, $rootScope, alertSe
             return $rootScope.forms.editTemplateForm.$dirty;
         }
         return false;
+    }
+
+    function addNewTemplate(){
+        vm.newTemplate = true;
+        vm.templateToEdit = {
+            name: 'New Template',
+            subject: '',
+            emailBody: '',
+            pdfBody: '',
+            pdfContentIsEditable: false,
+            notificationType: 'other'
+        };
+    }
+
+    function editingExistingTemplate(){
+        vm.newTemplate = false;
     }
 
 }
