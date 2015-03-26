@@ -53,10 +53,6 @@
                         <div ng-show="vm.product.isThirdPartyProduct" class="label">Third Party Product</div>
                     </view-edit-checkbox>
 
-                    <view-edit-checkbox label="Archive Capital Fee" ng-model="vm.product.hasArchiveCapitalFee" edit-mode="vm.editable" input-id="hasArchiveCapitalFee">
-                        <div ng-show="vm.product.hasArchiveCapitalFee" class="label">Archive Capital Fee</div>
-                    </view-edit-checkbox>
-
                     <view-edit-checkbox label="Sole Source" ng-model="vm.product.soleSource" edit-mode="vm.editable" input-id="soleSource">
                         <div ng-show="vm.product.soleSource" class="label">Sole Source</div>
                     </view-edit-checkbox>
@@ -68,6 +64,14 @@
                     <view-edit-checkbox label="Consolidated List" ng-model="vm.product.consolidatedList" edit-mode="vm.editable" input-id="consolidatedList">
                         <div ng-show="vm.product.consolidatedList" class="label">Consolidated List</div>
                     </view-edit-checkbox>
+
+                    <view-edit-checkbox label="Archive Capital Fee" ng-model="vm.product.hasArchiveCapitalFee" edit-mode="vm.editable" input-id="hasArchiveCapitalFee">
+                        <div ng-show="vm.product.hasArchiveCapitalFee" class="label">Archive Capital Fee</div>
+                    </view-edit-checkbox>
+
+                    <div ng-show="vm.editable" class="placeholder" style="white-space: nowrap">
+                        TODO: Archive Capital Fee Amount
+                    </div>
 
 
                     <div ng-show="vm.editable" class="placeholder" style="white-space: nowrap">
