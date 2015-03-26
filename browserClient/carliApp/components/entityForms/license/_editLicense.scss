@@ -38,6 +38,11 @@
                 select {
                     width: 100%;
                 }
+
+                .display {
+                    font-weight: bold;
+                    color: $purple;
+                }
             }
 
             .date-group {
