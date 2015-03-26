@@ -2,7 +2,7 @@
     <div class="list-page-header">
         <h1>Notifications</h1>
         <div class="button-container">
-            <a href="/notifications/manageTemplates">Manage Notification Templates</a>
+            <a data-toggle="modal" data-target="#manage-notifications-templates-modal">Manage Notification Templates</a>
             <button type="button" class="carli-button" id="new-notification">Draft a Notification <fa name="plus-circle"></fa></button>
         </div>
     </div>
@@ -17,4 +17,6 @@
         <notification-list notifications="vm.sentNotifications" mode="sent"></notification-list>
     </section>
 
+
+    <manage-notification-templates-modal></manage-notification-templates-modal>
 </section>
