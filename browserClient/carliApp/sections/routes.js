@@ -86,6 +86,11 @@ angular.module('carli.routes',[
         controller:  'notificationsController',
         controllerAs:'vm'
     })
+    .when('/notifications/manageTemplates', {
+        templateUrl: '/carliApp/sections/notifications/manageTemplates/manageTemplates.html',
+        controller:  'manageTemplatesController',
+        controllerAs:'vm'
+    })
     .when('/styleGuide', {
         templateUrl: '/carliApp/sections/styleGuide/styleGuide.html',
         controller:  'styleGuideController',

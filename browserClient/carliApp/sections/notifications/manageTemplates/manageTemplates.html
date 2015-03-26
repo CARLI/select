@@ -1,0 +1,17 @@
+<section id="manageNotificationsTemplates">
+    <div class="page-header">
+        <h1>Manage Notification Templates</h1>
+    </div>
+
+    <section class="content">
+        <label for="templateMenu">Choose a template to edit:</label>
+        <div class="carli-select">
+            <select ng-model="vm.templateToEdit" ng-options="template.name for template in vm.notificationTemplates" id="templateMenu"></select>
+        </div>
+
+        <form name="edit-template-form" warn-if-unsaved>
+
+        </form>
+    </section>
+</section>
+
