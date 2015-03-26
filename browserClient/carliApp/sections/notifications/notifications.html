@@ -10,8 +10,8 @@
     </div>
 
     <section class="content">
-        <notification-list notifications="vm.draftNotifications" title="Drafts" sub-title="(not sent)"></notification-list>
-        <notification-list notifications="vm.sentNotifications" mode="sent" title="Sent History"></notification-list>
+        <notification-list notifications="vm.draftNotifications" title="Drafts" sub-title="(not sent)" after-send-callback="vm.loadNotifications"></notification-list>
+        <notification-list notifications="vm.sentNotifications" mode="sent" title="Sent History" after-send-callback="vm.loadNotifications"></notification-list>
     </section>
 
 

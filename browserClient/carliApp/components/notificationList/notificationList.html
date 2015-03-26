@@ -15,11 +15,14 @@
             <span class="subject">{{ notification.subject }}</span>
             <span class="total" ng-show="notification.summaryTotal"> - ({{ notification.summaryTotal | currency }})</span>
         </div>
+        <div class="column date-sent" ng-if="vm.showDateSent">
+            <div class="time">{{ notification.dateSent | date:'shortTime' }}</div>
+            <div class="date">{{ notification.dateSent | date:'shortDate' }}</div>
+        </div>
         <div class="column preview">
             <a busy-click="vm.previewNotification(notification)">View</a> |
             <a busy-click="vm.previewPdf(notification)">PDF</a>
         </div>
-        <div class="column date-sent" ng-if="vm.showDateSent">{{ notification.dateSent | date }}</div>
         <div class="column remove" ng-if="vm.showRemove">
             <button type="button" class="carli-button subdued-remove-button" busy-click="vm.removeDraft(notification)">
                 Remove <span class="sr-only">draft for {{ notification.subject }}</span>

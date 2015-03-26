@@ -43,21 +43,33 @@ notification-list {
                     }
                 }
 
+                &.date-sent,
                 &.preview,
-                &.view-pdf,
                 &.remove,
                 &.send {
+                    align-self: center;
                     @include flex(0 1 auto);
-                }
-
-                &.remove,
-                &.send {
-                    padding: 0.25rem;
-                    padding-left: 0;
+                    padding-top: 0;
+                    padding-bottom: 0;
                     text-align: center;
                 }
 
-                button.carli-button {
+                &.date-sent {
+                    color: $black;
+                    @include font-size(12);
+
+                    .date {
+                        font-weight: bold;
+                    }
+                }
+
+                &.remove,
+                &.send {
+                    padding-right: 0.25rem;
+                    padding-left: 0;
+                }
+
+                    button.carli-button {
                     min-width: 85px;
                 }
             }

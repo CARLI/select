@@ -7,7 +7,8 @@ angular.module('carli.notificationList')
             notifications: '=',
             mode: '@',
             title: '@',
-            subTitle: '@'
+            subTitle: '@',
+            afterSendCallback: '='
         },
         controller: notificationListController,
         controllerAs: 'vm',
