@@ -1,11 +1,9 @@
 <div class="controls">
-    <label for="notifications-list{{ listId }}-radio-all">All Notifications</label>
-    <input type="radio" id="notifications-list{{ listId }}-radio-all" name="notifications-list{{ listId }}-filter" value="all" ng-model="vm.filter">
-    <label for="notifications-list{{ listId }}-radio-invoices">All Notifications</label>
-    <input type="radio" id="notifications-list{{ listId }}-radio-invoices" name="notifications-list{{ listId }}-filter" value="invoices" ng-model="vm.filter">
-    <label for="notifications-list{{ listId }}-radio-reports">All Notifications</label>
-    <input type="radio" id="notifications-list{{ listId }}-radio-reports" name="notifications-list{{ listId }}-filter" value="reports" ng-model="vm.filter">
+    <radio name="'notifications-list'+listId+'-filter'"  value="'all'" ng-model="vm.filter">All Notifications</radio>
+    <radio name="'notifications-list'+listId+'-filter'" value="'invoices'" ng-model="vm.filter">Invoices</radio>
+    <radio name="'notifications-list'+listId+'-filter'" value="'reports'" ng-model="vm.filter">Reports</radio>
 </div>
+
 <ul>
     <li class="column-headers">
         <div class="sortable column subject" role="columnheader" id="notifications-list{{ listId }}-subject" ng-class="{ activeSort: vm.orderBy === 'subject', reversedSort: vm.reverse }" ng-click="vm.sort('subject')">Subject</div>
