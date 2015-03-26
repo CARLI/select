@@ -38,6 +38,11 @@
                 select {
                     width: 100%;
                 }
+
+                .display {
+                    font-weight: bold;
+                    color: $purple;
+                }
             }
 
             .date-group {
@@ -56,5 +61,9 @@
             font-weight: normal;
             margin-top: 0;
         }
+    }
+
+    label.main-content {
+        margin-left: 1rem;
     }
 }

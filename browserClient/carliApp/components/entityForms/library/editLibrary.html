@@ -1,4 +1,4 @@
-    <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="libraryForm" ng-submit="vm.saveLibrary(); vm.closeModal();" warn-if-unsaved>
+    <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="libraryForm" ng-submit="vm.saveLibrary()" warn-if-unsaved>
         <div class="page-header">
             <div class="headings">
                 <label for="libraryName">Library Name</label>
@@ -141,6 +141,3 @@
             </fieldset>
         </div>
     </form>
-
-    <debug-panel ng-show="!vm.isModal">{{ vm.library | json }}</debug-panel>
-

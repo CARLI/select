@@ -39,7 +39,7 @@ entity-list {
             border-right: $default-border;
             .filter-by-active {
                 @include font-size(14);
-                line-height: 2;
+                line-height: 1.5rem;
                 margin: .714rem;
                 menuitem {
                     margin-right: $filter-by-active-inner-spacing;

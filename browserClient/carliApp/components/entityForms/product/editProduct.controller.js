@@ -60,7 +60,6 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
         else {
             initializeForExistingProduct();
         }
-        setProductFormPristine();
 
         vm.isModal = vm.newProduct;
     }
@@ -74,6 +73,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
         vm.editable = true;
         vm.newProduct = true;
         initializeCycles();
+        setProductFormPristine();
     }
     function initializeForExistingProduct() {
         productService.load(vm.productId).then( function( product ) {
@@ -83,6 +83,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
             rememberTermFields();
 
             initializeCycles();
+            setProductFormPristine();
 
             if ( isOneTimePurchaseProduct(product) ){
                 loadOfferingsForProduct(product);
@@ -182,7 +183,6 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
     function submitAction() {
         if (!vm.newProduct || isWizardComplete()) {
             saveProduct();
-            vm.closeModal();
         } else {
             vm.currentTemplate = templates.oneTimePurchaseFields;
         }
@@ -222,6 +222,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
         productService.update(vm.product)
             .then(saveOfferings)
             .then(function () {
+                vm.closeModal();
                 alertService.putAlert('Product updated', {severity: 'success'});
                 afterSubmitCallback();
                 initializeForExistingProduct();
@@ -234,6 +235,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
     function saveNewProduct() {
         productService.create(vm.product)
             .then(function () {
+                vm.closeModal();
                 alertService.putAlert('Product added', {severity: 'success'});
                 afterSubmitCallback();
                 initializeForNewProduct();

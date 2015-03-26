@@ -7,26 +7,49 @@ angular.module('carli.selectCycle')
                 inputId: '@'
             },
             link: function(scope, element, attrs) {
-                scope.currentCycle = cycleService.getCurrentCycle();
-                scope.setCurrentCycle = function() {
-                    cycleService.setCurrentCycle(scope.currentCycle);
-                };
+                var select = element.find('select');
 
                 activate();
 
                 function activate() {
                     cycleService.listActiveCycles().then(function(activeCycles) {
                         scope.activeCycles = activeCycles;
+                        bindSelectInput();
                     });
-                    watchCurrentCycle();
                 }
 
-                function watchCurrentCycle() {
-                    scope.$watch(cycleService.getCurrentCycle, function (newValue) {
-                        if (newValue) {
-                            scope.currentCycle = newValue;
-                        }
+                function setCurrentCycle(cycleId) {
+                    var cycle = getCycleFromSelection();
+
+                    scope.$apply(function(){
+                        cycleService.setCurrentCycle(cycle);
                     });
+
+                    function getCycleFromSelection(){
+                        return scope.activeCycles.filter(function(cycle){
+                            return cycle.id === cycleId;
+                        })[0];
+                    }
+                }
+
+                function bindSelectInput(){
+                    scope.activeCycles.forEach(function(cycle){
+                        select.append( $('<option></option>').attr('value',cycle.id).text(cycle.name) );
+                    });
+
+                    select.on('change', function(e){
+                        setCurrentCycle( select.val() );
+                    });
+
+                    watchCurrentCycle();
+
+                    function watchCurrentCycle() {
+                        scope.$watch(cycleService.getCurrentCycle, function (newValue) {
+                            if (newValue) {
+                                select.val(newValue.id);
+                            }
+                        });
+                    }
                 }
             }
         };

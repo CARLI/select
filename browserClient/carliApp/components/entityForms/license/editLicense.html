@@ -1,4 +1,4 @@
-    <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="licenseForm" ng-submit="vm.saveLicense(); vm.closeNewLicenseModal();" warn-if-unsaved>
+    <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="licenseForm" ng-submit="vm.saveLicense()" warn-if-unsaved>
 
         <div class="page-header">
             <div class="headings">
@@ -115,52 +115,52 @@
                         <div class="term">
                             <label for="downloadTerms">Download</label>
                             <view-edit-yes-no-other ng-model="vm.license.terms.downloadTerms" edit-mode="vm.editable" input-id="downloadTerms">
-                                {{ vm.license.terms.downloadTerms }}
+                                <span class="display">{{ vm.license.terms.downloadTerms }}</span>
                             </view-edit-yes-no-other>
                         </div>
                         <div class="term">
                             <label for="coursePacksTerms">Course Packs</label>
                             <view-edit-yes-no-other ng-model="vm.license.terms.coursePacksTerms" edit-mode="vm.editable" input-id="coursePacksTerms">
-                                {{ vm.license.terms.coursePacksTerms }}
+                                <span class="display">{{ vm.license.terms.coursePacksTerms }}</span>
                             </view-edit-yes-no-other>
                         </div>
 
                         <div class="term">
                             <label for="interLibraryLoanTerms">ILL</label>
                             <view-edit-yes-no-other ng-model="vm.license.terms.interLibraryLoanTerms" edit-mode="vm.editable" input-id="interLibraryLoanTerms">
-                                {{ vm.license.terms.interLibraryLoanTerms }}
+                                <span class="display">{{ vm.license.terms.interLibraryLoanTerms }}</span>
                             </view-edit-yes-no-other>
                         </div>
                         <div class="term">
                             <label for="printTerms">Print (in accordance with the Copyright Act)</label>
                             <view-edit-yes-no-other ng-model="vm.license.terms.printTerms" edit-mode="vm.editable" input-id="printTerms">
-                                {{ vm.license.terms.printTerms }}
+                                <span class="display">{{ vm.license.terms.printTerms }}</span>
                             </view-edit-yes-no-other>
                         </div>
 
                         <div class="term">
                             <label for="limitedScholarlySharingTerms">Limited Sharing for Scholarly Purposes</label>
                             <view-edit-yes-no-other ng-model="vm.license.terms.limitedScholarlySharingTerms" edit-mode="vm.editable" input-id="limitedScholarlySharingTerms">
-                                {{ vm.license.terms.limitedScholarlySharingTerms }}
+                                <span class="display">{{ vm.license.terms.limitedScholarlySharingTerms }}</span>
                             </view-edit-yes-no-other>
                         </div>
                         <div class="term">
                             <label for="walkinTerms">Use by Walk-ins</label>
                             <view-edit-yes-no-other ng-model="vm.license.terms.walkinTerms" edit-mode="vm.editable" input-id="walkinTerms">
-                                {{ vm.license.terms.walkinTerms }}
+                                <span class="display">{{ vm.license.terms.walkinTerms }}</span>
                             </view-edit-yes-no-other>
                         </div>
 
                         <div class="term">
                             <label for="eReservesTerms">E-Reserves</label>
                             <view-edit-yes-no-other ng-model="vm.license.terms.eReservesTerms" edit-mode="vm.editable" input-id="eReservesTerms">
-                                {{ vm.license.terms.eReservesTerms }}
+                                <span class="display">{{ vm.license.terms.eReservesTerms }}</span>
                             </view-edit-yes-no-other>
                         </div>
                         <div class="term">
-                            <label for="hasConfidentialityLanguage">Confidentiality Language</label>
-                            <view-edit-yes-no-other ng-model="vm.license.terms.hasConfidentialityLanguage" edit-mode="vm.editable" input-id="hasConfidentialityLanguage">
-                                {{ vm.license.terms.hasConfidentialityLanguage }}
+                            <label for="hasConfidentialityTerms">Confidentiality Terms</label>
+                            <view-edit-yes-no-other ng-model="vm.license.terms.hasConfidentialityTerms" edit-mode="vm.editable" input-id="hasConfidentialityTerms">
+                                <span class="display">{{ vm.license.terms.hasConfidentialityTerms }}</span>
                             </view-edit-yes-no-other>
                         </div>
                     </div>
@@ -225,6 +225,3 @@
     <modal-dialog modal-id="'products-modal'" modal-title="'Products'">
         <ng-include src="'carliApp/components/entityForms/license/productsModal.html'"></ng-include>
     </modal-dialog>
-
-    <hr>
-    <debug-panel>{{ vm.license | json }}</debug-panel>

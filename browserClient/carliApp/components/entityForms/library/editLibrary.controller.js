@@ -81,6 +81,7 @@ function editLibraryController( $scope, $rootScope, entityBaseService, librarySe
 
         if (vm.libraryId !== undefined){
             libraryService.update( vm.library ).then(function(){
+                vm.closeModal();
                 alertService.putAlert('Library updated', {severity: 'success'});
                 afterSubmitCallback();
                 initializeForExistingLibrary();
@@ -91,6 +92,7 @@ function editLibraryController( $scope, $rootScope, entityBaseService, librarySe
         }
         else {
             libraryService.create( vm.library ).then(function(){
+                vm.closeModal();
                 alertService.putAlert('Library created', {severity: 'success'});
                 afterSubmitCallback();
                 initializeForNewLibrary();
