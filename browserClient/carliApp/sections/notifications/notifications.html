@@ -1,20 +1,17 @@
-<section id="notifications">
-    <div class="list-page-header">
-        <h1>Notifications</h1>
-        <div class="button-container">
-            <a data-toggle="modal" data-target="#manage-notifications-templates-modal">Manage Notification Templates</a>
-            <button type="button" class="carli-button" data-toggle="modal" data-target="#notification-modal">Draft a Notification <fa name="plus-circle"></fa></button>
+<section id="notifications" class="edit-form">
+    <div class="page-header">
+        <div class="headings">
+            <h1>Notifications</h1>
+        </div>
+        <div class="controls">
+            <button type="button" class="carli-button secondary-button" data-toggle="modal" data-target="#manage-notifications-templates-modal">Manage Notification Templates</button>
+            <button type="button" class="carli-button primary-button" data-toggle="modal" data-target="#notification-modal">Draft a Notification</button>
         </div>
     </div>
 
-    <section class="content list-content">
-        <h2>Drafts (not sent)</h2>
-        <notification-list notifications="vm.draftNotifications"></notification-list>
-
-        <button type="button" id="sendAll" class="carli-button send-button" busy-click="vm.sendAllDrafts()">Send all drafts <fa name="paper-plane"></fa></button>
-
-        <h2>Sent</h2>
-        <notification-list notifications="vm.sentNotifications" mode="sent"></notification-list>
+    <section class="content">
+        <notification-list notifications="vm.draftNotifications" title="Drafts" sub-title="(not sent)"></notification-list>
+        <notification-list notifications="vm.sentNotifications" mode="sent" title="Sent History"></notification-list>
     </section>
 
 

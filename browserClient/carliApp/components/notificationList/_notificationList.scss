@@ -1,55 +1,71 @@
 notification-list {
+    clear: both;
+    display: block;
+    margin: 4rem auto;
+
+    .title,
+    .subtitle {
+        display: inline-block;
+        @include font-size(17);
+        font-family: 'Merriweather';
+        font-weight: bold;
+        color: $black;
+    }
+
+    .subtitle {
+        font-weight: normal;
+    }
+
     .controls {
+        float: right;
         margin: 0 0 0.5rem;
 
-        label {
-            font-weight: bold;
+        radio {
+            margin-left: 1rem;
         }
     }
 
     ul {
+        clear: both;
         @extend .zebra-table;
-        border-top: $controls-top-border;
 
         li {
-            .column {//rules here apply to all columns in headers and rows
-                flex-basis: 15%;
+            .column {
+                border-left: none;
 
-                &.preview,
-                &.view-pdf,
-                &.remove,
-                &.send {
-                    @include flex(none);
-                    width: 11rem;
+                &.subject {
+                    color: $black;
+                    @include font-size(14);
+                    font-family: 'Verdana', sans-serif;
+
+                    .total {
+                        font-weight: normal;
+                    }
                 }
-            }
 
-            button {
-                @include vendor-prefix('appearance', 'none');
-                background: transparent;
-                border: none;
-                font-size: 2rem;
-            }
-        }
-
-        li.column-headers {
-            .column {
-            }
-        }
-
-        li.notification-row {
-            .column {
                 &.preview,
                 &.view-pdf,
                 &.remove,
                 &.send {
-                    padding-top: 0.5rem;
-                    padding-bottom: 0;
+                    @include flex(0 1 auto);
+                }
+
+                &.remove,
+                &.send {
+                    padding: 0.25rem;
+                    padding-left: 0;
                     text-align: center;
                 }
+
+                button.carli-button {
+                    min-width: 85px;
+                }
             }
         }
-
     }
 
+    .footer {
+        border-top: 0 !important;
+        padding: 0.5rem !important;
+    }
 }

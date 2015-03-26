@@ -4,6 +4,8 @@ angular.module('carli.notificationList')
 function notificationListController(controllerBaseService){
     var vm = this;
     vm.filter = 'all';
+
+    vm.filterByType = filterByType;
     vm.previewNotification = previewNotification;
     vm.previewPdf = previewPdf;
     vm.removeDraft = removeDraft;
@@ -22,14 +24,20 @@ function notificationListController(controllerBaseService){
             if ( mode === 'sent' ){
                 vm.showRemove = false;
                 vm.showDateSent = true;
+                vm.showSendAll = false;
                 vm.sendLabel = 'Resend';
             }
             else {
                 vm.showRemove = true;
                 vm.showDateSent = false;
+                vm.showSendAll = true;
                 vm.sendLabel = 'Send';
             }
         }
+    }
+
+    function filterByType(value, index){
+        return vm.filter === 'all' || value.notificationType === vm.filter;
     }
 
     function previewNotification( notification ){
