@@ -6,8 +6,6 @@ user-menu {
     ul {
         @include flexbox;
         background: $dark-purple;
-        border-radius: 0 0 6px 6px;
-        box-shadow: 0 1px 1px -1px $light-purple;
 
         li {
             @include flex(1 1 auto);
@@ -42,6 +40,8 @@ user-menu {
             }
 
             &.active {
+                background: $very-dark-purple;
+
                 a {
                     color: $white;
                 }
