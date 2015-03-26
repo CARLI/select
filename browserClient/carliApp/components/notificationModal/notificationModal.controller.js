@@ -1,7 +1,7 @@
 angular.module('carli.notificationModal')
 .controller('notificationModalController', notificationModalController);
 
-function notificationModalController($scope, $rootScope, notificationService, notificationModalService, notificationTemplateService) {
+function notificationModalController($scope, $rootScope, alertService, notificationService, notificationModalService, notificationTemplateService) {
     var vm = this;
     vm.draft = {};
     vm.template = null;
@@ -75,11 +75,11 @@ function notificationModalController($scope, $rootScope, notificationService, no
     }
 
     function setNotificationFormPristine() {
-        if ($scope.editTemplateForm) {
-            $scope.editTemplateForm.$setPristine();
+        if ($scope.notificationForm) {
+            $scope.notificationForm.$setPristine();
         }
-        else if ($rootScope.forms && $rootScope.forms.editTemplateForm) {
-            $rootScope.forms.editTemplateForm.$setPristine();
+        else if ($rootScope.forms && $rootScope.forms.notificationForm) {
+            $rootScope.forms.notificationForm.$setPristine();
         }
     }
 
@@ -111,14 +111,20 @@ function notificationModalController($scope, $rootScope, notificationService, no
     function saveNotifications(){
         console.log('create notifications for ',vm.draft);
         notificationService.createNotificationsFor( vm.draft )
-            .then(alertSuccess, alertError)
-            .then(hideModal);
+            .then(saveSuccess)
+            .catch(saveError);
 
-        function alertSuccess() {
-            alert('it worked');
+        function saveSuccess(){
+            alertService.putAlert('Notifications created', {severity: 'success'});
+            resetNotificationForm();
+            hideModal();
+            if ( typeof vm.afterSubmitFn === 'function' ){
+                vm.afterSubmitFn();
+            }
         }
-        function alertError(err) {
-            alert(err);
+
+        function saveError(error) {
+            alertService.putAlert(error, {severity: 'danger'});
         }
     }
 }

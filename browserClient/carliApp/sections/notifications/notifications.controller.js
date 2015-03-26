@@ -5,11 +5,18 @@ function notificationsController( notificationService ){
     var vm = this;
     vm.draftNotifications = [];
     vm.sentNotifications = [];
+
+    vm.loadNotifications = loadNotifications;
     vm.sendAllDrafts = sendAllDrafts;
 
     activate();
 
+
     function activate(){
+        loadNotifications();
+    }
+
+    function loadNotifications(){
         notificationService.listDrafts().then(function(drafts){
             vm.draftNotifications = drafts;
         });

@@ -28,7 +28,7 @@ function notificationService($q, $http, CarliModules, config) {
     }
 
     function createNotificationsFor( spec ){
-        return $q.when(true);
+        return notificationModule.create(spec);
     }
 
     function sendNotification(envelope) {

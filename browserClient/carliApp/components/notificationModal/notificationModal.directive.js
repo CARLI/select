@@ -3,7 +3,9 @@ angular.module('carli.notificationModal')
         return {
             restrict: 'E',
             templateUrl: '/carliApp/components/notificationModal/notificationModal.html',
-            scope: {},
+            scope: {
+                afterSubmitFn: '='
+            },
             controller: 'notificationModalController',
             controllerAs: 'vm',
             bindToController: true
