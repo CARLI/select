@@ -6,19 +6,26 @@
                 <h4 class="modal-title" id="modal-label">Notification: {{ vm.template.name }}</h4>
             </div>
             <div class="modal-body">
-                <label for="recipients">To</label>
-                <textarea id="recipients">{{ vm.draft.recipients }}</textarea>
-
-                <label for="subject">Subject Line</label>
-                <input id="subject" type="text" value="{{ vm.draft.subject }}">
-
-                <label for="emailBody">Email Text</label>
-                <textarea id="emailBody">{{ vm.draft.emailBody }}</textarea>
-
-                <div ng-show="vm.template.isPdfContentEditable">
-                    <label for="pdfBody">Invoice Text</label>
-                    <textarea id="pdfBody">{{ vm.draft.pdfBody }}</textarea>
+                <label for="templateMenu">Choose a template:</label>
+                <div class="carli-select">
+                    <select ng-model="vm.template" ng-options="template.name for template in vm.templates" ng-change="vm.useTemplate()" id="templateMenu"></select>
                 </div>
+
+                <form name="notificationForm" warn-if-unsaved ng-if="vm.template">
+                    <label for="recipients">To</label>
+                    <textarea id="recipients" ng-model="vm.draft.recipients"></textarea>
+
+                    <label for="subject">Subject Line</label>
+                    <input id="subject" type="text" ng-model="vm.draft.subject">
+
+                    <label for="emailBody">Email Text</label>
+                    <textarea id="emailBody" ng-model="vm.draft.emailBody"></textarea>
+
+                    <div ng-show="vm.template.isPdfContentEditable">
+                        <label for="pdfBody">Invoice Text</label>
+                        <textarea id="pdfBody" ng-model="vm.draft.pdfBody"></textarea>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="carli-button cancel-button" data-dismiss="modal">Cancel</button>

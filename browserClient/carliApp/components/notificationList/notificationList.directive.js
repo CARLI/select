@@ -5,7 +5,10 @@ angular.module('carli.notificationList')
         templateUrl: '/carliApp/components/notificationList/notificationList.html',
         scope: {
             notifications: '=',
-            mode: '@'
+            mode: '@',
+            title: '@',
+            subTitle: '@',
+            afterSendCallback: '='
         },
         controller: notificationListController,
         controllerAs: 'vm',

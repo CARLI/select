@@ -1,1 +1,3 @@
-angular.module('carli.notificationList',[]);
+angular.module('carli.notificationList',[
+    'carli.notificationService'
+]);

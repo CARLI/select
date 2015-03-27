@@ -14,7 +14,8 @@ function notificationService($q, $http, CarliModules, config) {
         update: function() { return $q.when( notificationModule.update.apply(this, arguments) ); },
         load:   function() { return $q.when( notificationModule.load.apply(this, arguments) ); },
         createNotificationsFor: createNotificationsFor,
-        sendNotification: sendNotification
+        sendNotification: sendNotification,
+        removeNotification: function() { return $q.when( notificationModule.delete.apply(this, arguments)); }
     };
 
     function getBlankNotification(){
@@ -28,11 +29,17 @@ function notificationService($q, $http, CarliModules, config) {
     }
 
     function createNotificationsFor( spec ){
-        return $q.when(true);
+        return notificationModule.create(spec);
     }
 
-    function sendNotification(envelope) {
+    function sendNotification(notification) {
         var url = config.getMiddlewareUrl() + '/tell-pixobot';
-        $http.put(url, envelope);
+        return $http.put(url, notification)
+            .then(function(){
+                notification.draftStatus = 'sent';
+                notification.dateSent = new Date();
+
+                return notificationModule.update(notification);
+            });
     }
 }
