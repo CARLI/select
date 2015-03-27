@@ -1,7 +1,7 @@
 angular.module('carli.notificationList')
 .controller('notificationListController', notificationListController);
 
-function notificationListController(alertService, controllerBaseService, notificationService){
+function notificationListController(alertService, controllerBaseService, notificationService, notificationPreviewModalService){
     var vm = this;
     vm.filter = 'all';
 
@@ -48,7 +48,7 @@ function notificationListController(alertService, controllerBaseService, notific
     }
 
     function previewNotification( notification ){
-        console.log('preview notification', notification);
+        notificationPreviewModalService.sendShowPreviewMessage(notification);
     }
 
     function previewPdf( notification ){

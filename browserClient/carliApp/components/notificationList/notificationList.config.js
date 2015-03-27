@@ -1,3 +1,4 @@
 angular.module('carli.notificationList',[
-    'carli.notificationService'
+    'carli.notificationService',
+    'carli.notificationPreviewModal'
 ]);
