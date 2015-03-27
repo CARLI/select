@@ -3,7 +3,6 @@ angular.module('carli.manageNotificationTemplatesModal')
 
 function manageNotificationTemplatesModalController( $scope, $rootScope, alertService, notificationTemplateService ){
     var vm = this;
-    vm.notificationTemplates = [];
     vm.templateToEdit = null;
     vm.newTemplate = false;
 
@@ -15,13 +14,12 @@ function manageNotificationTemplatesModalController( $scope, $rootScope, alertSe
 
 
     function activate(){
-        loadNotificationTemplates();
         setupModalClosingUnsavedChangesWarning();
     }
 
-    function loadNotificationTemplates(){
+    function reloadNotificationTemplates(){
         notificationTemplateService.list().then(function(notificationTemplates){
-            vm.notificationTemplates = notificationTemplates;
+            vm.templates = notificationTemplates;
         });
     }
 
@@ -60,7 +58,7 @@ function manageNotificationTemplatesModalController( $scope, $rootScope, alertSe
         setTemplateFormPristine();
         vm.templateToEdit = null;
         vm.newTemplate = false;
-        loadNotificationTemplates();
+        reloadNotificationTemplates();
     }
 
     function setTemplateFormPristine() {

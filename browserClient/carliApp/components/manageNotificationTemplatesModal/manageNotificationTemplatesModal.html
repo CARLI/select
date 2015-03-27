@@ -8,7 +8,7 @@
             <div class="modal-body">
                 <label for="templateMenu">Choose a template to edit:</label>
                 <div class="carli-select">
-                    <select ng-model="vm.templateToEdit" ng-options="template.name for template in vm.notificationTemplates" ng-change="vm.editingExistingTemplate()" id="templateMenu"></select>
+                    <select ng-model="vm.templateToEdit" ng-options="template.name for template in vm.templates" ng-change="vm.editingExistingTemplate()" id="templateMenu"></select>
                 </div>
 
                 <button type="button" class="carli-button" ng-click="vm.addNewTemplate()">New Template <fa name="plus-circle"></fa></button>

@@ -15,6 +15,6 @@
     </section>
 
 
-    <notification-modal after-submit-fn="vm.loadNotifications"></notification-modal>
-    <manage-notification-templates-modal></manage-notification-templates-modal>
+    <notification-modal templates="vm.notificationTemplates" after-submit-fn="vm.loadNotifications"></notification-modal>
+    <manage-notification-templates-modal templates="vm.notificationTemplates"></manage-notification-templates-modal>
 </section>

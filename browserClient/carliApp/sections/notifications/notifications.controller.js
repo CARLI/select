@@ -1,7 +1,7 @@
 angular.module('carli.sections.notifications')
 .controller('notificationsController', notificationsController);
 
-function notificationsController( notificationService ){
+function notificationsController( notificationService, notificationTemplateService ){
     var vm = this;
     vm.draftNotifications = [];
     vm.sentNotifications = [];
@@ -14,6 +14,13 @@ function notificationsController( notificationService ){
 
     function activate(){
         loadNotifications();
+        loadNotificationTemplates();
+    }
+
+    function loadNotificationTemplates(){
+        notificationTemplateService.list().then(function(notificationTemplates){
+            vm.notificationTemplates = notificationTemplates;
+        });
     }
 
     function loadNotifications(){

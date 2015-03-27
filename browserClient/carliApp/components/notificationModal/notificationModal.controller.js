@@ -12,14 +12,16 @@ function notificationModalController($scope, $rootScope, alertService, notificat
     activate();
 
     function activate(){
-        loadNotificationTemplates();
+        if ( !vm.templates ){ //these might be passed it (e.g. the notifications screen), but might not be (subscription screens)
+            loadNotificationTemplates();
+        }
         $scope.$watch(notificationModalService.receiveStartDraftMessage, receiveStartDraftMessage);
         setupModalClosingUnsavedChangesWarning();
     }
 
     function loadNotificationTemplates(){
         notificationTemplateService.list().then(function(notificationTemplates){
-            vm.notificationTemplates = notificationTemplates;
+            vm.templates = notificationTemplates;
         });
     }
 
