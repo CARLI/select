@@ -1,7 +1,7 @@
 angular.module('carli.notificationList')
 .controller('notificationListController', notificationListController);
 
-function notificationListController(alertService, controllerBaseService, notificationService){
+function notificationListController($q, alertService, controllerBaseService, notificationService, notificationPreviewModalService){
     var vm = this;
     vm.filter = 'all';
 
@@ -10,6 +10,7 @@ function notificationListController(alertService, controllerBaseService, notific
     vm.previewPdf = previewPdf;
     vm.removeDraft = removeDraft;
     vm.sendNotification = sendNotification;
+    vm.sendAllDrafts = sendAllDrafts;
 
     controllerBaseService.addSortable(vm, vm.defaultSort || 'subject');
 
@@ -48,16 +49,14 @@ function notificationListController(alertService, controllerBaseService, notific
     }
 
     function previewNotification( notification ){
-        console.log('preview notification', notification);
+        notificationPreviewModalService.sendShowPreviewMessage(notification);
     }
 
     function previewPdf( notification ){
-        console.log('preview pdf for ',notification);
+        alert('TODO: show PDF');
     }
 
     function removeDraft( notification ){
-        console.log('removeDraft ',notification);
-
         notificationService.removeNotification(notification.id)
             .then(notificationRemovedSuccess)
             .catch(notificationRemovedError);
@@ -93,6 +92,30 @@ function notificationListController(alertService, controllerBaseService, notific
         vm.notifications = vm.notifications.filter(function(notification){
             return notification !== notificationToRemove;
         });
+    }
+
+    function sendAllDrafts(){
+        var sendPromises = vm.notifications.map(sendNotificationSilently);
+
+        $q.all(sendPromises)
+            .then(function(results){
+                alertService.putAlert( results.length + ' notifications sent', {severity: 'success'});
+
+                if ( typeof vm.afterSendCallback === 'function' ){
+                    vm.afterSendCallback();
+                }
+            })
+            .catch(function(error){
+                alertService.putAlert(error, {severity: 'danger'});
+
+                if ( typeof vm.afterSendCallback === 'function' ){
+                    vm.afterSendCallback();
+                }
+            });
+
+        function sendNotificationSilently(notification){
+            return notificationService.sendNotification(notification);
+        }
     }
 
 }

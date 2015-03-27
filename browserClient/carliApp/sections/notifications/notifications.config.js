@@ -1,5 +1,6 @@
 angular.module('carli.sections.notifications',[
     'carli.notificationService',
     'carli.notificationList',
-    'carli.manageNotificationTemplatesModal'
+    'carli.manageNotificationTemplatesModal',
+    'carli.notificationPreviewModal'
 ]);
