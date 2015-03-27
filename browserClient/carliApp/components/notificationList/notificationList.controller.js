@@ -53,12 +53,10 @@ function notificationListController($q, alertService, controllerBaseService, not
     }
 
     function previewPdf( notification ){
-        console.log('preview pdf for ',notification);
+        alert('TODO: show PDF');
     }
 
     function removeDraft( notification ){
-        console.log('removeDraft ',notification);
-
         notificationService.removeNotification(notification.id)
             .then(notificationRemovedSuccess)
             .catch(notificationRemovedError);
