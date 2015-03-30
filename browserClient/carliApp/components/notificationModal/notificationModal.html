@@ -8,7 +8,7 @@
             <div class="modal-body">
                 <label for="templateMenu">Choose a template:</label>
                 <div class="carli-select">
-                    <select ng-model="vm.template" ng-options="template.name for template in vm.templates" ng-change="vm.useTemplate()" id="templateMenu"></select>
+                    <select ng-model="vm.template" ng-options="template.name for template in vm.templateList track by template.id" ng-change="vm.useTemplate()" id="templateMenu"></select>
                 </div>
 
                 <form name="notificationForm" warn-if-unsaved ng-if="vm.template">
