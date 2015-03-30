@@ -6,9 +6,9 @@
                 <h4 class="modal-title" id="modal-label">Notification: {{ vm.template.name }}</h4>
             </div>
             <div class="modal-body">
-                <label for="templateMenu">Choose a template:</label>
-                <div class="carli-select">
-                    <select ng-model="vm.template" ng-options="template.name for template in vm.templateList track by template.id" ng-change="vm.useTemplate()" id="templateMenu"></select>
+                <label for="templateMenu" ng-if="vm.templates">Choose a template:</label>
+                <div class="carli-select" ng-if="vm.templates">
+                    <select ng-model="vm.template" ng-options="template.name for template in vm.templates | filter:{notificationType: 'other'} track by template.id" ng-change="vm.useTemplate()" id="templateMenu"></select>
                 </div>
 
                 <form name="notificationForm" warn-if-unsaved ng-if="vm.template">
