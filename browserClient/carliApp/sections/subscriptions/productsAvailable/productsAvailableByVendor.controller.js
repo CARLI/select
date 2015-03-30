@@ -17,6 +17,7 @@ function productsAvailableByVendorController( $scope, $q, accordionControllerMix
     vm.lastYear = '';
     vm.selectedOfferings = {};
     vm.reportCheckedProductsForVendor = reportCheckedProductsForVendor;
+    vm.reportAllProductsForVendor = reportAllProductsForVendor;
     vm.reportAllVendors = reportAllVendors;
     vm.offeringColumns = [
         'library',
@@ -148,6 +149,14 @@ function productsAvailableByVendorController( $scope, $q, accordionControllerMix
         });
 
         alert('report offerings '+offeringsToReport.join(','));
+    }
+
+    function reportAllProductsForVendor( vendor ){
+        notificationModalService.sendStartDraftMessage({
+            templateId: 'notification-template-vendor-reports',
+            cycleId: vm.cycle.id,
+            recipientId: vendor.id
+        });
     }
 
     function reportAllVendors() {

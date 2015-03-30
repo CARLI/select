@@ -1,7 +1,7 @@
 angular.module('carli.notificationModal')
 .controller('notificationModalController', notificationModalController);
 
-function notificationModalController($scope, $rootScope, alertService, notificationService, notificationModalService, notificationTemplateService) {
+function notificationModalController($scope, $rootScope, alertService, libraryService, notificationService, notificationModalService, notificationTemplateService, vendorService) {
     var vm = this;
     vm.draft = {};
     vm.template = null;
@@ -35,7 +35,7 @@ function notificationModalController($scope, $rootScope, alertService, notificat
         vm.template = template;
 
         vm.draft = {
-            recipients: '',
+            recipients: [],
             subject: template.subject,
             emailBody: template.emailBody,
             pdfBody: '',
@@ -51,6 +51,16 @@ function notificationModalController($scope, $rootScope, alertService, notificat
         return vm.draft;
     }
 
+    /*
+     * Possible properties for message spec object:
+     *
+         {
+            templateId: '',
+            cycleId: '',
+            recipientId: '',
+            offeringIds: []
+         }
+     */
     function receiveStartDraftMessage(message) {
         if (!message) {
             return;
@@ -58,10 +68,85 @@ function notificationModalController($scope, $rootScope, alertService, notificat
 
         notificationTemplateService.load(message.templateId)
             .then(initializeDraftFromTemplate)
+            .then(populateRecipientList)
             .then(showModal)
             .catch(function (err) {
                 console.log(err);
             });
+
+        function populateRecipientList(draftNotification) {
+
+            if (isAnnualAccessFeeInvoice()) {
+                return populateForAnnualAccessFeeInvoice();
+            } else if (isContactNonPlayers()) {
+                return populateForContactNonPlayers();
+            } else if (shouldSendEverythingToEveryone()) {
+                return populateForAllEntities();
+            } else if (doRecipientsComeFromOfferings()) {
+                return populateForRecipientsFromOfferings();
+            } else {
+                return populateForSingleRecipient();
+            }
+
+            function isAnnualAccessFeeInvoice(){
+                return message.templateId === 'notification-template-annual-access-fee-invoices';
+            }
+
+            function isContactNonPlayers(){
+                return message.templateId === 'notification-template-contact-non-players';
+            }
+
+            function shouldSendEverythingToEveryone() {
+                return doRecipientsComeFromOfferings() && isNotificationAboutAllOfferings();
+            }
+            function isNotificationAboutAllOfferings() {
+                return !message.offeringIds;
+            }
+
+            function doRecipientsComeFromOfferings() {
+                return !message.recipientId;
+            }
+
+            function populateForAnnualAccessFeeInvoice(){
+                //TODO
+            }
+
+            function populateForContactNonPlayers(){
+                //TODO
+            }
+
+            function populateForAllEntities(){
+                //TODO
+            }
+
+            function populateForRecipientsFromOfferings() {
+                //TODO
+            }
+
+            function populateForSingleRecipient() {
+                if (notificationService.notificationTypeIsForLibrary(vm.template.notificationType)) {
+                    return libraryService.load(message.recipientId)
+                        .then(addEntityToRecipientList);
+                } else if (notificationService.notificationTypeIsForVendor(vm.template.notificationType)) {
+                    return vendorService.load(message.recipientId)
+                        .then(addEntityToRecipientList);
+                } else {
+                    draftNotification.recipients.push({
+                        value: message.recipientId,
+                        label: message.recipientId
+                    });
+                    return draftNotification;
+                }
+
+                function addEntityToRecipientList( entity ){
+                    draftNotification.recipients.push({
+                        value: entity.id,
+                        label: notificationService.getRecipientLabel(entity.name, vm.template.notificationType)
+                    });
+                    return draftNotification;
+                }
+            }
+        }
 
         function showModal() {
             $('#notification-modal').modal();
