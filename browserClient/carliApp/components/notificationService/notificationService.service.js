@@ -29,6 +29,7 @@ function notificationService($q, $http, CarliModules, config) {
     }
 
     function createNotificationsFor( spec ){
+
         return notificationModule.create(spec);
     }
 
