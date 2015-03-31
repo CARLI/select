@@ -1,7 +1,7 @@
 angular.module('carli.notificationModal')
 .controller('notificationModalController', notificationModalController);
 
-function notificationModalController($scope, $rootScope, alertService, libraryService, notificationService, notificationModalService, notificationTemplateService, vendorService) {
+function notificationModalController($scope, $rootScope, alertService, libraryService, notificationService, notificationModalService, notificationTemplateService, productService, vendorService) {
     var vm = this;
     vm.draft = {};
     vm.template = null;
@@ -68,6 +68,7 @@ function notificationModalController($scope, $rootScope, alertService, librarySe
             });
 
         function populateRecipientList(draftNotification) {
+            var template = vm.template;
 
             if (isAnnualAccessFeeInvoice()) {
                 return populateForAnnualAccessFeeInvoice();
@@ -109,7 +110,22 @@ function notificationModalController($scope, $rootScope, alertService, librarySe
             }
 
             function populateForAllEntities(){
-                //TODO
+                if (notificationService.notificationTypeIsForLibrary(template.notificationType)) {
+                    return libraryService.list().then(function(libraryList){
+                        libraryList.map(addEntityToRecipientList);
+                        return draftNotification;
+                    });
+                } else if (notificationService.notificationTypeIsForVendor(template.notificationType)) {
+                    return productService.listProductCountsByVendorId()
+                        .then(function(productsByVendorId){ return Object.keys(productsByVendorId); })
+                        .then(vendorService.getVendorsById)
+                        .then(function(vendorList) {
+                            vendorList.map(addEntityToRecipientList);
+                            return draftNotification;
+                        });
+                } else {
+                    return draftNotification;
+                }
             }
 
             function populateForRecipientsFromOfferings() {
@@ -117,10 +133,10 @@ function notificationModalController($scope, $rootScope, alertService, librarySe
             }
 
             function populateForSingleRecipient() {
-                if (notificationService.notificationTypeIsForLibrary(vm.template.notificationType)) {
+                if (notificationService.notificationTypeIsForLibrary(template.notificationType)) {
                     return libraryService.load(message.recipientId)
                         .then(addEntityToRecipientList);
-                } else if (notificationService.notificationTypeIsForVendor(vm.template.notificationType)) {
+                } else if (notificationService.notificationTypeIsForVendor(template.notificationType)) {
                     return vendorService.load(message.recipientId)
                         .then(addEntityToRecipientList);
                 } else {
@@ -130,18 +146,20 @@ function notificationModalController($scope, $rootScope, alertService, librarySe
                     });
                     return draftNotification;
                 }
+            }
 
-                function addEntityToRecipientList( entity ){
-                    draftNotification.recipients.push({
-                        value: entity.id,
-                        label: notificationService.getRecipientLabel(entity.name, vm.template.notificationType)
-                    });
-                    return draftNotification;
-                }
+            function addEntityToRecipientList( entity ){
+                draftNotification.recipients.push({
+                    value: entity.id,
+                    label: notificationService.getRecipientLabel(entity.name, vm.template.notificationType)
+                });
+                return draftNotification;
             }
         }
 
         function showModal() {
+            console.log('Populate Recipients for '+vm.template.name, vm.draft);
+
             $('#notification-modal').modal();
         }
     }
