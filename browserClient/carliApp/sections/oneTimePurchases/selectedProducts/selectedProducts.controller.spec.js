@@ -71,7 +71,7 @@ describe('The One-time Purchases Selected-Products Controller', function(){
         expect(vm.libraryId).to.be.a('String');
         expect(vm.offeringList).to.be.an('Array');
         expect(vm.filterState).to.be.a('String');
-        expect(vm.selectedProducts).to.be.an('Object');
+        expect(vm.selectedOfferings).to.be.an('Object');
     });
 
     it('should expose VM functions', function(){

@@ -1,7 +1,7 @@
 angular.module('carli.notificationModal')
 .controller('notificationModalController', notificationModalController);
 
-function notificationModalController($scope, $rootScope, alertService, cycleService, libraryService, notificationService, notificationModalService, notificationTemplateService, productService, vendorService) {
+function notificationModalController($scope, $rootScope, alertService, cycleService, libraryService, notificationService, notificationModalService, notificationTemplateService, offeringService, productService, vendorService) {
     var vm = this;
     vm.draft = {};
     vm.template = null;
@@ -155,7 +155,45 @@ function notificationModalController($scope, $rootScope, alertService, cycleServ
             }
 
             function populateForRecipientsFromOfferings() {
-                //TODO
+                offeringService.getOfferingsById(message.offeringIds)
+                    .then(loadEntitiesForOfferings)
+                    .then(addEntitiesToRecipientList);
+
+                function loadEntitiesForOfferings(offerings) {
+                    var entityPromise;
+
+                    if (notificationService.notificationTypeIsForLibrary(vm.template.notificationType)) {
+                        var libraryIds = offerings.map(getLibraryIdFromOffering).filter(discardDuplicateIds);
+                        entityPromise = libraryService.getLibrariesById(libraryIds);
+                    } else if (notificationService.notificationTypeIsForVendor(vm.template.notificationType)) {
+                        var productIds = offerings.map(getProductIdFromOffering);
+                        entityPromise = productService.getProductsById(productIds).then(function (products) {
+                            var vendorIds = products.map(getVendorIdFromProduct).filter(discardDuplicateIds);
+                            return vendorService.getVendorsById(vendorIds);
+                        });
+                    }
+
+                    return entityPromise;
+                }
+
+                function getLibraryIdFromOffering(offering) {
+                    return offering.library;
+                }
+                function getProductIdFromOffering(offering) {
+                    return offering.product;
+                }
+                function getVendorIdFromProduct(product) {
+                    return product.vendor;
+                }
+
+                function discardDuplicateIds(value, index, self) {
+                    return self.indexOf(value) === index;
+                }
+
+                function addEntitiesToRecipientList( entities ){
+                    entities.forEach(addEntityToRecipientList);
+                    return draftNotification;
+                }
             }
 
             function populateForSingleRecipient() {
