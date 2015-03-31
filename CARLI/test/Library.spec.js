@@ -125,3 +125,11 @@ describe('the loadNonCrmLibraryForCrmId Couch view', function(){
             });
     });
 });
+
+describe('the listLibrariesWithSelectionsInCycle Couch view', function(){
+    it('should have a listLibrariesWithSelectionsInCycle method', function(){
+        expect(LibraryRepository.listLibrariesWithSelectionsInCycle).to.be.a('function');
+    });
+
+    it('should return an array of library IDs that have made selections in the cycle');
+});

@@ -9,6 +9,9 @@ function libraryService( CarliModules, $q ) {
         list:   function() { return $q.when( libraryModule.list() ); },
         update: function() { return $q.when( libraryModule.update.apply( this, arguments) ); },
         load:   function() { return $q.when( libraryModule.load.apply( this, arguments) ); },
+        listLibrariesWithSelectionsInCycle: function(cycle){
+            return $q.when(libraryModule.listLibrariesWithSelectionsInCycle(cycle));
+        } ,
 
         getInstitutionTypeOptions: libraryModule.getInstitutionTypeOptions,
         getInstitutionYearsOptions: libraryModule.getInstitutionYearsOptions,

@@ -1,7 +1,7 @@
 angular.module('carli.notificationModal')
 .controller('notificationModalController', notificationModalController);
 
-function notificationModalController($scope, $rootScope, alertService, libraryService, notificationService, notificationModalService, notificationTemplateService, productService, vendorService) {
+function notificationModalController($scope, $rootScope, alertService, cycleService, libraryService, notificationService, notificationModalService, notificationTemplateService, productService, vendorService) {
     var vm = this;
     vm.draft = {};
     vm.template = null;
@@ -69,6 +69,7 @@ function notificationModalController($scope, $rootScope, alertService, librarySe
 
         function populateRecipientList(draftNotification) {
             var template = vm.template;
+            var cycleId = message.cycleId;
 
             if (isAnnualAccessFeeInvoice()) {
                 return populateForAnnualAccessFeeInvoice();
@@ -106,7 +107,31 @@ function notificationModalController($scope, $rootScope, alertService, librarySe
             }
 
             function populateForContactNonPlayers(){
-                //TODO
+                return cycleService.load(cycleId)
+                    .then(libraryService.listLibrariesWithSelectionsInCycle)
+                    .then(listLibrariesThatHaveNotMadeSelections)
+                    .then(function( listOfLibrariesToContact ){
+                        listOfLibrariesToContact.map(addEntityToRecipientList);
+                        return draftNotification;
+                    });
+
+                    function listLibrariesThatHaveNotMadeSelections( librariesThatHaveMadeSelections ){
+                        return libraryService.list().then(function(listOfAllLibraries){
+                            return listOfAllLibraries.filter(function(library){
+                                return hasNotMadeSelection(library);
+                            });
+                        });
+
+                        function hasNotMadeSelection( lib ){
+                            var index = librariesThatHaveMadeSelections.indexOf( lib.id.toString() );
+
+                            if ( index > -1 ){
+                                librariesThatHaveMadeSelections.splice(index,1);
+                                return false;
+                            }
+                            return true;
+                        }
+                    }
             }
 
             function populateForAllEntities(){
@@ -158,8 +183,6 @@ function notificationModalController($scope, $rootScope, alertService, librarySe
         }
 
         function showModal() {
-            console.log('Populate Recipients for '+vm.template.name, vm.draft);
-
             $('#notification-modal').modal();
         }
     }
@@ -209,7 +232,6 @@ function notificationModalController($scope, $rootScope, alertService, librarySe
     }
 
     function saveNotifications(){
-        console.log('create notifications for ',vm.draft);
         notificationService.createNotificationsFor( vm.draft )
             .then(saveSuccess)
             .catch(saveError);
