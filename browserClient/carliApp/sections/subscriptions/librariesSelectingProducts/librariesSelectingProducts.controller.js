@@ -1,12 +1,22 @@
 angular.module('carli.sections.subscriptions.librariesSelectingProducts')
     .controller('librariesSelectingProductsController', librariesSelectingProductsController);
 
-function librariesSelectingProductsController( $q, alertService ) {
+function librariesSelectingProductsController( $q, alertService, cycleService, notificationModalService ) {
     var vm = this;
     vm.undoOpenSystem = undoOpenSystem;
     vm.closeSystem = closeSystem;
     vm.closeSystemDialogComplete = closeSystemDialogComplete;
-    
+
+    vm.sendReminder = sendReminder;
+    vm.estimateAllLibraries = estimateAllLibraries;
+
+    activate();
+
+
+    function activate(){
+        vm.cycle = cycleService.getCurrentCycle();
+    }
+
     function undoOpenSystem(){
         return vm.cycleRouter.previous();
     }
@@ -28,5 +38,19 @@ function librariesSelectingProductsController( $q, alertService ) {
             deferred.resolve();
         });
         return deferred.promise;
+    }
+
+    function sendReminder(){
+        notificationModalService.sendStartDraftMessage({
+            templateId: 'notification-template-library-reminder',
+            cycleId: vm.cycle.id
+        });
+    }
+
+    function estimateAllLibraries(){
+        notificationModalService.sendStartDraftMessage({
+            templateId: 'notification-template-library-estimates-open',
+            cycleId: vm.cycle.id
+        });
     }
 }

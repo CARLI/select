@@ -88,7 +88,8 @@ function notificationModalController($scope, $rootScope, alertService, cycleServ
             }
 
             function isContactNonPlayers(){
-                return message.templateId === 'notification-template-contact-non-players';
+                return message.templateId === 'notification-template-contact-non-players' ||
+                       message.templateId === 'notification-template-library-reminder';
             }
 
             function shouldSendEverythingToEveryone() {
