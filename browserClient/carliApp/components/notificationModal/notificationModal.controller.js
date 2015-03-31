@@ -156,7 +156,7 @@ function notificationModalController($scope, $rootScope, alertService, cycleServ
             }
 
             function populateForRecipientsFromOfferings() {
-                offeringService.getOfferingsById(message.offeringIds)
+                return offeringService.getOfferingsById(message.offeringIds)
                     .then(loadEntitiesForOfferings)
                     .then(addEntitiesToRecipientList);
 
@@ -178,7 +178,8 @@ function notificationModalController($scope, $rootScope, alertService, cycleServ
                 }
 
                 function getLibraryIdFromOffering(offering) {
-                    return offering.library;
+                    var id = offering.library;
+                    return typeof id === 'number' ? id : parseInt(id, 10);
                 }
                 function getProductIdFromOffering(offering) {
                     return offering.product;
@@ -228,6 +229,9 @@ function notificationModalController($scope, $rootScope, alertService, cycleServ
             function getLabel( recipient ){
                 return recipient.label;
             }
+
+            console.log('Draft',draftNotification);
+            return draftNotification;
         }
 
         function showModal() {

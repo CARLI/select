@@ -155,7 +155,7 @@ function productsAvailableByLibraryController( $scope, $q, accordionControllerMi
         notificationModalService.sendStartDraftMessage({
             templateId: 'notification-template-library-invoices',
             cycleId: vm.cycle.id,
-            offerings: offeringsToReport
+            offeringIds: offeringsToReport
         });
     }
 

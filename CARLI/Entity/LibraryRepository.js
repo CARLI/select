@@ -88,7 +88,16 @@ function listLibrariesWithSelectionsInCycle( cycle ){
 }
 
 function getLibrariesById( ids ){
-    return couchUtils.getCouchDocuments(StoreOptions.couchDbName,ids);
+    return listLibraries()
+        .then(filterListOfLibraries);
+
+    function filterListOfLibraries( listOfAllLibraries ){
+        return listOfAllLibraries.filter(libraryIdIsInRequestedList);
+    }
+
+    function libraryIdIsInRequestedList( library ){
+        return ids.indexOf(library.id) > -1;
+    }
 }
 
 module.exports = {
