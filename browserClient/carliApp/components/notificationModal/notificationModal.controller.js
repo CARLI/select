@@ -62,6 +62,7 @@ function notificationModalController($scope, $rootScope, alertService, cycleServ
         notificationTemplateService.load(message.templateId)
             .then(initializeDraftFromTemplate)
             .then(populateRecipientList)
+            .then(prepareDraftDataForEditForm)
             .then(showModal)
             .catch(function (err) {
                 console.log(err);
@@ -218,6 +219,14 @@ function notificationModalController($scope, $rootScope, alertService, cycleServ
                     label: notificationService.getRecipientLabel(entity.name, vm.template.notificationType)
                 });
                 return draftNotification;
+            }
+        }
+
+        function prepareDraftDataForEditForm( draftNotification ){
+            draftNotification.to = draftNotification.recipients.map(getLabel).join(', ');
+
+            function getLabel( recipient ){
+                return recipient.label;
             }
         }
 
