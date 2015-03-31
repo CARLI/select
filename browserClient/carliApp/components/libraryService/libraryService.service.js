@@ -15,6 +15,9 @@ function libraryService( CarliModules, $q ) {
 
         getInstitutionTypeOptions: libraryModule.getInstitutionTypeOptions,
         getInstitutionYearsOptions: libraryModule.getInstitutionYearsOptions,
-        getMembershipLevelOptions: libraryModule.getMembershipLevelOptions
+        getMembershipLevelOptions: libraryModule.getMembershipLevelOptions,
+        getLibrariesById: function(ids) {
+            return $q.when( libraryModule.getLibrariesById(ids) );
+        }
     };
 }

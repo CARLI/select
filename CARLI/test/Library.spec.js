@@ -133,3 +133,9 @@ describe('the listLibrariesWithSelectionsInCycle Couch view', function(){
 
     it('should return an array of library IDs that have made selections in the cycle');
 });
+
+describe('getLibrariesById', function(){
+    it('should be a function', function(){
+        expect(vendorRepository.getLibrariesById).to.be.a('function');
+    })
+});

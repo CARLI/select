@@ -42,6 +42,9 @@ function offeringService( CarliModules, $q, cycleService ) {
             });
             return options;
         },
+        getOfferingsById: function(ids) {
+            return $q.when( offeringModule.getOfferingsById(ids,  cycleService.getCurrentCycle()) );
+        },
         getOfferingDisplayLabels: function(){
             return offeringDisplayLabels;
         },

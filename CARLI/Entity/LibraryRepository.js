@@ -87,6 +87,10 @@ function listLibrariesWithSelectionsInCycle( cycle ){
         });
 }
 
+function getLibrariesById( ids ){
+    return couchUtils.getCouchDocuments(StoreOptions.couchDbName,ids);
+}
+
 module.exports = {
     setStore: localLibraryRepository.setStore,
     update: updateLibrary,
@@ -96,5 +100,6 @@ module.exports = {
     getInstitutionYearsOptions: getInstitutionYearsOptions,
     getMembershipLevelOptions: getMembershipLevelOptions,
     loadNonCrmLibraryForCrmId: loadNonCrmLibraryForCrmId,
-    listLibrariesWithSelectionsInCycle: listLibrariesWithSelectionsInCycle
+    listLibrariesWithSelectionsInCycle: listLibrariesWithSelectionsInCycle,
+    getLibrariesById: getLibrariesById
 };
