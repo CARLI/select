@@ -41,15 +41,11 @@
                         <span>{{ vm.invoiceTotal[vendor.id] | currency }}</span>
                     </div>
                     <button type="button" class="carli-button" ng-click="vm.reportCheckedProductsForVendor(vendor)">Report Checked Products</button>
-                    <div class="placeholder pull-left" style="width: 400px;">
-                        <button class="carli-button" ng-click="vm.reportAllProductsForVendor(vendor)">Report All Products</button>
-                    </div>
+                    <button type="button" class="carli-button" ng-click="vm.reportAllProductsForVendor(vendor)">Report All Products</button>
                 </div>
             </div>
         </li>
     </ul>
 </div>
 
-<div class="notifications placeholder" style="opacity: .8; width: 400px; margin-bottom: 1rem;">
-    <button class="carli-button" ng-click="vm.reportAllVendors()">Report All Vendors</button>
-</div>
+<button class="carli-button" ng-click="vm.reportAllVendors()">Report All Vendors</button>
