@@ -502,7 +502,7 @@ function runOneTimePurchaseProductTests(testCycle) {
 
     describe('getProductsById', function(){
         it('should be a function', function(){
-            expect(vendorRepository.getProductsById).to.be.a('function');
+            expect(ProductRepository.getProductsById).to.be.a('function');
         })
     });
 }

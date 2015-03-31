@@ -136,6 +136,6 @@ describe('the listLibrariesWithSelectionsInCycle Couch view', function(){
 
 describe('getLibrariesById', function(){
     it('should be a function', function(){
-        expect(vendorRepository.getLibrariesById).to.be.a('function');
+        expect(LibraryRepository.getLibrariesById).to.be.a('function');
     })
 });

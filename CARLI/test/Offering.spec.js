@@ -180,7 +180,7 @@ function runOfferingSpecificTests(testCycle) {
 
         describe('getOfferingsById', function(){
             it('should be a function', function(){
-                expect(vendorRepository.getOfferingsById).to.be.a('function');
+                expect(OfferingRepository.getOfferingsById).to.be.a('function');
             })
         });
     });
