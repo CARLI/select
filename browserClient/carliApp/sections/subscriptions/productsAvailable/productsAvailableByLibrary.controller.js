@@ -148,10 +148,14 @@ function productsAvailableByLibraryController( $scope, $q, accordionControllerMi
             return;
         }
 
+        var offeringsToReport = Object.keys(vm.selectedOfferings[library.id]).filter(function(key){
+            return vm.selectedOfferings[library.id][key];
+        });
+
         notificationModalService.sendStartDraftMessage({
             templateId: 'notification-template-library-invoices',
             cycleId: vm.cycle.id,
-            offerings: vm.selectedOfferings
+            offerings: offeringsToReport
         });
     }
 

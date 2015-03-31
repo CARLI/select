@@ -148,7 +148,12 @@ function productsAvailableByVendorController( $scope, $q, accordionControllerMix
             return vm.selectedOfferings[vendor.id][key];
         });
 
-        alert('report offerings '+offeringsToReport.join(','));
+        notificationModalService.sendStartDraftMessage({
+            templateId: 'notification-template-vendor-reports',
+            cycleId: vm.cycle.id,
+            recipientId: vendor.id,
+            offerings: offeringsToReport
+        });
     }
 
     function reportAllProductsForVendor( vendor ){
