@@ -16,9 +16,7 @@ function notificationService($q, $http, CarliModules, config) {
         createNotificationsFor: createNotificationsFor,
         sendNotification: sendNotification,
         removeNotification: function() { return $q.when( notificationModule.delete.apply(this, arguments)); },
-        getRecipientLabel: notificationModule.getRecipientLabel,
-        notificationTypeIsForLibrary: notificationModule.notificationTypeIsForLibrary,
-        notificationTypeIsForVendor: notificationModule.notificationTypeIsForVendor
+        getRecipientLabel: notificationModule.getRecipientLabel
     };
 
     function getBlankNotification(){

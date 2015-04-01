@@ -43,22 +43,4 @@ NotificationRepository.getRecipientLabel = function getRecipientLabel(recipientN
     }
 };
 
-NotificationRepository.notificationTypeIsForLibrary = function notificationTypeIsForLibrary(notificationType) {
-    var results = {
-        'invoice': true,
-        'report': false,
-        'subscription': true
-    };
-    return results[notificationType];
-};
-
-NotificationRepository.notificationTypeIsForVendor = function notificationTypeIsForVendor(notificationType) {
-    var results = {
-        'invoice': false,
-        'report': true,
-        'subscription': false
-    };
-    return results[notificationType];
-};
-
 module.exports = NotificationRepository;
