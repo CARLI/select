@@ -1,8 +1,10 @@
 angular.module('carli.sections.oneTimePurchases')
 .controller('oneTimePurchasesController', oneTimePurchasesController);
 
-function oneTimePurchasesController( $sce, libraryService ){
+function oneTimePurchasesController( $sce, notificationModalService, libraryService ){
     var vm = this;
+
+    vm.invoiceAnnualAccessFees = invoiceAnnualAccessFees;
 
     vm.libraryListColumns = [
         {
@@ -36,6 +38,12 @@ function oneTimePurchasesController( $sce, libraryService ){
     function activate() {
         vm.libraryLoadingPromise = libraryService.list().then( function(libraryList){
             vm.libraryList = libraryList;
+        });
+    }
+
+    function invoiceAnnualAccessFees() {
+        notificationModalService.sendStartDraftMessage({
+            templateId: 'notification-template-annual-access-fee-invoices'
         });
     }
 }

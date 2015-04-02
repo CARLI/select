@@ -15,6 +15,7 @@
         vm.computeTotalPurchasesAmount = computeTotalPurchasesAmount;
         vm.invoiceProducts = invoiceProducts;
         vm.reportProducts = reportProducts;
+        vm.invoiceAnnualAccessFees = invoiceAnnualAccessFees;
         vm.sort = sort;
 
         initFilterableByPurchased($scope, vm);
@@ -107,6 +108,13 @@
                 templateId: 'notification-template-vendor-reports',
                 cycleId: cycleService.getCurrentCycle().id,
                 offeringIds: offeringIds
+            });
+        }
+
+        function invoiceAnnualAccessFees() {
+            notificationModalService.sendStartDraftMessage({
+                templateId: 'notification-template-annual-access-fee-invoices',
+                recipientId: vm.libraryId
             });
         }
 
