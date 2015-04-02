@@ -2,6 +2,7 @@
 var cycleRepository = require('../Entity/CycleRepository');
 var libraryRepository = require('../Entity/LibraryRepository');
 var notificationRepository = require('../Entity/NotificationRepository');
+var offeringRepository = require('../Entity/OfferingRepository');
 var productRepository = require('../Entity/ProductRepository');
 var vendorRepository = require('../Entity/VendorRepository');
 var Q = require('q');
@@ -87,13 +88,18 @@ function getReminder(template, notificationData) {
 function getVendorReportsForAll(template, notificationData) {
 
     function getEntitiesForVendorReportsForAll() {
-        return productRepository.listProductCountsByVendorId()
-            .then(function(productsByVendorId){ return Object.keys(productsByVendorId); })
-            .then(vendorRepository.getVendorsById)
-            .then(function (vendors) {
-                return {
-                    vendorsWithProductsInCycle: vendors
-                }
+        return cycleRepository.load(notificationData.cycleId)
+            .then(function(cycle) {
+                return productRepository.listProductCountsByVendorId(cycle)
+                    .then(function (productsByVendorId) {
+                        return Object.keys(productsByVendorId);
+                    })
+                    .then(vendorRepository.getVendorsById)
+                    .then(function (vendors) {
+                        return {
+                            vendorsWithProductsInCycle: vendors
+                        }
+                    });
             });
     }
     function getRecipientsForVendorReportsForAll() {
@@ -114,19 +120,45 @@ function getVendorReportsForAll(template, notificationData) {
 }
 function getVendorReportsForSome(template, notificationData) {
     function getEntitiesForVendorReportsForSome() {
-        var productIds = offerings.map(getProductIdFromOffering);
-        entityPromise = productRepository.getProductsById(productIds).then(function (products) {
-            var vendorIds = products.map(getVendorIdFromProduct).filter(discardDuplicateIds);
-            return vendorRepository.getVendorsById(vendorIds).then(function (vendors) {
-                return {
-                    vendorsFromSelectedOfferings: vendors
+        return cycleRepository.load(notificationData.cycleId).then(function (cycle) {
+            return getOfferingsFromCycle()
+                .then(getProductsFromOfferings)
+                .then(getVendorsFromProducts)
+                .then(function (vendors) {
+                    return {
+                        vendorsFromSelectedOfferings: vendors
+                    }
+                });
+
+            function getOfferingsFromCycle() {
+                return offeringRepository.getOfferingsById(notificationData.offeringIds, cycle);
+            }
+            function getProductsFromOfferings(offerings) {
+                var productIds = offerings.map(getProductIdFromOffering);
+                return productRepository.getProductsById(productIds, cycle);
+
+                function getProductIdFromOffering(offering) {
+                    return offering.product;
                 }
-            });
+            }
+            function getVendorsFromProducts(products) {
+                var vendorIds = products.map(getVendorIdFromProduct).filter(discardDuplicateIds);
+                return vendorRepository.getVendorsById(vendorIds);
+
+                function getVendorIdFromProduct(product) {
+                    return product.vendor;
+                }
+            }
         });
+
+
     }
+
     function getRecipientsForVendorReportsForSome() {
         return someVendorsDraft.getEntities()
             .then(function( entityResults ) {
+                console.log(entityResults);
+
                 return entityResults.vendorsFromSelectedOfferings.map(function(vendor) {
                     return convertEntityToRecipient(vendor, template);
                 });
@@ -188,13 +220,22 @@ function getLibraryInvoicesForAll(template, notificationData) {
 }
 function getLibraryInvoicesForSome(template, notificationData) {
     function getEntitiesForLibraryInvoicesForSome() {
-        var libraryIds = offerings.map(getLibraryIdFromOffering).filter(discardDuplicateIds);
-        libraryRepository.getLibrariesById(libraryIds).then(function (libraries) {
-            return {
-                librariesFromOfferings: libraries
-            }
+        return cycleRepository.load(notificationData.cycleId).then(function (cycle) {
+            return offeringRepository.getOfferingsById(notificationData.offeringIds, cycle).then(function(offerings) {
+                var libraryIds = offerings.map(getLibraryIdFromOffering).filter(discardDuplicateIds);
+                return libraryRepository.getLibrariesById(libraryIds).then(function (libraries) {
+                    return {
+                        librariesFromOfferings: libraries
+                    }
+                });
+            });
         });
     }
+    function getLibraryIdFromOffering(offering) {
+        var id = offering.library;
+        return typeof id === 'number' ? id : parseInt(id, 10);
+    }
+
     function getRecipientsForLibraryInvoicesForSome() {
         return someLibrariesDraft.getEntities()
             .then(function( entityResults ) {
@@ -309,6 +350,10 @@ function convertEntityToRecipient(entity, template) {
         value: entity.id,
         label: notificationRepository.getRecipientLabel(entity.name, template.notificationType)
     };
+}
+
+function discardDuplicateIds(value, index, self) {
+    return self.indexOf(value) === index;
 }
 
 module.exports = {

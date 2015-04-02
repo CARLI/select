@@ -5,6 +5,7 @@ module.exports = {
     License: require('./Entity/LicenseRepository'),
     Notification: require('./Entity/NotificationRepository'),
     NotificationTemplate: require('./Entity/NotificationTemplateRepository'),
+    NotificationDraftGenerator: require('./NotificationDraftGenerator'),
     Offering: require('./Entity/OfferingRepository'),
     Product: require('./Entity/ProductRepository'),
     Vendor: require('./Entity/VendorRepository'),

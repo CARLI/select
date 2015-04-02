@@ -61,166 +61,19 @@ function notificationModalController($scope, $rootScope, alertService, cycleServ
 
         notificationTemplateService.load(message.templateId)
             .then(initializeDraftFromTemplate)
-            .then(populateRecipientList)
+            .then(populateRecipients)
             .then(prepareDraftDataForEditForm)
             .then(showModal)
             .catch(function (err) {
                 console.log(err);
             });
 
-        function populateRecipientList(draftNotification) {
-            var template = vm.template;
-            var cycleId = message.cycleId;
-
-            if (isAnnualAccessFeeInvoice()) {
-                return populateForAnnualAccessFeeInvoice();
-            } else if (isContactNonPlayers()) {
-                return populateForContactNonPlayers();
-            } else if (shouldSendEverythingToEveryone()) {
-                return populateForAllEntities();
-            } else if (doRecipientsComeFromOfferings()) {
-                return populateForRecipientsFromOfferings();
-            } else {
-                return populateForSingleRecipient();
-            }
-
-            function isAnnualAccessFeeInvoice(){
-                return message.templateId === 'notification-template-annual-access-fee-invoices';
-            }
-
-            function isContactNonPlayers(){
-                return message.templateId === 'notification-template-contact-non-players' ||
-                       message.templateId === 'notification-template-library-reminder';
-            }
-
-            function shouldSendEverythingToEveryone() {
-                return doRecipientsComeFromOfferings() && isNotificationAboutAllOfferings();
-            }
-            function isNotificationAboutAllOfferings() {
-                return !message.offeringIds;
-            }
-
-            function doRecipientsComeFromOfferings() {
-                return !message.recipientId;
-            }
-
-            function populateForAnnualAccessFeeInvoice(){
-                //TODO
-            }
-
-            function populateForContactNonPlayers(){
-                return cycleService.load(cycleId)
-                    .then(libraryService.listLibrariesWithSelectionsInCycle)
-                    .then(listLibrariesThatHaveNotMadeSelections)
-                    .then(function( listOfLibrariesToContact ){
-                        listOfLibrariesToContact.map(addEntityToRecipientList);
-                        return draftNotification;
-                    });
-
-                    function listLibrariesThatHaveNotMadeSelections( librariesThatHaveMadeSelections ){
-                        return libraryService.list().then(function(listOfAllLibraries){
-                            return listOfAllLibraries.filter(function(library){
-                                return hasNotMadeSelection(library);
-                            });
-                        });
-
-                        function hasNotMadeSelection( lib ){
-                            var index = librariesThatHaveMadeSelections.indexOf( lib.id.toString() );
-
-                            if ( index > -1 ){
-                                librariesThatHaveMadeSelections.splice(index,1);
-                                return false;
-                            }
-                            return true;
-                        }
-                    }
-            }
-
-            function populateForAllEntities(){
-                if (notificationService.notificationTypeIsForLibrary(template.notificationType)) {
-                    return libraryService.list().then(function(libraryList){
-                        libraryList.map(addEntityToRecipientList);
-                        return draftNotification;
-                    });
-                } else if (notificationService.notificationTypeIsForVendor(template.notificationType)) {
-                    return productService.listProductCountsByVendorId()
-                        .then(function(productsByVendorId){ return Object.keys(productsByVendorId); })
-                        .then(vendorService.getVendorsById)
-                        .then(function(vendorList) {
-                            vendorList.map(addEntityToRecipientList);
-                            return draftNotification;
-                        });
-                } else {
-                    return draftNotification;
-                }
-            }
-
-            function populateForRecipientsFromOfferings() {
-                return offeringService.getOfferingsById(message.offeringIds)
-                    .then(loadEntitiesForOfferings)
-                    .then(addEntitiesToRecipientList);
-
-                function loadEntitiesForOfferings(offerings) {
-                    var entityPromise;
-
-                    if (notificationService.notificationTypeIsForLibrary(vm.template.notificationType)) {
-                        var libraryIds = offerings.map(getLibraryIdFromOffering).filter(discardDuplicateIds);
-                        entityPromise = libraryService.getLibrariesById(libraryIds);
-                    } else if (notificationService.notificationTypeIsForVendor(vm.template.notificationType)) {
-                        var productIds = offerings.map(getProductIdFromOffering);
-                        entityPromise = productService.getProductsById(productIds).then(function (products) {
-                            var vendorIds = products.map(getVendorIdFromProduct).filter(discardDuplicateIds);
-                            return vendorService.getVendorsById(vendorIds);
-                        });
-                    }
-
-                    return entityPromise;
-                }
-
-                function getLibraryIdFromOffering(offering) {
-                    var id = offering.library;
-                    return typeof id === 'number' ? id : parseInt(id, 10);
-                }
-                function getProductIdFromOffering(offering) {
-                    return offering.product;
-                }
-                function getVendorIdFromProduct(product) {
-                    return product.vendor;
-                }
-
-                function discardDuplicateIds(value, index, self) {
-                    return self.indexOf(value) === index;
-                }
-
-                function addEntitiesToRecipientList( entities ){
-                    entities.forEach(addEntityToRecipientList);
-                    return draftNotification;
-                }
-            }
-
-            function populateForSingleRecipient() {
-                if (notificationService.notificationTypeIsForLibrary(template.notificationType)) {
-                    return libraryService.load(message.recipientId)
-                        .then(addEntityToRecipientList);
-                } else if (notificationService.notificationTypeIsForVendor(template.notificationType)) {
-                    return vendorService.load(message.recipientId)
-                        .then(addEntityToRecipientList);
-                } else {
-                    draftNotification.recipients.push({
-                        value: message.recipientId,
-                        label: message.recipientId
-                    });
-                    return draftNotification;
-                }
-            }
-
-            function addEntityToRecipientList( entity ){
-                draftNotification.recipients.push({
-                    value: entity.id,
-                    label: notificationService.getRecipientLabel(entity.name, vm.template.notificationType)
-                });
+        function populateRecipients(draftNotification) {
+            var generator = notificationService.generateDraftNotification(vm.template, message);
+            return generator.getRecipients().then(function (recipients) {
+                draftNotification.recipients = recipients;
                 return draftNotification;
-            }
+            });
         }
 
         function prepareDraftDataForEditForm( draftNotification ){
