@@ -27,10 +27,18 @@ module.exports = {
         helper_scripts: [ 'e2e/utils/jQueryHelpers.js' ]
     },
 
-    carli_app_all_files: [
-        'carliApp/**/*',
-        '!carliApp/**/*.spec.js'
-    ],
+    carli_app: {
+        all_files: [
+            'carliApp/**/*',
+            '!carliApp/**/*.spec.js'
+        ],
+        all_js: [
+            'carliApp/*.js',
+            'carliApp/**/*.js',
+            '!carliApp/**/*.spec.js'
+        ],
+        build_dir: 'build/carliApp/'
+    },
 
 
     /**/
@@ -43,10 +51,29 @@ module.exports = {
             'vendorApp/**/*.js',
             '!vendorApp/**/*.spec.js'
         ],
-        index_file: 'vendorApp/index.html'
+        build_dir: 'build/vendorApp/'
     },
     /**/
 
+    bower_files: [
+        'bower_modules/jquery/dist/jquery.js',
+        'bower_modules/angular/angular.js',
+        'bower_modules/angular-busyclick/src/busyClick.directive.js',
+        'bower_modules/angular-route/angular-route.js',
+        'bower_modules/angular-resource/angular-resource.js',
+        'bower_modules/angular-sanitize/angular-sanitize.js',
+        'bower_modules/angular-animate/angular-animate.js',
+        'bower_modules/angular-busy/angular-busy.js',
+        'bower_modules/bootstrap-sass-official/assets/javascripts/bootstrap.js',
+        'bower_modules/angular-bootstrap/ui-bootstrap.js',
+        'bower_modules/angular-bootstrap/ui-bootstrap-tpls.js',
+        'bower_modules/gsap/src/minified/TweenMax.min.js',
+        'bower_modules/gsap/src/minified/jquery.gsap.min.js',
+        'bower_modules/handlebars/handlebars.js',
+        'bower_modules/font-awesome/css/font-awesome.min.css',
+        'bower_modules/angular-busy/angular-busy.css',
+        'bower_modules/font-awesome/fonts/fontawesome-webfont.*'
+    ],
 
     /**
      * Stand-alone JavaScript files that get packaged by Browserify.
@@ -54,7 +81,7 @@ module.exports = {
      */
     logic_files: {
         global_var: 'CARLI',
-        js: '../CARLI/index.js',
+        js: ['../CARLI/index.js'],
         build: 'CARLI.js'
     },
 
