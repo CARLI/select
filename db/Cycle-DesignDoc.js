@@ -51,7 +51,7 @@ ddoc = {
         },
         listLibrariesWithSelections: {
             map: function(doc) {
-                if (doc.type === 'Offering' && doc.selection) {
+                if (doc.type === 'Offering' && ( doc.selection || doc.datePurchased )) {
                     emit(doc.library, 1);
                 }
             },

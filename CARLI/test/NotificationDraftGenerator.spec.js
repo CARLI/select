@@ -24,6 +24,11 @@ describe('The notification draft generator', function() {
         var notificationData = {
             recipientId: 'some library'
         };
+        function getMockEntitiesForAnnualAccessFee() {
+            return Q({
+                libraryFromNotificationData: [{id: 'library', name: 'Library'}]
+            });
+        }
 
         it('should return a draft notification', function() {
             var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
@@ -31,7 +36,19 @@ describe('The notification draft generator', function() {
             expect(draft.getAudienceAndSubject()).to.equal('One Library, Annual Access Fee');
         });
 
-        it('should generate a recipients list');
+        it('should generate a recipients list', function() {
+            var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
+            draft.getEntities = getMockEntitiesForAnnualAccessFee;
+
+            return draft.getRecipients().then(function(recipients) {
+                return Q.all([
+                    expect(recipients).to.be.an('array'),
+                    expect(recipients.length).to.equal(1),
+                    expect(recipients[0].value).to.equal('library'),
+                    expect(recipients[0].label).to.equal('Library Invoice Contacts')
+                ]);
+            });
+        });
     });
 
     describe('specification for generateDraftNotification "All Libraries, Annual Access Fee"', function() {
@@ -40,6 +57,11 @@ describe('The notification draft generator', function() {
             notificationType: 'invoice'
         };
         var notificationData = {};
+        function getMockEntitiesForAnnualAccessFee() {
+            return Q({
+                librariesWithSelections: [{id: 'library-with-selections', name: 'Library with selections'}]
+            });
+        }
 
         it('should return a draft notification', function() {
             var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
@@ -47,7 +69,19 @@ describe('The notification draft generator', function() {
             expect(draft.getAudienceAndSubject()).to.equal('All Libraries, Annual Access Fee');
         });
 
-        it('should generate a recipients list');
+        it('should generate a recipients list', function() {
+            var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
+            draft.getEntities = getMockEntitiesForAnnualAccessFee;
+
+            return draft.getRecipients().then(function(recipients) {
+                return Q.all([
+                    expect(recipients).to.be.an('array'),
+                    expect(recipients.length).to.equal(1),
+                    expect(recipients[0].value).to.equal('library-with-selections'),
+                    expect(recipients[0].label).to.equal('Library with selections Invoice Contacts')
+                ]);
+            });
+        });
     });
 
     describe('specification for generateDraftNotification "Reminder"', function() {

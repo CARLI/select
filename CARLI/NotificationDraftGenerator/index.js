@@ -1,4 +1,5 @@
 
+var config = require('../../config');
 var cycleRepository = require('../Entity/CycleRepository');
 var libraryRepository = require('../Entity/LibraryRepository');
 var notificationRepository = require('../Entity/NotificationRepository');
@@ -8,8 +9,21 @@ var vendorRepository = require('../Entity/VendorRepository');
 var Q = require('q');
 
 function getAnnualAccessFeeDraftForOneLibrary(template, notificationData) {
-    function getEntitiesForAnnualAccessFeeDraftForOneLibrary() {}
-    function getRecipientsForAnnualAccessFeeDraftForOneLibrary() {}
+    function getEntitiesForAnnualAccessFeeDraftForOneLibrary() {
+        return libraryRepository.load(notificationData.recipientId).then(function (library) {
+            return {
+                libraryFromNotificationData: [ library ]
+            }
+        });
+    }
+    function getRecipientsForAnnualAccessFeeDraftForOneLibrary() {
+        return annualAccessOneLibraryDraft.getEntities()
+            .then(function( entityResults ) {
+                return entityResults.libraryFromNotificationData.map(function(library) {
+                    return convertEntityToRecipient(library, template);
+                });
+            });
+    }
 
     var annualAccessOneLibraryDraft = {
         getAudienceAndSubject: function() { return 'One Library, Annual Access Fee'; },
@@ -19,8 +33,33 @@ function getAnnualAccessFeeDraftForOneLibrary(template, notificationData) {
     return annualAccessOneLibraryDraft;
 }
 function getAnnualAccessFeeDraftForAllLibraries(template, notificationData) {
-    function getEntitiesForAnnualAccessFeeDraftForAllLibraries() {}
-    function getRecipientsForAnnualAccessFeeDraftForAllLibraries() {}
+    function getEntitiesForAnnualAccessFeeDraftForAllLibraries() {
+        return cycleRepository.load(config.oneTimePurchaseProductsCycleDocId)
+            .then(function(cycle){
+                return libraryRepository.listLibrariesWithSelectionsInCycle(cycle);
+            })
+            .then(function(libraryIdsAsStrings){
+                var libraryIds = libraryIdsAsStrings.map(convertIdsToNumbers);
+
+                return libraryRepository.getLibrariesById(libraryIds).then(function(libraries) {
+                    return {
+                        librariesWithSelections: libraries
+                    };
+                });
+            });
+
+        function convertIdsToNumbers(id) {
+            return typeof id === 'number' ? id : parseInt(id, 10);
+        }
+    }
+    function getRecipientsForAnnualAccessFeeDraftForAllLibraries() {
+        return annualAccessAllLibrariesDraft.getEntities()
+            .then(function( entityResults ) {
+                return entityResults.librariesWithSelections.map(function(library) {
+                    return convertEntityToRecipient(library, template);
+                });
+            });
+    }
 
     var annualAccessAllLibrariesDraft = {
         getAudienceAndSubject: function() { return 'All Libraries, Annual Access Fee'; },
@@ -157,8 +196,6 @@ function getVendorReportsForSome(template, notificationData) {
     function getRecipientsForVendorReportsForSome() {
         return someVendorsDraft.getEntities()
             .then(function( entityResults ) {
-                console.log(entityResults);
-
                 return entityResults.vendorsFromSelectedOfferings.map(function(vendor) {
                     return convertEntityToRecipient(vendor, template);
                 });
@@ -231,6 +268,7 @@ function getLibraryInvoicesForSome(template, notificationData) {
             });
         });
     }
+
     function getLibraryIdFromOffering(offering) {
         var id = offering.library;
         return typeof id === 'number' ? id : parseInt(id, 10);
