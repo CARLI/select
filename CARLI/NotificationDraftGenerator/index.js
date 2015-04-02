@@ -113,8 +113,25 @@ function getVendorReportsForAll(template, notificationData) {
     return allVendorsDraft;
 }
 function getVendorReportsForSome(template, notificationData) {
-    function getEntitiesForVendorReportsForSome() {}
-    function getRecipientsForVendorReportsForSome() {}
+    function getEntitiesForVendorReportsForSome() {
+        var productIds = offerings.map(getProductIdFromOffering);
+        entityPromise = productRepository.getProductsById(productIds).then(function (products) {
+            var vendorIds = products.map(getVendorIdFromProduct).filter(discardDuplicateIds);
+            return vendorRepository.getVendorsById(vendorIds).then(function (vendors) {
+                return {
+                    vendorsFromSelectedOfferings: vendors
+                }
+            });
+        });
+    }
+    function getRecipientsForVendorReportsForSome() {
+        return someVendorsDraft.getEntities()
+            .then(function( entityResults ) {
+                return entityResults.vendorsFromSelectedOfferings.map(function(vendor) {
+                    return convertEntityToRecipient(vendor, template);
+                });
+            });
+    }
 
     var someVendorsDraft = {
         getAudienceAndSubject: function() { return 'One or more Vendors, One or more Products'; },
@@ -124,8 +141,19 @@ function getVendorReportsForSome(template, notificationData) {
     return someVendorsDraft;
 }
 function getVendorReportsForOne(template, notificationData) {
-    function getEntitiesForVendorReportsForOne() {}
-    function getRecipientsForVendorReportsForOne() {}
+    function getEntitiesForVendorReportsForOne() {
+        return vendorRepository.load(notificationData.recipientId).then(function(vendor) {
+            return { vendorFromNotificationData: [ vendor ] };
+        });
+    }
+    function getRecipientsForVendorReportsForOne() {
+        return oneVendorDraft.getEntities()
+            .then(function( entityResults ) {
+                return entityResults.vendorFromNotificationData.map(function(vendor) {
+                    return convertEntityToRecipient(vendor, template);
+                });
+            });
+    }
 
     var oneVendorDraft = {
         getAudienceAndSubject: function() { return 'One Vendor, All Products'; },
@@ -135,8 +163,21 @@ function getVendorReportsForOne(template, notificationData) {
     return oneVendorDraft;
 }
 function getLibraryInvoicesForAll(template, notificationData) {
-    function getEntitiesForLibraryInvoicesForAll() {}
-    function getRecipientsForLibraryInvoicesForAll() {}
+    function getEntitiesForLibraryInvoicesForAll() {
+        return libraryRepository.list().then(function(libraries){
+            return {
+                librariesWithSelectionsInCycle: libraries
+            }
+        });
+    }
+    function getRecipientsForLibraryInvoicesForAll() {
+        return allLibrariesDraft.getEntities()
+            .then(function( entityResults ) {
+                return entityResults.librariesWithSelectionsInCycle.map(function(vendor) {
+                    return convertEntityToRecipient(vendor, template);
+                });
+            });
+    }
 
     var allLibrariesDraft = {
         getAudienceAndSubject: function() { return 'All Libraries, All Products'; },
@@ -146,8 +187,22 @@ function getLibraryInvoicesForAll(template, notificationData) {
     return allLibrariesDraft;
 }
 function getLibraryInvoicesForSome(template, notificationData) {
-    function getEntitiesForLibraryInvoicesForSome() {}
-    function getRecipientsForLibraryInvoicesForSome() {}
+    function getEntitiesForLibraryInvoicesForSome() {
+        var libraryIds = offerings.map(getLibraryIdFromOffering).filter(discardDuplicateIds);
+        libraryRepository.getLibrariesById(libraryIds).then(function (libraries) {
+            return {
+                librariesFromOfferings: libraries
+            }
+        });
+    }
+    function getRecipientsForLibraryInvoicesForSome() {
+        return someLibrariesDraft.getEntities()
+            .then(function( entityResults ) {
+                return entityResults.librariesFromOfferings.map(function(vendor) {
+                    return convertEntityToRecipient(vendor, template);
+                });
+            });
+    }
 
     var someLibrariesDraft = {
         getAudienceAndSubject: function() { return 'One or more Libraries, One or more Products'; },
@@ -157,8 +212,21 @@ function getLibraryInvoicesForSome(template, notificationData) {
     return someLibrariesDraft;
 }
 function getLibraryInvoicesForOne(template, notificationData) {
-    function getEntitiesForLibraryInvoicesForOne() {}
-    function getRecipientsForLibraryInvoicesForOne() {}
+    function getEntitiesForLibraryInvoicesForOne() {
+        return libraryRepository.load(notificationData.recipientId).then(function (library) {
+            return {
+                libraryFromNotificationData: [ library ]
+            }
+        });
+    }
+    function getRecipientsForLibraryInvoicesForOne() {
+        return oneLibraryDraft.getEntities()
+            .then(function( entityResults ) {
+                return entityResults.libraryFromNotificationData.map(function(library) {
+                    return convertEntityToRecipient(library, template);
+                });
+            });
+    }
 
     var oneLibraryDraft = {
         getAudienceAndSubject: function() { return 'One Library, All Products'; },
