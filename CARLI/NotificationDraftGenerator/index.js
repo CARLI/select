@@ -2,9 +2,11 @@
 var cycleRepository = require('../Entity/CycleRepository');
 var libraryRepository = require('../Entity/LibraryRepository');
 var notificationRepository = require('../Entity/NotificationRepository');
+var productRepository = require('../Entity/ProductRepository');
+var vendorRepository = require('../Entity/VendorRepository');
 var Q = require('q');
 
-function getAnnualAccessFeeDraftForOneLibrary() {
+function getAnnualAccessFeeDraftForOneLibrary(template, notificationData) {
     return {
         getAudienceAndSubject: function() { return 'One Library, Annual Access Fee'; },
         getRecipients: function() {
@@ -75,15 +77,35 @@ function getReminderDraft(template, notificationData) {
 
     return reminderDraft;
 }
-function getVendorReportsForAll() {
-    return {
+function getVendorReportsForAll(template, notificationData) {
+
+    function getEntitiesForAllVendors() {
+        return productRepository.listProductCountsByVendorId()
+            .then(function(productsByVendorId){ return Object.keys(productsByVendorId); })
+            .then(vendorRepository.getVendorsById)
+            .then(function (vendors) {
+                return {
+                    vendorsWithProductsInCycle: vendors
+                }
+            });
+    }
+    function getRecipientsForAllVendors() {
+        return allVendorsDraft.getEntities()
+            .then(function( entityResults ) {
+                return entityResults.vendorsWithProductsInCycle.map(function(vendor) {
+                    return convertEntityToRecipient(vendor, template);
+                });
+            });
+    }
+
+    var allVendorsDraft = {
         getAudienceAndSubject: function() { return 'All Vendors, All Products'; },
-        getRecipients: function() {
-            //TODO
-        }
+        getEntities: getEntitiesForAllVendors,
+        getRecipients: getRecipientsForAllVendors
     };
+    return allVendorsDraft;
 }
-function getVendorReportsForSome() {
+function getVendorReportsForSome(template, notificationData) {
     return {
         getAudienceAndSubject: function() { return 'One or more Vendors, One or more Products'; },
         getRecipients: function() {
@@ -139,7 +161,7 @@ function generateDraftNotification(template, notificationData) {
         return getReminderDraft(template, notificationData);
     } else if (notificationTypeIsForVendor()) {
         if (shouldSendEverythingToEveryone()) {
-            return getVendorReportsForAll();
+            return getVendorReportsForAll(template, notificationData);
         } else if (doRecipientsComeFromOfferings()) {
             return getVendorReportsForSome();
         } else if (isASingleRecipient()) {

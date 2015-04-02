@@ -84,7 +84,7 @@ describe('The notification draft generator', function() {
                     expect(recipients[0].value).to.equal('library-without-selections'),
                     expect(recipients[0].label).to.equal('Library without selections Subscription Contacts')
                 ]);
-            })
+            });
         });
     });
 
@@ -94,6 +94,13 @@ describe('The notification draft generator', function() {
             notificationType: 'report'
         };
         var notificationData = {};
+        function getMockEntitiesForForAllVendorsAllProducts() {
+            return Q({
+                vendorsWithProductsInCycle: [
+                    {id: 'vendor', name: 'Vendor'}
+                ]
+            });
+        }
 
         it('should return a draft notification', function() {
             var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
@@ -101,7 +108,19 @@ describe('The notification draft generator', function() {
             expect(draft.getAudienceAndSubject()).to.equal('All Vendors, All Products');
         });
 
-        it('should generate a recipients list');
+        it('should generate a recipients list', function() {
+            var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
+            draft.getEntities = getMockEntitiesForForAllVendorsAllProducts;
+
+            return draft.getRecipients().then(function(recipients) {
+                return Q.all([
+                    expect(recipients).to.be.an('array'),
+                    expect(recipients.length).to.equal(1),
+                    expect(recipients[0].value).to.equal('vendor'),
+                    expect(recipients[0].label).to.equal('Vendor Report Contacts')
+                ]);
+            });
+        });
     });
     describe('specification for generateDraftNotification "One or more Vendors, One or more Products"', function() {
         var template = {
@@ -228,7 +247,7 @@ describe('The notification draft generator', function() {
         var notificationData = {
             recipientId: 'some library'
         };
-        
+
         it('should return a draft notification', function() {
             var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
             expect(draft).to.satisfy(implementsDraftNotificationInterface);
