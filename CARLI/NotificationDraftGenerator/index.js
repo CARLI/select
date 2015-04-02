@@ -45,7 +45,9 @@ function getReminderDraft(template, notificationData) {
                 return listLibrariesThatHaveNotMadeSelections(entityResults.librariesWithSelectionsInCycle, entityResults.allLibraries);
             })
             .then(function(librariesToContact){
-                return librariesToContact.map(convertEntityToRecipient);
+                return librariesToContact.map(function(library) {
+                    return convertEntityToRecipient(library, template);
+                });
             });
 
         function listLibrariesThatHaveNotMadeSelections( librariesThatHaveMadeSelections, allLibraries ){
@@ -190,10 +192,10 @@ function generateDraftNotification(template, notificationData) {
     }
 }
 
-function convertEntityToRecipient( entity ){
+function convertEntityToRecipient(entity, template) {
     return {
         value: entity.id,
-        label: notificationRepository.getRecipientLabel(entity.name, vm.template.notificationType)
+        label: notificationRepository.getRecipientLabel(entity.name, template.notificationType)
     };
 }
 

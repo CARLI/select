@@ -45,7 +45,6 @@ describe('The notification draft generator', function() {
     });
 
     describe('specification for generateDraftNotification "Reminder"', function() {
-        it('should return a draft notification', function() {
             var template = {
                 id: 'notification-template-library-reminder',
                 notificationType: 'subscription'
@@ -53,20 +52,32 @@ describe('The notification draft generator', function() {
             var notificationData = {};
             function getMockEntitiesForReminder() {
                 return Q({
-                    librariesWithSelectionsInCycle: [ 'library A' ],
+                    librariesWithSelectionsInCycle: [ 'library-with-selections' ],
                     allLibraries: [
-                        { id: 'library A', name: 'library A' },
-                        { id: 'library B', name: 'library B' }
+                        { id: 'library-with-selections', name: 'Library with selections' },
+                        { id: 'library-without-selections', name: 'Library without selections' }
                     ]
                 });
             }
 
-
+        it('should return a draft notification', function() {
             var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
             expect(draft).to.satisfy(implementsDraftNotificationInterface);
             expect(draft.getAudienceAndSubject()).to.equal('Reminder');
+
+        });
+        it('should generate a recipients list', function() {
+            var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
             draft.getEntities = getMockEntitiesForReminder;
-            expect(draft.getRecipients()).to.eventually.be.an('array');
+
+            return draft.getRecipients().then(function(recipients) {
+                return Q.all([
+                    expect(recipients).to.be.an('array'),
+                    expect(recipients.length).to.equal(1),
+                    expect(recipients[0].value).to.equal('library-without-selections'),
+                    expect(recipients[0].label).to.equal('Library without selections Subscription Contacts')
+                ]);
+            })
         });
     });
 
