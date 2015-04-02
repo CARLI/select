@@ -7,22 +7,28 @@ var vendorRepository = require('../Entity/VendorRepository');
 var Q = require('q');
 
 function getAnnualAccessFeeDraftForOneLibrary(template, notificationData) {
-    return {
+    function getEntitiesForAnnualAccessFeeDraftForOneLibrary() {}
+    function getRecipientsForAnnualAccessFeeDraftForOneLibrary() {}
+
+    var annualAccessOneLibraryDraft = {
         getAudienceAndSubject: function() { return 'One Library, Annual Access Fee'; },
-        getRecipients: function() {
-            //TODO
-        }
+        getEntities: getEntitiesForAnnualAccessFeeDraftForOneLibrary,
+        getRecipients: getRecipientsForAnnualAccessFeeDraftForOneLibrary
     };
+    return annualAccessOneLibraryDraft;
 }
-function getAnnualAccessFeeDraftForAllLibraries() {
-    return {
+function getAnnualAccessFeeDraftForAllLibraries(template, notificationData) {
+    function getEntitiesForAnnualAccessFeeDraftForAllLibraries() {}
+    function getRecipientsForAnnualAccessFeeDraftForAllLibraries() {}
+
+    var annualAccessAllLibrariesDraft = {
         getAudienceAndSubject: function() { return 'All Libraries, Annual Access Fee'; },
-        getRecipients: function() {
-            //TODO
-        }
+        getEntities: getEntitiesForAnnualAccessFeeDraftForAllLibraries,
+        getRecipients: getRecipientsForAnnualAccessFeeDraftForAllLibraries
     };
+    return annualAccessAllLibrariesDraft;
 }
-function getReminderDraft(template, notificationData) {
+function getReminder(template, notificationData) {
     var cycleId = notificationData.cycleId;
 
     function getEntitiesForReminder() {
@@ -77,9 +83,10 @@ function getReminderDraft(template, notificationData) {
 
     return reminderDraft;
 }
+
 function getVendorReportsForAll(template, notificationData) {
 
-    function getEntitiesForAllVendors() {
+    function getEntitiesForVendorReportsForAll() {
         return productRepository.listProductCountsByVendorId()
             .then(function(productsByVendorId){ return Object.keys(productsByVendorId); })
             .then(vendorRepository.getVendorsById)
@@ -89,7 +96,7 @@ function getVendorReportsForAll(template, notificationData) {
                 }
             });
     }
-    function getRecipientsForAllVendors() {
+    function getRecipientsForVendorReportsForAll() {
         return allVendorsDraft.getEntities()
             .then(function( entityResults ) {
                 return entityResults.vendorsWithProductsInCycle.map(function(vendor) {
@@ -100,50 +107,65 @@ function getVendorReportsForAll(template, notificationData) {
 
     var allVendorsDraft = {
         getAudienceAndSubject: function() { return 'All Vendors, All Products'; },
-        getEntities: getEntitiesForAllVendors,
-        getRecipients: getRecipientsForAllVendors
+        getEntities: getEntitiesForVendorReportsForAll,
+        getRecipients: getRecipientsForVendorReportsForAll
     };
     return allVendorsDraft;
 }
 function getVendorReportsForSome(template, notificationData) {
-    return {
+    function getEntitiesForVendorReportsForSome() {}
+    function getRecipientsForVendorReportsForSome() {}
+
+    var someVendorsDraft = {
         getAudienceAndSubject: function() { return 'One or more Vendors, One or more Products'; },
-        getRecipients: function() {
-            //TODO
-        }
+        getEntities: getEntitiesForVendorReportsForSome,
+        getRecipients: getRecipientsForVendorReportsForSome
     };
+    return someVendorsDraft;
 }
-function getVendorReportsForOne() {
-    return {
+function getVendorReportsForOne(template, notificationData) {
+    function getEntitiesForVendorReportsForOne() {}
+    function getRecipientsForVendorReportsForOne() {}
+
+    var oneVendorDraft = {
         getAudienceAndSubject: function() { return 'One Vendor, All Products'; },
-        getRecipients: function() {
-            //TODO
-        }
+        getEntities: getEntitiesForVendorReportsForOne,
+        getRecipients: getRecipientsForVendorReportsForOne
     };
+    return oneVendorDraft;
 }
-function getLibraryInvoicesForAll() {
-    return {
+function getLibraryInvoicesForAll(template, notificationData) {
+    function getEntitiesForLibraryInvoicesForAll() {}
+    function getRecipientsForLibraryInvoicesForAll() {}
+
+    var allLibrariesDraft = {
         getAudienceAndSubject: function() { return 'All Libraries, All Products'; },
-        getRecipients: function() {
-            //TODO
-        }
+        getEntities: getEntitiesForLibraryInvoicesForAll,
+        getRecipients: getRecipientsForLibraryInvoicesForAll
     };
+    return allLibrariesDraft;
 }
-function getLibraryInvoicesForSome() {
-    return {
+function getLibraryInvoicesForSome(template, notificationData) {
+    function getEntitiesForLibraryInvoicesForSome() {}
+    function getRecipientsForLibraryInvoicesForSome() {}
+
+    var someLibrariesDraft = {
         getAudienceAndSubject: function() { return 'One or more Libraries, One or more Products'; },
-        getRecipients: function() {
-            //TODO
-        }
+        getEntities: getEntitiesForLibraryInvoicesForSome,
+        getRecipients: getRecipientsForLibraryInvoicesForSome
     };
+    return someLibrariesDraft;
 }
-function getLibraryInvoicesForOne() {
-    return {
+function getLibraryInvoicesForOne(template, notificationData) {
+    function getEntitiesForLibraryInvoicesForOne() {}
+    function getRecipientsForLibraryInvoicesForOne() {}
+
+    var oneLibraryDraft = {
         getAudienceAndSubject: function() { return 'One Library, All Products'; },
-        getRecipients: function() {
-            //TODO
-        }
+        getEntities: getEntitiesForLibraryInvoicesForOne,
+        getRecipients: getRecipientsForLibraryInvoicesForOne
     };
+    return oneLibraryDraft;
 }
 
 
@@ -153,27 +175,27 @@ function generateDraftNotification(template, notificationData) {
 
     if (isAnnualAccessFeeInvoice()) {
         if (isASingleRecipient()) {
-            return getAnnualAccessFeeDraftForOneLibrary();
+            return getAnnualAccessFeeDraftForOneLibrary(template, notificationData);
         } else {
-            return getAnnualAccessFeeDraftForAllLibraries();
+            return getAnnualAccessFeeDraftForAllLibraries(template, notificationData);
         }
     } else if (isReminder()) {
-        return getReminderDraft(template, notificationData);
+        return getReminder(template, notificationData);
     } else if (notificationTypeIsForVendor()) {
         if (shouldSendEverythingToEveryone()) {
             return getVendorReportsForAll(template, notificationData);
         } else if (doRecipientsComeFromOfferings()) {
-            return getVendorReportsForSome();
+            return getVendorReportsForSome(template, notificationData);
         } else if (isASingleRecipient()) {
-            return getVendorReportsForOne();
+            return getVendorReportsForOne(template, notificationData);
         }
     } else if (notificationTypeIsForLibrary()) {
         if (shouldSendEverythingToEveryone()) {
-            return getLibraryInvoicesForAll();
+            return getLibraryInvoicesForAll(template, notificationData);
         } else if (doRecipientsComeFromOfferings()) {
-            return getLibraryInvoicesForSome();
+            return getLibraryInvoicesForSome(template, notificationData);
         } else if (isASingleRecipient()) {
-            return getLibraryInvoicesForOne();
+            return getLibraryInvoicesForOne(template, notificationData);
         }
     }
 
