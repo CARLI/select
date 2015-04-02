@@ -1,9 +1,14 @@
 var chai   = require( 'chai' );
+var chaiAsPromised = require('chai-as-promised');
 var expect = chai.expect;
 var notificationDraftGenerator = require('../NotificationDraftGenerator' );
+var Q = require('q');
+
+chai.use(chaiAsPromised);
 
 function implementsDraftNotificationInterface(draftNotification) {
-    return typeof draftNotification.getAudienceAndSubject === 'function';
+    return typeof draftNotification.getAudienceAndSubject === 'function' &&
+           typeof draftNotification.getRecipients == 'function';
 }
 
 describe('The notification draft generator', function() {
@@ -46,9 +51,22 @@ describe('The notification draft generator', function() {
                 notificationType: 'subscription'
             };
             var notificationData = {};
+            function getMockEntitiesForReminder() {
+                return Q({
+                    librariesWithSelectionsInCycle: [ 'library A' ],
+                    allLibraries: [
+                        { id: 'library A', name: 'library A' },
+                        { id: 'library B', name: 'library B' }
+                    ]
+                });
+            }
+
+
             var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
             expect(draft).to.satisfy(implementsDraftNotificationInterface);
             expect(draft.getAudienceAndSubject()).to.equal('Reminder');
+            draft.getEntities = getMockEntitiesForReminder;
+            expect(draft.getRecipients()).to.eventually.be.an('array');
         });
     });
 
