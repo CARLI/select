@@ -17,13 +17,13 @@ module.exports = function ( grunt ) {
     /**
      * Load in our build configuration file.
      */
-    var userConfig = require( './build.config.js' );
+    var user_config = require( './build.config.js' );
 
     /**
      * This is the configuration object Grunt uses to give each plugin its 
      * instructions.
      */
-    var taskConfig = {
+    var task_config = {
 
         /**
          * We read in our `package.json` file so we can access the package name and
@@ -75,6 +75,24 @@ module.exports = function ( grunt ) {
          * our project and vendor JavaScript into `build_dir`.
          */
         copy: {
+            carli_app_all_files: {
+                files: [{
+                    src: user_config.carli_app_all_files,
+                    dest: user_config.build_dir,
+                    expand: true
+                }]
+            },
+
+            /**/
+            vendor_app_all_files : {
+                files: [{
+                    src: user_config.vendor_app.all_files,
+                    dest: user_config.build_dir,
+                    expand: true
+                }]
+            },
+            /**/
+
             build_appjs: {
                 files: [{
                     src: [ '<%= carliApp_files.js %>' ],
@@ -414,6 +432,9 @@ module.exports = function ( grunt ) {
              * `src` property contains the list of included files.
              */
             build: {
+                options: {
+                    index_file: 'carliApp/index.html'
+                },
                 dir: '<%= build_dir %>',
                 src: [
                     '<%= vendor_files.js %>',
@@ -423,6 +444,15 @@ module.exports = function ( grunt ) {
                     '<%= build_dir %>/css/*.css',
                     '!<%= build_dir %>/css/app.css'
                 ]
+            },
+
+            vendor: {
+                options: {
+                    index_file: user_config.vendor_app.index_file
+                },
+
+                dir: user_config.build_dir+'/vendorApp/',
+                src: user_config.vendor_app.all_files
             },
 
             /**
@@ -440,7 +470,7 @@ module.exports = function ( grunt ) {
         }
     };
 
-    grunt.initConfig( _.extend( taskConfig, userConfig ) );
+    grunt.initConfig( _.extend( task_config, user_config ) );
 
     /**
      * A utility function to get all app JavaScript sources.
@@ -468,8 +498,9 @@ module.exports = function ( grunt ) {
      */
     grunt.registerMultiTask( 'index', 'Process index.html template', function () {
         var options = this.options();
-
         var dirRE = new RegExp( '^('+grunt.config('build_dir')+'|'+grunt.config('compile_dir')+')\/', 'g' );
+
+        console.log('index data',this.data);
 
         var jsFiles = filterForJS( this.filesSrc ).map( function ( file ) {
             return file.replace( dirRE, '' );
@@ -478,7 +509,7 @@ module.exports = function ( grunt ) {
             return file.replace( dirRE, '' );
         });
 
-        grunt.file.copy('carliApp/index.html', this.data.dir + '/index.html', {
+        grunt.file.copy(options.index_file, this.data.dir + '/index.html', {
             process: function ( contents, path ) {
                 return grunt.template.process( contents, {
                     data: {
@@ -511,6 +542,20 @@ module.exports = function ( grunt ) {
         'index:build',
         'jsenv:node'
     ]);
+
+
+    grunt.registerTask('buildVendorApp', [
+        'clean',
+        'jsenv:browser',
+        'ensure-local-config',
+        'jshint',
+        'copy:vendor_app_all_files',
+        'browserify:build',
+        'sass:build',
+        'index:vendor',
+        'jsenv:node'
+    ]);
+
 
     /**
      * Use `grunt test` to run ALL tests once

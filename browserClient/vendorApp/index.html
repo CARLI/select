@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html ng-app="carli.vendor.app" lang="en">
+    <head>
+        <base href="/">
+        <title>CARLI Vendor Pricing</title>
+        <% styles.forEach( function ( file ) { %>
+            <link type="text/css" rel="stylesheet" href="/<%= file %>">
+        <% }); %>
+        <link type="text/css" rel="stylesheet" href="/css/app.css">
+    </head>
+    <body>
+        <header carli-header role="banner"></header>
+        <nav nav-bar role="navigation"></nav>
+        <alerts></alerts>
+        <main role="main">
+            <div ng-view role="application"></div>
+        </main>
+
+        <!-- compiled JavaScript -->
+        <% scripts.forEach( function ( file ) { %>
+            <script type="text/javascript" src="/<%= file %>"></script>
+        <% }); %>
+
+        <script>
+            if (window.location.hostname == 'select-prod.carli.illinois.edu') {
+                var jiraBugReporterScriptUrl = "https://jira.pixotech.com/s/1da8c196d78afb2f4a47e86fbf58f91a-T/en_USrl3j18/6339/54/1.4.16/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=94458809";
+                $('body').append( $('<script>').attr('src',jiraBugReporterScriptUrl) );
+            }
+        </script>
+    </body>
+</html>

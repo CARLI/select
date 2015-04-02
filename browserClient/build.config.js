@@ -27,6 +27,27 @@ module.exports = {
         helper_scripts: [ 'e2e/utils/jQueryHelpers.js' ]
     },
 
+    carli_app_all_files: [
+        'carliApp/**/*',
+        '!carliApp/**/*.spec.js'
+    ],
+
+
+    /**/
+    vendor_app: {
+        all_files: [
+            'vendorApp/**/*',
+            '!vendorApp/**/*.spec.js'
+        ],
+        all_js: [
+            'vendorApp/**/*.js',
+            '!vendorApp/**/*.spec.js'
+        ],
+        index_file: 'vendorApp/index.html'
+    },
+    /**/
+
+
     /**
      * Stand-alone JavaScript files that get packaged by Browserify.
      * Browserify will set up a global (window) variable for the package logic files.
