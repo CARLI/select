@@ -71,10 +71,17 @@ describe('The notification draft generator', function() {
 
         it('should generate a list of notification objects', function(){
             var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
+            draft.getEntities = getMockEntitiesForAnnualAccessFee;
             draft.getOfferings = getMockOfferingsForAnnualAccessFee;
 
-            return draft.getNotifications().then(function(notifications){
-                return expect(notifications).to.be.an('array');
+            return draft.getRecipients().then(function (actualRecipients) {
+                draft.getNotifications(template, actualRecipients).then(function(notifications){
+                    return Q.all([
+                        expect(notifications).to.be.an('array'),
+                        expect(notifications.length).to.equal(1),
+                        expect(notifications[0].type).to.equal('Notification')
+                    ]);
+                });
             });
         });
     });
