@@ -385,7 +385,7 @@ function generateDraftNotification(template, notificationData) {
 
 function convertEntityToRecipient(entity, template) {
     return {
-        value: entity.id,
+        id: entity.id,
         label: notificationRepository.getRecipientLabel(entity.name, template.notificationType)
     };
 }

@@ -44,7 +44,7 @@ describe('The notification draft generator', function() {
                 return Q.all([
                     expect(recipients).to.be.an('array'),
                     expect(recipients.length).to.equal(1),
-                    expect(recipients[0].value).to.equal('library'),
+                    expect(recipients[0].id).to.equal('library'),
                     expect(recipients[0].label).to.equal('Library Invoice Contacts')
                 ]);
             });
@@ -77,7 +77,7 @@ describe('The notification draft generator', function() {
                 return Q.all([
                     expect(recipients).to.be.an('array'),
                     expect(recipients.length).to.equal(1),
-                    expect(recipients[0].value).to.equal('library-with-selections'),
+                    expect(recipients[0].id).to.equal('library-with-selections'),
                     expect(recipients[0].label).to.equal('Library with selections Invoice Contacts')
                 ]);
             });
@@ -115,7 +115,7 @@ describe('The notification draft generator', function() {
                 return Q.all([
                     expect(recipients).to.be.an('array'),
                     expect(recipients.length).to.equal(1),
-                    expect(recipients[0].value).to.equal('library-without-selections'),
+                    expect(recipients[0].id).to.equal('library-without-selections'),
                     expect(recipients[0].label).to.equal('Library without selections Subscription Contacts')
                 ]);
             });
@@ -150,7 +150,7 @@ describe('The notification draft generator', function() {
                 return Q.all([
                     expect(recipients).to.be.an('array'),
                     expect(recipients.length).to.equal(1),
-                    expect(recipients[0].value).to.equal('vendor'),
+                    expect(recipients[0].id).to.equal('vendor'),
                     expect(recipients[0].label).to.equal('Vendor Report Contacts')
                 ]);
             });
@@ -186,7 +186,7 @@ describe('The notification draft generator', function() {
                 return Q.all([
                     expect(recipients).to.be.an('array'),
                     expect(recipients.length).to.equal(1),
-                    expect(recipients[0].value).to.equal('vendor'),
+                    expect(recipients[0].id).to.equal('vendor'),
                     expect(recipients[0].label).to.equal('Vendor Report Contacts')
                 ]);
             });
@@ -220,7 +220,7 @@ describe('The notification draft generator', function() {
                 return Q.all([
                     expect(recipients).to.be.an('array'),
                     expect(recipients.length).to.equal(1),
-                    expect(recipients[0].value).to.equal('vendor'),
+                    expect(recipients[0].id).to.equal('vendor'),
                     expect(recipients[0].label).to.equal('Vendor Report Contacts')
                 ]);
             });
@@ -255,7 +255,7 @@ describe('The notification draft generator', function() {
                 return Q.all([
                     expect(recipients).to.be.an('array'),
                     expect(recipients.length).to.equal(1),
-                    expect(recipients[0].value).to.equal('library'),
+                    expect(recipients[0].id).to.equal('library'),
                     expect(recipients[0].label).to.equal('Library Invoice Contacts')
                 ]);
             });
@@ -291,7 +291,7 @@ describe('The notification draft generator', function() {
                 return Q.all([
                     expect(recipients).to.be.an('array'),
                     expect(recipients.length).to.equal(1),
-                    expect(recipients[0].value).to.equal('library'),
+                    expect(recipients[0].id).to.equal('library'),
                     expect(recipients[0].label).to.equal('Library Invoice Contacts')
                 ]);
             });
@@ -327,7 +327,7 @@ describe('The notification draft generator', function() {
                 return Q.all([
                     expect(recipients).to.be.an('array'),
                     expect(recipients.length).to.equal(1),
-                    expect(recipients[0].value).to.equal('library'),
+                    expect(recipients[0].id).to.equal('library'),
                     expect(recipients[0].label).to.equal('Library Invoice Contacts')
                 ]);
             });
@@ -361,7 +361,7 @@ describe('The notification draft generator', function() {
                 return Q.all([
                     expect(recipients).to.be.an('array'),
                     expect(recipients.length).to.equal(1),
-                    expect(recipients[0].value).to.equal('library'),
+                    expect(recipients[0].id).to.equal('library'),
                     expect(recipients[0].label).to.equal('Library Subscription Contacts')
                 ]);
             });
@@ -397,7 +397,7 @@ describe('The notification draft generator', function() {
                 return Q.all([
                     expect(recipients).to.be.an('array'),
                     expect(recipients.length).to.equal(1),
-                    expect(recipients[0].value).to.equal('library'),
+                    expect(recipients[0].id).to.equal('library'),
                     expect(recipients[0].label).to.equal('Library Subscription Contacts')
                 ]);
             });
@@ -433,7 +433,7 @@ describe('The notification draft generator', function() {
                 return Q.all([
                     expect(recipients).to.be.an('array'),
                     expect(recipients.length).to.equal(1),
-                    expect(recipients[0].value).to.equal('library'),
+                    expect(recipients[0].id).to.equal('library'),
                     expect(recipients[0].label).to.equal('Library Subscription Contacts')
                 ]);
             });
