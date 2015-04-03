@@ -24,11 +24,18 @@ function getAnnualAccessFeeDraftForOneLibrary(template, notificationData) {
                 });
             });
     }
-
+    function getOfferingsForAnnualAccessFeeDraftForOneLibrary() {
+        //TODO
+    }
+    function getNotificationsForAnnualAccessFeeDraftForOneLibrary(){
+        return Q([]);
+    }
     var annualAccessOneLibraryDraft = {
         getAudienceAndSubject: function() { return 'One Library, Annual Access Fee'; },
         getEntities: getEntitiesForAnnualAccessFeeDraftForOneLibrary,
-        getRecipients: getRecipientsForAnnualAccessFeeDraftForOneLibrary
+        getRecipients: getRecipientsForAnnualAccessFeeDraftForOneLibrary,
+        getOfferings: getOfferingsForAnnualAccessFeeDraftForOneLibrary,
+        getNotifications: getNotificationsForAnnualAccessFeeDraftForOneLibrary
     };
     return annualAccessOneLibraryDraft;
 }
@@ -60,11 +67,15 @@ function getAnnualAccessFeeDraftForAllLibraries(template, notificationData) {
                 });
             });
     }
+    function getOfferingsForAnnualAccessFeeDraftForAllLibraries(){}
+    function getNotificationsForAnnualAccessFeeDraftForAllLibraries(){}
 
     var annualAccessAllLibrariesDraft = {
         getAudienceAndSubject: function() { return 'All Libraries, Annual Access Fee'; },
         getEntities: getEntitiesForAnnualAccessFeeDraftForAllLibraries,
-        getRecipients: getRecipientsForAnnualAccessFeeDraftForAllLibraries
+        getRecipients: getRecipientsForAnnualAccessFeeDraftForAllLibraries,
+        getOfferings: getOfferingsForAnnualAccessFeeDraftForAllLibraries,
+        getNotifications: getNotificationsForAnnualAccessFeeDraftForAllLibraries
     };
     return annualAccessAllLibrariesDraft;
 }
@@ -114,11 +125,15 @@ function getReminder(template, notificationData) {
             }
         }
     }
+    function getOfferingsForReminder(){}
+    function getNotificationsForReminder(){}
 
     var reminderDraft = {
         getAudienceAndSubject: function() { return 'Reminder'; },
         getEntities: getEntitiesForReminder,
-        getRecipients: getRecipientsForReminder
+        getRecipients: getRecipientsForReminder,
+        getOfferings: getOfferingsForReminder,
+        getNotifications: getNotificationsForReminder
     };
 
     return reminderDraft;
@@ -149,11 +164,15 @@ function getVendorReportsForAll(template, notificationData) {
                 });
             });
     }
+    function getOfferingsForVendorReportsForAll(){}
+    function getNotificationsForVendorReportsForAll(){}
 
     var allVendorsDraft = {
         getAudienceAndSubject: function() { return 'All Vendors, All Products'; },
         getEntities: getEntitiesForVendorReportsForAll,
-        getRecipients: getRecipientsForVendorReportsForAll
+        getRecipients: getRecipientsForVendorReportsForAll,
+        getOfferings: getOfferingsForVendorReportsForAll,
+        getNotifications: getNotificationsForVendorReportsForAll
     };
     return allVendorsDraft;
 }
@@ -189,9 +208,9 @@ function getVendorReportsForSome(template, notificationData) {
                 }
             }
         });
-
-
     }
+    function getOfferingsForVendorReportsForSome(){}
+    function getNotificationsForVendorReportsForSome(){}
 
     function getRecipientsForVendorReportsForSome() {
         return someVendorsDraft.getEntities()
@@ -205,7 +224,9 @@ function getVendorReportsForSome(template, notificationData) {
     var someVendorsDraft = {
         getAudienceAndSubject: function() { return 'One or more Vendors, One or more Products'; },
         getEntities: getEntitiesForVendorReportsForSome,
-        getRecipients: getRecipientsForVendorReportsForSome
+        getRecipients: getRecipientsForVendorReportsForSome,
+        getOfferings: getOfferingsForVendorReportsForSome,
+        getNotifications: getNotificationsForVendorReportsForSome
     };
     return someVendorsDraft;
 }
@@ -223,11 +244,15 @@ function getVendorReportsForOne(template, notificationData) {
                 });
             });
     }
+    function getOfferingsForVendorReportsForOne(){}
+    function getNotificationsForVendorReportsForOne(){}
 
     var oneVendorDraft = {
         getAudienceAndSubject: function() { return 'One Vendor, All Products'; },
         getEntities: getEntitiesForVendorReportsForOne,
-        getRecipients: getRecipientsForVendorReportsForOne
+        getRecipients: getRecipientsForVendorReportsForOne,
+        getOfferings: getOfferingsForVendorReportsForOne,
+        getNotifications: getNotificationsForVendorReportsForOne
     };
     return oneVendorDraft;
 }
@@ -247,11 +272,15 @@ function getLibraryInvoicesForAll(template, notificationData) {
                 });
             });
     }
+    function getOfferingsForLibraryInvoicesForAll(){}
+    function getNotificationsForLibraryInvoicesForAll(){}
 
     var allLibrariesDraft = {
         getAudienceAndSubject: function() { return 'All Libraries, All Products'; },
         getEntities: getEntitiesForLibraryInvoicesForAll,
-        getRecipients: getRecipientsForLibraryInvoicesForAll
+        getRecipients: getRecipientsForLibraryInvoicesForAll,
+        getOfferings: getOfferingsForLibraryInvoicesForAll,
+        getNotifications: getNotificationsForLibraryInvoicesForAll
     };
     return allLibrariesDraft;
 }
@@ -283,10 +312,15 @@ function getLibraryInvoicesForSome(template, notificationData) {
             });
     }
 
+    function getOfferingsForLibraryInvoicesForSome(){}
+    function getNotificationsForLibraryInvoicesForSome(){}
+
     var someLibrariesDraft = {
         getAudienceAndSubject: function() { return 'One or more Libraries, One or more Products'; },
         getEntities: getEntitiesForLibraryInvoicesForSome,
-        getRecipients: getRecipientsForLibraryInvoicesForSome
+        getRecipients: getRecipientsForLibraryInvoicesForSome,
+        getOfferings: getOfferingsForLibraryInvoicesForSome,
+        getNotifications: getNotificationsForLibraryInvoicesForSome
     };
     return someLibrariesDraft;
 }
@@ -306,11 +340,15 @@ function getLibraryInvoicesForOne(template, notificationData) {
                 });
             });
     }
+    function getOfferingsForLibraryInvoicesForOne(){}
+    function getNotificationsForLibraryInvoicesForOne(){}
 
     var oneLibraryDraft = {
         getAudienceAndSubject: function() { return 'One Library, All Products'; },
         getEntities: getEntitiesForLibraryInvoicesForOne,
-        getRecipients: getRecipientsForLibraryInvoicesForOne
+        getRecipients: getRecipientsForLibraryInvoicesForOne,
+        getOfferings: getOfferingsForLibraryInvoicesForOne,
+        getNotifications: getNotificationsForLibraryInvoicesForOne
     };
     return oneLibraryDraft;
 }

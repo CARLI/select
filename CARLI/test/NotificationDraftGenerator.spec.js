@@ -8,7 +8,8 @@ chai.use(chaiAsPromised);
 
 function implementsDraftNotificationInterface(draftNotification) {
     return typeof draftNotification.getAudienceAndSubject === 'function' &&
-           typeof draftNotification.getRecipients == 'function';
+           typeof draftNotification.getRecipients == 'function' &&
+           typeof draftNotification.getNotifications == 'function';
 }
 
 describe('The notification draft generator', function() {
@@ -26,8 +27,26 @@ describe('The notification draft generator', function() {
         };
         function getMockEntitiesForAnnualAccessFee() {
             return Q({
-                libraryFromNotificationData: [{id: 'library', name: 'Library'}]
+                libraryFromNotificationData: [{id: 'library', name: 'Test Library'}]
             });
+        }
+        function getMockOfferingsForAnnualAccessFee(){
+            return Q([
+                {
+                    product: {
+                        id: 'product',
+                        name: 'Test Product'
+                    },
+                    library: {
+                        id: 'library',
+                        name: 'Test Library'
+                    },
+                    pricing: {
+                        site: 0.01
+                    },
+                    datePurchased: '2015-01-01'
+                }
+            ]);
         }
 
         it('should return a draft notification', function() {
@@ -45,8 +64,17 @@ describe('The notification draft generator', function() {
                     expect(recipients).to.be.an('array'),
                     expect(recipients.length).to.equal(1),
                     expect(recipients[0].id).to.equal('library'),
-                    expect(recipients[0].label).to.equal('Library Invoice Contacts')
+                    expect(recipients[0].label).to.equal('Test Library Invoice Contacts')
                 ]);
+            });
+        });
+
+        it('should generate a list of notification objects', function(){
+            var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
+            draft.getOfferings = getMockOfferingsForAnnualAccessFee;
+
+            return draft.getNotifications().then(function(notifications){
+                return expect(notifications).to.be.an('array');
             });
         });
     });
