@@ -9,17 +9,14 @@ var vendorRepository = require('../Entity/VendorRepository');
 var Q = require('q');
 
 function getAnnualAccessFeeDraftForOneLibrary(template, notificationData) {
+
     function getEntitiesForAnnualAccessFeeDraftForOneLibrary() {
-        return libraryRepository.load(notificationData.recipientId).then(function (library) {
-            return {
-                libraryFromNotificationData: [ library ]
-            }
-        });
+        return libraryRepository.load(notificationData.recipientId);
     }
     function getRecipientsForAnnualAccessFeeDraftForOneLibrary() {
         return annualAccessOneLibraryDraft.getEntities()
-            .then(function( entityResults ) {
-                return entityResults.libraryFromNotificationData.map(function(library) {
+            .then(function( libraryFromNotificationData ) {
+                return libraryFromNotificationData.map(function(library) {
                     return convertEntityToRecipient(library, template);
                 });
             });
@@ -44,6 +41,7 @@ function getAnnualAccessFeeDraftForOneLibrary(template, notificationData) {
     return annualAccessOneLibraryDraft;
 }
 function getAnnualAccessFeeDraftForAllLibraries(template, notificationData) {
+
     function getEntitiesForAnnualAccessFeeDraftForAllLibraries() {
         return cycleRepository.load(config.oneTimePurchaseProductsCycleDocId)
             .then(function(cycle){
@@ -52,11 +50,7 @@ function getAnnualAccessFeeDraftForAllLibraries(template, notificationData) {
             .then(function(libraryIdsAsStrings){
                 var libraryIds = libraryIdsAsStrings.map(convertIdsToNumbers);
 
-                return libraryRepository.getLibrariesById(libraryIds).then(function(libraries) {
-                    return {
-                        librariesWithSelections: libraries
-                    };
-                });
+                return libraryRepository.getLibrariesById(libraryIds);
             });
 
         function convertIdsToNumbers(id) {
@@ -65,8 +59,8 @@ function getAnnualAccessFeeDraftForAllLibraries(template, notificationData) {
     }
     function getRecipientsForAnnualAccessFeeDraftForAllLibraries() {
         return annualAccessAllLibrariesDraft.getEntities()
-            .then(function( entityResults ) {
-                return entityResults.librariesWithSelections.map(function(library) {
+            .then(function( librariesWithSelections ) {
+                return librariesWithSelections.map(function(library) {
                     return convertEntityToRecipient(library, template);
                 });
             });
@@ -84,28 +78,23 @@ function getAnnualAccessFeeDraftForAllLibraries(template, notificationData) {
     return annualAccessAllLibrariesDraft;
 }
 function getReminder(template, notificationData) {
-    var cycleId = notificationData.cycleId;
 
-    function getEntitiesForReminder() {
-        return cycleRepository.load(cycleId)
-            .then(function(cycle){
-                return Q.all([
-                    libraryRepository.listLibrariesWithSelectionsInCycle(cycle),
-                    libraryRepository.list()
-                ]);
-            })
-            .then(function(arrayOfPromises){
-                return {
-                    librariesWithSelectionsInCycle: arrayOfPromises[0],
-                    allLibraries: arrayOfPromises[1]
-                };
-            });
+    function getLibrariesWithSelections() {
+        console.log(notificationData.cycleId);
+        return cycleRepository.load(notificationData.cycleId).then(function(cycle){
+            return libraryRepository.listLibrariesWithSelectionsInCycle(cycle);
+        });
+    }
+    function getAllLibraries() {
+        return libraryRepository.list();
     }
 
     function getRecipientsForReminder() {
-        return reminderDraft.getEntities()
-            .then(function( entityResults ) {
-                return listLibrariesThatHaveNotMadeSelections(entityResults.librariesWithSelectionsInCycle, entityResults.allLibraries);
+        return reminderDraft.getLibrariesWithSelections()
+            .then(function( librariesWithSelectionsInCycle ) {
+                return reminderDraft.getAllLibraries().then(function(allLibraries) {
+                    return listLibrariesThatHaveNotMadeSelections(librariesWithSelectionsInCycle, allLibraries);
+                });
             })
             .then(function(librariesToContact){
                 return librariesToContact.map(function(library) {
@@ -134,7 +123,8 @@ function getReminder(template, notificationData) {
 
     var reminderDraft = {
         getAudienceAndSubject: function() { return 'Reminder'; },
-        getEntities: getEntitiesForReminder,
+        getLibrariesWithSelections: getLibrariesWithSelections,
+        getAllLibraries: getAllLibraries,
         getRecipients: getRecipientsForReminder,
         getOfferings: getOfferingsForReminder,
         getNotifications: getNotificationsForReminder
@@ -152,18 +142,13 @@ function getVendorReportsForAll(template, notificationData) {
                     .then(function (productsByVendorId) {
                         return Object.keys(productsByVendorId);
                     })
-                    .then(vendorRepository.getVendorsById)
-                    .then(function (vendors) {
-                        return {
-                            vendorsWithProductsInCycle: vendors
-                        }
-                    });
+                    .then(vendorRepository.getVendorsById);
             });
     }
     function getRecipientsForVendorReportsForAll() {
         return allVendorsDraft.getEntities()
-            .then(function( entityResults ) {
-                return entityResults.vendorsWithProductsInCycle.map(function(vendor) {
+            .then(function( vendorsWithProductsInCycle ) {
+                return vendorsWithProductsInCycle.map(function(vendor) {
                     return convertEntityToRecipient(vendor, template);
                 });
             });
@@ -185,12 +170,7 @@ function getVendorReportsForSome(template, notificationData) {
         return cycleRepository.load(notificationData.cycleId).then(function (cycle) {
             return getOfferingsFromCycle()
                 .then(getProductsFromOfferings)
-                .then(getVendorsFromProducts)
-                .then(function (vendors) {
-                    return {
-                        vendorsFromSelectedOfferings: vendors
-                    }
-                });
+                .then(getVendorsFromProducts);
 
             function getOfferingsFromCycle() {
                 return offeringRepository.getOfferingsById(notificationData.offeringIds, cycle);
@@ -218,8 +198,8 @@ function getVendorReportsForSome(template, notificationData) {
 
     function getRecipientsForVendorReportsForSome() {
         return someVendorsDraft.getEntities()
-            .then(function( entityResults ) {
-                return entityResults.vendorsFromSelectedOfferings.map(function(vendor) {
+            .then(function( vendorsFromSelectedOfferings ) {
+                return vendorsFromSelectedOfferings.map(function(vendor) {
                     return convertEntityToRecipient(vendor, template);
                 });
             });
@@ -237,13 +217,13 @@ function getVendorReportsForSome(template, notificationData) {
 function getVendorReportsForOne(template, notificationData) {
     function getEntitiesForVendorReportsForOne() {
         return vendorRepository.load(notificationData.recipientId).then(function(vendor) {
-            return { vendorFromNotificationData: [ vendor ] };
+            return [ vendor ];
         });
     }
     function getRecipientsForVendorReportsForOne() {
         return oneVendorDraft.getEntities()
-            .then(function( entityResults ) {
-                return entityResults.vendorFromNotificationData.map(function(vendor) {
+            .then(function( vendorFromNotificationData ) {
+                return vendorFromNotificationData.map(function(vendor) {
                     return convertEntityToRecipient(vendor, template);
                 });
             });
@@ -262,16 +242,12 @@ function getVendorReportsForOne(template, notificationData) {
 }
 function getLibraryInvoicesForAll(template, notificationData) {
     function getEntitiesForLibraryInvoicesForAll() {
-        return libraryRepository.list().then(function(libraries){
-            return {
-                librariesWithSelectionsInCycle: libraries
-            }
-        });
+        return libraryRepository.list();
     }
     function getRecipientsForLibraryInvoicesForAll() {
         return allLibrariesDraft.getEntities()
-            .then(function( entityResults ) {
-                return entityResults.librariesWithSelectionsInCycle.map(function(vendor) {
+            .then(function( librariesWithSelectionsInCycle ) {
+                return librariesWithSelectionsInCycle.map(function(vendor) {
                     return convertEntityToRecipient(vendor, template);
                 });
             });
@@ -289,15 +265,12 @@ function getLibraryInvoicesForAll(template, notificationData) {
     return allLibrariesDraft;
 }
 function getLibraryInvoicesForSome(template, notificationData) {
+
     function getEntitiesForLibraryInvoicesForSome() {
         return cycleRepository.load(notificationData.cycleId).then(function (cycle) {
             return offeringRepository.getOfferingsById(notificationData.offeringIds, cycle).then(function(offerings) {
                 var libraryIds = offerings.map(getLibraryIdFromOffering).filter(discardDuplicateIds);
-                return libraryRepository.getLibrariesById(libraryIds).then(function (libraries) {
-                    return {
-                        librariesFromOfferings: libraries
-                    }
-                });
+                return libraryRepository.getLibrariesById(libraryIds);
             });
         });
     }
@@ -309,8 +282,8 @@ function getLibraryInvoicesForSome(template, notificationData) {
 
     function getRecipientsForLibraryInvoicesForSome() {
         return someLibrariesDraft.getEntities()
-            .then(function( entityResults ) {
-                return entityResults.librariesFromOfferings.map(function(vendor) {
+            .then(function( librariesFromOfferings ) {
+                return librariesFromOfferings.map(function(vendor) {
                     return convertEntityToRecipient(vendor, template);
                 });
             });
@@ -329,17 +302,16 @@ function getLibraryInvoicesForSome(template, notificationData) {
     return someLibrariesDraft;
 }
 function getLibraryInvoicesForOne(template, notificationData) {
+
     function getEntitiesForLibraryInvoicesForOne() {
         return libraryRepository.load(notificationData.recipientId).then(function (library) {
-            return {
-                libraryFromNotificationData: [ library ]
-            }
+            return [ library ];
         });
     }
     function getRecipientsForLibraryInvoicesForOne() {
         return oneLibraryDraft.getEntities()
-            .then(function( entityResults ) {
-                return entityResults.libraryFromNotificationData.map(function(library) {
+            .then(function( libraryFromNotificationData ) {
+                return libraryFromNotificationData.map(function(library) {
                     return convertEntityToRecipient(library, template);
                 });
             });

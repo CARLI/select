@@ -22,13 +22,13 @@ describe('The notification draft generator', function() {
             id: 'notification-template-annual-access-fee-invoices',
             notificationType: 'invoice'
         };
+        /* The recipientId in the notification data is required for the real getEntities to know the recipient,
+           however we are not unit testing getEntities (the recipient is mocked in getMockEntitiesForAnnualAccessFee below) */
         var notificationData = {
-            recipientId: 'some library'
+            recipientId: 'library'
         };
         function getMockEntitiesForAnnualAccessFee() {
-            return Q({
-                libraryFromNotificationData: [{id: 'library', name: 'Test Library'}]
-            });
+            return Q([{id: 'library', name: 'Test Library'}]);
         }
         function getMockOfferingsForAnnualAccessFee(){
             return Q([
@@ -84,9 +84,7 @@ describe('The notification draft generator', function() {
         };
         var notificationData = {};
         function getMockEntitiesForAnnualAccessFee() {
-            return Q({
-                librariesWithSelections: [{id: 'library-with-selections', name: 'Library with selections'}]
-            });
+            return Q([{id: 'library-with-selections', name: 'Library with selections'}]);
         }
 
         it('should return a draft notification', function() {
@@ -117,14 +115,14 @@ describe('The notification draft generator', function() {
         };
         var notificationData = {};
 
-        function getMockEntitiesForReminder() {
-            return Q({
-                librariesWithSelectionsInCycle: ['library-with-selections'],
-                allLibraries: [
+        function getMockLibrariesWithSelectionsForReminder() {
+            return Q(['library-with-selections']);
+        }
+        function getMockAllLibrariesForReminder() {
+            return Q([
                     {id: 'library-with-selections', name: 'Library with selections'},
                     {id: 'library-without-selections', name: 'Library without selections'}
-                ]
-            });
+                ]);
         }
 
         it('should return a draft notification', function() {
@@ -135,7 +133,8 @@ describe('The notification draft generator', function() {
         });
         it('should generate a recipients list', function() {
             var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
-            draft.getEntities = getMockEntitiesForReminder;
+            draft.getLibrariesWithSelections = getMockLibrariesWithSelectionsForReminder;
+            draft.getAllLibraries = getMockAllLibrariesForReminder;
 
             return draft.getRecipients().then(function(recipients) {
                 return Q.all([
@@ -155,11 +154,7 @@ describe('The notification draft generator', function() {
         };
         var notificationData = {};
         function getMockEntitiesForAllVendorsAllProducts() {
-            return Q({
-                vendorsWithProductsInCycle: [
-                    {id: 'vendor', name: 'Vendor'}
-                ]
-            });
+            return Q([{id: 'vendor', name: 'Vendor'}]);
         }
 
         it('should return a draft notification', function() {
@@ -191,11 +186,7 @@ describe('The notification draft generator', function() {
             offeringIds: [ 1, 2, 3 ]
         };
         function getMockEntitiesForSomeVendorsSomeProducts() {
-            return Q({
-                vendorsFromSelectedOfferings: [
-                    {id: 'vendor', name: 'Vendor'}
-                ]
-            });
+            return Q([{id: 'vendor', name: 'Vendor'}]);
         }
 
         it('should return a draft notification', function() {
@@ -227,9 +218,7 @@ describe('The notification draft generator', function() {
             recipientId: 'some vendor'
         };
         function getMockEntitiesFromNotificationData() {
-            return Q({
-                vendorFromNotificationData: [ {id: 'vendor', name: 'Vendor'} ]
-            });
+            return Q( [ {id: 'vendor', name: 'Vendor'} ]);
         }
 
         it('should return a draft notification', function() {
@@ -260,11 +249,7 @@ describe('The notification draft generator', function() {
         };
         var notificationData = {};
         function getMockEntitiesForAllLibrariesAllProducts() {
-            return Q({
-                librariesWithSelectionsInCycle: [
-                    {id: 'library', name: 'Library'}
-                ]
-            });
+            return Q([{id: 'library', name: 'Library'}]);
         }
 
         it('should return a draft notification', function() {
@@ -296,11 +281,7 @@ describe('The notification draft generator', function() {
             offeringIds: [ 1, 2, 3 ]
         };
         function getMockEntitiesForSomeLibrariesSomeProducts() {
-            return Q({
-                librariesFromOfferings: [
-                    {id: 'library', name: 'Library'}
-                ]
-            });
+            return Q([{id: 'library', name: 'Library'}]);
         }
 
         it('should return a draft notification', function() {
@@ -332,11 +313,7 @@ describe('The notification draft generator', function() {
             recipientId: 'some library'
         };
         function getMockEntitiesForOneLibrariesAllProducts() {
-            return Q({
-                libraryFromNotificationData: [
-                    {id: 'library', name: 'Library'}
-                ]
-            });
+            return Q([{id: 'library', name: 'Library'}]);
         }
 
         it('should return a draft notification', function() {
@@ -366,11 +343,7 @@ describe('The notification draft generator', function() {
         };
         var notificationData = {};
         function getMockEntitiesForAllLibrariesAllProducts() {
-            return Q({
-                librariesWithSelectionsInCycle: [
-                    {id: 'library', name: 'Library'}
-                ]
-            });
+            return Q([{id: 'library', name: 'Library'}]);
         }
 
         it('should return a draft notification', function() {
@@ -402,11 +375,7 @@ describe('The notification draft generator', function() {
             offeringIds: [ 1, 2, 3 ]
         };
         function getMockEntitiesForSomeLibrariesSomeProducts() {
-            return Q({
-                librariesFromOfferings: [
-                    {id: 'library', name: 'Library'}
-                ]
-            });
+            return Q([{id: 'library', name: 'Library'}]);
         }
 
         it('should return a draft notification', function() {
@@ -438,11 +407,7 @@ describe('The notification draft generator', function() {
             recipientId: 'some library'
         };
         function getMockEntitiesForOneLibrariesAllProducts() {
-            return Q({
-                libraryFromNotificationData: [
-                    {id: 'library', name: 'Library'}
-                ]
-            });
+            return Q([{id: 'library', name: 'Library'}]);
         }
 
         it('should return a draft notification', function() {
