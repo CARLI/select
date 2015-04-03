@@ -31,15 +31,10 @@ function notificationModalController($scope, $rootScope, alertService, cycleServ
             recipients: [],
             subject: template.subject,
             emailBody: template.emailBody,
-            pdfBody: '',
-            isPdfContentEditable: template.isPdfContentEditable,
+            pdfBody: template.hasOwnProperty('pdfBody') ? template.pdfBody : '',
             draftStatus: 'draft',
             notificationType: template.notificationType
         };
-
-        if (template.hasOwnProperty('pdfBody')) {
-            vm.draft.pdfBody = template.pdfBody;
-        }
 
         return vm.draft;
     }

@@ -8,8 +8,8 @@
       "description": "Unique identifier for the Notification record",
       "type": "string"
     },
-    "recipients": {
-      "description": "Comma delimited list of e-mail addresses or contact groups.",
+    "targetEntity": {
+      "description": "The uuid of the recipient of this notification, either a library or vendor.",
       "type": "string"
     },
     "subject": {
@@ -19,13 +19,6 @@
       "type": "string"
     },
     "pdfBody": {
-      "type": "string"
-    },
-    "isPdfContentEditable": {
-      "type": "boolean"
-    },
-    "targetEntity": {
-      "description": "The uuid of the recipient of this notification, either a library or vendor.",
       "type": "string"
     },
     "offerings": {
