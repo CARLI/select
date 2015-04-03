@@ -27,24 +27,10 @@ function getAnnualAccessFeeDraftForOneLibrary(template, notificationData) {
     function getOfferingsForAnnualAccessFeeDraftForOneLibrary() {
         //TODO
     }
-    function getNotificationsForAnnualAccessFeeDraftForOneLibrary( customizedTemplate, actualRecipients ){
-        var actualRecipientsIds = actualRecipients.map(function (r) { return r.id; });
-
-        var customizedLibraryListPromise = annualAccessOneLibraryDraft.getEntities().then(function (entities) {
-            return entities.filter(onlyActualRecipients);
-            function onlyActualRecipients(entity) {
-                return actualRecipientsIds.indexOf(entity.id) !== -1;
-            }
-        });
-
-        return Q.all([
-            customizedLibraryListPromise,
-            annualAccessOneLibraryDraft.getOfferings()
-        ]).then(function(results){
-            var libraries = results[0];
-            var offerings = results[1];
-            return libraries.map(function(entity){
-                return generateNotificationForEntity(entity, offerings, customizedTemplate);
+    function getNotificationsForAnnualAccessFeeDraftForOneLibrary( customizedTemplate, actualRecipientIds ){
+        return annualAccessOneLibraryDraft.getOfferings().then(function(offerings){
+            return actualRecipientIds.map(function(id){
+                return generateNotificationForEntity(id, offerings, customizedTemplate);
             });
         });
     }
@@ -450,16 +436,20 @@ function discardDuplicateIds(value, index, self) {
     return self.indexOf(value) === index;
 }
 
-function generateNotificationForEntity(entity, offerings, customizedTemplate){
+function generateNotificationForEntity(entityId, offerings, customizedTemplate){
     return {
         type: 'Notification',
-        targetEntity: entity,
+        targetEntity: entityId,
         subject: customizedTemplate.subject,
         emailBody: customizedTemplate.emailBody,
         pdfBody: customizedTemplate.pdfBody,
-        offerings: offerings,
+        offerings: offerings.filter(onlyOfferingsForEntity),
         draftStatus: 'draft',
         notificationType: customizedTemplate.notificationType
+    };
+
+    function onlyOfferingsForEntity(offering){
+        return offering.library.id === entityId;
     }
 }
 

@@ -32,20 +32,8 @@ describe('The notification draft generator', function() {
         }
         function getMockOfferingsForAnnualAccessFee(){
             return Q([
-                {
-                    product: {
-                        id: 'product',
-                        name: 'Test Product'
-                    },
-                    library: {
-                        id: 'library',
-                        name: 'Test Library'
-                    },
-                    pricing: {
-                        site: 0.01
-                    },
-                    datePurchased: '2015-01-01'
-                }
+                { library: { id: 'library', name: 'Test Library'} },
+                { library: {id: 'library2', name: 'Test Library2'} }
             ]);
         }
 
@@ -74,14 +62,17 @@ describe('The notification draft generator', function() {
             draft.getEntities = getMockEntitiesForAnnualAccessFee;
             draft.getOfferings = getMockOfferingsForAnnualAccessFee;
 
-            return draft.getRecipients().then(function (actualRecipients) {
-                draft.getNotifications(template, actualRecipients).then(function(notifications){
-                    return Q.all([
-                        expect(notifications).to.be.an('array'),
-                        expect(notifications.length).to.equal(1),
-                        expect(notifications[0].type).to.equal('Notification')
-                    ]);
-                });
+            var customizedRecipients = [ 'library' ];
+
+            return draft.getNotifications(template, customizedRecipients).then(function(notifications){
+                return Q.all([
+                    expect(notifications).to.be.an('array'),
+                    expect(notifications.length).to.equal(1),
+                    expect(notifications[0].type).to.equal('Notification'),
+                    expect(notifications[0].targetEntity).to.equal('library'),
+                    expect(notifications[0].offerings).to.be.an('array'),
+                    expect(notifications[0].offerings.length).to.equal(1)
+                ]);
             });
         });
     });
