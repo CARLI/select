@@ -57,6 +57,8 @@ function notificationModalController($scope, $rootScope, alertService, cycleServ
     function receiveStartDraftMessage(message) {
         if (!message) {
             return;
+        } else {
+            notificationModalService.acknowledgeStartDraftMessage();
         }
 
         notificationTemplateService.load(message.templateId)
