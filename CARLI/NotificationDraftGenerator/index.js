@@ -22,14 +22,20 @@ function getAnnualAccessFeeDraftForOneLibrary(template, notificationData) {
             });
     }
     function getOfferingsForAnnualAccessFeeDraftForOneLibrary() {
-        //TODO
+        return cycleRepository.load(config.oneTimePurchaseProductsCycleDocId).then(function (cycle) {
+            return offeringRepository.listOfferingsForLibraryId(notificationData.recipientId, cycle);
+        });
     }
     function getNotificationsForAnnualAccessFeeDraftForOneLibrary( customizedTemplate, actualRecipientIds ){
-        return annualAccessOneLibraryDraft.getOfferings().then(function(offerings){
-            return actualRecipientIds.map(function(id){
-                return generateNotificationForEntity(id, offerings, customizedTemplate);
+        return annualAccessOneLibraryDraft.getOfferings()
+            .then(function(offerings) {
+                return offerings.filter(onlyPurchasedOfferings);
+            })
+            .then(function(offerings){
+                return actualRecipientIds.map(function(id){
+                    return generateNotificationForEntity(id, offerings, customizedTemplate);
+               });
             });
-        });
     }
     var annualAccessOneLibraryDraft = {
         getAudienceAndSubject: function() { return 'One Library, Annual Access Fee'; },
@@ -65,8 +71,22 @@ function getAnnualAccessFeeDraftForAllLibraries(template, notificationData) {
                 });
             });
     }
-    function getOfferingsForAnnualAccessFeeDraftForAllLibraries(){}
-    function getNotificationsForAnnualAccessFeeDraftForAllLibraries(){}
+    function getOfferingsForAnnualAccessFeeDraftForAllLibraries() {
+        return cycleRepository.load(config.oneTimePurchaseProductsCycleDocId).then(function (cycle) {
+            return offeringRepository.list(cycle);
+        });
+    }
+    function getNotificationsForAnnualAccessFeeDraftForAllLibraries( customizedTemplate, actualRecipientIds ){
+        return annualAccessAllLibrariesDraft.getOfferings()
+            .then(function(offerings) {
+                return offerings.filter(onlyPurchasedOfferings);
+            })
+            .then(function(offerings){
+                return actualRecipientIds.map(function(id){
+                    return generateNotificationForEntity(id, offerings, customizedTemplate);
+                });
+            });
+    }
 
     var annualAccessAllLibrariesDraft = {
         getAudienceAndSubject: function() { return 'All Libraries, Annual Access Fee'; },
@@ -415,7 +435,7 @@ function generateNotificationForEntity(entityId, offerings, customizedTemplate){
         subject: customizedTemplate.subject,
         emailBody: customizedTemplate.emailBody,
         pdfBody: customizedTemplate.pdfBody,
-        offerings: offerings.filter(onlyOfferingsForEntity),
+        offerings: offerings.filter(onlyOfferingsForEntity).map(getId),
         draftStatus: 'draft',
         notificationType: customizedTemplate.notificationType
     };
@@ -423,6 +443,14 @@ function generateNotificationForEntity(entityId, offerings, customizedTemplate){
     function onlyOfferingsForEntity(offering){
         return offering.library.id === entityId;
     }
+    function getId(o) {
+        return o.id;
+    }
+}
+
+
+function onlyPurchasedOfferings(offering) {
+    return offering.datePurchased || offering.selection;
 }
 
 module.exports = {
