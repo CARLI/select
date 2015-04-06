@@ -222,5 +222,51 @@ describe('Adding functions to Notification instances', function () {
                 return expect(notification.getSummaryTotal()).to.equal(200);
             });
         });
-    })
+    });
+
+    it('should add a getRecipientLabel method to instances of Notification', function () {
+        var notification = validNotificationData();
+
+        return notificationRepository.create(notification)
+            .then(notificationRepository.load)
+            .then(function (loadedNotification) {
+                return expect(loadedNotification.getRecipientLabel).to.be.a('function');
+            });
+    });
+});
+
+describe('the notificationTypeIsForLibrary method', function () {
+    it('should be a function', function(){
+        expect(notificationRepository.notificationTypeIsForLibrary).to.be.a('function');
+    });
+
+    it('should return the correct value for a library invoice', function () {
+        expect(notificationRepository.notificationTypeIsForLibrary('invoice')).to.be.true;
+    });
+
+    it('should return the correct value for a vendor report', function () {
+        expect(notificationRepository.notificationTypeIsForLibrary('report')).to.be.false;
+    });
+
+    it('should return the correct value for a subscription related notification', function () {
+        expect(notificationRepository.notificationTypeIsForLibrary('subscription')).to.be.true;
+    });
+});
+
+describe('the notificationTypeIsForVendor method', function () {
+    it('should be a function', function(){
+        expect(notificationRepository.notificationTypeIsForVendor).to.be.a('function');
+    });
+
+    it('should return the correct value for a library invoice', function () {
+        expect(notificationRepository.notificationTypeIsForVendor('invoice')).to.be.false;
+    });
+
+    it('should return the correct value for a vendor report', function () {
+        expect(notificationRepository.notificationTypeIsForVendor('report')).to.be.true;
+    });
+
+    it('should return the correct value for a subscription related notification', function () {
+        expect(notificationRepository.notificationTypeIsForVendor('subscription')).to.be.false;
+    });
 });

@@ -400,20 +400,10 @@ function generateDraftNotification(template, notificationData) {
         return !recipientId;
     }
     function notificationTypeIsForLibrary() {
-        var results = {
-            'invoice': true,
-            'report': false,
-            'subscription': true
-        };
-        return results[template.notificationType];
+        return notificationRepository.notificationTypeIsForLibrary(template.notificationType);
     }
     function notificationTypeIsForVendor() {
-        var results = {
-            'invoice': false,
-            'report': true,
-            'subscription': false
-        };
-        return results[template.notificationType];
+        return notificationRepository.notificationTypeIsForVendor(template.notificationType);
     }
 }
 
@@ -435,16 +425,14 @@ function generateNotificationForEntity(entityId, offerings, customizedTemplate){
         subject: customizedTemplate.subject,
         emailBody: customizedTemplate.emailBody,
         pdfBody: customizedTemplate.pdfBody,
-        offerings: offerings.filter(onlyOfferingsForEntity).map(getId),
+        cycle: offerings[0].cycle,
+        offerings: offerings.filter(onlyOfferingsForEntity),
         draftStatus: 'draft',
         notificationType: customizedTemplate.notificationType
     };
 
     function onlyOfferingsForEntity(offering){
         return offering.library.id === entityId;
-    }
-    function getId(o) {
-        return o.id;
     }
 }
 

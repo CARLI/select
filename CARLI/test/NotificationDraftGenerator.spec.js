@@ -458,38 +458,3 @@ describe('The notification draft generator', function() {
     });
 });
 
-//xdescribe('the notificationTypeIsForLibrary method', function () {
-//    it('should be a function', function(){
-//        expect(notificationRepository.notificationTypeIsForLibrary).to.be.a('function');
-//    });
-//
-//    it('should return the correct value for a library invoice', function () {
-//        expect(notificationRepository.notificationTypeIsForLibrary('invoice')).to.be.true;
-//    });
-//
-//    it('should return the correct value for a vendor report', function () {
-//        expect(notificationRepository.notificationTypeIsForLibrary('report')).to.be.false;
-//    });
-//
-//    it('should return the correct value for a subscription related notification', function () {
-//        expect(notificationRepository.notificationTypeIsForLibrary('subscription')).to.be.true;
-//    });
-//});
-//
-//xdescribe('the notificationTypeIsForVendor method', function () {
-//    it('should be a function', function(){
-//        expect(notificationRepository.notificationTypeIsForVendor).to.be.a('function');
-//    });
-//
-//    it('should return the correct value for a library invoice', function () {
-//        expect(notificationRepository.notificationTypeIsForVendor('invoice')).to.be.false;
-//    });
-//
-//    it('should return the correct value for a vendor report', function () {
-//        expect(notificationRepository.notificationTypeIsForVendor('report')).to.be.true;
-//    });
-//
-//    it('should return the correct value for a subscription related notification', function () {
-//        expect(notificationRepository.notificationTypeIsForVendor('subscription')).to.be.false;
-//    });
-//});

@@ -13,7 +13,6 @@ function notificationService($q, $http, CarliModules, config) {
         create: function() { return $q.when( notificationModule.create.apply(this, arguments) ); },
         update: function() { return $q.when( notificationModule.update.apply(this, arguments) ); },
         load:   function() { return $q.when( notificationModule.load.apply(this, arguments) ); },
-        createNotificationsFor: createNotificationsFor,
         sendNotification: sendNotification,
         removeNotification: function() { return $q.when( notificationModule.delete.apply(this, arguments)); },
         getRecipientLabel: notificationModule.getRecipientLabel,
@@ -28,11 +27,6 @@ function notificationService($q, $http, CarliModules, config) {
             recipients: '',
             draftStatus: 'draft'
         };
-    }
-
-    function createNotificationsFor( spec ){
-
-        return notificationModule.create(spec);
     }
 
     function sendNotification(notification) {
