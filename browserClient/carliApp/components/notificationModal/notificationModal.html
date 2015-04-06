@@ -13,7 +13,7 @@
 
                 <form name="notificationForm" warn-if-unsaved ng-if="vm.template">
                     <label for="recipients">To</label>
-                    <tags-input ng-model="vm.draft.recipients" placeholder="Add a recipient" key-property="id" display-property="label">
+                    <tags-input ng-model="vm.recipients" placeholder="Add a recipient" key-property="id" display-property="label">
 
                     <label for="subject">Subject Line</label>
                     <input id="subject" type="text" ng-model="vm.draft.subject">
@@ -29,7 +29,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="carli-button cancel-button" data-dismiss="modal">Cancel</button>
-                <button type="button" class="carli-button save-button" ng-click="vm.saveNotifications()">Save</button>
+                <button type="button" class="carli-button save-button" busy-click="vm.saveNotifications()">Save</button>
              </div>
         </div>
     </div>

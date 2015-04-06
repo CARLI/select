@@ -1,9 +1,12 @@
 angular.module('carli.notificationModal')
 .controller('notificationModalController', notificationModalController);
 
-function notificationModalController($scope, $rootScope, alertService, cycleService, libraryService, notificationService, notificationModalService, notificationTemplateService, offeringService, productService, vendorService) {
+function notificationModalController($q, $scope, $rootScope, alertService, cycleService, libraryService, notificationService, notificationModalService, notificationTemplateService, offeringService, productService, vendorService) {
     var vm = this;
+    var generator = null;
+
     vm.draft = {};
+    vm.recipients = [];
     vm.template = null;
 
     vm.saveNotifications = saveNotifications;
@@ -28,7 +31,6 @@ function notificationModalController($scope, $rootScope, alertService, cycleServ
         vm.template = template;
 
         vm.draft = {
-            recipients: [],
             subject: template.subject,
             emailBody: template.emailBody,
             pdfBody: template.hasOwnProperty('pdfBody') ? template.pdfBody : '',
@@ -65,9 +67,9 @@ function notificationModalController($scope, $rootScope, alertService, cycleServ
             });
 
         function populateRecipients(draftNotification) {
-            var generator = notificationService.generateDraftNotification(vm.template, message);
+            generator = notificationService.generateDraftNotification(vm.template, message);
             return generator.getRecipients().then(function (recipients) {
-                draftNotification.recipients = recipients;
+                vm.recipients = recipients;
                 return draftNotification;
             });
         }
@@ -123,12 +125,23 @@ function notificationModalController($scope, $rootScope, alertService, cycleServ
     }
 
     function saveNotifications(){
-        notificationService.createNotificationsFor( vm.draft )
+        var recipientIds = getRecipientIds(vm.recipients);
+
+        return generator.getNotifications(vm.draft, recipientIds)
+            .then(function(notifications) {
+                console.log(notifications);
+                var promises = notifications.map(notificationService.create);
+                return $q.all(promises);
+            })
             .then(saveSuccess)
             .catch(saveError);
 
-        function saveSuccess(){
-            alertService.putAlert('Notifications created', {severity: 'success'});
+        function getRecipientIds(recipients) {
+            return recipients.map(function (r) { return r.id.toString(); });
+        }
+
+        function saveSuccess(results){
+            alertService.putAlert(results.length + ' Notifications created', {severity: 'success'});
             resetNotificationForm();
             hideModal();
             if ( typeof vm.afterSubmitFn === 'function' ){
