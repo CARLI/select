@@ -121,7 +121,7 @@ function getRecipientLabel(recipientName, notificationType) {
 
 function getSummaryTotal() {
     var notification = this;
-    return notification.offerings.reduce(sumOfPrices, 0);
+    return notification.offerings ? notification.offerings.reduce(sumOfPrices, 0) : 0;
 
     function sumOfPrices(sum, offering) {
         return sum + offering.selection.price;

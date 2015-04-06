@@ -80,6 +80,10 @@ function notificationModalController($q, $scope, $rootScope, alertService, cycle
         }
     }
 
+    function isNotificationGeneratedFromData(){
+        return generator;
+    }
+
     function setupModalClosingUnsavedChangesWarning(){
         $('#notification-modal').on('hide.bs.modal', confirmHideModal);
     }
@@ -87,6 +91,7 @@ function notificationModalController($q, $scope, $rootScope, alertService, cycle
     function resetNotificationForm(){
         vm.draft = {};
         vm.template = null;
+        generator = null;
         setNotificationFormPristine();
     }
 
@@ -129,23 +134,40 @@ function notificationModalController($q, $scope, $rootScope, alertService, cycle
     }
 
     function saveNotifications(){
-        var recipientIds = getRecipientIds(vm.recipients);
+        if ( isNotificationGeneratedFromData() ) {
+            return saveNotificationFromGenerator();
+        }
+        else {
+            return saveNotificationFromForm();
+        }
 
-        return getNotifications(vm.draft, recipientIds)
-            .then(function(notifications) {
-                console.log(notifications);
-                var promises = notifications.map(notificationService.create);
-                return $q.all(promises);
-            })
+        function saveNotificationFromGenerator() {
+            var recipientIds = getRecipientIds(vm.recipients);
+
+            return getNotifications(vm.draft, recipientIds)
+                .then(function (notifications) {
+                    console.log(notifications);
+                    var promises = notifications.map(notificationService.create);
+                    return $q.all(promises);
+                })
+                .then(saveSuccess)
+                .catch(saveError);
+
+            function getRecipientIds(recipients) {
+                return recipients.map(function (r) { return r.id.toString(); });
+            }
+        }
+
+        function saveNotificationFromForm(){
+            vm.draft.to = vm.recipients.map(function (r) { return r.label; }).join(', ');
+            return notificationService.create(vm.draft)
             .then(saveSuccess)
             .catch(saveError);
-
-        function getRecipientIds(recipients) {
-            return recipients.map(function (r) { return r.id.toString(); });
         }
 
         function saveSuccess(results){
-            alertService.putAlert(results.length + ' Notifications created', {severity: 'success'});
+            var message = angular.isArray(results) ? results.length + ' Notifications created' : 'Notification created';
+            alertService.putAlert(message, {severity: 'success'});
             resetNotificationForm();
             hideModal();
             if ( typeof vm.afterSubmitFn === 'function' ){

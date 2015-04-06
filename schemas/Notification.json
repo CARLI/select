@@ -8,6 +8,10 @@
       "description": "Unique identifier for the Notification record",
       "type": "string"
     },
+    "to": {
+      "description": "List of actual email addresses to send to",
+      "type": "string"
+    },
     "targetEntity": {
       "description": "The uuid of the recipient of this notification, either a library or vendor.",
       "type": "string"
@@ -44,5 +48,5 @@
         "$ref": "./NotificationType.json"
     }
   },
-  "required": [ "targetEntity", "subject", "emailBody", "draftStatus", "notificationType" ]
+  "required": [ "subject", "emailBody", "draftStatus", "notificationType" ]
 }
