@@ -40,5 +40,5 @@
         "$ref": "./NotificationType.json"
     }
   },
-  "required": [ "subject", "emailBody", "recipients", "draftStatus", "notificationType" ]
+  "required": [ "targetEntity", "subject", "emailBody", "draftStatus", "notificationType" ]
 }
