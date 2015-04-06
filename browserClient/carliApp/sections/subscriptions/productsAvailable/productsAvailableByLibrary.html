@@ -30,6 +30,7 @@
                     <li role="row" class="offering" ng-class="{ 'edit-mode': vm.isEditing[offering.id] }" ng-repeat="offering in vm.offerings[library.id] | filter:vm.filterOfferingBySelection | orderBy:vm.orderBy:vm.reverse track by offering.id">
                         <edit-offering ng-if="vm.isEditing[offering.id]" cycle="::cycle" offering="offering" columns="::vm.offeringColumns" on-offering-saved="::vm.stopEditing"></edit-offering>
                         <render-offering ng-if="!vm.isEditing[offering.id]" offering="offering" cycle="::vm.cycle" columns="::vm.offeringColumns"></render-offering>
+                        <checkbox ng-model="vm.selectedOfferings[library.id][offering.id]"></checkbox>
                     </li>
                 </ul>
                 <div class="footer clearfix">
@@ -40,8 +41,8 @@
                     <div class="placeholder" style="margin-bottom: 1rem;">TODO: Outstanding Balances</div>
 
                     <button type="button" class="carli-button" ng-click="vm.invoiceCheckedProductsForLibrary(library)">Invoice Checked Products</button>
+                    <button type="button" class="carli-button" ng-click="vm.invoiceAllProductsForLibrary(library)">Invoice All Products</button>
 
-                    <div class="placeholder pull-left" style="margin-right: 1rem; width: 400px;">TODO: Invoice All</div>
                     <div class="placeholder pull-left" style="margin-right: 1rem; width: 400px;">TODO: Library View Button</div>
                 </div>
             </div>
@@ -49,6 +50,8 @@
     </ul>
 </div>
 
-<div class="notifications placeholder" style="width: 400px; margin-bottom: 1rem;">
-    TODO: Invoice Checked / Invoice All
-</div>
+<button class="carli-button" ng-click="vm.invoiceAllLibraries()">Invoice All Libraries</button>
+<button class="carli-button" ng-click="vm.contactNonPlayers()">Contact Non-Players</button>
+<button class="carli-button" ng-click="vm.estimateAllLibraries()">Estimate All Libraries</button>
+
+

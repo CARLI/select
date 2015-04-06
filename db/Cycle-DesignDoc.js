@@ -49,6 +49,16 @@ ddoc = {
                 return sum(values);
             }
         },
+        listLibrariesWithSelections: {
+            map: function(doc) {
+                if (doc.type === 'Offering' && doc.selection ) {
+                    emit(doc.library, 1);
+                }
+            },
+            reduce: function(key, values) {
+                return sum(values);
+            }
+        },
         getCycleSelectionAndInvoiceTotals: {
             map: function(doc) {
                 if (doc.type == 'Offering') {

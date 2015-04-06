@@ -1,7 +1,7 @@
 var Entity = require('../Entity')
   , EntityTransform = require( './EntityTransformationUtils')
   , config = require( '../../config' )
-  , CouchUtils = require( '../Store/CouchDb/Utils')
+  , couchUtils = require( '../Store/CouchDb/Utils')
   , getStoreForCycle = require('./getStoreForCycle')
   , Validator = require('../Validator')
   , Q = require('q')
@@ -101,13 +101,13 @@ function loadOffering( offeringId, cycle ){
 
 function listOfferingsForLibraryId( libraryId, cycle ) {
     setCycle(cycle);
-    return expandOfferings( CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForLibraryId', libraryId.toString()), cycle )
+    return expandOfferings( couchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForLibraryId', libraryId.toString()), cycle )
         .then(initializeComputedValues);
 }
 
 function listOfferingsForProductId( productId, cycle ) {
     setCycle(cycle);
-    return expandOfferings( CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForProductId', productId), cycle )
+    return expandOfferings( couchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForProductId', productId), cycle )
         .then(initializeComputedValues);
 }
 
@@ -163,10 +163,13 @@ var functionsToAdd = {
     //warning: some Offering views are in the Middleware and cross the http layer, which strips these functions
 };
 
+function getOfferingsById( ids, cycle ){
+    return couchUtils.getCouchDocuments(cycle.databaseName, ids);
+}
+
 function getOfferingDisplayOptions(){
     return Validator.getEnumValuesFor('Offering','display');
 }
-
 
 module.exports = {
     setStore: OfferingRepository.setStore,
@@ -178,6 +181,7 @@ module.exports = {
 
     listOfferingsForLibraryId: listOfferingsForLibraryId,
     listOfferingsForProductId: listOfferingsForProductId,
+    getOfferingsById: getOfferingsById,
     getOfferingDisplayOptions: getOfferingDisplayOptions,
     transformOfferingsForNewCycle: transformOfferingsForNewCycle,
     saveOfferingHistoryForYear: saveOfferingHistoryForYear,

@@ -2,7 +2,7 @@ var Entity = require('../Entity')
   , EntityTransform = require( './EntityTransformationUtils')
   , CycleRepository = require('./CycleRepository')
   , config = require( '../../config' )
-  , CouchUtils = require( '../Store/CouchDb/Utils')
+  , couchUtils = require( '../Store/CouchDb/Utils')
   , getStoreForCycle = require('./getStoreForCycle')
   , Validator = require('../Validator')
   , moment = require('moment')
@@ -91,12 +91,12 @@ function isAvailableToday( product ){
 
 function listProductsForLicenseId( licenseId, cycle ) {
     setCycle(cycle);
-    return expandProducts(CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listProductsByLicenseId', licenseId), cycle);
+    return expandProducts(couchUtils.getCouchViewResultValues(cycle.databaseName, 'listProductsByLicenseId', licenseId), cycle);
 }
 
 function listProductsForVendorId( vendorId, cycle ) {
     setCycle(cycle);
-    return expandProducts(CouchUtils.getCouchViewResultValues(cycle.databaseName, 'listProductsForVendorId', vendorId), cycle);
+    return expandProducts(couchUtils.getCouchViewResultValues(cycle.databaseName, 'listProductsForVendorId', vendorId), cycle);
 }
 
 function listProductsWithOfferingsForVendorId( vendorId, cycle ) {
@@ -105,7 +105,7 @@ function listProductsWithOfferingsForVendorId( vendorId, cycle ) {
 
 function listProductCountsByVendorId(cycle){
     setCycle(cycle);
-    return CouchUtils.getCouchViewResultObject(cycle.databaseName, 'listProductCountsByVendorId', null, true);
+    return couchUtils.getCouchViewResultObject(cycle.databaseName, 'listProductCountsByVendorId', null, true);
 }
 
 function setCycle(cycle) {
@@ -113,6 +113,10 @@ function setCycle(cycle) {
         throw Error("Cycle is required");
     }
     ProductRepository.setStore(getStoreForCycle(cycle));
+}
+
+function getProductsById( ids, cycle ){
+    return couchUtils.getCouchDocuments(cycle.databaseName, ids);
 }
 
 
@@ -144,5 +148,6 @@ module.exports = {
     listProductsForVendorId: listProductsForVendorId,
     listProductsWithOfferingsForVendorId: listProductsWithOfferingsForVendorId,
     listProductCountsByVendorId: listProductCountsByVendorId,
+    getProductsById: getProductsById,
     getProductDetailCodeOptions: getProductDetailCodeOptions
 };

@@ -8,8 +8,12 @@
       "description": "Unique identifier for the Notification record",
       "type": "string"
     },
-    "recipients": {
-      "description": "Comma delimited list of e-mail addresses or contact groups.",
+    "to": {
+      "description": "List of actual email addresses to send to",
+      "type": "string"
+    },
+    "targetEntity": {
+      "description": "The uuid of the recipient of this notification, either a library or vendor.",
       "type": "string"
     },
     "subject": {
@@ -21,11 +25,8 @@
     "pdfBody": {
       "type": "string"
     },
-    "isPdfContentEditable": {
-      "type": "boolean"
-    },
-    "targetEntity": {
-      "description": "The uuid of the recipient of this notification, either a library or vendor.",
+    "cycle": {
+      "description": "UUID of a cycle document, if notification contains offerings",
       "type": "string"
     },
     "offerings": {
@@ -47,5 +48,5 @@
         "$ref": "./NotificationType.json"
     }
   },
-  "required": [ "subject", "emailBody", "recipients", "draftStatus", "notificationType" ]
+  "required": [ "subject", "emailBody", "draftStatus", "notificationType" ]
 }

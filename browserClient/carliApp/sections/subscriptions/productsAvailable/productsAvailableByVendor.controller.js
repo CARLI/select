@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.productsAvailable')
     .controller('productsAvailableByVendorController', productsAvailableByVendorController);
 
-function productsAvailableByVendorController( $scope, $q, accordionControllerMixin, notificationModalService, controllerBaseService, cycleService, vendorService, offeringService, editOfferingService,  productService ) {
+function productsAvailableByVendorController( $scope, $timeout, $q, accordionControllerMixin, notificationModalService, controllerBaseService, cycleService, vendorService, offeringService, editOfferingService,  productService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadProductsForVendor);
@@ -17,6 +17,7 @@ function productsAvailableByVendorController( $scope, $q, accordionControllerMix
     vm.lastYear = '';
     vm.selectedOfferings = {};
     vm.reportCheckedProductsForVendor = reportCheckedProductsForVendor;
+    vm.reportAllProductsForVendor = reportAllProductsForVendor;
     vm.reportAllVendors = reportAllVendors;
     vm.offeringColumns = [
         'library',
@@ -67,9 +68,14 @@ function productsAvailableByVendorController( $scope, $q, accordionControllerMix
             return $q.when();
         }
 
+        var start = new Date();
+
         vm.loadingPromise[vendor.id] = productService.listProductsWithOfferingsForVendorId(vendor.id)
             .then(function(products) {
                 vendor.products = products;
+
+                //logLoadTime(products,start);
+
                 return products;
             });
 
@@ -147,13 +153,44 @@ function productsAvailableByVendorController( $scope, $q, accordionControllerMix
             return vm.selectedOfferings[vendor.id][key];
         });
 
-        alert('report offerings '+offeringsToReport.join(','));
+        notificationModalService.sendStartDraftMessage({
+            templateId: 'notification-template-vendor-reports',
+            cycleId: vm.cycle.id,
+            recipientId: vendor.id,
+            offeringIds: offeringsToReport
+        });
+    }
+
+    function reportAllProductsForVendor( vendor ){
+        notificationModalService.sendStartDraftMessage({
+            templateId: 'notification-template-vendor-reports',
+            cycleId: vm.cycle.id,
+            recipientId: vendor.id
+        });
     }
 
     function reportAllVendors() {
         notificationModalService.sendStartDraftMessage({
             templateId: 'notification-template-vendor-reports',
             cycleId: vm.cycle.id
+        });
+    }
+
+
+    function logLoadTime(products, startTime) {
+        if ( !products || !products.length ){
+            return;
+        }
+
+        var numberOfOfferings = products.map(function(list){
+            return list.offerings.length;
+        }).reduce(function(previousValue, currentValue, index, array) {
+            return previousValue + currentValue;
+        });
+
+        $timeout(function(){
+            var stop = new Date();
+            console.log('digest ' + numberOfOfferings + ' vendor offerings took '+ (stop-startTime)/1000 + 's');
         });
     }
 }

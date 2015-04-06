@@ -33,6 +33,9 @@ function productService( CarliModules, $q, cycleService ) {
         listProductCountsByVendorId: function(){
             return $q.when( productModule.listProductCountsByVendorId( cycleService.getCurrentCycle()) );
         },
+        getProductsById: function(ids) {
+            return $q.when( productModule.getProductsById(ids,  cycleService.getCurrentCycle()) );
+        },
         getProductDetailCodeOptions: productModule.getProductDetailCodeOptions
     };
 }

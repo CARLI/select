@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.productsAvailable')
     .controller('productsAvailableByLibraryController', productsAvailableByLibraryController);
 
-function productsAvailableByLibraryController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, libraryService, offeringService, editOfferingService, vendorService ) {
+function productsAvailableByLibraryController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, libraryService, notificationModalService, offeringService, editOfferingService, vendorService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadOfferingsForLibrary);
@@ -19,6 +19,11 @@ function productsAvailableByLibraryController( $scope, $q, accordionControllerMi
     vm.lastYear = '';
     vm.selectedOfferings = {};
     vm.invoiceCheckedProductsForLibrary = invoiceCheckedProductsForLibrary;
+    vm.invoiceAllProductsForLibrary = invoiceAllProductsForLibrary;
+    vm.invoiceAllLibraries = invoiceAllLibraries;
+    vm.contactNonPlayers = contactNonPlayers;
+    vm.estimateAllLibraries = estimateAllLibraries;
+
     vm.offeringColumns = [
         'product',
         'vendor',
@@ -143,10 +148,43 @@ function productsAvailableByLibraryController( $scope, $q, accordionControllerMi
             return;
         }
 
-        var offeringsToInvoice = Object.keys(vm.selectedOfferings[library.id]).filter(function(key){
+        var offeringsToReport = Object.keys(vm.selectedOfferings[library.id]).filter(function(key){
             return vm.selectedOfferings[library.id][key];
         });
 
-        alert('invoice offerings '+offeringsToInvoice.join(','));
+        notificationModalService.sendStartDraftMessage({
+            templateId: 'notification-template-library-invoices',
+            cycleId: vm.cycle.id,
+            offeringIds: offeringsToReport
+        });
+    }
+
+    function invoiceAllProductsForLibrary( library ){
+        notificationModalService.sendStartDraftMessage({
+            templateId: 'notification-template-library-invoices',
+            cycleId: vm.cycle.id,
+            recipientId: library.id
+        });
+    }
+
+    function invoiceAllLibraries() {
+        notificationModalService.sendStartDraftMessage({
+            templateId: 'notification-template-library-invoices',
+            cycleId: vm.cycle.id
+        });
+    }
+
+    function contactNonPlayers(){
+        notificationModalService.sendStartDraftMessage({
+            templateId: 'notification-template-contact-non-players',
+            cycleId: vm.cycle.id
+        });
+    }
+
+    function estimateAllLibraries(){
+        notificationModalService.sendStartDraftMessage({
+            templateId: 'notification-template-library-estimates-closed',
+            cycleId: vm.cycle.id
+        });
     }
 }

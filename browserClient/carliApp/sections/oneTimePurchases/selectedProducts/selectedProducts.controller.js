@@ -2,19 +2,20 @@
     angular.module('carli.sections.oneTimePurchases.selectedProducts')
         .controller('selectedProductsController', selectedProductsController);
 
-    function selectedProductsController($scope, $routeParams, config, cycleService, libraryService, offeringService, alertService) {
+    function selectedProductsController($scope, $routeParams, config, cycleService, libraryService, notificationModalService, offeringService, alertService) {
         var vm = this;
         vm.libraryId = $routeParams.libraryId;
         vm.offeringList = [];
         vm.orderBy = 'name';
         vm.reverse = false;
-        vm.selectedProducts = {};
+        vm.selectedOfferings = {};
 
         vm.purchaseProduct = purchaseProduct;
         vm.cancelPurchase = cancelPurchase;
         vm.computeTotalPurchasesAmount = computeTotalPurchasesAmount;
         vm.invoiceProducts = invoiceProducts;
         vm.reportProducts = reportProducts;
+        vm.invoiceAnnualAccessFees = invoiceAnnualAccessFees;
         vm.sort = sort;
 
         initFilterableByPurchased($scope, vm);
@@ -53,7 +54,10 @@
         }
 
         function purchaseProduct(offering) {
-            offering.datePurchased = new Date().toJSON().slice(0,10);
+            offering.selection = {
+                price: offering.pricing.site,
+                datePurchased: new Date().toJSON().slice(0, 10)
+            };
             offeringService.update(offering)
             .then(function(){
                 alertService.putAlert(offering.product.name + " purchased", {severity: 'success'});
@@ -66,8 +70,8 @@
         }
 
         function cancelPurchase(offering) {
-            var oldDate = offering.datePurchased;
-            delete offering.datePurchased;
+            var oldDate = offering.selection.datePurchased;
+            delete offering.selection;
             
             offeringService.update(offering)
             .then(function(){
@@ -86,19 +90,47 @@
 
             for (var i=0; i<vm.offeringList.length; i++) {
                 offering = vm.offeringList[i];
-                if (vm.filter(offering) && offering.datePurchased) {
-                    totalAmount += offering.pricing.site;
+                if (vm.filter(offering) && offering.selection) {
+                    totalAmount += offering.selection.price;
                 }
             }
             return totalAmount;
         }
 
         function invoiceProducts() {
-            alert("Invoice Products:" + JSON.stringify(vm.selectedProducts));
+            notificationModalService.sendStartDraftMessage({
+                templateId: 'notification-template-library-invoices',
+                cycleId: cycleService.getCurrentCycle().id,
+                recipientId: vm.libraryId
+            });
         }
 
         function reportProducts() {
-            alert("Report Products:" + JSON.stringify(vm.selectedProducts));
+            var offeringIds = flattenSelectedOfferingsObject();
+            notificationModalService.sendStartDraftMessage({
+                templateId: 'notification-template-vendor-reports',
+                cycleId: cycleService.getCurrentCycle().id,
+                offeringIds: offeringIds
+            });
+        }
+
+        function invoiceAnnualAccessFees() {
+            notificationModalService.sendStartDraftMessage({
+                templateId: 'notification-template-annual-access-fee-invoices',
+                recipientId: vm.libraryId
+            });
+        }
+
+        function flattenSelectedOfferingsObject() {
+            var offeringIds = [];
+
+            Object.keys(vm.selectedOfferings).forEach(function(offeringId) {
+                if (vm.selectedOfferings[offeringId]) {
+                    offeringIds.push(offeringId);
+                }
+            });
+
+            return offeringIds;
         }
 
         function sort( newOrderBy ){
@@ -127,7 +159,7 @@
         makeKeyboardAccessible();
 
         function filter( offering ){
-            var isProductPurchased = offering.datePurchased;
+            var isProductPurchased = offering.selection;
 
             filterValue =   (vm.filterState === 'all') ||
             (vm.filterState === 'purchased' && isProductPurchased) ||
@@ -156,7 +188,7 @@
             for ( key in vm.offeringList ){
                 offering = vm.offeringList[key];
                 if ( !filter(offering) ){
-                    vm.selectedProducts[offering.id] = false;
+                    vm.selectedOfferings[offering.id] = false;
                 }
             }
         }

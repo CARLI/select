@@ -4,6 +4,7 @@
 @import "colors";
 @import "variables";
 @import "mixins";
+@import "tagsInput";
 @import "helpers";
 @import "gridAdapter";
 @import "zebraTable";
@@ -229,6 +230,7 @@ section.content {
 @import "carliApp/components/modalDialog/modalDialog";
 @import "carliApp/components/newCycleForm/newCycleForm";
 @import "carliApp/components/notificationList/notificationList";
+@import "carliApp/components/notificationPreviewModal/notificationPreviewModal";
 @import "carliApp/components/productSelectionHistoryIcon/productSelectionHistoryIcon";
 @import "carliApp/components/radio/radio";
 @import "carliApp/components/selectCycle/selectCycle";

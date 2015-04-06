@@ -7,11 +7,11 @@
             </div>
             <div class="modal-body">
                 <div class="label">Recipients</div>
-                <p>{{ vm.notification.recipients }}</p>
+                <p>{{ vm.notification.getRecipientLabel() }}</p>
                 <div class="label">Subject</div>
                 <p>{{ vm.notification.subject }}</p>
                 <div class="label">Email Body</div>
-                <p>{{ vm.notification.emailBody }}</p>
+                <p class="email-body">{{ vm.notification.emailBody }}</p>
                 <div ng-if="vm.notification.pdfBody">
                     <div class="label">PDF Body</div>
                     <p>{{ vm.notification.pdfBody }}</p>

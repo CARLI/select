@@ -499,4 +499,10 @@ function runOneTimePurchaseProductTests(testCycle) {
                 })
         });
     });
+
+    describe('getProductsById', function(){
+        it('should be a function', function(){
+            expect(ProductRepository.getProductsById).to.be.a('function');
+        })
+    });
 }

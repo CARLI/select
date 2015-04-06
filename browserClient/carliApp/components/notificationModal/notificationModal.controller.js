@@ -1,9 +1,12 @@
 angular.module('carli.notificationModal')
 .controller('notificationModalController', notificationModalController);
 
-function notificationModalController($scope, $rootScope, alertService, notificationService, notificationModalService, notificationTemplateService) {
+function notificationModalController($q, $scope, $rootScope, alertService, cycleService, libraryService, notificationService, notificationModalService, notificationTemplateService, offeringService, productService, vendorService) {
     var vm = this;
+    var generator = null;
+
     vm.draft = {};
+    vm.recipients = [];
     vm.template = null;
 
     vm.saveNotifications = saveNotifications;
@@ -12,17 +15,12 @@ function notificationModalController($scope, $rootScope, alertService, notificat
     activate();
 
     function activate(){
-        if ( !vm.templates ){ //these might be passed it (e.g. the notifications screen), but might not be (subscription screens)
-            loadNotificationTemplates();
-        }
         $scope.$watch(notificationModalService.receiveStartDraftMessage, receiveStartDraftMessage);
         setupModalClosingUnsavedChangesWarning();
     }
 
-    function loadNotificationTemplates(){
-        notificationTemplateService.list().then(function(notificationTemplates){
-            vm.templates = notificationTemplates;
-        });
+    function keepCustomTemplates(template) {
+        return template.type === 'other';
     }
 
     function useTemplate(){
@@ -33,37 +31,57 @@ function notificationModalController($scope, $rootScope, alertService, notificat
         vm.template = template;
 
         vm.draft = {
-            recipients: '',
             subject: template.subject,
             emailBody: template.emailBody,
-            pdfBody: '',
-            isPdfContentEditable: template.isPdfContentEditable,
+            pdfBody: template.hasOwnProperty('pdfBody') ? template.pdfBody : '',
             draftStatus: 'draft',
             notificationType: template.notificationType
         };
 
-        if (template.hasOwnProperty('pdfBody')) {
-            vm.draft.pdfBody = template.pdfBody;
-        }
-
         return vm.draft;
     }
 
+    /*
+     * Possible properties for message spec object:
+     *
+         {
+            templateId: '',
+            cycleId: '',
+            recipientId: '',
+            offeringIds: []
+         }
+     */
     function receiveStartDraftMessage(message) {
         if (!message) {
             return;
+        } else {
+            notificationModalService.acknowledgeStartDraftMessage();
         }
 
         notificationTemplateService.load(message.templateId)
             .then(initializeDraftFromTemplate)
+            .then(populateRecipients)
             .then(showModal)
             .catch(function (err) {
                 console.log(err);
             });
 
+        function populateRecipients(draftNotification) {
+            generator = notificationService.generateDraftNotification(vm.template, message);
+            return generator.getRecipients().then(function (recipients) {
+                vm.recipients = recipients;
+                return draftNotification;
+            });
+        }
+
         function showModal() {
+            console.log('Draft',vm.draft);
             $('#notification-modal').modal();
         }
+    }
+
+    function isNotificationGeneratedFromData(){
+        return generator;
     }
 
     function setupModalClosingUnsavedChangesWarning(){
@@ -73,6 +91,7 @@ function notificationModalController($scope, $rootScope, alertService, notificat
     function resetNotificationForm(){
         vm.draft = {};
         vm.template = null;
+        generator = null;
         setNotificationFormPristine();
     }
 
@@ -110,14 +129,45 @@ function notificationModalController($scope, $rootScope, alertService, notificat
         return false;
     }
 
+    function getNotifications(editedTemplate, recipientIds) {
+        return $q.when(generator.getNotifications(editedTemplate, recipientIds));
+    }
+
     function saveNotifications(){
-        console.log('create notifications for ',vm.draft);
-        notificationService.createNotificationsFor( vm.draft )
+        if ( isNotificationGeneratedFromData() ) {
+            return saveNotificationFromGenerator();
+        }
+        else {
+            return saveNotificationFromForm();
+        }
+
+        function saveNotificationFromGenerator() {
+            var recipientIds = getRecipientIds(vm.recipients);
+
+            return getNotifications(vm.draft, recipientIds)
+                .then(function (notifications) {
+                    console.log(notifications);
+                    var promises = notifications.map(notificationService.create);
+                    return $q.all(promises);
+                })
+                .then(saveSuccess)
+                .catch(saveError);
+
+            function getRecipientIds(recipients) {
+                return recipients.map(function (r) { return r.id.toString(); });
+            }
+        }
+
+        function saveNotificationFromForm(){
+            vm.draft.to = vm.recipients.map(function (r) { return r.label; }).join(', ');
+            return notificationService.create(vm.draft)
             .then(saveSuccess)
             .catch(saveError);
+        }
 
-        function saveSuccess(){
-            alertService.putAlert('Notifications created', {severity: 'success'});
+        function saveSuccess(results){
+            var message = angular.isArray(results) ? results.length + ' Notifications created' : 'Notification created';
+            alertService.putAlert(message, {severity: 'success'});
             resetNotificationForm();
             hideModal();
             if ( typeof vm.afterSubmitFn === 'function' ){

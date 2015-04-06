@@ -23,7 +23,7 @@ var notificationTemplates = [
         emailBody: '',
         pdfBody: '{{ pdfContent }}',
         pdfContentIsEditable: true,
-        notificationType: 'other'
+        notificationType: 'subscription'
     },
     {
         id: 'notification-template-library-reminder',
@@ -31,7 +31,7 @@ var notificationTemplates = [
         subject: 'Reminder: CARLI Selection System Open',
         emailBody: '',
         pdfContentIsEditable: false,
-        notificationType: 'other'
+        notificationType: 'subscription'
     },
     {
         id: 'notification-template-library-estimates-closed',
@@ -40,7 +40,7 @@ var notificationTemplates = [
         emailBody: '',
         pdfBody: '{{ pdfContent }}',
         pdfContentIsEditable: true,
-        notificationType: 'other'
+        notificationType: 'subscription'
     },
     {
         id: 'notification-template-vendor-reports',
@@ -57,7 +57,7 @@ var notificationTemplates = [
         subject: 'CARLI Selections',
         emailBody: '',
         pdfContentIsEditable: false,
-        notificationType: 'other'
+        notificationType: 'subscription'
     },
     {
         id: 'notification-template-annual-access-fee-invoices',

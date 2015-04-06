@@ -80,6 +80,26 @@ function loadNonCrmLibraryForCrmId( crmId ){
         });
 }
 
+function listLibrariesWithSelectionsInCycle( cycle ){
+    return CouchUtils.getCouchViewResultObject(cycle.databaseName, 'listLibrariesWithSelections', null, true)
+        .then(function(resultObject){
+            return Object.keys(resultObject);
+        });
+}
+
+function getLibrariesById( ids ){
+    return listLibraries()
+        .then(filterListOfLibraries);
+
+    function filterListOfLibraries( listOfAllLibraries ){
+        return listOfAllLibraries.filter(libraryIdIsInRequestedList);
+    }
+
+    function libraryIdIsInRequestedList( library ){
+        return ids.indexOf(library.id) > -1;
+    }
+}
+
 module.exports = {
     setStore: localLibraryRepository.setStore,
     update: updateLibrary,
@@ -88,5 +108,7 @@ module.exports = {
     getInstitutionTypeOptions: getInstitutionTypeOptions,
     getInstitutionYearsOptions: getInstitutionYearsOptions,
     getMembershipLevelOptions: getMembershipLevelOptions,
-    loadNonCrmLibraryForCrmId: loadNonCrmLibraryForCrmId
+    loadNonCrmLibraryForCrmId: loadNonCrmLibraryForCrmId,
+    listLibrariesWithSelectionsInCycle: listLibrariesWithSelectionsInCycle,
+    getLibrariesById: getLibrariesById
 };

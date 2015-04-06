@@ -177,5 +177,11 @@ function runOfferingSpecificTests(testCycle) {
                 expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(true);
             });
         });
+
+        describe('getOfferingsById', function(){
+            it('should be a function', function(){
+                expect(OfferingRepository.getOfferingsById).to.be.a('function');
+            })
+        });
     });
 }

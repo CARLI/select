@@ -21,5 +21,7 @@ function notificationPreviewModalController($scope, notificationPreviewModalServ
         function showModal() {
             $('#notification-preview-modal').modal();
         }
+
+        notificationPreviewModalService.acknowledgeShowPreviewMessage();
     }
 }

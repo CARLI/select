@@ -20,4 +20,18 @@
             padding: 4px;
         }
     }
+
+    .notifications {
+        margin-top: 2rem;
+
+        header {
+            @extend label;
+            display: block;
+        }
+
+        .carli-button {
+            margin-top: 0;
+            margin-right: .5rem;
+        }
+    }
 }
