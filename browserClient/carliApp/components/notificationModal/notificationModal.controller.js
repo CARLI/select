@@ -124,10 +124,14 @@ function notificationModalController($q, $scope, $rootScope, alertService, cycle
         return false;
     }
 
+    function getNotifications(editedTemplate, recipientIds) {
+        return $q.when(generator.getNotifications(editedTemplate, recipientIds));
+    }
+
     function saveNotifications(){
         var recipientIds = getRecipientIds(vm.recipients);
 
-        return generator.getNotifications(vm.draft, recipientIds)
+        return getNotifications(vm.draft, recipientIds)
             .then(function(notifications) {
                 console.log(notifications);
                 var promises = notifications.map(notificationService.create);
