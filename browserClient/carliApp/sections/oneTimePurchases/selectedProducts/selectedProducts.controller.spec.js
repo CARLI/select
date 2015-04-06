@@ -25,7 +25,10 @@ describe('The One-time Purchases Selected-Products Controller', function(){
                 pricing: {
                     site: 100
                 },
-                datePurchased: '2015-01-01'
+                selection: {
+                    price: 100,
+                    datePurchased: '2015-01-01'
+                }
             },
             {
                 type: 'Offering',
@@ -35,7 +38,10 @@ describe('The One-time Purchases Selected-Products Controller', function(){
                 pricing: {
                     site: 100
                 },
-                datePurchased: '2015-01-01'
+                selection: {
+                    price: 100,
+                    datePurchased: '2015-01-01'
+                }
             }
         ];
 
@@ -120,7 +126,7 @@ describe('The One-time Purchases Selected-Products Controller', function(){
         expect( mockDependenciesForOneTimePurchase.offeringService.createOrUpdate ).to.equal('neither');
         vm.purchaseProduct( mockOffering );
         expect( mockDependenciesForOneTimePurchase.offeringService.createOrUpdate ).to.equal('update');
-        expect( mockOffering.datePurchased).to.be.a('String');
+        expect( mockOffering.selection.datePurchased).to.be.a('String');
     });
 
     it('should call offeringService.update when canceling a purchasing', function(){
@@ -129,16 +135,12 @@ describe('The One-time Purchases Selected-Products Controller', function(){
         expect( mockDependenciesForOneTimePurchase.offeringService.createOrUpdate ).to.equal('neither');
         vm.cancelPurchase( mockOffering );
         expect( mockDependenciesForOneTimePurchase.offeringService.createOrUpdate ).to.equal('update');
-        expect( mockOffering.datePurchased).to.be.an('undefined');
+        expect( mockOffering.selection).to.be.an('undefined');
     });
 
     it('should return the total price from computeTotalPurchasesAmount', function(){
         var total = vm.computeTotalPurchasesAmount();
         expect(total).to.equal(200);
     });
-
-    //TODO: invoiceProducts()
-    //TODO: reportProducts()
-
 });
 

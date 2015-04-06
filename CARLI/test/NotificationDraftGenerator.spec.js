@@ -32,7 +32,7 @@ describe('The notification draft generator', function() {
         }
         function getMockOfferingsForAnnualAccessFee(){
             return Q([
-                { library: { id: 'library', name: 'Test Library'}, datePurchased: '2015-01-01' },
+                { library: { id: 'library', name: 'Test Library'}, selection: { } },
                 { library: { id: 'library', name: 'Test Library'} },
                 { library: {id: 'library2', name: 'Test Library2'} }
             ]);
@@ -89,7 +89,7 @@ describe('The notification draft generator', function() {
         }
         function getMockOfferingsForAnnualAccessFee(){
             return Q([
-                { library: { id: 'library', name: 'Test Library'}, datePurchased: '2015-01-01' },
+                { library: { id: 'library', name: 'Test Library'}, selection: {} },
                 { library: { id: 'library', name: 'Test Library'} },
                 { library: {id: 'library2', name: 'Test Library2'} }
             ]);

@@ -27,12 +27,12 @@
                         <label for="oneTimePurchase_{{ offering.library.name }}">{{ offering.library.name }}</label>
                     </span>
                     <span class="column price">
-                        <view-edit-price ng-model="offering.pricing.site" edit-mode="vm.editable && !offering.datePurchased" input-id="oneTimePurchase_{{ offering.library.name }}">
+                        <view-edit-price ng-model="offering.pricing.site" edit-mode="vm.editable && !offering.selection" input-id="oneTimePurchase_{{ offering.library.name }}">
                             <span class="price-display">{{ offering.pricing.site | currency }}</span>
                         </view-edit-price>
                     </span>
                     <span class="column purchased">
-                        <i class="fa fa-check-circle" ng-show="offering.datePurchased"></i>
+                        <i class="fa fa-check-circle" ng-show="offering.selection"></i>
                     </span>
                 </li>
             </ul>

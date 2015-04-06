@@ -39,7 +39,7 @@
                         </div>
                         <div class="column">{{ offering.product.vendor.name }}</div>
                         <div class="column">
-                            <span ng-if="offering.datePurchased" class="price">{{ offering.pricing.site | currency }}</span>
+                            <span ng-if="offering.selection" class="price">{{ offering.pricing.site | currency }}</span>
                         </div>
                     </div>
                     <div class="content">
@@ -51,7 +51,7 @@
                                 </div>
                                 <div class="content-item">
                                     <label>Purchase Date:</label>
-                                    <p>{{ offering.datePurchased }}</p>
+                                    <p>{{ offering.selection.datePurchased }}</p>
                                 </div>
                             </div>
                             <div class="product-boolean-item" ng-show=""><fa name="check"></fa> Funded</div>
@@ -64,11 +64,11 @@
                             </div>
                         </div>
                         <div class="column">
-                            <div ng-if="!offering.datePurchased">
+                            <div ng-if="!offering.selection">
                                 <div class="label">Add Product</div>
                                 <div ng-click="vm.purchaseProduct(offering)" class="carli-button ask-button">{{ offering.pricing.site | currency }} <fa name="plus-circle"></fa></div>
                             </div>
-                            <div ng-if="offering.datePurchased">
+                            <div ng-if="offering.selection">
                                 <div class="label">Remove Product</div>
                                 <button type="button" ng-click="vm.cancelPurchase(offering)" class="carli-button remove-button">Remove <fa name="remove"></fa></button>
                             </div>

@@ -54,7 +54,10 @@
         }
 
         function purchaseProduct(offering) {
-            offering.datePurchased = new Date().toJSON().slice(0,10);
+            offering.selection = {
+                price: offering.pricing.site,
+                datePurchased: new Date().toJSON().slice(0, 10)
+            };
             offeringService.update(offering)
             .then(function(){
                 alertService.putAlert(offering.product.name + " purchased", {severity: 'success'});
@@ -67,8 +70,8 @@
         }
 
         function cancelPurchase(offering) {
-            var oldDate = offering.datePurchased;
-            delete offering.datePurchased;
+            var oldDate = offering.selection.datePurchased;
+            delete offering.selection;
             
             offeringService.update(offering)
             .then(function(){
@@ -87,8 +90,8 @@
 
             for (var i=0; i<vm.offeringList.length; i++) {
                 offering = vm.offeringList[i];
-                if (vm.filter(offering) && offering.datePurchased) {
-                    totalAmount += offering.pricing.site;
+                if (vm.filter(offering) && offering.selection) {
+                    totalAmount += offering.selection.price;
                 }
             }
             return totalAmount;
@@ -156,7 +159,7 @@
         makeKeyboardAccessible();
 
         function filter( offering ){
-            var isProductPurchased = offering.datePurchased;
+            var isProductPurchased = offering.selection;
 
             filterValue =   (vm.filterState === 'all') ||
             (vm.filterState === 'purchased' && isProductPurchased) ||

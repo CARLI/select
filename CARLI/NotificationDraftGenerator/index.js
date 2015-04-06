@@ -450,7 +450,7 @@ function generateNotificationForEntity(entityId, offerings, customizedTemplate){
 
 
 function onlyPurchasedOfferings(offering) {
-    return offering.datePurchased || offering.selection;
+    return offering.selection;
 }
 
 module.exports = {
