@@ -66,7 +66,7 @@ describe('Run the Offering tests', function () {
 
 
 function runOfferingSpecificTests(testCycle) {
-    describe('Offering Specific Tests', function () {
+    describe('Offering Repository Tests', function () {
 
         describe('Expanding referenced entities on load', function () {
 
@@ -95,27 +95,27 @@ function runOfferingSpecificTests(testCycle) {
             });
         });
 
-        describe('listOfferingsForLibraryId View', function () {
-            it('should have a listOfferingsForLibraryId method', function () {
-                expect(OfferingRepository.listOfferingsForLibraryId).to.be.a('function');
-            });
+        it('should have a listOfferingsForLibraryId method', function () {
+            expect(OfferingRepository.listOfferingsForLibraryId).to.be.a('function');
+        });
 
+        describe('listOfferingsForLibraryId View', function () {
             it('should list offerings for a specific library');
         });
 
-        describe('listOfferingsForProductId View', function () {
-            it('should have a listOfferingsForProductId method', function () {
-                expect(OfferingRepository.listOfferingsForProductId).to.be.a('function');
-            });
+        it('should have a listOfferingsForProductId method', function () {
+            expect(OfferingRepository.listOfferingsForProductId).to.be.a('function');
+        });
 
+        describe('listOfferingsForProductId View', function () {
             it('should list offerings for a specific product');
         });
 
-        describe('listOfferingsWithSelections View', function () {
-            it('should have a listOfferingsWithSelections method', function () {
-                expect(OfferingRepository.listOfferingsWithSelections).to.be.a('function');
-            });
+        it('should have a listOfferingsWithSelections method', function () {
+            expect(OfferingRepository.listOfferingsWithSelections).to.be.a('function');
+        });
 
+        describe('listOfferingsWithSelections View', function () {
             it('should list offerings that have selections', function(){
                 var testOfferings = [
                     validOfferingData(),
@@ -142,6 +142,60 @@ function runOfferingSpecificTests(testCycle) {
 
                     function createTestOffering(offering){
                         return OfferingRepository.create(offering, testCycle);
+                    }
+                }
+            });
+        });
+
+        it('should have a listVendorsFromOfferingIds method', function () {
+            expect(OfferingRepository.listVendorsFromOfferingIds).to.be.a('function');
+        });
+
+        describe('listVendorsForOfferings', function () {
+            it('should take a list of offering ids and return the set of Vendor id for those offerings', function(){
+                var testProducts = [
+                    { id: 'tp1', type: 'Product', name: 'Test Product 1', cycle: testCycle, vendor: 'test-vendor-1' },
+                    { id: 'tp2', type: 'Product', name: 'Test Product 2', cycle: testCycle, vendor: 'test-vendor-2' }
+                ];
+
+                var testOfferings = [ validOfferingData(), validOfferingData(), validOfferingData() ];
+                testOfferings[0].product = testProducts[0];
+                testOfferings[1].product = testProducts[0];
+                testOfferings[2].product = testProducts[1];
+
+                return setupTestData()
+                    .then(function( listOfOfferingIds ){
+                        return OfferingRepository.listVendorsFromOfferingIds( listOfOfferingIds, testCycle );
+                    })
+                    .then(function( listOfVendorIds ){
+                        return Q.all([
+                            expect(listOfVendorIds).to.be.an('array'),
+                            expect(listOfVendorIds.length).to.equal(2),
+                            expect(listOfVendorIds).to.include('test-vendor-1'),
+                            expect(listOfVendorIds).to.include('test-vendor-2')
+                        ]);
+                    });
+
+
+                function setupTestData(){
+                    return setupTestProducts()
+                        .then(clearAllTestOfferings)
+                        .then(setupTestOfferings);
+
+                    function setupTestProducts(){
+                        return Q.all( testProducts.map(createTestProduct) );
+
+                        function createTestProduct(product){
+                            return ProductRepository.create(product, testCycle);
+                        }
+                    }
+
+                    function setupTestOfferings(){
+                        return Q.all( testOfferings.map(createTestOffering) );
+
+                        function createTestOffering(offering){
+                            return OfferingRepository.create(offering, testCycle);
+                        }
                     }
                 }
             });
