@@ -183,6 +183,24 @@ function getOfferingDisplayOptions(){
     return Validator.getEnumValuesFor('Offering','display');
 }
 
+function listVendorsFromOfferingIds( listOfOfferingIds, cycle ){
+    return getOfferingsById( listOfOfferingIds, cycle )
+        .then(getVendorListFromOfferings);
+
+
+    function getVendorListFromOfferings(offerings) {
+        return offerings.map(getVendorIdFromOffering).filter(discardDuplicateIds);
+
+        function getVendorIdFromOffering(offering) {
+            return offering.product.vendor;
+        }
+
+        function discardDuplicateIds(value, index, self) {
+            return self.indexOf(value) === index;
+        }
+    }
+}
+
 module.exports = {
     setStore: OfferingRepository.setStore,
     setCycle: setCycle,
@@ -195,6 +213,7 @@ module.exports = {
     listOfferingsForLibraryId: listOfferingsForLibraryId,
     listOfferingsForProductId: listOfferingsForProductId,
     listOfferingsWithSelections: listOfferingsWithSelections,
+    listVendorsFromOfferingIds: listVendorsFromOfferingIds,
     getOfferingsById: getOfferingsById,
     getOfferingDisplayOptions: getOfferingDisplayOptions,
     transformOfferingsForNewCycle: transformOfferingsForNewCycle,

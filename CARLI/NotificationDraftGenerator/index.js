@@ -137,15 +137,19 @@ function getReminder(template, notificationData) {
             }
         }
     }
-    function getOfferingsForReminder(){}
-    function getNotificationsForReminder(){}
+
+    function getNotificationsForReminder( customizedTemplate, actualRecipientIds ){
+        var notifications = actualRecipientIds.map(function(id){
+            return generateNotificationForLibrary(id, null, customizedTemplate);
+        });
+        return Q(notifications);
+    }
 
     var reminderDraft = {
         getAudienceAndSubject: function() { return 'Reminder'; },
         getLibrariesWithSelections: getLibrariesWithSelections,
         getAllLibraries: getAllLibraries,
         getRecipients: getRecipientsForReminder,
-        getOfferings: getOfferingsForReminder,
         getNotifications: getNotificationsForReminder
     };
 
@@ -171,7 +175,7 @@ function getVendorReportsForAll(template, notificationData) {
     }
 
     function getOfferingsForVendorReportsForAll(){
-        return cycleRepository.load(notificationData.cycle).then(offeringRepository.listOfferingsWithSelections);
+        return cycleRepository.load(notificationData.cycleId).then(offeringRepository.listOfferingsWithSelections);
     }
 
     function getNotificationsForVendorReportsForAll( customizedTemplate, actualRecipientIds ){
@@ -192,42 +196,36 @@ function getVendorReportsForAll(template, notificationData) {
     };
     return allVendorsDraft;
 }
+
 function getVendorReportsForSome(template, notificationData) {
     function getEntitiesForVendorReportsForSome() {
-        return cycleRepository.load(notificationData.cycleId).then(function (cycle) {
-            return getOfferingsFromCycle()
-                .then(getProductsFromOfferings)
-                .then(getVendorsFromProducts);
-
-            function getOfferingsFromCycle() {
-                return offeringRepository.getOfferingsById(notificationData.offeringIds, cycle);
-            }
-            function getProductsFromOfferings(offerings) {
-                var productIds = offerings.map(getProductIdFromOffering);
-                return productRepository.getProductsById(productIds, cycle);
-
-                function getProductIdFromOffering(offering) {
-                    return offering.product;
-                }
-            }
-            function getVendorsFromProducts(products) {
-                var vendorIds = products.map(getVendorIdFromProduct).filter(discardDuplicateIds);
-                return vendorRepository.getVendorsById(vendorIds);
-
-                function getVendorIdFromProduct(product) {
-                    return product.vendor;
-                }
-            }
-        });
+        return cycleRepository.load(notificationData.cycleId)
+            .then(function(cycle){
+                return offeringRepository.listVendorsFromOfferingIds(notificationData.offeringIds, cycle);
+            });
     }
-    function getOfferingsForVendorReportsForSome(){}
-    function getNotificationsForVendorReportsForSome(){}
 
     function getRecipientsForVendorReportsForSome() {
         return someVendorsDraft.getEntities()
             .then(function( vendorsFromSelectedOfferings ) {
                 return vendorsFromSelectedOfferings.map(function(vendor) {
                     return convertEntityToRecipient(vendor, template);
+                });
+            });
+    }
+
+    function getOfferingsForVendorReportsForSome(){
+        return cycleRepository.load(notificationData.cycleId)
+            .then(function(cycle){
+                return offeringRepository.getOfferingsById(notificationData.offeringIds, cycle);
+            });
+    }
+
+    function getNotificationsForVendorReportsForSome( customizedTemplate, actualRecipientIds ){
+        return someVendorsDraft.getOfferings()
+            .then(function(offerings){
+                return actualRecipientIds.map(function(id){
+                    return generateNotificationForVendor(id, offerings, customizedTemplate);
                 });
             });
     }
@@ -247,6 +245,7 @@ function getVendorReportsForOne(template, notificationData) {
             return [ vendor ];
         });
     }
+
     function getRecipientsForVendorReportsForOne() {
         return oneVendorDraft.getEntities()
             .then(function( vendorFromNotificationData ) {
@@ -255,8 +254,29 @@ function getVendorReportsForOne(template, notificationData) {
                 });
             });
     }
-    function getOfferingsForVendorReportsForOne(){}
-    function getNotificationsForVendorReportsForOne(){}
+
+    function getOfferingsForVendorReportsForOne(){
+        var vendorForThisReport = notificationData.recipientId;
+
+        return cycleRepository.load(notificationData.cycleId)
+            .then(offeringRepository.listOfferingsWithSelections)
+            .then(getOfferingsForVendor);
+
+        function getOfferingsForVendor( listOfOfferings ){
+            return listOfOfferings.filter(function(offering){
+                return offering.product.vendor === vendorForThisReport;
+            });
+        }
+    }
+
+    function getNotificationsForVendorReportsForOne( customizedTemplate, actualRecipientIds ){
+        return oneVendorDraft.getOfferings()
+            .then(function(offerings){
+                return actualRecipientIds.map(function(id){
+                    return generateNotificationForVendor(id, offerings, customizedTemplate);
+                });
+            });
+    }
 
     var oneVendorDraft = {
         getAudienceAndSubject: function() { return 'One Vendor, All Products'; },
