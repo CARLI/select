@@ -269,18 +269,35 @@ function getVendorReportsForOne(template, notificationData) {
 }
 function getLibraryInvoicesForAll(template, notificationData) {
     function getEntitiesForLibraryInvoicesForAll() {
-        return libraryRepository.list();
+        return cycleRepository.load(notificationData.cycleId)
+            .then(function(cycle) {
+                return libraryRepository.listLibrariesWithSelectionsInCycle(cycle);
+            })
+            .then(function (libraryIds) {
+                return libraryRepository.getLibrariesById(libraryIds);
+            });
     }
     function getRecipientsForLibraryInvoicesForAll() {
         return allLibrariesDraft.getEntities()
-            .then(function( librariesWithSelectionsInCycle ) {
-                return librariesWithSelectionsInCycle.map(function(vendor) {
+            .then(function( librariesWithSelections ) {
+                return librariesWithSelections.map(function(vendor) {
                     return convertEntityToRecipient(vendor, template);
                 });
             });
     }
-    function getOfferingsForLibraryInvoicesForAll(){}
-    function getNotificationsForLibraryInvoicesForAll(){}
+    function getOfferingsForLibraryInvoicesForAll(){
+        return cycleRepository.load(notificationData.cycleId).then(function (cycle) {
+            return offeringRepository.listOfferingsWithSelections(cycle);
+        });
+    }
+    function getNotificationsForLibraryInvoicesForAll(customizedTemplate, actualRecipientIds){
+        return allLibrariesDraft.getOfferings()
+            .then(function(offerings){
+                return actualRecipientIds.map(function(id){
+                    return generateNotificationForLibrary(id, offerings, customizedTemplate);
+                });
+            });
+    }
 
     var allLibrariesDraft = {
         getAudienceAndSubject: function() { return 'All Libraries, All Products'; },
