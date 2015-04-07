@@ -267,6 +267,41 @@ function getVendorReportsForOne(template, notificationData) {
     };
     return oneVendorDraft;
 }
+function getLibraryEstimatesForAll(template, notificationData) {
+    function getEntitiesForLibraryEstimatesForAll() {
+        return libraryRepository.list();
+    }
+    function getRecipientsForLibraryEstimatesForAll() {
+        return allLibrariesDraft.getEntities()
+            .then(function( allLibraries ) {
+                return allLibraries.map(function(vendor) {
+                    return convertEntityToRecipient(vendor, template);
+                });
+            });
+    }
+    function getOfferingsForLibraryEstimatesForAll(){
+        return cycleRepository.load(notificationData.cycleId).then(function (cycle) {
+            return offeringRepository.list(cycle);
+        });
+    }
+    function getNotificationsForLibraryEstimatesForAll(customizedTemplate, actualRecipientIds){
+        return allLibrariesDraft.getOfferings()
+            .then(function(offerings){
+                return actualRecipientIds.map(function(id){
+                    return generateNotificationForLibrary(id, offerings, customizedTemplate);
+                });
+            });
+    }
+
+    var allLibrariesDraft = {
+        getAudienceAndSubject: function() { return 'All Libraries, All Products'; },
+        getEntities: getEntitiesForLibraryEstimatesForAll,
+        getRecipients: getRecipientsForLibraryEstimatesForAll,
+        getOfferings: getOfferingsForLibraryEstimatesForAll,
+        getNotifications: getNotificationsForLibraryEstimatesForAll
+    };
+    return allLibrariesDraft;
+}
 function getLibraryInvoicesForAll(template, notificationData) {
     function getEntitiesForLibraryInvoicesForAll() {
         return cycleRepository.load(notificationData.cycleId)
@@ -420,12 +455,18 @@ function generateDraftNotification(template, notificationData) {
             return getVendorReportsForOne(template, notificationData);
         }
     } else if (notificationTypeIsForLibrary()) {
-        if (shouldSendEverythingToEveryone()) {
-            return getLibraryInvoicesForAll(template, notificationData);
-        } else if (doRecipientsComeFromOfferings()) {
-            return getLibraryInvoicesForSome(template, notificationData);
-        } else if (isASingleRecipient()) {
-            return getLibraryInvoicesForOne(template, notificationData);
+        if (template.notificationType == 'subscription') {
+            if (shouldSendEverythingToEveryone()) {
+                return getLibraryEstimatesForAll(template, notificationData);
+            }
+        } else if (template.notificationType == 'invoice') {
+            if (shouldSendEverythingToEveryone()) {
+                return getLibraryInvoicesForAll(template, notificationData);
+            } else if (doRecipientsComeFromOfferings()) {
+                return getLibraryInvoicesForSome(template, notificationData);
+            } else if (isASingleRecipient()) {
+                return getLibraryInvoicesForOne(template, notificationData);
+            }
         }
     }
 
