@@ -116,6 +116,13 @@ function listOfferingsForProductId( productId, cycle ) {
         .then(initializeComputedValues);
 }
 
+function listOfferingsWithSelections( cycle ) {
+    setCycle(cycle);
+    return expandOfferings( couchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsWithSelections'), cycle )
+        .then(initializeComputedValues);
+
+}
+
 function initializeComputedValues(offerings) {
     offerings.forEach(function(offering){
         offering.display = offering.display || "with-price";
@@ -187,6 +194,7 @@ module.exports = {
 
     listOfferingsForLibraryId: listOfferingsForLibraryId,
     listOfferingsForProductId: listOfferingsForProductId,
+    listOfferingsWithSelections: listOfferingsWithSelections,
     getOfferingsById: getOfferingsById,
     getOfferingDisplayOptions: getOfferingDisplayOptions,
     transformOfferingsForNewCycle: transformOfferingsForNewCycle,

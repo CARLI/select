@@ -102,12 +102,49 @@ function runOfferingSpecificTests(testCycle) {
 
             it('should list offerings for a specific library');
         });
+
         describe('listOfferingsForProductId View', function () {
             it('should have a listOfferingsForProductId method', function () {
                 expect(OfferingRepository.listOfferingsForProductId).to.be.a('function');
             });
 
             it('should list offerings for a specific product');
+        });
+
+        describe('listOfferingsWithSelections View', function () {
+            it('should have a listOfferingsWithSelections method', function () {
+                expect(OfferingRepository.listOfferingsWithSelections).to.be.a('function');
+            });
+
+            it('should list offerings that have selections', function(){
+                var testOfferings = [
+                    validOfferingData(),
+                    validOfferingData(),
+                    validOfferingData()
+                ];
+                testOfferings[0].selection = {};
+
+                return clearAllTestOfferings()
+                    .then(setupTestOfferings)
+                    .then(OfferingRepository.listOfferingsWithSelections)
+                    .then(function(offerings){
+                        return Q.all([
+                            expect(offerings).to.be.an('array'),
+                            expect(offerings.length).to.equal(1),
+                            expect(offerings[0].selection).to.be.an('object')
+                        ]);
+                    });
+
+
+                function setupTestOfferings(){
+                    return Q.all( testOfferings.map(createTestOffering) )
+                        .thenResolve(testCycle);
+
+                    function createTestOffering(offering){
+                        return OfferingRepository.create(offering, testCycle);
+                    }
+                }
+            });
         });
 
         describe('saveOfferingHistoryForYear', function() {
