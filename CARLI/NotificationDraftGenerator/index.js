@@ -373,8 +373,20 @@ function getLibraryInvoicesForOne(template, notificationData) {
                 });
             });
     }
-    function getOfferingsForLibraryInvoicesForOne(){}
-    function getNotificationsForLibraryInvoicesForOne(){}
+    function getOfferingsForLibraryInvoicesForOne(){
+        return cycleRepository.load(notificationData.cycleId).then(function (cycle) {
+            return offeringRepository.listOfferingsForLibraryId(notificationData.recipientId, cycle);
+        });
+    }
+    function getNotificationsForLibraryInvoicesForOne(customizedTemplate){
+        return oneLibraryDraft.getOfferings()
+            .then(function(offerings) {
+                return offerings.filter(onlyPurchasedOfferings);
+            })
+            .then(function(offerings){
+                return [ generateNotificationForLibrary(notificationData.recipientId, offerings, customizedTemplate) ];
+            });
+    }
 
     var oneLibraryDraft = {
         getAudienceAndSubject: function() { return 'One Library, All Products'; },
@@ -456,7 +468,7 @@ function discardDuplicateIds(value, index, self) {
 }
 
 function generateNotificationForLibrary(libraryId, offerings, customizedTemplate){
-    var notification = generateNotificationForEntity(libraryId, customizedTemplate);
+    var notification = generateNotificationForEntity(libraryId.toString(), customizedTemplate);
 
     if ( offerings && offerings.length ){
         notification.offerings = offerings.filter(onlyOfferingsForLibrary);
@@ -466,7 +478,7 @@ function generateNotificationForLibrary(libraryId, offerings, customizedTemplate
     return notification;
 
     function onlyOfferingsForLibrary(offering){
-        return offering.library.id === libraryId;
+        return offering.library.id  == libraryId;
     }
 }
 

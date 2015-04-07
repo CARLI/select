@@ -423,10 +423,15 @@ describe('The notification draft generator', function() {
             notificationType: 'invoice'
         };
         var notificationData = {
-            recipientId: 'some library'
+            recipientId: 'library'
         };
         function getMockEntitiesForOneLibrariesAllProducts() {
             return Q([{id: 'library', name: 'Library'}]);
+        }
+        function getMockOfferingsForOneLibrariesAllProducts() {
+            return Q([
+                { library: { id: 'library', name: 'Test Library'}, selection: { } }
+            ]);
         }
 
         it('should return a draft notification', function() {
@@ -445,6 +450,23 @@ describe('The notification draft generator', function() {
                     expect(recipients.length).to.equal(1),
                     expect(recipients[0].id).to.equal('library'),
                     expect(recipients[0].label).to.equal('Library Invoice Contacts')
+                ]);
+            });
+        });
+
+        it('should generate a list of notification objects', function(){
+            var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
+            draft.getEntities = getMockEntitiesForOneLibrariesAllProducts;
+            draft.getOfferings = getMockOfferingsForOneLibrariesAllProducts;
+
+            return draft.getNotifications(template).then(function(notifications){
+                return Q.all([
+                    expect(notifications).to.be.an('array'),
+                    expect(notifications.length).to.equal(1),
+                    expect(notifications[0].type).to.equal('Notification'),
+                    expect(notifications[0].targetEntity).to.equal('library'),
+                    expect(notifications[0].offerings).to.be.an('array'),
+                    expect(notifications[0].offerings.length).to.equal(1)
                 ]);
             });
         });
