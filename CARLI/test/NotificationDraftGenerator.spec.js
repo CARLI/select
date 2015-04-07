@@ -157,6 +157,7 @@ describe('The notification draft generator', function() {
             expect(draft.getAudienceAndSubject()).to.equal('Reminder');
 
         });
+
         it('should generate a recipients list', function() {
             var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
             draft.getLibrariesWithSelections = getMockLibrariesWithSelectionsForReminder;
@@ -168,6 +169,23 @@ describe('The notification draft generator', function() {
                     expect(recipients.length).to.equal(1),
                     expect(recipients[0].id).to.equal('library-without-selections'),
                     expect(recipients[0].label).to.equal('Library without selections Subscription Contacts')
+                ]);
+            });
+        });
+
+        it('should generate a list of notification objects', function(){
+            var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
+            draft.getLibrariesWithSelections = getMockLibrariesWithSelectionsForReminder;
+            draft.getAllLibraries = getMockAllLibrariesForReminder;
+
+            var customizedRecipients = [ 'library' ];
+
+            return draft.getNotifications(template, customizedRecipients).then(function(notifications){
+                return Q.all([
+                    expect(notifications).to.be.an('array'),
+                    expect(notifications.length).to.equal(1),
+                    expect(notifications[0].type).to.equal('Notification'),
+                    expect(notifications[0].targetEntity).to.equal('library')
                 ]);
             });
         });

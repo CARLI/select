@@ -137,15 +137,19 @@ function getReminder(template, notificationData) {
             }
         }
     }
-    function getOfferingsForReminder(){}
-    function getNotificationsForReminder(){}
+
+    function getNotificationsForReminder( customizedTemplate, actualRecipientIds ){
+        var notifications = actualRecipientIds.map(function(id){
+            return generateNotificationForLibrary(id, null, customizedTemplate);
+        });
+        return Q(notifications);
+    }
 
     var reminderDraft = {
         getAudienceAndSubject: function() { return 'Reminder'; },
         getLibrariesWithSelections: getLibrariesWithSelections,
         getAllLibraries: getAllLibraries,
         getRecipients: getRecipientsForReminder,
-        getOfferings: getOfferingsForReminder,
         getNotifications: getNotificationsForReminder
     };
 
