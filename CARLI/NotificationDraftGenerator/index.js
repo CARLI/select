@@ -202,12 +202,14 @@ function getVendorReportsForSome(template, notificationData) {
         return cycleRepository.load(notificationData.cycleId)
             .then(function(cycle){
                 return offeringRepository.listVendorsFromOfferingIds(notificationData.offeringIds, cycle);
-            });
+            })
+            .then(vendorRepository.getVendorsById);
     }
 
     function getRecipientsForVendorReportsForSome() {
         return someVendorsDraft.getEntities()
             .then(function( vendorsFromSelectedOfferings ) {
+                console.log(vendorsFromSelectedOfferings);
                 return vendorsFromSelectedOfferings.map(function(vendor) {
                     return convertEntityToRecipient(vendor, template);
                 });
