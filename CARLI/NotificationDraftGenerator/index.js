@@ -301,7 +301,7 @@ function getLibraryEstimatesForAll(template, notificationData) {
     }
     function getOfferingsForLibraryEstimatesForAll(){
         return cycleRepository.load(notificationData.cycleId).then(function (cycle) {
-            return offeringRepository.list(cycle);
+            return offeringRepository.listOfferingsWithSelections(cycle);
         });
     }
     function getNotificationsForLibraryEstimatesForAll(customizedTemplate, actualRecipientIds){
