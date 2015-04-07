@@ -171,7 +171,7 @@ function getVendorReportsForAll(template, notificationData) {
     }
 
     function getOfferingsForVendorReportsForAll(){
-        return cycleRepository.load(notificationData.cycle).then(offeringRepository.listOfferingsWithSelections);
+        return cycleRepository.load(notificationData.cycleId).then(offeringRepository.listOfferingsWithSelections);
     }
 
     function getNotificationsForVendorReportsForAll( customizedTemplate, actualRecipientIds ){
