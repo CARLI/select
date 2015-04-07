@@ -29,7 +29,7 @@
                     <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'oneTimePurchase.libraryPurchaseData[vm.libraryId].price', reversedSort: vm.reverse }" ng-click="vm.sort('oneTimePurchase.libraryPurchaseData[\''+vm.libraryId+'\'].price')">Cost</div>
                 </li>
                 <li collapsible class="collapsed" ng-repeat="offering in vm.offeringList | filter: vm.filter | orderBy: vm.orderBy:vm.reverse track by offering.id ">
-                    <checkbox ng-model="vm.selectedOfferings[offering.id]"></checkbox>
+                    <checkbox ng-show="offering.selection" ng-model="vm.selectedOfferings[offering.id]"></checkbox>
                     <div class="collapsible-header">
                         <div class="column">
                             <button type="button" class="angle-icon-container">
