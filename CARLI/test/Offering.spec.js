@@ -8,6 +8,7 @@ var chai   = require( 'chai' )
     , OfferingRepository = require('../Entity/OfferingRepository' )
     , ProductRepository = require('../Entity/ProductRepository' )
     , testUtils = require('./utils')
+    , Q = require('q')
     , _ = require('lodash')
     ;
 
@@ -184,4 +185,15 @@ function runOfferingSpecificTests(testCycle) {
             })
         });
     });
+
+
+    function clearAllTestOfferings(){
+        return OfferingRepository.list(testCycle)
+            .then(function(offeringsList){
+                return Q.allSettled(offeringsList.map(function(entity){
+                    return OfferingRepository.delete(entity.id, testCycle);
+                }));
+            });
+    }
+
 }

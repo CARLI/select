@@ -99,6 +99,11 @@ function loadOffering( offeringId, cycle ){
     return deferred.promise;
 }
 
+function deleteOffering( offeringId, cycle ){
+    setCycle(cycle);
+    return OfferingRepository.delete(offeringId);
+}
+
 function listOfferingsForLibraryId( libraryId, cycle ) {
     setCycle(cycle);
     return expandOfferings( couchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForLibraryId', libraryId.toString()), cycle )
@@ -178,6 +183,7 @@ module.exports = {
     update: updateOffering,
     list: listOfferings,
     load: loadOffering,
+    delete: deleteOffering,
 
     listOfferingsForLibraryId: listOfferingsForLibraryId,
     listOfferingsForProductId: listOfferingsForProductId,
