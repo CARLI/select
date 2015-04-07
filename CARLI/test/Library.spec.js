@@ -42,6 +42,8 @@ describe('The LibraryRepository', function(){
     });
 
     describe('LibraryRepository.list', function() {
+        this.timeout(5000);
+
         it('should list Libraries from the CARLI CRM and the local database', function(){
             return LibraryRepository.list().then(function(libraryList){
                 return expect(libraryList).to.be.an('array');
