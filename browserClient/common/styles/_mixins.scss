@@ -32,3 +32,10 @@
   order: $val;
 }
 
+@mixin body-text {
+    font-family: 'Verdana', 'Helvetica', 'Arial', sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+    text-decoration: none;
+    color: $black;
+}

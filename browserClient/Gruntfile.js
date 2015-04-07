@@ -283,6 +283,24 @@ module.exports = function ( grunt ) {
                     expand: true,
                     flatten: true
                 }]
+            },
+            carli: {
+                files: [{
+                    src: user_config.carli_app.scss,
+                    dest: user_config.build_dir + '/carliApp/css',
+                    ext: '.css',
+                    expand: true,
+                    flatten: true
+                }]
+            },
+            vendor: {
+                files: [{
+                    src: user_config.vendor_app.scss,
+                    dest: user_config.build_dir + '/vendorApp/css',
+                    ext: '.css',
+                    expand: true,
+                    flatten: true
+                }]
             }
         },
 
@@ -427,7 +445,7 @@ module.exports = function ( grunt ) {
         'browserify:carli',
         'copy:carli_app_all_files',
         'copy:carli_app_bower_files',
-        'sass:build', /* carli */
+        'sass:carli',
         'index:carli',
         'jsenv:node'
     ]);
@@ -439,7 +457,7 @@ module.exports = function ( grunt ) {
         'browserify:vendor',
         'copy:vendor_app_all_files',
         'copy:vendor_app_bower_files',
-        'sass:build',  /* vendor */
+        'sass:vendor',
         'index:vendor',
         'jsenv:node'
     ]);
