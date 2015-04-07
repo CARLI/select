@@ -33,7 +33,7 @@ function getAnnualAccessFeeDraftForOneLibrary(template, notificationData) {
             })
             .then(function(offerings){
                 return actualRecipientIds.map(function(id){
-                    return generateNotificationForEntity(id, offerings, customizedTemplate);
+                    return generateNotificationForLibrary(id, offerings, customizedTemplate);
                });
             });
     }
@@ -83,7 +83,7 @@ function getAnnualAccessFeeDraftForAllLibraries(template, notificationData) {
             })
             .then(function(offerings){
                 return actualRecipientIds.map(function(id){
-                    return generateNotificationForEntity(id, offerings, customizedTemplate);
+                    return generateNotificationForLibrary(id, offerings, customizedTemplate);
                 });
             });
     }
@@ -156,14 +156,11 @@ function getVendorReportsForAll(template, notificationData) {
 
     function getEntitiesForVendorReportsForAll() {
         return cycleRepository.load(notificationData.cycleId)
-            .then(function(cycle) {
-                return productRepository.listProductCountsByVendorId(cycle)
-                    .then(function (productsByVendorId) {
-                        return Object.keys(productsByVendorId);
-                    })
-                    .then(vendorRepository.getVendorsById);
-            });
+            .then(productRepository.listProductCountsByVendorId)
+            .then(extractArrayOfIdsFromObject)
+            .then(vendorRepository.getVendorsById);
     }
+
     function getRecipientsForVendorReportsForAll() {
         return allVendorsDraft.getEntities()
             .then(function( vendorsWithProductsInCycle ) {
@@ -172,8 +169,19 @@ function getVendorReportsForAll(template, notificationData) {
                 });
             });
     }
-    function getOfferingsForVendorReportsForAll(){}
-    function getNotificationsForVendorReportsForAll(){}
+
+    function getOfferingsForVendorReportsForAll(){
+        return cycleRepository.load(notificationData.cycle).then(offeringRepository.listOfferingsWithSelections);
+    }
+
+    function getNotificationsForVendorReportsForAll( customizedTemplate, actualRecipientIds ){
+        return allVendorsDraft.getOfferings()
+            .then(function(offerings){
+                return actualRecipientIds.map(function(id){
+                    return generateNotificationForVendor(id, offerings, customizedTemplate);
+                });
+            });
+    }
 
     var allVendorsDraft = {
         getAudienceAndSubject: function() { return 'All Vendors, All Products'; },
@@ -430,24 +438,52 @@ function discardDuplicateIds(value, index, self) {
     return self.indexOf(value) === index;
 }
 
-function generateNotificationForEntity(entityId, offerings, customizedTemplate){
+function generateNotificationForLibrary(libraryId, offerings, customizedTemplate){
+    var notification = generateNotificationForEntity(libraryId, customizedTemplate);
+
+    if ( offerings && offerings.length ){
+        notification.offerings = offerings.filter(onlyOfferingsForLibrary);
+        notification.cycle = offerings[0].cycle;
+    }
+
+    return notification;
+
+    function onlyOfferingsForLibrary(offering){
+        return offering.library.id === libraryId;
+    }
+}
+
+function generateNotificationForVendor(vendorId, offerings, customizedTemplate){
+    var notification = generateNotificationForEntity(vendorId, customizedTemplate);
+
+    if ( offerings && offerings.length ){
+        notification.offerings = offerings.filter(onlyOfferingsForVendor);
+        notification.cycle = offerings[0].cycle;
+    }
+
+    return notification;
+
+    function onlyOfferingsForVendor(offering){
+        return offering.product.vendor === vendorId;
+    }
+}
+
+
+function generateNotificationForEntity(entityId, customizedTemplate){
     return {
         type: 'Notification',
         targetEntity: entityId,
         subject: customizedTemplate.subject,
         emailBody: customizedTemplate.emailBody,
         pdfBody: customizedTemplate.pdfBody,
-        cycle: offerings[0].cycle,
-        offerings: offerings.filter(onlyOfferingsForEntity),
         draftStatus: 'draft',
         notificationType: customizedTemplate.notificationType
     };
-
-    function onlyOfferingsForEntity(offering){
-        return offering.library.id === entityId;
-    }
 }
 
+function extractArrayOfIdsFromObject( mapObject ){
+    return Object.keys(mapObject);
+}
 
 function onlyPurchasedOfferings(offering) {
     return offering.selection;
