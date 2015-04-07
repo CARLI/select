@@ -327,7 +327,7 @@ function getLibraryInvoicesForSome(template, notificationData) {
             })
             .then(function(offerings){
                 return actualRecipientIds.map(function(id){
-                    return generateNotificationForEntity(id, offerings, customizedTemplate);
+                    return generateNotificationForLibrary(id, offerings, customizedTemplate);
                 });
             });
     }
