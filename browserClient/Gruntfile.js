@@ -124,13 +124,6 @@ module.exports = function ( grunt ) {
                     dest: '<%= build_dir %>/',
                     expand: true
                 }]
-            },
-            build_html: {
-                files: [{
-                    src: ['<%= carliApp_files.html %>'],
-                    dest: '<%= build_dir %>/',
-                    expand: true
-                }]
             }
         },
 
@@ -278,28 +271,21 @@ module.exports = function ( grunt ) {
             options: {
                 loadPath: '.'
             },
-            build: {
-                files: [{
-                    src: ['<%= carliApp_files.scss %>', '<%= vendor_files.css %>'],
-                    dest: '<%= build_dir %>/css/',
-                    ext: '.css',
-                    expand: true,
-                    flatten: true
-                }]
-            },
+
             carli: {
                 files: [{
-                    src: user_config.carli_app.scss,
-                    dest: user_config.build_dir + '/carliApp/css',
+                    src: user_config.carli_app.sass_main,
+                    dest: user_config.carli_app.build_dir,
                     ext: '.css',
                     expand: true,
                     flatten: true
                 }]
             },
+
             vendor: {
                 files: [{
-                    src: user_config.vendor_app.scss,
-                    dest: user_config.build_dir + '/vendorApp/css',
+                    src: user_config.vendor_app.sass_main,
+                    dest: user_config.vendor_app.build_dir,
                     ext: '.css',
                     expand: true,
                     flatten: true
@@ -318,66 +304,24 @@ module.exports = function ( grunt ) {
                 livereload: true
             },
 
-            /* */
-            gruntfile: {
-                files: 'Gruntfile.js',
-                tasks: ['jshint:gruntfile'],
-                options: {                
-                    livereload: false
-                }
+            filesChangedCarli: {
+                files: user_config.carli_app.all_files,
+                tasks: ['newer:copy:carli_app_all_files', 'index:carli']
             },
 
-           /**
-            * When our JavaScript source files change, we want to run lint them and
-            * run our unit tests.
-            */
-            jssrc: {
-                files: ['<%= carliApp_files.js %>'],
-                tasks: [ 'newer:jshint:src', 'newer:copy:build_appjs' ]
+            filesChangedVendor: {
+                files: user_config.vendor_app.all_files,
+                tasks: ['newer:copy:vendor_app_all_files', 'index:vendor']
             },
 
-           /**
-            * If JavaScript files are added or removed, process index.html to update the loaded scripts.
-            */
-            jssrcfiles: {
-                files: ['<%= carliApp_files.js %>'],
-                tasks: [ 'newer:copy:build_appjs', 'index:build' ], 
-                options: {
-                    event: ['added', 'deleted']
-                }
+            sassCarli: {
+                files: user_config.carli_app.sass_all,
+                tasks: ['sass:carli']
             },
 
-           /**
-            * When index.html changes, we need to compile it.
-            */
-            index: {
-                files: [ '<%= carliApp_files.index %>' ],
-                tasks: [ 'index:build' ]
-            },
-
-           /**
-            * When a JavaScript unit test file changes, we only want to lint it and
-            * run the unit tests. We don't want to do any live reloading.
-            */
-            jsunit: {
-                files: ['<%= carliApp_files.jsUnit %>'],
-                tasks: [ 'newer:jshint:test', 'karma:unit:run' ],
-                options: {
-                    livereload: false
-                }
-            },
-
-            /**
-             *
-             */
-            html: {
-                files: ['<%= carliApp_files.html %>'],
-                tasks: ['newer:copy:build_html']
-            },
-
-            css: {
-                files: ['<%= carliApp_files.watchSass %>'],
-                tasks: ['sass:build']
+            sassVendor: {
+                files: user_config.vendor_app.sass_all,
+                tasks: ['sass:vendor']
             }
         }
     };

@@ -38,7 +38,8 @@ module.exports = {
             '!carliApp/**/*.spec.js'
         ],
         build_dir: 'build/carliApp/',
-        scss: 'carliApp/styles/app.scss',
+        sass_main: 'carliApp/styles/app.scss',
+        sass_all: 'carliApp/**/*.scss',
         test_js: [
             'carliApp/**/*.spec.js'
         ]
@@ -56,7 +57,8 @@ module.exports = {
             '!vendorApp/**/*.spec.js'
         ],
         build_dir: 'build/vendorApp/',
-        scss: 'vendorApp/styles/app.scss',
+        sass_main: 'vendorApp/styles/app.scss',
+        sass_all: 'vendorApp/**/*.scss',
         test_js: [
             'vendorApp/**/*.spec.js'
         ]
