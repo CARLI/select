@@ -241,6 +241,7 @@ function getVendorReportsForOne(template, notificationData) {
             return [ vendor ];
         });
     }
+
     function getRecipientsForVendorReportsForOne() {
         return oneVendorDraft.getEntities()
             .then(function( vendorFromNotificationData ) {
@@ -249,8 +250,29 @@ function getVendorReportsForOne(template, notificationData) {
                 });
             });
     }
-    function getOfferingsForVendorReportsForOne(){}
-    function getNotificationsForVendorReportsForOne(){}
+
+    function getOfferingsForVendorReportsForOne(){
+        var vendorForThisReport = notificationData.recipientId;
+
+        return cycleRepository.load(notificationData.cycleId)
+            .then(offeringRepository.listOfferingsWithSelections)
+            .then(getOfferingsForVendor);
+
+        function getOfferingsForVendor( listOfOfferings ){
+            return listOfOfferings.filter(function(offering){
+                return offering.product.vendor === vendorForThisReport;
+            });
+        }
+    }
+
+    function getNotificationsForVendorReportsForOne( customizedTemplate, actualRecipientIds ){
+        return oneVendorDraft.getOfferings()
+            .then(function(offerings){
+                return actualRecipientIds.map(function(id){
+                    return generateNotificationForVendor(id, offerings, customizedTemplate);
+                });
+            });
+    }
 
     var oneVendorDraft = {
         getAudienceAndSubject: function() { return 'One Vendor, All Products'; },
