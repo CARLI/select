@@ -83,8 +83,12 @@ function loadNonCrmLibraryForCrmId( crmId ){
 function listLibrariesWithSelectionsInCycle( cycle ){
     return CouchUtils.getCouchViewResultObject(cycle.databaseName, 'listLibrariesWithSelections', null, true)
         .then(function(resultObject){
-            return Object.keys(resultObject);
+            return Object.keys(resultObject).map(returnAsInteger);
         });
+
+    function returnAsInteger(idString) {
+        return parseInt(idString, 10);
+    }
 }
 
 function getLibrariesById( ids ){

@@ -287,20 +287,72 @@ function getVendorReportsForOne(template, notificationData) {
     };
     return oneVendorDraft;
 }
-function getLibraryInvoicesForAll(template, notificationData) {
-    function getEntitiesForLibraryInvoicesForAll() {
+function getLibraryEstimatesForAll(template, notificationData) {
+    function getEntitiesForLibraryEstimatesForAll() {
         return libraryRepository.list();
     }
-    function getRecipientsForLibraryInvoicesForAll() {
+    function getRecipientsForLibraryEstimatesForAll() {
         return allLibrariesDraft.getEntities()
-            .then(function( librariesWithSelectionsInCycle ) {
-                return librariesWithSelectionsInCycle.map(function(vendor) {
+            .then(function( allLibraries ) {
+                return allLibraries.map(function(vendor) {
                     return convertEntityToRecipient(vendor, template);
                 });
             });
     }
-    function getOfferingsForLibraryInvoicesForAll(){}
-    function getNotificationsForLibraryInvoicesForAll(){}
+    function getOfferingsForLibraryEstimatesForAll(){
+        return cycleRepository.load(notificationData.cycleId).then(function (cycle) {
+            return offeringRepository.list(cycle);
+        });
+    }
+    function getNotificationsForLibraryEstimatesForAll(customizedTemplate, actualRecipientIds){
+        return allLibrariesDraft.getOfferings()
+            .then(function(offerings){
+                return actualRecipientIds.map(function(id){
+                    return generateNotificationForLibrary(id, offerings, customizedTemplate);
+                });
+            });
+    }
+
+    var allLibrariesDraft = {
+        getAudienceAndSubject: function() { return 'All Libraries, All Products'; },
+        getEntities: getEntitiesForLibraryEstimatesForAll,
+        getRecipients: getRecipientsForLibraryEstimatesForAll,
+        getOfferings: getOfferingsForLibraryEstimatesForAll,
+        getNotifications: getNotificationsForLibraryEstimatesForAll
+    };
+    return allLibrariesDraft;
+}
+function getLibraryInvoicesForAll(template, notificationData) {
+    function getEntitiesForLibraryInvoicesForAll() {
+        return cycleRepository.load(notificationData.cycleId)
+            .then(function(cycle) {
+                return libraryRepository.listLibrariesWithSelectionsInCycle(cycle);
+            })
+            .then(function (libraryIds) {
+                return libraryRepository.getLibrariesById(libraryIds);
+            });
+    }
+    function getRecipientsForLibraryInvoicesForAll() {
+        return allLibrariesDraft.getEntities()
+            .then(function( librariesWithSelections ) {
+                return librariesWithSelections.map(function(vendor) {
+                    return convertEntityToRecipient(vendor, template);
+                });
+            });
+    }
+    function getOfferingsForLibraryInvoicesForAll(){
+        return cycleRepository.load(notificationData.cycleId).then(function (cycle) {
+            return offeringRepository.listOfferingsWithSelections(cycle);
+        });
+    }
+    function getNotificationsForLibraryInvoicesForAll(customizedTemplate, actualRecipientIds){
+        return allLibrariesDraft.getOfferings()
+            .then(function(offerings){
+                return actualRecipientIds.map(function(id){
+                    return generateNotificationForLibrary(id, offerings, customizedTemplate);
+                });
+            });
+    }
 
     var allLibrariesDraft = {
         getAudienceAndSubject: function() { return 'All Libraries, All Products'; },
@@ -376,8 +428,20 @@ function getLibraryInvoicesForOne(template, notificationData) {
                 });
             });
     }
-    function getOfferingsForLibraryInvoicesForOne(){}
-    function getNotificationsForLibraryInvoicesForOne(){}
+    function getOfferingsForLibraryInvoicesForOne(){
+        return cycleRepository.load(notificationData.cycleId).then(function (cycle) {
+            return offeringRepository.listOfferingsForLibraryId(notificationData.recipientId, cycle);
+        });
+    }
+    function getNotificationsForLibraryInvoicesForOne(customizedTemplate){
+        return oneLibraryDraft.getOfferings()
+            .then(function(offerings) {
+                return offerings.filter(onlyPurchasedOfferings);
+            })
+            .then(function(offerings){
+                return [ generateNotificationForLibrary(notificationData.recipientId, offerings, customizedTemplate) ];
+            });
+    }
 
     var oneLibraryDraft = {
         getAudienceAndSubject: function() { return 'One Library, All Products'; },
@@ -411,12 +475,18 @@ function generateDraftNotification(template, notificationData) {
             return getVendorReportsForOne(template, notificationData);
         }
     } else if (notificationTypeIsForLibrary()) {
-        if (shouldSendEverythingToEveryone()) {
-            return getLibraryInvoicesForAll(template, notificationData);
-        } else if (doRecipientsComeFromOfferings()) {
-            return getLibraryInvoicesForSome(template, notificationData);
-        } else if (isASingleRecipient()) {
-            return getLibraryInvoicesForOne(template, notificationData);
+        if (template.notificationType == 'subscription') {
+            if (shouldSendEverythingToEveryone()) {
+                return getLibraryEstimatesForAll(template, notificationData);
+            }
+        } else if (template.notificationType == 'invoice') {
+            if (shouldSendEverythingToEveryone()) {
+                return getLibraryInvoicesForAll(template, notificationData);
+            } else if (doRecipientsComeFromOfferings()) {
+                return getLibraryInvoicesForSome(template, notificationData);
+            } else if (isASingleRecipient()) {
+                return getLibraryInvoicesForOne(template, notificationData);
+            }
         }
     }
 
@@ -459,7 +529,7 @@ function discardDuplicateIds(value, index, self) {
 }
 
 function generateNotificationForLibrary(libraryId, offerings, customizedTemplate){
-    var notification = generateNotificationForEntity(libraryId, customizedTemplate);
+    var notification = generateNotificationForEntity(libraryId.toString(), customizedTemplate);
 
     if ( offerings && offerings.length ){
         notification.offerings = offerings.filter(onlyOfferingsForLibrary);
@@ -469,7 +539,7 @@ function generateNotificationForLibrary(libraryId, offerings, customizedTemplate
     return notification;
 
     function onlyOfferingsForLibrary(offering){
-        return offering.library.id === libraryId;
+        return offering.library.id  == libraryId;
     }
 }
 
