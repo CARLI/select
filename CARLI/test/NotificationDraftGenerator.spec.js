@@ -249,6 +249,15 @@ describe('The notification draft generator', function() {
             return Q([{id: 'vendor', name: 'Vendor'}]);
         }
 
+        function getMockOfferingsForSomeVendorsSomeProducts(){
+            return Q([
+                { product: { id: 'product1', vendor: 'vendor1' }, selection: {} },
+                { product: { id: 'product1', vendor: 'vendor1' }, selection: {} },
+                { product: { id: 'product2', vendor: 'vendor2' }, selection: {} },
+                { product: { id: 'product2', vendor: 'vendor2' }, selection: {} }
+            ]);
+        }
+
         it('should return a draft notification', function() {
             var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
             expect(draft).to.satisfy(implementsDraftNotificationInterface);
@@ -265,6 +274,25 @@ describe('The notification draft generator', function() {
                     expect(recipients.length).to.equal(1),
                     expect(recipients[0].id).to.equal('vendor'),
                     expect(recipients[0].label).to.equal('Vendor Report Contacts')
+                ]);
+            });
+        });
+
+        it('should generate a list of notification objects', function(){
+            var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
+            draft.getEntities = getMockEntitiesForSomeVendorsSomeProducts;
+            draft.getOfferings = getMockOfferingsForSomeVendorsSomeProducts;
+
+            var customizedRecipients = [ 'vendor1', 'vendor2' ];
+
+            return draft.getNotifications(template, customizedRecipients).then(function(notifications){
+                return Q.all([
+                    expect(notifications).to.be.an('array'),
+                    expect(notifications.length).to.equal(2),
+                    expect(notifications[0].type).to.equal('Notification'),
+                    expect(notifications[0].targetEntity).to.equal('vendor1'),
+                    expect(notifications[0].offerings).to.be.an('array'),
+                    expect(notifications[0].offerings.length).to.equal(2)
                 ]);
             });
         });

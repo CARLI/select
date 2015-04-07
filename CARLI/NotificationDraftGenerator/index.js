@@ -192,42 +192,36 @@ function getVendorReportsForAll(template, notificationData) {
     };
     return allVendorsDraft;
 }
+
 function getVendorReportsForSome(template, notificationData) {
     function getEntitiesForVendorReportsForSome() {
-        return cycleRepository.load(notificationData.cycleId).then(function (cycle) {
-            return getOfferingsFromCycle()
-                .then(getProductsFromOfferings)
-                .then(getVendorsFromProducts);
-
-            function getOfferingsFromCycle() {
-                return offeringRepository.getOfferingsById(notificationData.offeringIds, cycle);
-            }
-            function getProductsFromOfferings(offerings) {
-                var productIds = offerings.map(getProductIdFromOffering);
-                return productRepository.getProductsById(productIds, cycle);
-
-                function getProductIdFromOffering(offering) {
-                    return offering.product;
-                }
-            }
-            function getVendorsFromProducts(products) {
-                var vendorIds = products.map(getVendorIdFromProduct).filter(discardDuplicateIds);
-                return vendorRepository.getVendorsById(vendorIds);
-
-                function getVendorIdFromProduct(product) {
-                    return product.vendor;
-                }
-            }
-        });
+        return cycleRepository.load(notificationData.cycleId)
+            .then(function(cycle){
+                return offeringRepository.listVendorsFromOfferingIds(notificationData.offeringIds, cycle);
+            });
     }
-    function getOfferingsForVendorReportsForSome(){}
-    function getNotificationsForVendorReportsForSome(){}
 
     function getRecipientsForVendorReportsForSome() {
         return someVendorsDraft.getEntities()
             .then(function( vendorsFromSelectedOfferings ) {
                 return vendorsFromSelectedOfferings.map(function(vendor) {
                     return convertEntityToRecipient(vendor, template);
+                });
+            });
+    }
+
+    function getOfferingsForVendorReportsForSome(){
+        return cycleRepository.load(notificationData.cycleId)
+            .then(function(cycle){
+                return offeringRepository.getOfferingsById(notificationData.offeringIds, cycle);
+            });
+    }
+
+    function getNotificationsForVendorReportsForSome( customizedTemplate, actualRecipientIds ){
+        return someVendorsDraft.getOfferings()
+            .then(function(offerings){
+                return actualRecipientIds.map(function(id){
+                    return generateNotificationForVendor(id, offerings, customizedTemplate);
                 });
             });
     }
