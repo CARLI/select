@@ -179,10 +179,13 @@ module.exports = function ( grunt ) {
 
         jshint: {
             src: [
-                '<%= carliApp_files.js %>'
+                user_config.logic_files.js,
+                user_config.carli_app.all_js,
+                user_config.vendor_app.all_js
             ],
             test: [
-                '<%= carliApp_files.jsUnit %>',
+                user_config.carli_app.test_js,
+                user_config.vendor_app.test_js
             ],
             gruntfile: [
                 'Gruntfile.js'
