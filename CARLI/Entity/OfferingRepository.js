@@ -99,6 +99,11 @@ function loadOffering( offeringId, cycle ){
     return deferred.promise;
 }
 
+function deleteOffering( offeringId, cycle ){
+    setCycle(cycle);
+    return OfferingRepository.delete(offeringId);
+}
+
 function listOfferingsForLibraryId( libraryId, cycle ) {
     setCycle(cycle);
     return expandOfferings( couchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForLibraryId', libraryId.toString()), cycle )
@@ -109,6 +114,13 @@ function listOfferingsForProductId( productId, cycle ) {
     setCycle(cycle);
     return expandOfferings( couchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForProductId', productId), cycle )
         .then(initializeComputedValues);
+}
+
+function listOfferingsWithSelections( cycle ) {
+    setCycle(cycle);
+    return expandOfferings( couchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsWithSelections'), cycle )
+        .then(initializeComputedValues);
+
 }
 
 function initializeComputedValues(offerings) {
@@ -178,9 +190,11 @@ module.exports = {
     update: updateOffering,
     list: listOfferings,
     load: loadOffering,
+    delete: deleteOffering,
 
     listOfferingsForLibraryId: listOfferingsForLibraryId,
     listOfferingsForProductId: listOfferingsForProductId,
+    listOfferingsWithSelections: listOfferingsWithSelections,
     getOfferingsById: getOfferingsById,
     getOfferingDisplayOptions: getOfferingDisplayOptions,
     transformOfferingsForNewCycle: transformOfferingsForNewCycle,

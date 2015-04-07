@@ -178,9 +178,23 @@ describe('The notification draft generator', function() {
             id: 'notification-template-vendor-reports',
             notificationType: 'report'
         };
+
         var notificationData = {};
+
         function getMockEntitiesForAllVendorsAllProducts() {
-            return Q([{id: 'vendor', name: 'Vendor'}]);
+            return Q([
+                {id: 'vendor1', name: 'Vendor1'},
+                {id: 'vendor2', name: 'Vendor2'}
+            ]);
+        }
+
+        function getMockOfferingsForAllVendorsAllProducts(){
+            return Q([
+                { product: { id: 'product1', vendor: 'vendor1' }, selection: {} },
+                { product: { id: 'product1', vendor: 'vendor1' }, selection: {} },
+                { product: { id: 'product2', vendor: 'vendor2' }, selection: {} },
+                { product: { id: 'product2', vendor: 'vendor2' }, selection: {} }
+            ]);
         }
 
         it('should return a draft notification', function() {
@@ -196,13 +210,33 @@ describe('The notification draft generator', function() {
             return draft.getRecipients().then(function(recipients) {
                 return Q.all([
                     expect(recipients).to.be.an('array'),
-                    expect(recipients.length).to.equal(1),
-                    expect(recipients[0].id).to.equal('vendor'),
-                    expect(recipients[0].label).to.equal('Vendor Report Contacts')
+                    expect(recipients.length).to.equal(2),
+                    expect(recipients[0].id).to.equal('vendor1'),
+                    expect(recipients[0].label).to.equal('Vendor1 Report Contacts')
+                ]);
+            });
+        });
+
+        it('should generate a list of notification objects', function(){
+            var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
+            draft.getEntities = getMockEntitiesForAllVendorsAllProducts;
+            draft.getOfferings = getMockOfferingsForAllVendorsAllProducts;
+
+            var customizedRecipients = [ 'vendor1', 'vendor2' ];
+
+            return draft.getNotifications(template, customizedRecipients).then(function(notifications){
+                return Q.all([
+                    expect(notifications).to.be.an('array'),
+                    expect(notifications.length).to.equal(2),
+                    expect(notifications[0].type).to.equal('Notification'),
+                    expect(notifications[0].targetEntity).to.equal('vendor1'),
+                    expect(notifications[0].offerings).to.be.an('array'),
+                    expect(notifications[0].offerings.length).to.equal(2)
                 ]);
             });
         });
     });
+
     describe('specification for generateDraftNotification "One or more Vendors, One or more Products"', function() {
         var template = {
             id: 'notification-template-vendor-reports',
@@ -235,6 +269,7 @@ describe('The notification draft generator', function() {
             });
         });
     });
+
     describe('specification for generateDraftNotification "One Vendor, All Products"', function() {
         var template = {
             id: 'notification-template-vendor-reports',
@@ -298,6 +333,7 @@ describe('The notification draft generator', function() {
             });
         });
     });
+
     describe('specification for generateDraftNotification "One or more Libraries, One or more Products" Invoices', function() {
         var template = {
             id: 'notification-template-library-invoices',
@@ -356,6 +392,7 @@ describe('The notification draft generator', function() {
             });
         });
     });
+
     describe('specification for generateDraftNotification "One Library, All Products" Invoice', function() {
         var template = {
             id: 'notification-template-library-invoices',
@@ -388,6 +425,7 @@ describe('The notification draft generator', function() {
             });
         });
     });
+
     describe('specification for generateDraftNotification "All Libraries, All Products" Estimates', function() {
         var template = {
             id: 'irrelevant template id',
@@ -418,6 +456,7 @@ describe('The notification draft generator', function() {
             });
         });
     });
+
     describe('specification for generateDraftNotification "One or more Libraries, One or more Products" Estimates', function() {
         var template = {
             id: 'irrelevant template id',
@@ -450,6 +489,7 @@ describe('The notification draft generator', function() {
             });
         });
     });
+
     describe('specification for generateDraftNotification "One Library, All Products" Estimate', function() {
         var template = {
             id: 'irrelevant template id',
