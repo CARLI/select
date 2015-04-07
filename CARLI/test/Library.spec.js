@@ -29,6 +29,8 @@ describe('The LibraryRepository', function(){
 
     describe('LibraryRepository.load', function() {
         it('should have a load method that combines data from the CARLI CRM and the local database', function(){
+            this.timeout(5000);
+
             return LibraryRepository.load(1).then(function(loadedLibrary){
                 return expect(loadedLibrary).to.be.an('object').and.have.property('id',1);
             });
