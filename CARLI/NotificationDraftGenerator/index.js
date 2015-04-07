@@ -100,7 +100,6 @@ function getAnnualAccessFeeDraftForAllLibraries(template, notificationData) {
 function getReminder(template, notificationData) {
 
     function getLibrariesWithSelections() {
-        console.log(notificationData.cycleId);
         return cycleRepository.load(notificationData.cycleId).then(function(cycle){
             return libraryRepository.listLibrariesWithSelectionsInCycle(cycle);
         });
@@ -320,7 +319,6 @@ function getLibraryInvoicesForSome(template, notificationData) {
             })
             .then(function(offerings){
                 return actualRecipientIds.map(function(id){
-                    console.log(id);
                     return generateNotificationForEntity(id, offerings, customizedTemplate);
                 });
             });
@@ -446,7 +444,6 @@ function generateNotificationForEntity(entityId, offerings, customizedTemplate){
     };
 
     function onlyOfferingsForEntity(offering){
-        console.log(offering.library.id, entityId);
         return offering.library.id === entityId;
     }
 }
