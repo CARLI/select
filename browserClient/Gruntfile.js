@@ -34,19 +34,7 @@ module.exports = function ( grunt ) {
             }
         },
 
-        build: {
-            carli: {
-
-            },
-            vendor: {
-                
-            }
-        },
-
-        clean: [
-          '<%= build_dir %>',
-          '<%= compile_dir %>'
-        ],
+        clean: [ user_config.build_dir, user_config.compile_dir ],
 
         concat: {
             compile_js: {
@@ -64,36 +52,37 @@ module.exports = function ( grunt ) {
         connect: {
             options: {
                 hostname: '0.0.0.0',
-                port: 8000,
                 base: 'build/',
-                livereload: 35729,
-                middleware: function (connect, options) {
-                    var optBase = (typeof options.base === 'string') ? [options.base] : options.base;
-                    return [require('connect-modrewrite')(['!(\\..+)$ / [L]'])].concat(
-                        optBase.map(function(path){ return connect.static(path); }));
+                livereload: 35729
+            },
+
+            serveCarli: {
+                options: {
+                    open: true,
+                    port: 8000,
+                    middleware: function (connect, options) {
+                        var optBase = (typeof options.base === 'string') ? [options.base] : options.base;
+                        var modRewrite = require('connect-modrewrite');
+
+                        return [modRewrite(['!(\\..+)$ /carliApp/index.html [L]'])].concat(
+                            optBase.map(function(path){ return connect.static(path); }));
+                    }
                 }
             },
 
-            serve: {
+            serveVendor: {
                 options: {
-                    open: true
-                }
-            },
+                    open: true,
+                    port: 8001,
+                    middleware: function (connect, options) {
+                        var optBase = (typeof options.base === 'string') ? [options.base] : options.base;
+                        var modRewrite = require('connect-modrewrite');
 
-            serveHeadless: {
-                options: {
-                    open: false,
-                    livereload: false
-                }
-            },
-
-            tests: {
-                options: {
-                    open: false,
-                    livereload: false
+                        return [modRewrite(['!(\\..+)$ /vendorApp/index.html [L]'])].concat(
+                            optBase.map(function(path){ return connect.static(path); }));
+                    }
                 }
             }
-
         },
 
         copy: {
@@ -194,7 +183,6 @@ module.exports = function ( grunt ) {
             ],
             test: [
                 '<%= carliApp_files.jsUnit %>',
-                '<%= carliApp_files.jsE2e %>'
             ],
             gruntfile: [
                 'Gruntfile.js'
@@ -281,21 +269,6 @@ module.exports = function ( grunt ) {
                 src: '<%= carliApp_files.js %>', 
                 title: 'API Documentation'
             }
-        },
-
-        protractor_webdriver: {
-            options: {},
-            all: {}
-        },
-
-        protractor: {
-            options: {
-                configFile: "protractor.conf.js",
-                keepAlive: false,
-                noColor: false,
-                args: {}
-            },
-            all: {}
         },
 
         sass: {
@@ -441,47 +414,42 @@ module.exports = function ( grunt ) {
         }
     });
 
-    /**
-     * The `build` task gets your app ready to run for development and testing.
-     */
     grunt.registerTask( 'build', [
         'clean',
+        'build:carli',
+        'build:vendor'
+    ]);
+
+    grunt.registerTask( 'build:carli', [
         'jsenv:browser',
         'ensure-local-config',
         'jshint',
-
         'browserify:carli',
         'copy:carli_app_all_files',
         'copy:carli_app_bower_files',
         'sass:build', /* carli */
         'index:carli',
-
         'jsenv:node'
     ]);
 
-
-    grunt.registerTask('buildVendorApp', [
-        'clean',
+    grunt.registerTask('build:vendor', [
         'jsenv:browser',
         'ensure-local-config',
         'jshint',
-
         'browserify:vendor',
         'copy:vendor_app_all_files',
         'copy:vendor_app_bower_files',
         'sass:build',  /* vendor */
         'index:vendor',
-
         'jsenv:node'
     ]);
 
 
     /**
-     * Use `grunt test` to run ALL tests once
+     * Use `grunt test` to run unit tests once
      */
     grunt.registerTask( 'test', [
         'test:unit'
-        //'test:e2e'
     ]);
 
     /**
@@ -494,36 +462,8 @@ module.exports = function ( grunt ) {
         'karma:continuous'
     ]);
 
-    grunt.registerTask( 'test:e2e', 'Run the end-to-end tests', function(){
-        if ( this.args && this.args.length > 0 ){
-            var specFiles = this.args.map( function(name){
-                return 'e2e/' + name + '.spec.js';
-            });
-            grunt.config('protractor.options.args.specs', specFiles);
-        }
-
-        grunt.task.run([
-            'clean',
-            'build',
-            'protractor_webdriver',
-            'connect:tests',
-            // 'deploy-test-db',
-            'protractor'// ,
-            // 'delete-test-dbs'
-        ]);
-    });
-
-    grunt.registerTask( 'test:e2eJenkins', [
-        'clean',
-        'build',
-        'connect:tests',
-        'deploy-db',
-        'protractor'
-    ]);
-
     grunt.registerTask( 'test:jenkins', [
-        'test:unit',
-        //, 'test:e2eJenkins'
+        'test:unit'
     ]);
 
     /*
@@ -532,28 +472,8 @@ module.exports = function ( grunt ) {
     grunt.registerTask( 'serve', [
         'build',
         'karma:unit',
-        'connect:serve',
-        'watch'
-    ]);
-    /*
-     * The `serve:headless` task runs serve without opening the browser, and without livereload
-     */
-    grunt.registerTask( 'serve:headless', [
-        'build',
-        'connect:serveHeadless',
-        // Leave `watch` here -- otherwise the server just exits immediately
-        'watch'
-    ]);
-
-    /*
-     * The `serve:protractor` task is used to start the selenium server along with a dev server to run Protractor tests
-     * against. (Use this if you want to manually run Protractor).
-     */
-    grunt.registerTask( 'serve:protractor', [
-        'build',
-        'karma:unit',
-        'protractor_webdriver',
-        'connect:serve',
+        'connect:serveCarli',
+        'connect:serveVendor',
         'watch'
     ]);
 
