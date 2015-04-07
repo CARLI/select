@@ -100,7 +100,6 @@ function getAnnualAccessFeeDraftForAllLibraries(template, notificationData) {
 function getReminder(template, notificationData) {
 
     function getLibrariesWithSelections() {
-        console.log(notificationData.cycleId);
         return cycleRepository.load(notificationData.cycleId).then(function(cycle){
             return libraryRepository.listLibrariesWithSelectionsInCycle(cycle);
         });
@@ -287,16 +286,14 @@ function getLibraryInvoicesForAll(template, notificationData) {
 function getLibraryInvoicesForSome(template, notificationData) {
 
     function getEntitiesForLibraryInvoicesForSome() {
-        return cycleRepository.load(notificationData.cycleId).then(function (cycle) {
-            return offeringRepository.getOfferingsById(notificationData.offeringIds, cycle).then(function(offerings) {
-                var libraryIds = offerings.map(getLibraryIdFromOffering).filter(discardDuplicateIds);
-                return libraryRepository.getLibrariesById(libraryIds);
-            });
+        return someLibrariesDraft.getOfferings().then(function(offerings) {
+            var libraryIds = offerings.map(getLibraryIdFromOffering).filter(discardDuplicateIds);
+            return libraryRepository.getLibrariesById(libraryIds);
         });
     }
 
     function getLibraryIdFromOffering(offering) {
-        var id = offering.library;
+        var id = offering.library.id;
         return typeof id === 'number' ? id : parseInt(id, 10);
     }
 
@@ -309,8 +306,23 @@ function getLibraryInvoicesForSome(template, notificationData) {
             });
     }
 
-    function getOfferingsForLibraryInvoicesForSome(){}
-    function getNotificationsForLibraryInvoicesForSome(){}
+    function getOfferingsForLibraryInvoicesForSome(){
+        return cycleRepository.load(notificationData.cycleId).then(function (cycle) {
+            return offeringRepository.getOfferingsById(notificationData.offeringIds, cycle);
+        });
+    }
+
+    function getNotificationsForLibraryInvoicesForSome(customizedTemplate, actualRecipientIds){
+        return someLibrariesDraft.getOfferings()
+            .then(function(offerings) {
+                return offerings.filter(onlyPurchasedOfferings);
+            })
+            .then(function(offerings){
+                return actualRecipientIds.map(function(id){
+                    return generateNotificationForEntity(id, offerings, customizedTemplate);
+                });
+            });
+    }
 
     var someLibrariesDraft = {
         getAudienceAndSubject: function() { return 'One or more Libraries, One or more Products'; },

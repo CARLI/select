@@ -45,7 +45,12 @@
             "description": "If product is selected, the pricing object that was selected, and the date the selection was made",
             "type": "object",
             "properties": {
-              "users": {"type": "number"},
+              "users": {
+                  "oneOf": [
+                      { "type": "number" },
+                      { "type": "string" }
+                  ]
+              },
               "price": {"type": "number"},
               "datePurchased": {"$ref": "./Date.json"}
             }

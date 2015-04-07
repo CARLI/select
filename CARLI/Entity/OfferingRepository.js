@@ -164,7 +164,7 @@ var functionsToAdd = {
 };
 
 function getOfferingsById( ids, cycle ){
-    return couchUtils.getCouchDocuments(cycle.databaseName, ids);
+    return expandOfferings(couchUtils.getCouchDocuments(cycle.databaseName, ids), cycle);
 }
 
 function getOfferingDisplayOptions(){

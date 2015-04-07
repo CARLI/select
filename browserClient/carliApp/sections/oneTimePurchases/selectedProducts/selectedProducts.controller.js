@@ -98,10 +98,12 @@
         }
 
         function invoiceProducts() {
+            var offeringIds = flattenSelectedOfferingsObject();
+
             notificationModalService.sendStartDraftMessage({
                 templateId: 'notification-template-library-invoices',
                 cycleId: cycleService.getCurrentCycle().id,
-                recipientId: vm.libraryId
+                offeringIds: offeringIds
             });
         }
 
