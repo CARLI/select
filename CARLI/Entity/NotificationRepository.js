@@ -124,7 +124,11 @@ function getSummaryTotal() {
     return notification.offerings ? notification.offerings.reduce(sumOfPrices, 0) : 0;
 
     function sumOfPrices(sum, offering) {
-        return sum + offering.selection.price;
+        if (offering.selection) {
+            return sum + offering.selection.price;
+        } else {
+            return sum;
+        }
     }
 }
 function getRecipientLabelForInstance() {
