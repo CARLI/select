@@ -1,64 +1,64 @@
-var config = require('../config');
 var request = require('../config/environmentDependentModules/request');
 var Q = require('q');
 
-var dbInfo = {
-    local: {
-        baseUrl: config.storeOptions.couchDbUrl,
-        mainDbName: config.storeOptions.couchDbName,
-        mainDbUrl: config.storeOptions.couchDbUrl + '/' + config.storeOptions.couchDbName
-    },
-    dev: {
-        baseUrl: 'http://carli-db.dev.pixotech.com',
-        mainDbName: 'carli',
-        mainDbUrl: 'http://carli-db.dev.pixotech.com/carli'
-    },
-    qa: {
-        baseUrl: 'http://carli-db.qa.pixotech.com',
-        mainDbName: 'carli',
-        mainDbUrl: 'http://carli-db.qa.pixotech.com/carli'
-    },
-    prod: {
-        baseUrl: 'http://select-prod.carli.illinois.edu/db',
-        mainDbName: 'carli',
-        mainDbUrl: 'http://select-prod.carli.illinois.edu/db/carli'
+var dbInfo = require('./databaseInfo');
+
+function replicator(sourceUrl) {
+    var replicateWhat = 'content';
+    var requestInfo = {
+        url: dbInfo.local.baseUrl + '/_replicate',
+        method: 'post',
+        json: {}
+    };
+    var _replicator = {
+        from: setSource,
+        to: setTarget,
+        designDocsOnly: setDesignDocIdsOnly,
+        replicate: triggerReplication
+    };
+
+    function setSource(sourceUrl) {
+        requestInfo.json.source = sourceUrl;
+        return _replicator;
     }
-};
 
-function replicateFrom(sourceUrl) {
-    return {
-        to: function (targetUrl) {
-            var deferred = Q.defer();
+    function setTarget(targetUrl) {
+        requestInfo.json.target = targetUrl;
+        return _replicator;
+    }
 
-            request({
-                url: dbInfo.local.baseUrl + '/_replicate',
-                method: 'post',
-                json: {
-                    source: sourceUrl,
-                    target: targetUrl
-                }
-            }, handleResponse);
+    function setDesignDocIdsOnly() {
+        replicateWhat = 'design docs';
+        requestInfo.doc_ids = [ "_design/CARLI" ];
+        return _replicator;
+    }
 
-            function handleResponse(error, response, body) {
-                if (error) {
-                    deferred.reject(error);
+    function triggerReplication() {
+        var deferred = Q.defer();
+
+        request(requestInfo, handleResponse);
+
+        function handleResponse(error, response, body) {
+            if (error) {
+                deferred.reject(error);
+            } else {
+                if (body.ok) {
+                    console.log("OK: Replicated " + replicateWhat + " of " + requestInfo.json.source + " to " + requestInfo.json.target);
+                    deferred.resolve();
+                } else if (body.error == 'db_not_found') {
+                    createDb(requestInfo.json.target).then(function() {
+                        return deferred.resolve(triggerReplication() );
+                    });
                 } else {
-                    if (body.ok) {
-                        console.log("OK: Replicated " + sourceUrl + " to " + targetUrl);
-                        deferred.resolve();
-                    } else if (body.error == 'db_not_found') {
-                        createDb(targetUrl).then(function() {
-                            return deferred.resolve(replicateFrom(sourceUrl).to(targetUrl));
-                        });
-                    } else {
-                        deferred.reject(body);
-                    }
+                    deferred.reject(body);
                 }
             }
-
-            return deferred.promise;
         }
+
+        return deferred.promise;
     }
+
+    return _replicator;
 }
 
 function replicateAllFrom(source) {
@@ -68,11 +68,24 @@ function replicateAllFrom(source) {
             var listCycleDbs = generateCycleDbLister(source);
             var replicateCycleDbs = generateCycleDbReplicator(source, target);
 
-            return replicateFrom(dbInfo[source].mainDbUrl).to(dbInfo[target].mainDbUrl)
+            return replicator().from(dbInfo[source].mainDbUrl).to(dbInfo[target].mainDbUrl).replicate()
                 .then(listCycleDbs)
                 .then(replicateCycleDbs);
         }
     };
+}
+
+function replicateDesignDocsFrom(source) {
+    return {
+        to: function (target) {
+            var listCycleDbs = generateCycleDbLister(source);
+            var replicateCycleDesignDocs = generateCycleDbDesignDocReplicator(source, target);
+
+            return replicator().designDocsOnly().from(dbInfo[source].mainDbUrl).to(dbInfo[target].mainDbUrl).replicate()
+                .then(listCycleDbs)
+                .then(replicateCycleDesignDocs);
+        }
+    }
 }
 
 function generateCycleDbReplicator(source, target) {
@@ -83,7 +96,21 @@ function generateCycleDbReplicator(source, target) {
         cycleDbs.forEach(function (cycleDb) {
             var sourceUrl = dbInfo[source].baseUrl + '/' + cycleDb;
             var targetUrl = dbInfo[target].baseUrl + '/' + cycleDb;
-            promises.push(replicateFrom(sourceUrl).to(targetUrl));
+            promises.push(replicator().from(sourceUrl).to(targetUrl).replicate());
+        });
+        return Q.all(promises);
+    }
+}
+
+function generateCycleDbDesignDocReplicator(source, target) {
+    return function (cycleDbs) {
+        console.log("Replicating Design Docs for " + cycleDbs.length + " Cycle Databases from " + source + " to " + target);
+
+        var promises = [];
+        cycleDbs.forEach(function (cycleDb) {
+            var sourceUrl = dbInfo[source].baseUrl + '/' + cycleDb;
+            var targetUrl = dbInfo[target].baseUrl + '/' + cycleDb;
+            promises.push(replicator().designDocsOnly().from(sourceUrl).to(targetUrl).replicate());
         });
         return Q.all(promises);
     }
@@ -155,9 +182,29 @@ function replicateLocalToQa() {
         })
         .done();
 }
+function replicateLocalDesignDocsToQa() {
+    replicateDesignDocsFrom('local').to('qa')
+        .then(function() {
+            console.log("Finished");
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+        .done();
+}
 
 function replicateLocalToDev() {
     replicateAllFrom('local').to('dev')
+        .then(function() {
+            console.log("Finished");
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+        .done();
+}
+function replicateLocalDesignDocsToDev() {
+    replicateDesignDocsFrom('local').to('dev')
         .then(function() {
             console.log("Finished");
         })
@@ -182,7 +229,9 @@ module.exports = {
     replicateQaToLocal: replicateQaToLocal,
     replicateLocalToQa: replicateLocalToQa,
     replicateLocalToDev: replicateLocalToDev,
-    replicateLocalToProd: replicateLocalToProd
+    replicateLocalToProd: replicateLocalToProd,
+    replicateLocalDesignDocsToDev: replicateLocalDesignDocsToDev,
+    replicateLocalDesignDocsToQa: replicateLocalDesignDocsToQa
 };
 
 if (require.main === module) {
