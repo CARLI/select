@@ -128,7 +128,7 @@ function getSummaryTotal() {
         return notification.offerings ? notification.offerings.reduce(sumOfFees, 0) : 0;
 
         function sumOfFees(sum, offering) {
-            if (offering.product.oneTimePurchaseAnnualAccessFee) {
+            if (offering.selection && offering.product.oneTimePurchaseAnnualAccessFee) {
                 return sum + offering.product.oneTimePurchaseAnnualAccessFee;
             } else {
                 return sum;
