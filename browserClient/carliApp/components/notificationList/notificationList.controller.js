@@ -84,7 +84,7 @@ function notificationListController($q, alertService, controllerBaseService, not
         }
 
         function notificationSentError(err){
-            alertService.putAlert(error, {severity: 'danger'});
+            alertService.putAlert(err, {severity: 'danger'});
         }
     }
 
