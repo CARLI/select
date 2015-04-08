@@ -1,6 +1,8 @@
-var tv4 = require('tv4')
-  , Q = require( 'q' )
-;
+var tv4 = require('tv4');
+var formats = require('tv4-formats');
+var Q = require( 'q' );
+
+tv4.addFormat(formats);
 
 var schemas = {
     Contact: require('../schemas/Contact.json'),
@@ -21,8 +23,7 @@ var schemas = {
     Pricing: require('../schemas/Pricing.json'),
     Product: require('../schemas/Product.json'),
     ProductDetailCodes: require('../schemas/ProductDetailCodes.json'),
-    Vendor: require('../schemas/Vendor.json'),
-    WebAddress: require('../schemas/WebAddress.json')
+    Vendor: require('../schemas/Vendor.json')
 };
 
 function _loadSchemas() {

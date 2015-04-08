@@ -7,13 +7,13 @@
     <section class="content">
         <div class="one-time-purchase-settings">
             <label for="annualAccessFee">Annual Access Fee</label>
-            <view-edit-price ng-model="vm.product.oneTimePurchase.annualAccessFee" edit-mode="vm.editable" input-id="annualAccessFee">
-                {{ vm.product.oneTimePurchase.annualAccessFee | currency }}
+            <view-edit-price ng-model="vm.product.oneTimePurchaseAnnualAccessFee" edit-mode="vm.editable" input-id="annualAccessFee">
+                {{ vm.product.oneTimePurchaseAnnualAccessFee | currency }}
             </view-edit-price>
 
             <label for="availableForPurchaseThrough">Available for Purchase Through</label>
-            <view-edit-date ng-model="vm.product.oneTimePurchase.availableForPurchaseThrough" edit-mode="vm.editable" input-id="availableForPurchaseThrough">
-                {{ vm.product.oneTimePurchase.availableForPurchaseThrough }}
+            <view-edit-date ng-model="vm.product.oneTimePurchaseAvailableForPurchaseThrough" edit-mode="vm.editable" input-id="availableForPurchaseThrough">
+                {{ vm.product.oneTimePurchaseAvailableForPurchaseThrough }}
             </view-edit-date>
 
             <ul id="one-time-purchase-pricing">

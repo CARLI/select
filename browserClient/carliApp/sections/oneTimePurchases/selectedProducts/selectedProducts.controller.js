@@ -2,11 +2,11 @@
     angular.module('carli.sections.oneTimePurchases.selectedProducts')
         .controller('selectedProductsController', selectedProductsController);
 
-    function selectedProductsController($scope, $routeParams, config, cycleService, libraryService, notificationModalService, offeringService, alertService) {
+    function selectedProductsController($scope, $routeParams, $q, alertService, config, cycleService, libraryService, notificationModalService, offeringService, vendorService) {
         var vm = this;
         vm.libraryId = $routeParams.libraryId;
         vm.offeringList = [];
-        vm.orderBy = 'name';
+        vm.orderBy = 'product.name';
         vm.reverse = false;
         vm.selectedOfferings = {};
 
@@ -43,10 +43,23 @@
 
         function loadOfferingsForLibrary( library ) {
             return offeringService.listOfferingsForLibraryId(library.id)
-            .then(function (offeringList) {
-                vm.offeringList = offeringList;
-                return offeringList;
-            });
+                .then(populateVendorsForOfferings)
+                .then(function (offeringList) {
+                    vm.offeringList = offeringList;
+                    return offeringList;
+                });
+
+            function populateVendorsForOfferings( offeringsList ){
+                return $q.all(offeringsList.map(loadVendor));
+
+                function loadVendor(offering){
+                    return vendorService.load(offering.product.vendor)
+                        .then(function(vendor){
+                            offering.product.vendor = vendor;
+                            return offering;
+                        });
+                }
+            }
         }
 
         function refreshOfferingsForLibrary(library){

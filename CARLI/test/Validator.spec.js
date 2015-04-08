@@ -25,8 +25,7 @@ var validTypes = [
     'Pricing',
     'Product',
     'ProductDetailCodes',
-    'Vendor',
-    'WebAddress'
+    'Vendor'
 ];
 
 describe( 'The Validator Module', function() {
@@ -60,6 +59,18 @@ describe( 'The Validator Module', function() {
             expect( badValidateUnrecognizedType ).to.throw( /Unrecognized Type/i );
         });
 
+        it.skip( 'should reject an invalid date string', function(){
+            var notificationWithInvalidDate = {
+                type: 'Notification',
+                subject: '',
+                emailBody: '',
+                draftStatus: 'draft',
+                notificationType: 'other',
+                dateSent: 'invalid date'
+            };
+            return expect( Validator.validate(notificationWithInvalidDate)).to.be.rejectedWith( /Format validation failed/ );
+        });
+
         it( 'should reject with a validation error for an invalid Vendor object', function() {
             return expect( Validator.validate( { type: 'Vendor' } ) ).to.be.rejectedWith( /Missing required property:/ );
         });
@@ -79,8 +90,12 @@ describe( 'The Validator Module', function() {
         });
 
         it.skip( 'should throw a validation error for a Vendor object with an invalid websiteUrl', function() {
-            return expect( Validator.validate({ type: 'Vendor', name: 'Example Vendor', websiteUrl: 'this is an invalid url' }) )
-              .to.be.rejectedWith(/Missing required property:/ );
+            var vendorWithInvalidWebsite = {
+                type: 'Vendor',
+                name: 'Example Vendor',
+                websiteUrl: 'this is an invalid url'
+            };
+            return expect( Validator.validate(vendorWithInvalidWebsite) ).to.be.rejectedWith( /Format validation failed/ );
         });
 
         it( 'should return true for a Vendor object with a valid websiteUrl', function() {

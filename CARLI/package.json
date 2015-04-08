@@ -11,7 +11,8 @@
     "node-uuid": "^1.4.1",
     "q": "^1.0.1",
     "query-string": "^1.0.0",
-    "tv4": "^1.1.4"
+    "tv4": "^1.1.4",
+    "tv4-formats": "^1.0.0"
   },
   "devDependencies": {
     "chai": "*",

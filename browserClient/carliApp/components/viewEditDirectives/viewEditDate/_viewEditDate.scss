@@ -4,6 +4,20 @@ view-edit-date {
 
     input[type="text"] {
         padding-right: 26px;
+
+        &.ng-invalid-date {
+            border: 1px solid $error-red;
+
+            & + .invalidDateNote,
+            & + ul + .invalidDateNote {
+                display: block;
+            }
+        }
+    }
+
+    .invalidDateNote {
+        color: $error-red;
+        display: none;
     }
 
     .fa-calendar {
