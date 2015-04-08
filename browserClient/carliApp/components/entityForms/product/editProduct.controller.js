@@ -54,7 +54,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
     activate();
 
     function activate() {
-        if (vm.productId === undefined) {
+        if ($scope.productId === undefined) {
             initializeForNewProduct();
         }
         else {
@@ -182,7 +182,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
 
     function submitAction() {
         if (!vm.newProduct || isWizardComplete()) {
-            saveProduct();
+            return saveProduct();
         } else {
             vm.currentTemplate = templates.oneTimePurchaseFields;
         }
@@ -199,10 +199,10 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
         translateOptionalSelections();
 
         if (vm.productId === undefined) {
-            saveNewProduct();
+            return saveNewProduct();
         } else {
             savePreviousName();
-            saveExistingProduct();
+            return saveExistingProduct();
         }
     }
 
@@ -219,7 +219,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
     }
 
     function saveExistingProduct() {
-        productService.update(vm.product)
+        return productService.update(vm.product)
             .then(saveOfferings)
             .then(function () {
                 vm.closeModal();
@@ -233,8 +233,9 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
     }
 
     function saveNewProduct() {
-        productService.create(vm.product)
-            .then(function () {
+        return productService.create(vm.product)
+            .then(productService.createOfferingsForProduct)
+            .then(function (offeringsIds) {
                 vm.closeModal();
                 alertService.putAlert('Product added', {severity: 'success'});
                 afterSubmitCallback();
