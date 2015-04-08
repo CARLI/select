@@ -39,7 +39,7 @@
         "enum": ["draft", "sent"]
     },
     "dateSent": {
-        "type": "string"
+        "$ref": "./Date.json"
     },
     "summaryTotal": {
         "type": "integer"

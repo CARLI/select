@@ -1,6 +1,8 @@
-var tv4 = require('tv4')
-  , Q = require( 'q' )
-;
+var tv4 = require('tv4');
+var formats = require('tv4-formats');
+var Q = require( 'q' );
+
+tv4.addFormat(formats);
 
 var schemas = {
     Contact: require('../schemas/Contact.json'),

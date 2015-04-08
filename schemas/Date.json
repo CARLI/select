@@ -1,5 +1,6 @@
 {
     "title": "Date",
     "schemaType": "Date",
-    "type": "string"
+    "type": "string",
+    "format": "date-time"
 }

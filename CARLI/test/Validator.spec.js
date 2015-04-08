@@ -60,6 +60,18 @@ describe( 'The Validator Module', function() {
             expect( badValidateUnrecognizedType ).to.throw( /Unrecognized Type/i );
         });
 
+        it( 'should reject an invalid date string', function(){
+            var notificationWithInvalidDate = {
+                type: 'Notification',
+                subject: '',
+                emailBody: '',
+                draftStatus: 'draft',
+                notificationType: 'other',
+                dateSent: 'invalid date'
+            };
+            return expect( Validator.validate(notificationWithInvalidDate)).to.be.rejectedWith( /Format validation failed/ );
+        });
+
         it( 'should reject with a validation error for an invalid Vendor object', function() {
             return expect( Validator.validate( { type: 'Vendor' } ) ).to.be.rejectedWith( /Missing required property:/ );
         });
