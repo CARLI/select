@@ -27,7 +27,7 @@ function getAnnualAccessFeeDraftForOneLibrary(template, notificationData) {
     function getNotificationsForAnnualAccessFeeDraftForOneLibrary( customizedTemplate, actualRecipientIds ){
         return annualAccessOneLibraryDraft.getOfferings()
             .then(function(offerings) {
-                return offerings.filter(onlyPurchasedOfferings);
+                return offerings.filter(onlyPurchasedOfferings).filter(onlyOfferingsWithFees);
             })
             .then(function(offerings){
                 return actualRecipientIds.map(function(id){
@@ -79,7 +79,7 @@ function getAnnualAccessFeeDraftForAllLibraries(template, notificationData) {
     function getNotificationsForAnnualAccessFeeDraftForAllLibraries( customizedTemplate, actualRecipientIds ){
         return annualAccessAllLibrariesDraft.getOfferings()
             .then(function(offerings) {
-                return offerings.filter(onlyPurchasedOfferings);
+                return offerings.filter(onlyPurchasedOfferings).filter(onlyOfferingsWithFees);
             })
             .then(function(offerings){
                 return actualRecipientIds.map(function(id){
@@ -581,6 +581,9 @@ function extractArrayOfIdsFromObject( mapObject ){
 
 function onlyPurchasedOfferings(offering) {
     return offering.selection;
+}
+function onlyOfferingsWithFees(offering) {
+    return offering.product.oneTimePurchaseAnnualAccessFee;
 }
 
 module.exports = {
