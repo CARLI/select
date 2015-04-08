@@ -201,6 +201,23 @@ function listVendorsFromOfferingIds( listOfOfferingIds, cycle ){
     }
 }
 
+function createOfferingsFor( productId, libraryIds, cycle ){
+    setCycle(cycle);
+
+    return Q.all( libraryIds.map(createOfferingForLibrary) );
+
+    function createOfferingForLibrary( libraryId ){
+        var newOffering = {
+            type: 'Offering',
+            cycle: cycle,
+            library: libraryId.toString(),
+            product: productId,
+            pricing: {}
+        };
+        return createOffering( newOffering, cycle );
+    }
+}
+
 module.exports = {
     setStore: OfferingRepository.setStore,
     setCycle: setCycle,
@@ -214,6 +231,8 @@ module.exports = {
     listOfferingsForProductId: listOfferingsForProductId,
     listOfferingsWithSelections: listOfferingsWithSelections,
     listVendorsFromOfferingIds: listVendorsFromOfferingIds,
+    createOfferingsFor: createOfferingsFor,
+
     getOfferingsById: getOfferingsById,
     getOfferingDisplayOptions: getOfferingDisplayOptions,
     transformOfferingsForNewCycle: transformOfferingsForNewCycle,

@@ -1,7 +1,7 @@
 angular.module('carli.productService')
     .service('productService', productService);
 
-function productService( CarliModules, $q, cycleService ) {
+function productService( CarliModules, $q, cycleService, libraryService, offeringService ) {
 
     var productModule = CarliModules.Product;
 
@@ -36,6 +36,22 @@ function productService( CarliModules, $q, cycleService ) {
         getProductsById: function(ids) {
             return $q.when( productModule.getProductsById(ids,  cycleService.getCurrentCycle()) );
         },
+        createOfferingsForProduct: createOfferingsForProduct,
         getProductDetailCodeOptions: productModule.getProductDetailCodeOptions
     };
+
+
+    function createOfferingsForProduct( productId ){
+        return libraryService.list()
+            .then(getLibraryIds)
+            .then(function( libraryIds ){
+                return offeringService.createOfferingsFor( productId, libraryIds );
+            });
+
+        function getLibraryIds( listOfLibraries ){
+            return listOfLibraries.map(function(library){
+                return library.id;
+            });
+        }
+    }
 }

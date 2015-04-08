@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.product')
     .controller('editProductController', editProductController);
 
-function editProductController( $q, $scope, $rootScope, $filter, entityBaseService, cycleService, licenseService, offeringService, productService, vendorService, alertService ) {
+function editProductController( $q, $scope, $rootScope, $filter, entityBaseService, cycleService, libraryService, licenseService, offeringService, productService, vendorService, alertService ) {
     var vm = this;
     var otpFieldsCopy = [];
     var termFieldsCopy = {};
@@ -51,10 +51,12 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
 
     vm.productDetailCodeOptions = productService.getProductDetailCodeOptions();
 
+    initializeCycles();
+
     activate();
 
     function activate() {
-        if (vm.productId === undefined) {
+        if ($scope.productId === undefined) {
             initializeForNewProduct();
         }
         else {
@@ -70,23 +72,26 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
             isActive: true,
             contacts: []
         };
+
+        ensureOneTimePurchaseProductHasEmptyOfferingsForAllLibraries();
+
         vm.editable = true;
         vm.newProduct = true;
-        initializeCycles();
         setProductFormPristine();
     }
     function initializeForExistingProduct() {
-        productService.load(vm.productId).then( function( product ) {
+        productService.load($scope.productId).then( function( product ) {
             vm.product = product;
             initializeProductNameWatcher();
             rememberOtpFields();
             rememberTermFields();
 
-            initializeCycles();
             setProductFormPristine();
 
             if ( isOneTimePurchaseProduct(product) ){
-                loadOfferingsForProduct(product);
+                loadOfferingsForProduct(product)
+                    .then(ensureOneTimePurchaseProductHasEmptyOfferingsForAllLibraries);
+
             }
         } );
 
@@ -158,15 +163,16 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
         function watchCurrentCycle() {
             $scope.$watch(cycleService.getCurrentCycle, function (activeCycle) {
                 if (activeCycle) {
-                    vm.product.cycle = activeCycle;
+                    activate();
                 }
             });
         }
     }
 
     function loadOfferingsForProduct( product ){
-        offeringService.listOfferingsForProductId(product.id).then(function(offerings){
+        return offeringService.listOfferingsForProductId(product.id).then(function(offerings){
             vm.productOfferings = offerings;
+            return offerings;
         });
     }
 
@@ -182,7 +188,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
 
     function submitAction() {
         if (!vm.newProduct || isWizardComplete()) {
-            saveProduct();
+            return saveProduct();
         } else {
             vm.currentTemplate = templates.oneTimePurchaseFields;
         }
@@ -199,10 +205,10 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
         translateOptionalSelections();
 
         if (vm.productId === undefined) {
-            saveNewProduct();
+            return saveNewProduct();
         } else {
             savePreviousName();
-            saveExistingProduct();
+            return saveExistingProduct();
         }
     }
 
@@ -219,8 +225,8 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
     }
 
     function saveExistingProduct() {
-        productService.update(vm.product)
-            .then(saveOfferings)
+        return productService.update(vm.product)
+            .then(updateOfferingsForExistingProduct)
             .then(function () {
                 vm.closeModal();
                 alertService.putAlert('Product updated', {severity: 'success'});
@@ -233,8 +239,9 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
     }
 
     function saveNewProduct() {
-        productService.create(vm.product)
-            .then(function () {
+        return productService.create(vm.product)
+            .then(saveOfferingsForNewProduct)
+            .then(function (offeringsIds) {
                 vm.closeModal();
                 alertService.putAlert('Product added', {severity: 'success'});
                 afterSubmitCallback();
@@ -245,16 +252,89 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
             });
     }
 
-    function saveOfferings(){
+    function updateOfferingsForExistingProduct(){
         var savePromises = [];
 
         if ( vm.productOfferings ){
             vm.productOfferings.forEach(function(offering){
-                savePromises.push( offeringService.update(offering) );
+                if ( offering.id ){
+                    savePromises.push( offeringService.update(offering) );
+                }
+                else if ( offering.pricing.site ){
+                    offering.library = offering.library.id.toString();
+                    savePromises.push( offeringService.create(offering) );
+                }
             });
         }
 
         return $q.all( savePromises );
+    }
+
+    function saveOfferingsForNewProduct( productId ){
+        var savePromises = [];
+        if ( vm.productOfferings.length ){
+            vm.productOfferings.forEach(function(partialOffering){
+                var newOfferingPromise = createNewOffering(partialOffering);
+                if ( newOfferingPromise ){
+                    savePromises.push(newOfferingPromise);
+                }
+            });
+        }
+        else {
+            savePromises = productService.createOfferingsForProduct( productId );
+        }
+
+        return $q.all( savePromises );
+
+        function createNewOffering( partialOffering ){
+            if ( partialOffering.pricing.site ){
+                var newOffering = angular.copy( partialOffering );
+                newOffering.product = productId;
+                newOffering.library = partialOffering.library.id.toString();
+                delete newOffering.$$hashKey;
+
+                return offeringService.create(newOffering);
+            }
+        }
+    }
+
+    function ensureOneTimePurchaseProductHasEmptyOfferingsForAllLibraries(){
+        var cycle = cycleService.getCurrentCycle();
+
+        if ( isOneTimePurchaseProduct(vm.product) ){
+            return  libraryService.list().then(ensureProductHasOfferingForEachLibrary);
+        }
+
+        function ensureProductHasOfferingForEachLibrary( libraryList ){
+            libraryList.forEach(ensureProductHasOfferingForLibrary);
+        }
+
+        function ensureProductHasOfferingForLibrary( library ){
+            if ( productDoesNotHaveOfferingForLibrary(library) ){
+                vm.productOfferings.push( createEmptyOffering(library) );
+            }
+
+            function productDoesNotHaveOfferingForLibrary(library){
+                return vm.productOfferings.filter(function(offering){
+                    return offering.library.id == library.id;
+                }).length === 0;
+            }
+        }
+
+        function createEmptyOffering( library ){
+            var newOffering = {
+                type: 'Offering',
+                cycle: cycle,
+                library: library,
+                pricing: {}
+            };
+
+            if ( vm.product.id ){
+                newOffering.product = vm.product;
+            }
+
+            return newOffering;
+        }
     }
 
     function filterLicensesBelongingToVendor(vendor) {

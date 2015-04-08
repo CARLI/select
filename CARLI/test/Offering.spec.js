@@ -275,6 +275,33 @@ function runOfferingSpecificTests(testCycle) {
                 expect(OfferingRepository.getOfferingsById).to.be.a('function');
             })
         });
+
+        it('should have a createOfferingsFor method', function () {
+            expect(OfferingRepository.createOfferingsFor).to.be.a('function');
+        });
+
+        describe('createOfferingsFor', function(){
+            it('should return a list of offering id created for the specified product and libraries', function(){
+                testProductId = 'test-product-id';
+                testLibraryIds = [ 1, 2, 3 ];
+
+                return OfferingRepository.createOfferingsFor( testProductId, testLibraryIds, testCycle )
+                    .then(function( offeringIds ){
+                        return Q.all([
+                            expect(offeringIds).to.be.an('array'),
+                            expect(offeringIds.length).to.equal(3),
+                            verifyOfferingsHaveCorrectProperties(offeringIds)
+                        ]);
+                    });
+
+
+                function verifyOfferingsHaveCorrectProperties(offeringIds){
+                    return OfferingRepository.load(offeringIds[0], testCycle).then(function(offering){
+                        return expect(offering.product).to.equal(testProductId);
+                    });
+                }
+            })
+        });
     });
 
 

@@ -22,7 +22,7 @@
                     <header class="column price">Price</header>
                     <header class="column purchased">Purchased</header>
                 </li>
-                <li ng-repeat="offering in vm.productOfferings">
+                <li ng-repeat="offering in vm.productOfferings | orderBy:'library.name'">
                     <span class="column library">
                         <label for="oneTimePurchase_{{ offering.library.name }}">{{ offering.library.name }}</label>
                     </span>
@@ -43,13 +43,13 @@
             <button type="button" class="carli-button cancel-button" data-dismiss="modal" ng-click="vm.cancelEdit()">
                 Cancel
             </button>
-            <input type="button" id="vendor-submit" class="carli-button save-button" value="{{ vm.submitLabel() }}" ng-click="vm.submitAction()">
+            <input type="button" id="vendor-submit" class="carli-button save-button" value="{{ vm.submitLabel() }}" busy-click="vm.submitAction()">
         </fieldset>
         <fieldset ng-show="!vm.newProduct">
-            <button type="button" class="carli-button cancel-button" data-dismiss="modal" ng-click="vm.cancelOtpEdit()">
+            <button type="button" class="carli-button cancel-button" data-dismiss="modal" busy-click="vm.cancelOtpEdit()">
                 Cancel
             </button>
-            <button type="button" class="carli-button save-button" data-dismiss="modal" ng-click="vm.rememberOtpFields()">
+            <button type="button" class="carli-button save-button" data-dismiss="modal" busy-click="vm.rememberOtpFields()">
                 Ok
             </button>
         </fieldset>
