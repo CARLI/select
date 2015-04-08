@@ -29,7 +29,8 @@
       "type": "string"
     },
     "productUrl": {
-      "$ref": "./WebAddress.json"
+      "type": "string",
+      "format": "url"
     },
     "description": {
       "type": "string"

@@ -18,7 +18,8 @@
         },
         "websiteUrl": {
             "description": "Vendor's Website",
-            "$ref": "./WebAddress.json"
+            "type": "string",
+            "format": "url"
         },
         "contacts": {
             "description": "List of vendor contacts",

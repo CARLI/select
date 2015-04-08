@@ -23,8 +23,7 @@ var schemas = {
     Pricing: require('../schemas/Pricing.json'),
     Product: require('../schemas/Product.json'),
     ProductDetailCodes: require('../schemas/ProductDetailCodes.json'),
-    Vendor: require('../schemas/Vendor.json'),
-    WebAddress: require('../schemas/WebAddress.json')
+    Vendor: require('../schemas/Vendor.json')
 };
 
 function _loadSchemas() {

@@ -25,8 +25,7 @@ var validTypes = [
     'Pricing',
     'Product',
     'ProductDetailCodes',
-    'Vendor',
-    'WebAddress'
+    'Vendor'
 ];
 
 describe( 'The Validator Module', function() {
@@ -90,9 +89,13 @@ describe( 'The Validator Module', function() {
             return expect( Validator.validate(validVendor) ).to.be.fullfilled
         });
 
-        it.skip( 'should throw a validation error for a Vendor object with an invalid websiteUrl', function() {
-            return expect( Validator.validate({ type: 'Vendor', name: 'Example Vendor', websiteUrl: 'this is an invalid url' }) )
-              .to.be.rejectedWith(/Missing required property:/ );
+        it( 'should throw a validation error for a Vendor object with an invalid websiteUrl', function() {
+            var vendorWithInvalidWebsite = {
+                type: 'Vendor',
+                name: 'Example Vendor',
+                websiteUrl: 'this is an invalid url'
+            };
+            return expect( Validator.validate(vendorWithInvalidWebsite) ).to.be.rejectedWith( /Format validation failed/ );
         });
 
         it( 'should return true for a Vendor object with a valid websiteUrl', function() {
