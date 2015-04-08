@@ -46,6 +46,10 @@
     },
     "notificationType": {
         "$ref": "./NotificationType.json"
+    },
+    "isFeeInvoice": {
+        "description": "If true, this notification is for oneTimePurchaseAnnualAccessFees, otherwise for the products themselves",
+        "type": "boolean"
     }
   },
   "required": [ "subject", "emailBody", "draftStatus", "notificationType" ]

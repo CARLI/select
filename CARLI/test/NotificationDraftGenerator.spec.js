@@ -28,7 +28,7 @@ describe('The notification draft generator', function() {
             recipientId: 'library'
         };
         function getMockEntitiesForAnnualAccessFee() {
-            return Q([{id: 'library', name: 'Test Library'}]);
+            return Q({id: 'library', name: 'Test Library'});
         }
         function getMockOfferingsForAnnualAccessFee(){
             return Q([

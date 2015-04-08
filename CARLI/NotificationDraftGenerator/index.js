@@ -16,9 +16,7 @@ function getAnnualAccessFeeDraftForOneLibrary(template, notificationData) {
     function getRecipientsForAnnualAccessFeeDraftForOneLibrary() {
         return annualAccessOneLibraryDraft.getEntities()
             .then(function( libraryFromNotificationData ) {
-                return libraryFromNotificationData.map(function(library) {
-                    return convertEntityToRecipient(library, template);
-                });
+                return [ convertEntityToRecipient(libraryFromNotificationData, template) ];
             });
     }
     function getOfferingsForAnnualAccessFeeDraftForOneLibrary() {
@@ -33,7 +31,9 @@ function getAnnualAccessFeeDraftForOneLibrary(template, notificationData) {
             })
             .then(function(offerings){
                 return actualRecipientIds.map(function(id){
-                    return generateNotificationForLibrary(id, offerings, customizedTemplate);
+                    var notification = generateNotificationForLibrary(id, offerings, customizedTemplate);
+                    notification.isFeeInvoice = true;
+                    return notification;
                });
             });
     }
@@ -83,7 +83,9 @@ function getAnnualAccessFeeDraftForAllLibraries(template, notificationData) {
             })
             .then(function(offerings){
                 return actualRecipientIds.map(function(id){
-                    return generateNotificationForLibrary(id, offerings, customizedTemplate);
+                    var notification = generateNotificationForLibrary(id, offerings, customizedTemplate);
+                    notification.isFeeInvoice = true;
+                    return notification;
                 });
             });
     }

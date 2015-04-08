@@ -53,11 +53,15 @@
                 return $q.all(offeringsList.map(loadVendor));
 
                 function loadVendor(offering){
-                    return vendorService.load(offering.product.vendor)
-                        .then(function(vendor){
-                            offering.product.vendor = vendor;
-                            return offering;
-                        });
+                    if (typeof offering.product.vendor == 'object') {
+                        return $q.when(offering);
+                    } else {
+                        return vendorService.load(offering.product.vendor)
+                            .then(function(vendor){
+                                offering.product.vendor = vendor;
+                                return offering;
+                            });
+                    }
                 }
             }
         }
