@@ -10,6 +10,9 @@ describe('The One-time Purchases Selected-Products Controller', function(){
         var mockOfferingList = [
             {
                 type: 'Offering',
+                product: {
+                    vendor: ''
+                },
                 cycle: {
                     cycleType: 'One-Time Purchase'
                 },
@@ -19,6 +22,9 @@ describe('The One-time Purchases Selected-Products Controller', function(){
             },
             {
                 type: 'Offering',
+                product: {
+                    vendor: ''
+                },
                 cycle: {
                     cycleType: 'One-Time Purchase'
                 },
@@ -32,6 +38,9 @@ describe('The One-time Purchases Selected-Products Controller', function(){
             },
             {
                 type: 'Offering',
+                product: {
+                    vendor: ''
+                },
                 cycle: {
                     cycleType: 'One-Time Purchase'
                 },
@@ -53,7 +62,7 @@ describe('The One-time Purchases Selected-Products Controller', function(){
             }
         ];
 
-        inject(function ($controller, $rootScope, $q, mockCycleService, mockLibraryService, mockOfferingService, mockAlertService) {
+        inject(function ($controller, $rootScope, $q, mockAlertService, mockCycleService, mockLibraryService, mockOfferingService, mockVendorService) {
             mockLibraryService.setTestData(mockLibraryList);
             mockOfferingService.setTestData(mockOfferingList);
             
@@ -62,10 +71,11 @@ describe('The One-time Purchases Selected-Products Controller', function(){
                 $routeParams: {
                     libraryId: 'testLibraryId'
                 },
+                alertService: mockAlertService,
                 cycleService: mockCycleService,
                 libraryService: mockLibraryService,
                 offeringService: mockOfferingService,
-                alertService: mockAlertService
+                vendorService: mockVendorService
             };
 
             vm = $controller('selectedProductsController', mockDependenciesForOneTimePurchase);

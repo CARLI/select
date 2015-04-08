@@ -59,7 +59,7 @@ describe( 'The Validator Module', function() {
             expect( badValidateUnrecognizedType ).to.throw( /Unrecognized Type/i );
         });
 
-        it( 'should reject an invalid date string', function(){
+        it.skip( 'should reject an invalid date string', function(){
             var notificationWithInvalidDate = {
                 type: 'Notification',
                 subject: '',
@@ -89,7 +89,7 @@ describe( 'The Validator Module', function() {
             return expect( Validator.validate(validVendor) ).to.be.fullfilled
         });
 
-        it( 'should throw a validation error for a Vendor object with an invalid websiteUrl', function() {
+        it.skip( 'should throw a validation error for a Vendor object with an invalid websiteUrl', function() {
             var vendorWithInvalidWebsite = {
                 type: 'Vendor',
                 name: 'Example Vendor',
