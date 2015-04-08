@@ -18,8 +18,7 @@
         },
         "websiteUrl": {
             "description": "Vendor's Website",
-            "type": "string",
-            "format": "url"
+            "type": "string"
         },
         "contacts": {
             "description": "List of vendor contacts",

@@ -29,8 +29,7 @@
       "type": "string"
     },
     "productUrl": {
-      "type": "string",
-      "format": "url"
+      "type": "string"
     },
     "description": {
       "type": "string"
