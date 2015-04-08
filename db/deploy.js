@@ -3,6 +3,7 @@ var CycleRepository = require('../CARLI/Entity/CycleRepository');
 var couchApp = require('../config/environmentDependentModules/couchApp');
 var request = require('../config/environmentDependentModules/request');
 var Q = require('q');
+var dbInfo = require('./databaseInfo');
 
 var projectRoot = __dirname + '/..';
 
@@ -49,11 +50,15 @@ function createOneTimePurchaseCycle(cycleName, store) {
     return CycleRepository.create(otpCycle);
 }
 
-function deployAppDesignDoc() {
-    return couchApp.putDesignDoc(config.storeOptions.couchDbName, 'CARLI');
+function deployLocalAppDesignDoc() {
+    return deployAppDesignDoc(dbInfo.local);
 }
 
-function deployCycleDesignDocs() {
+function deployAppDesignDoc(instance) {
+    return couchApp.putDesignDoc(instance.mainDbName, 'CARLI');
+}
+
+function deployLocalCycleDesignDocs(instance) {
     return CycleRepository.list().then(function (cycles) {
         var promises = [];
         cycles.forEach(function (cycle) {
@@ -71,7 +76,7 @@ if (require.main === module) {
     module.exports = {
         deployDb: deployDb,
         createOneTimePurchaseCycle: createOneTimePurchaseCycle,
-        deployAppDesignDoc: deployAppDesignDoc,
-        deployCycleDesignDocs: deployCycleDesignDocs
+        deployLocalAppDesignDoc: deployLocalAppDesignDoc,
+        deployLocalCycleDesignDocs: deployLocalCycleDesignDocs,
     };
 }

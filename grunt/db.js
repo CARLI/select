@@ -23,11 +23,11 @@ module.exports = function (grunt) {
     });
     grunt.registerTask('deploy-app-design-doc', function() {
         var done = this.async();
-        deployDb.deployAppDesignDoc().then(done);
+        deployDb.deployLocalAppDesignDoc().then(done);
     });
     grunt.registerTask('deploy-cycle-design-docs', function() {
         var done = this.async();
-        deployDb.deployCycleDesignDocs().then(done);
+        deployDb.deployLocalCycleDesignDocs().then(done);
     });
     grunt.registerTask('fixture-data', function() {
         grunt.task.run(['subdir-exec:'+projectRoot+'/db:./fixtures.js']);
