@@ -18,7 +18,8 @@ function validNotificationData() {
         emailBody: 'To whom it may concern: Hi there. Yours sincerely, CARLI',
         targetEntity: 'targetId',
         draftStatus: 'draft',
-        notificationType: 'other'
+        notificationType: 'other',
+        isFeeInvoice: false
     };
 }
 
@@ -217,9 +218,18 @@ describe('Adding functions to Notification instances', function () {
 
         var notification = validNotificationData();
 
-        it('should return a summary equal to the total of all selected prices in the given offerings', function() {
+        it('should return the total of all selected prices in the given offerings for a non-fee invoice', function() {
             return setupTestNotification(notification, offerings).then(function(notification){
                 return expect(notification.getSummaryTotal()).to.equal(200);
+            });
+        });
+
+        it('should return the total of all annual access fees in the selected products for a fee invoice', function() {
+            return setupTestNotification(notification, offerings).then(function(notification){
+                notification.isFeeInvoice = true;
+                notification.offerings[0].product = { oneTimePurchaseAnnualAccessFee: 10 };
+                notification.offerings[1].product = { oneTimePurchaseAnnualAccessFee: 20 };
+                return expect(notification.getSummaryTotal()).to.equal(30);
             });
         });
     });

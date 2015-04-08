@@ -121,13 +121,30 @@ function getRecipientLabel(recipientName, notificationType) {
 
 function getSummaryTotal() {
     var notification = this;
-    return notification.offerings ? notification.offerings.reduce(sumOfPrices, 0) : 0;
 
-    function sumOfPrices(sum, offering) {
-        if (offering.selection) {
-            return sum + offering.selection.price;
-        } else {
-            return sum;
+    return (notification.isFeeInvoice) ? getSummaryOfAccessFees() : getSummaryOfSelectedOfferings();
+
+    function getSummaryOfAccessFees() {
+        return notification.offerings ? notification.offerings.reduce(sumOfFees, 0) : 0;
+
+        function sumOfFees(sum, offering) {
+            if (offering.product.oneTimePurchaseAnnualAccessFee) {
+                return sum + offering.product.oneTimePurchaseAnnualAccessFee;
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    function getSummaryOfSelectedOfferings() {
+        return notification.offerings ? notification.offerings.reduce(sumOfPrices, 0) : 0;
+
+        function sumOfPrices(sum, offering) {
+            if (offering.selection) {
+                return sum + offering.selection.price;
+            } else {
+                return sum;
+            }
         }
     }
 }
