@@ -31,7 +31,9 @@ function getAnnualAccessFeeDraftForOneLibrary(template, notificationData) {
             })
             .then(function(offerings){
                 return actualRecipientIds.map(function(id){
-                    return generateNotificationForLibrary(id, offerings, customizedTemplate);
+                    var notification = generateNotificationForLibrary(id, offerings, customizedTemplate);
+                    notification.isFeeInvoice = true;
+                    return notification;
                });
             });
     }
@@ -81,7 +83,9 @@ function getAnnualAccessFeeDraftForAllLibraries(template, notificationData) {
             })
             .then(function(offerings){
                 return actualRecipientIds.map(function(id){
-                    return generateNotificationForLibrary(id, offerings, customizedTemplate);
+                    var notification = generateNotificationForLibrary(id, offerings, customizedTemplate);
+                    notification.isFeeInvoice = true;
+                    return notification;
                 });
             });
     }

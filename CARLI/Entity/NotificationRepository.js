@@ -131,7 +131,7 @@ function getSummaryTotal() {
             if (offering.product.oneTimePurchaseAnnualAccessFee) {
                 return sum + offering.product.oneTimePurchaseAnnualAccessFee;
             } else {
-                return 0;
+                return sum;
             }
         }
     }
