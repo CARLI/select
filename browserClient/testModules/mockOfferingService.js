@@ -49,6 +49,9 @@ angular.module('carli.mockOfferingService', [])
                 var deferred = $q.defer();
                 deferred.resolve([]);
                 return deferred.promise;
+            },
+            createOfferingsFor: function(){
+                return $q([]);
             }
         };
     });
