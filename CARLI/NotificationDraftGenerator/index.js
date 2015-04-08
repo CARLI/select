@@ -16,9 +16,7 @@ function getAnnualAccessFeeDraftForOneLibrary(template, notificationData) {
     function getRecipientsForAnnualAccessFeeDraftForOneLibrary() {
         return annualAccessOneLibraryDraft.getEntities()
             .then(function( libraryFromNotificationData ) {
-                return libraryFromNotificationData.map(function(library) {
-                    return convertEntityToRecipient(library, template);
-                });
+                return [ convertEntityToRecipient(libraryFromNotificationData, template) ];
             });
     }
     function getOfferingsForAnnualAccessFeeDraftForOneLibrary() {
