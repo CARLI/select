@@ -6,7 +6,7 @@
         var vm = this;
         vm.libraryId = $routeParams.libraryId;
         vm.offeringList = [];
-        vm.orderBy = 'name';
+        vm.orderBy = 'product.name';
         vm.reverse = false;
         vm.selectedOfferings = {};
 
