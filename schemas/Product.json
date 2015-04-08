@@ -83,6 +83,14 @@
       "items": {
         "$ref": "./Library.json"
       }
+    },
+    "oneTimePurchaseAnnualAccessFee": {
+        "description": "If the product is a one-time purchase product, this is its annual access fee",
+        "type": "number"
+    },
+    "oneTimePurchaseAvailableForPurchaseThrough": {
+        "description": "If the product is a one-time purchase product, this is the date it is available for purchase through",
+        "$ref": "./Date.json"
     }
   },
   "required": [

@@ -47,15 +47,15 @@
                             <div class="content-item-group">
                                 <div class="content-item">
                                     <label>Date Available Through:</label>
-                                    <p>{{ offering.availableForPurchaseThrough }}</p>
+                                    <p>{{ offering.product.oneTimePurchaseAvailableForPurchaseThrough | date:shortDate }}</p>
                                 </div>
-                                <div class="content-item">
+                                <div class="content-item" ng-show="offering.selection.datePurchased">
                                     <label>Purchase Date:</label>
-                                    <p>{{ offering.selection.datePurchased }}</p>
+                                    <p>{{ offering.selection.datePurchased | date:shortDate }}</p>
                                 </div>
                             </div>
                             <div class="product-boolean-item" ng-show=""><fa name="check"></fa> Funded</div>
-                            <div class="product-boolean-item" ng-show="offering.annualAccessFee"><fa name="check"></fa> Requires Annual Access Fee</div>
+                            <div class="product-boolean-item" ng-show="offering.product.oneTimePurchaseAnnualAccessFee"><fa name="check"></fa> Requires Annual Access Fee</div>
                         </div>
                         <div class="column">
                             <div class="content-item">
