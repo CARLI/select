@@ -12,7 +12,9 @@
 <ul>
     <li class="notification-row" ng-repeat="notification in vm.notifications | filter: vm.filterByType | orderBy:vm.orderBy:vm.reverse as filteredResults track by notification.id">
         <div class="column subject">
-            <span class="subject">{{ notification.targetEntity.name }}: {{ notification.subject }}</span>
+            <span class="subject">
+                <span class="recipient" ng-show="notification.targetEntity">{{ notification.targetEntity.name }}:</span>
+                <span class="subject">{{ notification.subject }}</span>
             <span class="total" ng-show="notification.getSummaryTotal() > 0"> - ({{ notification.getSummaryTotal() | currency }})</span>
         </div>
         <div class="column date-sent" ng-if="vm.showDateSent">
