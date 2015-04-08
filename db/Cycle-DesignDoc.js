@@ -88,6 +88,19 @@ ddoc = {
                 };
             }
         }
+    },
+    filters: {
+        filterCycleDatabaseForVendor: function(doc, req) {
+            if(!req.query.vendorId) {
+                throw("vendorId is required");
+            }
+
+            if(doc.vendor == req.query.vendorId) {
+                return true;
+            }
+
+            return false;
+        }
     }
 };
 

@@ -134,6 +134,16 @@ var functionsToAdd = {
             --this.status;
         }
     },
+    getDatabaseNameForVendorId: function(vendorId) {
+        return this.databaseName + '-' + vendorId
+    },
+    //createVendorDatabase: function(vendorId) {
+    //    var databaseName = this.getDatabaseNameForVendorId(vendorId);
+    //    return couchUtils.createDatabase(databaseName)
+    //        .then(function triggerReplicationToVendorDatabase() {
+    //
+    //        });
+    //},
     getCycleSelectionAndInvoiceTotals: function getCycleSelectionAndInvoiceTotals() {
         return couchUtils.getCouchViewResultValues(this.databaseName, 'getCycleSelectionAndInvoiceTotals').then(function(resultArray){
             return resultArray[0];
