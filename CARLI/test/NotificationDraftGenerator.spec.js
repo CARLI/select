@@ -32,9 +32,9 @@ describe('The notification draft generator', function() {
         }
         function getMockOfferingsForAnnualAccessFee(){
             return Q([
-                { library: { id: 'library', name: 'Test Library'}, selection: { } },
-                { library: { id: 'library', name: 'Test Library'} },
-                { library: {id: 'library2', name: 'Test Library2'} }
+                { library: { id: 'library', name: 'Test Library'}, product: { oneTimePurchaseAnnualAccessFee: 7 }, selection: { } },
+                { library: { id: 'library', name: 'Test Library'}, product: {} },
+                { library: {id: 'library2', name: 'Test Library2'}, product: {} }
             ]);
         }
 
@@ -89,9 +89,9 @@ describe('The notification draft generator', function() {
         }
         function getMockOfferingsForAnnualAccessFee(){
             return Q([
-                { library: { id: 'library', name: 'Test Library'}, selection: {} },
-                { library: { id: 'library', name: 'Test Library'} },
-                { library: {id: 'library2', name: 'Test Library2'} }
+                { library: { id: 'library', name: 'Test Library'}, product: { oneTimePurchaseAnnualAccessFee: 7 }, selection: {} },
+                { library: { id: 'library', name: 'Test Library'}, product: {} },
+                { library: {id: 'library2', name: 'Test Library2'}, product: {} }
             ]);
         }
 
