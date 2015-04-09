@@ -332,6 +332,11 @@ module.exports = function ( grunt ) {
                 tasks: ['newer:copy:vendor_app_all_files', 'index:vendor']
             },
 
+            filesChangedCommon: {
+                files: ['common/**/*.html', 'common/**/*.js'],
+                tasks: ['newer:copy:carli_app_common_components','newer:copy:vendor_app_common_components']
+            },
+
             sassCarli: {
                 files: user_config.carli_app.sass_all,
                 tasks: ['sass:carli']
@@ -340,6 +345,11 @@ module.exports = function ( grunt ) {
             sassVendor: {
                 files: user_config.vendor_app.sass_all,
                 tasks: ['sass:vendor']
+            },
+
+            sassCommon: {
+                files: user_config.common_components.sass_all,
+                tasks: ['sass:carli','sass:vendor']
             }
         }
     };
@@ -456,7 +466,6 @@ module.exports = function ( grunt ) {
      */
     grunt.registerTask( 'serve', [
         'build',
-        'karma:unit',
         'connect:serveCarli',
         'connect:serveVendor',
         'watch'

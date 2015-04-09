@@ -28,7 +28,8 @@ module.exports = {
     },
 
     common_components: {
-        all_files: 'common/**/*'
+        all_files: 'common/**/*',
+        sass_all: 'common/**/*.scss'
     },
 
     carli_app: {
