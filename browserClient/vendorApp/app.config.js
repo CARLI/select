@@ -1,22 +1,20 @@
-angular.module('carli.vendor.app', [
+angular.module('vendor.app', [
     'busyClick',
     'ngRoute',
-    'carli.cycleService',
     'ngAnimate',
-    'carli.carliHeader',
-    'carli.debugPanel',
-    'carli.fa',
-    'carli.navBar',
-    'carli.alerts',
-    'carli.routes',
-    'carli.userMenu'
+    'vendor.vendorHeader',
+    //'common.fa',
+    'vendor.navBar',
+    //'common.alerts',
+    'vendor.routes',
+    'vendor.userMenu'
 ])
 .config(function($locationProvider){
     $locationProvider.html5Mode(true);
 })
-.run(function(cycleService){
-    cycleService.initCurrentCycle();
-})
+//.run(function(cycleService){
+//    cycleService.initCurrentCycle();
+//})
 .value('cgBusyDefaults',{
     //message:'Loading Stuff',
     //backdrop: false,
