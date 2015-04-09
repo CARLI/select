@@ -27,6 +27,10 @@ module.exports = {
         helper_scripts: [ 'e2e/utils/jQueryHelpers.js' ]
     },
 
+    common_components: {
+        all_files: 'common/**/*'
+    },
+
     carli_app: {
         all_files: [
             'carliApp/**/*',
@@ -53,6 +57,7 @@ module.exports = {
             '!vendorApp/**/*.spec.js'
         ],
         all_js: [
+            'vendorApp/*.js',
             'vendorApp/**/*.js',
             '!vendorApp/**/*.spec.js'
         ],

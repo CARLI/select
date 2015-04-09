@@ -86,6 +86,14 @@ module.exports = function ( grunt ) {
         },
 
         copy: {
+            carli_app_common_components: {
+                files: [{
+                    src: user_config.common_components.all_files,
+                    dest: user_config.carli_app.build_dir,
+                    expand: true
+                }]
+            },
+
             carli_app_all_files: {
                 files: [{
                     src: user_config.carli_app.all_files,
@@ -98,6 +106,15 @@ module.exports = function ( grunt ) {
                 files: [{
                     src: user_config.bower_files,
                     dest: user_config.carli_app.build_dir
+                }]
+            },
+
+
+            vendor_app_common_components: {
+                files: [{
+                    src: user_config.common_components.all_files,
+                    dest: user_config.vendor_app.build_dir,
+                    expand: true
                 }]
             },
 
@@ -136,24 +153,34 @@ module.exports = function ( grunt ) {
                 options: {
                     base: 'carliApp'
                 },
-                dir: user_config.carli_app.build_dir,
-                src: [
-                    'build/carliApp/CARLI.js',
-                    user_config.bower_files,
-                    user_config.carli_app.all_js
-                ]
+                files: [{
+                    expand: true,
+                    cwd: user_config.carli_app.build_dir,
+                    src: [
+                        user_config.logic_files.build,
+                        user_config.bower_files,
+                        user_config.common_components.all_files,
+                        '*.js',
+                        '**/*.js'
+                    ]
+                }]
             },
 
             vendor: {
                 options: {
                     base: 'vendorApp'
                 },
-                dir: user_config.vendor_app.build_dir,
-                src: [
-                    user_config.bower_files,
-                    user_config.logic_files.build,
-                    user_config.vendor_app.all_js
-                ]
+                files: [{
+                    expand: true,
+                    cwd: user_config.vendor_app.build_dir,
+                    src: [
+                        user_config.logic_files.build,
+                        user_config.bower_files,
+                        user_config.common_components.all_files,
+                        '*.js',
+                        '**/*.js'
+                    ]
+                }]
             },
 
             /**
@@ -338,6 +365,7 @@ module.exports = function ( grunt ) {
         var options = this.options();
 
         var indexFile = options.base + '/index.html';
+        var targetIndexFile = 'build/' + indexFile;
 
         var basePathRegExp = new RegExp('^('+ user_config.build_dir + ')\/', 'g');
 
@@ -346,13 +374,12 @@ module.exports = function ( grunt ) {
 
         var cssFiles = normalizedFiles.filter(cssFilesOnly);
 
-        grunt.file.copy(indexFile, this.data.dir + '/index.html', {
+        grunt.file.copy(indexFile, targetIndexFile, {
             process: function( contents, path ) {
                 return grunt.template.process( contents, {
                     data: {
                         scripts: jsFiles,
-                        styles: cssFiles,
-                        version: grunt.config( 'pkg.version' )
+                        styles: cssFiles
                     }
                 });
             }
@@ -390,6 +417,7 @@ module.exports = function ( grunt ) {
         'ensure-local-config',
         'jshint',
         'browserify:carli',
+        'copy:carli_app_common_components',
         'copy:carli_app_all_files',
         'copy:carli_app_bower_files',
         'sass:carli',
@@ -402,6 +430,7 @@ module.exports = function ( grunt ) {
         'ensure-local-config',
         'jshint',
         'browserify:vendor',
+        'copy:vendor_app_common_components',
         'copy:vendor_app_all_files',
         'copy:vendor_app_bower_files',
         'sass:vendor',
