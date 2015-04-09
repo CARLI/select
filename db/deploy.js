@@ -62,7 +62,7 @@ function deployLocalCycleDesignDocs(instance) {
     return CycleRepository.list().then(function (cycles) {
         var promises = [];
         cycles.forEach(function (cycle) {
-            promises.push( couchApp.putDesignDoc(cycle.databaseName, 'Cycle') );
+            promises.push( couchApp.putDesignDoc(cycle.getDatabaseName(), 'Cycle') );
         });
         return Q.all(promises);
     });

@@ -58,9 +58,9 @@ function createCycle( cycle ) {
 
     function createDatabaseForCycle( cycle ) {
         cycle.databaseName = couchUtils.makeValidCouchDbName('cycle-' + cycle.name);
-        createCycleLog('Creating database for ' + cycle.name + ' with database ' + cycle.databaseName);
+        createCycleLog('Creating database for ' + cycle.name + ' with database ' + cycle.getDatabaseName());
 
-        return couchUtils.createDatabase(cycle.databaseName)
+        return couchUtils.createDatabase(cycle.getDatabaseName())
             .then(function commit() {
                 createCycleLog('  Success creating database for ' + cycle.name);
                 return updateCycle( cycle );
@@ -73,8 +73,8 @@ function createCycle( cycle ) {
     }
 
     function triggerViewIndexing(cycle) {
-        createCycleLog('Triggering view indexing for ' + cycle.name + ' with database ' + cycle.databaseName);
-        couchUtils.triggerViewIndexing(cycle.databaseName);
+        createCycleLog('Triggering view indexing for ' + cycle.name + ' with database ' + cycle.getDatabaseName());
+        couchUtils.triggerViewIndexing(cycle.getDatabaseName());
         return cycle;
     }
 
@@ -141,12 +141,12 @@ var functionsToAdd = {
         return this.databaseName + '-' + vendorId;
     },
     getCycleSelectionAndInvoiceTotals: function getCycleSelectionAndInvoiceTotals() {
-        return couchUtils.getCouchViewResultValues(this.databaseName, 'getCycleSelectionAndInvoiceTotals').then(function(resultArray){
+        return couchUtils.getCouchViewResultValues(this.getDatabaseName(), 'getCycleSelectionAndInvoiceTotals').then(function(resultArray){
             return resultArray[0];
         });
     },
     getViewUpdateProgress: function getViewUpdateStatus(){
-        var database = this.databaseName;
+        var database = this.getDatabaseName();
 
         return couchUtils.getRunningCouchJobs().then(filterIndexJobs).then(filterByCycle).then(resolveToProgress);
 

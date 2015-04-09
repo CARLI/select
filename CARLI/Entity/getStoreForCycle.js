@@ -5,5 +5,5 @@ var StoreModule = require( '../Store/CouchDb/Store');
 var _ = require('lodash');
 
 module.exports = function getStoreForCycle(cycle) {
-    return Store( StoreModule(_.extend({}, StoreOptions, { couchDbName: cycle.databaseName })) );
+    return Store( StoreModule(_.extend({}, StoreOptions, { couchDbName: cycle.getDatabaseName() })) );
 };

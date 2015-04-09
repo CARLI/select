@@ -46,7 +46,7 @@ function updateOffering( offering, cycle ){
 
 function listOfferings(cycle){
     setCycle(cycle);
-    return expandOfferings( OfferingRepository.list(cycle.databaseName), cycle);
+    return expandOfferings( OfferingRepository.list(cycle.getDatabaseName()), cycle);
 }
 
 function transformOfferingsForNewCycle(newCycle, sourceCycle) {
@@ -107,19 +107,19 @@ function deleteOffering( offeringId, cycle ){
 
 function listOfferingsForLibraryId( libraryId, cycle ) {
     setCycle(cycle);
-    return expandOfferings( couchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForLibraryId', libraryId.toString()), cycle )
+    return expandOfferings( couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listOfferingsForLibraryId', libraryId.toString()), cycle )
         .then(initializeComputedValues);
 }
 
 function listOfferingsForProductId( productId, cycle ) {
     setCycle(cycle);
-    return expandOfferings( couchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForProductId', productId), cycle )
+    return expandOfferings( couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listOfferingsForProductId', productId), cycle )
         .then(initializeComputedValues);
 }
 
 function listOfferingsWithSelections( cycle ) {
     setCycle(cycle);
-    return expandOfferings( couchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsWithSelections'), cycle )
+    return expandOfferings( couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listOfferingsWithSelections'), cycle )
         .then(initializeComputedValues);
 
 }
@@ -177,7 +177,7 @@ var functionsToAdd = {
 };
 
 function getOfferingsById( ids, cycle ){
-    return expandOfferings(couchUtils.getCouchDocuments(cycle.databaseName, ids), cycle);
+    return expandOfferings(couchUtils.getCouchDocuments(cycle.getDatabaseName(), ids), cycle);
 }
 
 function getOfferingDisplayOptions(){
