@@ -232,6 +232,25 @@ describe('Adding functions to Notification instances', function () {
                 return expect(notification.getSummaryTotal()).to.equal(30);
             });
         });
+
+        it('should return the total of all annual access fees even if one of them is zero', function() {
+            return setupTestNotification(notification, offerings).then(function(notification){
+                notification.isFeeInvoice = true;
+                notification.offerings[0].product = { oneTimePurchaseAnnualAccessFee: 10 };
+                notification.offerings[1].product = { oneTimePurchaseAnnualAccessFee: 0 };
+                return expect(notification.getSummaryTotal()).to.equal(10);
+            });
+        });
+
+        it('should only include annual access fees of products that have been purchased', function() {
+            return setupTestNotification(notification, offerings).then(function(notification){
+                notification.isFeeInvoice = true;
+                notification.offerings[0].product = { oneTimePurchaseAnnualAccessFee: 10 };
+                delete notification.offerings[0].selection;
+                notification.offerings[1].product = { oneTimePurchaseAnnualAccessFee: 20 };
+                return expect(notification.getSummaryTotal()).to.equal(20);
+            });
+        });
     });
 
     it('should add a getRecipientLabel method to instances of Notification', function () {
