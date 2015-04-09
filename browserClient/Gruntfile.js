@@ -131,16 +131,6 @@ module.exports = function ( grunt ) {
                     src: user_config.bower_files,
                     dest: user_config.vendor_app.build_dir
                 }]
-            },
-
-
-
-            build_appjs: {
-                files: [{
-                    src: [ '<%= carliApp_files.js %>' ],
-                    dest: '<%= build_dir %>/',
-                    expand: true
-                }]
             }
         },
 
@@ -226,43 +216,44 @@ module.exports = function ( grunt ) {
 
         karma: {
             options: {
-                configFile: 'karma.conf.js',
-                files: [
-                    '<%= vendor_files.js %>',
-                    '<%= test_files.js %>',
-                    '<%= build_dir %>/*.js',
-                    '<%= build_dir %>/<%= carliApp_files.jsAll %>',
-                    '<%= carliApp_files.jsUnit %>'
-                ]
-            },
-            /**
-             * 'grunt serve' includes 'karma:unit' which starts up the background karma server.
-             * 'karma:unit:run' runs the tests against the already-running server, which is quite 
-             * a bit faster than 'karma:continuous'. 
-             * The 'watch' tasks run 'karma:unit:run' whenever test files change.
-             */
-            unit: {
-                singleRun: false,
-                background: true,
-                reporters: ['mocha']
-            },
-            continuous: {
+                basePath: '.',
+                port: 9876,
                 singleRun: true,
                 browsers: [ 'PhantomJS' ],
-                reporters: [ 'mocha', 'junit' ],
+                frameworks: [ 'mocha', 'chai' ],
+                reporters: [ 'mocha', 'junit' ]
+            },
+            carli: {
+                files: {
+                    src: [
+                        'build/carliApp/bower_modules/jquery/dist/jquery.js',
+                        'build/carliApp/bower_modules/angular/angular.js',
+                        'bower_modules/angular-mocks/angular-mocks.js',
+                        'testModules/*.js',
+                        'build/carliApp/*.js',
+                        'build/carliApp/**/*.js',
+                        'carliApp/**/*.spec.js'
+                    ]
+                },
                 junitReporter: {
                     outputFile: '../artifacts/test-results/browserClient-unit.xml'
                 }
             },
-            configTemplate: {
-                basePath: '.',
-                frameworks: ['mocha', 'chai'],
-                reporters: ['progress'],
-                port: 9876,
-                colors: true,
-                autoWatch: false,
-                singleRun: false,
-                browsers: ['PhantomJS']
+            vendor: {
+                files: {
+                    src: [
+                        'build/vendorApp/bower_modules/jquery/dist/jquery.js',
+                        'build/vendorApp/bower_modules/angular/angular.js',
+                        'bower_modules/angular-mocks/angular-mocks.js',
+                        'testModules/*.js',
+                        'build/vendorApp/*.js',
+                        'build/vendorApp/**/*.js',
+                        'vendorApp/**/*.spec.js'
+                    ]
+                },
+                junitReporter: {
+                    outputFile: '../artifacts/test-results/vendorApp-unit.xml'
+                }
             }
         },
 
@@ -451,9 +442,9 @@ module.exports = function ( grunt ) {
      */
     grunt.registerTask( 'test:unit', [
         'clean',
-        'generate-karmaconf',
         'build',
-        'karma:continuous'
+        'karma:carli',
+        'karma:vendor'
     ]);
 
     grunt.registerTask( 'test:jenkins', [
@@ -484,20 +475,6 @@ module.exports = function ( grunt ) {
         'uglify',
         'index:compile'
     ]);
-
-    /**
-     * Generate a karma.conf.js file suitable for running Karma tests standalone.
-     */
-    grunt.registerTask( 'generate-karmaconf', 'Generate Karma configuration for executing tests outside of Grunt', function () {
-        var config = grunt.config('karma.configTemplate');
-        // Flatten the files array into a single 1-dimensional array
-        config.files = grunt.config('karma.options.files').reduce(function(a, b) {
-              return a.concat(b);
-        });
-        var configString = 'module.exports = function(config) { config.set(' + JSON.stringify(config, null, '    ') + '); };';
-        grunt.file.write(grunt.config('karma.options.configFile'), configString);
-    });
-
     /**
      * The default task is to build and compile.
      */

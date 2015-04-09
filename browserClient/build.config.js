@@ -102,13 +102,6 @@ module.exports = {
     },
 
     /**
-     * This is a collection of files used during testing only.
-     */
-    test_files: {
-        js: ['bower_modules/angular-mocks/angular-mocks.js', 'testModules/*.js']
-    },
-
-    /**
      * This is the same as `carliApp_files`, except it contains patterns that
      * reference vendor code (`bower_modules/`) that we need to place into the build
      * process somewhere. While the `carliApp_files` property ensures all

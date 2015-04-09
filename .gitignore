@@ -7,7 +7,6 @@
 /schemas/browser/index.json.html
 
 # Ignore browserClient's karma config.
-# Run `grunt generate-karmaconf` to generate it.
 /browserClient/karma.conf.js
 
 # Ignore CARLI local config, which can be used to override the default configuration that is in the repository.
