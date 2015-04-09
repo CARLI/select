@@ -270,6 +270,18 @@ describe('Adding functions to Cycle instances', function() {
         });
     });
 
+    describe('the Cycle.getDatabaseName method', function () {
+        it('should return a database name', function () {
+            var cycle = validCycleData();
+
+            return CycleRepository.create(cycle)
+                .then(CycleRepository.load)
+                .then(function (loadedCycle) {
+                    return expect(loadedCycle.getDatabaseName()).to.equal(loadedCycle.databaseName);
+                });
+        });
+    });
+
     describe('the Cycle.getDatabaseNameForVendorId method', function () {
         it('should return a database name', function () {
             var cycle = validCycleData();
