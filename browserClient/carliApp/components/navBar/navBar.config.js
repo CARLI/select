@@ -1,3 +1,3 @@
 angular.module("carli.navBar", [
-    'carli.activeTab'
+    'common.activeTab'
 ]);
