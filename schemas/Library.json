@@ -12,10 +12,6 @@
             "description": "Name of Library",
             "type": "string"
         },
-        "fte": {
-            "description": "Full-time Enrollment of Library",
-            "type": "integer"
-        },
         "institutionYears": {
             "description": "2 or 4 years",
             "$ref": "./InstitutionYears.json"
