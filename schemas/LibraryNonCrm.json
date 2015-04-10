@@ -12,6 +12,10 @@
             "description": "The id from the CRM database",
             "type": "integer"
         },
+        "gar": {
+            "description": "General Account Receivable",
+            "type": "string"
+        },
         "ipAddresses": {
             "description": "List of IP Addresses",
             "type": "string"
