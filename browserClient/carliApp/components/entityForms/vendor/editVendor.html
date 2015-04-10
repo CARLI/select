@@ -50,7 +50,7 @@
                         <label for="currentCycle">View products from cycle:</label>
                         <select-cycle input-id="currentCycle"></select-cycle>
                         <ul class="zebra-table">
-                            <li ng-repeat="product in vm.productList">
+                            <li ng-repeat="product in vm.productList | orderBy:'name'">
                                 <div class="column">
                                     <a ng-href="/product/{{ product.id }}">{{ product.name }}</a>
                                 </div>
