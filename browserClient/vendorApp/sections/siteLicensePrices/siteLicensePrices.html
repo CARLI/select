@@ -10,35 +10,52 @@
 
 <section class="content" id="siteLicensePrices">
 
-    <div cg-busy="vm.loadingPromise">
+    <div class="pricing-grid-controls">
+        <ul>
+            <li class="header">View Options</li>
+            <li><checkbox ng-model="vm.viewOptions.size">Size</checkbox></li>
+            <li><checkbox ng-model="vm.viewOptions.type">Type</checkbox></li>
+            <li><checkbox ng-model="vm.viewOptions.years">Years</checkbox></li>
+            <li><checkbox ng-model="vm.viewOptions.priceCap">Price Cap</checkbox></li>
+        </ul>
+    </div>
+    <div class="pricing-grid-container" cg-busy="vm.loadingPromise">
         <div class="pricing-grid-row-labels">
-            <div class="row">
-                <div class="column-header">Library</div>
-                <div class="column-header">Size</div>
-                <div class="column-header">Type</div>
-                <div class="column-header">Years</div>
-                <div class="column-header">Last Year's Price</div>
+            <div class="price-row">
+                <div class="column header">Library</div>
+                <div class="column header">Size</div>
+                <div class="column header">Type</div>
+                <div class="column header">Years</div>
+                <div class="column header">Last Year's Price</div>
             </div>
-            <div class="row" ng-repeat="library in vm.libraries">
-                <div class="column-header">{{ ::library.name }}</div>
-                <div class="column-header">{{ ::library.fte }}</div>
-                <div class="column-header">{{ ::library.institutionType }}</div>
-                <div class="column-header">{{ ::library.institutionYears }}</div>
-                <div class="column-header">{{ ::library.lastYearsPrice }}</div>
+            <div class="price-cap price-row" ng-show="vm.viewOptions.priceCap">
+                <div class="column header"></div>
+                <div class="column header"></div>
+                <div class="column header"></div>
+                <div class="column header"></div>
+                <div class="column header"></div>
+            </div>
+            <div class="price-row" ng-repeat="library in vm.libraries">
+                <div class="column">{{ ::library.name }}</div>
+                <div class="column">{{ ::library.fte }}</div>
+                <div class="column">{{ ::library.institutionType }}</div>
+                <div class="column">{{ ::library.institutionYears }}</div>
+                <div class="column">{{ ::library.lastYearsPrice }}</div>
             </div>
         </div>
-        <horizontal-scroller>
-            <pricing-grid>
-                <div class="row">
-                    <div ng-repeat="product in vm.products" class="column-header">{{ ::product.name }}</div>
+        <div class="pricing-grid-container">
+            <div class="pricing-grid">
+                <div class="price-row">
+                    <div class="column header" ng-repeat="product in vm.products">{{ ::product.name }}</div>
                 </div>
-                <div class="row" ng-repeat="library in vm.libraries">
+                <div class="price-cap price-row" ng-show="vm.viewOptions.priceCap">
+                    <div class="column header" ng-repeat="product in vm.products">{{ ::product.priceCap }}%</div>
+                </div>
+                <div class="price-row" ng-repeat="library in vm.libraries">
                     <div class="column" ng-repeat="product in vm.products">
-                        <div class="column-header">{{ ::vm.getPrice(product, library) }}</div>
+                        {{ ::vm.getPrice(product, library) | currency }}
                     </div>
                 </div>
-            </pricing-grid>
-        </horizontal-scroller>
-    </div>
-
+            </div>
+        </div>
 </section>

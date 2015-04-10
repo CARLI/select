@@ -1,0 +1,83 @@
+#siteLicensePrices {
+
+    .pricing-grid-controls {
+        margin: 1rem auto;
+
+        ul {
+            list-style: none;
+            @include flexbox();
+
+            li {
+                background: $light-gray;
+                border: $default-border;
+                border-left: none;
+                @include flex(1 1 auto);
+                padding: 1rem;
+            }
+
+            li.header {
+                background: $white;
+                border-left: $default-border;
+            }
+        }
+    }
+
+    .price-row {
+        @include flexbox();
+
+        .column {
+            border-bottom: $default-border;
+            border-left: $default-border;
+            @include flex(1 1 20%);
+            padding: 0.5rem 1rem;
+
+            &.header {
+                font-weight: bold;
+                background: $light-gray;
+                min-height: 6rem;
+            }
+
+            &:first-child {
+                flex-basis: 40%;
+            }
+        }
+
+        &.price-cap {
+            .header {
+                min-height: 2.5rem;
+                height: 2.5rem;
+            }
+        }
+    }
+
+    .pricing-grid-container{
+        @include flexbox();
+
+        .pricing-grid-container {
+            border: 1px solid black;
+            @include flex(1 1 50%);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .pricing-grid-row-labels,
+        .pricing-grid-container {
+            border-top: 3px solid black;
+            @include flex(1 1 50%);
+        }
+
+        .pricing-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            .price-row {
+                .column {
+                    @include flex(1 0 20%);
+                }
+            }
+        }
+
+
+    }
+}

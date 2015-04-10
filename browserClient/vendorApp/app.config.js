@@ -1,5 +1,6 @@
 angular.module('vendor.app', [
     'busyClick',
+    'cgBusy',
     'ngRoute',
     'ngAnimate',
     'common.cycleService',
