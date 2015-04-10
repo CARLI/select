@@ -1,5 +1,5 @@
 describe('The Library Service', function() {
-    beforeEach(module('carli.libraryService'));
+    beforeEach(module('common.libraryService'));
 
     it( 'should provide libraryService', inject( function(libraryService) {
         expect(libraryService).to.be.an('object');

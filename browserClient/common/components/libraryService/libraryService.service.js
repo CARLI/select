@@ -1,4 +1,4 @@
-angular.module('carli.libraryService')
+angular.module('common.libraryService')
     .service('libraryService', libraryService);
 
 function libraryService( CarliModules, $q ) {

@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.library',[
     'carli.alerts',
     'carli.entityBaseService',
-    'carli.libraryService',
+    'common.libraryService',
     'carli.viewEditDirectives',
     'carli.warnIfUnsaved'
 ]);

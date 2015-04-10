@@ -3,6 +3,6 @@ angular.module('carli.sections.libraries',[
     'carli.sections.libraries.edit',
     'carli.entityForms.library',
     'carli.modalDialog',
-    'carli.libraryService',
+    'common.libraryService',
     'carli.entityList'
 ]);

@@ -2,6 +2,7 @@
 @import "../../common/styles/colors";
 @import "../../common/styles/variables";
 @import "../../common/styles/mixins";
+@import "../../common/styles/buttons";
 @import "../../common/styles/helpers";
 @import "../../common/styles/gridAdapter";
 @import "../../common/styles/zebraTable";
@@ -15,7 +16,6 @@
 
 
 @import "../components/alerts/alerts";
-@import "../components/buttons/buttons";
 @import "../components/collapsible/collapsible";
 @import "../components/checkbox/checkbox";
 @import "../components/editOffering/_editOffering";

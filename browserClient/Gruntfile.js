@@ -28,7 +28,7 @@ module.exports = function ( grunt ) {
             },
             vendor: {
                 files: [{
-                    src: user_config.logic_files.js,
+                    src: '../CARLI/vendor.js',
                     dest: user_config.vendor_app.build_dir + user_config.logic_files.build
                 }]
             }

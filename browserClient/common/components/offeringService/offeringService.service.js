@@ -1,4 +1,4 @@
-angular.module('carli.offeringService')
+angular.module('common.offeringService')
     .service('offeringService', offeringService);
 
 function offeringService( CarliModules, $q, cycleService ) {

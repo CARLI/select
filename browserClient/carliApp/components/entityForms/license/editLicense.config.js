@@ -1,8 +1,8 @@
 angular.module('carli.entityForms.license',[
     'carli.alerts',
-    'carli.cycleService',
+    'common.cycleService',
     'carli.licenseService',
-    'carli.productService',
+    'common.productService',
     'carli.selectCycle',
     'carli.vendorService',
     'carli.viewEditDirectives',

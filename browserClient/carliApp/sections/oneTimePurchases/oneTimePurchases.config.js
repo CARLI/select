@@ -1,5 +1,5 @@
 angular.module('carli.sections.oneTimePurchases', [
     'ngSanitize',
-    'carli.libraryService',
+    'common.libraryService',
     'carli.sections.oneTimePurchases.selectedProducts'
 ]);

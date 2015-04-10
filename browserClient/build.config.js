@@ -28,7 +28,10 @@ module.exports = {
     },
 
     common_components: {
-        all_files: 'common/**/*',
+        all_files: [
+            'common/**/*',
+            '!common/**/*.spec.js'
+        ],
         sass_all: 'common/**/*.scss'
     },
 

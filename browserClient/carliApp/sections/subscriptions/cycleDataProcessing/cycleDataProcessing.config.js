@@ -1,4 +1,4 @@
 angular.module('carli.sections.subscriptions.cycleDataProcessing', [
-    'carli.cycleService',
+    'common.cycleService',
     'carli.notificationService'
 ]);

@@ -3,8 +3,8 @@ angular.module('carli.sections.oneTimePurchases.selectedProducts', [
     'carli.alerts',
     'carli.checkbox',
     'carli.collapsible',
-    'carli.libraryService',
+    'common.libraryService',
     'carli.notificationModal',
-    'carli.productService'
+    'common.productService'
 
 ]);

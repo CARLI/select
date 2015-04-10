@@ -1,4 +1,4 @@
-angular.module('carli.cycleService')
+angular.module('common.cycleService')
     .service('cycleService', cycleService);
 
 function cycleService( CarliModules, $q ) {
@@ -28,6 +28,22 @@ function cycleService( CarliModules, $q ) {
         initCurrentCycle: function(){
             listActiveCycles().then(function(cycleList){
                 currentCycle = cycleList[0];
+            });
+        },
+        initCurrentCycleForVendorApp: function(){
+            return listActiveCycles().then(function(cycleList){
+                openCycles = cycleList.filter(findOpenToVendorCycles);
+
+                if ( openCycles.length ){
+                    currentCycle = openCycles[0];
+                }
+                else {
+                    return $q.reject("No Open Cycles");
+                }
+
+                function findOpenToVendorCycles(cycle){
+                    return cycle.status === 2;
+                }
             });
         }
     };

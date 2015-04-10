@@ -1,5 +1,5 @@
 describe('The Offering service', function() {
-    beforeEach(module('carli.offeringService'));
+    beforeEach(module('common.offeringService'));
 
     it( 'should provide offeringService', inject( function(offeringService) {
         expect(offeringService).to.be.an('Object');

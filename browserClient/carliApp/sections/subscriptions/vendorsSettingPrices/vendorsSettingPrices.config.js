@@ -1,8 +1,8 @@
 angular.module('carli.sections.subscriptions.vendorsSettingPrices', [
     'carli.controllerBaseService',
-    'carli.cycleService',
-    'carli.offeringService',
-    'carli.productService',
+    'common.cycleService',
+    'common.offeringService',
+    'common.productService',
     'carli.vendorService',
     'carli.accordion',
     'carli.viewEditDirectives',
