@@ -8,7 +8,7 @@ function listLibraries() {
     var deferred = Q.defer();
     pool.getConnection(function(err, connection) {
         connection.query(
-            'SELECT m.institution_name, m.member_id, m.fte, m.library_type, m.membership_lvl ' +
+            'SELECT m.institution_name, m.member_id, m.library_type, m.membership_lvl ' +
             'FROM members AS m',
             null,
             function(err, rows, fields) {
