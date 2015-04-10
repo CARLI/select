@@ -1,4 +1,4 @@
-angular.module('carli.uuid')
+angular.module('common.uuid')
     .factory('uuid', function() {
         var uniqueId = 0;
 

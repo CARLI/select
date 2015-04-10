@@ -1,4 +1,4 @@
-angular.module('carli.checkbox')
+angular.module('common.checkbox')
     .directive('checkbox', checkbox);
 
     function checkbox(uuid) {
@@ -6,7 +6,7 @@ angular.module('carli.checkbox')
 
         return {
             restrict: 'E',
-            templateUrl: 'carliApp/components/checkbox/checkbox.html',
+            template: '<input id="{{ checkboxId }}" type="checkbox" ng-model="ngModel"><label for="{{ checkboxId }}"><span class="fa checkbox-display" /><ng-transclude></ng-transclude></label>',
             scope: {
                 ngModel: '=',
                 id: '='

@@ -6,7 +6,7 @@ angular.module('carli.sections.styleGuide',
         'carli.fa',
         'carli.viewEditDirectives',
         'carli.goodSelect',
-        'carli.checkbox',
+        'common.checkbox',
         'carli.radio',
         'carli.warnIfUnsaved'
     ]

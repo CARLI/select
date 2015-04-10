@@ -1,3 +1,3 @@
 angular.module('carli.radio', [
-    'carli.uuid'
+    'common.uuid'
 ]);
