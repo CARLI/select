@@ -22,7 +22,7 @@ function transformFunction( notification ){
 
     function transformTargetEntityToId( notification ){
         if ( notification.targetEntity && typeof notification.targetEntity === 'object' ){
-            notification.targetEntity = notification.targetEntity.id;
+            notification.targetEntity = notification.targetEntity.id.toString();
         }
     }
 
