@@ -4,7 +4,7 @@
     <li class="column-headers">
         <div class="column">Product Name</div>
     </li>
-    <li ng-repeat="product in vm.productList">
+    <li ng-repeat="product in vm.productList | orderBy:'name'">
         <div class="column"><a ng-click="vm.closeProductsModalAndGoTo('/product/'+product.id)">{{ product.name }}</a></div>
     </li>
 </ul>
