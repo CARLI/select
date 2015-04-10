@@ -425,10 +425,10 @@ function runProductSpecificTests(testCycle) {
                     "USIF - I-Share",
                     "USIG - Chronicle of Higher Education",
                     "USIH - OED",
-                    "USII - Spring Database",
-                    "USIJ - Fall Database",
+                    "USII - Fiscal Database",
+                    "USIJ - Calendar Database",
                     "USIK - SFX",
-                    "USIL - SFX",
+                    "USIL - Membership Pre-Pay",
                     "USIM - I-Share Pre-Pay",
                     "USIN - Database Pre-Pay"
                 ];
