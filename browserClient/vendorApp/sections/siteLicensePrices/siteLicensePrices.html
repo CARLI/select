@@ -20,27 +20,27 @@
         </ul>
     </div>
     <div class="pricing-grid-container" cg-busy="vm.loadingPromise">
-        <div class="pricing-grid-row-labels">
+        <div class="pricing-grid-row-labels" ng-class="vm.viewOptions">
             <div class="price-row">
-                <div class="column header">Library</div>
-                <div class="column header">Size</div>
-                <div class="column header">Type</div>
-                <div class="column header">Years</div>
-                <div class="column header">Last Year's Price</div>
+                <div class="column header library">Library</div>
+                <div class="column header size">Size</div>
+                <div class="column header type">Type</div>
+                <div class="column header years">Years</div>
+                <div class="column header lastYearsPrice">Last Year's Price</div>
             </div>
             <div class="price-cap price-row" ng-show="vm.viewOptions.priceCap">
-                <div class="column header"></div>
-                <div class="column header"></div>
-                <div class="column header"></div>
-                <div class="column header"></div>
-                <div class="column header"></div>
+                <div class="column header library"></div>
+                <div class="column header size"></div>
+                <div class="column header type"></div>
+                <div class="column header years"></div>
+                <div class="column header lastYearsPrice"></div>
             </div>
             <div class="price-row" ng-repeat="library in vm.libraries">
-                <div class="column">{{ ::library.name }}</div>
-                <div class="column">{{ ::library.fte }}</div>
-                <div class="column">{{ ::library.institutionType }}</div>
-                <div class="column">{{ ::library.institutionYears }}</div>
-                <div class="column">{{ ::library.lastYearsPrice }}</div>
+                <div class="column library">{{ ::library.name }}</div>
+                <div class="column size">{{ ::library.fte }}</div>
+                <div class="column type">{{ ::library.institutionType }}</div>
+                <div class="column years">{{ ::library.institutionYears }}</div>
+                <div class="column lastYearsPrice">{{ ::library.lastYearsPrice }}</div>
             </div>
         </div>
         <div class="pricing-grid-container">

@@ -65,13 +65,31 @@
         .pricing-grid-row-labels {
             .price-row {
                 .column {
+                    display: none;
                     @include flex(1 1 5%);
                     min-width: 5rem;
 
                     &:first-child {
                         min-width: 26.78rem;
                     }
+
+                    &.library {
+                        display: block;
+                    }
                 }
+            }
+
+            &.size {
+                .column.size { display: block; }
+            }
+            &.type {
+                .column.type { display: block; }
+            }
+            &.years {
+                .column.years { display: block; }
+            }
+            &.lastYearsPrice {
+                .column.lastYearsPrice { display: block; }
             }
         }
 
