@@ -12,6 +12,10 @@
             "description": "The id from the CRM database",
             "type": "integer"
         },
+        "fte": {
+            "description": "Full-time Enrollment of Library",
+            "type": "integer"
+        },
         "gar": {
             "description": "General Account Receivable",
             "type": "string"
