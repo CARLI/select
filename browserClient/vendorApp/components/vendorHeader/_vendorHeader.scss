@@ -4,10 +4,10 @@ $fg-color: $white;
 
 $height: 110px;
 
-header.carli-header {
+header.vendor-header {
     color: $fg-color;
     background-color: $bg-color;
-    background-image: url('/carliApp/components/carliHeader/images/header-background.png');
+    background-image: url('/vendorApp/components/vendorHeader/images/header-background.png');
     background-repeat: no-repeat;
     height: 110px;
     position: relative;

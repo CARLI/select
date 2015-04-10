@@ -1,4 +1,4 @@
-angular.module('carli.activeTab')
+angular.module('common.activeTab')
     .directive('activeTab', activeTab);
 
     function activeTab($location) {

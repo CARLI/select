@@ -1,15 +1,15 @@
 <!DOCTYPE HTML>
-<html ng-app="carli.app" lang="en">
+<html ng-app="vendor.app" lang="en">
     <head>
         <base href="/">
-        <title>CARLI Select</title>
+        <title>CARLI Vendor Pricing</title>
         <% styles.forEach( function ( file ) { %>
             <link type="text/css" rel="stylesheet" href="/<%= file %>">
         <% }); %>
-        <link type="text/css" rel="stylesheet" href="/carliApp/app.css">
+        <link type="text/css" rel="stylesheet" href="/vendorApp/app.css">
     </head>
     <body>
-        <header carli-header role="banner"></header>
+        <header vendor-header role="banner"></header>
         <nav nav-bar role="navigation"></nav>
         <alerts></alerts>
         <main role="main">
