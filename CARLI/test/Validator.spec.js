@@ -199,6 +199,8 @@ describe( 'The Validator Module', function() {
         it('should return the expected list of properties', function(){
             var expectedValues = [
                 'crmId',
+                'fte',
+                'gar',
                 'ipAddresses'
             ];
             expect( Validator.listNonIdPropertiesFor('LibraryNonCrm')).to.have.members( expectedValues );
