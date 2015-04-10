@@ -31,10 +31,6 @@
         "isIshareMember": {
             "type": "boolean"
         },
-        "gar": {
-            "description": "General Account Receivable",
-            "type": "string"
-        },
         "isActive": {
             "description": "Is this library active?",
             "type": "boolean"
