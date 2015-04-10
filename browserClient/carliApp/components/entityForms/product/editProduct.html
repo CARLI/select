@@ -117,7 +117,7 @@
                             <div ng-show="vm.editable" class="readonly input">{{ vm.noLicensesMessage }}</div>
                         </div>
                         <view-edit-typeahead ng-show="!vm.noLicensesMessage" ng-model="vm.product.license" options="vm.licenseList" edit-mode="vm.editable" input-id="license">
-                            {{ vm.product.license.name }}
+                            <a ng-href="/license/{{ vm.product.license.id }}">{{ vm.product.license.name }}</a>
                         </view-edit-typeahead>
 
                         <label for="detailCode">Detail Codes</label>
