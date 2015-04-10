@@ -16,13 +16,20 @@ NotificationRepository.setStore( Store( StoreModule(StoreOptions) ) );
 var propertiesToTransform = ['cycle'];
 
 function transformFunction( notification ){
+    transformTargetEntityToId( notification );
     transformOfferingObjectsToIds( notification );
     EntityTransform.transformObjectForPersistence(notification, propertiesToTransform);
-}
 
-function transformOfferingObjectsToIds( notification ){
-    if (notification.offerings) {
-        notification.offerings = notification.offerings.map(getId);
+    function transformTargetEntityToId( notification ){
+        if ( notification.targetEntity && typeof notification.targetEntity === 'object' ){
+            notification.targetEntity = notification.targetEntity.id;
+        }
+    }
+
+    function transformOfferingObjectsToIds( notification ){
+        if (notification.offerings) {
+            notification.offerings = notification.offerings.map(getId);
+        }
     }
 }
 
