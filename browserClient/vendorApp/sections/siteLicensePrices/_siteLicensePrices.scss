@@ -36,10 +36,6 @@
                 background: $light-gray;
                 min-height: 6rem;
             }
-
-            &:first-child {
-                flex-basis: 40%;
-            }
         }
 
         &.price-cap {
@@ -66,6 +62,19 @@
             @include flex(1 1 50%);
         }
 
+        .pricing-grid-row-labels {
+            .price-row {
+                .column {
+                    @include flex(1 1 5%);
+                    min-width: 5rem;
+
+                    &:first-child {
+                        min-width: 26.78rem;
+                    }
+                }
+            }
+        }
+
         .pricing-grid {
             position: absolute;
             top: 0;
@@ -74,6 +83,10 @@
             .price-row {
                 .column {
                     @include flex(1 0 20%);
+
+                    &:first-child {
+                        border-left: none;
+                    }
                 }
             }
         }
