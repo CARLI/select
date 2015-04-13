@@ -224,12 +224,23 @@ function replicateLocalToProd() {
         })
         .done();
 }
+function replicateQaToProd() {
+    replicateAllFrom('qa').to('prod')
+        .then(function() {
+            console.log("Finished");
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+        .done();
+}
 
 module.exports = {
     replicateQaToLocal: replicateQaToLocal,
     replicateLocalToQa: replicateLocalToQa,
     replicateLocalToDev: replicateLocalToDev,
     replicateLocalToProd: replicateLocalToProd,
+    replicateQaToProd: replicateQaToProd,
     replicateLocalDesignDocsToDev: replicateLocalDesignDocsToDev,
     replicateLocalDesignDocsToQa: replicateLocalDesignDocsToQa
 };

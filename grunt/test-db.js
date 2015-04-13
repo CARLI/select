@@ -37,4 +37,8 @@ module.exports = function (grunt) {
         var done = this.async();
         testUtils.nukeCouch('http://carli-db.qa.pixotech.com').then(done);
     });
+    grunt.registerTask('nuke-couch-prod', function() {
+        var done = this.async();
+        testUtils.nukeCouch('http://select-prod.carli.illinois.edu/db').then(done);
+    });
 };
