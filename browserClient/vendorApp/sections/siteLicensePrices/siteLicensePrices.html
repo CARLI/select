@@ -8,7 +8,7 @@
     </div>
 </div>
 
-<section class="content" id="siteLicensePrices">
+<section class="content" id="siteLicensePrices" cg-busy="vm.loadingPromise">
 
     <div class="pricing-grid-controls">
         <ul>
@@ -22,7 +22,7 @@
     <div class="scroll-slider-container">
         <horizontal-scroll-slider selector=".pricing-grid"></horizontal-scroll-slider>
     </div>
-    <div class="pricing-container" cg-busy="vm.loadingPromise">
+    <div class="pricing-container">
         <div class="pricing-grid-row-labels" ng-class="vm.viewOptions">
             <div class="price-row">
                 <div class="column header library">Library</div>
@@ -49,16 +49,19 @@
         <div class="pricing-grid-container">
             <div class="pricing-grid">
                 <div class="price-row">
-                    <div class="column header" ng-repeat="product in vm.products">{{ ::product.name }}</div>
+                    <div class="column header" ng-repeat="product in ::vm.products | orderBy:'name'">{{ ::product.name }}</div>
                 </div>
                 <div class="price-cap price-row" ng-show="vm.viewOptions.priceCap">
-                    <div class="column header" ng-repeat="product in vm.products">{{ ::product.priceCap }}%</div>
+                    <div class="column header" ng-repeat="product in ::vm.products | orderBy:'name'">{{ ::product.priceCap }}%</div>
                 </div>
-                <div class="price-row" ng-repeat="library in vm.libraries">
-                    <div class="column" ng-repeat="product in vm.products">
-                        {{ ::vm.getPrice(product, library) | currency }}
+                <div id="price-rows"></div>
+                <!--
+                <div class="price-row" ng-repeat="library in ::vm.libraries">
+                    <div class="column" ng-repeat="product in ::vm.products | orderBy:'name'">
+                        <input type="text" value="{{ ::vm.priceForLibraryByProduct[product.id][library.id] }}">
                     </div>
                 </div>
+                -->
             </div>
         </div>
 </section>
