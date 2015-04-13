@@ -1,5 +1,10 @@
 #siteLicensePrices {
 
+    .scroll-slider-container {
+        margin-left: 50%;
+    }
+
+
     .pricing-grid-controls {
         margin: 1rem auto;
 
@@ -46,7 +51,7 @@
         }
     }
 
-    .pricing-grid-container{
+    .pricing-container{
         @include flexbox();
 
         .pricing-grid-container {
@@ -97,10 +102,12 @@
             position: absolute;
             top: 0;
             left: 0;
+            width: 100%;
 
             .price-row {
                 .column {
-                    @include flex(1 0 20%);
+                    @include flex(0 0 auto);
+                    width: 150px;
 
                     &:first-child {
                         border-left: none;

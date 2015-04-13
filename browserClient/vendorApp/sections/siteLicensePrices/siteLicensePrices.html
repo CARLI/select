@@ -19,7 +19,10 @@
             <li><checkbox ng-model="vm.viewOptions.priceCap">Price Cap</checkbox></li>
         </ul>
     </div>
-    <div class="pricing-grid-container" cg-busy="vm.loadingPromise">
+    <div class="scroll-slider-container">
+        <horizontal-scroll-slider selector=".pricing-grid"></horizontal-scroll-slider>
+    </div>
+    <div class="pricing-container" cg-busy="vm.loadingPromise">
         <div class="pricing-grid-row-labels" ng-class="vm.viewOptions">
             <div class="price-row">
                 <div class="column header library">Library</div>
