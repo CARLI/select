@@ -5,9 +5,7 @@ function siteLicensePricesController($q, $filter, libraryService, productService
     var vm = this;
     vm.loadingPromises = [];
     vm.viewOptions = {};
-
-    vm.getPrice = getPrice;
-
+    
     activate();
 
     function activate() {
@@ -52,23 +50,8 @@ function siteLicensePricesController($q, $filter, libraryService, productService
         });
     }
 
-    function getPrice(product, library){
-        var offeringsForLibrary = product.offerings.filter(function (offering) {
-            return offering.library.id == library.id;
-        });
-        return (offeringsForLibrary.length > 0) ? offeringsForLibrary[0].pricing.site : 0;
-    }
-
     function buildPricingGrid() {
-        /*
-         <div class="price-row" ng-repeat="library in ::vm.libraries">
-         <div class="column" ng-repeat="product in ::vm.products | orderBy:'name'">
-         <input type="text" value="{{ ::vm.priceForLibraryByProduct[product.id][library.id] }}">
-         </div>
-         </div>
-         */
         var priceRows = $('<div>');
-
 
         vm.libraries.forEach(function (library) {
             var row = generateLibraryRow();
@@ -87,6 +70,5 @@ function siteLicensePricesController($q, $filter, libraryService, productService
             var price = vm.priceForLibraryByProduct[product.id][library.id] || 0;
             return $('<div class="column">').append('<input type="text" value="' + price + '">');
         }
-
     }
 }

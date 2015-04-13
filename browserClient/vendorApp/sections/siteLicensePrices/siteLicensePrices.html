@@ -55,13 +55,6 @@
                     <div class="column header" ng-repeat="product in ::vm.products | orderBy:'name'">{{ ::product.priceCap }}%</div>
                 </div>
                 <div id="price-rows"></div>
-                <!--
-                <div class="price-row" ng-repeat="library in ::vm.libraries">
-                    <div class="column" ng-repeat="product in ::vm.products | orderBy:'name'">
-                        <input type="text" value="{{ ::vm.priceForLibraryByProduct[product.id][library.id] }}">
-                    </div>
-                </div>
-                -->
             </div>
         </div>
 </section>
