@@ -1,5 +1,5 @@
 angular.module('vendor.fakeVendorMenu')
-    .directive('fakeVendorMenu', function ($q, $rootScope, currentUser, CarliModules) {
+    .directive('fakeVendorMenu', function ($q, $rootScope, $window, currentUser, CarliModules) {
         return {
             restrict: 'E',
             templateUrl: '/vendorApp/components/fakeVendorMenu/fakeVendorMenu.html',
@@ -11,14 +11,32 @@ angular.module('vendor.fakeVendorMenu')
                 function activate() {
                     $q.when(vendorModule.list()).then(function (vendors) {
                         scope.vendorList = vendors;
+
+                        if ($window.sessionStorage.getItem('currentVendorId')) {
+                            restoreCurrentVendor();
+                        }
                     });
 
                     scope.$watch('selectedVendor', function (newVendor) {
                         if (newVendor) {
-                            $rootScope.currentUser.vendor = newVendor;
-                            $rootScope.currentUser.userName = newVendor.name + ' User';
+                            setCurrentVendor(newVendor);
                         }
                     });
+                }
+
+                function restoreCurrentVendor() {
+                    var vendorId = $window.sessionStorage.getItem('currentVendorId');
+                    var filteredVendors = scope.vendorList.filter(function (vendor) {
+                        return vendor.id == vendorId;
+                    });
+                    setCurrentVendor(filteredVendors[0]);
+                }
+
+                function setCurrentVendor(vendor) {
+                    $rootScope.currentUser.vendor = vendor;
+                    $rootScope.currentUser.userName = vendor.name + ' User';
+
+                    $window.sessionStorage.setItem('currentVendorId', vendor.id);
                 }
             }
         };
