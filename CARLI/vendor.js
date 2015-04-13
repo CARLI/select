@@ -6,5 +6,6 @@ module.exports = {
     Product: require('./Entity/ProductRepository'),
     Store: require('./Store'),
     CouchDbStore: require('./Store/CouchDb/Store'),
-    Validator: require('./Validator')
+    Validator: require('./Validator'),
+    /*XXX*/Vendor: require('./Entity/VendorRepository')
 };

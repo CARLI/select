@@ -9,7 +9,8 @@ angular.module('vendor.app', [
     'vendor.navBar',
     //'common.alerts',
     'vendor.routes',
-    'vendor.userMenu'
+    'vendor.userMenu',
+    'vendor.fakeVendorMenu'
 ])
 .config(function($locationProvider){
     $locationProvider.html5Mode(true);
@@ -19,13 +20,13 @@ angular.module('vendor.app', [
         .then(openApp)
         .catch(closeApp);
 
-        function openApp() {
-            $rootScope.isAppOpen = true;
-        }
-        function closeApp() {
-            $rootScope.isAppOpen = false;
-            $location.path('/dashboard');
-        }
+    function openApp() {
+        $rootScope.isAppOpen = true;
+    }
+    function closeApp() {
+        $rootScope.isAppOpen = false;
+        $location.path('/dashboard');
+    }
 })
 .value('cgBusyDefaults',{
     //message:'Loading Stuff',

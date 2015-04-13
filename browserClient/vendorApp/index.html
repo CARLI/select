@@ -10,11 +10,17 @@
     </head>
     <body>
         <header vendor-header role="banner"></header>
-        <nav nav-bar role="navigation"></nav>
-        <alerts></alerts>
-        <main role="main">
-            <div ng-view role="application"></div>
-        </main>
+        <div ng-if="currentUser.vendor">
+            <nav nav-bar role="navigation"></nav>
+            <alerts></alerts>
+            <main role="main">
+                <div ng-view role="application"></div>
+            </main>
+        </div>
+        <div ng-if="!currentUser.vendor">
+            <fake-vendor-menu></fake-vendor-menu>
+        </div>
+        <pre>{{ currentUser | json }}</pre>
 
         <!-- compiled JavaScript -->
         <% scripts.forEach( function ( file ) { %>
