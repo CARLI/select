@@ -2,5 +2,6 @@ angular.module('vendor.sections.siteLicensePrices',[
     'cgBusy',
     'common.checkbox',
     'common.libraryService',
-    'common.productService'
+    'common.productService',
+    'vendor.horizontalScrollSlider'
 ]);
