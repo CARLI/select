@@ -106,7 +106,8 @@
 
             .price-row {
                 .column {
-                    @include flex(1 0 20%);
+                    @include flex(0 0 auto);
+                    width: 150px;
 
                     &:first-child {
                         border-left: none;
