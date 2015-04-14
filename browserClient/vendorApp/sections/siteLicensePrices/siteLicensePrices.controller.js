@@ -91,7 +91,7 @@ function siteLicensePricesController($q, $filter, cycleService, libraryService, 
             var newPrice = parseFloat( offeringCell.find('input').val());
 
             if ( !offering ){
-                if ( newPrice != 0 ){
+                if ( newPrice !== 0 ){
                     offering = generateNewOffering(libraryId, productId, cycle, newPrice);
                     newOfferings.push(offering);
                 }

@@ -3,5 +3,6 @@ angular.module('vendor.sections.siteLicensePrices',[
     'common.checkbox',
     'common.libraryService',
     'common.productService',
-    'vendor.horizontalScrollSlider'
+    'vendor.horizontalScrollSlider',
+    'vendor.quickPricing'
 ]);

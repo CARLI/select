@@ -1,0 +1,32 @@
+.quick-pricing {
+
+    color: $purple;
+    font-size: 1.21429rem;
+    font-family: 'Merriweather', serif;
+    font-weight: 700;
+    background: white;
+    border: $default-border;
+    padding: 0;
+
+    .collapsible-header .angle-icon-container {
+        padding: 1rem;
+        position: static;
+    }
+
+    .content {
+        list-style: none;
+
+        li {
+            border-top: $default-border;
+            padding: 1rem;
+
+            .content {
+                display: none;
+            }
+
+
+        }
+
+
+    }
+}
