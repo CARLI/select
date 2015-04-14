@@ -34,6 +34,13 @@ function siteLicensePricesController($q, $filter, cycleService, libraryService, 
     function loadProducts() {
         return productService.listProductsWithOfferingsForVendorId( currentUser.vendor.id ).then(function (products) {
             vm.products = $filter('orderBy')(products, 'name');
+            initializeSelectedProductIds();
+        });
+    }
+
+    function initializeSelectedProductIds() {
+        vm.products.forEach(function(product) {
+            vm.selectedProductIds[product.id] = false;
         });
     }
 
