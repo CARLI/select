@@ -3,15 +3,15 @@
     <ul class="content">
         <li class="step1" carli-accordion>
             <div class="accordion-header">
-                <button type="type">Step 1</button>
+                <button class="clear-button-styles"><span class="step">Step 1:</span> Select Products</button>
             </div>
             <div class="content">
-                Choose Products
+                <quick-pricing-product-selector products="vm.products" selected-product-ids="vm.selectedProductIds"></quick-pricing-product-selector>
             </div>
         </li>
         <li class="step2" carli-accordion>
             <div class="accordion-header">
-                <button type="type">Step 2</button>
+                <button class="clear-button-styles"><span class="step">Step 2:</span> Select Libraries</button>
             </div>
             <div class="content">
                 Choose Stuff
@@ -19,7 +19,7 @@
         </li>
         <li class="step3" carli-accordion>
             <div class="accordion-header">
-                <button type="type">Step 3</button>
+                <button class="clear-button-styles"><span class="step">Step 3:</span> Enter Prices</button>
             </div>
             <div class="content">
                 Choose Prices or whatever

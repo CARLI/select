@@ -146,3 +146,12 @@ $button-height: 40px;
         color: $white;
     }
 }
+
+@mixin clear-button-styles {
+    @include vendor-prefix(appearance, 'none');
+    background: none;
+    border: 0;
+}
+.clear-button-styles {
+    @include clear-button-styles;
+}

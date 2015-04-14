@@ -5,6 +5,7 @@ function siteLicensePricesController($q, $filter, cycleService, libraryService, 
     var vm = this;
     vm.loadingPromise = null;
     vm.viewOptions = {};
+    vm.selectedProductIds = {};
 
     vm.saveOfferings = saveOfferings;
 

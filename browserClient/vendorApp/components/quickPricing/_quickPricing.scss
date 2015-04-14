@@ -1,32 +1,123 @@
-.quick-pricing {
+quick-pricing-site,
+quick-pricing-su {
+    display: block;
+    
+    .quick-pricing {
+        $quick-pricing-spacing: 38px;
 
-    color: $purple;
-    font-size: 1.21429rem;
-    font-family: 'Merriweather', serif;
-    font-weight: 700;
-    background: white;
-    border: $default-border;
-    padding: 0;
+        color: $purple;
+        font-size: 1.21429rem;
+        font-family: 'Merriweather', serif;
+        font-weight: 700;
+        background: white;
+        border: $default-border;
+        padding: 0;
 
-    .collapsible-header .angle-icon-container {
-        padding: 1rem;
-        position: static;
-    }
-
-    .content {
-        list-style: none;
-
-        li {
-            border-top: $default-border;
-            padding: 1rem;
-
-            .content {
-                display: none;
-            }
-
+        .collapsible-header {
+            padding: 1rem 0 1rem $quick-pricing-spacing;
 
         }
 
+        > .content {
+            list-style: none;
 
+            > li {
+                border-top: $default-border;
+
+                .accordion-header {
+                    border-left: 3px solid $purple;
+                    padding: 1rem;
+                    padding-left: $quick-pricing-spacing - 3px;
+
+                    .step {
+                        color: $black;
+                    }
+
+                    button {
+                        @include clear-button-styles;
+                    }
+                }
+
+                .content {
+                    background: $light-gray;
+                    border-top: $default-border;
+                    display: none;
+                    padding: 0.5rem $quick-pricing-spacing;
+                }
+
+                &.collapsed {
+                    .accordion-header {
+                        border-left: none;
+                        padding-left: $quick-pricing-spacing;
+                    }
+                }
+            }
+
+        }
+
+        quick-pricing-product-selector {
+            ul {
+                list-style: none;
+            }
+
+            .select-products-controls {
+                display: flex;
+                height: 40px;
+                line-height: 40px;
+                margin-bottom: 1rem;
+
+                li {
+                    @include flex(1 1 auto);
+                    @include body-text;
+
+                    .select-all {
+                        font-weight: bold;
+                    }
+                    .filters-label {
+                        padding: 0 1rem;
+                        font-style: italic;
+                    }
+
+                    border-right: $default-border;
+                    border-bottom: $default-border;
+
+                    &.filter {
+                        border-top: $default-border;
+                        color: $black;
+                        cursor: pointer;
+                        font-family: 'Dosis', sans-serif;
+                        font-weight: 600;
+                        @include font-size(15);
+                        @include flex(0 0 60px);
+                        text-align: center;
+                    }
+
+                    &.filter.active {
+                        border-bottom: none;
+                        color: $orange;
+                    }
+                }
+            }
+
+            ul.product-list {
+                @include vendor-prefix('column-count', 4);
+
+                li.product {
+                    background-color: $white;
+                    border: $default-border;
+                    @include body-text;
+                    margin: 0 0 1rem 0;
+                    padding: 1rem;
+
+                    @include avoid-column-break;
+
+                    &.selected {
+                        border-color: $purple;
+                        color: $purple;
+                    }
+                }
+            }
+
+        }
     }
 }

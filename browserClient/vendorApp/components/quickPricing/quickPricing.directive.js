@@ -3,7 +3,10 @@ angular.module('vendor.quickPricing')
         return {
             restrict: 'E',
             templateUrl: '/vendorApp/components/quickPricing/quickPricingSite.html',
-            scope: {},
+            scope: {
+                products: '=',
+                selectedProductIds: '='
+            },
             controller: 'quickPricingSiteController',
             controllerAs: 'vm',
             bindToController: true
@@ -13,7 +16,10 @@ angular.module('vendor.quickPricing')
         return {
             restrict: 'E',
             templateUrl: '/vendorApp/components/quickPricing/quickPricingSu.html',
-            scope: {},
+            scope: {
+                products: '=',
+                selectedProductIds: '='
+            },
             controller: 'quickPricingSuController',
             controllerAs: 'vm',
             bindToController: true
