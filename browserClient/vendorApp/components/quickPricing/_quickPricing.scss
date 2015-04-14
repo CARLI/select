@@ -1,7 +1,7 @@
 quick-pricing-site,
 quick-pricing-su {
     display: block;
-    
+
     .quick-pricing {
         $quick-pricing-spacing: 38px;
 
@@ -42,7 +42,14 @@ quick-pricing-su {
                     background: $light-gray;
                     border-top: $default-border;
                     display: none;
-                    padding: 0.5rem $quick-pricing-spacing;
+                    padding: 0.5rem $quick-pricing-spacing $button-height;
+                    position: relative;
+
+                    .carli-button.next {
+                        position: absolute;
+                        right: $quick-pricing-spacing;
+                        bottom: -1px;
+                    }
                 }
 
                 &.collapsed {
@@ -52,7 +59,6 @@ quick-pricing-su {
                     }
                 }
             }
-
         }
 
         quick-pricing-product-selector {
