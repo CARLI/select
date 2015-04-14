@@ -1,4 +1,4 @@
-angular.module('carli.accordion')
+angular.module('common.accordion')
     .factory('accordionControllerMixin', accordionControllerMixin);
 
 function accordionControllerMixin() {

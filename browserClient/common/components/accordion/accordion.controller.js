@@ -1,4 +1,4 @@
-angular.module('carli.accordion')
+angular.module('common.accordion')
 .controller('accordionController', accordionController);
 
 function accordionController($scope) {

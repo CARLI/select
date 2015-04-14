@@ -1,4 +1,4 @@
-angular.module('carli.fa')
+angular.module('common.fa')
 .directive('fa', function () {
     return {
         restrict: 'E',

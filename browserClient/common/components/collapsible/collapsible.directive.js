@@ -1,4 +1,4 @@
-angular.module('carli.collapsible')
+angular.module('common.collapsible')
     .directive('collapsible', collapsible);
 
     function collapsible() {

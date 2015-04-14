@@ -1,4 +1,4 @@
-angular.module('carli.accordion')
+angular.module('common.accordion')
     .directive('carliAccordion', accordion);
 
     function accordion( $rootScope, uuid ) {
