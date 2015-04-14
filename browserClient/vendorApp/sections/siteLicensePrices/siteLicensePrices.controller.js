@@ -16,10 +16,10 @@ function siteLicensePricesController($q, $filter, libraryService, productService
             priceCap: true
         };
 
-        vm.loadingPromise = $q.all(
-            loadLibraries(),
-            loadProducts()
-        );
+        vm.loadingPromise = loadLibraries()
+            .then(loadProducts)
+            .then(buildPriceArray)
+            .then(buildPricingGrid);
     }
 
     function loadLibraries() {
@@ -31,9 +31,6 @@ function siteLicensePricesController($q, $filter, libraryService, productService
     function loadProducts() {
         return productService.listProductsWithOfferingsForVendorId( currentUser.vendor.id ).then(function (products) {
             vm.products = $filter('orderBy')(products, 'name');
-
-            buildPriceArray();
-            buildPricingGrid();
         });
     }
 
@@ -51,7 +48,7 @@ function siteLicensePricesController($q, $filter, libraryService, productService
     }
 
     function buildPricingGrid() {
-        var priceRows = $('<div>');
+        var priceRows = $('<div>').attr('id','price-rows');
 
         vm.libraries.forEach(function (library) {
             var row = generateLibraryRow();
