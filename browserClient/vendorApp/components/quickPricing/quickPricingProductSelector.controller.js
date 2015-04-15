@@ -41,6 +41,6 @@ function quickPricingProductSelectorController() {
         return function filterByFirstLetter(product) {
             var firstLetter = product.name[0].toLowerCase();
             return firstLetter >= lower && firstLetter <= upper;
-        }
+        };
     }
 }
