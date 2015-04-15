@@ -5,7 +5,9 @@ angular.module('vendor.quickPricing')
             templateUrl: '/vendorApp/components/quickPricing/quickPricingSite.html',
             scope: {
                 products: '=',
-                selectedProductIds: '='
+                selectedProductIds: '=',
+                libraries: '=',
+                selectedLibraryIds: '='
             },
             controller: 'quickPricingSiteController',
             controllerAs: 'vm',
@@ -18,7 +20,9 @@ angular.module('vendor.quickPricing')
             templateUrl: '/vendorApp/components/quickPricing/quickPricingSu.html',
             scope: {
                 products: '=',
-                selectedProductIds: '='
+                selectedProductIds: '=',
+                libraries: '=',
+                selectedLibraryIds: '='
             },
             controller: 'quickPricingSuController',
             controllerAs: 'vm',

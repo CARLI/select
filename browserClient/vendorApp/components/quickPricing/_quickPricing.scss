@@ -125,5 +125,50 @@ quick-pricing-su {
             }
 
         }
+
+        quick-pricing-library-selector {
+            @include body-text;
+
+            .narrow-by-label {
+                font-style: italic;
+            }
+            .narrow-by-container {
+                display: flex;
+            }
+            .narrow-by {
+                flex: 0 0 23%;
+                border: $default-border;
+                background-color: $white;
+                margin: 1rem 2rem 1rem 0;
+                padding: 1rem;
+
+                &.fte {
+                    .fte-header {
+                        margin-bottom: 1rem;
+                        .clear-fte {
+                            @include clear-button-styles;
+                            float: right;
+                            color: $orange;
+                        }
+                    }
+                    .fte-input {
+                        display: flex;
+
+                        input {
+                            flex: 1 0 40%;
+                            display: inline-block;
+                        }
+                        .to {
+                            flex: 0 1 20%;
+                            text-align: center;
+                        }
+                    }
+
+                }
+            }
+            ul {
+                list-style: none;
+            }
+        }
     }
 }

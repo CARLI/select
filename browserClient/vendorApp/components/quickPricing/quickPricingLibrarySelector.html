@@ -1,0 +1,31 @@
+{{ vm.selectedLibraryCount() }} out of {{ vm.totalLibraryCount() }} libraries selected.
+<span class="narrow-by-label">Narrow by:</span>
+<div class="narrow-by-container">
+    <div class="narrow-by fte">
+        <div class="fte-header">
+            <span class="fte-label">Size (FTE)</span>
+            <button class="clear-fte">Clear <fa name="times"></fa></button>
+        </div>
+        <div class="fte-input">
+            <input type="text"> <span class="to">to</span> <input type="text">
+        </div>
+    </div>
+    <div class="narrow-by">
+        <ul>
+            <li><checkbox></checkbox> 2 Year Institutions</li>
+            <li><checkbox></checkbox> 4 Year Institutions</li>
+            <li><checkbox></checkbox> All Other</li>
+        </ul>
+    </div>
+    <div class="narrow-by">
+        <ul>
+            <li><checkbox></checkbox> Public Institutions</li>
+            <li><checkbox></checkbox> Private Institutions</li>
+            <li><checkbox></checkbox> All Other</li>
+        </ul>
+    </div>
+    <div class="narrow-by">
+        <button class="carli-button">Choose Individual Libraries</button>
+    </div>
+</div>
+

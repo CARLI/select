@@ -6,6 +6,7 @@ function siteLicensePricesController($q, $filter, cycleService, libraryService, 
     vm.loadingPromise = null;
     vm.viewOptions = {};
     vm.selectedProductIds = {};
+    vm.selectedLibraryIds = {};
 
     vm.saveOfferings = saveOfferings;
 
@@ -28,6 +29,7 @@ function siteLicensePricesController($q, $filter, cycleService, libraryService, 
     function loadLibraries() {
         return libraryService.list().then(function (libraries) {
             vm.libraries = libraries;
+            initializeSelectedLibraryIds();
         });
     }
 
@@ -41,6 +43,11 @@ function siteLicensePricesController($q, $filter, cycleService, libraryService, 
     function initializeSelectedProductIds() {
         vm.products.forEach(function(product) {
             vm.selectedProductIds[product.id] = false;
+        });
+    }
+    function initializeSelectedLibraryIds() {
+        vm.libraries.forEach(function(library) {
+            vm.selectedLibraryIds[library.id] = false;
         });
     }
 

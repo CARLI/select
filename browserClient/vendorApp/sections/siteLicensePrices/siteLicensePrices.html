@@ -10,7 +10,10 @@
 
 <section class="content" id="siteLicensePrices" cg-busy="vm.loadingPromise">
 
-    <quick-pricing-site products="vm.products" selected-product-ids="vm.selectedProductIds"></quick-pricing-site>
+    <quick-pricing-site
+            products="vm.products" selected-product-ids="vm.selectedProductIds"
+            libraries="vm.libraries" selected-library-ids="vm.selectedLibraryIds"
+            ></quick-pricing-site>
 
     <div class="pricing-grid-controls">
         <ul>

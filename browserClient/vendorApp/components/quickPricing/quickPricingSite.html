@@ -15,7 +15,8 @@
                 <button class="clear-button-styles"><span class="step">Step 2:</span> Select Libraries</button>
             </div>
             <div class="content">
-                Choose Stuff
+                <quick-pricing-library-selector libraries="vm.libraries" selected-library-ids="vm.selectedLibraryIds"></quick-pricing-library-selector>
+                <button class="carli-button next" ng-click="vm.goToStep2()">Next Step</button>
             </div>
         </li>
         <li class="step3" carli-accordion>
