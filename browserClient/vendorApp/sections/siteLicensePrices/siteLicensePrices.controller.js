@@ -76,7 +76,7 @@ function siteLicensePricesController($q, $filter, cycleService, libraryService, 
         function generateOfferingCell(library, product) {
             var offering = vm.offeringsForLibraryByProduct[product.id][library.id] || { pricing: { site: 0 }};
             var price = offering.pricing.site;
-            var offeringCell = $('<div class="column offering">').append('<input type="number" step=".01" min="0" value="' + price + '">');
+            var offeringCell = $('<div class="column offering input">').append('<input type="number" step=".01" min="0" value="' + price + '">');
 
             offeringCell.data('libraryId', library.id);
             offeringCell.data('productId', product.id);
