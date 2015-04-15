@@ -17,13 +17,11 @@ function horizontalScrollSliderPostLink(scope, element, attrs) {
 
     scope.$watch('scrollPosition', updateScrollPosition);
 
-    function updateScrollPosition(newPosition) {
-        var scrollPanelWidth = controlledElement.width();
-        var columnHeaders = controlledElement.find('.column.header');
-        var lastHeader = columnHeaders[columnHeaders.length - 1];
-        scrollPanelWidth -= $(lastHeader).width();
+    function updateScrollPosition(percentage) {
+        var scrollPanelWidth = controlledElement[0].scrollWidth;
+        var viewportWidth = controlledElement.width();
 
-        var pixelValue = scrollPanelWidth * newPosition;
+        var pixelValue = (scrollPanelWidth - viewportWidth) * percentage;
         controlledElement.css('left', '-' + pixelValue + 'px');
     }
 }
