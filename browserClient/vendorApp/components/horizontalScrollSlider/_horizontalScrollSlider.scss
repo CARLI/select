@@ -15,4 +15,7 @@ horizontal-scroll-slider {
         background-color: $gray;
         height: 2px;
     }
+    slider div.value.active {
+        display: none;
+    }
 }
