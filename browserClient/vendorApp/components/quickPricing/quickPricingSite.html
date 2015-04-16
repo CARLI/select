@@ -10,21 +10,22 @@
                 <button class="carli-button next" ng-click="vm.goToStep2()">Next Step</button>
             </div>
         </li>
-        <li class="step2" carli-accordion>
+        <li class="step2" carli-accordion id="quick-pricing-accordion-2">
             <div class="accordion-header">
                 <button class="clear-button-styles"><span class="step">Step 2:</span> Select Libraries</button>
             </div>
             <div class="content">
                 <quick-pricing-library-selector libraries="vm.libraries" selected-library-ids="vm.selectedLibraryIds"></quick-pricing-library-selector>
-                <button class="carli-button next" ng-click="vm.goToStep2()">Next Step</button>
+                <button class="carli-button next" ng-click="vm.goToStep3()">Next Step</button>
             </div>
         </li>
-        <li class="step3" carli-accordion>
+        <li class="step3" carli-accordion  id="quick-pricing-accordion-3">
             <div class="accordion-header">
                 <button class="clear-button-styles"><span class="step">Step 3:</span> Enter Prices</button>
             </div>
             <div class="content">
                 Choose Prices or whatever
+                <button class="carli-button next" ng-click="vm.finish()">Finish</button>
             </div>
         </li>
     </ul>

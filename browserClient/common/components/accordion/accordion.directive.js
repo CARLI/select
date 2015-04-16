@@ -7,7 +7,7 @@ angular.module('common.accordion')
             controller: accordionController,
             scope: {},
             link: function postLink(scope, element, attrs) {
-                var accordionId = 'accordion' + uuid.generateCssId();
+                var accordionId = getAccordionId(element);
 
                 scope.accordionId = accordionId;
                 scope.element = element;
@@ -21,4 +21,12 @@ angular.module('common.accordion')
                     });
             }
         };
+
+        function getAccordionId(element) {
+            if (element.attr('id')) {
+                return element.attr('id');
+            } else {
+                return 'accordion' + uuid.generateCssId();
+            }
+        }
     }
