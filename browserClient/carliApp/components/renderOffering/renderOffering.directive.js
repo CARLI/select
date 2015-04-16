@@ -106,7 +106,7 @@ function renderOfferingDirective( $http, $q, $filter, alertService, offeringServ
                         editOfferingService.toggleOfferingUserFlaggedState(offeringId)
                             .then(alertSuccess, alertError)
                             .then(offeringService.load)
-                            .then(updateFlagCssClass)
+                            .then(updateFlagCssClass);
                     });
 
                     function alertSuccess(offeringId) {
