@@ -31,7 +31,7 @@
         <fa ng-if="vm.offering.history[vm.lastYear].selection" name="star"></fa>
     </div>
 
-    <div role="gridcell" aria-describedby="site-license-price-column-header" class="column site-license-price current-year-only" ng-if="vm.shouldShowColumn('site-license-price')">
+    <div role="gridcell" aria-describedby="site-license-price-column-header" class="column site-license-price current-year-only" ng-if="vm.shouldShowColumn('site-license-price-both') || vm.shouldShowColumn('site-license-price-current-only')">
         <offering-pricing year="vm.cycle.year" offering="vm.offering" edit-mode="true" hide-previous-year="true"></offering-pricing>
     </div>
 

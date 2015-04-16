@@ -16,7 +16,7 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
     vm.offeringColumns = [
         'library',
         'library-view',
-        'site-license-price',
+        'site-license-price-both',
         'flag'
     ];
 

@@ -23,12 +23,15 @@ function viewEditSuPricingController($scope){
     activate();
 
     function activate() {
+        vm.pricing = vm.pricing || [];
         sortPricing();
         $scope.$watch('vm.editMode', sortPricing);
     }
 
     function sortPricing() {
-        vm.pricing.sort(sortByUsers);
+        if ( vm.pricing ){
+            vm.pricing.sort(sortByUsers);
+        }
     }
 
     function sortByUsers(a, b) {

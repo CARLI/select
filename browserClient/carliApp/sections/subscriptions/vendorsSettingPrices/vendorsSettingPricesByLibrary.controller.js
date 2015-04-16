@@ -17,7 +17,7 @@ function vendorsSettingPricesByLibraryController( $scope, $q, accordionControlle
         'product',
         'vendor',
         'library-view',
-        'site-license-price',
+        'site-license-price-both',
         'flag'
     ];
 

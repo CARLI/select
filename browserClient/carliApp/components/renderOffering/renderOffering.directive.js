@@ -38,6 +38,7 @@ function renderOfferingDirective( $http, $q, $filter, alertService, offeringServ
                         thisYear: scope.cycle.year,
                         lastYear: lastYear,
                         selectedLastYear: selectedLastYear(),
+                        pricingLastYear: pricingLastYear(),
                         offering: offering,
                         columns: translateColumnArrayToObject(scope.columns)
                     };
@@ -49,6 +50,14 @@ function renderOfferingDirective( $http, $q, $filter, alertService, offeringServ
                     if ( offering.history && offering.history[lastYear] ){
                         return offering.history[lastYear].selection;
                     }
+                    return false;
+                }
+
+                function pricingLastYear(){
+                    if ( offering.history && offering.history[lastYear] ){
+                        return offering.history[lastYear].pricing;
+                    }
+                    return {};
                 }
             }
 

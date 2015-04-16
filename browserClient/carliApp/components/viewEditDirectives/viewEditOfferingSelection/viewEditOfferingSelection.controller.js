@@ -23,7 +23,8 @@ function viewEditOfferingSelectionController($scope){
             price: offering.pricing.site
         };
 
-        return offering.pricing.su.concat(siteOption);
+        var suPrices = offering.pricing.su || [];
+        return suPrices.concat(siteOption);
     }
 }
 
