@@ -28,6 +28,14 @@ angular.module('carli.editOffering')
 
             var userTouchedFlag = false;
 
+            activate();
+
+
+            function activate(){
+                offeringService.load(vm.offering.id)
+                    .then(workaroundCouchStoreRevisionSmell);
+            }
+
             function saveOffering() {
                 if (vm.offering.libraryComments === vm.offering.product.comments) {
                     delete vm.offering.libraryComments;
@@ -46,17 +54,17 @@ angular.module('carli.editOffering')
                         vm.notifyParentOfSave(vm.offering);
                     }).catch(function(err) {
                         alertService.putAlert(err, {severity: 'danger'});
-                        console.log('failed', err);
+                        console.log('failed to save offering', vm.offering);
                     });
 
                 function updateOfferingFlaggedStatus( offering ){
                     offering.flagged = offeringService.getFlaggedState(offering);
                     return offering;
                 }
+            }
 
-                function workaroundCouchStoreRevisionSmell( offering ){
-                    vm.offering._rev = offering._rev;
-                }
+            function workaroundCouchStoreRevisionSmell( offering ){
+                vm.offering._rev = offering._rev;
             }
 
             function shouldShowColumn(columnName) {

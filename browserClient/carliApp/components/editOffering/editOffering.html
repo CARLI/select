@@ -48,6 +48,6 @@
     </div>
 
     <div role="gridcell" aria-describedby="flag-column-header" class="column flag" ng-if="vm.shouldShowColumn('flag')">
-        <checkbox ng-click="vm.userClickedFlag()" ng-model="offering.flagged" class="flag"></checkbox>
+        <checkbox ng-click="vm.userClickedFlag()" ng-model="vm.offering.flagged" class="flag"></checkbox>
     </div>
 </form>
