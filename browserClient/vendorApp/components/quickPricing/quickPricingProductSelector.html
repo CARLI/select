@@ -1,6 +1,9 @@
+<div class="">{{ vm.selectedProductCount() }} out of {{ vm.totalProductCount() }} products selected.</div>
+
 <ul class="select-products-controls">
     <li>
-        <button class="clear-button-styles select-all" ng-click="vm.selectAll()">Select All</button>
+        <button class="clear-button-styles select-all" ng-click="vm.selectAll()">Select All</button> |
+        <button class="clear-button-styles select-none" ng-click="vm.selectNone()">Select None</button>
         <span class="pull-right filters-label">View:</span>
     </li>
     <li class="filter" ng-class="{ 'active': vm.filter === 'a-f' }" ng-click="vm.setFilter('a-f')">A-F</li>
