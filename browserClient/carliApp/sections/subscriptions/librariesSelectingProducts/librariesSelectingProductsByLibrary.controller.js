@@ -21,7 +21,7 @@ function librariesSelectingProductsByLibraryController( $scope, $q, accordionCon
         'vendor',
         'library-view',
         'selected-last-year',
-        'site-license-price',
+        'site-license-price-current-only',
         'selection'
     ];
 

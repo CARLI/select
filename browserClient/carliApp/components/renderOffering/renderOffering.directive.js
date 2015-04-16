@@ -38,6 +38,7 @@ function renderOfferingDirective( $http, $q, $filter, alertService, offeringServ
                         thisYear: scope.cycle.year,
                         lastYear: lastYear,
                         selectedLastYear: selectedLastYear(),
+                        pricingLastYear: pricingLastYear(),
                         offering: offering,
                         columns: translateColumnArrayToObject(scope.columns)
                     };
@@ -49,6 +50,14 @@ function renderOfferingDirective( $http, $q, $filter, alertService, offeringServ
                     if ( offering.history && offering.history[lastYear] ){
                         return offering.history[lastYear].selection;
                     }
+                    return false;
+                }
+
+                function pricingLastYear(){
+                    if ( offering.history && offering.history[lastYear] ){
+                        return offering.history[lastYear].pricing;
+                    }
+                    return {};
                 }
             }
 
@@ -97,9 +106,7 @@ function renderOfferingDirective( $http, $q, $filter, alertService, offeringServ
                         editOfferingService.toggleOfferingUserFlaggedState(offeringId)
                             .then(alertSuccess, alertError)
                             .then(offeringService.load)
-                            .then(function(offering) {
-                                scope.offering = offering;
-                            });
+                            .then(updateFlagCssClass)
                     });
 
                     function alertSuccess(offeringId) {
@@ -109,6 +116,21 @@ function renderOfferingDirective( $http, $q, $filter, alertService, offeringServ
                     function alertError(err) {
                         alertService.putAlert(err, {severity: 'danger'});
                         console.log('failed', err);
+                    }
+
+                    function updateFlagCssClass( updatedOffering ){
+                        //Do not use scope.offering here - it is always the offering of the first instance of this directive!
+                        var flag = $('.flag[data-offering-id='+updatedOffering.id+'] > .fa');
+                        var offeringShouldBeFlagged = offeringService.getFlaggedState(updatedOffering);
+
+                        if ( offeringShouldBeFlagged ){
+                            flag.removeClass('fa-flag-o').addClass('fa-flag');
+                        }
+                        else {
+                            flag.removeClass('fa-flag').addClass('fa-flag-o');
+                        }
+
+                        return updatedOffering;
                     }
                 }
             }

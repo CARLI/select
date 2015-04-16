@@ -17,7 +17,7 @@ function carliCheckingPricesByLibraryController( $scope, $q, accordionController
         'product',
         'vendor',
         'library-view',
-        'site-license-price',
+        'site-license-price-both',
         'flag'
     ];
 

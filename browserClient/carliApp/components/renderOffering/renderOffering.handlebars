@@ -36,12 +36,12 @@
     </div>
     <div class="offering-comments">
         <div class="column internal-comments">
-            <label for="internal-comments">Internal Comments</label>
-            <textarea id="internal-comments" readonly="true">{{ offering.internalComments }}</textarea>
+            <div class="label">Internal Comments</div>
+            <div class="view-comment">{{ offering.internalComments }}</div>
         </div>
         <div class="column library-comments">
-            <label for="library-comments">Comments for Libraries</label>
-            <textarea id="library-comments" readonly="true">{{ offering.libraryComments }}</textarea>
+            <div class="label">Comments for Libraries</div>
+            <div class="view-comment">{{ offering.libraryComments }}</div>
         </div>
     </div>
 </div>
@@ -55,42 +55,112 @@
 </div>
 {{/if}}
 
-{{#if columns.site_license_price }}
+{{#if columns.site_license_price_both }}
 <div role="gridcell" aria-describedby="site-license-price-column-header" class="column site-license-price">
     <div class="offering-pricing">
-        <div class="site-pricing single-column">
+        <div class="site-pricing">
             <div class="column">
-                <div class="header"><strong>{{ lastYear }}</strong> Price</div>
+                <div class="header">
+                    <strong>{{ lastYear }}</strong> Price
+                </div>
+                <div class="row">
+                    {{ currency offering.pricingLastYear.site }}
+                </div>
+            </div>
+            <div class="column">
+                <div class="header">
+                    <strong>{{ thisYear }}</strong> Price
+                </div>
                 <div class="row">
                     {{ currency offering.pricing.site }}
                 </div>
             </div>
         </div>
-        <div class="su-pricing single-column">
+        <div class="su-pricing">
             <div class="header"><strong>Simultaneous User Price</strong></div>
-            <div class="column">
-                <div class="edit-su-pricing">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th><strong>{{ thisYear }}</strong> Price</th>
-                            <th>User(s)</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {{#each offering.pricing.su }}
-                        <tr>
-                            <td>{{ currency price }}</td>
-                            <td>{{ users }}</td>
-                        </tr>
-                        {{/each}}
-                        </tbody>
-                    </table>
+                <div class="pricing-container">
+                <div class="column">
+                    <div class="edit-su-pricing">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th><strong>{{ lastYear }}</strong> Price</th>
+                                <th>User(s)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {{#each offering.pricingLastYear.su }}
+                            <tr>
+                                <td>{{ currency price }}</td>
+                                <td>{{ users }}</td>
+                            </tr>
+                            {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="edit-su-pricing">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th><strong>{{ thisYear }}</strong> Price</th>
+                                <th>User(s)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {{#each offering.pricing.su }}
+                                <tr>
+                                    <td>{{ currency price }}</td>
+                                    <td>{{ users }}</td>
+                                </tr>
+                            {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{{/if}}
+
+{{#if columns.site_license_price_current_only }}
+    <div role="gridcell" aria-describedby="site-license-price-column-header" class="column site-license-price">
+        <div class="offering-pricing">
+            <div class="site-pricing single-column">
+                <div class="column">
+                    <div class="header"><strong>Site License</strong></div>
+                    <div class="row">
+                        {{ currency offering.pricing.site }}
+                    </div>
+                </div>
+            </div>
+            <div class="su-pricing single-column">
+                <div class="header"><strong>Simultaneous User Prices</strong></div>
+                <div class="column">
+                    <div class="edit-su-pricing">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th><strong>Price</strong></th>
+                                <th>User(s)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {{#each offering.pricing.su }}
+                                <tr>
+                                    <td>{{ currency price }}</td>
+                                    <td>{{ users }}</td>
+                                </tr>
+                            {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {{/if}}
 
 {{#if columns.selection}}

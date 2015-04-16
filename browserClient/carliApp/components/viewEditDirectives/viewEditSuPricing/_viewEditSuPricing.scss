@@ -15,6 +15,7 @@
         th, td {
             border-right: $default-border;
             border-collapse: collapse;
+            font-weight: normal;
 
             &:last-child {
                 border-right: 0;

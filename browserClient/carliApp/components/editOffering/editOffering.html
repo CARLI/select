@@ -23,7 +23,7 @@
             <view-edit-radios ng-model="vm.offering.display" input-id="offering-display" edit-mode="true" items="vm.offeringDisplayOptions" radio-group-name="offering-{{vm.offering.library.name}}-display"></view-edit-radios>
         </div>
         <div class="comments">
-            <offering-comments offering="offering" edit-mode="true"></offering-comments>
+            <offering-comments offering="vm.offering" edit-mode="true"></offering-comments>
         </div>
     </div>
 
@@ -31,7 +31,7 @@
         <fa ng-if="vm.offering.history[vm.lastYear].selection" name="star"></fa>
     </div>
 
-    <div role="gridcell" aria-describedby="site-license-price-column-header" class="column site-license-price current-year-only" ng-if="vm.shouldShowColumn('site-license-price')">
+    <div role="gridcell" aria-describedby="site-license-price-column-header" class="column site-license-price current-year-only" ng-if="vm.shouldShowColumn('site-license-price-both') || vm.shouldShowColumn('site-license-price-current-only')">
         <offering-pricing year="vm.cycle.year" offering="vm.offering" edit-mode="true" hide-previous-year="true"></offering-pricing>
     </div>
 
@@ -42,12 +42,12 @@
 
     <div role="gridcell" aria-describedby="vendor-invoice-column-header" class="column vendor-invoice" ng-if="vm.shouldShowColumn('vendor-invoice')">
         <div class="label">Vendor Price</div>
-        <view-edit-price ng-model="offering.invoice.price" edit-mode="true"></view-edit-price>
+        <view-edit-price ng-model="vm.offering.invoice.price" edit-mode="true"></view-edit-price>
         <div class="label">Invoice #</div>
-        <view-edit-integer ng-model="offering.invoice.number" edit-mode="true"></view-edit-integer>
+        <view-edit-integer ng-model="vm.offering.invoice.number" edit-mode="true"></view-edit-integer>
     </div>
 
     <div role="gridcell" aria-describedby="flag-column-header" class="column flag" ng-if="vm.shouldShowColumn('flag')">
-        <checkbox ng-click="vm.userClickedFlag()" ng-model="offering.flagged" class="flag"></checkbox>
+        <checkbox ng-click="vm.userClickedFlag()" ng-model="vm.offering.flagged" class="flag"></checkbox>
     </div>
 </form>

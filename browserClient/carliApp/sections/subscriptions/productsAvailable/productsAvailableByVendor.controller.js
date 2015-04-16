@@ -23,7 +23,7 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
         'library',
         'library-view',
         'selected-last-year',
-        'site-license-price',
+        'site-license-price-current-only',
         'selection',
         'vendor-invoice'
     ];
