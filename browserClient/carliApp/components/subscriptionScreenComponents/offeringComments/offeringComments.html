@@ -1,8 +1,8 @@
 <div class="column internal-comments">
     <label for="internal-comments">Internal Comments</label>
-    <textarea id="internal-comments" ng-model="offering.internalComments" ng-readonly="!vm.editMode">{{ offering.internalComments }}</textarea>
+    <textarea id="internal-comments" ng-model="vm.offering.internalComments" ng-readonly="!vm.editMode">{{ vm.offering.internalComments }}</textarea>
 </div>
 <div class="column library-comments">
     <label for="library-comments">Comments for Libraries</label>
-    <textarea id="library-comments" ng-model="offering.libraryComments" ng-readonly="!vm.editMode">{{ offering.libraryComments }}</textarea>
+    <textarea id="library-comments" ng-model="vm.offering.libraryComments" ng-readonly="!vm.editMode">{{ vm.offering.libraryComments }}</textarea>
 </div>
