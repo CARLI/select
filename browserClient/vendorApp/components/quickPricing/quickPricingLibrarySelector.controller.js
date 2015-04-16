@@ -79,7 +79,7 @@ function quickPricingLibrarySelectorController($scope) {
     }
     function filterByFte(library) {
         if (!library.fte) {
-            return false;
+            library.fte = 0;
         }
 
         var lowerBound = parseInt(vm.filters.fte.lowerBound, 10) || 0;
