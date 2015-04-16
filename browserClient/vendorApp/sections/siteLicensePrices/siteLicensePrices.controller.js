@@ -40,16 +40,17 @@ function siteLicensePricesController($q, $filter, cycleService, libraryService, 
         });
     }
 
-    function initializeSelectedProductIds() {
-        vm.products.forEach(function(product) {
-            vm.selectedProductIds[product.id] = false;
-        });
-    }
     function initializeSelectedLibraryIds() {
         vm.libraries.forEach(function(library) {
-            vm.selectedLibraryIds[library.id] = false;
+            vm.selectedLibraryIds[library.id] = true;
         });
     }
+    function initializeSelectedProductIds() {
+        vm.products.forEach(function(product) {
+            vm.selectedProductIds[product.id] = true;
+        });
+    }
+
 
     function buildPriceArray() {
 
