@@ -260,7 +260,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
                 if ( offering.id ){
                     savePromises.push( offeringService.update(offering) );
                 }
-                else if ( offering.pricing.site ){
+                else {
                     offering.library = offering.library.id.toString();
                     savePromises.push( offeringService.create(offering) );
                 }
@@ -274,10 +274,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
         var savePromises = [];
         if ( vm.productOfferings.length ){
             vm.productOfferings.forEach(function(partialOffering){
-                var newOfferingPromise = createNewOffering(partialOffering);
-                if ( newOfferingPromise ){
-                    savePromises.push(newOfferingPromise);
-                }
+                savePromises.push( createNewOffering(partialOffering) );
             });
         }
         else {
@@ -287,14 +284,12 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
         return $q.all( savePromises );
 
         function createNewOffering( partialOffering ){
-            if ( partialOffering.pricing.site ){
-                var newOffering = angular.copy( partialOffering );
-                newOffering.product = productId;
-                newOffering.library = partialOffering.library.id.toString();
-                delete newOffering.$$hashKey;
+            var newOffering = angular.copy(partialOffering);
+            newOffering.product = productId;
+            newOffering.library = partialOffering.library.id.toString();
+            delete newOffering.$$hashKey;
 
-                return offeringService.create(newOffering);
-            }
+            return offeringService.create(newOffering);
         }
     }
 
