@@ -60,7 +60,7 @@ describe('Additional Repository Functions', function() {
         });
     });
 
-    describe('createCycleFrom', function(){
+    xdescribe('createCycleFrom', function(){
         it('should copy cycle contents from the specified cycle db', function(){
             var sourceCycleData = validCycleData();
             var sourceCycle = null;

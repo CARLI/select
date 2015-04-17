@@ -8,7 +8,7 @@ function listLibraries() {
     var deferred = Q.defer();
     pool.getConnection(function(err, connection) {
         connection.query(
-            'SELECT m.institution_name, m.member_id, m.library_type, m.membership_lvl ' +
+            'SELECT m.institution_name, m.member_id, m.library_type, m.membership_lvl, m.current ' +
             'FROM members AS m',
             null,
             function(err, rows, fields) {
@@ -72,7 +72,7 @@ function convertCrmInstitutionYearsFromType(crmType) {
         case 'CC': return '2 Year';
         case 'PUB': return '4 Year';
         default: return 'Other';
-    };
+    }
 }
 
 function convertCrmInstitutionType(crmType) {
@@ -82,7 +82,7 @@ function convertCrmInstitutionType(crmType) {
         case 'CC': return 'Other';
         case 'PUB': return 'Public';
         default: return 'Other';
-    };
+    }
 }
 
 function convertCrmMembershipLevel(crmLevel) {
@@ -102,18 +102,19 @@ function convertCrmLibrary(crm) {
         name: crm.institution_name,
         institutionYears: convertCrmInstitutionYearsFromType(crm.library_type),
         institutionType: convertCrmInstitutionType(crm.library_type),
-        // ipAddresses: "", // Stored in Select database
-        "membershipLevel": convertCrmMembershipLevel(crm.membership_lvl),
+        membershipLevel: convertCrmMembershipLevel(crm.membership_lvl),
         // "isIshareMember": crm.is_share_member ? true : false,
-        // "gar": "",
-        "isActive": true,
+        isActive: isLibraryActive(crm),
         "outstandingBalances": [],
         "contacts": []
     };
-    if (crm.fte) {
-        library.fte = parseInt(crm.fte);
-    }
+
     return library;
+
+
+    function isLibraryActive(crmLibrary){
+        return crmLibrary.membership_lvl === 'GOVERNING' && crmLibrary.current === 'y';
+    }
 }
 
 module.exports = {

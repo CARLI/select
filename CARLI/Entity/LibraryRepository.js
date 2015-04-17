@@ -51,6 +51,21 @@ function listLibraries(){
     });
 }
 
+function listActiveLibraries(){
+    return crmLibraryRepository.list()
+        .then(filterActiveLibraries)
+        .then(function(activeLibraries) {
+            return Q.all( activeLibraries.map(fillInNonCrmData) );
+        });
+
+
+    function filterActiveLibraries(libraries){
+        return libraries.filter(function(library){
+            return library.isActive;
+        });
+    }
+}
+
 function loadLibrary( libraryCrmId ){
     return crmLibraryRepository.load(libraryCrmId).then(fillInNonCrmData);
 }
@@ -108,6 +123,7 @@ module.exports = {
     setStore: localLibraryRepository.setStore,
     update: updateLibrary,
     list: listLibraries,
+    listActiveLibraries: listActiveLibraries,
     load: loadLibrary,
     getInstitutionTypeOptions: getInstitutionTypeOptions,
     getInstitutionYearsOptions: getInstitutionYearsOptions,
