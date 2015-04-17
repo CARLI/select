@@ -163,7 +163,7 @@ function replicateFrom(sourceDbName) {
         couchRequest(requestOptions)
             .then(function resolveReplication(data) {
                 if (data.ok) {
-                    // console.log("OK: Replicated " + sourceDbName + " to " + targetDbName);
+                    console.log("OK: Replicated " + sourceDbName + " to " + targetDbName);
                     deferred.resolve();
                 } else {
                     deferred.reject('replication failed ['+sourceDbName+' -> '+targetDbName+']');

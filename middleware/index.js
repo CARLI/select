@@ -6,6 +6,7 @@ var _ = require('lodash');
 
 var couchApp = require('./components/couchApp');
 var crmQueries = require('./components/crmQueries');
+var cycleCreation = require('./components/cycleCreation');
 var notifications = require('./components/notifications');
 var listProductsWithOfferingsForVendorId = require('./components/listProductsWithOfferingsForVendorId');
 
@@ -78,6 +79,15 @@ function runMiddlewareServer(){
         listProductsWithOfferingsForVendorId.listProductsWithOfferingsForVendorId(req.params.vendorId, req.params.cycleId)
             .then(function(products){
                 res.send(products);
+            }).catch(function (err) {
+                res.send( { error: err } );
+            });
+    });
+
+    carliMiddleware.put('/cycle-from', function (req, res) {
+        cycleCreation.createCycleFrom(req.body.sourceCycle, req.body.newCycleData)
+            .then(function(newCycleId){
+                res.send({ id: newCycleId });
             }).catch(function (err) {
                 res.send( { error: err } );
             });

@@ -1,11 +1,11 @@
 var Entity = require('../Entity')
-    , EntityTransform = require( './EntityTransformationUtils')
-    , config = require( '../../config' )
-    , couchUtils = require( '../Store/CouchDb/Utils')
-    , offeringRepository = require('./OfferingRepository')
+    , EntityTransform = require('./EntityTransformationUtils')
+    , config = require('../../config')
+    , couchUtils = require('../Store/CouchDb/Utils')
+    , cycleCreation = require('../../config/environmentDependentModules/cycleCreation')
     , StoreOptions = config.storeOptions
-    , Store = require( '../Store' )
-    , StoreModule = require( '../Store/CouchDb/Store')
+    , Store = require('../Store')
+    , StoreModule = require('../Store/CouchDb/Store')
     , Q = require('q')
     , _ = require('lodash')
     ;
@@ -34,19 +34,17 @@ function transformFunction( cycle ){
 }
 
 function createCycleFrom( sourceCycle, newCycleData ) {
-    return createCycle(newCycleData)
-        .then(function(newCycleId) {
-            return CycleRepository.load(newCycleId)
-                .then(function (newCycle) {
-                    return couchUtils.replicateFrom(sourceCycle.databaseName).to(newCycle.databaseName).thenResolve(newCycle);
-                })
-                .then(function(newCycle){
-                    return offeringRepository.transformOfferingsForNewCycle(newCycle, sourceCycle);
-                })
-                .then(function() {
-                    return newCycleId;
-                });
-        });
+    return cycleCreation.createCycleFrom(sourceCycle, newCycleData);
+}
+
+function createCycleLog(msg, data) {
+    var timestamp = new Date().toISOString();
+    var prefix = timestamp + ' [Cycle Creation]: ';
+    if (data) {
+        console.log(prefix + msg, data);
+    } else {
+        console.log(prefix + msg);
+    }
 }
 
 function createCycle( cycle ) {
@@ -60,18 +58,22 @@ function createCycle( cycle ) {
 
     function createDatabaseForCycle( cycle ) {
         cycle.databaseName = couchUtils.makeValidCouchDbName('cycle-' + cycle.name);
+        createCycleLog('Creating database for ' + cycle.name + ' with database ' + cycle.databaseName);
 
         return couchUtils.createDatabase(cycle.databaseName)
             .then(function commit() {
+                createCycleLog('  Success creating database for ' + cycle.name);
                 return updateCycle( cycle );
             })
             .catch(function rollback(err) {
+                createCycleLog('  Failed to create database for ' + cycle.name);
                 CycleRepository.delete( cycle.id );
                 throw new Error('createDatabase failed: ' + err);
             });
     }
 
     function triggerViewIndexing(cycle) {
+        createCycleLog('Triggering view indexing for ' + cycle.name + ' with database ' + cycle.databaseName);
         couchUtils.triggerViewIndexing(cycle.databaseName);
         return cycle;
     }
@@ -164,6 +166,7 @@ module.exports = {
     setStore: CycleRepository.setStore,
     create: createCycle,
     createCycleFrom: createCycleFrom,
+    createCycleLog: createCycleLog,
     update: updateCycle,
     list: listCycles,
     load: loadCycle,

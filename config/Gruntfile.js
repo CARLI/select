@@ -8,6 +8,7 @@ module.exports = function (grunt) {
         'request',
         'couchApp',
         'crmQueries',
+        'cycleCreation',
         'listProductsWithOfferingsForVendorId',
         'notifications'
     ];
