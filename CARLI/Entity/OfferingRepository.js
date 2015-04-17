@@ -51,6 +51,7 @@ function listOfferings(cycle){
 
 function transformOfferingsForNewCycle(newCycle, sourceCycle) {
     return listOfferings(newCycle).then(function(offerings) {
+        console.log('[Cycle Creation]: Transforming ' + offerings.length + ' offerings');
         var promises = offerings.map(transformOffering).map(saveOffering);
 
         return Q.all(promises);

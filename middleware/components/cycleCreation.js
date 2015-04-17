@@ -8,9 +8,11 @@ function createCycleFrom( sourceCycle, newCycleData ) {
         .then(function(newCycleId) {
             return cycleRepository.load(newCycleId)
                 .then(function (newCycle) {
+                    cycleRepository.createCycleLog('Replicating data from '+ sourceCycle.databaseName +' to '+ newCycle.databaseName);
                     return couchUtils.replicateFrom(sourceCycle.databaseName).to(newCycle.databaseName).thenResolve(newCycle);
                 })
                 .then(function(newCycle){
+                    cycleRepository.createCycleLog('Transforming offerings for new cycle');
                     return offeringRepository.transformOfferingsForNewCycle(newCycle, sourceCycle);
                 })
                 .then(function() {
