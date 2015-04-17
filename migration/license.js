@@ -76,15 +76,20 @@ function extractLicense( licenseRow ){
             eReservesTerms: licenseRow.ereserves || '',
             hasConfidentialityTerms: 'no'
         },
+        licenseType: {
+            isThirdPartyProduct: false,
+            isSoleSource: false,
+            isSealedBid: false,
+            isConsolidatedList: false,
+            isRfp: false,
+            isOtherType: false,
+            otherType: '',
+            hasArchiveCapitalFee: false
+        },
         purchaseOrderNumber: '',
         purchaseOrderAmount: '',
         purchaseOrderBalance: '',
         bannerId: '',
-        isRfp: false,
-        isSoleSource: false,
-        isSealedBid: false,
-        isOtherType: false,
-        otherType: '',
         offeringType: 'Product'
     };
 
