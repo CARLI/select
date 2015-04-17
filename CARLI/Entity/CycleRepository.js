@@ -20,7 +20,7 @@ var statusLabels = [
     "Vendors Setting Prices",
     "CARLI Checking Prices",
     "Libraries Selecting Products",
-    "Products Available",
+    "Selections Made",
     "Archived"
 ];
 var propertiesToTransform = [];
