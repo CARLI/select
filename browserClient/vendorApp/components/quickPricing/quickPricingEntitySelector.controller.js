@@ -1,7 +1,7 @@
 angular.module('vendor.quickPricing')
-    .controller('quickPricingProductSelectorController', quickPricingProductSelectorController);
+    .controller('quickPricingEntitySelectorController', quickPricingEntitySelectorController);
 
-function quickPricingProductSelectorController() {
+function quickPricingEntitySelectorController() {
     var vm = this;
 
     vm.alphaFilter = null;
@@ -27,14 +27,14 @@ function quickPricingProductSelectorController() {
     }
 
     function selectAll() {
-        Object.keys(vm.selectedProductIds).forEach(function(productId) {
-            vm.selectedProductIds[productId] = true;
+        Object.keys(vm.selectedEntityIds).forEach(function(entityId) {
+            vm.selectedEntityIds[entityId] = true;
         });
         setAlphaFilter('all');
     }
     function selectNone() {
-        Object.keys(vm.selectedProductIds).forEach(function(productId) {
-            vm.selectedProductIds[productId] = false;
+        Object.keys(vm.selectedEntityIds).forEach(function(entityId) {
+            vm.selectedEntityIds[entityId] = false;
         });
         setAlphaFilter('all');
     }
@@ -45,8 +45,8 @@ function quickPricingProductSelectorController() {
     }
 
     function makeAlphaFilterFunction(lower,upper){
-        return function filterByFirstLetter(product) {
-            var firstLetter = product.name[0].toLowerCase();
+        return function filterByFirstLetter(entity) {
+            var firstLetter = entity.name[0].toLowerCase();
             return firstLetter >= lower && firstLetter <= upper;
         };
     }

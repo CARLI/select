@@ -1,4 +1,4 @@
-<ul class="select-products-controls">
+<ul class="select-entities-controls">
     <li>
         <button class="clear-button-styles select-all" ng-click="vm.selectAll()">Select All</button> |
         <button class="clear-button-styles select-none" ng-click="vm.selectNone()">Select None</button>
@@ -10,8 +10,8 @@
     <li class="filter" ng-class="{ 'active': vm.alphaFilter === 's-z' }" ng-click="vm.setAlphaFilter('s-z')">S-Z</li>
     <li class="filter" ng-class="{ 'active': vm.alphaFilter === 'all' }" ng-click="vm.setAlphaFilter('all')">All</li>
 </ul>
-<ul class="product-list">
-    <li ng-repeat="product in vm.products | filter:vm.alphaFilterFunction" class="product" ng-class="{ 'selected': vm.selectedProductIds[product.id] }">
-        <checkbox ng-model="vm.selectedProductIds[product.id]"></checkbox> {{ product.name }}
+<ul class="entity-list">
+    <li ng-repeat="entity in vm.entities | filter:vm.alphaFilterFunction" class="entity" ng-class="{ 'selected': vm.selectedEntityIds[entity.id] }">
+        <checkbox ng-model="vm.selectedEntityIds[entity.id]"></checkbox> {{ entity.name }}
     </li>
 </ul>

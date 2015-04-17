@@ -67,14 +67,14 @@ quick-pricing-su {
             }
         }
 
-        quick-pricing-product-selector {
+        quick-pricing-entity-selector {
             @include body-text;
 
             ul {
                 list-style: none;
             }
 
-            .select-products-controls {
+            .select-entities-controls {
                 display: flex;
                 height: 40px;
                 line-height: 40px;
@@ -114,10 +114,10 @@ quick-pricing-su {
                 }
             }
 
-            ul.product-list {
+            ul.entity-list {
                 @include vendor-prefix('column-count', 4);
 
-                li.product {
+                li.entity {
                     background-color: $white;
                     border: $default-border;
                     @include body-text;

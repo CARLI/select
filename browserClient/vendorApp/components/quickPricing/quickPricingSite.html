@@ -7,7 +7,7 @@
                 <div class="selection-summary">{{ vm.selectedProductCount() }} out of {{ vm.totalProductCount() }} products selected.</div>
             </div>
             <div class="content">
-                <quick-pricing-product-selector products="vm.products" selected-product-ids="vm.selectedProductIds"></quick-pricing-product-selector>
+                <quick-pricing-entity-selector entities="vm.products" selected-entity-ids="vm.selectedProductIds"></quick-pricing-entity-selector>
                 <button class="carli-button next" ng-click="vm.goToStep2()">Next Step</button>
             </div>
         </li>
