@@ -1,11 +1,11 @@
 var Entity = require('../Entity')
-    , EntityTransform = require( './EntityTransformationUtils')
-    , config = require( '../../config' )
-    , couchUtils = require( '../Store/CouchDb/Utils')
-    , offeringRepository = require('./OfferingRepository')
+    , EntityTransform = require('./EntityTransformationUtils')
+    , config = require('../../config')
+    , couchUtils = require('../Store/CouchDb/Utils')
+    , cycleCreation = require('../../config/environmentDependentModules/cycleCreation')
     , StoreOptions = config.storeOptions
-    , Store = require( '../Store' )
-    , StoreModule = require( '../Store/CouchDb/Store')
+    , Store = require('../Store')
+    , StoreModule = require('../Store/CouchDb/Store')
     , Q = require('q')
     , _ = require('lodash')
     ;
@@ -34,19 +34,7 @@ function transformFunction( cycle ){
 }
 
 function createCycleFrom( sourceCycle, newCycleData ) {
-    return createCycle(newCycleData)
-        .then(function(newCycleId) {
-            return CycleRepository.load(newCycleId)
-                .then(function (newCycle) {
-                    return couchUtils.replicateFrom(sourceCycle.databaseName).to(newCycle.databaseName).thenResolve(newCycle);
-                })
-                .then(function(newCycle){
-                    return offeringRepository.transformOfferingsForNewCycle(newCycle, sourceCycle);
-                })
-                .then(function() {
-                    return newCycleId;
-                });
-        });
+    return cycleCreation.createCycleFrom(sourceCycle, newCycleData);
 }
 
 function createCycle( cycle ) {
