@@ -1,14 +1,18 @@
-<div class="controls select-by-toggle">
-    <button type="button" class="toggle-button"
-            ng-class="{ 'active': vm.selectBy === 'filter' }"
-            ng-click="vm.selectBy = 'filter'">Filter Libraries</button
-   ><button type="button" class="toggle-button"
-            ng-class="{ 'active': vm.selectBy === 'choose' }"
-            ng-click="vm.selectBy = 'choose'">Choose Individual Libraries</button>
+<div class="header">
+    <div ng-if="vm.selectBy === 'filter'" class="narrow-by-label">Narrow by:</div>
+
+    <div class="controls select-by-toggle">
+        <button type="button" class="toggle-button"
+                ng-class="{ 'active': vm.selectBy === 'filter' }"
+                ng-click="vm.selectBy = 'filter'">Filter Libraries</button
+                ><button type="button" class="toggle-button"
+                         ng-class="{ 'active': vm.selectBy === 'choose' }"
+                         ng-click="vm.selectBy = 'choose'">Choose Individual Libraries</button>
+    </div>
 </div>
 
+
 <div ng-if="vm.selectBy === 'filter'">
-    <div class="narrow-by-label">Narrow by:</div>
     <div class="narrow-by-container">
         <div class="narrow-by fte">
             <div class="fte-header">

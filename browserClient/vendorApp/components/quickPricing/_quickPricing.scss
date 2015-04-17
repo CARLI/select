@@ -138,12 +138,25 @@ quick-pricing-su {
         quick-pricing-library-selector {
             @include body-text;
 
-            .controls {
+            .header {
+                height: 52px;
+                position: relative;
+                
+                .narrow-by-label {
+                    font-style: italic;
+                    position: absolute;
+                    left: 0;
+                    bottom: 0;
+                }
+                .controls {
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                }
             }
 
-            .narrow-by-label {
-                font-style: italic;
-            }
+
+
             .narrow-by-container {
                 display: flex;
             }
