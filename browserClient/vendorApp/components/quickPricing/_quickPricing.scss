@@ -145,10 +145,13 @@ quick-pricing-su {
                 display: flex;
             }
             .narrow-by {
-                flex: 0 0 23%;
+                flex: 1 1 33%;
                 border: $default-border;
                 background-color: $white;
                 margin: 1rem 2rem 1rem 0;
+                &:last-child {
+                    margin-right: 0;
+                }
                 padding: 1rem;
 
                 &.fte {
