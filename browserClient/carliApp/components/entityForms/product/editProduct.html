@@ -49,24 +49,37 @@
                 </view-edit-text-area>
 
                 <div class="column">
-                    <view-edit-checkbox label="3rd Party Product" ng-model="vm.product.isThirdPartyProduct" edit-mode="vm.editable" input-id="isThirdPartyProduct">
-                        <div ng-show="vm.product.isThirdPartyProduct" class="label">Third Party Product</div>
+                    <div class="label">Type</div>
+
+                    <view-edit-checkbox label="3rd Party Product" ng-model="vm.product.licenseType.isThirdPartyProduct" edit-mode="vm.editable" input-id="isThirdPartyProduct">
+                        3rd Party Product: {{ vm.product.licenseType.isThirdPartyProduct ? 'Yes' : 'No' }}
                     </view-edit-checkbox>
 
-                    <view-edit-checkbox label="Sole Source" ng-model="vm.product.soleSource" edit-mode="vm.editable" input-id="soleSource">
-                        <div ng-show="vm.product.soleSource" class="label">Sole Source</div>
+                    <view-edit-checkbox label="Sole Source" ng-model="vm.product.licenseType.isSoleSource" edit-mode="vm.editable" input-id="soleSource">
+                        Sole Source: {{ vm.product.licenseType.isSoleSource ? 'Yes' : 'No' }}
                     </view-edit-checkbox>
 
-                    <view-edit-checkbox label="Sealed Bid" ng-model="vm.product.sealedBid" edit-mode="vm.editable" input-id="sealedBid">
-                        <div ng-show="vm.product.sealedBid" class="label">Sealed Bid</div>
+                    <view-edit-checkbox label="Sealed Bid" ng-model="vm.product.licenseType.isSealedBid" edit-mode="vm.editable" input-id="sealedBid">
+                        Sole Source: {{ vm.product.licenseType.isSoleSource ? 'Yes' : 'No' }}
                     </view-edit-checkbox>
 
-                    <view-edit-checkbox label="Consolidated List" ng-model="vm.product.consolidatedList" edit-mode="vm.editable" input-id="consolidatedList">
-                        <div ng-show="vm.product.consolidatedList" class="label">Consolidated List</div>
+                    <view-edit-checkbox label="Consolidated List" ng-model="vm.product.licenseType.isConsolidatedList" edit-mode="vm.editable" input-id="consolidatedList">
+                        Consolidated List: {{ vm.product.licenseType.isConsolidatedList ? 'Yes' : 'No' }}
                     </view-edit-checkbox>
 
-                    <view-edit-checkbox label="Archive Capital Fee" ng-model="vm.product.hasArchiveCapitalFee" edit-mode="vm.editable" input-id="hasArchiveCapitalFee">
-                        <div ng-show="vm.product.hasArchiveCapitalFee" class="label">Archive Capital Fee</div>
+                    <view-edit-checkbox label="RFP" ng-model="vm.product.licenseType.isRfp" edit-mode="vm.editable" input-id="rfp">
+                        RFP: {{ vm.product.licenseType.isRfp ? 'Yes' : 'No' }}
+                    </view-edit-checkbox>
+
+                    <view-edit-checkbox label="Other" ng-model="vm.product.licenseType.isOtherType" edit-mode="vm.editable" input-id="other">
+                        Other: {{ vm.product.licenseType.isOtherType ? vm.product.licenseType.otherType : 'No' }}
+                    </view-edit-checkbox>
+                    <view-edit-text-field aria-label="Type" ng-model="vm.product.licenseType.otherType" edit-mode="vm.editable" ng-show="vm.product.licenseType.isOtherType"></view-edit-text-field>
+
+                    <br>
+
+                    <view-edit-checkbox label="Archive Capital Fee" ng-model="vm.product.licenseType.hasArchiveCapitalFee" edit-mode="vm.editable" input-id="hasArchiveCapitalFee">
+                        Archive Capital Fee: {{ vm.product.licenseType.hasArchiveCapitalFee ? 'Yes' : 'No' }}
                     </view-edit-checkbox>
 
                     <div ng-show="vm.editable" class="placeholder" style="white-space: nowrap">
