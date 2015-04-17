@@ -3,39 +3,37 @@ angular.module('vendor.quickPricing')
 
 function quickPricingLibrarySelectorController($scope) {
     var vm = this;
+    vm.filters = {};
 
-    vm.filters = {
-        fte: {
-            lowerBound: null,
-            upperBound: null
-        },
-        institutionYears: {
-            fourYear: false,
-            twoYear: false,
-            other: false
-        },
-        institutionType: {
-            private: false,
-            public: false,
-            other: false
-        }
-    };
-
-    vm.selectedLibraryCount = selectedLibraryCount;
-    vm.totalLibraryCount = totalLibraryCount;
     vm.resetFteFilter = resetFteFilter;
     vm.debugApplyFilters = applyFilters;
 
-    function selectedLibraryCount() {
-        var selectedIdsArray = Object.keys(vm.selectedLibraryIds).filter(function (libraryId) {
-            return vm.selectedLibraryIds[libraryId];
-        });
-        return selectedIdsArray.length;
-    }
-    function totalLibraryCount() {
-        return Object.keys(vm.selectedLibraryIds).length;
+    activate();
+
+    function activate() {
+        vm.filters = {
+            fte: {
+                lowerBound: null,
+                upperBound: null
+            },
+            institutionYears: {
+                fourYear: false,
+                twoYear: false,
+                other: false
+            },
+            institutionType: {
+                private: false,
+                public: false,
+                other: false
+            }
+        };
+
+        $scope.$watch(getFilters, applyFilters, true);
     }
 
+    function getFilters() {
+        return vm.filters;
+    }
     function applyFilters() {
         if (!vm.libraries) {
             return;

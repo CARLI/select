@@ -9,9 +9,6 @@ function quickPricingProductSelectorController() {
     vm.selectAll = selectAll;
     vm.selectNone = selectNone;
     vm.setFilter = setFilter;
-    vm.selectedProductCount = selectedProductCount;
-    vm.totalProductCount = totalProductCount;
-
 
     var filterFunctions = null;
 
@@ -52,15 +49,5 @@ function quickPricingProductSelectorController() {
             var firstLetter = product.name[0].toLowerCase();
             return firstLetter >= lower && firstLetter <= upper;
         };
-    }
-
-    function selectedProductCount() {
-        var selectedIdsArray = Object.keys(vm.selectedProductIds).filter(function (productId) {
-            return vm.selectedProductIds[productId];
-        });
-        return selectedIdsArray.length;
-    }
-    function totalProductCount() {
-        return Object.keys(vm.selectedProductIds).length;
     }
 }

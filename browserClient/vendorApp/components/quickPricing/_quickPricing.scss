@@ -33,6 +33,12 @@ quick-pricing-su {
                         color: $black;
                     }
 
+                    .selection-summary {
+                        float: right;
+                        @include body-text;
+                        font-style: italic;
+                    }
+
                     button {
                         @include clear-button-styles;
                     }

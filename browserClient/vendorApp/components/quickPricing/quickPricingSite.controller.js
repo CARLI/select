@@ -7,10 +7,34 @@ function quickPricingSiteController($rootScope){
     vm.goToStep2 = goToStep2;
     vm.goToStep3 = goToStep3;
 
+    vm.selectedProductCount = selectedProductCount;
+    vm.totalProductCount = totalProductCount;
+    vm.selectedLibraryCount = selectedLibraryCount;
+    vm.totalLibraryCount = totalLibraryCount;
+
     function goToStep2() {
         $rootScope.$broadcast('accordion', 'quick-pricing-accordion-2');
     }
     function goToStep3() {
         $rootScope.$broadcast('accordion', 'quick-pricing-accordion-3');
+    }
+
+    function selectedProductCount() {
+        var selectedIdsArray = Object.keys(vm.selectedProductIds).filter(function (productId) {
+            return vm.selectedProductIds[productId];
+        });
+        return selectedIdsArray.length;
+    }
+    function totalProductCount() {
+        return Object.keys(vm.selectedProductIds).length;
+    }
+    function selectedLibraryCount() {
+        var selectedIdsArray = Object.keys(vm.selectedLibraryIds).filter(function (libraryId) {
+            return vm.selectedLibraryIds[libraryId];
+        });
+        return selectedIdsArray.length;
+    }
+    function totalLibraryCount() {
+        return Object.keys(vm.selectedLibraryIds).length;
     }
 }
