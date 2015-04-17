@@ -4,14 +4,14 @@
         <button class="clear-button-styles select-none" ng-click="vm.selectNone()">Select None</button>
         <span class="pull-right filters-label">View:</span>
     </li>
-    <li class="filter" ng-class="{ 'active': vm.filter === 'a-f' }" ng-click="vm.setFilter('a-f')">A-F</li>
-    <li class="filter" ng-class="{ 'active': vm.filter === 'g-l' }" ng-click="vm.setFilter('g-l')">G-L</li>
-    <li class="filter" ng-class="{ 'active': vm.filter === 'm-r' }" ng-click="vm.setFilter('m-r')">M-R</li>
-    <li class="filter" ng-class="{ 'active': vm.filter === 's-z' }" ng-click="vm.setFilter('s-z')">S-Z</li>
-    <li class="filter" ng-class="{ 'active': vm.filter === 'all' }" ng-click="vm.setFilter('all')">All</li>
+    <li class="filter" ng-class="{ 'active': vm.alphaFilter === 'a-f' }" ng-click="vm.setAlphaFilter('a-f')">A-F</li>
+    <li class="filter" ng-class="{ 'active': vm.alphaFilter === 'g-l' }" ng-click="vm.setAlphaFilter('g-l')">G-L</li>
+    <li class="filter" ng-class="{ 'active': vm.alphaFilter === 'm-r' }" ng-click="vm.setAlphaFilter('m-r')">M-R</li>
+    <li class="filter" ng-class="{ 'active': vm.alphaFilter === 's-z' }" ng-click="vm.setAlphaFilter('s-z')">S-Z</li>
+    <li class="filter" ng-class="{ 'active': vm.alphaFilter === 'all' }" ng-click="vm.setAlphaFilter('all')">All</li>
 </ul>
 <ul class="product-list">
-    <li ng-repeat="product in vm.products | filter:vm.filterFunction" class="product" ng-class="{ 'selected': vm.selectedProductIds[product.id] }">
+    <li ng-repeat="product in vm.products | filter:vm.alphaFilterFunction" class="product" ng-class="{ 'selected': vm.selectedProductIds[product.id] }">
         <checkbox ng-model="vm.selectedProductIds[product.id]"></checkbox> {{ product.name }}
     </li>
 </ul>

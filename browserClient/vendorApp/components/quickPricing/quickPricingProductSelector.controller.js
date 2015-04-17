@@ -4,11 +4,11 @@ angular.module('vendor.quickPricing')
 function quickPricingProductSelectorController() {
     var vm = this;
 
-    vm.filter = null;
-    vm.filterFunction = null;
+    vm.alphaFilter = null;
+    vm.alphaFilterFunction = null;
     vm.selectAll = selectAll;
     vm.selectNone = selectNone;
-    vm.setFilter = setFilter;
+    vm.setAlphaFilter = setAlphaFilter;
 
     var filterFunctions = null;
 
@@ -16,35 +16,35 @@ function quickPricingProductSelectorController() {
 
     function activate() {
         filterFunctions = {
-            'a-f': makeFilterFunction('a', 'f'),
-            'g-l': makeFilterFunction('g', 'l'),
-            'm-r': makeFilterFunction('m', 'r'),
-            's-z': makeFilterFunction('s', 'z'),
+            'a-f': makeAlphaFilterFunction('a', 'f'),
+            'g-l': makeAlphaFilterFunction('g', 'l'),
+            'm-r': makeAlphaFilterFunction('m', 'r'),
+            's-z': makeAlphaFilterFunction('s', 'z'),
             'all': function() { return true; }
         };
 
-        setFilter('all');
+        setAlphaFilter('all');
     }
 
     function selectAll() {
         Object.keys(vm.selectedProductIds).forEach(function(productId) {
             vm.selectedProductIds[productId] = true;
         });
-        setFilter('all');
+        setAlphaFilter('all');
     }
     function selectNone() {
         Object.keys(vm.selectedProductIds).forEach(function(productId) {
             vm.selectedProductIds[productId] = false;
         });
-        setFilter('all');
+        setAlphaFilter('all');
     }
 
-    function setFilter(filterKey) {
-        vm.filter = filterKey;
-        vm.filterFunction = filterFunctions[filterKey];
+    function setAlphaFilter(filterKey) {
+        vm.alphaFilter = filterKey;
+        vm.alphaFilterFunction = filterFunctions[filterKey];
     }
 
-    function makeFilterFunction(lower,upper){
+    function makeAlphaFilterFunction(lower,upper){
         return function filterByFirstLetter(product) {
             var firstLetter = product.name[0].toLowerCase();
             return firstLetter >= lower && firstLetter <= upper;

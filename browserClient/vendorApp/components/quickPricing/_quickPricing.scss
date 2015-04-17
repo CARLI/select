@@ -138,6 +138,9 @@ quick-pricing-su {
         quick-pricing-library-selector {
             @include body-text;
 
+            .controls {
+            }
+
             .narrow-by-label {
                 font-style: italic;
             }

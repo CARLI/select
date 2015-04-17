@@ -5,6 +5,7 @@ function quickPricingLibrarySelectorController($scope) {
     var vm = this;
     vm.filters = {};
 
+    vm.selectBy = 'filter';
     vm.resetFteFilter = resetFteFilter;
     vm.debugApplyFilters = applyFilters;
 
