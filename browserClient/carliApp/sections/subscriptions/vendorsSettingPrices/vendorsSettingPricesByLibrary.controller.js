@@ -45,7 +45,7 @@ function vendorsSettingPricesByLibraryController( $scope, $q, accordionControlle
     }
 
     function initLibraryList(){
-        vm.libraryLoadingPromise = libraryService.list().then(function(libraryList){
+        vm.libraryLoadingPromise = libraryService.listActiveLibraries().then(function(libraryList){
             vm.libraryList = libraryList;
         });
     }

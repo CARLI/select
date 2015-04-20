@@ -297,7 +297,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
         var cycle = cycleService.getCurrentCycle();
 
         if ( isOneTimePurchaseProduct(vm.product) ){
-            return  libraryService.list().then(ensureProductHasOfferingForEachLibrary);
+            return  libraryService.listActiveLibraries().then(ensureProductHasOfferingForEachLibrary);
         }
 
         function ensureProductHasOfferingForEachLibrary( libraryList ){
