@@ -5,7 +5,7 @@ function editVendorController( $scope, $rootScope, entityBaseService, alertServi
     var vm = this;
 
     vm.vendorId = $scope.vendorId;
-    var afterSubmitCallback;
+    var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
     vm.toggleEditable = toggleEditable;
     vm.cancelEdit = cancelEdit;
@@ -15,6 +15,7 @@ function editVendorController( $scope, $rootScope, entityBaseService, alertServi
 
     vm.statusOptions = entityBaseService.getStatusOptions();
 
+    setupModalClosingUnsavedChangesWarning();
     activate();
 
     function activate() {
@@ -24,21 +25,9 @@ function editVendorController( $scope, $rootScope, entityBaseService, alertServi
         else {
             initializeForExistingVendor();
         }
-        initializeSubmitCallback();
         vm.isModal = vm.newVendor;
     }
-    function initializeSubmitCallback() {
-        if ($scope.afterSubmitFn !== undefined) {
-            afterSubmitCallback = function() {
-                $scope.afterSubmitFn();
-                closeModal();
-            };
-        } else {
-            afterSubmitCallback = function() {
-                closeModal();
-            };
-        }
-    }
+
     function initializeForNewVendor() {
         vm.vendor = {
             type: 'Vendor',
@@ -55,7 +44,7 @@ function editVendorController( $scope, $rootScope, entityBaseService, alertServi
     }
     function initializeForExistingVendor() {
         vendorService.load(vm.vendorId).then( function( vendor ) {
-            vm.vendor = vendor;
+            vm.vendor = angular.copy(vendor);
             setVendorFormPristine();
         } );
         watchCurrentCycle();
@@ -77,14 +66,46 @@ function editVendorController( $scope, $rootScope, entityBaseService, alertServi
         setVendorFormPristine();
     }
 
-    function closeModal() {
+    function cancelEdit(){
+        if ( vm.isModal ){
+            return;
+        }
+        else {
+            resetVendorForm();
+        }
+    }
+
+    function setupModalClosingUnsavedChangesWarning(){
+        $('#new-vendor-modal').on('hide.bs.modal', confirmHideModal);
+    }
+
+    function resetVendorForm() {
+        activate();
+    }
+
+    function hideModal() {
         $('#new-vendor-modal').modal('hide');
     }
 
-    function cancelEdit() {
-        vm.editable = false;
-        activate();
-        setVendorFormPristine();
+    function confirmHideModal(modalHideEvent){
+        if ( vendorFormIsDirty() ){
+            if ( confirm('You have unsaved changes, are you sure you want to continue?') ){
+                $scope.$apply(resetVendorForm);
+            }
+            else {
+                modalHideEvent.preventDefault();
+            }
+        }
+    }
+
+    function vendorFormIsDirty(){
+        if ($scope.vendorForm) {
+            return $scope.vendorForm.$dirty;
+        }
+        else if ($rootScope.forms && $rootScope.forms.vendorForm) {
+            return $rootScope.forms.vendorForm.$dirty;
+        }
+        return false;
     }
 
     function setVendorFormPristine() {
@@ -97,12 +118,12 @@ function editVendorController( $scope, $rootScope, entityBaseService, alertServi
     }
 
     function saveVendor() {
-
         if (vm.vendorId !== undefined) {
             vendorService.update(vm.vendor)
                 .then(function () {
                     alertService.putAlert('Vendor updated', {severity: 'success'});
-                    initializeForExistingVendor();
+                    resetVendorForm();
+                    hideModal();
                     afterSubmitCallback();
                 })
                 .catch(function (error) {
@@ -113,7 +134,8 @@ function editVendorController( $scope, $rootScope, entityBaseService, alertServi
             vendorService.create(vm.vendor)
                 .then(function () {
                     alertService.putAlert('Vendor added', {severity: 'success'});
-                    initializeForNewVendor();
+                    resetVendorForm();
+                    hideModal();
                     afterSubmitCallback();
                 })
                 .catch(function (error) {

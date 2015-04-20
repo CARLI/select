@@ -14,9 +14,6 @@ function editLicenseController( $scope, $rootScope, $location, alertService, cyc
     vm.saveLicense = saveLicense;
     vm.showProductsModal = showProductsModal;
     vm.closeProductsModalAndGoTo = closeProductsModalAndGoTo;
-    vm.closeNewLicenseModal = function() {
-        $('#new-license-modal').modal('hide');
-    };
 
     vendorService.list().then( function( vendorList ){
         vm.vendorList = vendorList;
@@ -25,6 +22,7 @@ function editLicenseController( $scope, $rootScope, $location, alertService, cyc
     vm.statusOptions = entityBaseService.getStatusOptions();
     vm.offeringTypeOptions = licenseService.getOfferingTypeOptions();
 
+    setupModalClosingUnsavedChangesWarning();
     activate();
 
     function activate() {
@@ -34,6 +32,7 @@ function editLicenseController( $scope, $rootScope, $location, alertService, cyc
         else {
             initializeForExistingLicense();
         }
+        vm.isModal = vm.newLicense;
     }
     function initializeForNewLicense() {
         vm.license = {
@@ -48,7 +47,7 @@ function editLicenseController( $scope, $rootScope, $location, alertService, cyc
     }
     function initializeForExistingLicense() {
         licenseService.load(vm.licenseId).then( function( license ) {
-            vm.license = license;
+            vm.license = angular.copy(license);
             setLicenseFormPristine();
         } );
         watchCurrentCycle();
@@ -69,11 +68,47 @@ function editLicenseController( $scope, $rootScope, $location, alertService, cyc
     }
 
     function cancelEdit() {
-        vm.editable = false;
-        activate();
-        setLicenseFormPristine();
+        if ( vm.isModal ){
+            return;
+        }
+        else {
+            resetLicenseForm();
+        }
     }
 
+    function setupModalClosingUnsavedChangesWarning(){
+        $('#new-license-modal').on('hide.bs.modal', confirmHideModal);
+    }
+
+    function resetLicenseForm() {
+        activate();
+    }
+
+    function hideNewLicenseModal() {
+        $('#new-license-modal').modal('hide');
+    }
+
+    function confirmHideModal(modalHideEvent){
+        if ( licenseFormIsDirty() ){
+            if ( confirm('You have unsaved changes, are you sure you want to continue?') ){
+                $scope.$apply(resetLicenseForm);
+            }
+            else {
+                modalHideEvent.preventDefault();
+            }
+        }
+    }
+
+    function licenseFormIsDirty(){
+        if ($scope.licenseForm) {
+            return $scope.licenseForm.$dirty;
+        }
+        else if ($rootScope.forms && $rootScope.forms.licenseForm) {
+            return $rootScope.forms.licenseForm.$dirty;
+        }
+        return false;
+    }
+    
     function setLicenseFormPristine() {
         if ($scope.licenseForm) {
             $scope.licenseForm.$setPristine();
@@ -87,9 +122,9 @@ function editLicenseController( $scope, $rootScope, $location, alertService, cyc
         if ( vm.licenseId !== undefined ){
             licenseService.update( vm.license )
                 .then(function(){
-                    vm.closeNewLicenseModal();
                     alertService.putAlert('License updated', {severity: 'success'});
-                    initializeForExistingLicense();
+                    resetLicenseForm();
+                    hideNewLicenseModal();
                     afterSubmitCallback();
                 })
                 .catch(function(error) {
@@ -99,9 +134,9 @@ function editLicenseController( $scope, $rootScope, $location, alertService, cyc
         else {
             licenseService.create( vm.license )
                 .then(function(){
-                    vm.closeNewLicenseModal();
                     alertService.putAlert('License added', {severity: 'success'});
-                    initializeForNewLicense();
+                    resetLicenseForm();
+                    hideNewLicenseModal();
                     afterSubmitCallback();
                 })
                 .catch(function(error) {
