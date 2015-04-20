@@ -120,11 +120,19 @@ quick-pricing-su {
                 li.entity {
                     background-color: $white;
                     border: $default-border;
+                    display: flex;
                     @include body-text;
                     margin: 0 0 1rem 0;
                     padding: 1rem;
 
                     @include avoid-column-break;
+
+                    checkbox {
+                        flex: 0 0 22px;
+                    }
+                    .name {
+                        flex: 1 1 90%;
+                    }
 
                     &.selected {
                         border-color: $purple;

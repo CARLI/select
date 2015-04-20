@@ -11,7 +11,10 @@
     <li class="filter" ng-class="{ 'active': vm.alphaFilter === 'all' }" ng-click="vm.setAlphaFilter('all')">All</li>
 </ul>
 <ul class="entity-list">
-    <li ng-repeat="entity in vm.entities | filter:vm.alphaFilterFunction" class="entity" ng-class="{ 'selected': vm.selectedEntityIds[entity.id] }">
-        <checkbox ng-model="vm.selectedEntityIds[entity.id]"></checkbox> {{ entity.name }}
+    <li class="entity"
+        ng-repeat="entity in vm.entities | filter:vm.alphaFilterFunction"
+        ng-class="{ 'selected': vm.selectedEntityIds[entity.id] }">
+        <checkbox ng-model="vm.selectedEntityIds[entity.id]"></checkbox>
+        <span class="name">{{ entity.name }}</span>
     </li>
 </ul>
