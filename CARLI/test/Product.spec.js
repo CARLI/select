@@ -404,9 +404,84 @@ function runProductSpecificTests(testCycle) {
                 });
             });
 
-            //The Repository call will fail when trying to load a Product with no Vendor, but the Vendor should fail
-            it('should return false for an inactive Product with an empty Vendor');
-            it('should return true for an active Product with an empty Vendor');
+
+
+            it('should return true for an active Product with an active License', function () {
+                var vendor = {id: uuid.v4(), type: "Vendor", name: "my vendor name", isActive: true};
+                var license = {id: uuid.v4(), type: "License", name: "my license name", isActive: true, vendor: vendor};
+                var product = {id: uuid.v4(), type: "Product", name: "my product name", isActive: true, cycle: testCycleId, vendor: vendor };
+
+                return VendorRepository.create(vendor)
+                    .then(function(){
+                        LicenseRepository.create(license);
+                    })
+                    .then(function () {
+                        product.license = license;
+                        return ProductRepository.create(product, testCycle);
+                    })
+                    .then(function () {
+                        return ProductRepository.load(product.id, testCycle);
+                    })
+                    .then(function (loadedProduct) {
+                        return expect(loadedProduct.getIsActive()).to.equal(true);
+                    });
+            });
+
+            it('should return false for an active Product with an inactive License', function () {
+                var vendor = {id: uuid.v4(), type: "Vendor", name: "my vendor name", isActive: true};
+                var license = {id: uuid.v4(), type: "License", name: "my license name", isActive: false, vendor: vendor};
+                var product = {id: uuid.v4(), type: "Product", name: "my product name", isActive: true, cycle: testCycleId, vendor: vendor};
+
+                return VendorRepository.create(vendor)
+                    .then(function(){
+                        LicenseRepository.create(license);
+                    })
+                    .then(function () {
+                        product.license = license;
+                        return ProductRepository.create(product, testCycle);
+                    })
+                    .then(function () {
+                        return ProductRepository.load(product.id, testCycle);
+                    })
+                    .then(function (loadedProduct) {
+                        return expect(loadedProduct.getIsActive()).to.equal(false);
+                    });
+            });
+
+            it('should return false for an inactive Product with an inactive License', function () {
+
+                var license = {id: uuid.v4(), type: "License", name: "my license name", isActive: false, vendor: 'bogus'};
+                var product = {id: uuid.v4(), type: "Product", name: "my product name", isActive: false, cycle: testCycleId, vendor: 'bogus'};
+
+                return LicenseRepository.create(license)
+                    .then(function () {
+                        product.license = license;
+                        return ProductRepository.create(product, testCycle);
+                    })
+                    .then(function () {
+                        return ProductRepository.load(product.id, testCycle);
+                    })
+                    .then(function (loadedProduct) {
+                        return expect(loadedProduct.getIsActive()).to.equal(false);
+                    });
+            });
+
+            it('should return false for an inactive Product with an active License', function () {
+                var license = {id: uuid.v4(), type: "License", name: "my license name", isActive: true, vendor: 'bogus'};
+                var product = {id: uuid.v4(), type: "Product", name: "my product name", isActive: false, cycle: testCycleId, vendor: 'bogus'};
+
+                return LicenseRepository.create(license)
+                    .then(function () {
+                        product.license = license;
+                        return ProductRepository.create(product, testCycle);
+                    })
+                    .then(function () {
+                        return ProductRepository.load(product.id, testCycle);
+                    })
+                    .then(function (loadedProduct) {
+                        return expect(loadedProduct.getIsActive()).to.equal(false);
+                    });
+            });
         });
     });
 

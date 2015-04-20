@@ -25,6 +25,7 @@ var validTypes = [
     'Pricing',
     'Product',
     'ProductDetailCodes',
+    'ProductLicenseType',
     'Vendor'
 ];
 

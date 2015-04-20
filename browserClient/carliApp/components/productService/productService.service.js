@@ -42,7 +42,7 @@ function productService( CarliModules, $q, cycleService, libraryService, offerin
 
 
     function createOfferingsForProduct( productId ){
-        return libraryService.list()
+        return libraryService.listActiveLibraries()
             .then(getLibraryIds)
             .then(function( libraryIds ){
                 return offeringService.createOfferingsFor( productId, libraryIds );

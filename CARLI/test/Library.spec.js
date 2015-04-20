@@ -50,6 +50,30 @@ describe('The LibraryRepository', function(){
             });
         });
     });
+
+    it('should have a listActiveLibraries method', function(){
+        expect(LibraryRepository.listActiveLibraries).to.be.a('function');
+    });
+
+    describe('LibraryRepository.listActiveLibraries', function() {
+        this.timeout(5000);
+
+        it('should list only active Libraries from the CARLI CRM and the local database', function(){
+            return LibraryRepository.listActiveLibraries().then(function(libraryList){
+                return expect(libraryList).to.be.an('array').and.to.satisfy(allLibrariesAreActive);
+            });
+
+
+            function allLibrariesAreActive(libraryList){
+                return libraryList.every(libraryIsActive);
+
+                function libraryIsActive(library){
+                    return library.isActive;
+                }
+            }
+        });
+    });
+
 });
 
 

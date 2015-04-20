@@ -25,35 +25,16 @@ function editLibraryController( $scope, $rootScope, entityBaseService, librarySe
     activate();
 
     function activate() {
-        if (vm.libraryId === undefined) {
-            initializeForNewLibrary();
-        }
-        else {
+        if (vm.libraryId ){
             initializeForExistingLibrary();
         }
-        vm.isModal = vm.newLibrary;
     }
-    function initializeForNewLibrary() {
-        vm.library = {
-            type: 'Library',
-            isActive: true,
-            contacts: [
-                { contactType: 'Director' },
-                { contactType: 'E-Resources Liaison' },
-                { contactType: 'Other' },
-                { contactType: 'Notification Only' }
-            ]
-        };
-        vm.editable = true;
-        vm.newLibrary = true;
-        setLibraryFormPristine();
-    }
- 
+
     function initializeForExistingLibrary() {
-        libraryService.load(vm.libraryId).then( function( library ) {
-          vm.library = library;
+        libraryService.load(vm.libraryId).then(function (library) {
+            vm.library = angular.copy(library);
             setLibraryFormPristine();
-        } );
+        });
         vm.editable = false;
         vm.newLibrary = false;
     }
@@ -63,9 +44,11 @@ function editLibraryController( $scope, $rootScope, entityBaseService, librarySe
     }
 
     function cancelEdit(){
-        vm.editable = false;
         activate();
-        setLibraryFormPristine();
+    }
+
+    function resetLicenseForm() {
+        activate();
     }
 
     function setLibraryFormPristine() {
@@ -78,13 +61,11 @@ function editLibraryController( $scope, $rootScope, entityBaseService, librarySe
     }
 
     function saveLibrary(){
-
         if (vm.libraryId !== undefined){
             libraryService.update( vm.library ).then(function(){
-                vm.closeModal();
                 alertService.putAlert('Library updated', {severity: 'success'});
+                resetLicenseForm();
                 afterSubmitCallback();
-                initializeForExistingLibrary();
             })
             .catch(function(error) {
                 alertService.putAlert(error, {severity: 'danger'});
@@ -92,10 +73,9 @@ function editLibraryController( $scope, $rootScope, entityBaseService, librarySe
         }
         else {
             libraryService.create( vm.library ).then(function(){
-                vm.closeModal();
-                alertService.putAlert('Library created', {severity: 'success'});
+                alertService.putAlert('Library updated', {severity: 'success'});
+                resetLicenseForm();
                 afterSubmitCallback();
-                initializeForNewLibrary();
             })
             .catch(function(error) {
                 alertService.putAlert(error, {severity: 'danger'});

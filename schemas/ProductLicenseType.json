@@ -1,0 +1,36 @@
+{
+    "$schema": "json-schema.org/draft-04/schema",
+    "title": "ProductLicenseType",
+    "schemaType": "ProductLicenseType",
+    "type": "object",
+    "properties": {
+        "isThirdPartyProduct": {
+            "type": "boolean"
+        },
+        "isSoleSource": {
+            "type": "boolean"
+        },
+        "isSealedBid": {
+            "type": "boolean"
+        },
+        "isConsolidatedList": {
+            "type": "boolean"
+        },
+        "isRfp": {
+            "description": "Is this a request for proposal?",
+            "type": "boolean"
+        },
+        "isOtherType": {
+            "description": "Is this another type of license?",
+            "type": "boolean"
+        },
+        "otherType": {
+            "description": "The other type of license this is",
+            "type": "string"
+        },
+        "hasArchiveCapitalFee": {
+            "type": "boolean"
+        }
+    },
+    "required": [ ]
+}

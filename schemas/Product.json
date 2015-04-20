@@ -37,21 +37,6 @@
     "comments": {
       "type": "string"
     },
-    "isThirdPartyProduct": {
-      "type": "boolean"
-    },
-    "hasArchiveCapitalFee": {
-      "type": "boolean"
-    },
-    "soleSource": {
-      "type": "boolean"
-    },
-    "sealedBid": {
-      "type": "boolean"
-    },
-    "consolidatedList": {
-      "type": "boolean"
-    },
     "fundings": {
       "type": "array",
       "items": {
@@ -71,6 +56,9 @@
     "terms": {
       "description": "Terms of the license that this Product overrides",
       "$ref": "./LicenseTerms.json"
+    },
+    "licenseType": {
+      "$ref": "./ProductLicenseType.json"
     },
     "priceCap": {
       "type": "number"

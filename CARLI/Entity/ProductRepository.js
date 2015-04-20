@@ -122,10 +122,18 @@ function getProductsById( ids, cycle ){
 
 /* functions that get added as instance methods on loaded Products */
 var getIsActive = function(){
+    var vendorIsActive = true;
+    var licenseIsActive = true;
+
     if ( this.vendor && this.vendor.isActive != undefined) {
-        return this.isActive && this.vendor.isActive;
+        vendorIsActive = this.vendor.isActive;
     }
-    return this.isActive;
+
+    if ( this.license && this.license.isActive != undefined) {
+        licenseIsActive = this.license.isActive;
+    }
+
+    return this.isActive && vendorIsActive && licenseIsActive;
 };
 
 var functionsToAdd = {

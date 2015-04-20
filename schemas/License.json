@@ -84,30 +84,17 @@
             "description": "Banner ID",
             "type": "string"
         },
-        "isRfp": {
-            "description": "Is this a request for proposal?",
-            "type": "boolean"
-        },
-        "isSoleSource": {
-            "description": "Is this a sole source license?",
-            "type": "boolean"
-        },
-        "isSealedBid": {
-            "description": "Is this a sealed bid license?",
-            "type": "boolean"
-        },
-        "isOtherType": {
-            "description": "Is this another type of license?",
-            "type": "boolean"
-        },
-        "otherType": {
-            "description": "The other type of license this is",
-            "type": "string"
+        "licenseType": {
+            "$ref": "./ProductLicenseType.json"
         },
         "offeringType": {
             "description": "Type of offering, e.g. product or service",
             "type": "string",
-            "enum": ["Product","Service"]
+            "enum": ["Product","Service","Other"]
+        },
+        "offeringTypeValue": {
+            "description": "If offeringType is other, this is the value",
+            "type": "string"
         }
     },
     "required": [ "name", "vendor" ]

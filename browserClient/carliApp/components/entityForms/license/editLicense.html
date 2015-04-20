@@ -187,27 +187,44 @@
                         {{ vm.license.bannerId }}
                     </view-edit-text-field>
 
-                    <h2>Type</h2>
-                    <view-edit-checkbox ng-model="vm.license.isRfp" edit-mode="vm.editable" label="'RFP'">
-                        RFP: {{ vm.license.isRfp ? 'Yes' : 'No' }}
+                    <div class="label">Type</div>
+                    
+                    <view-edit-checkbox label="3rd Party Product" ng-model="vm.license.licenseType.isThirdPartyProduct" edit-mode="vm.editable" input-id="isThirdPartyProduct">
+                        3rd Party Product: {{ vm.license.licenseType.isThirdPartyProduct ? 'Yes' : 'No' }}
                     </view-edit-checkbox>
-                    <view-edit-checkbox ng-model="vm.license.isSoleSource" edit-mode="vm.editable" label="Sole Source">
-                        Sole Source: {{ vm.license.isSoleSource ? 'Yes' : 'No' }}
+
+                    <view-edit-checkbox label="Sole Source" ng-model="vm.license.licenseType.isSoleSource" edit-mode="vm.editable" input-id="soleSource">
+                        Sole Source: {{ vm.license.licenseType.isSoleSource ? 'Yes' : 'No' }}
                     </view-edit-checkbox>
-                    <view-edit-checkbox ng-model="vm.license.isSealedBid" edit-mode="vm.editable" label="Sealed Bid">
-                        Sealed Bid: {{ vm.license.isSealedBid ? 'Yes' : 'No' }}
+
+                    <view-edit-checkbox label="Sealed Bid" ng-model="vm.license.licenseType.isSealedBid" edit-mode="vm.editable" input-id="sealedBid">
+                        Sealed Bid: {{ vm.license.licenseType.isSealedBid ? 'Yes' : 'No' }}
                     </view-edit-checkbox>
-                    <view-edit-checkbox ng-model="vm.license.isOtherType" edit-mode="vm.editable" label="Other">
-                        Other: {{ vm.license.isOtherType ? 'Yes' : 'No' }}
+
+                    <view-edit-checkbox label="Consolidated List" ng-model="vm.license.licenseType.isConsolidatedList" edit-mode="vm.editable" input-id="consolidatedList">
+                        Consolidated List: {{ vm.license.licenseType.isConsolidatedList ? 'Yes' : 'No' }}
                     </view-edit-checkbox>
-                    <view-edit-text-field ng-model="vm.license.otherType" edit-mode="vm.editable" aria-label="Type">
-                        {{ vm.license.otherType }}
-                    </view-edit-text-field>
+
+                    <view-edit-checkbox label="RFP" ng-model="vm.license.licenseType.isRfp" edit-mode="vm.editable" input-id="rfp">
+                        RFP: {{ vm.license.licenseType.isRfp ? 'Yes' : 'No' }}
+                    </view-edit-checkbox>
+
+                    <view-edit-checkbox label="Other" ng-model="vm.license.licenseType.isOtherType" edit-mode="vm.editable" input-id="other">
+                        Other: {{ vm.license.licenseType.isOtherType ? vm.license.licenseType.otherType : 'No' }}
+                    </view-edit-checkbox>
+                    <view-edit-text-field aria-label="Type" ng-model="vm.license.licenseType.otherType" edit-mode="vm.editable" ng-show="vm.license.licenseType.isOtherType"></view-edit-text-field>
+
+                    <br>
+
+                    <view-edit-checkbox label="Archive Capital Fee" ng-model="vm.license.licenseType.hasArchiveCapitalFee" edit-mode="vm.editable" input-id="hasArchiveCapitalFee">
+                        Archive Capital Fee: {{ vm.license.licenseType.hasArchiveCapitalFee ? 'Yes' : 'No' }}
+                    </view-edit-checkbox>
 
                     <label for="offeringTypeOptions">Product / Service</label>
                     <view-edit-radios radio-group-name="offeringType" items="vm.offeringTypeOptions" ng-model="vm.license.offeringType" edit-mode="vm.editable" input-id="offeringTypeOptions">
-                        {{ vm.license.offeringType }}
+                        {{ vm.license.offeringType === 'Other' ? vm.license.offeringTypeValue : vm.license.offeringType }}
                     </view-edit-radios>
+                    <view-edit-text-field aria-label="Offering Type" ng-model="vm.license.offeringTypeValue" edit-mode="vm.editable" ng-show="vm.license.offeringType == 'Other'"></view-edit-text-field>
 
                 </div>
             </fieldset>

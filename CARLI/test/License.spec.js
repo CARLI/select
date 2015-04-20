@@ -115,7 +115,8 @@ describe('Helper functions for getting Enum values from the License Schema', fun
         it('should return expected values', function(){
             var testData = [
                 "Product",
-                "Service"
+                "Service",
+                "Other"
             ];
 
             expect(LicenseRepository.getOfferingTypeOptions()).to.have.members(testData);

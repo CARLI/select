@@ -65,8 +65,13 @@
                         </div>
                         <div class="column">
                             <div ng-if="!offering.selection">
-                                <div class="label">Add Product</div>
-                                <div ng-click="vm.purchaseProduct(offering)" class="carli-button ask-button">{{ offering.pricing.site | currency }} <fa name="plus-circle"></fa></div>
+                                <div ng-if="!offering.pricing.site">
+                                    No price entered.
+                                </div>
+                                <div ng-if="offering.pricing.site">
+                                    <div class="label">Add Product</div>
+                                    <div ng-click="vm.purchaseProduct(offering)" class="carli-button ask-button">{{ offering.pricing.site | currency }} <fa name="plus-circle"></fa></div>
+                                </div>
                             </div>
                             <div ng-if="offering.selection">
                                 <div class="label">Remove Product</div>
