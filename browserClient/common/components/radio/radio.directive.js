@@ -1,10 +1,12 @@
-angular.module('carli.radio')
+angular.module('common.radio')
     .directive('radio', radio);
 
     function radio(uuid) {
+        //noinspection StringLiteralBreaksHTMLJS
         return {
             restrict: 'E',
-            templateUrl: 'carliApp/components/radio/radio.html',
+            template: '<input id="{{ radioId }}" name="{{ name }}" ng-value="value" type="radio" ng-model="ngModel">' + "\n" +
+                      '<label for="{{ radioId }}"><i class="fa radio-display" /><ng-transclude></ng-transclude></label>',
             scope: {
                 ngModel: '=',
                 name: '=',
