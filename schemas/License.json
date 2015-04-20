@@ -90,7 +90,11 @@
         "offeringType": {
             "description": "Type of offering, e.g. product or service",
             "type": "string",
-            "enum": ["Product","Service"]
+            "enum": ["Product","Service","Other"]
+        },
+        "offeringTypeValue": {
+            "description": "If offeringType is other, this is the value",
+            "type": "string"
         }
     },
     "required": [ "name", "vendor" ]

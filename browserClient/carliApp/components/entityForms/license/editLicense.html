@@ -222,8 +222,9 @@
 
                     <label for="offeringTypeOptions">Product / Service</label>
                     <view-edit-radios radio-group-name="offeringType" items="vm.offeringTypeOptions" ng-model="vm.license.offeringType" edit-mode="vm.editable" input-id="offeringTypeOptions">
-                        {{ vm.license.offeringType }}
+                        {{ vm.license.offeringType === 'Other' ? vm.license.offeringTypeValue : vm.license.offeringType }}
                     </view-edit-radios>
+                    <view-edit-text-field aria-label="Offering Type" ng-model="vm.license.offeringTypeValue" edit-mode="vm.editable" ng-show="vm.license.offeringType == 'Other'"></view-edit-text-field>
 
                 </div>
             </fieldset>
