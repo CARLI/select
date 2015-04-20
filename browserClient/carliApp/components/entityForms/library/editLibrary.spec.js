@@ -67,12 +67,6 @@ describe('The Edit Library Directive', function(){
         expect( newCtrl.membershipLevelOptions ).to.be.an('Array');
     });
 
-    it('should have a default, editable library on the New Library screen', function(){
-        expect( newCtrl.library.isActive ).to.equal(true);
-        expect( newCtrl.editable ).to.equal(true);
-        expect( newCtrl.newLibrary ).to.equal(true);
-    });
-
     it('should call libraryService.create when saving a new Library', function(){
         expect( mockDependenciesForNewLibrary.libraryService.createOrUpdate ).to.equal('neither');
         newCtrl.saveLibrary();

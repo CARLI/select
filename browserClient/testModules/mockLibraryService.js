@@ -13,6 +13,11 @@ angular.module('carli.mockLibraryService', [])
                 deferred.resolve([]);
                 return deferred.promise;
             },
+            listActiveLibraries: function(){
+                var deferred = $q.defer();
+                deferred.resolve([]);
+                return deferred.promise;
+            },
             create: function () {
                 var deferred = $q.defer();
                 this.createOrUpdate = 'create';
