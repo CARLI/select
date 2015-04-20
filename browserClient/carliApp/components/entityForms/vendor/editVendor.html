@@ -46,8 +46,7 @@
 
                 <div class="column">
                     <div class="product-list" ng-if="!vm.editable">
-                        <div class="label">Products</div>
-                        <label for="currentCycle">View products from cycle:</label>
+                        <label for="currentCycle">Products From:</label>
                         <select-cycle input-id="currentCycle"></select-cycle>
                         <ul class="zebra-table">
                             <li ng-repeat="product in vm.productList | orderBy:'name'">
