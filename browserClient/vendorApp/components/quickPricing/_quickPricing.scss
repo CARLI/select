@@ -206,5 +206,56 @@ quick-pricing-su {
                 list-style: none;
             }
         }
+
+        quick-pricing-enter-prices {
+            ul.price-entry-mode {
+                margin-top: 2rem;
+                display: flex;
+                list-style: none;
+
+                li {
+                    flex: 0 1 25%;
+                    @include body-text;
+
+                    radio label {
+                        padding-left: 2em;
+                    }
+
+                    .input-wrapper {
+                        margin: 8px 2em 0;
+                        position: relative;
+
+                        .dollar-sign, .percent-sign {
+                            line-height: 2rem;
+                            margin: 0 8px;
+                            position: absolute;
+                        }
+                        .percent-sign {
+                            right: 0;
+                        }
+
+                        input {
+                            display: inline;
+                        }
+                    }
+
+                    &.dollars .input-wrapper {
+                        width: 150px;
+                        input {
+                            padding-left: 20px;
+                        }
+                    }
+                    &.percentage .input-wrapper {
+                        width: 75px;
+                        input {
+                            padding-right: 26px;
+                        }
+                    }
+
+
+                }
+            }
+
+        }
     }
 }
