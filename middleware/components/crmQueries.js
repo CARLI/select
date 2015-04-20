@@ -79,7 +79,7 @@ function convertCrmInstitutionType(crmType) {
     switch (crmType) {
         case 'OTH': return 'Other';
         case 'PRI': return 'Private';
-        case 'CC': return 'Other';
+        case 'CC': return 'Public';
         case 'PUB': return 'Public';
         default: return 'Other';
     }
