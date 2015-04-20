@@ -27,6 +27,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
     vm.saveProduct = saveProduct;
     vm.submitAction = submitAction;
     vm.submitLabel = submitLabel;
+    vm.productLicenseIsValid = productLicenseIsValid;
 
     vm.shouldShowOtpEditLink = function() {
         return vm.editable && !vm.newProduct && isOneTimePurchaseProduct(vm.product);
@@ -383,5 +384,9 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
         } else {
             vm.noLicensesMessage = 'Please select a vendor first';
         }
+    }
+
+    function productLicenseIsValid(){
+        return vm.product && vm.product.license && typeof vm.product.license === 'object';
     }
 }

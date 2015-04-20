@@ -132,6 +132,8 @@
                         <view-edit-typeahead ng-show="!vm.noLicensesMessage" ng-model="vm.product.license" options="vm.licenseList" edit-mode="vm.editable" input-id="license">
                             <a ng-href="/license/{{ vm.product.license.id }}">{{ vm.product.license.name }}</a>
                         </view-edit-typeahead>
+                        <div class="warning" ng-show="!vm.productLicenseIsValid()">Invalid License</div>
+
 
                         <label for="detailCode">Detail Codes</label>
                         <view-edit-select ng-model="vm.product.detailCode" items="vm.productDetailCodeOptions" edit-mode="vm.editable" input-id="detailCode">
