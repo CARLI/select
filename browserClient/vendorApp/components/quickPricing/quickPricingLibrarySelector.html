@@ -1,0 +1,50 @@
+<div class="header">
+    <div ng-if="vm.selectBy === 'filter'" class="narrow-by-label">Narrow by:</div>
+
+    <div class="controls select-by-toggle">
+        <button type="button" class="toggle-button"
+                ng-class="{ 'active': vm.selectBy === 'filter' }"
+                ng-click="vm.selectBy = 'filter'">Filter Libraries</button
+                ><button type="button" class="toggle-button"
+                         ng-class="{ 'active': vm.selectBy === 'choose' }"
+                         ng-click="vm.selectBy = 'choose'">Choose Individual Libraries</button>
+    </div>
+</div>
+
+
+<div ng-if="vm.selectBy === 'filter'">
+    <div class="narrow-by-container">
+        <div class="narrow-by fte">
+            <div class="fte-header">
+                <span class="fte-label">Size (FTE)</span>
+                <button class="clear-fte" ng-click="vm.resetFteFilter()">Clear <fa name="times"></fa></button>
+            </div>
+            <div class="fte-input">
+                <input type="text" ng-model="vm.filters.fte.lowerBound">
+                <span class="to">to</span>
+                <input type="text" ng-model="vm.filters.fte.upperBound">
+            </div>
+        </div>
+        <div class="narrow-by">
+            <ul>
+                <li><checkbox ng-model="vm.filters.institutionYears.twoYear"></checkbox> 2 Year Institutions</li>
+                <li><checkbox ng-model="vm.filters.institutionYears.fourYear"></checkbox> 4 Year Institutions</li>
+                <li><checkbox ng-model="vm.filters.institutionYears.other"></checkbox> All Other</li>
+            </ul>
+        </div>
+        <div class="narrow-by">
+            <ul>
+                <li><checkbox ng-model="vm.filters.institutionType.public"></checkbox> Public Institutions</li>
+                <li><checkbox ng-model="vm.filters.institutionType.private"></checkbox> Private Institutions</li>
+                <li><checkbox ng-model="vm.filters.institutionType.other"></checkbox> All Other</li>
+            </ul>
+        </div>
+        <!--<div class="narrow-by">
+            <button class="carli-button">Choose Individual Libraries</button>
+        </div>-->
+    </div>
+</div>
+
+<div ng-if="vm.selectBy === 'choose'">
+    <quick-pricing-entity-selector entities="vm.libraries" selected-entity-ids="vm.selectedLibraryIds"></quick-pricing-entity-selector>
+</div>

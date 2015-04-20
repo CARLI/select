@@ -1,3 +1,3 @@
 angular.module('carli.entityBaseService', [
-    'carli.carliModules'
+    'common.carliModules'
 ]);

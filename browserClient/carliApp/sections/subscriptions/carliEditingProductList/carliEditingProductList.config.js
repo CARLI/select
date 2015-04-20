@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.carliEditingProductList', [
-    'carli.cycleService',
-    'carli.productService',
+    'common.accordion',
+    'common.cycleService',
+    'common.productService',
     'carli.vendorService',
-    'carli.productSelectionHistoryIcon',
-    'carli.accordion'
+    'carli.productSelectionHistoryIcon'
 ]);

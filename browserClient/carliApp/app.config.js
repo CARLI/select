@@ -1,11 +1,11 @@
 angular.module('carli.app', [
     'busyClick',
     'ngRoute',
-    'carli.cycleService',
+    'common.cycleService',
+    'common.fa',
     'ngAnimate',
     'carli.carliHeader',
     'carli.debugPanel',
-    'carli.fa',
     'carli.navBar',
     'carli.alerts',
     'carli.routes',

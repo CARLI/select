@@ -1,0 +1,261 @@
+quick-pricing-site,
+quick-pricing-su {
+    display: block;
+
+    .quick-pricing {
+        $quick-pricing-spacing: 38px;
+
+        color: $purple;
+        font-size: 1.21429rem;
+        font-family: 'Merriweather', serif;
+        font-weight: 700;
+        background: white;
+        border: $default-border;
+        padding: 0;
+
+        .collapsible-header {
+            padding: 1rem 0 1rem $quick-pricing-spacing;
+
+        }
+
+        > .content {
+            list-style: none;
+
+            > li {
+                border-top: $default-border;
+
+                .accordion-header {
+                    border-left: 3px solid $purple;
+                    padding: 1rem;
+                    padding-left: $quick-pricing-spacing - 3px;
+
+                    .step {
+                        color: $black;
+                    }
+
+                    .selection-summary {
+                        float: right;
+                        @include body-text;
+                        font-style: italic;
+                    }
+
+                    button {
+                        @include clear-button-styles;
+                    }
+                }
+
+                .content {
+                    background: $light-gray;
+                    border-top: $default-border;
+                    display: none;
+                    padding: 0.5rem $quick-pricing-spacing $button-height;
+                    position: relative;
+
+                    .carli-button.next {
+                        position: absolute;
+                        right: $quick-pricing-spacing;
+                        bottom: -1px;
+                    }
+                }
+
+                &.collapsed {
+                    .accordion-header {
+                        border-left: none;
+                        padding-left: $quick-pricing-spacing;
+                    }
+                }
+            }
+        }
+
+        quick-pricing-entity-selector {
+            @include body-text;
+
+            ul {
+                list-style: none;
+            }
+
+            .select-entities-controls {
+                display: flex;
+                height: 40px;
+                line-height: 40px;
+                margin-bottom: 1rem;
+
+                li {
+                    @include flex(1 1 auto);
+
+                    .select-none,
+                    .select-all {
+                        font-weight: bold;
+                        color: $orange;
+                    }
+                    .filters-label {
+                        padding: 0 1rem;
+                        font-style: italic;
+                    }
+
+                    border-right: $default-border;
+                    border-bottom: $default-border;
+
+                    &.filter {
+                        border-top: $default-border;
+                        color: $black;
+                        cursor: pointer;
+                        font-family: 'Dosis', sans-serif;
+                        font-weight: 600;
+                        @include font-size(15);
+                        @include flex(0 0 60px);
+                        text-align: center;
+                    }
+
+                    &.filter.active {
+                        border-bottom: none;
+                        color: $orange;
+                    }
+                }
+            }
+
+            ul.entity-list {
+                @include vendor-prefix('column-count', 4);
+
+                li.entity {
+                    background-color: $white;
+                    border: $default-border;
+                    display: flex;
+                    @include body-text;
+                    margin: 0 0 1rem 0;
+                    padding: 1rem;
+
+                    @include avoid-column-break;
+
+                    checkbox {
+                        flex: 0 0 22px;
+                    }
+                    .name {
+                        flex: 1 1 90%;
+                    }
+
+                    &.selected {
+                        border-color: $purple;
+                        color: $purple;
+                    }
+                }
+            }
+
+        }
+
+        quick-pricing-library-selector {
+            @include body-text;
+
+            .header {
+                height: 52px;
+                position: relative;
+                
+                .narrow-by-label {
+                    font-style: italic;
+                    position: absolute;
+                    left: 0;
+                    bottom: 0;
+                }
+                .controls {
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                }
+            }
+
+
+
+            .narrow-by-container {
+                display: flex;
+            }
+            .narrow-by {
+                flex: 1 1 33%;
+                border: $default-border;
+                background-color: $white;
+                margin: 1rem 2rem 1rem 0;
+                &:last-child {
+                    margin-right: 0;
+                }
+                padding: 1rem;
+
+                &.fte {
+                    .fte-header {
+                        margin-bottom: 1rem;
+                        .clear-fte {
+                            @include clear-button-styles;
+                            float: right;
+                            color: $orange;
+                        }
+                    }
+                    .fte-input {
+                        display: flex;
+
+                        input {
+                            flex: 1 0 40%;
+                            display: inline-block;
+                        }
+                        .to {
+                            flex: 0 1 20%;
+                            text-align: center;
+                        }
+                    }
+
+                }
+            }
+            ul {
+                list-style: none;
+            }
+        }
+
+        quick-pricing-enter-prices {
+            ul.price-entry-mode {
+                margin-top: 2rem;
+                display: flex;
+                list-style: none;
+
+                li {
+                    flex: 0 1 25%;
+                    @include body-text;
+
+                    radio label {
+                        padding-left: 2em;
+                    }
+
+                    .input-wrapper {
+                        margin: 8px 2em 0;
+                        position: relative;
+
+                        .dollar-sign, .percent-sign {
+                            line-height: 2rem;
+                            margin: 0 8px;
+                            position: absolute;
+                        }
+                        .percent-sign {
+                            right: 0;
+                        }
+
+                        input {
+                            display: inline;
+                        }
+                    }
+
+                    &.dollars .input-wrapper {
+                        width: 150px;
+                        input {
+                            padding-left: 20px;
+                        }
+                    }
+                    &.percentage .input-wrapper {
+                        width: 75px;
+                        input {
+                            padding-right: 26px;
+                        }
+                    }
+
+
+                }
+            }
+
+        }
+    }
+}

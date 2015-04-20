@@ -3,11 +3,11 @@ angular.module('carli.sections.styleGuide',
         'carli.componentGatherer',
         'carli.alerts',
         'carli.entityList',
-        'carli.fa',
+        'common.fa',
         'carli.viewEditDirectives',
         'carli.goodSelect',
-        'carli.checkbox',
-        'carli.radio',
+        'common.checkbox',
+        'common.radio',
         'carli.warnIfUnsaved'
     ]
 )

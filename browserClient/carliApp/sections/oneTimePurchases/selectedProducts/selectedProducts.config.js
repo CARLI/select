@@ -1,10 +1,10 @@
 angular.module('carli.sections.oneTimePurchases.selectedProducts', [
     'cgBusy',
     'carli.alerts',
-    'carli.checkbox',
-    'carli.collapsible',
-    'carli.libraryService',
+    'common.checkbox',
+    'common.collapsible',
+    'common.libraryService',
     'carli.notificationModal',
-    'carli.productService'
+    'common.productService'
 
 ]);

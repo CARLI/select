@@ -1,9 +1,9 @@
 angular.module('carli.entityForms.product',[
     'ui.bootstrap',
     'carli.alerts',
-    'carli.libraryService',
+    'common.libraryService',
     'carli.licenseService',
-    'carli.productService',
+    'common.productService',
     'carli.viewEditDirectives',
     'carli.warnIfUnsaved'
 ]);

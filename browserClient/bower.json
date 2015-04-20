@@ -16,7 +16,8 @@
   },
   "devDependencies": {
     "angular-mocks": "~1.2",
-    "bootstrap-sass-official": "~3.2.0"
+    "bootstrap-sass-official": "~3.2.0",
+    "angular-slider": "~0.2.14"
   },
   "resolutions": {
     "angular": "~1.3.*"

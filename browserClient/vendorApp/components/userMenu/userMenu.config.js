@@ -1,1 +1,3 @@
-angular.module('vendor.userMenu',[]);
+angular.module('vendor.userMenu',[
+    'vendor.currentUser'
+]);

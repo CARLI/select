@@ -28,7 +28,10 @@ module.exports = {
     },
 
     common_components: {
-        all_files: 'common/**/*',
+        all_files: [
+            'common/**/*',
+            '!common/**/*.spec.js'
+        ],
         sass_all: 'common/**/*.scss'
     },
 
@@ -79,6 +82,7 @@ module.exports = {
         'bower_modules/angular-resource/angular-resource.js',
         'bower_modules/angular-sanitize/angular-sanitize.js',
         'bower_modules/angular-animate/angular-animate.js',
+        'bower_modules/angular-slider/slider.*',
         'bower_modules/angular-busy/angular-busy.js',
         'bower_modules/bootstrap-sass-official/assets/javascripts/bootstrap.js',
         'bower_modules/angular-bootstrap/ui-bootstrap.js',
@@ -123,6 +127,7 @@ module.exports = {
             'bower_modules/angular-resource/angular-resource.js',
             'bower_modules/angular-sanitize/angular-sanitize.js',
             'bower_modules/angular-animate/angular-animate.js',
+            'bower_modules/angular-slider/slider.js',
             'bower_modules/angular-busy/angular-busy.js',
             'bower_modules/bootstrap-sass-official/assets/javascripts/bootstrap.js',
             'bower_modules/angular-bootstrap/ui-bootstrap.js',
@@ -135,7 +140,8 @@ module.exports = {
         css: [
             'bower_modules/font-awesome/css/font-awesome.min.css',
             'bower_modules/angular-busy/angular-busy.css',
-            'bower_modules/ng-tags-input/ng-tags-input.css'
+            'bower_modules/ng-tags-input/ng-tags-input.css',
+            'bower_modules/angular-slider/slider.css'
         ],
         fonts: [
             'bower_modules/font-awesome/fonts/fontawesome-webfont.*'

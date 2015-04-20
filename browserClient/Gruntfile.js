@@ -28,7 +28,7 @@ module.exports = function ( grunt ) {
             },
             vendor: {
                 files: [{
-                    src: user_config.logic_files.js,
+                    src: '../CARLI/vendor.js',
                     dest: user_config.vendor_app.build_dir + user_config.logic_files.build
                 }]
             }
@@ -58,7 +58,7 @@ module.exports = function ( grunt ) {
 
             serveCarli: {
                 options: {
-                    open: true,
+                    open: 'http://localhost:8000',
                     port: 8000,
                     middleware: function (connect, options) {
                         var optBase = (typeof options.base === 'string') ? [options.base] : options.base;
@@ -72,7 +72,7 @@ module.exports = function ( grunt ) {
 
             serveVendor: {
                 options: {
-                    open: true,
+                    open: 'http://localhost:8001',
                     port: 8001,
                     middleware: function (connect, options) {
                         var optBase = (typeof options.base === 'string') ? [options.base] : options.base;

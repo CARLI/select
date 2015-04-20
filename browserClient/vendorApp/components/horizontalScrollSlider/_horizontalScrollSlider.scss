@@ -1,0 +1,21 @@
+horizontal-scroll-slider {
+    height: 18px;
+    slider div.handle {
+        background-image: url('/vendorApp/components/horizontalScrollSlider/sliderHandle.png');
+        width: 28px;
+        height:18px;
+        border: none;
+        border-radius: 0;
+
+        &::after {
+            display: none;
+        }
+    }
+    slider div.bar {
+        background-color: $gray;
+        height: 2px;
+    }
+    slider div.value.active {
+        display: none;
+    }
+}

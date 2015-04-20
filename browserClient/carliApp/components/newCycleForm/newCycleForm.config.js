@@ -1,6 +1,6 @@
 angular.module('carli.newCycleForm',[
     'carli.alerts',
     'carli.entityBaseService',
-    'carli.cycleService',
+    'common.cycleService',
     'carli.viewEditDirectives'
 ]);
