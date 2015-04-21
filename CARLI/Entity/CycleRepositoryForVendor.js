@@ -1,6 +1,26 @@
 var baseRepository = require('./CycleRepository');
+var couchUtils = require('../Store/CouchDb/Utils');
 
 module.exports = function (vendor) {
+
+    function createDatabaseForVendor(cycleId) {
+        return loadCycleForVendor(cycleId).then(function (cycle){
+            var sourceCycleDatabaseName = cycle.databaseName;
+            var targetCycleDatabaseName = cycle.getDatabaseName();
+
+            return couchUtils.createDatabase(targetCycleDatabaseName)
+                .then(startReplication)
+                .then(returnCycleId);
+
+            function startReplication() {
+                return couchUtils.startVendorDatabaseReplication(sourceCycleDatabaseName, targetCycleDatabaseName, vendor.id);
+            }
+
+            function returnCycleId() {
+                return cycleId;
+            }
+        });
+    }
 
     function loadCycleForVendor(cycleId) {
         return baseRepository.load(cycleId).then(overrideBaseMethods);
@@ -33,10 +53,12 @@ module.exports = function (vendor) {
             return this.databaseName + '-' + vendor.id;
         }
     };
-    
+
     return {
+        createDatabase: createDatabaseForVendor,
         load: loadCycleForVendor,
         statusLabels: baseRepository.statusLabels,
-        listActiveCycles: listActiveCyclesForVendor
+        listActiveCycles: listActiveCyclesForVendor,
+        vendor: vendor
     };
 };

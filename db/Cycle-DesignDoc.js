@@ -95,7 +95,11 @@ ddoc = {
                 throw("vendorId is required");
             }
 
-            if(doc.vendor == req.query.vendorId) {
+            if (doc.vendor == req.query.vendorId) {
+                return true;
+            }
+
+            if (doc._id.substr(0, 7) === '_design') {
                 return true;
             }
 

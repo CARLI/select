@@ -197,6 +197,23 @@ function _couchReplicationOptions(sourceDbName, targetDbName) {
     };
 }
 
+function startVendorDatabaseReplication(sourceCycleDbName, vendorCycleDbName, vendorId) {
+    var requestOptions = {
+        url: StoreOptions.couchDbUrl + '/_replicator',
+        method: 'post',
+        json: {
+            source: StoreOptions.couchDbUrl + '/' + sourceCycleDbName,
+            target: StoreOptions.couchDbUrl + '/' + vendorCycleDbName,
+            filter: "CARLI/filterCycleDatabaseForVendor",
+            query_params: {"vendorId": vendorId},
+            continuous: true,
+            create_target: true
+        }
+    };
+
+    return couchRequest(requestOptions);
+}
+
 function getRunningCouchJobs(){
     var url = StoreOptions.couchDbUrl + '/_active_tasks/';
 
@@ -220,5 +237,6 @@ module.exports = {
     makeValidCouchDbName: makeValidCouchDbName,
     replicateFrom: replicateFrom,
     getRunningCouchJobs: getRunningCouchJobs,
+    startVendorDatabaseReplication: startVendorDatabaseReplication,
     triggerViewIndexing: triggerViewIndexing
 };

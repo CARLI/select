@@ -1,10 +1,12 @@
 var chai = require('chai');
 var expect = chai.expect;
-//var chaiAsPromised = require('chai-as-promised');
+var config = require('../../config');
 var cycleRepositoryCarli = require('../Entity/CycleRepository');
 var cycleRepositoryForVendor = require('../Entity/CycleRepositoryForVendor');
-var testUtils = require('./utils');
 var Q = require('q');
+var request = require('request');
+var storeOptions = config.storeOptions;
+var testUtils = require('./utils');
 
 testUtils.setupTestDb();
 
@@ -33,29 +35,61 @@ describe('Cycle repository for a specific vendor', function() {
         return cycleRepositoryCarli.create(cycle)
             .then(cycleRepositoryVendor.load)
             .then(function (loadedCycle) {
-                return expect(loadedCycle.getDatabaseName('1234')).to.equal(loadedCycle.databaseName + '-1234');
+                return expect(loadedCycle.getDatabaseName()).to.equal(loadedCycle.databaseName + '-1234');
             });
     });
 
-    it('should include only cycles open to vendors from listActiveCycles', function() {
-        var nonOpenCycle = validCycleData();
-        var openCycle = validCycleData();
-        openCycle.status = 2;
+    describe('listActiveCycles', function() {
+        it('should include only cycles open to vendors', function() {
+            var nonOpenCycle = validCycleData();
+            var openCycle = validCycleData();
+            openCycle.status = 2;
 
-        return setupFixtures().then(ensureOnlyOpenToVendorCycles);
+            return setupFixtures().then(ensureOnlyOpenToVendorCycles);
 
-        function setupFixtures() {
-            return Q.all([ cycleRepositoryCarli.create(openCycle), cycleRepositoryCarli.create(nonOpenCycle) ]);
-        }
-        function ensureOnlyOpenToVendorCycles() {
-            return cycleRepositoryVendor.listActiveCycles().then(function(cycleList) {
-                return expect(cycleList).to.satisfy(includesOnlyOpenCycles);
-            });
-        }
-        function includesOnlyOpenCycles(cycleList) {
-            return cycleList.every(function (cycle) {
-                return cycle.status === 2;
-            });
-        }
+            function setupFixtures() {
+                return Q.all([ cycleRepositoryCarli.create(openCycle), cycleRepositoryCarli.create(nonOpenCycle) ]);
+            }
+            function ensureOnlyOpenToVendorCycles() {
+                return cycleRepositoryVendor.listActiveCycles().then(function(cycleList) {
+                    return expect(cycleList).to.satisfy(includesOnlyOpenCycles);
+                });
+            }
+            function includesOnlyOpenCycles(cycleList) {
+                return cycleList.every(function (cycle) {
+                    return cycle.status === 2;
+                });
+            }
+        });
+    });
+
+    describe('createDatabase', function () {
+        var cycle = validCycleData();
+
+        it('creates a new couch database', function () {
+            return cycleRepositoryCarli.create(cycle)
+                .then(cycleRepositoryVendor.createDatabase)
+                .then(cycleRepositoryVendor.load)
+                .then(checkForSuccessfulDatabaseCreation)
+                .then(function(result){
+                    return expect(result).to.be.true;
+                });
+
+
+            function checkForSuccessfulDatabaseCreation(loadedCycle){
+                var result = Q.defer();
+
+                request(storeOptions.couchDbUrl + '/' + loadedCycle.getDatabaseName(), function (error, response, body) {
+                    if ( response.statusCode === 200){
+                        result.resolve(true);
+                    }
+                    else {
+                        result.resolve(false);
+                    }
+                });
+
+                return result.promise;
+            }
+        });
     });
 });

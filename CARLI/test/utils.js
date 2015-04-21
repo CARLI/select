@@ -70,6 +70,42 @@ module.exports = {
 
         return deferred.promise;
     },
+    deleteTestReplicators: function() {
+        var deferred = Q.defer();
+
+        request.get(config.storeOptions.couchDbUrl + '/_replicator/_all_docs?include_docs=true', function (error, response, body) {
+            if (error) {
+                deferred.reject(error);
+            }
+            var jsonBody = JSON.parse(body);
+            var replicationList = jsonBody.rows;
+            var count = 0;
+            var promises = [];
+
+            replicationList.forEach(function (replication) {
+                if (replication.doc.hasOwnProperty('source') && replication.doc.source.indexOf(testDbMarker) >= 0) {
+                    count++;
+                    promises.push( promiseDeletion(replication.doc._id) );
+                }
+            });
+            console.log('Deleted ' + count + ' databases');
+            Q.all(promises).then(deferred.resolve);
+        });
+
+        function promiseDeletion(id) {
+            var deletion = Q.defer();
+            request.del(config.storeOptions.couchDbUrl + '/_replicator/' + id, function (error, response, body) {
+                if (error) {
+                    deletion.reject(error);
+                } else {
+                    deletion.resolve();
+                }
+            });
+            return deletion.promise;
+        }
+
+        return deferred.promise;
+    },
     nukeCouch: function(couchDbUrl) {
         var deferred = Q.defer();
         if (couchDbUrl === undefined) {
