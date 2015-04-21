@@ -33,10 +33,8 @@ module.exports = function (vendor) {
             return this.databaseName + '-' + vendor.id;
         }
     };
-
-
+    
     return {
-        setStore: baseRepository.setStore,
         load: loadCycleForVendor,
         statusLabels: baseRepository.statusLabels,
         listActiveCycles: listActiveCyclesForVendor
