@@ -1,6 +1,6 @@
 module.exports = {
     config: require( '../config' ),
-    Cycle: require('./Entity/CycleRepository'),
+    Cycle: require('./Entity/CycleRepositoryForVendor'),
     Library: require('./Entity/LibraryRepository'),
     Offering: require('./Entity/OfferingRepository'),
     Product: require('./Entity/ProductRepository'),

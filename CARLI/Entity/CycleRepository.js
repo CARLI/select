@@ -137,9 +137,6 @@ var functionsToAdd = {
     getDatabaseName: function() {
         return this.databaseName;
     },
-    getDatabaseNameForVendorId: function(vendorId) {
-        return this.databaseName + '-' + vendorId;
-    },
     getCycleSelectionAndInvoiceTotals: function getCycleSelectionAndInvoiceTotals() {
         return couchUtils.getCouchViewResultValues(this.getDatabaseName(), 'getCycleSelectionAndInvoiceTotals').then(function(resultArray){
             return resultArray[0];

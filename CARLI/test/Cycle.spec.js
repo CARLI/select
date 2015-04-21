@@ -141,7 +141,6 @@ describe('Adding functions to Cycle instances', function() {
                     expect(loadedCycle.getStatusLabel).to.be.a('function'),
                     expect(loadedCycle.proceedToNextStep).to.be.a('function'),
                     expect(loadedCycle.returnToPreviousStep).to.be.a('function'),
-                    expect(loadedCycle.getDatabaseNameForVendorId).to.be.a('function'),
                     expect(loadedCycle.getCycleSelectionAndInvoiceTotals).to.be.a('function')
                 ]);
             });
@@ -278,18 +277,6 @@ describe('Adding functions to Cycle instances', function() {
                 .then(CycleRepository.load)
                 .then(function (loadedCycle) {
                     return expect(loadedCycle.getDatabaseName()).to.equal(loadedCycle.databaseName);
-                });
-        });
-    });
-
-    describe('the Cycle.getDatabaseNameForVendorId method', function () {
-        it('should return a database name', function () {
-            var cycle = validCycleData();
-
-            return CycleRepository.create(cycle)
-                .then(CycleRepository.load)
-                .then(function (loadedCycle) {
-                    return expect(loadedCycle.getDatabaseNameForVendorId('1234')).to.equal(loadedCycle.databaseName + '-1234');
                 });
         });
     });
