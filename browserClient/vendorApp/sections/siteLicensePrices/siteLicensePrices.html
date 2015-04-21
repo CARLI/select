@@ -43,7 +43,7 @@
                 <div class="column header years"></div>
                 <div class="column header lastYearsPrice"></div>
             </div>
-            <div class="price-row {{ library.id }}" ng-repeat="library in vm.libraries">
+            <div class="price-row {{ ::library.id }}" ng-repeat="library in vm.libraries">
                 <div class="column library">{{ ::library.name }}</div>
                 <div class="column size">{{ ::library.fte }}</div>
                 <div class="column type">{{ ::library.institutionType }}</div>
@@ -51,15 +51,17 @@
                 <div class="column lastYearsPrice">{{ ::library.lastYearsPrice }}</div>
             </div>
         </div>
+
         <div class="pricing-grid-container">
             <div class="pricing-grid">
                 <div class="price-row product-name-row">
-                    <div class="column header {{ product.id }}" ng-repeat="product in ::vm.products | orderBy:'name'">{{ ::vm.getProductDisplayName(product) }}</div>
+                    <div class="column header {{ ::product.id }}" ng-repeat="product in ::vm.products | orderBy:'name'">{{ ::vm.getProductDisplayName(product) }}</div>
                 </div>
                 <div class="price-cap price-row" ng-show="vm.viewOptions.priceCap">
-                    <div class="column header {{ product.id }}" ng-repeat="product in ::vm.products | orderBy:'name'">{{ ::product.priceCap }}%</div>
+                    <div class="column header {{ ::product.id }}" ng-repeat="product in ::vm.products | orderBy:'name'">{{ ::product.priceCap }}%</div>
                 </div>
                 <div id="price-rows"></div>
             </div>
         </div>
+
 </section>

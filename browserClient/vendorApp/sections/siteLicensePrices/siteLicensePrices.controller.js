@@ -84,7 +84,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
         vm.libraries.forEach(function (library) {
             var row = generateLibraryRow(library);
             vm.products.forEach(function (product) {
-                row.append( generateOfferingCell(library, product));
+                row.append(generateOfferingCell(library, product));
             });
             priceRows.append(row);
         });
@@ -100,13 +100,41 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             var offering = vm.offeringsForLibraryByProduct[product.id][library.id] || { pricing: { site: 0 }};
             var price = offering.pricing.site;
             var offeringCell = $('<div class="column offering input">')
-                .append('<input type="number" step=".01" min="0" value="' + price + '">');
+                //.append(createReadOnlyOfferingCell(price));
+                .append(createEditableOfferingCell(price));
 
             offeringCell.data('libraryId', library.id);
             offeringCell.data('productId', product.id);
             offeringCell.addClass(product.id);
 
             return offeringCell;
+        }
+    }
+
+    function createReadOnlyOfferingCell(price) {
+        var cell = $('<div tabindex="0" class="price">'+price+'</div>');
+        cell.on('focus', makeEditable);
+        return cell;
+
+        function makeEditable() {
+            var price = $(this).text();
+            var input = createEditableOfferingCell(price);
+            $(this).replaceWith(input);
+            input.focus();
+        }
+    }
+    function createEditableOfferingCell(price) {
+        var cell = $('<input class="price-editable" type="text" step=".01" min="0" value="' + price + '">');
+        cell.on('blur', makeReadOnly);
+        return cell;
+
+        function makeReadOnly() {
+            console.log('makeReadOnly');
+            var price = $(this).val();
+            var div = createReadOnlyOfferingCell(price);
+            console.log('replacing', this, div);
+            $(this).replaceWith(div);
+            div.focus();
         }
     }
 
