@@ -1,7 +1,7 @@
 angular.module('vendor.cycleChooser')
     .controller('cycleChooserController', cycleChooserController);
 
-function cycleChooserController($scope, cycleService) {
+function cycleChooserController($scope, $timeout, cycleService) {
     var vm = this;
 
     vm.cycles = [];
@@ -10,21 +10,46 @@ function cycleChooserController($scope, cycleService) {
 
     function activate() {
         loadCycles();
-        $scope.$watch('vm.selectedCycle', setSelectedCycle);
+        $scope.$watch('vm.selectedCycle', readySelectedCycle);
     }
 
     function loadCycles() {
         cycleService.listActiveCycles().then(function (cycles) {
             if (cycles.length === 1) {
-                setSelectedCycle(cycles[0]);
+                readySelectedCycle(cycles[0]);
             } else {
                 vm.cycles = cycles;
             }
         });
     }
 
-    function setSelectedCycle(cycle) {
-        if (cycle) {
+    function readySelectedCycle(cycle) {
+        if (!cycle) {
+            return;
+        }
+
+        cycle.readyCheck().then(function (isReady) {
+            if (!isReady) {
+                cycle.prepare().then(watchProgress);
+            } else {
+                $scope.$apply(setCycle);
+            }
+        });
+
+
+        function watchProgress() {
+            cycle.getViewUpdateProgress().then(function(progress) {
+                console.log(progress); // TODO
+
+                if (progress < 100) {
+                    $timeout(watchProgress, 500);
+                } else {
+                    $scope.$apply(setCycle);
+                }
+            });
+        }
+
+        function setCycle() {
             cycleService.setCurrentCycle(cycle);
         }
     }

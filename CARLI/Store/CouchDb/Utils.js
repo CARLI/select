@@ -226,6 +226,14 @@ function triggerViewIndexing(databaseName) {
     couchRequest({url : url});
 }
 
+function doesDatabaseExist(databaseName) {
+    var url = StoreOptions.couchDbUrl + '/' + databaseName;
+
+    return couchRequest({url : url})
+        .then(function() { return true; })
+        .catch(function() { return false; });
+}
+
 module.exports = {
     couchViewUrl: couchViewUrl,
     createDatabase: createDatabase,
@@ -238,5 +246,6 @@ module.exports = {
     replicateFrom: replicateFrom,
     getRunningCouchJobs: getRunningCouchJobs,
     startVendorDatabaseReplication: startVendorDatabaseReplication,
-    triggerViewIndexing: triggerViewIndexing
+    triggerViewIndexing: triggerViewIndexing,
+    doesDatabaseExist: doesDatabaseExist
 };

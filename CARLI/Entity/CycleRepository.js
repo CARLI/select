@@ -143,8 +143,6 @@ var functionsToAdd = {
         });
     },
     getViewUpdateProgress: function getViewUpdateStatus(){
-        var database = this.getDatabaseName();
-
         return couchUtils.getRunningCouchJobs().then(filterIndexJobs).then(filterByCycle).then(resolveToProgress);
 
         function filterIndexJobs( jobs ){
@@ -155,7 +153,7 @@ var functionsToAdd = {
 
         function filterByCycle( jobs ){
             return jobs.filter(function(job){
-                return job.database === database;
+                return job.database === this.getDatabaseName();
             });
         }
 

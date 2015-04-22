@@ -54,6 +54,12 @@ module.exports = function (vendor) {
     var functionsToAdd = {
         getDatabaseName: function() {
             return this.databaseName + '-' + vendor.id;
+        },
+        prepare: function createDatabase() {
+            return createDatabaseForVendor(this.id);
+        },
+        readyCheck: function checkDatabaseExistance() {
+            return couchUtils.doesDatabaseExist(this.getDatabaseName());
         }
     };
 
