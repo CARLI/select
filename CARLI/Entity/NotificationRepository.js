@@ -1,6 +1,7 @@
 var Entity = require('../Entity')
     , EntityTransform = require( './EntityTransformationUtils')
     , config = require( '../../config' )
+    , couchUtils = require( '../Store/CouchDb/Utils')
     , libraryRepository = require('../Entity/LibraryRepository')
     , offeringRepository = require('../Entity/OfferingRepository')
     , vendorRepository = require('../Entity/VendorRepository')
@@ -113,6 +114,10 @@ function listSent(){
     }
 }
 
+function listSentBetweenDates(startDate, endDate){
+    return couchUtils.getCouchViewResultValuesWithinRange(config.getDbName(), 'listSentNotificationsByDate', startDate, endDate);
+}
+
 function getRecipientLabel(recipientName, notificationType) {
     return recipientName + ' ' + getLabelForNotificationType(notificationType);
 
@@ -195,6 +200,7 @@ module.exports = {
     delete: NotificationRepository.delete,
     listDrafts: listDrafts,
     listSent: listSent,
+    listSentBetweenDates: listSentBetweenDates,
     getRecipientLabel: getRecipientLabel,
     notificationTypeIsForLibrary: notificationTypeIsForLibrary,
     notificationTypeIsForVendor: notificationTypeIsForVendor

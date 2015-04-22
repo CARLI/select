@@ -3,6 +3,7 @@ var couchapp = require( 'couchapp' )
 
 ddoc = {
     _id: '_design/CARLI',
+    language: "javascript",
     views: {
         listByType: {
             map: function( doc ) { if ( doc.type ) { emit( doc.type, doc ) } }
@@ -29,6 +30,13 @@ ddoc = {
             map: function( doc ) {
                 if ( doc.type === 'LibraryNonCrm' ){
                     emit( doc.crmId, doc );
+                }
+            }
+        },
+        listSentNotificationsByDate: {
+            map: function( doc ) {
+                if ( doc.type === 'Notification' && doc.draftStatus === "sent" ) {
+                    emit( doc.dateSent, doc );
                 }
             }
         }

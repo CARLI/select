@@ -66,10 +66,20 @@ function getCouchViewResultObject( dbName, viewName, key, group) {
 }
 
 function getCouchViewResultValues( dbName, viewName, key, group) {
-    var deferred = Q.defer();
     var url = couchViewUrl(dbName, viewName, key, group);
+    return getCouchViewValuesFromUrl(url);
+}
 
-    couchRequest({ url: url })
+function getCouchViewResultValuesWithinRange( dbName, viewName, startKey, endKey ) {
+    var url = couchViewUrl(dbName, viewName);
+    url += '?startkey="' + startKey + '"&endkey="' + endKey + '"';
+    return getCouchViewValuesFromUrl(url);
+}
+
+function getCouchViewValuesFromUrl( couchUrl ){
+    var deferred = Q.defer();
+
+    couchRequest({ url: couchUrl })
         .then(resolveWithRowValues)
         .catch(function(error) {
             deferred.reject(error);
@@ -206,6 +216,7 @@ module.exports = {
     getCouchDocuments: getCouchDocuments,
     getCouchViewResultObject: getCouchViewResultObject,
     getCouchViewResultValues: getCouchViewResultValues,
+    getCouchViewResultValuesWithinRange: getCouchViewResultValuesWithinRange,
     makeValidCouchDbName: makeValidCouchDbName,
     replicateFrom: replicateFrom,
     getRunningCouchJobs: getRunningCouchJobs,

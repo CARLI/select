@@ -70,7 +70,7 @@ function setupTestNotification( notification, offerings ){
 
 test.run('Notification', validNotificationData, invalidNotificationData);
 
-describe('the listDraft method', function(){
+describe('the listDrafts method', function(){
     it('should be a function', function(){
        expect(notificationRepository.listDrafts).to.be.a('function');
     });
@@ -130,18 +130,66 @@ describe('the listSent method', function(){
         sent3.draftStatus = 'sent';
 
         return testUtils.deleteDocumentsOfType('Notification')
-            .then(function(){
+        .then(function(){
+            return Q.all([
+                notificationRepository.create(draft1),
+                notificationRepository.create(sent1),
+                notificationRepository.create(sent2),
+                notificationRepository.create(sent3)
+            ]);
+        })
+        .then(notificationRepository.listSent)
+        .then(function(list){
+            return expect(list.length).to.equal(3);
+        });
+});
+});
+
+describe('the listSentBetweenDates method', function(){
+    it('should be a function', function(){
+        expect(notificationRepository.listSentBetweenDates).to.be.a('function');
+    });
+
+    it('should return an array', function(){
+        return notificationRepository.listSentBetweenDates('1970-01-01', '2099-12-31').then(function(notificationList){
+            return expect(notificationList).to.be.an('array');
+        });
+    });
+
+    it('should only return notifications with status sent between the start date and end date', function(){
+        var testStartDate = '2000-01-01';
+        var testEndDate = '3000-01-01';
+
+        return testUtils.deleteDocumentsOfType('Notification')
+            .then(setupTestNotifications)
+            .then(testListSentBetweenDatesMethod);
+
+        function setupTestNotifications(){
+            var draft1 = validNotificationData();
+            var sent1 = validNotificationData();
+            var sent2 = validNotificationData();
+
+            sent1.draftStatus = 'sent';
+            sent1.dateSent = '1990-01-01';
+            sent2.draftStatus = 'sent';
+            sent2.dateSent = '2015-01-01';
+
+            return Q.all([
+                notificationRepository.create(draft1),
+                notificationRepository.create(sent1),
+                notificationRepository.create(sent2)
+            ]);
+        }
+
+        function testListSentBetweenDatesMethod(){
+            return notificationRepository.listSentBetweenDates(testStartDate, testEndDate).then(function(notificationList){
                 return Q.all([
-                    notificationRepository.create(draft1),
-                    notificationRepository.create(sent1),
-                    notificationRepository.create(sent2),
-                    notificationRepository.create(sent3)
+                    expect(notificationList.length).to.equal(1),
+                    expect(notificationList[0].draftStatus).to.equal('sent'),
+                    expect(notificationList[0].dateSent).to.equal('2015-01-01')
                 ]);
-            })
-            .then(notificationRepository.listSent)
-            .then(function(list){
-                return expect(list.length).to.equal(3);
             });
+        }
     });
 });
 
