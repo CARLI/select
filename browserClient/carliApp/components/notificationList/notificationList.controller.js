@@ -3,9 +3,13 @@ angular.module('carli.notificationList')
 
 function notificationListController($q, alertService, controllerBaseService, notificationService, notificationPreviewModalService){
     var vm = this;
+
+    var datePickerFormat = 'M/D/YY';
+
     vm.filter = 'all';
 
     vm.filterByType = filterByType;
+    vm.updateSent = updateSent;
     vm.previewNotification = previewNotification;
     vm.previewPdf = previewPdf;
     vm.removeDraft = removeDraft;
@@ -28,6 +32,8 @@ function notificationListController($q, alertService, controllerBaseService, not
                 vm.showSendAll = false;
                 vm.sendLabel = 'Resend';
                 vm.showDateFilter = true;
+                vm.sentFilterStartDate = moment().subtract(2,'week').format();
+                vm.sentFilterEndDate = moment().endOf('day').format();
             }
             else {
                 vm.showRemove = true;
@@ -39,14 +45,21 @@ function notificationListController($q, alertService, controllerBaseService, not
         }
     }
 
+    function updateSent(){
+        return loadNotifications();
+    }
+
     function loadNotifications(){
         if ( vm.mode === 'sent' ){
-            notificationService.listSent().then(function(sent){
+            var startDate = moment(vm.sentFilterStartDate).format();
+            var endDate = moment(vm.sentFilterEndDate).endOf('day').format();
+
+            return notificationService.listSentBetweenDates(startDate, endDate).then(function(sent){
                 vm.notifications  = sent;
             });
         }
         else {
-            notificationService.listDrafts().then(function(drafts){
+            return notificationService.listDrafts().then(function(drafts){
                 vm.notifications  = drafts;
             });
         }

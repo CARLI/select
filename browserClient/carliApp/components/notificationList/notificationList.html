@@ -5,8 +5,9 @@
 
 <div class="controls">
     <div ng-if="vm.showDateFilter">
-        <view-edit-date ng-model="vm.startDate" edit-mode="true"></view-edit-date>
-        <view-edit-date ng-model="vm.endDate" edit-mode="true"></view-edit-date>
+        <view-edit-date ng-model="vm.sentFilterStartDate" edit-mode="true"></view-edit-date>
+        <view-edit-date ng-model="vm.sentFilterEndDate" edit-mode="true"></view-edit-date>
+        <button type="button" class="carli-button" ng-click="vm.updateSent()">Set Date Range</button>
     </div>
     <radio name="'notifications-list'+listId+'-filter'"  value="'all'" ng-model="vm.filter">Show <strong>All Notifications</strong></radio>
     <radio name="'notifications-list'+listId+'-filter'" value="'invoice'" ng-model="vm.filter">Show <strong>Library Invoices</strong></radio>
