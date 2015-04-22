@@ -198,19 +198,26 @@ function _couchReplicationOptions(sourceDbName, targetDbName) {
 }
 
 function startVendorDatabaseReplication(sourceCycleDbName, vendorCycleDbName, vendorId) {
-    var requestOptions = {
-        url: StoreOptions.couchDbUrl + '/_replicator',
-        method: 'post',
-        json: {
-            source: StoreOptions.couchDbUrl + '/' + sourceCycleDbName,
-            target: StoreOptions.couchDbUrl + '/' + vendorCycleDbName,
-            filter: "CARLI/filterCycleDatabaseForVendor",
-            query_params: {"vendorId": vendorId},
-            continuous: true
-        }
-    };
+    var sourceToVendorOptions = getReplicationRequestOptions(sourceCycleDbName, vendorCycleDbName);
+    var vendorToSourceOptions = getReplicationRequestOptions(vendorCycleDbName, sourceCycleDbName);
 
-    return couchRequest(requestOptions);
+    return couchRequest(sourceToVendorOptions).then(function() {
+        return couchRequest(vendorToSourceOptions)
+    });
+
+    function getReplicationRequestOptions(sourceDbName, targetDbName) {
+        return {
+            url: StoreOptions.couchDbUrl + '/_replicator',
+            method: 'post',
+            json: {
+                source: StoreOptions.couchDbUrl + '/' + sourceDbName,
+                target: StoreOptions.couchDbUrl + '/' + targetDbName,
+                filter: "CARLI/filterCycleDatabaseForVendor",
+                query_params: {"vendorId": vendorId},
+                continuous: true
+            }
+        };
+    }
 }
 
 function getRunningCouchJobs(){

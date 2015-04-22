@@ -153,7 +153,9 @@ var functionsToAdd = {
 
         function filterByCycle( jobs ){
             return jobs.filter(function(job){
-                return job.target.indexOf(this.getDatabaseName()) >= 0;
+                // Monitor job where vendor DB is the source.  When it is the target, it will never
+                // reach 100%, because documents are filtered out.
+                return job.source.indexOf(this.getDatabaseName()) >= 0;
             });
         }
 
