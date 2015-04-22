@@ -6,6 +6,7 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
 
     accordionControllerMixin(vm, loadProductsForVendor);
 
+    vm.toggleProductSection = toggleProductSection;
     vm.getVendorPricingStatus = getVendorPricingStatus;
     vm.stopEditing = stopEditing;
     vm.computeSelectionTotalForVendor = computeSelectionTotalForVendor;
@@ -13,6 +14,7 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
     vm.loadingPromise = {};
     vm.vendors = [];
     vm.isEditing = {};
+    vm.expandedProducts = {};
     vm.cycle = {};
     vm.lastYear = '';
     vm.selectedOfferings = {};
@@ -64,23 +66,41 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
 
     function loadProductsForVendor(vendor) {
         if (vendor.products) {
-            updateVendorTotals();
-            return $q.when();
+            return $q.when(vendor.products);
         }
 
-        var start = new Date();
-
-        vm.loadingPromise[vendor.id] = productService.listProductsWithOfferingsForVendorId(vendor.id)
+        vm.loadingPromise[vendor.id] = productService.listProductsForVendorId(vendor.id)
             .then(function(products) {
                 vendor.products = products;
-
-                //logLoadTime(products,start);
-
                 return products;
             });
 
-        vm.loadingPromise[vendor.id].then(updateVendorTotals);
         return vm.loadingPromise[vendor.id];
+    }
+
+    function loadOfferingsForProduct(product){
+        if ( product.offerings ){
+            return $q.when(product.offerings);
+        }
+
+        vm.loadingPromise[product.id] = offeringService.listOfferingsForProductId(product.id)
+            .then(function(offerings){
+                product.offerings = offerings;
+                return offerings;
+            });
+
+        return vm.loadingPromise[product.id];
+    }
+
+    function toggleProductSection(product){
+        if ( vm.expandedProducts[product.id] ){
+            delete vm.expandedProducts[product.id];
+        }
+        else {
+            loadOfferingsForProduct(product).then(function(){
+                vm.expandedProducts[product.id] = true;
+            });
+        }
     }
 
     function getVendorPricingStatus(vendor) {

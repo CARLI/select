@@ -6,11 +6,13 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
 
     accordionControllerMixin(vm, loadProductsForVendor);
 
+    vm.toggleProductSection = toggleProductSection;
     vm.getVendorPricingStatus = getVendorPricingStatus;
     vm.loadingPromise = {};
     vm.stopEditing = stopEditing;
     vm.vendors = [];
     vm.isEditing = {};
+    vm.expandedProducts = {};
     vm.cycle = {};
     vm.lastYear = '';
     vm.offeringColumns = [
@@ -56,16 +58,41 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
 
     function loadProductsForVendor(vendor) {
         if (vendor.products) {
-            return $q.when();
+            return $q.when(vendor.products);
         }
 
-        vm.loadingPromise[vendor.id] = productService.listProductsWithOfferingsForVendorId(vendor.id)
+        vm.loadingPromise[vendor.id] = productService.listProductsForVendorId(vendor.id)
             .then(function(products) {
                 vendor.products = products;
                 return products;
             });
 
         return vm.loadingPromise[vendor.id];
+    }
+
+    function loadOfferingsForProduct(product){
+        if ( product.offerings ){
+            return $q.when(product.offerings);
+        }
+
+        vm.loadingPromise[product.id] = offeringService.listOfferingsForProductId(product.id)
+            .then(function(offerings){
+                product.offerings = offerings;
+                return offerings;
+            });
+
+        return vm.loadingPromise[product.id];
+    }
+
+    function toggleProductSection(product){
+        if ( vm.expandedProducts[product.id] ){
+            delete vm.expandedProducts[product.id];
+        }
+        else {
+            loadOfferingsForProduct(product).then(function(){
+                vm.expandedProducts[product.id] = true;
+            });
+        }
     }
 
     function getVendorPricingStatus(vendor) {
