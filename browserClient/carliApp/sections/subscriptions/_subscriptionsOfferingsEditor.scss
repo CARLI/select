@@ -199,21 +199,43 @@
 
     /* Applies to the by-vendor offerings view */
     .vendor-accordion {
-        .product-content {
+        .product-list {
             list-style: none inside;
             min-width: 960px;
 
             .product-header {
                 background: $purple;
                 color: #fff;
+                cursor: pointer;
                 @include font-size(17);
                 font-family: 'Merriweather';
                 padding: 1rem;
+                position: relative;
+                z-index: 2;
+
+                &.affix {
+                    position: fixed;
+                    top: 0;
+                    width: 100%;
+                    z-index: 1;
+
+                    &.dontAffix {
+                        position: relative !important;
+                    }
+                }
 
                 .price-cap {
                     float: right;
                     @include font-size(14);
                     font-family: 'Verdana';
+                }
+            }
+
+            .product-content {
+                display: none;
+
+                &.expanded {
+                    display: block;
                 }
             }
 
