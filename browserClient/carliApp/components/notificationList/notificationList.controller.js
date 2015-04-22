@@ -18,6 +18,7 @@ function notificationListController($q, alertService, controllerBaseService, not
 
     function activate(){
         setupTemplateConfigurationForMode();
+        loadNotifications();
 
         function setupTemplateConfigurationForMode(){
             vm.mode = vm.mode || 'draft';
@@ -26,13 +27,28 @@ function notificationListController($q, alertService, controllerBaseService, not
                 vm.showDateSent = true;
                 vm.showSendAll = false;
                 vm.sendLabel = 'Resend';
+                vm.showDateFilter = true;
             }
             else {
                 vm.showRemove = true;
                 vm.showDateSent = false;
                 vm.showSendAll = true;
                 vm.sendLabel = 'Send';
+                vm.showDateFilter = false;
             }
+        }
+    }
+
+    function loadNotifications(){
+        if ( vm.mode === 'sent' ){
+            notificationService.listSent().then(function(sent){
+                vm.notifications  = sent;
+            });
+        }
+        else {
+            notificationService.listDrafts().then(function(drafts){
+                vm.notifications  = drafts;
+            });
         }
     }
 
