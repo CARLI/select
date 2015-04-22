@@ -48,4 +48,8 @@ user-menu {
             }
         }
     }
+    .dropdown-menu.open {
+        display: block;
+        color: $black;
+    }
 }

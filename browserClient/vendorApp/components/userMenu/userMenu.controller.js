@@ -4,6 +4,7 @@ angular.module('vendor.userMenu')
 function userMenuController($rootScope, userService){
     var vm = this;
     vm.userName = null;
+    vm.logout = userService.logout;
 
     $rootScope.$watch(userService.getUser, function(user) {
         if (user.userName) {
