@@ -23,20 +23,16 @@ module.exports = function (vendor) {
     }
 
     function loadCycleForVendor(cycleId) {
-        return baseRepository.load(cycleId).then(overrideBaseMethods);
-
-        function overrideBaseMethods(cycle) {
-            Object.keys(functionsToAdd).forEach(function (methodName) {
-                cycle[methodName] = functionsToAdd[methodName];
-            });
-            return cycle;
-        }
+        return baseRepository.load(cycleId)
+            .then(overrideBaseMethods);
     }
+
     function listActiveCyclesForVendor() {
         return baseRepository.listActiveCycles().then(function(cycleList){
             return cycleList
                 .filter(findOpenToVendorCycles)
-                .filter(findCyclesWithProductsFromVendor);
+                .filter(findCyclesWithProductsFromVendor)
+                .map(overrideBaseMethods);
 
             function findOpenToVendorCycles(cycle){
                 return cycle.status === 2;
@@ -46,6 +42,13 @@ module.exports = function (vendor) {
                 return true; //TODO
             }
         });
+    }
+
+    function overrideBaseMethods(cycle) {
+        Object.keys(functionsToAdd).forEach(function (methodName) {
+            cycle[methodName] = functionsToAdd[methodName];
+        });
+        return cycle;
     }
 
     var functionsToAdd = {
