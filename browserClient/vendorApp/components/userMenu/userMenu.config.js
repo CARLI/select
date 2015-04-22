@@ -1,3 +1,3 @@
 angular.module('vendor.userMenu',[
-    'vendor.currentUser'
+    'vendor.userService'
 ]);

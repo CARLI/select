@@ -4,30 +4,23 @@ angular.module('vendor.app', [
     'ngRoute',
     'ngAnimate',
     'common.accordion',
-    'common.cycleService',
     'common.fa',
+    'vendor.appState',
     'vendor.vendorHeader',
     'vendor.navBar',
     //'common.alerts',
     'vendor.routes',
+    'vendor.cycleChooser',
+    'vendor.cycleService',
+    'vendor.userLookup',
     'vendor.userMenu',
     'vendor.fakeVendorMenu'
 ])
 .config(function($locationProvider){
     $locationProvider.html5Mode(true);
 })
-.run(function($rootScope, $location, cycleService) {
-    cycleService.initCurrentCycleForVendorApp()
-        .then(openApp)
-        .catch(closeApp);
-
-    function openApp() {
-        $rootScope.isAppOpen = true;
-    }
-    function closeApp() {
-        $rootScope.isAppOpen = false;
-        $location.path('/dashboard');
-    }
+.run(function($rootScope) {
+    $rootScope.appState = 'pendingUser';
 })
 .value('cgBusyDefaults',{
     //message:'Loading Stuff',

@@ -10,19 +10,20 @@
     </head>
     <body>
         <header vendor-header role="banner"></header>
-        <div ng-if="currentUser.vendor">
+
+        <div ng-if="appState === 'pendingUser'">
+            <user-lookup></user-lookup>
+        </div>
+
+        <div ng-if="appState === 'pendingCycle'">
+            <cycle-chooser></cycle-chooser>
+        </div>
+
+        <div ng-if="appState === 'ready'">
             <nav nav-bar role="navigation"></nav>
             <alerts></alerts>
             <main role="main">
                 <div ng-view role="application"></div>
-            </main>
-        </div>
-        <div ng-if="!currentUser.vendor">
-            <main role="main">
-                <section class="content">
-                    <h1>Select Vendor to log in as:</h1>
-                    <fake-vendor-menu></fake-vendor-menu>
-                </section>
             </main>
         </div>
 

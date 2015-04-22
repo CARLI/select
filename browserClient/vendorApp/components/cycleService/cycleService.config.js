@@ -1,4 +1,4 @@
-angular.module('vendor.fakeVendorMenu', [
+angular.module('vendor.cycleService', [
     'common.carliModules',
     'vendor.userService'
 ]);

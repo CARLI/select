@@ -1,6 +1,6 @@
 angular.module('carli.sections.subscriptions.carliEditingProductList', [
     'common.accordion',
-    'common.cycleService',
+    'carli.cycleService',
     'common.productService',
     'carli.vendorService',
     'carli.productSelectionHistoryIcon'

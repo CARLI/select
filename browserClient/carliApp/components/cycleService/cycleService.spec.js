@@ -1,5 +1,5 @@
 describe('The Cycle Service', function() {
-    beforeEach(module('common.cycleService'));
+    beforeEach(module('carli.cycleService'));
 
     it( 'should provide cycleService', inject( function(cycleService) {
         expect(cycleService).to.be.an('object');
