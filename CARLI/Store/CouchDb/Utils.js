@@ -206,8 +206,7 @@ function startVendorDatabaseReplication(sourceCycleDbName, vendorCycleDbName, ve
             target: StoreOptions.couchDbUrl + '/' + vendorCycleDbName,
             filter: "CARLI/filterCycleDatabaseForVendor",
             query_params: {"vendorId": vendorId},
-            continuous: true,
-            create_target: true
+            continuous: true
         }
     };
 
