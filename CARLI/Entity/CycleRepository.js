@@ -142,6 +142,25 @@ var functionsToAdd = {
             return resultArray[0];
         });
     },
+    getReplicationProgress: function getReplicationStatus(){
+        return couchUtils.getRunningCouchJobs().then(filterReplicationJobs).then(filterByCycle).then(resolveToProgress);
+
+        function filterReplicationJobs( jobs ){
+            return jobs.filter(function(job){
+                return job.type === 'replication';
+            });
+        }
+
+        function filterByCycle( jobs ){
+            return jobs.filter(function(job){
+                return job.target.indexOf(this.getDatabaseName()) >= 0;
+            });
+        }
+
+        function resolveToProgress( jobs ){
+            return jobs.length ? jobs[0].progress : 100;
+        }
+    },
     getViewUpdateProgress: function getViewUpdateStatus(){
         return couchUtils.getRunningCouchJobs().then(filterIndexJobs).then(filterByCycle).then(resolveToProgress);
 

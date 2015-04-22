@@ -38,7 +38,7 @@ function cycleChooserController($scope, $timeout, cycleService) {
 
 
         function watchProgress() {
-            cycle.getViewUpdateProgress().then(function(progress) {
+            cycle.getReplicationProgress().then(function(progress) {
                 console.log(progress); // TODO
 
                 if (progress < 100) {
