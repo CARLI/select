@@ -13,7 +13,8 @@
     "handlebars": "~3.0.0",
     "angular-busyclick": "~0.1.0",
     "ng-tags-input": "~2.3.0",
-    "moment": "~2.10.2"
+    "moment": "~2.10.2",
+    "ngScrollSpy": "~1.0.4"
   },
   "devDependencies": {
     "angular-mocks": "~1.2",

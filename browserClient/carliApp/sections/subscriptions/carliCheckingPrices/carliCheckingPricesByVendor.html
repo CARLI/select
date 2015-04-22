@@ -12,7 +12,7 @@
             <div class="content" ng-if="vm.openAccordion === vendor.id">
                 <ul class="product-content">
                     <li ng-repeat="product in ::vendor.products | filter:{isActive:true} track by product.id">
-                        <div class="product-header">
+                        <div class="product-header" affix>
                             {{ ::product.name }}
                             <span class="price-cap">Price Cap: <strong>{{ product.priceCap }}%</strong></span>
                         </div>

@@ -210,6 +210,12 @@
                 font-family: 'Merriweather';
                 padding: 1rem;
 
+                &.affix {
+                    top: 0;
+                    width: 100%;
+                    z-index: 999;
+                }
+
                 .price-cap {
                     float: right;
                     @include font-size(14);
