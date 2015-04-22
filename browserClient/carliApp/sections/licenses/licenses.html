@@ -7,7 +7,7 @@
     </div>
 
     <section class="content list-content">
-        <entity-list values="vm.licenseList" columns="vm.licenseListColumns" entity-label="licenses"></entity-list>
+        <entity-list values="vm.licenseList" columns="vm.licenseListColumns" entity-label="licenses" loading-promise="vm.loadingPromise"></entity-list>
     </section>
 
     <edit-license-modal after-submit-fn="vm.afterLicenseSubmit"></edit-license-modal>

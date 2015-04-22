@@ -11,7 +11,7 @@ function licensesController( $sce, licenseService ){
     }
 
     function populateLicenseList() {
-        licenseService.list().then( function(licenseList){
+        vm.loadingPromise = licenseService.list().then( function(licenseList){
             vm.licenseList = licenseList;
         });
     }
