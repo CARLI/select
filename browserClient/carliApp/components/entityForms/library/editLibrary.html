@@ -45,7 +45,7 @@
 
                     <label for="libraryIshareMember">I-Share Member</label>
                     <view-edit-checkbox ng-model="vm.library.isIshareMember" edit-mode="false" input-id="libraryIshareMember">
-                        {{ vm.library.isIshareMember }}
+                        {{ vm.library.isIshareMember ? 'Yes' : 'No' }}
                     </view-edit-checkbox>
 
                     <label for="libraryGar">General Account Receivable</label>

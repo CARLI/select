@@ -4,12 +4,14 @@ var Q = require('q');
 
 var pool = mysql.createPool(config.memberDb);
 
+var selectLibrary = 'SELECT m.institution_name, m.member_id, m.library_type, m.membership_lvl, m.current, p.product_id as is_ishare ' +
+                    'FROM members AS m LEFT JOIN subscribed_products p ON (m.member_id = p.member_id AND p.product_id = 1) ';
+
 function listLibraries() {
     var deferred = Q.defer();
     pool.getConnection(function(err, connection) {
         connection.query(
-            'SELECT m.institution_name, m.member_id, m.library_type, m.membership_lvl, m.current ' +
-            'FROM members AS m',
+            selectLibrary,
             null,
             function(err, rows, fields) {
                 var libraries = extractRowsFromResponse(err, rows, convertCrmLibrary);
@@ -28,9 +30,7 @@ function loadLibrary(id) {
     pool.getConnection(function(err, connection) {
 
         connection.query(
-            'SELECT m.institution_name, m.member_id, m.fte, m.library_type, m.membership_lvl ' +
-            'FROM members AS m ' +
-            'WHERE m.member_id = ?',
+            selectLibrary + 'WHERE m.member_id = ?',
             [id],
             function (err, rows, fields) {
                 var libraries = extractRowsFromResponse(err, rows, convertCrmLibrary);
@@ -103,7 +103,7 @@ function convertCrmLibrary(crm) {
         institutionYears: convertCrmInstitutionYearsFromType(crm.library_type),
         institutionType: convertCrmInstitutionType(crm.library_type),
         membershipLevel: convertCrmMembershipLevel(crm.membership_lvl),
-        // "isIshareMember": crm.is_share_member ? true : false,
+        isIshareMember: !!crm.is_ishare,
         isActive: isLibraryActive(crm),
         "outstandingBalances": [],
         "contacts": []

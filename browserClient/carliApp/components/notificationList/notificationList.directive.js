@@ -4,7 +4,6 @@ angular.module('carli.notificationList')
         restrict: 'E',
         templateUrl: '/carliApp/components/notificationList/notificationList.html',
         scope: {
-            notifications: '=',
             mode: '@',
             title: '@',
             subTitle: '@',

@@ -4,12 +4,17 @@
 </div>
 
 <div class="controls">
+    <div ng-if="vm.showDateFilter" class="date-filter-controls">
+        <view-edit-date ng-model="vm.sentFilterStartDate" edit-mode="true"></view-edit-date>
+        <view-edit-date ng-model="vm.sentFilterEndDate" edit-mode="true"></view-edit-date>
+        <button type="button" class="carli-button" ng-click="vm.updateSent()">Set Date Range</button>
+    </div>
     <radio name="'notifications-list'+listId+'-filter'"  value="'all'" ng-model="vm.filter">Show <strong>All Notifications</strong></radio>
     <radio name="'notifications-list'+listId+'-filter'" value="'invoice'" ng-model="vm.filter">Show <strong>Library Invoices</strong></radio>
     <radio name="'notifications-list'+listId+'-filter'" value="'report'" ng-model="vm.filter">Show <strong>Vendor Reports</strong></radio>
 </div>
 
-<ul>
+<ul cg-busy="vm.loadingPromise">
     <li class="notification-row" ng-repeat="notification in vm.notifications | filter: vm.filterByType | orderBy:vm.orderBy:vm.reverse as filteredResults track by notification.id">
         <div class="column subject">
             <span class="subject">

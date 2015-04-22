@@ -3,9 +3,13 @@ angular.module('carli.notificationList')
 
 function notificationListController($q, alertService, controllerBaseService, notificationService, notificationPreviewModalService){
     var vm = this;
+
+    var datePickerFormat = 'M/D/YY';
+
     vm.filter = 'all';
 
     vm.filterByType = filterByType;
+    vm.updateSent = updateSent;
     vm.previewNotification = previewNotification;
     vm.previewPdf = previewPdf;
     vm.removeDraft = removeDraft;
@@ -18,6 +22,7 @@ function notificationListController($q, alertService, controllerBaseService, not
 
     function activate(){
         setupTemplateConfigurationForMode();
+        vm.loadingPromise = loadNotifications();
 
         function setupTemplateConfigurationForMode(){
             vm.mode = vm.mode || 'draft';
@@ -26,13 +31,37 @@ function notificationListController($q, alertService, controllerBaseService, not
                 vm.showDateSent = true;
                 vm.showSendAll = false;
                 vm.sendLabel = 'Resend';
+                vm.showDateFilter = true;
+                vm.sentFilterStartDate = moment().subtract(2,'week').format();
+                vm.sentFilterEndDate = moment().endOf('day').format();
             }
             else {
                 vm.showRemove = true;
                 vm.showDateSent = false;
                 vm.showSendAll = true;
                 vm.sendLabel = 'Send';
+                vm.showDateFilter = false;
             }
+        }
+    }
+
+    function updateSent(){
+        vm.loadingPromise = loadNotifications();
+    }
+
+    function loadNotifications(){
+        if ( vm.mode === 'sent' ){
+            var startDate = moment(vm.sentFilterStartDate).format();
+            var endDate = moment(vm.sentFilterEndDate).endOf('day').format();
+
+            return notificationService.listSentBetweenDates(startDate, endDate).then(function(sent){
+                vm.notifications  = sent;
+            });
+        }
+        else {
+            return notificationService.listDrafts().then(function(drafts){
+                vm.notifications  = drafts;
+            });
         }
     }
 
