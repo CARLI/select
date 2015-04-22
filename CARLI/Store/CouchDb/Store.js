@@ -50,7 +50,8 @@ module.exports = function (inputOptions) {
         }, function (err, response, body) {
             var error = err || body.error;
             if (error) {
-                deferred.reject(config.errorMessages.fatal);
+                var message = (config.showFullErrors) ? error : config.errorMessages.fatal;
+                deferred.reject(message);
             }
             else {
                 data._id = body.id;
