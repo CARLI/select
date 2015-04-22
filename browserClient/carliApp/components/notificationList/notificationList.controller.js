@@ -22,7 +22,7 @@ function notificationListController($q, alertService, controllerBaseService, not
 
     function activate(){
         setupTemplateConfigurationForMode();
-        loadNotifications();
+        vm.loadingPromise = loadNotifications();
 
         function setupTemplateConfigurationForMode(){
             vm.mode = vm.mode || 'draft';
@@ -46,7 +46,7 @@ function notificationListController($q, alertService, controllerBaseService, not
     }
 
     function updateSent(){
-        return loadNotifications();
+        vm.loadingPromise = loadNotifications();
     }
 
     function loadNotifications(){

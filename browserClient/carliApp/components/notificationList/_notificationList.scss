@@ -23,6 +23,15 @@ notification-list {
         radio {
             margin-left: 1rem;
         }
+
+        .date-filter-controls {
+            display: inline-block;
+
+            view-edit-date {
+                display: inline-block;
+                width: 100px;
+            }
+        }
     }
 
     ul {
