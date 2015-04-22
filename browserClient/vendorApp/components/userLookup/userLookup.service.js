@@ -1,7 +1,7 @@
 angular.module('vendor.userLookup')
     .service('userLookup', userLookupService);
 
-function userLookupService( $q, appState, CarliModules, userService ){
+function userLookupService( $q, CarliModules, userService ){
     return {
         initializeUserFromToken: initializeUserFromToken,
         getFullUser: getFullUser

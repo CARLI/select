@@ -1,7 +1,7 @@
 angular.module('vendor.cycleChooser')
     .controller('cycleChooserController', cycleChooserController);
 
-function cycleChooserController($scope, appState, cycleService) {
+function cycleChooserController($scope, cycleService) {
     var vm = this;
 
     vm.cycles = [];
