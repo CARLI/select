@@ -213,6 +213,16 @@ function replicateLocalDesignDocsToDev() {
         })
         .done();
 }
+function replicateDevToLocal() {
+    replicateAllFrom('dev').to('local')
+        .then(function() {
+            console.log("Finished");
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+        .done();
+}
 
 function replicateLocalToProd() {
     replicateAllFrom('local').to('prod')
@@ -236,6 +246,7 @@ function replicateQaToProd() {
 }
 
 module.exports = {
+    replicateDevToLocal: replicateDevToLocal,
     replicateQaToLocal: replicateQaToLocal,
     replicateLocalToQa: replicateLocalToQa,
     replicateLocalToDev: replicateLocalToDev,
