@@ -2,7 +2,6 @@ var Entity = require('../Entity')
     , EntityTransform = require('./EntityTransformationUtils')
     , config = require('../../config')
     , couchUtils = require('../Store/CouchDb/Utils')
-    , cycleCreation = require('../../config/environmentDependentModules/cycleCreation')
     , StoreOptions = config.storeOptions
     , Store = require('../Store')
     , StoreModule = require('../Store/CouchDb/Store')
@@ -31,10 +30,6 @@ function expandCycles(result) {
 
 function transformFunction( cycle ){
     EntityTransform.transformObjectForPersistence(cycle, propertiesToTransform);
-}
-
-function createCycleFrom( sourceCycle, newCycleData ) {
-    return cycleCreation.createCycleFrom(sourceCycle, newCycleData);
 }
 
 function createCycleLog(msg, data) {
@@ -187,7 +182,6 @@ var functionsToAdd = {
 module.exports = {
     setStore: CycleRepository.setStore,
     create: createCycle,
-    createCycleFrom: createCycleFrom,
     createCycleLog: createCycleLog,
     update: updateCycle,
     list: listCycles,

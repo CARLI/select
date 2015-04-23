@@ -4,6 +4,7 @@ angular.module('carli.cycleService')
 function cycleService( CarliModules, $q ) {
 
     var cycleModule = CarliModules.Cycle;
+    var cycleMiddleware = CarliModules.CycleMiddleware;
 
     var currentCycle = null;
 
@@ -19,7 +20,7 @@ function cycleService( CarliModules, $q ) {
         },
         createCycleFrom: function( sourceCycle, newCycle ) {
             fixCycleName(newCycle);
-            return $q.when(cycleModule.createCycleFrom(sourceCycle,newCycle));
+            return $q.when(cycleMiddleware.createCycleFrom(sourceCycle,newCycle));
         },
         update: function() { return $q.when( cycleModule.update.apply( this, arguments) ); },
         load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ); },

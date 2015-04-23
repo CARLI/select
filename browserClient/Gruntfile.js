@@ -22,13 +22,13 @@ module.exports = function ( grunt ) {
             },
             carli: {
                 files: [{
-                    src: user_config.logic_files.js,
+                    src: 'carliAppModule.js',
                     dest: user_config.carli_app.build_dir + user_config.logic_files.build
                 }]
             },
             vendor: {
                 files: [{
-                    src: '../CARLI/vendor.js',
+                    src: 'vendorAppModule.js',
                     dest: user_config.vendor_app.build_dir + user_config.logic_files.build
                 }]
             }
@@ -189,7 +189,6 @@ module.exports = function ( grunt ) {
 
         jshint: {
             src: [
-                user_config.logic_files.js,
                 user_config.carli_app.all_js,
                 user_config.vendor_app.all_js
             ],

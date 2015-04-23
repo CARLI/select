@@ -4,6 +4,7 @@ angular.module('common.productService')
 function productService( CarliModules, $q, cycleService, libraryService, offeringService ) {
 
     var productModule = CarliModules.Product;
+    var productMiddleware = CarliModules.ProductMiddleware;
 
     return {
         list:   function() {
@@ -28,7 +29,7 @@ function productService( CarliModules, $q, cycleService, libraryService, offerin
             return $q.when( productModule.listProductsForVendorId( vendorId, cycleService.getCurrentCycle()) );
         },
         listProductsWithOfferingsForVendorId: function (vendorId) {
-            return $q.when( productModule.listProductsWithOfferingsForVendorId( vendorId, cycleService.getCurrentCycle()) );
+            return $q.when( productMiddleware.listProductsWithOfferingsForVendorId( vendorId, cycleService.getCurrentCycle()) );
         },
         listProductCountsByVendorId: function(){
             return $q.when( productModule.listProductCountsByVendorId( cycleService.getCurrentCycle()) );

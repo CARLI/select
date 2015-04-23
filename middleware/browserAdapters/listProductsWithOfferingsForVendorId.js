@@ -1,8 +1,8 @@
 var middlewareRequest = require('./middlewareRequest');
 
-function listProductsWithOfferingsForVendorId(vendorId, cycleId) {
+function listProductsWithOfferingsForVendorId(vendorId, cycle) {
     return middlewareRequest({
-        path: '/products-with-offerings-for-vendor/' + vendorId + '/for-cycle/' + cycleId,
+        path: '/products-with-offerings-for-vendor/' + vendorId + '/for-cycle/' + cycle.id,
         method: 'get',
         json: true
     });
