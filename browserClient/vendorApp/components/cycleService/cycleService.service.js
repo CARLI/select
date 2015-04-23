@@ -15,17 +15,7 @@ function cycleService( CarliModules, $q, appState, userService ) {
         listActiveCycles: listActiveCycles,
         load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ); },
         getCurrentCycle: getCurrentCycle,
-        setCurrentCycle: setCurrentCycle,
-        initCurrentCycle: function(){
-            return listActiveCycles().then(function(openCycles){
-                if ( openCycles.length ){
-                    currentCycle = openCycles[0];
-                }
-                else {
-                    return $q.reject("No Open Cycles");
-                }
-            });
-        }
+        setCurrentCycle: setCurrentCycle
     };
 
     function listActiveCycles() {
