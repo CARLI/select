@@ -1,4 +1,5 @@
-describe('The Offering service', function() {
+describe('The Edit Offering service', function() {
+    beforeEach(module('carli.cycleService'));
     beforeEach(module('carli.editOffering'));
 
     it( 'should provide a getCurrentOffering method', inject( function(editOfferingService) {

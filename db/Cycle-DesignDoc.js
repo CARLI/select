@@ -88,6 +88,23 @@ ddoc = {
                 };
             }
         }
+    },
+    filters: {
+        filterCycleDatabaseForVendor: function(doc, req) {
+            if(!req.query.vendorId) {
+                throw("vendorId is required");
+            }
+
+            if (doc.vendor == req.query.vendorId || doc.vendorId == req.query.vendorId) {
+                return true;
+            }
+
+            if (doc._id.substr(0, 7) === '_design') {
+                return true;
+            }
+
+            return false;
+        }
     }
 };
 

@@ -4,9 +4,10 @@ var test = require( './Entity/EntityInterface.spec' )
     , uuid = require( 'node-uuid' )
     , chaiAsPromised = require( 'chai-as-promised' )
     , CycleRepository = require( '../Entity/CycleRepository' )
+    , CycleMiddleware = require('../../middleware/components/cycleCreation')
     , ProductRepository = require( '../Entity/ProductRepository' )
     , config = require('../../config')
-    , request = require('../../config/environmentDependentModules/request')
+    , request = require('request')
     , storeOptions = config.storeOptions
     , testUtils = require('./utils')
     , Q = require('q')
@@ -60,7 +61,7 @@ describe('Additional Repository Functions', function() {
         });
     });
 
-    xdescribe('createCycleFrom', function(){
+    describe('createCycleFrom', function(){
         it('should copy cycle contents from the specified cycle db', function(){
             var sourceCycleData = validCycleData();
             var sourceCycle = null;
@@ -85,7 +86,7 @@ describe('Additional Repository Functions', function() {
                     return ProductRepository.create( productData, sourceCycle);
                 })
                 .then(function(){
-                    return CycleRepository.createCycleFrom(sourceCycle, newCycleData);
+                    return CycleMiddleware.createCycleFrom(sourceCycle, newCycleData);
                 })
                 .then(CycleRepository.load)
                 .then(function(newCycle){
@@ -265,6 +266,18 @@ describe('Adding functions to Cycle instances', function() {
                 .then(function (loadedCycle) {
                     loadedCycle.returnToPreviousStep();
                     return expect(loadedCycle.status).to.equal(0);
+                });
+        });
+    });
+
+    describe('the Cycle.getDatabaseName method', function () {
+        it('should return a database name', function () {
+            var cycle = validCycleData();
+
+            return CycleRepository.create(cycle)
+                .then(CycleRepository.load)
+                .then(function (loadedCycle) {
+                    return expect(loadedCycle.getDatabaseName()).to.equal(loadedCycle.databaseName);
                 });
         });
     });

@@ -30,7 +30,7 @@ function newCycleFormController( $scope, $rootScope, $location, alertService, cy
 
     function saveCycle() {
         var creationPromise;
-        if (vm.sourceCycle && vm.sourceCycle.databaseName) {
+        if (vm.sourceCycle && vm.sourceCycle.getDatabaseName()) {
             creationPromise = cycleService.createCycleFrom(vm.sourceCycle, vm.cycle);
         } else {
             creationPromise = cycleService.create(vm.cycle);

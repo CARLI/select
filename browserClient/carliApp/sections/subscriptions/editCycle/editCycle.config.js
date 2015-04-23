@@ -1,6 +1,6 @@
 angular.module('carli.sections.subscriptions.editCycle', [
     'carli.alerts',
-    'common.cycleService',
+    'carli.cycleService',
     'carli.notificationModal',
     'carli.sections.subscriptions.cycleDataProcessing',
     'carli.sections.subscriptions.carliEditingProductList',

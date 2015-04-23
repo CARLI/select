@@ -1,1 +1,1 @@
-<select ng-model="selectedVendor" ng-options="vendor as vendor.name for vendor in vendorList"></select>
+<select ng-model="selectedVendor" ng-options="vendor as vendor.name for vendor in vendorList | orderBy:'name'"></select>

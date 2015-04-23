@@ -6,7 +6,6 @@ var Entity = require('../Entity')
   , getStoreForCycle = require('./getStoreForCycle')
   , Validator = require('../Validator')
   , moment = require('moment')
-  , listProductsWithOfferingsForVendorIdModule = require('../../config/environmentDependentModules/listProductsWithOfferingsForVendorId')
   , Q = require('q')
   ;
 
@@ -35,7 +34,7 @@ function updateProduct( product, cycle ){
 
 function listProducts(cycle){
     setCycle(cycle);
-    return expandProducts( ProductRepository.list(cycle.databaseName), cycle );
+    return expandProducts( ProductRepository.list(cycle.getDatabaseName()), cycle );
 }
 
 function loadProduct( productId, cycle ){
@@ -91,21 +90,17 @@ function isAvailableToday( product ){
 
 function listProductsForLicenseId( licenseId, cycle ) {
     setCycle(cycle);
-    return expandProducts(couchUtils.getCouchViewResultValues(cycle.databaseName, 'listProductsByLicenseId', licenseId), cycle);
+    return expandProducts(couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listProductsByLicenseId', licenseId), cycle);
 }
 
 function listProductsForVendorId( vendorId, cycle ) {
     setCycle(cycle);
-    return expandProducts(couchUtils.getCouchViewResultValues(cycle.databaseName, 'listProductsForVendorId', vendorId), cycle);
-}
-
-function listProductsWithOfferingsForVendorId( vendorId, cycle ) {
-    return listProductsWithOfferingsForVendorIdModule.listProductsWithOfferingsForVendorId(vendorId, cycle.id);
+    return expandProducts(couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listProductsForVendorId', vendorId), cycle);
 }
 
 function listProductCountsByVendorId(cycle){
     setCycle(cycle);
-    return couchUtils.getCouchViewResultObject(cycle.databaseName, 'listProductCountsByVendorId', null, true);
+    return couchUtils.getCouchViewResultObject(cycle.getDatabaseName(), 'listProductCountsByVendorId', null, true);
 }
 
 function setCycle(cycle) {
@@ -116,7 +111,7 @@ function setCycle(cycle) {
 }
 
 function getProductsById( ids, cycle ){
-    return couchUtils.getCouchDocuments(cycle.databaseName, ids);
+    return couchUtils.getCouchDocuments(cycle.getDatabaseName(), ids);
 }
 
 
@@ -154,7 +149,6 @@ module.exports = {
     listAvailableOneTimePurchaseProducts: listAvailableOneTimePurchaseProducts,
     listProductsForLicenseId: listProductsForLicenseId,
     listProductsForVendorId: listProductsForVendorId,
-    listProductsWithOfferingsForVendorId: listProductsWithOfferingsForVendorId,
     listProductCountsByVendorId: listProductCountsByVendorId,
     getProductsById: getProductsById,
     getProductDetailCodeOptions: getProductDetailCodeOptions

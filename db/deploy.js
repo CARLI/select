@@ -1,7 +1,7 @@
 var config = require('../config');
 var CycleRepository = require('../CARLI/Entity/CycleRepository');
-var couchApp = require('../config/environmentDependentModules/couchApp');
-var request = require('../config/environmentDependentModules/request');
+var couchApp = require('../middleware/components/couchApp');
+var request = require('request');
 var Q = require('q');
 var dbInfo = require('./databaseInfo');
 
@@ -62,7 +62,7 @@ function deployLocalCycleDesignDocs(instance) {
     return CycleRepository.list().then(function (cycles) {
         var promises = [];
         cycles.forEach(function (cycle) {
-            promises.push( couchApp.putDesignDoc(cycle.databaseName, 'Cycle') );
+            promises.push( couchApp.putDesignDoc(cycle.getDatabaseName(), 'Cycle') );
         });
         return Q.all(promises);
     });

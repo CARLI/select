@@ -197,6 +197,29 @@ function _couchReplicationOptions(sourceDbName, targetDbName) {
     };
 }
 
+function startVendorDatabaseReplication(sourceCycleDbName, vendorCycleDbName, vendorId) {
+    var sourceToVendorOptions = getReplicationRequestOptions(sourceCycleDbName, vendorCycleDbName);
+    var vendorToSourceOptions = getReplicationRequestOptions(vendorCycleDbName, sourceCycleDbName);
+
+    return couchRequest(sourceToVendorOptions).then(function() {
+        return couchRequest(vendorToSourceOptions)
+    });
+
+    function getReplicationRequestOptions(sourceDbName, targetDbName) {
+        return {
+            url: StoreOptions.couchDbUrl + '/_replicator',
+            method: 'post',
+            json: {
+                source: StoreOptions.couchDbUrl + '/' + sourceDbName,
+                target: StoreOptions.couchDbUrl + '/' + targetDbName,
+                filter: "CARLI/filterCycleDatabaseForVendor",
+                query_params: {"vendorId": vendorId},
+                continuous: true
+            }
+        };
+    }
+}
+
 function getRunningCouchJobs(){
     var url = StoreOptions.couchDbUrl + '/_active_tasks/';
 
@@ -207,6 +230,14 @@ function triggerViewIndexing(databaseName) {
     var url = StoreOptions.couchDbUrl + '/' + databaseName + '/' + '_design/CARLI/_view/docTypes?stale=update_after';
 
     couchRequest({url : url});
+}
+
+function doesDatabaseExist(databaseName) {
+    var url = StoreOptions.couchDbUrl + '/' + databaseName;
+
+    return couchRequest({url : url})
+        .then(function() { return true; })
+        .catch(function() { return false; });
 }
 
 module.exports = {
@@ -220,5 +251,7 @@ module.exports = {
     makeValidCouchDbName: makeValidCouchDbName,
     replicateFrom: replicateFrom,
     getRunningCouchJobs: getRunningCouchJobs,
-    triggerViewIndexing: triggerViewIndexing
+    startVendorDatabaseReplication: startVendorDatabaseReplication,
+    triggerViewIndexing: triggerViewIndexing,
+    doesDatabaseExist: doesDatabaseExist
 };

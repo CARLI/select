@@ -1,0 +1,6 @@
+<main role="main">
+    <section class="content">
+        <h1>Choose a cycle:</h1>
+        <select ng-model="vm.selectedCycle" ng-options="cycle as cycle.name for cycle in vm.cycles track by cycle.id"></select>
+    </section>
+</main>

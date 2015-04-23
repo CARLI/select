@@ -1,7 +1,7 @@
 angular.module('vendor.sections.siteLicensePrices')
     .controller('siteLicensePricesController', siteLicensePricesController);
 
-function siteLicensePricesController($scope, $q, $filter, cycleService, libraryService, offeringService, productService, currentUser){
+function siteLicensePricesController($scope, $q, $filter, cycleService, libraryService, offeringService, productService, userService){
     var vm = this;
     vm.loadingPromise = null;
     vm.viewOptions = {};
@@ -34,7 +34,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     }
 
     function loadProducts() {
-        return productService.listProductsWithOfferingsForVendorId( currentUser.vendor.id ).then(function (products) {
+        return productService.listProductsWithOfferingsForVendorId( userService.getUser().vendor.id ).then(function (products) {
             vm.products = $filter('orderBy')(products, 'name');
             initializeSelectedProductIds();
         });

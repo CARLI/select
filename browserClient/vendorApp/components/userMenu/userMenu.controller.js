@@ -1,13 +1,14 @@
 angular.module('vendor.userMenu')
 .controller('userMenuController', userMenuController);
 
-function userMenuController($rootScope){
+function userMenuController($rootScope, userService){
     var vm = this;
-    vm.userName = 'Username!';
+    vm.userName = null;
+    vm.logout = userService.logout;
 
-    $rootScope.$watch('currentUser.userName', function(userName) {
-        if (userName) {
-            vm.userName = userName;
+    $rootScope.$watch(userService.getUser, function(user) {
+        if (user.userName) {
+            vm.userName = user.userName;
         }
     });
 }

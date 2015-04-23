@@ -1,5 +1,5 @@
 angular.module('vendor.fakeVendorMenu')
-    .directive('fakeVendorMenu', function ($q, $rootScope, $window, currentUser, CarliModules) {
+    .directive('fakeVendorMenu', function ($q, $window, userService, CarliModules) {
         return {
             restrict: 'E',
             templateUrl: '/vendorApp/components/fakeVendorMenu/fakeVendorMenu.html',
@@ -12,7 +12,7 @@ angular.module('vendor.fakeVendorMenu')
                     $q.when(vendorModule.list()).then(function (vendors) {
                         scope.vendorList = vendors;
 
-                        if ($window.sessionStorage.getItem('currentVendorId')) {
+                        if ($window.sessionStorage.getItem('authToken')) {
                             restoreCurrentVendor();
                         }
                     });
@@ -25,7 +25,7 @@ angular.module('vendor.fakeVendorMenu')
                 }
 
                 function restoreCurrentVendor() {
-                    var vendorId = $window.sessionStorage.getItem('currentVendorId');
+                    var vendorId = JSON.parse($window.sessionStorage.getItem('authToken'))  .vendorId;
                     var filteredVendors = scope.vendorList.filter(function (vendor) {
                         return vendor.id == vendorId;
                     });
@@ -33,10 +33,12 @@ angular.module('vendor.fakeVendorMenu')
                 }
 
                 function setCurrentVendor(vendor) {
-                    $rootScope.currentUser.vendor = vendor;
-                    $rootScope.currentUser.userName = vendor.name + ' User';
-
-                    $window.sessionStorage.setItem('currentVendorId', vendor.id);
+                    var authToken = {
+                        userName: vendor.name + ' User',
+                        vendorId: vendor.id
+                    };
+                    $window.sessionStorage.setItem('authToken', JSON.stringify(authToken));
+                    userService.initializeUserFromToken(authToken);
                 }
             }
         };

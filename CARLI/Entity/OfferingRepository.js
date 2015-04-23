@@ -4,6 +4,7 @@ var Entity = require('../Entity')
   , couchUtils = require( '../Store/CouchDb/Utils')
   , getStoreForCycle = require('./getStoreForCycle')
   , Validator = require('../Validator')
+  , productRepository = require('./ProductRepository')
   , Q = require('q')
   , _ = require('lodash')
   ;
@@ -31,11 +32,30 @@ function transformCycleReference( offering, cycle ) {
         offering.cycle = cycle.id; //manually transform cycle property from object to reference
     }
 }
+function addVendorToNewOffering(offering, cycle) {
+    if (offering.vendorId) {
+        return offering;
+    }
+    if (typeof offering.product == 'object') {
+        if (typeof offering.product.vendor == 'object') {
+            offering.vendorId = offering.product.vendor.id;
+        } else {
+            offering.vendorId = offering.product.vendor;
+        }
+        return offering;
+    }
+    return productRepository.load(offering.product, cycle).then(function (product) {
+        offering.vendorId = product.vendor.id;
+        return offering;
+    });
+}
 
 function createOffering( offering, cycle ){
     setCycle(cycle);
     transformCycleReference(offering, cycle);
-    return OfferingRepository.create( offering, transformFunction );
+    return addVendorToNewOffering(offering, cycle).then(function (newOffering) {
+        return OfferingRepository.create( newOffering, transformFunction );
+    });
 }
 
 function updateOffering( offering, cycle ){
@@ -46,7 +66,7 @@ function updateOffering( offering, cycle ){
 
 function listOfferings(cycle){
     setCycle(cycle);
-    return expandOfferings( OfferingRepository.list(cycle.databaseName), cycle);
+    return expandOfferings( OfferingRepository.list(cycle.getDatabaseName()), cycle);
 }
 
 function transformOfferingsForNewCycle(newCycle, sourceCycle) {
@@ -89,7 +109,8 @@ function loadOffering( offeringId, cycle ){
                 })
                 .catch(function(err){
                     // WARNING: this suppresses errors for entity references that are not found in the store
-                    //console.warn('*** Cannot find reference in database to either cycle, library, or product in offering ', err);
+                    //console.warn('*** Cannot find reference in database to either cycle, library, or product in
+                    // offering ', err);
                     deferred.resolve(offering);
                 });
         })
@@ -107,19 +128,19 @@ function deleteOffering( offeringId, cycle ){
 
 function listOfferingsForLibraryId( libraryId, cycle ) {
     setCycle(cycle);
-    return expandOfferings( couchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForLibraryId', libraryId.toString()), cycle )
+    return expandOfferings( couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listOfferingsForLibraryId', libraryId.toString()), cycle )
         .then(initializeComputedValues);
 }
 
 function listOfferingsForProductId( productId, cycle ) {
     setCycle(cycle);
-    return expandOfferings( couchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsForProductId', productId), cycle )
+    return expandOfferings( couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listOfferingsForProductId', productId), cycle )
         .then(initializeComputedValues);
 }
 
 function listOfferingsWithSelections( cycle ) {
     setCycle(cycle);
-    return expandOfferings( couchUtils.getCouchViewResultValues(cycle.databaseName, 'listOfferingsWithSelections'), cycle )
+    return expandOfferings( couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listOfferingsWithSelections'), cycle )
         .then(initializeComputedValues);
 
 }
@@ -177,7 +198,7 @@ var functionsToAdd = {
 };
 
 function getOfferingsById( ids, cycle ){
-    return expandOfferings(couchUtils.getCouchDocuments(cycle.databaseName, ids), cycle);
+    return expandOfferings(couchUtils.getCouchDocuments(cycle.getDatabaseName(), ids), cycle);
 }
 
 function getOfferingDisplayOptions(){

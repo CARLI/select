@@ -2,7 +2,6 @@ var Entity = require('../Entity')
     , EntityTransform = require('./EntityTransformationUtils')
     , config = require('../../config')
     , couchUtils = require('../Store/CouchDb/Utils')
-    , cycleCreation = require('../../config/environmentDependentModules/cycleCreation')
     , StoreOptions = config.storeOptions
     , Store = require('../Store')
     , StoreModule = require('../Store/CouchDb/Store')
@@ -33,10 +32,6 @@ function transformFunction( cycle ){
     EntityTransform.transformObjectForPersistence(cycle, propertiesToTransform);
 }
 
-function createCycleFrom( sourceCycle, newCycleData ) {
-    return cycleCreation.createCycleFrom(sourceCycle, newCycleData);
-}
-
 function createCycleLog(msg, data) {
     var timestamp = new Date().toISOString();
     var prefix = timestamp + ' [Cycle Creation]: ';
@@ -58,9 +53,9 @@ function createCycle( cycle ) {
 
     function createDatabaseForCycle( cycle ) {
         cycle.databaseName = couchUtils.makeValidCouchDbName('cycle-' + cycle.name);
-        createCycleLog('Creating database for ' + cycle.name + ' with database ' + cycle.databaseName);
+        createCycleLog('Creating database for ' + cycle.name + ' with database ' + cycle.getDatabaseName());
 
-        return couchUtils.createDatabase(cycle.databaseName)
+        return couchUtils.createDatabase(cycle.getDatabaseName())
             .then(function commit() {
                 createCycleLog('  Success creating database for ' + cycle.name);
                 return updateCycle( cycle );
@@ -73,8 +68,8 @@ function createCycle( cycle ) {
     }
 
     function triggerViewIndexing(cycle) {
-        createCycleLog('Triggering view indexing for ' + cycle.name + ' with database ' + cycle.databaseName);
-        couchUtils.triggerViewIndexing(cycle.databaseName);
+        createCycleLog('Triggering view indexing for ' + cycle.name + ' with database ' + cycle.getDatabaseName());
+        couchUtils.triggerViewIndexing(cycle.getDatabaseName());
         return cycle;
     }
 
@@ -134,14 +129,36 @@ var functionsToAdd = {
             --this.status;
         }
     },
+    getDatabaseName: function() {
+        return this.databaseName;
+    },
     getCycleSelectionAndInvoiceTotals: function getCycleSelectionAndInvoiceTotals() {
-        return couchUtils.getCouchViewResultValues(this.databaseName, 'getCycleSelectionAndInvoiceTotals').then(function(resultArray){
+        return couchUtils.getCouchViewResultValues(this.getDatabaseName(), 'getCycleSelectionAndInvoiceTotals').then(function(resultArray){
             return resultArray[0];
         });
     },
-    getViewUpdateProgress: function getViewUpdateStatus(){
-        var database = this.databaseName;
+    getReplicationProgress: function getReplicationStatus(){
+        return couchUtils.getRunningCouchJobs().then(filterReplicationJobs).then(filterByCycle).then(resolveToProgress);
 
+        function filterReplicationJobs( jobs ){
+            return jobs.filter(function(job){
+                return job.type === 'replication';
+            });
+        }
+
+        function filterByCycle( jobs ){
+            return jobs.filter(function(job){
+                // Monitor job where vendor DB is the source.  When it is the target, it will never
+                // reach 100%, because documents are filtered out.
+                return job.source.indexOf(this.getDatabaseName()) >= 0;
+            });
+        }
+
+        function resolveToProgress( jobs ){
+            return jobs.length ? jobs[0].progress : 100;
+        }
+    },
+    getViewUpdateProgress: function getViewUpdateStatus(){
         return couchUtils.getRunningCouchJobs().then(filterIndexJobs).then(filterByCycle).then(resolveToProgress);
 
         function filterIndexJobs( jobs ){
@@ -152,7 +169,7 @@ var functionsToAdd = {
 
         function filterByCycle( jobs ){
             return jobs.filter(function(job){
-                return job.database === database;
+                return job.database === this.getDatabaseName();
             });
         }
 
@@ -165,7 +182,6 @@ var functionsToAdd = {
 module.exports = {
     setStore: CycleRepository.setStore,
     create: createCycle,
-    createCycleFrom: createCycleFrom,
     createCycleLog: createCycleLog,
     update: updateCycle,
     list: listCycles,

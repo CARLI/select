@@ -1,9 +1,10 @@
-angular.module('common.cycleService')
+angular.module('carli.cycleService')
     .service('cycleService', cycleService);
 
 function cycleService( CarliModules, $q ) {
 
     var cycleModule = CarliModules.Cycle;
+    var cycleMiddleware = CarliModules.CycleMiddleware;
 
     var currentCycle = null;
 
@@ -19,7 +20,7 @@ function cycleService( CarliModules, $q ) {
         },
         createCycleFrom: function( sourceCycle, newCycle ) {
             fixCycleName(newCycle);
-            return $q.when(cycleModule.createCycleFrom(sourceCycle,newCycle));
+            return $q.when(cycleMiddleware.createCycleFrom(sourceCycle,newCycle));
         },
         update: function() { return $q.when( cycleModule.update.apply( this, arguments) ); },
         load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ); },
@@ -28,22 +29,6 @@ function cycleService( CarliModules, $q ) {
         initCurrentCycle: function(){
             listActiveCycles().then(function(cycleList){
                 currentCycle = cycleList[0];
-            });
-        },
-        initCurrentCycleForVendorApp: function(){
-            return listActiveCycles().then(function(cycleList){
-                openCycles = cycleList.filter(findOpenToVendorCycles);
-
-                if ( openCycles.length ){
-                    currentCycle = openCycles[0];
-                }
-                else {
-                    return $q.reject("No Open Cycles");
-                }
-
-                function findOpenToVendorCycles(cycle){
-                    return cycle.status === 2;
-                }
             });
         }
     };
