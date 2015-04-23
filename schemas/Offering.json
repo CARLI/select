@@ -20,6 +20,10 @@
             "description": "UUID of a Product document",
             "type": "string"
         },
+        "vendorId": {
+            "description": "UUID of a Vendor document",
+            "type": "string"
+        },
         "display": {
             "description": "Controls how the offer is shown to the library",
             "type": "string",

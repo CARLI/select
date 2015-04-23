@@ -4,6 +4,7 @@ var Entity = require('../Entity')
   , couchUtils = require( '../Store/CouchDb/Utils')
   , getStoreForCycle = require('./getStoreForCycle')
   , Validator = require('../Validator')
+  , productRepository = require('./ProductRepository')
   , Q = require('q')
   , _ = require('lodash')
   ;
@@ -31,11 +32,30 @@ function transformCycleReference( offering, cycle ) {
         offering.cycle = cycle.id; //manually transform cycle property from object to reference
     }
 }
+function addVendorToNewOffering(offering, cycle) {
+    if (offering.vendorId) {
+        return offering;
+    }
+    if (typeof offering.product == 'object') {
+        if (typeof offering.product.vendor == 'object') {
+            offering.vendorId = offering.product.vendor.id;
+        } else {
+            offering.vendorId = offering.product.vendor;
+        }
+        return offering;
+    }
+    return productRepository.load(offering.product, cycle).then(function (product) {
+        offering.vendorId = product.vendor.id;
+        return offering;
+    });
+}
 
 function createOffering( offering, cycle ){
     setCycle(cycle);
     transformCycleReference(offering, cycle);
-    return OfferingRepository.create( offering, transformFunction );
+    return addVendorToNewOffering(offering, cycle).then(function (newOffering) {
+        return OfferingRepository.create( newOffering, transformFunction );
+    });
 }
 
 function updateOffering( offering, cycle ){
@@ -89,7 +109,8 @@ function loadOffering( offeringId, cycle ){
                 })
                 .catch(function(err){
                     // WARNING: this suppresses errors for entity references that are not found in the store
-                    //console.warn('*** Cannot find reference in database to either cycle, library, or product in offering ', err);
+                    //console.warn('*** Cannot find reference in database to either cycle, library, or product in
+                    // offering ', err);
                     deferred.resolve(offering);
                 });
         })

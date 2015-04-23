@@ -95,7 +95,7 @@ ddoc = {
                 throw("vendorId is required");
             }
 
-            if (doc.vendor == req.query.vendorId) {
+            if (doc.vendor == req.query.vendorId || doc.vendorId == req.query.vendorId) {
                 return true;
             }
 
