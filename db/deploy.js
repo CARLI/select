@@ -1,7 +1,7 @@
 var config = require('../config');
 var CycleRepository = require('../CARLI/Entity/CycleRepository');
-var couchApp = require('../config/environmentDependentModules/couchApp');
-var request = require('../config/environmentDependentModules/request');
+var couchApp = require('../middleware/components/couchApp');
+var request = require('request');
 var Q = require('q');
 var dbInfo = require('./databaseInfo');
 

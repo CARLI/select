@@ -1,4 +1,4 @@
-var request = require('../config/environmentDependentModules/request');
+var request = require('request');
 var Q = require('q');
 
 var dbInfo = require('./databaseInfo');

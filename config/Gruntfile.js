@@ -7,10 +7,7 @@ module.exports = function (grunt) {
     var environmentDependentModules = [
         'request',
         'couchApp',
-        'crmQueries',
-        'cycleCreation',
-        'listProductsWithOfferingsForVendorId',
-        'notifications'
+        'crmQueries'
     ];
 
     grunt.registerTask('ensure-local-config', ensureLocalConfigExists);
