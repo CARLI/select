@@ -84,10 +84,10 @@ mod.service('ScrollSpy', function($window) {
 	var scrollHandler= function(force) {
 		var curPos= rawData($window);
 		var delta= getDelta(lastPos, curPos);
-		if(!delta.isEqual || curPos.hasOverscroll || force) {
+		if(!delta.isEqual || curPos.hasOverscroll || force) {
 			for(var k in handlers) {
 				var cond= handlers[k].cond;
-				if(cond(curPos, delta) || force) {
+				if(cond(curPos, delta) || force) {
 					handlers[k].handler(curPos, delta);
 				}
 			}
@@ -296,7 +296,7 @@ mod.directive('affix', function(ScrollSpy) {
     },
     link: function(scope, elem, attrs, controller) {
       // call linking function, supply default values if needed
-      scope.affix= scope.affix || 'top';
+      scope.affix= scope.affix || 'top';
       scope.affixClass= scope.affixClass || 'affix';
       linkFn(scope.affix, scope.affixClass, elem);
       scope.$on('destroy', function() {
