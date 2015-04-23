@@ -1,15 +1,37 @@
 angular.module('vendor.userService')
 .service('userService', userService);
 
-function userService($window, appState) {
+function userService(CarliModules, $q, $window, appState) {
     var currentUser = {};
 
+    function initializeUserFromToken( token ){
+        return getFullUser(token)
+            .then(function(user){
+                setUser(user);
+            });
+    }
+    function getUser() {
+        return currentUser;
+    }
     function setUser(user) {
         appState.setUser(user);
         currentUser = user;
     }
-    function getUser() {
-        return currentUser;
+    function getFullUser( token ){
+
+        return getMockUserFakeMiddlewareCall(token.userName)
+            .then(function(user) {
+                return $q.when(CarliModules.Vendor.load(token.vendorId)).then(function(vendor) {
+                    user.vendor = vendor;
+                    return user;
+                });
+            });
+
+        function getMockUserFakeMiddlewareCall(userName) {
+            return $q.when({
+                userName: userName
+            });
+        }
     }
     function logout() {
         appState.setUser(null);
@@ -18,8 +40,8 @@ function userService($window, appState) {
     }
 
     return {
+        initializeUserFromToken: initializeUserFromToken,
         getUser: getUser,
-        setUser: setUser,
         logout: logout
     };
 }
