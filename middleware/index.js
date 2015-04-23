@@ -8,13 +8,13 @@ var couchApp = require('./components/couchApp');
 var crmQueries = require('./components/crmQueries');
 var cycleCreation = require('./components/cycleCreation');
 var notifications = require('./components/notifications');
-var listProductsWithOfferingsForVendorId = require('./components/listProductsWithOfferingsForVendorId');
+var vendorSpecificProductQueries = require('./components/vendorSpecificProductQueries');
 
 function _enableCors(carliMiddleware) {
     carliMiddleware.use(function (req, res, next) {
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, X-AuthToken");
         next();
     });
 }
@@ -76,7 +76,17 @@ function runMiddlewareServer(){
     });
 
     carliMiddleware.get('/products-with-offerings-for-vendor/:vendorId/for-cycle/:cycleId', function (req, res) {
-        listProductsWithOfferingsForVendorId.listProductsWithOfferingsForVendorId(req.params.vendorId, req.params.cycleId)
+        var authToken = JSON.parse(req.header('X-AuthToken'));
+        if (!authToken) {
+            res.status(401).send('missing authorization cookie');
+            return;
+        }
+        if (!authToken.vendorId) {
+            res.status(400).send('invalid auth token');
+            return;
+        }
+        var vendorId = authToken.vendorId;
+        vendorSpecificProductQueries.listProductsWithOfferingsForVendorId(vendorId, req.params.cycleId)
             .then(function(products){
                 res.send(products);
             }).catch(function (err) {
@@ -107,5 +117,5 @@ if (require.main === module) {
     runMiddlewareServer();
 }
 else {
-    module.exports = _.extend({}, couchApp, notifications, crmQueries, listProductsWithOfferingsForVendorId);
+    module.exports = _.extend({}, couchApp, notifications, crmQueries, vendorSpecificProductQueries);
 }

@@ -6,7 +6,7 @@ module.exports = {
     Library: require('../CARLI/Entity/LibraryRepository'),
     Offering: require('../CARLI/Entity/OfferingRepository'),
     Product: require('../CARLI/Entity/ProductRepository'),
-    ProductMiddleware: require('../middleware/browserAdapters/listProductsWithOfferingsForVendorId'),
+    ProductMiddleware: require('../middleware/browserAdapters/vendorSpecificProductQueries'),
     Store: require('../CARLI/Store'),
     CouchDbStore: require('../CARLI/Store/CouchDb/Store'),
     Validator: require('../CARLI/Validator'),

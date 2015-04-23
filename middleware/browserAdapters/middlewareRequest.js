@@ -8,6 +8,14 @@ module.exports = function middlewareRequest(requestParams) {
     requestParams.url = config.getMiddlewareUrl() + requestParams.path;
     delete requestParams.path;
 
+    var token = getAuthToken();
+    if (token) {
+        if (!requestParams.headers) {
+            requestParams.headers = {};
+        }
+        requestParams.headers['X-AuthToken'] = token;
+    }
+
     request(requestParams, function(error, response, body) {
         if (error) {
             deferred.reject(error);
@@ -17,3 +25,7 @@ module.exports = function middlewareRequest(requestParams) {
     });
     return deferred.promise;
 };
+
+function getAuthToken() {
+    return window.sessionStorage.getItem('authToken');
+}

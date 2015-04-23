@@ -11,7 +11,6 @@ module.exports = {
     NotificationDraftGenerator: require('../CARLI/NotificationDraftGenerator'),
     Offering: require('../CARLI/Entity/OfferingRepository'),
     Product: require('../CARLI/Entity/ProductRepository'),
-    ProductMiddleware: require('../middleware/browserAdapters/listProductsWithOfferingsForVendorId'),
     Vendor: require('../CARLI/Entity/VendorRepository'),
     Store: require('../CARLI/Store'),
     MemoryStore: require('../CARLI/Store/MemoryStore'),
