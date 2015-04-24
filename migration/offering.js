@@ -4,6 +4,7 @@ var _ = require('lodash');
 
 function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping){
     var resultsPromise = Q.defer();
+    var batchSize = 500;
 
     var query = "SELECT " +
     "    vds.id as id, " +
@@ -43,54 +44,10 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping)
             });
 
         function createExistingOfferings() {
-            return createOfferingsInBatches(offeringsList, 20);
+            var numBatches = Math.floor(offeringsList.length / batchSize);
+            return createOfferingsInBatches(offeringsList, numBatches);
         }
 
-        function createOfferingsInBatches1(list) {
-            var offeringsPartitions = partitionOfferingsList(list, 10);
-
-            return createOfferings(offeringsPartitions[0], cycle)
-                .then(function () {
-                    console.log('Created offerings 1/10');
-                    return createOfferings(offeringsPartitions[1], cycle)
-                })
-                .then(function () {
-                    console.log('Created offerings 2/10');
-                    return createOfferings(offeringsPartitions[2], cycle)
-                })
-                .then(function () {
-                    console.log('Created offerings 3/10');
-                    return createOfferings(offeringsPartitions[3], cycle)
-                })
-                .then(function () {
-                    console.log('Created offerings 4/10');
-                    return createOfferings(offeringsPartitions[4], cycle)
-                })
-                .then(function(result){
-                    console.log('Created offerings 5/10');
-                    return createOfferings(offeringsPartitions[5], cycle)
-                })
-                .then(function () {
-                    console.log('Created offerings 6/10');
-                    return createOfferings(offeringsPartitions[6], cycle)
-                })
-                .then(function () {
-                    console.log('Created offerings 7/10');
-                    return createOfferings(offeringsPartitions[7], cycle)
-                })
-                .then(function () {
-                    console.log('Created offerings 8/10');
-                    return createOfferings(offeringsPartitions[8], cycle)
-                })
-                .then(function () {
-                    console.log('Created offerings 9/10');
-                    return createOfferings(offeringsPartitions[9], cycle)
-                })
-                .then(function(result){
-                    console.log('Created offerings 10/10');
-                    return result;
-                });
-        }
         function createOfferingsInBatches(list, numBatches) {
             var offeringsPartitions = partitionOfferingsList(list, numBatches);
             var currentBatch = 0;
@@ -101,7 +58,7 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping)
                 if (currentBatch == numBatches) {
                     return results;
                 }
-                console.log('Created offerings '+ (currentBatch + 1) +'/' + numBatches);
+                console.log('['+ cycle.name +'] Created offerings '+ (currentBatch + 1) +'/' + numBatches);
                 return createOfferings(offeringsPartitions[currentBatch], cycle)
                     .then(incrementBatch)
                     .then(createNextBatch);
@@ -132,7 +89,9 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping)
             });
             console.log('Creating '+ emptyOfferingsList.length +' empty offerings');
 
-            return createOfferingsInBatches(emptyOfferingsList, 20)
+            var numBatches = Math.floor(emptyOfferingsList.length / batchSize);
+
+            return createOfferingsInBatches(emptyOfferingsList, numBatches)
                 .then(function(result) {
                     console.log('Created '+ emptyOfferingsList.length +' empty offerings');
                     return result;
