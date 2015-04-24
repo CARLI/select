@@ -106,13 +106,11 @@ function getRecipientLabel(recipientName, notificationType) {
     }
 }
 
-function getSummaryTotal() {
-    var notification = this;
-
+function getSummaryTotal(notification, offerings) {
     return (notification.isFeeInvoice) ? getSummaryOfAccessFees() : getSummaryOfSelectedOfferings();
 
     function getSummaryOfAccessFees() {
-        return notification.offerings ? notification.offerings.reduce(sumOfFees, 0) : 0;
+        return offerings ? offerings.reduce(sumOfFees, 0) : 0;
 
         function sumOfFees(sum, offering) {
             if (offering.selection && offering.product.oneTimePurchaseAnnualAccessFee) {
@@ -124,7 +122,7 @@ function getSummaryTotal() {
     }
 
     function getSummaryOfSelectedOfferings() {
-        return notification.offerings ? notification.offerings.reduce(sumOfPrices, 0) : 0;
+        return offerings ? offerings.reduce(sumOfPrices, 0) : 0;
 
         function sumOfPrices(sum, offering) {
             if (offering.selection) {
@@ -141,7 +139,6 @@ function getRecipientLabelForInstance() {
     return getRecipientLabel(notification.targetEntity.name, notification.notificationType);
 }
 var functionsToAdd = {
-    getSummaryTotal: getSummaryTotal,
     getRecipientLabel: getRecipientLabelForInstance
 };
 
@@ -178,5 +175,6 @@ module.exports = {
     listSentBetweenDates: listSentBetweenDates,
     getRecipientLabel: getRecipientLabel,
     notificationTypeIsForLibrary: notificationTypeIsForLibrary,
-    notificationTypeIsForVendor: notificationTypeIsForVendor
+    notificationTypeIsForVendor: notificationTypeIsForVendor,
+    getSummaryTotal: getSummaryTotal
 };
