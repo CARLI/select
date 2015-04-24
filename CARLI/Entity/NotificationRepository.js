@@ -18,7 +18,6 @@ var propertiesToTransform = ['cycle'];
 
 function transformFunction( notification ){
     transformTargetEntityToId( notification );
-    transformOfferingObjectsToIds( notification );
     EntityTransform.transformObjectForPersistence(notification, propertiesToTransform);
 
     function transformTargetEntityToId( notification ){
@@ -26,22 +25,10 @@ function transformFunction( notification ){
             notification.targetEntity = notification.targetEntity.id.toString();
         }
     }
-
-    function transformOfferingObjectsToIds( notification ){
-        if (notification.offerings) {
-            notification.offerings = notification.offerings.map(getId);
-        }
-    }
 }
 
 function expandNotifications( listPromise  ){
-    return EntityTransform.expandListOfObjectsFromPersistence( listPromise, propertiesToTransform, functionsToAdd).then(function(notificationList) {
-        return Q.all(notificationList.map(expandNotificationFromPersistence));
-    });
-}
-
-function expandNotificationFromPersistence(notification) {
-    return expandOfferingObjects(notification).then(expandTargetEntities);
+    return EntityTransform.expandListOfObjectsFromPersistence( listPromise, propertiesToTransform, functionsToAdd);
 }
 
 function expandTargetEntities( notification ) {
@@ -56,18 +43,6 @@ function expandTargetEntities( notification ) {
             return notification;
         });
     } else {
-        return notification;
-    }
-}
-function expandOfferingObjects( notification ) {
-    if (notification.offerings && notification.cycle) {
-        return offeringRepository.getOfferingsById(notification.offerings, notification.cycle).then(attachOfferings);
-    } else {
-        return Q(notification);
-    }
-
-    function attachOfferings(listOfOfferings) {
-        notification.offerings = listOfOfferings;
         return notification;
     }
 }
@@ -89,7 +64,7 @@ function loadNotification( notificationId  ){
         .then(function(notification) {
             return EntityTransform.expandObjectFromPersistence( notification, propertiesToTransform, functionsToAdd)
                 .then(function() {
-                    return expandNotificationFromPersistence(notification);
+                    return notification;
                 });
         });
 }

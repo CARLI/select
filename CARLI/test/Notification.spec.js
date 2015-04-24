@@ -44,36 +44,6 @@ function testCycleData() {
     };
 }
 
-function setupTestNotification( notification, offerings ){
-    return cycleRepository.create(testCycleData())
-        .then(cycleRepository.load)
-        .then(function(cycle) {
-            return createTestOfferings(cycle).thenResolve(cycle);
-        })
-        .then(function(cycle) {
-            notification.cycle = cycle;
-            notification.offerings = offerings;
-
-            return notificationRepository.create(notification)
-                .then(notificationRepository.load)
-        });
-
-    function createTestOfferings( cycle ){
-        return Q.all( offerings.map(createOffering) );
-
-        function createOffering( offering ){
-            offering.cycle = cycle;
-            if ( !offering.product ){
-                offering.product = { type: 'Product', id: 'test', vendor: 'test' };
-            }
-            if ( !offering.library ){
-                offering.library = { type: 'Library', id: 'test', crmId: 1 };
-            }
-            return offeringRepository.create(offering, cycle);
-        }
-    }
-}
-
 test.run('Notification', validNotificationData, invalidNotificationData);
 
 describe('the listDrafts method', function(){
@@ -220,24 +190,6 @@ describe('the getRecipientLabel method', function () {
     });
 });
 
-describe('Persisting offerings on a Notification', function(){
-    it('should load Offerings objects on a loaded Notification', function(){
-        var offerings = [
-            {id: uuid.v4(), type: 'Offering' }
-        ];
-        var notification = validNotificationData();
-
-        return setupTestNotification(notification, offerings)
-            .then(function(notification){
-            return Q.all([
-                expect(notification.offerings).to.be.an('array'),
-                expect(notification.offerings[0]).to.be.an('object'),
-                expect(notification.offerings[0].type).to.equal('Offering')
-            ]);
-        });
-    });
-});
-
 describe('Adding functions to Notification instances', function () {
     it('should add a getSummaryTotal method to instances of Notification', function () {
         var notification = validNotificationData();
@@ -249,7 +201,7 @@ describe('Adding functions to Notification instances', function () {
             });
     });
 
-    describe('notification.getSummaryTotal', function() {
+    xdescribe('notification.getSummaryTotal', function() {
         var offerings = [
             {
                 id: uuid.v4(),

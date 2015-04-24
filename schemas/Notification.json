@@ -29,11 +29,6 @@
       "description": "UUID of a cycle document, if notification contains offerings",
       "type": "string"
     },
-    "offerings": {
-      "description": "An array of offering uuids.  This data will be aggregated into the PDF Invoice or Report",
-      "type": "array",
-      "items": { "type": "string" }
-    },
     "draftStatus": {
         "type": "string",
         "enum": ["draft", "sent"]
