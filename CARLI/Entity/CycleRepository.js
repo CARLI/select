@@ -138,6 +138,8 @@ var functionsToAdd = {
         });
     },
     getReplicationProgress: function getReplicationStatus(){
+        var thisCycle = this;
+
         return couchUtils.getRunningCouchJobs().then(filterReplicationJobs).then(filterByCycle).then(resolveToProgress);
 
         function filterReplicationJobs( jobs ){
@@ -150,7 +152,7 @@ var functionsToAdd = {
             return jobs.filter(function(job){
                 // Monitor job where vendor DB is the source.  When it is the target, it will never
                 // reach 100%, because documents are filtered out.
-                return job.source.indexOf(this.getDatabaseName()) >= 0;
+                return job.source.indexOf(thisCycle.getDatabaseName()) >= 0;
             });
         }
 
@@ -159,6 +161,8 @@ var functionsToAdd = {
         }
     },
     getViewUpdateProgress: function getViewUpdateStatus(){
+        var thisCycle = this;
+
         return couchUtils.getRunningCouchJobs().then(filterIndexJobs).then(filterByCycle).then(resolveToProgress);
 
         function filterIndexJobs( jobs ){
@@ -169,7 +173,7 @@ var functionsToAdd = {
 
         function filterByCycle( jobs ){
             return jobs.filter(function(job){
-                return job.database === this.getDatabaseName();
+                return job.database === thisCycle.getDatabaseName();
             });
         }
 
