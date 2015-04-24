@@ -18,18 +18,11 @@ var propertiesToTransform = ['cycle'];
 
 function transformFunction( notification ){
     transformTargetEntityToId( notification );
-    transformOfferingObjectsToIds( notification );
     EntityTransform.transformObjectForPersistence(notification, propertiesToTransform);
 
     function transformTargetEntityToId( notification ){
         if ( notification.targetEntity && typeof notification.targetEntity === 'object' ){
             notification.targetEntity = notification.targetEntity.id.toString();
-        }
-    }
-
-    function transformOfferingObjectsToIds( notification ){
-        if (notification.offerings) {
-            notification.offerings = notification.offerings.map(getId);
         }
     }
 }
@@ -41,7 +34,7 @@ function expandNotifications( listPromise  ){
 }
 
 function expandNotificationFromPersistence(notification) {
-    return expandOfferingObjects(notification).then(expandTargetEntities);
+    return expandTargetEntities(notification);
 }
 
 function expandTargetEntities( notification ) {
@@ -56,18 +49,6 @@ function expandTargetEntities( notification ) {
             return notification;
         });
     } else {
-        return notification;
-    }
-}
-function expandOfferingObjects( notification ) {
-    if (notification.offerings && notification.cycle) {
-        return offeringRepository.getOfferingsById(notification.offerings, notification.cycle).then(attachOfferings);
-    } else {
-        return Q(notification);
-    }
-
-    function attachOfferings(listOfOfferings) {
-        notification.offerings = listOfOfferings;
         return notification;
     }
 }
@@ -131,13 +112,19 @@ function getRecipientLabel(recipientName, notificationType) {
     }
 }
 
-function getSummaryTotal() {
-    var notification = this;
+function getSummaryTotal(notification, offerings) {
+    if ( !offerings ){
+        return;
+    }
+
+    if ( !offerings.length ){
+        return 0;
+    }
 
     return (notification.isFeeInvoice) ? getSummaryOfAccessFees() : getSummaryOfSelectedOfferings();
 
     function getSummaryOfAccessFees() {
-        return notification.offerings ? notification.offerings.reduce(sumOfFees, 0) : 0;
+        return offerings ? offerings.reduce(sumOfFees, 0) : 0;
 
         function sumOfFees(sum, offering) {
             if (offering.selection && offering.product.oneTimePurchaseAnnualAccessFee) {
@@ -149,7 +136,7 @@ function getSummaryTotal() {
     }
 
     function getSummaryOfSelectedOfferings() {
-        return notification.offerings ? notification.offerings.reduce(sumOfPrices, 0) : 0;
+        return offerings ? offerings.reduce(sumOfPrices, 0) : 0;
 
         function sumOfPrices(sum, offering) {
             if (offering.selection) {
@@ -166,7 +153,6 @@ function getRecipientLabelForInstance() {
     return getRecipientLabel(notification.targetEntity.name, notification.notificationType);
 }
 var functionsToAdd = {
-    getSummaryTotal: getSummaryTotal,
     getRecipientLabel: getRecipientLabelForInstance
 };
 
@@ -203,5 +189,6 @@ module.exports = {
     listSentBetweenDates: listSentBetweenDates,
     getRecipientLabel: getRecipientLabel,
     notificationTypeIsForLibrary: notificationTypeIsForLibrary,
-    notificationTypeIsForVendor: notificationTypeIsForVendor
+    notificationTypeIsForVendor: notificationTypeIsForVendor,
+    getSummaryTotal: getSummaryTotal
 };

@@ -1,12 +1,11 @@
 var chai   = require( 'chai' )
     , expect = chai.expect
     , notificationRepository = require('../Entity/NotificationRepository' )
-    , offeringRepository = require('../Entity/OfferingRepository' )
-    , cycleRepository = require('../Entity/CycleRepository' )
     , test = require( './Entity/EntityInterface.spec' )
     , testUtils = require('./utils')
     , Q = require('q')
     , uuid   = require( 'node-uuid' )
+    , vendorRepository = require('../Entity/VendorRepository' )
     ;
 
 testUtils.setupTestDb();
@@ -29,52 +28,46 @@ function invalidNotificationData() {
     };
 }
 
-function testCycleData() {
-    return {
-        id: uuid.v4(),
-        idalId: 200,
-        name: testUtils.testDbMarker + ' Notification Tests ' + uuid.v4(),
-        cycleType: 'Calendar Year',
-        year: 2014,
-        status: 5,
-        isArchived: true,
-        startDateForSelections: '2013-10-15',
-        endDateForSelections: '2013-11-15',
-        productsAvailableDate: '2014-01-01'
-    };
-}
-
-function setupTestNotification( notification, offerings ){
-    return cycleRepository.create(testCycleData())
-        .then(cycleRepository.load)
-        .then(function(cycle) {
-            return createTestOfferings(cycle).thenResolve(cycle);
-        })
-        .then(function(cycle) {
-            notification.cycle = cycle;
-            notification.offerings = offerings;
-
-            return notificationRepository.create(notification)
-                .then(notificationRepository.load)
-        });
-
-    function createTestOfferings( cycle ){
-        return Q.all( offerings.map(createOffering) );
-
-        function createOffering( offering ){
-            offering.cycle = cycle;
-            if ( !offering.product ){
-                offering.product = { type: 'Product', id: 'test', vendor: 'test' };
-            }
-            if ( !offering.library ){
-                offering.library = { type: 'Library', id: 'test', crmId: 1 };
-            }
-            return offeringRepository.create(offering, cycle);
-        }
-    }
-}
-
 test.run('Notification', validNotificationData, invalidNotificationData);
+
+describe('The NotificationRepository', function(){
+    it('should expand the targetEntity property to a library', function(){
+        var testLibrary = '1';
+        var testNotification = validNotificationData();
+        testNotification.targetEntity = testLibrary;
+        testNotification.notificationType = 'invoice';
+
+        return notificationRepository.create(testNotification)
+            .then(notificationRepository.load)
+            .then(expectTargetEntityToBeaLibrary);
+
+        function expectTargetEntityToBeaLibrary( notification ){
+            return expect(notification.targetEntity.type).to.equal('LibraryNonCrm');
+        }
+    });
+
+    it('should expand the targetEntity property to a vendor', function(){
+        var testVendor = {
+            type: 'Vendor',
+            name: 'Test Vendor',
+            id: uuid.v4()
+        };
+        var testNotification = validNotificationData();
+        testNotification.targetEntity = testVendor;
+        testNotification.notificationType = 'report';
+
+        return vendorRepository.create(testVendor)
+            .then(function(){
+                return notificationRepository.create(testNotification)
+            })
+            .then(notificationRepository.load)
+            .then(expectTargetEntityToBeaVendor);
+
+        function expectTargetEntityToBeaVendor( notification ){
+            return expect(notification.targetEntity.type).to.equal('Vendor');
+        }
+    });
+});
 
 describe('the listDrafts method', function(){
     it('should be a function', function(){
@@ -220,37 +213,9 @@ describe('the getRecipientLabel method', function () {
     });
 });
 
-describe('Persisting offerings on a Notification', function(){
-    it('should load Offerings objects on a loaded Notification', function(){
-        var offerings = [
-            {id: uuid.v4(), type: 'Offering' }
-        ];
-        var notification = validNotificationData();
-
-        return setupTestNotification(notification, offerings)
-            .then(function(notification){
-            return Q.all([
-                expect(notification.offerings).to.be.an('array'),
-                expect(notification.offerings[0]).to.be.an('object'),
-                expect(notification.offerings[0].type).to.equal('Offering')
-            ]);
-        });
-    });
-});
-
-describe('Adding functions to Notification instances', function () {
-    it('should add a getSummaryTotal method to instances of Notification', function () {
-        var notification = validNotificationData();
-
-        return notificationRepository.create(notification)
-            .then(notificationRepository.load)
-            .then(function (loadedNotification) {
-                return expect(loadedNotification.getSummaryTotal).to.be.a('function');
-            });
-    });
-
-    describe('notification.getSummaryTotal', function() {
-        var offerings = [
+describe('the getSummaryTotal method', function () {
+    function getTestOfferings() {
+        return [
             {
                 id: uuid.v4(),
                 type: 'Offering',
@@ -268,44 +233,54 @@ describe('Adding functions to Notification instances', function () {
                 }
             }
         ];
+    }
 
-        var notification = validNotificationData();
-
-        it('should return the total of all selected prices in the given offerings for a non-fee invoice', function() {
-            return setupTestNotification(notification, offerings).then(function(notification){
-                return expect(notification.getSummaryTotal()).to.equal(200);
-            });
-        });
-
-        it('should return the total of all annual access fees in the selected products for a fee invoice', function() {
-            return setupTestNotification(notification, offerings).then(function(notification){
-                notification.isFeeInvoice = true;
-                notification.offerings[0].product = { oneTimePurchaseAnnualAccessFee: 10 };
-                notification.offerings[1].product = { oneTimePurchaseAnnualAccessFee: 20 };
-                return expect(notification.getSummaryTotal()).to.equal(30);
-            });
-        });
-
-        it('should return the total of all annual access fees even if one of them is zero', function() {
-            return setupTestNotification(notification, offerings).then(function(notification){
-                notification.isFeeInvoice = true;
-                notification.offerings[0].product = { oneTimePurchaseAnnualAccessFee: 10 };
-                notification.offerings[1].product = { oneTimePurchaseAnnualAccessFee: 0 };
-                return expect(notification.getSummaryTotal()).to.equal(10);
-            });
-        });
-
-        it('should only include annual access fees of products that have been purchased', function() {
-            return setupTestNotification(notification, offerings).then(function(notification){
-                notification.isFeeInvoice = true;
-                notification.offerings[0].product = { oneTimePurchaseAnnualAccessFee: 10 };
-                delete notification.offerings[0].selection;
-                notification.offerings[1].product = { oneTimePurchaseAnnualAccessFee: 20 };
-                return expect(notification.getSummaryTotal()).to.equal(20);
-            });
-        });
+    it('should be a repository function', function () {
+        expect(notificationRepository.getSummaryTotal).to.be.a('function');
     });
 
+    it('should return the total of all selected prices in the given offerings for a non-fee invoice', function () {
+        var notification = validNotificationData();
+        var offerings = getTestOfferings();
+        expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(200);
+    });
+
+    it('should return the total of all annual access fees in the selected products for a fee invoice', function () {
+        var notification = validNotificationData();
+        var offerings = getTestOfferings();
+
+        notification.isFeeInvoice = true;
+        offerings[0].product = { oneTimePurchaseAnnualAccessFee: 10 };
+        offerings[1].product = { oneTimePurchaseAnnualAccessFee: 20 };
+
+        expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(30);
+    });
+
+    it('should return the total of all annual access fees even if one of them is zero', function () {
+        var notification = validNotificationData();
+        var offerings = getTestOfferings();
+
+        notification.isFeeInvoice = true;
+        offerings[0].product = { oneTimePurchaseAnnualAccessFee: 10 };
+        offerings[1].product = { oneTimePurchaseAnnualAccessFee: 0 };
+
+        expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(10);
+    });
+
+    it('should only include annual access fees of products that have been purchased', function () {
+        var notification = validNotificationData();
+        var offerings = getTestOfferings();
+
+        notification.isFeeInvoice = true;
+        offerings[0].product = { oneTimePurchaseAnnualAccessFee: 10 };
+        delete offerings[0].selection;
+        offerings[1].product = { oneTimePurchaseAnnualAccessFee: 20 };
+
+        expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(20);
+    });
+});
+
+describe('Adding functions to Notification instances', function () {
     it('should add a getRecipientLabel method to instances of Notification', function () {
         var notification = validNotificationData();
 
