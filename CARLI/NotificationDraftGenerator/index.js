@@ -211,7 +211,6 @@ function getVendorReportsForSome(template, notificationData) {
     function getRecipientsForVendorReportsForSome() {
         return someVendorsDraft.getEntities()
             .then(function( vendorsFromSelectedOfferings ) {
-                console.log(vendorsFromSelectedOfferings);
                 return vendorsFromSelectedOfferings.map(function(vendor) {
                     return convertEntityToRecipient(vendor, template);
                 });
@@ -532,13 +531,17 @@ function discardDuplicateIds(value, index, self) {
     return self.indexOf(value) === index;
 }
 
-function generateNotificationForLibrary(libraryId, offerings, customizedTemplate){
+function generateNotificationForLibrary(libraryId, offeringsForAll, customizedTemplate){
     var notification = generateNotificationForEntity(libraryId.toString(), customizedTemplate);
+    var offeringsForLibrary = null;
 
-    if ( offerings && offerings.length ){
-        var offeringsForLibrary = offerings.filter(onlyOfferingsForLibrary);
-        notification.summaryTotal = notificationRepository.getSummaryTotal(notification, offeringsForLibrary);
-        notification.cycle = offeringsForLibrary[0].cycle;
+    if ( offeringsForAll && offeringsForAll.length ){
+        notification.cycle = offeringsForAll[0].cycle;
+        offeringsForLibrary = offeringsForAll.filter(onlyOfferingsForLibrary);
+        var summaryTotal = notificationRepository.getSummaryTotal(notification, offeringsForLibrary);
+        if ( typeof summaryTotal === 'number' ){
+            notification.summaryTotal = summaryTotal;
+        }
     }
 
     return notification;
@@ -548,13 +551,17 @@ function generateNotificationForLibrary(libraryId, offerings, customizedTemplate
     }
 }
 
-function generateNotificationForVendor(vendorId, offerings, customizedTemplate){
+function generateNotificationForVendor(vendorId, offeringsForAll, customizedTemplate){
     var notification = generateNotificationForEntity(vendorId, customizedTemplate);
+    var offeringsForVendor = null;
 
-    if ( offerings && offerings.length ){
-        var offeringsForVendor = offerings.filter(onlyOfferingsForVendor);
-        notification.summaryTotal = notificationRepository.getSummaryTotal(notification, offeringsForVendor);
-        notification.cycle = offeringsForVendor[0].cycle;
+    if ( offeringsForAll && offeringsForAll.length ){
+        notification.cycle = offeringsForAll[0].cycle;
+        offeringsForVendor = offeringsForAll.filter(onlyOfferingsForVendor);
+        var summaryTotal = notificationRepository.getSummaryTotal(notification, offeringsForVendor);
+        if ( typeof summaryTotal === 'number' ){
+            notification.summaryTotal = summaryTotal;
+        }
     }
 
     return notification;

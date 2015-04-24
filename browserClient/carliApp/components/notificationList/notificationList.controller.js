@@ -147,4 +147,15 @@ function notificationListController($q, alertService, controllerBaseService, not
         }
     }
 
+    function formatSummaryTotal( summaryTotal ){
+        if ( typeof summaryTotal === 'number' ){
+            return summaryTotalString( $filter('currency')(summaryTotal) );
+        }
+        return '';
+
+
+        function summaryTotalString( amount ){
+            return '- (' + amount + ')';
+        }
+    }
 }

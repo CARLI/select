@@ -113,6 +113,14 @@ function getRecipientLabel(recipientName, notificationType) {
 }
 
 function getSummaryTotal(notification, offerings) {
+    if ( !offerings ){
+        return;
+    }
+
+    if ( !offerings.length ){
+        return 0;
+    }
+
     return (notification.isFeeInvoice) ? getSummaryOfAccessFees() : getSummaryOfSelectedOfferings();
 
     function getSummaryOfAccessFees() {
