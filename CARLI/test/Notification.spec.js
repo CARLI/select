@@ -63,6 +63,12 @@ function setupTestNotification( notification, offerings ){
 
         function createOffering( offering ){
             offering.cycle = cycle;
+            if ( !offering.product ){
+                offering.product = { type: 'Product', id: 'test', vendor: 'test' };
+            }
+            if ( !offering.library ){
+                offering.library = { type: 'Library', id: 'test', crmId: 1 };
+            }
             return offeringRepository.create(offering, cycle);
         }
     }
@@ -217,11 +223,12 @@ describe('the getRecipientLabel method', function () {
 describe('Persisting offerings on a Notification', function(){
     it('should load Offerings objects on a loaded Notification', function(){
         var offerings = [
-            {id: uuid.v4(), type: 'Offering', library: '', product: ''}
+            {id: uuid.v4(), type: 'Offering' }
         ];
         var notification = validNotificationData();
 
-        return setupTestNotification(notification, offerings).then(function(notification){
+        return setupTestNotification(notification, offerings)
+            .then(function(notification){
             return Q.all([
                 expect(notification.offerings).to.be.an('array'),
                 expect(notification.offerings[0]).to.be.an('object'),
@@ -248,7 +255,6 @@ describe('Adding functions to Notification instances', function () {
                 id: uuid.v4(),
                 type: 'Offering',
                 library: '',
-                product: '',
                 selection: {
                     price: 100
                 }
@@ -257,7 +263,6 @@ describe('Adding functions to Notification instances', function () {
                 id: uuid.v4(),
                 type: 'Offering',
                 library: '',
-                product: '',
                 selection: {
                     price: 100
                 }

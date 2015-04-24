@@ -21,7 +21,7 @@ function validOfferingData() {
         type: 'Offering',
         cycle: { id: testCycleId },
         library: { id: "1" },
-        product: { id: uuid.v4() },
+        product: { id: uuid.v4(), vendor: 'test' },
         pricing: {
             site: 1200,
             su: [{

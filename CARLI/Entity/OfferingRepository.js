@@ -32,9 +32,12 @@ function transformCycleReference( offering, cycle ) {
         offering.cycle = cycle.id; //manually transform cycle property from object to reference
     }
 }
-function addVendorToNewOffering(offering, cycle) {
+function findVendorIdForOffering(offering, cycle) {
+    if ( !offering ){
+        throw new Error('Data Required');
+    }
     if (offering.vendorId) {
-        return offering;
+        return Q(offering.vendorId);
     }
     if (typeof offering.product == 'object') {
         if (typeof offering.product.vendor == 'object') {
@@ -42,20 +45,34 @@ function addVendorToNewOffering(offering, cycle) {
         } else {
             offering.vendorId = offering.product.vendor;
         }
-        return offering;
+        return Q(offering.vendorId);
     }
-    return productRepository.load(offering.product, cycle).then(function (product) {
-        offering.vendorId = product.vendor.id;
-        return offering;
-    });
+    if ( offering.product ){
+        return productRepository.load(offering.product, cycle)
+            .then(function (product) {
+                offering.vendorId = product.vendor.id;
+                return offering.vendorId;
+            })
+            .catch(function(product){
+                return '';
+            });
+    }
+    return Q('');
 }
 
 function createOffering( offering, cycle ){
     setCycle(cycle);
     transformCycleReference(offering, cycle);
-    return addVendorToNewOffering(offering, cycle).then(function (newOffering) {
-        return OfferingRepository.create( newOffering, transformFunction );
-    });
+
+    return findVendorIdForOffering( offering, cycle)
+        .then(function(vendorId){
+            return OfferingRepository.create( offering, transformOffering );
+
+            function transformOffering( offering ){
+                offering.vendorId = vendorId;
+                transformFunction(offering);
+            }
+        });
 }
 
 function updateOffering( offering, cycle ){
