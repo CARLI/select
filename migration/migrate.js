@@ -26,6 +26,7 @@ function doMigration(){
     var cycleIdMapping = {};
     var productIdMapping = {};
     var productLicenseMapping = {};
+    var productMappingsByCycle = {};
 
     notificationTemplates.migrateNotificationTemplates()
         .then(loadCrmLibraryMapping)
@@ -97,9 +98,12 @@ function doMigration(){
         return Q.all( cycleCouchIds.map(migrateProductsForCycle) );
 
 
-        function migrateProductsForCycle(cycleId) {
-            return CycleRepository.load(cycleId).then(function (cycle) {
-                return productMigration.migrateProducts(connection, cycle, vendorIdMapping, productLicenseMapping);
+        function migrateProductsForCycle(cycleCouchId) {
+            return CycleRepository.load(cycleCouchId).then(function (cycle) {
+                return productMigration.migrateProducts(connection, cycle, vendorIdMapping, productLicenseMapping).then(function(mapping) {
+                    productMappingsByCycle[cycleCouchId] = mapping;
+                    return mapping;
+                });
             });
         }
     }
@@ -124,7 +128,7 @@ function doMigration(){
 
     function migrateOfferingsForCycle(cycleId){
         return CycleRepository.load(cycleId).then(function (cycle) {
-            return offeringMigration.migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping);
+            return offeringMigration.migrateOfferings(connection, cycle, libraryIdMapping, productMappingsByCycle[cycleId]);
         });
     }
 
