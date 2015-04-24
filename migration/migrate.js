@@ -115,12 +115,24 @@ function doMigration(){
         var deferred = Q.defer();
         var promises = [];
 
-        for (var idalId in cycleIdMapping) {
-            var cycleId = cycleIdMapping[idalId];
-            promises.push(migrateOfferingsForCycle(cycleId));
+        var idalIds = Object.keys(cycleIdMapping);
+        var currentIdalIndex = 0;
+
+        function migrateOfferingsForNextCycle() {
+            if (currentIdalIndex == idalIds.length) {
+                return;
+            }
+            var cycleId = cycleIdMapping[idalIds[currentIdalIndex]];
+            currentIdalIndex++;
+            var offeringPromise = migrateOfferingsForCycle(cycleId);
+            promises.push(offeringPromise);
+            return offeringPromise.then(migrateOfferingsForNextCycle);
         }
-        Q.all(promises).then(function (results) {
-            deferred.resolve(results);
+
+        migrateOfferingsForNextCycle().then(function() {
+            Q.all(promises).then(function (results) {
+                deferred.resolve(results);
+            });
         });
 
         return deferred.promise;
