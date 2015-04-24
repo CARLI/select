@@ -6,8 +6,7 @@ angular.module('carli.notificationList')
         scope: {
             mode: '@',
             title: '@',
-            subTitle: '@',
-            afterSendCallback: '='
+            subTitle: '@'
         },
         controller: notificationListController,
         controllerAs: 'vm',

@@ -1,7 +1,7 @@
 angular.module('carli.notificationList')
 .controller('notificationListController', notificationListController);
 
-function notificationListController($q, alertService, controllerBaseService, notificationService, notificationPreviewModalService){
+function notificationListController($q, $scope, $rootScope, $filter, alertService, controllerBaseService, notificationService, notificationPreviewModalService){
     var vm = this;
 
     var datePickerFormat = 'M/D/YY';
@@ -9,12 +9,14 @@ function notificationListController($q, alertService, controllerBaseService, not
     vm.filter = 'all';
 
     vm.filterByType = filterByType;
-    vm.updateSent = updateSent;
+    vm.updateNotifications = updateNotifications;
     vm.previewNotification = previewNotification;
     vm.previewPdf = previewPdf;
     vm.removeDraft = removeDraft;
     vm.sendNotification = sendNotification;
     vm.sendAllDrafts = sendAllDrafts;
+    vm.deleteAllDrafts = deleteAllDrafts;
+    vm.formatSummaryTotal = formatSummaryTotal;
 
     controllerBaseService.addSortable(vm, vm.defaultSort || 'subject');
 
@@ -43,9 +45,27 @@ function notificationListController($q, alertService, controllerBaseService, not
                 vm.showDateFilter = false;
             }
         }
+
+        listenForNotificationChanges();
     }
 
-    function updateSent(){
+    function listenForNotificationChanges(){
+        $scope.$on('notificationsUpdated', function(event, args){
+            if ( args === 'draftCreated' && vm.mode === 'draft' ){
+                updateNotifications();
+            }
+            else if ( args === 'draftSent' ){
+                /* This causes both the drafts list and the sent list to reload each time 'send draft' is clicked.
+                 * This is the quick and easy solution to updating the lists when that happens. If those lists are big
+                 * and slow to load this could be a pain. A better approach would be to also broadcast the id of the
+                 * notification that changed and then specifically remove it from both lists.
+                 */
+                updateNotifications();
+            }
+        });
+    }
+
+    function updateNotifications(){
         vm.loadingPromise = loadNotifications();
     }
 
@@ -106,10 +126,8 @@ function notificationListController($q, alertService, controllerBaseService, not
             .catch(notificationSentError);
 
         function notificationSentSuccess(){
-            if ( typeof vm.afterSendCallback === 'function' ){
-                vm.afterSendCallback();
-            }
             alertService.putAlert('Notification sent', {severity: 'success'});
+            announceNotificationsChange('draftSent');
         }
 
         function notificationSentError(err){
@@ -129,22 +147,24 @@ function notificationListController($q, alertService, controllerBaseService, not
         $q.all(sendPromises)
             .then(function(results){
                 alertService.putAlert( results.length + ' notifications sent', {severity: 'success'});
-
-                if ( typeof vm.afterSendCallback === 'function' ){
-                    vm.afterSendCallback();
-                }
+                announceNotificationsChange('draftSent');
             })
             .catch(function(error){
                 alertService.putAlert(error, {severity: 'danger'});
-
-                if ( typeof vm.afterSendCallback === 'function' ){
-                    vm.afterSendCallback();
-                }
             });
 
         function sendNotificationSilently(notification){
             return notificationService.sendNotification(notification);
         }
+    }
+
+    function deleteAllDrafts(){
+        return $q.all(vm.notifications.map(function(notification){
+                return notificationService.delete(notification.id);
+            }))
+            .then(function(){
+                announceNotificationsChange('draftSent');
+            });
     }
 
     function formatSummaryTotal( summaryTotal ){
@@ -157,5 +177,9 @@ function notificationListController($q, alertService, controllerBaseService, not
         function summaryTotalString( amount ){
             return '- (' + amount + ')';
         }
+    }
+
+    function announceNotificationsChange( typeOfChange ){
+        $rootScope.$broadcast('notificationsUpdated', typeOfChange);
     }
 }

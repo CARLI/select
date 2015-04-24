@@ -1,7 +1,7 @@
 angular.module('carli.notificationModal')
 .controller('notificationModalController', notificationModalController);
 
-function notificationModalController($q, $scope, $rootScope, alertService, cycleService, libraryService, notificationService, notificationModalService, notificationTemplateService, offeringService, productService, vendorService) {
+function notificationModalController($q, $rootScope, $scope, alertService, cycleService, libraryService, notificationService, notificationModalService, notificationTemplateService, offeringService, productService, vendorService) {
     var vm = this;
     var generator = null;
 
@@ -75,7 +75,6 @@ function notificationModalController($q, $scope, $rootScope, alertService, cycle
         }
 
         function showModal() {
-            console.log('Draft',vm.draft);
             $('#notification-modal').modal();
         }
     }
@@ -146,7 +145,6 @@ function notificationModalController($q, $scope, $rootScope, alertService, cycle
 
             return getNotifications(vm.draft, recipientIds)
                 .then(function (notifications) {
-                    console.log(notifications);
                     var promises = notifications.map(notificationService.create);
                     return $q.all(promises);
                 })
@@ -168,6 +166,7 @@ function notificationModalController($q, $scope, $rootScope, alertService, cycle
         function saveSuccess(results){
             var message = angular.isArray(results) ? results.length + ' Notifications created' : 'Notification created';
             alertService.putAlert(message, {severity: 'success'});
+            $rootScope.$broadcast('notificationsUpdated', 'draftCreated');
             resetNotificationForm();
             hideModal();
             if ( typeof vm.afterSubmitFn === 'function' ){

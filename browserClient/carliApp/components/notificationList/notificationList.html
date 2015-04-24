@@ -1,13 +1,13 @@
 <div class="pull-left">
-    <div class="title">{{ vm.title }}</div>
-    <div class="subtitle">{{ vm.subTitle }}</div>
+    <div class="title">{{ ::vm.title }}</div>
+    <div class="subtitle">{{ ::vm.subTitle }}</div>
 </div>
 
 <div class="controls">
     <div ng-if="vm.showDateFilter" class="date-filter-controls">
         <view-edit-date ng-model="vm.sentFilterStartDate" edit-mode="true"></view-edit-date>
         <view-edit-date ng-model="vm.sentFilterEndDate" edit-mode="true"></view-edit-date>
-        <button type="button" class="carli-button" ng-click="vm.updateSent()">Set Date Range</button>
+        <button type="button" class="carli-button" ng-click="vm.updateNotifications()">Set Date Range</button>
     </div>
     <radio name="'notifications-list'+listId+'-filter'"  value="'all'" ng-model="vm.filter">Show <strong>All Notifications</strong></radio>
     <radio name="'notifications-list'+listId+'-filter'" value="'invoice'" ng-model="vm.filter">Show <strong>Library Invoices</strong></radio>
@@ -23,22 +23,22 @@
                 <span class="total">{{ ::vm.formatSummaryTotal(notification.summaryTotal) }}</span>
             </span>
         </div>
-        <div class="column date-sent" ng-if="vm.showDateSent">
-            <div class="time">{{ notification.dateSent | date:'shortTime' }}</div>
-            <div class="date">{{ notification.dateSent | date:'shortDate' }}</div>
+        <div class="column date-sent" ng-if="::vm.showDateSent">
+            <div class="time">{{ ::notification.dateSent | date:'shortTime' }}</div>
+            <div class="date">{{ ::notification.dateSent | date:'shortDate' }}</div>
         </div>
         <div class="column preview">
             <a busy-click="vm.previewNotification(notification)">View</a> |
             <a busy-click="vm.previewPdf(notification)">PDF</a>
         </div>
-        <div class="column remove" ng-if="vm.showRemove">
+        <div class="column remove" ng-if="::vm.showRemove">
             <button type="button" class="carli-button subdued-remove-button" busy-click="vm.removeDraft(notification)">
-                Remove <span class="sr-only">draft for {{ notification.subject }}</span>
+                Remove <span class="sr-only">draft for {{ ::notification.subject }}</span>
             </button>
         </div>
         <div class="column send" >
             <button type="button" class="carli-button" busy-click="vm.sendNotification(notification)">
-                {{ vm.sendLabel }} <span class="sr-only">{{ vm.sendLabel }} notification {{ notification.subject }}</span>
+                {{ ::vm.sendLabel }} <span class="sr-only">{{ ::vm.sendLabel }} notification {{ ::notification.subject }}</span>
             </button>
         </div>
     </li>
@@ -46,4 +46,5 @@
 
 <div class="footer" ng-if="vm.showSendAll && filteredResults.length">
     <button type="button" id="sendAll" class="carli-button primary-button" busy-click="vm.sendAllDrafts()">Send all drafts <fa name="paper-plane"></fa></button>
+    <button type="button" id="removeAll" class="carli-button primary-button" busy-click="vm.deleteAllDrafts()" ng-show="false">Delete all drafts <fa name="trash-o"></fa></button>
 </div>

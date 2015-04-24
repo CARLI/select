@@ -10,12 +10,12 @@
     </div>
 
     <section class="content">
-        <notification-list title="Drafts" sub-title="(not sent)" after-send-callback="vm.loadNotifications"></notification-list>
-        <notification-list mode="sent" title="Sent History" after-send-callback="vm.loadNotifications"></notification-list>
+        <notification-list title="Drafts" sub-title="(not sent)"></notification-list>
+        <notification-list mode="sent" title="Sent History"></notification-list>
     </section>
 
 
-    <notification-modal templates="vm.notificationTemplates" after-submit-fn="vm.loadNotifications"></notification-modal>
+    <notification-modal templates="vm.notificationTemplates"></notification-modal>
     <manage-notification-templates-modal templates="vm.notificationTemplates"></manage-notification-templates-modal>
     <notification-preview-modal></notification-preview-modal>
 </section>
