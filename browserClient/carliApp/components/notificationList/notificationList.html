@@ -20,7 +20,7 @@
             <span class="subject">
                 <span class="recipient" ng-show="notification.targetEntity">{{ notification.targetEntity.name }}:</span>
                 <span class="subject">{{ notification.subject }}</span>
-            <span class="total" ng-show="notification.getSummaryTotal() > 0"> - ({{ notification.getSummaryTotal() | currency }})</span>
+            <span class="total" ng-show="notification.summaryTotal"> - ({{ notification.summaryTotal | currency }})</span>
         </div>
         <div class="column date-sent" ng-if="vm.showDateSent">
             <div class="time">{{ notification.dateSent | date:'shortTime' }}</div>
