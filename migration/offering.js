@@ -34,33 +34,60 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping)
         var offeringsList = extractPricingForOfferings(uniqueOfferings, rows, cycle, libraryIdMapping, productIdMapping);
         console.log('Extracted pricing lists for offerings');
 
-        var offeringsPartitions = partitionOfferingsList(offeringsList, 5);
+        var emptyOfferingsList = [];
 
-        createOfferings(offeringsPartitions[0], cycle, libraryIdMapping, productIdMapping)
-            .then(function() {
-                console.log('Created offerings 1/5');
-                return createOfferings(offeringsPartitions[1], cycle, libraryIdMapping, productIdMapping)
-            })
-            .then(function() {
-                console.log('Created offerings 2/5');
-                return createOfferings(offeringsPartitions[2], cycle, libraryIdMapping, productIdMapping)
-            })
-            .then(function() {
-                console.log('Created offerings 3/5');
-                return createOfferings(offeringsPartitions[3], cycle, libraryIdMapping, productIdMapping)
-            })
-            .then(function() {
-                console.log('Created offerings 4/5');
-                return createOfferings(offeringsPartitions[4], cycle, libraryIdMapping, productIdMapping)
-            })
+        return createExistingOfferings()
+            .then(createEmptyOfferings)
             .then(function(){
                 console.log('Created offerings 5/5');
-                resultsPromise.resolve(offeringsList.length);
+                resultsPromise.resolve(offeringsList.length + emptyOfferingsList.length);
             });
+
+        function createExistingOfferings() {
+            var offeringsPartitions = partitionOfferingsList(offeringsList, 5);
+
+            createOfferings(offeringsPartitions[0], cycle, libraryIdMapping, productIdMapping)
+                .then(function () {
+                    console.log('Created offerings 1/5');
+                    return createOfferings(offeringsPartitions[1], cycle, libraryIdMapping, productIdMapping)
+                })
+                .then(function () {
+                    console.log('Created offerings 2/5');
+                    return createOfferings(offeringsPartitions[2], cycle, libraryIdMapping, productIdMapping)
+                })
+                .then(function () {
+                    console.log('Created offerings 3/5');
+                    return createOfferings(offeringsPartitions[3], cycle, libraryIdMapping, productIdMapping)
+                })
+                .then(function () {
+                    console.log('Created offerings 4/5');
+                    return createOfferings(offeringsPartitions[4], cycle, libraryIdMapping, productIdMapping)
+                });
+        }
+
+        function createEmptyOfferings() {
+            Object.keys(productIdMapping).forEach(function (productIdalId) {
+                var productCouchId = productIdMapping[productIdalId];
+                Object.keys(libraryIdMapping).forEach(function (libraryIdalId) {
+                    var libraryCouchId = libraryIdMapping[libraryIdalId];
+                    // If offeringKey() was not in uniqueOfferings then
+                    var key = {
+                        product_id: productIdalId,
+                        library_id: libraryIdalId
+                    };
+                    if (!uniqueOfferings.hasOwnProperty(offeringKey(key))) {
+                        emptyOfferingsList.push(createEmptyOfferingObject(cycle, libraryCouchId, productCouchId));
+                    }
+                });
+            });
+            createOfferings(emptyOfferingsList, cycle);
+        }
+
     });
 
     return resultsPromise.promise;
 }
+
 
 /*
  * http://stackoverflow.com/questions/11345296/partitioning-in-javascript/11345570#11345570
@@ -143,6 +170,17 @@ function extractNascentOffering( row, cycle, libraryIdMapping, productIdMapping 
         display: 'with-price',
         library: libraryIdMapping[row.library_id],
         product: productIdMapping[row.product_id],
+        cycle: cycle,
+        pricing: {
+            su : []
+        }
+    };
+}
+function createEmptyOfferingObject( cycle, libraryCouchId, productCouchId ){
+    return {
+        display: 'without-price',
+        library: libraryCouchId,
+        product: productCouchId,
         cycle: cycle,
         pricing: {
             su : []
