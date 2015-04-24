@@ -43,33 +43,74 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping)
             });
 
         function createExistingOfferings() {
-            return createOfferingsInBatches(offeringsList);
+            return createOfferingsInBatches(offeringsList, 20);
         }
 
-        function createOfferingsInBatches(list) {
-            var offeringsPartitions = partitionOfferingsList(list, 5);
+        function createOfferingsInBatches1(list) {
+            var offeringsPartitions = partitionOfferingsList(list, 10);
 
             return createOfferings(offeringsPartitions[0], cycle)
                 .then(function () {
-                    console.log('Created offerings 1/5');
+                    console.log('Created offerings 1/10');
                     return createOfferings(offeringsPartitions[1], cycle)
                 })
                 .then(function () {
-                    console.log('Created offerings 2/5');
+                    console.log('Created offerings 2/10');
                     return createOfferings(offeringsPartitions[2], cycle)
                 })
                 .then(function () {
-                    console.log('Created offerings 3/5');
+                    console.log('Created offerings 3/10');
                     return createOfferings(offeringsPartitions[3], cycle)
                 })
                 .then(function () {
-                    console.log('Created offerings 4/5');
+                    console.log('Created offerings 4/10');
                     return createOfferings(offeringsPartitions[4], cycle)
                 })
                 .then(function(result){
-                    console.log('Created offerings 5/5');
+                    console.log('Created offerings 5/10');
+                    return createOfferings(offeringsPartitions[5], cycle)
+                })
+                .then(function () {
+                    console.log('Created offerings 6/10');
+                    return createOfferings(offeringsPartitions[6], cycle)
+                })
+                .then(function () {
+                    console.log('Created offerings 7/10');
+                    return createOfferings(offeringsPartitions[7], cycle)
+                })
+                .then(function () {
+                    console.log('Created offerings 8/10');
+                    return createOfferings(offeringsPartitions[8], cycle)
+                })
+                .then(function () {
+                    console.log('Created offerings 9/10');
+                    return createOfferings(offeringsPartitions[9], cycle)
+                })
+                .then(function(result){
+                    console.log('Created offerings 10/10');
                     return result;
                 });
+        }
+        function createOfferingsInBatches(list, numBatches) {
+            var offeringsPartitions = partitionOfferingsList(list, numBatches);
+            var currentBatch = 0;
+
+            return createNextBatch();
+
+            function createNextBatch(results) {
+                if (currentBatch == numBatches) {
+                    return results;
+                }
+                console.log('Created offerings '+ (currentBatch + 1) +'/' + numBatches);
+                return createOfferings(offeringsPartitions[currentBatch], cycle)
+                    .then(incrementBatch)
+                    .then(createNextBatch);
+            }
+
+            function incrementBatch(results) {
+                currentBatch++;
+                return results;
+            }
         }
 
         function createEmptyOfferings() {
@@ -91,7 +132,7 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping)
             });
             console.log('Creating '+ emptyOfferingsList.length +' empty offerings');
 
-            return createOfferingsInBatches(emptyOfferingsList)
+            return createOfferingsInBatches(emptyOfferingsList, 20)
                 .then(function(result) {
                     console.log('Created '+ emptyOfferingsList.length +' empty offerings');
                     return result;
