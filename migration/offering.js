@@ -4,6 +4,7 @@ var _ = require('lodash');
 
 function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping){
     var resultsPromise = Q.defer();
+    var batchSize = 500;
 
     var query = "SELECT " +
     "    vds.id as id, " +
@@ -34,33 +35,74 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping)
         var offeringsList = extractPricingForOfferings(uniqueOfferings, rows, cycle, libraryIdMapping, productIdMapping);
         console.log('Extracted pricing lists for offerings');
 
-        var offeringsPartitions = partitionOfferingsList(offeringsList, 5);
+        var emptyOfferingsList = [];
 
-        createOfferings(offeringsPartitions[0], cycle, libraryIdMapping, productIdMapping)
-            .then(function() {
-                console.log('Created offerings 1/5');
-                return createOfferings(offeringsPartitions[1], cycle, libraryIdMapping, productIdMapping)
-            })
-            .then(function() {
-                console.log('Created offerings 2/5');
-                return createOfferings(offeringsPartitions[2], cycle, libraryIdMapping, productIdMapping)
-            })
-            .then(function() {
-                console.log('Created offerings 3/5');
-                return createOfferings(offeringsPartitions[3], cycle, libraryIdMapping, productIdMapping)
-            })
-            .then(function() {
-                console.log('Created offerings 4/5');
-                return createOfferings(offeringsPartitions[4], cycle, libraryIdMapping, productIdMapping)
-            })
+        return createExistingOfferings()
+            .then(createEmptyOfferings)
             .then(function(){
-                console.log('Created offerings 5/5');
-                resultsPromise.resolve(offeringsList.length);
+                resultsPromise.resolve(offeringsList.length + emptyOfferingsList.length);
             });
+
+        function createExistingOfferings() {
+            var numBatches = Math.floor(offeringsList.length / batchSize);
+            return createOfferingsInBatches(offeringsList, numBatches);
+        }
+
+        function createOfferingsInBatches(list, numBatches) {
+            var offeringsPartitions = partitionOfferingsList(list, numBatches);
+            var currentBatch = 0;
+
+            return createNextBatch();
+
+            function createNextBatch(results) {
+                if (currentBatch == numBatches) {
+                    return results;
+                }
+                console.log('['+ cycle.name +'] Created offerings '+ (currentBatch + 1) +'/' + numBatches);
+                return createOfferings(offeringsPartitions[currentBatch], cycle)
+                    .then(incrementBatch)
+                    .then(createNextBatch);
+            }
+
+            function incrementBatch(results) {
+                currentBatch++;
+                return results;
+            }
+        }
+
+        function createEmptyOfferings() {
+            console.log('Generating empty offerings');
+
+            Object.keys(productIdMapping).forEach(function (productIdalId) {
+                var productCouchId = productIdMapping[productIdalId];
+                Object.keys(libraryIdMapping).forEach(function (libraryIdalId) {
+                    var libraryCouchId = libraryIdMapping[libraryIdalId];
+                    // If offeringKey() was not in uniqueOfferings then
+                    var key = {
+                        product_id: productIdalId,
+                        library_id: libraryIdalId
+                    };
+                    if (!uniqueOfferings.hasOwnProperty(offeringKey(key))) {
+                        emptyOfferingsList.push(createEmptyOfferingObject(cycle, libraryCouchId, productCouchId));
+                    }
+                });
+            });
+            console.log('Creating '+ emptyOfferingsList.length +' empty offerings');
+
+            var numBatches = Math.floor(emptyOfferingsList.length / batchSize);
+
+            return createOfferingsInBatches(emptyOfferingsList, numBatches)
+                .then(function(result) {
+                    console.log('Created '+ emptyOfferingsList.length +' empty offerings');
+                    return result;
+                });
+        }
+
     });
 
     return resultsPromise.promise;
 }
+
 
 /*
  * http://stackoverflow.com/questions/11345296/partitioning-in-javascript/11345570#11345570
@@ -132,6 +174,7 @@ function createOffering( offering, cycle ) {
         })
         .catch(function(err) {
             console.log('Error creating offering: ', err);
+            console.log(offering);
             couchIdPromise.reject();
         });
 
@@ -143,6 +186,17 @@ function extractNascentOffering( row, cycle, libraryIdMapping, productIdMapping 
         display: 'with-price',
         library: libraryIdMapping[row.library_id],
         product: productIdMapping[row.product_id],
+        cycle: cycle,
+        pricing: {
+            su : []
+        }
+    };
+}
+function createEmptyOfferingObject( cycle, libraryCouchId, productCouchId ){
+    return {
+        display: 'without-price',
+        library: libraryCouchId,
+        product: productCouchId,
         cycle: cycle,
         pricing: {
             su : []

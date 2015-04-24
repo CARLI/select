@@ -26,6 +26,7 @@ function doMigration(){
     var cycleIdMapping = {};
     var productIdMapping = {};
     var productLicenseMapping = {};
+    var productMappingsByCycle = {};
 
     notificationTemplates.migrateNotificationTemplates()
         .then(loadCrmLibraryMapping)
@@ -97,9 +98,12 @@ function doMigration(){
         return Q.all( cycleCouchIds.map(migrateProductsForCycle) );
 
 
-        function migrateProductsForCycle(cycleId) {
-            return CycleRepository.load(cycleId).then(function (cycle) {
-                return productMigration.migrateProducts(connection, cycle, vendorIdMapping, productLicenseMapping);
+        function migrateProductsForCycle(cycleCouchId) {
+            return CycleRepository.load(cycleCouchId).then(function (cycle) {
+                return productMigration.migrateProducts(connection, cycle, vendorIdMapping, productLicenseMapping).then(function(mapping) {
+                    productMappingsByCycle[cycleCouchId] = mapping;
+                    return mapping;
+                });
             });
         }
     }
@@ -111,12 +115,24 @@ function doMigration(){
         var deferred = Q.defer();
         var promises = [];
 
-        for (var idalId in cycleIdMapping) {
-            var cycleId = cycleIdMapping[idalId];
-            promises.push(migrateOfferingsForCycle(cycleId));
+        var idalIds = Object.keys(cycleIdMapping);
+        var currentIdalIndex = 0;
+
+        function migrateOfferingsForNextCycle() {
+            if (currentIdalIndex == idalIds.length) {
+                return;
+            }
+            var cycleId = cycleIdMapping[idalIds[currentIdalIndex]];
+            currentIdalIndex++;
+            var offeringPromise = migrateOfferingsForCycle(cycleId);
+            promises.push(offeringPromise);
+            return offeringPromise.then(migrateOfferingsForNextCycle);
         }
-        Q.all(promises).then(function (results) {
-            deferred.resolve(results);
+
+        migrateOfferingsForNextCycle().then(function() {
+            Q.all(promises).then(function (results) {
+                deferred.resolve(results);
+            });
         });
 
         return deferred.promise;
@@ -124,7 +140,7 @@ function doMigration(){
 
     function migrateOfferingsForCycle(cycleId){
         return CycleRepository.load(cycleId).then(function (cycle) {
-            return offeringMigration.migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping);
+            return offeringMigration.migrateOfferings(connection, cycle, libraryIdMapping, productMappingsByCycle[cycleId]);
         });
     }
 
