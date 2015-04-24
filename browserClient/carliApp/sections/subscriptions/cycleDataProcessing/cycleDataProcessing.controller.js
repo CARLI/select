@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.cycleDataProcessing')
     .controller('cycleDataProcessingController', cycleDataProcessingController);
 
-function cycleDataProcessingController( $q, $routeParams, $interval, cycleService ) {
+function cycleDataProcessingController( $q, $routeParams, $scope, $interval, cycleService ) {
     var vm = this;
     var updateInterval = 2000;
     var updateIntervalPromise = null;
@@ -18,6 +18,8 @@ function cycleDataProcessingController( $q, $routeParams, $interval, cycleServic
 
             updateIntervalPromise = $interval(updateCouchViewStatus, updateInterval);
         });
+
+        $scope.$on("$destroy", cancelUpdateTimer);
     }
 
     function updateCouchViewStatus(){
@@ -31,7 +33,13 @@ function cycleDataProcessingController( $q, $routeParams, $interval, cycleServic
     }
 
     function updateComplete(){
-        $interval.cancel(updateIntervalPromise);
+        cancelUpdateTimer();
         vm.cycleRouter.next();
+    }
+
+    function cancelUpdateTimer(){
+        if (updateIntervalPromise) {
+            $interval.cancel(updateIntervalPromise);
+        }
     }
 }
