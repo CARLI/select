@@ -28,7 +28,13 @@ function transformFunction( notification ){
 }
 
 function expandNotifications( listPromise  ){
-    return EntityTransform.expandListOfObjectsFromPersistence( listPromise, propertiesToTransform, functionsToAdd);
+    return EntityTransform.expandListOfObjectsFromPersistence( listPromise, propertiesToTransform, functionsToAdd).then(function(notificationList) {
+        return Q.all(notificationList.map(expandNotificationFromPersistence));
+    });
+}
+
+function expandNotificationFromPersistence(notification) {
+    return expandTargetEntities(notification);
 }
 
 function expandTargetEntities( notification ) {
@@ -64,7 +70,7 @@ function loadNotification( notificationId  ){
         .then(function(notification) {
             return EntityTransform.expandObjectFromPersistence( notification, propertiesToTransform, functionsToAdd)
                 .then(function() {
-                    return notification;
+                    return expandNotificationFromPersistence(notification);
                 });
         });
 }

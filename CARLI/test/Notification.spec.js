@@ -1,12 +1,11 @@
 var chai   = require( 'chai' )
     , expect = chai.expect
     , notificationRepository = require('../Entity/NotificationRepository' )
-    , offeringRepository = require('../Entity/OfferingRepository' )
-    , cycleRepository = require('../Entity/CycleRepository' )
     , test = require( './Entity/EntityInterface.spec' )
     , testUtils = require('./utils')
     , Q = require('q')
     , uuid   = require( 'node-uuid' )
+    , vendorRepository = require('../Entity/VendorRepository' )
     ;
 
 testUtils.setupTestDb();
@@ -29,22 +28,46 @@ function invalidNotificationData() {
     };
 }
 
-function testCycleData() {
-    return {
-        id: uuid.v4(),
-        idalId: 200,
-        name: testUtils.testDbMarker + ' Notification Tests ' + uuid.v4(),
-        cycleType: 'Calendar Year',
-        year: 2014,
-        status: 5,
-        isArchived: true,
-        startDateForSelections: '2013-10-15',
-        endDateForSelections: '2013-11-15',
-        productsAvailableDate: '2014-01-01'
-    };
-}
-
 test.run('Notification', validNotificationData, invalidNotificationData);
+
+describe('The NotificationRepository', function(){
+    it('should expand the targetEntity property to a library', function(){
+        var testLibrary = '1';
+        var testNotification = validNotificationData();
+        testNotification.targetEntity = testLibrary;
+        testNotification.notificationType = 'invoice';
+
+        return notificationRepository.create(testNotification)
+            .then(notificationRepository.load)
+            .then(expectTargetEntityToBeaLibrary);
+
+        function expectTargetEntityToBeaLibrary( notification ){
+            return expect(notification.targetEntity.type).to.equal('LibraryNonCrm');
+        }
+    });
+
+    it('should expand the targetEntity property to a vendor', function(){
+        var testVendor = {
+            type: 'Vendor',
+            name: 'Test Vendor',
+            id: uuid.v4()
+        };
+        var testNotification = validNotificationData();
+        testNotification.targetEntity = testVendor;
+        testNotification.notificationType = 'report';
+
+        return vendorRepository.create(testVendor)
+            .then(function(){
+                return notificationRepository.create(testNotification)
+            })
+            .then(notificationRepository.load)
+            .then(expectTargetEntityToBeaVendor);
+
+        function expectTargetEntityToBeaVendor( notification ){
+            return expect(notification.targetEntity.type).to.equal('Vendor');
+        }
+    });
+});
 
 describe('the listDrafts method', function(){
     it('should be a function', function(){
