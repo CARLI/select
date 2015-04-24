@@ -190,62 +190,70 @@ describe('the getRecipientLabel method', function () {
     });
 });
 
-describe('the getSummaryTotal method', function() {
-    var offerings = [
-        {
-            id: uuid.v4(),
-            type: 'Offering',
-            library: '',
-            selection: {
-                price: 100
+describe('the getSummaryTotal method', function () {
+    function getTestOfferings() {
+        return [
+            {
+                id: uuid.v4(),
+                type: 'Offering',
+                library: '',
+                selection: {
+                    price: 100
+                }
+            },
+            {
+                id: uuid.v4(),
+                type: 'Offering',
+                library: '',
+                selection: {
+                    price: 100
+                }
             }
-        },
-        {
-            id: uuid.v4(),
-            type: 'Offering',
-            library: '',
-            selection: {
-                price: 100
-            }
-        }
-    ];
-
-    var notification = validNotificationData();
+        ];
+    }
 
     it('should be a repository function', function () {
         expect(notificationRepository.getSummaryTotal).to.be.a('function');
     });
 
-    it('should return the total of all selected prices in the given offerings for a non-fee invoice', function() {
+    it('should return the total of all selected prices in the given offerings for a non-fee invoice', function () {
+        var notification = validNotificationData();
+        var offerings = getTestOfferings();
         expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(200);
     });
 
-    xit('should return the total of all annual access fees in the selected products for a fee invoice', function() {
-        return setupTestNotification(notification, offerings).then(function(notification){
-            notification.isFeeInvoice = true;
-            notification.offerings[0].product = { oneTimePurchaseAnnualAccessFee: 10 };
-            notification.offerings[1].product = { oneTimePurchaseAnnualAccessFee: 20 };
-             expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(30);
-        });
+    it('should return the total of all annual access fees in the selected products for a fee invoice', function () {
+        var notification = validNotificationData();
+        var offerings = getTestOfferings();
+
+        notification.isFeeInvoice = true;
+        offerings[0].product = { oneTimePurchaseAnnualAccessFee: 10 };
+        offerings[1].product = { oneTimePurchaseAnnualAccessFee: 20 };
+
+        expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(30);
     });
 
-    xit('should return the total of all annual access fees even if one of them is zero', function() {
-        return setupTestNotification(notification, offerings).then(function(notification){
-            notification.isFeeInvoice = true;
-            notification.offerings[0].product = { oneTimePurchaseAnnualAccessFee: 10 };
-            notification.offerings[1].product = { oneTimePurchaseAnnualAccessFee: 0 };
-             expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(10);
-        });
+    it('should return the total of all annual access fees even if one of them is zero', function () {
+        var notification = validNotificationData();
+        var offerings = getTestOfferings();
+
+        notification.isFeeInvoice = true;
+        offerings[0].product = { oneTimePurchaseAnnualAccessFee: 10 };
+        offerings[1].product = { oneTimePurchaseAnnualAccessFee: 0 };
+
+        expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(10);
     });
 
-    xit('should only include annual access fees of products that have been purchased', function() {
-        return setupTestNotification(notification, offerings).then(function(notification){
-            notification.isFeeInvoice = true;
-            notification.offerings[0].product = { oneTimePurchaseAnnualAccessFee: 10 };
-            delete notification.offerings[0].selection;
-            notification.offerings[1].product = { oneTimePurchaseAnnualAccessFee: 20 };
-             expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(20);
-        });
+    it('should only include annual access fees of products that have been purchased', function () {
+        var notification = validNotificationData();
+        var offerings = getTestOfferings();
+
+        notification.isFeeInvoice = true;
+        offerings[0].product = { oneTimePurchaseAnnualAccessFee: 10 };
+        delete offerings[0].selection;
+        offerings[1].product = { oneTimePurchaseAnnualAccessFee: 20 };
+
+        expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(20);
     });
 });
 
