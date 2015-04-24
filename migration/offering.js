@@ -39,33 +39,42 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping)
         return createExistingOfferings()
             .then(createEmptyOfferings)
             .then(function(){
-                console.log('Created offerings 5/5');
                 resultsPromise.resolve(offeringsList.length + emptyOfferingsList.length);
             });
 
         function createExistingOfferings() {
-            var offeringsPartitions = partitionOfferingsList(offeringsList, 5);
+            return createOfferingsInBatches(offeringsList);
+        }
 
-            createOfferings(offeringsPartitions[0], cycle, libraryIdMapping, productIdMapping)
+        function createOfferingsInBatches(list) {
+            var offeringsPartitions = partitionOfferingsList(list, 5);
+
+            return createOfferings(offeringsPartitions[0], cycle)
                 .then(function () {
                     console.log('Created offerings 1/5');
-                    return createOfferings(offeringsPartitions[1], cycle, libraryIdMapping, productIdMapping)
+                    return createOfferings(offeringsPartitions[1], cycle)
                 })
                 .then(function () {
                     console.log('Created offerings 2/5');
-                    return createOfferings(offeringsPartitions[2], cycle, libraryIdMapping, productIdMapping)
+                    return createOfferings(offeringsPartitions[2], cycle)
                 })
                 .then(function () {
                     console.log('Created offerings 3/5');
-                    return createOfferings(offeringsPartitions[3], cycle, libraryIdMapping, productIdMapping)
+                    return createOfferings(offeringsPartitions[3], cycle)
                 })
                 .then(function () {
                     console.log('Created offerings 4/5');
-                    return createOfferings(offeringsPartitions[4], cycle, libraryIdMapping, productIdMapping)
+                    return createOfferings(offeringsPartitions[4], cycle)
+                })
+                .then(function(result){
+                    console.log('Created offerings 5/5');
+                    return result;
                 });
         }
 
         function createEmptyOfferings() {
+            console.log('Generating empty offerings');
+
             Object.keys(productIdMapping).forEach(function (productIdalId) {
                 var productCouchId = productIdMapping[productIdalId];
                 Object.keys(libraryIdMapping).forEach(function (libraryIdalId) {
@@ -80,7 +89,13 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping)
                     }
                 });
             });
-            createOfferings(emptyOfferingsList, cycle);
+            console.log('Creating '+ emptyOfferingsList.length +' empty offerings');
+
+            return createOfferingsInBatches(emptyOfferingsList)
+                .then(function(result) {
+                    console.log('Created '+ emptyOfferingsList.length +' empty offerings');
+                    return result;
+                });
         }
 
     });
@@ -159,6 +174,7 @@ function createOffering( offering, cycle ) {
         })
         .catch(function(err) {
             console.log('Error creating offering: ', err);
+            console.log(offering);
             couchIdPromise.reject();
         });
 
