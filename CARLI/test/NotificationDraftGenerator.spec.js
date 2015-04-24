@@ -71,8 +71,7 @@ describe('The notification draft generator', function() {
                     expect(notifications.length).to.equal(1),
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('library'),
-                    expect(notifications[0].offerings).to.be.an('array'),
-                    expect(notifications[0].offerings.length).to.equal(1)
+                    expect(notifications[0].summaryTotal).to.be.a('number')
                 ]);
             });
         });
@@ -127,8 +126,7 @@ describe('The notification draft generator', function() {
                     expect(notifications.length).to.equal(1),
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('library'),
-                    expect(notifications[0].offerings).to.be.an('array'),
-                    expect(notifications[0].offerings.length).to.equal(1)
+                    expect(notifications[0].summaryTotal).to.be.a('number')
                 ]);
             });
         });
@@ -248,8 +246,7 @@ describe('The notification draft generator', function() {
                     expect(notifications.length).to.equal(2),
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('vendor1'),
-                    expect(notifications[0].offerings).to.be.an('array'),
-                    expect(notifications[0].offerings.length).to.equal(2)
+                    expect(notifications[0].summaryTotal).to.be.a('number')
                 ]);
             });
         });
@@ -309,8 +306,7 @@ describe('The notification draft generator', function() {
                     expect(notifications.length).to.equal(2),
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('vendor1'),
-                    expect(notifications[0].offerings).to.be.an('array'),
-                    expect(notifications[0].offerings.length).to.equal(2)
+                    expect(notifications[0].summaryTotal).to.be.a('number')
                 ]);
             });
         });
@@ -368,8 +364,7 @@ describe('The notification draft generator', function() {
                     expect(notifications.length).to.equal(1),
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('vendor1'),
-                    expect(notifications[0].offerings).to.be.an('array'),
-                    expect(notifications[0].offerings.length).to.equal(2)
+                    expect(notifications[0].summaryTotal).to.be.a('number')
                 ]);
             });
         });
@@ -423,8 +418,7 @@ describe('The notification draft generator', function() {
                     expect(notifications.length).to.equal(2),
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('library'),
-                    expect(notifications[0].offerings).to.be.an('array'),
-                    expect(notifications[0].offerings.length).to.equal(1)
+                    expect(notifications[0].summaryTotal).to.be.a('number')
                 ]);
             });
         });
@@ -482,8 +476,7 @@ describe('The notification draft generator', function() {
                     expect(notifications.length).to.equal(1),
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('library'),
-                    expect(notifications[0].offerings).to.be.an('array'),
-                    expect(notifications[0].offerings.length).to.equal(1)
+                    expect(notifications[0].summaryTotal).to.be.a('number')
                 ]);
             });
         });
@@ -537,8 +530,7 @@ describe('The notification draft generator', function() {
                     expect(notifications.length).to.equal(1),
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('library'),
-                    expect(notifications[0].offerings).to.be.an('array'),
-                    expect(notifications[0].offerings.length).to.equal(1)
+                    expect(notifications[0].summaryTotal).to.be.a('number')
                 ]);
             });
         });
@@ -592,8 +584,7 @@ describe('The notification draft generator', function() {
                     expect(notifications.length).to.equal(2),
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('library'),
-                    expect(notifications[0].offerings).to.be.an('array'),
-                    expect(notifications[0].offerings.length).to.equal(1)
+                    expect(notifications[0].summaryTotal).to.be.a('number')
                 ]);
             });
         });

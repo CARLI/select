@@ -536,8 +536,9 @@ function generateNotificationForLibrary(libraryId, offerings, customizedTemplate
     var notification = generateNotificationForEntity(libraryId.toString(), customizedTemplate);
 
     if ( offerings && offerings.length ){
-        notification.offerings = offerings.filter(onlyOfferingsForLibrary);
-        notification.cycle = offerings[0].cycle;
+        var offeringsForLibrary = offerings.filter(onlyOfferingsForLibrary);
+        notification.summaryTotal = notificationRepository.getSummaryTotal(notification, offeringsForLibrary);
+        notification.cycle = offeringsForLibrary[0].cycle;
     }
 
     return notification;
@@ -551,8 +552,9 @@ function generateNotificationForVendor(vendorId, offerings, customizedTemplate){
     var notification = generateNotificationForEntity(vendorId, customizedTemplate);
 
     if ( offerings && offerings.length ){
-        notification.offerings = offerings.filter(onlyOfferingsForVendor);
-        notification.cycle = offerings[0].cycle;
+        var offeringsForVendor = offerings.filter(onlyOfferingsForVendor);
+        notification.summaryTotal = notificationRepository.getSummaryTotal(notification, offeringsForVendor);
+        notification.cycle = offeringsForVendor[0].cycle;
     }
 
     return notification;

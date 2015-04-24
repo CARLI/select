@@ -37,7 +37,7 @@
         "$ref": "./Date.json"
     },
     "summaryTotal": {
-        "type": "integer"
+        "type": "number"
     },
     "notificationType": {
         "$ref": "./NotificationType.json"
