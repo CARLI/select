@@ -7,6 +7,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     vm.viewOptions = {};
     vm.selectedProductIds = {};
     vm.selectedLibraryIds = {};
+    vm.getProductDisplayName = productService.getProductDisplayName;
 
     vm.saveOfferings = saveOfferings;
 

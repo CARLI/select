@@ -8,6 +8,7 @@ function vendorsSettingPricesByVendorController( $scope, $q, accordionController
 
     vm.toggleProductSection = toggleProductSection;
     vm.getVendorPricingStatus = getVendorPricingStatus;
+    vm.getProductDisplayName = productService.getProductDisplayName;
     vm.loadingPromise = {};
     vm.stopEditing = stopEditing;
     vm.vendors = [];

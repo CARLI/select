@@ -5,7 +5,7 @@
         <div class="column">Product Name</div>
     </li>
     <li ng-repeat="product in vm.productList | orderBy:'name'">
-        <div class="column"><a ng-click="vm.closeProductsModalAndGoTo('/product/'+product.id)">{{ product.name }}</a></div>
+        <div class="column"><a ng-click="vm.closeProductsModalAndGoTo('/product/'+product.id)">{{ vm.getProductDisplayName(product) }}</a></div>
     </li>
 </ul>
 

@@ -7,7 +7,7 @@
     </div>
 
     <div role="gridcell" aria-describedby="product-column-header" class="column product" ng-if="vm.shouldShowColumn('product')">
-        <h3>{{ vm.offering.product.name }}</h3>
+        <h3>{{ vm.getProductDisplayName(vm.offering.product) }}</h3>
         <button type="button" class="carli-button save" busy-click="vm.saveOffering()">Save
             <fa name="floppy-o"></fa>
         </button>

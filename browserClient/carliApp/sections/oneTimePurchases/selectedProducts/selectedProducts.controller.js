@@ -2,7 +2,7 @@
     angular.module('carli.sections.oneTimePurchases.selectedProducts')
         .controller('selectedProductsController', selectedProductsController);
 
-    function selectedProductsController($scope, $routeParams, $q, alertService, config, cycleService, libraryService, notificationModalService, offeringService, vendorService) {
+    function selectedProductsController($scope, $routeParams, $q, alertService, config, cycleService, libraryService, notificationModalService, offeringService, vendorService, productService) {
         var vm = this;
         vm.libraryId = $routeParams.libraryId;
         vm.offeringList = [];
@@ -17,6 +17,7 @@
         vm.reportProducts = reportProducts;
         vm.invoiceAnnualAccessFees = invoiceAnnualAccessFees;
         vm.sort = sort;
+        vm.getProductDisplayName = productService.getProductDisplayName;
 
         initFilterableByPurchased($scope, vm);
         activate();
@@ -77,7 +78,7 @@
             };
             offeringService.update(offering)
             .then(function(){
-                alertService.putAlert(offering.product.name + " purchased", {severity: 'success'});
+                alertService.putAlert(productService.getProductDisplayName(offering.product) + " purchased", {severity: 'success'});
                 refreshOfferingsForLibrary(vm.library);
             })
             .catch(function(error){
@@ -92,7 +93,7 @@
             
             offeringService.update(offering)
             .then(function(){
-                alertService.putAlert(offering.product.name + " purchase cancelled", {severity: 'success'});
+                alertService.putAlert(productService.getProductDisplayName(offering.product) + " purchase cancelled", {severity: 'success'});
                 refreshOfferingsForLibrary(vm.library);
             })
             .catch(function(error){
