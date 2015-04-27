@@ -7,6 +7,7 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping)
     var batchSize = 500;
 
     var query = "SELECT " +
+    "    v.id as vendor_id, " +
     "    vds.id as id, " +
     "    vd.library_id, " +
     "    d.id as product_id, " +
@@ -58,7 +59,7 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping)
                 if (currentBatch == numBatches) {
                     return results;
                 }
-                console.log('['+ cycle.name +'] Created offerings '+ (currentBatch + 1) +'/' + numBatches);
+                console.log('['+ cycle.name +'] Creating offerings '+ (currentBatch + 1) +'/' + numBatches);
                 return createOfferings(offeringsPartitions[currentBatch], cycle)
                     .then(incrementBatch)
                     .then(createNextBatch);
@@ -78,11 +79,10 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping)
                 Object.keys(libraryIdMapping).forEach(function (libraryIdalId) {
                     var libraryCouchId = libraryIdMapping[libraryIdalId];
                     // If offeringKey() was not in uniqueOfferings then
-                    var key = {
-                        product_id: productIdalId,
-                        library_id: libraryIdalId
-                    };
-                    if (!uniqueOfferings.hasOwnProperty(offeringKey(key))) {
+
+                    var fakeKey = productIdalId + '-' + libraryIdalId;
+
+                    if (!uniqueOfferings.hasOwnProperty(fakeKey)) {
                         emptyOfferingsList.push(createEmptyOfferingObject(cycle, libraryCouchId, productCouchId));
                     }
                 });
@@ -185,7 +185,7 @@ function extractNascentOffering( row, cycle, libraryIdMapping, productIdMapping 
     return {
         display: 'with-price',
         library: libraryIdMapping[row.library_id],
-        product: productIdMapping[row.product_id],
+        product: productIdMapping[productLegacyId(row)],
         cycle: cycle,
         pricing: {
             su : []
@@ -205,7 +205,11 @@ function createEmptyOfferingObject( cycle, libraryCouchId, productCouchId ){
 }
 
 function offeringKey(o) {
-    return o.product_id + '-' + o.library_id;
+    return productLegacyId(o) + '-' + o.library_id;
+}
+
+function productLegacyId( row ){
+    return row.vendor_id + row.product_id;
 }
 
 module.exports = {
