@@ -17,7 +17,7 @@ function migrateProducts(connection, cycle, vendorIdMapping, productLicenseMappi
         "vd.db_id = d.id AND " +
         "vds.vendor_db_id = vd.id AND " +
         "vds.price > 0 " +
-        "GROUP BY product_name " +
+        "GROUP BY vendor_name, product_name " +
         "ORDER BY vendor_name, product_name";
 
     connection.query(query, function(err, rows, fields) {
@@ -62,7 +62,7 @@ function createProduct( productRow, cycle, vendorIdMapping, productLicenseMappin
     ProductRepository.create( product, cycle )
         .then(function(id) {
             couchIdPromise.resolve({
-                idalLegacyId: productRow.product_id,
+                idalLegacyId: makeProductLegacyId(productRow),
                 couchId: id
             });
         })
@@ -75,6 +75,8 @@ function createProduct( productRow, cycle, vendorIdMapping, productLicenseMappin
 }
 
 function extractProduct( row, cycle, vendorIdMapping, productLicenseMapping ){
+    var licenseMappingKey = makeProductLegacyId(row);
+
     return {
         name: row.product_name,
         vendor: vendorIdMapping[row.vendor_id],
@@ -82,7 +84,7 @@ function extractProduct( row, cycle, vendorIdMapping, productLicenseMapping ){
         productUrl: '',
         description: '',
         comments: '',
-        license: productLicenseMapping[row.product_id],
+        license: productLicenseMapping[licenseMappingKey],
         licenseType: {
             isThirdPartyProduct: false,
             isSoleSource: false,
@@ -100,6 +102,10 @@ function extractProduct( row, cycle, vendorIdMapping, productLicenseMapping ){
 //        oneTimePurchase: ''
         isActive: true
     };
+}
+
+function makeProductLegacyId( row ){
+    return row.vendor_id + row.product_id;
 }
 
 module.exports = {

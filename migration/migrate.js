@@ -24,7 +24,6 @@ function doMigration(){
     var licenseIdMapping = {};
     var crmLibraryIdMapping = {};
     var cycleIdMapping = {};
-    var productIdMapping = {};
     var productLicenseMapping = {};
     var productMappingsByCycle = {};
 
@@ -108,9 +107,9 @@ function doMigration(){
         }
     }
 
-    function migrateOfferings(productMapping){
-        productIdMapping = flattenCycleMigrationResults(productMapping);
-        console.log('Migrated ' + Object.keys(productIdMapping).length + ' products');
+    function migrateOfferings(productMigrationResults){
+        var productTotals = flattenCycleMigrationResults(productMigrationResults);
+        console.log('Migrated ' + Object.keys(productTotals).length + ' products');
 
         var deferred = Q.defer();
         var promises = [];
