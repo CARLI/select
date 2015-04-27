@@ -5,7 +5,7 @@ var offeringTemplatePromise;
 var editOfferingHandlerAttached;
 var flagOfferingHandlerAttached;
 
-function renderOfferingDirective( $http, $q, $filter, alertService, offeringService, editOfferingService ) {
+function renderOfferingDirective( $http, $q, $filter, alertService, offeringService, editOfferingService, productService ) {
     registerHandlebarsHelpers();
 
     return {
@@ -30,6 +30,7 @@ function renderOfferingDirective( $http, $q, $filter, alertService, offeringServ
             function render(offering){
                 var lastYear = scope.cycle.year - 1;
                 offering.pricing.su = $filter('orderBy')(offering.pricing.su, 'users');
+                offering.product.displayName = productService.getProductDisplayName(offering.product);
 
                 getOfferingTemplate().then(function (template) {
                     offering.flagged = offeringService.getFlaggedState(offering);

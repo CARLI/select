@@ -35,7 +35,7 @@
                             <button type="button" class="angle-icon-container">
                                 <fa name="angle-down"></fa>
                             </button>
-                            {{ offering.product.name }}
+                            {{ vm.getProductDisplayName(offering.product) }}
                         </div>
                         <div class="column">{{ offering.product.vendor.name }}</div>
                         <div class="column">

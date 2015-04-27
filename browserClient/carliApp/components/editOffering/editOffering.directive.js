@@ -19,12 +19,13 @@ angular.module('carli.editOffering')
 
         }
 
-        function editOfferingController() {
+        function editOfferingController(productService) {
             var vm = this;
             vm.saveOffering = saveOffering;
             vm.shouldShowColumn = shouldShowColumn;
             vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
             vm.userClickedFlag = userClickedFlag;
+            vm.getProductDisplayName = productService.getProductDisplayName;
 
             var userTouchedFlag = false;
 

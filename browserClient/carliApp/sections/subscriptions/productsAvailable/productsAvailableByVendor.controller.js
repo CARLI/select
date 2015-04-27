@@ -11,6 +11,7 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
     vm.stopEditing = stopEditing;
     vm.computeSelectionTotalForVendor = computeSelectionTotalForVendor;
     vm.computeInvoiceTotalForVendor = computeInvoiceTotalForVendor;
+    vm.getProductDisplayName = productService.getProductDisplayName;
     vm.loadingPromise = {};
     vm.vendors = [];
     vm.isEditing = {};

@@ -28,6 +28,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
     vm.submitAction = submitAction;
     vm.submitLabel = submitLabel;
     vm.productLicenseIsValid = productLicenseIsValid;
+    vm.getProductDisplayName = productService.getProductDisplayName;
 
     vm.shouldShowOtpEditLink = function() {
         return vm.editable && !vm.newProduct && isOneTimePurchaseProduct(vm.product);

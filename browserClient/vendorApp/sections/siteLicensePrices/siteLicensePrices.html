@@ -54,7 +54,7 @@
         <div class="pricing-grid-container">
             <div class="pricing-grid">
                 <div class="price-row product-name-row">
-                    <div class="column header {{ product.id }}" ng-repeat="product in ::vm.products | orderBy:'name'">{{ ::product.name }}</div>
+                    <div class="column header {{ product.id }}" ng-repeat="product in ::vm.products | orderBy:'name'">{{ ::vm.getProductDisplayName(product) }}</div>
                 </div>
                 <div class="price-cap price-row" ng-show="vm.viewOptions.priceCap">
                     <div class="column header {{ product.id }}" ng-repeat="product in ::vm.products | orderBy:'name'">{{ ::product.priceCap }}%</div>

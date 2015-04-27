@@ -4,7 +4,7 @@
         <div class="headings">
             <label for="name">Product Name</label>
             <view-edit-text-field ng-model="vm.product.name" edit-mode="vm.editable" input-id="name">
-                <h1>{{ vm.product.name }} <span ng-if="vm.product.showPreviousName">(formerly {{ vm.product.previousName }})</span></h1>
+                <h1>{{ vm.getProductDisplayName(vm.product) }}</h1>
             </view-edit-text-field>
             <view-edit-checkbox
                     ng-show="vm.shouldShowPreviousNameOption"

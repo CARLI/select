@@ -14,6 +14,7 @@ function editLicenseController( $scope, $rootScope, $location, alertService, cyc
     vm.saveLicense = saveLicense;
     vm.showProductsModal = showProductsModal;
     vm.closeProductsModalAndGoTo = closeProductsModalAndGoTo;
+    vm.getProductDisplayName = productService.getProductDisplayName;
 
     vendorService.list().then( function( vendorList ){
         vm.vendorList = vendorList;

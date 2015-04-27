@@ -6,6 +6,7 @@ function carliEditingProductListController( $scope, alertService, productService
     vm.removeProduct = removeProduct;
     vm.openVendorPricing = openVendorPricing;
     vm.loadProductsForVendor = loadProductsForVendor;
+    vm.getProductDisplayName = productService.getProductDisplayName;
     vm.loadingPromise = {};
     activate();
 

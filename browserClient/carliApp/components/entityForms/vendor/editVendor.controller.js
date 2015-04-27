@@ -12,6 +12,7 @@ function editVendorController( $scope, $rootScope, entityBaseService, alertServi
     vm.saveVendor = saveVendor;
     vm.addContact = addContact;
     vm.deleteContact = deleteContact;
+    vm.getProductDisplayName = productService.getProductDisplayName;
 
     vm.statusOptions = entityBaseService.getStatusOptions();
 
