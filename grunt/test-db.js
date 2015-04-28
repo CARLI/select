@@ -31,11 +31,11 @@ module.exports = function (grunt) {
     });
     grunt.registerTask('nuke-couch-dev', function() {
         var done = this.async();
-        testUtils.nukeCouch('http://carli-db.dev.pixotech.com').then(done);
+        testUtils.nukeCouch('http://vmhost.i.pixotech.com:9091').then(done);
     });
     grunt.registerTask('nuke-couch-qa', function() {
         var done = this.async();
-        testUtils.nukeCouch('http://carli-db.qa.pixotech.com').then(done);
+        testUtils.nukeCouch('http://vmhost.i.pixotech.com:9081').then(done);
     });
     grunt.registerTask('nuke-couch-prod', function() {
         var done = this.async();
