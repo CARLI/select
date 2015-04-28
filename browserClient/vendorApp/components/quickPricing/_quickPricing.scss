@@ -202,6 +202,10 @@ quick-pricing-su {
                 }
                 padding: 1rem;
 
+                ul li {
+                    line-height: 20px;
+                }
+
                 &.fte {
                     .fte-header {
                         margin-bottom: 1rem;
