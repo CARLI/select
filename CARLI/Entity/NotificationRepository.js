@@ -75,6 +75,14 @@ function loadNotification( notificationId  ){
         });
 }
 
+function sendNotification( notification ){
+    notification.draftStatus = 'sent';
+    notification.dateSent = new Date();
+    notification.subject = notification.targetEntity.name + ': ' + notification.subject;
+
+    return updateNotification(notification);
+}
+
 function listDrafts(){
     return listNotifications().then(keepUnsentNotifications);
 
@@ -184,6 +192,7 @@ module.exports = {
     list: listNotifications,
     load: loadNotification,
     delete: NotificationRepository.delete,
+    sendNotification: sendNotification,
     listDrafts: listDrafts,
     listSent: listSent,
     listSentBetweenDates: listSentBetweenDates,
