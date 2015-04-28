@@ -9,6 +9,7 @@ var mysql = require('mysql');
 var notificationTemplates = require('./notificationTemplates');
 var offeringMigration = require('./offering');
 var productMigration = require('./product');
+var selectionMigration = require('./selection');
 var Q = require('q');
 var vendorMigration = require('./vendor');
 var _ = require('lodash');
@@ -26,6 +27,7 @@ function doMigration(){
     var cycleIdMapping = {};
     var productLicenseMapping = {};
     var productMappingsByCycle = {};
+    var selectionsByCycle = {};
 
     notificationTemplates.migrateNotificationTemplates()
         .then(loadCrmLibraryMapping)
@@ -36,6 +38,7 @@ function doMigration(){
         .then(generateProductLicenseAssociations)
         .then(migrateCycles)
         .then(migrateProducts)
+        .then(gatherSelections)
         .then(migrateOfferings)
         .then(finishMigration)
         .then(closeIdalConnection)
@@ -107,10 +110,23 @@ function doMigration(){
         }
     }
 
-    function migrateOfferings(productMigrationResults){
+    function gatherSelections(productMigrationResults) {
         var productTotals = flattenCycleMigrationResults(productMigrationResults);
         console.log('Migrated ' + Object.keys(productTotals).length + ' products');
 
+        var cycleCouchIds = listObjectValues(cycleIdMapping);
+        return Q.all( cycleCouchIds.map(gatherSelectionsForCycle) );
+
+        function gatherSelectionsForCycle(cycleCouchId) {
+            return CycleRepository.load(cycleCouchId).then(function (cycle) {
+                return selectionMigration.gatherSelections(connection, cycle).then(function (selections) {
+                    selectionsByCycle[cycleCouchId] = selections;
+                });
+            });
+        }
+    }
+
+    function migrateOfferings() {
         var deferred = Q.defer();
         var promises = [];
 
@@ -139,7 +155,7 @@ function doMigration(){
 
     function migrateOfferingsForCycle(cycleId){
         return CycleRepository.load(cycleId).then(function (cycle) {
-            return offeringMigration.migrateOfferings(connection, cycle, libraryIdMapping, productMappingsByCycle[cycleId]);
+            return offeringMigration.migrateOfferings(connection, cycle, libraryIdMapping, productMappingsByCycle[cycleId], selectionsByCycle[cycleId]);
         });
     }
 
