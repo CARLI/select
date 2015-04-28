@@ -85,33 +85,39 @@ module.exports = {
             replicationList.forEach(function (replication) {
                 if (replication.doc.hasOwnProperty('source') && replication.doc.source.indexOf(testDbMarker) >= 0) {
                     count++;
-                    promises.push( promiseDeletion(replication.doc._id) );
+                    promises.push( promiseDeletion(replication.doc._id, replication.doc._rev) );
                 }
             });
-            console.log('Deleted ' + count + ' databases');
+            console.log('Deleted ' + count + ' replicator documents');
             Q.all(promises).then(deferred.resolve);
         });
 
-        function promiseDeletion(id) {
+        function promiseDeletion(id, rev) {
             var deletion = Q.defer();
-            request.del(config.storeOptions.couchDbUrl + '/_replicator/' + id, function (error, response, body) {
-                if (error) {
+
+            request.del(config.storeOptions.couchDbUrl + '/_replicator/' + id + '?rev=' + rev, function (error, response, body) {
+                var parsedBody = JSON.parse(body);
+                var err = error || parsedBody.error;
+                if (err) {
+                    console.log('Failed to delete ' + id + ' rev: '+ rev +', ' + err + ': ' + parsedBody.reason);
+                    console.log('Run `grunt delete-test-dbs` to clean this up');
                     deletion.reject(error);
                 } else {
                     deletion.resolve();
                 }
             });
+
             return deletion.promise;
         }
 
         return deferred.promise;
     },
     nukeCouch: function(couchDbUrl) {
-        var deferred = Q.defer();
         if (couchDbUrl === undefined) {
             couchDbUrl = config.storeOptions.couchDbUrl;
         }
 
+        var deferred = Q.defer();
         request.get(couchDbUrl + '/_all_dbs', function (error, response, body) {
             if (error) {
                 deferred.reject(error);
@@ -130,7 +136,6 @@ module.exports = {
             console.log('Deleted ' + count + ' databases');
             Q.all(promises).then(deferred.resolve);
         });
-
         return deferred.promise;
     },
     deleteDocumentsOfType: function(entityTypeName){
