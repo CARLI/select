@@ -58,10 +58,12 @@ function notificationModalController($q, $rootScope, $scope, alertService, cycle
             notificationModalService.acknowledgeStartDraftMessage();
         }
 
+        showLoadingDataModal();
+
         notificationTemplateService.load(message.templateId)
             .then(initializeDraftFromTemplate)
             .then(populateRecipients)
-            .then(showModal)
+            .then(showEditDraftModal)
             .catch(function (err) {
                 console.log(err);
             });
@@ -74,8 +76,20 @@ function notificationModalController($q, $rootScope, $scope, alertService, cycle
             });
         }
 
-        function showModal() {
-            $('#notification-modal').modal();
+        function showEditDraftModal() {
+            $('#notification-modal').modal('show');
+            hideLoadingDataModal();
+        }
+
+        function showLoadingDataModal(){
+            $('#notification-loading-modal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+        }
+
+        function hideLoadingDataModal(){
+            $('#notification-loading-modal').modal('hide');
         }
     }
 
