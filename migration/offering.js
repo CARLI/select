@@ -2,7 +2,7 @@ var OfferingRepository = require('../CARLI').Offering;
 var Q = require('q');
 var _ = require('lodash');
 
-function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping){
+function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping, selectionsByLibrary){
     var resultsPromise = Q.defer();
     var batchSize = 500;
 
@@ -35,6 +35,14 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping)
         console.log('Extracted '+ Object.keys(uniqueOfferings).length +' unique Offerings');
         var offeringsList = extractPricingForOfferings(uniqueOfferings, rows, cycle, libraryIdMapping, productIdMapping);
         console.log('Extracted pricing lists for offerings');
+
+        offeringsList.forEach(function(offering){
+            var libraryId = offering.library;
+            var productId = offering.product;
+            if ( selectionsByLibrary[libraryId] && selectionsByLibrary[libraryId][productId] ){
+                offering.selection = selectionsByLibrary[libraryId][productId];
+            }
+        });
 
         var emptyOfferingsList = [];
 
