@@ -171,6 +171,8 @@ function initializeComputedValues(offerings) {
         if (!offering.libraryComments) {
             offering.libraryComments = offering.product.comments;
         }
+
+        sortOfferingSuPricing(offering);
     });
     return offerings;
 }
@@ -197,10 +199,32 @@ function getFlaggedState(offering){
 
     function systemFlaggedState(){
         if ( offering.pricing && offering.pricing.su ){
-            var sitePrice = offering.pricing.site || 0;
+            var flagSiteLicensePrice = isThereAnSuOfferingForLessThanTheSiteLicensePrice();
+            var flagSuPrices = isThereAnSuOfferingForMoreUsersWithASmallerPrice();
 
-            for ( var i in offering.pricing.su ){
-                if ( offering.pricing.su[i].price > sitePrice ){
+            return flagSiteLicensePrice || flagSuPrices;
+        }
+        return false;
+    }
+
+    function isThereAnSuOfferingForLessThanTheSiteLicensePrice(){
+        var sitePrice = offering.pricing.site || 0;
+        for ( var i in offering.pricing.su ){
+            if ( offering.pricing.su[i].price > sitePrice ){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function isThereAnSuOfferingForMoreUsersWithASmallerPrice(){
+        sortOfferingSuPricing(offering);
+        var max = offering.pricing.su.length;
+
+        for ( var i = 0 ; i < max ; i++ ){
+            var priceToCheck = offering.pricing.su[i].price;
+            for ( var j = i ; j < max ; j++ ){
+                if ( offering.pricing.su[j].price > priceToCheck ){
                     return true;
                 }
             }
@@ -254,6 +278,16 @@ function createOfferingsFor( productId, libraryIds, cycle ){
             pricing: {}
         };
         return createOffering( newOffering, cycle );
+    }
+}
+
+function sortOfferingSuPricing( offering ){
+    if ( offering.pricing.su ){
+        offering.pricing.su.sort(sortByUsers);
+    }
+
+    function sortByUsers(a, b) {
+        return a.users > b.users;
     }
 }
 

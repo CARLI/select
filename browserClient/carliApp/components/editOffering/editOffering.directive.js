@@ -46,6 +46,8 @@ angular.module('carli.editOffering')
                 }
                 userTouchedFlag = false;
 
+                keepValidSuPricingRows();
+
                 return offeringService.update(vm.offering)
                     .then(offeringService.load)
                     .then(updateOfferingFlaggedStatus)
@@ -61,6 +63,19 @@ angular.module('carli.editOffering')
                 function updateOfferingFlaggedStatus( offering ){
                     offering.flagged = offeringService.getFlaggedState(offering);
                     return offering;
+                }
+
+                function keepValidSuPricingRows(){
+                    var newSuPricing = [];
+
+                    for ( var i in vm.offering.pricing.su ){
+                        var pricingRow = vm.offering.pricing.su[i];
+                        if ( pricingRow.price && pricingRow.users ){
+                            newSuPricing.push( vm.offering.pricing.su[i] );
+                        }
+                    }
+
+                    vm.offering.pricing.su = newSuPricing;
                 }
             }
 

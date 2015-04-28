@@ -19,6 +19,7 @@ function viewEditSuPricingController($scope){
     var vm = this;
 
     vm.addPriceRow = addPriceRow;
+    vm.removePriceRow = removePriceRow;
 
     activate();
 
@@ -38,10 +39,26 @@ function viewEditSuPricingController($scope){
         return a.users > b.users;
     }
 
+    function removePriceRow( indexToRemove ){
+        vm.pricing = vm.pricing.filter(function(value,index){
+            return index !== indexToRemove;
+        });
+    }
+
     function addPriceRow(){
         vm.pricing.push({
             price: '',
-            users: ''
+            users: highestUser() + 1
         });
+    }
+
+    function highestUser(){
+        var max = 0;
+        vm.pricing.forEach(function(price){
+            if ( price.users > max ){
+                max = price.users;
+            }
+        });
+        return max;
     }
 }
