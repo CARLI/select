@@ -16,6 +16,7 @@
             border-right: $default-border;
             border-collapse: collapse;
             font-weight: normal;
+            position: relative;
 
             &:last-child {
                 border-right: 0;
@@ -24,13 +25,25 @@
     }
 
     .carli-button.add {
-        border: 0;
-        height: auto;
-        padding: 0;
-        text-align: left;
+        text-align: right;
+        width: 100%;
+    }
+
+    .carli-button.remove {
+        background: transparent;
+        color: $gray;
+        min-width: 1rem;
+        position: absolute;
+        right: 1rem;
+        top: 0.3rem;
 
         &:hover {
-            background: $white;
+            background: transparent;
+        }
+
+        .fa {
+            margin: 0;
+            vertical-align: middle;
         }
     }
 }

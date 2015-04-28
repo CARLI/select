@@ -19,6 +19,7 @@ function viewEditSuPricingController($scope){
     var vm = this;
 
     vm.addPriceRow = addPriceRow;
+    vm.removePriceRow = removePriceRow;
 
     activate();
 
@@ -36,6 +37,12 @@ function viewEditSuPricingController($scope){
 
     function sortByUsers(a, b) {
         return a.users > b.users;
+    }
+
+    function removePriceRow( indexToRemove ){
+        vm.pricing = vm.pricing.filter(function(value,index){
+            return index !== indexToRemove;
+        });
     }
 
     function addPriceRow(){
