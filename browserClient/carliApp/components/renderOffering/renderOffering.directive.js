@@ -8,6 +8,8 @@ var flagOfferingHandlerAttached;
 function renderOfferingDirective( $http, $q, $filter, alertService, offeringService, editOfferingService, productService ) {
     registerHandlebarsHelpers();
 
+    var flagActionInProgress = {};
+
     return {
         restrict: 'E',
         scope: {
@@ -103,6 +105,12 @@ function renderOfferingDirective( $http, $q, $filter, alertService, offeringServ
                 function flagOffering() {
                     var offeringId = $(this).data('offering-id');
 
+                    if ( flagActionInProgress[offeringId] ){
+                        return;
+                    }
+
+                    disableFlagAction(offeringId);
+
                     scope.$apply(function() {
                         editOfferingService.toggleOfferingUserFlaggedState(offeringId)
                             .then(alertSuccess, alertError)
@@ -131,12 +139,23 @@ function renderOfferingDirective( $http, $q, $filter, alertService, offeringServ
                             flag.removeClass('fa-flag').addClass('fa-flag-o');
                         }
 
+                        enableFlagAction(updatedOffering.id);
+
                         return updatedOffering;
                     }
                 }
             }
         }
     };
+
+
+    function disableFlagAction( offeringId ){
+        flagActionInProgress[offeringId] = true;
+    }
+
+    function enableFlagAction( offeringId ){
+        flagActionInProgress[offeringId] = false;
+    }
 
     function currency( number ) {
         return $filter('currency')(number);

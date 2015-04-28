@@ -1,4 +1,13 @@
-<div class="modal fade" id="notification-modal" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+<div class="modal" id="notification-loading-modal" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div>Loading Data For Notification</div>
+            <div class="busy-spinner"></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="notification-modal" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -13,7 +22,7 @@
 
                 <form name="notificationForm" warn-if-unsaved ng-if="vm.template">
                     <label for="recipients">To</label>
-                    <tags-input ng-model="vm.recipients" placeholder="Add a recipient" key-property="id" display-property="label">
+                    <tags-input ng-model="vm.recipients" placeholder="Add a recipient" key-property="id" display-property="label"></tags-input>
 
                     <label for="subject">Subject Line</label>
                     <input id="subject" type="text" ng-model="vm.draft.subject">
