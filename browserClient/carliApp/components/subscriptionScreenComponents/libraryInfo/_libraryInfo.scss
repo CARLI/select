@@ -1,6 +1,7 @@
 .library-info,
 library-info {
     @include body-text();
+    line-height: 20px;
 
     .name {
         @extend h3;
