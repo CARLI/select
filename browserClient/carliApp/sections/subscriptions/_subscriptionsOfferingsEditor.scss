@@ -226,6 +226,12 @@
                     }
                 }
 
+                &.expanded {
+                    background: $purple;
+                    color: $white;
+                    border: none;
+                }
+
                 .price-cap {
                     float: right;
                     @include font-size(14);
