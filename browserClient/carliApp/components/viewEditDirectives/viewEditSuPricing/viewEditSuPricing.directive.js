@@ -41,7 +41,17 @@ function viewEditSuPricingController($scope){
     function addPriceRow(){
         vm.pricing.push({
             price: '',
-            users: ''
+            users: highestUser() + 1
         });
+    }
+
+    function highestUser(){
+        var max = 0;
+        vm.pricing.forEach(function(price){
+            if ( price.users > max ){
+                max = price.users;
+            }
+        });
+        return max;
     }
 }
