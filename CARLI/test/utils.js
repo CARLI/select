@@ -74,8 +74,11 @@ module.exports = {
         var deferred = Q.defer();
 
         request.get(config.storeOptions.couchDbUrl + '/_replicator/_all_docs?include_docs=true', function (error, response, body) {
-            if (error) {
+            var parsedBody = JSON.parse(body);
+            var err = error || parsedBody.error;
+            if (err) {
                 deferred.reject(error);
+                return;
             }
             var jsonBody = JSON.parse(body);
             var replicationList = jsonBody.rows;
@@ -85,53 +88,106 @@ module.exports = {
             replicationList.forEach(function (replication) {
                 if (replication.doc.hasOwnProperty('source') && replication.doc.source.indexOf(testDbMarker) >= 0) {
                     count++;
-                    promises.push( promiseDeletion(replication.doc._id) );
+                    promises.push( promiseDeletion(replication.doc._id, replication.doc._rev) );
                 }
             });
-            console.log('Deleted ' + count + ' databases');
+            console.log('Deleted ' + count + ' replicator documents');
             Q.all(promises).then(deferred.resolve);
         });
 
-        function promiseDeletion(id) {
+        function promiseDeletion(id, rev) {
             var deletion = Q.defer();
-            request.del(config.storeOptions.couchDbUrl + '/_replicator/' + id, function (error, response, body) {
-                if (error) {
+
+            request.del(config.storeOptions.couchDbUrl + '/_replicator/' + id + '?rev=' + rev, function (error, response, body) {
+                var parsedBody = JSON.parse(body);
+                var err = error || parsedBody.error;
+                if (err) {
+                    console.log('Failed to delete ' + id + ' rev: '+ rev +', ' + err + ': ' + parsedBody.reason);
+                    console.log('Run `grunt delete-test-dbs` to clean this up');
                     deletion.reject(error);
                 } else {
                     deletion.resolve();
                 }
             });
+
             return deletion.promise;
         }
 
         return deferred.promise;
     },
     nukeCouch: function(couchDbUrl) {
-        var deferred = Q.defer();
         if (couchDbUrl === undefined) {
             couchDbUrl = config.storeOptions.couchDbUrl;
         }
 
-        request.get(couchDbUrl + '/_all_dbs', function (error, response, body) {
-            if (error) {
-                deferred.reject(error);
-            }
-            var dbList = JSON.parse(body);
-            var count = 0;
-            var promises = [];
-            promises.push(_deleteDb(couchDbUrl, testDbName));
-            dbList.forEach(function (dbName) {
-                if (dbName.indexOf('_') != 0) {
+        return deleteAllReplicators().then(deleteAllNonSystemDatabases);
+
+        function deleteAllReplicators() {
+            var deferred = Q.defer();
+            request.get(couchDbUrl + '/_replicator/_all_docs?include_docs=true', function (error, response, body) {
+                var parsedBody = JSON.parse(body);
+                var err = error || parsedBody.error;
+                if (err) {
+                    deferred.reject(error);
+                    return;
+                }
+                var replicationList = parsedBody.rows;
+                var count = 0;
+                var promises = [];
+
+                replicationList.forEach(function (replication) {
                     count++;
-                    //request.del(couchDbUrl + '/' + dbName);
-                    promises.push(_deleteDb(couchDbUrl, dbName));
+                    if (replication.doc._id.indexOf('_') != 0) {
+                        promises.push(promiseDeletion(replication.doc._id, replication.doc._rev));
+                    }
+                });
+                console.log('Deleted ' + count + ' replicator documents');
+                Q.all(promises).then(deferred.resolve);
+            });
+            return deferred.promise;
+        }
+        function promiseDeletion(id, rev) {
+            var deletion = Q.defer();
+
+            request.del(couchDbUrl + '/_replicator/' + id + '?rev=' + rev, function (error, response, body) {
+                var parsedBody = JSON.parse(body);
+                var err = error || parsedBody.error;
+                if (err) {
+                    console.log('Failed to delete ' + id + ' rev: '+ rev +', ' + err + ': ' + parsedBody.reason);
+                    deletion.reject(error);
+                } else {
+                    deletion.resolve();
                 }
             });
-            console.log('Deleted ' + count + ' databases');
-            Q.all(promises).then(deferred.resolve);
-        });
 
-        return deferred.promise;
+            return deletion.promise;
+        }
+
+        function deleteAllNonSystemDatabases() {
+            var deferred = Q.defer();
+            request.get(couchDbUrl + '/_all_dbs', function(error, response, body) {
+                    if (error) {
+                        deferred.reject(error);
+                    }
+                    var dbList = JSON.parse(body);
+                    var count = 0;
+                    var promises = [];
+                    promises.push(_deleteDb(couchDbUrl, testDbName));
+                    dbList.forEach(
+                        function(dbName) {
+                            if (dbName.indexOf('_') != 0) {
+                                count++;
+                                //request.del(couchDbUrl + '/' + dbName);
+                                promises.push(_deleteDb(couchDbUrl, dbName));
+                            }
+                        }
+                    );
+                    console.log('Deleted ' + count + ' databases');
+                    Q.all(promises).then(deferred.resolve);
+                }
+            );
+            return deferred.promise;
+        }
     },
     deleteDocumentsOfType: function(entityTypeName){
         var EntityRepository = require('../Entity/'+entityTypeName+'Repository' );
