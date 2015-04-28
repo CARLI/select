@@ -42,7 +42,7 @@ function gatherSelections(connection, cycle, productMapping){
 function extractSelection( selectionRow ){
     return {
         price: selectionRow.price,
-        users: selectionRow.num_su
+        users: selectionRow.num_su === 0 ? 'Site License' : selectionRow.num_su
     }
 }
 
