@@ -4,6 +4,8 @@ quick-pricing-su {
 
     .quick-pricing {
         $quick-pricing-spacing: 38px;
+        $select-by-narrow-width: 152px;
+        $select-by-choose-width: 233px;
 
         color: $purple;
         font-size: 1.21429rem;
@@ -67,51 +69,66 @@ quick-pricing-su {
             }
         }
 
+        .select-by-toggle,
+        .select-entities-controls {
+            display: flex;
+            height: 40px;
+            line-height: 40px;
+            margin-bottom: 1rem;
+
+            li {
+                @include flex(1 1 auto);
+
+                .select-none,
+                .select-all {
+                    font-weight: bold;
+                    color: $orange;
+                }
+                .filters-label {
+                    padding: 0 1rem;
+                    font-style: italic;
+                }
+
+                border-right: $default-border;
+                border-bottom: $default-border;
+
+                &.select-by:first-child {
+                    border-left: $default-border;
+                }
+                &.select-by,
+                &.filter {
+                    border-top: $default-border;
+                    color: $black;
+                    cursor: pointer;
+                    text-align: center;
+                    text-transform: uppercase;
+                    font-family: 'Dosis', sans-serif;
+                    font-weight: 600;
+                    @include font-size(15);
+                }
+                &.select-by.narrow {
+                    @include flex(0 0 $select-by-narrow-width);
+                }
+                &.select-by.library {
+                    @include flex(0 0 $select-by-choose-width);
+                }
+                &.filter {
+                    @include flex(0 0 60px);
+                }
+
+                &.select-by.active,
+                &.filter.active {
+                    border-bottom: none;
+                    color: $orange;
+                }
+            }
+        }
+
         quick-pricing-entity-selector {
             @include body-text;
 
             ul {
                 list-style: none;
-            }
-
-            .select-entities-controls {
-                display: flex;
-                height: 40px;
-                line-height: 40px;
-                margin-bottom: 1rem;
-
-                li {
-                    @include flex(1 1 auto);
-
-                    .select-none,
-                    .select-all {
-                        font-weight: bold;
-                        color: $orange;
-                    }
-                    .filters-label {
-                        padding: 0 1rem;
-                        font-style: italic;
-                    }
-
-                    border-right: $default-border;
-                    border-bottom: $default-border;
-
-                    &.filter {
-                        border-top: $default-border;
-                        color: $black;
-                        cursor: pointer;
-                        font-family: 'Dosis', sans-serif;
-                        font-weight: 600;
-                        @include font-size(15);
-                        @include flex(0 0 60px);
-                        text-align: center;
-                    }
-
-                    &.filter.active {
-                        border-bottom: none;
-                        color: $orange;
-                    }
-                }
             }
 
             ul.entity-list {
@@ -146,24 +163,31 @@ quick-pricing-su {
         quick-pricing-library-selector {
             @include body-text;
 
+            .select-entities-controls {
+                margin-left: $select-by-narrow-width + $select-by-choose-width;
+                li:first-child {
+                    padding-left: 1rem;
+                }
+            }
+            .select-by-entity {
+                margin-top: -54px;
+            }
+            .narrow-by-label {
+                border-right: none;
+                padding: 0 1rem;
+                font-style: italic;
+            }
+
             .header {
                 height: 52px;
                 position: relative;
-                
-                .narrow-by-label {
-                    font-style: italic;
-                    position: absolute;
-                    left: 0;
-                    bottom: 0;
-                }
+
                 .controls {
                     position: absolute;
                     right: 0;
                     top: 0;
                 }
             }
-
-
 
             .narrow-by-container {
                 display: flex;
