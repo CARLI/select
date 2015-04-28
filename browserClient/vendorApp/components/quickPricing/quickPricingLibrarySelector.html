@@ -1,7 +1,7 @@
 <ul class="select-by-toggle">
     <li class="select-by narrow" ng-class="{ 'active': vm.selectBy === 'filter' }" ng-click="vm.selectBy = 'filter'">Filter Libraries</li>
     <li class="select-by library" ng-class="{ 'active': vm.selectBy === 'choose' }" ng-click="vm.selectBy = 'choose'">Choose Individual Libraries</li>
-    <li class="narrow-by-label" ng-if="vm.selectBy === 'filter'" class="narrow-by-label">Narrow by:</li>
+    <li class="select-by-header-spacer" ng-if="vm.selectBy === 'filter'"></li>
 </ul>
 
 
