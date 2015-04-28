@@ -99,9 +99,12 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
         function generateOfferingCell(library, product) {
             var offering = vm.offeringsForLibraryByProduct[product.id][library.id] || { pricing: { site: 0 }};
             var price = offering.pricing.site;
-            var offeringCell = $('<div class="column offering input">')
-                //.append(createReadOnlyOfferingCell(price));
-                .append(createEditableOfferingCell(price));
+            var offeringWrapper = $('<div class="column offering input">');
+            var offeringCell = offeringWrapper.append(createReadOnlyOfferingCell(price));
+
+            offeringWrapper.on('click', function() {
+                $(this).children().first().focus();
+            });
 
             offeringCell.data('libraryId', library.id);
             offeringCell.data('productId', product.id);
@@ -129,12 +132,9 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
         return cell;
 
         function makeReadOnly() {
-            console.log('makeReadOnly');
             var price = $(this).val();
             var div = createReadOnlyOfferingCell(price);
-            console.log('replacing', this, div);
             $(this).replaceWith(div);
-            div.focus();
         }
     }
 
