@@ -136,8 +136,8 @@ module.exports = {
                 var promises = [];
 
                 replicationList.forEach(function (replication) {
-                    count++;
                     if (replication.doc._id.indexOf('_') != 0) {
+                        count++;
                         promises.push(promiseDeletion(replication.doc._id, replication.doc._rev));
                     }
                 });
