@@ -7,6 +7,7 @@ sudo docker rm -f carli-middleware-$instance 2> /dev/null
 sudo docker run \
     --name="carli-middleware-$instance" \
     --detach=true \
+    --log-driver=syslog \
     --link=carli-couchdb-$instance:carli-couchdb \
     --volumes-from "carli-build-$instance" \
     -e "CARLI_CRM_MYSQL_PASSWORD=$CARLI_CRM_MYSQL_PASSWORD" \
