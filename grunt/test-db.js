@@ -35,7 +35,7 @@ module.exports = function (grunt) {
     });
     grunt.registerTask('nuke-couch-qa', function() {
         var done = this.async();
-        testUtils.nukeCouch('http://vmhost.i.pixotech.com:9081').then(done);
+        testUtils.nukeCouch('http://docker1.i.pixotech.com:9081').then(done);
     });
     grunt.registerTask('nuke-couch-prod', function() {
         var done = this.async();

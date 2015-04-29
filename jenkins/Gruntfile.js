@@ -60,7 +60,7 @@ module.exports = function (grunt) {
                     case 'dev':
                         return 'http://vmhost.i.pixotech.com:9091';
                     case 'qa':
-                        return 'http://vmhost.i.pixotech.com:9081';
+                        return 'http://docker1.i.pixotech.com:9081';
                     case 'prod':
                         return 'http://select-prod.carli.illinois.edu/db';
                     default:

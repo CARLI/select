@@ -19,5 +19,5 @@ Run on each push to develop
 
 Run on each push to QA
 
-* This job is the same as Build Dev, except: `carli.qa.pixotech.com` &rarr; `vmhost:9080`.
+* This job is the same as Build Dev, except: `carli.qa.pixotech.com` &rarr; `docker1:9080`.
 

@@ -12,9 +12,9 @@ module.exports = {
         mainDbUrl: 'http://vmhost.i.pixotech.com:9091/carli'
     },
     qa: {
-        baseUrl: 'http://vmhost.i.pixotech.com:9081',
+        baseUrl: 'http://docker1.i.pixotech.com:9081',
         mainDbName: 'carli',
-        mainDbUrl: 'http://vmhost.i.pixotech.com:9081/carli'
+        mainDbUrl: 'http://docker1.i.pixotech.com:9081/carli'
     },
     prod: {
         baseUrl: 'http://select-prod.carli.illinois.edu/db',
