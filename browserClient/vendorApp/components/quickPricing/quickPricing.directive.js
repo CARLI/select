@@ -21,8 +21,7 @@ angular.module('vendor.quickPricing')
             scope: {
                 products: '=',
                 selectedProductIds: '=',
-                libraries: '=',
-                selectedLibraryIds: '='
+                suLevels: '='
             },
             controller: 'quickPricingSuController',
             controllerAs: 'vm',

@@ -1,0 +1,22 @@
+#simultaneousUserPrices {
+    $su-column-width: 15%;
+    $grid-width: (100% - $su-column-width);
+
+    quick-pricing-su {
+        margin: 1rem auto;
+    }
+
+    .scroll-slider-container {
+        margin-left: $su-column-width;
+    }
+
+    .pricing-grid-row-labels {
+        @include flex(1 1 $su-column-width);
+        min-width: 75px;
+        font-weight: bold;
+    }
+
+    .pricing-grid-container {
+        @include flex(1 1 $grid-width);
+    }
+}

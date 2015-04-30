@@ -1,8 +1,31 @@
 <div class="quick-pricing" collapsible>
-    <ng-include src="'quickPricingHeader.html'"></ng-include>
+    <ng-include src="'/vendorApp/components/quickPricing/quickPricingHeader.html'"></ng-include>
     <ul class="content">
-        <li class="step1">Step1</li>
-        <li class="step1">Step2</li>
-        <li class="step1">Step3</li>
+        <li class="step1" carli-accordion>
+            <div class="accordion-header">
+                <button class="clear-button-styles"><span class="step">Step 1:</span> Select Products</button>
+                <div class="selection-summary">{{ vm.selectedProductCount() }} out of {{ vm.totalProductCount() }} products selected.</div>
+            </div>
+            <div class="content">
+                <quick-pricing-entity-selector entities="vm.products" selected-entity-ids="vm.selectedProductIds"></quick-pricing-entity-selector>
+                <button class="carli-button next" ng-click="vm.goToStep2()">Next Step</button>
+            </div>
+        </li>
+        <li class="step2" carli-accordion id="quick-pricing-accordion-2">
+            <div class="accordion-header">
+                <button class="clear-button-styles"><span class="step">Step 2:</span> Select Simultaneous User Levels</button>
+            </div>
+            <div class="content">
+                <button class="carli-button next" ng-click="vm.goToStep3()">Next Step</button>
+            </div>
+        </li>
+        <li class="step3" carli-accordion  id="quick-pricing-accordion-3">
+            <div class="accordion-header">
+                <button class="clear-button-styles"><span class="step">Step 3:</span> Enter Prices</button>
+            </div>
+            <div class="content">
+                <button class="carli-button next" ng-click="vm.finish()">Finish</button>
+            </div>
+        </li>
     </ul>
 </div>
