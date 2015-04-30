@@ -43,12 +43,9 @@ function createCycleLog(msg, data) {
 }
 
 function createCycle( cycle ) {
-
     return CycleRepository.create(cycle, transformFunction)
         .then(loadCycle)
         .then(createDatabaseForCycle)
-        .then(loadCycle)
-        .then(triggerViewIndexing)
         .then(resolveCycleId);
 
     function createDatabaseForCycle( cycle ) {
@@ -67,15 +64,15 @@ function createCycle( cycle ) {
             });
     }
 
-    function triggerViewIndexing(cycle) {
-        createCycleLog('Triggering view indexing for ' + cycle.name + ' with database ' + cycle.getDatabaseName());
-        couchUtils.triggerViewIndexing(cycle.getDatabaseName());
-        return cycle;
-    }
-
     function resolveCycleId(cycle){
         return cycle.id;
     }
+}
+
+function triggerViewIndexing(cycle) {
+    createCycleLog('Triggering view indexing for ' + cycle.name + ' with database ' + cycle.getDatabaseName());
+    couchUtils.triggerViewIndexing(cycle.getDatabaseName());
+    return cycle;
 }
 
 
