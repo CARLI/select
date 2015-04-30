@@ -2,7 +2,8 @@
 module.exports = function (grunt) {
     var projectRoot = __dirname + '/..';
     var testUtils = require(projectRoot + '/CARLI/test/utils');
-    var deployDb = require(projectRoot+'/db/deploy.js');
+    var deployDb = require(projectRoot+'/db/deploy');
+    var dbInfo = require(projectRoot+'/db/databaseInfo');
 
     grunt.registerTask('deploy-test-db', [
         'deploy-test-app-db',
@@ -31,14 +32,14 @@ module.exports = function (grunt) {
     });
     grunt.registerTask('nuke-couch-dev', function() {
         var done = this.async();
-        testUtils.nukeCouch('http://vmhost.i.pixotech.com:9091').then(done);
+        testUtils.nukeCouch(dbInfo.dev.baseUrl).then(done);
     });
     grunt.registerTask('nuke-couch-qa', function() {
         var done = this.async();
-        testUtils.nukeCouch('http://docker1.i.pixotech.com:9081').then(done);
+        testUtils.nukeCouch(dbInfo.qa.baseUrl).then(done);
     });
     grunt.registerTask('nuke-couch-prod', function() {
         var done = this.async();
-        testUtils.nukeCouch('http://select-prod.carli.illinois.edu/db').then(done);
+        testUtils.nukeCouch(dbInfo.prod.baseUrl).then(done);
     });
 };
