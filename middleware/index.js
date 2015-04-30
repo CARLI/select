@@ -127,5 +127,5 @@ if (require.main === module) {
     runMiddlewareServer();
 }
 else {
-    module.exports = _.extend({}, couchApp, crmQueries, cycleCreation, notifications, vendorSpecificProductQueries);
+    module.exports = {};
 }
