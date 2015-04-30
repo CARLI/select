@@ -45,8 +45,7 @@ function createCycleLog(msg, data) {
 function createCycle( cycle ) {
     return CycleRepository.create(cycle, transformFunction)
         .then(loadCycle)
-        .then(createDatabaseForCycle)
-        .then(resolveCycleId);
+        .then(createDatabaseForCycle);
 
     function createDatabaseForCycle( cycle ) {
         cycle.databaseName = couchUtils.makeValidCouchDbName('cycle-' + cycle.name);
@@ -62,10 +61,6 @@ function createCycle( cycle ) {
                 CycleRepository.delete( cycle.id );
                 throw new Error('createDatabase failed: ' + err);
             });
-    }
-
-    function resolveCycleId(cycle){
-        return cycle.id;
     }
 }
 
