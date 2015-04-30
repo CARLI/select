@@ -262,6 +262,10 @@ quick-pricing-su {
 
                         input {
                             display: inline;
+
+                            &[disabled] {
+                                opacity: 0.6;
+                            }
                         }
                     }
 

@@ -3,7 +3,9 @@ angular.module('vendor.quickPricing')
         return {
             restrict: 'E',
             templateUrl: '/vendorApp/components/quickPricing/quickPricingEnterPrices.html',
-            scope: {},
+            scope: {
+                quickPricingArguments: '='
+            },
             controller: 'quickPricingEnterPricesController',
             controllerAs: 'vm',
             bindToController: true

@@ -8,7 +8,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     vm.selectedProductIds = {};
     vm.selectedLibraryIds = {};
     vm.getProductDisplayName = productService.getProductDisplayName;
-
+    vm.quickPricingCallback = quickPricingCallback;
     vm.saveOfferings = saveOfferings;
 
     activate();
@@ -202,5 +202,30 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             });
 
         return deferred.promise;
+    }
+
+    function quickPricingCallback(mode, value) {
+        var selectedLibraryIds = Object.keys(vm.selectedLibraryIds).filter(function (libraryId) {
+            return vm.selectedLibraryIds[libraryId];
+        });
+        var selectedProductIds = Object.keys(vm.selectedProductIds).filter(function (productId) {
+            return vm.selectedProductIds[productId];
+        });
+
+        $('#price-rows .offering').each(function(i, cell) {
+            var $cell = $(cell);
+            if (selectedLibraryIds.indexOf($cell.data('libraryId').toString()) != -1 &&
+                selectedProductIds.indexOf($cell.data('productId')) != -1) {
+
+                if (mode == 'dollarAmount') {
+                    $cell.find('.price').text(value);
+                } else if (mode == 'percentageIncrease') {
+                    var originalValue = parseFloat($cell.text());
+                    var newValue = (100 + value)/100 * originalValue;
+                    // TODO round this to the nearest cent?
+                    $cell.find('.price').text( newValue );
+                }
+            }
+        });
     }
 }
