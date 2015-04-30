@@ -1,11 +1,13 @@
 .library-info,
 library-info {
     @include body-text();
+    line-height: 20px;
 
     .name {
         @extend h3;
         font-weight: 700;
         margin-top: 0;
+        padding-bottom: 6px;
     }
 
     .label {

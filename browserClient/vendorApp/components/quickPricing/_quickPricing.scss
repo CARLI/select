@@ -172,10 +172,8 @@ quick-pricing-su {
             .select-by-entity {
                 margin-top: -54px;
             }
-            .narrow-by-label {
+            .select-by-header-spacer {
                 border-right: none;
-                padding: 0 1rem;
-                font-style: italic;
             }
 
             .header {
@@ -201,6 +199,10 @@ quick-pricing-su {
                     margin-right: 0;
                 }
                 padding: 1rem;
+
+                ul li {
+                    line-height: 20px;
+                }
 
                 &.fte {
                     .fte-header {
