@@ -2,6 +2,7 @@ var Entity = require('../Entity')
   , EntityTransform = require( './EntityTransformationUtils')
   , config = require( '../../config' )
   , couchUtils = require( '../Store/CouchDb/Utils')
+  , cycleRepository = require('./CycleRepository')
   , getStoreForCycle = require('./getStoreForCycle')
   , Validator = require('../Validator')
   , productRepository = require('./ProductRepository')
@@ -89,20 +90,34 @@ function listOfferings(cycle){
 function transformOfferingsForNewCycle(newCycle, sourceCycle) {
     return listOfferings(newCycle).then(function(offerings) {
         console.log('[Cycle Creation]: Transforming ' + offerings.length + ' offerings');
-        var promises = offerings.map(transformOffering).map(saveOffering);
+        var numProcessed = 0;
+        var chunkSize = offerings.length / 100;
 
-        return Q.all(promises);
+        return Q.all( offerings.map(transformOffering) )
+            .then(updateProgress)
+            .thenResolve(newCycle);
 
         function transformOffering(offering) {
-            return saveOfferingHistoryForYear(offering, sourceCycle.year);
-        }
-        function saveOffering(offering) {
+            numProcessed++;
+            if (numProcessed % chunkSize == 0) {
+                updateProgress();
+            }
+            copyOfferingHistoryForYear(offering, sourceCycle.year);
             return updateOffering(offering, newCycle);
+        }
+
+        function updateProgress(){
+            return cycleRepository.load(newCycle.id)
+                .then(function(cycle){
+                    cycle.offeringTransformationPercentComplete = 100 * numProcessed / offerings.length;
+                    return cycle
+                })
+                .then(cycleRepository.update);
         }
     });
 }
 
-function saveOfferingHistoryForYear(offering, year) {
+function copyOfferingHistoryForYear(offering, year) {
     offering.history = offering.history || {};
     offering.history[year] = {
         pricing: _.clone(offering.pricing)
@@ -309,7 +324,7 @@ module.exports = {
     getOfferingsById: getOfferingsById,
     getOfferingDisplayOptions: getOfferingDisplayOptions,
     transformOfferingsForNewCycle: transformOfferingsForNewCycle,
-    saveOfferingHistoryForYear: saveOfferingHistoryForYear,
+    saveOfferingHistoryForYear: copyOfferingHistoryForYear,
 
     getFlaggedState: getFlaggedState
 };

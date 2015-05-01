@@ -201,19 +201,19 @@ function runOfferingSpecificTests(testCycle) {
             });
         });
 
-        describe('saveOfferingHistoryForYear', function() {
+        describe('copyOfferingHistoryForYear', function() {
             it('should copy the pricing data to a history property and preserve past history if it exists', function() {
                 var originalOffering = validOfferingData();
                 originalOffering.cycle = _.clone(testCycle);
                 originalOffering.cycle.year = 2014;
 
-                var transformedOffering = OfferingRepository.saveOfferingHistoryForYear(originalOffering, 2014);
+                var transformedOffering = OfferingRepository.copyOfferingHistoryForYear(originalOffering, 2014);
                 expect(transformedOffering.history['2014'].pricing).to.deep.equal(originalOffering.pricing);
 
                 transformedOffering.cycle = _.clone(testCycle);
                 transformedOffering.cycle.year = 2015;
 
-                transformedOffering = OfferingRepository.saveOfferingHistoryForYear(transformedOffering, 2015);
+                transformedOffering = OfferingRepository.copyOfferingHistoryForYear(transformedOffering, 2015);
                 expect(transformedOffering.history['2014'].pricing).to.deep.equal(originalOffering.pricing);
                 expect(transformedOffering.history['2015'].pricing).to.deep.equal(originalOffering.pricing);
 
@@ -224,13 +224,13 @@ function runOfferingSpecificTests(testCycle) {
                 originalOffering.cycle.year = 2014;
                 originalOffering.selection = { foo: 'bar' };
 
-                var transformedOffering = OfferingRepository.saveOfferingHistoryForYear(originalOffering, 2014);
+                var transformedOffering = OfferingRepository.copyOfferingHistoryForYear(originalOffering, 2014);
                 expect(transformedOffering.history['2014'].selection).to.deep.equal(originalOffering.selection);
 
                 transformedOffering.cycle = _.clone(testCycle);
                 transformedOffering.cycle.year = 2015;
 
-                transformedOffering = OfferingRepository.saveOfferingHistoryForYear(transformedOffering, 2015);
+                transformedOffering = OfferingRepository.copyOfferingHistoryForYear(transformedOffering, 2015);
                 expect(transformedOffering.history['2014'].selection).to.deep.equal(originalOffering.selection);
                 expect(transformedOffering.history['2015'].selection).to.deep.equal(originalOffering.selection);
             });

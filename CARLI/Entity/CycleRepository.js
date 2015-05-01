@@ -64,13 +64,6 @@ function createCycle( cycle ) {
     }
 }
 
-function triggerViewIndexing(cycle) {
-    createCycleLog('Triggering view indexing for ' + cycle.name + ' with database ' + cycle.getDatabaseName());
-    couchUtils.triggerViewIndexing(cycle.getDatabaseName());
-    return cycle;
-}
-
-
 function updateCycle( cycle ){
     return CycleRepository.update( cycle, transformFunction );
 }

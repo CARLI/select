@@ -1,131 +1,52 @@
-var config = require('../config');
-var express = require('express');
-var bodyParser = require('body-parser');
-var request = require('request');
-var _ = require('lodash');
+var cluster = require('cluster');
 
-var couchApp = require('./components/couchApp');
-var crmQueries = require('./components/crmQueries');
-var cycleCreation = require('./components/cycleCreation');
-var notifications = require('./components/notifications');
-var vendorSpecificProductQueries = require('./components/vendorSpecificProductQueries');
+// var webWorkerCount = require('os').cpus().length;
+var expressWorkerCount = 4;
+var expressWorkerSetup = { exec: './runExpress.js' };
+var cycleDatabaseWorkerSetup = { exec: './cycleDatabaseWorker.js' };
 
-function _enableCors(carliMiddleware) {
-    carliMiddleware.use(function (req, res, next) {
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, X-AuthToken");
-        next();
-    });
+if (cluster.isMaster) {
+    launchWebWorkers();
+    relaunchWebWorkers();
+    listenForMessages();
 }
 
-function couchDbProxy() {
-    return function (req, res, next) {
-        var proxyPath = req.path.match(RegExp("^\\/db/(.*)$"));
-        if (proxyPath) {
-            var dbUrl = 'http://localhost:5984/' + proxyPath[1];
-            req.pipe(request({
-                uri: dbUrl,
-                method: req.method,
-                qs: req.query
-            })).pipe(res);
+function launchWebWorkers() {
+    cluster.setupMaster(expressWorkerSetup);
+    for (var i = 0; i < expressWorkerCount; i += 1) {
+        cluster.fork();
+    }
+}
+
+function relaunchWebWorkers() {
+    cluster.on('exit', restartCrashedWorker);
+
+    function restartCrashedWorker(worker) {
+        console.log('worker '+worker.id+' exited');
+        if (!worker.suicide) {
+            console.log('Worker ' + worker.id + ' died, launching replacement');
+            cluster.setupMaster(expressWorkerSetup);
+            cluster.fork();
+        }
+    }
+}
+
+function listenForMessages() {
+    Object.keys(cluster.workers).forEach(function(id) {
+        cluster.workers[id].on('message', dispatchMessage);
+    });
+
+    function dispatchMessage(message) {
+        if (message.command == 'launchCycleDatabaseWorker') {
+            console.log('Master is launching cycle database worker');
+            launchCycleDatabaseWorker(message.sourceCycle, message.newCycleId);
         } else {
-            next();
+            console.log('Unrecognized message: ' + JSON.stringify(message));
         }
-    };
+    }
 }
 
-function runMiddlewareServer(){
-    var carliMiddleware = express();
-    carliMiddleware.use(bodyParser.json());
-    _enableCors(carliMiddleware);
-
-    carliMiddleware.use(couchDbProxy());
-
-    carliMiddleware.get('/version', function (req, res) {
-        res.send({ version: require('./package.json').version });
-    });
-
-    carliMiddleware.put('/design-doc/:dbName', function (req, res) {
-        couchApp.putDesignDoc(req.params.dbName, 'Cycle').then(function() {
-            res.send({ status: 'Ok' });
-        }).catch(function (err) {
-            res.send( { error: err } );
-        });
-    });
-
-    carliMiddleware.put('/tell-pixobot', function (req, res) {
-        notifications.tellPixobot(req.body);
-        res.send(req.body);
-    });
-
-    carliMiddleware.get('/library', function (req, res) {
-        crmQueries.listLibraries().then(function(libraries) {
-            res.send(libraries);
-        }).catch(function (err) {
-            res.send( { error: err } );
-        });
-    });
-
-    carliMiddleware.get('/library/:id', function (req, res) {
-        crmQueries.loadLibrary(req.params.id).then(function(library) {
-            res.send(library);
-        }).catch(function (err) {
-            res.send( { error: err } );
-        });
-    });
-
-    carliMiddleware.get('/products-with-offerings-for-vendor/:vendorId/for-cycle/:cycleId', function (req, res) {
-        var authToken = JSON.parse(req.header('X-AuthToken'));
-        if (!authToken) {
-            res.status(401).send('missing authorization cookie');
-            return;
-        }
-        if (!authToken.vendorId) {
-            res.status(400).send('invalid auth token');
-            return;
-        }
-        var vendorId = authToken.vendorId;
-        vendorSpecificProductQueries.listProductsWithOfferingsForVendorId(vendorId, req.params.cycleId)
-            .then(function(products){
-                res.send(products);
-            }).catch(function (err) {
-                res.send( { error: err } );
-            });
-    });
-
-    carliMiddleware.put('/cycle-from', function (req, res) {
-        cycleCreation.createCycleFrom(req.body.sourceCycle, req.body.newCycleData)
-            .then(function(newCycleId){
-                res.send({ id: newCycleId });
-            }).catch(function (err) {
-                res.send( { error: err } );
-            });
-    });
-
-    carliMiddleware.get('/cycle-creation-status/:id', function(req, res){
-        cycleCreation.getCycleCreationStatus( req.params.id )
-            .then(function(statusObject){
-                res.send( statusObject );
-            })
-            .catch(function(err){
-                res.send( { error: err } );
-            });
-    });
-
-    var server = carliMiddleware.listen(config.middleware.port, function () {
-
-        var host = server.address().address;
-        var port = server.address().port;
-
-        console.log('CARLI Middleware listening at http://%s:%s', host, port);
-
-    });
-}
-
-if (require.main === module) {
-    runMiddlewareServer();
-}
-else {
-    module.exports = {};
+function launchCycleDatabaseWorker(sourceCycle, newCycleId) {
+    cluster.setupMaster(cycleDatabaseWorkerSetup);
+    cluster.fork({ sourceCycle: sourceCycle, newCycleId: newCycleId });
 }
