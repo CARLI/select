@@ -37,7 +37,7 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, lib
     function updateVisibilityOfElementsWithEntityIdClasses(selectedEntities) {
         if (selectedEntities) {
             Object.keys(selectedEntities).forEach(function (entityId) {
-                var displayValue = selectedEntities[entityId] ? 'flex' : 'none';
+                var displayValue = selectedEntities[entityId] ? 'table-cell' : 'none';
                 $('.' + entityId).css('display', displayValue);
             });
         }
@@ -63,17 +63,13 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, lib
     }
 
     function buildPricingGrid() {
-        var priceRows = $('<div>').attr('id','price-rows');
-
         vm.suLevels.forEach(function (level) {
             var row = generateSuRow(level);
             vm.products.forEach(function (product) {
                 row.append(generateOfferingCell(level, product));
             });
-            priceRows.append(row);
+            $('.pricing-grid').append(row);
         });
-
-        $('#price-rows').replaceWith(priceRows);
 
         function generateSuRow(level) {
             var row = $('<div class="price-row">');

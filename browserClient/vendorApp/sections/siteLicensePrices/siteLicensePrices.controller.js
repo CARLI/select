@@ -58,7 +58,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     function updateVisibilityOfElementsWithEntityIdClasses(selectedEntities) {
         if (selectedEntities) {
             Object.keys(selectedEntities).forEach(function (entityId) {
-                var displayValue = selectedEntities[entityId] ? 'flex' : 'none';
+                var displayValue = selectedEntities[entityId] ? 'table-cell' : 'none';
                 $('.' + entityId).css('display', displayValue);
             });
         }
@@ -79,17 +79,13 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     }
 
     function buildPricingGrid() {
-        var priceRows = $('<div>').attr('id','price-rows');
-
         vm.libraries.forEach(function (library) {
             var row = generateLibraryRow(library);
             vm.products.forEach(function (product) {
                 row.append(generateOfferingCell(library, product));
             });
-            priceRows.append(row);
+            $('.pricing-grid').append(row);
         });
-
-        $('#price-rows').replaceWith(priceRows);
 
         function generateLibraryRow(library) {
             var row = $('<div class="price-row">');
