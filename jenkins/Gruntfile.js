@@ -58,9 +58,9 @@ module.exports = function (grunt) {
             function getPublicCouchDbUrl() {
                 switch (instance) {
                     case 'dev':
-                        return 'http://carli.dev.pixotech.com/db';
+                        return 'http://vmhost.i.pixotech.com:9091';
                     case 'qa':
-                        return 'http://carli.qa.pixotech.com/db';
+                        return 'http://docker1.i.pixotech.com:9081';
                     case 'prod':
                         return 'http://select-prod.carli.illinois.edu/db';
                     default:

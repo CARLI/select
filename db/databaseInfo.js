@@ -7,14 +7,14 @@ module.exports = {
         mainDbUrl: config.storeOptions.couchDbUrl + '/' + config.storeOptions.couchDbName
     },
     dev: {
-        baseUrl: 'http://carli-db.dev.pixotech.com',
+        baseUrl: 'http://vmhost.i.pixotech.com:9091',
         mainDbName: 'carli',
-        mainDbUrl: 'http://carli-db.dev.pixotech.com/carli'
+        mainDbUrl: 'http://vmhost.i.pixotech.com:9091/carli'
     },
     qa: {
-        baseUrl: 'http://carli-db.qa.pixotech.com',
+        baseUrl: 'http://docker1.i.pixotech.com:9081',
         mainDbName: 'carli',
-        mainDbUrl: 'http://carli-db.qa.pixotech.com/carli'
+        mainDbUrl: 'http://docker1.i.pixotech.com:9081/carli'
     },
     prod: {
         baseUrl: 'http://select-prod.carli.illinois.edu/db',

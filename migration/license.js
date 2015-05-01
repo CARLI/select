@@ -145,7 +145,7 @@ function generateProductLicenseAssociations( connection, licenseIdMapping ){
     var resultsPromise = Q.defer();
     var productIdalIdToLicenseCouchIdMap = {};
 
-    var query = "SELECT db_id, contract_id FROM contract_vendor_db GROUP BY db_id;";
+    var query = "SELECT * FROM contract_vendor_db";
     connection.query(query, function(err, rows, fields) {
         if (err){
             console.log(err);
@@ -161,10 +161,11 @@ function generateProductLicenseAssociations( connection, licenseIdMapping ){
 
     function mapProductIdalIdToLicenseCouchId( associationRow ){
         var licenseLegacyId = associationRow.contract_id;
-        var licenseCouchId = licenseIdMapping[licenseLegacyId];
+        var vendorLegacyId = associationRow.vendor_id;
         var productLegacyId = associationRow.db_id;
+        var licenseCouchId = licenseIdMapping[licenseLegacyId];
 
-        productIdalIdToLicenseCouchIdMap[productLegacyId] = licenseCouchId;
+        productIdalIdToLicenseCouchIdMap[vendorLegacyId+productLegacyId] = licenseCouchId;
     }
 }
 

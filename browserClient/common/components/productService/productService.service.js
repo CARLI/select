@@ -38,7 +38,8 @@ function productService( CarliModules, $q, cycleService, libraryService, offerin
             return $q.when( productModule.getProductsById(ids,  cycleService.getCurrentCycle()) );
         },
         createOfferingsForProduct: createOfferingsForProduct,
-        getProductDetailCodeOptions: productModule.getProductDetailCodeOptions
+        getProductDetailCodeOptions: productModule.getProductDetailCodeOptions,
+        getProductDisplayName: getProductDisplayName
     };
 
 
@@ -54,5 +55,16 @@ function productService( CarliModules, $q, cycleService, libraryService, offerin
                 return library.id;
             });
         }
+    }
+
+    function getProductDisplayName(product) {
+        if (!product) {
+            return '';
+        }
+        var name = product.name;
+        if (product.showPreviousName) {
+            name += ' (formerly ' + product.previousName + ')';
+        };
+        return name;
     }
 }

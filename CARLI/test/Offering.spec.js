@@ -256,7 +256,7 @@ function runOfferingSpecificTests(testCycle) {
                 expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(false);
             });
 
-            it('should compute true if the offering has an su price great than the site license price', function() {
+            it('should compute true if the offering has an su price greater than the site license price', function() {
                 var testOffering = validOfferingData();
                 testOffering.pricing = {
                     site: 1000,
@@ -264,6 +264,20 @@ function runOfferingSpecificTests(testCycle) {
                         users: 2,
                         price: 2000
                     }]
+                };
+
+                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(true);
+            });
+
+            it('should compute true if there is a su price higher than the price for a larger number of users', function() {
+                var testOffering = validOfferingData();
+                testOffering.pricing = {
+                    site: 9999,
+                    su: [
+                        { users: 1, price: 1000 },
+                        { users: 2, price: 200 },
+                        { users: 3, price: 300 }
+                    ]
                 };
 
                 expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(true);

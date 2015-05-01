@@ -11,17 +11,48 @@ angular.module('vendor.horizontalScrollSlider')
     });
 
 function horizontalScrollSliderPostLink(scope, element, attrs) {
-    var controlledElement = $(scope.selector);
+    initializeScrolledElement();
+    initializeKeyboardControl();
 
-    scope.scrollPosition = 0;
+    function initializeScrolledElement() {
+        var controlledElement = $(scope.selector);
+        scope.scrollPosition = 0;
+        scope.$watch('scrollPosition', updateScrollPosition);
 
-    scope.$watch('scrollPosition', updateScrollPosition);
+        function updateScrollPosition(percentage) {
+            var scrollPanelWidth = controlledElement[0].scrollWidth;
+            var viewportWidth = controlledElement.width();
 
-    function updateScrollPosition(percentage) {
-        var scrollPanelWidth = controlledElement[0].scrollWidth;
-        var viewportWidth = controlledElement.width();
+            var pixelValue = (scrollPanelWidth - viewportWidth) * percentage;
+            controlledElement.css('left', '-' + pixelValue + 'px');
+        }
+    }
 
-        var pixelValue = (scrollPanelWidth - viewportWidth) * percentage;
-        controlledElement.css('left', '-' + pixelValue + 'px');
+    function initializeKeyboardControl() {
+        var stepAmount = 0.05;
+        element.on('keydown', function(e) {
+            switch(e.which) {
+                case 39: // right
+                case 38: // up
+                    if (scope.scrollPosition < 1) {
+                        scope.$apply(function() {
+                            scope.scrollPosition += stepAmount;
+                        });
+                    }
+                    break;
+
+                case 37: // left
+                case 40: // down
+                    if (scope.scrollPosition > 0) {
+                        scope.$apply(function() {
+                            scope.scrollPosition -= stepAmount;
+                        });
+                    }
+                    break;
+
+                default: return;
+            }
+            e.preventDefault();
+        });
     }
 }

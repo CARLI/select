@@ -18,7 +18,7 @@
     },
     "showPreviousName": {
       "description": "If true, the previous name will be shown where ever the product name appears",
-      "type": "booelan"
+      "type": "boolean"
     },
     "cycle": {
       "description": "UUID of a Cycle document",

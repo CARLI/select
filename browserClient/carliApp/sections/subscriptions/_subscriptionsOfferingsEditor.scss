@@ -130,6 +130,9 @@
                             border-bottom: $default-border;
                             padding: .5rem 1rem;
                         }
+                        view-edit-radios {
+                            line-height: 20px;
+                        }
                     }
 
                     &.flag {
@@ -186,7 +189,6 @@
                         border: 0;
                         height: auto;
                         padding: 0;
-                        text-align: left;
 
                         &:hover {
                             background: $white;
@@ -204,12 +206,15 @@
             min-width: 960px;
 
             .product-header {
-                background: $purple;
-                color: #fff;
+                background: $light_gray;
+                color: $black;
+                border: $default_border;
+                border-bottom: none;
                 cursor: pointer;
                 @include font-size(17);
                 font-family: 'Merriweather';
                 padding: 1rem;
+                padding-left: 3rem;
                 position: relative;
                 z-index: 2;
 
@@ -222,6 +227,12 @@
                     &.dontAffix {
                         position: relative !important;
                     }
+                }
+
+                &.expanded {
+                    background: $purple;
+                    color: $white;
+                    border: none;
                 }
 
                 .price-cap {

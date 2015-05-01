@@ -10,6 +10,10 @@
 
     .pricing-grid-controls {
         margin: 1rem auto;
+        
+        .header {
+            font-weight: bold;
+        }
 
         ul {
             list-style: none;
@@ -52,6 +56,10 @@
                     border: none;
                 }
             }
+        }
+
+        .input .price {
+            padding: 0.5rem 1rem;
         }
 
         &.price-cap {

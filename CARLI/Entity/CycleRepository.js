@@ -16,7 +16,7 @@ CycleRepository.setStore( Store( StoreModule(StoreOptions) ) );
 var statusLabels = [
     "Cycle Data Processing",
     "CARLI Editing Product List",
-    "Vendors Setting Prices",
+    "Vendor Pricing in Progress",
     "CARLI Checking Prices",
     "Libraries Selecting Products",
     "Selections Made",

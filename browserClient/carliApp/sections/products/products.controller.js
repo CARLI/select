@@ -33,7 +33,7 @@ function productController( $scope, $sce, cycleService, productService ){
             label: "Product Name",
             orderByProperty: 'name',
             contentFunction: function(product) {
-                return $sce.trustAsHtml('<a href="product/' + product.id + '">' + product.name + '</a>');
+                return $sce.trustAsHtml('<a href="product/' + product.id + '">' + productService.getProductDisplayName(product) + '</a>');
             }
         },
         {

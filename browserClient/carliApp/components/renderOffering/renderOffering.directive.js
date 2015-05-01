@@ -5,8 +5,10 @@ var offeringTemplatePromise;
 var editOfferingHandlerAttached;
 var flagOfferingHandlerAttached;
 
-function renderOfferingDirective( $http, $q, $filter, alertService, offeringService, editOfferingService ) {
+function renderOfferingDirective( $http, $q, $filter, alertService, offeringService, editOfferingService, productService ) {
     registerHandlebarsHelpers();
+
+    var flagActionInProgress = {};
 
     return {
         restrict: 'E',
@@ -30,6 +32,7 @@ function renderOfferingDirective( $http, $q, $filter, alertService, offeringServ
             function render(offering){
                 var lastYear = scope.cycle.year - 1;
                 offering.pricing.su = $filter('orderBy')(offering.pricing.su, 'users');
+                offering.product.displayName = productService.getProductDisplayName(offering.product);
 
                 getOfferingTemplate().then(function (template) {
                     offering.flagged = offeringService.getFlaggedState(offering);
@@ -102,6 +105,12 @@ function renderOfferingDirective( $http, $q, $filter, alertService, offeringServ
                 function flagOffering() {
                     var offeringId = $(this).data('offering-id');
 
+                    if ( flagActionInProgress[offeringId] ){
+                        return;
+                    }
+
+                    disableFlagAction(offeringId);
+
                     scope.$apply(function() {
                         editOfferingService.toggleOfferingUserFlaggedState(offeringId)
                             .then(alertSuccess, alertError)
@@ -130,12 +139,23 @@ function renderOfferingDirective( $http, $q, $filter, alertService, offeringServ
                             flag.removeClass('fa-flag').addClass('fa-flag-o');
                         }
 
+                        enableFlagAction(updatedOffering.id);
+
                         return updatedOffering;
                     }
                 }
             }
         }
     };
+
+
+    function disableFlagAction( offeringId ){
+        flagActionInProgress[offeringId] = true;
+    }
+
+    function enableFlagAction( offeringId ){
+        flagActionInProgress[offeringId] = false;
+    }
 
     function currency( number ) {
         return $filter('currency')(number);

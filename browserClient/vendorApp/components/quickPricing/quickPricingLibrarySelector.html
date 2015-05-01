@@ -1,15 +1,8 @@
-<div class="header">
-    <div ng-if="vm.selectBy === 'filter'" class="narrow-by-label">Narrow by:</div>
-
-    <div class="controls select-by-toggle">
-        <button type="button" class="toggle-button"
-                ng-class="{ 'active': vm.selectBy === 'filter' }"
-                ng-click="vm.selectBy = 'filter'">Filter Libraries</button
-                ><button type="button" class="toggle-button"
-                         ng-class="{ 'active': vm.selectBy === 'choose' }"
-                         ng-click="vm.selectBy = 'choose'">Choose Individual Libraries</button>
-    </div>
-</div>
+<ul class="select-by-toggle">
+    <li class="select-by narrow" ng-class="{ 'active': vm.selectBy === 'filter' }" ng-click="vm.selectBy = 'filter'">Filter Libraries</li>
+    <li class="select-by library" ng-class="{ 'active': vm.selectBy === 'choose' }" ng-click="vm.selectBy = 'choose'">Choose Individual Libraries</li>
+    <li class="select-by-header-spacer" ng-if="vm.selectBy === 'filter'"></li>
+</ul>
 
 
 <div ng-if="vm.selectBy === 'filter'">
@@ -45,6 +38,6 @@
     </div>
 </div>
 
-<div ng-if="vm.selectBy === 'choose'">
+<div class="select-by-entity" ng-if="vm.selectBy === 'choose'">
     <quick-pricing-entity-selector entities="vm.libraries" selected-entity-ids="vm.selectedLibraryIds"></quick-pricing-entity-selector>
 </div>

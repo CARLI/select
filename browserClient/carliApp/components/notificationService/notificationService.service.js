@@ -15,7 +15,7 @@ function notificationService($q, $http, CarliModules, config) {
         update: function() { return $q.when( notificationModule.update.apply(this, arguments) ); },
         load:   function() { return $q.when( notificationModule.load.apply(this, arguments) ); },
         delete:   function() { return $q.when( notificationModule.delete.apply(this, arguments) ); },
-        sendNotification: sendNotification,
+        sendNotification: function() { return $q.when( notificationModule.sendNotification.apply(this, arguments) ); },
         removeNotification: function() { return $q.when( notificationModule.delete.apply(this, arguments)); },
         getRecipientLabel: notificationModule.getRecipientLabel,
         generateDraftNotification: CarliModules.NotificationDraftGenerator.generateDraftNotification
@@ -29,16 +29,5 @@ function notificationService($q, $http, CarliModules, config) {
             recipients: '',
             draftStatus: 'draft'
         };
-    }
-
-    function sendNotification(notification) {
-        var url = config.getMiddlewareUrl() + '/tell-pixobot';
-        return $http.put(url, notification)
-            .then(function(){
-                notification.draftStatus = 'sent';
-                notification.dateSent = new Date();
-
-                return notificationModule.update(notification);
-            });
     }
 }

@@ -28,6 +28,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
     vm.submitAction = submitAction;
     vm.submitLabel = submitLabel;
     vm.productLicenseIsValid = productLicenseIsValid;
+    vm.getProductDisplayName = productService.getProductDisplayName;
 
     vm.shouldShowOtpEditLink = function() {
         return vm.editable && !vm.newProduct && isOneTimePurchaseProduct(vm.product);
@@ -48,7 +49,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
 
     vm.productDetailCodeOptions = productService.getProductDetailCodeOptions();
 
-    initializeCycles();
+    var initializeCyclesPromise = initializeCycles();
 
     setupModalClosingUnsavedChangesWarning();
     activate();
@@ -58,7 +59,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
             initializeForNewProduct();
         }
         else {
-            initializeForExistingProduct();
+            initializeCyclesPromise.then(initializeForExistingProduct);
         }
 
         vm.isModal = vm.newProduct;
@@ -82,6 +83,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
     function initializeForExistingProduct() {
         productService.load($scope.productId).then( function( product ) {
             vm.product = angular.copy(product);
+            copyFullCycleInstanceToProduct(vm.product);
             initializeProductNameWatcher();
             rememberOtpFields();
             rememberTermFields();
@@ -97,6 +99,14 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
 
         vm.editable = false;
         vm.newProduct = false;
+    }
+
+    function copyFullCycleInstanceToProduct(product) {
+        vm.activeCycles.forEach(function (cycle) {
+            if (product.cycle.id === cycle.id) {
+                product.cycle = cycle;
+            }
+        });
     }
 
     function initializeProductNameWatcher() {
@@ -191,11 +201,12 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
     }
 
     function initializeCycles(){
-        cycleService.listActiveCycles().then(function(activeCycles) {
+        var loadCyclesPromise = cycleService.listActiveCycles().then(function(activeCycles) {
             vm.activeCycles = activeCycles;
         });
 
         watchCurrentCycle();
+        return loadCyclesPromise;
 
         function watchCurrentCycle() {
             $scope.$watch(cycleService.getCurrentCycle, function (activeCycle) {

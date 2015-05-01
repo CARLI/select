@@ -9,5 +9,6 @@ sudo docker run \
     --name="carli-couchdb-$instance" \
     --volumes-from "carli-data-$instance" \
     --detach=true \
+    --log-driver=syslog \
     -p $host_port:5984 \
     carli-couchdb:$tag
