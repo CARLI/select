@@ -103,6 +103,16 @@ function runMiddlewareServer(){
             });
     });
 
+    carliMiddleware.get('/cycle-creation-status/:id', function(req, res){
+        cycleCreation.getCycleCreationStatus( req.params.id )
+            .then(function(statusObject){
+                res.send( statusObject );
+            })
+            .catch(function(err){
+                res.send( { error: err } );
+            });
+    });
+
     var server = carliMiddleware.listen(config.middleware.port, function () {
 
         var host = server.address().address;
@@ -117,5 +127,5 @@ if (require.main === module) {
     runMiddlewareServer();
 }
 else {
-    module.exports = _.extend({}, couchApp, notifications, crmQueries, vendorSpecificProductQueries);
+    module.exports = _.extend({}, couchApp, crmQueries, cycleCreation, notifications, vendorSpecificProductQueries);
 }

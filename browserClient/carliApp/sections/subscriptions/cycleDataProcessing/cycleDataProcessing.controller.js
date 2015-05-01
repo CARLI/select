@@ -23,13 +23,13 @@ function cycleDataProcessingController( $q, $routeParams, $scope, $interval, cyc
     }
 
     function updateCouchViewStatus(){
-        $q.when(vm.cycle.getViewUpdateProgress()).then(function(progress){
-            vm.progress = progress;
-
-            if ( progress >= 100 ){
-                updateComplete();
-            }
-        });
+//        $q.when(vm.cycle.getViewUpdateProgress()).then(function(progress){
+//            vm.progress = progress;
+//
+//            if ( progress >= 100 ){
+//                updateComplete();
+//            }
+//        });
     }
 
     function updateComplete(){

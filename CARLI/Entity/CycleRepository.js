@@ -136,50 +136,6 @@ var functionsToAdd = {
         return couchUtils.getCouchViewResultValues(this.getDatabaseName(), 'getCycleSelectionAndInvoiceTotals').then(function(resultArray){
             return resultArray[0];
         });
-    },
-    getReplicationProgress: function getReplicationStatus(){
-        var thisCycle = this;
-
-        return couchUtils.getRunningCouchJobs().then(filterReplicationJobs).then(filterByCycle).then(resolveToProgress);
-
-        function filterReplicationJobs( jobs ){
-            return jobs.filter(function(job){
-                return job.type === 'replication';
-            });
-        }
-
-        function filterByCycle( jobs ){
-            return jobs.filter(function(job){
-                // Monitor job where vendor DB is the source.  When it is the target, it will never
-                // reach 100%, because documents are filtered out.
-                return job.source.indexOf(thisCycle.getDatabaseName()) >= 0;
-            });
-        }
-
-        function resolveToProgress( jobs ){
-            return jobs.length ? jobs[0].progress : 100;
-        }
-    },
-    getViewUpdateProgress: function getViewUpdateStatus(){
-        var thisCycle = this;
-
-        return couchUtils.getRunningCouchJobs().then(filterIndexJobs).then(filterByCycle).then(resolveToProgress);
-
-        function filterIndexJobs( jobs ){
-            return jobs.filter(function(job){
-                return job.type === 'indexer';
-            });
-        }
-
-        function filterByCycle( jobs ){
-            return jobs.filter(function(job){
-                return job.database === thisCycle.getDatabaseName();
-            });
-        }
-
-        function resolveToProgress( jobs ){
-            return jobs.length ? jobs[0].progress : 100;
-        }
     }
 };
 

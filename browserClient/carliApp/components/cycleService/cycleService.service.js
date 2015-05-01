@@ -22,6 +22,9 @@ function cycleService( CarliModules, $q ) {
             fixCycleName(newCycle);
             return $q.when(cycleMiddleware.createCycleFrom(sourceCycle,newCycle));
         },
+        getCycleCreationStatus: function(cycleId){
+            return $q.when( cycleMiddleware.getCycleCreationStatus(cycleId) );
+        },
         update: function() { return $q.when( cycleModule.update.apply( this, arguments) ); },
         load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ); },
         getCurrentCycle: getCurrentCycle,
