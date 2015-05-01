@@ -39,14 +39,14 @@ function listenForMessages() {
     function dispatchMessage(message) {
         if (message.command == 'launchCycleDatabaseWorker') {
             console.log('Master is launching cycle database worker');
-            launchCycleDatabaseWorker(message.sourceCycle, message.newCycleId);
+            launchCycleDatabaseWorker(message.sourceCycleId, message.newCycleId);
         } else {
             console.log('Unrecognized message: ' + JSON.stringify(message));
         }
     }
 }
 
-function launchCycleDatabaseWorker(sourceCycle, newCycleId) {
+function launchCycleDatabaseWorker(sourceCycleId, newCycleId) {
     cluster.setupMaster(cycleDatabaseWorkerSetup);
-    cluster.fork({ sourceCycle: sourceCycle, newCycleId: newCycleId });
+    cluster.fork({ sourceCycleId: sourceCycleId, newCycleId: newCycleId });
 }

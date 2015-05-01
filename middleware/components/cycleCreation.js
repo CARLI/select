@@ -10,23 +10,39 @@ function create( newCycleData ) {
 
 }
 
-function copyCycleDataFrom( sourceCycle, newCycleId ){
-    return cycleRepository.load(newCycleId)
-        .then(function (newCycle) {
-            cycleRepository.createCycleLog('Replicating data from '+ sourceCycle.databaseName +' to '+ newCycle.databaseName);
-            return couchUtils.replicateFrom(sourceCycle.databaseName).to(newCycle.databaseName).thenResolve(newCycle);
-        })
-        .then(function(newCycle){
-            cycleRepository.createCycleLog('Transforming offerings for new cycle');
-            return offeringRepository.transformOfferingsForNewCycle(newCycle, sourceCycle);
-        })
-        .then(function(newCycle) {
-            cycleRepository.createCycleLog('Triggering view indexing for ' + newCycle.name + ' with database ' + newCycle.getDatabaseName());
-            return couchUtils.triggerViewIndexing(newCycle.getDatabaseName());
-        })
-        .then(function() {
-            return newCycleId;
+function copyCycleDataFrom( sourceCycleId, newCycleId ){
+    var sourceCycle = null;
+    var newCycle = null;
+
+    return loadCycles()
+        .then(replicate)
+        .then(indexViews)
+        .then(transformOfferings)
+        .then(indexViews)
+        .thenResolve(newCycleId);
+
+    function loadCycles() {
+        return Q.all([
+            cycleRepository.load(sourceCycleId),
+            cycleRepository.load(newCycleId)
+        ]).then(function (cycles) {
+            sourceCycle = cycles[0];
+            newCycle = cycles[1];
+            return true;
         });
+    }
+    function replicate() {
+        cycleRepository.createCycleLog('Replicating data from '+ sourceCycle.databaseName +' to '+ newCycle.databaseName);
+        return couchUtils.replicateFrom(sourceCycle.databaseName).to(newCycle.databaseName)
+    }
+    function transformOfferings() {
+        cycleRepository.createCycleLog('Transforming offerings for new cycle');
+        return offeringRepository.transformOfferingsForNewCycle(newCycle, sourceCycle);
+    }
+    function indexViews() {
+        cycleRepository.createCycleLog('Triggering view indexing for ' + newCycle.name + ' with database ' + newCycle.getDatabaseName());
+        return couchUtils.triggerViewIndexing(newCycle.getDatabaseName());
+    }
 }
 
 function getCycleCreationStatus( cycleId ){

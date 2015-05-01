@@ -102,7 +102,7 @@ function runMiddlewareServer(){
                 console.log('Asking master to launchCycleDatabaseWorker');
                 cluster.worker.send({
                     command: 'launchCycleDatabaseWorker',
-                    sourceCycle: req.body.sourceCycle,
+                    sourceCycleId: req.body.sourceCycle.id,
                     newCycleId: newCycleId
                 });
             }).catch(function (err) {
