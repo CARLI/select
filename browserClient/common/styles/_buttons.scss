@@ -52,6 +52,10 @@ $button-height: 40px;
             background-color: $light-gray;
         }
     }
+
+    &.pull-left {
+        margin-right: 4px;
+    }
 }
 
 @mixin cancel-button-hover {
