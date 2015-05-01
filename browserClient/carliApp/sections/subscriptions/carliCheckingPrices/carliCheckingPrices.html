@@ -1,5 +1,5 @@
-<carli-checking-prices-by-vendor ng-if="vm.cycleRouter.groupBy === 'vendor'"></carli-checking-prices-by-vendor>
-<carli-checking-prices-by-library ng-if="vm.cycleRouter.groupBy === 'library'"></carli-checking-prices-by-library>
+<carli-checking-prices-by-vendor ng-if="vm.cycleRouter.groupBy === 'vendor' | orderBy:'name'"></carli-checking-prices-by-vendor>
+<carli-checking-prices-by-library ng-if="vm.cycleRouter.groupBy === 'library' | orderBy:'name'"></carli-checking-prices-by-library>
 
 <button type="button" class="carli-button pull-left" busy-click="vm.undoCloseVendorPricing()">Undo Close Vendor Pricing</button>
 <button type="button" class="carli-button pull-right" busy-click="vm.openSystem()">Open System</button>
