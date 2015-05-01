@@ -11,7 +11,7 @@
             </div>
             <div class="content" ng-if="vm.openAccordion === vendor.id">
                 <ul class="product-list">
-                    <li ng-repeat="product in ::vendor.products | filter:{isActive:true} track by product.id">
+                    <li ng-repeat="product in ::vendor.products | filter:{isActive:true} | orderBy:'name' track by product.id">
                         <div affix class="product-header" ng-class="{ dontAffix: !vm.expandedProducts[product.id], expanded: vm.expandedProducts[product.id] }"
                              ng-click="vm.toggleProductSection(product)" cg-busy="vm.loadingPromise[product.id]">
                             {{ ::vm.getProductDisplayName(product) }}
