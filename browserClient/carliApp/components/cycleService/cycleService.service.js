@@ -8,6 +8,12 @@ function cycleService( CarliModules, $q ) {
 
     var currentCycle = null;
 
+    var fakeProgress = {
+        replication: 0,
+        viewIndexing: 0,
+        offeringTransformation: 0
+    };
+
     return {
         cycleDefaults: cycleDefaults,
         list: function() { return $q.when( cycleModule.list() ); },
@@ -24,6 +30,19 @@ function cycleService( CarliModules, $q ) {
         },
         getCycleCreationStatus: function(cycleId){
             return $q.when( cycleMiddleware.getCycleCreationStatus(cycleId) );
+        },
+        fakeCycleCreationStatus: function(cycleId){
+            if (fakeProgress.replication < 100) {
+                fakeProgress.replication += 5;
+            } else if (fakeProgress.viewIndexing < 100) {
+                fakeProgress.viewIndexing += 5;
+            } else if (fakeProgress.offeringTransformation < 100) {
+                fakeProgress.viewIndexing = 0;
+                fakeProgress.offeringTransformation += 5;
+            } else if (fakeProgress.viewIndexing < 100) {
+                fakeProgress.viewIndexing += 5;
+            }
+            return $q.when( fakeProgress );
         },
         update: function() { return $q.when( cycleModule.update.apply( this, arguments) ); },
         load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ); },

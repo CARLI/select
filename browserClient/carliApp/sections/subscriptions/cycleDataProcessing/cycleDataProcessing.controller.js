@@ -28,7 +28,7 @@ function cycleDataProcessingController( $q, $routeParams, $scope, $interval, cyc
     }
 
     function updateCycleCreationStatus() {
-        cycleService.getCycleCreationStatus(cycleId).then(function (status) {
+        cycleService.fakeCycleCreationStatus(cycleId).then(function (status) {
             if (vm.progress.replication < 100) {
                 vm.progress.replication = status.replication;
             } else if (vm.progress.firstViewIndexing < 100) {
