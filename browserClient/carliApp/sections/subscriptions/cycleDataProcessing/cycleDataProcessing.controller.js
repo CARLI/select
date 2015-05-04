@@ -3,33 +3,44 @@ angular.module('carli.sections.subscriptions.cycleDataProcessing')
 
 function cycleDataProcessingController( $q, $routeParams, $scope, $interval, cycleService ) {
     var vm = this;
+
+    var cycleId = $routeParams.id;
     var updateInterval = 2000;
     var updateIntervalPromise = null;
 
-    vm.progress = 0;
+    vm.progress = {
+        replication: 0,
+        firstViewIndexing: 0,
+        offeringTransformation: 0,
+        secondViewIndexing: 0
+    };
 
     activate();
 
-
     function activate(){
-        cycleService.load($routeParams.id).then(function(cycle){
+        cycleService.load(cycleId).then(function(cycle){
             vm.cycle = cycle;
-            updateCouchViewStatus();
-
-            updateIntervalPromise = $interval(updateCouchViewStatus, updateInterval);
+            updateCycleCreationStatus();
+            updateIntervalPromise = $interval(updateCycleCreationStatus, updateInterval);
         });
 
         $scope.$on("$destroy", cancelUpdateTimer);
     }
 
-    function updateCouchViewStatus(){
-//        $q.when(vm.cycle.getViewUpdateProgress()).then(function(progress){
-//            vm.progress = progress;
-//
-//            if ( progress >= 100 ){
-//                updateComplete();
-//            }
-//        });
+    function updateCycleCreationStatus() {
+        cycleService.getCycleCreationStatus(cycleId).then(function (status) {
+            if (vm.progress.replication < 100) {
+                vm.progress.replication = status.replication;
+            } else if (vm.progress.firstViewIndexing < 100) {
+                vm.progress.firstViewIndexing = status.viewIndexing;
+            } else if (vm.progress.offeringTransformation < 100) {
+                vm.progress.offeringTransformation = status.offeringTransformation;
+            } else if (vm.progress.secondViewIndexing < 100) {
+                vm.progress.secondViewIndexing = status.viewIndexing;
+            } else {
+                updateComplete();
+            }
+        });
     }
 
     function updateComplete(){
