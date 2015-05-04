@@ -17,6 +17,7 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
     return loadCycles()
         .then(replicate)
         .then(indexViews)
+        .then(waitForIndexingToFinish)
         .then(transformOfferings)
         .then(indexViews)
         .thenResolve(newCycleId);
@@ -42,6 +43,22 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
     function indexViews() {
         cycleRepository.createCycleLog('Triggering view indexing for ' + newCycle.name + ' with database ' + newCycle.getDatabaseName());
         return couchUtils.triggerViewIndexing(newCycle.getDatabaseName());
+    }
+    function waitForIndexingToFinish() {
+        var waitForIndex = Q.defer();
+
+        var intervalId = setInterval(checkIndexStatus, 1000);
+
+        function checkIndexStatus() {
+            getViewIndexingStatus(newCycle).then(function (progress) {
+                if (progress == 100) {
+                    clearInterval(intervalId);
+                    waitForIndex.resolve();
+                }
+            });
+        }
+
+        return waitForIndex.promise;
     }
 }
 
@@ -82,26 +99,6 @@ function getCycleCreationStatus( cycleId ){
         return cycle.offeringTransformationPercentComplete || 0;
     }
 
-    function getViewIndexingStatus( cycle ){
-        return couchUtils.getRunningCouchJobs().then(filterIndexJobs).then(filterByCycle).then(resolveToProgress);
-
-        function filterIndexJobs( jobs ){
-            return jobs.filter(function(job){
-                return job.type === 'indexer';
-            });
-        }
-
-        function filterByCycle( jobs ){
-            return jobs.filter(function(job){
-                return job.database === cycle.getDatabaseName();
-            });
-        }
-    }
-
-    function resolveToProgress( jobs ){
-        return jobs.length ? jobs[0].progress : 100;
-    }
-
     function gatherStatusResults( resultsArray ){
         var replicationStatus = resultsArray[0] || 0;
         var offeringTransformationStatus = resultsArray[1] || 0;
@@ -113,8 +110,26 @@ function getCycleCreationStatus( cycleId ){
             viewIndexing: viewIndexingStatus
         }
     }
+}
 
+function getViewIndexingStatus( cycle ){
+    return couchUtils.getRunningCouchJobs().then(filterIndexJobs).then(filterByCycle).then(resolveToProgress);
 
+    function filterIndexJobs( jobs ){
+        return jobs.filter(function(job){
+            return job.type === 'indexer';
+        });
+    }
+
+    function filterByCycle( jobs ){
+        return jobs.filter(function(job){
+            return job.database === cycle.getDatabaseName();
+        });
+    }
+}
+
+function resolveToProgress( jobs ){
+    return jobs.length ? jobs[0].progress : 100;
 }
 
 module.exports = {
