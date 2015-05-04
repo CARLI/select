@@ -15,7 +15,6 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, lib
 
     function activate() {
         vm.loadingPromise = loadProducts()
-            .then(buildPriceArray)
             .then(buildPricingGrid);
     }
 
@@ -43,25 +42,6 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, lib
         }
     }
 
-
-    function buildPriceArray() {
-
-        vm.priceForSuByProduct = {};
-
-        vm.products.forEach(function (product) {
-            vm.priceForSuByProduct[product.id] = {};
-
-            product.offerings.forEach(function (offering) {
-                if ( offering.pricing.su ){
-                    offering.pricing.su.forEach(function(price){
-                        var suLevel = price.users;
-                        vm.priceForSuByProduct[product.id][suLevel] = price.price;
-                    });
-                }
-            });
-        });
-    }
-
     function buildPricingGrid() {
         vm.suLevels.forEach(function (level) {
             var row = generateSuRow(level);
@@ -78,9 +58,8 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, lib
         }
 
         function generateOfferingCell(suLevel, product) {
-            var price = vm.priceForSuByProduct[product.id][suLevel] || 0 ;
             var offeringWrapper = $('<div class="column offering input">');
-            var offeringCell = offeringWrapper.append(createReadOnlyOfferingCell(price));
+            var offeringCell = offeringWrapper.append(createReadOnlyOfferingCell(''));
 
             offeringWrapper.on('click', function() {
                 $(this).children().first().focus();
