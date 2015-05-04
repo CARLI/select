@@ -2,6 +2,8 @@
 library-info {
     @include body-text();
     line-height: 20px;
+    padding-bottom: 6px;
+    margin-bottom: 10px;
 
     .name {
         @extend h3;
@@ -19,7 +21,7 @@ library-info {
     }
 
     .value {
-        color: $purple
+        color: $purple;
     }
 
     &.inline {
