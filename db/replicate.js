@@ -234,6 +234,16 @@ function replicateLocalToProd() {
         })
         .done();
 }
+function replicateLocalDesignDocsToProd() {
+    replicateDesignDocsFrom('local').to('prod')
+        .then(function() {
+            console.log("Finished");
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+        .done();
+}
 function replicateQaToProd() {
     replicateAllFrom('qa').to('prod')
         .then(function() {
@@ -253,7 +263,8 @@ module.exports = {
     replicateLocalToProd: replicateLocalToProd,
     replicateQaToProd: replicateQaToProd,
     replicateLocalDesignDocsToDev: replicateLocalDesignDocsToDev,
-    replicateLocalDesignDocsToQa: replicateLocalDesignDocsToQa
+    replicateLocalDesignDocsToQa: replicateLocalDesignDocsToQa,
+    replicateLocalDesignDocsToProd: replicateLocalDesignDocsToProd
 };
 
 if (require.main === module) {

@@ -1,18 +1,24 @@
 <div class="progress">
-    <div class="progress-bar" role="progressbar" aria-valuenow="{{ vm.progress }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ vm.progress }}%;">
-        {{ vm.progress }}%
+    <div class="progress-bar" role="progressbar" aria-valuenow="{{ vm.progress.replication }}"
+         aria-valuemin="0" aria-valuemax="100" style="width:{{ vm.progress.replication }}%;">
+        {{ vm.progress.replication }}%
         <span class="sr-only">Complete</span>
     </div>
-    <div class="progress-bar" role="progressbar" aria-valuenow="{{ vm.progress }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ vm.progress }}%;">
-        {{ vm.progress }}%
+    <div class="progress-bar" role="progressbar" aria-valuenow="{{ vm.progress.firstViewIndexing }}"
+         aria-valuemin="0" aria-valuemax="100" style="width:{{ vm.progress.firstViewIndexing }}%;">
+        {{ vm.progress.firstViewIndexing }}%
         <span class="sr-only">Complete</span>
     </div>
-    <div class="progress-bar" role="progressbar" aria-valuenow="{{ vm.progress }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ vm.progress }}%;">
-        {{ vm.progress }}%
+    <div class="progress-bar" role="progressbar" aria-valuenow="{{ vm.progress.offeringTransformation }}"
+         aria-valuemin="0" aria-valuemax="100" style="width:{{ vm.progress.offeringTransformation }}%;">
+        {{ vm.progress.offeringTransformation }}%
         <span class="sr-only">Complete</span>
     </div>
-    <div class="progress-bar" role="progressbar" aria-valuenow="{{ vm.progress }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ vm.progress }}%;">
-        {{ vm.progress }}%
+    <div class="progress-bar" role="progressbar" aria-valuenow="{{ vm.progress.secondViewIndexing }}"
+         aria-valuemin="0" aria-valuemax="100" style="width:{{ vm.progress.secondViewIndexing }}%;">
+        {{ vm.progress.secondViewIndexing }}%
         <span class="sr-only">Complete</span>
     </div>
+
+    <pre>{{ vm.progress | json }}</pre>
 </div>
