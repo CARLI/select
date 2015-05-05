@@ -22,7 +22,8 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
         .then(indexViews)
         .then(waitForIndexingToFinish)
         .then(setCycleToNextPhase)
-        .thenResolve(newCycleId);
+        .thenResolve(newCycleId)
+        .catch(console.log);
 
     function loadCycles() {
         return Q.all([
@@ -68,11 +69,13 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
     }
     function setCycleToNextPhase() {
         console.log('Proceeding to next phase');
-        newCycle.proceedToNextStep();
-        return cycleRepository.save(newCycle)
-            .catch(function (err) {
-                console.log('Failed state transition: ', + err);
-            });
+        return cycleRepository.load(newCycle.id).then(function (newerCycle) {
+            newerCycle.proceedToNextStep();
+            cycleRepository.update(newerCycle)
+                .catch(function (err) {
+                    console.log('Failed state transition: ', err);
+                });
+        });
     }
 }
 

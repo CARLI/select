@@ -94,8 +94,7 @@ function cycleDataProcessingController( $q, $routeParams, $scope, $interval, cyc
 
     function updateComplete(){
         cancelUpdateTimer();
-        // TODO: go to next step, but don't try to increment the cycle phase, the backend does that
-        console.log('refresh the page now');
+        vm.cycleRouter.updateStatus();
     }
 
     function cancelUpdateTimer(){
