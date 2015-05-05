@@ -20,6 +20,8 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
         .then(waitForIndexingToFinish)
         .then(transformOfferings)
         .then(indexViews)
+        .then(waitForIndexingToFinish)
+        .then(setCycleToNextPhase)
         .thenResolve(newCycleId);
 
     function loadCycles() {
@@ -47,11 +49,15 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
     function waitForIndexingToFinish() {
         var waitForIndex = Q.defer();
 
+        var trustViewIndex = false;
         var intervalId = setInterval(checkIndexStatus, 1000);
 
         function checkIndexStatus() {
             getViewIndexingStatus(newCycle).then(function (progress) {
-                if (progress == 100) {
+                if (progress < 100) {
+                    trustViewIndex = true;
+                }
+                if (trustViewIndex && progress == 100) {
                     clearInterval(intervalId);
                     waitForIndex.resolve();
                 }
@@ -59,6 +65,14 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
         }
 
         return waitForIndex.promise;
+    }
+    function setCycleToNextPhase() {
+        console.log('Proceeding to next phase');
+        newCycle.proceedToNextStep();
+        return cycleRepository.save(newCycle)
+            .catch(function (err) {
+                console.log('Failed state transition: ', + err);
+            });
     }
 }
 
@@ -72,15 +86,17 @@ function getCycleCreationStatus( cycleId ){
         .then(gatherStatusResults);
 
     function getStatusForCycle( cycle ){
+        var couchJobsPromise = couchUtils.getRunningCouchJobs();
+
         return Q.all([
-            getNewCycleReplicationStatus(cycle),
-            getOfferingTransformationStatus(cycle),
-            getViewIndexingStatus(cycle)
+            getNewCycleReplicationStatus(cycle, couchJobsPromise),
+            getViewIndexingStatus(cycle, couchJobsPromise),
+            getOfferingTransformationStatus(cycle)
         ]);
     }
 
-    function getNewCycleReplicationStatus( cycle ){
-        return couchUtils.getRunningCouchJobs().then(filterReplicationJobs).then(filterByTargetCycle).then(resolveToProgress);
+    function getNewCycleReplicationStatus( cycle, couchJobsPromise ){
+        return couchJobsPromise.then(filterReplicationJobs).then(filterByTargetCycle).then(resolveToProgress);
 
         function filterReplicationJobs( jobs ){
             return jobs.filter(function(job){
@@ -101,19 +117,22 @@ function getCycleCreationStatus( cycleId ){
 
     function gatherStatusResults( resultsArray ){
         var replicationStatus = resultsArray[0] || 0;
-        var offeringTransformationStatus = resultsArray[1] || 0;
-        var viewIndexingStatus = resultsArray[2] || 0;
+        var viewIndexingStatus = resultsArray[1] || 0;
+        var offeringTransformationStatus = resultsArray[2] || 0;
 
         return {
             replication: replicationStatus,
-            offeringTransformation: offeringTransformationStatus,
-            viewIndexing: viewIndexingStatus
+            viewIndexing: viewIndexingStatus,
+            offeringTransformation: offeringTransformationStatus
         }
     }
 }
 
-function getViewIndexingStatus( cycle ){
-    return couchUtils.getRunningCouchJobs().then(filterIndexJobs).then(filterByCycle).then(resolveToProgress);
+function getViewIndexingStatus( cycle, couchJobsPromise ){
+    if (!couchJobsPromise) {
+        couchJobsPromise = couchUtils.getRunningCouchJobs();
+    }
+    return couchJobsPromise.then(filterIndexJobs).then(filterByCycle).then(resolveToProgress);
 
     function filterIndexJobs( jobs ){
         return jobs.filter(function(job){

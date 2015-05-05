@@ -88,33 +88,85 @@ function listOfferings(cycle){
 }
 
 function transformOfferingsForNewCycle(newCycle, sourceCycle) {
-    return listOfferings(newCycle).then(function(offerings) {
+    return listUnexpandedOfferings(newCycle).then(function(offerings) {
         console.log('[Cycle Creation]: Transforming ' + offerings.length + ' offerings');
-        var numProcessed = 0;
-        var chunkSize = offerings.length / 100;
+        return transformOfferingsInBatches(offerings, Math.floor( offerings.length / 100 ))
+            .then(setProgressComplete);
+    });
 
-        return Q.all( offerings.map(transformOffering) )
-            .then(updateProgress)
-            .thenResolve(newCycle);
+    function setProgressComplete(){
+        return cycleRepository.load(newCycle.id)
+            .then(function(cycle){
+                cycle.offeringTransformationPercentComplete = 100;
+                return cycle;
+            })
+            .then(cycleRepository.update);
+    }
 
-        function transformOffering(offering) {
-            numProcessed++;
-            if (numProcessed % chunkSize == 0) {
-                updateProgress();
+    function listUnexpandedOfferings(cycle) {
+        setCycle(cycle);
+        return OfferingRepository.list(cycle.getDatabaseName());
+    }
+    function updateUnexpandedOffering(offering, cycle) {
+        setCycle(cycle);
+        return OfferingRepository.update( offering, function() {} );
+    }
+
+    function transformOfferingsInBatches(offerings, numBatches) {
+        var offeringsPartitions = partitionOfferingsList(offerings, numBatches);
+        var currentBatch = 0;
+
+        return updateNextBatch();
+
+        function updateNextBatch(results) {
+            if (currentBatch == numBatches) {
+                return results;
             }
-            copyOfferingHistoryForYear(offering, sourceCycle.year);
-            return updateOffering(offering, newCycle);
+            console.log('[Cycle Creation]: Transforming offerings ' + (currentBatch + 1) + '/' + numBatches);
+            return transformOfferingsBatch(offeringsPartitions[currentBatch])
+                .then(incrementBatch)
+                .then(updateProgress)
+                .then(updateNextBatch);
+        }
+
+        function transformOfferingsBatch(offeringsBatch) {
+            offeringsBatch.forEach(function (offering) {
+                copyOfferingHistoryForYear(offering, sourceCycle.year);
+            });
+            console.log('  Finished copying offerings for batch');
+            var updatePromises = [];
+            offeringsBatch.forEach(function (offering) {
+                updatePromises.push(updateUnexpandedOffering(offering, newCycle));
+            });
+            return Q.all( updatePromises );
+        }
+
+        function incrementBatch(results) {
+            currentBatch++;
+            return results;
         }
 
         function updateProgress(){
             return cycleRepository.load(newCycle.id)
                 .then(function(cycle){
-                    cycle.offeringTransformationPercentComplete = 100 * numProcessed / offerings.length;
-                    return cycle
+                    cycle.offeringTransformationPercentComplete = 100 * (currentBatch / numBatches);
+                    return cycle;
                 })
                 .then(cycleRepository.update);
         }
-    });
+
+        /*
+         * http://stackoverflow.com/questions/11345296/partitioning-in-javascript/11345570#11345570
+         */
+        function partitionOfferingsList( list, numParts ) {
+            var partLength = Math.floor(list.length / numParts);
+
+            var result = _.groupBy(list, function(item , i) {
+                return Math.floor(i/partLength);
+            });
+            return _.values(result);
+        }
+    }
 }
 
 function copyOfferingHistoryForYear(offering, year) {
