@@ -3,6 +3,4 @@ angular.module('vendor.quickPricing')
 
 function quickPricingEnterPricesController() {
     var vm = this;
-
-    vm.priceEntryMode = 'dollarAmount';
 }

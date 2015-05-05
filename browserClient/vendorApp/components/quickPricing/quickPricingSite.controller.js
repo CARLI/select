@@ -4,8 +4,15 @@ angular.module('vendor.quickPricing')
 function quickPricingSiteController($rootScope){
     var vm = this;
 
+    vm.quickPricingArguments = {
+        mode: 'dollarAmount',
+        dollarValue: null,
+        percentValue: null
+    };
+
     vm.goToStep2 = goToStep2;
     vm.goToStep3 = goToStep3;
+    vm.finish = finish;
 
     vm.selectedProductCount = selectedProductCount;
     vm.totalProductCount = totalProductCount;
@@ -17,6 +24,16 @@ function quickPricingSiteController($rootScope){
     }
     function goToStep3() {
         $rootScope.$broadcast('accordion', 'quick-pricing-accordion-3');
+    }
+    function finish() {
+        $rootScope.$broadcast('accordion', '');
+        $('#quick-pricing-header').click();
+        if (vm.quickPricingArguments.mode == 'dollarAmount') {
+            vm.quickPricingCallback('dollarAmount', vm.quickPricingArguments.dollarValue);
+        }
+        if (vm.quickPricingArguments.mode == 'percentageIncrease') {
+            vm.quickPricingCallback('percentageIncrease', vm.quickPricingArguments.percentValue);
+        }
     }
 
     function selectedProductCount() {

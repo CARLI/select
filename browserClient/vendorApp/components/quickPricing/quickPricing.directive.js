@@ -7,7 +7,8 @@ angular.module('vendor.quickPricing')
                 products: '=',
                 selectedProductIds: '=',
                 libraries: '=',
-                selectedLibraryIds: '='
+                selectedLibraryIds: '=',
+                quickPricingCallback: '='
             },
             controller: 'quickPricingSiteController',
             controllerAs: 'vm',
@@ -22,7 +23,8 @@ angular.module('vendor.quickPricing')
                 products: '=',
                 selectedProductIds: '=',
                 libraries: '=',
-                selectedLibraryIds: '='
+                selectedLibraryIds: '=',
+                quickPricingCallback: '='
             },
             controller: 'quickPricingSuController',
             controllerAs: 'vm',
