@@ -23,6 +23,12 @@ sudo docker run --rm -t \
     --workdir=/carli-select/config \
     carli-build:latest grunt jsenv:node
 
+echo "Make sure local configuration is present"
+sudo docker run --rm -t \
+    --volumes-from=carli-build-test \
+    --workdir=/carli-select/config \
+    carli-build:latest grunt ensure-local-config
+
 echo "Launching test CouchDb instance"
 sudo docker run \
     --name="carli-couchdb-test" \
