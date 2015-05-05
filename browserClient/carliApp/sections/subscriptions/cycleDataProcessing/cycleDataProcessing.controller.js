@@ -32,7 +32,6 @@ function cycleDataProcessingController( $q, $routeParams, $scope, $interval, cyc
         cycleService.getCycleCreationStatus(cycleId).then(function (status) {
             determineTrustOfIndexingStatus(status);
             var currentStep = determineCurrentStep(status);
-            console.log(status, 'Current step is ', currentStep, ' trust index statuses? ', trustFirstViewIndex, trustSecondViewIndex);
 
             if (currentStep === 1) {
                 vm.progress.replication = status.replication;
@@ -94,7 +93,7 @@ function cycleDataProcessingController( $q, $routeParams, $scope, $interval, cyc
 
     function updateComplete(){
         cancelUpdateTimer();
-        vm.cycleRouter.updateStatus();
+        vm.cycleRouter.updateStatus(vm.cycle.id);
     }
 
     function cancelUpdateTimer(){

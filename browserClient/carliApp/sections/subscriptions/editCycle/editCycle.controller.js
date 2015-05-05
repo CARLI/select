@@ -46,8 +46,8 @@ function editCycleController( $routeParams, alertService, cycleService ) {
 
     }
 
-    function updateStatus() {
-        return cycleService.load()
+    function updateStatus(cycleId) {
+        return cycleService.load(cycleId)
             .then(function (cycle) {
                 cycleRouter.cycle = cycle;
                 cycleRouter.status = cycle.status;
