@@ -2,7 +2,9 @@
 var Q = require('q');
 
 var cycleRepository = require('../../CARLI/Entity/CycleRepository');
+var cycleRepositoryForVendor = require('../../CARLI/Entity/CycleRepositoryForVendor');
 var offeringRepository = require('../../CARLI/Entity/OfferingRepository');
+var vendorRepository = require('../../CARLI/Entity/VendorRepository');
 var couchUtils = require('../../CARLI/Store/CouchDb/Utils');
 
 function create( newCycleData ) {
@@ -76,6 +78,19 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
                 });
         });
     }
+}
+
+function createVendorDatabases(newCycleId) {
+
+    return vendorRepository.list().then(function (vendors) {
+        console.log('Replicating ' + newCycleId + ' for ' + vendors.length + ' vendors');
+        return Q.all( vendors.map(createDatabase) );
+
+        function createDatabase(vendor) {
+            var repoForVendor = cycleRepositoryForVendor(vendor);
+            return repoForVendor.createDatabase(newCycleId);
+        }
+    });
 }
 
 function getCycleCreationStatus( cycleId ){
@@ -156,5 +171,6 @@ function resolveToProgress( jobs ){
 module.exports = {
     create: create,
     copyCycleDataFrom: copyCycleDataFrom,
+    createVendorDatabases: createVendorDatabases,
     getCycleCreationStatus: getCycleCreationStatus
 };

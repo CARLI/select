@@ -27,10 +27,10 @@ function cycleChooserController($scope, $timeout, cycleService) {
         if (!cycle) {
             return;
         }
-
+        
         cycle.readyCheck().then(function (isReady) {
             if (!isReady) {
-                cycle.prepare().then(setCycle);
+                cycle.createDatabase().then(setCycle);
             } else {
                 $scope.$apply(setCycle);
             }

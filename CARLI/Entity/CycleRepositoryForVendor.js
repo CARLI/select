@@ -55,7 +55,7 @@ module.exports = function (vendor) {
         getDatabaseName: function() {
             return this.databaseName + '-' + vendor.id;
         },
-        prepare: function createDatabase() {
+        createDatabase: function createDatabase() {
             return createDatabaseForVendor(this.id);
         },
         readyCheck: function checkDatabaseExistance() {
