@@ -60,7 +60,15 @@ function cycleDataProcessingController( $q, $routeParams, $scope, $interval, cyc
                 vm.progress.secondViewIndexing = 100;
                 updateComplete();
             }
+
+            vm.progress.overall = normalizeProgresses();
         });
+        function normalizeProgresses() {
+            return Math.floor(0.014 * vm.progress.replication +
+                0.818 * vm.progress.firstViewIndexing +
+                0.026 * vm.progress.offeringTransformation +
+                0.142 * vm.progress.secondViewIndexing);
+        }
 
         function determineTrustOfIndexingStatus(status) {
             if (vm.progress.offeringTransformation > 0) {

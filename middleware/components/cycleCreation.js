@@ -68,10 +68,9 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
         return waitForIndex.promise;
     }
     function setCycleToNextPhase() {
-        console.log('Proceeding to next phase');
         return cycleRepository.load(newCycle.id).then(function (newerCycle) {
             newerCycle.proceedToNextStep();
-            cycleRepository.update(newerCycle)
+            return cycleRepository.update(newerCycle)
                 .catch(function (err) {
                     console.log('Failed state transition: ', err);
                 });
@@ -114,7 +113,7 @@ function getCycleCreationStatus( cycleId ){
         }
     }
 
-    function getOfferingTransformationStatus( cycle ){
+    function getOfferingTransformationStatus( cycle ) {
         return cycle.offeringTransformationPercentComplete || 0;
     }
 
