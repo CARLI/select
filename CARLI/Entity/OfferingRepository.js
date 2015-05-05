@@ -90,7 +90,7 @@ function listOfferings(cycle){
 function transformOfferingsForNewCycle(newCycle, sourceCycle) {
     return listUnexpandedOfferings(newCycle).then(function(offerings) {
         console.log('[Cycle Creation]: Transforming ' + offerings.length + ' offerings');
-        return transformOfferingsInBatches(offerings, Math.floor( offerings.length / 100 ))
+        return transformOfferingsInBatches(offerings, 1 /* Math.floor( offerings.length / 100 ) */)
             .then(setProgressComplete);
     });
 
@@ -122,7 +122,7 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
             if (currentBatch == numBatches) {
                 return results;
             }
-            console.log('[Cycle Creation]: Transforming offerings ' + (currentBatch + 1) + '/' + numBatches);
+            // console.log('[Cycle Creation]: Transforming offerings ' + (currentBatch + 1) + '/' + numBatches);
             return transformOfferingsBatch(offeringsPartitions[currentBatch])
                 .then(incrementBatch)
                 .then(updateProgress)
@@ -133,12 +133,12 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
             offeringsBatch.forEach(function (offering) {
                 copyOfferingHistoryForYear(offering, sourceCycle.year);
             });
-            console.log('  Finished copying offerings for batch');
             var updatePromises = [];
-            offeringsBatch.forEach(function (offering) {
-                updatePromises.push(updateUnexpandedOffering(offering, newCycle));
-            });
-            return Q.all( updatePromises );
+            return couchUtils.bulkUpdateDocuments(newCycle.getDatabaseName(), offeringsBatch);
+            //offeringsBatch.forEach(function (offering) {
+            //    updatePromises.push(updateUnexpandedOffering(offering, newCycle));
+            //});
+            //return Q.all( updatePromises );
         }
 
         function incrementBatch(results) {
