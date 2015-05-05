@@ -29,7 +29,10 @@ function cycleService( CarliModules, $q ) {
             return $q.when(cycleMiddleware.createCycleFrom(sourceCycle,newCycle));
         },
         getCycleCreationStatus: function(cycleId){
-            return $q.when( cycleMiddleware.getCycleCreationStatus(cycleId) );
+            return $q.when( cycleMiddleware.getCycleCreationStatus(cycleId) )
+                .then(function (statusString) {
+                    return JSON.parse(statusString);
+                });
         },
         fakeCycleCreationStatus: function(cycleId){
             if (fakeProgress.replication < 100) {
