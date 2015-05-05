@@ -7,6 +7,8 @@ function cycleDataProcessingController( $q, $routeParams, $scope, $interval, cyc
     var cycleId = $routeParams.id;
     var updateInterval = 2000;
     var updateIntervalPromise = null;
+    var trustFirstViewIndex = false;
+    var trustSecondViewIndex = false;
 
     vm.progress = {
         replication: 0,
@@ -20,7 +22,6 @@ function cycleDataProcessingController( $q, $routeParams, $scope, $interval, cyc
     function activate(){
         cycleService.load(cycleId).then(function(cycle){
             vm.cycle = cycle;
-            updateCycleCreationStatus();
             updateIntervalPromise = $interval(updateCycleCreationStatus, updateInterval);
         });
 
@@ -28,24 +29,73 @@ function cycleDataProcessingController( $q, $routeParams, $scope, $interval, cyc
     }
 
     function updateCycleCreationStatus() {
-        cycleService.fakeCycleCreationStatus(cycleId).then(function (status) {
-            if (vm.progress.replication < 100) {
+        cycleService.getCycleCreationStatus(cycleId).then(function (status) {
+            determineTrustOfIndexingStatus(status);
+            var currentStep = determineCurrentStep(status);
+            console.log(status, 'Current step is ', currentStep, ' trust index statuses? ', trustFirstViewIndex, trustSecondViewIndex);
+
+            if (currentStep === 1) {
                 vm.progress.replication = status.replication;
-            } else if (vm.progress.firstViewIndexing < 100) {
-                vm.progress.firstViewIndexing = status.viewIndexing;
-            } else if (vm.progress.offeringTransformation < 100) {
-                vm.progress.offeringTransformation = status.offeringTransformation;
-            } else if (vm.progress.secondViewIndexing < 100) {
-                vm.progress.secondViewIndexing = status.viewIndexing;
+                vm.progress.firstViewIndexing = 0;
+                vm.progress.offeringTransformation = 0;
+                vm.progress.secondViewIndexing = 0;
+            } else if (currentStep === 2) {
+                vm.progress.replication = 100;
+                vm.progress.firstViewIndexing = trustFirstViewIndex ? status.viewIndexing : 0;
+                vm.progress.offeringTransformation = 0;
+                vm.progress.secondViewIndexing = 0;
+            } else if (currentStep === 3) {
+                vm.progress.replication = 100;
+                vm.progress.firstViewIndexing = 100;
+                vm.progress.offeringTransformation = Math.floor(status.offeringTransformation);
+                vm.progress.secondViewIndexing = 0;
+            } else if (currentStep === 4) {
+                vm.progress.replication = 100;
+                vm.progress.firstViewIndexing = 100;
+                vm.progress.offeringTransformation = 100;
+                vm.progress.secondViewIndexing = trustSecondViewIndex ? status.viewIndexing : 0;
             } else {
+                vm.progress.replication = 100;
+                vm.progress.firstViewIndexing = 100;
+                vm.progress.offeringTransformation = 100;
+                vm.progress.secondViewIndexing = 100;
                 updateComplete();
             }
         });
+
+        function determineTrustOfIndexingStatus(status) {
+            if (vm.progress.offeringTransformation > 0) {
+                trustFirstViewIndex = true;
+            }
+            if (!trustFirstViewIndex && status.viewIndexing < 100) {
+                trustFirstViewIndex = true;
+            }
+            if (trustFirstViewIndex && vm.progress.firstViewIndexing == 100 && status.viewIndexing < 100) {
+                trustSecondViewIndex = true;
+            }
+        }
+
+        function determineCurrentStep(status) {
+            if (status.replication < 100) {
+                return 1;
+            }
+            if ( !trustFirstViewIndex || (status.offeringTransformation === 0 && !trustSecondViewIndex && status.viewIndexing < 100) ) {
+                return 2;
+            }
+            if (status.offeringTransformation < 100) {
+                return 3;
+            }
+            if ( !trustSecondViewIndex || (trustSecondViewIndex && status.viewIndexing < 100) ) {
+                return 4;
+            }
+            return 5;
+        }
     }
 
     function updateComplete(){
         cancelUpdateTimer();
-        vm.cycleRouter.next();
+        // TODO: go to next step, but don't try to increment the cycle phase, the backend does that
+        console.log('refresh the page now');
     }
 
     function cancelUpdateTimer(){
