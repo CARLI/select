@@ -376,7 +376,7 @@ module.exports = {
     getOfferingsById: getOfferingsById,
     getOfferingDisplayOptions: getOfferingDisplayOptions,
     transformOfferingsForNewCycle: transformOfferingsForNewCycle,
-    saveOfferingHistoryForYear: copyOfferingHistoryForYear,
+    copyOfferingHistoryForYear: copyOfferingHistoryForYear,
 
     getFlaggedState: getFlaggedState
 };

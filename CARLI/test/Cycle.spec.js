@@ -61,41 +61,6 @@ describe('Additional Repository Functions', function() {
         });
     });
 
-    describe('createCycleFrom', function(){
-        it('should copy cycle contents from the specified cycle db', function(){
-            var sourceCycleData = validCycleData();
-            var sourceCycle = null;
-            var productId = uuid.v4();
-
-            var newCycleData = validCycleData();
-            newCycleData.name = 'Copy of ' + sourceCycleData.name;
-
-            return CycleRepository.create(sourceCycleData)
-                .then(CycleRepository.load)
-                .then(function(loadedCycle){
-                    //noinspection ReuseOfLocalVariableJS
-                    sourceCycle = loadedCycle;
-                    var productData = {
-                        id: productId,
-                        name: 'Copy Cycle Test Product',
-                        type: "Product",
-                        vendor: 'bogus',
-                        cycle: sourceCycle
-                    };
-
-                    return ProductRepository.create( productData, sourceCycle);
-                })
-                .then(function(){
-                    return CycleMiddleware.createCycleFrom(sourceCycle, newCycleData);
-                })
-                .then(CycleRepository.load)
-                .then(function(newCycle){
-                    return expect(ProductRepository.load(productId, newCycle)).to.be.fulfilled;
-                });
-        });
-
-    });
-
     describe('listActiveCycles View', function () {
         it('should have a listActiveCycles method', function(){
             expect(CycleRepository.listActiveCycles).to.be.a('function');
