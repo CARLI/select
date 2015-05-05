@@ -24,7 +24,8 @@ angular.module('vendor.quickPricing')
                 selectedProductIds: '=',
                 libraries: '=',
                 selectedLibraryIds: '=',
-                quickPricingCallback: '='
+                quickPricingCallback: '=',
+                suLevels: '='
             },
             controller: 'quickPricingSuController',
             controllerAs: 'vm',

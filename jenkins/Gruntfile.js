@@ -1,6 +1,8 @@
 var fs = require('fs');
 var _ = require('lodash');
+var dbInfo = require('../db/databaseInfo');
 var localConfigFile = __dirname + '/../config/local.js';
+
 
 module.exports = function (grunt) {
     grunt.registerTask('generate-config', generateConfig);
@@ -58,11 +60,11 @@ module.exports = function (grunt) {
             function getPublicCouchDbUrl() {
                 switch (instance) {
                     case 'dev':
-                        return 'http://vmhost.i.pixotech.com:9091';
-                    case 'qa':
-                        return 'http://docker1.i.pixotech.com:9081';
+                        return dbInfo.dev.baseUrl;
+                 case 'qa':
+                        return dbInfo.qa.baseUrl;
                     case 'prod':
-                        return 'http://select-prod.carli.illinois.edu/db';
+                        return dbInfo.prod.baseUrl;
                     default:
                         throw new Error('Invalid instance: ' + instance);
                 }

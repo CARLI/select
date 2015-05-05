@@ -1,0 +1,70 @@
+
+.price-row {
+    @include flexbox();
+
+    .column {
+        border-bottom: $default-border;
+        border-left: $default-border;
+        @include flex(1 1 20%);
+        padding: 0.5rem 1rem;
+
+        &.header {
+            font-weight: bold;
+            background: $light-gray;
+            height: 6rem;
+        }
+
+        &.input {
+            padding: 0;
+            input {
+                padding: 0.5rem 1rem;
+                border: none;
+            }
+        }
+    }
+
+    .input .price {
+        padding: 0.5rem 1rem;
+    }
+
+    &.price-cap {
+        .header {
+            min-height: 2.5rem;
+            height: 2.5rem;
+        }
+    }
+}
+
+.pricing-container {
+    @include flexbox();
+
+    .pricing-grid-container {
+        border: 1px solid black;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .pricing-grid-row-labels,
+    .pricing-grid-container {
+        border-top: 3px solid black;
+        @include flex(1 1 50%);
+    }
+
+    .pricing-grid {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+
+        .price-row {
+            .column {
+                @include flex(0 0 auto);
+                width: 150px;
+
+                &:first-child {
+                    border-left: none;
+                }
+            }
+        }
+    }
+}

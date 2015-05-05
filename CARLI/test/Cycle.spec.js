@@ -281,16 +281,4 @@ describe('Adding functions to Cycle instances', function() {
                 });
         });
     });
-
-    it('should add a getViewUpdateStatus method to instances of Cycle', function(){
-        var cycle = validCycleData();
-
-        return CycleRepository.create(cycle)
-            .then(function (cycleId) {
-                return CycleRepository.load(cycleId);
-            })
-            .then(function (loadedCycle) {
-                return expect(loadedCycle.getViewUpdateProgress).to.be.a('function');
-            });
-    });
 });

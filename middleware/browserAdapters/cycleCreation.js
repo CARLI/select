@@ -16,6 +16,16 @@ function createCycleFrom(sourceCycle, newCycleData) {
     });
 }
 
+function getCycleCreationStatus( cycleId ){
+    var request = {
+        path: '/cycle-creation-status/' + cycleId,
+        method: 'get'
+    };
+
+    return middlewareRequest(request);
+}
+
 module.exports = {
-    createCycleFrom: createCycleFrom
+    createCycleFrom: createCycleFrom,
+    getCycleCreationStatus: getCycleCreationStatus
 };

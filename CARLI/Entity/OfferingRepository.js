@@ -2,6 +2,7 @@ var Entity = require('../Entity')
   , EntityTransform = require( './EntityTransformationUtils')
   , config = require( '../../config' )
   , couchUtils = require( '../Store/CouchDb/Utils')
+  , cycleRepository = require('./CycleRepository')
   , getStoreForCycle = require('./getStoreForCycle')
   , Validator = require('../Validator')
   , productRepository = require('./ProductRepository')
@@ -87,22 +88,88 @@ function listOfferings(cycle){
 }
 
 function transformOfferingsForNewCycle(newCycle, sourceCycle) {
-    return listOfferings(newCycle).then(function(offerings) {
+    return listUnexpandedOfferings(newCycle).then(function(offerings) {
         console.log('[Cycle Creation]: Transforming ' + offerings.length + ' offerings');
-        var promises = offerings.map(transformOffering).map(saveOffering);
-
-        return Q.all(promises);
-
-        function transformOffering(offering) {
-            return saveOfferingHistoryForYear(offering, sourceCycle.year);
-        }
-        function saveOffering(offering) {
-            return updateOffering(offering, newCycle);
-        }
+        return transformOfferingsInBatches(offerings, 1 /* Math.floor( offerings.length / 100 ) */)
+            .then(setProgressComplete);
     });
+
+    function setProgressComplete(){
+        return cycleRepository.load(newCycle.id)
+            .then(function(cycle){
+                cycle.offeringTransformationPercentComplete = 100;
+                return cycle;
+            })
+            .then(cycleRepository.update);
+    }
+
+    function listUnexpandedOfferings(cycle) {
+        setCycle(cycle);
+        return OfferingRepository.list(cycle.getDatabaseName());
+    }
+    function updateUnexpandedOffering(offering, cycle) {
+        setCycle(cycle);
+        return OfferingRepository.update( offering, function() {} );
+    }
+
+    function transformOfferingsInBatches(offerings, numBatches) {
+        var offeringsPartitions = partitionOfferingsList(offerings, numBatches);
+        var currentBatch = 0;
+
+        return updateNextBatch();
+
+        function updateNextBatch(results) {
+            if (currentBatch == numBatches) {
+                return results;
+            }
+            // console.log('[Cycle Creation]: Transforming offerings ' + (currentBatch + 1) + '/' + numBatches);
+            return transformOfferingsBatch(offeringsPartitions[currentBatch])
+                .then(incrementBatch)
+                .then(updateProgress)
+                .then(updateNextBatch);
+        }
+
+        function transformOfferingsBatch(offeringsBatch) {
+            offeringsBatch.forEach(function (offering) {
+                copyOfferingHistoryForYear(offering, sourceCycle.year);
+            });
+            var updatePromises = [];
+            return couchUtils.bulkUpdateDocuments(newCycle.getDatabaseName(), offeringsBatch);
+            //offeringsBatch.forEach(function (offering) {
+            //    updatePromises.push(updateUnexpandedOffering(offering, newCycle));
+            //});
+            //return Q.all( updatePromises );
+        }
+
+        function incrementBatch(results) {
+            currentBatch++;
+            return results;
+        }
+
+        function updateProgress(){
+            return cycleRepository.load(newCycle.id)
+                .then(function(cycle){
+                    cycle.offeringTransformationPercentComplete = 100 * (currentBatch / numBatches);
+                    return cycle;
+                })
+                .then(cycleRepository.update);
+        }
+
+        /*
+         * http://stackoverflow.com/questions/11345296/partitioning-in-javascript/11345570#11345570
+         */
+        function partitionOfferingsList( list, numParts ) {
+            var partLength = Math.floor(list.length / numParts);
+
+            var result = _.groupBy(list, function(item , i) {
+                return Math.floor(i/partLength);
+            });
+            return _.values(result);
+        }
+    }
 }
 
-function saveOfferingHistoryForYear(offering, year) {
+function copyOfferingHistoryForYear(offering, year) {
     offering.history = offering.history || {};
     offering.history[year] = {
         pricing: _.clone(offering.pricing)
@@ -309,7 +376,7 @@ module.exports = {
     getOfferingsById: getOfferingsById,
     getOfferingDisplayOptions: getOfferingDisplayOptions,
     transformOfferingsForNewCycle: transformOfferingsForNewCycle,
-    saveOfferingHistoryForYear: saveOfferingHistoryForYear,
+    saveOfferingHistoryForYear: copyOfferingHistoryForYear,
 
     getFlaggedState: getFlaggedState
 };

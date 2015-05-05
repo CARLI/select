@@ -18,7 +18,8 @@ function editCycleController( $routeParams, alertService, cycleService ) {
             cycleRouter.cycleRouter = {
                 next: cycleRouterNext,
                 previous: cycleRouterPrevious,
-                groupBy: cycleRouter.groupBy
+                groupBy: cycleRouter.groupBy,
+                updateStatus: updateStatus
             };
 
             cycleService.setCurrentCycle(cycle);
@@ -41,14 +42,18 @@ function editCycleController( $routeParams, alertService, cycleService ) {
 
     function saveCycleAndUpdateStatus(){
         var copyOfCycle = angular.copy(cycleRouter.cycle);
-        return cycleService.update(copyOfCycle)
-            .then(cycleService.load)
+        return cycleService.update(copyOfCycle).then(updateStatus);
+
+    }
+
+    function updateStatus(cycleId) {
+        return cycleService.load(cycleId)
             .then(function (cycle) {
                 cycleRouter.cycle = cycle;
                 cycleRouter.status = cycle.status;
             })
-            .catch(function(err){
-                alertService.putAlert(err, {severity: 'danger'});
+            .catch(function (err) {
+                alertService.putAlert(err, { severity: 'danger' });
             });
     }
 }

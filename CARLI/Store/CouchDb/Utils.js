@@ -39,6 +39,18 @@ function getCouchDocuments(dbName, ids) {
     });
 }
 
+function bulkUpdateDocuments(dbName, documents) {
+    var url = StoreOptions.couchDbUrl + '/' + dbName + '/' + '_bulk_docs';
+
+    return couchRequest({
+        url: url,
+        method: 'post',
+        json: { docs: documents }
+    }).then(function processResults(results){
+        return results;
+    });
+}
+
 function getCouchViewResultObject( dbName, viewName, key, group) {
     var deferred = Q.defer();
     var url = couchViewUrl(dbName, viewName, key, group);
@@ -253,5 +265,6 @@ module.exports = {
     getRunningCouchJobs: getRunningCouchJobs,
     startVendorDatabaseReplication: startVendorDatabaseReplication,
     triggerViewIndexing: triggerViewIndexing,
-    doesDatabaseExist: doesDatabaseExist
+    doesDatabaseExist: doesDatabaseExist,
+    bulkUpdateDocuments: bulkUpdateDocuments
 };
