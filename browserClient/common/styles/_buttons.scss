@@ -36,6 +36,7 @@ $button-height: 40px;
         @include carli-button-hover;
     }
 
+    &[disabled],
     &.disabled {
         color: gray;
         background-color: $light-gray;
