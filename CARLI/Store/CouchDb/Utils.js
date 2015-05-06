@@ -297,6 +297,10 @@ function getCycleViewIndexingStatus( cycle ){
             return job.database === cycle.getDatabaseName();
         });
     }
+
+    function resolveToProgress( jobs ){
+        return jobs.length ? jobs[0].progress : 100;
+    }
 }
 
 module.exports = {

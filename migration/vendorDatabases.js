@@ -12,7 +12,11 @@ function createVendorDatabases(cycleId) {
 
         function createDatabase(vendor) {
             var repoForVendor = cycleRepositoryForVendor(vendor);
-            return repoForVendor.createDatabase(cycleId);
+            return repoForVendor.createDatabase(cycleId)
+                .then(repoForVendor.load)
+                .then(function (cycleForVendor) {
+                    return cycleForVendor.replicateFromSource();
+                });
         }
     });
 }

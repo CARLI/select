@@ -28,7 +28,7 @@ function cycleChooserController($scope, $timeout, cycleService) {
             return;
         }
         
-        cycle.readyCheck().then(function (isReady) {
+        cycle.databaseExists().then(function (isReady) {
             if (!isReady) {
                 cycle.createDatabase().then(setCycle);
             } else {

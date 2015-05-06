@@ -5,6 +5,48 @@ var cycleRepository = require('../../CARLI/Entity/CycleRepository');
 var cycleRepositoryForVendor = require('../../CARLI/Entity/CycleRepositoryForVendor');
 var vendorRepository = require('../../CARLI/Entity/VendorRepository');
 
+function createVendorDatabasesForCycle(cycleId) {
+
+    return vendorRepository.list().then(function (vendors) {
+        console.log('Replicating ' + cycleId + ' for ' + vendors.length + ' vendors');
+        return Q.all( vendors.map(createDatabase) )
+            .thenResolve(cycleId);
+
+        function createDatabase(vendor) {
+            var repoForVendor = cycleRepositoryForVendor(vendor);
+            return repoForVendor.createDatabase(cycleId);
+        }
+    });
+}
+
+function replicateDataToVendorsForCycle(cycleId) {
+    return vendorRepository.list().then(function (vendors) {
+        return Q.all( vendors.map(replicateData) );
+
+        function replicateData(vendor) {
+            var repoForVendor = cycleRepositoryForVendor(vendor);
+            return repoForVendor.load(cycleId)
+                .then(function (cycleForVendor) {
+                    return cycleForVendor.replicateFromSource();
+                });
+        }
+    });
+}
+
+function replicateDataFromVendorsForCycle(cycleId) {
+    return vendorRepository.list().then(function (vendors) {
+        return Q.all( vendors.map(replicateData) );
+
+        function replicateData(vendor) {
+            var repoForVendor = cycleRepositoryForVendor(vendor);
+            return repoForVendor.load(cycleId)
+                .then(function (cycleForVendor) {
+                    return cycleForVendor.replicateToSource();
+                });
+        }
+    });
+}
+
 function getCycleStatusForAllVendorsAllCycles() {
     return cycleRepository.list().then(gatherStatuses);
 
@@ -75,10 +117,11 @@ function getDatabaseStatusForVendor(vendor, cycleId) {
     }
 
     function returnCompleteStatusObject(vendorCycle) {
-        console.log('completing the status object');
+        status.databaseExists = true;
         return addReplicationProgress(vendorCycle)
             .then(addIndexingProgress)
-            .then(addViewIndexDelta);
+            .then(addViewIndexDelta)
+            .thenResolve(status);
     }
 
     function returnStatusForNonexistentDatabase() {
@@ -112,6 +155,9 @@ function getDatabaseStatusForVendor(vendor, cycleId) {
 }
 
 module.exports = {
+    createVendorDatabasesForCycle: createVendorDatabasesForCycle,
+    replicateDataToVendorsForCycle: replicateDataToVendorsForCycle,
+    replicateDataFromVendorsForCycle: replicateDataFromVendorsForCycle,
     getCycleStatusForAllVendorsAllCycles: getCycleStatusForAllVendorsAllCycles,
     getCycleStatusForAllVendors: getCycleStatusForAllVendors,
     getCycleStatusForVendorId: getCycleStatusForVendorId
