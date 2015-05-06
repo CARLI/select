@@ -9,6 +9,7 @@ var couchApp = require('./components/couchApp');
 var crmQueries = require('./components/crmQueries');
 var cycleCreation = require('./components/cycleCreation');
 var notifications = require('./components/notifications');
+var vendorDatabases = require('./components/vendorDatabases');
 var vendorSpecificProductQueries = require('./components/vendorSpecificProductQueries');
 
 function _enableCors(carliMiddleware) {
@@ -112,6 +113,37 @@ function runMiddlewareServer(){
 
     carliMiddleware.get('/cycle-creation-status/:id', function(req, res){
         cycleCreation.getCycleCreationStatus( req.params.id )
+            .then(function(statusObject){
+                res.send( statusObject );
+            })
+            .catch(function(err){
+                res.send( { error: err } );
+            });
+    });
+
+
+    carliMiddleware.get('/cycle-database-status/', function(req, res) {
+        vendorDatabases.getCycleStatusForAllVendorsAllCycles()
+            .then(function(arrayOfStatusObjects){
+                res.send( arrayOfStatusObjects );
+            })
+            .catch(function(err){
+                console.log(err);
+                res.send( { error: err } );
+            });
+    });
+    carliMiddleware.get('/cycle-database-status/:cycleId', function(req, res) {
+        vendorDatabases.getCycleStatusForAllVendors(req.params.cycleId)
+            .then(function(arrayOfStatusObjects){
+                res.send( arrayOfStatusObjects );
+            })
+            .catch(function(err){
+                console.log(err);
+                res.send( { error: err } );
+            });
+    });
+    carliMiddleware.get('/cycle-database-status/:cycleId/for-vendor/:vendorId', function(req, res) {
+        vendorDatabases.getCycleStatusForVendorId(req.params.vendorId, req.params.cycleId)
             .then(function(statusObject){
                 res.send( statusObject );
             })

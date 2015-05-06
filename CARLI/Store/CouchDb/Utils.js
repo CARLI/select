@@ -252,6 +252,53 @@ function doesDatabaseExist(databaseName) {
         .catch(function() { return false; });
 }
 
+function getDatabaseInfo(databaseName) {
+    var url = StoreOptions.couchDbUrl + '/' + databaseName;
+
+    return couchRequest({url : url});
+}
+function getDatabaseDesignDocInfo(databaseName) {
+    var url = StoreOptions.couchDbUrl + '/' + databaseName + '/_design/CARLI/_info';
+
+    return couchRequest({url : url});
+}
+
+function getCycleReplicationStatus( cycle ){
+    return getRunningCouchJobs().then(filterReplicationJobs).then(filterByTargetCycle).then(resolveToProgress);
+
+    function filterReplicationJobs( jobs ){
+        return jobs.filter(function(job){
+            return job.type === 'replication';
+        });
+    }
+
+    function filterByTargetCycle( jobs ){
+        return jobs.filter(function(job){
+            return job.target === cycle.getDatabaseName();
+        });
+    }
+
+    function resolveToProgress( jobs ){
+        return jobs.length ? jobs[0].progress : 100;
+    }
+}
+
+function getCycleViewIndexingStatus( cycle ){
+    return getRunningCouchJobs().then(filterIndexJobs).then(filterByCycle).then(resolveToProgress);
+
+    function filterIndexJobs( jobs ){
+        return jobs.filter(function(job){
+            return job.type === 'indexer';
+        });
+    }
+
+    function filterByCycle( jobs ){
+        return jobs.filter(function(job){
+            return job.database === cycle.getDatabaseName();
+        });
+    }
+}
+
 module.exports = {
     couchViewUrl: couchViewUrl,
     createDatabase: createDatabase,
@@ -266,5 +313,9 @@ module.exports = {
     startVendorDatabaseReplication: startVendorDatabaseReplication,
     triggerViewIndexing: triggerViewIndexing,
     doesDatabaseExist: doesDatabaseExist,
-    bulkUpdateDocuments: bulkUpdateDocuments
+    bulkUpdateDocuments: bulkUpdateDocuments,
+    getDatabaseInfo: getDatabaseInfo,
+    getDatabaseDesignDocInfo: getDatabaseDesignDocInfo,
+    getCycleReplicationStatus: getCycleReplicationStatus,
+    getCycleViewIndexingStatus: getCycleViewIndexingStatus
 };
