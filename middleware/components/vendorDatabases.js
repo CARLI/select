@@ -5,8 +5,38 @@ var cycleRepository = require('../../CARLI/Entity/CycleRepository');
 var cycleRepositoryForVendor = require('../../CARLI/Entity/CycleRepositoryForVendor');
 var vendorRepository = require('../../CARLI/Entity/VendorRepository');
 
-function createVendorDatabasesForCycle(cycleId) {
+function createVendorDatabasesForAllCycles() {
+    return cycleRepository.list().then(function (cycles) {
+        return Q.all( cycles.map(createDatabases) );
 
+        function createDatabases(cycle) {
+            return createVendorDatabasesForCycle(cycle.id);
+        }
+    });
+}
+
+function replicateDataToVendorsForAllCycles() {
+    return cycleRepository.list().then(function (cycles) {
+        return Q.all( cycles.map(replicateData) );
+
+        function replicateData(cycle) {
+            return replicateDataToVendorsForCycle(cycle.id);
+        }
+    });
+}
+
+function replicateDataFromVendorsForAllCycles() {
+    return cycleRepository.list().then(function (cycles) {
+        return Q.all( cycles.map(replicateData) );
+
+        function replicateData(cycle) {
+            return replicateDataFromVendorsForCycle(cycle.id);
+        }
+    });
+}
+
+
+function createVendorDatabasesForCycle(cycleId) {
     return vendorRepository.list().then(function (vendors) {
         console.log('Replicating ' + cycleId + ' for ' + vendors.length + ' vendors');
         return Q.all( vendors.map(createDatabase) )
@@ -89,6 +119,7 @@ function getDatabaseStatusForVendor(vendor, cycleId) {
         cycleId: cycleId,
         databaseExists: false,
         replicationProgress: 0,
+        replicationDelta: 0,
         indexingProgress: 0,
         viewIndexDelta: 0
     };
@@ -120,7 +151,7 @@ function getDatabaseStatusForVendor(vendor, cycleId) {
         status.databaseExists = true;
         return addReplicationProgress(vendorCycle)
             .then(addIndexingProgress)
-            .then(addViewIndexDelta)
+            .then(addDeltas)
             .thenResolve(status);
     }
 
@@ -141,20 +172,29 @@ function getDatabaseStatusForVendor(vendor, cycleId) {
         });
     }
 
-    function addViewIndexDelta(vendorCycle) {
+    function addDeltas(vendorCycle) {
         return Q.all([
             couchUtils.getDatabaseInfo(vendorCycle.getDatabaseName()),
             couchUtils.getDatabaseDesignDocInfo(vendorCycle.getDatabaseName())
         ]).then(function(info) {
             var vendorDatabaseInfo = info[0];
             var vendorDesignDocInfo =  info[1];
+            console.log(vendorDatabaseInfo);
             status.viewIndexDelta = vendorDatabaseInfo.update_seq - vendorDesignDocInfo.view_index.update_seq;
-            return vendorCycle;
+
+            //return couchUtils.getVendorDatabaseReplicationStatus(vendorCycle.getSourceDatabaseName(), vendorDatabaseInfo.update_seq, vendor.id)
+            //    .then(function(response) {
+            //        status.replicationDelta = response.results.length;
+            //        return vendorCycle;
+            //    });
         });
     }
 }
 
 module.exports = {
+    createVendorDatabasesForAllCycles: createVendorDatabasesForAllCycles,
+    replicateDataToVendorsForAllCycles: replicateDataToVendorsForAllCycles,
+    replicateDataFromVendorsForAllCycles: replicateDataFromVendorsForAllCycles,
     createVendorDatabasesForCycle: createVendorDatabasesForCycle,
     replicateDataToVendorsForCycle: replicateDataToVendorsForCycle,
     replicateDataFromVendorsForCycle: replicateDataFromVendorsForCycle,

@@ -121,6 +121,37 @@ function runMiddlewareServer(){
             });
     });
 
+    carliMiddleware.get('/create-all-vendor-databases', function(req, res) {
+        vendorDatabases.createVendorDatabasesForAllCycles()
+            .then(sendOk(res))
+            .catch(sendError(res));
+    });
+    carliMiddleware.get('/replicate-all-data-to-vendors', function(req, res) {
+        vendorDatabases.replicateDataToVendorsForAllCycles()
+            .then(sendOk(res))
+            .catch(sendError(res));
+    });
+    carliMiddleware.get('/replicate-all-data-from-vendors', function(req, res) {
+        vendorDatabases.replicateDataFromVendorsForAllCycles()
+            .then(sendOk(res))
+            .catch(sendError(res));
+    });
+    carliMiddleware.get('/create-vendor-databases-for-cycle/:cycleId', function(req, res) {
+        vendorDatabases.createVendorDatabasesForCycle(req.params.cycleId)
+            .then(sendOk(res))
+            .catch(sendError(res));
+    });
+    carliMiddleware.get('/replicate-data-to-vendors-for-cycle/:cycleId', function(req, res) {
+        vendorDatabases.replicateDataToVendorsForCycle(req.params.cycleId)
+            .then(sendOk(res))
+            .catch(sendError(res));
+    });
+    carliMiddleware.get('/replicate-data-from-vendors-for-cycle/:cycleId', function(req, res) {
+        vendorDatabases.replicateDataFromVendorsForCycle(req.params.cycleId)
+            .then(sendOk(res))
+            .catch(sendError(res));
+    });
+
 
     carliMiddleware.get('/cycle-database-status/', function(req, res) {
         vendorDatabases.getCycleStatusForAllVendorsAllCycles()
@@ -128,7 +159,6 @@ function runMiddlewareServer(){
                 res.send( arrayOfStatusObjects );
             })
             .catch(function(err){
-                console.log(err);
                 res.send( { error: err } );
             });
     });
@@ -138,7 +168,6 @@ function runMiddlewareServer(){
                 res.send( arrayOfStatusObjects );
             })
             .catch(function(err){
-                console.log(err);
                 res.send( { error: err } );
             });
     });
@@ -151,6 +180,17 @@ function runMiddlewareServer(){
                 res.send( { error: err } );
             });
     });
+
+    function sendOk(res) {
+        return function() {
+            res.send( { status: 'ok' } );
+        }
+    }
+    function sendError(res) {
+        return function(err) {
+            res.send( { error: err } );
+        }
+    }
 
     var server = carliMiddleware.listen(config.middleware.port, function () {
 
