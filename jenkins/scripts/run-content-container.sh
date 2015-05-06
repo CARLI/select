@@ -23,7 +23,7 @@ sudo docker run --rm -t \
 
 echo "Make sure local configuration is present"
 sudo docker run --rm -t \
-    --volumes-from=carli-build-test \
+    --volumes-from=carli-build-$instance \
     --workdir=/carli-select/config \
     carli-build:$tag grunt ensure-local-config
 
