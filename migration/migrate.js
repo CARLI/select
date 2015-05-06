@@ -12,6 +12,7 @@ var productMigration = require('./product');
 var selectionMigration = require('./selection');
 var Q = require('q');
 var vendorMigration = require('./vendor');
+var vendorDatabases = require('./vendorDatabases');
 var _ = require('lodash');
 
 doMigration();
@@ -40,6 +41,7 @@ function doMigration(){
         .then(migrateProducts)
         .then(gatherSelections)
         .then(migrateOfferings)
+        .then(createVendorDatabases)
         .then(finishMigration)
         .then(closeIdalConnection)
         .then(closeCrmConnection)
@@ -157,6 +159,12 @@ function doMigration(){
         return CycleRepository.load(cycleId).then(function (cycle) {
             return offeringMigration.migrateOfferings(connection, cycle, libraryIdMapping, productMappingsByCycle[cycleId], selectionsByCycle[cycleId]);
         });
+    }
+
+    function createVendorDatabases() {
+        var cycleCouchIds = listObjectValues(cycleIdMapping);
+
+        return cycleCouchIds.map(vendorDatabases.createVendorDatabases);
     }
 
     function finishMigration( offeringsResults ){
