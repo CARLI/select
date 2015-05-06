@@ -3,6 +3,5 @@ angular.module('carli.entityForms.vendor',[
     'carli.selectCycle',
     'carli.entityBaseService',
     'carli.vendorService',
-    'carli.viewEditDirectives',
-    'carli.warnIfUnsaved'
+    'carli.viewEditDirectives'
 ]);

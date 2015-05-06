@@ -8,7 +8,7 @@ angular.module('carli.sections.styleGuide',
         'carli.goodSelect',
         'common.checkbox',
         'common.radio',
-        'carli.warnIfUnsaved'
+        'common.warnIfUnsaved'
     ]
 )
     .value('componentExamples', {

@@ -4,6 +4,5 @@ angular.module('carli.entityForms.product',[
     'common.libraryService',
     'carli.licenseService',
     'common.productService',
-    'carli.viewEditDirectives',
-    'carli.warnIfUnsaved'
+    'carli.viewEditDirectives'
 ]);

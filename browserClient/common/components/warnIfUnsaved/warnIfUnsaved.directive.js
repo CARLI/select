@@ -1,4 +1,4 @@
-angular.module('carli.warnIfUnsaved')
+angular.module('common.warnIfUnsaved')
     .directive('warnIfUnsaved', warnIfUnsaved);
 
     function warnIfUnsaved( $rootScope ) {

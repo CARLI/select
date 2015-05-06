@@ -5,6 +5,5 @@ angular.module('carli.entityForms.license',[
     'common.productService',
     'carli.selectCycle',
     'carli.vendorService',
-    'carli.viewEditDirectives',
-    'carli.warnIfUnsaved'
+    'carli.viewEditDirectives'
 ]);

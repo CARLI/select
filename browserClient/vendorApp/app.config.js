@@ -5,6 +5,7 @@ angular.module('vendor.app', [
     'ngAnimate',
     'common.accordion',
     'common.fa',
+    'common.warnIfUnsaved',
     'vendor.appState',
     'vendor.vendorHeader',
     'vendor.navBar',
