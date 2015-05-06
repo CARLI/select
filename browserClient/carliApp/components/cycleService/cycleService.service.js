@@ -5,6 +5,8 @@ function cycleService( CarliModules, $q ) {
 
     var cycleModule = CarliModules.Cycle;
     var cycleMiddleware = CarliModules.CycleMiddleware;
+    var databaseStatusMiddleware = CarliModules.DatabaseStatusMiddleware;
+
 
     var currentCycle = null;
 
@@ -34,6 +36,7 @@ function cycleService( CarliModules, $q ) {
                     return JSON.parse(statusString);
                 });
         },
+        getCycleDatabaseStatuses: getCycleDatabaseStatuses,
         update: function() { return $q.when( cycleModule.update.apply( this, arguments) ); },
         load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ); },
         getCurrentCycle: getCurrentCycle,
@@ -60,6 +63,10 @@ function cycleService( CarliModules, $q ) {
         return (cycle.cycleType == 'Alternative Cycle') ?
             cycle.description + ' ' + cycle.year :
             cycle.cycleType + ' ' + cycle.year;
+    }
+
+    function getCycleDatabaseStatuses() {
+        return $q.when( databaseStatusMiddleware.getCycleStatusForAllVendorsAllCycles() );
     }
 
     function listActiveCycles() {

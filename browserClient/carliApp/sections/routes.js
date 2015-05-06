@@ -16,6 +16,11 @@ angular.module('carli.routes',[
         controller:  'dashboardController',
         controllerAs:'vm'
     })
+    .when('/admin/databaseStatus', {
+        templateUrl: '/carliApp/sections/admin/databaseStatus/databaseStatus.html',
+        controller:  'databaseStatusController',
+        controllerAs:'vm'
+    })
     .when('/dashboard', {
         templateUrl: '/carliApp/sections/dashboard/dashboard.html',
         controller:  'dashboardController',
