@@ -5,6 +5,8 @@ function cycleService( CarliModules, $q ) {
 
     var cycleModule = CarliModules.Cycle;
     var cycleMiddleware = CarliModules.CycleMiddleware;
+    var databaseStatusMiddleware = CarliModules.DatabaseStatusMiddleware;
+
 
     var currentCycle = null;
 
@@ -34,19 +36,7 @@ function cycleService( CarliModules, $q ) {
                     return JSON.parse(statusString);
                 });
         },
-        fakeCycleCreationStatus: function(cycleId){
-            if (fakeProgress.replication < 100) {
-                fakeProgress.replication += 5;
-            } else if (fakeProgress.viewIndexing < 100) {
-                fakeProgress.viewIndexing += 5;
-            } else if (fakeProgress.offeringTransformation < 100) {
-                fakeProgress.viewIndexing = 0;
-                fakeProgress.offeringTransformation += 5;
-            } else if (fakeProgress.viewIndexing < 100) {
-                fakeProgress.viewIndexing += 5;
-            }
-            return $q.when( fakeProgress );
-        },
+        getCycleDatabaseStatuses: getCycleDatabaseStatuses,
         update: function() { return $q.when( cycleModule.update.apply( this, arguments) ); },
         load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ); },
         getCurrentCycle: getCurrentCycle,
@@ -73,6 +63,10 @@ function cycleService( CarliModules, $q ) {
         return (cycle.cycleType == 'Alternative Cycle') ?
             cycle.description + ' ' + cycle.year :
             cycle.cycleType + ' ' + cycle.year;
+    }
+
+    function getCycleDatabaseStatuses(cycleId) {
+        return $q.when( databaseStatusMiddleware.getCycleStatusForAllVendors(cycleId) );
     }
 
     function listActiveCycles() {

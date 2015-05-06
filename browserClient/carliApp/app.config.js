@@ -1,6 +1,7 @@
 angular.module('carli.app', [
     'busyClick',
     'ngRoute',
+    'carli.admin',
     'carli.cycleService',
     'common.fa',
     'ngAnimate',

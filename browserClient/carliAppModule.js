@@ -4,6 +4,7 @@ module.exports = {
     config: require('../config'),
     Cycle: require('../CARLI/Entity/CycleRepository'),
     CycleMiddleware: require('../middleware/browserAdapters/cycleCreation'),
+    DatabaseStatusMiddleware: require('../middleware/browserAdapters/vendorDatabases'),
     Library: require('../CARLI/Entity/LibraryRepository'),
     License: require('../CARLI/Entity/LicenseRepository'),
     Notification: require('../CARLI/Entity/NotificationRepository'),
