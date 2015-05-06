@@ -10,7 +10,11 @@
 
 <section class="content" id="simultaneousUserPrices" cg-busy="vm.loadingPromise">
 
-    <quick-pricing-su products="vm.products" selected-product-ids="vm.selectedProductIds" su-levels="vm.suLevels" selected-su-level-ids="vm.selectedSuLevelIds"></quick-pricing-su>
+    <quick-pricing-su
+            products="vm.products" selected-product-ids="vm.selectedProductIds"
+            su-levels="vm.suLevels" selected-su-level-ids="vm.selectedSuLevelIds"
+            add-su-pricing-level="vm.addSuPricingLevel">
+    </quick-pricing-su>
 
     <div class="scroll-slider-container">
         <horizontal-scroll-slider container-selector="#su-pricing-grid-container" content-selector="#su-pricing-grid"></horizontal-scroll-slider>
@@ -32,5 +36,7 @@
                 </div>
             </div>
         </div>
+    </div>
 
+    <button class="carli-button add" ng-click="vm.addSuPricingLevel()">Add S.U. Level <fa name="plus-circle"></fa></button>
 </section>

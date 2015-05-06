@@ -7,7 +7,7 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, lib
     vm.selectedProductIds = {};
     vm.selectedSuLevelIds = {};
     vm.getProductDisplayName = productService.getProductDisplayName;
-
+    vm.addSuPricingLevel = addSuPricingLevel;
     vm.saveOfferings = saveOfferings;
 
     activate();
@@ -22,17 +22,17 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, lib
 
     function defaultSuLevels(){
         return [1,2,3].map(makeSuLevel);
+    }
 
-        function makeSuLevel(level){
-            return {
-                id: 'su-'+level,
-                name: suLevelName(level),
-                users: level
-            };
+    function makeSuLevel(level){
+        return {
+            id: 'su-'+level,
+            name: suLevelName(level),
+            users: level
+        };
 
-            function suLevelName(level){
-                return level + ' Simultaneous User' + (level > 1 ? 's' : '');
-            }
+        function suLevelName(level){
+            return level + ' Simultaneous User' + (level > 1 ? 's' : '');
         }
     }
 
@@ -186,5 +186,22 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, lib
             });
 
         return deferred.promise;
+    }
+
+    function addSuPricingLevel(){
+        var newLevel = makeSuLevel( highestSuLevel() +1 );
+
+        vm.suLevels.push(newLevel);
+        vm.selectedSuLevelIds[newLevel.id] = true;
+
+        function highestSuLevel(){
+            var max = 0;
+            vm.suLevels.forEach(function(su){
+                if ( su.users > max ){
+                    max = su.users;
+                }
+            });
+            return max;
+        }
     }
 }
