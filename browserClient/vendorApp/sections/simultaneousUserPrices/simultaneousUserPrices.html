@@ -24,7 +24,7 @@
             <div class="price-row">
                 <div class="column header"></div>
             </div>
-            <div class="price-row" ng-repeat="su in vm.suLevels">
+            <div class="price-row" ng-repeat="su in vm.suLevels | orderBy:'users' track by su.id">
                 <div class="column {{ ::su.id }}">{{ ::su.name }}</div>
             </div>
         </div>
@@ -32,7 +32,7 @@
         <div class="pricing-grid-container" id="su-pricing-grid-container">
             <div class="pricing-grid" id="su-pricing-grid">
                 <div class="price-row product-name-row">
-                    <div class="column header {{ ::product.id }}" ng-repeat="product in ::vm.products | orderBy:'name'">{{ ::vm.getProductDisplayName(product) }}</div>
+                    <div class="column header {{ ::product.id }}" ng-repeat="product in ::vm.products | orderBy:'name' track by product.id">{{ ::vm.getProductDisplayName(product) }}</div>
                 </div>
             </div>
         </div>

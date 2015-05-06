@@ -47,7 +47,7 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, lib
         vm.products.forEach(function(product) {
             vm.selectedProductIds[product.id] = true;
         });
-        $scope.$watchCollection(getSelectedProductIds, updateVisibilityOfElementsWithEntityIdClasses);
+        $scope.$watchCollection(getSelectedProductIds, updateVisibilityOfCellsForSelectedProducts);
         function getSelectedProductIds() { return vm.selectedProductIds; }
     }
 
@@ -55,11 +55,20 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, lib
         vm.suLevels.forEach(function(su) {
             vm.selectedSuLevelIds[su.id] = true;
         });
-        $scope.$watchCollection(getSelectedSuLevelIds, updateVisibilityOfElementsWithEntityIdClasses);
+        $scope.$watchCollection(getSelectedSuLevelIds, updateVisibilityOfRowsForSelectedSuLevels);
         function getSelectedSuLevelIds() { return vm.selectedSuLevelIds; }
     }
 
-    function updateVisibilityOfElementsWithEntityIdClasses(selectedEntities) {
+    function updateVisibilityOfRowsForSelectedSuLevels(selectedEntities) {
+        if (selectedEntities) {
+            Object.keys(selectedEntities).forEach(function (entityId) {
+                var displayValue = selectedEntities[entityId] ? 'table-row' : 'none';
+                $('.' + entityId).css('display', displayValue);
+            });
+        }
+    }
+
+    function updateVisibilityOfCellsForSelectedProducts(selectedEntities) {
         if (selectedEntities) {
             Object.keys(selectedEntities).forEach(function (entityId) {
                 var displayValue = selectedEntities[entityId] ? 'table-cell' : 'none';
@@ -70,18 +79,21 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, lib
 
     function buildPricingGrid() {
         vm.suLevels.forEach(function (level) {
-            var row = generateSuRow(level);
-            vm.products.forEach(function (product) {
-                row.append(generateOfferingCell(level, product));
-            });
-            $('.pricing-grid').append(row);
+            makeSuPricingRow(level);
+        });
+    }
+
+    function makeSuPricingRow(level) {
+        var row = $('<div class="price-row">');
+        row.addClass('su-'+level.users);
+
+        vm.products.forEach(function (product) {
+            row.append(generateOfferingCell(level, product));
         });
 
-        function generateSuRow(level) {
-            var row = $('<div class="price-row">');
-            row.addClass(level+'su');
-            return row;
-        }
+        $('.pricing-grid').append(row);
+
+        return row;
 
         function generateOfferingCell(suLevel, product) {
             var offeringWrapper = $('<div class="column offering input">');
@@ -193,6 +205,8 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, lib
 
         vm.suLevels.push(newLevel);
         vm.selectedSuLevelIds[newLevel.id] = true;
+
+        makeSuPricingRow(newLevel);
 
         function highestSuLevel(){
             var max = 0;
