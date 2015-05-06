@@ -37,7 +37,7 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, lib
     }
 
     function loadProducts() {
-        return productService.listProductsWithOfferingsForVendorId( userService.getUser().vendor.id ).then(function (products) {
+        return productService.listProductsForVendorId( userService.getUser().vendor.id ).then(function (products) {
             vm.products = $filter('orderBy')(products, 'name');
             initializeSelectedProductIds();
         });
