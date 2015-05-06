@@ -10,7 +10,7 @@
 
 <section class="content" id="simultaneousUserPrices" cg-busy="vm.loadingPromise">
 
-    <quick-pricing-su products="vm.products" selected-product-ids="vm.selectedProductIds" su-levels="vm.suLevels"></quick-pricing-su>
+    <quick-pricing-su products="vm.products" selected-product-ids="vm.selectedProductIds" su-levels="vm.suLevels" selected-su-level-ids="vm.selectedSuLevelIds"></quick-pricing-su>
 
     <div class="scroll-slider-container">
         <horizontal-scroll-slider container-selector="#su-pricing-grid-container" content-selector="#su-pricing-grid"></horizontal-scroll-slider>
@@ -21,7 +21,7 @@
                 <div class="column header"></div>
             </div>
             <div class="price-row" ng-repeat="su in vm.suLevels">
-                <div class="column lastYearsPrice">{{ ::su }} S.U.</div>
+                <div class="column {{ ::su.id }}">{{ ::su.name }}</div>
             </div>
         </div>
 

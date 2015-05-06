@@ -22,10 +22,9 @@ angular.module('vendor.quickPricing')
             scope: {
                 products: '=',
                 selectedProductIds: '=',
-                libraries: '=',
-                selectedLibraryIds: '=',
-                quickPricingCallback: '=',
-                suLevels: '='
+                suLevels: '=',
+                selectedSuLevelIds: '=',
+                quickPricingCallback: '='
             },
             controller: 'quickPricingSuController',
             controllerAs: 'vm',

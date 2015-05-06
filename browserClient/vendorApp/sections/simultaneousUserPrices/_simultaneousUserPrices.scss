@@ -4,6 +4,17 @@
 
     quick-pricing-su {
         margin: 1rem auto;
+
+        .step2 {
+            .select-entities-controls > li {
+                border-right: none;
+            }
+
+            .filter,
+            .filters-label {
+                display: none;
+            }
+        }
     }
 
     .scroll-slider-container {

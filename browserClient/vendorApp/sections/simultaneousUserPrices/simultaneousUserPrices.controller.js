@@ -5,17 +5,35 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, lib
     var vm = this;
     vm.loadingPromise = null;
     vm.selectedProductIds = {};
+    vm.selectedSuLevelIds = {};
     vm.getProductDisplayName = productService.getProductDisplayName;
-
-    vm.suLevels = [1,2,3];
 
     vm.saveOfferings = saveOfferings;
 
     activate();
 
     function activate() {
+        vm.suLevels = defaultSuLevels();
+        initializeSelectedSuLevelIds();
+
         vm.loadingPromise = loadProducts()
             .then(buildPricingGrid);
+    }
+
+    function defaultSuLevels(){
+        return [1,2,3].map(makeSuLevel);
+
+        function makeSuLevel(level){
+            return {
+                id: 'su-'+level,
+                name: suLevelName(level),
+                users: level
+            };
+
+            function suLevelName(level){
+                return level + ' Simultaneous User' + (level > 1 ? 's' : '');
+            }
+        }
     }
 
     function loadProducts() {
@@ -31,6 +49,14 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, lib
         });
         $scope.$watchCollection(getSelectedProductIds, updateVisibilityOfElementsWithEntityIdClasses);
         function getSelectedProductIds() { return vm.selectedProductIds; }
+    }
+
+    function initializeSelectedSuLevelIds() {
+        vm.suLevels.forEach(function(su) {
+            vm.selectedSuLevelIds[su.id] = true;
+        });
+        $scope.$watchCollection(getSelectedSuLevelIds, updateVisibilityOfElementsWithEntityIdClasses);
+        function getSelectedSuLevelIds() { return vm.selectedSuLevelIds; }
     }
 
     function updateVisibilityOfElementsWithEntityIdClasses(selectedEntities) {
