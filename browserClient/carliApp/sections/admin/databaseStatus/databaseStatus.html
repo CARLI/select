@@ -1,4 +1,4 @@
-<section class="content">
+<section class="content" cg-busy="vm.loadingPromise">
     <div class="section" ng-repeat="cycle in vm.cycles">
         <h2>{{ cycle.name }}</h2>
         <ul class="entity-list">
@@ -6,6 +6,7 @@
                 <div class="column">Vendor</div>
                 <div class="column">Database?</div>
                 <div class="column">Replication</div>
+                <div class="column">Replication Δ</div>
                 <div class="column">Indexing</div>
                 <div class="column">Index Δ</div>
             </li>
@@ -13,6 +14,7 @@
                 <div class="column">{{ vm.vendorsById[status.vendorId].name }}</div>
                 <div class="column">{{ status.databaseExists }}</div>
                 <div class="column">{{ status.replicationProgress }}</div>
+                <div class="column">{{ status.replicationDelta }}</div>
                 <div class="column">{{ status.indexingProgress }}</div>
                 <div class="column">{{ status.viewIndexDelta }}</div>
             </li>

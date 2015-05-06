@@ -180,7 +180,7 @@ function replicateFrom(sourceDbName) {
 
     function replicateTo(targetDbName) {
         var deferred = Q.defer();
-        var requestOptions = _couchReplicationOptions(sourceDbName, targetDbName);
+        var requestOptions = couchReplicationOptions();
 
         couchRequest(requestOptions)
             .then(function resolveReplication(data) {
@@ -196,17 +196,58 @@ function replicateFrom(sourceDbName) {
             });
 
         return deferred.promise;
+
+        function couchReplicationOptions() {
+            return {
+                url: StoreOptions.couchDbUrl + '/_replicate',
+                method: 'post',
+                json: {
+                    source: sourceDbName,
+                    target: targetDbName
+                }
+            };
+        }
     }
 }
-function _couchReplicationOptions(sourceDbName, targetDbName) {
-    return {
-        url: StoreOptions.couchDbUrl + '/_replicate',
-        method: 'post',
-        json: {
-            source: sourceDbName,
-            target: targetDbName
+
+function replicateForVendor(vendorId) {
+    return { from: replicateFrom };
+
+    function replicateFrom(sourceDbName) {
+        return { to: replicateTo };
+
+        function replicateTo(targetDbName) {
+            var deferred = Q.defer();
+            var requestOptions = couchReplicationOptions();
+
+            couchRequest(requestOptions)
+                .then(function resolveReplication(data) {
+                    if (data.ok) {
+                        deferred.resolve();
+                    } else {
+                        deferred.reject('replication failed [' + sourceDbName + ' -> ' + targetDbName + ']');
+                    }
+                })
+                .catch(function (error) {
+                    deferred.reject(error);
+                });
+
+            return deferred.promise;
+
+            function couchReplicationOptions() {
+                return {
+                    url: StoreOptions.couchDbUrl + '/_replicate',
+                    method: 'post',
+                    json: {
+                        source: sourceDbName,
+                        target: targetDbName,
+                        filter: "CARLI/filterCycleDatabaseForVendor",
+                        query_params: {"vendorId": vendorId}
+                    }
+                };
+            }
         }
-    };
+    }
 }
 
 function startVendorDatabaseReplication(sourceCycleDbName, vendorCycleDbName, vendorId) {
@@ -230,6 +271,17 @@ function startVendorDatabaseReplication(sourceCycleDbName, vendorCycleDbName, ve
             }
         };
     }
+}
+
+function getVendorDatabaseReplicationStatus(databaseName, since, vendorId) {
+    var requestOptions = {
+        url: StoreOptions.couchDbUrl + '/' + databaseName + '/_changes' +
+            '?since=' + since + '&filter=CARLI/filterCycleDatabaseForVendor&vendorId='+vendorId,
+        method: 'get'
+    };
+
+    return couchRequest(requestOptions);
+
 }
 
 function getRunningCouchJobs(){
@@ -313,8 +365,10 @@ module.exports = {
     getCouchViewResultValuesWithinRange: getCouchViewResultValuesWithinRange,
     makeValidCouchDbName: makeValidCouchDbName,
     replicateFrom: replicateFrom,
+    replicateForVendor: replicateForVendor,
     getRunningCouchJobs: getRunningCouchJobs,
     startVendorDatabaseReplication: startVendorDatabaseReplication,
+    getVendorDatabaseReplicationStatus: getVendorDatabaseReplicationStatus,
     triggerViewIndexing: triggerViewIndexing,
     doesDatabaseExist: doesDatabaseExist,
     bulkUpdateDocuments: bulkUpdateDocuments,

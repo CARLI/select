@@ -61,14 +61,14 @@ module.exports = function (vendor) {
         createDatabase: function createDatabase() {
             return createDatabaseForVendor(this.id);
         },
-        databaseExists: function checkDatabaseExistance() {
+        databaseExists: function databaseExists() {
             return couchUtils.doesDatabaseExist(this.getDatabaseName());
         },
         replicateFromSource: function replicateFromSource() {
-            return couchUtils.replicateFrom(this.getSourceDatabaseName()).to(this.getDatabaseName());
+            return couchUtils.replicateForVendor(vendor.id).from(this.getSourceDatabaseName()).to(this.getDatabaseName());
         },
         replicateToSource: function replicateToSource() {
-            return couchUtils.replicateFrom(this.getDatabaseName()).to(this.getSourceDatabaseName());
+            return couchUtils.replicateForVendor(vendor.id).from(this.getDatabaseName()).to(this.getSourceDatabaseName());
         }
     };
 
