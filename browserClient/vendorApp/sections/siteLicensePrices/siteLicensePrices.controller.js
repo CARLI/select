@@ -45,17 +45,32 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
         vm.libraries.forEach(function(library) {
             vm.selectedLibraryIds[library.id] = true;
         });
-        $scope.$watchCollection(getSelectedLibraryIds, updateVisibilityOfElementsWithEntityIdClasses);
+        $scope.$watchCollection(getSelectedLibraryIds, updateVisibilityOfRowsForSelectedLibraries);
         function getSelectedLibraryIds() { return vm.selectedLibraryIds; }
     }
+
     function initializeSelectedProductIds() {
         vm.products.forEach(function(product) {
             vm.selectedProductIds[product.id] = true;
         });
-        $scope.$watchCollection(getSelectedProductIds, updateVisibilityOfElementsWithEntityIdClasses);
+        $scope.$watchCollection(getSelectedProductIds, updateVisibilityOfCellsForSelectedProducts);
         function getSelectedProductIds() { return vm.selectedProductIds; }
     }
-    function updateVisibilityOfElementsWithEntityIdClasses(selectedEntities) {
+
+    function updateVisibilityOfRowsForSelectedLibraries(selectedEntities) {
+        if (selectedEntities) {
+            Object.keys(selectedEntities).forEach(function (entityId) {
+                var displayValueLabel = selectedEntities[entityId] ? 'flex' : 'none';
+                $('.pricing-grid-row-labels .' + entityId).css('display', displayValueLabel);
+
+                var displayValuePrice = selectedEntities[entityId] ? 'table-row' : 'none';
+                $('.pricing-grid .' + entityId).css('display', displayValuePrice);
+
+            });
+        }
+    }
+
+    function updateVisibilityOfCellsForSelectedProducts(selectedEntities) {
         if (selectedEntities) {
             Object.keys(selectedEntities).forEach(function (entityId) {
                 var displayValue = selectedEntities[entityId] ? 'table-cell' : 'none';
@@ -63,7 +78,6 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             });
         }
     }
-
 
     function buildPriceArray() {
 
