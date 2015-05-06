@@ -4,43 +4,44 @@ angular.module('carli.admin')
 function databaseStatusController($q, cycleService, vendorService) {
     var vm = this;
 
-    vm.vendors = {};
-    vm.cycles = {};
-    vm.cycleStatuses = [];
+    vm.vendorsById = {};
+    vm.cycles = [];
+    vm.cycleStatusByCycleId = {};
 
     activate();
 
     function activate() {
-        vm.loadingPromise = $q.all([
-            loadCycles(),
-            loadVendors(),
-            loadDatabaseStatuses()
-        ]);
+        vm.loadingPromise = loadVendors()
+            .then(loadCycles)
+            .then(loadDatabaseStatuses);
+    }
+
+    function loadVendors() {
+        return vendorService.list()
+            .then(function (vendors) {
+                vendors.forEach(function (vendor) {
+                    vm.vendorsById[ vendor.id ] = vendor;
+                });
+                return vendors;
+            });
     }
 
     function loadCycles() {
         return cycleService.list()
             .then(function (cycles) {
-                cycles.forEach(function (cycle) {
-                    vm.cycles[ cycle.id ] = cycle;
-                });
-                return true;
-            });
-    }
-    function loadVendors() {
-        return vendorService.list()
-            .then(function (vendors) {
-                vendors.forEach(function (vendor) {
-                    vm.vendors[ vendor.id ] = vendor;
-                });
-                return true;
+                vm.cycles = cycles;
+                return cycles;
             });
     }
 
-    function loadDatabaseStatuses() {
-        return cycleService.getCycleDatabaseStatuses().then(function (statuses) {
-            vm.cycleStatuses = JSON.parse(statuses);
-            return true;
-        });
+    function loadDatabaseStatuses(cycles) {
+        return $q.all(cycles.map(loadStatusForCycle));
+
+        function loadStatusForCycle(cycle) {
+            return cycleService.getCycleDatabaseStatuses(cycle.id).then(function (statuses) {
+                vm.cycleStatusByCycleId[cycle.id] = JSON.parse(statuses);
+                return true;
+            });
+        }
     }
 }

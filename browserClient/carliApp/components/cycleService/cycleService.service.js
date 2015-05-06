@@ -65,8 +65,8 @@ function cycleService( CarliModules, $q ) {
             cycle.cycleType + ' ' + cycle.year;
     }
 
-    function getCycleDatabaseStatuses() {
-        return $q.when( databaseStatusMiddleware.getCycleStatusForAllVendorsAllCycles() );
+    function getCycleDatabaseStatuses(cycleId) {
+        return $q.when( databaseStatusMiddleware.getCycleStatusForAllVendors(cycleId) );
     }
 
     function listActiveCycles() {

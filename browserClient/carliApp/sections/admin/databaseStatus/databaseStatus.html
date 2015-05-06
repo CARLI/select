@@ -1,18 +1,22 @@
-<ul class="entity-list" cg-busy="loadingPromise">
-    <li class="column-headers">
-        <div class="column">Cycle</div>
-        <div class="column">Vendor</div>
-        <div class="column">Database?</div>
-        <div class="column">Replication</div>
-        <div class="column">Indexing</div>
-        <div class="column">Index Δ</div>
-    </li>
-    <li ng-repeat="status in vm.cycleStatuses">
-        <div class="column">{{ vm.cycles[status.cycleId].name }}</div>
-        <div class="column">{{ vm.vendors[status.vendorId].name }}</div>
-        <div class="column">{{ status.databaseExists }}</div>
-        <div class="column">{{ status.replicationProgress }}</div>
-        <div class="column">{{ status.indexingProgress }}</div>
-        <div class="column">{{ status.viewIndexDelta }}</div>
-    </li>
-</ul>
+<section class="content">
+    <div class="section" ng-repeat="cycle in vm.cycles">
+        <h2>{{ cycle.name }}</h2>
+        <ul class="entity-list">
+            <li class="column-headers">
+                <div class="column">Vendor</div>
+                <div class="column">Database?</div>
+                <div class="column">Replication</div>
+                <div class="column">Indexing</div>
+                <div class="column">Index Δ</div>
+            </li>
+            <li ng-repeat="status in vm.cycleStatusByCycleId[cycle.id]">
+                <div class="column">{{ vm.vendorsById[status.vendorId].name }}</div>
+                <div class="column">{{ status.databaseExists }}</div>
+                <div class="column">{{ status.replicationProgress }}</div>
+                <div class="column">{{ status.indexingProgress }}</div>
+                <div class="column">{{ status.viewIndexDelta }}</div>
+            </li>
+        </ul>
+    </div>
+</section>
+
