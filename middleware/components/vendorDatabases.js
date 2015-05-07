@@ -15,27 +15,6 @@ function createVendorDatabasesForAllCycles() {
     });
 }
 
-function replicateDataToVendorsForAllCycles() {
-    return cycleRepository.list().then(function (cycles) {
-        return Q.all( cycles.map(replicateData) );
-
-        function replicateData(cycle) {
-            return replicateDataToVendorsForCycle(cycle.id);
-        }
-    });
-}
-
-function replicateDataFromVendorsForAllCycles() {
-    return cycleRepository.list().then(function (cycles) {
-        return Q.all( cycles.map(replicateData) );
-
-        function replicateData(cycle) {
-            return replicateDataFromVendorsForCycle(cycle.id);
-        }
-    });
-}
-
-
 function createVendorDatabasesForCycle(cycleId) {
     return vendorRepository.list().then(function (vendors) {
         console.log('Replicating ' + cycleId + ' for ' + vendors.length + ' vendors');
@@ -45,6 +24,16 @@ function createVendorDatabasesForCycle(cycleId) {
         function createDatabase(vendor) {
             var repoForVendor = cycleRepositoryForVendor(vendor);
             return repoForVendor.createDatabase(cycleId);
+        }
+    });
+}
+
+function replicateDataToVendorsForAllCycles() {
+    return cycleRepository.list().then(function (cycles) {
+        return Q.all( cycles.map(replicateData) );
+
+        function replicateData(cycle) {
+            return replicateDataToVendorsForCycle(cycle.id);
         }
     });
 }
@@ -59,6 +48,16 @@ function replicateDataToVendorsForCycle(cycleId) {
                 .then(function (cycleForVendor) {
                     return cycleForVendor.replicateFromSource();
                 });
+        }
+    });
+}
+
+function replicateDataFromVendorsForAllCycles() {
+    return cycleRepository.list().then(function (cycles) {
+        return Q.all( cycles.map(replicateData) );
+
+        function replicateData(cycle) {
+            return replicateDataFromVendorsForCycle(cycle.id);
         }
     });
 }
@@ -193,10 +192,10 @@ function getDatabaseStatusForVendor(vendor, cycleId) {
 
 module.exports = {
     createVendorDatabasesForAllCycles: createVendorDatabasesForAllCycles,
-    replicateDataToVendorsForAllCycles: replicateDataToVendorsForAllCycles,
-    replicateDataFromVendorsForAllCycles: replicateDataFromVendorsForAllCycles,
     createVendorDatabasesForCycle: createVendorDatabasesForCycle,
+    replicateDataToVendorsForAllCycles: replicateDataToVendorsForAllCycles,
     replicateDataToVendorsForCycle: replicateDataToVendorsForCycle,
+    replicateDataFromVendorsForAllCycles: replicateDataFromVendorsForAllCycles,
     replicateDataFromVendorsForCycle: replicateDataFromVendorsForCycle,
     getCycleStatusForAllVendorsAllCycles: getCycleStatusForAllVendorsAllCycles,
     getCycleStatusForAllVendors: getCycleStatusForAllVendors,

@@ -7,20 +7,6 @@ function createVendorDatabasesForAllCycles() {
     });
 }
 
-function replicateDataToVendorsForAllCycles() {
-    return middlewareRequest({
-        path: '/replicate-all-data-to-vendors',
-        method: 'post'
-    });
-}
-
-function replicateDataFromVendorsForAllCycles() {
-    return middlewareRequest({
-        path: '/replicate-all-data-from-vendors',
-        method: 'post'
-    });
-}
-
 function createVendorDatabasesForCycle(cycleId) {
     return middlewareRequest({
         path: '/create-vendor-databases-for-cycle/' + cycleId,
@@ -28,9 +14,23 @@ function createVendorDatabasesForCycle(cycleId) {
     });
 }
 
+function replicateDataToVendorsForAllCycles() {
+    return middlewareRequest({
+        path: '/replicate-all-data-to-vendors',
+        method: 'post'
+    });
+}
+
 function replicateDataToVendorsForCycle(cycleId) {
     return middlewareRequest({
         path: '/replicate-data-to-vendors-for-cycle/' + cycleId,
+        method: 'post'
+    });
+}
+
+function replicateDataFromVendorsForAllCycles() {
+    return middlewareRequest({
+        path: '/replicate-all-data-from-vendors',
         method: 'post'
     });
 }
@@ -67,8 +67,8 @@ module.exports = {
     createVendorDatabasesForAllCycles: createVendorDatabasesForAllCycles,
     createVendorDatabasesForCycle: createVendorDatabasesForCycle,
     replicateDataToVendorsForAllCycles: replicateDataToVendorsForAllCycles,
-    replicateDataFromVendorsForAllCycles: replicateDataFromVendorsForAllCycles,
     replicateDataToVendorsForCycle: replicateDataToVendorsForCycle,
+    replicateDataFromVendorsForAllCycles: replicateDataFromVendorsForAllCycles,
     replicateDataFromVendorsForCycle: replicateDataFromVendorsForCycle,
     getCycleStatusForAllVendorsAllCycles: getCycleStatusForAllVendorsAllCycles,
     getCycleStatusForAllVendors: getCycleStatusForAllVendors,
