@@ -1,7 +1,7 @@
 angular.module('vendor.sections.simultaneousUserPrices')
     .controller('simultaneousUserPricesController', simultaneousUserPricesController);
 
-function simultaneousUserPricesController($scope, $q, $filter, cycleService, libraryService, offeringService, productService, userService){
+function simultaneousUserPricesController($scope, $q, $filter, cycleService, offeringService, productService, userService){
     var vm = this;
     vm.loadingPromise = null;
     vm.suLevels = [];
@@ -140,69 +140,34 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, lib
 
     function saveOfferings(){
         var cycle = cycleService.getCurrentCycle();
-        var changedOfferings = [];
-        var newOfferings = [];
-        var offeringCells = $('#price-rows .offering');
+        var newSuPricingByProduct = {};
 
-        offeringCells.each(function(index, element){
-            var offeringCell = $(element);
-            var libraryId = offeringCell.data('libraryId');
-            var productId = offeringCell.data('productId');
-            var offering = vm.priceForSuByProduct[productId][libraryId];
-            var newPrice = parseFloat( offeringCell.find('input').val());
+        vm.products.forEach(function(product){
+            newSuPricingByProduct[product.id] = [];
 
-            if ($(element).is(":visible")) {
-                if ( !offering ){
-                    if ( newPrice !== 0 ){
-                        offering = generateNewOffering(libraryId, productId, cycle, newPrice);
-                        newOfferings.push(offering);
-                    }
-                }
-                else if ( newPrice != offering.pricing.site ){
-                    offering.pricing.site = newPrice;
-                    changedOfferings.push(offering);
-                }
-            }
+            vm.suLevels.forEach(function(suLevel){
+                var users = suLevel.users;
+                var $productCellForSu = $('.price-row.su-'+users+' .'+product.id);
+                var newPrice = parseFloat( $productCellForSu.text() );
+
+                newSuPricingByProduct[product.id].push({
+                    users: users,
+                    price: newPrice
+                });
+            });
         });
 
-        vm.loadingPromise = saveAllOfferings( newOfferings, changedOfferings );
+        return $q.all( vm.products.map(updateOfferingsForAllLibrariesForProduct) );
+
+
+        function updateOfferingsForAllLibrariesForProduct( product ){
+            var newSuPricing = newSuPricingByProduct[product.id];
+
+            return offeringService.updateSuPricingForAllLibrariesForProduct(product.id, newSuPricing);
+        }
     }
 
-    function generateNewOffering(libraryId, productId, cycle, newPrice) {
-        return {
-            cycle: cycle,
-            library: libraryId.toString(),
-            product: productId,
-            pricing: {
-                site: newPrice
-            }
-        };
-    }
 
-    function saveAllNewOfferings( newOfferings ){
-        return $q.all(newOfferings.map(offeringService.create));
-    }
-
-    function saveAllChangedOfferings( changedOfferings ){
-        return $q.all(changedOfferings.map(offeringService.update));
-    }
-
-    function saveAllOfferings( newOfferings, changedOfferings ){
-        var deferred = $q.defer();
-
-        $q.all( [ saveAllNewOfferings(newOfferings), saveAllChangedOfferings(changedOfferings) ] )
-            .then(function(arrays){
-                var count = arrays[0].length + arrays[1].length;
-                console.log('saved '+count+' offerings');
-                deferred.resolve();
-            })
-            .catch(function(err){
-                console.log(err);
-                deferred.reject(err);
-            });
-
-        return deferred.promise;
-    }
 
     function addSuPricingLevel(){
         var newLevel = makeSuLevel( highestSuLevel() +1 );
@@ -259,8 +224,6 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, lib
                     percent: pricingBySuLevel[suLevel.users]
                 };
             });
-
-            console.log('apply percentages ',suLevelPercentagesToApply);
 
             suLevelPercentagesToApply.forEach(applySuPercentageIncreaseToSelectedProducts);
 
