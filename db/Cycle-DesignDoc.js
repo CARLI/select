@@ -99,7 +99,7 @@ ddoc = {
                 return true;
             }
 
-            if (doc._id.substr(0, 7) === '_design') {
+            if (doc._id === '_design/CARLI') {
                 return true;
             }
 
