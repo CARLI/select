@@ -7,7 +7,7 @@ RUN apt-get update
 # Install required system packages
 RUN apt-get -qq install git curl ruby
 # Use PPA for nodejs, because the official package lags behind
-RUN curl -sL https://deb.nodesource.com/setup | bash - 
+RUN curl -sL https://deb.nodesource.com/setup_0.12 | bash -
 RUN apt-get -qq install nodejs build-essential
 # Required for PhantomJS
 RUN apt-get -qq install libfreetype6 libfontconfig
