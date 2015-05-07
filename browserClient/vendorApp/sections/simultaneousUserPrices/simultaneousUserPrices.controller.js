@@ -96,8 +96,10 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, lib
         return row;
 
         function generateOfferingCell(suLevel, product) {
+            //var priceForProduct = product.suPricing[suLevel.users];
+            var priceForProduct = 0;
             var offeringWrapper = $('<div class="column offering input">');
-            var offeringCell = offeringWrapper.append(createReadOnlyOfferingCell(''));
+            var offeringCell = offeringWrapper.append(createReadOnlyOfferingCell(priceForProduct));
 
             offeringWrapper.on('click', function() {
                 $(this).children().first().focus();
