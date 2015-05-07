@@ -79,6 +79,13 @@ function replicateDataFromVendorsForCycle(cycleId) {
     });
 }
 
+function syncEverything() {
+    return createVendorDatabasesForAllCycles()
+        .then(replicateDataToVendorsForAllCycles)
+        .then(replicateDataFromVendorsForAllCycles)
+        .then(triggerIndexingForAllCycles);
+}
+
 function triggerIndexingForAllCycles() {
     return cycleRepository.list().then(function (cycles) {
         return Q.all( cycles.map(triggerIndexing) );
