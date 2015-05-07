@@ -4,11 +4,13 @@ angular.module('vendor.sections.simultaneousUserPrices')
 function simultaneousUserPricesController($scope, $q, $filter, cycleService, libraryService, offeringService, productService, userService){
     var vm = this;
     vm.loadingPromise = null;
+    vm.suLevels = [];
     vm.selectedProductIds = {};
     vm.selectedSuLevelIds = {};
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.addSuPricingLevel = addSuPricingLevel;
     vm.saveOfferings = saveOfferings;
+    vm.quickPricingCallback = quickPricingCallback;
 
     activate();
 
@@ -218,6 +220,74 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, lib
                 }
             });
             return max;
+        }
+    }
+
+    function quickPricingCallback(mode, pricingBySuLevel) {
+        var selectedSuLevels = vm.suLevels.filter(function (suLevel) {
+            return vm.selectedSuLevelIds[suLevel.id];
+        });
+
+        if ( mode === 'dollarAmount' ){
+            var suLevelPricesToInsert = selectedSuLevels.map(function(suLevel){
+                return {
+                    users: suLevel.users,
+                    price: pricingBySuLevel[suLevel.users]
+                };
+            });
+
+            suLevelPricesToInsert.forEach(applySuPricingToSelectedProducts);
+
+            function applySuPricingToSelectedProducts( pricingItem ){
+                var users = pricingItem.users;
+                var price = pricingItem.price;
+
+                $('.price-row.su-'+users+' .offering').each(function(i, cell){
+                    var $cell = $(cell);
+                    var productId = $cell.data('productId');
+
+                    if ( productIsSelected(productId) ){
+                        $('.price', $cell).text(price);
+                    }
+                });
+            }
+        }
+        else {
+            var suLevelPercentagesToApply = selectedSuLevels.map(function(suLevel){
+                return {
+                    users: suLevel.users,
+                    percent: pricingBySuLevel[suLevel.users]
+                };
+            });
+
+            console.log('apply percentages ',suLevelPercentagesToApply);
+
+            suLevelPercentagesToApply.forEach(applySuPercentageIncreaseToSelectedProducts);
+
+            function applySuPercentageIncreaseToSelectedProducts( pricingItem ){
+                var users = pricingItem.users;
+                var percentIncrease = pricingItem.percent;
+
+                $('.price-row.su-'+users+' .offering').each(function(i, cell){
+                    var $cell = $(cell);
+                    var productId = $cell.data('productId');
+
+                    if ( productIsSelected(productId) ){
+                        applyPercentageIncreaseToCell();
+                    }
+
+                    function applyPercentageIncreaseToCell(){
+                        var originalValue = parseFloat($cell.text());
+                        var newValue = (100 + percentIncrease)/100 * originalValue;
+                        // TODO round this to the nearest cent?
+                        $('.price', $cell).text( newValue );
+                    }
+                });
+            }
+        }
+
+        function productIsSelected(productId){
+            return vm.selectedProductIds[productId];
         }
     }
 }

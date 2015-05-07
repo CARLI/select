@@ -152,7 +152,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
         var cycle = cycleService.getCurrentCycle();
         var changedOfferings = [];
         var newOfferings = [];
-        var offeringCells = $('#price-rows .offering');
+        var offeringCells = $('#site-pricing-grid .offering');
 
         offeringCells.each(function(index, element){
             var offeringCell = $(element);
@@ -222,7 +222,8 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             return vm.selectedProductIds[productId];
         });
 
-        $('#price-rows .offering').each(function(i, cell) {
+
+        $('#site-pricing-grid .offering').each(function(i, cell) {
             var $cell = $(cell);
             if (selectedLibraryIds.indexOf($cell.data('libraryId').toString()) != -1 &&
                 selectedProductIds.indexOf($cell.data('productId')) != -1) {
