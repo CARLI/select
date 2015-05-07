@@ -15,36 +15,24 @@ function createVendorDatabasesForAllCycles() {
     });
 }
 
-function replicateDataToVendorsForAllCycles() {
-    return cycleRepository.list().then(function (cycles) {
-        return Q.all( cycles.map(replicateData) );
-
-        function replicateData(cycle) {
-            return replicateDataToVendorsForCycle(cycle.id);
-        }
-    });
-}
-
-function replicateDataFromVendorsForAllCycles() {
-    return cycleRepository.list().then(function (cycles) {
-        return Q.all( cycles.map(replicateData) );
-
-        function replicateData(cycle) {
-            return replicateDataFromVendorsForCycle(cycle.id);
-        }
-    });
-}
-
-
 function createVendorDatabasesForCycle(cycleId) {
     return vendorRepository.list().then(function (vendors) {
-        console.log('Replicating ' + cycleId + ' for ' + vendors.length + ' vendors');
         return Q.all( vendors.map(createDatabase) )
             .thenResolve(cycleId);
 
         function createDatabase(vendor) {
             var repoForVendor = cycleRepositoryForVendor(vendor);
             return repoForVendor.createDatabase(cycleId);
+        }
+    });
+}
+
+function replicateDataToVendorsForAllCycles() {
+    return cycleRepository.list().then(function (cycles) {
+        return Q.all( cycles.map(replicateData) );
+
+        function replicateData(cycle) {
+            return replicateDataToVendorsForCycle(cycle.id);
         }
     });
 }
@@ -63,6 +51,16 @@ function replicateDataToVendorsForCycle(cycleId) {
     });
 }
 
+function replicateDataFromVendorsForAllCycles() {
+    return cycleRepository.list().then(function (cycles) {
+        return Q.all( cycles.map(replicateData) );
+
+        function replicateData(cycle) {
+            return replicateDataFromVendorsForCycle(cycle.id);
+        }
+    });
+}
+
 function replicateDataFromVendorsForCycle(cycleId) {
     return vendorRepository.list().then(function (vendors) {
         return Q.all( vendors.map(replicateData) );
@@ -75,6 +73,44 @@ function replicateDataFromVendorsForCycle(cycleId) {
                 });
         }
     });
+}
+
+function triggerIndexingForAllCycles() {
+    return cycleRepository.list().then(function (cycles) {
+        return Q.all( cycles.map(triggerIndexing) );
+
+        function triggerIndexing(cycle) {
+            return triggerIndexingForCycle(cycle.id);
+        }
+    });
+}
+
+function triggerIndexingForCycleId(cycleId) {
+    return cycleRepository.load(cycleId).then(triggerIndexingForCycle);
+}
+
+function triggerIndexingForCycle(cycle) {
+
+    return triggerIndexingForMainDatabase()
+        .then(vendorRepository.list)
+        .then(makeCycleInstancesForAllVendors)
+        .then(triggerIndexingForAllVendorDatabases);
+
+    function triggerIndexingForMainDatabase() {
+        return couchUtils.triggerViewIndexing(cycle.getDatabaseName());
+    }
+    function makeCycleInstancesForAllVendors(vendors) {
+        return vendors.map(makeCycleInstanceForVendor);
+    }
+    function makeCycleInstanceForVendor(vendor) {
+        return cycleRepositoryForVendor(vendor).load(cycleId);
+    }
+    function triggerIndexingForAllVendorDatabases(cycles) {
+        return cycles.map(triggerIndexingForVendorDatabase);
+    }
+    function triggerIndexingForVendorDatabase(cycleForVendor) {
+        return couchUtils.triggerViewIndexing(cycleForVendor.getDatabaseName());
+    }
 }
 
 function getCycleStatusForAllVendorsAllCycles() {
@@ -193,11 +229,13 @@ function getDatabaseStatusForVendor(vendor, cycleId) {
 
 module.exports = {
     createVendorDatabasesForAllCycles: createVendorDatabasesForAllCycles,
-    replicateDataToVendorsForAllCycles: replicateDataToVendorsForAllCycles,
-    replicateDataFromVendorsForAllCycles: replicateDataFromVendorsForAllCycles,
     createVendorDatabasesForCycle: createVendorDatabasesForCycle,
+    replicateDataToVendorsForAllCycles: replicateDataToVendorsForAllCycles,
     replicateDataToVendorsForCycle: replicateDataToVendorsForCycle,
+    replicateDataFromVendorsForAllCycles: replicateDataFromVendorsForAllCycles,
     replicateDataFromVendorsForCycle: replicateDataFromVendorsForCycle,
+    triggerIndexingForAllCycles: triggerIndexingForAllCycles,
+    triggerIndexingForCycleId: triggerIndexingForCycleId,
     getCycleStatusForAllVendorsAllCycles: getCycleStatusForAllVendorsAllCycles,
     getCycleStatusForAllVendors: getCycleStatusForAllVendors,
     getCycleStatusForVendorId: getCycleStatusForVendorId

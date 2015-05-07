@@ -293,7 +293,7 @@ function getRunningCouchJobs(){
 function triggerViewIndexing(databaseName) {
     var url = StoreOptions.couchDbUrl + '/' + databaseName + '/' + '_design/CARLI/_view/docTypes?stale=update_after';
 
-    couchRequest({url : url});
+    return couchRequest({url : url});
 }
 
 function doesDatabaseExist(databaseName) {

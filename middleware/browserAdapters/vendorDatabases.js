@@ -7,23 +7,16 @@ function createVendorDatabasesForAllCycles() {
     });
 }
 
-function replicateDataToVendorsForAllCycles() {
-    return middlewareRequest({
-        path: '/replicate-all-data-to-vendors',
-        method: 'post'
-    });
-}
-
-function replicateDataFromVendorsForAllCycles() {
-    return middlewareRequest({
-        path: '/replicate-all-data-from-vendors',
-        method: 'post'
-    });
-}
-
 function createVendorDatabasesForCycle(cycleId) {
     return middlewareRequest({
         path: '/create-vendor-databases-for-cycle/' + cycleId,
+        method: 'post'
+    });
+}
+
+function replicateDataToVendorsForAllCycles() {
+    return middlewareRequest({
+        path: '/replicate-all-data-to-vendors',
         method: 'post'
     });
 }
@@ -35,10 +28,30 @@ function replicateDataToVendorsForCycle(cycleId) {
     });
 }
 
+function replicateDataFromVendorsForAllCycles() {
+    return middlewareRequest({
+        path: '/replicate-all-data-from-vendors',
+        method: 'post'
+    });
+}
+
 function replicateDataFromVendorsForCycle(cycleId) {
     return middlewareRequest({
         path: '/replicate-data-from-vendors-for-cycle/' + cycleId,
         method: 'post'
+    });
+}
+
+function triggerIndexingForAllCycles() {
+    return middlewareRequest({
+        path: '/index-all-cycles',
+        method: 'get'
+    });
+}
+function triggerIndexingForCycleId(cycleId) {
+    return middlewareRequest({
+        path: '/index-cycle/' + cycleId,
+        method: 'get'
     });
 }
 
@@ -67,9 +80,11 @@ module.exports = {
     createVendorDatabasesForAllCycles: createVendorDatabasesForAllCycles,
     createVendorDatabasesForCycle: createVendorDatabasesForCycle,
     replicateDataToVendorsForAllCycles: replicateDataToVendorsForAllCycles,
-    replicateDataFromVendorsForAllCycles: replicateDataFromVendorsForAllCycles,
     replicateDataToVendorsForCycle: replicateDataToVendorsForCycle,
+    replicateDataFromVendorsForAllCycles: replicateDataFromVendorsForAllCycles,
     replicateDataFromVendorsForCycle: replicateDataFromVendorsForCycle,
+    triggerIndexingForAllCycles: triggerIndexingForAllCycles,
+    triggerIndexingForCycleId: triggerIndexingForCycleId,
     getCycleStatusForAllVendorsAllCycles: getCycleStatusForAllVendorsAllCycles,
     getCycleStatusForAllVendors: getCycleStatusForAllVendors,
     getCycleStatusForVendorId: getCycleStatusForVendorId

@@ -5,16 +5,19 @@ module.exports = function (vendor) {
 
     function createDatabaseForVendor(cycleId) {
         return loadCycleForVendor(cycleId).then(function (cycle){
-            //var sourceCycleDatabaseName = cycle.databaseName;
             var targetCycleDatabaseName = cycle.getDatabaseName();
 
-            return couchUtils.createDatabase(targetCycleDatabaseName)
-                //.then(startReplication)
+            return couchUtils.doesDatabaseExist(targetCycleDatabaseName)
+                .then(createDatabaseIfNotExists)
                 .then(returnCycleId);
 
-            //function startReplication() {
-            //    return couchUtils.startVendorDatabaseReplication(sourceCycleDatabaseName, targetCycleDatabaseName, vendor.id);
-            //}
+            function createDatabaseIfNotExists(databaseExists) {
+                if (!databaseExists) {
+                    return couchUtils.createDatabase(targetCycleDatabaseName);
+                } else {
+                    return cycleId;
+                }
+            }
 
             function returnCycleId() {
                 return cycleId;
