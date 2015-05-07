@@ -17,7 +17,6 @@ function createVendorDatabasesForAllCycles() {
 
 function createVendorDatabasesForCycle(cycleId) {
     return vendorRepository.list().then(function (vendors) {
-        console.log('Replicating ' + cycleId + ' for ' + vendors.length + ' vendors');
         return Q.all( vendors.map(createDatabase) )
             .thenResolve(cycleId);
 
