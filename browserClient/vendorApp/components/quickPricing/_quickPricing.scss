@@ -288,5 +288,49 @@ quick-pricing-su {
             }
 
         }
+
+        quick-pricing-enter-su-prices {
+            ul.su-price-entry-list {
+                list-style: none;
+
+                li.su-price-entry {
+                    display: none;
+
+                    &.selected {
+                        display: block;
+                    }
+
+                    .input-wrapper {
+                        width: auto;
+
+                        label {
+                            display: inline-block;
+                            font-weight: normal;
+                            margin-top: 0;
+                            min-width: 50px;
+                        }
+
+                        input {
+                            width: auto;
+                        }
+
+                        .dollar-sign,
+                        .percent-sign {
+                            margin: 0;
+                            margin-right: -10px;
+                            position: relative;
+                        }
+
+                        .dollar-sign {
+                            left: 4px;
+                        }
+
+                        .percent-sign {
+                            right: 18px;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
