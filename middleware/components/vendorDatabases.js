@@ -75,6 +75,44 @@ function replicateDataFromVendorsForCycle(cycleId) {
     });
 }
 
+function triggerIndexingForAllCycles() {
+    return cycleRepository.list().then(function (cycles) {
+        return Q.all( cycles.map(triggerIndexing) );
+
+        function triggerIndexing(cycle) {
+            return triggerIndexingForCycle(cycle.id);
+        }
+    });
+}
+
+function triggerIndexingForCycleId(cycleId) {
+    return cycleRepository.load(cycleId).then(triggerIndexingForCycle);
+}
+
+function triggerIndexingForCycle(cycle) {
+
+    return triggerIndexingForMainDatabase()
+        .then(vendorRepository.list)
+        .then(makeCycleInstancesForAllVendors)
+        .then(triggerIndexingForAllVendorDatabases);
+
+    function triggerIndexingForMainDatabase() {
+        return couchUtils.triggerViewIndexing(cycle.getDatabaseName());
+    }
+    function makeCycleInstancesForAllVendors(vendors) {
+        return vendors.map(makeCycleInstanceForVendor);
+    }
+    function makeCycleInstanceForVendor(vendor) {
+        return cycleRepositoryForVendor(vendor).load(cycleId);
+    }
+    function triggerIndexingForAllVendorDatabases(cycles) {
+        return cycles.map(triggerIndexingForVendorDatabase);
+    }
+    function triggerIndexingForVendorDatabase(cycleForVendor) {
+        return couchUtils.triggerViewIndexing(cycleForVendor.getDatabaseName());
+    }
+}
+
 function getCycleStatusForAllVendorsAllCycles() {
     return cycleRepository.list().then(gatherStatuses);
 
@@ -196,6 +234,8 @@ module.exports = {
     replicateDataToVendorsForCycle: replicateDataToVendorsForCycle,
     replicateDataFromVendorsForAllCycles: replicateDataFromVendorsForAllCycles,
     replicateDataFromVendorsForCycle: replicateDataFromVendorsForCycle,
+    triggerIndexingForAllCycles: triggerIndexingForAllCycles,
+    triggerIndexingForCycleId: triggerIndexingForCycleId,
     getCycleStatusForAllVendorsAllCycles: getCycleStatusForAllVendorsAllCycles,
     getCycleStatusForAllVendors: getCycleStatusForAllVendors,
     getCycleStatusForVendorId: getCycleStatusForVendorId

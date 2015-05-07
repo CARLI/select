@@ -49,11 +49,9 @@ function runMiddlewareServer(){
     });
 
     carliMiddleware.put('/design-doc/:dbName', function (req, res) {
-        couchApp.putDesignDoc(req.params.dbName, 'Cycle').then(function() {
-            res.send({ status: 'Ok' });
-        }).catch(function (err) {
-            res.send( { error: err } );
-        });
+        couchApp.putDesignDoc(req.params.dbName, 'Cycle')
+            .then(sendOk(res))
+            .catch(sendError(res));
     });
 
     carliMiddleware.put('/tell-pixobot', function (req, res) {
@@ -62,19 +60,15 @@ function runMiddlewareServer(){
     });
 
     carliMiddleware.get('/library', function (req, res) {
-        crmQueries.listLibraries().then(function(libraries) {
-            res.send(libraries);
-        }).catch(function (err) {
-            res.send( { error: err } );
-        });
+        crmQueries.listLibraries()
+            .then(sendResult(res))
+            .catch(sendError(res));
     });
 
     carliMiddleware.get('/library/:id', function (req, res) {
-        crmQueries.loadLibrary(req.params.id).then(function(library) {
-            res.send(library);
-        }).catch(function (err) {
-            res.send( { error: err } );
-        });
+        crmQueries.loadLibrary(req.params.id)
+            .then(sendResult(res))
+            .catch(sendError(res));
     });
 
     carliMiddleware.get('/products-with-offerings-for-vendor/:vendorId/for-cycle/:cycleId', function (req, res) {
@@ -89,11 +83,8 @@ function runMiddlewareServer(){
         }
         var vendorId = authToken.vendorId;
         vendorSpecificProductQueries.listProductsWithOfferingsForVendorId(vendorId, req.params.cycleId)
-            .then(function(products){
-                res.send(products);
-            }).catch(function (err) {
-                res.send( { error: err } );
-            });
+            .then(sendResult(res))
+            .catch(sendError(res));;
     });
 
     carliMiddleware.put('/cycle-from', function (req, res) {
@@ -113,12 +104,8 @@ function runMiddlewareServer(){
 
     carliMiddleware.get('/cycle-creation-status/:id', function(req, res){
         cycleCreation.getCycleCreationStatus( req.params.id )
-            .then(function(statusObject){
-                res.send( statusObject );
-            })
-            .catch(function(err){
-                res.send( { error: err } );
-            });
+            .then(sendResult(res))
+            .catch(sendError(res));;
     });
 
     carliMiddleware.get('/create-all-vendor-databases', function(req, res) {
@@ -148,6 +135,16 @@ function runMiddlewareServer(){
     });
     carliMiddleware.get('/replicate-data-from-vendors-for-cycle/:cycleId', function(req, res) {
         vendorDatabases.replicateDataFromVendorsForCycle(req.params.cycleId)
+            .then(sendOk(res))
+            .catch(sendError(res));
+    });
+    carliMiddleware.get('/index-all-cycles', function (req, res) {
+        vendorDatabases.triggerIndexingForAllCycles()
+            .then(sendOk(res))
+            .catch(sendError(res));
+    });
+    carliMiddleware.get('/index-cycle/:cycleId', function (req, res) {
+        vendorDatabases.triggerIndexingForCycleId(req.params.cycleId)
             .then(sendOk(res))
             .catch(sendError(res));
     });
@@ -181,9 +178,14 @@ function runMiddlewareServer(){
             });
     });
 
+    function sendResult(res) {
+        return function (result) {
+            res.send(result);
+        }
+    }
     function sendOk(res) {
         return function() {
-            res.send( { status: 'ok' } );
+            res.send( { status: 'Ok' } );
         }
     }
     function sendError(res) {

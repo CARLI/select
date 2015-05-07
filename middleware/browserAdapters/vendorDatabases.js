@@ -42,6 +42,19 @@ function replicateDataFromVendorsForCycle(cycleId) {
     });
 }
 
+function triggerIndexingForAllCycles() {
+    return middlewareRequest({
+        path: '/index-all-cycles',
+        method: 'get'
+    });
+}
+function triggerIndexingForCycleId(cycleId) {
+    return middlewareRequest({
+        path: '/index-cycle/' + cycleId,
+        method: 'get'
+    });
+}
+
 function getCycleStatusForAllVendorsAllCycles(){
     return middlewareRequest({
         path: '/cycle-database-status',
@@ -70,6 +83,8 @@ module.exports = {
     replicateDataToVendorsForCycle: replicateDataToVendorsForCycle,
     replicateDataFromVendorsForAllCycles: replicateDataFromVendorsForAllCycles,
     replicateDataFromVendorsForCycle: replicateDataFromVendorsForCycle,
+    triggerIndexingForAllCycles: triggerIndexingForAllCycles,
+    triggerIndexingForCycleId: triggerIndexingForCycleId,
     getCycleStatusForAllVendorsAllCycles: getCycleStatusForAllVendorsAllCycles,
     getCycleStatusForAllVendors: getCycleStatusForAllVendors,
     getCycleStatusForVendorId: getCycleStatusForVendorId
