@@ -26,6 +26,9 @@
                 <button class="clear-button-styles"><span class="step">Step 3:</span> Enter Prices</button>
             </div>
             <div class="content">
+                <quick-pricing-enter-su-prices
+                        su-levels="vm.suLevels" selected-su-level-ids="vm.selectedSuLevelIds"
+                        quick-pricing-arguments="vm.quickPricingArguments"></quick-pricing-enter-su-prices>
                 <button class="carli-button next" ng-click="vm.finish()">Finish</button>
             </div>
         </li>

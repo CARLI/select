@@ -4,6 +4,12 @@ angular.module('vendor.quickPricing')
 function quickPricingSuController( $rootScope ){
     var vm = this;
 
+    vm.quickPricingArguments = {
+        mode: 'dollarAmount',
+        dollarValues: {},
+        percentValues: {}
+    };
+
     vm.goToStep2 = goToStep2;
     vm.goToStep3 = goToStep3;
     vm.finish = finish;
@@ -21,7 +27,12 @@ function quickPricingSuController( $rootScope ){
     function finish() {
         $rootScope.$broadcast('accordion', '');
         $('#quick-pricing-header').click();
-        vm.quickPricingCallback('finish SU quick pricing');
+        if (vm.quickPricingArguments.mode == 'dollarAmount') {
+            vm.quickPricingCallback('dollarAmount', vm.quickPricingArguments.dollarValues);
+        }
+        if (vm.quickPricingArguments.mode == 'percentageIncrease') {
+            vm.quickPricingCallback('percentageIncrease', vm.quickPricingArguments.percentValues);
+        }
     }
 
     function selectedProductCount() {
