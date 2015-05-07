@@ -139,7 +139,6 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
     }
 
     function saveOfferings(){
-        var cycle = cycleService.getCurrentCycle();
         var newSuPricingByProduct = {};
 
         vm.products.forEach(function(product){
@@ -157,7 +156,14 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
             });
         });
 
-        return $q.all( vm.products.map(updateOfferingsForAllLibrariesForProduct) );
+        return $q.all( vm.products.map(updateOfferingsForAllLibrariesForProduct) )
+            .then(function(){
+                console.log('saved '+vm.products.length+' products');
+            })
+            .catch(function(err){
+                console.error(err);
+            });
+
 
 
         function updateOfferingsForAllLibrariesForProduct( product ){
@@ -202,20 +208,6 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
             });
 
             suLevelPricesToInsert.forEach(applySuPricingToSelectedProducts);
-
-            function applySuPricingToSelectedProducts( pricingItem ){
-                var users = pricingItem.users;
-                var price = pricingItem.price;
-
-                $('.price-row.su-'+users+' .offering').each(function(i, cell){
-                    var $cell = $(cell);
-                    var productId = $cell.data('productId');
-
-                    if ( productIsSelected(productId) ){
-                        $('.price', $cell).text(price);
-                    }
-                });
-            }
         }
         else {
             var suLevelPercentagesToApply = selectedSuLevels.map(function(suLevel){
@@ -226,27 +218,41 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
             });
 
             suLevelPercentagesToApply.forEach(applySuPercentageIncreaseToSelectedProducts);
+        }
 
-            function applySuPercentageIncreaseToSelectedProducts( pricingItem ){
-                var users = pricingItem.users;
-                var percentIncrease = pricingItem.percent;
+        function applySuPricingToSelectedProducts( pricingItem ){
+            var users = pricingItem.users;
+            var price = pricingItem.price;
 
-                $('.price-row.su-'+users+' .offering').each(function(i, cell){
-                    var $cell = $(cell);
-                    var productId = $cell.data('productId');
+            $('.price-row.su-'+users+' .offering').each(function(i, cell){
+                var $cell = $(cell);
+                var productId = $cell.data('productId');
 
-                    if ( productIsSelected(productId) ){
-                        applyPercentageIncreaseToCell();
-                    }
+                if ( productIsSelected(productId) ){
+                    $('.price', $cell).text(price);
+                }
+            });
+        }
 
-                    function applyPercentageIncreaseToCell(){
-                        var originalValue = parseFloat($cell.text());
-                        var newValue = (100 + percentIncrease)/100 * originalValue;
-                        // TODO round this to the nearest cent?
-                        $('.price', $cell).text( newValue );
-                    }
-                });
-            }
+        function applySuPercentageIncreaseToSelectedProducts( pricingItem ){
+            var users = pricingItem.users;
+            var percentIncrease = pricingItem.percent;
+
+            $('.price-row.su-'+users+' .offering').each(function(i, cell){
+                var $cell = $(cell);
+                var productId = $cell.data('productId');
+
+                if ( productIsSelected(productId) ){
+                    applyPercentageIncreaseToCell();
+                }
+
+                function applyPercentageIncreaseToCell(){
+                    var originalValue = parseFloat($cell.text());
+                    var newValue = (100 + percentIncrease)/100 * originalValue;
+                    // TODO round this to the nearest cent?
+                    $('.price', $cell).text( newValue );
+                }
+            });
         }
 
         function productIsSelected(productId){

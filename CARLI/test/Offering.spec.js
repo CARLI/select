@@ -316,6 +316,79 @@ function runOfferingSpecificTests(testCycle) {
                 }
             })
         });
+
+        it('should have a setSuPricingForAllLibrariesForProduct method', function(){
+            expect(OfferingRepository.setSuPricingForAllLibrariesForProduct).to.be.a('function');
+        });
+
+        describe('setSuPricingForAllLibrariesForProduct', function(){
+            it('should set the su pricing on all offerings for a product', function(){
+                var testProductId = uuid.v4();
+                var testNewSuPricing = [
+                    { users: 1, price: 100 },
+                    { users: 2, price: 200 },
+                    { users: 3, price: 300 },
+                    { users: 4, price: 400 }
+                ];
+
+                return setupTestData()
+                    .then(function(){
+                        return OfferingRepository.setSuPricingForAllLibrariesForProduct(testProductId, testNewSuPricing, testCycle);
+                    })
+                    .then(verifyAllOfferingsWereUpdated);
+
+                function setupTestData(){
+                    var testOfferings = [
+                        {
+                            type: 'Offering', cycle: testCycle, product: testProductId, library: '1',
+                            pricing: {
+                                su: [
+                                    { users: 1, price: 1 },
+                                    { users: 2, price: 2 }
+                                ]
+                            }
+                        },
+                        {
+                            type: 'Offering', cycle: testCycle, product: testProductId, library: '2',
+                            pricing: {
+                                su: []
+                            }
+                        },
+                        {
+                            type: 'Offering', cycle: testCycle, product: testProductId, library: '3',
+                            pricing: {}
+                        }
+                    ];
+
+                    return Q.all( testOfferings.map(function(offering){
+                        return OfferingRepository.create( offering, testCycle );
+                    }) );
+                }
+
+                function verifyAllOfferingsWereUpdated( arrayOfOfferings ){
+                    return Q.all([
+                        expect( arrayOfOfferings.length).to.be.greaterThan(1),
+                        expect( arrayOfOfferings ).to.satisfy( allOfferingsHaveNewSuPricing )
+                    ]);
+
+                    function allOfferingsHaveNewSuPricing( arrayOfOfferings ){
+                        return arrayOfOfferings.every(function(offering){
+                            return _.isArray(offering.pricing.su) && _.isEqual( offering.pricing.su, testNewSuPricing);
+                        });
+                    }
+                }
+            });
+
+            it('does not call OfferingRepository.update on the offerings');
+        });
+
+        it('should have an updateSuPricingForAllLibrariesForProduct method', function(){
+            expect(OfferingRepository.updateSuPricingForAllLibrariesForProduct).to.be.a('function');
+        });
+
+        describe('updateSuPricingForAllLibrariesForProduct', function(){
+            it('calls setSuPricingForAllLibrariesForProduct and then bulk updates the offerings');
+        });
     });
 
 

@@ -33,6 +33,9 @@ function offeringService( CarliModules, $q, cycleService ) {
         createOfferingsFor: function createOfferingsFor( productId, libraryIds ){
             return $q.when( offeringModule.createOfferingsFor( productId, libraryIds, cycleService.getCurrentCycle()) );
         },
+        updateSuPricingForAllLibrariesForProduct: function updateSuPricingForAllLibrariesForProduct( productId, newSuPricing ){
+            return $q.when( offeringModule.updateSuPricingForAllLibrariesForProduct( productId, newSuPricing, cycleService.getCurrentCycle()) );
+        },
         getOfferingDisplayOptions: function() {
             var values = offeringModule.getOfferingDisplayOptions();
             var options = [];

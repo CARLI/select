@@ -89,7 +89,6 @@ function listOfferings(cycle){
 
 function transformOfferingsForNewCycle(newCycle, sourceCycle) {
     return listUnexpandedOfferings(newCycle).then(function(offerings) {
-        console.log('[Cycle Creation]: Transforming ' + offerings.length + ' offerings');
         return transformOfferingsInBatches(offerings, 1 /* Math.floor( offerings.length / 100 ) */)
             .then(setProgressComplete);
     });
@@ -227,6 +226,28 @@ function listOfferingsWithSelections( cycle ) {
     return expandOfferings( couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listOfferingsWithSelections'), cycle )
         .then(initializeComputedValues);
 
+}
+
+function setSuPricingForAllLibrariesForProduct( productId, newSuPricing, cycle ){
+    return listOfferingsForProductId(productId, cycle)
+        .then(applyNewSuPricingToAllOfferings);
+
+    function applyNewSuPricingToAllOfferings( listOfOfferings ){
+        return listOfOfferings.map( applyNewSuPricingToOffering );
+
+        function applyNewSuPricingToOffering( offering ){
+            offering.pricing = offering.pricing || {};
+            offering.pricing.su = newSuPricing.slice(0);
+            return offering;
+        }
+    }
+}
+
+function updateSuPricingForAllLibrariesForProduct( productId, newSuPricing, cycle ){
+    return setSuPricingForAllLibrariesForProduct( productId, newSuPricing, cycle )
+        .then(function( offerings ){
+            return couchUtils.bulkUpdateDocuments(cycle.getDatabaseName(), offerings);
+        });
 }
 
 function initializeComputedValues(offerings) {
@@ -370,6 +391,8 @@ module.exports = {
     listOfferingsForLibraryId: listOfferingsForLibraryId,
     listOfferingsForProductId: listOfferingsForProductId,
     listOfferingsWithSelections: listOfferingsWithSelections,
+    setSuPricingForAllLibrariesForProduct: setSuPricingForAllLibrariesForProduct,
+    updateSuPricingForAllLibrariesForProduct: updateSuPricingForAllLibrariesForProduct,
     listVendorsFromOfferingIds: listVendorsFromOfferingIds,
     createOfferingsFor: createOfferingsFor,
 
