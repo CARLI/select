@@ -133,7 +133,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             var price = $(this).text();
             var input = createEditableOfferingCell(price);
             $(this).replaceWith(input);
-            input.focus();
+            input.focus().select();
         }
     }
     function createEditableOfferingCell(price) {

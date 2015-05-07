@@ -121,7 +121,7 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, lib
             var price = $(this).text();
             var input = createEditableOfferingCell(price);
             $(this).replaceWith(input);
-            input.focus();
+            input.focus().select();
         }
     }
     function createEditableOfferingCell(price) {
