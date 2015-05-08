@@ -1,7 +1,7 @@
 angular.module('vendor.cycleService')
     .service('cycleService', cycleService);
 
-function cycleService( CarliModules, $q, appState, userService ) {
+function cycleService( CarliModules, config, $q, appState, userService ) {
 
     var currentUser = userService.getUser();
     if (!currentUser.vendor) {
@@ -19,7 +19,22 @@ function cycleService( CarliModules, $q, appState, userService ) {
     };
 
     function listActiveCycles() {
-        return $q.when( cycleModule.listActiveCycles() );
+        return $q.when( cycleModule.listActiveCycles())
+            .then(function( cycleList ){
+                if ( currentUser.vendor.mayOfferOneTimePurchaseProducts ){
+                    return $q.when(cycleModule.load(config.oneTimePurchaseProductsCycleDocId))
+                        .then(function(otpCycle){
+                            cycleList.push(otpCycle);
+                            return cycleList;
+                        })
+                        .catch(function(err){
+                            return cycleList;
+                        });
+                }
+                else {
+                    return cycleList;
+                }
+            });
     }
 
     function getCurrentCycle() {
