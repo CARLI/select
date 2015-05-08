@@ -207,6 +207,7 @@ function createEmptyOfferingObject( cycle, libraryCouchId, productCouchId ){
         product: productCouchId,
         cycle: cycle,
         pricing: {
+            site: 0,
             su : []
         }
     };
