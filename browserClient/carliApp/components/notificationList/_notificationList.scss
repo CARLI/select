@@ -57,6 +57,7 @@ notification-list {
                 &.remove,
                 &.send {
                     align-self: center;
+                    -webkit-align-self: center;
                     @include flex(0 1 auto);
                     padding-top: 0;
                     padding-bottom: 0;
