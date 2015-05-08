@@ -42,6 +42,13 @@ function replicateDataFromVendorsForCycle(cycleId) {
     });
 }
 
+function syncEverything() {
+    return middlewareRequest({
+        path: '/sync',
+        method: 'get'
+    });
+}
+
 function triggerIndexingForAllCycles() {
     return middlewareRequest({
         path: '/index-all-cycles',
@@ -83,6 +90,7 @@ module.exports = {
     replicateDataToVendorsForCycle: replicateDataToVendorsForCycle,
     replicateDataFromVendorsForAllCycles: replicateDataFromVendorsForAllCycles,
     replicateDataFromVendorsForCycle: replicateDataFromVendorsForCycle,
+    syncEverything: syncEverything,
     triggerIndexingForAllCycles: triggerIndexingForAllCycles,
     triggerIndexingForCycleId: triggerIndexingForCycleId,
     getCycleStatusForAllVendorsAllCycles: getCycleStatusForAllVendorsAllCycles,

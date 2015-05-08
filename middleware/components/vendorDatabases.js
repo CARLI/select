@@ -38,7 +38,11 @@ function replicateDataToVendorsForAllCycles() {
 }
 
 function replicateDataToVendorsForCycle(cycleId) {
-    return vendorRepository.list().then(function (vendors) {
+    return vendorRepository.list()
+        .then(replicateDataToVendors)
+        .thenResolve(cycleId);
+
+    function replicateDataToVendors(vendors) {
         return Q.all( vendors.map(replicateData) );
 
         function replicateData(vendor) {
@@ -48,7 +52,7 @@ function replicateDataToVendorsForCycle(cycleId) {
                     return cycleForVendor.replicateFromSource();
                 });
         }
-    });
+    }
 }
 
 function replicateDataFromVendorsForAllCycles() {
@@ -75,12 +79,32 @@ function replicateDataFromVendorsForCycle(cycleId) {
     });
 }
 
+function syncEverything() {
+    log("Creating vendor databases (if needed)")();
+    return createVendorDatabasesForAllCycles()
+        .then(log('Replicating data to vendors'))
+        .then(replicateDataToVendorsForAllCycles)
+        .then(log('Replicating data from vendors'))
+        .then(replicateDataFromVendorsForAllCycles)
+        .then(log('Trigging indexing of views'))
+        .then(triggerIndexingForAllCycles)
+        .catch(function(err) {
+            log(' *ERROR*',err);
+        });
+
+    function log(message) {
+        return function () {
+            console.log("[SYNC] " + message);
+        }
+    }
+}
+
 function triggerIndexingForAllCycles() {
     return cycleRepository.list().then(function (cycles) {
         return Q.all( cycles.map(triggerIndexing) );
 
         function triggerIndexing(cycle) {
-            return triggerIndexingForCycle(cycle.id);
+            return triggerIndexingForCycle(cycle);
         }
     });
 }
@@ -100,13 +124,13 @@ function triggerIndexingForCycle(cycle) {
         return couchUtils.triggerViewIndexing(cycle.getDatabaseName());
     }
     function makeCycleInstancesForAllVendors(vendors) {
-        return vendors.map(makeCycleInstanceForVendor);
+        return Q.all(vendors.map(makeCycleInstanceForVendor));
     }
     function makeCycleInstanceForVendor(vendor) {
-        return cycleRepositoryForVendor(vendor).load(cycleId);
+        return cycleRepositoryForVendor(vendor).load(cycle.id);
     }
     function triggerIndexingForAllVendorDatabases(cycles) {
-        return cycles.map(triggerIndexingForVendorDatabase);
+        return Q.all(cycles.map(triggerIndexingForVendorDatabase));
     }
     function triggerIndexingForVendorDatabase(cycleForVendor) {
         return couchUtils.triggerViewIndexing(cycleForVendor.getDatabaseName());
@@ -215,7 +239,7 @@ function getDatabaseStatusForVendor(vendor, cycleId) {
         ]).then(function(info) {
             var vendorDatabaseInfo = info[0];
             var vendorDesignDocInfo =  info[1];
-            console.log(vendorDatabaseInfo);
+            //console.log(vendorDatabaseInfo);
             status.viewIndexDelta = vendorDatabaseInfo.update_seq - vendorDesignDocInfo.view_index.update_seq;
 
             //return couchUtils.getVendorDatabaseReplicationStatus(vendorCycle.getSourceDatabaseName(), vendorDatabaseInfo.update_seq, vendor.id)
@@ -234,6 +258,7 @@ module.exports = {
     replicateDataToVendorsForCycle: replicateDataToVendorsForCycle,
     replicateDataFromVendorsForAllCycles: replicateDataFromVendorsForAllCycles,
     replicateDataFromVendorsForCycle: replicateDataFromVendorsForCycle,
+    syncEverything: syncEverything,
     triggerIndexingForAllCycles: triggerIndexingForAllCycles,
     triggerIndexingForCycleId: triggerIndexingForCycleId,
     getCycleStatusForAllVendorsAllCycles: getCycleStatusForAllVendorsAllCycles,

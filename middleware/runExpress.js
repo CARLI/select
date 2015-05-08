@@ -113,30 +113,37 @@ function runMiddlewareServer(){
             .then(sendOk(res))
             .catch(sendError(res));
     });
-    carliMiddleware.get('/replicate-all-data-to-vendors', function(req, res) {
+    carliMiddleware.post('/replicate-all-data-to-vendors', function(req, res) {
         vendorDatabases.replicateDataToVendorsForAllCycles()
             .then(sendOk(res))
             .catch(sendError(res));
     });
-    carliMiddleware.get('/replicate-all-data-from-vendors', function(req, res) {
+    carliMiddleware.post('/replicate-all-data-from-vendors', function(req, res) {
         vendorDatabases.replicateDataFromVendorsForAllCycles()
             .then(sendOk(res))
             .catch(sendError(res));
     });
-    carliMiddleware.get('/create-vendor-databases-for-cycle/:cycleId', function(req, res) {
+    carliMiddleware.post('/create-vendor-databases-for-cycle/:cycleId', function(req, res) {
         vendorDatabases.createVendorDatabasesForCycle(req.params.cycleId)
             .then(sendOk(res))
             .catch(sendError(res));
     });
-    carliMiddleware.get('/replicate-data-to-vendors-for-cycle/:cycleId', function(req, res) {
+    carliMiddleware.post('/replicate-data-to-vendors-for-cycle/:cycleId', function(req, res) {
         vendorDatabases.replicateDataToVendorsForCycle(req.params.cycleId)
             .then(sendOk(res))
             .catch(sendError(res));
     });
-    carliMiddleware.get('/replicate-data-from-vendors-for-cycle/:cycleId', function(req, res) {
+    carliMiddleware.post('/replicate-data-from-vendors-for-cycle/:cycleId', function(req, res) {
         vendorDatabases.replicateDataFromVendorsForCycle(req.params.cycleId)
             .then(sendOk(res))
             .catch(sendError(res));
+    });
+    carliMiddleware.get('/sync', function (req, res) {
+        console.log('Asking master to launchSynchronizationWorker');
+        cluster.worker.send({
+            command: 'launchSynchronizationWorker'
+        });
+        sendOk(res);
     });
     carliMiddleware.get('/index-all-cycles', function (req, res) {
         vendorDatabases.triggerIndexingForAllCycles()
