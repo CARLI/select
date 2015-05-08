@@ -15,6 +15,16 @@ function editVendorController( $scope, $rootScope, entityBaseService, alertServi
     vm.getProductDisplayName = productService.getProductDisplayName;
 
     vm.statusOptions = entityBaseService.getStatusOptions();
+    vm.otpAccessOptions = [
+        {
+            label: 'May offer products',
+            value: true
+        },
+        {
+            label: 'May not offer products',
+            value: false
+        }
+    ];
 
     setupModalClosingUnsavedChangesWarning();
     activate();

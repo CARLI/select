@@ -73,7 +73,8 @@ function extractVendor(v) {
         contacts: extractVendorContacts(v),
         comments: "",
         adminModule: v.admin_module_url || '',
-        isActive: true
+        isActive: true,
+        mayOfferOneTimePurchaseProducts: false
     };
 }
 

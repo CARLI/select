@@ -36,6 +36,10 @@
         "isActive": {
             "description": "Is this vendor active?",
             "type": "boolean"
+        },
+        "mayOfferOneTimePurchaseProducts": {
+            "description": "Is this vendor allowed to offer products in the One-Time Purchase cycle?",
+            "type": "boolean"
         }
     },
     "required": [ "name" ]
