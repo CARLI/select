@@ -167,21 +167,27 @@ function runMiddlewareServer(){
                 });
         });
     }
+}
 
-    function sendResult(res) {
-        return function (result) {
-            res.send(result);
-        }
+function sendResult(res) {
+    return function (result) {
+        res.send(result);
     }
-    function sendOk(res) {
-        return function() {
-            res.send( { status: 'Ok' } );
-        }
+}
+function sendOk(res) {
+    return function() {
+        res.send( { status: 'Ok' } );
     }
-    function sendError(res) {
-        return function(err) {
-            res.send( { error: err } );
-        }
+}
+function sendError(res) {
+    return function(err) {
+        res.send( { error: err } );
+    }
+}
+
+function sendCsvResponse(res, body) {
+    return function() {
+
     }
 }
 
@@ -205,8 +211,6 @@ function couchDbProxy(req, res, next) {
         next();
     }
 }
-
-
 
 if (require.main === module) {
     runMiddlewareServer();
