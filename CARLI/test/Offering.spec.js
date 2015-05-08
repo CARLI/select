@@ -297,9 +297,10 @@ function runOfferingSpecificTests(testCycle) {
         describe('createOfferingsFor', function(){
             it('should return a list of offering id created for the specified product and libraries', function(){
                 testProductId = 'test-product-id';
+                testVendorId = 'test-vendor-id';
                 testLibraryIds = [ 1, 2, 3 ];
 
-                return OfferingRepository.createOfferingsFor( testProductId, testLibraryIds, testCycle )
+                return OfferingRepository.createOfferingsFor( testProductId, testVendorId, testLibraryIds, testCycle )
                     .then(function( offeringIds ){
                         return Q.all([
                             expect(offeringIds).to.be.an('array'),
@@ -388,6 +389,14 @@ function runOfferingSpecificTests(testCycle) {
 
         describe('updateSuPricingForAllLibrariesForProduct', function(){
             it('calls setSuPricingForAllLibrariesForProduct and then bulk updates the offerings');
+        });
+
+        it('should have an ensureProductHasOfferingsForAllLibraries', function(){
+            expect(OfferingRepository.ensureProductHasOfferingsForAllLibraries).to.be.a('function');
+        });
+
+        describe('ensureProductHasOfferingsForAllLibraries', function(){
+            it('lists libraries that do not already have offerings for a product and calls createOfferingsFor');
         });
     });
 

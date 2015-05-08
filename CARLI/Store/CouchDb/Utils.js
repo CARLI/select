@@ -88,6 +88,12 @@ function getCouchViewResultValuesWithinRange( dbName, viewName, startKey, endKey
     return getCouchViewValuesFromUrl(url);
 }
 
+function getCouchViewResultValuesWithLimit( dbName, viewName, key, limit ) {
+    var url = couchViewUrl(dbName, viewName, key);
+    url += '&limit='+limit;
+    return getCouchViewValuesFromUrl(url);
+}
+
 function getCouchViewValuesFromUrl( couchUrl ){
     var deferred = Q.defer();
 
@@ -363,6 +369,7 @@ module.exports = {
     getCouchViewResultObject: getCouchViewResultObject,
     getCouchViewResultValues: getCouchViewResultValues,
     getCouchViewResultValuesWithinRange: getCouchViewResultValuesWithinRange,
+    getCouchViewResultValuesWithLimit: getCouchViewResultValuesWithLimit,
     makeValidCouchDbName: makeValidCouchDbName,
     replicateFrom: replicateFrom,
     replicateForVendor: replicateForVendor,
