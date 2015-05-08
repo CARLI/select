@@ -240,12 +240,6 @@ console.log('  price for '+suLevel.users+' user - '+product.name+' ', vm.suPrici
         }
     }
 
-    function getPriceForNumberOfUsers( arrayOfPricingObjects, numberOfUsers ){
-        for ( var suLevel in arrayOfPricingObjects ){
-            if ( suLevel.users === )
-        }
-    }
-
     function quickPricingCallback(mode, pricingBySuLevel) {
         var selectedSuLevels = vm.suLevels.filter(function (suLevel) {
             return vm.selectedSuLevelIds[suLevel.id];
