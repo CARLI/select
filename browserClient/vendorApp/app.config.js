@@ -4,6 +4,7 @@ angular.module('vendor.app', [
     'ngRoute',
     'ngAnimate',
     'common.accordion',
+    'common.config',
     'common.fa',
     'common.warnIfUnsaved',
     'vendor.appState',
