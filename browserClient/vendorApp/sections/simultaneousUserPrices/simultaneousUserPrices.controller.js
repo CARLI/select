@@ -4,6 +4,7 @@ angular.module('vendor.sections.simultaneousUserPrices')
 function simultaneousUserPricesController($scope, $q, $filter, cycleService, offeringService, productService, userService){
     var vm = this;
     vm.loadingPromise = null;
+    vm.suPricingByProduct = {};
     vm.suLevels = [];
     vm.selectedProductIds = {};
     vm.selectedSuLevelIds = {};
@@ -15,34 +16,75 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
     activate();
 
     function activate() {
-        vm.suLevels = defaultSuLevels();
-        initializeSelectedSuLevelIds();
+        vm.vendorId = userService.getUser().vendor.id;
 
         vm.loadingPromise = loadProducts()
+            .then(getSuPricingForAllProducts)
+            .then(initializeSuLevelsFromPricing)
+            .then(initializeSelectedProductIds)
+            .then(initializeSelectedSuLevelIds)
             .then(buildPricingGrid);
     }
 
-    function defaultSuLevels(){
-        return [1,2,3].map(makeSuLevel);
+
+
+    function loadProducts() {
+        return productService.listProductsForVendorId( vm.vendorId ).then(function (products) {
+            vm.products = $filter('orderBy')(products, 'name');
+            return products;
+        });
     }
 
-    function makeSuLevel(level){
-        return {
-            id: 'su-'+level,
-            name: suLevelName(level),
-            users: level
-        };
+    function getSuPricingForAllProducts( productList ){
+        return $q.all( productList.map(loadSuLevelsForProduct) );
 
-        function suLevelName(level){
-            return level + ' Simultaneous User' + (level > 1 ? 's' : '');
+        function loadSuLevelsForProduct( product ){
+            return offeringService.getOneOfferingForProductId(product.id).then(function(representativeOffering){
+                var suPricingForProduct = representativeOffering ? representativeOffering.pricing.su : [];
+
+                vm.suPricingByProduct[product.id] = convertArrayOfPricingObjectsToMappingObject(suPricingForProduct);
+
+console.log('got su pricing for '+product.name, vm.suPricingByProduct[product.id]);
+                return vm.suPricingByProduct[product.id];
+            });
+
+            function convertArrayOfPricingObjectsToMappingObject( suPricing ){
+                var suPricingMap = {};
+                suPricing.forEach(function( suPricingObject ){
+                    suPricingMap[suPricingObject.users] = suPricingObject.price;
+                });
+                return suPricingMap;
+            }
         }
     }
 
-    function loadProducts() {
-        return productService.listProductsForVendorId( userService.getUser().vendor.id ).then(function (products) {
-            vm.products = $filter('orderBy')(products, 'name');
-            initializeSelectedProductIds();
+    function initializeSuLevelsFromPricing(){
+        var combinedSuLevels = {};
+
+        vm.products.forEach(function(product){
+            var pricingObject = vm.suPricingByProduct[product.id];
+            Object.keys(pricingObject).forEach(function(suLevel){
+                combinedSuLevels[suLevel] = true;
+            });
         });
+
+        vm.suLevels = Object.keys(combinedSuLevels).map(makeSuLevel);
+
+        if ( vm.suLevels.length === 0 ){
+            vm.suLevels = [1,2,3].map(makeSuLevel);
+        }
+
+        function makeSuLevel(level){
+            return {
+                id: 'su-'+level,
+                name: suLevelName(level),
+                users: level
+            };
+
+            function suLevelName(level){
+                return level + ' Simultaneous User' + (level > 1 ? 's' : '');
+            }
+        }
     }
 
     function initializeSelectedProductIds() {
@@ -98,8 +140,9 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
         return row;
 
         function generateOfferingCell(suLevel, product) {
-            //var priceForProduct = product.suPricing[suLevel.users];
-            var priceForProduct = 0;
+console.log('  price for '+suLevel.users+' user - '+product.name+' ', vm.suPricingByProduct[product.id][suLevel.users]);
+
+            var priceForProduct = vm.suPricingByProduct[product.id][suLevel.users] || 0;
             var offeringWrapper = $('<div class="column offering input">');
             var offeringCell = offeringWrapper.append(createReadOnlyOfferingCell(priceForProduct));
 
@@ -169,7 +212,10 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
         function updateOfferingsForAllLibrariesForProduct( product ){
             var newSuPricing = newSuPricingByProduct[product.id];
 
-            return offeringService.updateSuPricingForAllLibrariesForProduct(product.id, newSuPricing);
+            return offeringService.ensureProductHasOfferingsForAllLibraries(product)
+                .then(function(){
+                    return offeringService.updateSuPricingForAllLibrariesForProduct(product.id, newSuPricing);
+                });
         }
     }
 
@@ -191,6 +237,12 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
                 }
             });
             return max;
+        }
+    }
+
+    function getPriceForNumberOfUsers( arrayOfPricingObjects, numberOfUsers ){
+        for ( var suLevel in arrayOfPricingObjects ){
+            if ( suLevel.users === )
         }
     }
 
