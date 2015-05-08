@@ -51,6 +51,14 @@ function productController( $scope, $sce, cycleService, productService ){
                 var license = product.license || {};
                 return license.name || '';
             }
+        },
+        {
+            label: "Contract Number",
+            orderByProperty: 'license.contractNumber',
+            contentFunction: function(product) {
+                var license = product.license || {};
+                return license.contractNumber || '';
+            }
         }
     ];
 

@@ -128,10 +128,14 @@
                         <div ng-show="vm.noLicensesMessage">
                             <div ng-show="vm.editable" class="readonly input">{{ vm.noLicensesMessage }}</div>
                         </div>
-                        <view-edit-typeahead ng-show="!vm.noLicensesMessage" ng-model="vm.product.license" options="vm.licenseList" edit-mode="vm.editable" input-id="license">
+                        <view-edit-select-object ng-show="!vm.noLicensesMessage" ng-model="vm.product.license" objects="vm.licenseList" label-property="name" track-by="id" edit-mode="vm.editable" input-id="license">
                             <a ng-href="/license/{{ vm.product.license.id }}">{{ vm.product.license.name }}</a>
-                        </view-edit-typeahead>
+                        </view-edit-select-object>
                         <div class="warning" ng-show="!vm.productLicenseIsValid()">Invalid License</div>
+                        <label for="contractNumber">Contract Number</label>
+                        <div>
+                            {{ vm.product.license.contractNumber }}
+                        </div>
 
 
                         <label for="detailCode">Detail Codes</label>
