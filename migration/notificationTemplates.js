@@ -52,14 +52,6 @@ var notificationTemplates = [
         notificationType: 'report'
     },
     {
-        id: 'notification-template-contact-non-players',
-        name: 'Contact Non-Players',
-        subject: 'CARLI Selections',
-        emailBody: '',
-        pdfContentIsEditable: false,
-        notificationType: 'subscription'
-    },
-    {
         id: 'notification-template-annual-access-fee-invoices',
         name: 'Annual Access Fee Invoices',
         subject: 'CARLI Annual Access Fee Invoices',
