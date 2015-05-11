@@ -27,6 +27,10 @@ module.exports = function (inputOptions) {
 
         request({ url: db_host + '/' + id },
             function (err, response, body) {
+                if (!body) {
+                    console.log("Got empty body for " + db_host + '/' + id);
+                    console.log(err);
+                }
                 var data = JSON.parse(body);
                 var error = err || data.error;
                 if (error) {

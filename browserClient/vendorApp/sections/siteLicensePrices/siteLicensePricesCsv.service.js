@@ -7,14 +7,14 @@ function siteLicensePricesCsv() {
 
     function generateCsv(viewOptions, productsToInclude, librariesToInclude, offeringsForLibraryByProduct) {
         var csvData = [];
-        var viewOptionColumns = getCsvColumnsFromViewOptions();
+        var viewOptionColumns = getCsvColumnsFromViewOptions(viewOptions);
         
         var columns = [ 'Library' ];
         columns.concat(viewOptionColumns);
         columns.concat(productsToInclude.map(getName));
 
         if (viewOptions.priceCap) {
-            csvData.push(generateCsvPriceCapRow());
+            csvData.push(generateCsvPriceCapRow(viewOptionColumns, productsToInclude));
         }
 
         librariesToInclude.forEach(function (library) {
@@ -41,7 +41,7 @@ function siteLicensePricesCsv() {
         }
     }
 
-    function getCsvColumnsFromViewOptions() {
+    function getCsvColumnsFromViewOptions(viewOptions) {
         var columns = [ ];
 
         if (viewOptions.size) {

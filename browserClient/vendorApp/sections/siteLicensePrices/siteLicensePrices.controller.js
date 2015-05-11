@@ -232,13 +232,14 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     }
 
     function downloadCsv() {
+        var csvData = siteLicensePricesCsv(vm.viewOptions, getCsvProductList(), getCsvLibraryList(), vm.offeringsForLibraryByProduct);
+        console.log('Generated ' + csvData.length + ' rows of CSV');
 
-        vm.loadingPromise = saveOfferings().then(function () {
-            var csvData = siteLicensePricesCsv(vm.viewOptions, getCsvProductList(), getCsvLibraryList(), vm.offeringsForLibraryByProduct);
-
-            console.log('Generated ' + csvData.length + ' rows of CSV');
-            return true;
-        });
+        //vm.loadingPromise = saveOfferings().then(function () {
+        //    var csvData = siteLicensePricesCsv(vm.viewOptions, getCsvProductList(), getCsvLibraryList(), vm.offeringsForLibraryByProduct);
+        //    console.log('Generated ' + csvData.length + ' rows of CSV');
+        //    return true;
+        //});
 
         return vm.loadingPromise;
 
