@@ -160,7 +160,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             var libraryId = offeringCell.data('libraryId');
             var productId = offeringCell.data('productId');
             var offering = vm.offeringsForLibraryByProduct[productId][libraryId];
-            var newPrice = parseFloat( offeringCell.find('input').val());
+            var newPrice = parseFloat( offeringCell.text() );
 
             if ($(element).is(":visible")) {
                 if ( !offering ){
