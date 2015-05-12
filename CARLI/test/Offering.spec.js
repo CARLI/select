@@ -336,12 +336,12 @@ function runOfferingSpecificTests(testCycle) {
                     .then(function(){
                         return OfferingRepository.setSuPricingForAllLibrariesForProduct(testProductId, testNewSuPricing, testCycle);
                     })
-                    .then(verifyAllOfferingsWereUpdated);
+                    .then(verifyAllOfferingsGotNewPricing);
 
                 function setupTestData(){
                     var testOfferings = [
                         {
-                            type: 'Offering', cycle: testCycle, product: testProductId, library: '1',
+                            type: 'Offering', cycle: testCycle, product: testProductId, library: '1', vendorId: 'test',
                             pricing: {
                                 su: [
                                     { users: 1, price: 1 },
@@ -350,13 +350,13 @@ function runOfferingSpecificTests(testCycle) {
                             }
                         },
                         {
-                            type: 'Offering', cycle: testCycle, product: testProductId, library: '2',
+                            type: 'Offering', cycle: testCycle, product: testProductId, library: '2', vendorId: 'test',
                             pricing: {
                                 su: []
                             }
                         },
                         {
-                            type: 'Offering', cycle: testCycle, product: testProductId, library: '3',
+                            type: 'Offering', cycle: testCycle, product: testProductId, library: '3', vendorId: 'test',
                             pricing: {}
                         }
                     ];
@@ -366,7 +366,7 @@ function runOfferingSpecificTests(testCycle) {
                     }) );
                 }
 
-                function verifyAllOfferingsWereUpdated( arrayOfOfferings ){
+                function verifyAllOfferingsGotNewPricing( arrayOfOfferings ){
                     return Q.all([
                         expect( arrayOfOfferings.length).to.be.greaterThan(1),
                         expect( arrayOfOfferings ).to.satisfy( allOfferingsHaveNewSuPricing )

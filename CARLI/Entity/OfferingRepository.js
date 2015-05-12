@@ -216,18 +216,21 @@ function listOfferingsForLibraryId( libraryId, cycle ) {
         .then(initializeComputedValues);
 }
 
-function listOfferingsForProductId( productId, cycle, offeringLimit ) {
-    setCycle(cycle);
-
+function listOfferingsForProductIdUnexpanded(productId, cycle, offeringLimit) {
     var getOfferings = Q([]);
 
-    if ( offeringLimit ){
+    if (offeringLimit) {
         getOfferings = couchUtils.getCouchViewResultValuesWithLimit(cycle.getDatabaseName(), 'listOfferingsForProductId', productId, offeringLimit);
     }
     else {
         getOfferings = couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listOfferingsForProductId', productId);
     }
+    return getOfferings;
+}
 
+function listOfferingsForProductId( productId, cycle, offeringLimit ) {
+    setCycle(cycle);
+    var getOfferings = listOfferingsForProductIdUnexpanded(productId, cycle, offeringLimit  );
     return expandOfferings( getOfferings, cycle ).then(initializeComputedValues);
 }
 
@@ -239,7 +242,7 @@ function listOfferingsWithSelections( cycle ) {
 }
 
 function setSuPricingForAllLibrariesForProduct( productId, newSuPricing, cycle ){
-    return listOfferingsForProductId(productId, cycle)
+    return listOfferingsForProductIdUnexpanded(productId, cycle)
         .then(applyNewSuPricingToAllOfferings);
 
     function applyNewSuPricingToAllOfferings( listOfOfferings ){
@@ -257,26 +260,39 @@ function updateSuPricingForAllLibrariesForProduct( productId, newSuPricing, cycl
     return setSuPricingForAllLibrariesForProduct( productId, newSuPricing, cycle )
         .then(function( offerings ){
             return couchUtils.bulkUpdateDocuments(cycle.getDatabaseName(), offerings);
-        });
+        })
+        .then(returnSuccessfulBulkUpdateIds);
+}
+
+function returnSuccessfulBulkUpdateIds( bulkUpdateStatusArray ){
+    return bulkUpdateStatusArray.filter(wasSuccessfulUpdate).map(getUpdatedId);
+
+    function wasSuccessfulUpdate( bulkUpdateStatusObject ){
+        return bulkUpdateStatusObject && bulkUpdateStatusObject.ok;
+    }
+
+    function getUpdatedId( bulkUpdateStatusObject ){
+        return bulkUpdateStatusObject.id;
+    }
 }
 
 function ensureProductHasOfferingsForAllLibraries( productId, vendorId, cycle ){
     var offeringList = [];
     var librariesThatAlreadyHaveOfferings = [];
 
-    return listOfferingsForProductId(productId, cycle)
+    return listOfferingsForProductIdUnexpanded(productId, cycle)
         .then(function( offerings ){
             offeringList = offerings;
             return libraryRepository.listActiveLibraries();
         })
         .then(function(libraryList){
-            var librariesThatAlreadyHaveOfferings = offeringList.map(getLibraryFromOffering);
+            librariesThatAlreadyHaveOfferings = offeringList.map(getLibraryFromOffering);
             var missingLibraryIds = libraryList.filter(libraryDoesNotAlreadyHaveOffering).map(getIdFromLibrary);
             return createOfferingsFor(productId, vendorId, missingLibraryIds, cycle);
         });
 
     function getLibraryFromOffering(offering){
-        return offering.library.id;
+        return offering.library;
     }
 
     function getIdFromLibrary(library){
@@ -395,10 +411,12 @@ function createOfferingsFor( productId, vendorId, libraryIds, cycle ){
 
     var offeringsToCreate = libraryIds.map(createOfferingForLibrary);
 
-    //return couchUtils.bulkUpdateDocuments(cycle.getDatabaseName(), offeringsToCreate);
-    return Q.all( offeringsToCreate.map(function(offering){
+    return couchUtils.bulkUpdateDocuments(cycle.getDatabaseName(), offeringsToCreate)
+        .then(returnSuccessfulBulkUpdateIds);
+
+    /*return Q.all( offeringsToCreate.map(function(offering){
         return createOffering(offering, cycle);
-    }) );
+    }) );*/
 
     function createOfferingForLibrary( libraryId ){
         return {
