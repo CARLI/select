@@ -57,7 +57,7 @@ function runMiddlewareServer(){
                 .catch(sendError(res));
         });
         carliMiddleware.get('/products-with-offerings-for-vendor/:vendorId/for-cycle/:cycleId', function (req, res) {
-            var authToken = getAuthTokenFromHeader();
+            var authToken = getAuthTokenFromHeader(req);
             if (!authToken) {
                 res.status(401).send('missing authorization cookie');
                 return;
