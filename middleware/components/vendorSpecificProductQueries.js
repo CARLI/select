@@ -27,6 +27,39 @@ function listProductsWithOfferingsForVendorId(vendorId, cycleId) {
 
 }
 
+function updateSuPricingForProduct( productId, vendorId, newSuPricing, cycleId ){
+    var cycle = null;
+    console.log('updateSuPricingForProduct '+productId+','+vendorId, newSuPricing);
+
+    return vendorRepository.load(vendorId)
+        .then(function(vendor) {
+            var cycleRepository = cycleRepositoryForVendor(vendor);
+            return cycleRepository.load(cycleId);
+        }, catchNoVendor)
+        .then(function(loadedCycle){
+            cycle = loadedCycle;
+            return offeringRepository.ensureProductHasOfferingsForAllLibraries(productId, vendorId, cycle);
+        }, catchNoCycle)
+        .then(function(){
+            return offeringRepository.updateSuPricingForAllLibrariesForProduct(productId, newSuPricing, cycle);
+        },catchEnsureError)
+        .catch(updateSuPricingError);
+
+    function catchNoVendor( err ){
+        console.log('error updating Su Pricing For Product '+ productId +' - No Vendor', err);
+    }
+    function catchNoCycle( err ){
+        console.log('error updating Su Pricing For Product '+ productId +' - No Cycle', err);
+    }
+    function catchEnsureError( err ){
+        console.log('error updating Su Pricing For Product '+ productId +' - Ensure Error', err);
+    }
+    function updateSuPricingError( err ){
+        console.log('error updating Su Pricing For Product '+ productId +' - Updating Pricing ', err);
+    }
+}
+
 module.exports = {
-    listProductsWithOfferingsForVendorId: listProductsWithOfferingsForVendorId
+    listProductsWithOfferingsForVendorId: listProductsWithOfferingsForVendorId,
+    updateSuPricingForProduct: updateSuPricingForProduct
 };

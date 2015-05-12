@@ -16,6 +16,8 @@
                 <button class="clear-button-styles"><span class="step">Step 2:</span> Select Simultaneous User Levels</button>
             </div>
             <div class="content">
+                <quick-pricing-entity-selector entities="vm.suLevels" selected-entity-ids="vm.selectedSuLevelIds"></quick-pricing-entity-selector>
+                <button class="carli-button add" ng-click="vm.addSuPricingLevel()"><fa name="plus-circle"></fa> Add S.U. Level</button>
                 <button class="carli-button next" ng-click="vm.goToStep3()">Next Step</button>
             </div>
         </li>
@@ -24,6 +26,9 @@
                 <button class="clear-button-styles"><span class="step">Step 3:</span> Enter Prices</button>
             </div>
             <div class="content">
+                <quick-pricing-enter-su-prices
+                        su-levels="vm.suLevels" selected-su-level-ids="vm.selectedSuLevelIds"
+                        quick-pricing-arguments="vm.quickPricingArguments"></quick-pricing-enter-su-prices>
                 <button class="carli-button next" ng-click="vm.finish()">Finish</button>
             </div>
         </li>

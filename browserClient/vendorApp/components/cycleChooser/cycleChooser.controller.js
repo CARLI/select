@@ -15,7 +15,10 @@ function cycleChooserController($scope, $timeout, cycleService) {
 
     function loadCycles() {
         cycleService.listActiveCycles().then(function (cycles) {
-            if (cycles.length === 1) {
+            if (cycles.length === 0){
+                vm.noActiveCycles = true;
+            }
+            else if (cycles.length === 1) {
                 readySelectedCycle(cycles[0]);
             } else {
                 vm.cycles = cycles;

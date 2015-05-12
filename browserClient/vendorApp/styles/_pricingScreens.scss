@@ -1,44 +1,10 @@
 
-.price-row {
-    @include flexbox();
-
-    .column {
-        border-bottom: $default-border;
-        border-left: $default-border;
-        @include flex(1 1 20%);
-        padding: 0.5rem 1rem;
-
-        &.header {
-            font-weight: bold;
-            background: $light-gray;
-            height: 6rem;
-        }
-
-        &.input {
-            padding: 0;
-            input {
-                padding: 0.5rem 1rem;
-                border: none;
-            }
-        }
-    }
-
-    .input .price {
-        padding: 0.5rem 1rem;
-    }
-
-    &.price-cap {
-        .header {
-            min-height: 2.5rem;
-            height: 2.5rem;
-        }
-    }
-}
-
 .pricing-container {
     @include flexbox();
+    min-width: 600px;
 
     .pricing-grid-container {
+        background: white;
         border: 1px solid black;
         overflow: hidden;
         position: relative;
@@ -50,19 +16,60 @@
         @include flex(1 1 50%);
     }
 
+    .pricing-grid-row-labels {
+        border-left: $default-border;
+    }
+
+    .pricing-grid-row-labels {
+        .price-row {
+            @include flexbox();
+        }
+
+        .column {
+            @include flex(1 1 150px);
+        }
+    }
+
+    .price-row {
+        .column {
+            border-bottom: $default-border;
+            border-right: $default-border;
+            padding: 0.5rem 1rem;
+            min-width: 150px;
+
+            &.header {
+                font-weight: bold;
+                background: $light-gray;
+                height: 6rem;
+                padding: 1rem;
+            }
+        }
+    }
+
     .pricing-grid {
+        display: table;
         position: absolute;
         top: 0;
         left: 0;
-        width: 100%;
 
         .price-row {
+            display: table-row;
+
             .column {
-                @include flex(0 0 auto);
+                display: table-cell;
+                padding: 0;
                 width: 150px;
 
-                &:first-child {
-                    border-left: none;
+                &.header {
+                    padding: 0.5rem;
+                }
+
+                &.input {
+                    input,
+                    .price {
+                        padding: 0.5rem 1rem;
+                        border: none;
+                    }
                 }
             }
         }

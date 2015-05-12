@@ -76,6 +76,10 @@ textarea {
     padding: $default-input-padding;
     width: 100%;
     display: block; /* caused overlap when inline-block */
+
+    &.ng-invalid {
+        border: 1px solid $error-red;
+    }
 }
 
 select {

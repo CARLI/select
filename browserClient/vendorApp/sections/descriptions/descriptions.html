@@ -1,0 +1,33 @@
+<div class="page-header">
+    <div class="headings">
+        <h1>Descriptions</h1>
+    </div>
+
+    <div class="controls">
+        <button type="button" id="save-products" class="carli-button" busy-click="vm.saveProducts()" ng-disabled="vm.noProductsHaveChanged()">Save Changes<i class="fa fa-floppy-o"></i></button>
+    </div>
+</div>
+
+<section class="content" id="descriptions" cg-busy="vm.loadingPromise">
+    <form name="productForm" warn-if-unsaved>
+        <ul class="product-list">
+            <li class="product" ng-repeat="product in vm.products | orderBy:'name' track by product.id">
+                <div class="column url">
+                    <div class="name">{{ ::product.name }}</div>
+                    <div class="url-group">
+                        <div class="label">Product URL</div>
+                        <input type="text" ng-model="product.productUrl" ng-change="vm.productChanged(product.id)" />
+                    </div>
+                </div>
+                <div class="column description">
+                    <div class="label">Product Description</div>
+                    <textarea ng-model="product.description" ng-change="vm.productChanged(product.id)"></textarea>
+                </div>
+                <div class="column comments">
+                    <div class="label">Bulk Pricing Comments</div>
+                    <textarea ng-model="product.comments" ng-change="vm.productChanged(product.id)"></textarea>
+                </div>
+            </li>
+        </ul>
+    </form>
+</section>

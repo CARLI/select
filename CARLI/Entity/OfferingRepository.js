@@ -4,8 +4,9 @@ var Entity = require('../Entity')
   , couchUtils = require( '../Store/CouchDb/Utils')
   , cycleRepository = require('./CycleRepository')
   , getStoreForCycle = require('./getStoreForCycle')
-  , Validator = require('../Validator')
+  , libraryRepository = require('./LibraryRepository')
   , productRepository = require('./ProductRepository')
+  , Validator = require('../Validator')
   , Q = require('q')
   , _ = require('lodash')
   ;
@@ -89,7 +90,6 @@ function listOfferings(cycle){
 
 function transformOfferingsForNewCycle(newCycle, sourceCycle) {
     return listUnexpandedOfferings(newCycle).then(function(offerings) {
-        console.log('[Cycle Creation]: Transforming ' + offerings.length + ' offerings');
         return transformOfferingsInBatches(offerings, 1 /* Math.floor( offerings.length / 100 ) */)
             .then(setProgressComplete);
     });
@@ -216,10 +216,22 @@ function listOfferingsForLibraryId( libraryId, cycle ) {
         .then(initializeComputedValues);
 }
 
-function listOfferingsForProductId( productId, cycle ) {
+function listOfferingsForProductIdUnexpanded(productId, cycle, offeringLimit) {
+    var getOfferings = Q([]);
+
+    if (offeringLimit) {
+        getOfferings = couchUtils.getCouchViewResultValuesWithLimit(cycle.getDatabaseName(), 'listOfferingsForProductId', productId, offeringLimit);
+    }
+    else {
+        getOfferings = couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listOfferingsForProductId', productId);
+    }
+    return getOfferings;
+}
+
+function listOfferingsForProductId( productId, cycle, offeringLimit ) {
     setCycle(cycle);
-    return expandOfferings( couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listOfferingsForProductId', productId), cycle )
-        .then(initializeComputedValues);
+    var getOfferings = listOfferingsForProductIdUnexpanded(productId, cycle, offeringLimit  );
+    return expandOfferings( getOfferings, cycle ).then(initializeComputedValues);
 }
 
 function listOfferingsWithSelections( cycle ) {
@@ -227,6 +239,69 @@ function listOfferingsWithSelections( cycle ) {
     return expandOfferings( couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listOfferingsWithSelections'), cycle )
         .then(initializeComputedValues);
 
+}
+
+function setSuPricingForAllLibrariesForProduct( productId, newSuPricing, cycle ){
+    return listOfferingsForProductIdUnexpanded(productId, cycle)
+        .then(applyNewSuPricingToAllOfferings);
+
+    function applyNewSuPricingToAllOfferings( listOfOfferings ){
+        return listOfOfferings.map( applyNewSuPricingToOffering );
+
+        function applyNewSuPricingToOffering( offering ){
+            offering.pricing = offering.pricing || {};
+            offering.pricing.su = newSuPricing.slice(0);
+            return offering;
+        }
+    }
+}
+
+function updateSuPricingForAllLibrariesForProduct( productId, newSuPricing, cycle ){
+    return setSuPricingForAllLibrariesForProduct( productId, newSuPricing, cycle )
+        .then(function( offerings ){
+            return couchUtils.bulkUpdateDocuments(cycle.getDatabaseName(), offerings);
+        })
+        .then(returnSuccessfulBulkUpdateIds);
+}
+
+function returnSuccessfulBulkUpdateIds( bulkUpdateStatusArray ){
+    return bulkUpdateStatusArray.filter(wasSuccessfulUpdate).map(getUpdatedId);
+
+    function wasSuccessfulUpdate( bulkUpdateStatusObject ){
+        return bulkUpdateStatusObject && bulkUpdateStatusObject.ok;
+    }
+
+    function getUpdatedId( bulkUpdateStatusObject ){
+        return bulkUpdateStatusObject.id;
+    }
+}
+
+function ensureProductHasOfferingsForAllLibraries( productId, vendorId, cycle ){
+    var offeringList = [];
+    var librariesThatAlreadyHaveOfferings = [];
+
+    return listOfferingsForProductIdUnexpanded(productId, cycle)
+        .then(function( offerings ){
+            offeringList = offerings;
+            return libraryRepository.listActiveLibraries();
+        })
+        .then(function(libraryList){
+            librariesThatAlreadyHaveOfferings = offeringList.map(getLibraryFromOffering);
+            var missingLibraryIds = libraryList.filter(libraryDoesNotAlreadyHaveOffering).map(getIdFromLibrary);
+            return createOfferingsFor(productId, vendorId, missingLibraryIds, cycle);
+        });
+
+    function getLibraryFromOffering(offering){
+        return offering.library;
+    }
+
+    function getIdFromLibrary(library){
+        return library.id;
+    }
+
+    function libraryDoesNotAlreadyHaveOffering(library){
+        return librariesThatAlreadyHaveOfferings.indexOf(library.id) === -1;
+    }
 }
 
 function initializeComputedValues(offerings) {
@@ -331,20 +406,30 @@ function listVendorsFromOfferingIds( listOfOfferingIds, cycle ){
     }
 }
 
-function createOfferingsFor( productId, libraryIds, cycle ){
+function createOfferingsFor( productId, vendorId, libraryIds, cycle ){
     setCycle(cycle);
 
-    return Q.all( libraryIds.map(createOfferingForLibrary) );
+    var offeringsToCreate = libraryIds.map(createOfferingForLibrary);
+
+    return couchUtils.bulkUpdateDocuments(cycle.getDatabaseName(), offeringsToCreate)
+        .then(returnSuccessfulBulkUpdateIds);
+
+    /*return Q.all( offeringsToCreate.map(function(offering){
+        return createOffering(offering, cycle);
+    }) );*/
 
     function createOfferingForLibrary( libraryId ){
-        var newOffering = {
+        return {
             type: 'Offering',
             cycle: cycle,
             library: libraryId.toString(),
             product: productId,
-            pricing: {}
+            vendorId: vendorId,
+            pricing: {
+                site: 0,
+                su: []
+            }
         };
-        return createOffering( newOffering, cycle );
     }
 }
 
@@ -370,8 +455,11 @@ module.exports = {
     listOfferingsForLibraryId: listOfferingsForLibraryId,
     listOfferingsForProductId: listOfferingsForProductId,
     listOfferingsWithSelections: listOfferingsWithSelections,
+    setSuPricingForAllLibrariesForProduct: setSuPricingForAllLibrariesForProduct,
+    updateSuPricingForAllLibrariesForProduct: updateSuPricingForAllLibrariesForProduct,
     listVendorsFromOfferingIds: listVendorsFromOfferingIds,
     createOfferingsFor: createOfferingsFor,
+    ensureProductHasOfferingsForAllLibraries: ensureProductHasOfferingsForAllLibraries,
 
     getOfferingsById: getOfferingsById,
     getOfferingDisplayOptions: getOfferingDisplayOptions,

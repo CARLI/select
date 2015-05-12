@@ -72,7 +72,7 @@ function runMiddlewareServer(){
     });
 
     carliMiddleware.get('/products-with-offerings-for-vendor/:vendorId/for-cycle/:cycleId', function (req, res) {
-        var authToken = JSON.parse(req.header('X-AuthToken'));
+        var authToken = getAuthTokenFromHeader(req);
         if (!authToken) {
             res.status(401).send('missing authorization cookie');
             return;
@@ -84,7 +84,31 @@ function runMiddlewareServer(){
         var vendorId = authToken.vendorId;
         vendorSpecificProductQueries.listProductsWithOfferingsForVendorId(vendorId, req.params.cycleId)
             .then(sendResult(res))
-            .catch(sendError(res));;
+            .catch(sendError(res));
+    });
+
+    carliMiddleware.post('/update-su-pricing-for-product/:cycleId/:productId', function (req, res) {
+        var authToken = getAuthTokenFromHeader(req);
+        if (!authToken) {
+            res.status(401).send('missing authorization cookie');
+            return;
+        }
+        if (!authToken.vendorId) {
+            res.status(400).send('invalid auth token');
+            return;
+        }
+        var vendorId = authToken.vendorId;
+
+        var newSuPricing = {};
+        if ( !req.body || !req.body.newSuPricing ){
+            res.status(400).send('missing pricing data');
+            return;
+        }
+
+        vendorSpecificProductQueries.updateSuPricingForProduct(req.params.productId, vendorId, req.body.newSuPricing, req.params.cycleId)
+            .then(sendResult(res))
+            .catch(sendError(res));
+
     });
 
     carliMiddleware.put('/cycle-from', function (req, res) {
@@ -105,7 +129,7 @@ function runMiddlewareServer(){
     carliMiddleware.get('/cycle-creation-status/:id', function(req, res){
         cycleCreation.getCycleCreationStatus( req.params.id )
             .then(sendResult(res))
-            .catch(sendError(res));;
+            .catch(sendError(res));
     });
 
     carliMiddleware.get('/create-all-vendor-databases', function(req, res) {
@@ -199,6 +223,13 @@ function runMiddlewareServer(){
         return function(err) {
             res.send( { error: err } );
         }
+    }
+
+    function getAuthTokenFromHeader(req) {
+        if ( req && req.header('X-AuthToken') ){
+            return JSON.parse(req.header('X-AuthToken'));
+        }
+        return null;
     }
 
     var server = carliMiddleware.listen(config.middleware.port, function () {

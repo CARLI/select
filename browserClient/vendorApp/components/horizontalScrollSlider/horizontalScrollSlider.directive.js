@@ -4,7 +4,8 @@ angular.module('vendor.horizontalScrollSlider')
             restrict: 'E',
             templateUrl: '/vendorApp/components/horizontalScrollSlider/horizontalScrollSlider.html',
             scope: {
-                selector: '@'
+                containerSelector: '@',
+                contentSelector: '@'
             },
             link: horizontalScrollSliderPostLink
         };
@@ -15,15 +16,17 @@ function horizontalScrollSliderPostLink(scope, element, attrs) {
     initializeKeyboardControl();
 
     function initializeScrolledElement() {
-        var controlledElement = $(scope.selector);
+        var containerElement = $(scope.containerSelector);
+        var controlledElement = $(scope.contentSelector);
+
         scope.scrollPosition = 0;
         scope.$watch('scrollPosition', updateScrollPosition);
 
         function updateScrollPosition(percentage) {
-            var scrollPanelWidth = controlledElement[0].scrollWidth;
-            var viewportWidth = controlledElement.width();
+            var viewPortWidth = containerElement.width();
+            var scrollPanelWidth = controlledElement.width();
 
-            var pixelValue = (scrollPanelWidth - viewportWidth) * percentage;
+            var pixelValue = (scrollPanelWidth - viewPortWidth) * percentage;
             controlledElement.css('left', '-' + pixelValue + 'px');
         }
     }

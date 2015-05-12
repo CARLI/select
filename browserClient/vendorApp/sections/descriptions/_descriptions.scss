@@ -1,0 +1,42 @@
+#descriptions {
+    .product-list {
+        margin-top: 2rem;
+        border-bottom: $default-border;
+        border-left: $default-border;
+        border-right: $default-border;
+
+        .product {
+            @include flexbox();
+            border-top: 3px solid $purple;
+
+            .column {
+                @include flex(1 1 33%);
+                padding: 1rem;
+
+                &:first-child {
+                    border-right: $default-border;
+                }
+
+                &.url {
+                    position: relative;
+
+                    .url-group {
+                        bottom: 1rem;
+                        left: 1rem;
+                        position: absolute;
+                        right: 1rem;
+                    }
+                }
+
+                .label {
+                    margin-top: 0;
+                    margin-bottom: 1rem;
+                }
+
+                .name {
+                    @extend .zebra-table-header;
+                }
+            }
+        }
+    }
+}

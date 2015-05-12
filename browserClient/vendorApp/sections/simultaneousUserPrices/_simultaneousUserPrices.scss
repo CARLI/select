@@ -4,6 +4,22 @@
 
     quick-pricing-su {
         margin: 1rem auto;
+
+        .step2 {
+            .select-entities-controls > li {
+                border-right: none;
+            }
+
+            .filter,
+            .filters-label {
+                display: none;
+            }
+
+            .carli-button.add,
+            .carli-button.add > .fa {
+                font-size: .9rem;
+            }
+        }
     }
 
     .scroll-slider-container {
@@ -18,5 +34,9 @@
 
     .pricing-grid-container {
         @include flex(1 1 $grid-width);
+    }
+
+    .carli-button.add {
+        margin-top: 1rem;
     }
 }

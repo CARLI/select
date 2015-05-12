@@ -45,25 +45,39 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
         vm.libraries.forEach(function(library) {
             vm.selectedLibraryIds[library.id] = true;
         });
-        $scope.$watchCollection(getSelectedLibraryIds, updateVisibilityOfElementsWithEntityIdClasses);
+        $scope.$watchCollection(getSelectedLibraryIds, updateVisibilityOfRowsForSelectedLibraries);
         function getSelectedLibraryIds() { return vm.selectedLibraryIds; }
     }
+
     function initializeSelectedProductIds() {
         vm.products.forEach(function(product) {
             vm.selectedProductIds[product.id] = true;
         });
-        $scope.$watchCollection(getSelectedProductIds, updateVisibilityOfElementsWithEntityIdClasses);
+        $scope.$watchCollection(getSelectedProductIds, updateVisibilityOfCellsForSelectedProducts);
         function getSelectedProductIds() { return vm.selectedProductIds; }
     }
-    function updateVisibilityOfElementsWithEntityIdClasses(selectedEntities) {
+
+    function updateVisibilityOfRowsForSelectedLibraries(selectedEntities) {
         if (selectedEntities) {
             Object.keys(selectedEntities).forEach(function (entityId) {
-                var displayValue = selectedEntities[entityId] ? 'flex' : 'none';
-                $('.' + entityId).css('display', displayValue);
+                var displayValueLabel = selectedEntities[entityId] ? 'flex' : 'none';
+                $('.pricing-grid-row-labels .' + entityId).css('display', displayValueLabel);
+
+                var displayValuePrice = selectedEntities[entityId] ? 'table-row' : 'none';
+                $('.pricing-grid .' + entityId).css('display', displayValuePrice);
+
             });
         }
     }
 
+    function updateVisibilityOfCellsForSelectedProducts(selectedEntities) {
+        if (selectedEntities) {
+            Object.keys(selectedEntities).forEach(function (entityId) {
+                var displayValue = selectedEntities[entityId] ? 'table-cell' : 'none';
+                $('.' + entityId).css('display', displayValue);
+            });
+        }
+    }
 
     function buildPriceArray() {
 
@@ -79,17 +93,13 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     }
 
     function buildPricingGrid() {
-        var priceRows = $('<div>').attr('id','price-rows');
-
         vm.libraries.forEach(function (library) {
             var row = generateLibraryRow(library);
             vm.products.forEach(function (product) {
                 row.append(generateOfferingCell(library, product));
             });
-            priceRows.append(row);
+            $('.pricing-grid').append(row);
         });
-
-        $('#price-rows').replaceWith(priceRows);
 
         function generateLibraryRow(library) {
             var row = $('<div class="price-row">');
@@ -123,7 +133,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             var price = $(this).text();
             var input = createEditableOfferingCell(price);
             $(this).replaceWith(input);
-            input.focus();
+            input.focus().select();
         }
     }
     function createEditableOfferingCell(price) {
@@ -142,7 +152,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
         var cycle = cycleService.getCurrentCycle();
         var changedOfferings = [];
         var newOfferings = [];
-        var offeringCells = $('#price-rows .offering');
+        var offeringCells = $('#site-pricing-grid .offering');
 
         offeringCells.each(function(index, element){
             var offeringCell = $(element);
@@ -212,7 +222,8 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             return vm.selectedProductIds[productId];
         });
 
-        $('#price-rows .offering').each(function(i, cell) {
+
+        $('#site-pricing-grid .offering').each(function(i, cell) {
             var $cell = $(cell);
             if (selectedLibraryIds.indexOf($cell.data('libraryId').toString()) != -1 &&
                 selectedProductIds.indexOf($cell.data('productId')) != -1) {

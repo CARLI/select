@@ -1,12 +1,12 @@
 angular.module('vendor.quickPricing')
-    .directive('quickPricingEnterPrices', function() {
+    .directive('quickPricingEnterSitePrices', function() {
         return {
             restrict: 'E',
-            templateUrl: '/vendorApp/components/quickPricing/quickPricingEnterPrices.html',
+            templateUrl: '/vendorApp/components/quickPricing/quickPricingEnterSitePrices.html',
             scope: {
                 quickPricingArguments: '='
             },
-            controller: 'quickPricingEnterPricesController',
+            controller: 'quickPricingEnterSitePricesController',
             controllerAs: 'vm',
             bindToController: true
         };

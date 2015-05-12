@@ -1,7 +1,8 @@
 angular.module('vendor.routes',[
         'vendor.sections.dashboard',
         'vendor.sections.siteLicensePrices',
-        'vendor.sections.simultaneousUserPrices'
+        'vendor.sections.simultaneousUserPrices',
+        'vendor.sections.descriptions'
     ])
     .config(function ($routeProvider) {
         $routeProvider
@@ -23,6 +24,11 @@ angular.module('vendor.routes',[
             .when('/simultaneousUserPrices', {
                 templateUrl: '/vendorApp/sections/simultaneousUserPrices/simultaneousUserPrices.html',
                 controller:  'simultaneousUserPricesController',
+                controllerAs:'vm'
+            })
+            .when('/descriptions', {
+                templateUrl: '/vendorApp/sections/descriptions/descriptions.html',
+                controller:  'descriptionsController',
                 controllerAs:'vm'
             });
     });

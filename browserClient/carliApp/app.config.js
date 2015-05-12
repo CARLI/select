@@ -4,6 +4,7 @@ angular.module('carli.app', [
     'carli.admin',
     'carli.cycleService',
     'common.fa',
+    'common.warnIfUnsaved',
     'ngAnimate',
     'carli.carliHeader',
     'carli.debugPanel',
