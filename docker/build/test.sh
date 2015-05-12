@@ -1,4 +1,10 @@
 #!/bin/sh
 
-cd /carli-select &&
-    CARLI_TEST_ENABLE_CHROME="no" CARLI_TEST_ENABLE_FIREFOX="yes" CARLI_TEST_ENABLE_SHARDING="no" grunt test:jenkins
+cd /carli-select/CARLI && grunt test:jenkins
+
+mocha_status=$?
+
+cd /carli-select/browserClient && grunt test:jenkins
+
+exit $mocha_status
+
