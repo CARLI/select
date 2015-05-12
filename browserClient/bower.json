@@ -13,7 +13,8 @@
     "handlebars": "~3.0.0",
     "angular-busyclick": "*",
     "ng-tags-input": "~2.3.0",
-    "moment": "~2.10.2"
+    "moment": "~2.10.2",
+    "FileSaver": "*"
   },
   "devDependencies": {
     "angular-mocks": "~1.2",

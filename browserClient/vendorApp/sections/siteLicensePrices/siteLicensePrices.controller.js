@@ -1,7 +1,7 @@
 angular.module('vendor.sections.siteLicensePrices')
     .controller('siteLicensePricesController', siteLicensePricesController);
 
-function siteLicensePricesController($scope, $q, $filter, cycleService, libraryService, offeringService, productService, userService){
+function siteLicensePricesController($scope, $q, $filter, cycleService, libraryService, offeringService, productService, userService, siteLicensePricesCsv){
     var vm = this;
     vm.loadingPromise = null;
     vm.viewOptions = {};
@@ -10,6 +10,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.quickPricingCallback = quickPricingCallback;
     vm.saveOfferings = saveOfferings;
+    vm.downloadCsv = downloadCsv;
 
     activate();
 
@@ -176,6 +177,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
         });
 
         vm.loadingPromise = saveAllOfferings( newOfferings, changedOfferings );
+        return vm.loadingPromise;
     }
 
     function generateNewOffering(libraryId, productId, cycle, newPrice) {
@@ -238,5 +240,43 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
                 }
             }
         });
+    }
+
+    function downloadCsv() {
+        //vm.loadingPromise = saveOfferings()
+        //    .then(generateCsvData)
+        //    .then(triggerDownload);
+
+        generateCsvData()
+            .then(triggerDownload)
+            .catch(function (err) {
+                console.log('CSV generation failed', err);
+            });
+
+        function generateCsvData() {
+            return siteLicensePricesCsv(vm.viewOptions, getCsvProductList(), getCsvLibraryList(), vm.offeringsForLibraryByProduct);
+        }
+
+        function triggerDownload(csvString) {
+            console.log('makeing Blob');
+            var blob = new Blob([csvString], {type: "text/csv;charset=utf-8"});
+            console.log('saving');
+            console.log(saveAs);
+            saveAs(blob, "stylophone.csv");
+        }
+
+        return vm.loadingPromise;
+
+        function getCsvProductList() {
+            return vm.products.filter(function (product) {
+                return vm.selectedProductIds[product.id];
+            });
+        }
+        function getCsvLibraryList() {
+            return vm.libraries.filter(function (library) {
+                return vm.selectedLibraryIds[library.id];
+            });
+        }
+
     }
 }
