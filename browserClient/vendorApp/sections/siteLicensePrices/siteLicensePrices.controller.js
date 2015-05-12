@@ -232,14 +232,27 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     }
 
     function downloadCsv() {
-        var csvData = siteLicensePricesCsv(vm.viewOptions, getCsvProductList(), getCsvLibraryList(), vm.offeringsForLibraryByProduct);
-        console.log('Generated ' + csvData.length + ' rows of CSV');
+        //vm.loadingPromise = saveOfferings()
+        //    .then(generateCsvData)
+        //    .then(triggerDownload);
 
-        //vm.loadingPromise = saveOfferings().then(function () {
-        //    var csvData = siteLicensePricesCsv(vm.viewOptions, getCsvProductList(), getCsvLibraryList(), vm.offeringsForLibraryByProduct);
-        //    console.log('Generated ' + csvData.length + ' rows of CSV');
-        //    return true;
-        //});
+        generateCsvData()
+            .then(triggerDownload)
+            .catch(function (err) {
+                console.log('CSV generation failed', err);
+            });
+
+        function generateCsvData() {
+            return siteLicensePricesCsv(vm.viewOptions, getCsvProductList(), getCsvLibraryList(), vm.offeringsForLibraryByProduct);
+        }
+
+        function triggerDownload(csvString) {
+            console.log('makeing Blob');
+            var blob = new Blob([csvString], {type: "text/csv;charset=utf-8"});
+            console.log('saving');
+            console.log(saveAs);
+            saveAs(blob, "stylophone.csv");
+        }
 
         return vm.loadingPromise;
 

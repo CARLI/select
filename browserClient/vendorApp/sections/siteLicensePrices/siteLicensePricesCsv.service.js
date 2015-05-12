@@ -1,7 +1,7 @@
 angular.module('vendor.sections.siteLicensePrices')
     .service('siteLicensePricesCsv', siteLicensePricesCsv);
 
-function siteLicensePricesCsv() {
+function siteLicensePricesCsv($q, CarliModules) {
 
     return generateCsv;
 
@@ -10,34 +10,63 @@ function siteLicensePricesCsv() {
         var viewOptionColumns = getCsvColumnsFromViewOptions(viewOptions);
         
         var columns = [ 'Library' ];
-        columns.concat(viewOptionColumns);
-        columns.concat(productsToInclude.map(getName));
+        columns = columns.concat(viewOptionColumns);
+        columns = columns.concat(productsToInclude.map(getName));
+
+        csvData.push(generateHeaderRow());
 
         if (viewOptions.priceCap) {
             csvData.push(generateCsvPriceCapRow(viewOptionColumns, productsToInclude));
         }
 
-        librariesToInclude.forEach(function (library) {
-            var row = { Library: library.name };
-            viewOptionColumns.forEach(function (column) {
-                row[column] = getViewOptionValue(library, column);
-            });
-            var getPrice = makePriceGetter(library);
-            row.concat(productsToInclude.map(getPrice));
-            csvData.push(row);
-        });
+        librariesToInclude.forEach(generateRowForLibrary);
 
-        return csvData;
-
-        function makePriceGetter(library) {
-            return getPrice;
-            function getPrice(product) {
-                return offeringsForLibraryByProduct[product.id][library.id];
+        var deferred = $q.defer();
+        CarliModules.Csv.stringify(csvData, { columns: columns }, function(err, out) {
+            if (err) {
+                deferred.reject(err);
+            } else {
+                deferred.resolve(out);
             }
-        }
+        });
+        return deferred.promise;
 
         function getName(entity) {
             return entity.name;
+        }
+
+        function generateHeaderRow() {
+            var row = {};
+            columns.forEach(function (column) {
+                row[column] = column;
+            });
+            return row;
+        }
+
+        function generateRowForLibrary(library) {
+            var offerings = productsToInclude.map(getOffering);
+            var row = { Library: library.name };
+
+            viewOptionColumns.forEach(addViewOptionColumn);
+            offerings.forEach(addPriceColumn);
+            csvData.push(row);
+
+            function getOffering(product) {
+                return offeringsForLibraryByProduct[product.id][library.id] || makeNullOffering(product);
+            }
+            function addViewOptionColumn(column) {
+                row[column] = getViewOptionValue(library, column);
+            }
+            function addPriceColumn(offering) {
+                row[offering.product.name] = offering.pricing.site;
+            }
+        }
+
+        function makeNullOffering(product) {
+            return {
+                product: product,
+                pricing: { site: 0 }
+            };
         }
     }
 
@@ -79,5 +108,7 @@ function siteLicensePricesCsv() {
         productsToInclude.forEach(function (product) {
             row[product.name] = product.priceCap;
         });
+
+        return row;
     }
 }
