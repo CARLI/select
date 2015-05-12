@@ -30,7 +30,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
 
     function loadLibraries() {
         return libraryService.list().then(function (libraries) {
-            vm.libraries = libraries;
+            vm.libraries = $filter('orderBy')(libraries, 'name');
             initializeSelectedLibraryIds();
         });
     }
@@ -160,7 +160,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             var libraryId = offeringCell.data('libraryId');
             var productId = offeringCell.data('productId');
             var offering = vm.offeringsForLibraryByProduct[productId][libraryId];
-            var newPrice = parseFloat( offeringCell.find('input').val());
+            var newPrice = parseFloat( offeringCell.text() );
 
             if ($(element).is(":visible")) {
                 if ( !offering ){

@@ -6,6 +6,7 @@ var Entity = require('../Entity')
   , getStoreForCycle = require('./getStoreForCycle')
   , libraryRepository = require('./LibraryRepository')
   , productRepository = require('./ProductRepository')
+  , uuid = require('node-uuid')
   , Validator = require('../Validator')
   , Q = require('q')
   , _ = require('lodash')
@@ -420,6 +421,7 @@ function createOfferingsFor( productId, vendorId, libraryIds, cycle ){
 
     function createOfferingForLibrary( libraryId ){
         return {
+            id: uuid.v4(),
             type: 'Offering',
             cycle: cycle,
             library: libraryId.toString(),
