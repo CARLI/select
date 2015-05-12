@@ -200,22 +200,16 @@ console.log('  price for '+suLevel.users+' user - '+product.name+' ', vm.suPrici
         });
 
         return $q.all( vm.products.map(updateOfferingsForAllLibrariesForProduct) )
-            .then(function(){
-                console.log('saved '+vm.products.length+' products');
+            .then(function(updateResults){
+                console.log('saved '+vm.products.length+' products',updateResults);
             })
             .catch(function(err){
                 console.error(err);
             });
 
-
-
         function updateOfferingsForAllLibrariesForProduct( product ){
             var newSuPricing = newSuPricingByProduct[product.id];
-
-            return offeringService.ensureProductHasOfferingsForAllLibraries(product)
-                .then(function(){
-                    return offeringService.updateSuPricingForAllLibrariesForProduct(product.id, newSuPricing);
-                });
+            return offeringService.updateSuPricingForAllLibrariesForProduct(product.id, newSuPricing );
         }
     }
 

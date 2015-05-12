@@ -8,6 +8,18 @@ function listProductsWithOfferingsForVendorId(vendorId, cycle) {
     });
 }
 
+function updateSuPricingForProduct(productId, newSuPricing, cycle){
+    return middlewareRequest({
+        path: '/update-su-pricing-for-product/' + cycle.id + '/' + productId,
+        method: 'post',
+        json: true,
+        body: {
+            newSuPricing: newSuPricing
+        }
+    });
+}
+
 module.exports = {
-    listProductsWithOfferingsForVendorId: listProductsWithOfferingsForVendorId
+    listProductsWithOfferingsForVendorId: listProductsWithOfferingsForVendorId,
+    updateSuPricingForProduct: updateSuPricingForProduct
 };

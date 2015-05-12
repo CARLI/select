@@ -4,6 +4,7 @@ angular.module('common.offeringService')
 function offeringService( CarliModules, $q, cycleService ) {
 
     var offeringModule = CarliModules.Offering;
+    var productMiddleware = CarliModules.ProductMiddleware;
 
     var offeringDisplayLabels = {
         'with-price': 'Display with price',
@@ -43,7 +44,7 @@ function offeringService( CarliModules, $q, cycleService ) {
             return $q.when( offeringModule.createOfferingsFor( product.id, product.vendor.id, libraryIds, cycleService.getCurrentCycle()) );
         },
         updateSuPricingForAllLibrariesForProduct: function updateSuPricingForAllLibrariesForProduct( productId, newSuPricing ){
-            return $q.when( offeringModule.updateSuPricingForAllLibrariesForProduct( productId, newSuPricing, cycleService.getCurrentCycle()) );
+            return $q.when( productMiddleware.updateSuPricingForProduct(productId, newSuPricing, cycleService.getCurrentCycle()) );
         },
         getOfferingDisplayOptions: function() {
             var values = offeringModule.getOfferingDisplayOptions();
