@@ -30,7 +30,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
 
     function loadLibraries() {
         return libraryService.list().then(function (libraries) {
-            vm.libraries = libraries;
+            vm.libraries = $filter('orderBy')(libraries, 'name');
             initializeSelectedLibraryIds();
         });
     }

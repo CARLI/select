@@ -44,7 +44,7 @@
                 <div class="column header years"></div>
                 <div class="column header lastYearsPrice"></div>
             </div>
-            <div class="price-row {{ ::library.id }}" ng-repeat="library in vm.libraries">
+            <div class="price-row {{ ::library.id }}" ng-repeat="library in vm.libraries | orderBy: 'name'">
                 <div class="column library">{{ ::library.name }}</div>
                 <div class="column size">{{ ::library.fte }}</div>
                 <div class="column type">{{ ::library.institutionType }}</div>
