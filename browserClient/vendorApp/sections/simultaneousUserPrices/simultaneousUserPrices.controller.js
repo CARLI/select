@@ -44,7 +44,6 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
 
                 vm.suPricingByProduct[product.id] = convertArrayOfPricingObjectsToMappingObject(suPricingForProduct);
 
-console.log('got su pricing for '+product.name, vm.suPricingByProduct[product.id]);
                 return vm.suPricingByProduct[product.id];
             });
 
@@ -73,17 +72,17 @@ console.log('got su pricing for '+product.name, vm.suPricingByProduct[product.id
         if ( vm.suLevels.length === 0 ){
             vm.suLevels = [1,2,3].map(makeSuLevel);
         }
+    }
 
-        function makeSuLevel(level){
-            return {
-                id: 'su-'+level,
-                name: suLevelName(level),
-                users: level
-            };
+    function makeSuLevel(level){
+        return {
+            id: 'su-'+level,
+            name: suLevelName(level),
+            users: level - 0
+        };
 
-            function suLevelName(level){
-                return level + ' Simultaneous User' + (level > 1 ? 's' : '');
-            }
+        function suLevelName(level){
+            return level + ' Simultaneous User' + (level > 1 ? 's' : '');
         }
     }
 
@@ -140,8 +139,6 @@ console.log('got su pricing for '+product.name, vm.suPricingByProduct[product.id
         return row;
 
         function generateOfferingCell(suLevel, product) {
-console.log('  price for '+suLevel.users+' user - '+product.name+' ', vm.suPricingByProduct[product.id][suLevel.users]);
-
             var priceForProduct = vm.suPricingByProduct[product.id][suLevel.users] || 0;
             var offeringWrapper = $('<div class="column offering input">');
             var offeringCell = offeringWrapper.append(createReadOnlyOfferingCell(priceForProduct));
@@ -200,8 +197,8 @@ console.log('  price for '+suLevel.users+' user - '+product.name+' ', vm.suPrici
         });
 
         return $q.all( vm.products.map(updateOfferingsForAllLibrariesForProduct) )
-            .then(function(updateResults){
-                console.log('saved '+vm.products.length+' products',updateResults);
+            .then(function(){
+                console.log('saved '+vm.products.length+' products');
             })
             .catch(function(err){
                 console.error(err);
