@@ -57,11 +57,13 @@ function runMiddlewareServer(){
                 .catch(sendError(res));
         });
         carliMiddleware.get('/products-with-offerings-for-vendor/:vendorId/for-cycle/:cycleId', function (req, res) {
-            var authToken = JSON.parse(req.header('X-AuthToken'));
-            if (!authToken) {
+            if (!req.header('X-AuthToken')) {
                 res.status(401).send('missing authorization cookie');
                 return;
             }
+
+            var authToken = JSON.parse(req.header('X-AuthToken'));
+
             if (!authToken.vendorId) {
                 res.status(400).send('invalid auth token');
                 return;
