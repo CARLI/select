@@ -2,6 +2,7 @@
 
 module.exports = {
     config: require( '../config' ),
+    Csv: require('../CARLI/Csv'),
     Cycle: require('../CARLI/Entity/CycleRepositoryForVendor'),
     Library: require('../CARLI/Entity/LibraryRepository'),
     Offering: require('../CARLI/Entity/OfferingRepository'),
