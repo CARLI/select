@@ -55,17 +55,20 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
     activate();
 
     function activate() {
+        vm.isModal = vm.newProduct;
+
         if ($scope.productId === undefined) {
-            initializeForNewProduct();
+            return initializeForNewProduct();
         }
         else {
-            initializeCyclesPromise.then(initializeForExistingProduct);
+            return initializeCyclesPromise.then(initializeForExistingProduct);
         }
-
-        vm.isModal = vm.newProduct;
     }
 
     function initializeForNewProduct() {
+        vm.editable = true;
+        vm.newProduct = true;
+
         vm.product = {
             type: 'Product',
             cycle: cycleService.getCurrentCycle() || { cycleType: '' },
@@ -73,15 +76,16 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
             contacts: []
         };
 
-        ensureOneTimePurchaseProductHasEmptyOfferingsForAllLibraries();
-
-        vm.editable = true;
-        vm.newProduct = true;
         setProductFormPristine();
+
+        return ensureOneTimePurchaseProductHasEmptyOfferingsForAllLibraries();
     }
 
     function initializeForExistingProduct() {
-        productService.load($scope.productId).then( function( product ) {
+        vm.editable = false;
+        vm.newProduct = false;
+
+        return productService.load($scope.productId).then( function( product ) {
             vm.product = angular.copy(product);
             copyFullCycleInstanceToProduct(vm.product);
             initializeProductNameWatcher();
@@ -96,9 +100,6 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
 
             }
         } );
-
-        vm.editable = false;
-        vm.newProduct = false;
     }
 
     function copyFullCycleInstanceToProduct(product) {
@@ -154,7 +155,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
     }
 
     function resetProductForm() {
-        activate();
+        return activate();
     }
 
     function hideProductModal() {
@@ -277,9 +278,10 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
             .then(updateOfferingsForExistingProduct)
             .then(function () {
                 alertService.putAlert('Product updated', {severity: 'success'});
-                resetProductForm();
-                hideProductModal();
-                afterSubmitCallback();
+                resetProductForm().then(function(){
+                    hideProductModal();
+                    afterSubmitCallback();
+                });
             })
             .catch(function (error) {
                 alertService.putAlert(error, {severity: 'danger'});
@@ -291,9 +293,10 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
             .then(saveOfferingsForNewProduct)
             .then(function (offeringsIds) {
                 alertService.putAlert('Product added', {severity: 'success'});
-                resetProductForm();
-                hideProductModal();
-                afterSubmitCallback();
+                resetProductForm().then(function(){
+                    hideProductModal();
+                    afterSubmitCallback();
+                });
             })
             .catch(function (error) {
                 alertService.putAlert(error, {severity: 'danger'});
