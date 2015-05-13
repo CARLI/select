@@ -65,12 +65,7 @@ describe('The Edit Product Controller', function(){
         expect( mockDependenciesForNewProduct.productService.createOrUpdate ).to.equal('create');
     });
 
-    it('should add an alert when saving a new Product', inject(function($rootScope){
-        expect( mockDependenciesForNewProduct.alertService.alertCount ).to.equal( 0 );
-        newCtrl.saveProduct();
-        $rootScope.$digest();
-        expect( mockDependenciesForNewProduct.alertService.alertCount ).to.equal( 1 );
-    }));
+    it('should add an alert when saving a new Product');
 
     it('should have a known, non-editable Product on the Edit Product screen', function(){
         expect( editCtrl.product.name ).to.equal('Test Product 0');
