@@ -26,7 +26,7 @@
                 <div class="column header"></div>
             </div>
             <div class="price-row" ng-repeat="su in vm.suLevels | orderBy:'users' track by su.id">
-                <div class="column {{ ::su.id }}">{{ ::su.name }}</div>
+                <div class="column {{ ::su.id }}">{{ ::su.shortName }}</div>
             </div>
         </div>
 

@@ -78,11 +78,16 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
         return {
             id: 'su-'+level,
             name: suLevelName(level),
+            shortName: suLevelShortName(level),
             users: level - 0
         };
 
         function suLevelName(level){
             return level + ' Simultaneous User' + (level > 1 ? 's' : '');
+        }
+
+        function suLevelShortName(level){
+            return level + ' S.U.';
         }
     }
 
