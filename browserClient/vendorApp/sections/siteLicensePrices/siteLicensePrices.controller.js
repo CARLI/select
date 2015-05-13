@@ -262,7 +262,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             var blob = new Blob([csvString], {type: "text/csv;charset=utf-8"});
             console.log('saving');
             console.log(saveAs);
-            saveAs(blob, "stylophone.csv");
+            saveAs(blob, makeFilename);
         }
 
         return vm.loadingPromise;
@@ -276,6 +276,12 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             return vm.libraries.filter(function (library) {
                 return vm.selectedLibraryIds[library.id];
             });
+        }
+
+        function makeFilename() {
+            var vendorName = userService.getUser().vendor.name;
+            var cycleName = cycleService.getCurrentCycle().name;
+            return vendorName + ' ' + cycleName + ' Site License Prices.csv';
         }
 
     }
