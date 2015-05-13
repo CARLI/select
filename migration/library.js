@@ -29,11 +29,11 @@ function migrateLibraries(connection, crmLibraryMapping) {
         var resultsPromise = Q.defer();
 
         for (var i in libraries) {
-            var createLibraryPromise = createLibrary(libraries[i]);
+            var mapLibraryPromise = mapLibraryCrmIdToIdalId(libraries[i]);
 
-            extractPromises.push(createLibraryPromise);
+            extractPromises.push(mapLibraryPromise);
 
-            createLibraryPromise.then(function(resultObj){
+            mapLibraryPromise.then(function(resultObj){
                 idalIdsToCouchIds[resultObj.idalLegacyId] = resultObj.couchId;
             });
         }
@@ -45,7 +45,7 @@ function migrateLibraries(connection, crmLibraryMapping) {
         return resultsPromise.promise;
     }
 
-    function createLibrary(libraryRow){
+    function mapLibraryCrmIdToIdalId(libraryRow){
         return Q({
             couchId: getCrmId(libraryRow.name),
             idalLegacyId: libraryRow.id
