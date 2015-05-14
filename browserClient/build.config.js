@@ -91,6 +91,7 @@ module.exports = {
         'bower_modules/gsap/src/minified/jquery.gsap.min.js',
         'bower_modules/handlebars/handlebars.js',
         'bower_modules/ng-tags-input/ng-tags-input.js',
+        'bower_modules/ng-tags-input/ng-tags-input.css',
         'bower_modules/font-awesome/css/font-awesome.min.css',
         'bower_modules/angular-busy/angular-busy.css',
         'bower_modules/font-awesome/fonts/fontawesome-webfont.*',

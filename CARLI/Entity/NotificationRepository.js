@@ -3,7 +3,6 @@ var Entity = require('../Entity')
     , config = require( '../../config' )
     , couchUtils = require( '../Store/CouchDb/Utils')
     , libraryRepository = require('../Entity/LibraryRepository')
-    , offeringRepository = require('../Entity/OfferingRepository')
     , vendorRepository = require('../Entity/VendorRepository')
     , StoreOptions = config.storeOptions
     , Store = require( '../Store' )
@@ -157,9 +156,18 @@ function getSummaryTotal(notification, offerings) {
 }
 function getRecipientLabelForInstance() {
     var notification = this;
+    var recipientLabel = '';
 
-    return getRecipientLabel(notification.targetEntity.name, notification.notificationType);
+    if ( notification.targetEntity ){
+        recipientLabel = getRecipientLabel(notification.targetEntity.name, notification.notificationType);
+    }
+    else if ( notification.to ){
+        recipientLabel = notification.to;
+    }
+
+    return recipientLabel;
 }
+
 var functionsToAdd = {
     getRecipientLabel: getRecipientLabelForInstance
 };
