@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.carliEditingProductList')
     .controller('carliEditingProductListController', carliEditingProductListController);
 
-function carliEditingProductListController( $scope, alertService, productService, vendorService ) {
+function carliEditingProductListController( $scope, alertService, cycleService, productService, vendorService ) {
     var vm = this;
     vm.removeProduct = removeProduct;
     vm.openVendorPricing = openVendorPricing;
@@ -11,6 +11,8 @@ function carliEditingProductListController( $scope, alertService, productService
     activate();
 
     function activate () {
+        vm.cycle = cycleService.getCurrentCycle();
+
         initYearsToDisplay();
         initSortable();
         loadVendors();
@@ -69,6 +71,7 @@ function carliEditingProductListController( $scope, alertService, productService
             });
         });
     }
+
     function _pickRandomSelectionHistory() {
         switch (getRandomInt(0, 2)) {
             case 0: return 'not offered';
@@ -76,11 +79,15 @@ function carliEditingProductListController( $scope, alertService, productService
             case 2: return 'selected';
         }
     }
+
     function getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
+
     function removeProduct( product ){
         product.isActive = false;
+        product.cycle = vm.cycle;
+
         return productService.update( product).then( function(){
             alertService.putAlert('Product Removed', {severity: 'success'});
         });
