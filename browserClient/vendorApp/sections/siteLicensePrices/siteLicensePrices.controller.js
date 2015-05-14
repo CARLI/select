@@ -262,7 +262,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             var blob = new Blob([csvString], {type: "text/csv;charset=utf-8"});
             console.log('saving');
             console.log(saveAs);
-            saveAs(blob, makeFilename);
+            saveAs(blob, makeFilename());
         }
 
         return vm.loadingPromise;
