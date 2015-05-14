@@ -17,7 +17,7 @@ function descriptionsController( $scope, $rootScope, $q, cycleService, productSe
     }
 
     function loadProducts(){
-        vm.loadingPromise = productService.listProductsForVendorId( userService.getUser().vendor.id )
+        vm.loadingPromise = productService.listActiveProductsForVendorId( userService.getUser().vendor.id )
             .then(function(productList){
                 vm.products = productList;
             });

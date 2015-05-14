@@ -156,8 +156,8 @@ function editVendorController( $scope, $rootScope, entityBaseService, alertServi
     }
 
     function getActiveProducts() {
-        productService.listProductsForVendorId(vm.vendorId).then ( function ( productList ) {
-            vm.productList = productList.filter(_entityIsActive);
+        return productService.listActiveProductsForVendorId(vm.vendorId).then(function ( productList ) {
+            vm.productList = productList;
         });
     }
 
