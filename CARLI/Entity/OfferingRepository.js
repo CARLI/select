@@ -345,11 +345,13 @@ function getFlaggedState(offering){
             var flagSiteLicensePrice = isThereAnSuOfferingForLessThanTheSiteLicensePrice();
             var flagSuPrices = isThereAnSuOfferingForMoreUsersWithASmallerPrice();
             var flagExceedsPriceCap = doesIncreaseFromLastYearExceedPriceCap();
+            var flagGreaterThan5PercentReduction = doesDecreaseFromLastYearExceed5Percent();
             // TODO: Does decrease from last years price exceed 5%, for any SU or Site License
             console.log('flagSiteLicensePrice', flagSiteLicensePrice);
             console.log('flagSuPrices', flagSuPrices);
             console.log('flagExceedsPriceCap', flagExceedsPriceCap);
-            return flagSiteLicensePrice || flagSuPrices || flagExceedsPriceCap;
+            console.log('flagGreaterThan5PercentReduction', flagGreaterThan5PercentReduction);
+            return flagSiteLicensePrice || flagSuPrices || flagExceedsPriceCap || flagGreaterThan5PercentReduction;
         }
         return false;
     }
@@ -400,28 +402,60 @@ function getFlaggedState(offering){
         }
         function checkSuPriceIncrease(suPricing) {
             var priceToCheck = suPricing.price;
-            var lastYearsPrice = lookupLastYearsPriceForSu(suPricing.users);
+            var lastYearsPrice = lookupLastYearsPriceForSu(offering, suPricing.users);
             if ( lastYearsPrice && priceToCheck > priceCapMultiplier * lastYearsPrice ){
                 exceedsPriceCap = true;
             }
         }
-        function lookupLastYearsPriceForSu(usersToFind) {
-            var lastYearsPrice = null;
-            offering.pricing.su.forEach(findLastYearsPricingForSu);
-            return lastYearsPrice;
+    }
 
-            function findLastYearsPricingForSu(suPricing) {
-                if (suPricing.users === usersToFind) {
-                    offering.history.pricing.su.forEach(function (lastYearsPricing) {
-                        if (suPricing.users === lastYearsPricing.users) {
-                            lastYearsPrice = lastYearsPricing.price;
-                        }
-                    });
-                }
+    function doesDecreaseFromLastYearExceed5Percent() {
+        var exceedsDecreaseLimit = false;
+
+        var multiplier = 0.95;
+
+        if (canEnforceDecrease()) {
+            checkSitePriceDecrease();
+            offering.pricing.su.forEach(checkSuPriceDecrease);
+        }
+
+        return exceedsDecreaseLimit;
+
+        function canEnforceDecrease() {
+            return !!offering.history;
+        }
+        function checkSitePriceDecrease() {
+            if (offering.pricing.site < multiplier * offering.history.pricing.site) {
+                exceedsDecreaseLimit = true;
+            }
+        }
+        function checkSuPriceDecrease(suPricing) {
+            var priceToCheck = suPricing.price;
+            var lastYearsPrice = lookupLastYearsPriceForSu(offering, suPricing.users);
+            if ( lastYearsPrice && priceToCheck < multiplier * lastYearsPrice ){
+                exceedsDecreaseLimit = true;
             }
         }
     }
 
+}
+
+function lookupLastYearsPriceForSu(offering, suToFind) {
+    var lastYearsPrice = null;
+    if (offering.history) {
+        offering.pricing.su.forEach(findLastYearsPricingForSu);
+    }
+    return lastYearsPrice;
+
+    function findLastYearsPricingForSu(suPricing) {
+        if (suPricing.users === suToFind) {
+            offering.history.pricing.su.forEach(function (lastYearsPricing) {
+                if (suPricing.users === lastYearsPricing.users) {
+                    lastYearsPrice = lastYearsPricing.price;
+                }
+            });
+        }
+    }
 }
 
 /* functions that get added as instance methods on loaded Offerings */
