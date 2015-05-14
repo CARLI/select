@@ -7,7 +7,7 @@ SCRIPTS=./jenkins/scripts
 
 all_containers="couchdb build nginx"
 
-$SCRIPTS/add-build-number.sh dev &&
+$SCRIPTS/add-build-number.sh dev
 
 build_all_containers () {
     for container in $all_containers; do
