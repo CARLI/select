@@ -289,9 +289,9 @@ function runOfferingSpecificTests(testCycle) {
                 testOffering.pricing = {
                     site: 500,
                     su: [
-                        { users: 1, price: 100 },
-                        { users: 2, price: 200 },
-                        { users: 3, price: 300 }
+                        { users: 1, price: 200 },
+                        { users: 2, price: 300 },
+                        { users: 3, price: 400 }
                     ]
                 };
                 testOffering.history = {
