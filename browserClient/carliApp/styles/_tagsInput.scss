@@ -1,6 +1,9 @@
 
 tags-input {
     .tags {
+        height: 200px;
+        overflow-y: scroll;
+
         .tag-item {
             background: none;
             background-color: #eee;
