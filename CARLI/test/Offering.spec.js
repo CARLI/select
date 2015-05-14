@@ -282,6 +282,31 @@ function runOfferingSpecificTests(testCycle) {
 
                 expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(true);
             });
+
+            it('should compute true if increase from last years price exceeds the price cap', function() {
+                var testOffering = validOfferingData();
+                testOffering.product.priceCap = 10;
+                testOffering.pricing = {
+                    site: 500,
+                    su: [
+                        { users: 1, price: 100 },
+                        { users: 2, price: 200 },
+                        { users: 3, price: 300 }
+                    ]
+                };
+                testOffering.history = {
+                    pricing: {
+                        site: 500,
+                        su: [
+                            { users: 1, price: 100 },
+                            { users: 2, price: 200 },
+                            { users: 3, price: 300 }
+                        ]
+                    }
+                };
+
+                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(true);
+            });
         });
 
         describe('getOfferingsById', function(){
