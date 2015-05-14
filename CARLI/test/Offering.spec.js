@@ -282,6 +282,81 @@ function runOfferingSpecificTests(testCycle) {
 
                 expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(true);
             });
+
+            it('should compute true if increase from last years price exceeds the price cap', function() {
+                var testOffering = validOfferingData();
+                testOffering.product.priceCap = 10;
+                testOffering.pricing = {
+                    site: 500,
+                    su: [
+                        { users: 1, price: 200 },
+                        { users: 2, price: 300 },
+                        { users: 3, price: 400 }
+                    ]
+                };
+                testOffering.history = {
+                    pricing: {
+                        site: 500,
+                        su: [
+                            { users: 1, price: 100 },
+                            { users: 2, price: 200 },
+                            { users: 3, price: 300 }
+                        ]
+                    }
+                };
+
+                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(true);
+            });
+
+            it('should compute true if decrease from last years price exceeds 5%', function() {
+                var testOffering = validOfferingData();
+                testOffering.product.priceCap = 10;
+                testOffering.pricing = {
+                    site: 500,
+                    su: [
+                        { users: 1, price: 100 },
+                        { users: 2, price: 200 },
+                        { users: 3, price: 300 }
+                    ]
+                };
+                testOffering.history = {
+                    pricing: {
+                        site: 1000,
+                        su: [
+                            { users: 1, price: 200 },
+                            { users: 2, price: 300 },
+                            { users: 3, price: 400 }
+                        ]
+                    }
+                };
+
+                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(true);
+            });
+
+            it('should compute false if increase or decrease is within acceptable range', function() {
+                var testOffering = validOfferingData();
+                testOffering.product.priceCap = 10;
+                testOffering.pricing = {
+                    site: 480,
+                    su: [
+                        { users: 1, price: 96 },
+                        { users: 2, price: 218 },
+                        { users: 3, price: 327 }
+                    ]
+                };
+                testOffering.history = {
+                    pricing: {
+                        site: 500,
+                        su: [
+                            { users: 1, price: 100 },
+                            { users: 2, price: 200 },
+                            { users: 3, price: 300 }
+                        ]
+                    }
+                };
+
+                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(false);
+            });
         });
 
         describe('getOfferingsById', function(){
