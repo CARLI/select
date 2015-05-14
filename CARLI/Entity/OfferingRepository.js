@@ -346,6 +346,9 @@ function getFlaggedState(offering){
             var flagSuPrices = isThereAnSuOfferingForMoreUsersWithASmallerPrice();
             var flagExceedsPriceCap = doesIncreaseFromLastYearExceedPriceCap();
             // TODO: Does decrease from last years price exceed 5%, for any SU or Site License
+            console.log('flagSiteLicensePrice', flagSiteLicensePrice);
+            console.log('flagSuPrices', flagSuPrices);
+            console.log('flagExceedsPriceCap', flagExceedsPriceCap);
             return flagSiteLicensePrice || flagSuPrices || flagExceedsPriceCap;
         }
         return false;
