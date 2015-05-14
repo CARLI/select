@@ -98,6 +98,17 @@ function listProductsForVendorId( vendorId, cycle ) {
     return expandProducts(couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listProductsForVendorId', vendorId), cycle);
 }
 
+function listActiveProductsForVendorId( vendorId, cycle ){
+    return listProductsForVendorId(vendorId,cycle)
+        .then(filterActiveProducts);
+
+    function filterActiveProducts( productList ){
+        return productList.filter(function(product){
+            return product.getIsActive();
+        });
+    }
+}
+
 function listProductCountsByVendorId(cycle){
     setCycle(cycle);
     return couchUtils.getCouchViewResultObject(cycle.getDatabaseName(), 'listProductCountsByVendorId', null, true);
@@ -149,6 +160,7 @@ module.exports = {
     listAvailableOneTimePurchaseProducts: listAvailableOneTimePurchaseProducts,
     listProductsForLicenseId: listProductsForLicenseId,
     listProductsForVendorId: listProductsForVendorId,
+    listActiveProductsForVendorId: listActiveProductsForVendorId,
     listProductCountsByVendorId: listProductCountsByVendorId,
     getProductsById: getProductsById,
     getProductDetailCodeOptions: getProductDetailCodeOptions

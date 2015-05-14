@@ -59,7 +59,7 @@ function carliEditingProductListController( $scope, alertService, cycleService, 
         if (vendor.products) {
             return;
         }
-        vm.loadingPromise[vendor.id] = productService.listProductsForVendorId(vendor.id).then(function (products) {
+        vm.loadingPromise[vendor.id] = productService.listActiveProductsForVendorId(vendor.id).then(function (products) {
             vendor.products = products;
             angular.forEach(products, function (product) {
                 product.selectionHistory = {};
