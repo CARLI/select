@@ -37,16 +37,7 @@ module.exports = function ( grunt ) {
         clean: [ user_config.build_dir, user_config.compile_dir ],
 
         concat: {
-            compile_js: {
-                src: [
-                    '<%= vendor_files.js %>',
-                    '<%= build_dir %>/<%= logic_files.build %>',
-                    'module.prefix',
-                    '<%= build_dir %>/<%= carliApp_files.jsAll %>',
-                    'module.suffix'
-                ],
-                dest: '<%= compile_dir %>/<%= pkg.name %>-<%= pkg.version %>.js'
-            }
+            /* TODO for each app */
         },
 
         connect: {
@@ -179,11 +170,7 @@ module.exports = function ( grunt ) {
              * file. Now we're back!
              */
             compile: {
-                dir: '<%= compile_dir %>',
-                src: [
-                    '<%= concat.compile_js.dest %>',
-                    '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>.css'
-                ]
+                /* TODO: for each app */
             }
         },
 
@@ -257,14 +244,7 @@ module.exports = function ( grunt ) {
         },
 
         ngAnnotate: {
-            compile: {
-                files: [{
-                    src: [ '<%= carliApp_files.js %>' ],
-                    cwd: '<%= build_dir %>',
-                    dest: '<%= build_dir %>',
-                    expand: true
-                }]
-            }
+            /* TODO for compile task for each app */
         },
 
         ngdocs: {
@@ -279,7 +259,7 @@ module.exports = function ( grunt ) {
                 bestMatch: true
             },
             api: {
-                src: '<%= carliApp_files.js %>', 
+                src: user_config.carli_app.all_js,
                 title: 'API Documentation'
             }
         },
@@ -311,9 +291,7 @@ module.exports = function ( grunt ) {
         },
 
         uglify: {
-            compile: {
-                files: {'<%= concat.compile_js.dest %>': '<%= concat.compile_js.dest %>' }
-            }
+            /* TODO for compile task for each app */
         },
 
         watch: {
