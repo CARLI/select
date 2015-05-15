@@ -60,9 +60,16 @@
                     &.library {
                         display: block;
                     }
+
+                    &.price-cap {
+                        display: block;
+                        text-align: right;
+                        line-height: 4px;
+                        background-color: white;
+                    }
                 }
             }
-
+            
             &.size {
                 .column.size { display: block; }
             }
