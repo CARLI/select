@@ -25,7 +25,7 @@ function libraryController( $sce, libraryService ){
         },
         {
             'label': 'Institution Type',
-            orderByProperty: 'institutionType',
+            orderByProperty: ['institutionType','name'],
             'contentFunction': function(library) { return library.institutionType; }
         }
     ];

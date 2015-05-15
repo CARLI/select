@@ -38,7 +38,7 @@ function productController( $scope, $sce, cycleService, productService ){
         },
         {
             label: "Vendor",
-            orderByProperty: 'vendor.name',
+            orderByProperty: ['vendor.name','name'],
             contentFunction: function(product) {
                 var vendor = product.vendor || {};
                 return vendor.name || "";
@@ -46,7 +46,7 @@ function productController( $scope, $sce, cycleService, productService ){
         },
         {
             label: "License",
-            orderByProperty: 'license.name',
+            orderByProperty: ['license.name','name'],
             contentFunction: function(product) {
                 var license = product.license || {};
                 return license.name || '';
@@ -54,7 +54,7 @@ function productController( $scope, $sce, cycleService, productService ){
         },
         {
             label: "Contract Number",
-            orderByProperty: 'license.contractNumber',
+            orderByProperty: ['license.contractNumber','name'],
             contentFunction: function(product) {
                 var license = product.license || {};
                 return license.contractNumber || '';

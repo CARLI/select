@@ -26,12 +26,12 @@ function licensesController( $sce, licenseService ){
         },
         {
             label: "Vendor",
-            orderByProperty: 'vendor.name',
+            orderByProperty: ['vendor.name','name'],
             contentFunction: function(license) { return license.vendor.name; }
         },
         {
             label: "Contract Number",
-            orderByProperty: 'contractNumber',
+            orderByProperty: ['contractNumber','name'],
             contentFunction: function(license) { return license.contractNumber; }
         }
     ];
