@@ -13,6 +13,10 @@
         .carli-button {
             margin-top: 1rem;
             margin-bottom: 1rem;
+
+            &.ask-button {
+              font-family: 'Verdana', sans-serif;
+            }
         }
 
         menu {
