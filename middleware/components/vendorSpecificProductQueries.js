@@ -11,7 +11,7 @@ function listProductsWithOfferingsForVendorId(vendorId, cycleId) {
     });
 
     function loadProductsAndOfferings(cycle) {
-        return productRepository.listProductsForVendorId(vendorId, cycle).then(loadOfferingsForProducts);
+        return productRepository.listActiveProductsForVendorId(vendorId, cycle).then(loadOfferingsForProducts);
 
         function loadOfferingsForProducts(products) {
             return Q.all( products.map(loadOfferingsForProduct));

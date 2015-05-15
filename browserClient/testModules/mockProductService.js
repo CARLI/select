@@ -45,13 +45,13 @@ angular.module('carli.mockProductService', [])
                 deferred.resolve(mockProductList);
                 return deferred.promise;
             },
+            listActiveProductsForVendorId: function () {
+                var deferred = $q.defer();
+                deferred.resolve(mockProductList);
+                return deferred.promise;
+            },
             getProductDetailCodeOptions: function(){
                 return [];
-            },
-            createOfferingsForProduct: function(){
-                var deferred = $q.defer();
-                deferred.resolve([]);
-                return deferred.promise;
             }
         };
     });

@@ -17,7 +17,7 @@ function offeringService( CarliModules, $q, cycleService ) {
             return $q.when( offeringModule.list( cycleService.getCurrentCycle() ) );
         },
         create: function( offering ) {
-            return $q.when( offeringModule.create(offering, cycleService.getCurrentCycle()) );
+            return $q.when( offeringModule.create(offering, offering.cycle) );
         },
         update: function( offering ) {
             return $q.when( offeringModule.update(offering, cycleService.getCurrentCycle()) );
@@ -38,7 +38,7 @@ function offeringService( CarliModules, $q, cycleService ) {
                 });
         },
         ensureProductHasOfferingsForAllLibraries: function ensureProductHasOfferingsForAllLibraries( product ){
-            return $q.when( offeringModule.ensureProductHasOfferingsForAllLibraries( product.id, product.vendor.id, cycleService.getCurrentCycle() ) );
+            return $q.when( offeringModule.ensureProductHasOfferingsForAllLibraries( product.id, product.vendor.id, product.cycle ) );
         },
         createOfferingsFor: function createOfferingsFor( product, libraryIds ){
             return $q.when( offeringModule.createOfferingsFor( product.id, product.vendor.id, libraryIds, cycleService.getCurrentCycle()) );

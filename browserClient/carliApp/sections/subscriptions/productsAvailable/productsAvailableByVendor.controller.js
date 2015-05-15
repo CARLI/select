@@ -70,7 +70,7 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
             return $q.when(vendor.products);
         }
 
-        vm.loadingPromise[vendor.id] = productService.listProductsForVendorId(vendor.id)
+        vm.loadingPromise[vendor.id] = productService.listActiveProductsForVendorId(vendor.id)
             .then(function(products) {
                 vendor.products = products;
                 return products;

@@ -282,6 +282,10 @@ function runProductSpecificTests(testCycle) {
         });
     });
 
+    describe('listActiveProductsForVendorId', function(){
+        it('should list only active products associated with a vendor');
+    });
+
     describe('listProductCountsByVendorId View', function () {
         var vendor1 = {id: uuid.v4(), type: "Vendor", name: "test product counts vendor", isActive: true};
         var product1 = {
