@@ -329,7 +329,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
             });
         }
         else {
-            savePromises = productService.createOfferingsForProduct( productId );
+            savePromises = offeringService.ensureProductHasOfferingsForAllLibraries( vm.product );
         }
 
         return $q.all( savePromises );

@@ -52,11 +52,6 @@ angular.module('carli.mockProductService', [])
             },
             getProductDetailCodeOptions: function(){
                 return [];
-            },
-            createOfferingsForProduct: function(){
-                var deferred = $q.defer();
-                deferred.resolve([]);
-                return deferred.promise;
             }
         };
     });

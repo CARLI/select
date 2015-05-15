@@ -40,25 +40,9 @@ function productService( CarliModules, $q, cycleService, libraryService, offerin
         getProductsById: function(ids) {
             return $q.when( productModule.getProductsById(ids,  cycleService.getCurrentCycle()) );
         },
-        createOfferingsForProduct: createOfferingsForProduct,
         getProductDetailCodeOptions: productModule.getProductDetailCodeOptions,
         getProductDisplayName: getProductDisplayName
     };
-
-
-    function createOfferingsForProduct( productId ){
-        return libraryService.listActiveLibraries()
-            .then(getLibraryIds)
-            .then(function( libraryIds ){
-                return offeringService.createOfferingsFor( productId, libraryIds );
-            });
-
-        function getLibraryIds( listOfLibraries ){
-            return listOfLibraries.map(function(library){
-                return library.id;
-            });
-        }
-    }
 
     function getProductDisplayName(product) {
         if (!product) {
@@ -67,7 +51,7 @@ function productService( CarliModules, $q, cycleService, libraryService, offerin
         var name = product.name;
         if (product.showPreviousName) {
             name += ' (formerly ' + product.previousName + ')';
-        };
+        }
         return name;
     }
 }
