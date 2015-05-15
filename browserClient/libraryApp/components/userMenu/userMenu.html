@@ -1,0 +1,20 @@
+<ul ng-if="vm.userName">
+    <li class="dropdown">
+        <a href="">Hi, {{ vm.userName }}!
+        <button id="user-menu-label"
+                class="clear-button-styles"
+                type="button"
+                data-toggle="dropdown"
+                data-target="#user-menu"
+                aria-haspopup="true"
+                aria-expanded="false">
+            <span class="sr-only">Open user menu</span>
+            <span class="fa fa-cog"></span>
+        </button>
+        </a>
+        <ul id="user-menu" class="dropdown-menu" role="menu" aria-labelledby="user-menu-label">
+            <li><a ng-click="vm.logout()">Log out</a></li>
+        </ul>
+
+    </li>
+</ul>
