@@ -111,6 +111,9 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             var offering = vm.offeringsForLibraryByProduct[product.id][library.id] || { pricing: { site: 0 }};
             var price = offering.pricing.site;
             var offeringWrapper = $('<div class="column offering input">');
+            if (offering.flagged) {
+                offeringWrapper.addClass('flagged');
+            }
             var offeringCell = offeringWrapper.append(createReadOnlyOfferingCell(price));
 
             offeringWrapper.on('click', function() {
