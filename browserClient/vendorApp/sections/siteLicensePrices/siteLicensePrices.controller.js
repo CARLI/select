@@ -113,6 +113,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             var offeringWrapper = $('<div class="column offering input">');
             if (offering.flagged) {
                 offeringWrapper.addClass('flagged');
+                offeringWrapper.attr('title', offering.flaggedReason);
             }
             var offeringCell = offeringWrapper.append(createReadOnlyOfferingCell(price));
 

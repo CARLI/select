@@ -337,21 +337,36 @@ function getFlaggedState(offering){
 
 
     function userFlaggedState(){
+        if (offering.flagged) {
+            offering.flaggedReason = 'Flagged by user';
+        }
         return offering.flagged;
     }
 
     function systemFlaggedState(){
         if ( offering.pricing && offering.pricing.su ){
-            var flagSiteLicensePrice = isThereAnSuOfferingForLessThanTheSiteLicensePrice();
+            var flagSiteLicensePrice = isThereAnSuOfferingForMoreThanTheSiteLicensePrice();
             var flagSuPrices = isThereAnSuOfferingForMoreUsersWithASmallerPrice();
             var flagExceedsPriceCap = doesIncreaseFromLastYearExceedPriceCap();
             var flagGreaterThan5PercentReduction = doesDecreaseFromLastYearExceed5Percent();
+            if (flagSiteLicensePrice) {
+                offering.flaggedReason = 'SU offering for less than the Site license price';
+            }
+            if (flagSuPrices) {
+                offering.flaggedReason = 'SU offering for more users with lower price';
+            }
+            if (flagExceedsPriceCap) {
+                offering.flaggedReason = 'Offering exceeds price cap';
+            }
+            if (flagGreaterThan5PercentReduction) {
+                offering.flaggedReason = 'Offering is more than 5% less than last year';
+            }
             return flagSiteLicensePrice || flagSuPrices || flagExceedsPriceCap || flagGreaterThan5PercentReduction;
         }
         return false;
     }
 
-    function isThereAnSuOfferingForLessThanTheSiteLicensePrice(){
+    function isThereAnSuOfferingForMoreThanTheSiteLicensePrice(){
         var sitePrice = offering.pricing.site || 0;
         for ( var i in offering.pricing.su ){
             if ( offering.pricing.su[i].price > sitePrice ){
