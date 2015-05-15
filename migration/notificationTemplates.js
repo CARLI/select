@@ -43,6 +43,15 @@ var notificationTemplates = [
         notificationType: 'subscription'
     },
     {
+        id: 'notification-template-open-system',
+        name: 'Open System',
+        subject: 'Open System',
+        emailBody: '',
+        pdfBody: '{{ pdfContent }}',
+        pdfContentIsEditable: false,
+        notificationType: 'subscription'
+    },
+    {
         id: 'notification-template-vendor-reports',
         name: 'Vendor Reports',
         subject: 'Report: CARLI Library Selections',
