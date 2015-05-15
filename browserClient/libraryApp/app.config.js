@@ -8,6 +8,7 @@ angular.module('library.app', [
     'common.fa',
     'common.warnIfUnsaved',
     'library.appState',
+    'library.cycleChooser',
     'library.libraryHeader',
     'library.navBar',
     //'common.alerts',
