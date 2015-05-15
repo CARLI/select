@@ -26,6 +26,12 @@ module.exports = function ( grunt ) {
                     dest: user_config.carli_app.build_dir + user_config.logic_files.build
                 }]
             },
+            library: {
+                files: [{
+                    src: 'libraryAppModule.js',
+                    dest: user_config.library_app.build_dir + user_config.logic_files.build
+                }]
+            },
             vendor: {
                 files: [{
                     src: 'vendorAppModule.js',
@@ -61,6 +67,20 @@ module.exports = function ( grunt ) {
                 }
             },
 
+            serveLibrary: {
+                options: {
+                    open: 'http://localhost:8002',
+                    port: 8002,
+                    middleware: function (connect, options) {
+                        var optBase = (typeof options.base === 'string') ? [options.base] : options.base;
+                        var modRewrite = require('connect-modrewrite');
+
+                        return [modRewrite(['!(\\..+)$ /libraryApp/index.html [L]'])].concat(
+                            optBase.map(function(path){ return connect.static(path); }));
+                    }
+                }
+            },
+
             serveVendor: {
                 options: {
                     open: 'http://localhost:8001',
@@ -84,7 +104,6 @@ module.exports = function ( grunt ) {
                     expand: true
                 }]
             },
-
             carli_app_all_files: {
                 files: [{
                     src: user_config.carli_app.all_files,
@@ -92,7 +111,6 @@ module.exports = function ( grunt ) {
                     expand: true
                 }]
             },
-
             carli_app_bower_files: {
                 files: [{
                     src: user_config.bower_files,
@@ -100,6 +118,26 @@ module.exports = function ( grunt ) {
                 }]
             },
 
+            library_app_common_components: {
+                files: [{
+                    src: user_config.common_components.all_files,
+                    dest: user_config.library_app.build_dir,
+                    expand: true
+                }]
+            },
+            library_app_all_files : {
+                files: [{
+                    src: user_config.library_app.all_files,
+                    dest: user_config.build_dir,
+                    expand: true
+                }]
+            },
+            library_app_bower_files: {
+                files: [{
+                    src: user_config.bower_files,
+                    dest: user_config.library_app.build_dir
+                }]
+            },
 
             vendor_app_common_components: {
                 files: [{
@@ -108,7 +146,6 @@ module.exports = function ( grunt ) {
                     expand: true
                 }]
             },
-
             vendor_app_all_files : {
                 files: [{
                     src: user_config.vendor_app.all_files,
@@ -116,7 +153,6 @@ module.exports = function ( grunt ) {
                     expand: true
                 }]
             },
-
             vendor_app_bower_files: {
                 files: [{
                     src: user_config.bower_files,
@@ -137,6 +173,23 @@ module.exports = function ( grunt ) {
                 files: [{
                     expand: true,
                     cwd: user_config.carli_app.build_dir,
+                    src: [
+                        user_config.logic_files.build,
+                        user_config.bower_files,
+                        user_config.common_components.all_files,
+                        '*.js',
+                        '**/*.js'
+                    ]
+                }]
+            },
+
+            library: {
+                options: {
+                    base: 'libraryApp'
+                },
+                files: [{
+                    expand: true,
+                    cwd: user_config.library_app.build_dir,
                     src: [
                         user_config.logic_files.build,
                         user_config.bower_files,
@@ -177,10 +230,12 @@ module.exports = function ( grunt ) {
         jshint: {
             src: [
                 user_config.carli_app.all_js,
+                user_config.library_app.all_js,
                 user_config.vendor_app.all_js
             ],
             test: [
                 user_config.carli_app.test_js,
+                user_config.library_app.test_js,
                 user_config.vendor_app.test_js
             ],
             gruntfile: [
@@ -223,6 +278,22 @@ module.exports = function ( grunt ) {
                 },
                 junitReporter: {
                     outputFile: '../artifacts/test-results/browserClient-unit.xml'
+                }
+            },
+            library: {
+                files: {
+                    src: [
+                        'build/libraryApp/bower_modules/jquery/dist/jquery.js',
+                        'build/libraryApp/bower_modules/angular/angular.js',
+                        'bower_modules/angular-mocks/angular-mocks.js',
+                        'testModules/*.js',
+                        'build/libraryApp/*.js',
+                        'build/libraryApp/**/*.js',
+                        'libraryApp/**/*.spec.js'
+                    ]
+                },
+                junitReporter: {
+                    outputFile: '../artifacts/test-results/libraryApp-unit.xml'
                 }
             },
             vendor: {
@@ -279,6 +350,16 @@ module.exports = function ( grunt ) {
                 }]
             },
 
+            library: {
+                files: [{
+                    src: user_config.library_app.sass_main,
+                    dest: user_config.library_app.build_dir,
+                    ext: '.css',
+                    expand: true,
+                    flatten: true
+                }]
+            },
+
             vendor: {
                 files: [{
                     src: user_config.vendor_app.sass_main,
@@ -303,30 +384,37 @@ module.exports = function ( grunt ) {
                 files: user_config.carli_app.all_files,
                 tasks: ['newer:copy:carli_app_all_files', 'index:carli']
             },
-
+            filesChangedLibrary: {
+                files: user_config.library_app.all_files,
+                tasks: ['newer:copy:library_app_all_files', 'index:library']
+            },
             filesChangedVendor: {
                 files: user_config.vendor_app.all_files,
                 tasks: ['newer:copy:vendor_app_all_files', 'index:vendor']
             },
-
             filesChangedCommon: {
                 files: ['common/**/*.html', 'common/**/*.js'],
-                tasks: ['newer:copy:carli_app_common_components','newer:copy:vendor_app_common_components']
+                tasks: [
+                    'newer:copy:carli_app_common_components',
+                    'newer:copy:library_app_common_components',
+                    'newer:copy:vendor_app_common_components']
             },
 
             sassCarli: {
                 files: user_config.carli_app.sass_all,
                 tasks: ['sass:carli']
             },
-
+            sassLibrary: {
+                files: user_config.library_app.sass_all,
+                tasks: ['sass:library']
+            },
             sassVendor: {
                 files: user_config.vendor_app.sass_all,
                 tasks: ['sass:vendor']
             },
-
             sassCommon: {
                 files: user_config.common_components.sass_all,
-                tasks: ['sass:carli','sass:vendor']
+                tasks: ['sass:carli','sass:library','sass:vendor']
             }
         }
     };
@@ -387,6 +475,7 @@ module.exports = function ( grunt ) {
     grunt.registerTask( 'build', [
         'clean',
         'build:carli',
+        'build:library',
         'build:vendor'
     ]);
 
@@ -400,6 +489,19 @@ module.exports = function ( grunt ) {
         'copy:carli_app_bower_files',
         'sass:carli',
         'index:carli',
+        'jsenv:node'
+    ]);
+
+    grunt.registerTask('build:library', [
+        'jsenv:browser',
+        'ensure-local-config',
+        'jshint',
+        'browserify:library',
+        'copy:library_app_common_components',
+        'copy:library_app_all_files',
+        'copy:library_app_bower_files',
+        'sass:library',
+        'index:library',
         'jsenv:node'
     ]);
 
@@ -431,6 +533,7 @@ module.exports = function ( grunt ) {
         'clean',
         'build',
         'karma:carli',
+        'karma:library',
         'karma:vendor'
     ]);
 
@@ -444,6 +547,7 @@ module.exports = function ( grunt ) {
     grunt.registerTask( 'serve', [
         'build',
         'connect:serveCarli',
+        'connect:serveLibrary',
         'connect:serveVendor',
         'watch'
     ]);

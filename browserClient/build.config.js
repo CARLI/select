@@ -36,8 +36,24 @@ module.exports = {
         ]
     },
 
+    library_app: {
+        all_files: [
+            'libraryApp/**/*',
+            '!libraryApp/**/*.spec.js'
+        ],
+        all_js: [
+            'libraryApp/*.js',
+            'libraryApp/**/*.js',
+            '!libraryApp/**/*.spec.js'
+        ],
+        build_dir: 'build/libraryApp/',
+        sass_main: 'libraryApp/styles/app.scss',
+        sass_all: 'libraryApp/**/*.scss',
+        test_js: [
+            'libraryApp/**/*.spec.js'
+        ]
+    },
 
-    /**/
     vendor_app: {
         all_files: [
             'vendorApp/**/*',
@@ -55,31 +71,32 @@ module.exports = {
             'vendorApp/**/*.spec.js'
         ]
     },
-    /**/
 
     bower_files: [
+        'bower_modules/angular-busy/angular-busy.css',
+        'bower_modules/font-awesome/css/font-awesome.min.css',
+        'bower_modules/ng-tags-input/ng-tags-input.css',
+
         'bower_modules/jquery/dist/jquery.js',
         'bower_modules/angular/angular.js',
+        'bower_modules/angular-animate/angular-animate.js',
+        'bower_modules/angular-busy/angular-busy.js',
         'bower_modules/angular-busyclick/src/busyClick.directive.js',
         'bower_modules/angular-route/angular-route.js',
         'bower_modules/angular-resource/angular-resource.js',
         'bower_modules/angular-sanitize/angular-sanitize.js',
-        'bower_modules/angular-animate/angular-animate.js',
         'bower_modules/angular-slider/slider.*',
-        'bower_modules/angular-busy/angular-busy.js',
         'bower_modules/bootstrap-sass-official/assets/javascripts/bootstrap.js',
         'bower_modules/angular-bootstrap/ui-bootstrap.js',
         'bower_modules/angular-bootstrap/ui-bootstrap-tpls.js',
+        'bower_modules/FileSaver/FileSaver.js',
         'bower_modules/gsap/src/minified/TweenMax.min.js',
         'bower_modules/gsap/src/minified/jquery.gsap.min.js',
         'bower_modules/handlebars/handlebars.js',
-        'bower_modules/ng-tags-input/ng-tags-input.js',
-        'bower_modules/ng-tags-input/ng-tags-input.css',
-        'bower_modules/font-awesome/css/font-awesome.min.css',
-        'bower_modules/angular-busy/angular-busy.css',
-        'bower_modules/font-awesome/fonts/fontawesome-webfont.*',
         'bower_modules/moment/moment.js',
-        'bower_modules/FileSaver/FileSaver.js'
+        'bower_modules/ng-tags-input/ng-tags-input.js',
+
+        'bower_modules/font-awesome/fonts/fontawesome-webfont.*'
     ],
 
     /**
