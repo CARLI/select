@@ -76,6 +76,8 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
             contacts: []
         };
 
+        vm.productOfferings = [];
+
         setProductFormPristine();
 
         return ensureOneTimePurchaseProductHasEmptyOfferingsForAllLibraries();
@@ -95,9 +97,12 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
             setProductFormPristine();
 
             if ( isOneTimePurchaseProduct(product) ){
-                loadOfferingsForProduct(product)
+                return loadOfferingsForProduct(product)
                     .then(ensureOneTimePurchaseProductHasEmptyOfferingsForAllLibraries);
 
+            }
+            else {
+                return $q.when();
             }
         } );
     }
@@ -239,7 +244,9 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
         if (!vm.newProduct || isWizardComplete()) {
             return saveProduct();
         } else {
-            vm.currentTemplate = templates.oneTimePurchaseFields;
+            return ensureOneTimePurchaseProductHasEmptyOfferingsForAllLibraries().then(function(){
+                vm.currentTemplate = templates.oneTimePurchaseFields;
+            });
         }
     }
 
@@ -293,7 +300,8 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
             .then(saveOfferingsForNewProduct)
             .then(function (offeringsIds) {
                 alertService.putAlert('Product added', {severity: 'success'});
-                resetProductForm().then(function(){
+
+                return resetProductForm().then(function(){
                     hideProductModal();
                     afterSubmitCallback();
                 });
@@ -345,14 +353,15 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
     }
 
     function ensureOneTimePurchaseProductHasEmptyOfferingsForAllLibraries(){
-        var cycle = cycleService.getCurrentCycle();
-
         if ( isOneTimePurchaseProduct(vm.product) ){
-            return  libraryService.listActiveLibraries().then(ensureProductHasOfferingForEachLibrary);
+            return libraryService.listActiveLibraries().then(ensureProductHasOfferingForEachLibrary);
+        }
+        else {
+            return $q.when();
         }
 
         function ensureProductHasOfferingForEachLibrary( libraryList ){
-            libraryList.forEach(ensureProductHasOfferingForLibrary);
+            return libraryList.map(ensureProductHasOfferingForLibrary);
         }
 
         function ensureProductHasOfferingForLibrary( library ){
@@ -370,7 +379,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
         function createEmptyOffering( library ){
             var newOffering = {
                 type: 'Offering',
-                cycle: cycle,
+                cycle: vm.product.cycle,
                 library: library,
                 pricing: {}
             };
