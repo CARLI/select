@@ -4,11 +4,21 @@
         <button class="clear-button-styles select-none" ng-click="vm.selectNone()">Select None</button>
         <span class="pull-right filters-label">View:</span>
     </li>
-    <li class="filter" ng-class="{ 'active': vm.alphaFilter === 'a-f' }" ng-click="vm.setAlphaFilter('a-f')">A-F</li>
-    <li class="filter" ng-class="{ 'active': vm.alphaFilter === 'g-l' }" ng-click="vm.setAlphaFilter('g-l')">G-L</li>
-    <li class="filter" ng-class="{ 'active': vm.alphaFilter === 'm-r' }" ng-click="vm.setAlphaFilter('m-r')">M-R</li>
-    <li class="filter" ng-class="{ 'active': vm.alphaFilter === 's-z' }" ng-click="vm.setAlphaFilter('s-z')">S-Z</li>
-    <li class="filter" ng-class="{ 'active': vm.alphaFilter === 'all' }" ng-click="vm.setAlphaFilter('all')">All</li>
+    <li class="filter" ng-class="{ 'active': vm.alphaFilter === 'a-f' }">
+        <button class="clear-button-styles" ng-click="vm.setAlphaFilter('a-f')">A-F</button>
+    </li>
+    <li class="filter" ng-class="{ 'active': vm.alphaFilter === 'g-l' }">
+        <button class="clear-button-styles"  ng-click="vm.setAlphaFilter('g-l')">G-L</button>
+    </li>
+    <li class="filter" ng-class="{ 'active': vm.alphaFilter === 'm-r' }">
+        <button class="clear-button-styles"  ng-click="vm.setAlphaFilter('m-r')">M-R</button>
+    </li>
+    <li class="filter" ng-class="{ 'active': vm.alphaFilter === 's-z' }">
+        <button class="clear-button-styles"  ng-click="vm.setAlphaFilter('s-z')">S-Z</button>
+    </li>
+    <li class="filter" ng-class="{ 'active': vm.alphaFilter === 'all' }">
+        <button class="clear-button-styles"  ng-click="vm.setAlphaFilter('all')">All</button>
+    </li>
 </ul>
 <ul class="entity-list">
     <li class="entity"
