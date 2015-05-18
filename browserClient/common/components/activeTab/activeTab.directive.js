@@ -5,7 +5,11 @@ angular.module('common.activeTab')
         return {
             restrict: 'A',
             link: function postLink(scope, element, attrs) {
-                scope.$on("$routeChangeSuccess", function (event, current, previous) {
+                scope.$on("$routeChangeSuccess", updateActiveTab);
+
+                updateActiveTab();
+
+                function updateActiveTab(){
                     var pathLevel = attrs.activeTab || 1;
                     var pathToCheck = $location.path().split('/')[pathLevel] ||
                         "current $location.path doesn't reach this level";
@@ -17,7 +21,7 @@ angular.module('common.activeTab')
                     } else {
                         element.parent().removeClass("active");
                     }
-                });
+                }
             }
         };
     }
