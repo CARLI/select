@@ -349,18 +349,20 @@ function getFlaggedState(offering){
             var flagSuPrices = isThereAnSuOfferingForMoreUsersWithASmallerPrice();
             var flagExceedsPriceCap = doesIncreaseFromLastYearExceedPriceCap();
             var flagGreaterThan5PercentReduction = doesDecreaseFromLastYearExceed5Percent();
+            var flagReasons = [];
             if (flagSiteLicensePrice) {
-                offering.flaggedReason = 'SU offering for less than the Site license price';
+                flagReasons.push('SU offering for less than the Site license price');
             }
             if (flagSuPrices) {
-                offering.flaggedReason = 'SU offering for more users with lower price';
+                flagReasons.push('SU offering for more users with lower price');
             }
             if (flagExceedsPriceCap) {
-                offering.flaggedReason = 'Offering exceeds price cap';
+                flagReasons.push('Offering exceeds price cap');
             }
             if (flagGreaterThan5PercentReduction) {
-                offering.flaggedReason = 'Offering is more than 5% less than last year';
+                flagReasons.push('Offering is more than 5% less than last year');
             }
+            offering.flaggedReason  = flagReasons.join("\n");
             return flagSiteLicensePrice || flagSuPrices || flagExceedsPriceCap || flagGreaterThan5PercentReduction;
         }
         return false;
@@ -369,8 +371,10 @@ function getFlaggedState(offering){
     function isThereAnSuOfferingForMoreThanTheSiteLicensePrice(){
         var sitePrice = offering.pricing.site || 0;
         for ( var i in offering.pricing.su ){
-            if ( offering.pricing.su[i].price > sitePrice ){
-                return true;
+            if ( offering.pricing.site !== 0 && offering.pricing.su[i].price !== 0 ){
+                if ( offering.pricing.su[i].price > sitePrice ){
+                    return true;
+                }
             }
         }
         return false;
