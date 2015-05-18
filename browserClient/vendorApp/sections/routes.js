@@ -6,11 +6,6 @@ angular.module('vendor.routes',[
     ])
     .config(function ($routeProvider) {
         $routeProvider
-            .when('/', {
-                templateUrl: '/vendorApp/sections/dashboard/dashboard.html',
-                controller:  'dashboardController',
-                controllerAs:'vm'
-            })
             .when('/dashboard', {
                 templateUrl: '/vendorApp/sections/dashboard/dashboard.html',
                 controller:  'dashboardController',
@@ -30,5 +25,8 @@ angular.module('vendor.routes',[
                 templateUrl: '/vendorApp/sections/descriptions/descriptions.html',
                 controller:  'descriptionsController',
                 controllerAs:'vm'
-            });
+            })
+            .otherwise({
+                redirectTo: '/dashboard'
+            })
     });

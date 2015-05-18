@@ -4,11 +4,6 @@ angular.module('library.routes',[
     ])
     .config(function ($routeProvider) {
         $routeProvider
-            .when('/', {
-                templateUrl: '/libraryApp/sections/dashboard/dashboard.html',
-                controller:  'dashboardController',
-                controllerAs:'vm'
-            })
             .when('/dashboard', {
                 templateUrl: '/libraryApp/sections/dashboard/dashboard.html',
                 controller:  'dashboardController',
@@ -45,5 +40,8 @@ angular.module('library.routes',[
                 controllerAs:'vm'
             })
             */
+            .otherwise({
+                redirectTo: '/dashboard'
+            })
         ;
     });
