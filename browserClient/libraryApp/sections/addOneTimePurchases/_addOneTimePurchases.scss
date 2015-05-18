@@ -1,0 +1,33 @@
+ul.product-list {
+    @extend .zebra-table;
+
+    clear: both;
+
+    li {
+        padding: 0;
+
+        &[collapsible]{
+            display: block;
+        }
+
+        .collapsible-header,
+        .content {
+            width: 100%;
+            @include flexbox;
+        }
+
+        .column:first-child {
+            padding-left: 36px;
+        }
+
+        .column .list-button {
+            @include list-button;
+        }
+    }
+}
+
+.one-time-purchase-progress {
+    li.selected {
+        font-weight: bold;
+    }
+}

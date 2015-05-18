@@ -1,5 +1,6 @@
 angular.module('library.routes',[
-        'library.sections.dashboard'
+        'library.sections.dashboard',
+        'library.sections.addOneTimePurchases'
     ])
     .config(function ($routeProvider) {
         $routeProvider
@@ -21,16 +22,6 @@ angular.module('library.routes',[
             .when('/addOneTimePurchases', {
                 templateUrl: '/libraryApp/sections/addOneTimePurchases/addOneTimePurchases.html',
                 controller:  'addOneTimePurchasesController',
-                controllerAs:'vm'
-            })
-            .when('/addOneTimePurchases/review', {
-                templateUrl: '/libraryApp/sections/addOneTimePurchases/review/addOneTimePurchasesReview.html',
-                controller:  'addOneTimePurchasesReviewController',
-                controllerAs:'vm'
-            })
-            .when('/addOneTimePurchases/complete', {
-                templateUrl: '/libraryApp/sections/addOneTimePurchases/complete/addOneTimePurchasesComplete.html',
-                controller:  'addOneTimePurchasesCompleteController',
                 controllerAs:'vm'
             })
             /*.when('/report', {
