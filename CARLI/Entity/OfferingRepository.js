@@ -337,30 +337,44 @@ function getFlaggedState(offering){
 
 
     function userFlaggedState(){
+        if (offering.flagged) {
+            offering.flaggedReason = 'Flagged by user';
+        }
         return offering.flagged;
     }
 
     function systemFlaggedState(){
         if ( offering.pricing && offering.pricing.su ){
-            var flagSiteLicensePrice = isThereAnSuOfferingForLessThanTheSiteLicensePrice();
+            var flagSiteLicensePrice = isThereAnSuOfferingForMoreThanTheSiteLicensePrice();
             var flagSuPrices = isThereAnSuOfferingForMoreUsersWithASmallerPrice();
             var flagExceedsPriceCap = doesIncreaseFromLastYearExceedPriceCap();
             var flagGreaterThan5PercentReduction = doesDecreaseFromLastYearExceed5Percent();
-            // TODO: Does decrease from last years price exceed 5%, for any SU or Site License
-            console.log('flagSiteLicensePrice', flagSiteLicensePrice);
-            console.log('flagSuPrices', flagSuPrices);
-            console.log('flagExceedsPriceCap', flagExceedsPriceCap);
-            console.log('flagGreaterThan5PercentReduction', flagGreaterThan5PercentReduction);
+            var flagReasons = [];
+            if (flagSiteLicensePrice) {
+                flagReasons.push('SU offering for less than the Site license price');
+            }
+            if (flagSuPrices) {
+                flagReasons.push('SU offering for more users with lower price');
+            }
+            if (flagExceedsPriceCap) {
+                flagReasons.push('Offering exceeds price cap');
+            }
+            if (flagGreaterThan5PercentReduction) {
+                flagReasons.push('Offering is more than 5% less than last year');
+            }
+            offering.flaggedReason  = flagReasons.join("\n");
             return flagSiteLicensePrice || flagSuPrices || flagExceedsPriceCap || flagGreaterThan5PercentReduction;
         }
         return false;
     }
 
-    function isThereAnSuOfferingForLessThanTheSiteLicensePrice(){
+    function isThereAnSuOfferingForMoreThanTheSiteLicensePrice(){
         var sitePrice = offering.pricing.site || 0;
         for ( var i in offering.pricing.su ){
-            if ( offering.pricing.su[i].price > sitePrice ){
-                return true;
+            if ( offering.pricing.site !== 0 && offering.pricing.su[i].price !== 0 ){
+                if ( offering.pricing.su[i].price > sitePrice ){
+                    return true;
+                }
             }
         }
         return false;

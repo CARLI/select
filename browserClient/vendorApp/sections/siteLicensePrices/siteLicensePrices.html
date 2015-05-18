@@ -28,21 +28,22 @@
     <div class="scroll-slider-container">
         <horizontal-scroll-slider container-selector="#site-pricing-grid-container" content-selector="#site-pricing-grid"></horizontal-scroll-slider>
     </div>
+
     <div class="pricing-container">
         <div class="pricing-grid-row-labels" ng-class="vm.viewOptions">
+            <div class="price-cap price-row" ng-show="vm.viewOptions.priceCap">
+                <div class="column header price-cap">Price Cap:</div>
+                <!--<div class="column header size"></div>-->
+                <!--<div class="column header type"></div>-->
+                <!--<div class="column header years"></div>-->
+                <!--<div class="column header lastYearsPrice"></div>-->
+            </div>
             <div class="price-row">
                 <div class="column header library">Library</div>
                 <div class="column header size">Size</div>
                 <div class="column header type">Type</div>
                 <div class="column header years">Years</div>
                 <div class="column header lastYearsPrice">Last Year's Price</div>
-            </div>
-            <div class="price-cap price-row" ng-show="vm.viewOptions.priceCap">
-                <div class="column header library"></div>
-                <div class="column header size"></div>
-                <div class="column header type"></div>
-                <div class="column header years"></div>
-                <div class="column header lastYearsPrice"></div>
             </div>
             <div class="price-row {{ ::library.id }}" ng-repeat="library in vm.libraries | orderBy: 'name'">
                 <div class="column library">{{ ::library.name }}</div>
@@ -55,11 +56,11 @@
 
         <div class="pricing-grid-container" id="site-pricing-grid-container">
             <div class="pricing-grid" id="site-pricing-grid">
-                <div class="price-row product-name-row">
-                    <div class="column header {{ ::product.id }}" ng-repeat="product in ::vm.products | orderBy:'name'">{{ ::vm.getProductDisplayName(product) }}</div>
-                </div>
                 <div class="price-cap price-row" ng-show="vm.viewOptions.priceCap">
                     <div class="column header {{ ::product.id }}" ng-repeat="product in ::vm.products | orderBy:'name'">{{ ::product.priceCap }}%</div>
+                </div>
+                <div class="price-row product-name-row">
+                    <div class="column header {{ ::product.id }}" ng-repeat="product in ::vm.products | orderBy:'name'">{{ ::vm.getProductDisplayName(product) }}</div>
                 </div>
             </div>
         </div>
