@@ -28,5 +28,5 @@ angular.module('vendor.routes',[
             })
             .otherwise({
                 redirectTo: '/dashboard'
-            })
+            });
     });

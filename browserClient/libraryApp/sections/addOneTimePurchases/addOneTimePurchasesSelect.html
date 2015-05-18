@@ -1,11 +1,11 @@
     <h2>Available for Purchase Year-Round</h2>
     <ul class="product-list" cg-busy="vm.loadingPromise">
         <li class="column-headers">
-            <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'product.name', reversedSort: vm.reverse }" ng-click="vm.sort('product.name')">Product</div>
-            <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'product.vendor.name', reversedSort: vm.reverse }" ng-click="vm.sort(['product.vendor.name','product.name'])">Vendor</div>
-            <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'pricing.site', reversedSort: vm.reverse }" ng-click="vm.sort(['pricing.site','product.name'])">Cost</div>
+            <div class="sortable column" ng-class="{ activeSort: vm.orderByAvailable === 'product.name', reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable('product.name')">Product</div>
+            <div class="sortable column" ng-class="{ activeSort: vm.orderByAvailable === 'product.vendor.name', reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(['product.vendor.name','product.name'])">Vendor</div>
+            <div class="sortable column" ng-class="{ activeSort: vm.orderByAvailable === 'pricing.site', reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(['pricing.site','product.name'])">Cost</div>
         </li>
-        <li collapsible class="collapsed" ng-repeat="offering in vm.availableForPurchase | orderBy: vm.orderBy:vm.reverse track by offering.id">
+        <li collapsible class="collapsed" ng-repeat="offering in vm.availableForPurchase | orderBy: vm.orderByAvailable:vm.reverseAvailable track by offering.id">
             <div class="collapsible-header">
                 <div class="column">
                     <button type="button" class="angle-icon-container">
@@ -68,11 +68,11 @@
     <h2>Previously Purchased Items</h2>
     <ul class="product-list" cg-busy="vm.loadingPromise">
         <li class="column-headers">
-            <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'product.name', reversedSort: vm.reverse }" ng-click="vm.sort('product.name')">Product</div>
-            <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'product.vendor.name', reversedSort: vm.reverse }" ng-click="vm.sort('product.vendor.name')">Vendor</div>
-            <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'pricing.site', reversedSort: vm.reverse }" ng-click="vm.sort('pricing.site')">Cost</div>
+            <div class="sortable column" ng-class="{ activeSort: vm.orderByPurchased === 'product.name', reversedSort: vm.reversePurchased }" ng-click="vm.sortPurchased('product.name')">Product</div>
+            <div class="sortable column" ng-class="{ activeSort: vm.orderByPurchased === 'product.vendor.name', reversedSort: vm.reversePurchased }" ng-click="vm.sortPurchased(['product.vendor.name','product.name'])">Vendor</div>
+            <div class="sortable column" ng-class="{ activeSort: vm.orderByPurchased === 'pricing.site', reversedSort: vm.reversePurchased }" ng-click="vm.sortPurchased('pricing.site')">Cost</div>
         </li>
-        <li collapsible class="collapsed" ng-repeat="offering in vm.purchased | orderBy: vm.orderBy:vm.reverse track by offering.id ">
+        <li collapsible class="collapsed" ng-repeat="offering in vm.purchased | orderBy: vm.orderByPurchased:vm.reversePurchased track by offering.id ">
             <div class="collapsible-header">
                 <div class="column">
                     <button type="button" class="angle-icon-container">

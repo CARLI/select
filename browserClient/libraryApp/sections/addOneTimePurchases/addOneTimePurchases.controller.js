@@ -6,8 +6,10 @@ function addOneTimePurchasesController( $q, $window, config, cycleService, offer
 
     vm.selectionStep = 'select';
     vm.libraryId = userService.getUser().library.id;
-    vm.orderBy = 'product.name';
-    vm.reverse = false;
+    vm.orderByAvailable = 'product.name';
+    vm.orderByPurchased = 'product.name';
+    vm.reverseAvailable = false;
+    vm.reversePurchased = false;
 
     vm.availableForPurchase = [];
     vm.purchased = [];
@@ -19,7 +21,8 @@ function addOneTimePurchasesController( $q, $window, config, cycleService, offer
     vm.reviewSelections = reviewSelections;
     vm.startSelections = startSelections;
     vm.selectProduct = selectProduct;
-    vm.sort = sort;
+    vm.sortAvailable = function sortAvailable(newSort){ sort(newSort, 'Available'); };
+    vm.sortPurchased = function sortPurchased(newSort){ sort(newSort, 'Purchased'); };
     vm.unselectProduct = unselectProduct;
 
     activate();
@@ -99,17 +102,17 @@ function addOneTimePurchasesController( $q, $window, config, cycleService, offer
         }
     }
 
-    function sort( newOrderBy ){
+    function sort( newOrderBy, sortProperty ){
         if ( !newOrderBy ){
             return;
         }
 
-        if ( vm.orderBy === newOrderBy){
-            vm.reverse = !vm.reverse;
+        if ( vm['orderBy'+sortProperty] === newOrderBy.toString() ){
+            vm['reverse'+sortProperty] = !vm['reverse'+sortProperty];
         }
         else {
-            vm.orderBy = newOrderBy;
-            vm.reverse = false;
+            vm['orderBy'+sortProperty] = newOrderBy;
+            vm['reverse'+sortProperty] = false;
         }
     }
 
