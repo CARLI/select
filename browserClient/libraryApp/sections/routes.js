@@ -13,17 +13,27 @@ angular.module('library.routes',[
                 controller:  'dashboardController',
                 controllerAs:'vm'
             })
-            /*.when('/addSubscriptions', {
-                templateUrl: '/libraryApp/sections/',
-                controller:  'Controller',
-                controllerAs:'vm'
-            })
+//            .when('/addSubscriptions', {
+//                templateUrl: '/libraryApp/sections/',
+//                controller:  'Controller',
+//                controllerAs:'vm'
+//            })
             .when('/addOneTimePurchases', {
-                templateUrl: '/libraryApp/sections/',
-                controller:  'Controller',
+                templateUrl: '/libraryApp/sections/addOneTimePurchases/addOneTimePurchases.html',
+                controller:  'addOneTimePurchasesController',
                 controllerAs:'vm'
             })
-            .when('/report', {
+            .when('/addOneTimePurchases/review', {
+                templateUrl: '/libraryApp/sections/addOneTimePurchases/review/addOneTimePurchasesReview.html',
+                controller:  'addOneTimePurchasesReviewController',
+                controllerAs:'vm'
+            })
+            .when('/addOneTimePurchases/complete', {
+                templateUrl: '/libraryApp/sections/addOneTimePurchases/complete/addOneTimePurchasesComplete.html',
+                controller:  'addOneTimePurchasesCompleteController',
+                controllerAs:'vm'
+            })
+            /*.when('/report', {
                 templateUrl: '/libraryApp/sections/',
                 controller:  'Controller',
                 controllerAs:'vm'
