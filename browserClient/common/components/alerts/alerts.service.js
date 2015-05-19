@@ -1,5 +1,5 @@
-angular.module('carli.alerts')
-    .factory('alertService', alertService);
+angular.module('common.alerts')
+    .service('alertService', alertService);
 
 function alertService($timeout, config) {
     var alerts = [];

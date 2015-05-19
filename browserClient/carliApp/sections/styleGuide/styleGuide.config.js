@@ -1,7 +1,7 @@
 angular.module('carli.sections.styleGuide',
     [
         'carli.componentGatherer',
-        'carli.alerts',
+        'common.alerts',
         'carli.entityList',
         'common.fa',
         'carli.viewEditDirectives',

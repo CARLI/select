@@ -9,7 +9,7 @@ angular.module('carli.app', [
     'carli.carliHeader',
     'carli.debugPanel',
     'carli.navBar',
-    'carli.alerts',
+    'common.alerts',
     'carli.routes',
     'carli.userMenu'
 ])

@@ -1,6 +1,6 @@
 angular.module('carli.sections.oneTimePurchases.selectedProducts', [
     'cgBusy',
-    'carli.alerts',
+    'common.alerts',
     'carli.cycleService',
     'carli.notificationModal',
     'common.checkbox',

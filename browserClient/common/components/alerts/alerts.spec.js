@@ -1,5 +1,5 @@
 describe ('The Alerts module', function () {
-    beforeEach(module('carli.alerts'));
+    beforeEach(module('common.alerts'));
 
     it('should provide a service object', inject(function(alertService) {
         expect(alertService).to.be.an('Object');
