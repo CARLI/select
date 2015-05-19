@@ -1,0 +1,43 @@
+    <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="userForm" warn-if-unsaved>
+
+    <div class="page-header">
+        <div class="headings">
+            <label for="name">User Name</label>
+            <view-edit-text-field ng-model="vm.user.name" edit-mode="vm.editable" input-id="name">
+                <h1>{{ vm.user.name }}</h1>
+            </view-edit-text-field>
+        </div>
+        <div ng-show="!vm.newUser" class="controls">
+            <div ng-show="vm.editable">
+                <button type="button" class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</button>
+                <input class="carli-button save-button" ng-disabled="!vm.editable" type="button" value="{{ vm.submitLabel() }}" busy-click="vm.submitAction()" >
+            </div>
+
+            <button type="button" id="user-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">
+                Edit<fa name="edit"></fa>
+            </button>
+        </div>
+    </div>
+
+    <section class="content">
+        <fieldset>
+            
+        </fieldset>
+    </section>
+
+    <div class="footer" ng-show="vm.editable">
+        <fieldset>
+            <button type="button" class="carli-button cancel-button" data-dismiss="modal" ng-click="vm.cancelEdit()">Cancel</button>
+            <input type="button" id="user-submit" class="carli-button save-button" value="{{ vm.submitLabel() }}" busy-click="vm.submitAction()">
+        </fieldset>
+    </div>
+
+</form>
+
+    <modal-dialog modal-id="'otp-modal'" modal-title="'One-Time Purchase'">
+        <ng-include src="'carliApp/components/entityForms/user/editOneTimePurchase.html'"></ng-include>
+    </modal-dialog>
+
+    <modal-dialog modal-id="'terms-modal'" modal-title="'Override License-Level Terms'">
+        <ng-include src="'carliApp/components/entityForms/user/editTerms.html'"></ng-include>
+    </modal-dialog>

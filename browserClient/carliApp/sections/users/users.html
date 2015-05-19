@@ -1,0 +1,14 @@
+<section id="users">
+    <div class="list-page-header">
+        <h1>Users</h1>
+        <div class="button-container">
+            <button type="button" id="new-user" class="carli-button" data-toggle="modal" data-target="#new-user-modal">New User <i class="fa fa-plus-circle"></i></button>
+        </div>
+    </div>
+
+    <section class="content list-content">
+        <entity-list values="vm.userList" columns="vm.userListColumns" entity-label="users" loading-promise="vm.loadingPromise"></entity-list>
+    </section>
+
+    <edit-user-modal after-submit-fn="vm.afterUserSubmit"></edit-user-modal>
+</section>

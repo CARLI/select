@@ -1,0 +1,73 @@
+
+#users {
+    $column-gutter: 20px;
+
+    #currentCycleSelect {
+        display: inline-block;
+        margin-right: 2rem;
+    }
+
+    .edit-form {
+        div.column {
+            @include grid-column(6);
+            &:nth-child(1) {
+                padding-right: $column-gutter / 2;
+            }
+            &:nth-child(2) {
+                padding-left: $column-gutter / 2;
+            }
+        }
+
+        view-edit-radios {
+            span {
+                display: block;
+            }
+        }
+
+        .one-time-purchase-settings {
+            clear: both;
+        }
+
+        .library-list {
+            margin-top: $label-margin-top;
+        }
+
+    }
+
+    ul.terms-list {
+        list-style: none inside;
+        margin-top: 1rem;
+
+        li {
+            border-top: $default-border;
+            border-left: $default-border;
+            border-right: $default-border;
+            padding: 1rem;
+            margin: 0;
+
+            label {
+                font-weight: normal;
+                margin: 0;
+            }
+
+            &:last-child {
+                border-bottom: $default-border;
+                border-left: $default-border;
+                border-right: $default-border;
+            }
+
+            [ng-transclude] {
+                color: $purple;
+                display: inline;
+            }
+        }
+
+        &.editing {
+            li {
+                border: 0;
+                margin-bottom: 1rem;
+                padding: 0;
+            }
+        }
+    }
+}

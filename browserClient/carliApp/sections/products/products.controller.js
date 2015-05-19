@@ -41,7 +41,11 @@ function productController( $scope, $sce, cycleService, productService ){
             orderByProperty: ['vendor.name','name'],
             contentFunction: function(product) {
                 var vendor = product.vendor || {};
-                return vendor.name || "";
+                if (vendor) {
+                    return $sce.trustAsHtml('<a href="vendor/' + vendor.id + '">' + vendor.name + '</a>');
+                } else {
+                    return '';
+                }
             }
         },
         {
@@ -49,7 +53,11 @@ function productController( $scope, $sce, cycleService, productService ){
             orderByProperty: ['license.name','name'],
             contentFunction: function(product) {
                 var license = product.license || {};
-                return license.name || '';
+                if (license) {
+                    return $sce.trustAsHtml('<a href="license/' + license.id + '">' + license.name + '</a>');
+                } else {
+                    return '';
+                }
             }
         },
         {
