@@ -21,13 +21,17 @@ function quickPricingSiteController($rootScope){
 
     function goToStep2() {
         $rootScope.$broadcast('accordion', 'quick-pricing-accordion-2');
+        $('#quick-pricing-accordion-2 .accordion-header button').focus();
     }
     function goToStep3() {
         $rootScope.$broadcast('accordion', 'quick-pricing-accordion-3');
+        $('#quick-pricing-accordion-3 .accordion-header button').focus();
     }
     function finish() {
         $rootScope.$broadcast('accordion', '');
         $('#quick-pricing-header').click();
+        $('#quick-pricing-header button').focus();
+
         if (vm.quickPricingArguments.mode == 'dollarAmount') {
             vm.quickPricingCallback('dollarAmount', vm.quickPricingArguments.dollarValue);
         }

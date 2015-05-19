@@ -1,6 +1,10 @@
 <ul class="select-by-toggle">
-    <li class="select-by narrow" ng-class="{ 'active': vm.selectBy === 'filter' }" ng-click="vm.selectBy = 'filter'">Filter Libraries</li>
-    <li class="select-by library" ng-class="{ 'active': vm.selectBy === 'choose' }" ng-click="vm.selectBy = 'choose'">Choose Individual Libraries</li>
+    <li class="select-by narrow" ng-class="{ 'active': vm.selectBy === 'filter' }">
+        <button class="clear-button-styles" ng-click="vm.selectBy = 'filter'">Filter Libraries</button>
+    </li>
+    <li class="select-by library" ng-class="{ 'active': vm.selectBy === 'choose' }">
+        <button class="clear-button-styles" ng-click="vm.selectBy = 'choose'">Choose Individual Libraries</button>
+    </li>
     <li class="select-by-header-spacer" ng-if="vm.selectBy === 'filter'"></li>
 </ul>
 
@@ -13,23 +17,23 @@
                 <button class="clear-fte" ng-click="vm.resetFteFilter()">Clear <fa name="times"></fa></button>
             </div>
             <div class="fte-input">
-                <input type="text" ng-model="vm.filters.fte.lowerBound">
+                <input type="text" ng-model="vm.filters.fte.lowerBound" aria-label="minimum full time enrollment">
                 <span class="to">to</span>
-                <input type="text" ng-model="vm.filters.fte.upperBound">
+                <input type="text" ng-model="vm.filters.fte.upperBound" aria-label="maximum full time enrollment">
             </div>
         </div>
         <div class="narrow-by">
             <ul>
-                <li><checkbox ng-model="vm.filters.institutionYears.twoYear"></checkbox> 2 Year Institutions</li>
-                <li><checkbox ng-model="vm.filters.institutionYears.fourYear"></checkbox> 4 Year Institutions</li>
-                <li><checkbox ng-model="vm.filters.institutionYears.other"></checkbox> All Other</li>
+                <li><checkbox ng-model="vm.filters.institutionYears.twoYear">2 Year Institutions</checkbox></li>
+                <li><checkbox ng-model="vm.filters.institutionYears.fourYear">4 Year Institutions</checkbox></li>
+                <li><checkbox ng-model="vm.filters.institutionYears.other">All Other</checkbox></li>
             </ul>
         </div>
         <div class="narrow-by">
             <ul>
-                <li><checkbox ng-model="vm.filters.institutionType.public"></checkbox> Public Institutions</li>
-                <li><checkbox ng-model="vm.filters.institutionType.private"></checkbox> Private Institutions</li>
-                <li><checkbox ng-model="vm.filters.institutionType.other"></checkbox> All Other</li>
+                <li><checkbox ng-model="vm.filters.institutionType.public">Public Institutions</checkbox></li>
+                <li><checkbox ng-model="vm.filters.institutionType.private">Private Institutions</checkbox></li>
+                <li><checkbox ng-model="vm.filters.institutionType.other">All Other</checkbox></li>
             </ul>
         </div>
         <!--<div class="narrow-by">

@@ -101,10 +101,13 @@ quick-pricing-su {
                     color: $black;
                     cursor: pointer;
                     text-align: center;
-                    text-transform: uppercase;
                     font-family: 'Dosis', sans-serif;
                     font-weight: 600;
                     @include font-size(15);
+
+                    button {
+                        text-transform: uppercase;
+                    }
                 }
                 &.select-by.narrow {
                     @include flex(0 0 $select-by-narrow-width);
