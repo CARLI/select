@@ -1,15 +1,16 @@
 angular.module('carli.app', [
     'busyClick',
+    'ngAnimate',
     'ngRoute',
-    'carli.admin',
-    'carli.cycleService',
+    'common.alerts',
+    'common.errorHandler',
     'common.fa',
     'common.warnIfUnsaved',
-    'ngAnimate',
+    'carli.admin',
     'carli.carliHeader',
+    'carli.cycleService',
     'carli.debugPanel',
     'carli.navBar',
-    'common.alerts',
     'carli.routes',
     'carli.userMenu'
 ])

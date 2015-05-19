@@ -1,7 +1,7 @@
 angular.module('carli.newCycleForm')
     .controller('newCycleFormController', newCycleFormController);
 
-function newCycleFormController( $scope, $rootScope, $location, alertService, cycleService ) {
+function newCycleFormController( $scope, $rootScope, $location, alertService, cycleService, errorHandler ) {
     var vm = this;
 
     vm.cycle = {};
@@ -45,9 +45,7 @@ function newCycleFormController( $scope, $rootScope, $location, alertService, cy
                 });
                 alertService.putAlert('Cycle added', {severity: 'success'});
             })
-            .catch(function (error) {
-                alertService.putAlert(error, {severity: 'danger'});
-            });
+            .catch(errorHandler);
 
         return creationPromise;
     }

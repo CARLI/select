@@ -5,7 +5,7 @@ var offeringTemplatePromise;
 var editOfferingHandlerAttached;
 var flagOfferingHandlerAttached;
 
-function renderOfferingDirective( $http, $q, $filter, alertService, offeringService, editOfferingService, productService ) {
+function renderOfferingDirective($http, $q, $filter, alertService, editOfferingService, errorHandler, offeringService, productService){
     registerHandlebarsHelpers();
 
     var flagActionInProgress = {};
@@ -113,7 +113,7 @@ function renderOfferingDirective( $http, $q, $filter, alertService, offeringServ
 
                     scope.$apply(function() {
                         editOfferingService.toggleOfferingUserFlaggedState(offeringId)
-                            .then(alertSuccess, alertError)
+                            .then(alertSuccess, errorHandler)
                             .then(offeringService.load)
                             .then(updateFlagCssClass);
                     });
@@ -121,10 +121,6 @@ function renderOfferingDirective( $http, $q, $filter, alertService, offeringServ
                     function alertSuccess(offeringId) {
                         alertService.putAlert('Offering updated', {severity: 'success'});
                         return offeringId;
-                    }
-                    function alertError(err) {
-                        alertService.putAlert(err, {severity: 'danger'});
-                        console.log('failed', err);
                     }
 
                     function updateFlagCssClass( updatedOffering ){

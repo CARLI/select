@@ -1,5 +1,5 @@
 angular.module('carli.editOffering')
-    .directive('editOffering', function (alertService, offeringService) {
+    .directive('editOffering', function (alertService, errorHandler, offeringService) {
         return {
             restrict: 'E',
             scope: {
@@ -55,10 +55,7 @@ angular.module('carli.editOffering')
                         workaroundCouchStoreRevisionSmell(updatedOffering);
                         alertService.putAlert('Offering updated', {severity: 'success'});
                         vm.notifyParentOfSave(vm.offering);
-                    }).catch(function(err) {
-                        alertService.putAlert(err, {severity: 'danger'});
-                        console.log('failed to save offering', vm.offering);
-                    });
+                    }).catch(errorHandler);
 
                 function updateOfferingFlaggedStatus( offering ){
                     offering.flagged = offeringService.getFlaggedState(offering);

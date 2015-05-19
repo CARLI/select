@@ -2,7 +2,7 @@
     angular.module('carli.sections.oneTimePurchases.selectedProducts')
         .controller('selectedProductsController', selectedProductsController);
 
-    function selectedProductsController($scope, $routeParams, $q, alertService, config, cycleService, libraryService, notificationModalService, offeringService, vendorService, productService) {
+    function selectedProductsController($scope, $routeParams, $q, alertService, config, cycleService, errorHandler, libraryService, notificationModalService, offeringService, vendorService, productService) {
         var vm = this;
         vm.libraryId = $routeParams.libraryId;
         vm.offeringList = [];
@@ -82,7 +82,7 @@
                 refreshOfferingsForLibrary(vm.library);
             })
             .catch(function(error){
-                alertService.putAlert(error, {severity: 'danger'});
+                errorHandler(error);
                 refreshOfferingsForLibrary(vm.library);
             });
         }
@@ -97,7 +97,7 @@
                 refreshOfferingsForLibrary(vm.library);
             })
             .catch(function(error){
-                alertService.putAlert(error, {severity: 'danger'});
+                errorHandler(error);
                 refreshOfferingsForLibrary(vm.library);
             });
         }

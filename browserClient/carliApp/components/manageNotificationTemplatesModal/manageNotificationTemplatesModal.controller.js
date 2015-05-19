@@ -1,7 +1,7 @@
 angular.module('carli.manageNotificationTemplatesModal')
 .controller('manageNotificationTemplatesModalController', manageNotificationTemplatesModalController);
 
-function manageNotificationTemplatesModalController( $scope, $rootScope, alertService, notificationTemplateService ){
+function manageNotificationTemplatesModalController( $scope, $rootScope, alertService, errorHandler, notificationTemplateService ){
     var vm = this;
     vm.templateToEdit = null;
     vm.newTemplate = false;
@@ -33,24 +33,20 @@ function manageNotificationTemplatesModalController( $scope, $rootScope, alertSe
                 .then(function(){
                     successfulSave('Template created');
                 })
-                .catch(errorSaving);
+                .catch(errorHandler);
         }
         else {
             notificationTemplateService.update(vm.templateToEdit)
                 .then(function(){
                     successfulSave('Template updated');
                 })
-                .catch(errorSaving);
+                .catch(errorHandler);
         }
 
         function successfulSave(message){
             alertService.putAlert(message, {severity: 'success'});
             resetTemplateForm();
             hideModal();
-        }
-
-        function errorSaving( error ){
-            alertService.putAlert(error, {severity: 'danger'});
         }
     }
 

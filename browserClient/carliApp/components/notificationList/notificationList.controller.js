@@ -1,7 +1,7 @@
 angular.module('carli.notificationList')
 .controller('notificationListController', notificationListController);
 
-function notificationListController($q, $scope, $rootScope, $filter, alertService, controllerBaseService, notificationService, notificationPreviewModalService){
+function notificationListController($q, $scope, $rootScope, $filter, alertService, controllerBaseService, errorHandler, notificationService, notificationPreviewModalService){
     var vm = this;
 
     var datePickerFormat = 'M/D/YY';
@@ -108,30 +108,22 @@ function notificationListController($q, $scope, $rootScope, $filter, alertServic
     function removeDraft( notification ){
         notificationService.removeNotification(notification.id)
             .then(notificationRemovedSuccess)
-            .catch(notificationRemovedError);
+            .catch(errorHandler);
 
         function notificationRemovedSuccess(){
             removeNotificationFromVm(notification);
             alertService.putAlert('Notification removed', {severity: 'success'});
-        }
-
-        function notificationRemovedError(err){
-            alertService.putAlert(error, {severity: 'danger'});
         }
     }
 
     function sendNotification( notification ){
         notificationService.sendNotification(notification)
             .then(notificationSentSuccess)
-            .catch(notificationSentError);
+            .catch(errorHandler);
 
         function notificationSentSuccess(){
             alertService.putAlert('Notification sent', {severity: 'success'});
             announceNotificationsChange('draftSent');
-        }
-
-        function notificationSentError(err){
-            alertService.putAlert(err, {severity: 'danger'});
         }
     }
 
@@ -149,9 +141,7 @@ function notificationListController($q, $scope, $rootScope, $filter, alertServic
                 alertService.putAlert( results.length + ' notifications sent', {severity: 'success'});
                 announceNotificationsChange('draftSent');
             })
-            .catch(function(error){
-                alertService.putAlert(error, {severity: 'danger'});
-            });
+            .catch(errorHandler);
 
         function sendNotificationSilently(notification){
             return notificationService.sendNotification(notification);

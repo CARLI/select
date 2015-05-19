@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.editCycle')
     .controller('editCycleController', editCycleController);
 
-function editCycleController( $routeParams, alertService, cycleService ) {
+function editCycleController( $routeParams, cycleService, errorHandler ) {
     var cycleRouter = this;
     cycleRouter.cycleId = $routeParams.id;
     cycleRouter.shouldShowGroupByToggle = shouldShowGroupByToggle;
@@ -52,8 +52,6 @@ function editCycleController( $routeParams, alertService, cycleService ) {
                 cycleRouter.cycle = cycle;
                 cycleRouter.status = cycle.status;
             })
-            .catch(function (err) {
-                alertService.putAlert(err, { severity: 'danger' });
-            });
+            .catch(errorHandler);
     }
 }
