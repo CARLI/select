@@ -1,3 +1,4 @@
 angular.module('carli.sections.login', [
-    'common.auth'
+    'common.auth',
+    'common.carliModules'
 ]);

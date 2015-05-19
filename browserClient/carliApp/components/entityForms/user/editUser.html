@@ -2,8 +2,8 @@
 
     <div class="page-header">
         <div class="headings">
-            <label for="name">User Name</label>
-            <view-edit-text-field ng-model="vm.user.name" edit-mode="vm.editable" input-id="name">
+            <label for="name">User Full Name</label>
+            <view-edit-text-field ng-model="vm.user.fullName" edit-mode="vm.editable" input-id="name">
                 <h1>{{ vm.user.name }}</h1>
             </view-edit-text-field>
         </div>
@@ -21,7 +21,15 @@
 
     <section class="content">
         <fieldset>
-            
+            <label for="email">Email</label>
+            <view-edit-text-field ng-model="vm.user.email" edit-mode="vm.editable" input-id="email">
+                <h1>{{ vm.user.email }}</h1>
+            </view-edit-text-field>
+
+            <label for="password">Password</label>
+            <view-edit-text-field ng-model="vm.user.password" edit-mode="vm.editable" input-id="password">
+                <h1>{{ vm.user.password }}</h1>
+            </view-edit-text-field>
         </fieldset>
     </section>
 
@@ -33,11 +41,3 @@
     </div>
 
 </form>
-
-    <modal-dialog modal-id="'otp-modal'" modal-title="'One-Time Purchase'">
-        <ng-include src="'carliApp/components/entityForms/user/editOneTimePurchase.html'"></ng-include>
-    </modal-dialog>
-
-    <modal-dialog modal-id="'terms-modal'" modal-title="'Override License-Level Terms'">
-        <ng-include src="'carliApp/components/entityForms/user/editTerms.html'"></ng-include>
-    </modal-dialog>

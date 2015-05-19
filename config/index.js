@@ -6,11 +6,10 @@ var couchDbName = 'carli';
 var defaults = {
     alertTimeout: 10000,
     middleware: {
-        url: 'http://localhost:3000',
-        port: 3000
+        url: 'http://carli-staff.local:8080/api',
     },
     storeOptions: {
-        couchDbUrl: 'http://localhost:5984',
+        couchDbUrl: 'http://carli-staff.local:8080/db',
         couchDbName: couchDbName
     },
     memberDb: {

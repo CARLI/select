@@ -1,17 +1,8 @@
 angular.module('common.auth')
     .service('authService', authService);
 
-function authService() {
+function authService(CarliModules) {
     return {
-        logIn: logIn
+        logIn: CarliModules.Auth.logIn
     };
-
-    function logIn(user) {
-        //return $request(config.couchDbUrl + '_session')
-        //    .then(function(session) {
-        //        console.log(session);
-        //        $rootScope.loggedIn = true;
-        //        return session;
-        //    });
-    }
 }

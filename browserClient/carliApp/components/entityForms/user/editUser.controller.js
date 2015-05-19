@@ -130,20 +130,11 @@ function editUserController( $scope, $rootScope, entityBaseService, userService,
     }
 
     function submitAction() {
-        if (!vm.newUser || isWizardComplete()) {
-            return saveUser();
-        } else {
-            return ensureOneTimePurchaseUserHasEmptyOfferingsForAllLibraries().then(function(){
-                vm.currentTemplate = templates.oneTimePurchaseFields;
-            });
-        }
+        return saveUser();
     }
 
     function submitLabel() {
-        if (!vm.newUser || isWizardComplete()) {
-            return 'Save';
-        }
-        return 'Next';
+        return 'Save';
     }
 
     function saveUser(){
@@ -152,21 +143,12 @@ function editUserController( $scope, $rootScope, entityBaseService, userService,
         if (vm.userId === undefined) {
             return saveNewUser();
         } else {
-            savePreviousName();
             return saveExistingUser();
         }
     }
 
     function translateOptionalSelections() {
-        if (vm.user.license === undefined) {
-            vm.user.license = null;
-        }
-    }
 
-    function savePreviousName() {
-        if (originalUserName !== vm.user.name) {
-            vm.user.previousName = originalUserName;
-        }
     }
 
     function saveExistingUser() {
@@ -185,6 +167,7 @@ function editUserController( $scope, $rootScope, entityBaseService, userService,
     }
 
     function saveNewUser() {
+        vm.user.roles = [ 'staff' ];
         return userService.create(vm.user)
             .then(function () {
                 alertService.putAlert('User added', {severity: 'success'});
