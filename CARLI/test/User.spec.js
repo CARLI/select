@@ -1,25 +1,21 @@
 var chai   = require( 'chai' );
 var expect = chai.expect;
 var test = require( './Entity/EntityInterface.spec' );
-var vendorRepository = require('../Entity/UserRepository' );
+var userRepository = require('../Entity/UserRepository' );
 
 function validUserData() {
     return {
-        type: 'Vendor',
-        name: 'foo'
+        type: 'user',
+        name: 'foo',
+        email: 'foo@hotmail.com',
+        roles: [ 'staff' ]
     };
 }
 
 function invalidUserData() {
     return {
-        type: 'Vendor'
+        type: 'user'
     };
 }
 
-test.run('Vendor', validUserData, invalidUserData);
-
-describe('getVendorsById', function(){
-    it('should be a function', function(){
-        expect(vendorRepository.getVendorsById).to.be.a('function');
-    })
-});
+test.run('User', validUserData, invalidUserData);

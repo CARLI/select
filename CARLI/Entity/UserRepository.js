@@ -8,7 +8,7 @@ var Entity = require('../Entity')
     , Q = require('q')
     ;
 
-var UserRepository = Entity('Vendor');
+var UserRepository = Entity('user');
 var userStoreOptions = {
     couchDbUrl: StoreOptions.couchDbUrl,
     couchDbName: '_users'
@@ -17,35 +17,35 @@ UserRepository.setStore( Store( StoreModule(userStoreOptions) ) );
 
 var propertiesToTransform = [];
 
-function transformFunction( vendor ){
-    EntityTransform.transformObjectForPersistence(vendor, propertiesToTransform);
+function transformFunction( user ){
+    EntityTransform.transformObjectForPersistence(user, propertiesToTransform);
 }
 
-function createUser( vendor ){
-    return UserRepository.create( vendor, transformFunction );
+function createUser( user ){
+    return UserRepository.create( user, transformFunction );
 }
 
-function updateUser( vendor ){
-    return UserRepository.update( vendor, transformFunction );
+function updateUser( user ){
+    return UserRepository.update( user, transformFunction );
 }
 
 function listUsers(){
     return EntityTransform.expandListOfObjectsFromPersistence( UserRepository.list(), propertiesToTransform, functionsToAdd);
 }
 
-function loadUser( vendorId ){
+function loadUser( userId ){
     var deferred = Q.defer();
 
-    UserRepository.load( vendorId )
-        .then(function (vendor) {
-            EntityTransform.expandObjectFromPersistence( vendor, propertiesToTransform, functionsToAdd )
+    UserRepository.load( userId )
+        .then(function (user) {
+            EntityTransform.expandObjectFromPersistence( user, propertiesToTransform, functionsToAdd )
                 .then(function () {
-                    deferred.resolve(vendor);
+                    deferred.resolve(user);
                 })
                 .catch(function(err){
                     // WARNING: this suppresses errors for entity references that are not found in the store
                     console.warn('*** Cannot find reference in database ', err);
-                    deferred.resolve(vendor);
+                    deferred.resolve(user);
                 });
         })
         .catch(function (err) {
@@ -55,7 +55,7 @@ function loadUser( vendorId ){
     return deferred.promise;
 }
 
-/* functions that get added as instance methods on loaded Vendors */
+/* functions that get added as instance methods on loaded users */
 
 var functionsToAdd = {
 };

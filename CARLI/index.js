@@ -8,6 +8,7 @@ module.exports = {
     NotificationDraftGenerator: require('./NotificationDraftGenerator'),
     Offering: require('./Entity/OfferingRepository'),
     Product: require('./Entity/ProductRepository'),
+    User: require('./Entity/UserRepository'),
     Vendor: require('./Entity/VendorRepository'),
     VendorStatus: require('./Entity/VendorStatusRepository'),
     Store: require('./Store'),

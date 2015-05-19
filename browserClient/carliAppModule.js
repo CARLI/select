@@ -12,6 +12,7 @@ module.exports = {
     NotificationDraftGenerator: require('../CARLI/NotificationDraftGenerator'),
     Offering: require('../CARLI/Entity/OfferingRepository'),
     Product: require('../CARLI/Entity/ProductRepository'),
+    User: require('../CARLI/Entity/UserRepository'),
     Vendor: require('../CARLI/Entity/VendorRepository'),
     VendorStatus: require('../CARLI/Entity/VendorStatusRepository'),
     Store: require('../CARLI/Store'),
