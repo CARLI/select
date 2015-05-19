@@ -1,5 +1,6 @@
 var config = require('../../../config');
 var couchApp = require('../../../config/environmentDependentModules/couchApp'),
+    couchError = require('./Error'),
     Q = require('q'),
     request = require('../../../config/environmentDependentModules/request'),
     StoreOptions = require( '../../../config').storeOptions,
@@ -13,11 +14,14 @@ function couchRequest(requestOptions) {
 
     function handleCouchResponse(error, response, body) {
         var data = (typeof body === 'string') ? JSON.parse(body) : body;
-        var err = error || data.error;
 
-        if (err) {
-            deferred.reject( err /*config.errorMessages.fatal*/ );
-        } else {
+        if ( error ){
+            deferred.reject( couchError(error) );
+        }
+        else if (data.error) {
+            deferred.reject( couchError(data) );
+        }
+        else {
             deferred.resolve(data);
         }
     }

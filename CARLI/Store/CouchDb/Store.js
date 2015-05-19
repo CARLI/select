@@ -1,4 +1,5 @@
 var config = require('../../../config');
+var couchError = require('./Error');
 var Q = require('q');
 var request = require('../../../config/environmentDependentModules/request');
 var CouchUtils = require('./Utils');
@@ -34,7 +35,7 @@ module.exports = function (inputOptions) {
                 var data = JSON.parse(body);
                 var error = err || data.error;
                 if (error) {
-                    deferred.reject(error);
+                    deferred.reject(couchError(error));
                 }
                 else {
                     deferred.resolve(data);
@@ -54,8 +55,7 @@ module.exports = function (inputOptions) {
         }, function (err, response, body) {
             var error = err || body.error;
             if (error) {
-                var message = (config.showFullErrors) ? error : config.errorMessages.fatal;
-                deferred.reject(message);
+                deferred.reject(couchError(error));
             }
             else {
                 data._id = body.id;
@@ -82,14 +82,14 @@ module.exports = function (inputOptions) {
                 var data = JSON.parse(body);
                 var error = err || data.error;
                 if (error) {
-                    deferred.reject(error);
+                    deferred.reject(couchError(error));
                 }
                 else {
                     request({uri: db_host + '/' + id + '?rev=' + data._rev, method: 'DELETE' },
                         function (err, response, body) {
                             var error = err || data.error;
                             if (error) {
-                                deferred.reject(error);
+                                deferred.reject(couchError(error));
                             }
                             else {
                                 deferred.resolve();
