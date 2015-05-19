@@ -23,7 +23,7 @@ module.exports = function () {
             deferred.resolve(_cloneData(memoryStore[id]));
         }
         else {
-            deferred.reject('not_found');
+            deferred.reject({error:'not_found'});
         }
 
         return deferred.promise;

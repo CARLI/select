@@ -27,15 +27,18 @@ module.exports = function (inputOptions) {
         var deferred = Q.defer();
 
         request({ url: db_host + '/' + id },
-            function (err, response, body) {
+            function (requestError, response, body) {
                 if (!body) {
                     console.log("Got empty body for " + db_host + '/' + id);
-                    console.log(err);
+                    console.log(requestError);
                 }
                 var data = JSON.parse(body);
-                var error = err || data.error;
-                if (error) {
-                    deferred.reject(couchError(error));
+
+                if (requestError) {
+                    deferred.reject(couchError(requestError));
+                }
+                else if (data.error){
+                    deferred.reject(couchError(data));
                 }
                 else {
                     deferred.resolve(data);
