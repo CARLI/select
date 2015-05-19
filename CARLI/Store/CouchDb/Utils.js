@@ -16,10 +16,10 @@ function couchRequest(requestOptions) {
         var data = (typeof body === 'string') ? JSON.parse(body) : body;
 
         if ( error ){
-            deferred.reject( couchError(error) );
+            deferred.reject( couchError(error, response.statusCode) );
         }
         else if (data.error) {
-            deferred.reject( couchError(data) );
+            deferred.reject( couchError(data, response.statusCode) );
         }
         else {
             deferred.resolve(data);
