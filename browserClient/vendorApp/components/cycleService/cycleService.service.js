@@ -1,7 +1,7 @@
 angular.module('vendor.cycleService')
     .service('cycleService', cycleService);
 
-function cycleService( CarliModules, config, $q, appState, userService ) {
+function cycleService( CarliModules, config, $q, appState, errorHandler, userService ) {
 
     var currentUser = userService.getUser();
     if (!currentUser.vendor) {
@@ -13,7 +13,7 @@ function cycleService( CarliModules, config, $q, appState, userService ) {
 
     return {
         listActiveCycles: listActiveCycles,
-        load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ); },
+        load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ).catch(errorHandler); },
         getCurrentCycle: getCurrentCycle,
         setCurrentCycle: setCurrentCycle
     };
@@ -34,7 +34,8 @@ function cycleService( CarliModules, config, $q, appState, userService ) {
                 else {
                     return cycleList;
                 }
-            });
+            })
+            .catch(errorHandler);
     }
 
     function getCurrentCycle() {

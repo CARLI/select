@@ -1,7 +1,7 @@
 angular.module('carli.cycleService')
     .service('cycleService', cycleService);
 
-function cycleService( CarliModules, $q ) {
+function cycleService( CarliModules, $q, errorHandler ) {
 
     var cycleModule = CarliModules.Cycle;
     var cycleMiddleware = CarliModules.CycleMiddleware;
@@ -18,7 +18,7 @@ function cycleService( CarliModules, $q ) {
 
     return {
         cycleDefaults: cycleDefaults,
-        list: function() { return $q.when( cycleModule.list() ); },
+        list: function() { return $q.when( cycleModule.list()).catch(errorHandler); },
         listActiveCycles: listActiveCycles,
         listActiveCyclesOfType: listActiveCyclesOfType,
         listActiveSubscriptionCycles: listActiveSubscriptionCycles,
@@ -38,7 +38,7 @@ function cycleService( CarliModules, $q ) {
         },
         getCycleDatabaseStatuses: getCycleDatabaseStatuses,
         update: function() { return $q.when( cycleModule.update.apply( this, arguments) ); },
-        load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ); },
+        load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ).catch(errorHandler); },
         getCurrentCycle: getCurrentCycle,
         setCurrentCycle: setCurrentCycle,
         initCurrentCycle: function(){
@@ -70,7 +70,7 @@ function cycleService( CarliModules, $q ) {
     }
 
     function listActiveCycles() {
-        return $q.when( cycleModule.listActiveCycles() );
+        return $q.when( cycleModule.listActiveCycles() ).catch(errorHandler);
     }
 
     function listActiveSubscriptionCycles() {
