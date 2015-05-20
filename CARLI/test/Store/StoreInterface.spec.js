@@ -89,7 +89,10 @@ function test( storeTypeName, options ) {
             } );
 
             it( 'should fail when an id not found', function() {
-                return expect( DataStore.get(uuid.v4()) ).to.be.rejectedWith( /not_found/ );
+                return DataStore.get(uuid.v4())
+                    .catch(function( rejection ){
+                        return expect( rejection.error ).to.equal('not_found');
+                    });
             } );
 
             it( 'should return stored data for id', function() {

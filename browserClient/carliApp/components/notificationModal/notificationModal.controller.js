@@ -1,7 +1,7 @@
 angular.module('carli.notificationModal')
 .controller('notificationModalController', notificationModalController);
 
-function notificationModalController($q, $rootScope, $scope, alertService, cycleService, libraryService, notificationService, notificationModalService, notificationTemplateService, offeringService, productService, vendorService) {
+function notificationModalController($q, $rootScope, $scope, alertService, errorHandler, notificationService, notificationModalService, notificationTemplateService) {
     var vm = this;
     var generator = null;
 
@@ -174,7 +174,7 @@ function notificationModalController($q, $rootScope, $scope, alertService, cycle
             vm.draft.to = vm.recipients.map(function (r) { return r.label; }).join(', ');
             return notificationService.create(vm.draft)
             .then(saveSuccess)
-            .catch(saveError);
+            .catch(errorHandler);
         }
 
         function saveSuccess(results){
@@ -186,10 +186,6 @@ function notificationModalController($q, $rootScope, $scope, alertService, cycle
             if ( typeof vm.afterSubmitFn === 'function' ){
                 vm.afterSubmitFn();
             }
-        }
-
-        function saveError(error) {
-            alertService.putAlert(error, {severity: 'danger'});
         }
     }
 }

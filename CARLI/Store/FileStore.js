@@ -34,7 +34,7 @@ module.exports = function (options) {
 
         fs.readFile(resourcePath + '/' + id + '.json', function (err, data) {
             if (err) {
-                deferred.reject('not_found')
+                deferred.reject({error:'not_found'});
             }
             else {
                 deferred.resolve(JSON.parse(data));

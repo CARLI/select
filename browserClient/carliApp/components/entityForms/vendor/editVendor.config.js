@@ -1,5 +1,5 @@
 angular.module('carli.entityForms.vendor',[
-    'carli.alerts',
+    'common.alerts',
     'carli.selectCycle',
     'carli.entityBaseService',
     'carli.vendorService',

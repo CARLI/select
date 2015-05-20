@@ -1,4 +1,5 @@
 var config = require('../../../config');
+var couchError = require('./Error');
 var Q = require('q');
 var request = require('../../../config/environmentDependentModules/request');
 var CouchUtils = require('./Utils');
@@ -26,15 +27,18 @@ module.exports = function (inputOptions) {
         var deferred = Q.defer();
 
         request({ url: db_host + '/' + id },
-            function (err, response, body) {
+            function (requestError, response, body) {
                 if (!body) {
                     console.log("Got empty body for " + db_host + '/' + id);
-                    console.log(err);
+                    console.log(requestError);
                 }
                 var data = JSON.parse(body);
-                var error = err || data.error;
-                if (error) {
-                    deferred.reject(error);
+
+                if (requestError) {
+                    deferred.reject(couchError(requestError, response.statusCode));
+                }
+                else if (data.error){
+                    deferred.reject(couchError(data, response.statusCode));
                 }
                 else {
                     deferred.resolve(data);
@@ -54,8 +58,7 @@ module.exports = function (inputOptions) {
         }, function (err, response, body) {
             var error = err || body.error;
             if (error) {
-                var message = (config.showFullErrors) ? error : config.errorMessages.fatal;
-                deferred.reject(message);
+                deferred.reject(couchError(error, response.statusCode));
             }
             else {
                 data._id = body.id;
@@ -82,14 +85,14 @@ module.exports = function (inputOptions) {
                 var data = JSON.parse(body);
                 var error = err || data.error;
                 if (error) {
-                    deferred.reject(error);
+                    deferred.reject(couchError(error, response.statusCode));
                 }
                 else {
                     request({uri: db_host + '/' + id + '?rev=' + data._rev, method: 'DELETE' },
                         function (err, response, body) {
                             var error = err || data.error;
                             if (error) {
-                                deferred.reject(error);
+                                deferred.reject(couchError(error, response.statusCode));
                             }
                             else {
                                 deferred.resolve();

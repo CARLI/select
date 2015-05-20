@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.product')
     .controller('editProductController', editProductController);
 
-function editProductController( $q, $scope, $rootScope, $filter, entityBaseService, cycleService, libraryService, licenseService, offeringService, productService, vendorService, alertService ) {
+function editProductController( $q, $scope, $rootScope, $filter, alertService, entityBaseService, errorHandler, cycleService, libraryService, licenseService, offeringService, productService, vendorService) {
     var vm = this;
     var otpFieldsCopy = [];
     var termFieldsCopy = {};
@@ -290,9 +290,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
                     afterSubmitCallback();
                 });
             })
-            .catch(function (error) {
-                alertService.putAlert(error, {severity: 'danger'});
-            });
+            .catch(errorHandler);
     }
 
     function saveNewProduct() {
@@ -306,9 +304,7 @@ function editProductController( $q, $scope, $rootScope, $filter, entityBaseServi
                     afterSubmitCallback();
                 });
             })
-            .catch(function (error) {
-                alertService.putAlert(error, {severity: 'danger'});
-            });
+            .catch(errorHandler);
     }
 
     function updateOfferingsForExistingProduct(){

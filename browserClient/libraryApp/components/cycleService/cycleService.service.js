@@ -1,7 +1,7 @@
 angular.module('library.cycleService')
     .service('cycleService', cycleService);
 
-function cycleService( CarliModules, $q, appState, userService ) {
+function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
 
     var currentUser = userService.getUser();
     if (!currentUser.library) {
@@ -13,7 +13,7 @@ function cycleService( CarliModules, $q, appState, userService ) {
 
     return {
         listActiveCycles: listActiveCycles,
-        load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ); },
+        load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ).catch(errorHandler); },
         getCurrentCycle: getCurrentCycle,
         setCurrentCycle: setCurrentCycle
     };
@@ -22,7 +22,8 @@ function cycleService( CarliModules, $q, appState, userService ) {
         return $q.when( cycleModule.listActiveCycles() )
             .then(function( cycleList ){
                 return cycleList.filter(cycleIsOpenToLibraries);
-            });
+            })
+            .catch(errorHandler);
 
 
         function cycleIsOpenToLibraries( cycle ){

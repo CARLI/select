@@ -1,4 +1,4 @@
 angular.module('carli.sections.licenses.edit',[
-    'carli.alerts',
+    'common.alerts',
     'carli.entityForms.license'
 ]);

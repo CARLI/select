@@ -1,5 +1,5 @@
 angular.module('carli.entityForms.library',[
-    'carli.alerts',
+    'common.alerts',
     'carli.entityBaseService',
     'common.libraryService',
     'carli.viewEditDirectives'

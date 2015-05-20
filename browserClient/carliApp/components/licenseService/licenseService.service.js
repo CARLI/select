@@ -1,7 +1,7 @@
 angular.module('carli.licenseService')
     .service('licenseService', licenseService);
 
-function licenseService( CarliModules, $q, entityBaseService ) {
+function licenseService( CarliModules, $q, errorHandler ) {
 
     var licenseModule = CarliModules.License;
 
@@ -22,12 +22,12 @@ function licenseService( CarliModules, $q, entityBaseService ) {
     }
 
     return {
-        list:   function() { return $q.when( licenseModule.list() ); },
+        list:   function() { return $q.when( licenseModule.list() ).catch(errorHandler); },
         create: function() { return $q.when( licenseModule.create.apply(this, arguments) ); },
         update: function() { return $q.when( licenseModule.update.apply(this, arguments) ); },
-        load:   function() { return $q.when( licenseModule.load.apply(this, arguments) ); },
+        load:   function() { return $q.when( licenseModule.load.apply(this, arguments) ).catch(errorHandler); },
         listLicensesForVendorId: function(){
-            return $q.when( licenseModule.listLicensesForVendorId.apply(this, arguments) );
+            return $q.when( licenseModule.listLicensesForVendorId.apply(this, arguments) ).catch(errorHandler);
         },
         getOfferingTypeOptions: getOfferingTypeOptionsForAngularController
     };
