@@ -26,7 +26,7 @@ describe('The Edit Vendor Directive', function(){
         module('carli.entityForms.vendor');
         module('carli.mockServices');
 
-        inject( function($controller, $rootScope, $q, mockEntityBaseService, mockAlertService, mockCycleService, mockLicenseService, mockProductService, mockVendorService ) {
+        inject( function($controller, $rootScope, $q, mockEntityBaseService, mockAlertService, mockCycleService, mockLicenseService, mockProductService, mockVendorService, mockErrorHandlerService ) {
 
             mockVendorService.setTestData(angular.copy(mockVendorList));
 
@@ -38,7 +38,8 @@ describe('The Edit Vendor Directive', function(){
                 cycleService: mockCycleService,
                 licenseService: mockLicenseService,
                 productService: mockProductService,
-                vendorService: mockVendorService
+                vendorService: mockVendorService,
+                errorHandler: mockErrorHandlerService
             };
 
             mockDependenciesForEditVendor = {
@@ -54,7 +55,8 @@ describe('The Edit Vendor Directive', function(){
                 cycleService: mockCycleService,
                 licenseService: mockLicenseService,
                 productService: mockProductService,
-                vendorService: mockVendorService
+                vendorService: mockVendorService,
+                errorHandler: mockErrorHandlerService
             };
 
             newCtrl  = $controller('editVendorController', mockDependenciesForNewVendor);

@@ -19,7 +19,7 @@ describe('The Edit Product Controller', function(){
         module('carli.entityForms.product');
         module('carli.mockServices');
 
-        inject(function ($controller, $rootScope, $q, mockCycleService, mockLibraryService, mockOfferingService, mockProductService, mockVendorService, mockAlertService) {
+        inject(function ($controller, $rootScope, $q, mockCycleService, mockLibraryService, mockLicenseService, mockOfferingService, mockProductService, mockVendorService, mockAlertService, mockErrorHandlerService) {
             mockProductService.setTestData(mockProductList);
 
             mockDependenciesForNewProduct = {
@@ -30,8 +30,10 @@ describe('The Edit Product Controller', function(){
                 offeringService: mockOfferingService,
                 productService: mockProductService,
                 libraryService: mockLibraryService,
+                licenseService: mockLicenseService,
                 vendorService: mockVendorService,
-                alertService: mockAlertService
+                alertService: mockAlertService,
+                errorHandler: mockErrorHandlerService
             };
 
             mockDependenciesForEditProduct = {
@@ -43,8 +45,10 @@ describe('The Edit Product Controller', function(){
                 offeringService: mockOfferingService,
                 productService: mockProductService,
                 libraryService: mockLibraryService,
+                licenseService: mockLicenseService,
                 vendorService: mockVendorService,
-                alertService: mockAlertService
+                alertService: mockAlertService,
+                errorHandler: mockErrorHandlerService
             };
 
             newCtrl  = $controller('editProductController', mockDependenciesForNewProduct);

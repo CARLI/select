@@ -62,7 +62,7 @@ describe('The One-time Purchases Selected-Products Controller', function(){
             }
         ];
 
-        inject(function ($controller, $rootScope, $q, mockAlertService, mockCycleService, mockLibraryService, mockOfferingService, mockVendorService) {
+        inject(function ($controller, $rootScope, $q, mockAlertService, mockCycleService, mockLibraryService, mockOfferingService, mockProductService, mockVendorService, mockErrorHandlerService) {
             mockLibraryService.setTestData(mockLibraryList);
             mockOfferingService.setTestData(mockOfferingList);
             
@@ -75,7 +75,9 @@ describe('The One-time Purchases Selected-Products Controller', function(){
                 cycleService: mockCycleService,
                 libraryService: mockLibraryService,
                 offeringService: mockOfferingService,
-                vendorService: mockVendorService
+                productService: mockProductService,
+                vendorService: mockVendorService,
+                errorHandler: mockErrorHandlerService
             };
 
             vm = $controller('selectedProductsController', mockDependenciesForOneTimePurchase);

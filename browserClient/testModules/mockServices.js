@@ -2,6 +2,7 @@ angular.module('carli.mockServices',[
     'carli.mockAlertService',
     'carli.mockCycleService',
     'carli.mockEntityBaseService',
+    'carli.mockErrorHandlerService',
     'carli.mockLibraryService',
     'carli.mockLicenseService',
     'carli.mockLocationService',

@@ -37,14 +37,15 @@ describe('The Edit Library Directive', function(){
         module('carli.entityForms.library');
         module('carli.mockServices');
 
-        inject( function($controller, $rootScope, $q, mockLocationService, mockLibraryService, mockAlertService ) {
+        inject( function($controller, $rootScope, $q, mockLocationService, mockLibraryService, mockAlertService, mockErrorHandlerService ) {
 
             mockLibraryService.setTestData(angular.copy(mockLibraryList));
 
             mockDependenciesForNewLibrary = {
                 $scope: {},
                 libraryService: mockLibraryService,
-                alertService: mockAlertService
+                alertService: mockAlertService,
+                errorHandler: mockErrorHandlerService
             };
 
             mockDependenciesForEditLibrary = {
@@ -52,7 +53,8 @@ describe('The Edit Library Directive', function(){
                     libraryId: 'xxxxx'
                 },
                 libraryService: mockLibraryService,
-                alertService: mockAlertService
+                alertService: mockAlertService,
+                errorHandler: mockErrorHandlerService
             };
 
             newCtrl  = $controller('editLibraryController', mockDependenciesForNewLibrary);
