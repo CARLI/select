@@ -55,7 +55,7 @@ module.exports = function ( grunt ) {
 
             serveCarli: {
                 options: {
-                    open: 'http://carli-staff.local:8080',
+                    open: 'http://staff.carli.local:8080',
                     port: 8000,
                     middleware: function (connect, options) {
                         var optBase = (typeof options.base === 'string') ? [options.base] : options.base;
@@ -83,7 +83,7 @@ module.exports = function ( grunt ) {
 
             serveVendor: {
                 options: {
-                    open: 'http://carli-vendor.local:8080',
+                    open: 'http://vendor.carli.local:8080',
                     port: 8001,
                     middleware: function (connect, options) {
                         var optBase = (typeof options.base === 'string') ? [options.base] : options.base;

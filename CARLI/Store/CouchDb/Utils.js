@@ -29,6 +29,38 @@ function couchRequest(requestOptions) {
     return deferred.promise;
 }
 
+function couchLogIn(user) {
+    var deferred = Q.defer();
+
+    var requestOptions = {
+        url: config.storeOptions.couchDbUrl + '/_session',
+        method: 'post',
+        json: {
+            name: user.email,
+            password: user.password
+        }
+    };
+
+    request(requestOptions, handleCouchResponse);
+
+    function handleCouchResponse(error, response, body) {
+        console.log('Coooooookies!', response.headers['set-cookie']);
+        var cookie = response.headers['set-cookie'];
+        cookie += '; Domain=carli.local';
+
+        var data = (typeof body === 'string') ? JSON.parse(body) : body;
+        var err = error || data.error;
+
+        if (err) {
+            deferred.reject( err /*config.errorMessages.fatal*/ );
+        } else {
+            deferred.resolve(cookie);
+        }
+    }
+
+    return deferred.promise;
+}
+
 function getCouchDocuments(dbName, ids) {
     var url = StoreOptions.couchDbUrl + '/' + dbName + '/' + '_all_docs?include_docs=true';
 
@@ -369,6 +401,7 @@ module.exports = {
     couchViewUrl: couchViewUrl,
     createDatabase: createDatabase,
     couchRequest: couchRequest,
+    couchLogIn: couchLogIn,
     getCouchDocuments: getCouchDocuments,
     getCouchViewResultObject: getCouchViewResultObject,
     getCouchViewResultValues: getCouchViewResultValues,

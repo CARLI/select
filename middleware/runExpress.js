@@ -5,6 +5,7 @@ var request = require('request');
 var _ = require('lodash');
 
 var config = require('../config');
+var auth = require('./components/auth');
 var couchApp = require('./components/couchApp');
 var crmQueries = require('./components/crmQueries');
 var cycleCreation = require('./components/cycleCreation');
@@ -34,6 +35,18 @@ function runMiddlewareServer(){
     }
 
     function defineRoutes() {
+        carliMiddleware.post('/login', function (req, res) {
+            console.log("sending login request");
+            auth.logIn(req.body)
+                .then(copyAuthCookieFromResponse)
+                .then(sendResult(res))
+                .catch(sendError(res));
+
+            function copyAuthCookieFromResponse(couchCookieSetter) {
+                res.append('Set-Cookie', couchCookieSetter);
+                return couchCookieSetter;
+            }
+        });
         carliMiddleware.get('/version', function (req, res) {
             res.send({ version: require('./package.json').version });
         });
