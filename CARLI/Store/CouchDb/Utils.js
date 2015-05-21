@@ -1,6 +1,6 @@
 var config = require('../../../config');
 var couchApp = require('../../../config/environmentDependentModules/couchApp'),
-    couchError = require('./Error'),
+    carliError = require('../../Error'),
     Q = require('q'),
     request = require('../../../config/environmentDependentModules/request'),
     StoreOptions = require( '../../../config').storeOptions,
@@ -13,13 +13,17 @@ function couchRequest(requestOptions) {
     request(requestOptions, handleCouchResponse);
 
     function handleCouchResponse(error, response, body) {
-        var data = (typeof body === 'string') ? JSON.parse(body) : body;
+        var data;
 
-        if ( error ){
-            deferred.reject( couchError(error, response.statusCode) );
+        if (error) {
+            deferred.reject(carliError(error, response.statusCode));
         }
-        else if (data.error) {
-            deferred.reject( couchError(data, response.statusCode) );
+        else {
+            data = (typeof body === 'string') ? JSON.parse(body) : body;
+        }
+
+        if (data && data.error) {
+            deferred.reject(carliError(data, response.statusCode));
         }
         else {
             deferred.resolve(data);
@@ -29,7 +33,13 @@ function couchRequest(requestOptions) {
     return deferred.promise;
 }
 
-function couchLogIn(user) {
+function promiseToHandleCouchResponse(deferred) {
+    return handleCouchResponse();
+
+
+}
+
+function couchRequestSession(user) {
     var deferred = Q.defer();
 
     var requestOptions = {
@@ -44,18 +54,28 @@ function couchLogIn(user) {
     request(requestOptions, handleCouchResponse);
 
     function handleCouchResponse(error, response, body) {
-        console.log('Coooooookies!', response.headers['set-cookie']);
-        var cookie = response.headers['set-cookie'];
-        cookie += '; Domain=carli.local';
+        var data;
 
-        var data = (typeof body === 'string') ? JSON.parse(body) : body;
-        var err = error || data.error;
-
-        if (err) {
-            deferred.reject( err /*config.errorMessages.fatal*/ );
-        } else {
-            deferred.resolve(cookie);
+        if (error) {
+            deferred.reject(carliError(error, response.statusCode));
         }
+        else {
+            data = (typeof body === 'string') ? JSON.parse(body) : body;
+        }
+
+        if (data && data.error) {
+            data.authCookie = getCookieWithDomainAdded(response);
+            deferred.reject(carliError(data, response.statusCode));
+        }
+        else {
+            deferred.resolve(data);
+        }
+    }
+
+    function getCookieWithDomainAdded(response) {
+        var cookie = response.headers[ 'set-cookie' ];
+        cookie += '; Domain=carli.local';
+        return cookie;
     }
 
     return deferred.promise;
@@ -401,7 +421,7 @@ module.exports = {
     couchViewUrl: couchViewUrl,
     createDatabase: createDatabase,
     couchRequest: couchRequest,
-    couchLogIn: couchLogIn,
+    couchRequestSession: couchRequestSession,
     getCouchDocuments: getCouchDocuments,
     getCouchViewResultObject: getCouchViewResultObject,
     getCouchViewResultValues: getCouchViewResultValues,

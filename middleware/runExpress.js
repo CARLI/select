@@ -36,15 +36,14 @@ function runMiddlewareServer(){
 
     function defineRoutes() {
         carliMiddleware.post('/login', function (req, res) {
-            console.log("sending login request");
             auth.logIn(req.body)
                 .then(copyAuthCookieFromResponse)
                 .then(sendResult(res))
                 .catch(sendError(res));
 
-            function copyAuthCookieFromResponse(couchCookieSetter) {
-                res.append('Set-Cookie', couchCookieSetter);
-                return couchCookieSetter;
+            function copyAuthCookieFromResponse(authResponse) {
+                res.append('Set-Cookie', authResponse.authCookie);
+                return authResponse;
             }
         });
         carliMiddleware.get('/version', function (req, res) {
@@ -221,9 +220,12 @@ function sendOk(res) {
         res.send( { status: 'Ok' } );
     }
 }
-function sendError(res) {
+function sendError(res, errorCode) {
+    if (!errorCode) {
+        errorCode = 500;
+    }
     return function(err) {
-        res.send( { error: err } );
+        res.status(errorCode).send( { error: err } );
     }
 }
 
