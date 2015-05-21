@@ -1,3 +1,20 @@
+#addOneTimePurchases {
+    .list-page-header {
+        display: block;
+    }
+
+    h1 {
+        margin-bottom: 16px;
+        padding-bottom: 0;
+    }
+
+    h2 {
+        margin-top: 0;
+        margin-bottom: 32px;
+        padding: 0;
+    }
+}
+
 ul.product-list {
     @extend .zebra-table;
 
@@ -23,11 +40,5 @@ ul.product-list {
         .column .list-button {
             @include list-button;
         }
-    }
-}
-
-.one-time-purchase-progress {
-    li.selected {
-        font-weight: bold;
     }
 }

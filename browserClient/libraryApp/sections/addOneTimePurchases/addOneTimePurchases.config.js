@@ -1,3 +1,4 @@
 angular.module('library.sections.addOneTimePurchases',[
-    'common.collapsible'
+    'common.collapsible',
+    'library.subscriptionProgress'
 ]);

@@ -1,0 +1,82 @@
+subscription-progress {
+    $progress-height: 40px;
+    $triangle-border: $progress-height / 2 - 1;
+    $triangle-fill: $triangle-border - 1;
+
+    ol {
+        list-style: none;
+        overflow: hidden;
+    }
+
+    li {
+        background: $light-gray;
+        border: $default-border;
+        border-left: none;
+        color: #8e8e8e;
+        display: inline-block;
+        float: left;
+        font-family: 'Dosis';
+        @include font-size(15);
+        font-weight: bold;
+        height: $progress-height;
+        line-height: $progress-height;
+        padding: 0 50px;
+        position: relative;
+        text-transform: uppercase;
+
+        &:before,
+        &:after {
+            border-color: transparent transparent transparent $light-gray;
+            border-style: solid;
+            content: "";
+            display: inline-block;
+            height: 0;
+            position: absolute;
+            top: 0;
+            width: 0;
+        }
+
+        &:before {
+            border-left-color: #bbb;
+            border-width: $triangle-border;
+            border-right-width: 0;
+            border-left-width: $triangle-border + 1;
+            right: -$triangle-border - 1;
+        }
+
+        &:after {
+            border-left-color: $light-gray;
+            border-width: $triangle-fill;
+            border-right-width: 0;
+            border-left-width: $triangle-fill + 1;
+            right: -$triangle-fill - 1;
+            top: 1px;
+        }
+
+        &:first-child {
+            border-left: $default-border;
+        }
+
+        &.selected {
+            background: $white;
+            color: $black;
+            font-weight: bold;
+
+            &:after {
+                border-left-color: $white;
+            }
+        }
+
+        &.select {
+            z-index: 3;
+        }
+
+        &.review {
+            z-index: 2;
+        }
+
+        &.complete {
+            z-index: 1;
+        }
+    }
+}

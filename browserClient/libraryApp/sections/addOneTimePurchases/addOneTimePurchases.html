@@ -1,15 +1,14 @@
-<section class="content" id="addOneTimePurchases">
-    <div class="page-header">
+<section id="addOneTimePurchases">
+    <div class="list-page-header">
         <h1>One-Time Purchases</h1>
+        <h2>Available for Purchase Year-Round</h2>
     </div>
 
-    <ol class="one-time-purchase-progress">
-        <li class="select" ng-class="{ selected: vm.selectionStep === 'select' }">Select</li>
-        <li class="review" ng-class="{ selected: vm.selectionStep === 'review' }">Review</li>
-        <li class="complete"  ng-class="{ selected: vm.selectionStep === 'complete' }">Complete</li>
-    </ol>
+    <section class="content list-content">
+        <subscription-progress step="vm.selectionStep"></subscription-progress>
 
-    <div ng-if="vm.selectionStep === 'select'" ng-include="'libraryApp/sections/addOneTimePurchases/addOneTimePurchasesSelect.html'"></div>
-    <div ng-if="vm.selectionStep === 'review'" ng-include="'libraryApp/sections/addOneTimePurchases/addOneTimePurchasesReview.html'"></div>
-    <div ng-if="vm.selectionStep === 'complete'" ng-include="'libraryApp/sections/addOneTimePurchases/addOneTimePurchasesComplete.html'"></div>
+        <div ng-if="vm.selectionStep === 'select'" ng-include="'libraryApp/sections/addOneTimePurchases/addOneTimePurchasesSelect.html'"></div>
+        <div ng-if="vm.selectionStep === 'review'" ng-include="'libraryApp/sections/addOneTimePurchases/addOneTimePurchasesReview.html'"></div>
+        <div ng-if="vm.selectionStep === 'complete'" ng-include="'libraryApp/sections/addOneTimePurchases/addOneTimePurchasesComplete.html'"></div>
+    </section>
 </section>
