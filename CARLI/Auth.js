@@ -6,6 +6,10 @@ function createSession(userLogin) {
     return couchUtils.couchRequestSession(userLogin);
 }
 
+function deleteSession() {
+    return couchUtils.couchRequest({ url: config.storeOptions.couchDbUrl + '/_session', method: 'delete' });
+}
+
 function getSession() {
     return couchUtils.couchRequest({ url: config.storeOptions.couchDbUrl + '/_session', method: 'get' }).then(returnUserContext);
 
@@ -20,6 +24,7 @@ function getUser(email) {
 
 module.exports = {
     createSession: createSession,
+    deleteSession: deleteSession,
     getSession: getSession,
     getUser: getUser
 };

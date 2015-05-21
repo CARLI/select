@@ -46,6 +46,11 @@ function runMiddlewareServer(){
                 return authResponse;
             }
         });
+        carliMiddleware.delete('/logout', function (req, res) {
+            auth.deleteSession()
+                .then(sendResult(res))
+                .catch(sendError(res));
+        });
         carliMiddleware.get('/version', function (req, res) {
             res.send({ version: require('./package.json').version });
         });

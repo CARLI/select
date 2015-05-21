@@ -9,6 +9,14 @@ function createSession(userLogin) {
     });
 }
 
+function deleteSession() {
+    return middlewareRequest({
+        path: '/logout',
+        method: 'delete'
+    });
+}
+
 module.exports = {
-    createSession: createSession
+    createSession: createSession,
+    deleteSession: deleteSession
 };

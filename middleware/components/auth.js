@@ -5,6 +5,11 @@ function createSession(userLogin) {
     return auth.createSession(userLogin);
 }
 
+function deleteSession() {
+    return auth.deleteSession();
+}
+
 module.exports = {
-    createSession: createSession
+    createSession: createSession,
+    deleteSession: deleteSession
 };

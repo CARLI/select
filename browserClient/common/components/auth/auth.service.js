@@ -6,6 +6,7 @@ function authService($rootScope, $q, $location, CarliModules) {
 
     return {
         createSession: createSession,
+        deleteSession: deleteSession,
         getCurrentUser: getCurrentUser,
         requireSession: requireSession,
         requireStaff: requireStaff,
@@ -13,11 +14,16 @@ function authService($rootScope, $q, $location, CarliModules) {
     };
 
     function createSession(userLogin) {
-        return $q.when ( CarliModules.AuthMiddleware.createSession(userLogin) )
+        return $q.when ( CarliModules.Auth.createSession(userLogin) )
             .then(function (newSession) {
                 session = newSession;
                 return session;
             });
+    }
+
+    function deleteSession() {
+        return $q.when(CarliModules.Auth.deleteSession()).then(redirectToLogin);
+
     }
 
     function getCurrentUser() {
@@ -53,8 +59,9 @@ function authService($rootScope, $q, $location, CarliModules) {
         return session.roles.indexOf('staff') >= 0;
     }
 
-    function redirectToLogin() {
+    function redirectToLogin(passthrough) {
+        $rootScope.isLoggedIn = false;
         $location.url('/login');
-        return true;
+        return passthrough;
     }
 }

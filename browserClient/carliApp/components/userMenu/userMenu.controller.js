@@ -7,15 +7,28 @@ function userMenuController( $interval, authService, notificationService ){
     vm.notificationsCount = 0;
     vm.userName = '';
 
-    authService.getCurrentUser().then(function (user) {
-        vm.userName = user.fullName;
-    });
+    vm.logout = authService.deleteSession;
 
+    activate();
+
+    function activate() {
+        loadUserInfo();
+        updateNotificationCount();
+    }
+
+    function loadUserInfo() {
+        authService.getCurrentUser().then(function (user) {
+            vm.userName = user.fullName;
+        });
+    }
+
+    function updateNotificationCount() {
 //    $interval(function() {
-        countDrafts().then(function(count) {
+        countDrafts().then(function (count) {
             vm.notificationsCount = count;
         });
 //    }, 2000);
+    }
 
     function countDrafts(){
         return notificationService.listDrafts()
