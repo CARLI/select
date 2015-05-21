@@ -28,12 +28,13 @@ function authService($rootScope, $q, $location, CarliModules) {
         }
 
         function getUserFromSession() {
-            return $q.when ( CarliModules.Auth.getUser(session.name))
+            return $q.when( CarliModules.Auth.getUser(session.name) )
                 .then(setLoggedIn);
         }
 
-        function setLoggedIn() {
+        function setLoggedIn(passthrough) {
             $rootScope.isLoggedIn = true;
+            return passthrough;
         }
     }
 

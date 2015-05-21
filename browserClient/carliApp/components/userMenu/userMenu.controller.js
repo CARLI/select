@@ -1,11 +1,15 @@
 angular.module('carli.userMenu')
 .controller('userMenuController', userMenuController);
 
-function userMenuController( $interval, notificationService ){
+function userMenuController( $interval, authService, notificationService ){
     var vm = this;
 
     vm.notificationsCount = 0;
-    vm.userName = 'Username!';
+    vm.userName = '';
+
+    authService.getCurrentUser().then(function (user) {
+        vm.userName = user.fullName;
+    });
 
 //    $interval(function() {
         countDrafts().then(function(count) {
