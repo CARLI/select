@@ -1,6 +1,8 @@
 <section class="content" id="login">
-    <label for="email">Email</label><input type="text" ng-model="vm.user.email">
-    <label for="password">Password</label><input type="password" ng-model="vm.user.password">
+    <form>
+        <label for="email">Email</label><input type="text" ng-model="vm.user.email">
+        <label for="password">Password</label><input type="password" ng-model="vm.user.password">
 
-    <input type="button" class="carli-button login-button" value="Log in" busy-click="vm.logIn()">
+        <input type="submit" class="carli-button login-button" value="Log in" busy-click="vm.logIn()">
+    </form>
 </section>

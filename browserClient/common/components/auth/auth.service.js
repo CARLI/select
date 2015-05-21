@@ -3,6 +3,6 @@ angular.module('common.auth')
 
 function authService(CarliModules) {
     return {
-        logIn: CarliModules.Auth.logIn
+        logIn: CarliModules.AuthMiddleware.logIn
     };
 }

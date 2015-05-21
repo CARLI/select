@@ -1,5 +1,5 @@
 angular.module('carli.entityForms.user',[
     'ui.bootstrap',
-    'carli.alerts',
+    'common.alerts',
     'carli.viewEditDirectives'
 ]);

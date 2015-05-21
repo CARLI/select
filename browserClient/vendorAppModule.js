@@ -2,7 +2,7 @@
 
 module.exports = {
     config: require( '../config' ),
-    Auth: require('../middleware/browserAdapters/auth'),
+    AuthMiddleware: require('../middleware/browserAdapters/auth'),
     Csv: require('../CARLI/Csv'),
     Cycle: require('../CARLI/Entity/CycleRepositoryForVendor'),
     Library: require('../CARLI/Entity/LibraryRepository'),
