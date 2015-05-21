@@ -17,7 +17,7 @@
 
 ul.product-list {
     @extend .zebra-table;
-
+    border-top: 3px solid $black;
     clear: both;
 
     li {
@@ -33,8 +33,65 @@ ul.product-list {
             @include flexbox;
         }
 
-        .column:first-child {
-            padding-left: 36px;
+        .collapsible-header {
+            > .column:first-child {
+                padding-left: 36px;
+            }
+        }
+
+        .content {
+            border-top: $default-border;
+
+            .column.product-info {
+                flex-basis: 33%;
+            }
+
+            .column.license-info {
+                border-left: none;
+                flex-basis: 66%;
+            }
+
+            .column.select {
+                padding: 0;
+                padding-bottom: 50px;
+                position: relative;
+                background-color: $light-gray;
+
+                subscription-button {
+                    margin: 4px;
+                }
+
+                .carli-button.remove-button {
+                    display: block;
+                    position: relative;
+                    text-align: left;
+                    width: 100%;
+
+                    .fa {
+                        @include font-size(22);
+                        position: absolute;
+                        right: 12px;
+                    }
+                }
+
+                .bottom-buttons {
+                    border-top: $default-border;
+                    bottom: 0;
+                    position: absolute;
+                    padding: 4px;
+                    width: 100%;
+                }
+            }
+        }
+
+        .column.funded {
+            flex: none;
+            width: 85px;
+        }
+
+        .column.select {
+            flex: none;
+            width: 200px;
         }
 
         .column .list-button {

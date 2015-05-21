@@ -1,8 +1,9 @@
     <ul class="product-list" cg-busy="vm.loadingPromise">
         <li class="column-headers">
-            <div class="sortable column" ng-class="{ activeSort: vm.orderByAvailable === 'product.name', reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable('product.name')">Product</div>
-            <div class="sortable column" ng-class="{ activeSort: vm.orderByAvailable === 'product.vendor.name', reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(['product.vendor.name','product.name'])">Vendor</div>
-            <div class="sortable column" ng-class="{ activeSort: vm.orderByAvailable === 'pricing.site', reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(['pricing.site','product.name'])">Cost</div>
+            <div class="sortable column" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.productName, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.productName)">Product</div>
+            <div class="sortable column" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.vendorName, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.vendorName)">Vendor</div>
+            <div class="sortable column funded" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.funded, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.funded)">CARLI Funded</div>
+            <div class="sortable column select" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.pricing, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.pricing)">Selected</div>
         </li>
         <li collapsible class="collapsed" ng-repeat="offering in vm.availableForPurchase | orderBy: vm.orderByAvailable:vm.reverseAvailable track by offering.id">
             <div class="collapsible-header">
@@ -13,44 +14,45 @@
                     {{ offering.product.name }}
                 </div>
                 <div class="column">{{ offering.product.vendor.name }}</div>
-                <div class="column">
+                <div class="column funded">
+                    <span>{{ offering.product.funded | currency }}</span>
+                </div>
+                <div class="column select">
                     <span ng-if="offering.selectionPendingReview" class="price">{{ offering.selectionPendingReview.price | currency }}</span>
                 </div>
             </div>
             <div class="content">
-                <div class="column">
-                    <div class="content-item-group">
-                        <div class="content-item">
-                            <label>Date Available Through:</label>
-                            <p>{{ offering.product.oneTimePurchaseAvailableForPurchaseThrough | date:shortDate }}</p>
-                        </div>
-                        <div class="content-item" ng-show="offering.selection.datePurchased">
-                            <label>Purchase Date:</label>
-                            <p>{{ offering.selection.datePurchased | date:shortDate }}</p>
-                        </div>
-                    </div>
-                    <div class="product-boolean-item" ng-show="offering.product.oneTimePurchaseAnnualAccessFee"><fa name="check"></fa> Requires Annual Access Fee</div>
+                <div class="column product-info">
+                    <div class="label">Vendor Website</div>
+
+                    <div class="label">Product Description</div>
                 </div>
-                <div class="column">
-                    <div class="content-item">
-                        <label>Comments for Library:</label>
-                        <p class="comments">{{ offering.product.comments }}</p>
-                    </div>
+                <div class="column license-info">
+                    <div class="label">Pricing Comments</div>
+
+                    <div class="label">Subscribers to Date</div>
+
+                    <div class="label">Specific Terms</div>
+
+                    <div class="label purple">Redacted License Agreement</div>
                 </div>
-                <div class="column">
-                    <div ng-if="!offering.selectionPendingReview">
-                        <div ng-if="!offering.pricing.site">
-                            <span>A price has not been provided for this product. Ask CARLI for more information.</span>
-                            <span class="placeholder">Ask CARLI</span>
-                        </div>
-                        <div ng-if="offering.pricing.site">
-                            <div class="label">Add Product</div>
-                            <div ng-click="vm.selectProduct(offering)" class="carli-button ask-button">{{ offering.pricing.site | currency }} <fa name="plus-circle"></fa></div>
+                <div class="column select">
+                    <div ng-if="offering.pricing.site">
+                        <subscription-button title="Site License" price="{{ offering.pricing.site }}" selected="offering.selectionPendingReview" ng-click="vm.selectProduct(offering)"></subscription-button>
+
+                        <div class="bottom-buttons">
+                            <button type="button" class="carli-button remove-button"
+                                    ng-click="vm.unselectProduct(offering)"
+                                    ng-if="offering.selectionPendingReview">
+                                Remove Selection<fa name="remove"></fa>
+                            </button>
+
+                            <ask-carli-button></ask-carli-button>
                         </div>
                     </div>
-                    <div ng-if="offering.selectionPendingReview">
-                        <div class="label">Remove Product</div>
-                        <button type="button" ng-click="vm.unselectProduct(offering)" class="carli-button remove-button">Remove <fa name="remove"></fa></button>
+                    <div ng-if="!offering.pricing.site">
+                        <span>A price has not been provided for this product. Ask CARLI for more information.</span>
+                        <span class="placeholder">Ask CARLI</span>
                     </div>
                 </div>
             </div>
@@ -60,17 +62,17 @@
             <div class="column">Total</div>
             <div class="column">{{ vm.computeTotalPurchasesAmount() | currency}}</div>
         </li>
+        <li class="footer">
+            <button type="button" ng-click="vm.reviewSelections()" class="carli-button">Review</button>
+        </li>
     </ul>
 
-    <button type="button" ng-click="vm.reviewSelections()" class="carli-button">Review</button>
-
     <h2>Previously Purchased Items</h2>
+    <p>
+        The following products are items that your library currently has access to through CARLI. If your library is not
+        able to access any one of these items, <a>please contact CARLI</a>.
+    </p>
     <ul class="product-list" cg-busy="vm.loadingPromise">
-        <li class="column-headers">
-            <div class="sortable column" ng-class="{ activeSort: vm.orderByPurchased === 'product.name', reversedSort: vm.reversePurchased }" ng-click="vm.sortPurchased('product.name')">Product</div>
-            <div class="sortable column" ng-class="{ activeSort: vm.orderByPurchased === 'product.vendor.name', reversedSort: vm.reversePurchased }" ng-click="vm.sortPurchased(['product.vendor.name','product.name'])">Vendor</div>
-            <div class="sortable column" ng-class="{ activeSort: vm.orderByPurchased === 'pricing.site', reversedSort: vm.reversePurchased }" ng-click="vm.sortPurchased('pricing.site')">Cost</div>
-        </li>
         <li collapsible class="collapsed" ng-repeat="offering in vm.purchased | orderBy: vm.orderByPurchased:vm.reversePurchased track by offering.id ">
             <div class="collapsible-header">
                 <div class="column">
@@ -108,6 +110,9 @@
                     {{ offering.selection }}
                 </div>
             </div>
+        </li>
+        <li class="footer">
+            <ask-carli-button></ask-carli-button>
         </li>
     </ul>
 </section>

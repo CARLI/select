@@ -13,6 +13,12 @@ function addOneTimePurchasesController( $q, $window, config, cycleService, offer
 
     vm.availableForPurchase = [];
     vm.purchased = [];
+    vm.sortOptions = {
+        productName: 'product.name',
+        vendorName: ['product.vendor.name','product.name'],
+        funded: ['product.funded','product.name'],
+        pricing: ['pricing.site','product.name']
+    };
 
     vm.completeSelections = completeSelections;
     vm.computeTotalPurchasesAmount = computeTotalPurchasesAmount;
@@ -107,7 +113,7 @@ function addOneTimePurchasesController( $q, $window, config, cycleService, offer
             return;
         }
 
-        if ( vm['orderBy'+sortProperty] === newOrderBy.toString() ){
+        if ( vm['orderBy'+sortProperty] === newOrderBy ){
             vm['reverse'+sortProperty] = !vm['reverse'+sortProperty];
         }
         else {
