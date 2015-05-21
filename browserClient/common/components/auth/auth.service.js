@@ -1,8 +1,59 @@
 angular.module('common.auth')
     .service('authService', authService);
 
-function authService($q, CarliModules) {
+function authService($rootScope, $q, $location, CarliModules) {
+    var session = null;
+
     return {
-        logIn: function (user) { return $q.when ( CarliModules.AuthMiddleware.logIn(user) ); }
+        createSession: createSession,
+        getCurrentUser: getCurrentUser,
+        requireSession: requireSession,
+        requireStaff: requireStaff,
+        redirectToLogin: redirectToLogin
     };
+
+    function createSession(userLogin) {
+        return $q.when ( CarliModules.AuthMiddleware.createSession(userLogin) )
+            .then(function (newSession) {
+                session = newSession;
+                return session;
+            });
+    }
+
+    function getCurrentUser() {
+        if (session) {
+            return getUserFromSession();
+        } else {
+            return requireSession().then(getUserFromSession);
+        }
+
+        function getUserFromSession() {
+            return $q.when ( CarliModules.Auth.getUser(session.name))
+                .then(setLoggedIn);
+        }
+
+        function setLoggedIn() {
+            $rootScope.isLoggedIn = true;
+        }
+    }
+
+    function requireSession() {
+        return $q.when ( CarliModules.Auth.getSession() )
+            .then(function (newSession) {
+                if (newSession.name) {
+                    session = newSession;
+                    return session;
+                }
+                return $q.reject('Authentication required');
+            });
+    }
+
+    function requireStaff() {
+        return session.roles.indexOf('staff') >= 0;
+    }
+
+    function redirectToLogin() {
+        $location.url('/login');
+        return true;
+    }
 }

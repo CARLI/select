@@ -1,36 +1,53 @@
 angular.module('carli.sections.login')
     .controller('loginController', loginController);
 
-function loginController ($rootScope, $location, alertService, authService) {
+function loginController ($location, alertService, authService) {
     var vm = this;
 
-    vm.user = {
+    vm.userLogin = {
         email: '',
         password: ''
     };
 
-    vm.logIn = logIn;
+    redirectIfLoggedIn();
 
-    function logIn() {
-        return authService.logIn(vm.user)
+    vm.createSession = createSession;
+
+    function createSession() {
+        return authService.createSession(vm.userLogin)
             .then(loginSuccess)
             .catch(loginFailure);
 
-        function loginSuccess(user) {
-            console.log("Auth success:", user);
-            $rootScope.isLoggedIn = true;
-            var returnTo = getReturnTo() || '/';
-            $location.url(returnTo);
+        function loginSuccess() {
+
+            authService.requireSession()
+                .then(authService.requireStaff)
+                .then(authService.getCurrentUser)
+                .then(redirectAfterLogin);
         }
 
         function loginFailure(err) {
-            console.log("Auth failure:", err);
-            alertService.putAlert("Invalid username or password", { severity: err });
+            alertService.putAlert("Email or password is incorrect", { severity: err });
         }
+    }
 
-        function getReturnTo() {
-            var queryString = $location.search();
-            return queryString['return_to'];
+    function redirectIfLoggedIn() {
+        authService.getCurrentUser()
+            .then(redirectAfterLogin)
+            .catch(swallowAuthError);
+
+        function swallowAuthError() {
+            return true;
         }
+    }
+
+    function redirectAfterLogin() {
+        var returnTo = getReturnTo() || '/';
+        $location.url(returnTo);
+    }
+
+    function getReturnTo() {
+        var queryString = $location.search();
+        return queryString['return_to'];
     }
 }

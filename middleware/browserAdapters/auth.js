@@ -1,14 +1,14 @@
 var middlewareRequest = require('./middlewareRequest');
 
-function logIn(user) {
+function createSession(userLogin) {
     return middlewareRequest({
         path: '/login',
         method: 'post',
         json: true,
-        body: user
+        body: userLogin
     });
 }
 
 module.exports = {
-    logIn: logIn
+    createSession: createSession
 };

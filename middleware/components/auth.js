@@ -1,10 +1,10 @@
 
 var auth = require('../../CARLI/Auth');
 
-function logIn(user) {
-    return auth.logIn(user);
+function createSession(userLogin) {
+    return auth.createSession(userLogin);
 }
 
 module.exports = {
-    logIn: logIn
+    createSession: createSession
 };

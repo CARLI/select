@@ -1,7 +1,7 @@
 angular.module('common.userService')
     .service('userService', userService);
 
-function userService( CarliModules, $q, cycleService, libraryService, offeringService ) {
+function userService( CarliModules, $q, cycleService ) {
 
     var userModule = CarliModules.User;
 

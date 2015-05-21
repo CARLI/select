@@ -10,7 +10,7 @@ var defaults = {
         port: 3000
     },
     storeOptions: {
-        couchDbUrl: 'http://vendor.carli.local:8080/db',
+        couchDbUrl: 'http://staff.carli.local:8080/db',
         couchDbName: couchDbName
     },
     memberDb: {

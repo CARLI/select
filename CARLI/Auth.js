@@ -2,8 +2,16 @@
 var config = require('../config');
 var couchUtils = require('./Store/CouchDb/Utils');
 
-function logIn(user) {
-    return couchUtils.couchRequestSession(user);
+function createSession(userLogin) {
+    return couchUtils.couchRequestSession(userLogin);
+}
+
+function getSession() {
+    return couchUtils.couchRequest({ url: config.storeOptions.couchDbUrl + '/_session', method: 'get' }).then(returnUserContext);
+
+    function returnUserContext(response) {
+        return response.userCtx;
+    }
 }
 
 function getUser(email) {
@@ -11,6 +19,7 @@ function getUser(email) {
 }
 
 module.exports = {
-    logIn: logIn,
+    createSession: createSession,
+    getSession: getSession,
     getUser: getUser
 };

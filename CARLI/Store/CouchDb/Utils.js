@@ -39,15 +39,15 @@ function promiseToHandleCouchResponse(deferred) {
 
 }
 
-function couchRequestSession(user) {
+function couchRequestSession(userLogin) {
     var deferred = Q.defer();
 
     var requestOptions = {
         url: config.storeOptions.couchDbUrl + '/_session',
         method: 'post',
         json: {
-            name: user.email,
-            password: user.password
+            name: userLogin.email,
+            password: userLogin.password
         }
     };
 
@@ -64,10 +64,10 @@ function couchRequestSession(user) {
         }
 
         if (data && data.error) {
-            data.authCookie = getCookieWithDomainAdded(response);
             deferred.reject(carliError(data, response.statusCode));
         }
         else {
+            data.authCookie = getCookieWithDomainAdded(response);
             deferred.resolve(data);
         }
     }

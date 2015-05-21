@@ -3,6 +3,7 @@ angular.module('carli.app', [
     'ngAnimate',
     'ngRoute',
     'ngSanitize',
+    'common.auth',
     'common.alerts',
     'common.errorHandler',
     'common.fa',
@@ -19,6 +20,12 @@ angular.module('carli.app', [
 ])
 .config(function($locationProvider){
     $locationProvider.html5Mode(true);
+})
+.run(function(authService) {
+    authService.requireSession()
+        .then(authService.requireStaff)
+        .then(authService.getCurrentUser)
+        .catch(authService.redirectToLogin);
 })
 .run(function(cycleService){
     cycleService.initCurrentCycle();

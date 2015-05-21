@@ -36,7 +36,7 @@ function runMiddlewareServer(){
 
     function defineRoutes() {
         carliMiddleware.post('/login', function (req, res) {
-            auth.logIn(req.body)
+            auth.createSession(req.body)
                 .then(copyAuthCookieFromResponse)
                 .then(sendResult(res))
                 .catch(sendError(res));
