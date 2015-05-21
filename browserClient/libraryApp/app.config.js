@@ -12,6 +12,7 @@ angular.module('library.app', [
     'common.productService',
     'common.warnIfUnsaved',
     'library.appState',
+    'library.askCarliButton',
     'library.cycleChooser',
     'library.cycleService',
     'library.libraryHeader',
