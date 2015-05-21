@@ -25,7 +25,7 @@ function loginController ($rootScope, $location, alertService, authService) {
 
         function loginFailure(err) {
             console.log("Auth failure:", err);
-            alertService.putAlert("Invalid username or password", { severity: error });
+            alertService.putAlert("Invalid username or password", { severity: err });
         }
 
         function getReturnTo() {

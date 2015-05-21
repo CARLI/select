@@ -1,8 +1,8 @@
 angular.module('common.auth')
     .service('authService', authService);
 
-function authService(CarliModules) {
+function authService($q, CarliModules) {
     return {
-        logIn: CarliModules.AuthMiddleware.logIn
+        logIn: function (user) { return $q.when ( CarliModules.AuthMiddleware.logIn(user) ); }
     };
 }

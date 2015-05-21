@@ -18,7 +18,7 @@ function carliError( error, statusCode ){
         originalError: error,
         statusCode: statusCode
     };
-};
+}
 
 function errorFromString(errorString, statusCode) {
     return {
