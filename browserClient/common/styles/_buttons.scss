@@ -54,6 +54,45 @@ $button-height: 40px;
         }
     }
 
+    &.arrow-right {
+        $arrow-size: $button-height / 2;
+        $fill-size: $arrow-size - 1;
+
+        border-right: none;
+        position: relative;
+        margin-right: $arrow-size;
+
+        &:before,
+        &:after {
+            content: "";
+            position: absolute;
+            border-right: none;
+        }
+
+        &:before {
+            border-top: $arrow-size solid transparent;
+            border-bottom: $arrow-size solid transparent;
+            border-left: $arrow-size solid darken($gray, 10%);
+            right: -$arrow-size;
+            top: -1px;
+        }
+
+        &:after {
+            border-top: $fill-size solid transparent;
+            border-bottom: $fill-size solid transparent;
+            border-left: $fill-size solid $white;
+            right: -$fill-size;
+            top: 0;
+        }
+
+        &:hover,
+        &:focus {
+            &:after {
+                border-left-color: $light-gray;
+            }
+        }
+    }
+
     &.pull-left {
         margin-right: 4px;
     }
@@ -80,9 +119,27 @@ $button-height: 40px;
 .primary-button,
 .save-button {
     background-color: $orange;
+    border-color: $dark-orange;
     color: $white;
     &:hover, &:focus {
         @include save-button-hover;
+    }
+
+    &.arrow-right {
+        &:before {
+            border-left-color: darken($dark-orange, 10%);
+        }
+
+        &:after {
+            border-left-color: $orange;
+        }
+
+        &:hover,
+        &:focus {
+            &:after {
+                border-left-color: $dark-orange;
+            }
+        }
     }
 }
 

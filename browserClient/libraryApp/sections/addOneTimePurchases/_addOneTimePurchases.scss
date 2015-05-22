@@ -129,5 +129,9 @@ ul.product-list {
         .column .list-button {
             @include list-button;
         }
+
+        &.footer {
+            padding: 8px;
+        }
     }
 }
