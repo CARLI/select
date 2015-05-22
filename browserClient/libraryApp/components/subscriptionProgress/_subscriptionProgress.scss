@@ -16,7 +16,7 @@ subscription-progress {
         background: $light-gray;
         border: $default-border;
         border-left: none;
-        color: #8e8e8e;
+        color: $black;
         display: inline-block;
         float: left;
         font-family: 'Dosis';
@@ -63,7 +63,7 @@ subscription-progress {
 
         &.selected {
             background: $white;
-            color: $black;
+            color: $purple;
             font-weight: bold;
 
             &:after {

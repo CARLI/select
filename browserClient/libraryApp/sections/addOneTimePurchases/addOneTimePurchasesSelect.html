@@ -79,14 +79,14 @@
                     <div class="subscription-buttons">
                         <subscription-button title="Site License" price="{{ offering.pricing.site }}"
                                              selected="offering.selectionPendingReview"
-                                             ng-click="vm.selectProduct(offering)"
+                                             busy-click="vm.selectProduct(offering)"
                                              ng-if="offering.pricing.site">
                         </subscription-button>
                         <div class="no-price" ng-if="!offering.pricing.site">A price has not been provided for this product. Ask CARLI for more information.</div>
                     </div>
                     <div class="bottom-buttons">
                         <button type="button" class="carli-button remove-button"
-                                ng-click="vm.unselectProduct(offering)"
+                                busy-click="vm.unselectProduct(offering)"
                                 ng-if="offering.selectionPendingReview">
                             Remove Selection<fa name="remove"></fa>
                         </button>
@@ -124,34 +124,72 @@
                     </button>
                     {{ offering.product.name }}
                 </div>
-                <div class="column">{{ offering.product.vendor.name }}</div>
-                <div class="column">
-                    <span ng-if="offering.selection" class="price">{{ offering.pricing.site | currency }}</span>
+                <div class="column vendor">
+                    {{ offering.product.vendor.name }}
+                </div>
+                <div class="column purchase">
+                    Your library purchased this item
+                    <span ng-show="offering.selection.datePurchased">on</span>
+                    <span class="date">{{ offering.selection.datePurchased | date:shortDate }}</span>
+                    <span ng-show="offering.selection.price">for</span>
+                    <span class="price">{{ offering.selection.price | currency }}</span>
                 </div>
             </div>
             <div class="content">
-                <div class="column">
-                    <div class="content-item-group">
-                        <div class="content-item">
-                            <label>Date Available Through:</label>
-                            <p>{{ offering.product.oneTimePurchaseAvailableForPurchaseThrough | date:shortDate }}</p>
-                        </div>
-                        <div class="content-item" ng-show="offering.selection.datePurchased">
-                            <label>Purchase Date:</label>
-                            <p>{{ offering.selection.datePurchased | date:shortDate }}</p>
-                        </div>
-                    </div>
-                    <div class="product-boolean-item" ng-show="offering.product.oneTimePurchaseAnnualAccessFee"><fa name="check"></fa> Requires Annual Access Fee</div>
+                <div class="column product-info">
+                    <div class="label">Vendor Website</div>
+                    <div class="h3" ng-bind-html="vm.vendor.websiteUrl | linky:'_blank'"></div>
+
+                    <div class="label">Product Description</div>
+                    <p>{{ offering.product.description }}</p>
                 </div>
-                <div class="column">
-                    <div class="content-item">
-                        <label>Comments for Library:</label>
-                        <p class="comments">{{ offering.product.comments }}</p>
-                    </div>
+                <div class="column license-info">
+                    <div class="label">Pricing Comments:</div>
+                    <p>{{ offering.product.comments }}</p>
+
+                    <div class="label">Subscribers to Date:</div>
+                    <p>{{ offering.product.subscribersToDate }}</p>
+
+                    <div class="label">Specific Terms</div>
+                    <ul class="terms-list">
+                        <li>
+                            <span class="label">Download:</span>
+                            <span class="term">{{ offering.product.terms.downloadTerms || offering.product.license.terms.downloadTerms }}</span>
+                        </li>
+                        <li>
+                            <span class="label">ILL:</span>
+                            <span class="term">{{ offering.product.terms.interLibraryLoanTerms || offering.product.license.terms.interLibraryLoanTerms }}</span>
+                        </li>
+
+                        <li>
+                            <span class="label">Course Packs:</span>
+                            <span class="term">{{ offering.product.terms.coursePacksTerms || offering.product.license.terms.coursePacksTerms }}</span>
+                        </li>
+
+                        <li>
+                            <span class="label">Print:</span>
+                            <span class="term">{{ offering.product.terms.printTerms || offering.product.license.terms.printTerms}}</span>
+                        </li>
+
+                        <li>
+                            <span class="label">Limited Sharing for Scholarly Purposes:</span>
+                            <span class="term">{{ offering.product.terms.limitedScholarlySharingTerms || offering.product.license.terms.limitedScholarlySharingTerms}}</span>
+                        </li>
+
+                        <li>
+                            <span class="label">Use by Walk-ins:</span>
+                            <span class="term">{{ offering.product.terms.walkinTerms || offering.product.license.terms.walkinTerms}}</span>
+                        </li>
+
+                        <li>
+                            <span class="label">E-Reserves:</span>
+                            <span class="term">{{ offering.product.terms.eReservesTerms || offering.product.license.terms.eReservesTerms}}</span>
+                        </li>
+                    </ul>
+
+                    <div class="label purple">Redacted License Agreement</div>
                 </div>
-                <div class="column">
-                    {{ offering.selection }}
-                </div>
+                <div class="column empty"></div>
             </div>
         </li>
         <li class="footer">

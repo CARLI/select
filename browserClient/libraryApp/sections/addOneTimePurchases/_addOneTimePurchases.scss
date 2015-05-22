@@ -80,6 +80,15 @@ ul.product-list {
                     width: 100%;
                 }
             }
+
+            .column.purchase {
+                @include body-text;
+
+                .date,
+                .price {
+                    font-weight: bold;
+                }
+            }
         }
 
         .content {
@@ -136,6 +145,10 @@ ul.product-list {
                 .no-price {
                     padding: 0.5rem;
                 }
+            }
+
+            .column.empty {
+                border: none;
             }
         }
 

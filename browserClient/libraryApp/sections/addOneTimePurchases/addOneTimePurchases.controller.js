@@ -85,14 +85,33 @@ function addOneTimePurchasesController( $q, $window, config, cycleService, offer
     }
 
     function selectProduct(offering) {
+        if ( offering.selectionPendingReview ){
+            return $q.when();
+        }
+
         offering.selectionPendingReview = {
+            datePurchased: new Date().toJSON().slice(0, 10),
             price: offering.pricing.site,
-            datePurchased: new Date().toJSON().slice(0, 10)
+            users: 'site'
         };
+
+        return updatePendingSelection(offering);
     }
 
     function unselectProduct(offering) {
         delete offering.selectionPendingReview;
+        return updatePendingSelection(offering);
+    }
+
+    function updatePendingSelection( offering ){
+        return offeringService.update(offering)
+            .then(offeringService.load)
+            .then(workaroundCouchSmell);
+
+        function workaroundCouchSmell( updatedOffering ){
+            offering._rev = updatedOffering._rev;
+            return offering;
+        }
     }
 
     function computeTotalPurchasesAmount() {
@@ -139,10 +158,16 @@ function addOneTimePurchasesController( $q, $window, config, cycleService, offer
             });
 
         function selectOfferingAndSave( offering ){
-            offering.selection = offering.selectionPendingReview;
-            delete offering.selectionPendingReview;
+            if ( offering.selectionPendingReview ){
+                offering.selection = offering.selectionPendingReview;
+                offering.selection.datePurchased = new Date().toJSON().slice(0, 10);
+                delete offering.selectionPendingReview;
 
-            return offeringService.update(offering);
+                return offeringService.update(offering);
+            }
+            else {
+                return $q.when();
+            }
         }
     }
 
