@@ -29,6 +29,7 @@ function addOneTimePurchasesController( $q, $window, config, cycleService, offer
     vm.selectProduct = selectProduct;
     vm.sortAvailable = function sortAvailable(newSort){ sort(newSort, 'Available'); };
     vm.sortPurchased = function sortPurchased(newSort){ sort(newSort, 'Purchased'); };
+    vm.todo = todo;
     vm.unselectProduct = unselectProduct;
 
     activate();
@@ -147,5 +148,9 @@ function addOneTimePurchasesController( $q, $window, config, cycleService, offer
 
     function returnToBeginning(){
         $window.location.reload();
+    }
+
+    function todo(){
+        alert("TODO");
     }
 }

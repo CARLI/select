@@ -1,7 +1,7 @@
     <ul class="product-list" cg-busy="vm.loadingPromise">
         <li class="column-headers">
             <div class="sortable column" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.productName, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.productName)">Product</div>
-            <div class="sortable column" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.vendorName, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.vendorName)">Vendor</div>
+            <div class="sortable column vendor" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.vendorName, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.vendorName)">Vendor</div>
             <div class="sortable column funded" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.funded, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.funded)">CARLI Funded</div>
             <div class="sortable column select" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.pricing, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.pricing)">Selected</div>
         </li>
@@ -13,7 +13,7 @@
                     </button>
                     {{ offering.product.name }}
                 </div>
-                <div class="column">{{ offering.product.vendor.name }}</div>
+                <div class="column vendor">{{ offering.product.vendor.name }}</div>
                 <div class="column funded">
                     <span>{{ offering.product.funded | currency }}</span>
                 </div>
@@ -96,17 +96,22 @@
             </div>
         </li>
         <li class="summary-row">
-            <div class="column"></div>
-            <div class="column">Total</div>
-            <div class="column">{{ vm.computeTotalPurchasesAmount() | currency}}</div>
+            <div class="column">
+                <aside>All changes saved automatically</aside>
+                <span class="total-label">Total</span>
+            </div>
+            <div class="column total">{{ vm.computeTotalPurchasesAmount() | currency}}</div>
         </li>
         <li class="footer">
+            <button class="carli-button print" ng-click="vm.todo()">PRINT</button>
+            <button class="carli-button export" ng-click="vm.todo()">EXPORT</button>
+            <button class="carli-button email" ng-click="vm.todo()">EMAIL</button>
             <button type="button" ng-click="vm.reviewSelections()" class="carli-button primary-button arrow-right">Review</button>
         </li>
     </ul>
 
     <h2>Previously Purchased Items</h2>
-    <p>
+    <p class="purchased-message">
         The following products are items that your library currently has access to through CARLI. If your library is not
         able to access any one of these items, <a>please contact CARLI</a>.
     </p>

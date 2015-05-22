@@ -12,9 +12,11 @@
         <div class="column">{{ offering.selectionPendingReview.price | currency }}</div>
     </li>
     <li class="summary-row">
-        <div class="column"></div>
-        <div class="column">Total</div>
-        <div class="column">{{ vm.computeTotalPurchasesAmount() | currency}}</div>
+        <div class="column">
+            <aside>This is an estimate. Prices may have minor variations based on final vendor invoices.</aside>
+            <span class="total-label">Total</span>
+        </div>
+        <div class="column total">{{ vm.computeTotalPurchasesAmount() | currency}}</div>
     </li>
     <li class="footer">
         <button type="button" busy-click="vm.startSelections()" class="carli-button arrow-left">Change Selections</button>
