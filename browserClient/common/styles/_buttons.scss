@@ -2,6 +2,9 @@
 $button-padding: 10px;
 $button-height: 40px;
 
+$arrow-border-size: $button-height / 2;
+$arrow-fill-size: $arrow-border-size - 1;
+
 @mixin carli-button-hover {
     background-color: $light-gray;
     text-decoration: none;
@@ -55,12 +58,9 @@ $button-height: 40px;
     }
 
     &.arrow-right {
-        $arrow-size: $button-height / 2;
-        $fill-size: $arrow-size - 1;
-
         border-right: none;
         position: relative;
-        margin-right: $arrow-size;
+        margin-right: $arrow-border-size;
 
         &:before,
         &:after {
@@ -70,18 +70,18 @@ $button-height: 40px;
         }
 
         &:before {
-            border-top: $arrow-size solid transparent;
-            border-bottom: $arrow-size solid transparent;
-            border-left: $arrow-size solid darken($gray, 10%);
-            right: -$arrow-size;
+            border-top: $arrow-border-size solid transparent;
+            border-bottom: $arrow-border-size solid transparent;
+            border-left: $arrow-border-size solid darken($gray, 10%);
+            right: -$arrow-border-size;
             top: -1px;
         }
 
         &:after {
-            border-top: $fill-size solid transparent;
-            border-bottom: $fill-size solid transparent;
-            border-left: $fill-size solid $white;
-            right: -$fill-size;
+            border-top: $arrow-fill-size solid transparent;
+            border-bottom: $arrow-fill-size solid transparent;
+            border-left: $arrow-fill-size solid $white;
+            right: -$arrow-fill-size;
             top: 0;
         }
 
@@ -89,6 +89,42 @@ $button-height: 40px;
         &:focus {
             &:after {
                 border-left-color: $light-gray;
+            }
+        }
+    }
+
+    &.arrow-left {
+        border-left: none;
+        position: relative;
+        margin-left: $arrow-border-size;
+
+        &:before,
+        &:after {
+            content: "";
+            position: absolute;
+            border-left: none;
+        }
+
+        &:before {
+            border-top: $arrow-border-size solid transparent;
+            border-bottom: $arrow-border-size solid transparent;
+            border-right: $arrow-border-size solid darken($gray, 10%);
+            left: -$arrow-border-size;
+            top: -1px;
+        }
+
+        &:after {
+            border-top: $arrow-fill-size solid transparent;
+            border-bottom: $arrow-fill-size solid transparent;
+            border-right: $arrow-fill-size solid $white;
+            left: -$arrow-fill-size;
+            top: 0;
+        }
+
+        &:hover,
+        &:focus {
+            &:after {
+                border-right-color: $light-gray;
             }
         }
     }
@@ -138,6 +174,23 @@ $button-height: 40px;
         &:focus {
             &:after {
                 border-left-color: $dark-orange;
+            }
+        }
+    }
+
+    &.arrow-left {
+        &:before {
+            border-right-color: darken($dark-orange, 10%);
+        }
+
+        &:after {
+            border-right-color: $orange;
+        }
+
+        &:hover,
+        &:focus {
+            &:after {
+                border-right-color: $dark-orange;
             }
         }
     }

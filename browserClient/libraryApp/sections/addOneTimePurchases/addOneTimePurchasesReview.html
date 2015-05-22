@@ -16,7 +16,8 @@
         <div class="column">Total</div>
         <div class="column">{{ vm.computeTotalPurchasesAmount() | currency}}</div>
     </li>
+    <li class="footer">
+        <button type="button" busy-click="vm.startSelections()" class="carli-button arrow-left">Change Selections</button>
+        <button type="button" busy-click="vm.completeSelections()" class="carli-button primary-button arrow-right">Complete</button>
+    </li>
 </ul>
-
-<button type="button" busy-click="vm.startSelections()" class="carli-button">Change Selections</button>
-<button type="button" busy-click="vm.completeSelections()" class="carli-button">Complete</button>

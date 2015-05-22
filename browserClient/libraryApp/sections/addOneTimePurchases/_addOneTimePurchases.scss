@@ -131,7 +131,14 @@ ul.product-list {
         }
 
         &.footer {
+            min-height: 58px;
             padding: 8px;
+            position: relative;
+
+            button.arrow-right {
+                position: absolute;
+                right: 8px;
+            }
         }
     }
 }
