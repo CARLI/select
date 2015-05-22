@@ -20,7 +20,7 @@ ul.product-list {
     border-top: 3px solid $black;
     clear: both;
 
-    li {
+    > li {
         padding: 0;
 
         &[collapsible]{
@@ -29,17 +29,34 @@ ul.product-list {
 
         .collapsible-header,
         .content {
-            width: 100%;
             @include flexbox;
+            width: 100%;
         }
 
         .collapsible-header {
             > .column:first-child {
                 padding-left: 36px;
             }
+
+            .column.select {
+                padding: 0;
+
+                .price {
+                    background: $green;
+                    border: 1px solid $dark-green;
+                    color: $white;
+                    height: 100%;
+                    left: 0;
+                    padding: 16px;
+                    position: absolute;
+                    top: 0;
+                    width: 100%;
+                }
+            }
         }
 
         .content {
+            background: $white;
             border-top: $default-border;
 
             .column.product-info {
@@ -52,10 +69,25 @@ ul.product-list {
             }
 
             .column.select {
+                @include flexbox;
+                flex-direction: column;
+                justify-content: space-between;
                 padding: 0;
-                padding-bottom: 50px;
                 position: relative;
                 background-color: $light-gray;
+
+                .subscription-buttons {
+                    @include flex(1 1 50%);
+                }
+
+                .bottom-buttons {
+                    border-top: $default-border;
+                    padding: 4px;
+
+                    .remove-button {
+                        margin-bottom: 4px;
+                    }
+                }
 
                 subscription-button {
                     margin: 4px;
@@ -74,14 +106,14 @@ ul.product-list {
                     }
                 }
 
-                .bottom-buttons {
-                    border-top: $default-border;
-                    bottom: 0;
-                    position: absolute;
-                    padding: 4px;
-                    width: 100%;
+                .no-price {
+                    padding: 0.5rem;
                 }
             }
+        }
+
+        .column {
+            position: relative;
         }
 
         .column.funded {

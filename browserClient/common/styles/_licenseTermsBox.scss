@@ -1,0 +1,38 @@
+ul.terms-list {
+    background: $white;
+    list-style: none inside;
+    margin-top: 1rem;
+
+    > li {
+        border-top: $default-border;
+        border-left: $default-border;
+        border-right: $default-border;
+        padding: 1rem;
+        margin: 0;
+
+        label, .label {
+            font-weight: normal;
+            margin: 0;
+        }
+
+        &:last-child {
+            border-bottom: $default-border;
+            border-left: $default-border;
+            border-right: $default-border;
+        }
+
+        .term,
+        [ng-transclude] {
+            color: $purple;
+            display: inline;
+        }
+    }
+
+    &.editing {
+        li {
+            border: 0;
+            margin-bottom: 1rem;
+            padding: 0;
+        }
+    }
+}

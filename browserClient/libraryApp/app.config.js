@@ -3,6 +3,7 @@ angular.module('library.app', [
     'cgBusy',
     'ngAnimate',
     'ngRoute',
+    'ngSanitize',
     'common.alerts',
     'common.accordion',
     'common.config',

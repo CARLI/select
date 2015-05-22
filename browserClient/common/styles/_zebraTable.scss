@@ -37,11 +37,11 @@ $table-content-fg-color: $purple;
     border-bottom: $default-border;
     list-style: outside none none;
 
-    li.column-headers {
+    > li.column-headers {
         @include sortable-column-header;
     }
 
-    li {
+    > li {
         @include flexbox;
         font-family: 'Verdana', sans-serif;
         @include font-size(15);
@@ -79,11 +79,11 @@ $table-content-fg-color: $purple;
     font-weight: 700;
 }
 
-.zebra-table li > a {
+.zebra-table > li > a {
     @extend .zebra-table-header;
 }
 
-.zebra-table li > a[disabled] {
+.zebra-table > li > a[disabled] {
     color: $gray;
     pointer-events: none;
 }

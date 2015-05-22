@@ -2,6 +2,7 @@ angular.module('carli.app', [
     'busyClick',
     'ngAnimate',
     'ngRoute',
+    'ngSanitize',
     'common.alerts',
     'common.errorHandler',
     'common.fa',
