@@ -11,11 +11,6 @@ angular.module('carli.routes',[
 ])
 .config(function ($routeProvider) {
     $routeProvider
-    .when('/', {
-        templateUrl: '/carliApp/sections/dashboard/dashboard.html',
-        controller:  'dashboardController',
-        controllerAs:'vm'
-    })
     .when('/admin/databaseStatus', {
         templateUrl: '/carliApp/sections/admin/databaseStatus/databaseStatus.html',
         controller:  'databaseStatusController',
@@ -95,6 +90,9 @@ angular.module('carli.routes',[
         templateUrl: '/carliApp/sections/styleGuide/styleGuide.html',
         controller:  'styleGuideController',
         controllerAs:'vm'
+    })
+    .otherwise({
+        redirectTo: '/dashboard'
     })
     ;
 });

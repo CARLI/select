@@ -2,6 +2,9 @@
 $button-padding: 10px;
 $button-height: 40px;
 
+$arrow-border-size: $button-height / 2;
+$arrow-fill-size: $arrow-border-size - 1;
+
 @mixin carli-button-hover {
     background-color: $light-gray;
     text-decoration: none;
@@ -54,6 +57,78 @@ $button-height: 40px;
         }
     }
 
+    &.arrow-right {
+        border-right: none;
+        position: relative;
+        margin-right: $arrow-border-size;
+
+        &:before,
+        &:after {
+            content: "";
+            position: absolute;
+            border-right: none;
+        }
+
+        &:before {
+            border-top: $arrow-border-size solid transparent;
+            border-bottom: $arrow-border-size solid transparent;
+            border-left: $arrow-border-size solid darken($gray, 10%);
+            right: -$arrow-border-size;
+            top: -1px;
+        }
+
+        &:after {
+            border-top: $arrow-fill-size solid transparent;
+            border-bottom: $arrow-fill-size solid transparent;
+            border-left: $arrow-fill-size solid $white;
+            right: -$arrow-fill-size;
+            top: 0;
+        }
+
+        &:hover,
+        &:focus {
+            &:after {
+                border-left-color: $light-gray;
+            }
+        }
+    }
+
+    &.arrow-left {
+        border-left: none;
+        position: relative;
+        margin-left: $arrow-border-size;
+
+        &:before,
+        &:after {
+            content: "";
+            position: absolute;
+            border-left: none;
+        }
+
+        &:before {
+            border-top: $arrow-border-size solid transparent;
+            border-bottom: $arrow-border-size solid transparent;
+            border-right: $arrow-border-size solid darken($gray, 10%);
+            left: -$arrow-border-size;
+            top: -1px;
+        }
+
+        &:after {
+            border-top: $arrow-fill-size solid transparent;
+            border-bottom: $arrow-fill-size solid transparent;
+            border-right: $arrow-fill-size solid $white;
+            left: -$arrow-fill-size;
+            top: 0;
+        }
+
+        &:hover,
+        &:focus {
+            &:after {
+                border-right-color: $light-gray;
+            }
+        }
+    }
+
     &.pull-left {
         margin-right: 4px;
     }
@@ -80,9 +155,44 @@ $button-height: 40px;
 .primary-button,
 .save-button {
     background-color: $orange;
+    border-color: $dark-orange;
     color: $white;
     &:hover, &:focus {
         @include save-button-hover;
+    }
+
+    &.arrow-right {
+        &:before {
+            border-left-color: darken($dark-orange, 10%);
+        }
+
+        &:after {
+            border-left-color: $orange;
+        }
+
+        &:hover,
+        &:focus {
+            &:after {
+                border-left-color: $dark-orange;
+            }
+        }
+    }
+
+    &.arrow-left {
+        &:before {
+            border-right-color: darken($dark-orange, 10%);
+        }
+
+        &:after {
+            border-right-color: $orange;
+        }
+
+        &:hover,
+        &:focus {
+            &:after {
+                border-right-color: $dark-orange;
+            }
+        }
     }
 }
 

@@ -1,0 +1,47 @@
+subscription-button {
+    display: block;
+
+    .button-body {
+        background: white;
+        border: $default-border;
+        color: $black;
+        cursor: pointer;
+        display: block;
+        height: 56px;
+        margin-bottom: 3px;
+        padding: 8px 34px 0 12px;
+        position: relative;
+
+        &.selected {
+            background: $green;
+            border: 1px solid $dark-green;
+            color: $white;
+            cursor: auto;
+        }
+    }
+
+    .title {
+        @include font-size(12);
+    }
+
+    .price {
+        @include font-size(15);
+        font-weight: bold;
+    }
+
+    .fa {
+        @include font-size(22);
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 12px;
+
+        &.fa-circle-thin {
+            color: $gray;
+        }
+
+        &.fa-check-circle {
+            color: #486300;
+        }
+    }
+}

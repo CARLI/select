@@ -1,0 +1,25 @@
+<p> Please review your purchase. You have selected the following item(s):
+</p>
+<ul class="product-list" cg-busy="vm.loadingPromise">
+    <li class="column-headers">
+        <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'product.name', reversedSort: vm.reverse }" ng-click="vm.sort('product.name')">Product</div>
+        <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'product.vendor.name', reversedSort: vm.reverse }" ng-click="vm.sort(['product.vendor.name','product.name'])">Vendor</div>
+        <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'pricing.site', reversedSort: vm.reverse }" ng-click="vm.sort(['pricing.site','product.name'])">Cost</div>
+    </li>
+    <li ng-repeat="offering in vm.availableForPurchase | filter: vm.hasPendingSelection | orderBy: vm.orderBy:vm.reverse track by offering.id">
+        <div class="column">{{ offering.product.name }}</div>
+        <div class="column">{{ offering.product.vendor.name }}</div>
+        <div class="column">{{ offering.selectionPendingReview.price | currency }}</div>
+    </li>
+    <li class="summary-row">
+        <div class="column">
+            <aside>This is an estimate. Prices may have minor variations based on final vendor invoices.</aside>
+            <span class="total-label">Total</span>
+        </div>
+        <div class="column total">{{ vm.computeTotalPurchasesAmount() | currency}}</div>
+    </li>
+    <li class="footer">
+        <button type="button" busy-click="vm.startSelections()" class="carli-button arrow-left">Change Selections</button>
+        <button type="button" busy-click="vm.completeSelections()" class="carli-button primary-button arrow-right">Complete</button>
+    </li>
+</ul>

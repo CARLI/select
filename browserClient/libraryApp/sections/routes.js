@@ -1,29 +1,25 @@
 angular.module('library.routes',[
-        'library.sections.dashboard'
+        'library.sections.dashboard',
+        'library.sections.addOneTimePurchases'
     ])
     .config(function ($routeProvider) {
         $routeProvider
-            .when('/', {
-                templateUrl: '/libraryApp/sections/dashboard/dashboard.html',
-                controller:  'dashboardController',
-                controllerAs:'vm'
-            })
             .when('/dashboard', {
                 templateUrl: '/libraryApp/sections/dashboard/dashboard.html',
                 controller:  'dashboardController',
                 controllerAs:'vm'
             })
-            /*.when('/addSubscriptions', {
-                templateUrl: '/libraryApp/sections/',
-                controller:  'Controller',
-                controllerAs:'vm'
-            })
+//            .when('/addSubscriptions', {
+//                templateUrl: '/libraryApp/sections/',
+//                controller:  'Controller',
+//                controllerAs:'vm'
+//            })
             .when('/addOneTimePurchases', {
-                templateUrl: '/libraryApp/sections/',
-                controller:  'Controller',
+                templateUrl: '/libraryApp/sections/addOneTimePurchases/addOneTimePurchases.html',
+                controller:  'addOneTimePurchasesController',
                 controllerAs:'vm'
             })
-            .when('/report', {
+            /*.when('/report', {
                 templateUrl: '/libraryApp/sections/',
                 controller:  'Controller',
                 controllerAs:'vm'
@@ -44,5 +40,8 @@ angular.module('library.routes',[
                 controllerAs:'vm'
             })
             */
+            .otherwise({
+                redirectTo: '/dashboard'
+            })
         ;
     });

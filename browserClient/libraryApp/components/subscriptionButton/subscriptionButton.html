@@ -1,0 +1,6 @@
+<div class="button-body" ng-class="{ selected: selected }">
+    <div class="title">{{ title }}</div>
+    <div class="price">{{ price | currency }}</div>
+    <fa name="circle-thin" ng-if="!selected"></fa>
+    <fa name="check-circle" ng-if="selected"></fa>
+</div>

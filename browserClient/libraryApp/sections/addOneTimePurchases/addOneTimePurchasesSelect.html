@@ -1,0 +1,199 @@
+    <ul class="product-list" cg-busy="vm.loadingPromise">
+        <li class="column-headers">
+            <div class="sortable column" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.productName, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.productName)">Product</div>
+            <div class="sortable column vendor" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.vendorName, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.vendorName)">Vendor</div>
+            <div class="sortable column funded" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.funded, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.funded)">CARLI Funded</div>
+            <div class="sortable column select" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.pricing, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.pricing)">Selected</div>
+        </li>
+        <li collapsible class="collapsed" ng-repeat="offering in vm.availableForPurchase | orderBy: vm.orderByAvailable:vm.reverseAvailable track by offering.id">
+            <div class="collapsible-header">
+                <div class="column">
+                    <button type="button" class="angle-icon-container">
+                        <fa name="angle-down"></fa>
+                    </button>
+                    {{ offering.product.name }}
+                </div>
+                <div class="column vendor">{{ offering.product.vendor.name }}</div>
+                <div class="column funded">
+                    <span>{{ offering.product.funded | currency }}</span>
+                </div>
+                <div class="column select">
+                    <span ng-if="offering.selectionPendingReview" class="price">{{ offering.selectionPendingReview.price | currency }}</span>
+                </div>
+            </div>
+            <div class="content">
+                <div class="column product-info">
+                    <div class="label">Vendor Website</div>
+                    <div class="h3" ng-bind-html="vm.vendor.websiteUrl | linky:'_blank'"></div>
+
+                    <div class="label">Product Description</div>
+                    <p>{{ offering.product.description }}</p>
+                </div>
+                <div class="column license-info">
+                    <div class="label">Pricing Comments:</div>
+                    <p>{{ offering.product.comments }}</p>
+
+                    <div class="label">Subscribers to Date:</div>
+                    <p>{{ offering.product.subscribersToDate }}</p>
+
+                    <div class="label">Specific Terms</div>
+                    <ul class="terms-list">
+                        <li>
+                            <span class="label">Download:</span>
+                            <span class="term">{{ offering.product.terms.downloadTerms || offering.product.license.terms.downloadTerms }}</span>
+                        </li>
+                        <li>
+                            <span class="label">ILL:</span>
+                            <span class="term">{{ offering.product.terms.interLibraryLoanTerms || offering.product.license.terms.interLibraryLoanTerms }}</span>
+                        </li>
+
+                        <li>
+                            <span class="label">Course Packs:</span>
+                            <span class="term">{{ offering.product.terms.coursePacksTerms || offering.product.license.terms.coursePacksTerms }}</span>
+                        </li>
+
+                        <li>
+                            <span class="label">Print:</span>
+                            <span class="term">{{ offering.product.terms.printTerms || offering.product.license.terms.printTerms}}</span>
+                        </li>
+
+                        <li>
+                            <span class="label">Limited Sharing for Scholarly Purposes:</span>
+                            <span class="term">{{ offering.product.terms.limitedScholarlySharingTerms || offering.product.license.terms.limitedScholarlySharingTerms}}</span>
+                        </li>
+
+                        <li>
+                            <span class="label">Use by Walk-ins:</span>
+                            <span class="term">{{ offering.product.terms.walkinTerms || offering.product.license.terms.walkinTerms}}</span>
+                        </li>
+
+                        <li>
+                            <span class="label">E-Reserves:</span>
+                            <span class="term">{{ offering.product.terms.eReservesTerms || offering.product.license.terms.eReservesTerms}}</span>
+                        </li>
+                    </ul>
+
+                    <div class="label purple">Redacted License Agreement</div>
+                </div>
+                <div class="column select">
+                    <div class="subscription-buttons">
+                        <subscription-button title="Site License" price="{{ offering.pricing.site }}"
+                                             selected="offering.selectionPendingReview"
+                                             busy-click="vm.selectProduct(offering)"
+                                             ng-if="offering.pricing.site">
+                        </subscription-button>
+                        <div class="no-price" ng-if="!offering.pricing.site">A price has not been provided for this product. Ask CARLI for more information.</div>
+                    </div>
+                    <div class="bottom-buttons">
+                        <button type="button" class="carli-button remove-button"
+                                busy-click="vm.unselectProduct(offering)"
+                                ng-if="offering.selectionPendingReview">
+                            Remove Selection<fa name="remove"></fa>
+                        </button>
+                        <ask-carli-button></ask-carli-button>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="summary-row">
+            <div class="column">
+                <aside>All changes saved automatically</aside>
+                <span class="total-label">Total</span>
+            </div>
+            <div class="column total">{{ vm.computeTotalPurchasesAmount() | currency}}</div>
+        </li>
+        <li class="footer">
+            <button class="carli-button print" ng-click="vm.todo()">PRINT</button>
+            <button class="carli-button export" ng-click="vm.todo()">EXPORT</button>
+            <button class="carli-button email" ng-click="vm.todo()">EMAIL</button>
+            <button type="button" ng-click="vm.reviewSelections()" class="carli-button primary-button arrow-right">Review</button>
+        </li>
+    </ul>
+
+    <h2>Previously Purchased Items</h2>
+    <p class="purchased-message">
+        The following products are items that your library currently has access to through CARLI. If your library is not
+        able to access any one of these items, <a>please contact CARLI</a>.
+    </p>
+    <ul class="product-list" cg-busy="vm.loadingPromise">
+        <li collapsible class="collapsed" ng-repeat="offering in vm.purchased | orderBy: vm.orderByPurchased:vm.reversePurchased track by offering.id ">
+            <div class="collapsible-header">
+                <div class="column">
+                    <button type="button" class="angle-icon-container">
+                        <fa name="angle-down"></fa>
+                    </button>
+                    {{ offering.product.name }}
+                </div>
+                <div class="column vendor">
+                    {{ offering.product.vendor.name }}
+                </div>
+                <div class="column purchase">
+                    Your library purchased this item
+                    <span ng-show="offering.selection.datePurchased">on</span>
+                    <span class="date">{{ offering.selection.datePurchased | date:shortDate }}</span>
+                    <span ng-show="offering.selection.price">for</span>
+                    <span class="price">{{ offering.selection.price | currency }}</span>
+                </div>
+            </div>
+            <div class="content">
+                <div class="column product-info">
+                    <div class="label">Vendor Website</div>
+                    <div class="h3" ng-bind-html="vm.vendor.websiteUrl | linky:'_blank'"></div>
+
+                    <div class="label">Product Description</div>
+                    <p>{{ offering.product.description }}</p>
+                </div>
+                <div class="column license-info">
+                    <div class="label">Pricing Comments:</div>
+                    <p>{{ offering.product.comments }}</p>
+
+                    <div class="label">Subscribers to Date:</div>
+                    <p>{{ offering.product.subscribersToDate }}</p>
+
+                    <div class="label">Specific Terms</div>
+                    <ul class="terms-list">
+                        <li>
+                            <span class="label">Download:</span>
+                            <span class="term">{{ offering.product.terms.downloadTerms || offering.product.license.terms.downloadTerms }}</span>
+                        </li>
+                        <li>
+                            <span class="label">ILL:</span>
+                            <span class="term">{{ offering.product.terms.interLibraryLoanTerms || offering.product.license.terms.interLibraryLoanTerms }}</span>
+                        </li>
+
+                        <li>
+                            <span class="label">Course Packs:</span>
+                            <span class="term">{{ offering.product.terms.coursePacksTerms || offering.product.license.terms.coursePacksTerms }}</span>
+                        </li>
+
+                        <li>
+                            <span class="label">Print:</span>
+                            <span class="term">{{ offering.product.terms.printTerms || offering.product.license.terms.printTerms}}</span>
+                        </li>
+
+                        <li>
+                            <span class="label">Limited Sharing for Scholarly Purposes:</span>
+                            <span class="term">{{ offering.product.terms.limitedScholarlySharingTerms || offering.product.license.terms.limitedScholarlySharingTerms}}</span>
+                        </li>
+
+                        <li>
+                            <span class="label">Use by Walk-ins:</span>
+                            <span class="term">{{ offering.product.terms.walkinTerms || offering.product.license.terms.walkinTerms}}</span>
+                        </li>
+
+                        <li>
+                            <span class="label">E-Reserves:</span>
+                            <span class="term">{{ offering.product.terms.eReservesTerms || offering.product.license.terms.eReservesTerms}}</span>
+                        </li>
+                    </ul>
+
+                    <div class="label purple">Redacted License Agreement</div>
+                </div>
+                <div class="column empty"></div>
+            </div>
+        </li>
+        <li class="footer">
+            <ask-carli-button></ask-carli-button>
+        </li>
+    </ul>
+</section>
