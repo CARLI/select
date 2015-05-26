@@ -90,7 +90,7 @@
                                 ng-if="offering.selectionPendingReview">
                             Remove Selection<fa name="remove"></fa>
                         </button>
-                        <ask-carli-button></ask-carli-button>
+                        <ask-carli-button context="{{ offering.product.name }} from {{ offering.product.vendor.name }}"></ask-carli-button>
                     </div>
                 </div>
             </div>
@@ -193,7 +193,7 @@
             </div>
         </li>
         <li class="footer">
-            <ask-carli-button></ask-carli-button>
+            <ask-carli-button context="Previously Purchased Products List"></ask-carli-button>
         </li>
     </ul>
 </section>

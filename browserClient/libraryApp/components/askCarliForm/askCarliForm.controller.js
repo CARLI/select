@@ -1,7 +1,7 @@
 angular.module('library.askCarliForm')
 .controller('askCarliFormController', askCarliFormController);
 
-function askCarliFormController($location, $q, $scope, userService) {
+function askCarliFormController($location, $q, $scope, askCarliService, userService) {
     var vm = this;
 
     vm.draft = {};
@@ -11,18 +11,43 @@ function askCarliFormController($location, $q, $scope, userService) {
     activate();
 
     function activate(){
-        $('#ask-carli-form-modal').on('hide.bs.modal', modalClosing);
-
         resetForm();
+        listenForAskCarliButtonEvents();
+        clearFormOnAnyBootstrapCancel();
     }
 
-    function modalClosing(){
-        resetForm();
-        $scope.$digest();
+    function listenForAskCarliButtonEvents(){
+        $scope.$watch(askCarliService.receiveStartDraftMessage, receiveStartDraftMessage);
+
+        function receiveStartDraftMessage(askCarliMessage){
+            if (!askCarliMessage) {
+                return;
+            } else {
+                askCarliService.acknowledgeStartDraftMessage();
+            }
+
+            resetForm();
+
+            vm.draft.context = askCarliMessage;
+
+            showDraftMessageModal();
+        }
+    }
+
+    function clearFormOnAnyBootstrapCancel(){
+        $('#ask-carli-form-modal').on('hide.bs.modal', modalClosing);
+
+        function modalClosing(){
+            $scope.$applyAsync(resetForm);
+        }
     }
 
     function resetForm(){
         vm.draft = {};
+    }
+
+    function showDraftMessageModal() {
+        $('#ask-carli-form-modal').modal();
     }
 
     function hideDraftMessageModal() {
@@ -43,9 +68,7 @@ function askCarliFormController($location, $q, $scope, userService) {
             user: user
         };
 
-        console.log('send message', message);
-
-        $q.when()
+        return askCarliService.sendAskCarliMessage(message)
             .then(messageSentSuccess);
 
         function messageSentSuccess(){
