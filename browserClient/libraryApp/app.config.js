@@ -11,6 +11,7 @@ angular.module('library.app', [
     'common.fa',
     'common.offeringService',
     'common.productService',
+    'common.scrollTo',
     'common.warnIfUnsaved',
     'library.appState',
     'library.askCarliButton',
