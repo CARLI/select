@@ -1,18 +1,24 @@
 angular.module('library.askCarliForm')
 .controller('askCarliFormController', askCarliFormController);
 
-function askCarliFormController($q, $location, userService) {
+function askCarliFormController($location, $q, $scope, userService) {
     var vm = this;
 
     vm.draft = {};
 
-    vm.cancel = cancel;
     vm.sendMessage = sendMessage;
 
     activate();
 
     function activate(){
+        $('#ask-carli-form-modal').on('hide.bs.modal', modalClosing);
+
         resetForm();
+    }
+
+    function modalClosing(){
+        resetForm();
+        $scope.$digest();
     }
 
     function resetForm(){
@@ -25,10 +31,6 @@ function askCarliFormController($q, $location, userService) {
 
     function showMessageSentModal(){
         $('#ask-carli-form-sent-modal').modal();
-    }
-
-    function cancel(){
-        resetForm();
     }
 
     function sendMessage(){
