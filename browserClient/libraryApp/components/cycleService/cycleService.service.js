@@ -8,12 +8,14 @@ function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
         throw new Error('Cycle Service was initialized without a valid user');
     }
     var cycleModule = CarliModules.Cycle;
+    var offeringModule = CarliModules.Offering;
 
     var currentCycle = null;
 
     return {
         listActiveCycles: listActiveCycles,
         listOpenForSelectionsCycles: listOpenForSelectionsCycles,
+        listSelectionsForCycle: listSelectionsForCycle,
         load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ).catch(errorHandler); },
         getCurrentCycle: getCurrentCycle,
         setCurrentCycle: setCurrentCycle
@@ -35,6 +37,11 @@ function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
         function cycleIsOpenToLibraries( cycle ){
             return cycle.status === 4;
         }
+    }
+
+    function listSelectionsForCycle( cycle ){
+        return $q.when(offeringModule.listOfferingsWithSelectionsForLibrary(currentUser.library.id,cycle))
+            .catch(errorHandler);
     }
 
     function getCurrentCycle() {

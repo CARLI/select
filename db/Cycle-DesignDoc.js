@@ -35,7 +35,7 @@ ddoc = {
         listOfferingsWithSelections: {
             map: function ( doc ) {
                 if ( doc.type === 'Offering' && doc.selection ) {
-                    emit( doc.id, doc );
+                    emit( doc.library, doc );
                 }
             }
         },

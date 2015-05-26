@@ -242,6 +242,11 @@ function listOfferingsWithSelections( cycle ) {
 
 }
 
+function listOfferingsWithSelectionsForLibrary( libraryId, cycle ){
+    setCycle(cycle);
+    return expandOfferings( couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listOfferingsWithSelections', libraryId), cycle )
+}
+
 function setSuPricingForAllLibrariesForProduct( productId, newSuPricing, cycle ){
     return listOfferingsForProductIdUnexpanded(productId, cycle)
         .then(applyNewSuPricingToAllOfferings);
@@ -553,6 +558,7 @@ module.exports = {
     listOfferingsForLibraryId: listOfferingsForLibraryId,
     listOfferingsForProductId: listOfferingsForProductId,
     listOfferingsWithSelections: listOfferingsWithSelections,
+    listOfferingsWithSelectionsForLibrary: listOfferingsWithSelectionsForLibrary,
     setSuPricingForAllLibrariesForProduct: setSuPricingForAllLibrariesForProduct,
     updateSuPricingForAllLibrariesForProduct: updateSuPricingForAllLibrariesForProduct,
     listVendorsFromOfferingIds: listVendorsFromOfferingIds,
