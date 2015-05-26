@@ -7,6 +7,7 @@
 @import "../../common/styles/gridAdapter";
 @import "../../common/styles/zebraTable";
 @import "../../common/styles/licenseTermsBox";
+@import "../../common/styles/modalDialog";
 @import "../../common/styles/carli";
 
 @import "tagsInput";
@@ -29,7 +30,6 @@
 @import "../components/entityForms/vendor/editVendor";
 @import "../components/entityList/entityList";
 @import "../components/filterByActive/filterByActive";
-@import "../components/modalDialog/modalDialog";
 @import "../components/newCycleForm/newCycleForm";
 @import "../components/notificationList/notificationList";
 @import "../components/notificationModal/_notificationModal";
