@@ -13,12 +13,18 @@ function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
 
     return {
         listActiveCycles: listActiveCycles,
+        listOpenForSelectionsCycles: listOpenForSelectionsCycles,
         load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ).catch(errorHandler); },
         getCurrentCycle: getCurrentCycle,
         setCurrentCycle: setCurrentCycle
     };
 
-    function listActiveCycles() {
+    function listActiveCycles(){
+        return $q.when( cycleModule.listActiveCycles() )
+            .catch(errorHandler);
+    }
+
+    function listOpenForSelectionsCycles() {
         return $q.when( cycleModule.listActiveCycles() )
             .then(function( cycleList ){
                 return cycleList.filter(cycleIsOpenToLibraries);

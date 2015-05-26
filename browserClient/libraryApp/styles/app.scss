@@ -17,6 +17,11 @@
 @import "../../common/components/radio/radio";
 @import "../../common/components/userMenu/userMenu";
 
+.purchased-message {
+    width: 50%;
+    margin-bottom: 30px;
+}
+
 @import "../components/askCarliButton/askCarliButton";
 @import "../components/cycleChooser/cycleChooser";
 @import "../components/libraryHeader/libraryHeader";
@@ -24,3 +29,4 @@
 @import "../components/subscriptionProgress/subscriptionProgress";
 
 @import "../sections/addOneTimePurchases/addOneTimePurchases";
+@import "../sections/dashboard/dashboard";
