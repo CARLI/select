@@ -23,6 +23,9 @@ function askCarliFormController($q, $location, userService) {
         $('#ask-carli-form-modal').modal('hide');
     }
 
+    function showMessageSentModal(){
+        $('#ask-carli-form-sent-modal').modal();
+    }
 
     function cancel(){
         resetForm();
@@ -45,6 +48,7 @@ function askCarliFormController($q, $location, userService) {
 
         function messageSentSuccess(){
             hideDraftMessageModal();
+            showMessageSentModal();
             resetForm();
         }
     }
