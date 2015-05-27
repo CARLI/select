@@ -22,6 +22,9 @@ function vendorsSettingPricesByVendorController( $scope, $q, accordionController
         'site-license-price-both',
         'flag'
     ];
+    vm.vendorStatus = {};
+    vm.closeVendorPricing = closeVendorPricing;
+    vm.openVendorPricing = openVendorPricing;
 
     activate();
 
@@ -54,6 +57,21 @@ function vendorsSettingPricesByVendorController( $scope, $q, accordionController
             .then(vendorService.getVendorsById)
             .then(function (vendors) {
                 vm.vendors = vendors;
+            })
+            .then(loadVendorStatuses);
+    }
+
+    function loadVendorStatuses(){
+        vm.vendorStatus = {};
+
+        return vendorStatusService.list(vm.cycle)
+            .then(function(vendorStatusList){
+                console.log('listed vendor statuses', vendorStatusList);
+
+                vendorStatusList.forEach(function(vendorStatus){
+                    vm.vendorStatus[vendorStatus.vendor] = vendorStatus;
+                });
+                return vm.vendorStatus;
             });
     }
 
@@ -96,8 +114,23 @@ function vendorsSettingPricesByVendorController( $scope, $q, accordionController
         }
     }
 
+    function closeVendorPricing( vendor ){
+        return vendorStatusService.closePricingForVendor( vendor.id, vm.cycle )
+            .then(function(){
+                vm.vendorStatus[vendor.id].isClosed = true;
+            });
+    }
+
+    function openVendorPricing( vendor ){
+        return vendorStatusService.openPricingForVendor( vendor.id, vm.cycle )
+            .then(function(){
+                vm.vendorStatus[vendor.id].isClosed = false;
+            });
+    }
+
     function getVendorPricingStatus(vendor) {
-        return "No activity";
+        var status = vm.vendorStatus[vendor.id] || {};
+        return status.description + ' [Pricing ' + (status.isClosed ? 'Closed' : 'Open') + ']' || "No Activity";
     }
 
     function setOfferingEditable( offering ){
