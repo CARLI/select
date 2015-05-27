@@ -7,7 +7,7 @@
                     <fa name="angle-down"></fa><span class="sr-only">Open offerings for {{ ::vendor.name }}</span>
                 </button>
                 {{ ::vendor.name }}
-                <span class="vendor-status">{{ ::vm.getVendorPricingStatus(vendor) }}</span>
+                <span class="vendor-status">{{ vm.getVendorPricingStatus(vendor) }}</span>
             </div>
             <div class="content" ng-if="vm.openAccordion === vendor.id">
                 <ul class="product-list">
@@ -32,11 +32,16 @@
                             </ul>
                             <div class="footer">
                                 <div class="placeholder pull-left" style="width: 250px;">Print Email Export</div>
-                                <div class="placeholder pull-right" style="width: 250px;">Vendor Pricing Entry</div>
                             </div>
                         </div>
                     </li>
                 </ul>
+                <div class="vendor footer">
+                    <button class="carli-button" busy-click="vm.openVendorPricing(vendor)" ng-if="vm.vendorStatus[vendor.id].isClosed">Re-Open {{ vendor.name }} Pricing</button>
+                    <button class="carli-button" busy-click="vm.closeVendorPricing(vendor)" ng-if="!vm.vendorStatus[vendor.id].isClosed">Close {{ vendor.name }} Pricing</button>
+
+                    <div class="placeholder pull-right" style="width: 250px;">Vendor Pricing Entry</div>
+                </div>
             </div>
         </li>
     </ul>

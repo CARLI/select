@@ -66,6 +66,13 @@ ddoc = {
                 return sum(values);
             }
         },
+        listVendorStatusesByVendorId: {
+            map: function(doc) {
+                if ( doc.type === 'VendorStatus' ){
+                    emit(doc.vendor, doc);
+                }
+            }
+        },
         getCycleSelectionAndInvoiceTotals: {
             map: function(doc) {
                 if (doc.type == 'Offering') {

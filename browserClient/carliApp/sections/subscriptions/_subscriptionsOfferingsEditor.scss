@@ -257,6 +257,10 @@
                 border-left: $default-border;
             }
         }
+
+        .footer.vendor {
+            border-top: $default-border;
+        }
     }
 
     /* Applies to the by-library offerings view */

@@ -93,7 +93,6 @@ function test( entityTypeName, validData, invalidData, cycle ) {
             it( 'should be rejected if id not found', function() {
                 return EntityRepository.load( uuid.v4(), cycle )
                     .catch(function( rejection ){
-                        console.log('rejected: ',rejection);
                         return expect( rejection.error ).to.equal('not_found');
                     });
             } );

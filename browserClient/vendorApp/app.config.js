@@ -8,6 +8,7 @@ angular.module('vendor.app', [
     'common.config',
     'common.errorHandler',
     'common.fa',
+    'common.vendorStatusService',
     'common.warnIfUnsaved',
     'vendor.appState',
     'vendor.vendorHeader',
