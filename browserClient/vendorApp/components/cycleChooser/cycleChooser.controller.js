@@ -24,7 +24,7 @@ function cycleChooserController($scope, cycleService, userService, vendorStatusS
                 vm.noActiveCycles = true;
             }
             else if (cycles.length === 1) {
-                return readyCycleIfVendorIsStillAllowedIn(cycles[0])
+                return readyCycleIfVendorIsStillAllowedIn(cycles[0]);
             } else {
                 vm.cycles = cycles;
             }
