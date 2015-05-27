@@ -8,6 +8,10 @@
             "description": "Unique identifier for the VendorStatus record",
             "type": "string"
         },
+        "cycle": {
+            "description": "UUID of a Cycle document",
+            "type": "string"
+        },
         "vendor": {
             "description": "Uuid of the Vendor that this document is recording the status of",
             "type": "string"
@@ -29,5 +33,5 @@
             "type": "int"
         }
     },
-    "required": [ "vendor" ]
+    "required": [ "cycle", "vendor" ]
 }
