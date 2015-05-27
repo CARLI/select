@@ -1,37 +1,61 @@
 angular.module('vendor.cycleChooser')
     .controller('cycleChooserController', cycleChooserController);
 
-function cycleChooserController($scope, $timeout, cycleService) {
+function cycleChooserController($scope, cycleService, userService, vendorStatusService ) {
     var vm = this;
 
     vm.cycles = [];
+    vm.loadingPromise = null;
+    vm.vendor = {};
 
     activate();
 
     function activate() {
-        loadCycles();
-        $scope.$watch('vm.selectedCycle', readySelectedCycle);
+        var currentUser = userService.getUser();
+        vm.vendor = currentUser.vendor;
+
+        vm.loadingPromise = loadCycles();
+        $scope.$watch('vm.selectedCycle', readyCycleIfVendorIsStillAllowedIn);
     }
 
     function loadCycles() {
-        cycleService.listActiveCycles().then(function (cycles) {
+        return cycleService.listActiveCycles().then(function (cycles) {
             if (cycles.length === 0){
                 vm.noActiveCycles = true;
             }
             else if (cycles.length === 1) {
-                readySelectedCycle(cycles[0]);
+                return readyCycleIfVendorIsStillAllowedIn(cycles[0])
             } else {
                 vm.cycles = cycles;
             }
         });
     }
 
-    function readySelectedCycle(cycle) {
+    function readyCycleIfVendorIsStillAllowedIn( cycle ){
         if (!cycle) {
             return;
         }
         
-        cycle.databaseExists().then(function (isReady) {
+        return vendorStatusService.getStatusForVendor( vm.vendor.id, cycle )
+            .then(function(vendorStatus){
+                var isAllowedIn = !vendorStatus.isClosed;
+
+                if ( isAllowedIn ){
+                    return readySelectedCycle(cycle);
+                }
+                else {
+                    vm.noActiveCycles = true;
+                    return false;
+                }
+            });
+    }
+
+    function readySelectedCycle(cycle) {
+        if (!cycle) {
+            return;
+        }
+
+        return cycle.databaseExists().then(function (isReady) {
             if (!isReady) {
                 cycle.createDatabase().then(setCycle);
             } else {

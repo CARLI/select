@@ -11,5 +11,6 @@ module.exports = {
     Store: require('../CARLI/Store'),
     CouchDbStore: require('../CARLI/Store/CouchDb/Store'),
     Validator: require('../CARLI/Validator'),
-    /*XXX*/Vendor: require('../CARLI/Entity/VendorRepository')
+    /*XXX*/Vendor: require('../CARLI/Entity/VendorRepository'),
+    VendorStatus: require('../CARLI/Entity/VendorStatusRepository')
 };
