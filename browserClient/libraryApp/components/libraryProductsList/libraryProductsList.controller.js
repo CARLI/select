@@ -4,12 +4,13 @@ angular.module('library.libraryProductsList')
 function libraryProductsListController( cycleService ){
     var vm = this;
 
+    vm.loadingPromise = null;
     vm.selectedOfferings = [];
 
     activate();
 
     function activate(){
-        cycleService.listSelectionsForCycle( vm.cycle)
+        vm.loadingPromise = cycleService.listSelectionsForCycle( vm.cycle)
             .then(function( offerings ){
                 vm.selectedOfferings = offerings;
             });

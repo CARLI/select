@@ -1,26 +1,22 @@
 angular.module('library.sections.dashboard')
 .controller('dashboardController', dashboardController);
 
-function dashboardController( $anchorScroll, $location, $scope, cycleService, userService ){
+function dashboardController( cycleService, userService ){
     var vm = this;
 
     vm.cycles = [];
     vm.library = {};
+    vm.loadingPromise = null;
 
     activate();
 
 
     function activate(){
-        console.log('activate');
-
-        $scope.$on('$locationChangeStart', function(event, next, current) {
-            console.log('location change');
-        });
-
         vm.library = userService.getUser().library;
 
-        cycleService.listActiveCycles().then(function(cycleList){
+        vm.loadingPromise = cycleService.listActiveCycles().then(function(cycleList){
             vm.cycles = cycleList;
+            console.log('active cycles: ',cycleList);
         });
     }
 }
