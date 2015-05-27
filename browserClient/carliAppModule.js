@@ -13,6 +13,7 @@ module.exports = {
     Offering: require('../CARLI/Entity/OfferingRepository'),
     Product: require('../CARLI/Entity/ProductRepository'),
     Vendor: require('../CARLI/Entity/VendorRepository'),
+    VendorStatus: require('../CARLI/Entity/VendorStatusRepository'),
     Store: require('../CARLI/Store'),
     MemoryStore: require('../CARLI/Store/MemoryStore'),
     FileStore: require('../CARLI/Store/FileStore'),

@@ -13,7 +13,8 @@ angular.module('carli.app', [
     'carli.debugPanel',
     'carli.navBar',
     'carli.routes',
-    'carli.userMenu'
+    'carli.userMenu',
+    'common.vendorStatusService'
 ])
 .config(function($locationProvider){
     $locationProvider.html5Mode(true);
