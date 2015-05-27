@@ -9,6 +9,7 @@ module.exports = {
     Offering: require('./Entity/OfferingRepository'),
     Product: require('./Entity/ProductRepository'),
     Vendor: require('./Entity/VendorRepository'),
+    VendorStatus: require('./Entity/VendorStatusRepository'),
     Store: require('./Store'),
     MemoryStore: require('./Store/MemoryStore'),
     FileStore: require('./Store/FileStore'),

@@ -30,7 +30,7 @@
         },
         "offeringFlaggedCount": {
             "description": "Is this vendor allowed to offer products in the One-Time Purchase cycle?",
-            "type": "int"
+            "type": "integer"
         }
     },
     "required": [ "cycle", "vendor" ]

@@ -60,4 +60,8 @@ describe( 'CARLI', function() {
     it( 'should export the NotificationDraftGenerator module', function() {
         expect(CARLI.NotificationDraftGenerator).to.be.an('Object');
     } );
+
+    it( 'should export the VendorStatus module', function() {
+        expect(CARLI.VendorStatus).to.be.an('Object');
+    } );
 } );

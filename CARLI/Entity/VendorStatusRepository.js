@@ -59,6 +59,50 @@ function loadVendorStatus( vendorStatusId, cycle ){
     return deferred.promise;
 }
 
+function getStatusForVendor( vendorId, cycle ){
+    setCycle(cycle);
+    return expandVendorStatuses(couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listVendorStatusesByVendorId', vendorId))
+        .then(function(statusesForVendor){
+            if ( statusesForVendor.length > 0 ){
+                return statusesForVendor[0];
+            }
+            else {
+                return newStatusForVendor(vendorId, cycle);
+            }
+        });
+}
+
+function newStatusForVendor( vendorId, cycle ){
+    return {
+        cycle: cycle.id, //I don't see a reason to expand cycles at present, so just save the ID manually here
+        vendor: vendorId,
+        description: 'No Activity',
+        isClosed: false,
+        offeringFlaggedCount: 0
+    }
+}
+
+function ensureStatusExistsForVendor( vendorId, cycle ){
+    setCycle(cycle);
+    return getStatusForVendor( vendorId, cycle )
+        .then(function( vendorStatus ){
+            return vendorStatus.id ? vendorStatus.id : createVendorStatus(vendorStatus, cycle);
+        });
+}
+
+function reset( vendorStatus ){
+    if ( !vendorStatus ){
+        return;
+    }
+
+    vendorStatus.lastActivity = null;
+    vendorStatus.description = 'No Activity';
+    vendorStatus.isClosed = false;
+    vendorStatus.offeringFlaggedCount = 0;
+
+    return vendorStatus;
+}
+
 function setCycle(cycle) {
     if (cycle === undefined) {
         throw Error("Cycle is required");
@@ -75,5 +119,8 @@ module.exports = {
     create: createVendorStatus,
     update: updateVendorStatus,
     list: listVendorStatuses,
-    load: loadVendorStatus
+    load: loadVendorStatus,
+    getStatusForVendor: getStatusForVendor,
+    ensureStatusExistsForVendor: ensureStatusExistsForVendor,
+    reset: reset
 };
