@@ -1,0 +1,33 @@
+{
+    "$schema": "json-schema.org/draft-04/schema",
+    "title": "VendorStatus",
+    "schemaType": "VendorStatus",
+    "type": "object",
+    "properties": {
+        "id": {
+            "description": "Unique identifier for the VendorStatus record",
+            "type": "string"
+        },
+        "vendor": {
+            "description": "Uuid of the Vendor that this document is recording the status of",
+            "type": "string"
+        },
+        "lastActivity": {
+            "description": "The date that the Vendor last made any modifications in the Vendor app",
+            "$ref": "./Date.json"
+        },
+        "description": {
+            "description": "A text description of the Vendor's pricing status",
+            "type": "string"
+        },
+        "isClosed": {
+            "description": "Has this vendor been locked out of the Vendor app?",
+            "type": "boolean"
+        },
+        "offeringFlaggedCount": {
+            "description": "Is this vendor allowed to offer products in the One-Time Purchase cycle?",
+            "type": "int"
+        }
+    },
+    "required": [ "vendor" ]
+}

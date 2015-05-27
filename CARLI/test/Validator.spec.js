@@ -26,7 +26,8 @@ var validTypes = [
     'Product',
     'ProductDetailCodes',
     'ProductLicenseType',
-    'Vendor'
+    'Vendor',
+    'VendorStatus'
 ];
 
 describe( 'The Validator Module', function() {
