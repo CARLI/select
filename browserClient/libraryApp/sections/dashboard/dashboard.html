@@ -1,6 +1,21 @@
 
-<section class="content" id="dashboard">
-    <h1>Dashboard</h1>
+<section class="content" id="dashboard" cg-busy="vm.loadingPromise">
+    <h1>{{ vm.library.name }}'s Products</h1>
 
-    <p>Welcome to the Library Selections App!</p>
+    <p class="purchased-message">This page lists all of the products that your library's patrons currently have access to through CARLI.
+        If your library is not able to access any one of these items, please contact CARLI.</p>
+
+    <div class="cycle-link-header">Jump to:</div>
+    <ol class="cycle-link-list">
+        <li class="cycle-link" ng-repeat="cycle in vm.cycles">
+            <button class="clear-button-styles" scroll-to="{{ cycle.id }}">Link to {{ cycle.name }}</button>
+        </li>
+    </ol>
+
+    <ol class="cycle-list">
+        <li class="cycle" ng-repeat="cycle in vm.cycles" id="{{ cycle.id }}">
+            <h2>{{ cycle.name }}</h2>
+            <library-products-list cycle="cycle"></library-products-list>
+        </li>
+    </ol>
 </section>

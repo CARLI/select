@@ -1,4 +1,5 @@
 <section class="content" cg-busy="vm.loadingPromise">
+    <button class="carli-button" busy-click="vm.syncAll()" style="display: block; margin: 2rem auto 0; width: 300px;">Sync Everything!</button>
     <div class="section" ng-repeat="cycle in vm.cycles">
         <h2>{{ cycle.name }}</h2>
         <ul class="entity-list">

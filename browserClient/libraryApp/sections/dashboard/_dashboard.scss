@@ -1,0 +1,22 @@
+.cycle-link-header {
+
+}
+
+.cycle-link-list {
+    list-style: none;
+
+    .cycle-link {
+        button {
+            @extend a;
+        }
+    }
+}
+
+
+.cycle-list {
+    list-style: none;
+
+    .cycle {
+
+    }
+}

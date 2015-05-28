@@ -14,7 +14,7 @@ function cycleChooserController($scope, cycleService) {
     }
 
     function loadCycles() {
-        cycleService.listActiveCycles().then(function (cycles) {
+        cycleService.listOpenForSelectionsCycles().then(function (cycles) {
             if (cycles.length === 0){
                 vm.noActiveCycles = true;
             }
