@@ -1,12 +1,13 @@
 angular.module('carli.admin')
     .controller('databaseStatusController', databaseStatusController);
 
-function databaseStatusController($q, cycleService, vendorService) {
+function databaseStatusController($q, CarliModules, cycleService, vendorService) {
     var vm = this;
 
     vm.vendorsById = {};
     vm.cycles = [];
     vm.cycleStatusByCycleId = {};
+    vm.syncAll = syncAll;
 
     activate();
 
@@ -43,5 +44,9 @@ function databaseStatusController($q, cycleService, vendorService) {
                 return true;
             });
         }
+    }
+
+    function syncAll(){
+        return $q.when( CarliModules.DatabaseStatusMiddleware.syncEverything() );
     }
 }
