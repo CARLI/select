@@ -13,213 +13,197 @@
         margin: 0 auto 8px;
         padding: 0;
     }
-}
 
-ul.product-list {
-    $funded-column-width: 85px;
-    $select-column-width: 200px;
+    ul.product-list {
+        $funded-column-width: 85px;
+        $select-column-width: 200px;
 
-    @extend .zebra-table;
-    border-top: 3px solid $black;
-    clear: both;
-    margin-bottom: 60px;
+        border-top: 3px solid $black;
 
-    > li {
-        padding: 0;
-        border-left: 3px solid $purple;
+        > li {
+            border-left: 3px solid $purple;
 
-        &.column-headers {
-            border-left: $default-border;
-            padding-left: 2px;
-        }
+            &.column-headers {
+                border-left: $default-border;
+                padding-left: 2px;
+            }
 
-        &.collapsed {
-            border-left: $default-border;
-            padding-left: 2px;
+            &.collapsed {
+                border-left: $default-border;
+                padding-left: 2px;
+
+                .collapsible-header {
+                    .column.vendor {
+                        font-weight: normal;
+                    }
+                }
+            }
+
+            &[collapsible]{
+                display: block;
+            }
+
+            .collapsible-header,
+            .content {
+                @include flexbox;
+                width: 100%;
+            }
 
             .collapsible-header {
+                > .column:first-child {
+                    padding-left: 36px;
+                }
+
                 .column.vendor {
-                    font-weight: normal;
-                }
-            }
-        }
-
-        &[collapsible]{
-            display: block;
-        }
-
-        .collapsible-header,
-        .content {
-            @include flexbox;
-            width: 100%;
-        }
-
-        .collapsible-header {
-            > .column:first-child {
-                padding-left: 36px;
-            }
-
-            .column.vendor {
-                color: $black;
-                font-weight: bold;
-            }
-
-            .column.select {
-                padding: 0;
-
-                .price {
-                    background: $green;
-                    border: 1px solid $dark-green;
-                    color: $white;
-                    font-weight: bold;
-                    height: 100%;
-                    left: 0;
-                    padding: 16px;
-                    position: absolute;
-                    top: 0;
-                    width: 100%;
-                }
-            }
-
-            .column.purchase {
-                @include body-text;
-
-                .date,
-                .price {
+                    color: $black;
                     font-weight: bold;
                 }
-            }
-        }
 
-        .content {
-            background: $white;
-            border-top: $default-border;
+                .column.select {
+                    padding: 0;
 
-            .column.product-info {
-                flex-basis: 33%;
-            }
-
-            .column.license-info {
-                border-left: none;
-                flex-basis: 66%;
-            }
-
-            .column.select {
-                @include flexbox;
-                flex-direction: column;
-                justify-content: space-between;
-                padding: 0;
-                position: relative;
-                background-color: $light-gray;
-
-                .subscription-buttons {
-                    @include flex(1 1 50%);
-                }
-
-                .bottom-buttons {
-                    border-top: $default-border;
-                    padding: 4px;
-
-                    .remove-button {
-                        margin-bottom: 4px;
-                    }
-                }
-
-                subscription-button {
-                    margin: 4px;
-                }
-
-                .carli-button {
-                    display: block;
-                    position: relative;
-                    text-align: left;
-                    width: 100%;
-
-                    .fa {
-                        @include font-size(22);
+                    .price {
+                        background: $green;
+                        border: 1px solid $dark-green;
+                        color: $white;
+                        font-weight: bold;
+                        height: 100%;
+                        left: 0;
+                        padding: 16px;
                         position: absolute;
-                        right: 12px;
+                        top: 0;
+                        width: 100%;
                     }
                 }
 
-                .no-price {
-                    padding: 0.5rem;
+                .column.purchase {
+                    @include body-text;
+
+                    .date,
+                    .price {
+                        font-weight: bold;
+                    }
                 }
             }
 
-            .column.empty {
-                border: none;
-            }
-        }
-
-        .column {
-            position: relative;
-        }
-
-        .column.funded {
-            flex: none;
-            width: $funded-column-width;
-        }
-
-        .column.select {
-            flex: none;
-            width: $select-column-width;
-        }
-
-        .column .list-button {
-            @include list-button;
-        }
-
-        &.summary-row {
-            border-left: $default-border;
-
-            .column:first-child {
-                background: $light-gray;
-                line-height: 21px;
-            }
-
-            aside {
-                @include body-text;
-                float: left;
-                font-style: italic;
-            }
-
-            .total-label {
-                @include font-size(17);
-                color: $black;
-                float: right;
-                font-family: 'Dosis';
-                font-weight: bold;
-                text-align: right;
-                text-transform: uppercase;
-            }
-
-            .column.total {
+            .content {
                 background: $white;
-                color: $green;
+                border-top: $default-border;
+
+                .column.product-info {
+                    flex-basis: 33%;
+                }
+
+                .column.license-info {
+                    border-left: none;
+                    flex-basis: 66%;
+                }
+
+                .column.select {
+                    @include flexbox;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    padding: 0;
+                    position: relative;
+                    background-color: $light-gray;
+
+                    .subscription-buttons {
+                        @include flex(1 1 50%);
+                    }
+
+                    .bottom-buttons {
+                        border-top: $default-border;
+                        padding: 4px;
+
+                        .remove-button {
+                            margin-bottom: 4px;
+                        }
+                    }
+
+                    subscription-button {
+                        margin: 4px;
+                    }
+
+                    .carli-button {
+                        display: block;
+                        position: relative;
+                        text-align: left;
+                        width: 100%;
+
+                        .fa {
+                            @include font-size(22);
+                            position: absolute;
+                            right: 12px;
+                        }
+                    }
+
+                    .no-price {
+                        padding: 0.5rem;
+                    }
+                }
+
+                .column.empty {
+                    border: none;
+                }
+            }
+
+            .column.funded {
                 flex: none;
-                font-weight: bold;
-                width: $funded-column-width + $select-column-width;
-            }
-        }
-
-        &.footer {
-            background: $light-gray;
-            border-left: $default-border;
-            min-height: 58px;
-            padding: 8px;
-            position: relative;
-
-            .carli-button.print,
-            .carli-button.export,
-            .carli-button.email {
-                margin-right: 8px;
-                min-width: 80px;
+                width: $funded-column-width;
             }
 
-            button.arrow-right {
-                position: absolute;
-                right: 8px;
+            .column.select {
+                flex: none;
+                width: $select-column-width;
+            }
+
+            &.summary-row {
+                border-left: $default-border;
+
+                .column:first-child {
+                    background: $light-gray;
+                    line-height: 21px;
+                }
+
+                aside {
+                    @include body-text;
+                    float: left;
+                    font-style: italic;
+                }
+
+                .total-label {
+                    @include font-size(17);
+                    color: $black;
+                    float: right;
+                    font-family: 'Dosis';
+                    font-weight: bold;
+                    text-align: right;
+                    text-transform: uppercase;
+                }
+
+                .column.total {
+                    background: $white;
+                    color: $green;
+                    flex: none;
+                    font-weight: bold;
+                    width: $funded-column-width + $select-column-width;
+                }
+            }
+
+            &.footer {
+                border-left: $default-border;
+
+                .carli-button.print,
+                .carli-button.export,
+                .carli-button.email {
+                    margin-right: 8px;
+                    min-width: 80px;
+                }
+
+                button.arrow-right {
+                    position: absolute;
+                    right: 8px;
+                }
             }
         }
     }

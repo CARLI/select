@@ -1,0 +1,25 @@
+ul.product-list {
+    @extend .zebra-table;
+
+    clear: both;
+    margin-bottom: 60px;
+
+    > li {
+        padding: 0;
+
+        .column {
+            position: relative;
+        }
+
+        .column .list-button {
+            @include list-button;
+        }
+
+        &.footer {
+            background: $light-gray;
+            min-height: 58px;
+            padding: 8px;
+            position: relative;
+        }
+    }
+}
