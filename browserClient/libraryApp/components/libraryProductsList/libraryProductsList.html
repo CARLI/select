@@ -1,13 +1,13 @@
 <ul class="product-list selected-products" cg-busy="vm.loadingPromise">
     <li class="column-headers">
-        <div class="sortable column" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.productName, reversedSort: vm.reverseAvailable }" ng-click="vm.sort(vm.sortOptions.productName)">Product</div>
-        <div class="sortable column vendor" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.vendorName, reversedSort: vm.reverseAvailable }" ng-click="vm.sort(vm.sortOptions.vendorName)">Vendor</div>
-        <div class="sortable column license" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.funded, reversedSort: vm.reverseAvailable }" ng-click="vm.sort(vm.sortOptions.funded)">License Agreement</div>
-        <div class="sortable column su" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.su, reversedSort: vm.reverseAvailable }" ng-click="vm.sort(vm.sortOptions.su)">S.U.</div>
-        <div class="sortable column cost" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.cost, reversedSort: vm.reverseAvailable }" ng-click="vm.sort(vm.sortOptions.cost)">Cost</div>
+        <div class="sortable column product" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.productName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.productName)">Product</div>
+        <div class="sortable column vendor" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.vendorName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.vendorName)">Vendor</div>
+        <div class="sortable column license" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.license, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.license)">License Agreement</div>
+        <div class="sortable column su" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.su, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.su)">S.U.</div>
+        <div class="sortable column cost" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.cost, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.cost)">Cost</div>
     </li>
-    <li ng-repeat="offering in vm.selectedOfferings | orderBy: vm.orderByAvailable:vm.reverseAvailable track by offering.id">
-        <div class="column">
+    <li ng-repeat="offering in vm.selectedOfferings | orderBy: vm.orderBy:vm.reverse track by offering.id">
+        <div class="column product">
             {{ offering.product.name }}
         </div>
         <div class="column vendor">
