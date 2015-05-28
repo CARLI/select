@@ -1,5 +1,5 @@
 describe('The controller Base Service', function() {
-    beforeEach(module('carli.controllerBaseService'));
+    beforeEach(module('common.controllerBaseService'));
 
     it('should provide controllerBaseService', inject(function (controllerBaseService) {
         expect(controllerBaseService).to.be.an('object');

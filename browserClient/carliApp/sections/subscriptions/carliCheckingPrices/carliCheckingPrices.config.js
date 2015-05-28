@@ -1,5 +1,5 @@
 angular.module('carli.sections.subscriptions.carliCheckingPrices', [
-    'carli.controllerBaseService',
+    'common.controllerBaseService',
     'common.accordion',
     'carli.cycleService',
     'common.offeringService',

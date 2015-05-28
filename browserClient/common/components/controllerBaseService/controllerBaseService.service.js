@@ -1,4 +1,4 @@
-angular.module('carli.controllerBaseService')
+angular.module('common.controllerBaseService')
     .service('controllerBaseService', controllerBaseService);
 
 

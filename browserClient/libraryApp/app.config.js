@@ -7,6 +7,7 @@ angular.module('library.app', [
     'common.alerts',
     'common.accordion',
     'common.config',
+    'common.controllerBaseService',
     'common.errorHandler',
     'common.fa',
     'common.offeringService',
