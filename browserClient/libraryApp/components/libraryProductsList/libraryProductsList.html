@@ -1,3 +1,26 @@
-<ul cg-busy="vm.loadingPromise">
-    {{ vm.selectedOfferings }}
+<ul class="product-list selected-products" cg-busy="vm.loadingPromise">
+    <li class="column-headers">
+        <div class="sortable column" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.productName, reversedSort: vm.reverseAvailable }" ng-click="vm.sort(vm.sortOptions.productName)">Product</div>
+        <div class="sortable column vendor" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.vendorName, reversedSort: vm.reverseAvailable }" ng-click="vm.sort(vm.sortOptions.vendorName)">Vendor</div>
+        <div class="sortable column license" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.funded, reversedSort: vm.reverseAvailable }" ng-click="vm.sort(vm.sortOptions.funded)">License Agreement</div>
+        <div class="sortable column su" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.su, reversedSort: vm.reverseAvailable }" ng-click="vm.sort(vm.sortOptions.su)">S.U.</div>
+        <div class="sortable column cost" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.cost, reversedSort: vm.reverseAvailable }" ng-click="vm.sort(vm.sortOptions.cost)">Cost</div>
+    </li>
+    <li ng-repeat="offering in vm.selectedOfferings | orderBy: vm.orderByAvailable:vm.reverseAvailable track by offering.id">
+        <div class="column">
+            {{ offering.product.name }}
+        </div>
+        <div class="column vendor">
+            {{ offering.product.vendor.name }}
+        </div>
+        <div class="column license">
+            <span>{{ offering.product.license.name }}</span>
+        </div>
+        <div class="column su">
+            {{ offering.selection.users }}
+        </div>
+        <div class="column cost">
+            {{ offering.selection.price | currency }}
+        </div>
+    </li>
 </ul>
