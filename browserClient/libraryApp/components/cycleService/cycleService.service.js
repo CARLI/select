@@ -23,16 +23,22 @@ function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
 
     function listActiveCycles(){
         return $q.when( cycleModule.listActiveCycles() )
+            .then(function( cycleList ){
+                return cycleList.filter(excludeOneTimePurchaseCycle);
+            })
             .catch(errorHandler);
+
+        function excludeOneTimePurchaseCycle( cycle ){
+            return cycle.cycleType !== 'One-Time Purchase';
+        }
     }
 
     function listOpenForSelectionsCycles() {
-        return $q.when( cycleModule.listActiveCycles() )
+        return listActiveCycles()
             .then(function( cycleList ){
                 return cycleList.filter(cycleIsOpenToLibraries);
             })
             .catch(errorHandler);
-
 
         function cycleIsOpenToLibraries( cycle ){
             return cycle.status === 4;
