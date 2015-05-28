@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.carliCheckingPrices')
     .controller('carliCheckingPricesByLibraryController', carliCheckingPricesByLibraryController);
 
-function carliCheckingPricesByLibraryController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, libraryService, offeringService, editOfferingService, vendorService ) {
+function carliCheckingPricesByLibraryController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, libraryService, offeringService, editOfferingService, productService, vendorService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadOfferingsForLibrary);
@@ -65,21 +65,30 @@ function carliCheckingPricesByLibraryController( $scope, $q, accordionController
         }
 
         vm.loadingPromise[library.id] = offeringService.listOfferingsForLibraryId(library.id)
+            .then(attachVendorsToOfferingProducts)
+            .then(filterActiveProducts)
             .then(attachOfferingsToLibrary);
 
         return vm.loadingPromise[library.id];
 
 
-        function attachOfferingsToLibrary(offerings){
-            vm.offerings[library.id] = offerings;
-            offerings.forEach(attachProductVendorToOffering);
-            return offerings;
+        function attachVendorsToOfferingProducts(offerings){
+            return offerings.map(function(offering){
+                var vendorId = offering.product.vendor;
+                offering.product.vendor = vm.vendorMap[vendorId];
+                return offering;
+            });
         }
 
-        function attachProductVendorToOffering(offering){
-            var vendorId = offering.product.vendor;
-            offering.product.vendor = vm.vendorMap[vendorId];
-            return offering;
+        function filterActiveProducts(offerings){
+            return offerings.filter(function(offering){
+                return productService.isProductActive(offering.product);
+            });
+        }
+
+        function attachOfferingsToLibrary(offerings){
+            vm.offerings[library.id] = offerings;
+            return offerings;
         }
     }
 

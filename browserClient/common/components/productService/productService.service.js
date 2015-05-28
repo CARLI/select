@@ -49,6 +49,7 @@ function productService( CarliModules, $q, cycleService, errorHandler ) {
             return $q.when( productModule.getProductsById(ids,  cycleService.getCurrentCycle()) )
                 .catch(errorHandler);
         },
+        isProductActive: productModule.isProductActive,
         getProductDetailCodeOptions: productModule.getProductDetailCodeOptions,
         getProductDisplayName: getProductDisplayName
     };

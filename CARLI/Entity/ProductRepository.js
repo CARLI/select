@@ -128,19 +128,23 @@ function getProductsById( ids, cycle ){
 
 /* functions that get added as instance methods on loaded Products */
 var getIsActive = function(){
+    return isProductActive(this);
+};
+
+function isProductActive( product ){
     var vendorIsActive = true;
     var licenseIsActive = true;
 
-    if ( this.vendor && this.vendor.isActive != undefined) {
-        vendorIsActive = this.vendor.isActive;
+    if ( product.vendor && product.vendor.isActive != undefined) {
+        vendorIsActive = product.vendor.isActive;
     }
 
-    if ( this.license && this.license.isActive != undefined) {
-        licenseIsActive = this.license.isActive;
+    if ( product.license && product.license.isActive != undefined) {
+        licenseIsActive = product.license.isActive;
     }
 
-    return this.isActive && vendorIsActive && licenseIsActive;
-};
+    return product.isActive && vendorIsActive && licenseIsActive;
+}
 
 var functionsToAdd = {
     'getIsActive': getIsActive
@@ -163,5 +167,6 @@ module.exports = {
     listActiveProductsForVendorId: listActiveProductsForVendorId,
     listProductCountsByVendorId: listProductCountsByVendorId,
     getProductsById: getProductsById,
-    getProductDetailCodeOptions: getProductDetailCodeOptions
+    getProductDetailCodeOptions: getProductDetailCodeOptions,
+    isProductActive: isProductActive
 };
