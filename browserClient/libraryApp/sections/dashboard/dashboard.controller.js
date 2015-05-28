@@ -16,7 +16,6 @@ function dashboardController( cycleService, userService ){
 
         vm.loadingPromise = cycleService.listActiveCycles().then(function(cycleList){
             vm.cycles = cycleList;
-            console.log('active cycles: ',cycleList);
         });
     }
 }

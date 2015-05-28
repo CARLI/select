@@ -22,9 +22,12 @@
     margin-bottom: 30px;
 }
 
+@import "productList";
+
 @import "../components/askCarliButton/askCarliButton";
 @import "../components/cycleChooser/cycleChooser";
 @import "../components/libraryHeader/libraryHeader";
+@import "../components/libraryProductsList/libraryProductsList";
 @import "../components/subscriptionButton/subscriptionButton";
 @import "../components/subscriptionProgress/subscriptionProgress";
 

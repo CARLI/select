@@ -46,7 +46,7 @@ function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
     }
 
     function listSelectionsForCycle( cycle ){
-        return $q.when(offeringModule.listOfferingsWithSelectionsForLibrary(currentUser.library.id,cycle))
+        return $q.when(offeringModule.listOfferingsWithSelectionsForLibrary(currentUser.library.id.toString(),cycle))
             .catch(errorHandler);
     }
 
