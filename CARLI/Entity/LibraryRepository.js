@@ -22,12 +22,35 @@ function transformFunction( library ){
     EntityTransform.transformObjectForPersistence(library, propertiesToTransform);
 }
 
-function fillInNonCrmData( library ){
-    return loadNonCrmLibraryForCrmId(library.crmId).then(function (libraryNonCrm) {
-        var result = _.extend({}, library, libraryNonCrm);
-        result.id = library.crmId;
-        return result;
-    });
+function loadAndFillInNonCrmDataForLibrary( library ){
+    return loadNonCrmLibraryForCrmId(library.crmId)
+        .then(function(nonCrmLibrary){
+            return combineCrmDataAndNonCrmData(library, nonCrmLibrary);
+        });
+}
+
+function associateNonCrmDataWithListOfLibraries( libraryList ){
+    return localLibraryRepository.list()
+        .then(function(nonCrmData){
+            var nonCrmDataByCrmId = {};
+
+            nonCrmData.forEach(function(nonCrmLibrary){
+                nonCrmDataByCrmId[nonCrmLibrary.crmId.toString()] = nonCrmLibrary;
+            });
+
+            return nonCrmDataByCrmId;
+        })
+        .then(function(nonCrmDataByCrmId){
+            return libraryList.map(function(library){
+                return combineCrmDataAndNonCrmData(library, nonCrmDataByCrmId[library.crmId]);
+            });
+        });
+}
+
+function combineCrmDataAndNonCrmData( crmLibrary, nonCrmLibrary ){
+    var result = _.extend({}, crmLibrary, nonCrmLibrary);
+    result.id = crmLibrary.crmId;
+    return result;
 }
 
 function updateLibrary( library ){
@@ -46,17 +69,14 @@ function updateLibrary( library ){
 }
 
 function listLibraries(){
-    return crmLibraryRepository.list().then(function(libraries) {
-        return Q.all( libraries.map(fillInNonCrmData) );
-    });
+    return crmLibraryRepository.list()
+        .then(associateNonCrmDataWithListOfLibraries);
 }
 
 function listActiveLibraries(){
     return crmLibraryRepository.list()
         .then(filterActiveLibraries)
-        .then(function(activeLibraries) {
-            return Q.all( activeLibraries.map(fillInNonCrmData) );
-        });
+        .then(associateNonCrmDataWithListOfLibraries);
 
 
     function filterActiveLibraries(libraries){
@@ -67,7 +87,8 @@ function listActiveLibraries(){
 }
 
 function loadLibrary( libraryCrmId ){
-    return crmLibraryRepository.load(libraryCrmId).then(fillInNonCrmData);
+    return crmLibraryRepository.load(libraryCrmId)
+        .then(loadAndFillInNonCrmDataForLibrary);
 }
 
 

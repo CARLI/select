@@ -88,7 +88,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             vm.offeringsForLibraryByProduct[product.id] = {};
 
             product.offerings.forEach(function (offering) {
-                vm.offeringsForLibraryByProduct[product.id][offering.library.id] = offering;
+                vm.offeringsForLibraryByProduct[product.id][offering.library] = offering;
             });
         });
     }

@@ -1,9 +1,9 @@
 var chai   = require( 'chai' )
   , expect = chai.expect
-  , test = require( './Entity/EntityInterface.spec' )
   , Entity = require('../Entity')
   , LibraryRepository = require('../Entity/LibraryRepository' )
   , testUtils = require('./utils')
+  , Q = require('q')
   ;
 
 function validLibraryData() {
@@ -22,6 +22,10 @@ function invalidLibraryData() {
 testUtils.setupTestDb();
 LibraryRepository.setStore( testUtils.getTestDbStore() );
 
+var localLibraryRepository = Entity('LibraryNonCrm');
+localLibraryRepository.setStore( testUtils.getTestDbStore() );
+
+
 describe('The LibraryRepository', function(){
     it('should have a load function', function() {
         expect(LibraryRepository.load).to.be.a('function');
@@ -31,9 +35,22 @@ describe('The LibraryRepository', function(){
         it('should have a load method that combines data from the CARLI CRM and the local database', function(){
             this.timeout(5000);
 
-            return LibraryRepository.load(1).then(function(loadedLibrary){
-                return expect(loadedLibrary).to.be.an('object').and.have.property('id',1);
-            });
+            var testNonCrmLibrary = {
+                type: 'LibraryNonCrm',
+                crmId: 1,
+                fte: 1111
+            };
+
+            return localLibraryRepository.create(testNonCrmLibrary)
+                .then(function(){
+                    return LibraryRepository.load(1);
+                })
+                .then(function(loadedLibrary){
+                    return Q.all([
+                        expect(loadedLibrary).to.be.an('object').and.have.property('id',1),
+                        expect(loadedLibrary).to.have.property('fte',testNonCrmLibrary.fte)
+                    ]);
+                });
         });
     });
 
@@ -45,9 +62,27 @@ describe('The LibraryRepository', function(){
         this.timeout(5000);
 
         it('should list Libraries from the CARLI CRM and the local database', function(){
-            return LibraryRepository.list().then(function(libraryList){
-                return expect(libraryList).to.be.an('array');
-            });
+            var testNonCrmLibrary = {
+                type: 'LibraryNonCrm',
+                crmId: 3,
+                fte: 3333
+            };
+
+            return localLibraryRepository.create(testNonCrmLibrary)
+                .then(function(){
+                    return LibraryRepository.list();
+                })
+                .then(function(libraryList){
+                    return expect(libraryList).to.satisfy(listOfCrmLibrariesCombinedWithNonCrmData);
+                });
+
+            function listOfCrmLibrariesCombinedWithNonCrmData(libraryList){
+                var testLibrary = libraryList.filter(function(library){
+                    return library.id === testNonCrmLibrary.crmId;
+                });
+
+                return testLibrary[0].fte === testNonCrmLibrary.fte;
+            }
         });
     });
 
@@ -139,7 +174,7 @@ describe('the loadNonCrmLibraryForCrmId Couch view', function(){
 
         var testLibraryNonCrm = {
             type: 'LibraryNonCrm',
-            crmId: 1,
+            crmId: 10,
             ipAddresses: 'test'
         };
 

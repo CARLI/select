@@ -17,7 +17,7 @@ function listProductsWithOfferingsForVendorId(vendorId, cycleId) {
             return Q.all( products.map(loadOfferingsForProduct));
 
             function loadOfferingsForProduct(product) {
-                return offeringRepository.listOfferingsForProductId(product.id, cycle).then(function(offerings) {
+                return offeringRepository.listOfferingsForProductIdUnexpanded(product.id, cycle).then(function(offerings) {
                     product.offerings = offerings;
                     return product;
                 });

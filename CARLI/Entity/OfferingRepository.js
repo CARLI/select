@@ -557,6 +557,7 @@ module.exports = {
 
     listOfferingsForLibraryId: listOfferingsForLibraryId,
     listOfferingsForProductId: listOfferingsForProductId,
+    listOfferingsForProductIdUnexpanded: listOfferingsForProductIdUnexpanded,
     listOfferingsWithSelections: listOfferingsWithSelections,
     listOfferingsWithSelectionsForLibrary: listOfferingsWithSelectionsForLibrary,
     setSuPricingForAllLibrariesForProduct: setSuPricingForAllLibrariesForProduct,
