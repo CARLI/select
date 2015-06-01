@@ -232,7 +232,16 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             .catch(function(err){
                 console.log('error saving offerings',err);
             })
+            .then(syncData)
+            .catch(syncDataError);
 
+        function syncData(){
+            return cycleService.syncDataBackToCarli();
+        }
+
+        function syncDataError( err ){
+            console.log( 'error syncing data',err );
+        }
     }
 
     function quickPricingCallback(mode, value) {
