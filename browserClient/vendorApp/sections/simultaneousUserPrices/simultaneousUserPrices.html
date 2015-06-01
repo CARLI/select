@@ -41,3 +41,10 @@
 
     <button class="carli-button add" ng-click="vm.addSuPricingLevel()">Add S.U. Level <fa name="plus-circle"></fa></button>
 </section>
+
+<modal-dialog modal-id="'progress-modal'" modal-title="'Saving Pricing'">
+    <div class="modal-body">
+        <div>Saving Pricing</div>
+        <p>{{ vm.productsSaved }} / {{ vm.totalProducts }} products saved</p>
+    </div>
+</modal-dialog>
