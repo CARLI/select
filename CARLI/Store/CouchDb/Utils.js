@@ -1,11 +1,10 @@
 var config = require('../../../config');
-var couchApp = require('../../../config/environmentDependentModules/couchApp'),
-    carliError = require('../../Error'),
-    Q = require('q'),
-    request = require('../../../config/environmentDependentModules/request'),
-    StoreOptions = require( '../../../config').storeOptions,
-    queryString = require('query-string')
-;
+var couchApp = require('../../../config/environmentDependentModules/couchApp');
+var carliError = require('../../Error');
+var Q = require('q');
+var request = require('../../../config/environmentDependentModules/request');
+var StoreOptions = require( '../../../config').storeOptions;
+var queryString = require('query-string');
 
 function couchRequest(requestOptions) {
     var deferred = Q.defer();
