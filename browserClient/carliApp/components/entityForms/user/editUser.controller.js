@@ -41,9 +41,10 @@ function editUserController( $scope, $rootScope, entityBaseService, userService,
 
         vm.user = {
             type: 'user',
-            name: '',
             email: '',
-            password: ''
+            password: '',
+            isActive: true,
+            roles: [ 'staff' ]
         };
 
         setUserFormPristine();
@@ -154,10 +155,11 @@ function editUserController( $scope, $rootScope, entityBaseService, userService,
         return userService.update(vm.user)
             .then(function () {
                 alertService.putAlert('User updated', {severity: 'success'});
-                resetUserForm().then(function(){
-                    hideUserModal();
-                    afterSubmitCallback();
-                });
+                return resetUserForm();
+            })
+            .then(function(){
+                hideUserModal();
+                afterSubmitCallback();
             })
             .catch(function (error) {
                 alertService.putAlert(error, {severity: 'danger'});
@@ -165,15 +167,14 @@ function editUserController( $scope, $rootScope, entityBaseService, userService,
     }
 
     function saveNewUser() {
-        vm.user.roles = [ 'staff' ];
         return userService.create(vm.user)
             .then(function () {
                 alertService.putAlert('User added', {severity: 'success'});
-
-                return resetUserForm().then(function(){
-                    hideUserModal();
-                    afterSubmitCallback();
-                });
+                return resetUserForm();
+            })
+            .then(function(){
+                hideUserModal();
+                afterSubmitCallback();
             })
             .catch(function (error) {
                 alertService.putAlert(error, {severity: 'danger'});
