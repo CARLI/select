@@ -29,6 +29,11 @@
             <label ng-show="vm.editable" for="password">Password</label>
             <view-edit-text-field ng-model="vm.user.password" edit-mode="vm.editable" input-id="password">
             </view-edit-text-field>
+
+            <label for="isActive">User Status</label>
+            <view-edit-radios radio-group-name="isActive" radio-group-legend="Product Status" items="vm.statusOptions" ng-model="vm.user.isActive" edit-mode="vm.editable" input-id="isActive">
+                {{ vm.user.isActive ? 'Active User' : 'Inactive User' }}
+            </view-edit-radios>
         </fieldset>
     </section>
 
