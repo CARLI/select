@@ -2,3 +2,10 @@ select-cycle {
     display: inline-block;
     margin: 1rem;
 }
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    select-cycle {
+      position: relative;
+      top: 10x;
+    }
+}
