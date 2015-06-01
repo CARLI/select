@@ -57,7 +57,6 @@ function editUserController( $scope, $rootScope, entityBaseService, userService,
 
         return userService.load($scope.userId).then( function( user ) {
             vm.user = angular.copy(user);
-            initializeUserNameWatcher();
 
             setUserFormPristine();
 

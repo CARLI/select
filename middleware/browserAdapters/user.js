@@ -8,6 +8,15 @@ function list() {
     });
 }
 
+function load(email) {
+    return middlewareRequest({
+        path: '/user/' + email,
+        method: 'get',
+        json: true
+    });
+}
+
 module.exports = {
-    list: list
+    list: list,
+    load: load
 };

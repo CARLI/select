@@ -217,6 +217,11 @@ function runMiddlewareServer(){
                 .then(sendResult(res))
                 .catch(sendError(res));
         });
+        carliMiddleware.get('/user/:email', function (req, res) {
+            user.load(req.params.email)
+                .then(sendResult(res))
+                .catch(sendError(res));
+        });
     }
 }
 

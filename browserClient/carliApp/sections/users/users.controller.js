@@ -19,15 +19,15 @@ function userController( $sce, userService ){
 
     vm.userListColumns = [
         {
-            label: "User Name",
-            orderByProperty: 'name',
+            label: "User",
+            orderByProperty: 'fullName',
             contentFunction: function(user) {
-                return $sce.trustAsHtml('<a href="user/' + user.id + '">' + user.name + '</a>');
+                return $sce.trustAsHtml('<a href="user/' + user.email + '">' + user.fullName + '</a>');
             }
         },
         {
-            label: "Roles",
-            orderByProperty: ['vendor.name','name'],
+            label: "Email",
+            orderByProperty: ['email'],
             contentFunction: function(user) {
                 return $sce.trustAsHtml('<a href="mailto:' + user.email + '">' + user.email + '</a>');
             }

@@ -17,7 +17,7 @@ function userService( CarliModules, $q, cycleService ) {
             return $q.when( userModule.update(user, user.cycle) );
         },
         load:   function( userId ) {
-            return $q.when( userModule.load( userId, cycleService.getCurrentCycle()) );
+            return $q.when( userMiddleware.load( userId, cycleService.getCurrentCycle()) );
         }
     };
 

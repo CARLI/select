@@ -30,7 +30,7 @@ angular.module('carli.routes',[
     })
     .when('/user/:id', {
         templateUrl: '/carliApp/sections/users/editUser/editUser.html',
-        controller:  'userController',
+        controller:  'editUserPageController',
         controllerAs:'vm'
     })
     .when('/dashboard', {

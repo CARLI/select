@@ -36,7 +36,7 @@ function listUsers(){
 function loadUser( userId ){
     var deferred = Q.defer();
 
-    UserRepository.load( userId )
+    UserRepository.load( 'org.couchdb.user:' + userId )
         .then(function (user) {
             EntityTransform.expandObjectFromPersistence( user, propertiesToTransform, functionsToAdd )
                 .then(function () {
