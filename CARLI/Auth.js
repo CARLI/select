@@ -1,6 +1,6 @@
 
 var config = require('../config');
-var couchUtils = require('./Store/CouchDb/Utils');
+var couchUtils = require('./Store/CouchDb/Utils')();
 
 function createSession(userLogin) {
     return couchUtils.couchRequestSession(userLogin);

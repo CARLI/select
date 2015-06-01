@@ -1,5 +1,5 @@
 var baseRepository = require('./CycleRepository');
-var couchUtils = require('../Store/CouchDb/Utils');
+var couchUtils = require('../Store/CouchDb/Utils')();
 
 module.exports = function (vendor) {
 

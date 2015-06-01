@@ -1,6 +1,6 @@
 var chai = require( 'chai' );
 var expect = chai.expect;
-var couchUtils = require('../Store/CouchDb/Utils');
+var couchUtils = require('../Store/CouchDb/Utils')();
 var testUtils = require('./utils');
 var Q = require('q');
 var storeOptions = require( '../../config').storeOptions;

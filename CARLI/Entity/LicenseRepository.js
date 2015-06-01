@@ -4,7 +4,7 @@ var Entity = require('../Entity')
     , Store = require( '../Store' )
     , StoreModule = require( '../Store/CouchDb/Store')
     , EntityTransform = require( './EntityTransformationUtils')
-    , CouchUtils = require( '../Store/CouchDb/Utils')
+    , CouchUtils = require( '../Store/CouchDb/Utils')()
     , Q = require('q')
     , Validator = require('../Validator')
     ;
