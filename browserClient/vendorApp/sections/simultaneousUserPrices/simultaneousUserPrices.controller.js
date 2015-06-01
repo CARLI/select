@@ -8,6 +8,7 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
     vm.suLevels = [];
     vm.selectedProductIds = {};
     vm.selectedSuLevelIds = {};
+    vm.changedProductIds = {};
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.addSuPricingLevel = addSuPricingLevel;
     vm.saveOfferings = saveOfferings;
@@ -213,24 +214,35 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
                 var $productCellForSu = $('.price-row.su-'+users+' .'+product.id);
                 var newPrice = parseFloat( $productCellForSu.text() );
 
-                newSuPricingByProduct[product.id].push({
-                    users: users,
-                    price: newPrice
-                });
+                if ( !isNaN(newPrice) ){
+                    newSuPricingByProduct[product.id].push({
+                        users: users,
+                        price: newPrice
+                    });
+                }
             });
         });
 
-        return $q.all( vm.products.map(updateOfferingsForAllLibrariesForProduct) )
+        var productIdsToUpdate = Object.keys(vm.changedProductIds).filter(function(id){
+            return vm.changedProductIds[id];
+        });
+
+        vm.loadingPromise = $q.all( productIdsToUpdate.map(updateOfferingsForAllLibrariesForProduct) )
             .then(function(){
-                console.log('saved '+vm.products.length+' products');
+                console.log('saved '+productIdsToUpdate.length+' products');
             })
             .catch(function(err){
                 console.error(err);
             });
 
-        function updateOfferingsForAllLibrariesForProduct( product ){
-            var newSuPricing = newSuPricingByProduct[product.id];
-            return offeringService.updateSuPricingForAllLibrariesForProduct(product.id, newSuPricing );
+        return vm.loadingPromise;
+
+        function updateOfferingsForAllLibrariesForProduct( productId ){
+            var newSuPricing = newSuPricingByProduct[productId];
+            return offeringService.updateSuPricingForAllLibrariesForProduct(productId, newSuPricing )
+                .then(function(){
+                    vm.changedProductIds = {};
+                });
         }
     }
 
@@ -268,6 +280,7 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
                 };
             });
 
+
             suLevelPricesToInsert.forEach(applySuPricingToSelectedProducts);
         }
         else {
@@ -290,7 +303,8 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
                 var productId = $cell.data('productId');
 
                 if ( productIsSelected(productId) ){
-                    $('.price', $cell).text(price);
+                    $('.price', $cell).text(price).removeClass('no-pricing');
+                    markProductChanged(productId);
                 }
             });
         }
@@ -311,13 +325,18 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
                     var originalValue = parseFloat($cell.text());
                     var newValue = (100 + percentIncrease)/100 * originalValue;
                     // TODO round this to the nearest cent?
-                    $('.price', $cell).text( newValue );
+                    $('.price', $cell).text( newValue ).removeClass('no-pricing');
+                    markProductChanged(productId);
                 }
             });
         }
 
         function productIsSelected(productId){
             return vm.selectedProductIds[productId];
+        }
+
+        function markProductChanged( productId ){
+            vm.changedProductIds[productId] = true;
         }
     }
 }
