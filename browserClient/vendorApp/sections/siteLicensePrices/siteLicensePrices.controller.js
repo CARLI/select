@@ -23,7 +23,11 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
         };
 
         vm.loadingPromise = loadLibraries()
-            .then(loadProducts)
+            .then(initializePricingGrid);
+    }
+
+    function initializePricingGrid(){
+        return loadProducts()
             .then(buildPriceArray)
             .then(buildPricingGrid);
     }
@@ -81,7 +85,6 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     }
 
     function buildPriceArray() {
-
         vm.offeringsForLibraryByProduct = {};
 
         vm.products.forEach(function (product) {
@@ -166,6 +169,10 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             var offering = vm.offeringsForLibraryByProduct[productId][libraryId];
             var newPrice = parseFloat( offeringCell.text() );
 
+            if ( isNaN(newPrice) ){
+                newPrice = 0;
+            }
+
             if ($(element).is(":visible")) {
                 if ( !offering ){
                     if ( newPrice !== 0 ){
@@ -204,20 +211,28 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     }
 
     function saveAllOfferings( newOfferings, changedOfferings ){
-        var deferred = $q.defer();
-
-        $q.all( [ saveAllNewOfferings(newOfferings), saveAllChangedOfferings(changedOfferings) ] )
+        return $q.all([
+                saveAllNewOfferings(newOfferings),
+                saveAllChangedOfferings(changedOfferings)
+            ])
             .then(function(arrays){
-                var count = arrays[0].length + arrays[1].length;
+                var newOfferingsCreated = arrays[0].length;
+                var oldOfferingsUpdated = arrays[1].length;
+                var count = newOfferingsCreated + oldOfferingsUpdated;
                 console.log('saved '+count+' offerings');
-                deferred.resolve();
+
+                if ( newOfferingsCreated ){
+                    console.log('* new offerings were created, reload pricing grid');
+                    return initializePricingGrid();
+                }
+                else {
+                    return $q.when();
+                }
             })
             .catch(function(err){
-                console.log(err);
-                deferred.reject(err);
-            });
+                console.log('error saving offerings',err);
+            })
 
-        return deferred.promise;
     }
 
     function quickPricingCallback(mode, value) {
