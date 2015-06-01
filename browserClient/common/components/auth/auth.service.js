@@ -56,7 +56,7 @@ function authService($rootScope, $q, $location, CarliModules) {
     }
 
     function requireStaff() {
-        return session.roles.indexOf('staff') >= 0;
+        return session.roles.indexOf('staff') >= 0 || session.roles.indexOf('_admin') > 0;
     }
 
     function redirectToLogin(passthrough) {
