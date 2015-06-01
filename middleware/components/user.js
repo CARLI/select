@@ -21,8 +21,16 @@ function list() {
 function load(email) {
     return userRepository.load(email);
 }
+function create(user) {
+    return userRepository.create(user);
+}
+function update(user) {
+    return userRepository.update(user);
+}
 
 module.exports = {
     list: list,
-    load: load
+    load: load,
+    create: create,
+    update: update
 };

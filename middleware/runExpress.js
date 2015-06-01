@@ -212,13 +212,23 @@ function runMiddlewareServer(){
                 .catch(sendError(res));
 
         });
-        carliMiddleware.get('/user/list', function (req, res) {
+        carliMiddleware.get('/user', function (req, res) {
             user.list()
                 .then(sendResult(res))
                 .catch(sendError(res));
         });
         carliMiddleware.get('/user/:email', function (req, res) {
             user.load(req.params.email)
+                .then(sendResult(res))
+                .catch(sendError(res));
+        });
+        carliMiddleware.post('/user', function (req, res) {
+            user.create(req.body)
+                .then(sendResult(res))
+                .catch(sendError(res));
+        });
+        carliMiddleware.put('/user/:email', function (req, res) {
+            user.update(req.body)
                 .then(sendResult(res))
                 .catch(sendError(res));
         });

@@ -22,10 +22,12 @@ function transformFunction( user ){
 }
 
 function createUser( user ){
+    user.id = 'org.couchdb.user:' + user.email;
     return UserRepository.create( user, transformFunction );
 }
 
 function updateUser( user ){
+    user.id = 'org.couchdb.user:' + user.email;
     return UserRepository.update( user, transformFunction );
 }
 

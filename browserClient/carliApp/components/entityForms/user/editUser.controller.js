@@ -152,7 +152,6 @@ function editUserController( $scope, $rootScope, entityBaseService, userService,
 
     function saveExistingUser() {
         return userService.update(vm.user)
-            .then(updateOfferingsForExistingUser)
             .then(function () {
                 alertService.putAlert('User updated', {severity: 'success'});
                 resetUserForm().then(function(){

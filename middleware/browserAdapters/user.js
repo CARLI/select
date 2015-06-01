@@ -2,7 +2,7 @@ var middlewareRequest = require('./middlewareRequest');
 
 function list() {
     return middlewareRequest({
-        path: '/user/list',
+        path: '/user',
         method: 'get',
         json: true
     });
@@ -16,7 +16,25 @@ function load(email) {
     });
 }
 
+function create(user) {
+    return middlewareRequest({
+        path: '/user',
+        method: 'post',
+        json: user
+    });
+}
+
+function update(user) {
+    return middlewareRequest({
+        path: '/user/' + user.email,
+        method: 'put',
+        json: user
+    });
+}
+
 module.exports = {
     list: list,
-    load: load
+    load: load,
+    create: create,
+    update: update
 };
