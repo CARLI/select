@@ -27,8 +27,12 @@
             </view-edit-text-field>
 
             <label ng-show="vm.editable" for="password">Password</label>
-            <view-edit-text-field ng-model="vm.user.password" edit-mode="vm.editable" input-id="password">
-            </view-edit-text-field>
+            <view-edit-secret ng-model="vm.user.password" edit-mode="vm.editable" input-id="password">
+            </view-edit-secret>
+
+            <label ng-show="vm.editable" for="password-confirmation">Confirm Password</label>
+            <view-edit-secret ng-model="vm.passwordConfirmation" edit-mode="vm.editable" input-id="password-confirmation">
+            </view-edit-secret>
 
             <label for="isActive">User Status</label>
             <view-edit-radios radio-group-name="isActive" radio-group-legend="Product Status" items="vm.statusOptions" ng-model="vm.user.isActive" edit-mode="vm.editable" input-id="isActive">

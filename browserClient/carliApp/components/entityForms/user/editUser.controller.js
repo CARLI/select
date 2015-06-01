@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.user')
     .controller('editUserController', editUserController);
 
-function editUserController( $scope, $rootScope, entityBaseService, userService, alertService ) {
+function editUserController( $scope, $rootScope, $q, entityBaseService, userService, alertService ) {
     var vm = this;
 
     var templates = {
@@ -10,6 +10,7 @@ function editUserController( $scope, $rootScope, entityBaseService, userService,
     vm.currentTemplate = templates.userFields;
 
     vm.userId = $scope.userId;
+    vm.passwordConfirmation = '';
     var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
     vm.toggleEditable = toggleEditable;
@@ -152,6 +153,10 @@ function editUserController( $scope, $rootScope, entityBaseService, userService,
     }
 
     function saveExistingUser() {
+        if (!confirmPasswordsMatch()) {
+            alertService.putAlert('Passwords do not match', {severity: 'danger'});
+            return $q.reject('Passwords do not match');
+        }
         return userService.update(vm.user)
             .then(function () {
                 alertService.putAlert('User updated', {severity: 'success'});
@@ -167,6 +172,14 @@ function editUserController( $scope, $rootScope, entityBaseService, userService,
     }
 
     function saveNewUser() {
+        if (!vm.user.password) {
+            alertService.putAlert('Password is required', {severity: 'danger'});
+            return $q.reject('Password is required');
+        }
+        if (!confirmPasswordsMatch()) {
+            alertService.putAlert('Passwords do not match', {severity: 'danger'});
+            return $q.reject('Passwords do not match');
+        }
         return userService.create(vm.user)
             .then(function () {
                 alertService.putAlert('User added', {severity: 'success'});
@@ -181,4 +194,10 @@ function editUserController( $scope, $rootScope, entityBaseService, userService,
             });
     }
 
+    function confirmPasswordsMatch() {
+        if (vm.user.password || vm.passwordConfirmation) {
+            return vm.user.password == vm.passwordConfirmation;
+        }
+        return true;
+    }
 }
