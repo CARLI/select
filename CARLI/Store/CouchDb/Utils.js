@@ -1,3 +1,4 @@
+var config = require('../../../config');
 var couchApp = require('../../../config/environmentDependentModules/couchApp');
 var carliError = require('../../Error');
 var Q = require('q');
@@ -5,6 +6,10 @@ var request = require('../../../config/environmentDependentModules/request');
 var queryString = require('query-string');
 
 module.exports = function (storeOptions) {
+
+    if (!storeOptions) {
+        storeOptions = config.storeOptions;
+    }
 
     function couchRequest(requestOptions) {
         var deferred = Q.defer();
