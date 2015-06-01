@@ -1,25 +1,14 @@
 angular.module('carli.sections.users')
 .controller('userController', userController);
 
-function userController( $scope, $sce, cycleService, userService ){
+function userController( $sce, userService ){
     var vm = this;
     vm.activeCycles = [];
     vm.afterUserSubmit = populateUserList;
     activate();
 
     function activate() {
-        cycleService.listActiveCycles().then(function(activeCycles) {
-            vm.activeCycles = activeCycles;
-        });
-        watchCurrentCycle();
-    }
-
-    function watchCurrentCycle() {
-        $scope.$watch(cycleService.getCurrentCycle, function (newValue) {
-            if (newValue) {
-                populateUserList();
-            }
-        });
+        populateUserList();
     }
 
     function populateUserList() {

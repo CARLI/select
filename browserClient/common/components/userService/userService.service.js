@@ -4,10 +4,11 @@ angular.module('common.userService')
 function userService( CarliModules, $q, cycleService ) {
 
     var userModule = CarliModules.User;
+    var userMiddleware = CarliModules.UserMiddleware;
 
     return {
         list:   function() {
-            return $q.when( userModule.list( cycleService.getCurrentCycle() ) );
+            return $q.when( userMiddleware.list( cycleService.getCurrentCycle() ) );
         },
         create: function( user ) {
             return $q.when( userModule.create(user, user.cycle) );

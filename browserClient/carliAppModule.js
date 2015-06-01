@@ -15,6 +15,7 @@ module.exports = {
     Offering: require('../CARLI/Entity/OfferingRepository'),
     Product: require('../CARLI/Entity/ProductRepository'),
     User: require('../CARLI/Entity/UserRepository'),
+    UserMiddleware: require('../middleware/browserAdapters/user'),
     Vendor: require('../CARLI/Entity/VendorRepository'),
     VendorStatus: require('../CARLI/Entity/VendorStatusRepository'),
     Store: require('../CARLI/Store'),

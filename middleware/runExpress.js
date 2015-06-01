@@ -10,6 +10,7 @@ var couchApp = require('./components/couchApp');
 var crmQueries = require('./components/crmQueries');
 var cycleCreation = require('./components/cycleCreation');
 var notifications = require('./components/notifications');
+var user = require('./components/user');
 var vendorDatabases = require('./components/vendorDatabases');
 var vendorSpecificProductQueries = require('./components/vendorSpecificProductQueries');
 
@@ -211,7 +212,11 @@ function runMiddlewareServer(){
                 .catch(sendError(res));
 
         });
-
+        carliMiddleware.get('/user/list', function (req, res) {
+            user.list()
+                .then(sendResult(res))
+                .catch(sendError(res));
+        });
     }
 }
 

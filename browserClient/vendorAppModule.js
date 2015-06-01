@@ -12,6 +12,7 @@ module.exports = {
     ProductMiddleware: require('../middleware/browserAdapters/vendorSpecificProductQueries'),
     Store: require('../CARLI/Store'),
     User: require('../CARLI/Entity/UserRepository'),
+    UserMiddleware: require('../middleware/browserAdapters/user'),
     CouchDbStore: require('../CARLI/Store/CouchDb/Store'),
     Validator: require('../CARLI/Validator'),
     /*XXX*/Vendor: require('../CARLI/Entity/VendorRepository'),
