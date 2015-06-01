@@ -546,8 +546,13 @@ function sortOfferingSuPricing( offering ){
     }
 }
 
+function setStore(store) {
+    OfferingRepository.setStore(store);
+    couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+}
+
 module.exports = {
-    setStore: OfferingRepository.setStore,
+    setStore: setStore,
     setCycle: setCycle,
     create: createOffering,
     update: updateOffering,

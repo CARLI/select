@@ -14,14 +14,19 @@ module.exports = function (inputOptions) {
     var options = _cloneData(inputOptions);
     var db_host = options.couchDbUrl + '/' + options.couchDbName;
     var defaultCollection = options.couchDbName;
+    var couchUtils = CouchUtils(options);
 
     return {
+        getOptions: getOptions,
         getDataFor: getDataFor,
         storeData: storeData,
         listDataFor: listDataFor,
         deleteDataFor: deleteDataFor
     };
 
+    function getOptions() {
+        return options;
+    }
 
     function getDataFor(id) {
         var deferred = Q.defer();
@@ -74,7 +79,7 @@ module.exports = function (inputOptions) {
         if (collection === undefined) {
             collection = defaultCollection;
         }
-        return CouchUtils.getCouchViewResultValues(collection, 'listByType', type);
+        return couchUtils.getCouchViewResultValues(collection, 'listByType', type);
     }
 
     function deleteDataFor(id) {

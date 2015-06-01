@@ -59,7 +59,9 @@ module.exports = function (storeType) {
             }
 
             return deferred.promise;
-        }
+        },
+
+        getOptions: storeType.getOptions
 
     };
 };

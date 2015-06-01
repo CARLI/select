@@ -154,8 +154,13 @@ function getProductDetailCodeOptions(){
     return Validator.getEnumValuesFor('ProductDetailCodes');
 }
 
+function setStore(store) {
+    ProductRepository.setStore(store);
+    couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+}
+
 module.exports = {
-    setStore: ProductRepository.setStore,
+    setStore: setStore,
     setCycle: setCycle,
     create: createProduct,
     update: updateProduct,

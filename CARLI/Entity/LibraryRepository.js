@@ -136,8 +136,13 @@ function getLibrariesById( ids ){
     }
 }
 
+function setStore(store) {
+    localLibraryRepository.setStore(store);
+    CouchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+}
+
 module.exports = {
-    setStore: localLibraryRepository.setStore,
+    setStore: setStore,
     update: updateLibrary,
     list: listLibraries,
     listActiveLibraries: listActiveLibraries,

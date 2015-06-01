@@ -61,6 +61,11 @@ function getVendorsById( ids ){
 var functionsToAdd = {
 };
 
+function setStore(store) {
+    VendorRepository.setStore(store);
+    couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+}
+
 module.exports = {
     setStore: VendorRepository.setStore,
     create: createVendor,

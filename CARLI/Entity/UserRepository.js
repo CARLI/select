@@ -60,8 +60,13 @@ function loadUser( userId ){
 var functionsToAdd = {
 };
 
+function setStore(store) {
+    UserRepository.setStore(store);
+    couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+}
+
 module.exports = {
-    setStore: UserRepository.setStore,
+    setStore: setStore,
     create: createUser,
     update: updateUser,
     list: listUsers,

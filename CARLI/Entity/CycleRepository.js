@@ -124,8 +124,13 @@ var functionsToAdd = {
     }
 };
 
+function setStore(store) {
+    CycleRepository.setStore(store);
+    couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+}
+
 module.exports = {
-    setStore: CycleRepository.setStore,
+    setStore: setStore,
     create: createCycle,
     createCycleLog: createCycleLog,
     update: updateCycle,

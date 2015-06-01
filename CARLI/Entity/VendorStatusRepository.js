@@ -113,6 +113,11 @@ function setCycle(cycle) {
 
 var functionsToAdd = {};
 
+function setStore(store) {
+    VendorStatusRepository.setStore(store);
+    couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+}
+
 module.exports = {
     setStore: VendorStatusRepository.setStore,
     setCycle: setCycle,

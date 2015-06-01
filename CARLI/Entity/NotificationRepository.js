@@ -193,8 +193,13 @@ function notificationTypeIsForVendor(notificationType) {
     return results[notificationType];
 }
 
+function setStore(store) {
+    NotificationRepository.setStore(store);
+    couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+}
+
 module.exports = {
-    setStore: NotificationRepository.setStore,
+    setStore: setStore,
     create: createNotification,
     update: updateNotification,
     list: listNotifications,
