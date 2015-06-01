@@ -39,8 +39,10 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
         return $q.all( productList.map(loadSuLevelsForProduct) );
 
         function loadSuLevelsForProduct( product ){
-            return offeringService.getOneOfferingForProductId(product.id).then(function(representativeOffering){
-                var suPricingForProduct = representativeOffering ? representativeOffering.pricing.su : [];
+            return offeringService.getOneOfferingForProductId(product.id).then(function(offering){
+                var representativeOffering = offering || {};
+                var pricingForProduct = representativeOffering.pricing || {};
+                var suPricingForProduct = pricingForProduct.su || [];
 
                 vm.suPricingByProduct[product.id] = convertArrayOfPricingObjectsToMappingObject(suPricingForProduct);
 
@@ -144,9 +146,10 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
         return row;
 
         function generateOfferingCell(suLevel, product) {
-            var priceForProduct = vm.suPricingByProduct[product.id][suLevel.users] || 0;
+            var priceForProduct = vm.suPricingByProduct[product.id][suLevel.users];
             var offeringWrapper = $('<div class="column offering input">');
-            var offeringCell = offeringWrapper.append(createReadOnlyOfferingCell(priceForProduct));
+            var offeringCellContent = createOfferingCellContent(priceForProduct);
+            var offeringCell = offeringWrapper.append(offeringCellContent);
 
             offeringWrapper.on('click', function() {
                 $(this).children().first().focus();
@@ -159,28 +162,44 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
         }
     }
 
+    function createOfferingCellContent(price){
+        if ( price > 0 || price === 0 ){
+            return createReadOnlyOfferingCell(price);
+        }
+        else {
+            return createEmptyOfferingCell();
+        }
+    }
+
     function createReadOnlyOfferingCell(price) {
         var cell = $('<div tabindex="0" class="price">'+price+'</div>');
         cell.on('focus', makeEditable);
         return cell;
-
-        function makeEditable() {
-            var price = $(this).text();
-            var input = createEditableOfferingCell(price);
-            $(this).replaceWith(input);
-            input.focus().select();
-        }
     }
+
+    function createEmptyOfferingCell(){
+        var cell = $('<div tabindex="0" class="price no-pricing">&nbsp;</div>');
+        cell.on('focus', makeEditable);
+        return cell;
+    }
+
     function createEditableOfferingCell(price) {
         var cell = $('<input class="price-editable" type="text" step=".01" min="0" value="' + price + '">');
         cell.on('blur', makeReadOnly);
         return cell;
+    }
 
-        function makeReadOnly() {
-            var price = $(this).val();
-            var div = createReadOnlyOfferingCell(price);
-            $(this).replaceWith(div);
-        }
+    function makeEditable() {
+        var price = $(this).text();
+        var input = createEditableOfferingCell(price);
+        $(this).replaceWith(input);
+        input.focus().select();
+    }
+
+    function makeReadOnly() {
+        var price = $(this).val();
+        var div = createOfferingCellContent(price);
+        $(this).replaceWith(div);
     }
 
     function saveOfferings(){
