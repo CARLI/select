@@ -11,7 +11,8 @@ var defaults = {
     },
     storeOptions: {
         couchDbUrl: 'http://staff.carli.local:8080/db',
-        couchDbName: couchDbName
+        couchDbName: couchDbName,
+        privilegedCouchDbUrl: 'http://admin:relax@localhost:5984/db'
     },
     memberDb: {
         connectionLimit: 10,

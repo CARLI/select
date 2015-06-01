@@ -33,12 +33,6 @@ function couchRequest(requestOptions) {
     return deferred.promise;
 }
 
-function promiseToHandleCouchResponse(deferred) {
-    return handleCouchResponse();
-
-
-}
-
 function couchRequestSession(userLogin) {
     var deferred = Q.defer();
 
