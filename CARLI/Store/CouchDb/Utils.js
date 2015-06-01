@@ -1,9 +1,7 @@
-var config = require('../../../config');
 var couchApp = require('../../../config/environmentDependentModules/couchApp');
 var carliError = require('../../Error');
 var Q = require('q');
 var request = require('../../../config/environmentDependentModules/request');
-var StoreOptions = require( '../../../config').storeOptions;
 var queryString = require('query-string');
 
 module.exports = function (storeOptions) {
@@ -38,7 +36,7 @@ module.exports = function (storeOptions) {
         var deferred = Q.defer();
 
         var requestOptions = {
-            url: config.storeOptions.couchDbUrl + '/_session',
+            url: storeOptions.couchDbUrl + '/_session',
             method: 'post',
             json: {
                 name: userLogin.email,
@@ -77,7 +75,7 @@ module.exports = function (storeOptions) {
     }
 
     function getCouchDocuments(dbName, ids) {
-        var url = StoreOptions.couchDbUrl + '/' + dbName + '/' + '_all_docs?include_docs=true';
+        var url = storeOptions.couchDbUrl + '/' + dbName + '/' + '_all_docs?include_docs=true';
 
         return couchRequest({
             url: url,
@@ -91,7 +89,7 @@ module.exports = function (storeOptions) {
     }
 
     function bulkUpdateDocuments(dbName, documents) {
-        var url = StoreOptions.couchDbUrl + '/' + dbName + '/' + '_bulk_docs';
+        var url = storeOptions.couchDbUrl + '/' + dbName + '/' + '_bulk_docs';
 
         return couchRequest({
             url: url,
@@ -174,7 +172,7 @@ module.exports = function (storeOptions) {
     }
 
     function couchViewUrl(dbName, viewName, key, group) {
-        var url = StoreOptions.couchDbUrl + '/' + dbName + '/' + '_design/CARLI/_view/' + viewName;
+        var url = storeOptions.couchDbUrl + '/' + dbName + '/' + '_design/CARLI/_view/' + viewName;
 
         var queryParams = {};
         if (key) {
@@ -207,9 +205,9 @@ module.exports = function (storeOptions) {
     function createDatabase(dbName) {
         var deferred = Q.defer();
 
-        var dbType = (dbName == StoreOptions.couchDbName) ? 'CARLI' : 'Cycle';
+        var dbType = (dbName == storeOptions.couchDbName) ? 'CARLI' : 'Cycle';
 
-        request.put(StoreOptions.couchDbUrl + '/' + dbName,  function(error, response, body) {
+        request.put(storeOptions.couchDbUrl + '/' + dbName,  function(error, response, body) {
             if (error) {
                 deferred.reject(error);
             } else if (response.statusCode >= 200 && response.statusCode <= 299) {
@@ -226,7 +224,7 @@ module.exports = function (storeOptions) {
 
     /**
      * Note 1: Only supports the case where target and source are the same couch instance.
-     *         (Specifically, the one configured in config.storeOptions)
+     *         (Specifically, the one configured in storeOptions)
      * Note 2: Will *not* automatically create the database if it doesn't exist.
      *         Attempting to replicate to a nonexistent database is an error.
      *
@@ -256,7 +254,7 @@ module.exports = function (storeOptions) {
 
             function couchReplicationOptions() {
                 return {
-                    url: StoreOptions.couchDbUrl + '/_replicate',
+                    url: storeOptions.couchDbUrl + '/_replicate',
                     method: 'post',
                     json: {
                         source: sourceDbName,
@@ -293,7 +291,7 @@ module.exports = function (storeOptions) {
 
                 function couchReplicationOptions() {
                     return {
-                        url: StoreOptions.couchDbUrl + '/_replicate',
+                        url: storeOptions.couchDbUrl + '/_replicate',
                         method: 'post',
                         json: {
                             source: sourceDbName,
@@ -317,11 +315,11 @@ module.exports = function (storeOptions) {
 
         function getReplicationRequestOptions(sourceDbName, targetDbName) {
             return {
-                url: StoreOptions.couchDbUrl + '/_replicator',
+                url: storeOptions.couchDbUrl + '/_replicator',
                 method: 'post',
                 json: {
-                    source: StoreOptions.couchDbUrl + '/' + sourceDbName,
-                    target: StoreOptions.couchDbUrl + '/' + targetDbName,
+                    source: storeOptions.couchDbUrl + '/' + sourceDbName,
+                    target: storeOptions.couchDbUrl + '/' + targetDbName,
                     filter: "CARLI/filterCycleDatabaseForVendor",
                     query_params: {"vendorId": vendorId},
                     continuous: true
@@ -332,7 +330,7 @@ module.exports = function (storeOptions) {
 
     function getVendorDatabaseReplicationStatus(databaseName, since, vendorId) {
         var requestOptions = {
-            url: StoreOptions.couchDbUrl + '/' + databaseName + '/_changes' +
+            url: storeOptions.couchDbUrl + '/' + databaseName + '/_changes' +
                 '?since=' + since + '&filter=CARLI/filterCycleDatabaseForVendor&vendorId='+vendorId,
             method: 'get'
         };
@@ -342,19 +340,19 @@ module.exports = function (storeOptions) {
     }
 
     function getRunningCouchJobs(){
-        var url = StoreOptions.couchDbUrl + '/_active_tasks/';
+        var url = storeOptions.couchDbUrl + '/_active_tasks/';
 
         return couchRequest({ url: url });
     }
 
     function triggerViewIndexing(databaseName) {
-        var url = StoreOptions.couchDbUrl + '/' + databaseName + '/' + '_design/CARLI/_view/docTypes?stale=update_after';
+        var url = storeOptions.couchDbUrl + '/' + databaseName + '/' + '_design/CARLI/_view/docTypes?stale=update_after';
 
         return couchRequest({url : url});
     }
 
     function doesDatabaseExist(databaseName) {
-        var url = StoreOptions.couchDbUrl + '/' + databaseName;
+        var url = storeOptions.couchDbUrl + '/' + databaseName;
 
         return couchRequest({url : url})
             .then(function() { return true; })
@@ -362,12 +360,12 @@ module.exports = function (storeOptions) {
     }
 
     function getDatabaseInfo(databaseName) {
-        var url = StoreOptions.couchDbUrl + '/' + databaseName;
+        var url = storeOptions.couchDbUrl + '/' + databaseName;
 
         return couchRequest({url : url});
     }
     function getDatabaseDesignDocInfo(databaseName) {
-        var url = StoreOptions.couchDbUrl + '/' + databaseName + '/_design/CARLI/_info';
+        var url = storeOptions.couchDbUrl + '/' + databaseName + '/_design/CARLI/_info';
 
         return couchRequest({url : url});
     }
