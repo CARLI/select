@@ -163,7 +163,7 @@ function notificationModalController($q, $rootScope, $scope, alertService, error
                     return $q.all(promises);
                 })
                 .then(saveSuccess)
-                .catch(saveError);
+                .catch(errorHandler);
 
             function getRecipientIds(recipients) {
                 return recipients.map(function (r) { return r.id.toString(); });

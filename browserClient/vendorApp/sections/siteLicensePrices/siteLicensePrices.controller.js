@@ -33,7 +33,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     }
 
     function loadLibraries() {
-        return libraryService.list().then(function (libraries) {
+        return libraryService.listActiveLibraries().then(function (libraries) {
             vm.libraries = $filter('orderBy')(libraries, 'name');
             initializeSelectedLibraryIds();
         });
@@ -97,6 +97,8 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     }
 
     function buildPricingGrid() {
+        $('.pricing-grid .price-row:not(.product-name-row):not(.price-cap)').remove();
+
         vm.libraries.forEach(function (library) {
             var row = generateLibraryRow(library);
             vm.products.forEach(function (product) {
@@ -111,8 +113,8 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             return row;
         }
         function generateOfferingCell(library, product) {
-            var offering = vm.offeringsForLibraryByProduct[product.id][library.id] || { pricing: { site: 0 }};
-            var price = offering.pricing.site;
+            var offering = vm.offeringsForLibraryByProduct[product.id][library.id] || { pricing: { site: '&nbsp;' }};
+            var price = offering.pricing.site || '&nbsp;';
             var offeringWrapper = $('<div class="column offering input">');
             if (offering.flagged) {
                 offeringWrapper.addClass('flagged');
@@ -219,10 +221,11 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
                 var newOfferingsCreated = arrays[0].length;
                 var oldOfferingsUpdated = arrays[1].length;
                 var count = newOfferingsCreated + oldOfferingsUpdated;
-                console.log('saved '+count+' offerings');
 
-                if ( newOfferingsCreated ){
-                    console.log('* new offerings were created, reload pricing grid');
+                console.log('created '+newOfferingsCreated+' new offerings');
+                console.log('updated '+oldOfferingsUpdated+' old offerings');
+
+                if ( count ){
                     return initializePricingGrid();
                 }
                 else {

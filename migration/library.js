@@ -48,7 +48,7 @@ function migrateLibraries(connection, crmLibraryMapping) {
     function mapLibraryCrmIdToIdalId(libraryRow){
         return Q({
             couchId: getCrmId(libraryRow.name),
-            idalLegacyId: libraryRow.id
+            idalLegacyId: libraryRow.id.toString()
         });
     }
 
@@ -77,7 +77,7 @@ function loadCrmLibraryMapping(crmConnection) {
 
         var crmLibraryMapping = {};
         rows.forEach(function (row) {
-            crmLibraryMapping[row.institution_name.toLowerCase()] = row.member_id;
+            crmLibraryMapping[row.institution_name.toLowerCase()] = row.member_id.toString();
         });
         resultsPromise.resolve(crmLibraryMapping);
     });

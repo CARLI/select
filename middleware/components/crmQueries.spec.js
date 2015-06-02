@@ -28,7 +28,7 @@ describe('The CRM Adaptor', function () {
             listPromise.then(function (libraries) {
                 var promises = [];
                 for (var i = 0; i < libraries.length; i++) {
-                    promises.push( expect(Validator.validate(libraries[0])).to.be.fulfilled );
+                    promises.push( expect(Validator.validate(libraries[i])).to.be.fulfilled );
                 }
                 Q.all(promises).then(
                     function() { deferred.resolve(); },
