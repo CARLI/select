@@ -3,12 +3,17 @@ angular.module('vendor.sections.simultaneousUserPrices')
 
 function simultaneousUserPricesController($scope, $q, $filter, cycleService, offeringService, productService, userService){
     var vm = this;
+    vm.changedProductIds = {};
     vm.loadingPromise = null;
-    vm.suPricingByProduct = {};
-    vm.suLevels = [];
+    vm.productsSaved = 0;
+    vm.productsSavedProgress = 0;
+
     vm.selectedProductIds = {};
     vm.selectedSuLevelIds = {};
-    vm.changedProductIds = {};
+    vm.suPricingByProduct = {};
+    vm.suLevels = [];
+    vm.totalProducts = 0;
+
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.addSuPricingLevel = addSuPricingLevel;
     vm.saveOfferings = saveOfferings;
@@ -198,9 +203,20 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
     }
 
     function makeReadOnly() {
-        var price = $(this).val();
+        var $cell = $(this);
+        markProductChangedForCell( $cell.parent() );
+        var price = $cell.val();
         var div = createOfferingCellContent(price);
-        $(this).replaceWith(div);
+        $cell.replaceWith(div);
+    }
+
+    function markProductChangedForCell( jqueryCell ){
+        var classList = jqueryCell.attr('class').split(/\s+/);
+        classList.forEach(function(className){
+            if ( className !== 'column' && className !== 'offering' && className !== 'input' ){
+                vm.changedProductIds[className] = true;
+            }
+        });
     }
 
     function saveOfferings(){
@@ -227,22 +243,74 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
             return vm.changedProductIds[id];
         });
 
-        vm.loadingPromise = $q.all( productIdsToUpdate.map(updateOfferingsForAllLibrariesForProduct) )
-            .then(function(){
-                console.log('saved '+productIdsToUpdate.length+' products');
-            })
-            .catch(function(err){
-                console.error(err);
-            });
+        if ( productIdsToUpdate.length < 4 ){
+            vm.loadingPromise = updateChangedProductsConcurrently();
+        }
+        else {
+            vm.loadingPromise = updateChangedProductsSeriallyWithProgressBar();
+        }
 
         return vm.loadingPromise;
 
-        function updateOfferingsForAllLibrariesForProduct( productId ){
-            var newSuPricing = newSuPricingByProduct[productId];
-            return offeringService.updateSuPricingForAllLibrariesForProduct(productId, newSuPricing )
+
+        function updateChangedProductsConcurrently(){
+            return $q.all( productIdsToUpdate.map(updateOfferingsForAllLibrariesForProduct) )
                 .then(function(){
                     vm.changedProductIds = {};
+                    console.log('saved '+productIdsToUpdate.length+' products');
+                })
+                .catch(function(err){
+                    console.error(err);
                 });
+        }
+
+        function updateChangedProductsSeriallyWithProgressBar(){
+            var saveAllProductsPromise = $q.defer();
+
+            vm.productsSaved = 0;
+            vm.productsSavedProgress = 0;
+            vm.totalProducts = productIdsToUpdate.length;
+
+            $('#progress-modal').modal({
+                backdrop: 'static',
+                keyboard: false
+            });
+
+            $scope.warningForm.$setDirty();
+
+            saveNextProduct();
+
+            function saveNextProduct(){
+                if ( vm.productsSaved === vm.totalProducts ){
+                    serialSaveFinished();
+                    return;
+                }
+
+                return updateOfferingsForAllLibrariesForProduct( productIdsToUpdate[vm.productsSaved] )
+                    .then(function(){
+                        vm.productsSaved++;
+                        vm.productsSavedProgress = Math.floor((vm.productsSaved / vm.totalProducts) * 100);
+                        saveNextProduct();
+                    });
+            }
+
+            return saveAllProductsPromise.promise;
+
+
+            function serialSaveFinished(){
+                cycleService.syncDataBackToCarli()
+                    .then(function(){
+                        //TODO: get couch replication job progress, show it in this progress bar
+                        $('#progress-modal').modal('hide');
+                        $scope.warningForm.$setPristine();
+                        saveAllProductsPromise.resolve();
+                    });
+            }
+        }
+
+        function updateOfferingsForAllLibrariesForProduct( productId ){
+            var newSuPricing = newSuPricingByProduct[productId];
+            return offeringService.updateSuPricingForAllLibrariesForProduct(productId, newSuPricing );
         }
     }
 
