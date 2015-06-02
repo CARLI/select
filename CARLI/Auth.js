@@ -11,11 +11,9 @@ function deleteSession() {
 }
 
 function getSession() {
-    console.log('getting session', config.storeOptions.couchDbUrl);
     return couchUtils.couchRequest({ url: config.storeOptions.couchDbUrl + '/_session', method: 'get' }).then(returnUserContext);
 
     function returnUserContext(response) {
-        console.log('response', response);
         return response.userCtx;
     }
 }
@@ -26,12 +24,9 @@ function getUser(email) {
 
 function requireStaff() {
     return getSession().then(function (userContext) {
-        console.log(userContext);
-        if (userContext.roles.indexOf('staff') >= 0 || userContext.roles.indexOf('_admin') >= 0) {
-            console.log('required staff success');
+        if (userContext.roles.indexOf('staff') >= 0) {
             return true;
         }
-        console.log('required staff fail');
         throw new Error('Unauthorized');
     });
 }

@@ -63,7 +63,7 @@ function authService($rootScope, $q, $location, CarliModules) {
     }
 
     function requireStaff() {
-        if (session.roles.indexOf('staff') >= 0 || session.roles.indexOf('_admin') >= 0) {
+        if (session.roles.indexOf('staff') >= 0) {
             return true;
         }
         throw new Error('Unauthorized');
