@@ -24,7 +24,6 @@ function runMiddlewareServer(){
 
     function configureMiddleware() {
         carliMiddleware.use(corsHeaders);
-        carliMiddleware.use(couchDbProxy);
         carliMiddleware.use(bodyParser.json());
         carliMiddleware.use(cookieParser());
     }
@@ -269,20 +268,6 @@ function corsHeaders(req, res, next) {
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, X-AuthToken");
     next();
-}
-
-function couchDbProxy(req, res, next) {
-    var proxyPath = req.path.match(RegExp("^\\/db/(.*)$"));
-    if (proxyPath) {
-        var dbUrl = 'http://localhost:5984/' + proxyPath[ 1 ];
-        req.pipe(request({
-            uri: dbUrl,
-            method: req.method,
-            qs: req.query
-        })).pipe(res);
-    } else {
-        next();
-    }
 }
 
 if (require.main === module) {
