@@ -98,7 +98,7 @@ function convertCrmMembershipLevel(crmLevel) {
 function convertCrmLibrary(crm) {
     var library = {
         type: 'Library',
-        crmId: crm.member_id,
+        crmId: crm.member_id.toString(),
         name: crm.institution_name,
         institutionYears: convertCrmInstitutionYearsFromType(crm.library_type),
         institutionType: convertCrmInstitutionType(crm.library_type),
