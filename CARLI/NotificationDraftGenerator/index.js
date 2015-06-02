@@ -53,15 +53,9 @@ function getAnnualAccessFeeDraftForAllLibraries(template, notificationData) {
             .then(function(cycle){
                 return libraryRepository.listLibrariesWithSelectionsInCycle(cycle);
             })
-            .then(function(libraryIdsAsStrings){
-                var libraryIds = libraryIdsAsStrings.map(convertIdsToNumbers);
-
+            .then(function(libraryIds){
                 return libraryRepository.getLibrariesById(libraryIds);
             });
-
-        function convertIdsToNumbers(id) {
-            return typeof id === 'number' ? id : parseInt(id, 10);
-        }
     }
     function getRecipientsForAnnualAccessFeeDraftForAllLibraries() {
         return annualAccessAllLibrariesDraft.getEntities()
@@ -376,8 +370,7 @@ function getLibraryInvoicesForSome(template, notificationData) {
     }
 
     function getLibraryIdFromOffering(offering) {
-        var id = offering.library.id;
-        return typeof id === 'number' ? id : parseInt(id, 10);
+        return offering.library.id;
     }
 
     function getRecipientsForLibraryInvoicesForSome() {

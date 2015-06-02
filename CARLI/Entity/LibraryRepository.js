@@ -35,7 +35,7 @@ function associateNonCrmDataWithListOfLibraries( libraryList ){
             var nonCrmDataByCrmId = {};
 
             nonCrmData.forEach(function(nonCrmLibrary){
-                nonCrmDataByCrmId[nonCrmLibrary.crmId.toString()] = nonCrmLibrary;
+                nonCrmDataByCrmId[nonCrmLibrary.crmId] = nonCrmLibrary;
             });
 
             return nonCrmDataByCrmId;
@@ -119,12 +119,8 @@ function loadNonCrmLibraryForCrmId( crmId ){
 function listLibrariesWithSelectionsInCycle( cycle ){
     return CouchUtils.getCouchViewResultObject(cycle.getDatabaseName(), 'listLibrariesWithSelections', null, true)
         .then(function(resultObject){
-            return Object.keys(resultObject).map(returnAsInteger);
+            return Object.keys(resultObject);
         });
-
-    function returnAsInteger(idString) {
-        return parseInt(idString, 10);
-    }
 }
 
 function getLibrariesById( ids ){
