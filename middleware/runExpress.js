@@ -1,6 +1,7 @@
 var cluster = require('cluster');
 var express = require('express');
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 var request = require('request');
 var _ = require('lodash');
 
@@ -25,6 +26,7 @@ function runMiddlewareServer(){
         carliMiddleware.use(corsHeaders);
         carliMiddleware.use(couchDbProxy);
         carliMiddleware.use(bodyParser.json());
+        carliMiddleware.use(cookieParser());
     }
 
     function launchServer() {
@@ -223,12 +225,12 @@ function runMiddlewareServer(){
                 .catch(sendError(res));
         });
         carliMiddleware.post('/user', function (req, res) {
-            user.create(req.body)
+            user.create(req.body, req.cookies)
                 .then(sendOk(res))
                 .catch(sendError(res));
         });
         carliMiddleware.put('/user/:email', function (req, res) {
-            user.update(req.body)
+            user.update(req.body, req.cookies)
                 .then(sendOk(res))
                 .catch(sendError(res));
         });

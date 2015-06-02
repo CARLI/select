@@ -65,7 +65,7 @@ module.exports = function (storeOptions) {
                 deferred.reject(carliError(data, response.statusCode));
             }
             else {
-                //data.authCookie = getCookieWithDomainAdded(response);
+                data.authCookie = getCookieWithDomainAdded(response);
                 deferred.resolve(data);
             }
         }

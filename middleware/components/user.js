@@ -1,4 +1,5 @@
 
+var auth = require('../../CARLI/Auth');
 var config = require( '../../config' );
 var StoreOptions = config.storeOptions;
 var Store = require( '../../CARLI/Store' );
@@ -22,10 +23,14 @@ function load(email) {
     return userRepository.load(email);
 }
 function create(user) {
-    return userRepository.create(user);
+    return auth.requireStaff().then(function() {
+        return userRepository.create(user);
+    });
 }
 function update(user) {
-    return userRepository.update(user);
+    return auth.requireStaff().then(function() {
+        return userRepository.update(user);
+    });
 }
 
 module.exports = {

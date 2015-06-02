@@ -3,6 +3,7 @@ angular.module('common.auth')
 
 function authService($rootScope, $q, $location, CarliModules) {
     var session = null;
+    var user = null;
 
     return {
         createSession: createSession,
@@ -10,11 +11,12 @@ function authService($rootScope, $q, $location, CarliModules) {
         getCurrentUser: getCurrentUser,
         requireSession: requireSession,
         requireStaff: requireStaff,
+        requireActive: requireActive,
         redirectToLogin: redirectToLogin
     };
 
     function createSession(userLogin) {
-        return $q.when ( CarliModules.Auth.createSession(userLogin) )
+        return $q.when ( CarliModules.AuthMiddleware.createSession(userLogin) )
             .then(function (newSession) {
                 session = newSession;
                 return session;
@@ -22,7 +24,7 @@ function authService($rootScope, $q, $location, CarliModules) {
     }
 
     function deleteSession() {
-        return $q.when(CarliModules.Auth.deleteSession()).then(redirectToLogin);
+        return $q.when(CarliModules.AuthMiddleware.deleteSession()).then(redirectToLogin);
 
     }
 
@@ -35,9 +37,14 @@ function authService($rootScope, $q, $location, CarliModules) {
 
         function getUserFromSession() {
             return $q.when( CarliModules.Auth.getUser(session.name) )
+                .then(saveUserReference)
                 .then(setLoggedIn);
         }
 
+        function saveUserReference(foundUser) {
+            user = foundUser;
+            return foundUser;
+        }
         function setLoggedIn(passthrough) {
             $rootScope.isLoggedIn = true;
             return passthrough;
@@ -56,8 +63,19 @@ function authService($rootScope, $q, $location, CarliModules) {
     }
 
     function requireStaff() {
-        return session.roles.indexOf('staff') >= 0 || session.roles.indexOf('_admin') > 0;
+        if (session.roles.indexOf('staff') >= 0 || session.roles.indexOf('_admin') >= 0) {
+            return true;
+        }
+        throw new Error('Unauthorized');
     }
+
+    function requireActive() {
+        if (user.isActive) {
+            return true;
+        }
+        throw new Error('Unauthorized');
+    }
+
 
     function redirectToLogin(passthrough) {
         $rootScope.isLoggedIn = false;
