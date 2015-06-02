@@ -299,9 +299,8 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
 
 
             function serialSaveFinished(){
-                return syncData()
+                return syncData() //Enhancement: get couch replication job progress, show it in the 2nd progress bar
                     .then(function(){
-                        //TODO: get couch replication job progress, show it in this progress bar
                         $('#progress-modal').modal('hide');
                         $scope.warningForm.$setPristine();
                         saveAllProductsPromise.resolve();
