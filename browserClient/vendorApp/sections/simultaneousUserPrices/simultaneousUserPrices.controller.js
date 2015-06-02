@@ -255,6 +255,7 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
 
         function updateChangedProductsConcurrently(){
             return $q.all( productIdsToUpdate.map(updateOfferingsForAllLibrariesForProduct) )
+                .then(syncData)
                 .then(function(){
                     vm.changedProductIds = {};
                     console.log('saved '+productIdsToUpdate.length+' products');
@@ -298,7 +299,7 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
 
 
             function serialSaveFinished(){
-                cycleService.syncDataBackToCarli()
+                return syncData()
                     .then(function(){
                         //TODO: get couch replication job progress, show it in this progress bar
                         $('#progress-modal').modal('hide');
@@ -311,6 +312,10 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
         function updateOfferingsForAllLibrariesForProduct( productId ){
             var newSuPricing = newSuPricingByProduct[productId];
             return offeringService.updateSuPricingForAllLibrariesForProduct(productId, newSuPricing );
+        }
+
+        function syncData(){
+            return cycleService.syncDataBackToCarli();
         }
     }
 
