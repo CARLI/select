@@ -11,7 +11,7 @@ var vendorRepository = require('../CARLI/Entity/VendorRepository');
 var projectRoot = __dirname + '/..';
 
 function getDbUrl(dbName) {
-    return config.storeOptions.couchDbUrl + '/' + dbName;
+    return config.storeOptions.privilegedCouchDbUrl + '/' + dbName;
 }
 
 function recreateDb(dbName) {
@@ -36,9 +36,16 @@ function deployDb(dbName) {
     if (!dbName) {
         dbName = config.storeOptions.couchDbName;
     }
-    return recreateDb(dbName).then(function() {
+    return recreateDb(dbName)
+        .then(addSecurityDoc)
+        .then(addDesignDoc);
+
+    function addSecurityDoc() {
+        addSecurityDocWithRoles(dbName, [ 'staff', 'vendor', 'library' ]);
+    }
+    function addDesignDoc() {
         return couchApp.putDesignDoc(dbName, 'CARLI');
-    });
+    }
 }
 
 function createOneTimePurchaseCycle(cycleName, store) {
@@ -51,6 +58,22 @@ function createOneTimePurchaseCycle(cycleName, store) {
     }
 
     return CycleRepository.create(otpCycle);
+}
+
+function addSecurityDocWithRoles(dbName, roles) {
+    request.put({
+        url: getDbUrl(dbName) + '/_security',
+        json: {
+            admins: {
+                names: [],
+                roles:[]
+            },
+            members: {
+                names: [],
+                roles: roles
+            }
+        }
+    });
 }
 
 function deployLocalAppDesignDoc() {
