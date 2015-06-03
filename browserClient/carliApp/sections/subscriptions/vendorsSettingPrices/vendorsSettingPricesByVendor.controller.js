@@ -118,14 +118,22 @@ function vendorsSettingPricesByVendorController( $scope, $q, accordionController
         return vendorStatusService.closePricingForVendor( vendor.id, vm.cycle )
             .then(function(){
                 vm.vendorStatus[vendor.id].isClosed = true;
-            });
+                return vendor.id;
+            })
+            .then(syncData);
     }
 
     function openVendorPricing( vendor ){
         return vendorStatusService.openPricingForVendor( vendor.id, vm.cycle )
             .then(function(){
                 vm.vendorStatus[vendor.id].isClosed = false;
-            });
+                return vendor.id;
+            })
+            .then(syncData);
+    }
+
+    function syncData(vendorId){
+        return cycleService.syncDataToVendorDatabase(vendorId);
     }
 
     function getVendorPricingStatus(vendor) {
