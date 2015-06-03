@@ -6,10 +6,11 @@ var Q = require('q');
 var testDbName = 'test-db';
 var testDbMarker = 'test-db-marker';
 var testStore = null;
+var testStoreOptions = getTestStoreOptions();
 
 function getTestStoreOptions() {
     return {
-        couchDbUrl: config.storeOptions.couchDbUrl,
+        couchDbUrl: config.storeOptions.privilegedCouchDbUrl,
         couchDbName: testDbName
     };
 }
@@ -25,7 +26,7 @@ function _deleteDb(couchDbUrl, dbName) {
 var createdDb = false;
 function _createMainTestDb () {
     if (!createdDb) {
-        request.put(config.storeOptions.couchDbUrl + '/' + testDbName);
+        request.put(testStoreOptions.couchDbUrl + '/' + testDbName);
         createdDb = true;
     }
 }
@@ -49,19 +50,19 @@ module.exports = {
     deleteTestDbs: function() {
         var deferred = Q.defer();
 
-        request.get(config.storeOptions.couchDbUrl + '/_all_dbs', function (error, response, body) {
+        request.get(testStoreOptions.couchDbUrl + '/_all_dbs', function (error, response, body) {
             if (error) {
                 deferred.reject(error);
             }
             var dbList = JSON.parse(body);
             var count = 0;
             var promises = [];
-            promises.push(_deleteDb(config.storeOptions.couchDbUrl, testDbName));
+            promises.push(_deleteDb(testStoreOptions.couchDbUrl, testDbName));
             dbList.forEach(function (dbName) {
                 if (dbName.indexOf(testDbMarker) >= 0) {
                     count++;
-                    // request.del(config.storeOptions.couchDbUrl + '/' + dbName);
-                    promises.push(_deleteDb(config.storeOptions.couchDbUrl, dbName));
+                    // request.del(testStoreOptions.couchDbUrl + '/' + dbName);
+                    promises.push(_deleteDb(testStoreOptions.couchDbUrl, dbName));
                 }
             });
             console.log('Deleted ' + count + ' databases');
@@ -73,7 +74,7 @@ module.exports = {
     deleteTestReplicators: function() {
         var deferred = Q.defer();
 
-        request.get(config.storeOptions.couchDbUrl + '/_replicator/_all_docs?include_docs=true', function (error, response, body) {
+        request.get(testStoreOptions.couchDbUrl + '/_replicator/_all_docs?include_docs=true', function (error, response, body) {
             var parsedBody = JSON.parse(body);
             var err = error || parsedBody.error;
             if (err) {
@@ -98,7 +99,7 @@ module.exports = {
         function promiseDeletion(id, rev) {
             var deletion = Q.defer();
 
-            request.del(config.storeOptions.couchDbUrl + '/_replicator/' + id + '?rev=' + rev, function (error, response, body) {
+            request.del(testStoreOptions.couchDbUrl + '/_replicator/' + id + '?rev=' + rev, function (error, response, body) {
                 var parsedBody = JSON.parse(body);
                 var err = error || parsedBody.error;
                 if (err) {
@@ -117,7 +118,7 @@ module.exports = {
     },
     nukeCouch: function(couchDbUrl) {
         if (couchDbUrl === undefined) {
-            couchDbUrl = config.storeOptions.couchDbUrl;
+            couchDbUrl = testStoreOptions.couchDbUrl;
         }
 
         return deleteAllReplicators().then(deleteAllNonSystemDatabases);
