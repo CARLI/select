@@ -86,7 +86,7 @@ describe('Couch utilities', function () {
     describe('couchViewUrl', function(){
         var testDbName = 'testDb';
         var testViewName = 'testView';
-        var testUrl = storeOptions.privilegedCouchDbUrl + '/' + testDbName + '/' + '_design/CARLI/_view/' + testViewName;
+        var testUrl = storeOptions.couchDbUrl + '/' + testDbName + '/' + '_design/CARLI/_view/' + testViewName;
 
         it('should return the base for the correct database and view if given no additional arguments', function(){
             expect(couchUtils.couchViewUrl(testDbName, testViewName)).to.equal(testUrl);

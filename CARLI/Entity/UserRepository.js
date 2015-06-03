@@ -10,6 +10,7 @@ var Entity = require('../Entity')
 
 var UserRepository = Entity('user');
 var userStoreOptions = {
+    privilegedCouchDbUrl: StoreOptions.privilegedCouchDbUrl,
     couchDbUrl: StoreOptions.couchDbUrl,
     couchDbName: '_users'
 };
@@ -22,8 +23,10 @@ function transformFunction( user ){
 }
 
 function createUser( user ){
-    user.id = 'org.couchdb.user:' + user.email;
-    user.name = user.email;
+    if (user) {
+        user.id = 'org.couchdb.user:' + user.email;
+        user.name = user.email;
+    }
     return UserRepository.create( user, transformFunction );
 }
 
