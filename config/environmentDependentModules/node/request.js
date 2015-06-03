@@ -10,8 +10,5 @@ request.setAuth = function (authSession) {
 request.clearAuth = function () {
     jar.setCookie('AuthSession=', config.storeOptions.couchDbUrl);
 };
-request.getJar = function() {
-    return jar;
-};
 
 module.exports = request;

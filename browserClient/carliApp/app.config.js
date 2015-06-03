@@ -26,7 +26,7 @@ angular.module('carli.app', [
         .then(authService.requireStaff)
         .then(authService.getCurrentUser)
         .then(authService.requireActive)
-        .catch(authService.deleteSession);
+        .catch(authService.redirectToLogin);
 })
 .run(function(cycleService){
     cycleService.initCurrentCycle();

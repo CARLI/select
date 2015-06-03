@@ -17,7 +17,6 @@ var vendorSpecificProductQueries = require('./components/vendorSpecificProductQu
 
 function runMiddlewareServer(){
     var carliMiddleware = express();
-    var carliMiddlewareAuthPassthrough = createAuthPassthrough(carliMiddleware);
 
     configureMiddleware();
     defineRoutes();
@@ -27,6 +26,7 @@ function runMiddlewareServer(){
         carliMiddleware.use(corsHeaders);
         carliMiddleware.use(bodyParser.json());
         carliMiddleware.use(cookieParser());
+        carliMiddleware.use(setAuthForRequest);
     }
 
     function launchServer() {
@@ -38,7 +38,7 @@ function runMiddlewareServer(){
     }
 
     function defineRoutes() {
-        carliMiddlewareAuthPassthrough.post('/login', function (req, res) {
+        carliMiddleware.post('/login', function (req, res) {
             auth.createSession(req.body)
                 .then(copyAuthCookieFromResponse)
                 .then(sendResult(res))
@@ -49,34 +49,42 @@ function runMiddlewareServer(){
                 return authResponse;
             }
         });
-        carliMiddlewareAuthPassthrough.delete('/logout', function (req, res) {
+        carliMiddleware.delete('/login', function (req, res) {
             auth.deleteSession()
+                .then(clearAuthCookie)
                 .then(sendResult(res))
                 .catch(sendError(res));
+
+            function clearAuthCookie(authResponse) {
+                res.append('Set-Cookie', 'AuthSession=; Version=1; Expires=-1; Max-Age=-1; Path=/; Domain=' + config.cookieDomain);
+                res.append('Set-Cookie', 'AuthSession=; Version=1; Expires=-1; Max-Age=-1; Path=/');
+                request.clearAuth();
+                return authResponse;
+            }
         });
-        carliMiddlewareAuthPassthrough.get('/version', function (req, res) {
+        carliMiddleware.get('/version', function (req, res) {
             res.send({ version: require('./package.json').version });
         });
-        carliMiddlewareAuthPassthrough.put('/design-doc/:dbName', function (req, res) {
+        carliMiddleware.put('/design-doc/:dbName', function (req, res) {
             couchApp.putDesignDoc(req.params.dbName, 'Cycle')
                 .then(sendOk(res))
                 .catch(sendError(res));
         });
-        carliMiddlewareAuthPassthrough.put('/tell-pixobot', function (req, res) {
+        carliMiddleware.put('/tell-pixobot', function (req, res) {
             notifications.tellPixobot(req.body);
             res.send(req.body);
         });
-        carliMiddlewareAuthPassthrough.get('/library', function (req, res) {
+        carliMiddleware.get('/library', function (req, res) {
             crmQueries.listLibraries()
                 .then(sendResult(res))
                 .catch(sendError(res));
         });
-        carliMiddlewareAuthPassthrough.get('/library/:id', function (req, res) {
+        carliMiddleware.get('/library/:id', function (req, res) {
             crmQueries.loadLibrary(req.params.id)
                 .then(sendResult(res))
                 .catch(sendError(res));
         });
-        carliMiddlewareAuthPassthrough.get('/products-with-offerings-for-vendor/:vendorId/for-cycle/:cycleId', function (req, res) {
+        carliMiddleware.get('/products-with-offerings-for-vendor/:vendorId/for-cycle/:cycleId', function (req, res) {
             var authToken = getAuthTokenFromHeader(req);
             if (!authToken) {
                 res.status(401).send('missing authorization cookie');
@@ -92,7 +100,7 @@ function runMiddlewareServer(){
                 .catch(sendError(res));
             ;
         });
-        carliMiddlewareAuthPassthrough.put('/cycle-from', function (req, res) {
+        carliMiddleware.put('/cycle-from', function (req, res) {
             cycleCreation.create(req.body.newCycleData)
                 .then(function (newCycleId) {
                     res.send({ id: newCycleId });
@@ -106,33 +114,33 @@ function runMiddlewareServer(){
                     res.send({ error: err });
                 });
         });
-        carliMiddlewareAuthPassthrough.get('/cycle-creation-status/:id', function (req, res) {
+        carliMiddleware.get('/cycle-creation-status/:id', function (req, res) {
             cycleCreation.getCycleCreationStatus(req.params.id)
                 .then(sendResult(res))
                 .catch(sendError(res));
             ;
         });
-        carliMiddlewareAuthPassthrough.get('/create-all-vendor-databases', function (req, res) {
+        carliMiddleware.get('/create-all-vendor-databases', function (req, res) {
             vendorDatabases.createVendorDatabasesForAllCycles()
                 .then(sendOk(res))
                 .catch(sendError(res));
         });
-        carliMiddlewareAuthPassthrough.post('/replicate-all-data-to-vendors', function (req, res) {
+        carliMiddleware.post('/replicate-all-data-to-vendors', function (req, res) {
             vendorDatabases.replicateDataToVendorsForAllCycles()
                 .then(sendOk(res))
                 .catch(sendError(res));
         });
-        carliMiddlewareAuthPassthrough.post('/replicate-all-data-from-vendors', function (req, res) {
+        carliMiddleware.post('/replicate-all-data-from-vendors', function (req, res) {
             vendorDatabases.replicateDataFromVendorsForAllCycles()
                 .then(sendOk(res))
                 .catch(sendError(res));
         });
-        carliMiddlewareAuthPassthrough.post('/create-vendor-databases-for-cycle/:cycleId', function (req, res) {
+        carliMiddleware.post('/create-vendor-databases-for-cycle/:cycleId', function (req, res) {
             vendorDatabases.createVendorDatabasesForCycle(req.params.cycleId)
                 .then(sendOk(res))
                 .catch(sendError(res));
         });
-        carliMiddlewareAuthPassthrough.post('/replicate-data-to-vendors-for-cycle/:cycleId', function (req, res) {
+        carliMiddleware.post('/replicate-data-to-vendors-for-cycle/:cycleId', function (req, res) {
             vendorDatabases.replicateDataToVendorsForCycle(req.params.cycleId)
                 .then(sendOk(res))
                 .catch(sendError(res));
@@ -147,24 +155,24 @@ function runMiddlewareServer(){
                 .then(sendOk(res))
                 .catch(sendError(res));
         });
-        carliMiddlewareAuthPassthrough.get('/sync', function (req, res) {
+        carliMiddleware.get('/sync', function (req, res) {
             console.log('Asking master to launchSynchronizationWorker');
             cluster.worker.send({
                 command: 'launchSynchronizationWorker'
             });
             sendOk(res);
         });
-        carliMiddlewareAuthPassthrough.get('/index-all-cycles', function (req, res) {
+        carliMiddleware.get('/index-all-cycles', function (req, res) {
             vendorDatabases.triggerIndexingForAllCycles()
                 .then(sendOk(res))
                 .catch(sendError(res));
         });
-        carliMiddlewareAuthPassthrough.get('/index-cycle/:cycleId', function (req, res) {
+        carliMiddleware.get('/index-cycle/:cycleId', function (req, res) {
             vendorDatabases.triggerIndexingForCycleId(req.params.cycleId)
                 .then(sendOk(res))
                 .catch(sendError(res));
         });
-        carliMiddlewareAuthPassthrough.get('/cycle-database-status/', function (req, res) {
+        carliMiddleware.get('/cycle-database-status/', function (req, res) {
             vendorDatabases.getCycleStatusForAllVendorsAllCycles()
                 .then(function (arrayOfStatusObjects) {
                     res.send(arrayOfStatusObjects);
@@ -173,7 +181,7 @@ function runMiddlewareServer(){
                     res.send({ error: err });
                 });
         });
-        carliMiddlewareAuthPassthrough.get('/cycle-database-status/:cycleId', function (req, res) {
+        carliMiddleware.get('/cycle-database-status/:cycleId', function (req, res) {
             vendorDatabases.getCycleStatusForAllVendors(req.params.cycleId)
                 .then(function (arrayOfStatusObjects) {
                     res.send(arrayOfStatusObjects);
@@ -182,7 +190,7 @@ function runMiddlewareServer(){
                     res.send({ error: err });
                 });
         });
-        carliMiddlewareAuthPassthrough.get('/cycle-database-status/:cycleId/for-vendor/:vendorId', function (req, res) {
+        carliMiddleware.get('/cycle-database-status/:cycleId/for-vendor/:vendorId', function (req, res) {
             vendorDatabases.getCycleStatusForVendorId(req.params.vendorId, req.params.cycleId)
                 .then(function (statusObject) {
                     res.send(statusObject);
@@ -191,7 +199,7 @@ function runMiddlewareServer(){
                     res.send({ error: err });
                 });
         });
-        carliMiddlewareAuthPassthrough.post('/update-su-pricing-for-product/:cycleId/:productId', function (req, res) {
+        carliMiddleware.post('/update-su-pricing-for-product/:cycleId/:productId', function (req, res) {
             var authToken = getAuthTokenFromHeader(req);
             if (!authToken) {
                 res.status(401).send('missing authorization cookie');
@@ -214,22 +222,22 @@ function runMiddlewareServer(){
                 .catch(sendError(res));
 
         });
-        carliMiddlewareAuthPassthrough.get('/user', function (req, res) {
+        carliMiddleware.get('/user', function (req, res) {
             user.list()
                 .then(sendResult(res))
                 .catch(sendError(res));
         });
-        carliMiddlewareAuthPassthrough.get('/user/:email', function (req, res) {
+        carliMiddleware.get('/user/:email', function (req, res) {
             user.load(req.params.email)
                 .then(sendResult(res))
                 .catch(sendError(res));
         });
-        carliMiddlewareAuthPassthrough.post('/user', function (req, res) {
+        carliMiddleware.post('/user', function (req, res) {
             user.create(req.body)
                 .then(sendOk(res))
                 .catch(sendError(res));
         });
-        carliMiddlewareAuthPassthrough.put('/user/:email', function (req, res) {
+        carliMiddleware.put('/user/:email', function (req, res) {
             user.update(req.body)
                 .then(sendOk(res))
                 .catch(sendError(res));
@@ -271,35 +279,38 @@ function corsHeaders(req, res, next) {
     next();
 }
 
-function createAuthPassthrough(carliMiddleware) {
-    var wrapper = {};
-    var methods = [ 'post', 'put', 'get', 'delete' ];
+//function createAuthPassthrough(carliMiddleware) {
+//    var wrapper = {};
+//    var methods = [ 'post', 'put', 'get', 'delete' ];
+//
+//    methods.forEach(addMethodToWrapper);
+//
+//    function addMethodToWrapper(method) {
+//        wrapper[method] = wrappedMethod;
+//
+//        function wrappedMethod(url, callback) {
+//            carliMiddleware[method](url, setAuthAndContinue);
+//
+//            function setAuthAndContinue(req, res) {
+//                //setAuthForRequest(req, res);
+//                callback(req, res);
+//            }
+//        }
+//    }
+//
+//    return wrapper;
+//}
 
-    methods.forEach(addMethodToWrapper);
-
-    function addMethodToWrapper(method) {
-        wrapper[method] = wrappedMethod;
-
-        function wrappedMethod(url, callback) {
-            carliMiddleware[method](url, setAuthAndContinue);
-
-            function setAuthAndContinue(req, res) {
-                setAuthForRequest(req, res);
-                callback(req, res);
-            }
+function setAuthForRequest(req, res, next) {
+    if (req.url !== '/login') {
+        if (req.cookies && req.cookies.AuthSession) {
+            request.setAuth(req.cookies.AuthSession);
+        } else {
+            request.clearAuth();
         }
+        res.on('finish', request.clearAuth);
     }
-
-    return wrapper;
-}
-
-function setAuthForRequest(req, res) {
-    if (req.cookies && req.cookies.AuthSession) {
-        request.setAuth(req.cookies.AuthSession);
-    } else {
-        request.clearAuth();
-    }
-    res.on('finish', request.clearAuth);
+    next();
 }
 
 if (require.main === module) {

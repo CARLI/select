@@ -11,7 +11,7 @@ function createSession(userLogin) {
 
 function deleteSession() {
     return middlewareRequest({
-        path: '/logout',
+        path: '/login',
         method: 'delete'
     });
 }

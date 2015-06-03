@@ -5,6 +5,7 @@ var couchDbName = 'carli';
 
 var defaults = {
     alertTimeout: 10000,
+    cookieDomain: 'carli.local',
     middleware: {
         url: 'http://staff.carli.local:8080/api',
         port: 3000

@@ -72,7 +72,7 @@ module.exports = function (storeOptions) {
 
         function getCookieWithDomainAdded(response) {
             var cookie = response.headers[ 'set-cookie' ];
-            cookie += '; Domain=carli.local';
+            cookie += '; Domain=' + config.cookieDomain;
             return cookie;
         }
 
