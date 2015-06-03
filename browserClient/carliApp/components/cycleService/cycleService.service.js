@@ -6,7 +6,7 @@ function cycleService( CarliModules, $q, errorHandler ) {
     var cycleModule = CarliModules.Cycle;
     var cycleMiddleware = CarliModules.CycleMiddleware;
     var databaseStatusMiddleware = CarliModules.DatabaseStatusMiddleware;
-
+    var VendorDatabaseModule = CarliModules.VendorDatabaseMiddleware;
 
     var currentCycle = null;
 
@@ -45,7 +45,10 @@ function cycleService( CarliModules, $q, errorHandler ) {
             listActiveCycles().then(function(cycleList){
                 currentCycle = cycleList[0];
             });
-        }
+        },
+        syncDataToVendorDatabase: syncDataToVendorDatabase,
+        syncDataToAllVendorDatabases: syncDataToAllVendorDatabases,
+        syncDataToAllVendorDatabasesForCycle: syncDataToAllVendorDatabasesForCycle
     };
 
     function fixCycleName(newCycle) {
@@ -103,5 +106,19 @@ function cycleService( CarliModules, $q, errorHandler ) {
 
     function setCurrentCycle(cycleObject) {
         currentCycle = cycleObject;
+    }
+
+    function syncDataToVendorDatabase(vendorId, cycle){
+        var cycleId = cycle ? cycle.id : currentCycle.id;
+        return $q.when( VendorDatabaseModule.replicateDataToOneVendorForCycle(vendorId, cycleId) );
+    }
+
+    function syncDataToAllVendorDatabases(){
+        return syncDataToAllVendorDatabasesForCycle();
+    }
+
+    function syncDataToAllVendorDatabasesForCycle(cycle){
+        var cycleId = cycle ? cycle.id : currentCycle.id;
+        return $q.when( VendorDatabaseModule.replicateDataToVendorsForCycle(cycleId) );
     }
 }

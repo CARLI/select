@@ -37,17 +37,17 @@ describe('The LibraryRepository', function(){
 
             var testNonCrmLibrary = {
                 type: 'LibraryNonCrm',
-                crmId: 1,
+                crmId: '1',
                 fte: 1111
             };
 
             return localLibraryRepository.create(testNonCrmLibrary)
                 .then(function(){
-                    return LibraryRepository.load(1);
+                    return LibraryRepository.load('1');
                 })
                 .then(function(loadedLibrary){
                     return Q.all([
-                        expect(loadedLibrary).to.be.an('object').and.have.property('id',1),
+                        expect(loadedLibrary).to.be.an('object').and.have.property('id','1'),
                         expect(loadedLibrary).to.have.property('fte',testNonCrmLibrary.fte)
                     ]);
                 });
@@ -64,7 +64,7 @@ describe('The LibraryRepository', function(){
         it('should list Libraries from the CARLI CRM and the local database', function(){
             var testNonCrmLibrary = {
                 type: 'LibraryNonCrm',
-                crmId: 3,
+                crmId: '3',
                 fte: 3333
             };
 
@@ -174,7 +174,7 @@ describe('the loadNonCrmLibraryForCrmId Couch view', function(){
 
         var testLibraryNonCrm = {
             type: 'LibraryNonCrm',
-            crmId: 10,
+            crmId: '10',
             ipAddresses: 'test'
         };
 

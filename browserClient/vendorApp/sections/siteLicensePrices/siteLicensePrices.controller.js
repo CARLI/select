@@ -23,13 +23,17 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
         };
 
         vm.loadingPromise = loadLibraries()
-            .then(loadProducts)
+            .then(initializePricingGrid);
+    }
+
+    function initializePricingGrid(){
+        return loadProducts()
             .then(buildPriceArray)
             .then(buildPricingGrid);
     }
 
     function loadLibraries() {
-        return libraryService.list().then(function (libraries) {
+        return libraryService.listActiveLibraries().then(function (libraries) {
             vm.libraries = $filter('orderBy')(libraries, 'name');
             initializeSelectedLibraryIds();
         });
@@ -81,7 +85,6 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     }
 
     function buildPriceArray() {
-
         vm.offeringsForLibraryByProduct = {};
 
         vm.products.forEach(function (product) {
@@ -94,6 +97,8 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     }
 
     function buildPricingGrid() {
+        $('.pricing-grid .price-row:not(.product-name-row):not(.price-cap)').remove();
+
         vm.libraries.forEach(function (library) {
             var row = generateLibraryRow(library);
             vm.products.forEach(function (product) {
@@ -108,8 +113,8 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             return row;
         }
         function generateOfferingCell(library, product) {
-            var offering = vm.offeringsForLibraryByProduct[product.id][library.id] || { pricing: { site: 0 }};
-            var price = offering.pricing.site;
+            var offering = vm.offeringsForLibraryByProduct[product.id][library.id] || { pricing: { site: '&nbsp;' }};
+            var price = offering.pricing.site || '&nbsp;';
             var offeringWrapper = $('<div class="column offering input">');
             if (offering.flagged) {
                 offeringWrapper.addClass('flagged');
@@ -166,6 +171,10 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             var offering = vm.offeringsForLibraryByProduct[productId][libraryId];
             var newPrice = parseFloat( offeringCell.text() );
 
+            if ( isNaN(newPrice) ){
+                newPrice = 0;
+            }
+
             if ($(element).is(":visible")) {
                 if ( !offering ){
                     if ( newPrice !== 0 ){
@@ -204,20 +213,38 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     }
 
     function saveAllOfferings( newOfferings, changedOfferings ){
-        var deferred = $q.defer();
-
-        $q.all( [ saveAllNewOfferings(newOfferings), saveAllChangedOfferings(changedOfferings) ] )
+        return $q.all([
+                saveAllNewOfferings(newOfferings),
+                saveAllChangedOfferings(changedOfferings)
+            ])
             .then(function(arrays){
-                var count = arrays[0].length + arrays[1].length;
-                console.log('saved '+count+' offerings');
-                deferred.resolve();
+                var newOfferingsCreated = arrays[0].length;
+                var oldOfferingsUpdated = arrays[1].length;
+                var count = newOfferingsCreated + oldOfferingsUpdated;
+
+                console.log('created '+newOfferingsCreated+' new offerings');
+                console.log('updated '+oldOfferingsUpdated+' old offerings');
+
+                if ( count ){
+                    return initializePricingGrid();
+                }
+                else {
+                    return $q.when();
+                }
             })
             .catch(function(err){
-                console.log(err);
-                deferred.reject(err);
-            });
+                console.log('error saving offerings',err);
+            })
+            .then(syncData)
+            .catch(syncDataError);
 
-        return deferred.promise;
+        function syncData(){
+            return cycleService.syncDataBackToCarli();
+        }
+
+        function syncDataError( err ){
+            console.log( 'error syncing data',err );
+        }
     }
 
     function quickPricingCallback(mode, value) {

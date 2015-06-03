@@ -18,5 +18,6 @@ module.exports = {
     MemoryStore: require('../CARLI/Store/MemoryStore'),
     FileStore: require('../CARLI/Store/FileStore'),
     CouchDbStore: require('../CARLI/Store/CouchDb/Store'),
-    Validator: require('../CARLI/Validator')
+    Validator: require('../CARLI/Validator'),
+    VendorDatabaseMiddleware: require('../middleware/browserAdapters/vendorDatabases.js')
 };

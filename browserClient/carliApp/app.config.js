@@ -6,6 +6,7 @@ angular.module('carli.app', [
     'common.alerts',
     'common.errorHandler',
     'common.fa',
+    'common.modalDialog',
     'common.warnIfUnsaved',
     'carli.admin',
     'carli.carliHeader',

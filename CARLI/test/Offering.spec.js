@@ -373,7 +373,7 @@ function runOfferingSpecificTests(testCycle) {
             it('should return a list of offering id created for the specified product and libraries', function(){
                 testProductId = 'test-product-id';
                 testVendorId = 'test-vendor-id';
-                testLibraryIds = [ 1, 2, 3 ];
+                testLibraryIds = [ '1', '2', '3' ];
 
                 return OfferingRepository.createOfferingsFor( testProductId, testVendorId, testLibraryIds, testCycle )
                     .then(function( offeringIds ){

@@ -27,7 +27,10 @@ module.exports = function (grunt) {
     });
     grunt.registerTask('deploy-cycle-design-docs', function() {
         var done = this.async();
-        deployDb.deployLocalCycleDesignDocs().then(done);
+        deployDb.deployLocalCycleDesignDocs().then(done)
+            .catch(function(err){
+                console.log('error deploying Local Cycle Design Docs',err);
+            });
     });
     grunt.registerTask('fixture-data', function() {
         grunt.task.run(['subdir-exec:'+projectRoot+'/db:./fixtures.js']);

@@ -1,9 +1,12 @@
 var config = require('../config');
 var CycleRepository = require('../CARLI/Entity/CycleRepository');
+var cycleRepositoryForVendor = require('../CARLI/Entity/CycleRepositoryForVendor');
 var couchApp = require('../middleware/components/couchApp');
 var request = require('request');
 var Q = require('q');
 var dbInfo = require('./databaseInfo');
+var vendorRepository = require('../CARLI/Entity/VendorRepository');
+
 
 var projectRoot = __dirname + '/..';
 
@@ -58,14 +61,33 @@ function deployAppDesignDoc(instance) {
     return couchApp.putDesignDoc(instance.mainDbName, 'CARLI');
 }
 
-function deployLocalCycleDesignDocs(instance) {
+function deployLocalCycleDesignDocs() {
     return CycleRepository.list().then(function (cycles) {
         var promises = [];
         cycles.forEach(function (cycle) {
             promises.push( couchApp.putDesignDoc(cycle.getDatabaseName(), 'Cycle') );
+            promises.push( deployLocalCycleDesignDocsForVendorDatabases(cycle ) );
         });
         return Q.all(promises);
     });
+}
+
+function deployLocalCycleDesignDocsForVendorDatabases( cycle ) {
+    return vendorRepository.list()
+        .then(function (vendors) {
+            return Q.all( vendors.map(pushDesignDocForVendor) );
+        });
+
+        function pushDesignDocForVendor(vendor) {
+            var repoForVendor = cycleRepositoryForVendor(vendor);
+            return repoForVendor.load(cycle.id)
+                .then(function(cycleForVendor){
+                    return couchApp.putDesignDoc( cycleForVendor.getDatabaseName(), 'Cycle' )
+                        .catch(function(err){
+                            console.log('error deploying '+vendor.id+' design doc: ',err);
+                        });
+                })
+        }
 }
 
 if (require.main === module) {
@@ -77,6 +99,6 @@ if (require.main === module) {
         deployDb: deployDb,
         createOneTimePurchaseCycle: createOneTimePurchaseCycle,
         deployLocalAppDesignDoc: deployLocalAppDesignDoc,
-        deployLocalCycleDesignDocs: deployLocalCycleDesignDocs,
+        deployLocalCycleDesignDocs: deployLocalCycleDesignDocs
     };
 }

@@ -8,6 +8,7 @@ function cycleService( CarliModules, config, $q, appState, errorHandler, userSer
         throw new Error('Cycle Service was initialized without a valid user');
     }
     var cycleModule = CarliModules.Cycle(currentUser.vendor);
+    var VendorDatabaseModule = CarliModules.VendorDatabaseMiddleware;
 
     var currentCycle = null;
 
@@ -15,8 +16,10 @@ function cycleService( CarliModules, config, $q, appState, errorHandler, userSer
         listActiveCycles: listActiveCycles,
         load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ).catch(errorHandler); },
         getCurrentCycle: getCurrentCycle,
-        setCurrentCycle: setCurrentCycle
+        setCurrentCycle: setCurrentCycle,
+        syncDataBackToCarli: syncDataBackToCarli
     };
+
 
     function listActiveCycles() {
         return $q.when( cycleModule.listActiveCycles())
@@ -45,5 +48,9 @@ function cycleService( CarliModules, config, $q, appState, errorHandler, userSer
     function setCurrentCycle(cycleObject) {
         appState.setCycle(cycleObject);
         currentCycle = cycleObject;
+    }
+
+    function syncDataBackToCarli(){
+        return $q.when( VendorDatabaseModule.replicateDataFromVendorsForCycle( currentCycle.id ) );
     }
 }

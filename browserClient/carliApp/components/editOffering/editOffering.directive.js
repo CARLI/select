@@ -1,5 +1,5 @@
 angular.module('carli.editOffering')
-    .directive('editOffering', function (alertService, errorHandler, offeringService) {
+    .directive('editOffering', function (alertService, cycleService, errorHandler, offeringService) {
         return {
             restrict: 'E',
             scope: {
@@ -55,11 +55,17 @@ angular.module('carli.editOffering')
                         workaroundCouchStoreRevisionSmell(updatedOffering);
                         alertService.putAlert('Offering updated', {severity: 'success'});
                         vm.notifyParentOfSave(vm.offering);
-                    }).catch(errorHandler);
+                    })
+                    .then(syncData)
+                    .catch(errorHandler);
 
                 function updateOfferingFlaggedStatus( offering ){
                     offering.flagged = offeringService.getFlaggedState(offering);
                     return offering;
+                }
+
+                function syncData(){
+                    return cycleService.syncDataToVendorDatabase(vm.offering.vendorId);
                 }
 
                 function keepValidSuPricingRows(){

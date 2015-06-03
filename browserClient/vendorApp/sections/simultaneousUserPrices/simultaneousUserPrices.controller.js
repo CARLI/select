@@ -3,11 +3,17 @@ angular.module('vendor.sections.simultaneousUserPrices')
 
 function simultaneousUserPricesController($scope, $q, $filter, cycleService, offeringService, productService, userService){
     var vm = this;
+    vm.changedProductIds = {};
     vm.loadingPromise = null;
-    vm.suPricingByProduct = {};
-    vm.suLevels = [];
+    vm.productsSaved = 0;
+    vm.productsSavedProgress = 0;
+
     vm.selectedProductIds = {};
     vm.selectedSuLevelIds = {};
+    vm.suPricingByProduct = {};
+    vm.suLevels = [];
+    vm.totalProducts = 0;
+
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.addSuPricingLevel = addSuPricingLevel;
     vm.saveOfferings = saveOfferings;
@@ -39,8 +45,10 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
         return $q.all( productList.map(loadSuLevelsForProduct) );
 
         function loadSuLevelsForProduct( product ){
-            return offeringService.getOneOfferingForProductId(product.id).then(function(representativeOffering){
-                var suPricingForProduct = representativeOffering ? representativeOffering.pricing.su : [];
+            return offeringService.getOneOfferingForProductId(product.id).then(function(offering){
+                var representativeOffering = offering || {};
+                var pricingForProduct = representativeOffering.pricing || {};
+                var suPricingForProduct = pricingForProduct.su || [];
 
                 vm.suPricingByProduct[product.id] = convertArrayOfPricingObjectsToMappingObject(suPricingForProduct);
 
@@ -144,9 +152,10 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
         return row;
 
         function generateOfferingCell(suLevel, product) {
-            var priceForProduct = vm.suPricingByProduct[product.id][suLevel.users] || 0;
+            var priceForProduct = vm.suPricingByProduct[product.id][suLevel.users];
             var offeringWrapper = $('<div class="column offering input">');
-            var offeringCell = offeringWrapper.append(createReadOnlyOfferingCell(priceForProduct));
+            var offeringCellContent = createOfferingCellContent(priceForProduct);
+            var offeringCell = offeringWrapper.append(offeringCellContent);
 
             offeringWrapper.on('click', function() {
                 $(this).children().first().focus();
@@ -159,28 +168,55 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
         }
     }
 
+    function createOfferingCellContent(price){
+        if ( price > 0 || price === 0 ){
+            return createReadOnlyOfferingCell(price);
+        }
+        else {
+            return createEmptyOfferingCell();
+        }
+    }
+
     function createReadOnlyOfferingCell(price) {
         var cell = $('<div tabindex="0" class="price">'+price+'</div>');
         cell.on('focus', makeEditable);
         return cell;
-
-        function makeEditable() {
-            var price = $(this).text();
-            var input = createEditableOfferingCell(price);
-            $(this).replaceWith(input);
-            input.focus().select();
-        }
     }
+
+    function createEmptyOfferingCell(){
+        var cell = $('<div tabindex="0" class="price no-pricing">&nbsp;</div>');
+        cell.on('focus', makeEditable);
+        return cell;
+    }
+
     function createEditableOfferingCell(price) {
         var cell = $('<input class="price-editable" type="text" step=".01" min="0" value="' + price + '">');
         cell.on('blur', makeReadOnly);
         return cell;
+    }
 
-        function makeReadOnly() {
-            var price = $(this).val();
-            var div = createReadOnlyOfferingCell(price);
-            $(this).replaceWith(div);
-        }
+    function makeEditable() {
+        var price = $(this).text();
+        var input = createEditableOfferingCell(price);
+        $(this).replaceWith(input);
+        input.focus().select();
+    }
+
+    function makeReadOnly() {
+        var $cell = $(this);
+        markProductChangedForCell( $cell.parent() );
+        var price = $cell.val();
+        var div = createOfferingCellContent(price);
+        $cell.replaceWith(div);
+    }
+
+    function markProductChangedForCell( jqueryCell ){
+        var classList = jqueryCell.attr('class').split(/\s+/);
+        classList.forEach(function(className){
+            if ( className !== 'column' && className !== 'offering' && className !== 'input' ){
+                vm.changedProductIds[className] = true;
+            }
+        });
     }
 
     function saveOfferings(){
@@ -194,24 +230,91 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
                 var $productCellForSu = $('.price-row.su-'+users+' .'+product.id);
                 var newPrice = parseFloat( $productCellForSu.text() );
 
-                newSuPricingByProduct[product.id].push({
-                    users: users,
-                    price: newPrice
-                });
+                if ( !isNaN(newPrice) ){
+                    newSuPricingByProduct[product.id].push({
+                        users: users,
+                        price: newPrice
+                    });
+                }
             });
         });
 
-        return $q.all( vm.products.map(updateOfferingsForAllLibrariesForProduct) )
-            .then(function(){
-                console.log('saved '+vm.products.length+' products');
-            })
-            .catch(function(err){
-                console.error(err);
+        var productIdsToUpdate = Object.keys(vm.changedProductIds).filter(function(id){
+            return vm.changedProductIds[id];
+        });
+
+        if ( productIdsToUpdate.length < 4 ){
+            vm.loadingPromise = updateChangedProductsConcurrently();
+        }
+        else {
+            vm.loadingPromise = updateChangedProductsSeriallyWithProgressBar();
+        }
+
+        return vm.loadingPromise;
+
+
+        function updateChangedProductsConcurrently(){
+            return $q.all( productIdsToUpdate.map(updateOfferingsForAllLibrariesForProduct) )
+                .then(syncData)
+                .then(function(){
+                    vm.changedProductIds = {};
+                    console.log('saved '+productIdsToUpdate.length+' products');
+                })
+                .catch(function(err){
+                    console.error(err);
+                });
+        }
+
+        function updateChangedProductsSeriallyWithProgressBar(){
+            var saveAllProductsPromise = $q.defer();
+
+            vm.productsSaved = 0;
+            vm.productsSavedProgress = 0;
+            vm.totalProducts = productIdsToUpdate.length;
+
+            $('#progress-modal').modal({
+                backdrop: 'static',
+                keyboard: false
             });
 
-        function updateOfferingsForAllLibrariesForProduct( product ){
-            var newSuPricing = newSuPricingByProduct[product.id];
-            return offeringService.updateSuPricingForAllLibrariesForProduct(product.id, newSuPricing );
+            $scope.warningForm.$setDirty();
+
+            saveNextProduct();
+
+            function saveNextProduct(){
+                if ( vm.productsSaved === vm.totalProducts ){
+                    serialSaveFinished();
+                    return;
+                }
+
+                return updateOfferingsForAllLibrariesForProduct( productIdsToUpdate[vm.productsSaved] )
+                    .then(function(){
+                        vm.productsSaved++;
+                        vm.productsSavedProgress = Math.floor((vm.productsSaved / vm.totalProducts) * 100);
+                        saveNextProduct();
+                    });
+            }
+
+            return saveAllProductsPromise.promise;
+
+
+            function serialSaveFinished(){
+                return syncData() //Enhancement: get couch replication job progress, show it in the 2nd progress bar
+                    .then(function(){
+                        $('#progress-modal').modal('hide');
+                        $scope.warningForm.$setPristine();
+                        saveAllProductsPromise.resolve();
+                    });
+            }
+        }
+
+        function updateOfferingsForAllLibrariesForProduct( productId ){
+            var newSuPricing = newSuPricingByProduct[productId];
+            return offeringService.updateSuPricingForAllLibrariesForProduct(productId, newSuPricing );
+        }
+
+        function syncData(){
+            return cycleService.syncDataBackToCarli();
         }
     }
 
@@ -249,6 +352,7 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
                 };
             });
 
+
             suLevelPricesToInsert.forEach(applySuPricingToSelectedProducts);
         }
         else {
@@ -271,7 +375,8 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
                 var productId = $cell.data('productId');
 
                 if ( productIsSelected(productId) ){
-                    $('.price', $cell).text(price);
+                    $('.price', $cell).text(price).removeClass('no-pricing');
+                    markProductChanged(productId);
                 }
             });
         }
@@ -292,13 +397,18 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
                     var originalValue = parseFloat($cell.text());
                     var newValue = (100 + percentIncrease)/100 * originalValue;
                     // TODO round this to the nearest cent?
-                    $('.price', $cell).text( newValue );
+                    $('.price', $cell).text( newValue ).removeClass('no-pricing');
+                    markProductChanged(productId);
                 }
             });
         }
 
         function productIsSelected(productId){
             return vm.selectedProductIds[productId];
+        }
+
+        function markProductChanged( productId ){
+            vm.changedProductIds[productId] = true;
         }
     }
 }

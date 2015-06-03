@@ -10,7 +10,7 @@
         },
         "crmId": {
             "description": "The id from the CRM database",
-            "type": "integer"
+            "type": "string"
         },
         "fte": {
             "description": "Full-time Enrollment of Library",

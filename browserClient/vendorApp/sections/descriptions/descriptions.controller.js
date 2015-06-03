@@ -50,7 +50,6 @@ function descriptionsController( $scope, $rootScope, $q, cycleService, productSe
 
     function saveProducts(){
         var changedProducts = listChangedProducts();
-        console.time('saveProducts', changedProducts);
 
         var cycle = cycleService.getCurrentCycle();
         var saveAllProducts = $q.all( changedProducts.map(saveProduct) );
@@ -62,16 +61,25 @@ function descriptionsController( $scope, $rootScope, $q, cycleService, productSe
 
         return saveAllProducts
             .then(alertSuccess)
-            .catch(alertError);
+            .catch(alertError)
+            .then(syncData)
+            .catch(syncDataError);
 
         function alertSuccess(){
-            console.timeEnd('saveProducts');
             console.log('saved '+changedProducts.length+' products');
             activate();
         }
 
         function alertError( err ){
             console.log( err );
+        }
+
+        function syncData(){
+            return cycleService.syncDataBackToCarli();
+        }
+
+        function syncDataError( err ){
+            console.log( 'error syncing data',err );
         }
     }
 }

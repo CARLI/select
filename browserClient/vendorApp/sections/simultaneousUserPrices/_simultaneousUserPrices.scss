@@ -40,3 +40,9 @@
         margin-top: 1rem;
     }
 }
+
+#progress-modal {
+    button.close {
+        display: none;
+    }
+}

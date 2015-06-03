@@ -31,7 +31,7 @@ module.exports = function (timeout) {
 
             function loadLibrary(id){
                 return crmQueries.loadLibrary(id).then(function(library){
-                    library.id = library.crmId.toString();
+                    library.id = library.crmId;
                     return library;
                 });
             }

@@ -260,11 +260,20 @@ function editProductController( $q, $scope, $rootScope, $filter, alertService, e
     function saveProduct(){
         translateOptionalSelections();
 
+        var savePromise = $q.when();
+
         if (vm.productId === undefined) {
-            return saveNewProduct();
+            savePromise = saveNewProduct();
         } else {
             savePreviousName();
-            return saveExistingProduct();
+            savePromise = saveExistingProduct();
+        }
+
+        return savePromise
+            .then(syncData);
+
+        function syncData(){
+            return cycleService.syncDataToVendorDatabase( vm.product.vendor.id, vm.product.cycle );
         }
     }
 

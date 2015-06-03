@@ -117,6 +117,11 @@ function runMiddlewareServer(){
                 .then(sendOk(res))
                 .catch(sendError(res));
         });
+        carliMiddleware.post('/replicate-data-to-one-vendor-for-cycle/:vendorId/:cycleId', function(req, res) {
+            vendorDatabases.replicateDataToOneVendorForCycle(req.params.vendorId,req.params.cycleId)
+                .then(sendOk(res))
+                .catch(sendError(res));
+        });
         carliMiddleware.post('/replicate-data-from-vendors-for-cycle/:cycleId', function (req, res) {
             vendorDatabases.replicateDataFromVendorsForCycle(req.params.cycleId)
                 .then(sendOk(res))
