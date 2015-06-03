@@ -43,15 +43,29 @@ function replicateDataToVendorsForCycle(cycleId) {
         .thenResolve(cycleId);
 
     function replicateDataToVendors(vendors) {
-        return Q.all( vendors.map(replicateData) );
+        return Q.all( vendors.map(replicateDataToVendor) );
 
-        function replicateData(vendor) {
+        function replicateDataToVendor(vendor) {
             var repoForVendor = cycleRepositoryForVendor(vendor);
             return repoForVendor.load(cycleId)
                 .then(function (cycleForVendor) {
                     return cycleForVendor.replicateFromSource();
                 });
         }
+    }
+}
+
+function replicateDataToOneVendorForCycle(vendorId, cycleId){
+    return vendorRepository.load(vendorId)
+        .then(replicateDataToVendor)
+        .thenResolve(cycleId);
+
+    function replicateDataToVendor(vendor){
+        var repoForVendor = cycleRepositoryForVendor(vendor);
+        return repoForVendor.load(cycleId)
+            .then(function (cycleForVendor) {
+                return cycleForVendor.replicateFromSource();
+            });
     }
 }
 
@@ -256,6 +270,7 @@ module.exports = {
     createVendorDatabasesForCycle: createVendorDatabasesForCycle,
     replicateDataToVendorsForAllCycles: replicateDataToVendorsForAllCycles,
     replicateDataToVendorsForCycle: replicateDataToVendorsForCycle,
+    replicateDataToOneVendorForCycle: replicateDataToOneVendorForCycle,
     replicateDataFromVendorsForAllCycles: replicateDataFromVendorsForAllCycles,
     replicateDataFromVendorsForCycle: replicateDataFromVendorsForCycle,
     syncEverything: syncEverything,

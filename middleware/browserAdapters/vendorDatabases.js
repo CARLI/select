@@ -28,6 +28,13 @@ function replicateDataToVendorsForCycle(cycleId) {
     });
 }
 
+function replicateDataToOneVendorForCycle(vendorId,cycleId) {
+    return middlewareRequest({
+        path: '/replicate-data-to-one-vendor-for-cycle/' + vendorId + '/' + cycleId,
+        method: 'post'
+    });
+}
+
 function replicateDataFromVendorsForAllCycles() {
     return middlewareRequest({
         path: '/replicate-all-data-from-vendors',
@@ -88,6 +95,7 @@ module.exports = {
     createVendorDatabasesForCycle: createVendorDatabasesForCycle,
     replicateDataToVendorsForAllCycles: replicateDataToVendorsForAllCycles,
     replicateDataToVendorsForCycle: replicateDataToVendorsForCycle,
+    replicateDataToOneVendorForCycle: replicateDataToOneVendorForCycle,
     replicateDataFromVendorsForAllCycles: replicateDataFromVendorsForAllCycles,
     replicateDataFromVendorsForCycle: replicateDataFromVendorsForCycle,
     syncEverything: syncEverything,
