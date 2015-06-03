@@ -2,28 +2,28 @@ angular.module('carli.mockCycleService', [])
     .factory('mockCycleService', function mockCycleService($q) {
 
         return {
-            load: function(){
-                var deferred = $q.defer();
-
-                deferred.resolve({
-                    id: '',
-                    cycleType: 'Fiscal Year'
-                });
-
-                return deferred.promise;
-            },
-            setCurrentCycle: function(){
-
-            },
-            getCurrentCycle: function(){
-                return {};
-            },
-            listActiveCycles: function(){
-                var deferred = $q.defer();
-
-                deferred.resolve([]);
-
-                return deferred.promise;
-            }
+            cycleDefaults: noOp,
+            list: promiseNoOp,
+            listActiveCycles: promiseNoOp,
+            listActiveCyclesOfType: promiseNoOp,
+            listActiveSubscriptionCycles: promiseNoOp,
+            create: promiseNoOp,
+            createCycleFrom: promiseNoOp,
+            getCycleCreationStatus: promiseNoOp,
+            getCycleDatabaseStatuses: promiseNoOp,
+            update: promiseNoOp,
+            load:   promiseNoOp,
+            getCurrentCycle: noOp,
+            setCurrentCycle: noOp,
+            initCurrentCycle: noOp,
+            syncDataToVendorDatabase: promiseNoOp,
+            syncDataToAllVendorDatabases: promiseNoOp,
+            syncDataToAllVendorDatabasesForCycle: promiseNoOp
         };
+
+        function noOp(){}
+
+        function promiseNoOp(){
+            return $q.when([]);
+        }
     });

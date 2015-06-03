@@ -11,6 +11,9 @@ describe('The Edit Product Controller', function(){
                 id: '',
                 cycleType: 'Fiscal Year'
             },
+            vendor: {
+                id: ''
+            },
             isActive: true
         }
     ];
