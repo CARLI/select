@@ -29,7 +29,6 @@ var validTypes = [
     'user',
     'Vendor',
     'VendorStatus'
-    'Vendor'
 ];
 
 describe( 'The Validator Module', function() {
