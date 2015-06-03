@@ -212,7 +212,7 @@ module.exports = function (storeOptions) {
 
         var dbType = (dbName == storeOptions.couchDbName) ? 'CARLI' : 'Cycle';
 
-        request.put(storeOptions.couchDbUrl + '/' + dbName,  function(error, response, body) {
+        request.put(storeOptions.privilegedCouchDbUrl + '/' + dbName,  function(error, response, body) {
             if (error) {
                 deferred.reject(error);
             } else if (response.statusCode >= 200 && response.statusCode <= 299) {
@@ -259,7 +259,7 @@ module.exports = function (storeOptions) {
 
             function couchReplicationOptions() {
                 return {
-                    url: storeOptions.couchDbUrl + '/_replicate',
+                    url: storeOptions.privilegedCouchDbUrl + '/_replicate',
                     method: 'post',
                     json: {
                         source: sourceDbName,
@@ -296,7 +296,7 @@ module.exports = function (storeOptions) {
 
                 function couchReplicationOptions() {
                     return {
-                        url: storeOptions.couchDbUrl + '/_replicate',
+                        url: storeOptions.privilegedCouchDbUrl + '/_replicate',
                         method: 'post',
                         json: {
                             source: sourceDbName,
@@ -320,11 +320,11 @@ module.exports = function (storeOptions) {
 
         function getReplicationRequestOptions(sourceDbName, targetDbName) {
             return {
-                url: storeOptions.couchDbUrl + '/_replicator',
+                url: storeOptions.privilegedCouchDbUrl + '/_replicator',
                 method: 'post',
                 json: {
-                    source: storeOptions.couchDbUrl + '/' + sourceDbName,
-                    target: storeOptions.couchDbUrl + '/' + targetDbName,
+                    source: storeOptions.privilegedCouchDbUrl + '/' + sourceDbName,
+                    target: storeOptions.privilegedCouchDbUrl + '/' + targetDbName,
                     filter: "CARLI/filterCycleDatabaseForVendor",
                     query_params: {"vendorId": vendorId},
                     continuous: true
@@ -335,7 +335,7 @@ module.exports = function (storeOptions) {
 
     function getVendorDatabaseReplicationStatus(databaseName, since, vendorId) {
         var requestOptions = {
-            url: storeOptions.couchDbUrl + '/' + databaseName + '/_changes' +
+            url: storeOptions.privilegedCouchDbUrl + '/' + databaseName + '/_changes' +
                 '?since=' + since + '&filter=CARLI/filterCycleDatabaseForVendor&vendorId='+vendorId,
             method: 'get'
         };
