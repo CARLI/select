@@ -26,7 +26,7 @@ describe('Couch utilities', function () {
             return couchUtils.createDatabase(sourceDbName)
                 .then(function () {
                     return couchUtils.couchRequest({
-                        url: storeOptions.couchDbUrl + '/' + sourceDbName + '/' + testDocId,
+                        url: storeOptions.privilegedCouchDbUrl + '/' + sourceDbName + '/' + testDocId,
                         method: 'put',
                         json: { id: testDocId }
                     });
@@ -39,7 +39,7 @@ describe('Couch utilities', function () {
                 })
                 .then(function() {
                     var requestPromise = couchUtils.couchRequest({
-                        url: storeOptions.couchDbUrl + '/' + targetDbName + '/' + testDocId,
+                        url: storeOptions.privilegedCouchDbUrl + '/' + targetDbName + '/' + testDocId,
                         method: 'get'
                     });
                     return expect(requestPromise).to.be.fulfilled
@@ -57,21 +57,21 @@ describe('Couch utilities', function () {
             return couchUtils.createDatabase(testDbName)
                 .then(function () {
                     return couchUtils.couchRequest({
-                        url: storeOptions.couchDbUrl + '/' + testDbName + '/' + testIds[0],
+                        url: storeOptions.privilegedCouchDbUrl + '/' + testDbName + '/' + testIds[0],
                         method: 'put',
                         json: { id: testIds[0] }
                     });
                 })
                 .then(function () {
                     return couchUtils.couchRequest({
-                        url: storeOptions.couchDbUrl + '/' + testDbName + '/' + testIds[1],
+                        url: storeOptions.privilegedCouchDbUrl + '/' + testDbName + '/' + testIds[1],
                         method: 'put',
                         json: { id: testIds[1] }
                     });
                 })
                 .then(function () {
                     return couchUtils.couchRequest({
-                        url: storeOptions.couchDbUrl + '/' + testDbName + '/' + testIds[2],
+                        url: storeOptions.privilegedCouchDbUrl + '/' + testDbName + '/' + testIds[2],
                         method: 'put',
                         json: { id: testIds[2] }
                     });
@@ -86,7 +86,7 @@ describe('Couch utilities', function () {
     describe('couchViewUrl', function(){
         var testDbName = 'testDb';
         var testViewName = 'testView';
-        var testUrl = storeOptions.couchDbUrl + '/' + testDbName + '/' + '_design/CARLI/_view/' + testViewName;
+        var testUrl = storeOptions.privilegedCouchDbUrl + '/' + testDbName + '/' + '_design/CARLI/_view/' + testViewName;
 
         it('should return the base for the correct database and view if given no additional arguments', function(){
             expect(couchUtils.couchViewUrl(testDbName, testViewName)).to.equal(testUrl);

@@ -40,7 +40,7 @@ describe('Additional Repository Functions', function() {
     describe('createCycle', function () {
         //'it' refers to the test.run() block above. At least one of those should have created a cycle DB
         it('should have created a new couch database', function(done) {
-            request(storeOptions.couchDbUrl + '/cycle-'+ testUtils.testDbMarker +'-fiscal-year-' + uniqueCycleNameSuffix,  function(error, response, body) {
+            request(storeOptions.privilegedCouchDbUrl + '/cycle-'+ testUtils.testDbMarker +'-fiscal-year-' + uniqueCycleNameSuffix,  function(error, response, body) {
                 expect(response.statusCode).to.equal(200);
                 done();
             });

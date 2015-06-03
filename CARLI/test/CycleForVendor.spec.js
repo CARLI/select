@@ -79,7 +79,7 @@ describe('Cycle repository for a specific vendor', function() {
             function checkForSuccessfulDatabaseCreation(loadedCycle){
                 var result = Q.defer();
 
-                request(storeOptions.couchDbUrl + '/' + loadedCycle.getDatabaseName(), function (error, response, body) {
+                request(storeOptions.privilegedCouchDbUrl + '/' + loadedCycle.getDatabaseName(), function (error, response, body) {
                     if ( response.statusCode === 200){
                         result.resolve(true);
                     }
