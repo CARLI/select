@@ -65,7 +65,7 @@ angular.module('carli.editOffering')
                 }
 
                 function syncData(){
-                    return cycleService.syncDataToAllVendorDatabases();
+                    return cycleService.syncDataToVendorDatabase(vm.offering.vendorId);
                 }
 
                 function keepValidSuPricingRows(){

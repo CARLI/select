@@ -46,6 +46,7 @@ function cycleService( CarliModules, $q, errorHandler ) {
                 currentCycle = cycleList[0];
             });
         },
+        syncDataToVendorDatabase: syncDataToVendorDatabase,
         syncDataToAllVendorDatabases: syncDataToAllVendorDatabases,
         syncDataToAllVendorDatabasesForCycle: syncDataToAllVendorDatabasesForCycle
     };
@@ -105,6 +106,11 @@ function cycleService( CarliModules, $q, errorHandler ) {
 
     function setCurrentCycle(cycleObject) {
         currentCycle = cycleObject;
+    }
+
+    function syncDataToVendorDatabase(vendorId, cycle){
+        var cycleId = cycle ? cycle.id : currentCycle.id;
+        return $q.when( VendorDatabaseModule.replicateDataToOneVendorForCycle(vendorId, cycleId) );
     }
 
     function syncDataToAllVendorDatabases(){
