@@ -16,8 +16,8 @@
     "tv4-formats": "^1.0.0"
   },
   "devDependencies": {
-    "chai": "*",
-    "chai-as-promised": "*",
+    "chai": "2",
+    "chai-as-promised": "2",
     "mocha": "^1.21.5",
     "mocha-jenkins-reporter": "^0.1.2",
     "moment": "^2.8.4",
