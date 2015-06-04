@@ -1,4 +1,5 @@
 var config = require('../config');
+var carliError = require('../CARLI/Error');
 var CycleRepository = require('../CARLI/Entity/CycleRepository');
 var cycleRepositoryForVendor = require('../CARLI/Entity/CycleRepositoryForVendor');
 var couchApp = require('../middleware/components/couchApp');
@@ -21,7 +22,6 @@ function recreateDb(dbName) {
     request.del(dbUrl, function () {
         request.put(dbUrl, function (err) {
             if (err) {
-                console.log("Error creating database '"+dbName+"':" + err);
                 deferred.reject(err);
             } else {
                 console.log("Created database " + dbName);
@@ -29,6 +29,7 @@ function recreateDb(dbName) {
             }
         });
     });
+
     return deferred.promise;
 }
 
@@ -46,6 +47,35 @@ function deployDb(dbName) {
     function addDesignDoc() {
         return couchApp.putDesignDoc(dbName, 'CARLI');
     }
+}
+
+function createAdminUser() {
+    var deferred = Q.defer();
+
+    request.put({
+        url: config.storeOptions.couchDbUrl + '/_config/admins/' + config.storeOptions.privilegedCouchUsername,
+        body: '"' + config.storeOptions.privilegedCouchPassword + '"'
+    }, handleCouchResponse);
+
+    function handleCouchResponse(error, response, body) {
+        var data;
+
+        if (error) {
+            deferred.reject(carliError(error, response.statusCode));
+        }
+        else {
+            data = (typeof body === 'string') ? JSON.parse(body) : body;
+        }
+
+        if (data && data.error) {
+            console.log('Error creating admin user', carliError(data, response.statusCode));
+            deferred.reject(carliError(data, response.statusCode));
+        }
+        else {
+            deferred.resolve(data);
+        }
+    }
+    return deferred.promise;
 }
 
 function createOneTimePurchaseCycle(cycleName, store) {
@@ -125,6 +155,7 @@ if (require.main === module) {
     // required as a module
     module.exports = {
         deployDb: deployDb,
+        createAdminUser: createAdminUser,
         createOneTimePurchaseCycle: createOneTimePurchaseCycle,
         deployLocalAppDesignDoc: deployLocalAppDesignDoc,
         deployLocalCycleDesignDocs: deployLocalCycleDesignDocs

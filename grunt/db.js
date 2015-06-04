@@ -3,6 +3,14 @@ module.exports = function (grunt) {
     var projectRoot = __dirname + '/..';
     var deployDb = require(projectRoot+'/db/deploy.js');
 
+    grunt.registerTask('bootstrap-db', [
+        'create-admin-user',
+        'deploy-db'
+    ]);
+    grunt.registerTask('create-admin-user', function createAdminUser() {
+        var done = this.async();
+        deployDb.createAdminUser().then(done);
+    });
     grunt.registerTask('deploy-db', [
         'deploy-app-db',
         'deploy-otp-cycle'

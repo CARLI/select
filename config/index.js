@@ -11,9 +11,12 @@ var defaults = {
         port: 3000
     },
     storeOptions: {
-        couchDbUrl: 'http://staff.carli.local:8080/db',
         couchDbName: couchDbName,
-        privilegedCouchDbUrl: 'http://admin:relax@localhost:5984'
+        couchDbUrl: 'http://staff.carli.local:8080/db',
+        privilegedCouchUsername: 'admin',
+        privilegedCouchPassword: 'relax',
+        privilegedCouchUrlScheme: 'http://',
+        privilegedCouchHostname: 'localhost:5984'
     },
     memberDb: {
         connectionLimit: 10,
@@ -33,13 +36,18 @@ var defaults = {
 
 var config = _.extend(defaults, localConfig);
 
-defaults.setDbName = function(name) {
+config.storeOptions.privilegedCouchDbUrl = config.storeOptions.privilegedCouchUrlScheme +
+    config.storeOptions.privilegedCouchUsername + ':' +
+    config.storeOptions.privilegedCouchPassword + '@' +
+    config.storeOptions.privilegedCouchHostname;
+
+config.setDbName = function(name) {
     couchDbName = name;
 };
-defaults.getDbName = function() {
+config.getDbName = function() {
     return couchDbName;
 };
-defaults.getMiddlewareUrl = function() {
+config.getMiddlewareUrl = function() {
     return config.middleware.url;
 };
 
