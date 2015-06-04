@@ -1,6 +1,7 @@
 var chai = require('chai');
 var expect = chai.expect;
 var config = require('../../config');
+var couchUtils = require('../Store/CouchDb/Utils');
 var cycleRepositoryCarli = require('../Entity/CycleRepository');
 var cycleRepositoryForVendor = require('../Entity/CycleRepositoryForVendor');
 var Q = require('q');
@@ -68,7 +69,7 @@ describe('Cycle repository for a specific vendor', function() {
 
         it('creates a new couch database', function () {
             return cycleRepositoryCarli.create(cycle)
-                .then(cycleRepositoryVendor.createDatabase)
+                .then(cycleRepositoryVendor.createDatabase, couchUtils.DB_TYPE_TEST)
                 .then(cycleRepositoryVendor.load)
                 .then(checkForSuccessfulDatabaseCreation)
                 .then(function(result){

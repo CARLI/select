@@ -23,7 +23,7 @@ describe('Couch utilities', function () {
             var targetDbName = testUtils.testDbMarker + '-replication-target-db';
             var testDocId = 'test-replication-document';
 
-            return couchUtils.createDatabase(sourceDbName)
+            return couchUtils.createDatabase(sourceDbName, couchUtils.DB_TYPE_TEST)
                 .then(function () {
                     return couchUtils.couchRequest({
                         url: storeOptions.privilegedCouchDbUrl + '/' + sourceDbName + '/' + testDocId,
@@ -32,7 +32,7 @@ describe('Couch utilities', function () {
                     });
                 })
                 .then(function() {
-                    return couchUtils.createDatabase(targetDbName);
+                    return couchUtils.createDatabase(targetDbName, couchUtils.DB_TYPE_TEST);
                 })
                 .then(function() {
                     return couchUtils.replicateFrom(sourceDbName).to(targetDbName);
@@ -54,7 +54,7 @@ describe('Couch utilities', function () {
             var testDbName = testUtils.testDbMarker + '-couch-docs';
             var testIds = [ uuid.v4(), uuid.v4(), uuid.v4() ];
 
-            return couchUtils.createDatabase(testDbName)
+            return couchUtils.createDatabase(testDbName, couchUtils.DB_TYPE_TEST)
                 .then(function () {
                     return couchUtils.couchRequest({
                         url: storeOptions.privilegedCouchDbUrl + '/' + testDbName + '/' + testIds[0],

@@ -42,7 +42,7 @@ function createCycleLog(msg, data) {
     }
 }
 
-function createCycle( cycle ) {
+function createCycle( cycle, databaseType ) {
     return CycleRepository.create(cycle, transformFunction)
         .then(loadCycle)
         .then(createDatabaseForCycle);
@@ -51,7 +51,7 @@ function createCycle( cycle ) {
         cycle.databaseName = couchUtils.makeValidCouchDbName('cycle-' + cycle.name);
         createCycleLog('Creating database for ' + cycle.name + ' with database ' + cycle.getDatabaseName());
 
-        return couchUtils.createDatabase(cycle.getDatabaseName())
+        return couchUtils.createDatabase(cycle.getDatabaseName(), databaseType)
             .then(function commit() {
                 createCycleLog('  Success creating database for ' + cycle.name);
                 return updateCycle( cycle );

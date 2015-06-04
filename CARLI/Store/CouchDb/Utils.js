@@ -207,7 +207,7 @@ module.exports = function (storeOptions) {
         return name;
     }
 
-    function createDatabase(dbName) {
+    function createDatabase(dbName, databaseType) {
         var deferred = Q.defer();
 
         var dbType = (dbName == storeOptions.couchDbName) ? 'CARLI' : 'Cycle';
@@ -216,8 +216,10 @@ module.exports = function (storeOptions) {
             if (error) {
                 deferred.reject(error);
             } else if (response.statusCode >= 200 && response.statusCode <= 299) {
-                couchApp.putDesignDoc(dbName, dbType).then(function () {
-                    deferred.resolve();
+                createSecurityDocumentForType(databaseType).then(function() {
+                    couchApp.putDesignDoc(dbName, dbType).then(function () {
+                        deferred.resolve();
+                    });
                 });
             } else {
                 console.log(body);
@@ -225,6 +227,10 @@ module.exports = function (storeOptions) {
             }
         });
         return deferred.promise;
+    }
+
+    function createSecurityDocumentForType(databaseType) {
+        return Q(true);
     }
 
     /**
@@ -416,6 +422,10 @@ module.exports = function (storeOptions) {
     }
 
     return {
+        DB_TYPE_TEST: 'db_type_test',
+        DB_TYPE_STAFF: 'db_type_staff',
+        DB_TYPE_VENDOR: 'db_type_vendor',
+
         couchViewUrl: couchViewUrl,
         createDatabase: createDatabase,
         couchRequest: couchRequest,
