@@ -11,7 +11,7 @@ var Entity = require('../Entity')
 var UserRepository = Entity('user');
 var userStoreOptions = {
     privilegedCouchDbUrl: StoreOptions.privilegedCouchDbUrl,
-    couchDbUrl: StoreOptions.couchDbUrl,
+    couchDbUrl: StoreOptions.privilegedCouchDbUrl,
     couchDbName: '_users'
 };
 UserRepository.setStore( Store( StoreModule(userStoreOptions) ) );

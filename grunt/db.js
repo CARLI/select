@@ -11,6 +11,10 @@ module.exports = function (grunt) {
         var done = this.async();
         deployDb.createAdminUser().then(done);
     });
+    grunt.registerTask('create-pixo-users', function createAdminUser() {
+        var done = this.async();
+        deployDb.createUsersFromJson('./pixo-test-users.json').then(done);
+    });
     grunt.registerTask('deploy-db', [
         'deploy-app-db',
         'deploy-otp-cycle'

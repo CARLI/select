@@ -1,13 +1,15 @@
-var config = require('../config');
-var carliError = require('../CARLI/Error');
-var CycleRepository = require('../CARLI/Entity/CycleRepository');
-var cycleRepositoryForVendor = require('../CARLI/Entity/CycleRepositoryForVendor');
-var couchApp = require('../middleware/components/couchApp');
-var request = require('request');
 var Q = require('q');
-var dbInfo = require('./databaseInfo');
-var vendorRepository = require('../CARLI/Entity/VendorRepository');
+var request = require('request');
+var _ = require('lodash');
 
+var carliError = require('../CARLI/Error');
+var config = require('../config');
+var couchApp = require('../middleware/components/couchApp');
+var cycleRepository = require('../CARLI/Entity/CycleRepository');
+var cycleRepositoryForVendor = require('../CARLI/Entity/CycleRepositoryForVendor');
+var dbInfo = require('./databaseInfo');
+var userRepository = require('../CARLI/Entity/UserRepository');
+var vendorRepository = require('../CARLI/Entity/VendorRepository');
 
 var projectRoot = __dirname + '/..';
 
@@ -78,16 +80,45 @@ function createAdminUser() {
     return deferred.promise;
 }
 
+function createUsersFromJson(file) {
+    var users = require(file);
+
+    return Q.all(users.map(createUser))
+        .catch(function(err) {
+            console.log(err);
+        });
+
+    function createUser(user) {
+        return userRepository
+            .create(user)
+            .catch(updateIfConflict);
+
+        function updateIfConflict(err) {
+            if (err.statusCode == 409) {
+                return userRepository
+                    .load(user.email)
+                    .then(mergeAndUpdateUser);
+            }
+            throw err;
+        }
+
+        function mergeAndUpdateUser(loadedUser) {
+            var updatedUser = _.extend(loadedUser, user);
+            return userRepository.update(updatedUser);
+        }
+    }
+}
+
 function createOneTimePurchaseCycle(cycleName, store) {
     var otpCycle = require(projectRoot + '/db/oneTimePurchaseCycle.json');
     if (cycleName) {
         otpCycle.name = cycleName;
     }
     if (store) {
-        CycleRepository.setStore(store);
+        cycleRepository.setStore(store);
     }
 
-    return CycleRepository.create(otpCycle);
+    return cycleRepository.create(otpCycle);
 }
 
 function addSecurityDocWithRoles(dbName, roles) {
@@ -120,7 +151,7 @@ function deployAppDesignDoc(instance) {
 }
 
 function deployLocalCycleDesignDocs() {
-    return CycleRepository.list().then(function (cycles) {
+    return cycleRepository.list().then(function (cycles) {
         var promises = [];
         cycles.forEach(function (cycle) {
             promises.push( couchApp.putDesignDoc(cycle.getDatabaseName(), 'Cycle') );
@@ -156,6 +187,7 @@ if (require.main === module) {
     module.exports = {
         deployDb: deployDb,
         createAdminUser: createAdminUser,
+        createUsersFromJson: createUsersFromJson,
         createOneTimePurchaseCycle: createOneTimePurchaseCycle,
         deployLocalAppDesignDoc: deployLocalAppDesignDoc,
         deployLocalCycleDesignDocs: deployLocalCycleDesignDocs
