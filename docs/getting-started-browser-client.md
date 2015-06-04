@@ -27,7 +27,7 @@ The protractor tests are no longer maintained, nor run by default, so these can 
 * ~~`npm install -g protractor`~~
 * ~~`webdriver-manager update --standalone`~~
 
-### CouchDB and Nginx ###
+### CouchDB Setup ###
 
 * On a Mac, the best way to install these is with [Homebrew](http://brew.sh/).  Install Homebrew following the
 instructions on their website, then:
@@ -35,6 +35,13 @@ instructions on their website, then:
     * During the install, instructions will be printed for how to start and stop couch.  The recommended way is to 
 use OSX's launchctl facility.  To do so, copy the `homebrew.mxcl.couchdb.plist` file into your `~/Library/LaunchAgents/`
 folder as instructed during the `brew install` process.  If you prefer, you can also start and stop CouchDB manually.
+
+* mention futon
+* initial setup for database (grunt tasks - deploy cycles, deploy design docs, deploy admin user)
+* Import users (grunt task - imported from users.json)
+
+### Nginx Setup ###
+
 * `brew install nginx`
     * Again, you can choose to use the launchctl facility, or start and stop nginx manually.
     * Copy the nginx config file from `./docs/nginx.conf` over top of `/usr/local/etc/nginx/nginx.conf`.

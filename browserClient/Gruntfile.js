@@ -69,7 +69,7 @@ module.exports = function ( grunt ) {
 
             serveLibrary: {
                 options: {
-                    open: 'http://localhost:8002',
+                    open: 'http://library.carli.local:8002',
                     port: 8002,
                     middleware: function (connect, options) {
                         var optBase = (typeof options.base === 'string') ? [options.base] : options.base;

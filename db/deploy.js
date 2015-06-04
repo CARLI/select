@@ -81,7 +81,12 @@ function deployLocalAppDesignDoc() {
 }
 
 function deployAppDesignDoc(instance) {
-    return couchApp.putDesignDoc(instance.mainDbName, 'CARLI');
+    return couchApp.putDesignDoc(instance.mainDbName, 'CARLI')
+        .then(deployDesignDocToUsers);
+
+    function deployDesignDocToUsers() {
+        return couchApp.putDesignDoc('_users', 'CARLI');
+    }
 }
 
 function deployLocalCycleDesignDocs() {
