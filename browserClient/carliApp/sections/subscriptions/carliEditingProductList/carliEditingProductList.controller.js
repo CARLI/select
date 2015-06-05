@@ -50,9 +50,18 @@ function carliEditingProductListController( $scope, alertService, cycleService, 
                 return Object.keys(productsByVendorId);
             })
             .then(vendorService.getVendorsById)
+            .then(filterActiveVendors)
             .then(function (vendors) {
                 vm.vendors = vendors;
             });
+    }
+
+    function filterActiveVendors(vendorList){
+        return vendorList.filter(vendorIsActive);
+
+        function vendorIsActive(vendor){
+            return vendor.isActive;
+        }
     }
 
     function loadProductsForVendor(vendor) {

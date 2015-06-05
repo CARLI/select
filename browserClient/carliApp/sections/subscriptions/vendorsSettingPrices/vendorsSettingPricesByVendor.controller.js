@@ -55,12 +55,21 @@ function vendorsSettingPricesByVendorController( $scope, $q, accordionController
                 return Object.keys(productsByVendorId);
             })
             .then(vendorService.getVendorsById)
+            .then(filterActiveVendors)
             .then(function (vendors) {
                 vm.vendors = vendors;
             })
             .then(loadVendorStatuses);
     }
 
+    function filterActiveVendors(vendorList){
+        return vendorList.filter(vendorIsActive);
+
+        function vendorIsActive(vendor){
+            return vendor.isActive;
+        }
+    }
+    
     function loadVendorStatuses(){
         vm.vendorStatus = {};
 
