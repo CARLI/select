@@ -4,7 +4,7 @@ var couchapp = require( 'couchapp' )
 ddoc = {
     _id: '_design/CARLI',
     language: "javascript",
-    validate_doc_update: function (newDoc, oldDoc, userCtx) {
+    validate_doc_update_disabled: function (newDoc, oldDoc, userCtx) {
         if ( ! (userHasRole('staff') || userHasRole('_admin')) ) {
             throw({ forbidden: 'Unauthorized' });
         }

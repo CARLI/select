@@ -20,7 +20,7 @@ ddoc = {
             return false;
         }
     },
-    validate_doc_update: function (newDoc, oldDoc, userCtx) {
+    validate_doc_update_disabled: function (newDoc, oldDoc, userCtx) {
         if ( ! (userHasRole('staff') || userHasRole('_admin') || userHasMatchingVendorRole()) ) {
             throw({ forbidden: 'Unauthorized' });
         }
