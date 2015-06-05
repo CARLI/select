@@ -121,9 +121,10 @@ function doMigration(){
 
         function gatherSelectionsForCycle(cycleCouchId) {
             return CycleRepository.load(cycleCouchId).then(function (cycle) {
-                return selectionMigration.gatherSelections(connection, cycle, productMappingsByCycle[cycleCouchId]).then(function (selections) {
-                    selectionsByCycle[cycleCouchId] = selections;
-                });
+                return selectionMigration.gatherSelections(connection, cycle, productMappingsByCycle[cycleCouchId])
+                    .then(function (selections) {
+                        selectionsByCycle[cycleCouchId] = selections;
+                    });
             });
         }
     }

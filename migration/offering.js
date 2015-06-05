@@ -37,11 +37,17 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping,
         console.log('Extracted pricing lists for offerings');
 
         offeringsList.forEach(function(offering){
-            var libraryId = offering.library;
+            var libraryIdalId = offering.libraryIdalId;
+            var libraryCrmId = offering.libraryCrmId;
             var productId = offering.product;
-            if ( selectionsByLibrary[libraryId] && selectionsByLibrary[libraryId][productId] ){
-                offering.selection = selectionsByLibrary[libraryId][productId];
+
+            if ( selectionsByLibrary[libraryIdalId] && selectionsByLibrary[libraryIdalId][productId] ){
+                offering.selection = selectionsByLibrary[libraryIdalId][productId];
             }
+
+            offering.library = libraryCrmId;
+            delete offering.libraryCrmId;
+            delete offering.libraryIdalId;
         });
 
         var emptyOfferingsList = [];
@@ -192,7 +198,8 @@ function createOffering( offering, cycle ) {
 function extractNascentOffering( row, cycle, libraryIdMapping, productIdMapping ){
     return {
         display: 'with-price',
-        library: libraryIdMapping[row.library_id],
+        libraryIdalId: row.library_id,
+        libraryCrmId: libraryIdMapping[row.library_id],
         product: productIdMapping[productLegacyId(row)],
         cycle: cycle,
         pricing: {

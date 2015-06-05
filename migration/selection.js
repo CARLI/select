@@ -27,12 +27,12 @@ function gatherSelections(connection, cycle, productMapping){
         resultsPromise.resolve(results);
 
         function addSelectionToResults(selectionRow){
-            var libraryId = selectionRow.library_id.toString();
+            var libraryIdalId = selectionRow.library_id.toString();
             var legacyProductId = selectionRow.vendor_id + selectionRow.product_id;
             var productCouchId = productMapping[legacyProductId];
 
-            results[libraryId] = results[libraryId] || {};
-            results[libraryId][productCouchId] = extractSelection( selectionRow );
+            results[libraryIdalId] = results[libraryIdalId] || {};
+            results[libraryIdalId][productCouchId] = extractSelection( selectionRow );
         }
     });
 
