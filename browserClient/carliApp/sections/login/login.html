@@ -1,8 +1,17 @@
 <section class="content" id="login">
     <form>
-        <label for="email">Email</label><input type="text" ng-model="vm.userLogin.email">
-        <label for="password">Password</label><input type="password" ng-model="vm.userLogin.password">
+        <div class="forgot-instructions" ng-show="vm.forgotMode">Please enter your email address, and then check your email for further instructions.</div>
 
-        <input type="submit" class="carli-button login-button" value="Log in" busy-click="vm.createSession()">
+        <label for="email">Email</label><input type="text" ng-model="vm.userLogin.email">
+        <label ng-show="!vm.forgotMode" for="password">Password</label><input ng-show="!vm.forgotMode" type="password" ng-model="vm.userLogin.password">
+
+        <input type="submit" class="carli-button login-button" ng-value="vm.submitLabel" busy-click="vm.submitLoginForm()">
+
+        <div class="toggle-forgot">
+            <a ng-click="vm.toggleForgotMode()">
+                <span ng-show="!vm.forgotMode">I don't know my password</span>
+                <span ng-show="vm.forgotMode">Back to Login</span>
+            </a>
+        </div>
     </form>
 </section>

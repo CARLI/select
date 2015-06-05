@@ -48,6 +48,24 @@ ddoc = {
                     emit( doc.dateSent, doc );
                 }
             }
+        },
+        listUsersByResetKey: {
+            map: function (doc) {
+                if ( doc.type === 'user' && userHasUnexpiredResetKey(doc) ) {
+                    emit (doc.passwordResetDate, doc)
+                }
+
+                function userHasUnexpiredResetKey(user) {
+                    if (!user.passwordResetDate || !user.passwordResetDate) {
+                        return false;
+                    }
+
+                    var oneDayInMilliseconds = 86400000;
+                    var keyGeneratedMilliseconds = new Date(user.passwordResetDate).getTime();
+
+                    return Date.now() - keyGeneratedMilliseconds < oneDayInMilliseconds;
+                }
+            }
         }
     }
 };

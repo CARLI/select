@@ -6,6 +6,9 @@ var Entity = require('../Entity')
     , Store = require( '../Store' )
     , StoreModule = require( '../Store/CouchDb/Store')
     , Q = require('q')
+    , uuid = require('node-uuid')
+    , crypto = require('crypto')
+    , shasum = crypto.createHash('sha1');
     ;
 
 var UserRepository = Entity('user');
@@ -63,7 +66,48 @@ function loadUser( userId ){
 
 /* functions that get added as instance methods on loaded users */
 
+
 var functionsToAdd = {
+    generateUserHash: function generateUserHash() {
+        var user = this;
+
+        shasum.update(user.email);
+        return shasum.digest('hex');
+    },
+    generatePasswordResetKey: function generatePasswordResetKey() {
+        var user = this;
+
+        user.passwordResetKey = uuid.v4();
+        user.passwordResetDate = new Date().toISOString();
+
+        UserRepository.update(user);
+    },
+    passwordResetKeyIsValid: function validatePasswordResetKey(userProvidedHash) {
+        var user = this;
+
+        if (!user.passwordResetKey || !user.passwordResetDate) {
+            return false;
+        }
+        if (isKeyExpired()) {
+            return false;
+        }
+        return userProvidedHash === user.generateUserHash();
+
+        function isKeyExpired() {
+            var oneDayInMilliseconds = 86400000;
+            var keyGeneratedMilliseconds = new Date(user.passwordResetDate).getTime();
+
+            return Date.now() - keyGeneratedMilliseconds > oneDayInMilliseconds;
+        }
+    },
+    consumePasswordResetKey: function consumePasswordResetKey() {
+        var user = this;
+
+        delete user.passwordResetKey;
+        delete user.passwordResetDate;
+
+        UserRepository.update(user);
+    }
 };
 
 function setStore(store) {

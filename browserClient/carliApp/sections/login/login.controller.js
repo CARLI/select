@@ -1,7 +1,7 @@
 angular.module('carli.sections.login')
     .controller('loginController', loginController);
 
-function loginController ($location, alertService, authService) {
+function loginController ($location, alertService, authService, userService) {
     var vm = this;
 
     vm.userLogin = {
@@ -11,7 +11,24 @@ function loginController ($location, alertService, authService) {
 
     redirectIfLoggedIn();
 
-    vm.createSession = createSession;
+    vm.forgotMode = false;
+    vm.submitLabel = "Log in";
+
+    vm.submitLoginForm = submitLoginForm;
+    vm.toggleForgotMode = toggleForgotMode;
+
+    function submitLoginForm() {
+        if (vm.forgotMode) {
+            requestPasswordReset();
+        } else {
+            createSession();
+        }
+    }
+
+    function toggleForgotMode() {
+        vm.forgotMode = !vm.forgotMode;
+        vm.submitLabel = vm.forgotMode ? 'Request Password Reset' : 'Log in';
+    }
 
     function createSession() {
         return authService.createSession(vm.userLogin)
@@ -49,5 +66,21 @@ function loginController ($location, alertService, authService) {
     function getReturnTo() {
         var queryString = $location.search();
         return queryString['return_to'];
+    }
+
+    function requestPasswordReset() {
+        // TODO: Either this needs to go through the middleware, or we need to make these non-instance methods...
+        userService
+            .load(vm.userLogin.email)
+            .then(generateKey)
+            .then(userService.load)
+            .then(function (user) {
+                console.log('Generated password reset key for ' + user.email);
+                console.log('/reset?k=' + user.passwordResetKey + '&u=' + user.generateUserHash());
+            });
+
+        function generateKey(user) {
+            return user.generatePasswordResetKey();
+        }
     }
 }
