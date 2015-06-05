@@ -94,12 +94,19 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
         }
 
         vm.loadingPromise[product.id] = offeringService.listOfferingsForProductId(product.id)
+            .then(filterActiveLibraries)
             .then(function(offerings){
                 product.offerings = offerings;
                 return offerings;
             });
 
         return vm.loadingPromise[product.id];
+    }
+
+    function filterActiveLibraries(offeringsList){
+        return offeringsList.filter(function(offering){
+            return offering.library.isActive;
+        });
     }
 
     function toggleProductSection(product){
