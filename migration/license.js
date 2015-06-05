@@ -4,6 +4,7 @@ var carliConfig = require('../CARLI').config;
 var StoreOptions = carliConfig.storeOptions;
 var Store = require('../CARLI').Store;
 var Q = require('q');
+var util = require('./util');
 LicenseRepository.setStore(Store(CouchDbStore(StoreOptions)));
 
 function migrateLicenses(connection){
@@ -160,12 +161,14 @@ function generateProductLicenseAssociations( connection, licenseIdMapping ){
 
 
     function mapProductIdalIdToLicenseCouchId( associationRow ){
-        var licenseLegacyId = associationRow.contract_id;
-        var vendorLegacyId = associationRow.vendor_id;
-        var productLegacyId = associationRow.db_id;
-        var licenseCouchId = licenseIdMapping[licenseLegacyId];
+        var licenseIdalId = associationRow.contract_id;
+        var vendorIdalId = associationRow.vendor_id;
+        var productIdalId = associationRow.db_id;
+        var licenseCouchId = licenseIdMapping[licenseIdalId];
 
-        productIdalIdToLicenseCouchIdMap[vendorLegacyId+productLegacyId] = licenseCouchId;
+        var productLegacyId = util.makeProductLegacyId(vendorIdalId, productIdalId);
+
+        productIdalIdToLicenseCouchIdMap[productLegacyId] = licenseCouchId;
     }
 }
 

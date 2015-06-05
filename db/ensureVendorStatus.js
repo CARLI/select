@@ -12,17 +12,19 @@ cycleRepository.listActiveCycles()
     .then(function(cycleList){
         console.log('Got '+cycleList.length+' cycles');
         return Q.all( cycleList.map(ensureAllVendorsHaveStatusForCycle)) ;
-    });
+    })
+    .done();
 
 function ensureAllVendorsHaveStatusForCycle( cycle ){
+
     return vendorRepository.list()
         .then(function(vendorList){
-            console.log('Ensure vendor status entries for '+cycle.name);
+            console.log('Ensure vendor status entries for '+cycle.name+' - '+vendorList.length+' vendors');
             return Q.all( vendorList.map(makeVendorStatus) );
         });
 
     function makeVendorStatus(vendor){
-        console.log('  ++'+vendor.name);
+        console.log('  + '+vendor.name);
         return vendorStatusRepository.ensureStatusExistsForVendor(vendor.id, cycle)
             .catch(function(err){
                 console.log('  error making status for '+vendor.name,err);

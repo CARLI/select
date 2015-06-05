@@ -1,5 +1,6 @@
 var OfferingRepository = require('../CARLI').Offering;
 var Q = require('q');
+var util = require('./util');
 var _ = require('lodash');
 
 function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping, selectionsByLibrary){
@@ -34,7 +35,6 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping,
 
         console.log('Extracted '+ Object.keys(uniqueOfferings).length +' unique Offerings');
         var offeringsList = extractPricingForOfferings(uniqueOfferings, rows, cycle, libraryIdMapping, productIdMapping);
-        console.log('Extracted pricing lists for offerings');
 
         offeringsList.forEach(function(offering){
             var libraryIdalId = offering.libraryIdalId;
@@ -200,7 +200,7 @@ function extractNascentOffering( row, cycle, libraryIdMapping, productIdMapping 
         display: 'with-price',
         libraryIdalId: row.library_id,
         libraryCrmId: libraryIdMapping[row.library_id],
-        product: productIdMapping[productLegacyId(row)],
+        product: productIdMapping[util.makeUniqueProductIdFromDatabaseRow(row)],
         cycle: cycle,
         pricing: {
             su : []
@@ -220,12 +220,8 @@ function createEmptyOfferingObject( cycle, libraryCouchId, productCouchId ){
     };
 }
 
-function offeringKey(o) {
-    return productLegacyId(o) + '-' + o.library_id;
-}
-
-function productLegacyId( row ){
-    return row.vendor_id + row.product_id;
+function offeringKey(row) {
+    return util.makeUniqueProductIdFromDatabaseRow(row) + '_' + row.library_id;
 }
 
 module.exports = {

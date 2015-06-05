@@ -1,4 +1,5 @@
 var Q = require('q');
+var util = require('./util');
 
 function gatherSelections(connection, cycle, productMapping){
     var resultsPromise = Q.defer();
@@ -28,7 +29,7 @@ function gatherSelections(connection, cycle, productMapping){
 
         function addSelectionToResults(selectionRow){
             var libraryIdalId = selectionRow.library_id.toString();
-            var legacyProductId = selectionRow.vendor_id + selectionRow.product_id;
+            var legacyProductId = util.makeUniqueProductIdFromDatabaseRow(selectionRow);
             var productCouchId = productMapping[legacyProductId];
 
             results[libraryIdalId] = results[libraryIdalId] || {};

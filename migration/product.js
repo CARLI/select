@@ -1,5 +1,6 @@
 var ProductRepository = require('../CARLI').Product;
 var Q = require('q');
+var util = require('./util');
 
 function migrateProducts(connection, cycle, vendorIdMapping, productLicenseMapping){
     var resultsPromise = Q.defer();
@@ -55,27 +56,21 @@ function extractProducts(productRows, cycle, vendorIdMapping, productLicenseMapp
 }
 
 function createProduct( productRow, cycle, vendorIdMapping, productLicenseMapping ) {
-    //console.log('  creating: ' + productRow.product_name);
-
-    var couchIdPromise = Q.defer();
     var product = extractProduct(productRow, cycle, vendorIdMapping, productLicenseMapping);
-    ProductRepository.create( product, cycle )
+    return ProductRepository.create( product, cycle )
         .then(function(id) {
-            couchIdPromise.resolve({
-                idalLegacyId: makeProductLegacyId(productRow),
+            return {
+                idalLegacyId: util.makeUniqueProductIdFromDatabaseRow(productRow),
                 couchId: id
-            });
+            };
         })
         .catch(function(err) {
             console.log('Error creating product: ', err);
-            couchIdPromise.reject();
         });
-
-    return couchIdPromise.promise;
 }
 
 function extractProduct( row, cycle, vendorIdMapping, productLicenseMapping ){
-    var licenseMappingKey = makeProductLegacyId(row);
+    var licenseMappingKey = util.makeUniqueProductIdFromDatabaseRow(row);
 
     return {
         name: row.product_name,
@@ -95,17 +90,8 @@ function extractProduct( row, cycle, vendorIdMapping, productLicenseMapping ){
             otherType: '',
             hasArchiveCapitalFee: false
         },
-//        terms: '',
-//        priceCap: '',
-//        detailCode: '',
-//        librariesThatHavePaidAcf: '',
-//        oneTimePurchase: ''
         isActive: true
     };
-}
-
-function makeProductLegacyId( row ){
-    return row.vendor_id + row.product_id;
 }
 
 module.exports = {
