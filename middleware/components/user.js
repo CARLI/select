@@ -33,9 +33,14 @@ function update(user) {
     });
 }
 
+function requestPasswordReset(email) {
+    return userRepository.requestPasswordReset(email);
+}
+
 module.exports = {
     list: list,
     load: load,
     create: create,
-    update: update
+    update: update,
+    requestPasswordReset: requestPasswordReset
 };

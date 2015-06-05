@@ -77,10 +77,11 @@ var functionsToAdd = {
     generatePasswordResetKey: function generatePasswordResetKey() {
         var user = this;
 
-        user.passwordResetKey = uuid.v4();
+        // !!! TODO: we can't store this on user.  Anyone can load the user object and get them.
+        user.passwordResetKey = generateNonce();
         user.passwordResetDate = new Date().toISOString();
 
-        UserRepository.update(user);
+        return UserRepository.update(user);
     },
     passwordResetKeyIsValid: function validatePasswordResetKey(userProvidedHash) {
         var user = this;
@@ -106,9 +107,34 @@ var functionsToAdd = {
         delete user.passwordResetKey;
         delete user.passwordResetDate;
 
-        UserRepository.update(user);
+        return UserRepository.update(user);
     }
 };
+
+function generateNonce() {
+    var nonce = '';
+    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var length = 64;
+
+    for (var i = 0; i < length; ++i) {
+        var rnum = Math.floor(Math.random() * chars.length);
+        nonce += chars.substring(rnum, rnum+1);
+    }
+    return nonce;
+}
+
+function requestPasswordReset(email) {
+    return loadUser(email).then(generatePasswordResetKey);
+
+    function generatePasswordResetKey(user) {
+        return user.generatePasswordResetKey();
+    }
+}
+
+function getUserByPasswordResetKey(key) {
+    return couchUtils.getCouchViewResultValues( '_users', 'listUsersByEmail', key);
+}
+
 
 function setStore(store) {
     UserRepository.setStore(store);
@@ -120,5 +146,6 @@ module.exports = {
     create: createUser,
     update: updateUser,
     list: listUsers,
-    load: loadUser
+    load: loadUser,
+    requestPasswordReset: requestPasswordReset
 };

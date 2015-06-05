@@ -69,18 +69,19 @@ function loginController ($location, alertService, authService, userService) {
     }
 
     function requestPasswordReset() {
-        // TODO: Either this needs to go through the middleware, or we need to make these non-instance methods...
         userService
-            .load(vm.userLogin.email)
-            .then(generateKey)
-            .then(userService.load)
+            .requestPasswordReset(vm.userLogin.email)
+            .then(loadUser)
             .then(function (user) {
                 console.log('Generated password reset key for ' + user.email);
-                console.log('/reset?k=' + user.passwordResetKey + '&u=' + user.generateUserHash());
+                console.log('/reset?k=' + user.passwordResetKey);
+            })
+            .catch(function (err) {
+                console.log(err);
             });
 
-        function generateKey(user) {
-            return user.generatePasswordResetKey();
+        function loadUser() {
+            return userService.load(vm.userLogin.email);
         }
     }
 }

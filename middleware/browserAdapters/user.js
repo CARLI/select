@@ -32,9 +32,18 @@ function update(user) {
     });
 }
 
+function requestPasswordReset(email) {
+    return middlewareRequest({
+        path: '/user/' + email + '/reset',
+        method: 'get',
+        json: true
+    });
+}
+
 module.exports = {
     list: list,
     load: load,
     create: create,
-    update: update
+    update: update,
+    requestPasswordReset: requestPasswordReset
 };

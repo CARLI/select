@@ -242,6 +242,11 @@ function runMiddlewareServer(){
                 .then(sendOk(res))
                 .catch(sendError(res));
         });
+        carliMiddleware.get('/user/:email/reset', function (req, res) {
+            user.requestPasswordReset(req.params.email)
+                .then(sendOk(res))
+                .catch(sendError(res));
+        });
     }
 }
 
@@ -278,28 +283,6 @@ function corsHeaders(req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, X-AuthToken");
     next();
 }
-
-//function createAuthPassthrough(carliMiddleware) {
-//    var wrapper = {};
-//    var methods = [ 'post', 'put', 'get', 'delete' ];
-//
-//    methods.forEach(addMethodToWrapper);
-//
-//    function addMethodToWrapper(method) {
-//        wrapper[method] = wrappedMethod;
-//
-//        function wrappedMethod(url, callback) {
-//            carliMiddleware[method](url, setAuthAndContinue);
-//
-//            function setAuthAndContinue(req, res) {
-//                //setAuthForRequest(req, res);
-//                callback(req, res);
-//            }
-//        }
-//    }
-//
-//    return wrapper;
-//}
 
 function setAuthForRequest(req, res, next) {
     if (req.url !== '/login') {
