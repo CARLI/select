@@ -26,7 +26,7 @@
         }
 
         .column {
-            @include flex(1 1 150px);
+            @include flex(1 1 160px);
         }
     }
 
@@ -35,7 +35,7 @@
             border-bottom: $default-border;
             border-right: $default-border;
             padding: 0.5rem 1rem;
-            min-width: 150px;
+            min-width: 160px;
 
             &.header {
                 font-weight: bold;
