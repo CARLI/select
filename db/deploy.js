@@ -10,11 +10,22 @@ var cycleRepositoryForVendor = require('../CARLI/Entity/CycleRepositoryForVendor
 var dbInfo = require('./databaseInfo');
 var userRepository = require('../CARLI/Entity/UserRepository');
 var vendorRepository = require('../CARLI/Entity/VendorRepository');
+var storeOptions = config.storeOptions;
+storeOptions.couchDbUrl = storeOptions.privilegedCouchDbUrl;
+var Store = require('../CARLI/Store');
+var StoreModule = require('../CARLI/Store/CouchDb/Store');
+
+cycleRepository.setStore(getPrivilegedStore());
+vendorRepository.setStore(getPrivilegedStore());
 
 var projectRoot = __dirname + '/..';
 
 function getDbUrl(dbName) {
     return config.storeOptions.privilegedCouchDbUrl + '/' + dbName;
+}
+
+function getPrivilegedStore() {
+    return Store( StoreModule(storeOptions) );
 }
 
 function recreateDb(dbName) {
@@ -41,13 +52,29 @@ function deployDb(dbName) {
     }
     return recreateDb(dbName)
         .then(addSecurityDoc)
-        .then(addDesignDoc);
+        .then(addDesignDoc)
+        .then(deployResetRequestDb);
 
     function addSecurityDoc() {
-        addSecurityDocWithRoles(dbName, [ 'staff', 'vendor', 'library' ]);
+        addSecurityDocWithRoles(dbName, [ '_admin', 'staff', 'vendor', 'library' ]);
     }
     function addDesignDoc() {
         return couchApp.putDesignDoc(dbName, 'CARLI');
+    }
+}
+
+function deployResetRequestDb() {
+    var dbName = 'user-reset-requests';
+
+    return recreateDb(dbName)
+        .then(addResetSecurityDoc)
+        .then(addResetDesignDoc);
+
+    function addResetSecurityDoc() {
+        return addSecurityDocAdminOnly(dbName);
+    }
+    function addResetDesignDoc() {
+        return couchApp.putDesignDoc(dbName, 'UserResetRequest');
     }
 }
 
@@ -137,6 +164,10 @@ function addSecurityDocWithRoles(dbName, roles) {
     });
 }
 
+function addSecurityDocAdminOnly(dbName) {
+    return addSecurityDocWithRoles(dbName, [ '_admin' ]);
+}
+
 function deployLocalAppDesignDoc() {
     return deployAppDesignDoc(dbInfo.local);
 }
@@ -146,7 +177,7 @@ function deployAppDesignDoc(instance) {
         .then(deployDesignDocToUsers);
 
     function deployDesignDocToUsers() {
-        return couchApp.putDesignDoc('_users', 'CARLI');
+        return couchApp.putDesignDoc('_users', 'Users');
     }
 }
 
@@ -158,7 +189,8 @@ function deployLocalCycleDesignDocs() {
             promises.push( deployLocalCycleDesignDocsForVendorDatabases(cycle ) );
         });
         return Q.all(promises);
-    });
+    })
+        .catch(function (err) { console.log('>>> Not allowed to list cycles', err); });
 }
 
 function deployLocalCycleDesignDocsForVendorDatabases( cycle ) {

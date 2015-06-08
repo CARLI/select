@@ -87,7 +87,7 @@ function createCycle(cycle){
             });
         })
         .catch(function(err) {
-            console.log(err);
+            console.log('Error creating cycle:', err);
             couchIdPromise.reject();
         });
 

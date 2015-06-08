@@ -1,19 +1,34 @@
 #!/usr/local/bin/node
 
+var Q = require('q');
+var _ = require('lodash');
+var mysql = require('mysql');
+
+var carliConfig = require('../config');
+carliConfig.storeOptions.couchDbUrl = carliConfig.storeOptions.privilegedCouchDbUrl;
+
 var CycleRepository = require('../CARLI').Cycle;
+var migrationConfig = require('./config');
+var notificationTemplates = require('./notificationTemplates');
+var vendorDatabases = require('./vendorDatabases');
+
 var cycleMigration = require('./cycle');
 var libraryMigration = require('./library');
 var licenseMigration = require('./license');
-var migrationConfig = require('./config');
-var mysql = require('mysql');
-var notificationTemplates = require('./notificationTemplates');
 var offeringMigration = require('./offering');
 var productMigration = require('./product');
 var selectionMigration = require('./selection');
-var Q = require('q');
 var vendorMigration = require('./vendor');
-var vendorDatabases = require('./vendorDatabases');
-var _ = require('lodash');
+
+//var storeOptions = config.storeOptions;
+//storeOptions.couchDbUrl = storeOptions.privilegedCouchDbUrl;
+//var Store = require('../CARLI/Store');
+//var StoreModule = require('../CARLI/Store/CouchDb/Store');
+//
+//function getPrivilegedStore() {
+//    return Store( StoreModule(storeOptions) );
+//}
+//CycleRepository.setStore( getPrivilegedStore() );
 
 doMigration();
 

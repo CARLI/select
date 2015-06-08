@@ -58,7 +58,7 @@ function createVendor(vendorRow){
             });
         })
         .catch(function(err) {
-            console.log(err);
+            console.log('Error creating vendor:', err);
             couchIdPromise.reject();
         });
 
