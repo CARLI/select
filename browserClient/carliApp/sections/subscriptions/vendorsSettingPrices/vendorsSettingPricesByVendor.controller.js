@@ -55,10 +55,19 @@ function vendorsSettingPricesByVendorController( $scope, $q, accordionController
                 return Object.keys(productsByVendorId);
             })
             .then(vendorService.getVendorsById)
+            .then(filterActiveVendors)
             .then(function (vendors) {
                 vm.vendors = vendors;
             })
             .then(loadVendorStatuses);
+    }
+
+    function filterActiveVendors(vendorList){
+        return vendorList.filter(vendorIsActive);
+
+        function vendorIsActive(vendor){
+            return vendor.isActive;
+        }
     }
 
     function loadVendorStatuses(){
@@ -95,12 +104,19 @@ function vendorsSettingPricesByVendorController( $scope, $q, accordionController
         }
 
         vm.loadingPromise[product.id] = offeringService.listOfferingsForProductId(product.id)
+            .then(filterActiveLibraries)
             .then(function(offerings){
                 product.offerings = offerings;
                 return offerings;
             });
 
         return vm.loadingPromise[product.id];
+    }
+
+    function filterActiveLibraries(offeringsList){
+        return offeringsList.filter(function(offering){
+            return offering.library.isActive;
+        });
     }
 
     function toggleProductSection(product){

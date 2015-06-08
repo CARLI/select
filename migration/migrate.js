@@ -41,6 +41,7 @@ function doMigration(){
         .then(migrateProducts)
         .then(gatherSelections)
         .then(migrateOfferings)
+        .then(makeVendorStatuses)
         .then(createVendorDatabases)
         .then(finishMigration)
         .then(closeIdalConnection)
@@ -121,9 +122,10 @@ function doMigration(){
 
         function gatherSelectionsForCycle(cycleCouchId) {
             return CycleRepository.load(cycleCouchId).then(function (cycle) {
-                return selectionMigration.gatherSelections(connection, cycle, productMappingsByCycle[cycleCouchId]).then(function (selections) {
-                    selectionsByCycle[cycleCouchId] = selections;
-                });
+                return selectionMigration.gatherSelections(connection, cycle, productMappingsByCycle[cycleCouchId])
+                    .then(function (selections) {
+                        selectionsByCycle[cycleCouchId] = selections;
+                    });
             });
         }
     }
@@ -159,6 +161,10 @@ function doMigration(){
         return CycleRepository.load(cycleId).then(function (cycle) {
             return offeringMigration.migrateOfferings(connection, cycle, libraryIdMapping, productMappingsByCycle[cycleId], selectionsByCycle[cycleId]);
         });
+    }
+
+    function makeVendorStatuses(){
+        return vendorDatabases.createVendorStatusesForAllCycles();
     }
 
     function createVendorDatabases() {

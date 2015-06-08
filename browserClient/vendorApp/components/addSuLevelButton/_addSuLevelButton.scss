@@ -1,0 +1,24 @@
+add-su-level-button {
+    display: block;
+    font-size: 0;
+    padding: 0.5rem 0;
+
+    button,
+    label,
+    input[type=number] {
+        display: inline-block;
+        margin: 0;
+    }
+
+    input[type=number] {
+        color: $black;
+        font-family: verdana;
+        @include font-size(14);
+        font-weight: normal;
+        height: $button-height;
+        margin-left: 0.5rem;
+        position: relative;
+        top: -1px;
+        width: 4rem;
+    }
+}

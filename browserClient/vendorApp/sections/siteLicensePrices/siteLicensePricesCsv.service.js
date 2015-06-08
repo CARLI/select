@@ -52,7 +52,15 @@ function siteLicensePricesCsv($q, CarliModules) {
             csvData.push(row);
 
             function getOffering(product) {
-                return offeringsForLibraryByProduct[product.id][library.id] || makeNullOffering(product);
+                var offering = offeringsForLibraryByProduct[product.id][library.id] || makeNullOffering(product);
+                var result = angular.copy(offering);
+                if ( typeof result.product === 'string' ){
+                    result.product = {
+                        id: product.id,
+                        name: product.name
+                    };
+                }
+                return result;
             }
             function addViewOptionColumn(column) {
                 row[column] = getViewOptionValue(library, column);

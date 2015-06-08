@@ -182,7 +182,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
                         newOfferings.push(offering);
                     }
                 }
-                else if ( newPrice != offering.pricing.site ){
+                else if ( newPrice !== 0 && newPrice != offering.pricing.site ){
                     offering.pricing.site = newPrice;
                     changedOfferings.push(offering);
                 }
@@ -289,10 +289,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
         }
 
         function triggerDownload(csvString) {
-            console.log('makeing Blob');
             var blob = new Blob([csvString], {type: "text/csv;charset=utf-8"});
-            console.log('saving');
-            console.log(saveAs);
             saveAs(blob, makeFilename());
         }
 

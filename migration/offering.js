@@ -1,10 +1,13 @@
 var OfferingRepository = require('../CARLI').Offering;
+var libraryRepository = require('../CARLI').Library;
 var Q = require('q');
+var util = require('./util');
 var _ = require('lodash');
 
 function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping, selectionsByLibrary){
     var resultsPromise = Q.defer();
     var batchSize = 500;
+    var offeringsThatExist = {};
 
     var query = "SELECT " +
     "    v.id as vendor_id, " +
@@ -34,22 +37,21 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping,
 
         console.log('Extracted '+ Object.keys(uniqueOfferings).length +' unique Offerings');
         var offeringsList = extractPricingForOfferings(uniqueOfferings, rows, cycle, libraryIdMapping, productIdMapping);
-        console.log('Extracted pricing lists for offerings');
 
-        offeringsList.forEach(function(offering){
-            var libraryId = offering.library;
-            var productId = offering.product;
-            if ( selectionsByLibrary[libraryId] && selectionsByLibrary[libraryId][productId] ){
-                offering.selection = selectionsByLibrary[libraryId][productId];
-            }
-        });
+        //Convert legacy ID's to new couch ids, attach selections, and track offerings that were created
+        offeringsList.forEach(finalizeOffering);
 
         var emptyOfferingsList = [];
 
         return createExistingOfferings()
+            .then(libraryRepository.listActiveLibraries)
             .then(createEmptyOfferings)
             .then(function(){
                 resultsPromise.resolve(offeringsList.length + emptyOfferingsList.length);
+            })
+            .catch(function(err){
+                console.log('Error creating offerings', err);
+                throw err;
             });
 
         function createExistingOfferings() {
@@ -79,18 +81,17 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping,
             }
         }
 
-        function createEmptyOfferings() {
+        function createEmptyOfferings(libraryList) {
             console.log('Generating empty offerings');
 
-            Object.keys(productIdMapping).forEach(function (productIdalId) {
-                var productCouchId = productIdMapping[productIdalId];
-                Object.keys(libraryIdMapping).forEach(function (libraryIdalId) {
-                    var libraryCouchId = libraryIdMapping[libraryIdalId];
-                    // If offeringKey() was not in uniqueOfferings then
+            Object.keys(productIdMapping).forEach(function (productLegacyId) {
+                var productCouchId = productIdMapping[productLegacyId];
 
-                    var fakeKey = productIdalId + '-' + libraryIdalId;
+                libraryList.forEach(function(library) {
+                    var libraryCouchId = library.id;
+                    var offeringKey = makeOfferingKey(productLegacyId, libraryCouchId);
 
-                    if (!uniqueOfferings.hasOwnProperty(fakeKey)) {
+                    if (!offeringsThatExist[offeringKey]) {
                         emptyOfferingsList.push(createEmptyOfferingObject(cycle, libraryCouchId, productCouchId));
                     }
                 });
@@ -109,6 +110,26 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping,
     });
 
     return resultsPromise.promise;
+
+
+    function finalizeOffering( offering ){
+        var libraryIdalId = offering.libraryIdalId;
+        var libraryCrmId = offering.libraryCrmId;
+        var productLegacyId = offering.productLegacyId;
+        var productCouchId = productIdMapping[productLegacyId];
+
+        if ( selectionsByLibrary[libraryIdalId] && selectionsByLibrary[libraryIdalId][productCouchId] ){
+            offering.selection = selectionsByLibrary[libraryIdalId][productCouchId];
+        }
+
+        offering.library = libraryCrmId;
+        offering.product = productCouchId;
+        delete offering.libraryCrmId;
+        delete offering.libraryIdalId;
+        delete offering.productLegacyId;
+
+        offeringsThatExist[makeOfferingKey(productLegacyId,libraryCrmId)] = true;
+    }
 }
 
 
@@ -192,8 +213,9 @@ function createOffering( offering, cycle ) {
 function extractNascentOffering( row, cycle, libraryIdMapping, productIdMapping ){
     return {
         display: 'with-price',
-        library: libraryIdMapping[row.library_id],
-        product: productIdMapping[productLegacyId(row)],
+        libraryIdalId: row.library_id,
+        libraryCrmId: libraryIdMapping[row.library_id],
+        productLegacyId: util.makeUniqueProductIdFromDatabaseRow(row),
         cycle: cycle,
         pricing: {
             su : []
@@ -207,18 +229,17 @@ function createEmptyOfferingObject( cycle, libraryCouchId, productCouchId ){
         product: productCouchId,
         cycle: cycle,
         pricing: {
-            site: 0,
             su : []
         }
     };
 }
 
-function offeringKey(o) {
-    return productLegacyId(o) + '-' + o.library_id;
+function offeringKey(row) {
+    return makeOfferingKey(util.makeUniqueProductIdFromDatabaseRow(row), row.library_id);
 }
 
-function productLegacyId( row ){
-    return row.vendor_id + row.product_id;
+function makeOfferingKey( productId, libraryId ){
+    return productId + '_' + libraryId;
 }
 
 module.exports = {

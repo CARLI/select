@@ -52,9 +52,18 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
                 return Object.keys(productsByVendorId);
             })
             .then(vendorService.getVendorsById)
+            .then(filterActiveVendors)
             .then(function (vendors) {
                 vm.vendors = vendors;
             });
+    }
+
+    function filterActiveVendors(vendorList){
+        return vendorList.filter(vendorIsActive);
+
+        function vendorIsActive(vendor){
+            return vendor.isActive;
+        }
     }
 
     function loadProductsForVendor(vendor) {
@@ -77,12 +86,19 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
         }
 
         vm.loadingPromise[product.id] = offeringService.listOfferingsForProductId(product.id)
+            .then(filterActiveLibraries)
             .then(function(offerings){
                 product.offerings = offerings;
                 return offerings;
             });
 
         return vm.loadingPromise[product.id];
+    }
+
+    function filterActiveLibraries(offeringsList){
+        return offeringsList.filter(function(offering){
+            return offering.library.isActive;
+        });
     }
 
     function toggleProductSection(product){

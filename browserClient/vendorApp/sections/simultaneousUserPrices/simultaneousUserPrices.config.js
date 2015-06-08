@@ -4,6 +4,7 @@ angular.module('vendor.sections.simultaneousUserPrices',[
     'common.libraryService',
     'common.modalDialog',
     'common.productService',
+    'vendor.addSuLevelButton',
     'vendor.horizontalScrollSlider',
     'vendor.quickPricing'
 ]);
