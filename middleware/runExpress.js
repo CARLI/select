@@ -247,6 +247,16 @@ function runMiddlewareServer(){
                 .then(sendOk(res))
                 .catch(sendError(res));
         });
+        carliMiddleware.get('/user/validate-key/:key', function (req, res) {
+            user.isKeyValid(req.params.key)
+                .then(sendResult(res))
+                .catch(sendError(res));
+        });
+        carliMiddleware.put('/user/consume-key/:key', function (req, res) {
+            user.consumeKey(req.params.key, req.body)
+                .then(sendOk(res))
+                .catch(sendError(res));
+        });
     }
 }
 

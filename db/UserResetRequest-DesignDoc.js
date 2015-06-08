@@ -23,7 +23,7 @@ ddoc = {
         },
         listRequestsByResetKey: {
             map: function (doc) {
-                if ( doc.type === 'user-reset-request' && resetKeyIsNotExpired(doc) ) {
+                if ( doc.type === 'UserResetRequest' && resetKeyIsNotExpired(doc) ) {
                     emit (doc.key, doc);
                 }
 
@@ -37,7 +37,7 @@ ddoc = {
         },
         listExpiredRequestIds: {
             map: function (doc) {
-                if ( doc.type === 'userResetRequest' && resetKeyIsExpired(doc) ) {
+                if ( doc.type === 'UserResetRequest' && resetKeyIsExpired(doc) ) {
                     emit (doc._id, null);
                 }
 

@@ -5,15 +5,21 @@ var StoreOptions = config.storeOptions;
 var Store = require( '../../CARLI/Store' );
 var StoreModule = require( '../../CARLI/Store/CouchDb/Store');
 var userRepository = require('../../CARLI/Entity/UserRepository');
+var userResetRequestRepository = require('../../CARLI/Entity/UserResetRequestRepository');
 
 useAdminCouchCredentials();
 
 function useAdminCouchCredentials() {
-    var privilegedStoreOptions = {
+    var userStoreOptions = {
         couchDbUrl: StoreOptions.privilegedCouchDbUrl,
         couchDbName: '_users'
     };
-    userRepository.setStore(Store(StoreModule(privilegedStoreOptions)));
+    userRepository.setStore(Store(StoreModule(userStoreOptions)));
+    var resetStoreOptions = {
+        couchDbUrl: StoreOptions.privilegedCouchDbUrl,
+        couchDbName: 'user-reset-requests'
+    };
+    userResetRequestRepository.setStore(Store(StoreModule(resetStoreOptions)));
 }
 
 function list() {
@@ -34,7 +40,20 @@ function update(user) {
 }
 
 function requestPasswordReset(email) {
-    return userRepository.requestPasswordReset(email);
+    return userResetRequestRepository.create(email);
+}
+
+function isKeyValid(key) {
+    return userResetRequestRepository.isKeyValid(key);
+}
+
+function consumeKey(key, user) {
+    return userResetRequestRepository.isKeyValid(key)
+        .then(function() {
+            return userRepository.update(user).then(function () {
+                return userResetRequestRepository.consumeKey(key);
+            });
+        });
 }
 
 module.exports = {
@@ -42,5 +61,7 @@ module.exports = {
     load: load,
     create: create,
     update: update,
-    requestPasswordReset: requestPasswordReset
+    requestPasswordReset: requestPasswordReset,
+    isKeyValid: isKeyValid,
+    consumeKey: consumeKey
 };

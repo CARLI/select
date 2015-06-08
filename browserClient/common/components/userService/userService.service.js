@@ -7,19 +7,26 @@ function userService(CarliModules, $q, cycleService) {
 
     return {
         list: function () {
-            return $q.when( userMiddleware.list(cycleService.getCurrentCycle()) );
+            return $q.when( userMiddleware.list() );
         },
         create: function (user) {
-            return $q.when( userMiddleware.create(user, user.cycle) );
+            return $q.when( userMiddleware.create(user) );
         },
         update: function (user) {
-            return $q.when( userMiddleware.update(user, user.cycle) );
+            console.log('calling update');
+            return $q.when( userMiddleware.update(user) );
         },
         load: function (userId) {
-            return $q.when( userMiddleware.load(userId, cycleService.getCurrentCycle()) );
+            return $q.when( userMiddleware.load(userId) );
         },
         requestPasswordReset: function (email) {
             return $q.when( userMiddleware.requestPasswordReset(email) );
+        },
+        isKeyValid: function (key, user) {
+            return $q.when( userMiddleware.isKeyValid(key, user) );
+        },
+        consumeKey: function (key, user) {
+            return $q.when( userMiddleware.consumeKey(key, user) );
         }
     };
 }

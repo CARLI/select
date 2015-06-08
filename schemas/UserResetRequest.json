@@ -1,0 +1,18 @@
+{
+  "$schema": "json-schema.org/draft-04/schema",
+  "title": "UserResetRequest",
+  "schemaType": "UserResetRequest",
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string"
+    },
+    "key": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string"
+    }
+  },
+  "required": [ "email", "key", "date" ]
+}

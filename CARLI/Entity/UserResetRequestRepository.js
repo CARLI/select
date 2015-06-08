@@ -7,9 +7,12 @@ var Entity = require('../Entity')
     , StoreModule = require( '../Store/CouchDb/Store')
     , Q = require('q')
     , uuid = require('node-uuid')
+    , carliError = require('../Error')
 ;
+var request = require('../../config/environmentDependentModules/request');
 
-var UserResetRequestRepository = Entity('userResetRequest');
+
+var UserResetRequestRepository = Entity('UserResetRequest');
 var userResetRequestStoreOptions = {
     privilegedCouchDbUrl: StoreOptions.privilegedCouchDbUrl,
     couchDbUrl: StoreOptions.privilegedCouchDbUrl,
@@ -25,7 +28,17 @@ function createRequest( email ){
     };
 
     return deleteExpiredResetRequests().then(function() {
-        return UserResetRequestRepository.create( resetRequest, function() {} );
+        return UserResetRequestRepository.create(resetRequest)
+            .then(UserResetRequestRepository.load)
+            .then(function (resetRequest) {
+                console.log(resetRequest);
+                var url = config.getMiddlewareUrl() + '/tell-pixobot';
+                request.put({
+                    url: url,
+                    json: { message: "Reset password link generated for " + resetRequest.email + "\n  /reset/" + resetRequest.key }
+                });
+                return { ok: true };
+            });
     });
 
     function generateNonce() {
@@ -45,8 +58,13 @@ function deleteRequest( requestId ){
     return UserResetRequestRepository.delete( requestId );
 }
 
+function throwInvalidKey() {
+    throw carliError('Request has expired', 500);
+}
+
 function isKeyValid(key) {
     return getRequestByResetKey(key)
+        .catch(throwInvalidKey)
         .then(isRequestValid);
 }
 
@@ -61,7 +79,10 @@ function consumeKey(key) {
 }
 
 function getRequestByResetKey(key) {
-    return couchUtils.getCouchViewResultValues( 'user-reset-requests', 'listRequestsByResetKey', key);
+    return couchUtils.getCouchViewResultValues( 'user-reset-requests', 'listRequestsByResetKey', key)
+        .then(function(results) {
+            return results[0] || throwInvalidKey();
+        });
 }
 
 function isRequestValid(request) {
@@ -69,8 +90,9 @@ function isRequestValid(request) {
     var millisecondsSinceKeyWasGenerated = Date.now() - new Date(request.date).getTime();
 
     if (millisecondsSinceKeyWasGenerated > oneDayInMilliseconds) {
-        throw new Error('Request has expired');
+        throwInvalidKey();
     }
+    return request;
 }
 
 function deleteExpiredResetRequests() {

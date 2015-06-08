@@ -4,24 +4,31 @@ angular.module('carli.sections.login')
 function loginController ($location, alertService, authService, userService) {
     var vm = this;
 
-    vm.userLogin = {
-        email: '',
-        password: ''
-    };
+    vm.userLogin = {};
 
     redirectIfLoggedIn();
+    activate();
 
-    vm.forgotMode = false;
-    vm.submitLabel = "Log in";
+    function activate() {
+        console.log('activating');
+        vm.forgotMode = false;
+        vm.resetRequestSent = false;
+        vm.submitLabel = "Log in";
+        vm.userLogin = {
+            email: '',
+            password: ''
+        };
+    }
 
+    vm.resetLoginForm = activate;
     vm.submitLoginForm = submitLoginForm;
     vm.toggleForgotMode = toggleForgotMode;
 
     function submitLoginForm() {
         if (vm.forgotMode) {
-            requestPasswordReset();
+            return requestPasswordReset();
         } else {
-            createSession();
+            return createSession();
         }
     }
 
@@ -54,6 +61,7 @@ function loginController ($location, alertService, authService, userService) {
             .catch(swallowAuthError);
 
         function swallowAuthError() {
+            console.log('gulp');
             return true;
         }
     }
@@ -69,17 +77,11 @@ function loginController ($location, alertService, authService, userService) {
     }
 
     function requestPasswordReset() {
-        // TODO: Need a userResetRequest service for the new entity
-        //userService
-        //    .requestPasswordReset(vm.userLogin.email)
-        //    .then(loadUser)
-        //    .then(function (user) {
-        //        console.log('Generated password reset key for ' + user.email);
-        //        console.log('/reset?k=' + user.passwordResetKey);
-        //    })
-        //    .catch(function (err) {
-        //        console.log(err);
-        //    });
+        return userService.requestPasswordReset(vm.userLogin.email)
+            .then(function () {
+                vm.resetRequestSent = true;
+            });
+
 
         function loadUser() {
             return userService.load(vm.userLogin.email);

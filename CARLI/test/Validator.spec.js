@@ -27,6 +27,7 @@ var validTypes = [
     'ProductDetailCodes',
     'ProductLicenseType',
     'user',
+    'UserResetRequest',
     'Vendor',
     'VendorStatus'
 ];
