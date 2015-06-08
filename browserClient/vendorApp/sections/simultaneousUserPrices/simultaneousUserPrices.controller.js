@@ -320,22 +320,23 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
 
 
 
-    function addSuPricingLevel(){
-        var newLevel = makeSuLevel( highestSuLevel() +1 );
+    function addSuPricingLevel( numberOfUsers ){
+        var newLevel = makeSuLevel( numberOfUsers );
+
+        if ( suLevelExists() ){
+            return;
+        }
 
         vm.suLevels.push(newLevel);
         vm.selectedSuLevelIds[newLevel.id] = true;
 
         makeSuPricingRow(newLevel);
 
-        function highestSuLevel(){
-            var max = 0;
-            vm.suLevels.forEach(function(su){
-                if ( su.users > max ){
-                    max = su.users;
-                }
-            });
-            return max;
+
+        function suLevelExists(){
+            return vm.suLevels.filter(function(suLevel){
+                return suLevel.users === numberOfUsers;
+            }).length;
         }
     }
 

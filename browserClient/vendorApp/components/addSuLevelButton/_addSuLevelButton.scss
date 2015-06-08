@@ -1,0 +1,20 @@
+add-su-level-button {
+    display: block;
+    padding: 0.5rem;
+
+    button,
+    label,
+    input[type=number] {
+        display: inline-block;
+        margin: 0;
+    }
+
+    input[type=number] {
+        color: $black;
+        height: $button-height;
+        margin-left: 0.5rem;
+        position: relative;
+        top: -1px;
+        width: 4rem;
+    }
+}
