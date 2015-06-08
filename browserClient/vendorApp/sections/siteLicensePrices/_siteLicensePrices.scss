@@ -21,6 +21,7 @@
                 border-left: none;
                 @include flex(1 1 auto);
                 padding: 1rem;
+                text-align: center;
             }
 
             li.header {

@@ -11,6 +11,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     vm.quickPricingCallback = quickPricingCallback;
     vm.saveOfferings = saveOfferings;
     vm.downloadCsv = downloadCsv;
+    vm.checkViewOption = checkViewOption;
 
     activate();
 
@@ -315,5 +316,15 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             return vendorName + ' ' + cycleName + ' Site License Prices.csv';
         }
 
+    }
+
+    function checkViewOption(option) {
+
+        if (vm.viewOptions[option] === true ) {
+            vm.viewOptions[option] = false;
+        }
+        else {
+            vm.viewOptions[option] = true;
+        }
     }
 }
