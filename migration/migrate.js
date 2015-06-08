@@ -41,6 +41,7 @@ function doMigration(){
         .then(migrateProducts)
         .then(gatherSelections)
         .then(migrateOfferings)
+        .then(makeVendorStatuses)
         .then(createVendorDatabases)
         .then(finishMigration)
         .then(closeIdalConnection)
@@ -160,6 +161,10 @@ function doMigration(){
         return CycleRepository.load(cycleId).then(function (cycle) {
             return offeringMigration.migrateOfferings(connection, cycle, libraryIdMapping, productMappingsByCycle[cycleId], selectionsByCycle[cycleId]);
         });
+    }
+
+    function makeVendorStatuses(){
+        return vendorDatabases.createVendorStatusesForAllCycles();
     }
 
     function createVendorDatabases() {
