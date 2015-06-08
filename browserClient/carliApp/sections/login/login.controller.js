@@ -69,16 +69,17 @@ function loginController ($location, alertService, authService, userService) {
     }
 
     function requestPasswordReset() {
-        userService
-            .requestPasswordReset(vm.userLogin.email)
-            .then(loadUser)
-            .then(function (user) {
-                console.log('Generated password reset key for ' + user.email);
-                console.log('/reset?k=' + user.passwordResetKey);
-            })
-            .catch(function (err) {
-                console.log(err);
-            });
+        // TODO: Need a userResetRequest service for the new entity
+        //userService
+        //    .requestPasswordReset(vm.userLogin.email)
+        //    .then(loadUser)
+        //    .then(function (user) {
+        //        console.log('Generated password reset key for ' + user.email);
+        //        console.log('/reset?k=' + user.passwordResetKey);
+        //    })
+        //    .catch(function (err) {
+        //        console.log(err);
+        //    });
 
         function loadUser() {
             return userService.load(vm.userLogin.email);
