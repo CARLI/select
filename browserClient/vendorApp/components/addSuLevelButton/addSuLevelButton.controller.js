@@ -4,7 +4,7 @@ angular.module('vendor.addSuLevelButton')
 function addSuLevelButtonController(){
     var vm = this;
 
-    vm.numberOfUsers = 1;
+    vm.numberOfUsers = vm.nextSuLevel() || 1;
 
     vm.addSuPrice = addSuPrice;
 

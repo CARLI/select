@@ -4,7 +4,8 @@ angular.module('vendor.addSuLevelButton')
             restrict: 'E',
             templateUrl: '/vendorApp/components/addSuLevelButton/addSuLevelButton.html',
             scope: {
-                addSuPricingLevel: '='
+                addSuPricingLevel: '=',
+                nextSuLevel: '='
             },
             controller: 'addSuLevelButtonController',
             controllerAs: 'vm',

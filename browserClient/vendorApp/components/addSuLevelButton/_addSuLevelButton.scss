@@ -1,6 +1,7 @@
 add-su-level-button {
     display: block;
-    padding: 0.5rem;
+    font-size: 0;
+    padding: 0.5rem 0;
 
     button,
     label,
@@ -11,6 +12,9 @@ add-su-level-button {
 
     input[type=number] {
         color: $black;
+        font-family: verdana;
+        @include font-size(14);
+        font-weight: normal;
         height: $button-height;
         margin-left: 0.5rem;
         position: relative;

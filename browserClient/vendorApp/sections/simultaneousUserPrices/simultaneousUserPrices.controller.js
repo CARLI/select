@@ -16,6 +16,7 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
 
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.addSuPricingLevel = addSuPricingLevel;
+    vm.nextSuLevel = nextSuLevel;
     vm.saveOfferings = saveOfferings;
     vm.quickPricingCallback = quickPricingCallback;
 
@@ -411,5 +412,15 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
         function markProductChanged( productId ){
             vm.changedProductIds[productId] = true;
         }
+    }
+
+    function nextSuLevel(){
+        var max = 0;
+        vm.suLevels.forEach(function(su){
+            if ( su.users > max ){
+                max = su.users;
+            }
+        });
+        return max + 1;
     }
 }

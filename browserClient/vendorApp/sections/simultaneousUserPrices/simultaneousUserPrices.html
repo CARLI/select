@@ -14,6 +14,7 @@
             products="vm.products" selected-product-ids="vm.selectedProductIds"
             su-levels="vm.suLevels" selected-su-level-ids="vm.selectedSuLevelIds"
             add-su-pricing-level="vm.addSuPricingLevel"
+            next-su-level="vm.nextSuLevel"
             quick-pricing-callback="vm.quickPricingCallback">
     </quick-pricing-su>
 
@@ -39,7 +40,7 @@
         </div>
     </div>
 
-    <add-su-level-button add-su-pricing-level="vm.addSuPricingLevel"></add-su-level-button>
+    <add-su-level-button add-su-pricing-level="vm.addSuPricingLevel" next-su-level="vm.nextSuLevel"></add-su-level-button>
 </section>
 
 <modal-dialog modal-id="'progress-modal'" modal-title="'Saving Pricing'">

@@ -30,10 +30,6 @@
     .pricing-grid-container {
         @include flex(1 1 $grid-width);
     }
-
-    .carli-button.add {
-        margin-top: 1rem;
-    }
 }
 
 #progress-modal {
