@@ -1,0 +1,35 @@
+#dashboard {
+    $top-height: 3rem;
+
+    section {
+        border: $default-border;
+        padding: 1rem;
+        margin-bottom: 2rem;
+        padding-top: 1rem + $top-height;
+        position: relative;
+
+        .header {
+            background: $purple;
+            color: $white;
+            display: block;
+            font-family: 'Merriweather', serif;
+            @include font-size(16);
+            height: $top-height;
+            line-height: 2rem;
+            padding: 0.5rem;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
+        checkbox {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress {
+            margin-bottom: 0;
+        }
+    }
+}
