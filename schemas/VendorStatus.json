@@ -32,6 +32,12 @@
             "description": "Is this vendor allowed to offer products in the One-Time Purchase cycle?",
             "type": "integer"
         },
+        "progress": {
+            "description": "Rough estimate of how complete the vendor's pricing is for the cycle",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+        },
         "checklist": {
             "description": "Used by the vendor app dashboard to let them track their progress",
             "type": "object",
