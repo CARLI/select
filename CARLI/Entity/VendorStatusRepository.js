@@ -7,6 +7,7 @@ var Entity = require('../Entity')
   , Validator = require('../Validator')
   , moment = require('moment')
   , Q = require('q')
+  , _ = require('lodash')
   ;
 
 var VendorStatusRepository = Entity('VendorStatus');
@@ -64,7 +65,8 @@ function getStatusForVendor( vendorId, cycle ){
     return expandVendorStatuses(couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listVendorStatusesByVendorId', vendorId))
         .then(function(statusesForVendor){
             if ( statusesForVendor.length > 0 ){
-                return statusesForVendor[0];
+                var status = statusesForVendor[0];
+                return ensureDefaultsForStatus(status, cycle);
             }
             else {
                 return newStatusForVendor(vendorId, cycle);
@@ -85,6 +87,15 @@ function newStatusForVendor( vendorId, cycle ){
             descriptions: false
         }
     }
+}
+
+function ensureDefaultsForStatus( vendorStatus, cycle ){
+    var defaults = newStatusForVendor( vendorStatus.vendor, cycle );
+    //_.extend only goes one level deep so we have to manually extend the checklist object too
+    var checklist = _.extend(defaults.checklist, vendorStatus.checklist);
+    var result = _.extend(defaults, vendorStatus);
+    result.checklist = checklist;
+    return result;
 }
 
 function ensureStatusExistsForVendor( vendorId, cycle ){
