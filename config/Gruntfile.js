@@ -5,9 +5,10 @@ module.exports = function (grunt) {
     var localConfigFile = __dirname + '/../config/local.js';
     var environmentDependentModulesDirectory = __dirname + '/environmentDependentModules';
     var environmentDependentModules = [
-        'request',
         'couchApp',
-        'crmQueries'
+        'crmQueries',
+        'currentEnvironment',
+        'request'
     ];
 
     grunt.registerTask('ensure-local-config', ensureLocalConfigExists);

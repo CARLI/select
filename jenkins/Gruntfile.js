@@ -44,7 +44,10 @@ module.exports = function (grunt) {
                 throw new Error('Couch container link not found');
             }
 
+            //var password = process.env.CARLI_COUCHDB_ADMIN_PASSWORD || 'relax';
+
             return {
+                privilegedCouchDbUrl: 'http://admin:relax@' + host + ':' + port,
                 couchDbUrl: 'http://' + host + ':' + port,
                 couchDbName: 'carli'
             };
@@ -52,19 +55,33 @@ module.exports = function (grunt) {
 
         function getPublicCouchConfig() {
             return {
+                privilegedCouchDbUrl: getPrivilegedCouchDbUrl(instance),
                 couchDbUrl: getPublicCouchDbUrl(instance),
                 couchDbName: 'carli'
             };
 
             //noinspection FunctionWithMultipleReturnPointsJS
-            function getPublicCouchDbUrl() {
+            function getPrivilegedCouchDbUrl() {
                 switch (instance) {
                     case 'dev':
                         return dbInfo.dev.baseUrl;
-                 case 'qa':
+                    case 'qa':
                         return dbInfo.qa.baseUrl;
                     case 'prod':
                         return dbInfo.prod.baseUrl;
+                    default:
+                        throw new Error('Invalid instance: ' + instance);
+                }
+            }
+            //noinspection FunctionWithMultipleReturnPointsJS
+            function getPublicCouchDbUrl() {
+                switch (instance) {
+                    case 'dev':
+                        return dbInfo.dev.publicBaseUrl;
+                    case 'qa':
+                        return dbInfo.qa.publicBaseUrl;
+                    case 'prod':
+                        return dbInfo.prod.publicBaseUrl;
                     default:
                         throw new Error('Invalid instance: ' + instance);
                 }
