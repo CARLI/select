@@ -5,4 +5,11 @@
     <p>Welcome to the Vendor Price Entry App!</p>
 
     <p>CARLI Prices reflects the dollar amount that these products were offered at last year until you begin editing the prices.</p>
+
+    <section id="checklist">
+        <div class="header">Checklist</div>
+        <checkbox ng-change="vm.updateVendorStatus()" ng-model="vm.vendorStatus.checklist.siteLicense">Site License Prices</checkbox>
+        <checkbox ng-change="vm.updateVendorStatus()" ng-model="vm.vendorStatus.checklist.simultaneousUsers">Simultaneous User Prices</checkbox>
+        <checkbox ng-change="vm.updateVendorStatus()" ng-model="vm.vendorStatus.checklist.descriptions">Product Descriptions</checkbox>
+    </section>
 </section>
