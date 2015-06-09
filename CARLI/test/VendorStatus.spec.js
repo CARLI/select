@@ -77,7 +77,11 @@ function runVendorStatusSpecificTests(testCycle) {
 
             return vendorStatusRepository.getStatusForVendor(testVendorId, testCycle)
                 .then(function( statusForVendor ){
-                    return expect(statusForVendor.vendor).to.equal(testVendorId);
+                    return Q.all([
+                        expect(statusForVendor.vendor).to.equal(testVendorId),
+                        expect(statusForVendor.lastActivity).to.be.an('undefined'),
+                        expect(statusForVendor.checklist.siteLicense).to.equal(false)
+                    ]);
                 });
         });
     });

@@ -78,7 +78,12 @@ function newStatusForVendor( vendorId, cycle ){
         vendor: vendorId,
         description: 'No Activity',
         isClosed: false,
-        offeringFlaggedCount: 0
+        offeringFlaggedCount: 0,
+        checklist: {
+            siteLicense: false,
+            simultaneousUsers: false,
+            descriptions: false
+        }
     }
 }
 
