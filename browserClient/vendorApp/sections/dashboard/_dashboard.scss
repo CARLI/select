@@ -5,6 +5,7 @@
         border: $default-border;
         padding: 1rem;
         margin-bottom: 2rem;
+        min-height: 100px;
         padding-top: 1rem + $top-height;
         position: relative;
 
@@ -34,6 +35,12 @@
 
         ul {
             padding-left: 2rem;
+        }
+
+        ask-carli-button {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
         }
     }
 }

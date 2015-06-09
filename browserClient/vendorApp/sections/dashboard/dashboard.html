@@ -8,12 +8,13 @@
 
     <section id="alerts">
         <div class="header">Alerts</div>
-        You have <strong>{{ vm.vendorStatus.flaggedOfferingsCount }}</strong> pricing issues.
+        <p>You have <strong>{{ vm.vendorStatus.flaggedOfferingsCount }}</strong> pricing issues.</p>
         <ul>
             <li ng-repeat="(reason, count) in vm.vendorStatus.flaggedOfferingsReasons">
                 {{ count }} price{{ count > 1 ? 's were':' was' }} flagged because {{count > 1 ? 'they were':'it was' }} {{ reason }}.
             </li>
         </ul>
+        <ask-carli-button context="flagged offerings - alerts dashboard section"></ask-carli-button>
     </section>
 
     <section id="checklist">
