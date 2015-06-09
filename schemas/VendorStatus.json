@@ -31,6 +31,21 @@
         "offeringFlaggedCount": {
             "description": "Is this vendor allowed to offer products in the One-Time Purchase cycle?",
             "type": "integer"
+        },
+        "checklist": {
+            "description": "Used by the vendor app dashboard to let them track their progress",
+            "type": "object",
+            "properties": {
+                "siteLicense": {
+                    "type": "boolean"
+                },
+                "simultaneousUsers": {
+                    "type": "boolean"
+                },
+                "descriptions": {
+                    "type": "boolean"
+                }
+            }
         }
     },
     "required": [ "cycle", "vendor" ]

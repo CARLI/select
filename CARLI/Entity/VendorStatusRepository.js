@@ -99,6 +99,11 @@ function reset( vendorStatus ){
     vendorStatus.description = 'No Activity';
     vendorStatus.isClosed = false;
     vendorStatus.offeringFlaggedCount = 0;
+    vendorStatus.checklist = {
+        siteLicense: false,
+        simultaneousUsers: false,
+        descriptions: false
+    };
 
     return vendorStatus;
 }

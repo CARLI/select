@@ -110,6 +110,11 @@ function runVendorStatusSpecificTests(testCycle) {
             expect(testVendorStatus.description).to.equal('No Activity');
             expect(testVendorStatus.isClosed).to.equal(false);
             expect(testVendorStatus.offeringFlaggedCount).to.equal(0);
+
+            expect(testVendorStatus.checklist.siteLicense).to.equal(false);
+            expect(testVendorStatus.checklist.simultaneousUsers).to.equal(false);
+            expect(testVendorStatus.checklist.descriptions).to.equal(false);
+
         });
     });
 }
