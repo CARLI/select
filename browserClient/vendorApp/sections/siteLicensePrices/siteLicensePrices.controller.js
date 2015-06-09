@@ -1,7 +1,7 @@
 angular.module('vendor.sections.siteLicensePrices')
     .controller('siteLicensePricesController', siteLicensePricesController);
 
-function siteLicensePricesController($scope, $q, $filter, cycleService, libraryService, offeringService, productService, userService, siteLicensePricesCsv){
+function siteLicensePricesController($scope, $q, $filter, cycleService, libraryService, offeringService, productService, userService, siteLicensePricesCsv, vendorStatusService){
     var vm = this;
     vm.loadingPromise = null;
     vm.viewOptions = {};
@@ -15,6 +15,8 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     activate();
 
     function activate() {
+        vm.vendorId = userService.getUser().vendor.id;
+
         vm.viewOptions = {
             size: true,
             type: true,
@@ -235,8 +237,13 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             .catch(function(err){
                 console.log('error saving offerings',err);
             })
+            .then(updateVendorStatus)
             .then(syncData)
             .catch(syncDataError);
+
+        function updateVendorStatus(){
+            return vendorStatusService.updateVendorStatusActivity( 'Site License Prices Updated', vm.vendorId, cycleService.getCurrentCycle() );
+        }
 
         function syncData(){
             return cycleService.syncDataBackToCarli();

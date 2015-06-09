@@ -1,7 +1,7 @@
 angular.module('vendor.sections.simultaneousUserPrices')
     .controller('simultaneousUserPricesController', simultaneousUserPricesController);
 
-function simultaneousUserPricesController($scope, $q, $filter, cycleService, offeringService, productService, userService){
+function simultaneousUserPricesController($scope, $q, $filter, cycleService, offeringService, productService, userService, vendorStatusService){
     var vm = this;
     vm.changedProductIds = {};
     vm.loadingPromise = null;
@@ -256,6 +256,7 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
 
         function updateChangedProductsConcurrently(){
             return $q.all( productIdsToUpdate.map(updateOfferingsForAllLibrariesForProduct) )
+                .then(updateVendorStatus)
                 .then(syncData)
                 .then(function(){
                     vm.changedProductIds = {};
@@ -312,6 +313,10 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
         function updateOfferingsForAllLibrariesForProduct( productId ){
             var newSuPricing = newSuPricingByProduct[productId];
             return offeringService.updateSuPricingForAllLibrariesForProduct(productId, newSuPricing );
+        }
+
+        function updateVendorStatus(){
+            return vendorStatusService.updateVendorStatusActivity( 'Simultaneous User Prices Updated', vm.vendorId, cycleService.getCurrentCycle() );
         }
 
         function syncData(){

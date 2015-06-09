@@ -1,7 +1,7 @@
 angular.module('common.vendorStatusService')
     .service('vendorStatusService', vendorStatusService);
 
-function vendorStatusService( CarliModules, $q, errorHandler ) {
+function vendorStatusService( CarliModules, $filter, $q, errorHandler ) {
 
     var vendorStatusModule = CarliModules.VendorStatus;
 
@@ -9,6 +9,7 @@ function vendorStatusService( CarliModules, $q, errorHandler ) {
         list:   function(cycle) { return $q.when( vendorStatusModule.list(cycle)).catch(errorHandler); },
         create: function() { return $q.when( vendorStatusModule.create.apply(this, arguments) ); },
         update: updateVendorStatus,
+        updateVendorStatusActivity: updateVendorStatusActivity,
         load:   function() { return $q.when( vendorStatusModule.load.apply(this, arguments) ).catch(errorHandler); },
         getStatusForVendor: getStatusForVendor,
         closePricingForVendor: closePricingForVendor,
@@ -17,6 +18,15 @@ function vendorStatusService( CarliModules, $q, errorHandler ) {
 
     function updateVendorStatus( vendorStatus, cycle ){
         return $q.when( vendorStatusModule.update(vendorStatus, cycle) );
+    }
+
+    function updateVendorStatusActivity( activityMessage, vendorId, cycle ){
+        return getStatusForVendor(vendorId, cycle)
+            .then(function(vendorStatus){
+                vendorStatus.lastActivity = new Date();
+                vendorStatus.description = activityMessage;
+                return updateVendorStatus(vendorStatus, cycle);
+            });
     }
 
     function getStatusForVendor( vendorId, cycle ) {
