@@ -90,6 +90,14 @@ function getCycleStatusForVendorId( vendorId, cycleId ){
     });
 }
 
+function updateFlaggedOfferingsForVendor(vendorId, cycle){
+    return middlewareRequest({
+        path: '/update-flagged-offerings-for-vendor/' + vendorId + '/for-cycle/' + cycle.id,
+        method: 'get',
+        json: true
+    });
+}
+
 module.exports = {
     createVendorDatabasesForAllCycles: createVendorDatabasesForAllCycles,
     createVendorDatabasesForCycle: createVendorDatabasesForCycle,
@@ -103,5 +111,6 @@ module.exports = {
     triggerIndexingForCycleId: triggerIndexingForCycleId,
     getCycleStatusForAllVendorsAllCycles: getCycleStatusForAllVendorsAllCycles,
     getCycleStatusForAllVendors: getCycleStatusForAllVendors,
-    getCycleStatusForVendorId: getCycleStatusForVendorId
+    getCycleStatusForVendorId: getCycleStatusForVendorId,
+    updateFlaggedOfferingsForVendor: updateFlaggedOfferingsForVendor
 };

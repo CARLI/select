@@ -3,7 +3,9 @@ var Q = require('q');
 var couchUtils = require('../../CARLI/Store/CouchDb/Utils');
 var cycleRepository = require('../../CARLI/Entity/CycleRepository');
 var cycleRepositoryForVendor = require('../../CARLI/Entity/CycleRepositoryForVendor');
+var offeringRepository = require('../../CARLI/Entity/OfferingRepository.js');
 var vendorRepository = require('../../CARLI/Entity/VendorRepository');
+var vendorStatusRepository = require('../../CARLI/Entity/VendorStatusRepository.js');
 
 function createVendorDatabasesForAllCycles() {
     return cycleRepository.list().then(function (cycles) {
@@ -265,6 +267,55 @@ function getDatabaseStatusForVendor(vendor, cycleId) {
     }
 }
 
+function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
+    var cycle = null;
+    var flaggedOfferingsCount = 0;
+    var flaggedOfferingsReason = {};
+
+    return vendorRepository.load(vendorId)
+        .then(loadCycleForVendor, catchNoVendor)
+        .then(function(vendorCycle){
+            cycle = vendorCycle;
+            return offeringRepository.listOfferingsUnexpanded(cycle);
+        }, catchNoCycle)
+        .then(function(offeringsList){
+            offeringsList.forEach(function(offering){
+                if ( offeringRepository.getFlaggedState(offering) ){
+                    flaggedOfferingsCount++;
+                    offering.flaggedReason.forEach(function(reason){
+                        flaggedOfferingsReason[reason] = (flaggedOfferingsReason[reason] || 0) + 1;
+                    });
+                }
+            });
+        })
+        .then(updateVendorStatusFlaggedOfferings)
+        .catch(function(err){
+            console.log('error updating flagged offerings', err);
+        });
+
+    function loadCycleForVendor(vendor){
+        var cycleRepository = cycleRepositoryForVendor(vendor);
+        return cycleRepository.load(cycleId);
+    }
+
+    function catchNoVendor( err ){
+        console.log('error updating Flagged Offerings for vendor' + vendorId +' - No Vendor', err);
+    }
+
+    function catchNoCycle( err ){
+        console.log('error updating Flagged Offerings for vendor' + vendorId +' - No Cycle', err);
+    }
+
+    function updateVendorStatusFlaggedOfferings(){
+        return vendorStatusRepository.getStatusForVendor(vendorId, cycle)
+            .then(function(vendorStatus){
+                vendorStatus.flaggedOfferingsCount = flaggedOfferingsCount;
+                vendorStatus.flaggedOfferingsReasons = flaggedOfferingsReason;
+                return vendorStatusRepository.update(vendorStatus, cycle);
+            });
+    }
+}
+
 module.exports = {
     createVendorDatabasesForAllCycles: createVendorDatabasesForAllCycles,
     createVendorDatabasesForCycle: createVendorDatabasesForCycle,
@@ -278,5 +329,6 @@ module.exports = {
     triggerIndexingForCycleId: triggerIndexingForCycleId,
     getCycleStatusForAllVendorsAllCycles: getCycleStatusForAllVendorsAllCycles,
     getCycleStatusForAllVendors: getCycleStatusForAllVendors,
-    getCycleStatusForVendorId: getCycleStatusForVendorId
+    getCycleStatusForVendorId: getCycleStatusForVendorId,
+    updateFlaggedOfferingsForVendor: updateFlaggedOfferingsForVendor
 };

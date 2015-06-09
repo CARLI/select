@@ -29,9 +29,7 @@ function listProductsWithOfferingsForVendorId(vendorId, cycleId) {
 
 function updateSuPricingForProduct( productId, vendorId, newSuPricing, cycleId ){
     var cycle = null;
-    console.log('updateSuPricingForProduct '+productId);
-    console.log(newSuPricing);
-
+    
     return vendorRepository.load(vendorId)
         .then(function(vendor) {
             var cycleRepository = cycleRepositoryForVendor(vendor);

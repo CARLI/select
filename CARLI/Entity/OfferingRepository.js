@@ -86,7 +86,12 @@ function updateOffering( offering, cycle ){
 
 function listOfferings(cycle){
     setCycle(cycle);
-    return expandOfferings( OfferingRepository.list(cycle.getDatabaseName()), cycle);
+    return expandOfferings( listOfferingsUnexpanded(cycle), cycle);
+}
+
+function listOfferingsUnexpanded(cycle){
+    setCycle(cycle);
+    return OfferingRepository.list(cycle.getDatabaseName())
 }
 
 function transformOfferingsForNewCycle(newCycle, sourceCycle) {
@@ -558,6 +563,7 @@ module.exports = {
     create: createOffering,
     update: updateOffering,
     list: listOfferings,
+    listOfferingsUnexpanded: listOfferingsUnexpanded,
     load: loadOffering,
     delete: deleteOffering,
 
