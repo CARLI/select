@@ -32,6 +32,10 @@
             "description": "Is this vendor allowed to offer products in the One-Time Purchase cycle?",
             "type": "integer"
         },
+        "flaggedOfferingsReasons": {
+            "description": "Maps reasons for offerings being flagged to the count of each",
+            "type": "object"
+        },
         "progress": {
             "description": "Rough estimate of how complete the vendor's pricing is for the cycle",
             "type": "integer",

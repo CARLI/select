@@ -343,7 +343,7 @@ function getFlaggedState(offering){
 
     function userFlaggedState(){
         if (offering.flagged) {
-            offering.flaggedReason = 'Flagged by user';
+            offering.flaggedReason = ['Flagged by CARLI staff'];
         }
         return offering.flagged;
     }
@@ -356,7 +356,6 @@ function getFlaggedState(offering){
             var flagGreaterThan5PercentReduction = doesDecreaseFromLastYearExceed5Percent();
             var flagReasons = [];
             if (flagSiteLicensePrice) {
-                flagReasons.push('SU offering for less than the Site license price');
             }
             if (flagSuPrices) {
                 flagReasons.push('SU offering for more users with lower price');
@@ -367,7 +366,7 @@ function getFlaggedState(offering){
             if (flagGreaterThan5PercentReduction) {
                 flagReasons.push('Offering is more than 5% less than last year');
             }
-            offering.flaggedReason  = flagReasons.join("\n");
+            offering.flaggedReason  = flagReasons;
             return flagSiteLicensePrice || flagSuPrices || flagExceedsPriceCap || flagGreaterThan5PercentReduction;
         }
         return false;
