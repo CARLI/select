@@ -1,4 +1,4 @@
-angular.module('library.askCarliForm')
+angular.module('common.askCarliForm')
     .factory('askCarliService', askCarliService);
 
 function askCarliService( $http, config ) {

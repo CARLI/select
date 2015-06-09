@@ -1,4 +1,4 @@
-angular.module('library.askCarliButton')
+angular.module('common.askCarliButton')
 .directive('askCarliButton', function(askCarliService){
     return {
         restrict: 'E',
