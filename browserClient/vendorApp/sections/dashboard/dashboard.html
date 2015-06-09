@@ -11,7 +11,7 @@
         You have <strong>{{ vm.vendorStatus.flaggedOfferingsCount }}</strong> pricing issues.
         <ul>
             <li ng-repeat="(reason, count) in vm.vendorStatus.flaggedOfferingsReasons">
-                {{ count }} offerings were flagged because {{ reason }}.
+                {{ count }} price{{ count > 1 ? 's were':' was' }} flagged because {{count > 1 ? 'they were':'it was' }} {{ reason }}.
             </li>
         </ul>
     </section>
