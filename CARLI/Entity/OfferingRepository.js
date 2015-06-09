@@ -356,6 +356,7 @@ function getFlaggedState(offering){
             var flagGreaterThan5PercentReduction = doesDecreaseFromLastYearExceed5Percent();
             var flagReasons = [];
             if (flagSiteLicensePrice) {
+                flagReasons.push('Site license price for less than an SU offering');
             }
             if (flagSuPrices) {
                 flagReasons.push('SU offering for more users with lower price');
