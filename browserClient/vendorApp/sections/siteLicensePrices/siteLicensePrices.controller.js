@@ -3,14 +3,19 @@ angular.module('vendor.sections.siteLicensePrices')
 
 function siteLicensePricesController($scope, $q, $filter, cycleService, libraryService, offeringService, productService, userService, siteLicensePricesCsv, vendorStatusService){
     var vm = this;
+
     vm.loadingPromise = null;
     vm.viewOptions = {};
     vm.selectedProductIds = {};
     vm.selectedLibraryIds = {};
+    vm.flaggedOfferingsCount = 0;
+    vm.flaggedOfferingsReasons = {};
+
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.quickPricingCallback = quickPricingCallback;
     vm.saveOfferings = saveOfferings;
     vm.downloadCsv = downloadCsv;
+
 
     activate();
 
@@ -29,6 +34,9 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     }
 
     function initializePricingGrid(){
+        vm.flaggedOfferingsCount = 0;
+        vm.flaggedOfferingsReasons = {};
+
         return loadProducts()
             .then(buildPriceArray)
             .then(buildPricingGrid);
@@ -118,9 +126,13 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             var offering = vm.offeringsForLibraryByProduct[product.id][library.id] || { pricing: { site: '&nbsp;' }};
             var price = offering.pricing.site || '&nbsp;';
             var offeringWrapper = $('<div class="column offering input">');
-            if (offering.flagged) {
+            if (offeringService.getFlaggedState(offering)) {
+                vm.flaggedOfferingsCount++;
+                offering.flaggedReason.forEach(function(reason){
+                    vm.flaggedOfferingsReasons[reason] = (vm.flaggedOfferingsReasons[reason] || 0) + 1;
+                });
                 offeringWrapper.addClass('flagged');
-                offeringWrapper.attr('title', offering.flaggedReason);
+                offeringWrapper.attr('title', offering.flaggedReason[0]);
             }
             var offeringCell = offeringWrapper.append(createReadOnlyOfferingCell(price));
 
@@ -237,12 +249,17 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             .catch(function(err){
                 console.log('error saving offerings',err);
             })
+            .then(updateVendorFlaggedOfferings)
             .then(updateVendorStatus)
             .then(syncData)
             .catch(syncDataError);
 
         function updateVendorStatus(){
             return vendorStatusService.updateVendorStatusActivity( 'Site License Prices Updated', vm.vendorId, cycleService.getCurrentCycle() );
+        }
+
+        function updateVendorFlaggedOfferings(){
+            return vendorStatusService.updateVendorStatusFlaggedOfferings( vm.flaggedOfferingsCount, vm.flaggedOfferingsReasons, vm.vendorId, cycleService.getCurrentCycle() );
         }
 
         function syncData(){

@@ -93,8 +93,8 @@ function runVendorStatusSpecificTests(testCycle) {
                         expect(statusForVendor.lastActivity).to.equal(testActivity),
                         expect(statusForVendor.description).to.equal('No Activity'),
                         expect(statusForVendor.isClosed).to.equal(false),
-                        expect(statusForVendor.offeringFlaggedCount).to.equal(0),
-                        expect(statusForVendor.offeringFlaggedReasons).to.be.empty,
+                        expect(statusForVendor.flaggedOfferingsCount).to.equal(0),
+                        expect(statusForVendor.flaggedOfferingsReasons).to.be.empty,
                         expect(statusForVendor.progress).to.equal(0),
                         expect(statusForVendor.checklist.siteLicense).to.equal(false),
                         expect(statusForVendor.checklist.simultaneousUsers).to.equal(true),
@@ -144,8 +144,8 @@ function runVendorStatusSpecificTests(testCycle) {
             expect(testVendorStatus.lastActivity).to.be.a('null');
             expect(testVendorStatus.description).to.equal('No Activity');
             expect(testVendorStatus.isClosed).to.equal(false);
-            expect(testVendorStatus.offeringFlaggedCount).to.equal(0);
-            expect(testVendorStatus.offeringFlaggedReasons).to.be.empty;
+            expect(testVendorStatus.flaggedOfferingsCount).to.equal(0);
+            expect(testVendorStatus.flaggedOfferingsReasons).to.be.empty;
             expect(testVendorStatus.progress).to.equal(0);
             expect(testVendorStatus.checklist.siteLicense).to.equal(false);
             expect(testVendorStatus.checklist.simultaneousUsers).to.equal(false);

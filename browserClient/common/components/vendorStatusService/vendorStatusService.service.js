@@ -10,6 +10,7 @@ function vendorStatusService( CarliModules, $filter, $q, errorHandler ) {
         create: function() { return $q.when( vendorStatusModule.create.apply(this, arguments) ); },
         update: updateVendorStatus,
         updateVendorStatusActivity: updateVendorStatusActivity,
+        updateVendorStatusFlaggedOfferings: updateVendorStatusFlaggedOfferings,
         load:   function() { return $q.when( vendorStatusModule.load.apply(this, arguments) ).catch(errorHandler); },
         getStatusForVendor: getStatusForVendor,
         closePricingForVendor: closePricingForVendor,
@@ -25,6 +26,15 @@ function vendorStatusService( CarliModules, $filter, $q, errorHandler ) {
             .then(function(vendorStatus){
                 vendorStatus.lastActivity = new Date();
                 vendorStatus.description = activityMessage;
+                return updateVendorStatus(vendorStatus, cycle);
+            });
+    }
+
+    function updateVendorStatusFlaggedOfferings( flaggedOfferingsCount, flaggedOfferingsReasons, vendorId, cycle ){
+        return getStatusForVendor(vendorId, cycle)
+            .then(function(vendorStatus){
+                vendorStatus.flaggedOfferingsCount = flaggedOfferingsCount;
+                vendorStatus.flaggedOfferingsReasons = flaggedOfferingsReasons;
                 return updateVendorStatus(vendorStatus, cycle);
             });
     }

@@ -28,7 +28,7 @@
             "description": "Has this vendor been locked out of the Vendor app?",
             "type": "boolean"
         },
-        "offeringFlaggedCount": {
+        "flaggedOfferingsCount": {
             "description": "Is this vendor allowed to offer products in the One-Time Purchase cycle?",
             "type": "integer"
         },

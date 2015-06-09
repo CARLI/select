@@ -44,7 +44,7 @@ function createVendorStatusesForAllCycles(){
                 vendor: vendor.id,
                 description: 'No Activity',
                 isClosed: false,
-                offeringFlaggedCount: 0
+                flaggedOfferingsCount: 0
             };
 
             return vendorStatusRepository.create(newStatus, cycle)

@@ -80,8 +80,8 @@ function newStatusForVendor( vendorId, cycle ){
         vendor: vendorId,
         description: 'No Activity',
         isClosed: false,
-        offeringFlaggedCount: 0,
-        offeringFlaggedReasons: {},
+        flaggedOfferingsCount: 0,
+        flaggedOfferingsReasons: {},
         progress: 0,
         checklist: {
             siteLicense: false,
@@ -116,8 +116,8 @@ function reset( vendorStatus ){
     vendorStatus.lastActivity = null;
     vendorStatus.description = 'No Activity';
     vendorStatus.isClosed = false;
-    vendorStatus.offeringFlaggedCount = 0;
-    vendorStatus.offeringFlaggedReasons = {};
+    vendorStatus.flaggedOfferingsCount = 0;
+    vendorStatus.flaggedOfferingsReasons = {};
     vendorStatus.progress = 0;
     vendorStatus.checklist = {
         siteLicense: false,
