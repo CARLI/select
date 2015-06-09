@@ -2,14 +2,14 @@ var config = require('../config');
 
 module.exports = {
     local: {
-        baseUrl: config.storeOptions.couchDbUrl,
+        baseUrl: config.storeOptions.privilegedCouchDbUrl,
         mainDbName: config.storeOptions.couchDbName,
-        mainDbUrl: config.storeOptions.couchDbUrl + '/' + config.storeOptions.couchDbName
+        mainDbUrl: config.storeOptions.privilegedCouchDbUrl + '/' + config.storeOptions.couchDbName
     },
     dev: {
-        baseUrl: 'http://vmhost.i.pixotech.com:9091',
+        baseUrl: 'http://admin:relax@vmhost.i.pixotech.com:9091',
         mainDbName: 'carli',
-        mainDbUrl: 'http://vmhost.i.pixotech.com:9091/carli'
+        mainDbUrl: 'http://admin:relax@vmhost.i.pixotech.com:9091/carli'
     },
     qa: {
         baseUrl: 'http://docker1.i.pixotech.com:9081',
