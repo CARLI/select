@@ -1,13 +1,14 @@
 var Entity = require('../Entity')
     , EntityTransform = require( './EntityTransformationUtils')
+    , carliError = require('../Error')
     , config = require( '../../config' )
     , couchUtils = require('../Store/CouchDb/Utils')()
     , StoreOptions = config.storeOptions
     , Store = require( '../Store' )
     , StoreModule = require( '../Store/CouchDb/Store')
+    , UserRepository = require('./UserRepository')
     , Q = require('q')
     , uuid = require('node-uuid')
-    , carliError = require('../Error')
 ;
 var request = require('../../config/environmentDependentModules/request');
 
@@ -27,19 +28,33 @@ function createRequest( email ){
         date: new Date().toISOString()
     };
 
-    return deleteExpiredResetRequests().then(function() {
+    return requireUserExists()
+        .then(createResetRequest)
+        .then(deleteExpiredResetRequests)
+        .then(returnOk);
+
+    function requireUserExists() {
+        return UserRepository.load(email);
+    }
+
+    function createResetRequest() {
         return UserResetRequestRepository.create(resetRequest)
             .then(UserResetRequestRepository.load)
-            .then(function (resetRequest) {
-                console.log(resetRequest);
-                var url = config.getMiddlewareUrl() + '/tell-pixobot';
-                request.put({
-                    url: url,
-                    json: { message: "Reset password link generated for " + resetRequest.email + "\n  /reset/" + resetRequest.key }
-                });
-                return { ok: true };
-            });
-    });
+            .then(sendResetInfoToUser);
+    }
+
+    function sendResetInfoToUser(resetRequest) {
+        var url = config.getMiddlewareUrl() + '/tell-pixobot';
+        request.put({
+            url: url,
+            json: { message: "Reset password link generated for " + resetRequest.email + "\n  /reset/" + resetRequest.key }
+        });
+        return true;
+    }
+
+    function returnOk() {
+        return { ok: true };
+    }
 
     function generateNonce() {
         var nonce = '';

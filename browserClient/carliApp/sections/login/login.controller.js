@@ -79,11 +79,12 @@ function loginController ($location, alertService, authService, errorHandler, us
             .then(function () {
                 vm.resetRequestSent = true;
             })
-            .catch(errorHandler);
-
-
-        function loadUser() {
-            return userService.load(vm.userLogin.email);
-        }
+            .catch(function (err) {
+                if (err.statusCode == 404) {
+                    alertService.putAlert(vm.userLogin.email + ' is not a registered user', { severity: 'danger' });
+                } else {
+                    throw err;
+                }
+            });
     }
 }

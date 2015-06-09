@@ -26,8 +26,8 @@ angular.module('carli.app', [
         authService.authenticateForStaffApp();
     }
 })
-.run(function(authService, cycleService){
-    if (authService.isRouteProtected()) {
+.run(function($rootScope, cycleService){
+    if ($rootScope.isLoggedIn) {
         cycleService.initCurrentCycle();
     }
 })

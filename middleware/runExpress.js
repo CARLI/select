@@ -275,6 +275,9 @@ function sendError(res, errorCode) {
         errorCode = 500;
     }
     return function(err) {
+        if (err.statusCode) {
+            errorCode = err.statusCode;
+        }
         res.status(errorCode).send( { error: err } );
     }
 }
