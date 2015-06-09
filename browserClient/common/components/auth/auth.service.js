@@ -6,14 +6,32 @@ function authService($rootScope, $q, $location, CarliModules) {
     var user = null;
 
     return {
+        authenticateForStaffApp: authenticateForStaffApp,
+
+        isRouteProtected: isRouteProtected,
+
         createSession: createSession,
         deleteSession: deleteSession,
+
         getCurrentUser: getCurrentUser,
+
         requireSession: requireSession,
         requireStaff: requireStaff,
         requireActive: requireActive,
         redirectToLogin: redirectToLogin
     };
+
+    function authenticateForStaffApp() {
+        return requireSession()
+            .then(requireStaff)
+            .then(getCurrentUser)
+            .then(requireActive)
+            .catch(redirectToLogin);
+    }
+
+    function isRouteProtected() {
+        return $location.url().slice(0, 7) !== '/reset/' && $location.url().slice(0, 6) !== '/login';
+    }
 
     function createSession(userLogin) {
         return $q.when ( CarliModules.AuthMiddleware.createSession(userLogin) )

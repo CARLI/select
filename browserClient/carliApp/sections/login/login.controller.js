@@ -1,7 +1,7 @@
 angular.module('carli.sections.login')
     .controller('loginController', loginController);
 
-function loginController ($location, alertService, authService, userService) {
+function loginController ($location, alertService, authService, errorHandler, userService) {
     var vm = this;
 
     vm.userLogin = {};
@@ -10,7 +10,6 @@ function loginController ($location, alertService, authService, userService) {
     activate();
 
     function activate() {
-        console.log('activating');
         vm.forgotMode = false;
         vm.resetRequestSent = false;
         vm.submitLabel = "Log in";
@@ -61,7 +60,6 @@ function loginController ($location, alertService, authService, userService) {
             .catch(swallowAuthError);
 
         function swallowAuthError() {
-            console.log('gulp');
             return true;
         }
     }
@@ -80,7 +78,8 @@ function loginController ($location, alertService, authService, userService) {
         return userService.requestPasswordReset(vm.userLogin.email)
             .then(function () {
                 vm.resetRequestSent = true;
-            });
+            })
+            .catch(errorHandler);
 
 
         function loadUser() {

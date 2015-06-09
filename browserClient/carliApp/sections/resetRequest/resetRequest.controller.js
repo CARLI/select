@@ -30,13 +30,7 @@ function resetRequestController($routeParams, $q, alertService, authService, use
         }
 
         return userService.consumeKey(resetKey, vm.user)
-            .then(function (result) {
-                console.log("What happened?!", result);
-                return result;
-            })
-            .then(authService.redirectToLogin)
-            .catch(function (err) { console.log('OW!', err); });
-
+            .then(authService.redirectToLogin);
     }
 
     function confirmPasswordsMatch() {

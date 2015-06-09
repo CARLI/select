@@ -21,17 +21,15 @@ angular.module('carli.app', [
 .config(function($locationProvider){
     $locationProvider.html5Mode(true);
 })
-.run(function($location, authService) {
-    if ($location.url().slice(0, 7) !== '/reset/') {
-        authService.requireSession()
-            .then(authService.requireStaff)
-            .then(authService.getCurrentUser)
-            .then(authService.requireActive)
-            .catch(authService.redirectToLogin);
+.run(function(authService) {
+    if (authService.isRouteProtected()) {
+        authService.authenticateForStaffApp();
     }
 })
-.run(function(cycleService){
-    cycleService.initCurrentCycle();
+.run(function(authService, cycleService){
+    if (authService.isRouteProtected()) {
+        cycleService.initCurrentCycle();
+    }
 })
 .value('cgBusyDefaults',{
     //message:'Loading Stuff',
