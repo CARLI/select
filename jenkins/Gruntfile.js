@@ -64,11 +64,10 @@ module.exports = function (grunt) {
             function getPrivilegedCouchDbUrl() {
                 switch (instance) {
                     case 'dev':
-                        return dbInfo.dev.baseUrl;
                     case 'qa':
-                        return dbInfo.qa.baseUrl;
                     case 'prod':
-                        return dbInfo.prod.baseUrl;
+                        var containerConfig = getContainerCouchConfig();
+                        return containerConfig.privilegedCouchDbUrl;
                     default:
                         throw new Error('Invalid instance: ' + instance);
                 }
