@@ -5,7 +5,8 @@ angular.module('vendor.quickPricing')
             templateUrl: '/vendorApp/components/quickPricing/quickPricingEntitySelector.html',
             scope: {
                 entities: '=',
-                selectedEntityIds: '='
+                selectedEntityIds: '=',
+                orderBy: '@'
             },
             controller: 'quickPricingEntitySelectorController',
             controllerAs: 'vm',
