@@ -256,6 +256,7 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
 
         function updateChangedProductsConcurrently(){
             return $q.all( productIdsToUpdate.map(updateOfferingsForAllLibrariesForProduct) )
+                .then(updateVendorFlaggedOfferings)
                 .then(updateVendorStatus)
                 .then(syncData)
                 .then(function(){
@@ -301,7 +302,9 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
 
 
             function serialSaveFinished(){
-                return syncData() //Enhancement: get couch replication job progress, show it in the 2nd progress bar
+                return updateVendorFlaggedOfferings()
+                    .then(updateVendorStatus)
+                    .then(syncData) //Enhancement: get couch replication job progress, show it in the 2nd progress bar
                     .then(function(){
                         $('#progress-modal').modal('hide');
                         $scope.warningForm.$setPristine();
@@ -317,6 +320,10 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
 
         function updateVendorStatus(){
             return vendorStatusService.updateVendorStatusActivity( 'Simultaneous User Prices Updated', vm.vendorId, cycleService.getCurrentCycle() );
+        }
+
+        function updateVendorFlaggedOfferings(){
+            return vendorStatusService.updateVendorStatusFlaggedOfferings( vm.vendorId, cycleService.getCurrentCycle() );
         }
 
         function syncData(){
