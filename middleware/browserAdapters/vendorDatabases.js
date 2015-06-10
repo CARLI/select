@@ -93,8 +93,7 @@ function getCycleStatusForVendorId( vendorId, cycleId ){
 function updateFlaggedOfferingsForVendor(vendorId, cycle){
     return middlewareRequest({
         path: '/update-flagged-offerings-for-vendor/' + vendorId + '/for-cycle/' + cycle.id,
-        method: 'get',
-        json: true
+        method: 'post'
     });
 }
 
