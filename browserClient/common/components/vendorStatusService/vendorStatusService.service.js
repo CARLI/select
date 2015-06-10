@@ -4,6 +4,7 @@ angular.module('common.vendorStatusService')
 function vendorStatusService( CarliModules, $filter, $q, errorHandler ) {
 
     var vendorStatusModule = CarliModules.VendorStatus;
+    var VendorDatabaseModule = CarliModules.VendorDatabaseMiddleware;
 
     return {
         list:   function(cycle) { return $q.when( vendorStatusModule.list(cycle)).catch(errorHandler); },
@@ -30,13 +31,9 @@ function vendorStatusService( CarliModules, $filter, $q, errorHandler ) {
             });
     }
 
-    function updateVendorStatusFlaggedOfferings( flaggedOfferingsCount, flaggedOfferingsReasons, vendorId, cycle ){
-        return getStatusForVendor(vendorId, cycle)
-            .then(function(vendorStatus){
-                vendorStatus.flaggedOfferingsCount = flaggedOfferingsCount;
-                vendorStatus.flaggedOfferingsReasons = flaggedOfferingsReasons;
-                return updateVendorStatus(vendorStatus, cycle);
-            });
+    function updateVendorStatusFlaggedOfferings( vendorId, cycle ){
+        return $q.when( VendorDatabaseModule.updateFlaggedOfferingsForVendor(vendorId, cycle) )
+            .catch(errorHandler);
     }
 
     function getStatusForVendor( vendorId, cycle ) {

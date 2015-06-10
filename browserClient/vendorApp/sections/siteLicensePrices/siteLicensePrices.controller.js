@@ -8,8 +8,6 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     vm.viewOptions = {};
     vm.selectedProductIds = {};
     vm.selectedLibraryIds = {};
-    vm.flaggedOfferingsCount = 0;
-    vm.flaggedOfferingsReasons = {};
 
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.quickPricingCallback = quickPricingCallback;
@@ -34,9 +32,6 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     }
 
     function initializePricingGrid(){
-        vm.flaggedOfferingsCount = 0;
-        vm.flaggedOfferingsReasons = {};
-
         return loadProducts()
             .then(buildPriceArray)
             .then(buildPricingGrid);
@@ -127,10 +122,6 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             var price = offering.pricing.site || '&nbsp;';
             var offeringWrapper = $('<div class="column offering input">');
             if (offeringService.getFlaggedState(offering)) {
-                vm.flaggedOfferingsCount++;
-                offering.flaggedReason.forEach(function(reason){
-                    vm.flaggedOfferingsReasons[reason] = (vm.flaggedOfferingsReasons[reason] || 0) + 1;
-                });
                 offeringWrapper.addClass('flagged');
                 offeringWrapper.attr('title', offering.flaggedReason[0]);
             }
@@ -259,7 +250,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
         }
 
         function updateVendorFlaggedOfferings(){
-            return vendorStatusService.updateVendorStatusFlaggedOfferings( vm.flaggedOfferingsCount, vm.flaggedOfferingsReasons, vm.vendorId, cycleService.getCurrentCycle() );
+            return vendorStatusService.updateVendorStatusFlaggedOfferings( vm.vendorId, cycleService.getCurrentCycle() );
         }
 
         function syncData(){
