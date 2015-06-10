@@ -2,6 +2,7 @@
 
 module.exports = {
     config: require( '../config' ),
+    CouchDbStore: require('../CARLI/Store/CouchDb/Store'),
     Csv: require('../CARLI/Csv'),
     Cycle: require('../CARLI/Entity/CycleRepositoryForVendor'),
     Library: require('../CARLI/Entity/LibraryRepository'),
@@ -9,7 +10,6 @@ module.exports = {
     Product: require('../CARLI/Entity/ProductRepository'),
     ProductMiddleware: require('../middleware/browserAdapters/vendorSpecificProductQueries'),
     Store: require('../CARLI/Store'),
-    CouchDbStore: require('../CARLI/Store/CouchDb/Store'),
     Validator: require('../CARLI/Validator'),
     /*XXX*/Vendor: require('../CARLI/Entity/VendorRepository'),
     VendorDatabaseMiddleware: require('../middleware/browserAdapters/vendorDatabases.js'),
