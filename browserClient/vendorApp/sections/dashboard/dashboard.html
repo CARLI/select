@@ -5,4 +5,32 @@
     <p>Welcome to the Vendor Price Entry App!</p>
 
     <p>CARLI Prices reflects the dollar amount that these products were offered at last year until you begin editing the prices.</p>
+
+    <section id="alerts">
+        <div class="header">Alerts</div>
+        <p>You have <strong>{{ vm.vendorStatus.flaggedOfferingsCount }}</strong> pricing issues.</p>
+        <ul>
+            <li ng-repeat="(reason, count) in vm.vendorStatus.flaggedOfferingsReasons">
+                {{ count }} price{{ count > 1 ? 's were':' was' }} flagged because {{count > 1 ? 'they were':'it was' }} {{ reason }}.
+            </li>
+        </ul>
+        <ask-carli-button context="flagged offerings - alerts dashboard section"></ask-carli-button>
+    </section>
+
+    <section id="checklist">
+        <div class="header">Checklist</div>
+        <checkbox ng-change="vm.updateVendorStatus()" ng-model="vm.vendorStatus.checklist.siteLicense">Site License Prices</checkbox>
+        <checkbox ng-change="vm.updateVendorStatus()" ng-model="vm.vendorStatus.checklist.simultaneousUsers">Simultaneous User Prices</checkbox>
+        <checkbox ng-change="vm.updateVendorStatus()" ng-model="vm.vendorStatus.checklist.descriptions">Product Descriptions</checkbox>
+    </section>
+
+    <section id="completed">
+        <div class="header">Completed</div>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="{{ vm.vendorStatus.progress }}"
+                 aria-valuemin="0" aria-valuemax="100" style="width:{{ vm.vendorStatus.progress }}%;">
+                {{ vm.vendorStatus.progress }}%
+            </div>
+        </div>
+    </section>
 </section>

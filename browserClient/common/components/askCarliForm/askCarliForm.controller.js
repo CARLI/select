@@ -1,4 +1,4 @@
-angular.module('library.askCarliForm')
+angular.module('common.askCarliForm')
 .controller('askCarliFormController', askCarliFormController);
 
 function askCarliFormController($location, $q, $scope, askCarliService, userService) {

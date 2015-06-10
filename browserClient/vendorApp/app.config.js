@@ -5,6 +5,8 @@ angular.module('vendor.app', [
     'ngRoute',
     'common.accordion',
     'common.alerts',
+    'common.askCarliButton',
+    'common.askCarliForm',
     'common.config',
     'common.errorHandler',
     'common.fa',

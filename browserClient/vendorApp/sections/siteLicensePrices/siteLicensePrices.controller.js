@@ -1,20 +1,25 @@
 angular.module('vendor.sections.siteLicensePrices')
     .controller('siteLicensePricesController', siteLicensePricesController);
 
-function siteLicensePricesController($scope, $q, $filter, cycleService, libraryService, offeringService, productService, userService, siteLicensePricesCsv){
+function siteLicensePricesController($scope, $q, $filter, cycleService, libraryService, offeringService, productService, userService, siteLicensePricesCsv, vendorStatusService){
     var vm = this;
+
     vm.loadingPromise = null;
     vm.viewOptions = {};
     vm.selectedProductIds = {};
     vm.selectedLibraryIds = {};
+
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.quickPricingCallback = quickPricingCallback;
     vm.saveOfferings = saveOfferings;
     vm.downloadCsv = downloadCsv;
 
+
     activate();
 
     function activate() {
+        vm.vendorId = userService.getUser().vendor.id;
+
         vm.viewOptions = {
             size: true,
             type: true,
@@ -116,9 +121,9 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             var offering = vm.offeringsForLibraryByProduct[product.id][library.id] || { pricing: { site: '&nbsp;' }};
             var price = offering.pricing.site || '&nbsp;';
             var offeringWrapper = $('<div class="column offering input">');
-            if (offering.flagged) {
+            if (offeringService.getFlaggedState(offering)) {
                 offeringWrapper.addClass('flagged');
-                offeringWrapper.attr('title', offering.flaggedReason);
+                offeringWrapper.attr('title', offering.flaggedReason[0]);
             }
             var offeringCell = offeringWrapper.append(createReadOnlyOfferingCell(price));
 
@@ -235,8 +240,18 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
             .catch(function(err){
                 console.log('error saving offerings',err);
             })
+            .then(updateVendorFlaggedOfferings)
+            .then(updateVendorStatus)
             .then(syncData)
             .catch(syncDataError);
+
+        function updateVendorStatus(){
+            return vendorStatusService.updateVendorStatusActivity( 'Site License Prices Updated', vm.vendorId, cycleService.getCurrentCycle() );
+        }
+
+        function updateVendorFlaggedOfferings(){
+            return vendorStatusService.updateVendorStatusFlaggedOfferings( vm.vendorId, cycleService.getCurrentCycle() );
+        }
 
         function syncData(){
             return cycleService.syncDataBackToCarli();

@@ -86,7 +86,12 @@ function updateOffering( offering, cycle ){
 
 function listOfferings(cycle){
     setCycle(cycle);
-    return expandOfferings( OfferingRepository.list(cycle.getDatabaseName()), cycle);
+    return expandOfferings( listOfferingsUnexpanded(cycle), cycle);
+}
+
+function listOfferingsUnexpanded(cycle){
+    setCycle(cycle);
+    return OfferingRepository.list(cycle.getDatabaseName())
 }
 
 function transformOfferingsForNewCycle(newCycle, sourceCycle) {
@@ -343,7 +348,7 @@ function getFlaggedState(offering){
 
     function userFlaggedState(){
         if (offering.flagged) {
-            offering.flaggedReason = 'Flagged by user';
+            offering.flaggedReason = ['flagged by CARLI staff'];
         }
         return offering.flagged;
     }
@@ -354,20 +359,26 @@ function getFlaggedState(offering){
             var flagSuPrices = isThereAnSuOfferingForMoreUsersWithASmallerPrice();
             var flagExceedsPriceCap = doesIncreaseFromLastYearExceedPriceCap();
             var flagGreaterThan5PercentReduction = doesDecreaseFromLastYearExceed5Percent();
+
+            /**
+             * Reasons should read well in either form:
+             * 1 price was flagged because it was REASON
+             * 7 prices were flagged because they were REASON
+             */
             var flagReasons = [];
             if (flagSiteLicensePrice) {
-                flagReasons.push('SU offering for less than the Site license price');
+                flagReasons.push('a site license price for less than a SU price');
             }
             if (flagSuPrices) {
-                flagReasons.push('SU offering for more users with lower price');
+                flagReasons.push('for a SU level with a higher price than the price for a greater number of users');
             }
             if (flagExceedsPriceCap) {
-                flagReasons.push('Offering exceeds price cap');
+                flagReasons.push('increased by more than the price cap');
             }
             if (flagGreaterThan5PercentReduction) {
-                flagReasons.push('Offering is more than 5% less than last year');
+                flagReasons.push('decreased by more than 5% compared to last year');
             }
-            offering.flaggedReason  = flagReasons.join("\n");
+            offering.flaggedReason  = flagReasons;
             return flagSiteLicensePrice || flagSuPrices || flagExceedsPriceCap || flagGreaterThan5PercentReduction;
         }
         return false;
@@ -552,6 +563,7 @@ module.exports = {
     create: createOffering,
     update: updateOffering,
     list: listOfferings,
+    listOfferingsUnexpanded: listOfferingsUnexpanded,
     load: loadOffering,
     delete: deleteOffering,
 

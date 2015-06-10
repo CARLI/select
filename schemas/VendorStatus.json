@@ -28,9 +28,34 @@
             "description": "Has this vendor been locked out of the Vendor app?",
             "type": "boolean"
         },
-        "offeringFlaggedCount": {
+        "flaggedOfferingsCount": {
             "description": "Is this vendor allowed to offer products in the One-Time Purchase cycle?",
             "type": "integer"
+        },
+        "flaggedOfferingsReasons": {
+            "description": "Maps reasons for offerings being flagged to the count of each",
+            "type": "object"
+        },
+        "progress": {
+            "description": "Rough estimate of how complete the vendor's pricing is for the cycle",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+        },
+        "checklist": {
+            "description": "Used by the vendor app dashboard to let them track their progress",
+            "type": "object",
+            "properties": {
+                "siteLicense": {
+                    "type": "boolean"
+                },
+                "simultaneousUsers": {
+                    "type": "boolean"
+                },
+                "descriptions": {
+                    "type": "boolean"
+                }
+            }
         }
     },
     "required": [ "cycle", "vendor" ]

@@ -1,7 +1,7 @@
 angular.module('vendor.sections.descriptions')
 .controller('descriptionsController', descriptionsController);
 
-function descriptionsController( $scope, $rootScope, $q, cycleService, productService, userService ){
+function descriptionsController( $scope, $rootScope, $q, cycleService, productService, userService, vendorStatusService ){
     var vm = this;
 
     vm.productChanged = productChanged;
@@ -12,6 +12,8 @@ function descriptionsController( $scope, $rootScope, $q, cycleService, productSe
 
 
     function activate(){
+        vm.vendorId = userService.getUser().vendor.id;
+
         setProductFormPristine();
         loadProducts();
     }
@@ -62,6 +64,7 @@ function descriptionsController( $scope, $rootScope, $q, cycleService, productSe
         return saveAllProducts
             .then(alertSuccess)
             .catch(alertError)
+            .then(updateVendorStatus)
             .then(syncData)
             .catch(syncDataError);
 
@@ -72,6 +75,10 @@ function descriptionsController( $scope, $rootScope, $q, cycleService, productSe
 
         function alertError( err ){
             console.log( err );
+        }
+
+        function updateVendorStatus(){
+            return vendorStatusService.updateVendorStatusActivity( 'Product Descriptions Updated', vm.vendorId, cycleService.getCurrentCycle() );
         }
 
         function syncData(){

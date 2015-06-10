@@ -72,12 +72,47 @@ function runVendorStatusSpecificTests(testCycle) {
                 });
         });
 
+        it('should ensure default values on the VendorStatus document', function(){
+            var testVendorId = uuid.v4();
+            var testActivity = uuid.v4();
+            var testVendorStatus = validVendorStatusData();
+            testVendorStatus.vendor = testVendorId;
+            testVendorStatus.lastActivity = testActivity;
+            testVendorStatus.checklist = {
+                simultaneousUsers: true
+            };
+
+            return vendorStatusRepository.create(testVendorStatus, testCycle)
+                .then(function(){
+                    return vendorStatusRepository.getStatusForVendor(testVendorId, testCycle);
+                })
+                .then(function( statusForVendor ){
+                    return Q.all([
+                        expect(statusForVendor.cycle).to.equal(testCycleId),
+                        expect(statusForVendor.vendor).to.equal(testVendorId),
+                        expect(statusForVendor.lastActivity).to.equal(testActivity),
+                        expect(statusForVendor.description).to.equal('No Activity'),
+                        expect(statusForVendor.isClosed).to.equal(false),
+                        expect(statusForVendor.flaggedOfferingsCount).to.equal(0),
+                        expect(statusForVendor.flaggedOfferingsReasons).to.be.empty,
+                        expect(statusForVendor.progress).to.equal(0),
+                        expect(statusForVendor.checklist.siteLicense).to.equal(false),
+                        expect(statusForVendor.checklist.simultaneousUsers).to.equal(true),
+                        expect(statusForVendor.checklist.descriptions).to.equal(false)
+                    ]);
+                });
+        });
+
         it('should return a default VendorStatus object for a Vendor that does not have a VendorStatus document already', function(){
             var testVendorId = uuid.v4();
 
             return vendorStatusRepository.getStatusForVendor(testVendorId, testCycle)
                 .then(function( statusForVendor ){
-                    return expect(statusForVendor.vendor).to.equal(testVendorId);
+                    return Q.all([
+                        expect(statusForVendor.vendor).to.equal(testVendorId),
+                        expect(statusForVendor.lastActivity).to.be.an('undefined'),
+                        expect(statusForVendor.checklist.siteLicense).to.equal(false)
+                    ]);
                 });
         });
     });
@@ -109,7 +144,13 @@ function runVendorStatusSpecificTests(testCycle) {
             expect(testVendorStatus.lastActivity).to.be.a('null');
             expect(testVendorStatus.description).to.equal('No Activity');
             expect(testVendorStatus.isClosed).to.equal(false);
-            expect(testVendorStatus.offeringFlaggedCount).to.equal(0);
+            expect(testVendorStatus.flaggedOfferingsCount).to.equal(0);
+            expect(testVendorStatus.flaggedOfferingsReasons).to.be.empty;
+            expect(testVendorStatus.progress).to.equal(0);
+            expect(testVendorStatus.checklist.siteLicense).to.equal(false);
+            expect(testVendorStatus.checklist.simultaneousUsers).to.equal(false);
+            expect(testVendorStatus.checklist.descriptions).to.equal(false);
+
         });
     });
 }

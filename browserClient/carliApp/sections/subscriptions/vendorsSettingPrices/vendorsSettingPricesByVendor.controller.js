@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.vendorsSettingPrices')
     .controller('vendorsSettingPricesByVendorController', vendorsSettingPricesByVendorController);
 
-function vendorsSettingPricesByVendorController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, offeringService, editOfferingService, productService, vendorService, vendorStatusService ) {
+function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionControllerMixin, controllerBaseService, cycleService, offeringService, editOfferingService, productService, vendorService, vendorStatusService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadProductsForVendor);
@@ -75,8 +75,6 @@ function vendorsSettingPricesByVendorController( $scope, $q, accordionController
 
         return vendorStatusService.list(vm.cycle)
             .then(function(vendorStatusList){
-                console.log('listed vendor statuses', vendorStatusList);
-
                 vendorStatusList.forEach(function(vendorStatus){
                     vm.vendorStatus[vendorStatus.vendor] = vendorStatus;
                 });
@@ -154,7 +152,18 @@ function vendorsSettingPricesByVendorController( $scope, $q, accordionController
 
     function getVendorPricingStatus(vendor) {
         var status = vm.vendorStatus[vendor.id] || {};
-        return status.description + ' [Pricing ' + (status.isClosed ? 'Closed' : 'Open') + ']' || "No Activity";
+        return description() + openOrClosed();
+
+        function description(){
+            if ( status.lastActivity && status.description !== 'No Activity' ){
+                return status.description + ' ' + $filter('date')(status.lastActivity);
+            }
+            return 'No Activity';
+        }
+
+        function openOrClosed(){
+            return ' [Pricing ' + (status.isClosed ? 'Closed' : 'Open') + ']';
+        }
     }
 
     function setOfferingEditable( offering ){

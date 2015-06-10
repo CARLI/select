@@ -10,6 +10,7 @@
 @import "../../common/styles/carli";
 
 @import "../../common/components/alerts/alerts";
+@import "../../common/components/askCarliButton/askCarliButton";
 @import "../../common/components/checkbox/checkbox";
 @import "../../common/components/collapsible/collapsible";
 @import "../../common/components/navBar/navBar";
@@ -22,6 +23,7 @@
 @import "../components/quickPricing/quickPricing";
 @import "../components/vendorHeader/vendorHeader";
 @import "../components/horizontalScrollSlider/horizontalScrollSlider";
+@import "../sections/dashboard/dashboard";
 @import "../sections/descriptions/descriptions";
 @import "../sections/siteLicensePrices/siteLicensePrices";
 @import "../sections/simultaneousUserPrices/simultaneousUserPrices";

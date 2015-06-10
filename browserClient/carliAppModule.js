@@ -2,22 +2,21 @@
 
 module.exports = {
     config: require('../config'),
+    CouchDbStore: require('../CARLI/Store/CouchDb/Store'),
     Cycle: require('../CARLI/Entity/CycleRepository'),
     CycleMiddleware: require('../middleware/browserAdapters/cycleCreation'),
     DatabaseStatusMiddleware: require('../middleware/browserAdapters/vendorDatabases'),
     Library: require('../CARLI/Entity/LibraryRepository'),
     License: require('../CARLI/Entity/LicenseRepository'),
+    MemoryStore: require('../CARLI/Store/MemoryStore'),
     Notification: require('../CARLI/Entity/NotificationRepository'),
     NotificationTemplate: require('../CARLI/Entity/NotificationTemplateRepository'),
     NotificationDraftGenerator: require('../CARLI/NotificationDraftGenerator'),
     Offering: require('../CARLI/Entity/OfferingRepository'),
     Product: require('../CARLI/Entity/ProductRepository'),
-    Vendor: require('../CARLI/Entity/VendorRepository'),
-    VendorStatus: require('../CARLI/Entity/VendorStatusRepository'),
     Store: require('../CARLI/Store'),
-    MemoryStore: require('../CARLI/Store/MemoryStore'),
-    FileStore: require('../CARLI/Store/FileStore'),
-    CouchDbStore: require('../CARLI/Store/CouchDb/Store'),
     Validator: require('../CARLI/Validator'),
-    VendorDatabaseMiddleware: require('../middleware/browserAdapters/vendorDatabases.js')
+    Vendor: require('../CARLI/Entity/VendorRepository'),
+    VendorDatabaseMiddleware: require('../middleware/browserAdapters/vendorDatabases.js'),
+    VendorStatus: require('../CARLI/Entity/VendorStatusRepository')
 };

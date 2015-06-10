@@ -195,6 +195,13 @@ function runMiddlewareServer(){
 
         });
 
+        carliMiddleware.post('/update-flagged-offerings-for-vendor/:vendorId/for-cycle/:cycleId', function (req, res) {
+            vendorDatabases.updateFlaggedOfferingsForVendor(req.params.vendorId, req.params.cycleId)
+                .then(sendOk(res))
+                .catch(sendError(res));
+        });
+
+
     }
 }
 
