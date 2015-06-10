@@ -148,7 +148,7 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
             row.append(generateOfferingCell(level, product));
         });
 
-        $('.pricing-grid').append(row);
+        $('#su-pricing-grid').append(row);
 
         return row;
 
