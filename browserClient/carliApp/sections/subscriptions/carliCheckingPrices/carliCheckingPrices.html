@@ -9,14 +9,17 @@
         <div class="modal-body">
             <label for="recipients">To:</label>
             <input id="recipients" type="text" ng-model="vm.openSystemMessage.recipients">
-            <label for="from">From:</label>
-            <input id="from" type="text" ng-model="vm.openSystemMessage.from">
+
+            <label for="subject">Subject Line</label>
+            <input id="subject" type="text" ng-model="vm.openSystemMessage.subject">
+
             <label for="message">Message:</label>
             <textarea id="message" ng-model="vm.openSystemMessage.message"></textarea>
+
             <checkbox ng-model="vm.openSystemMessage.doNotSend">Do not send notification</checkbox>
         </div>
         <div class="modal-footer">
-            <button type="button" class="carli-button cancel-button" data-dismiss="modal">Close</button>
+            <button type="button" class="carli-button cancel-button" data-dismiss="modal">Cancel</button>
             <button type="submit" class="carli-button save-button">Open System</button>
         </div>
     </form>
