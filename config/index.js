@@ -34,12 +34,14 @@ var defaults = {
     }
 };
 
-var config = _.extend(defaults, localConfig);
+var config = _.merge(defaults, localConfig);
 
-config.storeOptions.privilegedCouchDbUrl = config.storeOptions.privilegedCouchUrlScheme +
-    config.storeOptions.privilegedCouchUsername + ':' +
-    config.storeOptions.privilegedCouchPassword + '@' +
-    config.storeOptions.privilegedCouchHostname;
+if (!config.storeOptions.privilegedCouchDbUrl) {
+    config.storeOptions.privilegedCouchDbUrl = config.storeOptions.privilegedCouchUrlScheme +
+        config.storeOptions.privilegedCouchUsername + ':' +
+        config.storeOptions.privilegedCouchPassword + '@' +
+        config.storeOptions.privilegedCouchHostname;
+}
 
 config.setDbName = function(name) {
     couchDbName = name;
