@@ -11,6 +11,7 @@ var dbInfo = require('./databaseInfo');
 var userRepository = require('../CARLI/Entity/UserRepository');
 var vendorRepository = require('../CARLI/Entity/VendorRepository');
 var storeOptions = config.storeOptions;
+var unprivilegedCouchDbUrl = storeOptions.couchDbUrl;
 storeOptions.couchDbUrl = storeOptions.privilegedCouchDbUrl;
 var Store = require('../CARLI/Store');
 var StoreModule = require('../CARLI/Store/CouchDb/Store');
@@ -82,7 +83,7 @@ function createAdminUser() {
     var deferred = Q.defer();
 
     request.put({
-        url: config.storeOptions.couchDbUrl + '/_config/admins/' + config.storeOptions.privilegedCouchUsername,
+        url: unprivilegedCouchDbUrl + '/_config/admins/' + config.storeOptions.privilegedCouchUsername,
         body: '"' + config.storeOptions.privilegedCouchPassword + '"'
     }, handleCouchResponse);
 
