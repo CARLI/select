@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Change to root directory of the project
 cd `git rev-parse --show-toplevel`

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 image=$1
 tag=$2

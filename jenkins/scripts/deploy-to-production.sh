@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ### This script is run on the production server, not in the Jenkin's build environment
 . /home/jenkins/.carli-select.environment

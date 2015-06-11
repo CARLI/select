@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 sudo docker rm -f carli-build-test 2> /dev/null
 sudo docker rm -f carli-middleware-test 2> /dev/null
