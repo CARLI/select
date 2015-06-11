@@ -20,7 +20,12 @@ module.exports = function middlewareRequest(requestParams) {
         if (error) {
             deferred.reject(error);
         } else {
-            deferred.resolve(body);
+            if ( response.statusCode >= 400 ){
+                deferred.reject(body);
+            }
+            else {
+                deferred.resolve(body);
+            }
         }
     });
     return deferred.promise;
