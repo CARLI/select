@@ -1,5 +1,6 @@
 angular.module('library.routes',[
         'library.sections.dashboard',
+        'library.sections.addSubscriptions',
         'library.sections.addOneTimePurchases'
     ])
     .config(function ($routeProvider) {
@@ -9,11 +10,11 @@ angular.module('library.routes',[
                 controller:  'dashboardController',
                 controllerAs:'vm'
             })
-//            .when('/addSubscriptions', {
-//                templateUrl: '/libraryApp/sections/',
-//                controller:  'Controller',
-//                controllerAs:'vm'
-//            })
+            .when('/addSubscriptions/:cycleId', {
+                templateUrl: '/libraryApp/sections/addSubscriptions/addSubscriptions.html',
+                controller:  'addSubscriptionsController',
+                controllerAs:'vm'
+            })
             .when('/addOneTimePurchases', {
                 templateUrl: '/libraryApp/sections/addOneTimePurchases/addOneTimePurchases.html',
                 controller:  'addOneTimePurchasesController',
