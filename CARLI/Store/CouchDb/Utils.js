@@ -54,15 +54,20 @@ module.exports = function (storeOptions) {
         function handleCouchResponse(error, response, body) {
             var data;
 
+            var statusCode = 500;
+            if (response) {
+                statusCode = response.statusCode;
+            }
+
             if (error) {
-                deferred.reject(carliError(error, response.statusCode));
+                deferred.reject(carliError(error, statusCode));
             }
             else {
                 data = (typeof body === 'string') ? JSON.parse(body) : body;
             }
 
             if (data && data.error) {
-                deferred.reject(carliError(data, response.statusCode));
+                deferred.reject(carliError(data, statusCode));
             }
             else {
                 data.authCookie = getCookieWithDomainAdded(response);
