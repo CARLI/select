@@ -3,14 +3,14 @@
 docker="sudo docker"
 
 create-data-container-if-not-exists() {
-    sudo docker inspect carli-data-${CARLI_INSTANCE} 2>&1 > /dev/null
+    ${docker} inspect carli-data-${CARLI_INSTANCE} 2>&1 > /dev/null
     data_container_status=$?
 
     # Do not recreate the data container if it already exists.
     # The point of this container is persist the data storage.
     # If a reset is needed, the container should be manually removed.
     if [ ${data_container_status} -eq 1 ]; then
-        sudo docker run \
+        ${docker} run \
             --name "carli-data-$CARLI_INSTANCE" \
             carli-couchdb:${CARLI_DOCKER_TAG} \
             /bin/echo Couch Data-only Container
@@ -38,7 +38,7 @@ recreate-couchdb-container() {
 
 create-middleware-container() {
     ${docker} run \
-        --name="carli-middleware-$instance" \
+        --name="carli-middleware-${CARLI_INSTANCE}" \
         --detach=true \
         --log-driver=syslog \
         --link=carli-couchdb-${CARLI_INSTANCE}:carli-couchdb \
@@ -107,7 +107,7 @@ run-in-container() {
     ${docker} run --rm -t \
         --volumes-from=carli-assets-${CARLI_INSTANCE} \
         --workdir=${workdir} \
-        ${extra_arguments} carli-build:${CARLI_DOCKER_TAG} grunt ${command}
+        ${extra_arguments} carli-build:${CARLI_DOCKER_TAG} ${command}
 }
 
 install-build-dependencies() {
@@ -139,11 +139,11 @@ build-browser-clients() {
 }
 
 redeploy-carli() {
-    create-data-container-if-not-exists &&
-    recreate-couchdb-container &&
-    recreate-middleware-container &&
-    recreate-assets-container &&
-    install-dependencies-and-configure &&
-    build-browser-clients &&
-    recreate-serve-container
+    echo "Creating data container, if needed" && create-data-container-if-not-exists &&
+    echo "Redeploying CouchDB" && recreate-couchdb-container &&
+    echo "Redeploying CARLI Assets" && recreate-assets-container &&
+    echo "Redeploying Middleware" && recreate-middleware-container &&
+    echo "Installing dependencies and configuring containers" && install-dependencies-and-configure &&
+    echo "Building the browser clients" && build-browser-clients &&
+    echo "Redeploying web server" && recreate-serve-container
 }
