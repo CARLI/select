@@ -54,6 +54,10 @@ module.exports = function (storeOptions) {
         function handleCouchResponse(error, response, body) {
             var data;
 
+            console.log('Couch error', JSON.stringify(error));
+            console.log('Couch response', JSON.stringify(response));
+            console.log('Couch body', JSON.stringify(body));
+
             var statusCode = 500;
             if (response) {
                 statusCode = response.statusCode;

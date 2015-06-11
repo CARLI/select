@@ -14,6 +14,8 @@ function useAdminCouchCredentials() {
         couchDbUrl: StoreOptions.privilegedCouchDbUrl,
         couchDbName: '_users'
     };
+    console.log('UserRepository credentials', JSON.stringify(userStoreOptions));
+
     userRepository.setStore(Store(StoreModule(userStoreOptions)));
     var resetStoreOptions = {
         couchDbUrl: StoreOptions.privilegedCouchDbUrl,
