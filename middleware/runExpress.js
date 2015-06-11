@@ -98,7 +98,6 @@ function runMiddlewareServer(){
             vendorSpecificProductQueries.listProductsWithOfferingsForVendorId(vendorId, req.params.cycleId)
                 .then(sendResult(res))
                 .catch(sendError(res));
-            ;
         });
         carliMiddleware.put('/cycle-from', function (req, res) {
             cycleCreation.create(req.body.newCycleData)
@@ -118,7 +117,6 @@ function runMiddlewareServer(){
             cycleCreation.getCycleCreationStatus(req.params.id)
                 .then(sendResult(res))
                 .catch(sendError(res));
-            ;
         });
         carliMiddleware.get('/create-all-vendor-databases', function (req, res) {
             vendorDatabases.createVendorDatabasesForAllCycles()

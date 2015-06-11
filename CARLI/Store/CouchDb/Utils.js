@@ -44,6 +44,7 @@ module.exports = function (storeOptions) {
     function couchRequestSession(userLogin) {
         var deferred = Q.defer();
 
+        console.log('CouchDB URL', JSON.stringify(storeOptions));
         var requestOptions = {
             url: storeOptions.couchDbUrl + '/_session',
             method: 'post',
