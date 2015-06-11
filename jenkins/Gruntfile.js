@@ -17,6 +17,7 @@ module.exports = function (grunt) {
         cfg.storeOptions = generateCouchConfig(instance);
         cfg.middleware = generateMiddlewareConfig(instance);
         cfg.memberDb = generateMemberDbConfig(instance);
+        cfg.cookieDomain = getCookieDomain(instance);
 
         fs.writeFileSync(localConfigFile, stringifyConfig(cfg));
 
@@ -119,5 +120,21 @@ module.exports = function (grunt) {
             password: process.env.CARLI_CRM_MYSQL_PASSWORD,
             database: 'carli_crm'
         };
+    }
+
+    function getCookieDomain(instance) {
+        //noinspection FunctionWithMultipleReturnPointsJS
+        switch (instance) {
+            case 'test':
+                return 'carli.local';
+            case 'dev':
+                return 'dev.pixotech.com';
+            case 'qa':
+                return 'qa.pixotech.com';
+            case 'prod':
+                return 'carli.illinois.edu';
+            default:
+                throw new Error('Invalid instance: ' + instance);
+        }
     }
 };
