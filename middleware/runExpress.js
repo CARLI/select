@@ -49,12 +49,12 @@ function runMiddlewareServer(){
         carliMiddleware.get('/library', function (req, res) {
             crmQueries.listLibraries()
                 .then(sendResult(res))
-                .catch(sendError(res));
+                .catch(send500Error(res));
         });
         carliMiddleware.get('/library/:id', function (req, res) {
             crmQueries.loadLibrary(req.params.id)
                 .then(sendResult(res))
-                .catch(sendError(res));
+                .catch(send500Error(res));
         });
         carliMiddleware.get('/products-with-offerings-for-vendor/:vendorId/for-cycle/:cycleId', function (req, res) {
             var authToken = getAuthTokenFromHeader(req);
@@ -218,6 +218,12 @@ function sendOk(res) {
 function sendError(res) {
     return function(err) {
         res.send( { error: err } );
+    }
+}
+
+function send500Error(res) {
+    return function(err) {
+        res.status(500).send( { error: err } );
     }
 }
 
