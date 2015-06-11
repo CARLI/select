@@ -14,6 +14,7 @@ function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
 
     return {
         listActiveCycles: listActiveCycles,
+        listActiveCyclesIncludingOneTimePurchase: listActiveCyclesIncludingOneTimePurchase,
         listOpenForSelectionsCycles: listOpenForSelectionsCycles,
         listSelectionsForCycle: listSelectionsForCycle,
         load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ).catch(errorHandler); },
@@ -31,6 +32,10 @@ function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
         function excludeOneTimePurchaseCycle( cycle ){
             return cycle.cycleType !== 'One-Time Purchase';
         }
+    }
+
+    function listActiveCyclesIncludingOneTimePurchase(){
+        return $q.when( cycleModule.listActiveCycles() );
     }
 
     function listOpenForSelectionsCycles() {

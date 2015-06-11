@@ -14,7 +14,7 @@ function dashboardController( cycleService, userService ){
     function activate(){
         vm.library = userService.getUser().library;
 
-        vm.loadingPromise = cycleService.listActiveCycles().then(function(cycleList){
+        vm.loadingPromise = cycleService.listActiveCyclesIncludingOneTimePurchase().then(function(cycleList){
             vm.cycles = cycleList;
         });
     }
