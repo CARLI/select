@@ -22,9 +22,9 @@
 </ul>
 <ul class="entity-list">
     <li class="entity"
-        ng-repeat="entity in vm.entities | filter:vm.alphaFilterFunction"
+        ng-repeat="entity in vm.entities | orderBy: vm.orderBy | filter:vm.alphaFilterFunction"
         ng-class="{ 'selected': vm.selectedEntityIds[entity.id] }">
-        <checkbox ng-model="vm.selectedEntityIds[entity.id]"></checkbox>
+        <checkbox ng-model="vm.selectedEntityIds[entity.id]">{{ entity.name }}</checkbox>
         <span class="name">{{ entity.name }}</span>
     </li>
 </ul>

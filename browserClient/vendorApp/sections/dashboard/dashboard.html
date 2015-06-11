@@ -23,14 +23,4 @@
         <checkbox ng-change="vm.updateVendorStatus()" ng-model="vm.vendorStatus.checklist.simultaneousUsers">Simultaneous User Prices</checkbox>
         <checkbox ng-change="vm.updateVendorStatus()" ng-model="vm.vendorStatus.checklist.descriptions">Product Descriptions</checkbox>
     </section>
-
-    <section id="completed">
-        <div class="header">Completed</div>
-        <div class="progress">
-            <div class="progress-bar" role="progressbar" aria-valuenow="{{ vm.vendorStatus.progress }}"
-                 aria-valuemin="0" aria-valuemax="100" style="width:{{ vm.vendorStatus.progress }}%;">
-                {{ vm.vendorStatus.progress }}%
-            </div>
-        </div>
-    </section>
 </section>

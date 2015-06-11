@@ -1,6 +1,7 @@
 quick-pricing-site,
 quick-pricing-su {
     display: block;
+    min-width: 900px;
 
     .quick-pricing {
         $quick-pricing-spacing: 38px;
@@ -149,6 +150,12 @@ quick-pricing-su {
 
                     checkbox {
                         flex: 0 0 22px;
+
+                        label {
+                            ng-transclude span {
+                                font-size: 0;
+                            }
+                        }
                     }
                     .name {
                         flex: 1 1 90%;

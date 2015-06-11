@@ -74,7 +74,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
                 $('.pricing-grid-row-labels .' + entityId).css('display', displayValueLabel);
 
                 var displayValuePrice = selectedEntities[entityId] ? 'table-row' : 'none';
-                $('.pricing-grid .' + entityId).css('display', displayValuePrice);
+                $('#site-pricing-grid .' + entityId).css('display', displayValuePrice);
 
             });
         }
@@ -102,14 +102,14 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     }
 
     function buildPricingGrid() {
-        $('.pricing-grid .price-row:not(.product-name-row):not(.price-cap)').remove();
+        $('#su-pricing-grid .price-row:not(.product-name-row):not(.price-cap)').remove();
 
         vm.libraries.forEach(function (library) {
             var row = generateLibraryRow(library);
             vm.products.forEach(function (product) {
                 row.append(generateOfferingCell(library, product));
             });
-            $('.pricing-grid').append(row);
+            $('#site-pricing-grid').append(row);
         });
 
         function generateLibraryRow(library) {
@@ -140,7 +140,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     }
 
     function createReadOnlyOfferingCell(price) {
-        var cell = $('<div tabindex="0" class="price">'+price+'</div>');
+        var cell = $('<div tabindex="0" class="price" role="gridcell">'+price+'</div>');
         cell.on('focus', makeEditable);
         return cell;
 
@@ -152,7 +152,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
         }
     }
     function createEditableOfferingCell(price) {
-        var cell = $('<input class="price-editable" type="text" step=".01" min="0" value="' + price + '">');
+        var cell = $('<input class="price-editable" role="textbox" type="text" step=".01" min="0" value="' + price + '">');
         cell.on('blur', makeReadOnly);
         return cell;
 
