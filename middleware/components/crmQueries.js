@@ -10,12 +10,22 @@ var selectLibrary = 'SELECT m.institution_name, m.member_id, m.library_type, m.m
 function listLibraries() {
     var deferred = Q.defer();
     pool.getConnection(function(err, connection) {
+
+        if ( err ){
+            return handleError( deferred, 'pool.getConnection error listing libraries', err);
+        }
+
         connection.query(
             selectLibrary,
             null,
             function(err, rows, fields) {
-                var libraries = extractRowsFromResponse(err, rows, convertCrmLibrary);
-                deferred.resolve(libraries);
+                if ( err ){
+                    handleError( deferred, 'query error listing libraries', err);
+                }
+                else {
+                    var libraries = extractRowsFromResponse(err, rows, convertCrmLibrary);
+                    deferred.resolve(libraries);
+                }
             }
         );
 
@@ -29,12 +39,21 @@ function loadLibrary(id) {
     var deferred = Q.defer();
     pool.getConnection(function(err, connection) {
 
+        if ( err ){
+            return handleError( deferred, 'pool.getConnection error loading library', err);
+        }
+
         connection.query(
             selectLibrary + 'WHERE m.member_id = ?',
             [id],
             function (err, rows, fields) {
-                var libraries = extractRowsFromResponse(err, rows, convertCrmLibrary);
-                deferred.resolve(libraries[0]);
+                if ( err ){
+                    handleError( deferred, 'query error loading library', err);
+                }
+                else {
+                    var libraries = extractRowsFromResponse(err, rows, convertCrmLibrary);
+                    deferred.resolve(libraries[0]);
+                }
             }
         );
 
@@ -115,6 +134,15 @@ function convertCrmLibrary(crm) {
     function isLibraryActive(crmLibrary){
         return crmLibrary.membership_lvl === 'GOVERNING' && crmLibrary.current === 'y';
     }
+}
+
+function handleError( promise, message, error ){
+    var errorObject = {
+        message: message,
+        error: error
+    };
+    promise.reject(errorObject);
+    return errorObject;
 }
 
 module.exports = {
