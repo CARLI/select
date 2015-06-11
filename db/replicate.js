@@ -68,9 +68,17 @@ function replicateAllFrom(source) {
             var listCycleDbs = generateCycleDbLister(source);
             var replicateCycleDbs = generateCycleDbReplicator(source, target);
 
-            return replicator().from(dbInfo[source].mainDbUrl).to(dbInfo[target].mainDbUrl).replicate()
+            return replicateMainDb()
+                .then(replicateUserResetDb)
                 .then(listCycleDbs)
                 .then(replicateCycleDbs);
+
+            function replicateMainDb() {
+                return replicator().from(dbInfo[source].mainDbUrl).to(dbInfo[target].mainDbUrl).replicate();
+            }
+            function replicateUserResetDb() {
+                return replicator().from(dbInfo[source].baseUrl + '/user-reset-requests').to(dbInfo[target].baseUrl + '/user-reset-requests').replicate();
+            }
         }
     };
 }
