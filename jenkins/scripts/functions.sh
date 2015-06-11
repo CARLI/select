@@ -142,8 +142,8 @@ redeploy-carli() {
     echo "Creating data container, if needed" && create-data-container-if-not-exists &&
     echo "Redeploying CouchDB" && recreate-couchdb-container &&
     echo "Redeploying CARLI Assets" && recreate-assets-container &&
-    echo "Redeploying Middleware" && recreate-middleware-container &&
     echo "Installing dependencies and configuring containers" && install-dependencies-and-configure &&
+    echo "Redeploying Middleware" && recreate-middleware-container &&
     echo "Building the browser clients" && build-browser-clients &&
     echo "Redeploying web server" && recreate-serve-container
 }
