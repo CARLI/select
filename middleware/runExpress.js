@@ -8,6 +8,7 @@ var config = require('../config');
 var couchApp = require('./components/couchApp');
 var crmQueries = require('./components/crmQueries');
 var cycleCreation = require('./components/cycleCreation');
+var libraryQueries = require('./components/libraryQueries');
 var notifications = require('./components/notifications');
 var vendorDatabases = require('./components/vendorDatabases');
 var vendorSpecificProductQueries = require('./components/vendorSpecificProductQueries');
@@ -53,6 +54,11 @@ function runMiddlewareServer(){
         });
         carliMiddleware.get('/library/:id', function (req, res) {
             crmQueries.loadLibrary(req.params.id)
+                .then(sendResult(res))
+                .catch(send500Error(res));
+        });
+        carliMiddleware.get('/list-selections-for-library/:libraryId/from-cycle/:cycleId', function (req, res) {
+            libraryQueries.listSelectionsForLibraryFromCycle(req.params.libraryId, req.params.cycleId)
                 .then(sendResult(res))
                 .catch(send500Error(res));
         });

@@ -2,11 +2,12 @@
 
 module.exports = {
     config: require( '../config' ),
+    CouchDbStore: require('../CARLI/Store/CouchDb/Store'),
     Cycle: require('../CARLI/Entity/CycleRepository'),
     Library: require('../CARLI/Entity/LibraryRepository'),
+    LibraryMiddleware: require('../middleware/browserAdapters/libraryQueries'),
     Offering: require('../CARLI/Entity/OfferingRepository'),
     Product: require('../CARLI/Entity/ProductRepository'),
     Store: require('../CARLI/Store'),
-    CouchDbStore: require('../CARLI/Store/CouchDb/Store'),
     Validator: require('../CARLI/Validator')
 };

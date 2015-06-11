@@ -18,27 +18,12 @@ function libraryProductsListController( $q, controllerBaseService, cycleService,
     activate();
 
     function activate(){
-        vm.loadingPromise = cycleService.listSelectionsForCycle( vm.cycle)
-            .then(populateProductsForOfferings)
+        vm.loadingPromise = cycleService.listSelectionsForCycle(vm.cycle)
             .then(function( offerings ){
+                console.log('listing '+offerings.length+' selections for '+vm.cycle.name);
+                console.log(typeof offerings);
                 vm.selectedOfferings = offerings;
             });
-
-        function populateProductsForOfferings( offeringsList ){
-            return $q.all(offeringsList.map(loadProduct));
-
-            function loadProduct(offering){
-                if (typeof offering.product.vendor == 'object' && offering.product.license == 'object') {
-                    return $q.when(offering);
-                } else {
-                    return productService.load(offering.product.id)
-                        .then(function(product){
-                            offering.product = product;
-                            return offering;
-                        });
-                }
-            }
-        }
     }
 
 }

@@ -8,7 +8,7 @@ function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
         throw new Error('Cycle Service was initialized without a valid user');
     }
     var cycleModule = CarliModules.Cycle;
-    var offeringModule = CarliModules.Offering;
+    var middlewareModule = CarliModules.LibraryMiddleware;
 
     var currentCycle = null;
 
@@ -51,7 +51,7 @@ function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
     }
 
     function listSelectionsForCycle( cycle ){
-        return $q.when(offeringModule.listOfferingsWithSelectionsForLibrary(currentUser.library.id.toString(),cycle))
+        return $q.when(middlewareModule.listSelectionsForLibraryFromCycle(currentUser.library.id, cycle.id))
             .catch(errorHandler);
     }
 
