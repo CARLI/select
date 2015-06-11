@@ -60,7 +60,6 @@ function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
     }
 
     function setCurrentCycle(cycleObject) {
-        appState.setCycle(cycleObject);
         currentCycle = cycleObject;
     }
 }

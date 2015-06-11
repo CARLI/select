@@ -17,6 +17,7 @@ function appStateService($rootScope) {
 
     function setCycle(cycle) {
         $rootScope.appState = 'ready';
+        $rootScope.cycleId = cycle.id;
     }
 
 

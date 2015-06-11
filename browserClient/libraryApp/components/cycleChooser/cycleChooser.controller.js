@@ -1,7 +1,7 @@
 angular.module('library.cycleChooser')
     .controller('cycleChooserController', cycleChooserController);
 
-function cycleChooserController($scope, cycleService) {
+function cycleChooserController($scope, appState, cycleService) {
     var vm = this;
 
     vm.cycles = [];
@@ -32,5 +32,6 @@ function cycleChooserController($scope, cycleService) {
         }
 
         cycleService.setCurrentCycle(cycle);
+        appState.setCycle(cycle);
     }
 }
