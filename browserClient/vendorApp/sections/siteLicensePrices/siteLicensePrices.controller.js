@@ -140,7 +140,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     }
 
     function createReadOnlyOfferingCell(price) {
-        var cell = $('<div tabindex="0" class="price">'+price+'</div>');
+        var cell = $('<div tabindex="0" class="price" role="gridcell">'+price+'</div>');
         cell.on('focus', makeEditable);
         return cell;
 
@@ -152,7 +152,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
         }
     }
     function createEditableOfferingCell(price) {
-        var cell = $('<input class="price-editable" type="text" step=".01" min="0" value="' + price + '">');
+        var cell = $('<input class="price-editable" role="textbox" type="text" step=".01" min="0" value="' + price + '">');
         cell.on('blur', makeReadOnly);
         return cell;
 
