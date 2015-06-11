@@ -14,16 +14,26 @@ function libraryProductsListController( $q, controllerBaseService, cycleService,
         cost: ['selection.price','product.name']
     };
 
+    vm.selectionTotal = selectionTotal;
+
     controllerBaseService.addSortable(vm, vm.sortOptions.productName);
     activate();
 
     function activate(){
         vm.loadingPromise = cycleService.listSelectionsForCycle(vm.cycle)
             .then(function( offerings ){
-                console.log('listing '+offerings.length+' selections for '+vm.cycle.name);
-                console.log(typeof offerings);
                 vm.selectedOfferings = offerings;
             });
+    }
+
+    function selectionTotal(){
+        var total = 0;
+
+        vm.selectedOfferings.forEach(function(offering){
+            total += offering.selection.price;
+        });
+
+        return total;
     }
 
 }

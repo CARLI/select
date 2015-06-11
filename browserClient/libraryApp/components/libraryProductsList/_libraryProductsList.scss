@@ -2,4 +2,21 @@ ul.product-list.selected-products {
     .column.product {
         flex-grow: 2;
     }
+
+    .column.cost {
+        flex: none;
+        width: 200px;
+    }
+
+    li.summary-row {
+        .column.cost {
+            background: $white;
+            color: $green;
+            font-weight: bold;
+        }
+
+        .column.total {
+            text-align: right;
+        }
+    }
 }

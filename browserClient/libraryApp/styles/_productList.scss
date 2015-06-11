@@ -16,6 +16,16 @@ ul.product-list {
             @include list-button;
         }
 
+        .total-label {
+            @include font-size(17);
+            color: $black;
+            float: right;
+            font-family: 'Dosis';
+            font-weight: bold;
+            text-align: right;
+            text-transform: uppercase;
+        }
+
         &.footer {
             background: $light-gray;
             min-height: 58px;
