@@ -18,19 +18,23 @@ module.exports = function (storeOptions) {
 
         function handleCouchResponse(error, response, body) {
             var data;
+            var statusCode = 500;
+            if (response) {
+                statusCode = response.statusCode;
+            }
 
             if (error) {
-                deferred.reject(carliError(error, response.statusCode));
+                deferred.reject(carliError(error, statusCode));
             }
             else {
                 data = (typeof body === 'string') ? JSON.parse(body) : body;
-            }
 
-            if (data && data.error) {
-                deferred.reject(carliError(data, response.statusCode));
-            }
-            else {
-                deferred.resolve(data);
+                if (data && data.error) {
+                    deferred.reject(carliError(data, statusCode));
+                }
+                else {
+                    deferred.resolve(data);
+                }
             }
         }
 
@@ -53,11 +57,6 @@ module.exports = function (storeOptions) {
 
         function handleCouchResponse(error, response, body) {
             var data;
-
-            console.log('Couch error', JSON.stringify(error));
-            console.log('Couch response', JSON.stringify(response));
-            console.log('Couch body', JSON.stringify(body));
-
             var statusCode = 500;
             if (response) {
                 statusCode = response.statusCode;
@@ -68,14 +67,14 @@ module.exports = function (storeOptions) {
             }
             else {
                 data = (typeof body === 'string') ? JSON.parse(body) : body;
-            }
 
-            if (data && data.error) {
-                deferred.reject(carliError(data, statusCode));
-            }
-            else {
-                data.authCookie = getCookieWithDomainAdded(response);
-                deferred.resolve(data);
+                if (data && data.error) {
+                    deferred.reject(carliError(data, statusCode));
+                }
+                else {
+                    data.authCookie = getCookieWithDomainAdded(response);
+                    deferred.resolve(data);
+                }
             }
         }
 
