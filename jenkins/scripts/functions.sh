@@ -153,6 +153,6 @@ redeploy-carli() {
     echo "Installing dependencies and configuring containers" && install-dependencies-and-configure &&
     echo "Redeploying Middleware" && recreate-middleware-container &&
     echo "Building the browser clients" && build-browser-clients &&
-    # echo "Creating CouchDB Admin" && create-couchdb-admin &&
-    echo "Redeploying web server" && recreate-serve-container
+    echo "Redeploying web server" && recreate-serve-container &&
+    echo "Creating CouchDB Admin" && create-couchdb-admin
 }
