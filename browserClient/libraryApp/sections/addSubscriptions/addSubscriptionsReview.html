@@ -9,7 +9,7 @@
     <li ng-repeat="offering in vm.offerings | filter: vm.hasSelection | orderBy: vm.orderBy:vm.reverse track by offering.id">
         <div class="column">{{ offering.product.name }}</div>
         <div class="column">{{ offering.product.vendor.name }}</div>
-        <div class="column">{{ offering.selectionPendingReview.price | currency }}</div>
+        <div class="column">{{ offering.selection.price | currency }}</div>
     </li>
     <li class="summary-row">
         <div class="column">

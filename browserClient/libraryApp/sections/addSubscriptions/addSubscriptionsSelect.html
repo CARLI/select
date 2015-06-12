@@ -1,6 +1,7 @@
-    <ul class="product-list" cg-busy="vm.loadingPromise">
+    <ul class="subscriptions product-list" cg-busy="vm.loadingPromise">
         <li class="column-headers">
             <div class="sortable column" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.productName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.productName)">Product</div>
+            <div class="column selected-last-year">Selected Last Year</div>
             <div class="sortable column vendor" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.vendorName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.vendorName)">Vendor</div>
             <div class="sortable column funded" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.funded, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.funded)">CARLI Funded</div>
             <div class="sortable column select" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.pricing, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.pricing)">Selected</div>
@@ -13,12 +14,15 @@
                     </button>
                     {{ offering.product.name }}
                 </div>
+                <div class="column selected-last-year">
+                    <fa name="star" ng-if="offering.selectedLastYear"></fa>
+                </div>
                 <div class="column vendor">{{ offering.product.vendor.name }}</div>
                 <div class="column funded">
                     <span>{{ offering.product.funded | currency }}</span>
                 </div>
                 <div class="column select">
-                    <span ng-if="offering.selectionPendingReview" class="price">{{ offering.selectionPendingReview.price | currency }}</span>
+                    <span ng-if="offering.selectionPendingReview" class="price">{{ offering.selection.price | currency }}</span>
                 </div>
             </div>
             <div class="content">
@@ -78,16 +82,19 @@
                 <div class="column select">
                     <div class="subscription-buttons">
                         <subscription-button title="Site License" price="{{ offering.pricing.site }}"
-                                             selected="offering.selectionPendingReview"
+                                             selected="offering.selection"
                                              busy-click="vm.selectProduct(offering)"
                                              ng-if="offering.pricing.site">
                         </subscription-button>
+
+                        TODO: SU buttons
+
                         <div class="no-price" ng-if="!offering.pricing.site">A price has not been provided for this product. Ask CARLI for more information.</div>
                     </div>
                     <div class="bottom-buttons">
                         <button type="button" class="carli-button remove-button"
                                 busy-click="vm.unselectProduct(offering)"
-                                ng-if="offering.selectionPendingReview">
+                                ng-if="offering.selection">
                             Remove Selection<fa name="remove"></fa>
                         </button>
                         <ask-carli-button context="{{ offering.product.name }} from {{ offering.product.vendor.name }}"></ask-carli-button>

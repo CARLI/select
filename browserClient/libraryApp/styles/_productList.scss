@@ -34,3 +34,193 @@ ul.product-list {
         }
     }
 }
+
+ul.product-list.subscriptions {
+    $selected-last-year-column-width: 80px;
+    $funded-column-width: 85px;
+    $select-column-width: 200px;
+
+    border-top: 3px solid $black;
+
+    > li {
+        border-left: 3px solid $purple;
+
+        &.column-headers {
+            border-left: $default-border;
+            padding-left: 2px;
+        }
+
+        &.collapsed {
+            border-left: $default-border;
+            padding-left: 2px;
+
+            .collapsible-header {
+                .column.vendor {
+                    font-weight: normal;
+                }
+            }
+        }
+
+        &[collapsible]{
+            display: block;
+        }
+
+        .collapsible-header,
+        .content {
+            @include flexbox;
+            width: 100%;
+        }
+
+        .collapsible-header {
+            > .column:first-child {
+                padding-left: 36px;
+            }
+
+            .column.vendor {
+                color: $black;
+                font-weight: bold;
+            }
+
+            .column.select {
+                padding: 0;
+
+                .price {
+                    background: $green;
+                    border: 1px solid $dark-green;
+                    color: $white;
+                    font-weight: bold;
+                    height: 100%;
+                    left: 0;
+                    padding: 16px;
+                    position: absolute;
+                    top: 0;
+                    width: 100%;
+                }
+            }
+
+            .column.purchase {
+                @include body-text;
+
+                .date,
+                .price {
+                    font-weight: bold;
+                }
+            }
+        }
+
+        .content {
+            background: $white;
+            border-top: $default-border;
+
+            .column.product-info {
+                flex-basis: 33%;
+            }
+
+            .column.license-info {
+                border-left: none;
+                flex-basis: 66%;
+            }
+
+            .column.select {
+                @include flexbox;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: 0;
+                position: relative;
+                background-color: $light-gray;
+
+                .subscription-buttons {
+                    @include flex(1 1 50%);
+                }
+
+                .bottom-buttons {
+                    border-top: $default-border;
+                    padding: 4px;
+
+                    .remove-button {
+                        margin-bottom: 4px;
+                    }
+                }
+
+                subscription-button {
+                    margin: 4px;
+                }
+
+                .carli-button {
+                    display: block;
+                    position: relative;
+                    text-align: left;
+                    width: 100%;
+
+                    .fa {
+                        @include font-size(22);
+                        position: absolute;
+                        right: 12px;
+                    }
+                }
+
+                .no-price {
+                    padding: 0.5rem;
+                }
+            }
+
+            .column.empty {
+                border: none;
+            }
+        }
+
+        .column.selected-last-year {
+            flex: none;
+            width: $selected-last-year-column-width;
+        }
+
+        .column.funded {
+            flex: none;
+            width: $funded-column-width;
+        }
+
+        .column.select {
+            flex: none;
+            width: $select-column-width;
+        }
+
+        &.summary-row {
+            border-left: $default-border;
+
+            .column:first-child {
+                background: $light-gray;
+                line-height: 21px;
+            }
+
+            aside {
+                @include body-text;
+                float: left;
+                font-style: italic;
+            }
+
+            .column.total {
+                background: $white;
+                color: $green;
+                flex: none;
+                font-weight: bold;
+                width: $funded-column-width + $select-column-width;
+            }
+        }
+
+        &.footer {
+            border-left: $default-border;
+
+            .carli-button.print,
+            .carli-button.export,
+            .carli-button.email {
+                margin-right: 8px;
+                min-width: 80px;
+            }
+
+            button.arrow-right {
+                position: absolute;
+                right: 8px;
+            }
+        }
+    }
+}

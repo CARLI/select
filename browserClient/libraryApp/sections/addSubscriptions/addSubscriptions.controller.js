@@ -81,6 +81,7 @@ function addSubscriptionsController( $q, $routeParams, $window, cycleService, of
             users: users
         };
 
+        //TODO: set price of selection
 //        if ( users === 'site' ){
 //            offering.selection.price = offering.pricing.site
 //        }

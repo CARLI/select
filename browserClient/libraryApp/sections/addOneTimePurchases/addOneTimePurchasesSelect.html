@@ -1,4 +1,4 @@
-    <ul class="product-list" cg-busy="vm.loadingPromise">
+    <ul class="subscriptions product-list" cg-busy="vm.loadingPromise">
         <li class="column-headers">
             <div class="sortable column" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.productName, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.productName)">Product</div>
             <div class="sortable column vendor" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.vendorName, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.vendorName)">Vendor</div>
@@ -115,7 +115,7 @@
         The following products are items that your library currently has access to through CARLI. If your library is not
         able to access any one of these items, <a>please contact CARLI</a>.
     </p>
-    <ul class="product-list" cg-busy="vm.loadingPromise">
+    <ul class="subscriptions product-list" cg-busy="vm.loadingPromise">
         <li collapsible class="collapsed" ng-repeat="offering in vm.purchased | orderBy: vm.orderByPurchased:vm.reversePurchased track by offering.id ">
             <div class="collapsible-header">
                 <div class="column">
