@@ -139,7 +139,11 @@ build-browser-clients() {
 }
 
 create-couchdb-admin() {
-    run-in-container "grunt create-admin-user"
+    ${docker} run --rm \
+        --link=carli-couchdb-${CARLI_INSTANCE}:carli-couchdb \
+        --volumes-from "carli-assets-${CARLI_INSTANCE}" \
+        --workdir=/carli-select \
+        carli-build:${CARLI_DOCKER_TAG} grunt create-admin-user
 }
 
 redeploy-carli() {
