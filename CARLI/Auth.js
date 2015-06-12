@@ -3,7 +3,6 @@ var config = require('../config');
 var couchUtils = require('./Store/CouchDb/Utils')();
 
 function createSession(userLogin) {
-    console.log('creating session', JSON.stringify(config.storeOptions.couchDbUrl));
     return couchUtils.couchRequestSession(userLogin);
 }
 
