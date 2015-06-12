@@ -4,7 +4,7 @@ var Entity = require('../Entity')
     , Store = require( '../Store' )
     , StoreModule = require( '../Store/CouchDb/Store')
     , EntityTransform = require( './EntityTransformationUtils')
-    , CouchUtils = require( '../Store/CouchDb/Utils')
+    , CouchUtils = require( '../Store/CouchDb/Utils')()
     , Q = require('q')
     , Validator = require('../Validator')
     ;
@@ -73,8 +73,13 @@ function getOfferingTypeOptions(){
     return Validator.getEnumValuesFor('License', 'offeringType');
 }
 
+function setStore(store) {
+    LicenseRepository.setStore(store);
+    CouchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+}
+
 module.exports = {
-    setStore: LicenseRepository.setStore,
+    setStore: setStore,
     create: createLicense,
     update: updateLicense,
     list: listLicenses,

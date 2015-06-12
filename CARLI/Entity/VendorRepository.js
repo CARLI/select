@@ -1,7 +1,7 @@
 var Entity = require('../Entity')
     , EntityTransform = require( './EntityTransformationUtils')
     , config = require( '../../config' )
-    , couchUtils = require('../Store/CouchDb/Utils')
+    , couchUtils = require('../Store/CouchDb/Utils')()
     , StoreOptions = config.storeOptions
     , Store = require( '../Store' )
     , StoreModule = require( '../Store/CouchDb/Store')
@@ -60,6 +60,11 @@ function getVendorsById( ids ){
 
 var functionsToAdd = {
 };
+
+function setStore(store) {
+    VendorRepository.setStore(store);
+    couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+}
 
 module.exports = {
     setStore: VendorRepository.setStore,

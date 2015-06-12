@@ -1,0 +1,19 @@
+#login {
+
+  .forgot-instructions {
+    margin-top: 1rem;
+    font-size: 1.2em;
+  }
+  .toggle-forgot {
+    margin-top: 1rem;
+  }
+
+  input[text], input[password] {
+    width: 50%;
+  }
+
+  .login-button {
+    float: right;
+    margin-top: 2rem;
+  }
+}

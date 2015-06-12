@@ -17,6 +17,7 @@ module.exports = function (grunt) {
         cfg.storeOptions = generateCouchConfig(instance);
         cfg.middleware = generateMiddlewareConfig(instance);
         cfg.memberDb = generateMemberDbConfig(instance);
+        cfg.cookieDomain = getCookieDomain(instance);
 
         fs.writeFileSync(localConfigFile, stringifyConfig(cfg));
 
@@ -44,7 +45,10 @@ module.exports = function (grunt) {
                 throw new Error('Couch container link not found');
             }
 
+            //var password = process.env.CARLI_COUCHDB_ADMIN_PASSWORD || 'relax';
+
             return {
+                privilegedCouchDbUrl: 'http://admin:relax@' + host + ':' + port,
                 couchDbUrl: 'http://' + host + ':' + port,
                 couchDbName: 'carli'
             };
@@ -52,19 +56,32 @@ module.exports = function (grunt) {
 
         function getPublicCouchConfig() {
             return {
+                privilegedCouchDbUrl: getPrivilegedCouchDbUrl(instance),
                 couchDbUrl: getPublicCouchDbUrl(instance),
                 couchDbName: 'carli'
             };
 
             //noinspection FunctionWithMultipleReturnPointsJS
+            function getPrivilegedCouchDbUrl() {
+                switch (instance) {
+                    case 'dev':
+                    case 'qa':
+                    case 'prod':
+                        var containerConfig = getContainerCouchConfig();
+                        return containerConfig.privilegedCouchDbUrl;
+                    default:
+                        throw new Error('Invalid instance: ' + instance);
+                }
+            }
+            //noinspection FunctionWithMultipleReturnPointsJS
             function getPublicCouchDbUrl() {
                 switch (instance) {
                     case 'dev':
-                        return dbInfo.dev.baseUrl;
-                 case 'qa':
-                        return dbInfo.qa.baseUrl;
+                        return dbInfo.dev.publicBaseUrl;
+                    case 'qa':
+                        return dbInfo.qa.publicBaseUrl;
                     case 'prod':
-                        return dbInfo.prod.baseUrl;
+                        return dbInfo.prod.publicBaseUrl;
                     default:
                         throw new Error('Invalid instance: ' + instance);
                 }
@@ -103,5 +120,21 @@ module.exports = function (grunt) {
             password: process.env.CARLI_CRM_MYSQL_PASSWORD,
             database: 'carli_crm'
         };
+    }
+
+    function getCookieDomain(instance) {
+        //noinspection FunctionWithMultipleReturnPointsJS
+        switch (instance) {
+            case 'test':
+                return 'carli.local';
+            case 'dev':
+                return 'dev.pixotech.com';
+            case 'qa':
+                return 'qa.pixotech.com';
+            case 'prod':
+                return 'carli.illinois.edu';
+            default:
+                throw new Error('Invalid instance: ' + instance);
+        }
     }
 };

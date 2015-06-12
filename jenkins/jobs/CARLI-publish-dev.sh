@@ -1,12 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 
 # Change to root directory of the project
 cd `git rev-parse --show-toplevel`
 
-SCRIPTS=./jenkins/scripts
+export CARLI_INSTANCE=dev
+export CARLI_DOCKER_TAG=latest
+export CARLI_COUCHDB_HOST_PORT=9091
+export CARLI_NGINX_HOST_PORT=9090
 
-$SCRIPTS/run-data-container.sh dev latest &&
-$SCRIPTS/run-db-container.sh dev latest 9091 &&
-$SCRIPTS/run-content-container.sh dev latest &&
-$SCRIPTS/run-middleware-container.sh dev latest &&
-$SCRIPTS/run-serve-container.sh dev latest 9090
+. ./jenkins/scripts/functions.sh
+
+redeploy-carli

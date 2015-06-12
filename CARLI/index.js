@@ -1,5 +1,6 @@
 module.exports = {
     config: require( '../config' ),
+    Auth: require('./Auth'),
     Cycle: require('./Entity/CycleRepository'),
     Library: require('./Entity/LibraryRepository'),
     License: require('./Entity/LicenseRepository'),
@@ -8,6 +9,7 @@ module.exports = {
     NotificationDraftGenerator: require('./NotificationDraftGenerator'),
     Offering: require('./Entity/OfferingRepository'),
     Product: require('./Entity/ProductRepository'),
+    User: require('./Entity/UserRepository'),
     Vendor: require('./Entity/VendorRepository'),
     VendorStatus: require('./Entity/VendorStatusRepository'),
     Store: require('./Store'),

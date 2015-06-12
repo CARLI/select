@@ -1,1 +1,3 @@
-angular.module('carli.userMenu',[]);
+angular.module('carli.userMenu',[
+    'common.auth'
+]);

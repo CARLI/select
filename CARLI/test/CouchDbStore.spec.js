@@ -1,6 +1,6 @@
 var test   = require( './Store/StoreInterface.spec' )
   , testUtils = require( './utils' )
-  , couchUtils = require('../Store/CouchDb/Utils')
+  , couchUtils = require('../Store/CouchDb/Utils')()
 ;
 
 var testOptions = testUtils.getTestDbStoreOptions();

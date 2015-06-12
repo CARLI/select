@@ -1,0 +1,19 @@
+{
+  "$schema": "json-schema.org/draft-04/schema",
+  "title": "User",
+  "schemaType": "user",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique identifier for the Notification record",
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    }
+  },
+  "required": [ "email", "name" ]
+}

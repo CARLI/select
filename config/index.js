@@ -5,13 +5,18 @@ var couchDbName = 'carli';
 
 var defaults = {
     alertTimeout: 10000,
+    cookieDomain: 'carli.local',
     middleware: {
-        url: 'http://localhost:3000',
+        url: 'http://staff.carli.local:8080/api',
         port: 3000
     },
     storeOptions: {
-        couchDbUrl: 'http://localhost:5984',
-        couchDbName: couchDbName
+        couchDbName: couchDbName,
+        couchDbUrl: 'http://staff.carli.local:8080/db',
+        privilegedCouchUsername: 'admin',
+        privilegedCouchPassword: 'relax',
+        privilegedCouchUrlScheme: 'http://',
+        privilegedCouchHostname: 'localhost:5984'
     },
     memberDb: {
         connectionLimit: 10,
@@ -29,15 +34,22 @@ var defaults = {
     }
 };
 
-var config = _.extend(defaults, localConfig);
+var config = _.merge(defaults, localConfig);
 
-defaults.setDbName = function(name) {
+if (!config.storeOptions.privilegedCouchDbUrl) {
+    config.storeOptions.privilegedCouchDbUrl = config.storeOptions.privilegedCouchUrlScheme +
+        config.storeOptions.privilegedCouchUsername + ':' +
+        config.storeOptions.privilegedCouchPassword + '@' +
+        config.storeOptions.privilegedCouchHostname;
+}
+
+config.setDbName = function(name) {
     couchDbName = name;
 };
-defaults.getDbName = function() {
+config.getDbName = function() {
     return couchDbName;
 };
-defaults.getMiddlewareUrl = function() {
+config.getMiddlewareUrl = function() {
     return config.middleware.url;
 };
 

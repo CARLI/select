@@ -1,17 +1,32 @@
-var config = require('../config');
-var CycleRepository = require('../CARLI/Entity/CycleRepository');
-var cycleRepositoryForVendor = require('../CARLI/Entity/CycleRepositoryForVendor');
-var couchApp = require('../middleware/components/couchApp');
-var request = require('request');
 var Q = require('q');
-var dbInfo = require('./databaseInfo');
-var vendorRepository = require('../CARLI/Entity/VendorRepository');
+var request = require('request');
+var _ = require('lodash');
 
+var carliError = require('../CARLI/Error');
+var config = require('../config');
+var couchApp = require('../middleware/components/couchApp');
+var cycleRepository = require('../CARLI/Entity/CycleRepository');
+var cycleRepositoryForVendor = require('../CARLI/Entity/CycleRepositoryForVendor');
+var dbInfo = require('./databaseInfo');
+var userRepository = require('../CARLI/Entity/UserRepository');
+var vendorRepository = require('../CARLI/Entity/VendorRepository');
+var storeOptions = config.storeOptions;
+var unprivilegedCouchDbUrl = storeOptions.couchDbUrl;
+storeOptions.couchDbUrl = storeOptions.privilegedCouchDbUrl;
+var Store = require('../CARLI/Store');
+var StoreModule = require('../CARLI/Store/CouchDb/Store');
+
+cycleRepository.setStore(getPrivilegedStore());
+vendorRepository.setStore(getPrivilegedStore());
 
 var projectRoot = __dirname + '/..';
 
 function getDbUrl(dbName) {
-    return config.storeOptions.couchDbUrl + '/' + dbName;
+    return config.storeOptions.privilegedCouchDbUrl + '/' + dbName;
+}
+
+function getPrivilegedStore() {
+    return Store( StoreModule(storeOptions) );
 }
 
 function recreateDb(dbName) {
@@ -21,7 +36,6 @@ function recreateDb(dbName) {
     request.del(dbUrl, function () {
         request.put(dbUrl, function (err) {
             if (err) {
-                console.log("Error creating database '"+dbName+"':" + err);
                 deferred.reject(err);
             } else {
                 console.log("Created database " + dbName);
@@ -29,6 +43,7 @@ function recreateDb(dbName) {
             }
         });
     });
+
     return deferred.promise;
 }
 
@@ -36,9 +51,90 @@ function deployDb(dbName) {
     if (!dbName) {
         dbName = config.storeOptions.couchDbName;
     }
-    return recreateDb(dbName).then(function() {
+    return recreateDb(dbName)
+        .then(addSecurityDoc)
+        .then(addDesignDoc)
+        .then(deployResetRequestDb);
+
+    function addSecurityDoc() {
+        addSecurityDocWithRoles(dbName, [ '_admin', 'staff', 'vendor', 'library' ]);
+    }
+    function addDesignDoc() {
         return couchApp.putDesignDoc(dbName, 'CARLI');
-    });
+    }
+}
+
+function deployResetRequestDb() {
+    var dbName = 'user-reset-requests';
+
+    return recreateDb(dbName)
+        .then(addResetSecurityDoc)
+        .then(addResetDesignDoc);
+
+    function addResetSecurityDoc() {
+        return addSecurityDocAdminOnly(dbName);
+    }
+    function addResetDesignDoc() {
+        return couchApp.putDesignDoc(dbName, 'UserResetRequest');
+    }
+}
+
+function createAdminUser() {
+    var deferred = Q.defer();
+
+    request.put({
+        url: unprivilegedCouchDbUrl + '/_config/admins/' + config.storeOptions.privilegedCouchUsername,
+        body: '"' + config.storeOptions.privilegedCouchPassword + '"'
+    }, handleCouchResponse);
+
+    function handleCouchResponse(error, response, body) {
+        var data;
+
+        if (error) {
+            deferred.reject(carliError(error, response.statusCode));
+        }
+        else {
+            data = (typeof body === 'string') ? JSON.parse(body) : body;
+        }
+
+        if (data && data.error) {
+            console.log('Error creating admin user', carliError(data, response.statusCode));
+            deferred.reject(carliError(data, response.statusCode));
+        }
+        else {
+            deferred.resolve(data);
+        }
+    }
+    return deferred.promise;
+}
+
+function createUsersFromJson(file) {
+    var users = require(file);
+
+    return Q.all(users.map(createUser))
+        .catch(function(err) {
+            console.log(err);
+        });
+
+    function createUser(user) {
+        return userRepository
+            .create(user)
+            .catch(updateIfConflict);
+
+        function updateIfConflict(err) {
+            if (err.statusCode == 409) {
+                return userRepository
+                    .load(user.email)
+                    .then(mergeAndUpdateUser);
+            }
+            throw err;
+        }
+
+        function mergeAndUpdateUser(loadedUser) {
+            var updatedUser = _.extend(loadedUser, user);
+            return userRepository.update(updatedUser);
+        }
+    }
 }
 
 function createOneTimePurchaseCycle(cycleName, store) {
@@ -47,10 +143,30 @@ function createOneTimePurchaseCycle(cycleName, store) {
         otpCycle.name = cycleName;
     }
     if (store) {
-        CycleRepository.setStore(store);
+        cycleRepository.setStore(store);
     }
 
-    return CycleRepository.create(otpCycle);
+    return cycleRepository.create(otpCycle);
+}
+
+function addSecurityDocWithRoles(dbName, roles) {
+    request.put({
+        url: getDbUrl(dbName) + '/_security',
+        json: {
+            admins: {
+                names: [],
+                roles:[]
+            },
+            members: {
+                names: [],
+                roles: roles
+            }
+        }
+    });
+}
+
+function addSecurityDocAdminOnly(dbName) {
+    return addSecurityDocWithRoles(dbName, [ '_admin' ]);
 }
 
 function deployLocalAppDesignDoc() {
@@ -58,18 +174,24 @@ function deployLocalAppDesignDoc() {
 }
 
 function deployAppDesignDoc(instance) {
-    return couchApp.putDesignDoc(instance.mainDbName, 'CARLI');
+    return couchApp.putDesignDoc(instance.mainDbName, 'CARLI')
+        .then(deployDesignDocToUsers);
+
+    function deployDesignDocToUsers() {
+        return couchApp.putDesignDoc('_users', 'Users');
+    }
 }
 
 function deployLocalCycleDesignDocs() {
-    return CycleRepository.list().then(function (cycles) {
+    return cycleRepository.list().then(function (cycles) {
         var promises = [];
         cycles.forEach(function (cycle) {
             promises.push( couchApp.putDesignDoc(cycle.getDatabaseName(), 'Cycle') );
             promises.push( deployLocalCycleDesignDocsForVendorDatabases(cycle ) );
         });
         return Q.all(promises);
-    });
+    })
+        .catch(function (err) { console.log('>>> Not allowed to list cycles', err); });
 }
 
 function deployLocalCycleDesignDocsForVendorDatabases( cycle ) {
@@ -97,6 +219,8 @@ if (require.main === module) {
     // required as a module
     module.exports = {
         deployDb: deployDb,
+        createAdminUser: createAdminUser,
+        createUsersFromJson: createUsersFromJson,
         createOneTimePurchaseCycle: createOneTimePurchaseCycle,
         deployLocalAppDesignDoc: deployLocalAppDesignDoc,
         deployLocalCycleDesignDocs: deployLocalCycleDesignDocs

@@ -4,6 +4,15 @@ var couchapp = require( 'couchapp' )
 ddoc = {
     _id: '_design/CARLI',
     language: "javascript",
+    validate_doc_update_disabled: function (newDoc, oldDoc, userCtx) {
+        if ( ! (userHasRole('staff') || userHasRole('_admin')) ) {
+            throw({ forbidden: 'Unauthorized' });
+        }
+
+        function userHasRole(role) {
+            return userCtx.roles.indexOf(role) >= 0;
+        }
+    },
     views: {
         listByType: {
             map: function( doc ) { if ( doc.type ) { emit( doc.type, doc ) } }

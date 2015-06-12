@@ -1,5 +1,6 @@
 var CycleRepository = require('../CARLI').Cycle;
 var CouchDbStore = require('../CARLI').CouchDbStore;
+var couchUtils = require('../CARLI/Store/CouchDb/Utils');
 var carliConfig = require('../CARLI').config;
 var StoreOptions = carliConfig.storeOptions;
 var Store = require('../CARLI').Store;
@@ -78,7 +79,7 @@ function createCycle(cycle){
 
     var couchIdPromise = Q.defer();
 
-    CycleRepository.create( cycle )
+    CycleRepository.create( cycle, couchUtils.DB_TYPE_STAFF )
         .then(function(id) {
             couchIdPromise.resolve({
                 couchId: id,
@@ -86,7 +87,7 @@ function createCycle(cycle){
             });
         })
         .catch(function(err) {
-            console.log(err);
+            console.log('Error creating cycle:', err);
             couchIdPromise.reject();
         });
 

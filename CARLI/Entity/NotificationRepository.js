@@ -1,7 +1,7 @@
 var Entity = require('../Entity')
     , EntityTransform = require( './EntityTransformationUtils')
     , config = require( '../../config' )
-    , couchUtils = require( '../Store/CouchDb/Utils')
+    , couchUtils = require( '../Store/CouchDb/Utils')()
     , libraryRepository = require('../Entity/LibraryRepository')
     , vendorRepository = require('../Entity/VendorRepository')
     , StoreOptions = config.storeOptions
@@ -193,8 +193,13 @@ function notificationTypeIsForVendor(notificationType) {
     return results[notificationType];
 }
 
+function setStore(store) {
+    NotificationRepository.setStore(store);
+    couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+}
+
 module.exports = {
-    setStore: NotificationRepository.setStore,
+    setStore: setStore,
     create: createNotification,
     update: updateNotification,
     list: listNotifications,

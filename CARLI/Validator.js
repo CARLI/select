@@ -24,6 +24,8 @@ var schemas = {
     Product: require('../schemas/Product.json'),
     ProductDetailCodes: require('../schemas/ProductDetailCodes.json'),
     ProductLicenseType: require('../schemas/ProductLicenseType.json'),
+    user: require('../schemas/user.json'),
+    UserResetRequest: require('../schemas/UserResetRequest.json'),
     Vendor: require('../schemas/Vendor.json'),
     VendorStatus: require('../schemas/VendorStatus.json')
 };

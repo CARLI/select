@@ -19,10 +19,53 @@ In the browserClient/ directory, run:
 * `npm install`
 * `npm install -g grunt-cli`
 * `npm install -g bower`
-* `npm install -g protractor`
-* `webdriver-manager update --standalone`
 * `bower install`
 * `gem install sass`
+
+The protractor tests are no longer maintained, nor run by default, so these can be skipped.
+
+* ~~`npm install -g protractor`~~
+* ~~`webdriver-manager update --standalone`~~
+
+### CouchDB Setup ###
+
+* On a Mac, the best way to install these is with [Homebrew](http://brew.sh/).  Install Homebrew following the
+instructions on their website, then:
+* `brew install couchdb`
+    * During the install, instructions will be printed for how to start and stop couch.  The recommended way is to 
+use OSX's launchctl facility.  To do so, copy the `homebrew.mxcl.couchdb.plist` file into your `~/Library/LaunchAgents/`
+folder as instructed during the `brew install` process.  If you prefer, you can also start and stop CouchDB manually.
+
+* mention futon
+* initial setup for database (grunt tasks - deploy cycles, deploy design docs, deploy admin user)
+* Import users (grunt task - imported from users.json)
+
+### Nginx Setup ###
+
+* `brew install nginx`
+    * Again, you can choose to use the launchctl facility, or start and stop nginx manually.
+    * Copy the nginx config file from `./docs/nginx.conf` over top of `/usr/local/etc/nginx/nginx.conf`.
+    * Restart nginx, if it is running.
+    * For authentication to work during local development, we have to add fake hostnames to our local system. To do so, 
+edit your hosts file, on `sudo vim /etc/hosts` and add the following lines:
+```
+    127.0.0.1 staff.carli.local
+    127.0.0.1 vendor.carli.local
+    127.0.0.1 library.carli.local
+```
+    * After changing the hosts file, run `sudo dscacheutil -flushcache; sudo killall mDNSResponder` to make sure the
+changes are seen by OSX.
+
+#### launchctl aliases ####
+
+If you choose to use launchctl to manage couch and/or nginx, the following aliases may be useful:
+
+```
+alias couchdb_start='launchctl load ~/Library/LaunchAgents/homebrew.mxcl.couchdb.plist'
+alias couchdb_stop='launchctl unload ~/Library/LaunchAgents/homebrew.mxcl.couchdb.plist'
+alias nginx_start='launchctl load ~/Library/LaunchAgents/homebrew.mxcl.nginx.plist'
+alias nginx_stop='launchctl unload ~/Library/LaunchAgents/homebrew.mxcl.nginx.plist'
+```
 
 ## Start Local Dev Server ##
 To build the project and start a local development server:

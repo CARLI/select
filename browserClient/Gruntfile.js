@@ -55,7 +55,7 @@ module.exports = function ( grunt ) {
 
             serveCarli: {
                 options: {
-                    open: 'http://localhost:8000',
+                    open: 'http://staff.carli.local:8080',
                     port: 8000,
                     middleware: function (connect, options) {
                         var optBase = (typeof options.base === 'string') ? [options.base] : options.base;
@@ -69,7 +69,7 @@ module.exports = function ( grunt ) {
 
             serveLibrary: {
                 options: {
-                    open: 'http://localhost:8002',
+                    open: 'http://library.carli.local:8002',
                     port: 8002,
                     middleware: function (connect, options) {
                         var optBase = (typeof options.base === 'string') ? [options.base] : options.base;
@@ -83,7 +83,7 @@ module.exports = function ( grunt ) {
 
             serveVendor: {
                 options: {
-                    open: 'http://localhost:8001',
+                    open: 'http://vendor.carli.local:8080',
                     port: 8001,
                     middleware: function (connect, options) {
                         var optBase = (typeof options.base === 'string') ? [options.base] : options.base;

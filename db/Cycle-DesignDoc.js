@@ -3,6 +3,37 @@ var couchapp = require( 'couchapp' )
 
 ddoc = {
     _id: '_design/CARLI',
+    filters: {
+        filterCycleDatabaseForVendor: function(doc, req) {
+            if(!req.query.vendorId) {
+                throw("vendorId is required");
+            }
+
+            if (doc.vendor == req.query.vendorId || doc.vendorId == req.query.vendorId) {
+                return true;
+            }
+
+            if (doc._id === '_design/CARLI') {
+                return true;
+            }
+
+            return false;
+        }
+    },
+    validate_doc_update_disabled: function (newDoc, oldDoc, userCtx) {
+        if ( ! (userHasRole('staff') || userHasRole('_admin') || userHasMatchingVendorRole()) ) {
+            throw({ forbidden: 'Unauthorized' });
+        }
+
+        function userHasRole(role) {
+            return userCtx.roles.indexOf(role) >= 0;
+        }
+
+        function userHasMatchingVendorRole() {
+            var vendorId = userCtx.db.slice(-36);
+            return userHasRole('vendor') && userHasRole('vendor-' + vendorId);
+        }
+    },
     views: {
         listByType: {
             map: function( doc ) { if ( doc.type ) { emit( doc.type, doc ) } }
@@ -94,23 +125,6 @@ ddoc = {
                     invoicePrice: sum(invoicePrices)
                 };
             }
-        }
-    },
-    filters: {
-        filterCycleDatabaseForVendor: function(doc, req) {
-            if(!req.query.vendorId) {
-                throw("vendorId is required");
-            }
-
-            if (doc.vendor == req.query.vendorId || doc.vendorId == req.query.vendorId) {
-                return true;
-            }
-
-            if (doc._id === '_design/CARLI') {
-                return true;
-            }
-
-            return false;
         }
     }
 };

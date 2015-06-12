@@ -1,6 +1,6 @@
 var chai = require( 'chai' );
 var expect = chai.expect;
-var couchUtils = require('../Store/CouchDb/Utils');
+var couchUtils = require('../Store/CouchDb/Utils')();
 var testUtils = require('./utils');
 var Q = require('q');
 var storeOptions = require( '../../config').storeOptions;
@@ -23,23 +23,23 @@ describe('Couch utilities', function () {
             var targetDbName = testUtils.testDbMarker + '-replication-target-db';
             var testDocId = 'test-replication-document';
 
-            return couchUtils.createDatabase(sourceDbName)
+            return couchUtils.createDatabase(sourceDbName, couchUtils.DB_TYPE_TEST)
                 .then(function () {
                     return couchUtils.couchRequest({
-                        url: storeOptions.couchDbUrl + '/' + sourceDbName + '/' + testDocId,
+                        url: storeOptions.privilegedCouchDbUrl + '/' + sourceDbName + '/' + testDocId,
                         method: 'put',
                         json: { id: testDocId }
                     });
                 })
                 .then(function() {
-                    return couchUtils.createDatabase(targetDbName);
+                    return couchUtils.createDatabase(targetDbName, couchUtils.DB_TYPE_TEST);
                 })
                 .then(function() {
                     return couchUtils.replicateFrom(sourceDbName).to(targetDbName);
                 })
                 .then(function() {
                     var requestPromise = couchUtils.couchRequest({
-                        url: storeOptions.couchDbUrl + '/' + targetDbName + '/' + testDocId,
+                        url: storeOptions.privilegedCouchDbUrl + '/' + targetDbName + '/' + testDocId,
                         method: 'get'
                     });
                     return expect(requestPromise).to.be.fulfilled
@@ -54,24 +54,24 @@ describe('Couch utilities', function () {
             var testDbName = testUtils.testDbMarker + '-couch-docs';
             var testIds = [ uuid.v4(), uuid.v4(), uuid.v4() ];
 
-            return couchUtils.createDatabase(testDbName)
+            return couchUtils.createDatabase(testDbName, couchUtils.DB_TYPE_TEST)
                 .then(function () {
                     return couchUtils.couchRequest({
-                        url: storeOptions.couchDbUrl + '/' + testDbName + '/' + testIds[0],
+                        url: storeOptions.privilegedCouchDbUrl + '/' + testDbName + '/' + testIds[0],
                         method: 'put',
                         json: { id: testIds[0] }
                     });
                 })
                 .then(function () {
                     return couchUtils.couchRequest({
-                        url: storeOptions.couchDbUrl + '/' + testDbName + '/' + testIds[1],
+                        url: storeOptions.privilegedCouchDbUrl + '/' + testDbName + '/' + testIds[1],
                         method: 'put',
                         json: { id: testIds[1] }
                     });
                 })
                 .then(function () {
                     return couchUtils.couchRequest({
-                        url: storeOptions.couchDbUrl + '/' + testDbName + '/' + testIds[2],
+                        url: storeOptions.privilegedCouchDbUrl + '/' + testDbName + '/' + testIds[2],
                         method: 'put',
                         json: { id: testIds[2] }
                     });

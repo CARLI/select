@@ -1,5 +1,5 @@
 var baseRepository = require('./CycleRepository');
-var couchUtils = require('../Store/CouchDb/Utils');
+var couchUtils = require('../Store/CouchDb/Utils')();
 
 module.exports = function (vendor) {
 
@@ -13,7 +13,7 @@ module.exports = function (vendor) {
 
             function createDatabaseIfNotExists(databaseExists) {
                 if (!databaseExists) {
-                    return couchUtils.createDatabase(targetCycleDatabaseName);
+                    return couchUtils.createDatabase(targetCycleDatabaseName, couchUtils.DB_TYPE_VENDOR);
                 } else {
                     return cycleId;
                 }

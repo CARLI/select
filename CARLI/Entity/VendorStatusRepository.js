@@ -2,7 +2,7 @@ var Entity = require('../Entity')
   , EntityTransform = require( './EntityTransformationUtils')
   , CycleRepository = require('./CycleRepository')
   , config = require( '../../config' )
-  , couchUtils = require( '../Store/CouchDb/Utils')
+  , couchUtils = require( '../Store/CouchDb/Utils')()
   , getStoreForCycle = require('./getStoreForCycle')
   , Validator = require('../Validator')
   , moment = require('moment')
@@ -137,6 +137,11 @@ function setCycle(cycle) {
 
 
 var functionsToAdd = {};
+
+function setStore(store) {
+    VendorStatusRepository.setStore(store);
+    couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+}
 
 module.exports = {
     setStore: VendorStatusRepository.setStore,

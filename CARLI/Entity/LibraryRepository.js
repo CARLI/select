@@ -5,7 +5,7 @@ var CrmLibraryEntity = require('./CrmLibraryEntity')
     , StoreOptions = config.storeOptions
     , Store = require( '../Store' )
     , StoreModule = require( '../Store/CouchDb/Store')
-    , CouchUtils = require( '../Store/CouchDb/Utils')
+    , CouchUtils = require( '../Store/CouchDb/Utils')()
     , Q = require('q')
     , Validator = require('../Validator')
     , _ = require('lodash')
@@ -136,8 +136,13 @@ function getLibrariesById( ids ){
     }
 }
 
+function setStore(store) {
+    localLibraryRepository.setStore(store);
+    CouchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+}
+
 module.exports = {
-    setStore: localLibraryRepository.setStore,
+    setStore: setStore,
     update: updateLibrary,
     list: listLibraries,
     listActiveLibraries: listActiveLibraries,

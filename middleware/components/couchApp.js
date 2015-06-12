@@ -11,7 +11,7 @@ function putDesignDoc(dbName, dbType) {
 
     // var couchAppDomain = domain.create();
 
-    var url = config.storeOptions.couchDbUrl + '/' + dbName + '/_design/CARLI';
+    var url = config.storeOptions.privilegedCouchDbUrl + '/' + dbName + '/_design/CARLI';
 
     /*
      *  Running couchApp in its own domain allows you to actually see and deal with errors that it throws.

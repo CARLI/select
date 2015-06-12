@@ -1,7 +1,7 @@
 var Entity = require('../Entity')
     , EntityTransform = require('./EntityTransformationUtils')
     , config = require('../../config')
-    , couchUtils = require('../Store/CouchDb/Utils')
+    , couchUtils = require('../Store/CouchDb/Utils')()
     , StoreOptions = config.storeOptions
     , Store = require('../Store')
     , StoreModule = require('../Store/CouchDb/Store')
@@ -42,7 +42,7 @@ function createCycleLog(msg, data) {
     }
 }
 
-function createCycle( cycle ) {
+function createCycle( cycle, databaseType ) {
     return CycleRepository.create(cycle, transformFunction)
         .then(loadCycle)
         .then(createDatabaseForCycle);
@@ -51,7 +51,7 @@ function createCycle( cycle ) {
         cycle.databaseName = couchUtils.makeValidCouchDbName('cycle-' + cycle.name);
         createCycleLog('Creating database for ' + cycle.name + ' with database ' + cycle.getDatabaseName());
 
-        return couchUtils.createDatabase(cycle.getDatabaseName())
+        return couchUtils.createDatabase(cycle.getDatabaseName(), databaseType)
             .then(function commit() {
                 createCycleLog('  Success creating database for ' + cycle.name);
                 return updateCycle( cycle );
@@ -124,8 +124,13 @@ var functionsToAdd = {
     }
 };
 
+function setStore(store) {
+    CycleRepository.setStore(store);
+    couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+}
+
 module.exports = {
-    setStore: CycleRepository.setStore,
+    setStore: setStore,
     create: createCycle,
     createCycleLog: createCycleLog,
     update: updateCycle,

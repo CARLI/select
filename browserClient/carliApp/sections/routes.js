@@ -7,13 +7,35 @@ angular.module('carli.routes',[
     'carli.sections.products',
     'carli.sections.libraries',
     'carli.sections.licenses',
-    'carli.sections.styleGuide'
+    'carli.sections.styleGuide',
+    'carli.sections.login',
+    'carli.sections.users'
 ])
 .config(function ($routeProvider) {
     $routeProvider
     .when('/admin/databaseStatus', {
         templateUrl: '/carliApp/sections/admin/databaseStatus/databaseStatus.html',
         controller:  'databaseStatusController',
+        controllerAs:'vm'
+    })
+    .when('/login', {
+        templateUrl: '/carliApp/sections/login/login.html',
+        controller:  'loginController',
+        controllerAs:'vm'
+    })
+    .when('/reset/:key', {
+        templateUrl: '/carliApp/sections/resetRequest/resetRequest.html',
+        controller:  'resetRequestController',
+        controllerAs:'vm'
+    })
+    .when('/user', {
+        templateUrl: '/carliApp/sections/users/users.html',
+        controller:  'userController',
+        controllerAs:'vm'
+    })
+    .when('/user/:id', {
+        templateUrl: '/carliApp/sections/users/editUser/editUser.html',
+        controller:  'editUserPageController',
         controllerAs:'vm'
     })
     .when('/dashboard', {

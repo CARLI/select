@@ -1,6 +1,6 @@
 
 var Q = require('q');
-var couchUtils = require('../../CARLI/Store/CouchDb/Utils');
+var couchUtils = require('../../CARLI/Store/CouchDb/Utils')();
 var cycleRepository = require('../../CARLI/Entity/CycleRepository');
 var cycleRepositoryForVendor = require('../../CARLI/Entity/CycleRepositoryForVendor');
 var offeringRepository = require('../../CARLI/Entity/OfferingRepository.js');

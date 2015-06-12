@@ -3,6 +3,7 @@ angular.module('carli.app', [
     'ngAnimate',
     'ngRoute',
     'ngSanitize',
+    'common.auth',
     'common.alerts',
     'common.errorHandler',
     'common.fa',
@@ -20,8 +21,15 @@ angular.module('carli.app', [
 .config(function($locationProvider){
     $locationProvider.html5Mode(true);
 })
-.run(function(cycleService){
-    cycleService.initCurrentCycle();
+.run(function(authService) {
+    if (authService.isRouteProtected()) {
+        authService.authenticateForStaffApp();
+    }
+})
+.run(function($rootScope, cycleService){
+    if ($rootScope.isLoggedIn) {
+        cycleService.initCurrentCycle();
+    }
 })
 .value('cgBusyDefaults',{
     //message:'Loading Stuff',

@@ -3,10 +3,10 @@ var Q = require('q');
 
 var cycleRepository = require('../../CARLI/Entity/CycleRepository');
 var offeringRepository = require('../../CARLI/Entity/OfferingRepository');
-var couchUtils = require('../../CARLI/Store/CouchDb/Utils');
+var couchUtils = require('../../CARLI/Store/CouchDb/Utils')();
 
 function create( newCycleData ) {
-    return cycleRepository.create(newCycleData);
+    return cycleRepository.create(newCycleData, couchUtils.DB_TYPE_STAFF);
 
 }
 

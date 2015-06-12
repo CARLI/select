@@ -2,7 +2,7 @@ var Entity = require('../Entity')
   , EntityTransform = require( './EntityTransformationUtils')
   , CycleRepository = require('./CycleRepository')
   , config = require( '../../config' )
-  , couchUtils = require( '../Store/CouchDb/Utils')
+  , couchUtils = require( '../Store/CouchDb/Utils')()
   , getStoreForCycle = require('./getStoreForCycle')
   , Validator = require('../Validator')
   , moment = require('moment')
@@ -154,8 +154,13 @@ function getProductDetailCodeOptions(){
     return Validator.getEnumValuesFor('ProductDetailCodes');
 }
 
+function setStore(store) {
+    ProductRepository.setStore(store);
+    couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+}
+
 module.exports = {
-    setStore: ProductRepository.setStore,
+    setStore: setStore,
     setCycle: setCycle,
     create: createProduct,
     update: updateProduct,

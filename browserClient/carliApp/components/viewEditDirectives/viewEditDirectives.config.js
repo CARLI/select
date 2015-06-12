@@ -9,6 +9,7 @@ angular.module('carli.viewEditDirectives', [
     'carli.viewEditDirectives.viewEditRadios',
     'carli.viewEditDirectives.viewEditSelect',
     'carli.viewEditDirectives.viewEditSuPricing',
+    'carli.viewEditDirectives.viewEditSecret',
     'carli.viewEditDirectives.viewEditTextArea',
     'carli.viewEditDirectives.viewEditTextField',
     'carli.viewEditDirectives.viewEditTypeahead',

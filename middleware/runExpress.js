@@ -1,14 +1,17 @@
 var cluster = require('cluster');
 var express = require('express');
 var bodyParser = require('body-parser');
-var request = require('request');
+var cookieParser = require('cookie-parser');
 var _ = require('lodash');
 
 var config = require('../config');
+var request = require('../config/environmentDependentModules/request');
+var auth = require('./components/auth');
 var couchApp = require('./components/couchApp');
 var crmQueries = require('./components/crmQueries');
 var cycleCreation = require('./components/cycleCreation');
 var notifications = require('./components/notifications');
+var user = require('./components/user');
 var vendorDatabases = require('./components/vendorDatabases');
 var vendorSpecificProductQueries = require('./components/vendorSpecificProductQueries');
 
@@ -21,8 +24,9 @@ function runMiddlewareServer(){
 
     function configureMiddleware() {
         carliMiddleware.use(corsHeaders);
-        carliMiddleware.use(couchDbProxy);
         carliMiddleware.use(bodyParser.json());
+        carliMiddleware.use(cookieParser());
+        carliMiddleware.use(setAuthForRequest);
     }
 
     function launchServer() {
@@ -34,6 +38,30 @@ function runMiddlewareServer(){
     }
 
     function defineRoutes() {
+        carliMiddleware.post('/login', function (req, res) {
+            auth.createSession(req.body)
+                .then(copyAuthCookieFromResponse)
+                .then(sendResult(res))
+                .catch(sendError(res));
+
+            function copyAuthCookieFromResponse(authResponse) {
+                res.append('Set-Cookie', authResponse.authCookie);
+                return authResponse;
+            }
+        });
+        carliMiddleware.delete('/login', function (req, res) {
+            auth.deleteSession()
+                .then(clearAuthCookie)
+                .then(sendResult(res))
+                .catch(sendError(res));
+
+            function clearAuthCookie(authResponse) {
+                res.append('Set-Cookie', 'AuthSession=; Version=1; Expires=-1; Max-Age=-1; Path=/; Domain=' + config.cookieDomain);
+                res.append('Set-Cookie', 'AuthSession=; Version=1; Expires=-1; Max-Age=-1; Path=/');
+                request.clearAuth();
+                return authResponse;
+            }
+        });
         carliMiddleware.get('/version', function (req, res) {
             res.send({ version: require('./package.json').version });
         });
@@ -70,7 +98,6 @@ function runMiddlewareServer(){
             vendorSpecificProductQueries.listProductsWithOfferingsForVendorId(vendorId, req.params.cycleId)
                 .then(sendResult(res))
                 .catch(sendError(res));
-            ;
         });
         carliMiddleware.put('/cycle-from', function (req, res) {
             cycleCreation.create(req.body.newCycleData)
@@ -90,7 +117,6 @@ function runMiddlewareServer(){
             cycleCreation.getCycleCreationStatus(req.params.id)
                 .then(sendResult(res))
                 .catch(sendError(res));
-            ;
         });
         carliMiddleware.get('/create-all-vendor-databases', function (req, res) {
             vendorDatabases.createVendorDatabasesForAllCycles()
@@ -194,14 +220,47 @@ function runMiddlewareServer(){
                 .catch(sendError(res));
 
         });
-
         carliMiddleware.post('/update-flagged-offerings-for-vendor/:vendorId/for-cycle/:cycleId', function (req, res) {
             vendorDatabases.updateFlaggedOfferingsForVendor(req.params.vendorId, req.params.cycleId)
                 .then(sendOk(res))
                 .catch(sendError(res));
         });
 
-
+        carliMiddleware.get('/user', function (req, res) {
+            user.list()
+                .then(sendResult(res))
+                .catch(sendError(res));
+        });
+        carliMiddleware.get('/user/:email', function (req, res) {
+            user.load(req.params.email)
+                .then(sendResult(res))
+                .catch(sendError(res));
+        });
+        carliMiddleware.post('/user', function (req, res) {
+            user.create(req.body)
+                .then(sendOk(res))
+                .catch(sendError(res));
+        });
+        carliMiddleware.put('/user/:email', function (req, res) {
+            user.update(req.body)
+                .then(sendOk(res))
+                .catch(sendError(res));
+        });
+        carliMiddleware.get('/user/:email/reset', function (req, res) {
+            user.requestPasswordReset(req.params.email)
+                .then(sendOk(res))
+                .catch(sendError(res));
+        });
+        carliMiddleware.get('/user/validate-key/:key', function (req, res) {
+            user.isKeyValid(req.params.key)
+                .then(sendResult(res))
+                .catch(sendError(res));
+        });
+        carliMiddleware.put('/user/consume-key/:key', function (req, res) {
+            user.consumeKey(req.params.key, req.body)
+                .then(sendOk(res))
+                .catch(sendError(res));
+        });
     }
 }
 
@@ -215,9 +274,15 @@ function sendOk(res) {
         res.send( { status: 'Ok' } );
     }
 }
-function sendError(res) {
+function sendError(res, errorCode) {
+    if (!errorCode) {
+        errorCode = 500;
+    }
     return function(err) {
-        res.send( { error: err } );
+        if (err.statusCode) {
+            errorCode = err.statusCode;
+        }
+        res.status(errorCode).send( { error: err } );
     }
 }
 
@@ -242,18 +307,16 @@ function corsHeaders(req, res, next) {
     next();
 }
 
-function couchDbProxy(req, res, next) {
-    var proxyPath = req.path.match(RegExp("^\\/db/(.*)$"));
-    if (proxyPath) {
-        var dbUrl = 'http://localhost:5984/' + proxyPath[ 1 ];
-        req.pipe(request({
-            uri: dbUrl,
-            method: req.method,
-            qs: req.query
-        })).pipe(res);
-    } else {
-        next();
+function setAuthForRequest(req, res, next) {
+    if (req.url !== '/login') {
+        if (req.cookies && req.cookies.AuthSession) {
+            request.setAuth(req.cookies.AuthSession);
+        } else {
+            request.clearAuth();
+        }
+        res.on('finish', request.clearAuth);
     }
+    next();
 }
 
 if (require.main === module) {

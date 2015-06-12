@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 container=$1
 version=$2
