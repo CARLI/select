@@ -138,6 +138,10 @@ build-browser-clients() {
     run-in-container "grunt build" /carli-select/browserClient
 }
 
+create-couchdb-admin() {
+    run-in-container "grunt create-admin-user"
+}
+
 redeploy-carli() {
     echo "Creating data container, if needed" && create-data-container-if-not-exists &&
     echo "Redeploying CouchDB" && recreate-couchdb-container &&
@@ -145,5 +149,6 @@ redeploy-carli() {
     echo "Installing dependencies and configuring containers" && install-dependencies-and-configure &&
     echo "Redeploying Middleware" && recreate-middleware-container &&
     echo "Building the browser clients" && build-browser-clients &&
+    echo "Creating CouchDB Admin" && create-couchdb-admin &&
     echo "Redeploying web server" && recreate-serve-container
 }
