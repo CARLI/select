@@ -285,6 +285,7 @@ function runOfferingSpecificTests(testCycle) {
 
             it('should compute true if increase from last years price exceeds the price cap', function() {
                 var testOffering = validOfferingData();
+                testOffering.cycle = testCycle;
                 testOffering.product.priceCap = 10;
                 testOffering.pricing = {
                     site: 500,
@@ -295,13 +296,15 @@ function runOfferingSpecificTests(testCycle) {
                     ]
                 };
                 testOffering.history = {
-                    pricing: {
-                        site: 500,
-                        su: [
-                            { users: 1, price: 100 },
-                            { users: 2, price: 200 },
-                            { users: 3, price: 300 }
-                        ]
+                    2013: {
+                        pricing: {
+                            site: 500,
+                            su: [
+                                { users: 1, price: 100 },
+                                { users: 2, price: 200 },
+                                { users: 3, price: 300 }
+                            ]
+                        }
                     }
                 };
 
@@ -310,6 +313,7 @@ function runOfferingSpecificTests(testCycle) {
 
             it('should compute true if decrease from last years price exceeds 5%', function() {
                 var testOffering = validOfferingData();
+                testOffering.cycle = testCycle;
                 testOffering.product.priceCap = 10;
                 testOffering.pricing = {
                     site: 500,
@@ -320,13 +324,15 @@ function runOfferingSpecificTests(testCycle) {
                     ]
                 };
                 testOffering.history = {
-                    pricing: {
-                        site: 1000,
-                        su: [
-                            { users: 1, price: 200 },
-                            { users: 2, price: 300 },
-                            { users: 3, price: 400 }
-                        ]
+                    2013: {
+                        pricing: {
+                            site: 1000,
+                            su: [
+                                { users: 1, price: 200 },
+                                { users: 2, price: 300 },
+                                { users: 3, price: 400 }
+                            ]
+                        }
                     }
                 };
 
@@ -335,6 +341,7 @@ function runOfferingSpecificTests(testCycle) {
 
             it('should compute false if increase or decrease is within acceptable range', function() {
                 var testOffering = validOfferingData();
+                testOffering.cycle = testCycle;
                 testOffering.product.priceCap = 10;
                 testOffering.pricing = {
                     site: 480,
@@ -345,13 +352,15 @@ function runOfferingSpecificTests(testCycle) {
                     ]
                 };
                 testOffering.history = {
-                    pricing: {
-                        site: 500,
-                        su: [
-                            { users: 1, price: 100 },
-                            { users: 2, price: 200 },
-                            { users: 3, price: 300 }
-                        ]
+                    2013: {
+                        pricing: {
+                            site: 500,
+                            su: [
+                                { users: 1, price: 100 },
+                                { users: 2, price: 200 },
+                                { users: 3, price: 300 }
+                            ]
+                        }
                     }
                 };
 

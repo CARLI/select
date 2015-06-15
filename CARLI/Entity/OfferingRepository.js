@@ -339,6 +339,9 @@ function setCycle(cycle) {
 
 
 function getFlaggedState(offering){
+    var thisYear = offering.cycle.year || 1;
+    var lastYear = thisYear - 1;
+
     if ( userFlaggedState() !== undefined ){
         return userFlaggedState();
     }
@@ -423,10 +426,11 @@ function getFlaggedState(offering){
         return exceedsPriceCap;
 
         function canEnforcePriceCap() {
-            return offering.product.priceCap && offering.history;
+            var knowLastYear = (lastYear > 0);
+            return knowLastYear && offering.product.priceCap && offering.history;
         }
         function checkSitePriceIncrease() {
-            if (offering.pricing.site > priceCapMultiplier * offering.history.pricing.site) {
+            if (offering.pricing.site > priceCapMultiplier * offering.history[lastYear].pricing.site) {
                 exceedsPriceCap = true;
             }
         }
@@ -452,10 +456,11 @@ function getFlaggedState(offering){
         return exceedsDecreaseLimit;
 
         function canEnforceDecrease() {
-            return !!offering.history;
+            var knowLastYear = (lastYear > 0);
+            return !!offering.history && knowLastYear;
         }
         function checkSitePriceDecrease() {
-            if (offering.pricing.site < multiplier * offering.history.pricing.site) {
+            if (offering.pricing.site < multiplier * offering.history[lastYear].pricing.site) {
                 exceedsDecreaseLimit = true;
             }
         }
@@ -468,25 +473,25 @@ function getFlaggedState(offering){
         }
     }
 
-}
+    function lookupLastYearsPriceForSu(offering, suToFind) {
+        var lastYearsPrice = null;
+        if (offering.history) {
+            offering.pricing.su.forEach(findLastYearsPricingForSu);
+        }
+        return lastYearsPrice;
 
-function lookupLastYearsPriceForSu(offering, suToFind) {
-    var lastYearsPrice = null;
-    if (offering.history) {
-        offering.pricing.su.forEach(findLastYearsPricingForSu);
-    }
-    return lastYearsPrice;
-
-    function findLastYearsPricingForSu(suPricing) {
-        if (suPricing.users === suToFind) {
-            offering.history.pricing.su.forEach(function (lastYearsPricing) {
-                if (suPricing.users === lastYearsPricing.users) {
-                    lastYearsPrice = lastYearsPricing.price;
-                }
-            });
+        function findLastYearsPricingForSu(suPricing) {
+            if (suPricing.users === suToFind) {
+                offering.history[lastYear].pricing.su.forEach(function (lastYearsPricing) {
+                    if (suPricing.users === lastYearsPricing.users) {
+                        lastYearsPrice = lastYearsPricing.price;
+                    }
+                });
+            }
         }
     }
 }
+
 
 /* functions that get added as instance methods on loaded Offerings */
 var functionsToAdd = {
