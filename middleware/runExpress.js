@@ -45,6 +45,7 @@ function runMiddlewareServer(){
                 .catch(sendError(res));
 
             function copyAuthCookieFromResponse(authResponse) {
+                console.log('setting cookie');
                 res.append('Set-Cookie', authResponse.authCookie);
                 return authResponse;
             }
@@ -56,6 +57,7 @@ function runMiddlewareServer(){
                 .catch(sendError(res));
 
             function clearAuthCookie(authResponse) {
+                console.log('clearing cookie');
                 res.append('Set-Cookie', 'AuthSession=; Version=1; Expires=-1; Max-Age=-1; Path=/; Domain=' + config.cookieDomain);
                 res.append('Set-Cookie', 'AuthSession=; Version=1; Expires=-1; Max-Age=-1; Path=/');
                 request.clearAuth();

@@ -7,7 +7,7 @@ function putDesignDoc(dbName, dbType) {
     var putDocPromise = Q.defer();
 
     var docName = dbType + '-DesignDoc.js';
-    var designDoc = require('../../db/' + docName);
+    var designDoc = require('../../db/designDocs/' + docName);
 
     // var couchAppDomain = domain.create();
 

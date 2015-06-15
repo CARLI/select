@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.user')
     .controller('editUserController', editUserController);
 
-function editUserController( $scope, $rootScope, $q, entityBaseService, userService, alertService ) {
+function editUserController( $scope, $rootScope, $q, alertService, authService, entityBaseService, userService  ) {
     var vm = this;
 
     var templates = {
@@ -27,6 +27,7 @@ function editUserController( $scope, $rootScope, $q, entityBaseService, userServ
 
     function activate() {
         vm.isModal = vm.newUser;
+        vm.isCurrentUser = false;
 
         if ($scope.userId === undefined) {
             return initializeForNewUser();
@@ -57,13 +58,24 @@ function editUserController( $scope, $rootScope, $q, entityBaseService, userServ
         vm.editable = false;
         vm.newUser = false;
 
-        return userService.load($scope.userId).then( function( user ) {
+        return userService.load($scope.userId)
+            .then(setUserOnVm)
+            .then(determineIfUserIsCurrentUser);
+
+        function setUserOnVm( user ) {
             vm.user = angular.copy(user);
-
             setUserFormPristine();
-
             return user;
-        } );
+        }
+
+        function determineIfUserIsCurrentUser(userBeingEdited) {
+            return authService.getCurrentUser().then(function (currentUser) {
+                if (currentUser.id === userBeingEdited.id) {
+                    vm.isCurrentUser = true;
+                }
+                return userBeingEdited;
+            });
+        }
     }
 
     function toggleEditable(){
