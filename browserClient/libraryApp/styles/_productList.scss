@@ -42,6 +42,10 @@ ul.product-list.subscriptions {
 
     border-top: 3px solid $black;
 
+    &.complete {
+        border-top: none;
+    }
+
     > li {
         &.column-headers {
             border-left: $default-border;
@@ -229,7 +233,8 @@ ul.product-list.subscriptions {
                 min-width: 80px;
             }
 
-            button.arrow-right {
+            button.arrow-right,
+            ask-carli-button {
                 position: absolute;
                 right: 8px;
             }

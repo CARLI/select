@@ -1,6 +1,9 @@
-<h2>Selections completed!</h2>
-<p>CARLI will contact the vendor to secure your purchase and respond to you shortly with an invoice and a date when the
-   product will be available to your patrons.</p>
-<p>Note: This process may take 2-3 weeks.</p>
+<h2>Thank you! You have completed your subscriptions</h2>
+<p>You can continue to make changes until <strong class="purple">{{ vm.cycle.endDateForSelections | date }}</strong></p>
 
-<button type="button" busy-click="vm.returnToBeginning()" class="carli-button">Return to Add Subscriptions</button>
+<ul class="subscriptions product-list complete">
+    <li class="footer">
+        <button type="button" busy-click="vm.startSelections()" class="carli-button arrow-left">Change Selections</button>
+        <ask-carli-button context="ubscriptions complete"></ask-carli-button>
+    </li>
+</ul>
