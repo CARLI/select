@@ -1,15 +1,15 @@
 <p> Please review your purchase. You have selected the following item(s):
 </p>
-<ul class="product-list" cg-busy="vm.loadingPromise">
+<ul class="subscriptions product-list review" cg-busy="vm.loadingPromise">
     <li class="column-headers">
-        <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'product.name', reversedSort: vm.reverse }" ng-click="vm.sort('product.name')">Product</div>
-        <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'product.vendor.name', reversedSort: vm.reverse }" ng-click="vm.sort(['product.vendor.name','product.name'])">Vendor</div>
-        <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'pricing.site', reversedSort: vm.reverse }" ng-click="vm.sort(['pricing.site','product.name'])">Cost</div>
+        <div class="sortable column" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.productName, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.productName)">Product</div>
+        <div class="sortable column vendor" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.vendorName, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.vendorName)">Vendor</div>
+        <div class="sortable column review-cost" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.selectionPrice, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.selectionPrice)">Cost</div>
     </li>
-    <li ng-repeat="offering in vm.availableForPurchase | filter: vm.hasPendingSelection | orderBy: vm.orderBy:vm.reverse track by offering.id">
+    <li ng-repeat="offering in vm.availableForPurchase | filter: vm.hasPendingSelection | orderBy: vm.orderByAvailable:vm.reverseAvailable track by offering.id">
         <div class="column">{{ offering.product.name }}</div>
         <div class="column">{{ offering.product.vendor.name }}</div>
-        <div class="column">{{ offering.selectionPendingReview.price | currency }}</div>
+        <div class="column review-cost">{{ offering.selectionPendingReview.price | currency }}</div>
     </li>
     <li class="summary-row">
         <div class="column">
@@ -20,6 +20,9 @@
     </li>
     <li class="footer">
         <button type="button" busy-click="vm.startSelections()" class="carli-button arrow-left">Change Selections</button>
+        <button class="carli-button print" ng-click="vm.todo()">PRINT</button>
+        <button class="carli-button export" ng-click="vm.todo()">EXPORT</button>
+        <button class="carli-button email" ng-click="vm.todo()">EMAIL</button>
         <button type="button" busy-click="vm.completeSelections()" class="carli-button primary-button arrow-right">Complete</button>
     </li>
 </ul>

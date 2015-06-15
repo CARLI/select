@@ -15,7 +15,8 @@ function addSubscriptionsController( $q, $routeParams, $window, cycleService, of
         productName: 'product.name',
         vendorName: ['product.vendor.name','product.name'],
         funded: ['product.funded','product.name'],
-        pricing: ['pricing.site','product.name']
+        pricing: ['pricing.site','product.name'],
+        selectionPrice: ['selection.price', 'product.name']
     };
 
     vm.completeSelections = completeSelections;

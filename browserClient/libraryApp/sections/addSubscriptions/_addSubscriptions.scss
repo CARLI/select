@@ -1,8 +1,32 @@
 #addSubscriptions {
+    $su-column-width: 135px;
+    $cost-column-width: 200px;
 
     .column-headers {
         .selected-last-year {
             font-size: 9px;
+        }
+    }
+
+    .review.subscriptions {
+        .column-headers {
+            padding-left: 0;
+        }
+
+        .column.su {
+            flex: none;
+            width: $su-column-width;
+        }
+
+        .column.review-cost {
+            flex: none;
+            width: $cost-column-width;
+        }
+
+        .summary-row {
+            .column.total {
+                width: $cost-column-width;
+            }
         }
     }
 }

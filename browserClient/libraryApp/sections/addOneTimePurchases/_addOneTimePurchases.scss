@@ -1,4 +1,6 @@
 #addOneTimePurchases {
+    $cost-column-width: 250px;
+
     .list-page-header {
         display: block;
     }
@@ -12,5 +14,22 @@
         font-size: 1rem;
         margin: 0 auto 8px;
         padding: 0;
+    }
+
+    .review.subscriptions {
+        .column-headers {
+            padding-left: 0;
+        }
+
+        .column.review-cost {
+            flex: none;
+            width: $cost-column-width;
+        }
+
+        .summary-row {
+            .column.total {
+                width: $cost-column-width;
+            }
+        }
     }
 }

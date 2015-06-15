@@ -43,14 +43,12 @@ ul.product-list.subscriptions {
     border-top: 3px solid $black;
 
     > li {
-        border-left: 3px solid $purple;
-
         &.column-headers {
             border-left: $default-border;
             padding-left: 2px;
         }
 
-        &.collapsed {
+        &[collapsible].collapsed {
             border-left: $default-border;
             padding-left: 2px;
 
@@ -70,6 +68,7 @@ ul.product-list.subscriptions {
         }
 
         &[collapsible]{
+            border-left: 3px solid $purple;
             display: block;
         }
 
@@ -218,6 +217,10 @@ ul.product-list.subscriptions {
 
         &.footer {
             border-left: $default-border;
+
+            .carli-button + .carli-button.print {
+                margin-left: 8px;
+            }
 
             .carli-button.print,
             .carli-button.export,
