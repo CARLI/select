@@ -62,6 +62,11 @@ function runMiddlewareServer(){
                 .then(sendResult(res))
                 .catch(send500Error(res));
         });
+        carliMiddleware.get('/list-offerings-for-library-with-expanded-products/:libraryId/from-cycle/:cycleId', function (req, res) {
+            libraryQueries.listOfferingsForLibraryWithExpandedProducts(req.params.libraryId, req.params.cycleId)
+                .then(sendResult(res))
+                .catch(send500Error(res));
+        });
         carliMiddleware.get('/products-with-offerings-for-vendor/:vendorId/for-cycle/:cycleId', function (req, res) {
             var authToken = getAuthTokenFromHeader(req);
             if (!authToken) {

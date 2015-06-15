@@ -17,6 +17,7 @@ function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
         listActiveCyclesIncludingOneTimePurchase: listActiveCyclesIncludingOneTimePurchase,
         listOpenForSelectionsCycles: listOpenForSelectionsCycles,
         listSelectionsForCycle: listSelectionsForCycle,
+        listAllOfferingsForCycle: listAllOfferingsForCycle,
         load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ).catch(errorHandler); },
         getCurrentCycle: getCurrentCycle,
         setCurrentCycle: setCurrentCycle
@@ -52,6 +53,11 @@ function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
 
     function listSelectionsForCycle( cycle ){
         return $q.when(middlewareModule.listSelectionsForLibraryFromCycle(currentUser.library.id, cycle.id))
+            .catch(errorHandler);
+    }
+
+    function listAllOfferingsForCycle( cycle ){
+        return $q.when(middlewareModule.listOfferingsForLibraryWithExpandedProducts(currentUser.library.id, cycle.id))
             .catch(errorHandler);
     }
 

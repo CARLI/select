@@ -44,30 +44,10 @@ function addSubscriptionsController( $q, $routeParams, $window, cycleService, of
 
     function loadOfferings( cycle ) {
         vm.cycle = cycle;
-        cycleService.setCurrentCycle(cycle);
-
-        return offeringService.listOfferingsForLibraryId(vm.libraryId)
-            .then(populateProductsForOfferings)
-            .then(function (offeringList) {
-                vm.offerings = offeringList;
-                return offeringList;
+        return cycleService.listAllOfferingsForCycle(cycle)
+            .then(function(offeringsList){
+                vm.offerings = offeringsList;
             });
-
-        function populateProductsForOfferings( offeringsList ){
-            return $q.all(offeringsList.map(loadProduct));
-
-            function loadProduct(offering){
-                if (typeof offering.product.vendor == 'object' && offering.product.license == 'object') {
-                    return $q.when(offering);
-                } else {
-                    return productService.load(offering.product.id)
-                        .then(function(product){
-                            offering.product = product;
-                            return offering;
-                        });
-                }
-            }
-        }
     }
 
     function selectProduct(offering, users) {
@@ -77,7 +57,7 @@ function addSubscriptionsController( $q, $routeParams, $window, cycleService, of
         };
 
         if ( users === 'Site License' ){
-            offering.selection.price = offering.pricing.site
+            offering.selection.price = offering.pricing.site;
         }
         else {
             offering.selection.price = priceForUsers(users);

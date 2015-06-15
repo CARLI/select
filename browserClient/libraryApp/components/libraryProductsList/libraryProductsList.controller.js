@@ -1,7 +1,7 @@
 angular.module('library.libraryProductsList')
 .controller('libraryProductsListController', libraryProductsListController);
 
-function libraryProductsListController( $q, controllerBaseService, cycleService, productService ){
+function libraryProductsListController( $q, controllerBaseService, cycleService ){
     var vm = this;
 
     vm.loadingPromise = null;

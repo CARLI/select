@@ -46,30 +46,12 @@ function addOneTimePurchasesController( $q, $window, config, cycleService, offer
         });
     }
 
-    function loadOfferings( ) {
-        return offeringService.listOfferingsForLibraryId(vm.libraryId)
-            .then(populateProductsForOfferings)
-            .then(function (offeringList) {
+    function loadOfferings(cycle) {
+        return cycleService.listAllOfferingsForCycle(cycle)
+            .then(function(offeringList){
                 vm.availableForPurchase = offeringList.filter(availableForPurchase);
                 vm.purchased = offeringList.filter(purchased);
-                return offeringList;
             });
-
-        function populateProductsForOfferings( offeringsList ){
-            return $q.all(offeringsList.map(loadProduct));
-
-            function loadProduct(offering){
-                if (typeof offering.product.vendor == 'object' && offering.product.license == 'object') {
-                    return $q.when(offering);
-                } else {
-                    return productService.load(offering.product.id)
-                        .then(function(product){
-                            offering.product = product;
-                            return offering;
-                        });
-                }
-            }
-        }
 
         function availableForPurchase( offering ){
             return !offering.selection;

@@ -17,7 +17,6 @@ function listSelectionsForLibraryFromCycle( libraryId, cycleId ){
     return cycleRepository.load(cycleId)
         .then(function(loadedCycle){
             cycle = loadedCycle;
-            console.log('listSelectionsForLibrary '+libraryId+' FromCycle '+cycle.name);
             return offeringRepository.listOfferingsWithSelectionsForLibrary(libraryId, cycle);
         })
         .then(populateProductsForOfferings)
@@ -38,6 +37,38 @@ function listSelectionsForLibraryFromCycle( libraryId, cycleId ){
     }
 }
 
+/* Used by the selection screens in the library app. They need all of their offerings plus vendor and license info from
+ * the Products for each offering.
+ * Load all of that in the middleware to prevent the browser from doing too many requests.
+ */
+function listOfferingsForLibraryWithExpandedProducts( libraryId, cycleId ){
+    var cycle = null;
+
+    return cycleRepository.load(cycleId)
+        .then(function(loadedCycle){
+            cycle = loadedCycle;
+            console.log('listOfferingsForLibrary '+libraryId+' FromCycle '+cycle.name);
+            return offeringRepository.listOfferingsForLibraryId(libraryId, cycle);
+        })
+        .then(populateProductsForOfferings)
+        .catch(function(err){
+            console.log('Error listing selections for library '+libraryId+' from cycle '+cycle.name, err);
+        });
+
+    function populateProductsForOfferings( offeringsList ){
+        return Q.all(offeringsList.map(loadProduct));
+
+        function loadProduct(offering){
+            return productRepository.load(offering.product.id, cycle)
+                .then(function(product){
+                    offering.product = product;
+                    return offering;
+                });
+        }
+    }
+}
+
 module.exports = {
-    listSelectionsForLibraryFromCycle: listSelectionsForLibraryFromCycle
+    listSelectionsForLibraryFromCycle: listSelectionsForLibraryFromCycle,
+    listOfferingsForLibraryWithExpandedProducts: listOfferingsForLibraryWithExpandedProducts
 };
