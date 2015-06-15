@@ -7,10 +7,8 @@ function addSubscriptionsController( $q, $routeParams, $window, cycleService, of
     vm.cycle = null;
     vm.selectionStep = 'select';
     vm.libraryId = userService.getUser().library.id;
-    vm.orderByAvailable = 'product.name';
-    vm.orderByPurchased = 'product.name';
-    vm.reverseAvailable = false;
-    vm.reversePurchased = false;
+    vm.orderBy = 'product.name';
+    vm.reverse = false;
 
     vm.offerings = [];
     vm.sortOptions = {
@@ -23,6 +21,7 @@ function addSubscriptionsController( $q, $routeParams, $window, cycleService, of
     vm.completeSelections = completeSelections;
     vm.computeTotalPurchasesAmount = computeTotalPurchasesAmount;
     vm.hasSelection = hasSelection;
+    vm.isSelected = isSelected;
     vm.returnToBeginning = returnToBeginning;
     vm.reviewSelections = reviewSelections;
     vm.startSelections = startSelections;
@@ -72,21 +71,42 @@ function addSubscriptionsController( $q, $routeParams, $window, cycleService, of
     }
 
     function selectProduct(offering, users) {
-        if ( offering.selection ){
-            return $q.when();
-        }
-
         offering.selection = {
             datePurchased: new Date().toJSON().slice(0, 10),
             users: users
         };
 
-        //TODO: set price of selection
-//        if ( users === 'site' ){
-//            offering.selection.price = offering.pricing.site
-//        }
+        if ( users === 'Site License' ){
+            offering.selection.price = offering.pricing.site
+        }
+        else {
+            offering.selection.price = priceForUsers(users);
+        }
 
         return updateOffering(offering);
+
+
+        function priceForUsers( numberOfUsers ){
+            var pricingObj = offering.pricing.su.filter(matchingUsers)[0];
+            return pricingObj.price;
+
+            function matchingUsers(priceObject){
+                return priceObject.users === numberOfUsers;
+            }
+        }
+    }
+
+    function isSelected(offering, users){
+        if ( !offering.selection ){
+            return false;
+        }
+
+        if ( users === 'Site License' ){
+            return offering.selection.users === 'Site License';
+        }
+        else {
+            return offering.selection.users === users;
+        }
     }
 
     function hasSelection( offering ){
