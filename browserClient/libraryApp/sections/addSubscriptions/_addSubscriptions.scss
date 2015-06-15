@@ -29,4 +29,14 @@
             }
         }
     }
+
+    .selection-container {
+        position: relative;
+
+        .carli-button.select-last-year {
+            position: absolute;
+            top: -70px;
+            right: 0;
+        }
+    }
 }

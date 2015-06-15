@@ -26,6 +26,7 @@ function addSubscriptionsController( $q, $routeParams, $window, cycleService, of
     vm.returnToBeginning = returnToBeginning;
     vm.reviewSelections = reviewSelections;
     vm.startSelections = startSelections;
+    vm.selectLastYearsSelections = selectLastYearsSelections;
     vm.selectProduct = selectProduct;
     vm.sort = sort;
     vm.todo = todo;
@@ -74,6 +75,37 @@ function addSubscriptionsController( $q, $routeParams, $window, cycleService, of
             function matchingUsers(priceObject){
                 return priceObject.users === numberOfUsers;
             }
+        }
+    }
+
+    function selectLastYearsSelections(){
+        var lastYear = vm.cycle.year - 1;
+
+        if ( $window.confirm('This will reset all of your selections to last year') ){
+            vm.offerings.forEach(selectLastYear);
+        }
+
+
+        /*
+        {
+            "2013": {
+                "pricing": {
+                    "site": 1000,
+                    "su": []
+                },
+                "selection": {
+                    "users": "Site License",
+                     "price": 1000
+                }
+            }
+        }
+         */
+        function selectLastYear( offering ){
+            var allHistory = offering.history || {};
+            var history = allHistory[lastYear] || {};
+
+            console.log('select last year '+offering.product.name+' '+offering.id);
+            console.log('  '+lastYear+' selection: '+history.selection);
         }
     }
 
