@@ -6,7 +6,7 @@
             <div class="sortable column funded" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.funded, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.funded)">CARLI Funded</div>
             <div class="sortable column select" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.pricing, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.pricing)">Selected</div>
         </li>
-        <li collapsible class="offering collapsed display-{{ ::offering.display }}" ng-repeat="offering in vm.offerings | orderBy: vm.orderBy:vm.reverse track by offering.id">
+        <li collapsible class="offering collapsed display-{{ ::offering.display }}" ng-repeat="offering in vm.offerings | orderBy: vm.orderBy:vm.reverse track by offering.id" ng-if="::offering.display !== 'none'">
             <div class="collapsible-header">
                 <div class="column">
                     <button type="button" class="angle-icon-container">
