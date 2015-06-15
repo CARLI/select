@@ -1,9 +1,11 @@
 
 var Q = require('q');
 
+var couchUtils = require('../../CARLI/Store/CouchDb/Utils')();
 var cycleRepository = require('../../CARLI/Entity/CycleRepository');
 var offeringRepository = require('../../CARLI/Entity/OfferingRepository');
-var couchUtils = require('../../CARLI/Store/CouchDb/Utils')();
+var vendorRepository = require('../../CARLI/Entity/VendorRepository');
+var vendorStatusRepository = require('../../CARLI/Entity/VendorStatusRepository');
 
 function create( newCycleData ) {
     return cycleRepository.create(newCycleData, couchUtils.DB_TYPE_STAFF);
@@ -18,6 +20,7 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
         .then(replicate)
         .then(indexViews)
         .then(waitForIndexingToFinish)
+        .then(resetVendorStatuses)
         .then(transformOfferings)
         .then(indexViews)
         .then(waitForIndexingToFinish)
@@ -38,6 +41,27 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
     function replicate() {
         cycleRepository.createCycleLog('Replicating data from '+ sourceCycle.databaseName +' to '+ newCycle.databaseName);
         return couchUtils.replicateFrom(sourceCycle.databaseName).to(newCycle.databaseName)
+    }
+    function resetVendorStatuses() {
+        cycleRepository.createCycleLog('Resetting vendor statuses for ' + newCycle.databaseName);
+        return vendorRepository.list()
+            .then(function(vendorList){
+                return Q.all( vendorList.map(ensureVendorStatus) )
+                    .then(function(){
+                        return Q.all( vendorList.map(resetVendorStatus) );
+                    });
+            });
+
+        function ensureVendorStatus(vendor){
+            return vendorStatusRepository.ensureStatusExistsForVendor(vendor.id, newCycle);
+        }
+        function resetVendorStatus(vendor){
+            return vendorStatusRepository.getStatusForVendor(vendor.id)
+                .then(function(vendorStatus){
+                    var resetStatus = vendorStatusRepository.reset(vendorStatus, newCycle);
+                    return vendorStatusRepository.update(resetStatus);
+                });
+        }
     }
     function transformOfferings() {
         cycleRepository.createCycleLog('Transforming offerings for new cycle');
