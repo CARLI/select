@@ -58,6 +58,14 @@ ul.product-list.subscriptions {
                 .column.vendor {
                     font-weight: normal;
                 }
+
+                .column.select {
+                    .price {
+                        background: transparent;
+                        border: none;
+                        color: $black;
+                    }
+                }
             }
         }
 
