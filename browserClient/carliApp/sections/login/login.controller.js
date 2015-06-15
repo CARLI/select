@@ -59,12 +59,14 @@ function loginController ($location, alertService, authService, errorHandler, us
             .then(redirectAfterLogin)
             .catch(swallowAuthError);
 
-        function swallowAuthError() {
+        function swallowAuthError(err) {
+            console.log('ignoring error', err);
             return true;
         }
     }
 
     function redirectAfterLogin() {
+        console.log('redirecting');
         var returnTo = getReturnTo() || '/';
         $location.url(returnTo);
     }
