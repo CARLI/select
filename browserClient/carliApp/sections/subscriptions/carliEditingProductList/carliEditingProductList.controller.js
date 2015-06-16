@@ -99,6 +99,9 @@ function carliEditingProductListController( $scope, alertService, cycleService, 
 
         return productService.update( product).then( function(){
             alertService.putAlert('Product Removed', {severity: 'success'});
+        })
+        .then(function syncData(){
+            return cycleService.syncDataToVendorDatabase( product.vendor.id, vm.cycle );
         });
     }
 

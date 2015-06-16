@@ -357,7 +357,8 @@ function setCycle(cycle) {
 
 
 function getFlaggedState(offering){
-    var thisYear = offering.cycle.year || 1;
+    var cycle = offering.cycle || {};
+    var thisYear = cycle.year || 1;
     var lastYear = thisYear - 1;
 
     if ( userFlaggedState() !== undefined ){
