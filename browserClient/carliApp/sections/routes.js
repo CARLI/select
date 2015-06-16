@@ -25,7 +25,7 @@ angular.module('carli.routes',[
     })
     .when('/reset/:key', {
         templateUrl: '/carliApp/sections/resetRequest/resetRequest.html',
-        controller:  'resetRequestController',
+        controller:  'resetRequestPageController',
         controllerAs:'vm'
     })
     .when('/user', {
