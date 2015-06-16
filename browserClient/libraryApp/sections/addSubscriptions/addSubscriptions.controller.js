@@ -28,9 +28,11 @@ function addSubscriptionsController( $q, $routeParams, $window, cycleService, of
     vm.startSelections = startSelections;
     vm.selectLastYearsSelections = selectLastYearsSelections;
     vm.selectProduct = selectProduct;
+    vm.selectAndUpdateProduct = selectAndUpdateProduct;
     vm.sort = sort;
     vm.todo = todo;
-    vm.unselectProduct = unselectProduct;
+    vm.unSelectProduct = unSelectProduct;
+    vm.unSelectAndUpdateProduct = unSelectAndUpdateProduct;
 
     activate();
 
@@ -65,8 +67,7 @@ function addSubscriptionsController( $q, $routeParams, $window, cycleService, of
             offering.selection.price = priceForUsers(users);
         }
 
-        return updateOffering(offering);
-
+        return offering;
 
         function priceForUsers( numberOfUsers ){
             var pricingObj = offering.pricing.su.filter(matchingUsers)[0];
@@ -76,6 +77,11 @@ function addSubscriptionsController( $q, $routeParams, $window, cycleService, of
                 return priceObject.users === numberOfUsers;
             }
         }
+    }
+
+    function selectAndUpdateProduct(offering, users){
+        selectProduct(offering, users);
+        return updateOffering(offering);
     }
 
     function selectLastYearsSelections(){
@@ -104,8 +110,53 @@ function addSubscriptionsController( $q, $routeParams, $window, cycleService, of
             var allHistory = offering.history || {};
             var history = allHistory[lastYear] || {};
 
-            console.log('select last year '+offering.product.name+' '+offering.id);
-            console.log('  '+lastYear+' selection: '+history.selection);
+            if ( history.selection ){
+                console.log('Last year '+offering.product.name+' was selected ',history.selection);
+
+                var users = history.selection.users;
+                var selectionValidity = lastYearsSelectionIsStillValid(offering, users);
+
+                if ( selectionValidity.isValid ){
+                    console.log('  offering is still valid, select it again');
+                    selectProduct(offering, users);
+                }
+                else {
+                    console.log('  selection not valid because '+selectionValidity.reason);
+                }
+            }
+            else {
+                console.log('No selection last year for '+offering.product.name+' - deselecting');
+                unSelectProduct(offering);
+            }
+
+
+            function lastYearsSelectionIsStillValid( offering, users ){
+                var success = false;
+                var reason = '';
+
+                if ( users === 'Site License' ){
+                    success = offering.pricing.site;
+                    if ( !success ){
+                        reason = 'No site license is offered this year.';
+                    }
+                }
+                else {
+                    success = offering.pricing.su.filter(matchingUsers).length;
+                    if ( !success ){
+                        reason = 'The previously chosen SU level (' + users + ') is no longer offered';
+                    }
+                }
+
+                return {
+                    isValid: !!success,
+                    reason: reason
+                };
+
+
+                function matchingUsers(priceObject){
+                    return priceObject.users === users;
+                }
+            }
         }
     }
 
@@ -126,7 +177,12 @@ function addSubscriptionsController( $q, $routeParams, $window, cycleService, of
         return offering.selection;
     }
 
-    function unselectProduct(offering) {
+    function unSelectProduct(offering) {
+        delete offering.selection;
+        return offering;
+    }
+
+    function unSelectAndUpdateProduct(offering){
         delete offering.selection;
         return updateOffering(offering);
     }

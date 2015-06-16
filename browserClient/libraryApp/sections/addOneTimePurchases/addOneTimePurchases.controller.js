@@ -31,7 +31,7 @@ function addOneTimePurchasesController( $q, $window, config, cycleService, offer
     vm.sortAvailable = function sortAvailable(newSort){ sort(newSort, 'Available'); };
     vm.sortPurchased = function sortPurchased(newSort){ sort(newSort, 'Purchased'); };
     vm.todo = todo;
-    vm.unselectProduct = unselectProduct;
+    vm.unSelectProduct = unselectProduct;
 
     activate();
 

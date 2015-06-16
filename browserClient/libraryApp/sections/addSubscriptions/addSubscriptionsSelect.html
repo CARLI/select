@@ -86,24 +86,24 @@
                         <subscription-button ng-if="offering.pricing.site"
                                              title="Site License" price="{{ ::offering.pricing.site }}"
                                              selected="vm.isSelected(offering, 'Site License')"
-                                             busy-click="vm.selectProduct(offering, 'Site License')">
+                                             busy-click="vm.selectAndUpdateProduct(offering, 'Site License')">
                         </subscription-button>
                         <div class="su-buttons" ng-if="offering.pricing.su && offering.pricing.su.length">
                             <subscription-button ng-repeat="su in ::offering.pricing.su | orderBy:users track by su.users"
                                                  title="{{ ::su.users }} Simultaneous Users" price="{{ ::su.price }}"
                                                  selected="vm.isSelected(offering, su.users)"
-                                                 busy-click="vm.selectProduct(offering, su.users)">
+                                                 busy-click="vm.selectAndUpdateProduct(offering, su.users)">
                             </subscription-button>
                         </div>
 
                         <div class="no-price" ng-if="!offering.pricing.site && !offering.pricing.su.length">A price has not been provided for this product. Ask CARLI for more information.</div>
                     </div>
 
-                    <div class="no-price-display" ng-if="offering.display === 'without-price'">This offering is displayed without pricing.</div>
+                    <div class="no-price-display" ng-if="offering.display === 'without-price'">Ask CARLI to find out the price of this product for your institution.</div>
 
                     <div class="bottom-buttons">
                         <button type="button" class="carli-button remove-button"
-                                busy-click="vm.unselectProduct(offering)"
+                                busy-click="vm.unSelectAndUpdateProduct(offering)"
                                 ng-if="offering.selection">
                             Remove Selection<fa name="remove"></fa>
                         </button>
