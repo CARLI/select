@@ -20,7 +20,7 @@ angular.module('carli.routes',[
     })
     .when('/login', {
         templateUrl: '/carliApp/sections/login/login.html',
-        controller:  'loginController',
+        controller:  'loginPageController',
         controllerAs:'vm'
     })
     .when('/reset/:key', {
