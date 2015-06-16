@@ -49,7 +49,7 @@ var notificationTemplates = [
         emailBody: '',
         pdfBody: '{{ pdfContent }}',
         pdfContentIsEditable: false,
-        notificationType: 'subscription'
+        notificationType: 'other'
     },
     {
         id: 'notification-template-vendor-reports',

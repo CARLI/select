@@ -14,9 +14,9 @@
             <input id="subject" type="text" ng-model="vm.openSystemMessage.subject">
 
             <label for="message">Message:</label>
-            <textarea id="message" ng-model="vm.openSystemMessage.message"></textarea>
+            <textarea id="message" ng-model="vm.openSystemMessage.emailBody"></textarea>
 
-            <checkbox ng-model="vm.openSystemMessage.doNotSend">Do not send notification</checkbox>
+            <checkbox ng-model="vm.doNotCreateNotification">Do not create notification</checkbox>
         </div>
         <div class="modal-footer">
             <button type="button" class="carli-button cancel-button" data-dismiss="modal">Cancel</button>

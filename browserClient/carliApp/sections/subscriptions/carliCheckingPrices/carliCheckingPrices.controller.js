@@ -3,6 +3,7 @@ angular.module('carli.sections.subscriptions.carliCheckingPrices')
 
 function carliCheckingPricesController( $q, notificationService, notificationTemplateService ) {
     var vm = this;
+    vm.doNotCreateNotification = false;
     vm.undoCloseVendorPricing = undoCloseVendorPricing;
     vm.openSystem = openSystem;
     vm.openSystemMessage = {};
@@ -11,10 +12,14 @@ function carliCheckingPricesController( $q, notificationService, notificationTem
     activate();
 
     function activate(){
+        vm.doNotCreateNotification = false;
+
         notificationTemplateService.load('notification-template-open-system')
             .then(function(openSystemTemplate){
                 vm.openSystemMessage.subject = openSystemTemplate.subject;
-                vm.openSystemMessage.message = openSystemTemplate.emailBody;
+                vm.openSystemMessage.emailBody = openSystemTemplate.emailBody;
+                vm.openSystemMessage.draftStatus = 'draft';
+                vm.openSystemMessage.notificationType = openSystemTemplate.notificationType;
             });
     }
 
@@ -29,8 +34,14 @@ function carliCheckingPricesController( $q, notificationService, notificationTem
     }
 
     function openSystemDialogComplete(){
-        if (!vm.openSystemMessage.doNotSend) {
-            notificationService.sendNotification(vm.openSystemMessage);
+        if (!vm.doNotCreateNotification) {
+            notificationService.create(vm.openSystemMessage)
+                .then(function(){
+                    console.log('Created open system notification');
+                })
+                .catch(function(err){
+                    console.log('error creating open system not',err);
+                });
         }
 
         return closeModal().then(vm.cycleRouter.next);
