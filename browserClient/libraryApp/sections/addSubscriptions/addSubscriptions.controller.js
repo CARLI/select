@@ -1,7 +1,7 @@
 angular.module('library.sections.addSubscriptions')
 .controller('addSubscriptionsController', addSubscriptionsController);
 
-function addSubscriptionsController( $q, $routeParams, $window, cycleService, offeringService, productService, userService ){
+function addSubscriptionsController( $q, $routeParams, $window, cycleService, offeringService, userService ){
     var vm = this;
 
     vm.cycle = null;
@@ -15,7 +15,6 @@ function addSubscriptionsController( $q, $routeParams, $window, cycleService, of
         productName: 'product.name',
         vendorName: ['product.vendor.name','product.name'],
         funded: ['product.funded','product.name'],
-        pricing: ['pricing.site','product.name'],
         selectionPrice: ['selection.price', 'product.name']
     };
 
@@ -29,6 +28,7 @@ function addSubscriptionsController( $q, $routeParams, $window, cycleService, of
     vm.selectLastYearsSelections = selectLastYearsSelections;
     vm.selectProduct = selectProduct;
     vm.selectAndUpdateProduct = selectAndUpdateProduct;
+    vm.selectionProblems = [];
     vm.sort = sort;
     vm.todo = todo;
     vm.unSelectProduct = unSelectProduct;
@@ -37,7 +37,7 @@ function addSubscriptionsController( $q, $routeParams, $window, cycleService, of
     activate();
 
     function activate(){
-        vm.loadingPromise = getCycleForRouteParameter()
+        return getCycleForRouteParameter()
             .then(loadOfferings);
     }
 
@@ -48,10 +48,12 @@ function addSubscriptionsController( $q, $routeParams, $window, cycleService, of
 
     function loadOfferings( cycle ) {
         vm.cycle = cycle;
-        return cycleService.listAllOfferingsForCycle(cycle)
+        vm.loadingPromise = cycleService.listAllOfferingsForCycle(cycle)
             .then(function(offeringsList){
                 vm.offerings = offeringsList;
             });
+
+        return vm.loadingPromise;
     }
 
     function selectProduct(offering, users) {
@@ -86,47 +88,47 @@ function addSubscriptionsController( $q, $routeParams, $window, cycleService, of
 
     function selectLastYearsSelections(){
         var lastYear = vm.cycle.year - 1;
+        var changedOfferings = [];
+        var selectionProblems = [];
 
         if ( $window.confirm('This will reset all of your selections to last year') ){
             vm.offerings.forEach(selectLastYear);
+
+            sort(vm.sortOptions.selectionPrice);
+            showSelectionProblemsPopup(selectionProblems);
+
+            return offeringService.bulkUpdateOfferings(changedOfferings, vm.cycle)
+                .then(function(){
+                    return loadOfferings(vm.cycle);
+                })
+                .catch(function(err){ console.log('error', err, vm.offerings); });
         }
 
-
-        /*
-        {
-            "2013": {
-                "pricing": {
-                    "site": 1000,
-                    "su": []
-                },
-                "selection": {
-                    "users": "Site License",
-                     "price": 1000
-                }
-            }
-        }
-         */
         function selectLastYear( offering ){
             var allHistory = offering.history || {};
             var history = allHistory[lastYear] || {};
+            var wasSelectedLastYear = !!history.selection;
 
-            if ( history.selection ){
-                console.log('Last year '+offering.product.name+' was selected ',history.selection);
-
+            if ( wasSelectedLastYear ){
                 var users = history.selection.users;
                 var selectionValidity = lastYearsSelectionIsStillValid(offering, users);
 
                 if ( selectionValidity.isValid ){
-                    console.log('  offering is still valid, select it again');
                     selectProduct(offering, users);
+                    changedOfferings.push(offering);
                 }
                 else {
-                    console.log('  selection not valid because '+selectionValidity.reason);
+                    selectionProblems.push({
+                        product: offering.product.name,
+                        reason: selectionValidity.reason
+                    });
                 }
             }
             else {
-                console.log('No selection last year for '+offering.product.name+' - deselecting');
-                unSelectProduct(offering);
+                if ( offering.selection ){
+                    unSelectProduct(offering);
+                    changedOfferings.push(offering);
+                }
             }
 
 
@@ -190,7 +192,10 @@ function addSubscriptionsController( $q, $routeParams, $window, cycleService, of
     function updateOffering( offering ){
         return offeringService.update(offering)
             .then(offeringService.load)
-            .then(workaroundCouchSmell);
+            .then(workaroundCouchSmell)
+            .catch(function(err){
+                console.error('Error updating offering', err);
+            });
 
         function workaroundCouchSmell( updatedOffering ){
             offering._rev = updatedOffering._rev;
@@ -245,5 +250,15 @@ function addSubscriptionsController( $q, $routeParams, $window, cycleService, of
 
     function todo(){
         alert("TODO");
+    }
+
+    function showSelectionProblemsPopup( listOfProblems ){
+        if ( !listOfProblems || !listOfProblems.length ){
+            return;
+        }
+        else {
+            vm.selectionProblems = listOfProblems;
+            $('#selection-problems-modal').modal();
+        }
     }
 }

@@ -5,7 +5,7 @@
             <div class="column selected-last-year">Selected Last Year</div>
             <div class="sortable column vendor" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.vendorName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.vendorName)">Vendor</div>
             <div class="sortable column funded" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.funded, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.funded)">CARLI Funded</div>
-            <div class="sortable column select" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.pricing, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.pricing)">Selected</div>
+            <div class="sortable column select" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.selectionPrice, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.selectionPrice)">Selected</div>
         </li>
         <li collapsible class="offering collapsed display-{{ ::offering.display }}" ng-repeat="offering in vm.offerings | orderBy: vm.orderBy:vm.reverse track by offering.id" ng-if="::offering.display !== 'none'">
             <div class="collapsible-header">
@@ -127,3 +127,14 @@
         </li>
     </ul>
 </section>
+
+<modal-dialog modal-id="'selection-problems-modal'" modal-title="'Problems Making Selections from Last Year'" modal-class="modal-lg">
+    <div class="modal-body">
+        <ul class="problem-list">
+            <li ng-repeat="problem in vm.selectionProblems"><strong>{{ problem.product }}</strong> - {{ problem.reason }}</li>
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="carli-button primary-button" data-dismiss="modal">OK</button>
+    </div>
+</modal-dialog>
