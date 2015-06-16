@@ -11,6 +11,16 @@ angular.module('vendor.routes',[
                 controller:  'dashboardController',
                 controllerAs:'vm'
             })
+            .when('/login', {
+                templateUrl: '/vendorApp/sections/login/login.html',
+                controller:  'loginPageController',
+                controllerAs:'vm'
+            })
+            .when('/reset/:key', {
+                templateUrl: '/vendorApp/sections/resetRequest/resetRequest.html',
+                controller:  'resetRequestPageController',
+                controllerAs:'vm'
+            })
             .when('/siteLicensePrices', {
                 templateUrl: '/vendorApp/sections/siteLicensePrices/siteLicensePrices.html',
                 controller:  'siteLicensePricesController',

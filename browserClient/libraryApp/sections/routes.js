@@ -15,6 +15,21 @@ angular.module('library.routes',[
                 controller:  'addSubscriptionsController',
                 controllerAs:'vm'
             })
+            .when('/login', {
+                templateUrl: '/libraryApp/sections/login/login.html',
+                controller:  'loginPageController',
+                controllerAs:'vm'
+            })
+            .when('/reset/:key', {
+                templateUrl: '/libraryApp/sections/resetRequest/resetRequest.html',
+                controller:  'resetRequestPageController',
+                controllerAs:'vm'
+            })
+//            .when('/addSubscriptions', {
+//                templateUrl: '/libraryApp/sections/',
+//                controller:  'Controller',
+//                controllerAs:'vm'
+//            })
             .when('/addOneTimePurchases', {
                 templateUrl: '/libraryApp/sections/addOneTimePurchases/addOneTimePurchases.html',
                 controller:  'addOneTimePurchasesController',
