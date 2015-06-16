@@ -8,9 +8,9 @@ function userMenuController( $interval, notificationService ){
     vm.userName = 'Username!';
 
 //    $interval(function() {
-        countDrafts().then(function(count) {
-            vm.notificationsCount = count;
-        });
+//        countDrafts().then(function(count) {
+//            vm.notificationsCount = count;
+//        });
 //    }, 2000);
 
     function countDrafts(){
