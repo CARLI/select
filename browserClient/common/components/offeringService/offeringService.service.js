@@ -42,6 +42,10 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
                 })
                 .catch(errorHandler);
         },
+        bulkUpdateOfferings: function( listOfOfferings, cycle ){
+            var cycleToUse = cycle || cycleService.getCurrentCycle();
+            return $q.when( offeringModule.bulkUpdateOfferings( listOfOfferings, cycleToUse ));
+        },
         ensureProductHasOfferingsForAllLibraries: function ensureProductHasOfferingsForAllLibraries( product ){
             return $q.when( offeringModule.ensureProductHasOfferingsForAllLibraries( product.id, product.vendor.id, product.cycle ) );
         },

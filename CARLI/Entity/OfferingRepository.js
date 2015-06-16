@@ -315,6 +315,24 @@ function ensureProductHasOfferingsForAllLibraries( productId, vendorId, cycle ){
     }
 }
 
+function bulkUpdateOfferings( listOfOfferings, cycle ){
+    var transformedOfferings = listOfOfferings.map(transformOfferingForUpdate);
+
+    return Q.all( transformedOfferings.map(Validator.validate) )
+        .then(bulkUpdateOfferings)
+        .then(returnSuccessfulBulkUpdateIds);
+
+    function transformOfferingForUpdate(offering){
+        transformFunction(offering);
+        transformCycleReference(offering, cycle);
+        return offering;
+    }
+
+    function bulkUpdateOfferings(){
+        return couchUtils.bulkUpdateDocuments(cycle.getDatabaseName(), transformedOfferings);
+    }
+}
+
 function initializeComputedValues(offerings) {
     offerings.forEach(function(offering){
         offering.display = offering.display || "with-price";
@@ -582,6 +600,7 @@ module.exports = {
     listVendorsFromOfferingIds: listVendorsFromOfferingIds,
     createOfferingsFor: createOfferingsFor,
     ensureProductHasOfferingsForAllLibraries: ensureProductHasOfferingsForAllLibraries,
+    bulkUpdateOfferings: bulkUpdateOfferings,
 
     getOfferingsById: getOfferingsById,
     getOfferingDisplayOptions: getOfferingDisplayOptions,
