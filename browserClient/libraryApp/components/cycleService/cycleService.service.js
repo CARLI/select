@@ -16,6 +16,7 @@ function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
         listActiveCycles: listActiveCycles,
         listActiveCyclesIncludingOneTimePurchase: listActiveCyclesIncludingOneTimePurchase,
         listOpenForSelectionsCycles: listOpenForSelectionsCycles,
+        listOpenForSelectionsAndClosedCycles: listOpenForSelectionsAndClosedCycles,
         listSelectionsForCycle: listSelectionsForCycle,
         listAllOfferingsForCycle: listAllOfferingsForCycle,
         load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ).catch(errorHandler); },
@@ -48,6 +49,18 @@ function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
 
         function cycleIsOpenToLibraries( cycle ){
             return cycle.status === 4;
+        }
+    }
+
+    function listOpenForSelectionsAndClosedCycles() {
+        return listActiveCycles()
+            .then(function( cycleList ){
+                return cycleList.filter(cycleIsOpenToLibrariesOrClosed);
+            })
+            .catch(errorHandler);
+
+        function cycleIsOpenToLibrariesOrClosed( cycle ){
+            return cycle.status === 4 || cycle.status === 5;
         }
     }
 

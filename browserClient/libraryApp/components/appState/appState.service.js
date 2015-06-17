@@ -11,12 +11,11 @@ function appStateService($rootScope) {
         if (!user) {
             $rootScope.appState = 'pendingUser';
         } else {
-            $rootScope.appState = 'pendingCycle';
+            $rootScope.appState = 'ready';
         }
     }
 
     function setCycle(cycle) {
-        $rootScope.appState = 'ready';
         $rootScope.cycleId = cycle.id;
     }
 

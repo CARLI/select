@@ -10,9 +10,9 @@ angular.module('library.routes',[
                 controller:  'dashboardController',
                 controllerAs:'vm'
             })
-            .when('/addSubscriptions/:cycleId', {
+            .when('/addSubscriptions', {
                 templateUrl: '/libraryApp/sections/addSubscriptions/addSubscriptions.html',
-                controller:  'subscriptionSelectionsController',
+                controller:  'addSubscriptionsController',
                 controllerAs:'vm'
             })
             .when('/addOneTimePurchases', {

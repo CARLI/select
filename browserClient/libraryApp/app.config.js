@@ -17,7 +17,6 @@ angular.module('library.app', [
     'library.appState',
     'common.askCarliButton',
     'common.askCarliForm',
-    'library.cycleChooser',
     'library.cycleService',
     'library.libraryHeader',
     'library.navBar',
