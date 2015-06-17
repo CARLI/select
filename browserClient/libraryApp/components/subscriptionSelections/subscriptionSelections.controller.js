@@ -4,7 +4,7 @@ angular.module('library.subscriptionSelections')
 function subscriptionSelectionsController( $q, $window, cycleService, libraryStatusService, offeringService, userService ){
     var vm = this;
 
-    vm.selectionStep = 'select';
+    vm.selectionStep = '';
     vm.orderBy = 'product.name';
     vm.reverse = false;
 
@@ -20,6 +20,7 @@ function subscriptionSelectionsController( $q, $window, cycleService, librarySta
     vm.computeTotalPurchasesAmount = computeTotalPurchasesAmount;
     vm.hasSelection = hasSelection;
     vm.isSelected = isSelected;
+    vm.libraryId = null;
     vm.returnToBeginning = returnToBeginning;
     vm.reviewSelections = reviewSelections;
     vm.startSelections = startSelections;
@@ -35,14 +36,15 @@ function subscriptionSelectionsController( $q, $window, cycleService, librarySta
     activate();
 
     function activate(){
+        vm.selectionStep = 'loading';
         return loadLibraryStatus()
             .then(loadOfferings)
             .then(setSelectionScreenState);
     }
 
     function loadLibraryStatus(){
-        var libraryId = userService.getUser().library.id;
-        return libraryStatusService.getStatusForLibrary(libraryId, vm.cycle)
+        vm.libraryId = userService.getUser().library.id;
+        return libraryStatusService.getStatusForLibrary(vm.libraryId, vm.cycle)
             .then(function(status){
                 vm.libraryStatus = status;
             });
@@ -71,7 +73,7 @@ function subscriptionSelectionsController( $q, $window, cycleService, librarySta
         }
         else if ( cycleIsOpen && libraryIsComplete ){
             console.log('cycle is open, library complete');
-            completeSelections();
+            selectionsComplete();
         }
         else if ( cycleIsClosed && productsAreAvailable ){
             console.log('cycle is closed, products not yet available');
@@ -268,6 +270,11 @@ function subscriptionSelectionsController( $q, $window, cycleService, librarySta
     }
 
     function completeSelections(){
+        return libraryStatusService.markLibrarySelectionsComplete(vm.libraryId, vm.cycle)
+            .then(selectionsComplete);
+    }
+
+    function selectionsComplete(){
         vm.selectionStep = 'complete';
     }
 

@@ -24,6 +24,7 @@ function libraryStatusService( CarliModules, $q, errorHandler ) {
     }
 
     function markLibrarySelectionsComplete( libraryId, cycle ){
-        return $q.when( libraryStatusModule.markLibrarySelectionsComplete(libraryId, cycle) );
+        return $q.when( libraryStatusModule.markLibrarySelectionsComplete(libraryId, cycle) )
+            .catch(errorHandler);
     }
 }
