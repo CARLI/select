@@ -2,6 +2,7 @@ var Entity = require('../Entity')
     , EntityTransform = require('./EntityTransformationUtils')
     , config = require('../../config')
     , couchUtils = require('../Store/CouchDb/Utils')
+    , moment = require('moment')
     , StoreOptions = config.storeOptions
     , Store = require('../Store')
     , StoreModule = require('../Store/CouchDb/Store')
@@ -121,8 +122,29 @@ var functionsToAdd = {
         return couchUtils.getCouchViewResultValues(this.getDatabaseName(), 'getCycleSelectionAndInvoiceTotals').then(function(resultArray){
             return resultArray[0];
         });
+    },
+    isOpenToLibraries: function(){
+        return isOpenToLibraries(this);
+    },
+    isClosed: function(){
+        return isClosed(this);
+    },
+    productsAreAvailable: function(){
+        return productsAreAvailable(this);
     }
 };
+
+function isOpenToLibraries( cycle ){
+    return cycle.status === statusLabels.indexOf("Libraries Selecting Products");
+}
+
+function isClosed( cycle ){
+    return cycle.status === statusLabels.indexOf("Selections Made");
+}
+
+function productsAreAvailable( cycle ){
+    return moment().isAfter(cycle.productsAvailableDate);
+}
 
 module.exports = {
     setStore: CycleRepository.setStore,
@@ -132,5 +154,8 @@ module.exports = {
     list: listCycles,
     load: loadCycle,
     statusLabels: statusLabels,
-    listActiveCycles: listActiveCycles
+    listActiveCycles: listActiveCycles,
+    isOpenToLibraries: isOpenToLibraries,
+    isClosed: isClosed,
+    productsAreAvailable: productsAreAvailable
 };

@@ -247,3 +247,69 @@ describe('Adding functions to Cycle instances', function() {
         });
     });
 });
+
+describe('the isOpenToLibraries method', function(){
+    it('should return true for cycles in the "Libraries Selecting Products" state', function(){
+        var testCycle = validCycleData();
+        testCycle.status = 4;
+
+        expect(CycleRepository.isOpenToLibraries(testCycle)).to.be.true;
+    });
+
+    it('should return false for any other status', function(){
+        var testCycle = validCycleData();
+        expect(CycleRepository.isOpenToLibraries(testCycle)).to.be.false;
+
+        testCycle.status = 1;
+        expect(CycleRepository.isOpenToLibraries(testCycle)).to.be.false;
+
+        testCycle.status = 2;
+        expect(CycleRepository.isOpenToLibraries(testCycle)).to.be.false;
+
+        testCycle.status = 3;
+        expect(CycleRepository.isOpenToLibraries(testCycle)).to.be.false;
+
+        testCycle.status = 5;
+        expect(CycleRepository.isOpenToLibraries(testCycle)).to.be.false;
+    });
+});
+
+describe('the isClosed method', function(){
+    it('should return true for cycles in the "Selections Made" state', function(){
+        var testCycle = validCycleData();
+        testCycle.status = 5;
+
+        expect(CycleRepository.isClosed(testCycle)).to.be.true;
+    });
+
+    it('should return false for any other status', function(){
+        var testCycle = validCycleData();
+        expect(CycleRepository.isClosed(testCycle)).to.be.false;
+
+        testCycle.status = 1;
+        expect(CycleRepository.isClosed(testCycle)).to.be.false;
+
+        testCycle.status = 2;
+        expect(CycleRepository.isClosed(testCycle)).to.be.false;
+
+        testCycle.status = 3;
+        expect(CycleRepository.isClosed(testCycle)).to.be.false;
+
+        testCycle.status = 4;
+        expect(CycleRepository.isClosed(testCycle)).to.be.false;
+    });
+});
+
+describe('the productsAreAvailable method', function(){
+    it('should return true if today is equal to after the cycle end date', function(){
+        var testCycle = validCycleData();
+        testCycle.productsAvailableDate = '2000-01-01';
+        expect(CycleRepository.productsAreAvailable(testCycle)).to.be.true;
+    });
+
+    it('should return false if today is before the end date', function(){
+        var testCycle = validCycleData();
+        testCycle.productsAvailableDate = '3000-11-31';
+        expect(CycleRepository.productsAreAvailable(testCycle)).to.be.false;
+    });
+});
