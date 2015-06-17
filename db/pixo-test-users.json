@@ -1,5 +1,15 @@
 [
   {
+    "_id": "org.couchdb.user:aaron@pixotech.com",
+    "id": "org.couchdb.user:aaron@pixotech.com",
+    "name": "aaron@pixotech.com",
+    "email": "aaron@pixotech.com",
+    "fullName": "Aaron",
+    "roles": [ "staff" ],
+    "type": "user",
+    "isActive": true
+  },
+  {
     "_id": "org.couchdb.user:bryan@pixotech.com",
     "id": "org.couchdb.user:bryan@pixotech.com",
     "name": "bryan@pixotech.com",
