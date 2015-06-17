@@ -13,6 +13,7 @@ var schemas = {
     InstitutionYears: require('../schemas/InstitutionYears.json'),
     Library: require('../schemas/Library.json'),
     LibraryNonCrm: require('../schemas/LibraryNonCrm.json'),
+    LibraryStatus: require('../schemas/LibraryStatus.json'),
     License: require('../schemas/License.json'),
     MembershipLevel: require('../schemas/MembershipLevel.json'),
     Notification: require('../schemas/Notification.json'),

@@ -1,0 +1,33 @@
+{
+    "$schema": "json-schema.org/draft-04/schema",
+    "title": "LibraryStatus",
+    "schemaType": "LibraryStatus",
+    "type": "object",
+    "properties": {
+        "id": {
+            "description": "Unique identifier for the LibraryStatus record",
+            "type": "string"
+        },
+        "cycle": {
+            "description": "UUID of a Cycle document",
+            "type": "string"
+        },
+        "library": {
+            "description": "Uuid of the Library that this document is recording the status of",
+            "type": "string"
+        },
+        "lastActivity": {
+            "description": "The date that the Library last made any modifications in their app",
+            "$ref": "./Date.json"
+        },
+        "description": {
+            "description": "A text description of the Vendor's pricing status",
+            "type": "string"
+        },
+        "isComplete": {
+            "description": "Has this library completed their selections for the cycle?",
+            "type": "boolean"
+        }
+    },
+    "required": [ "cycle", "vendor" ]
+}
