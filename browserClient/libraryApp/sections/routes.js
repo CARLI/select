@@ -12,7 +12,7 @@ angular.module('library.routes',[
             })
             .when('/addSubscriptions/:cycleId', {
                 templateUrl: '/libraryApp/sections/addSubscriptions/addSubscriptions.html',
-                controller:  'addSubscriptionsController',
+                controller:  'subscriptionSelectionsController',
                 controllerAs:'vm'
             })
             .when('/addOneTimePurchases', {
