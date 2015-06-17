@@ -1,6 +1,7 @@
 <section id="addSubscriptions">
     <div class="list-page-header" cg-busy="vm.loadingPromise">
-        <h1>{{ vm.cycle.name }}</h1>
+        <h1>{{ vm.activeCycle.name }}</h1>
+        <button class="carli-button" ng-if="vm.cycles.length > 1" ng-click="vm.resetCycleChoice()">Work with another cycle</button>
     </div>
 
     <section class="content list-content choose-cycle" ng-if="vm.chooseCycle">

@@ -11,6 +11,7 @@ function addSubscriptionsController( $q, $routeParams, cycleService, userService
     vm.libraryId = userService.getUser().library.id;
     vm.loadingPromise = null;
 
+    vm.resetCycleChoice = multipleCycles;
     vm.setCycle = oneCycle;
 
     activate();
@@ -23,6 +24,8 @@ function addSubscriptionsController( $q, $routeParams, cycleService, userService
     function loadCycles(){
         return cycleService.listOpenForSelectionsAndClosedCycles()
             .then(function(cycles){
+                vm.cycles = cycles;
+
                 if ( cycles.length === 0 ){
                     noCycles();
                 }
@@ -30,27 +33,24 @@ function addSubscriptionsController( $q, $routeParams, cycleService, userService
                     oneCycle(cycles[0]);
                 }
                 else {
-                    multipleCycles(cycles);
+                    multipleCycles();
                 }
             });
     }
 
     function noCycles(){
-        vm.cycles = [];
         vm.chooseCycle = false;
         vm.activeCycle = null;
         vm.noCycles = true;
     }
 
     function oneCycle(cycle){
-        vm.cycles = [];
         vm.chooseCycle = false;
         vm.activeCycle = cycle;
         vm.noCycles = false;
     }
 
-    function multipleCycles(cycleList){
-        vm.cycles = cycleList;
+    function multipleCycles(){
         vm.chooseCycle = true;
         vm.activeCycle = null;
         vm.noCycles = false;
