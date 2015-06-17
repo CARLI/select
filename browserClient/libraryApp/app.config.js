@@ -10,6 +10,7 @@ angular.module('library.app', [
     'common.controllerBaseService',
     'common.errorHandler',
     'common.fa',
+    'common.libraryStatusService',
     'common.offeringService',
     'common.productService',
     'common.scrollTo',
