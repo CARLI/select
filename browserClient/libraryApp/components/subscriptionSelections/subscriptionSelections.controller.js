@@ -1,11 +1,10 @@
 angular.module('library.subscriptionSelections')
 .controller('subscriptionSelectionsController', subscriptionSelectionsController);
 
-function subscriptionSelectionsController( $q, $window, cycleService, offeringService, userService ){
+function subscriptionSelectionsController( $q, $window, cycleService, libraryStatusService, offeringService, userService ){
     var vm = this;
 
     vm.selectionStep = 'select';
-    vm.libraryId = userService.getUser().library.id;
     vm.orderBy = 'product.name';
     vm.reverse = false;
 
@@ -36,7 +35,17 @@ function subscriptionSelectionsController( $q, $window, cycleService, offeringSe
     activate();
 
     function activate(){
-        return loadOfferings();
+        return loadLibraryStatus()
+            .then(loadOfferings)
+            .then(setSelectionScreenState);
+    }
+
+    function loadLibraryStatus(){
+        var libraryId = userService.getUser().library.id;
+        return libraryStatusService.getStatusForLibrary(libraryId, vm.cycle)
+            .then(function(status){
+                vm.libraryStatus = status;
+            });
     }
 
     function loadOfferings() {
@@ -46,6 +55,32 @@ function subscriptionSelectionsController( $q, $window, cycleService, offeringSe
             });
 
         return vm.loadingPromise;
+    }
+
+    function setSelectionScreenState(){
+        console.log('library status', vm.libraryStatus);
+
+        var cycleIsOpen = vm.cycle.isOpenToLibraries();
+        var cycleIsClosed = vm.cycle.isClosed();
+        var libraryIsComplete = (vm.libraryStatus && vm.libraryStatus.isComplete);
+        var productsAreAvailable = vm.cycle.productsAreAvailable();
+
+        if ( cycleIsOpen && !libraryIsComplete ){
+            console.log('cycle is open, library not complete');
+            startSelections();
+        }
+        else if ( cycleIsOpen && libraryIsComplete ){
+            console.log('cycle is open, library complete');
+            completeSelections();
+        }
+        else if ( cycleIsClosed && productsAreAvailable ){
+            console.log('cycle is closed, products not yet available');
+            cycleRecentlyClosed();
+        }
+        else {
+            console.log('cycle is closed, products are available');
+            cycleClosed();
+        }
     }
 
     function selectProduct(offering, users) {
@@ -234,6 +269,14 @@ function subscriptionSelectionsController( $q, $window, cycleService, offeringSe
 
     function completeSelections(){
         vm.selectionStep = 'complete';
+    }
+
+    function cycleRecentlyClosed(){
+        vm.selectionStep = 'recentlyClosed';
+    }
+
+    function cycleClosed(){
+        vm.selectionStep = 'closed';
     }
 
     function returnToBeginning(){

@@ -4,8 +4,7 @@ angular.module('library.subscriptionSelections')
             restrict: 'E',
             templateUrl: 'libraryApp/components/subscriptionSelections/subscriptionSelections.html',
             scope: {
-                cycle: '=',
-                libraryStatus: '='
+                cycle: '='
             },
             controller: 'subscriptionSelectionsController',
             controllerAs: 'vm',

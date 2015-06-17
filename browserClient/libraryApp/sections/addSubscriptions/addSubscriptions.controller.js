@@ -1,14 +1,13 @@
 angular.module('library.sections.addSubscriptions')
 .controller('addSubscriptionsController', addSubscriptionsController);
 
-function addSubscriptionsController( $q, $routeParams, cycleService, userService ){
+function addSubscriptionsController( cycleService ){
     var vm = this;
 
     vm.activeCycle = null;
     vm.chooseCycle = false;
     vm.cycles = [];
     vm.noCycles = false;
-    vm.libraryId = userService.getUser().library.id;
     vm.loadingPromise = null;
 
     vm.resetCycleChoice = multipleCycles;
@@ -48,6 +47,8 @@ function addSubscriptionsController( $q, $routeParams, cycleService, userService
         vm.chooseCycle = false;
         vm.activeCycle = cycle;
         vm.noCycles = false;
+
+        cycleService.setCurrentCycle(cycle);
     }
 
     function multipleCycles(){
