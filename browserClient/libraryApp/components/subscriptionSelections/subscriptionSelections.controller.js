@@ -75,7 +75,7 @@ function subscriptionSelectionsController( $q, $window, cycleService, librarySta
             console.log('cycle is open, library complete');
             selectionsComplete();
         }
-        else if ( cycleIsClosed && productsAreAvailable ){
+        else if ( cycleIsClosed && !productsAreAvailable ){
             console.log('cycle is closed, products not yet available');
             cycleRecentlyClosed();
         }
