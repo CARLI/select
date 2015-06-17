@@ -94,6 +94,19 @@ function setCycle(cycle) {
     LibraryStatusRepository.setStore(getStoreForCycle(cycle));
 }
 
+function markLibrarySelectionsComplete( libraryId, cycle ){
+    return getStatusForLibrary(libraryId, cycle)
+        .then(function(libraryStatus){
+            libraryStatus.isComplete = true;
+
+            if ( libraryStatus.id ){
+                return updateLibraryStatus(libraryStatus, cycle);
+            }
+            else {
+                return createLibraryStatus(libraryStatus, cycle);
+            }
+        });
+}
 
 var functionsToAdd = {};
 
@@ -104,5 +117,6 @@ module.exports = {
     update: updateLibraryStatus,
     list: listLibraryStatuses,
     load: loadLibraryStatus,
-    getStatusForLibrary: getStatusForLibrary
+    getStatusForLibrary: getStatusForLibrary,
+    markLibrarySelectionsComplete: markLibrarySelectionsComplete
 };
