@@ -21,7 +21,7 @@
             "$ref": "./Date.json"
         },
         "description": {
-            "description": "A text description of the Vendor's pricing status",
+            "description": "A text description of the Library's status",
             "type": "string"
         },
         "isComplete": {
@@ -29,5 +29,5 @@
             "type": "boolean"
         }
     },
-    "required": [ "cycle", "vendor" ]
+    "required": [ "cycle", "library" ]
 }
