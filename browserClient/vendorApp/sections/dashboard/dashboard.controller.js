@@ -31,18 +31,22 @@ function dashboardController($scope, cycleService, userService, vendorStatusServ
         return $scope.$watch('vm.vendorStatus.checklist', updateVendorStatus, computeObjectEqualityDeeply);
     }
 
-    function updateVendorStatus(value){
-        if ( !value ){
+    function updateVendorStatus(newValue, oldValue){
+        if ( !newValue || angular.equals(newValue,oldValue) ){
             return;
         }
 
         return vendorStatusService.update(vm.vendorStatus, cycle)
             .then(function(){
-                console.log('vendor status updated');
-                return loadVendorStatus();
+                return syncData()
+                    .then(loadVendorStatus);
             })
             .catch(function(err){
                 console.log('error updating vendor status', err);
             });
+    }
+
+    function syncData(){
+        return cycleService.syncDataBackToCarli();
     }
 }

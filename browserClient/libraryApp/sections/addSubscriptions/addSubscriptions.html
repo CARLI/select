@@ -1,0 +1,21 @@
+<section id="addSubscriptions">
+    <div class="list-page-header" cg-busy="vm.loadingPromise">
+        <h1>{{ vm.activeCycle.name }}</h1>
+        <button class="carli-button" ng-if="vm.cycles.length > 1" ng-click="vm.resetCycleChoice()">Work with another cycle</button>
+    </div>
+
+    <section class="content list-content choose-cycle" ng-if="vm.chooseCycle">
+        <h2>Please select a subscription cycle:</h2>
+        <button class="carli-button" ng-repeat="cycle in vm.cycles | orderBy:'name' track by cycle.id" ng-click="vm.setCycle(cycle)">{{ cycle.name }}</button>
+    </section>
+
+    <section class="content list-content" ng-if="vm.activeCycle">
+        <subscription-selections cycle="vm.activeCycle"></subscription-selections>
+    </section>
+
+    <section class="content list-content no-cycles" ng-if="vm.noCycles">
+        <p>Sorry, there are no active subscription cycles at this time.
+           Please <a ask-carli="Add Subscriptions - no cycles found">contact CARLI</a>.
+        </p>
+    </section>
+</section>

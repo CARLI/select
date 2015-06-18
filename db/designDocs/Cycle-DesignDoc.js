@@ -104,6 +104,13 @@ ddoc = {
                 }
             }
         },
+        listLibraryStatusesByLibraryId: {
+            map: function(doc) {
+                if ( doc.type === 'LibraryStatus' ){
+                    emit(doc.library, doc);
+                }
+            }
+        },
         getCycleSelectionAndInvoiceTotals: {
             map: function(doc) {
                 if (doc.type == 'Offering') {

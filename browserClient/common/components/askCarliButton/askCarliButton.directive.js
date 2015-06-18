@@ -20,4 +20,26 @@ angular.module('common.askCarliButton')
             });
         });
     }
+})
+.directive('askCarli', function(askCarliService){
+    return {
+        restrict: 'A',
+        scope: {},
+        link: linkAskCarli
+    };
+
+    function linkAskCarli(scope, element, attributes){
+        var context = 'None';
+
+        attributes.$observe('askCarli', function(value) {
+            context = value;
+        });
+
+        element.on('click', function(){
+            console.log('ask carli click');
+            scope.$apply(function(){
+                askCarliService.sendStartDraftMessage(context);
+            });
+        });
+    }
 });

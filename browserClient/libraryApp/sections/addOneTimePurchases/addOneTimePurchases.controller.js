@@ -15,9 +15,10 @@ function addOneTimePurchasesController( $q, $window, config, cycleService, offer
     vm.purchased = [];
     vm.sortOptions = {
         productName: 'product.name',
-        vendorName: ['product.vendor.name','product.name'],
-        funded: ['product.funded','product.name'],
-        pricing: ['pricing.site','product.name']
+        vendorName: ['product.vendor.name', 'product.name'],
+        funded: ['product.funded', 'product.name'],
+        pricing: ['pricing.site', 'product.name'],
+        selectionPrice: ['selection.price', 'product.name']
     };
 
     vm.completeSelections = completeSelections;
@@ -30,7 +31,7 @@ function addOneTimePurchasesController( $q, $window, config, cycleService, offer
     vm.sortAvailable = function sortAvailable(newSort){ sort(newSort, 'Available'); };
     vm.sortPurchased = function sortPurchased(newSort){ sort(newSort, 'Purchased'); };
     vm.todo = todo;
-    vm.unselectProduct = unselectProduct;
+    vm.unSelectProduct = unselectProduct;
 
     activate();
 
@@ -46,30 +47,12 @@ function addOneTimePurchasesController( $q, $window, config, cycleService, offer
         });
     }
 
-    function loadOfferings( ) {
-        return offeringService.listOfferingsForLibraryId(vm.libraryId)
-            .then(populateProductsForOfferings)
-            .then(function (offeringList) {
+    function loadOfferings(cycle) {
+        return cycleService.listAllOfferingsForCycle(cycle)
+            .then(function(offeringList){
                 vm.availableForPurchase = offeringList.filter(availableForPurchase);
                 vm.purchased = offeringList.filter(purchased);
-                return offeringList;
             });
-
-        function populateProductsForOfferings( offeringsList ){
-            return $q.all(offeringsList.map(loadProduct));
-
-            function loadProduct(offering){
-                if (typeof offering.product.vendor == 'object' && offering.product.license == 'object') {
-                    return $q.when(offering);
-                } else {
-                    return productService.load(offering.product.id)
-                        .then(function(product){
-                            offering.product = product;
-                            return offering;
-                        });
-                }
-            }
-        }
 
         function availableForPurchase( offering ){
             return !offering.selection;

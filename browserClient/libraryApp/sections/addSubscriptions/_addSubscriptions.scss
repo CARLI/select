@@ -1,0 +1,13 @@
+#addSubscriptions {
+
+    .choose-cycle {
+        button {
+            display: block;
+            margin-bottom: 1rem;
+        }
+    }
+
+    .no-cycles {
+        @include font-size(16);
+    }
+}

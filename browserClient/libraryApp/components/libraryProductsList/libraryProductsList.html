@@ -23,4 +23,12 @@
             {{ offering.selection.price | currency }}
         </div>
     </li>
+    <li class="summary-row">
+        <div class="column">
+            <span class="total-label">Total</span>
+        </div>
+        <div class="column cost">{{ vm.selectionTotal() | currency }}</div>
+    </li>
 </ul>
+
+<div class="placeholder" style="width: 300px; margin: -45px 0 1rem;">Print | Export | Email</div>

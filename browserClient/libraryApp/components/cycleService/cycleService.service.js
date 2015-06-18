@@ -8,14 +8,17 @@ function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
         throw new Error('Cycle Service was initialized without a valid user');
     }
     var cycleModule = CarliModules.Cycle;
-    var offeringModule = CarliModules.Offering;
+    var middlewareModule = CarliModules.LibraryMiddleware;
 
     var currentCycle = null;
 
     return {
         listActiveCycles: listActiveCycles,
+        listActiveCyclesIncludingOneTimePurchase: listActiveCyclesIncludingOneTimePurchase,
         listOpenForSelectionsCycles: listOpenForSelectionsCycles,
+        listOpenForSelectionsAndClosedCycles: listOpenForSelectionsAndClosedCycles,
         listSelectionsForCycle: listSelectionsForCycle,
+        listAllOfferingsForCycle: listAllOfferingsForCycle,
         load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ).catch(errorHandler); },
         getCurrentCycle: getCurrentCycle,
         setCurrentCycle: setCurrentCycle
@@ -33,6 +36,10 @@ function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
         }
     }
 
+    function listActiveCyclesIncludingOneTimePurchase(){
+        return $q.when( cycleModule.listActiveCycles() );
+    }
+
     function listOpenForSelectionsCycles() {
         return listActiveCycles()
             .then(function( cycleList ){
@@ -45,8 +52,25 @@ function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
         }
     }
 
+    function listOpenForSelectionsAndClosedCycles() {
+        return listActiveCycles()
+            .then(function( cycleList ){
+                return cycleList.filter(cycleIsOpenToLibrariesOrClosed);
+            })
+            .catch(errorHandler);
+
+        function cycleIsOpenToLibrariesOrClosed( cycle ){
+            return cycle.status === 4 || cycle.status === 5;
+        }
+    }
+
     function listSelectionsForCycle( cycle ){
-        return $q.when(offeringModule.listOfferingsWithSelectionsForLibrary(currentUser.library.id.toString(),cycle))
+        return $q.when(middlewareModule.listSelectionsForLibraryFromCycle(currentUser.library.id, cycle.id))
+            .catch(errorHandler);
+    }
+
+    function listAllOfferingsForCycle( cycle ){
+        return $q.when(middlewareModule.listOfferingsForLibraryWithExpandedProducts(currentUser.library.id, cycle.id))
             .catch(errorHandler);
     }
 
@@ -55,7 +79,6 @@ function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
     }
 
     function setCurrentCycle(cycleObject) {
-        appState.setCycle(cycleObject);
         currentCycle = cycleObject;
     }
 }

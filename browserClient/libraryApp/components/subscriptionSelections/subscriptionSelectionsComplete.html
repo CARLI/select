@@ -1,0 +1,9 @@
+<h2>Thank you! You have completed your subscriptions</h2>
+<p>You can continue to make changes until <strong class="purple">{{ vm.cycle.endDateForSelections | date }}</strong></p>
+
+<ul class="subscriptions product-list complete">
+    <li class="footer">
+        <button type="button" busy-click="vm.startSelections()" class="carli-button arrow-left">Change Selections</button>
+        <ask-carli-button context="ubscriptions complete"></ask-carli-button>
+    </li>
+</ul>

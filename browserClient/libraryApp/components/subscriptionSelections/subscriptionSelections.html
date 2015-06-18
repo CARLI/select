@@ -1,0 +1,8 @@
+<subscription-progress step="vm.selectionStep" ng-if="vm.showProgress"></subscription-progress>
+
+<div ng-if="vm.selectionStep === 'loading'" cg-busy="vm.loadingPromise"></div>
+<div ng-if="vm.selectionStep === 'select'" ng-include="'libraryApp/components/subscriptionSelections/subscriptionSelectionsSelect.html'" class="selection-container"></div>
+<div ng-if="vm.selectionStep === 'review'" ng-include="'libraryApp/components/subscriptionSelections/subscriptionSelectionsReview.html'"></div>
+<div ng-if="vm.selectionStep === 'complete'" ng-include="'libraryApp/components/subscriptionSelections/subscriptionSelectionsComplete.html'"></div>
+<div ng-if="vm.selectionStep === 'recentlyClosed'" ng-include="'libraryApp/components/subscriptionSelections/subscriptionSelectionsRecentlyClosed.html'"></div>
+<div ng-if="vm.selectionStep === 'closed'" ng-include="'libraryApp/components/subscriptionSelections/subscriptionSelectionsClosed.html'"></div>

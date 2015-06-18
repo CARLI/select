@@ -2,14 +2,16 @@
 </p>
 <ul class="subscriptions product-list review" cg-busy="vm.loadingPromise">
     <li class="column-headers">
-        <div class="sortable column" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.productName, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.productName)">Product</div>
-        <div class="sortable column vendor" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.vendorName, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.vendorName)">Vendor</div>
-        <div class="sortable column review-cost" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.selectionPrice, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.selectionPrice)">Cost</div>
+        <div class="sortable column" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.productName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.productName)">Product</div>
+        <div class="sortable column" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.vendorName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.vendorName)">Vendor</div>
+        <div class="column su">SU</div>
+        <div class="sortable column review-cost" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.selectionPrice, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.selectionPrice)">Cost</div>
     </li>
-    <li ng-repeat="offering in vm.availableForPurchase | filter: vm.hasPendingSelection | orderBy: vm.orderByAvailable:vm.reverseAvailable track by offering.id">
+    <li ng-repeat="offering in vm.offerings | filter: vm.hasSelection | orderBy: vm.orderBy:vm.reverse track by offering.id">
         <div class="column">{{ offering.product.name }}</div>
         <div class="column">{{ offering.product.vendor.name }}</div>
-        <div class="column review-cost">{{ offering.selectionPendingReview.price | currency }}</div>
+        <div class="column su">{{ offering.selection.users }}</div>
+        <div class="column review-cost">{{ offering.selection.price | currency }}</div>
     </li>
     <li class="summary-row">
         <div class="column">

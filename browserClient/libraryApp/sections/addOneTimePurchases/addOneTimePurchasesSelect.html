@@ -1,11 +1,11 @@
-    <ul class="product-list" cg-busy="vm.loadingPromise">
+    <ul class="subscriptions product-list" cg-busy="vm.loadingPromise">
         <li class="column-headers">
             <div class="sortable column" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.productName, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.productName)">Product</div>
             <div class="sortable column vendor" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.vendorName, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.vendorName)">Vendor</div>
             <div class="sortable column funded" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.funded, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.funded)">CARLI Funded</div>
             <div class="sortable column select" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.pricing, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.pricing)">Selected</div>
         </li>
-        <li collapsible class="collapsed" ng-repeat="offering in vm.availableForPurchase | orderBy: vm.orderByAvailable:vm.reverseAvailable track by offering.id">
+        <li collapsible class="offering collapsed" ng-repeat="offering in vm.availableForPurchase | orderBy: vm.orderByAvailable:vm.reverseAvailable track by offering.id" ng-if="::offering.display !== 'none'">
             <div class="collapsible-header">
                 <div class="column">
                     <button type="button" class="angle-icon-container">
@@ -86,7 +86,7 @@
                     </div>
                     <div class="bottom-buttons">
                         <button type="button" class="carli-button remove-button"
-                                busy-click="vm.unselectProduct(offering)"
+                                busy-click="vm.unSelectProduct(offering)"
                                 ng-if="offering.selectionPendingReview">
                             Remove Selection<fa name="remove"></fa>
                         </button>
@@ -115,8 +115,8 @@
         The following products are items that your library currently has access to through CARLI. If your library is not
         able to access any one of these items, <a>please contact CARLI</a>.
     </p>
-    <ul class="product-list" cg-busy="vm.loadingPromise">
-        <li collapsible class="collapsed" ng-repeat="offering in vm.purchased | orderBy: vm.orderByPurchased:vm.reversePurchased track by offering.id ">
+    <ul class="subscriptions product-list" cg-busy="vm.loadingPromise">
+        <li collapsible class="offering collapsed" ng-repeat="offering in vm.purchased | orderBy: vm.orderByPurchased:vm.reversePurchased track by offering.id ">
             <div class="collapsible-header">
                 <div class="column">
                     <button type="button" class="angle-icon-container">

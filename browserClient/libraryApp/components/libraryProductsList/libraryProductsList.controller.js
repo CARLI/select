@@ -1,7 +1,7 @@
 angular.module('library.libraryProductsList')
 .controller('libraryProductsListController', libraryProductsListController);
 
-function libraryProductsListController( $q, controllerBaseService, cycleService, productService ){
+function libraryProductsListController( $q, controllerBaseService, cycleService ){
     var vm = this;
 
     vm.loadingPromise = null;
@@ -14,31 +14,26 @@ function libraryProductsListController( $q, controllerBaseService, cycleService,
         cost: ['selection.price','product.name']
     };
 
+    vm.selectionTotal = selectionTotal;
+
     controllerBaseService.addSortable(vm, vm.sortOptions.productName);
     activate();
 
     function activate(){
-        vm.loadingPromise = cycleService.listSelectionsForCycle( vm.cycle)
-            .then(populateProductsForOfferings)
+        vm.loadingPromise = cycleService.listSelectionsForCycle(vm.cycle)
             .then(function( offerings ){
                 vm.selectedOfferings = offerings;
             });
+    }
 
-        function populateProductsForOfferings( offeringsList ){
-            return $q.all(offeringsList.map(loadProduct));
+    function selectionTotal(){
+        var total = 0;
 
-            function loadProduct(offering){
-                if (typeof offering.product.vendor == 'object' && offering.product.license == 'object') {
-                    return $q.when(offering);
-                } else {
-                    return productService.load(offering.product.id)
-                        .then(function(product){
-                            offering.product = product;
-                            return offering;
-                        });
-                }
-            }
-        }
+        vm.selectedOfferings.forEach(function(offering){
+            total += offering.selection.price;
+        });
+
+        return total;
     }
 
 }

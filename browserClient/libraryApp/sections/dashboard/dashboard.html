@@ -3,7 +3,7 @@
     <h1>{{ vm.library.name }}'s Products</h1>
 
     <p class="purchased-message">This page lists all of the products that your library's patrons currently have access to through CARLI.
-        If your library is not able to access any one of these items, please contact CARLI.</p>
+        If your library is not able to access any one of these items, please <a ask-carli="Dashboard - unable to access product - contact CARLI">contact CARLI</a>.</p>
 
     <div class="cycle-link-header">Jump to:</div>
     <ol class="cycle-link-list">
@@ -13,9 +13,13 @@
     </ol>
 
     <ol class="cycle-list">
-        <li class="cycle" ng-repeat="cycle in vm.cycles" id="{{ cycle.id }}">
+        <li class="cycle" ng-repeat="cycle in vm.cycles track by cycle.id" id="{{ cycle.id }}">
             <h2>{{ cycle.name }}</h2>
             <library-products-list cycle="cycle"></library-products-list>
+
+            <ask-carli-button context="Dashboard - {{ cycle.name }} products list"></ask-carli-button>
+            <div class="placeholder" style="width: 600px;" ng-if="cycle.id !== 'one-time-purchase-products-cycle'">View Upgrades and Unselected {{ vm.cycle.name }} Subscription Products</div>
+            <a class="carli-button" href="/addOneTimePurchases" ng-if="cycle.id === 'one-time-purchase-products-cycle'">Add One-Time Purchases</a>
         </li>
     </ol>
 </section>

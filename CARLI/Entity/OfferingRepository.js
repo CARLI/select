@@ -315,6 +315,24 @@ function ensureProductHasOfferingsForAllLibraries( productId, vendorId, cycle ){
     }
 }
 
+function bulkUpdateOfferings( listOfOfferings, cycle ){
+    var transformedOfferings = listOfOfferings.map(transformOfferingForUpdate);
+
+    return Q.all( transformedOfferings.map(Validator.validate) )
+        .then(bulkUpdateOfferings)
+        .then(returnSuccessfulBulkUpdateIds);
+
+    function transformOfferingForUpdate(offering){
+        transformFunction(offering);
+        transformCycleReference(offering, cycle);
+        return offering;
+    }
+
+    function bulkUpdateOfferings(){
+        return couchUtils.bulkUpdateDocuments(cycle.getDatabaseName(), transformedOfferings);
+    }
+}
+
 function initializeComputedValues(offerings) {
     offerings.forEach(function(offering){
         offering.display = offering.display || "with-price";
@@ -339,6 +357,10 @@ function setCycle(cycle) {
 
 
 function getFlaggedState(offering){
+    var cycle = offering.cycle || {};
+    var thisYear = cycle.year || 1;
+    var lastYear = thisYear - 1;
+
     if ( userFlaggedState() !== undefined ){
         return userFlaggedState();
     }
@@ -423,10 +445,11 @@ function getFlaggedState(offering){
         return exceedsPriceCap;
 
         function canEnforcePriceCap() {
-            return offering.product.priceCap && offering.history;
+            var knowLastYear = (lastYear > 0);
+            return knowLastYear && offering.product.priceCap && offering.history;
         }
         function checkSitePriceIncrease() {
-            if (offering.pricing.site > priceCapMultiplier * offering.history.pricing.site) {
+            if (offering.pricing.site > priceCapMultiplier * offering.history[lastYear].pricing.site) {
                 exceedsPriceCap = true;
             }
         }
@@ -452,10 +475,11 @@ function getFlaggedState(offering){
         return exceedsDecreaseLimit;
 
         function canEnforceDecrease() {
-            return !!offering.history;
+            var knowLastYear = (lastYear > 0);
+            return !!offering.history && knowLastYear;
         }
         function checkSitePriceDecrease() {
-            if (offering.pricing.site < multiplier * offering.history.pricing.site) {
+            if (offering.pricing.site < multiplier * offering.history[lastYear].pricing.site) {
                 exceedsDecreaseLimit = true;
             }
         }
@@ -468,25 +492,25 @@ function getFlaggedState(offering){
         }
     }
 
-}
+    function lookupLastYearsPriceForSu(offering, suToFind) {
+        var lastYearsPrice = null;
+        if (offering.history) {
+            offering.pricing.su.forEach(findLastYearsPricingForSu);
+        }
+        return lastYearsPrice;
 
-function lookupLastYearsPriceForSu(offering, suToFind) {
-    var lastYearsPrice = null;
-    if (offering.history) {
-        offering.pricing.su.forEach(findLastYearsPricingForSu);
-    }
-    return lastYearsPrice;
-
-    function findLastYearsPricingForSu(suPricing) {
-        if (suPricing.users === suToFind) {
-            offering.history.pricing.su.forEach(function (lastYearsPricing) {
-                if (suPricing.users === lastYearsPricing.users) {
-                    lastYearsPrice = lastYearsPricing.price;
-                }
-            });
+        function findLastYearsPricingForSu(suPricing) {
+            if (suPricing.users === suToFind) {
+                offering.history[lastYear].pricing.su.forEach(function (lastYearsPricing) {
+                    if (suPricing.users === lastYearsPricing.users) {
+                        lastYearsPrice = lastYearsPricing.price;
+                    }
+                });
+            }
         }
     }
 }
+
 
 /* functions that get added as instance methods on loaded Offerings */
 var functionsToAdd = {
@@ -582,6 +606,7 @@ module.exports = {
     listVendorsFromOfferingIds: listVendorsFromOfferingIds,
     createOfferingsFor: createOfferingsFor,
     ensureProductHasOfferingsForAllLibraries: ensureProductHasOfferingsForAllLibraries,
+    bulkUpdateOfferings: bulkUpdateOfferings,
 
     getOfferingsById: getOfferingsById,
     getOfferingDisplayOptions: getOfferingDisplayOptions,
