@@ -113,6 +113,7 @@ module.exports = function (grunt) {
     }
 
     function generateMemberDbConfig(instance) {
+        console.log("PW3 Generating Member DB config", process.env.CARLI_CRM_MYSQL_PASSWORD);
         return {
             connectionLimit: 10,
             host: 'mysql.carli.illinois.edu',
