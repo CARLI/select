@@ -104,6 +104,12 @@ run-in-container() {
         workdir='/carli-select'
     fi
 
+    echo "--------------- Running in docker ------------------"
+    echo ${docker} run --rm -t \
+        --volumes-from=carli-assets-${CARLI_INSTANCE} \
+        --workdir=${workdir} \
+        ${extra_arguments} carli-build:${CARLI_DOCKER_TAG} ${command}
+
     ${docker} run --rm -t \
         --volumes-from=carli-assets-${CARLI_INSTANCE} \
         --workdir=${workdir} \
