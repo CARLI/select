@@ -2,7 +2,8 @@ angular.module('vendor.routes',[
         'vendor.sections.dashboard',
         'vendor.sections.siteLicensePrices',
         'vendor.sections.simultaneousUserPrices',
-        'vendor.sections.descriptions'
+        'vendor.sections.descriptions',
+        'vendor.sections.login'
     ])
     .config(function ($routeProvider) {
         $routeProvider
@@ -37,6 +38,6 @@ angular.module('vendor.routes',[
                 controllerAs:'vm'
             })
             .otherwise({
-                redirectTo: '/dashboard'
+                redirectTo: '/login'
             });
     });

@@ -5,6 +5,7 @@ angular.module('carli.app', [
     'ngSanitize',
     'common.auth',
     'common.alerts',
+    'common.config',
     'common.errorHandler',
     'common.fa',
     'common.modalDialog',
@@ -22,7 +23,8 @@ angular.module('carli.app', [
 .config(function($locationProvider){
     $locationProvider.html5Mode(true);
 })
-.run(function(authService) {
+.run(function(authService, config) {
+    document.domain = config.cookieDomain;
     if (authService.isRouteProtected()) {
         authService.authenticateForStaffApp();
     }

@@ -4,6 +4,7 @@ angular.module('library.app', [
     'ngAnimate',
     'ngRoute',
     'ngSanitize',
+    'common.auth',
     'common.alerts',
     'common.accordion',
     'common.config',
@@ -29,8 +30,13 @@ angular.module('library.app', [
 .config(function($locationProvider){
     $locationProvider.html5Mode(true);
 })
-.run(function($rootScope) {
+.run(function($rootScope, authService, config) {
+    document.domain = config.cookieDomain;
     $rootScope.appState = 'pendingUser';
+
+    if (authService.isRouteProtected()) {
+        authService.authenticateForLibraryApp();
+    }
 })
 .value('cgBusyDefaults',{
     //message:'Loading Stuff',

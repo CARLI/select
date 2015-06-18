@@ -3,6 +3,7 @@ angular.module('vendor.app', [
     'cgBusy',
     'ngAnimate',
     'ngRoute',
+    'common.auth',
     'common.accordion',
     'common.alerts',
     'common.askCarliButton',
@@ -25,8 +26,13 @@ angular.module('vendor.app', [
 .config(function($locationProvider){
     $locationProvider.html5Mode(true);
 })
-.run(function($rootScope) {
+.run(function($rootScope, authService, config) {
+    document.domain = config.cookieDomain;
     $rootScope.appState = 'pendingUser';
+
+    if (authService.isRouteProtected()) {
+        authService.authenticateForVendorApp();
+    }
 })
 .value('cgBusyDefaults',{
     //message:'Loading Stuff',

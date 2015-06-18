@@ -114,7 +114,7 @@ angular.module('carli.routes',[
         controllerAs:'vm'
     })
     .otherwise({
-        redirectTo: '/dashboard'
+        redirectTo: '/login'
     })
     ;
 });

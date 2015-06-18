@@ -8,12 +8,12 @@ var defaults = {
     alertTimeout: 10000,
     cookieDomain: 'carli.local',
     middleware: {
-        url: 'http://staff.carli.local:8080/api',
+        url: 'http://vendor.carli.local:8080/api',
         port: 3000
     },
     storeOptions: {
         couchDbName: couchDbName,
-        couchDbUrl: 'http://staff.carli.local:8080/db',
+        couchDbUrl: 'http://vendor.carli.local:8080/db',
         privilegedCouchUsername: 'admin',
         privilegedCouchPassword: 'relax',
         privilegedCouchUrlScheme: 'http://',

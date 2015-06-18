@@ -1,7 +1,7 @@
 angular.module('common.login')
     .controller('loginController', loginController);
 
-function loginController ($location, alertService, authService, errorHandler, userService) {
+function loginController ($rootScope, $location, alertService, authService, userService) {
     var vm = this;
 
     vm.userLogin = {};
@@ -42,11 +42,7 @@ function loginController ($location, alertService, authService, errorHandler, us
             .catch(loginFailure);
 
         function loginSuccess() {
-
-            authService.requireSession()
-                .then(authService.requireStaff)
-                .then(authService.getCurrentUser)
-                .then(redirectAfterLogin);
+            authService.authenticateForVendorApp().then(redirectIfLoggedIn);
         }
 
         function loginFailure(err) {
@@ -67,13 +63,21 @@ function loginController ($location, alertService, authService, errorHandler, us
 
     function redirectAfterLogin() {
         console.log('redirecting');
-        var returnTo = getReturnTo() || '/';
+        var returnTo = getReturnTo() || '/dashboard';
         $location.url(returnTo);
     }
 
     function getReturnTo() {
-        var queryString = $location.search();
-        return queryString['return_to'];
+        return queryStringReturnTo() || rootScopeReturnTo();
+
+        function queryStringReturnTo() {
+            var queryString = $location.search();
+            return queryString['return_to'];
+        }
+
+        function rootScopeReturnTo() {
+            return $rootScope.returnTo;
+        }
     }
 
     function requestPasswordReset() {

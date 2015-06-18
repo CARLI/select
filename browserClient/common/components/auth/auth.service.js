@@ -7,6 +7,8 @@ function authService($rootScope, $q, $location, CarliModules) {
 
     return {
         authenticateForStaffApp: authenticateForStaffApp,
+        authenticateForVendorApp: authenticateForVendorApp,
+        authenticateForLibraryApp: authenticateForLibraryApp,
 
         isRouteProtected: isRouteProtected,
 
@@ -24,6 +26,20 @@ function authService($rootScope, $q, $location, CarliModules) {
     function authenticateForStaffApp() {
         return requireSession()
             .then(requireStaff)
+            .then(getCurrentUser)
+            .then(requireActive)
+            .catch(redirectToLogin);
+    }
+    function authenticateForVendorApp() {
+        return requireSession()
+            .then(requireVendor)
+            .then(getCurrentUser)
+            .then(requireActive)
+            .catch(redirectToLogin);
+    }
+    function authenticateForLibraryApp() {
+        return requireSession()
+            .then(requireLibrary)
             .then(getCurrentUser)
             .then(requireActive)
             .catch(redirectToLogin);
@@ -81,10 +97,26 @@ function authService($rootScope, $q, $location, CarliModules) {
     }
 
     function requireStaff() {
-        if (session.roles.indexOf('staff') >= 0) {
-            return true;
+        if (!hasRole('staff')) {
+            throw new Error('Unauthorized');
         }
-        throw new Error('Unauthorized');
+    }
+
+    function requireVendor() {
+        if (!hasRole('vendor')) {
+            throw new Error('Unauthorized');
+        }
+    }
+
+    function requireLibrary() {
+        if (!hasRole('library')) {
+            throw new Error('Unauthorized');
+        }
+    }
+
+    function hasRole(role) {
+        return session.roles.indexOf(role) >= 0;
+
     }
 
     function requireActive() {

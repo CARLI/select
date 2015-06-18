@@ -1,7 +1,8 @@
 angular.module('library.routes',[
         'library.sections.dashboard',
         'library.sections.addSubscriptions',
-        'library.sections.addOneTimePurchases'
+        'library.sections.addOneTimePurchases',
+        'library.sections.login'
     ])
     .config(function ($routeProvider) {
         $routeProvider
@@ -57,7 +58,7 @@ angular.module('library.routes',[
             })
             */
             .otherwise({
-                redirectTo: '/dashboard'
+                redirectTo: '/login'
             })
         ;
     });

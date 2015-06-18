@@ -184,10 +184,6 @@ function editUserController( $scope, $rootScope, $q, alertService, authService, 
     }
 
     function saveNewUser() {
-        if (!vm.user.password) {
-            alertService.putAlert('Password is required', {severity: 'danger'});
-            return $q.reject('Password is required');
-        }
         if (!confirmPasswordsMatch()) {
             alertService.putAlert('Passwords do not match', {severity: 'danger'});
             return $q.reject('Passwords do not match');

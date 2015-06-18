@@ -17,6 +17,8 @@ angular.module('common.resetRequest')
                 '</div>'
             ].join(''),
             scope: true,
-            transclude: true
+            transclude: true,
+            controller: 'resetRequestController',
+            controllerAs: 'vm'
         };
     });

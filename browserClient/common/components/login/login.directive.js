@@ -27,6 +27,8 @@ angular.module('common.login')
                 '</section>'
             ].join(''),
             scope: true,
-            transclude: true
+            transclude: true,
+            controller: 'loginController',
+            controllerAs: 'vm'
         };
     });
