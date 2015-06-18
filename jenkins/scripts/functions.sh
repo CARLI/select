@@ -147,6 +147,8 @@ create-couchdb-admin() {
 }
 
 redeploy-carli() {
+    echo "PW2: $CARLI_CRM_MYSQL_PASSWORD"
+
     echo "Creating data container, if needed" && create-data-container-if-not-exists &&
     echo "Redeploying CouchDB" && recreate-couchdb-container &&
     echo "Redeploying CARLI Assets" && recreate-assets-container &&
