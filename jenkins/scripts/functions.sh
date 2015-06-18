@@ -130,7 +130,7 @@ ensure-local-config() {
 
 generate-config() {
     run-in-container "grunt generate-config:$CARLI_INSTANCE" /carli-select/jenkins \
-        "-e \"CARLI_CRM_MYSQL_PASSWORD=$CARLI_CRM_MYSQL_PASSWORD\" --link=carli-couchdb-$CARLI_INSTANCE:carli-couchdb"
+        "-e CARLI_CRM_MYSQL_PASSWORD=$CARLI_CRM_MYSQL_PASSWORD --link=carli-couchdb-$CARLI_INSTANCE:carli-couchdb"
 }
 
 install-dependencies-and-configure() {

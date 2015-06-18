@@ -9,7 +9,6 @@ export CARLI_DOCKER_TAG=last-good
 export CARLI_COUCHDB_HOST_PORT=9081
 export CARLI_NGINX_HOST_PORT=9080
 
-echo "PW1: $CARLI_CRM_MYSQL_PASSWORD"
 . ./jenkins/scripts/functions.sh
 
 redeploy-carli
