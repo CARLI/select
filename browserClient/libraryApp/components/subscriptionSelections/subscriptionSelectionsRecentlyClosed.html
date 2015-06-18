@@ -1,0 +1,139 @@
+<h2>Selected Subscriptions</h2>
+<p>Your subscriptions will be available {{ vm.cycle.productsAvailableDate | date }}</p>
+<ul class="subscriptions product-list review" cg-busy="vm.loadingPromise">
+    <li class="column-headers">
+        <div class="sortable column" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.productName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.productName)">Product</div>
+        <div class="sortable column" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.vendorName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.vendorName)">Vendor</div>
+        <div class="column su">SU</div>
+        <div class="sortable column review-cost" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.selectionPrice, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.selectionPrice)">Cost</div>
+    </li>
+    <li ng-repeat="offering in vm.offerings | filter: vm.hasSelection | orderBy: vm.orderBy:vm.reverse track by offering.id">
+        <div class="column">{{ offering.product.name }}</div>
+        <div class="column">{{ offering.product.vendor.name }}</div>
+        <div class="column su">{{ offering.selection.users }}</div>
+        <div class="column review-cost">{{ offering.selection.price | currency }}</div>
+    </li>
+    <li class="summary-row">
+        <div class="column">
+            <aside>Prices are subject to change.</aside>
+            <span class="total-label">Total</span>
+        </div>
+        <div class="column total">{{ vm.computeTotalPurchasesAmount() | currency}}</div>
+    </li>
+    <li class="footer">
+        <button class="carli-button print" ng-click="vm.todo()">PRINT</button>
+        <button class="carli-button export" ng-click="vm.todo()">EXPORT</button>
+        <button class="carli-button email" ng-click="vm.todo()">EMAIL</button>
+    </li>
+</ul>
+
+<h2>Unselected Subscriptions</h2>
+<ul class="subscriptions product-list" cg-busy="vm.loadingPromise">
+    <li class="column-headers">
+        <div class="sortable column" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.productName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.productName)">Product</div>
+        <div class="column selected-last-year">Selected Last Year</div>
+        <div class="sortable column vendor" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.vendorName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.vendorName)">Vendor</div>
+        <div class="sortable column funded" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.funded, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.funded)">CARLI Funded</div>
+        <div class="sortable column select" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.selectionPrice, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.selectionPrice)">Selected</div>
+    </li>
+    <li collapsible class="offering collapsed display-{{ ::offering.display }}" ng-repeat="offering in vm.offerings | filter:vm.unselected | orderBy: vm.orderBy:vm.reverse track by offering.id" ng-if="::offering.display !== 'none'">
+        <div class="collapsible-header">
+            <div class="column">
+                <button type="button" class="angle-icon-container">
+                    <fa name="angle-down"></fa>
+                </button>
+                {{ ::offering.product.name }}
+            </div>
+            <div class="column selected-last-year">
+                <fa name="star" ng-if="offering.selectedLastYear"></fa>
+            </div>
+            <div class="column vendor">{{ ::offering.product.vendor.name }}</div>
+            <div class="column funded">
+                <span>{{ offering.product.funded | currency }}</span>
+            </div>
+            <div class="column select">
+                <span ng-if="offering.selection" class="price">{{ offering.selection.price | currency }}</span>
+            </div>
+        </div>
+        <div class="content">
+            <div class="column product-info">
+                <div class="label">Vendor Website</div>
+                <div class="h3" ng-bind-html="vm.vendor.websiteUrl | linky:'_blank'"></div>
+
+                <div class="label">Product Description</div>
+                <p>{{ ::offering.product.description }}</p>
+            </div>
+            <div class="column license-info">
+                <div class="label">Pricing Comments:</div>
+                <p>{{ ::offering.product.comments }}</p>
+
+                <div class="label">Subscribers to Date:</div>
+                <p>{{ ::offering.product.subscribersToDate }}</p>
+
+                <div class="label">Specific Terms</div>
+                <ul class="terms-list">
+                    <li>
+                        <span class="label">Download:</span>
+                        <span class="term">{{ offering.product.terms.downloadTerms || offering.product.license.terms.downloadTerms }}</span>
+                    </li>
+                    <li>
+                        <span class="label">ILL:</span>
+                        <span class="term">{{ offering.product.terms.interLibraryLoanTerms || offering.product.license.terms.interLibraryLoanTerms }}</span>
+                    </li>
+
+                    <li>
+                        <span class="label">Course Packs:</span>
+                        <span class="term">{{ offering.product.terms.coursePacksTerms || offering.product.license.terms.coursePacksTerms }}</span>
+                    </li>
+
+                    <li>
+                        <span class="label">Print:</span>
+                        <span class="term">{{ offering.product.terms.printTerms || offering.product.license.terms.printTerms}}</span>
+                    </li>
+
+                    <li>
+                        <span class="label">Limited Sharing for Scholarly Purposes:</span>
+                        <span class="term">{{ offering.product.terms.limitedScholarlySharingTerms || offering.product.license.terms.limitedScholarlySharingTerms}}</span>
+                    </li>
+
+                    <li>
+                        <span class="label">Use by Walk-ins:</span>
+                        <span class="term">{{ offering.product.terms.walkinTerms || offering.product.license.terms.walkinTerms}}</span>
+                    </li>
+
+                    <li>
+                        <span class="label">E-Reserves:</span>
+                        <span class="term">{{ offering.product.terms.eReservesTerms || offering.product.license.terms.eReservesTerms}}</span>
+                    </li>
+                </ul>
+
+                <div class="label purple">Redacted License Agreement</div>
+            </div>
+            <div class="column select">
+
+                <div class="subscription-buttons" ng-if="offering.display === 'with-price'">
+                    <subscription-button ng-if="offering.pricing.site"
+                                         title="Site License" price="{{ ::offering.pricing.site }}" disabled>
+                    </subscription-button>
+                    <div class="su-buttons" ng-if="offering.pricing.su && offering.pricing.su.length">
+                        <subscription-button ng-repeat="su in ::offering.pricing.su | orderBy:users track by su.users"
+                                             title="{{ ::su.users }} Simultaneous Users" price="{{ ::su.price }}" disabled>
+                        </subscription-button>
+                    </div>
+                    <div class="no-price" ng-if="!offering.pricing.site && !offering.pricing.su.length">A price has not been provided for this product. Ask CARLI for more information.</div>
+                </div>
+
+                <div class="no-price-display" ng-if="offering.display === 'without-price'">Ask CARLI to find out the price of this product for your institution.</div>
+
+                <div class="bottom-buttons">
+                    <ask-carli-button context="Closed cycle - {{ offering.product.name }} from {{ offering.product.vendor.name }}"></ask-carli-button>
+                </div>
+            </div>
+        </div>
+    </li>
+    <li class="footer">
+        <button class="carli-button print" ng-click="vm.todo()">PRINT</button>
+        <button class="carli-button export" ng-click="vm.todo()">EXPORT</button>
+        <button class="carli-button email" ng-click="vm.todo()">EMAIL</button>
+    </li>
+</ul>

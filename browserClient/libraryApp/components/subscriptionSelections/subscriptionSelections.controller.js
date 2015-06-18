@@ -28,8 +28,10 @@ function subscriptionSelectionsController( $q, $window, cycleService, librarySta
     vm.selectProduct = selectProduct;
     vm.selectAndUpdateProduct = selectAndUpdateProduct;
     vm.selectionProblems = [];
+    vm.showProgress = false;
     vm.sort = sort;
     vm.todo = todo;
+    vm.unselected = unselected;
     vm.unSelectProduct = unSelectProduct;
     vm.unSelectAndUpdateProduct = unSelectAndUpdateProduct;
 
@@ -208,6 +210,10 @@ function subscriptionSelectionsController( $q, $window, cycleService, librarySta
         return offering.selection;
     }
 
+    function unselected( offering ){
+        return !hasSelection( offering );
+    }
+
     function unSelectProduct(offering) {
         delete offering.selection;
         return offering;
@@ -263,10 +269,12 @@ function subscriptionSelectionsController( $q, $window, cycleService, librarySta
 
     function startSelections(){
         vm.selectionStep = 'select';
+        vm.showProgress = true;
     }
 
     function reviewSelections(){
         vm.selectionStep = 'review';
+        vm.showProgress = true;
     }
 
     function completeSelections(){
@@ -276,14 +284,17 @@ function subscriptionSelectionsController( $q, $window, cycleService, librarySta
 
     function selectionsComplete(){
         vm.selectionStep = 'complete';
+        vm.showProgress = true;
     }
 
     function cycleRecentlyClosed(){
         vm.selectionStep = 'recentlyClosed';
+        vm.showProgress = false;
     }
 
     function cycleClosed(){
         vm.selectionStep = 'closed';
+        vm.showProgress = false;
     }
 
     function returnToBeginning(){
