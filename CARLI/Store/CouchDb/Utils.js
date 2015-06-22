@@ -49,6 +49,18 @@ module.exports = function (storeOptions) {
             }
         }
 
+        function isJsonString(text) {
+            if (typeof text !== 'string') {
+                return false;
+            }
+            try {
+                JSON.parse(str);
+            } catch (e) {
+                return false;
+            }
+            return true;
+        }
+
         return deferred.promise;
     }
 
@@ -77,6 +89,13 @@ module.exports = function (storeOptions) {
                 deferred.reject(carliError(error, statusCode));
             }
             else {
+                if (typeof body !== 'object') {
+                    if (isJsonString(body)) {
+                        data = JSON.parse(body);
+                    } else {
+                        deferred.reject(carliError(body, statusCode));
+                    }
+                }
                 data = (typeof body === 'string') ? JSON.parse(body) : body;
 
                 if (data && data.error) {
