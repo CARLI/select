@@ -34,6 +34,7 @@
         .column {
             border-bottom: $default-border;
             border-right: $default-border;
+            height: 30px;
             padding: 0.5rem 1rem;
             min-width: 160px;
 
@@ -67,8 +68,9 @@
                 &.input {
                     input,
                     .price {
-                        padding: 0.5rem 1rem;
                         border: none;
+                        height: 29px;
+                        padding: 0.5rem 1rem;
                     }
 
                     .price.no-pricing {
