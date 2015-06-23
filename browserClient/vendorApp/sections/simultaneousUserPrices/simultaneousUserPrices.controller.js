@@ -185,7 +185,7 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
     }
 
     function createEmptyOfferingCell(){
-        var cell = $('<div tabindex="0" class="price no-pricing" role="gridcell>&nbsp;</div>');
+        var cell = $('<div tabindex="0" class="price no-pricing" role="gridcell">&nbsp;</div>');
         cell.on('focus', makeEditable);
         return cell;
     }
