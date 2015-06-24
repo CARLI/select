@@ -54,8 +54,9 @@ module.exports = function (storeOptions) {
                 return false;
             }
             try {
-                JSON.parse(str);
+                JSON.parse(text);
             } catch (e) {
+                console.log('error!', e);
                 return false;
             }
             return true;

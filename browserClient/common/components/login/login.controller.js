@@ -51,7 +51,7 @@ function loginController ($rootScope, $location, alertService, authService, user
     }
 
     function redirectIfLoggedIn() {
-        authService.getCurrentUser()
+        authService.fetchCurrentUser()
             .then(redirectAfterLogin)
             .catch(swallowAuthError);
 

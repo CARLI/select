@@ -1,7 +1,7 @@
 angular.module('common.auth')
     .service('authService', authService);
 
-function authService($rootScope, $q, $location, CarliModules) {
+function authService($rootScope, $q, $location, appState, CarliModules) {
     var session = null;
     var user = null;
 
@@ -16,6 +16,7 @@ function authService($rootScope, $q, $location, CarliModules) {
         deleteSession: deleteSession,
 
         getCurrentUser: getCurrentUser,
+        fetchCurrentUser: fetchCurrentUser,
 
         requireSession: requireSession,
         requireStaff: requireStaff,
@@ -26,21 +27,21 @@ function authService($rootScope, $q, $location, CarliModules) {
     function authenticateForStaffApp() {
         return requireSession()
             .then(requireStaff)
-            .then(getCurrentUser)
+            .then(fetchCurrentUser)
             .then(requireActive)
             .catch(redirectToLogin);
     }
     function authenticateForVendorApp() {
         return requireSession()
             .then(requireVendor)
-            .then(getCurrentUser)
+            .then(fetchCurrentUser)
             .then(requireActive)
             .catch(redirectToLogin);
     }
     function authenticateForLibraryApp() {
         return requireSession()
             .then(requireLibrary)
-            .then(getCurrentUser)
+            .then(fetchCurrentUser)
             .then(requireActive)
             .catch(redirectToLogin);
     }
@@ -63,6 +64,18 @@ function authService($rootScope, $q, $location, CarliModules) {
     }
 
     function getCurrentUser() {
+        console.log('getting user');
+        if (!user) {
+            throw new Error('Asked for user that does not exist yet');
+        }
+        return user;
+    }
+
+    function fetchCurrentUser() {
+        if (user) {
+            return $q.when(user);
+        }
+
         if (session) {
             return getUserFromSession();
         } else {
@@ -77,6 +90,8 @@ function authService($rootScope, $q, $location, CarliModules) {
 
         function saveUserReference(foundUser) {
             user = foundUser;
+            console.log('Setting user', user);
+            appState.setUser(user);
             return foundUser;
         }
         function setLoggedIn(passthrough) {

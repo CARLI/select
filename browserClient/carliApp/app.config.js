@@ -12,6 +12,7 @@ angular.module('carli.app', [
     'common.subscriptionHistoryTable',
     'common.warnIfUnsaved',
     'carli.admin',
+    'carli.appState',
     'carli.carliHeader',
     'carli.cycleService',
     'carli.debugPanel',

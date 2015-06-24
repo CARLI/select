@@ -69,7 +69,7 @@ function editUserController( $scope, $rootScope, $q, alertService, authService, 
         }
 
         function determineIfUserIsCurrentUser(userBeingEdited) {
-            return authService.getCurrentUser().then(function (currentUser) {
+            return authService.fetchCurrentUser().then(function (currentUser) {
                 if (currentUser.id === userBeingEdited.id) {
                     vm.isCurrentUser = true;
                 }

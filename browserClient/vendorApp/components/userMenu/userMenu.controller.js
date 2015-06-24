@@ -1,14 +1,20 @@
 angular.module('vendor.userMenu')
 .controller('userMenuController', userMenuController);
 
-function userMenuController($rootScope, userService){
+function userMenuController(authService){
     var vm = this;
     vm.userName = null;
-    vm.logout = userService.logout;
+    vm.logout = authService.deleteSession;
 
-    $rootScope.$watch(userService.getUser, function(user) {
-        if (user.userName) {
-            vm.userName = user.userName;
-        }
-    });
+    activate();
+
+    function activate() {
+        loadUserInfo();
+    }
+
+    function loadUserInfo() {
+        authService.fetchCurrentUser().then(function (user) {
+            vm.userName = user.fullName;
+        });
+    }
 }

@@ -1,7 +1,7 @@
 angular.module('vendor.cycleChooser')
     .controller('cycleChooserController', cycleChooserController);
 
-function cycleChooserController($scope, cycleService, userService, vendorStatusService ) {
+function cycleChooserController($scope, authService, cycleService, vendorStatusService ) {
     var vm = this;
 
     vm.cycles = [];
@@ -11,10 +11,12 @@ function cycleChooserController($scope, cycleService, userService, vendorStatusS
     activate();
 
     function activate() {
-        var currentUser = userService.getUser();
-        vm.vendor = currentUser.vendor;
+        authService.fetchCurrentUser().then(function (user) {
+            vm.vendor = user.vendor;
+            vm.loadingPromise = loadCycles();
 
-        vm.loadingPromise = loadCycles();
+        });
+
         $scope.$watch('vm.selectedCycle', readyCycleIfVendorIsStillAllowedIn);
     }
 
