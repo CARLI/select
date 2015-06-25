@@ -108,10 +108,15 @@ function markLibrarySelectionsComplete( libraryId, cycle ){
         });
 }
 
+function setStore(store) {
+    LibraryStatusRepository.setStore(store);
+    couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+}
+
 var functionsToAdd = {};
 
 module.exports = {
-    setStore: LibraryStatusRepository.setStore,
+    setStore: setStore,
     setCycle: setCycle,
     create: createLibraryStatus,
     update: updateLibraryStatus,
