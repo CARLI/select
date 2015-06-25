@@ -28,11 +28,7 @@ var defaults = {
     },
     oneTimePurchaseProductsCycleDocId: 'one-time-purchase-products-cycle',
     storePath: 'CouchDb/Store',
-    defaultEntityCacheTimeToLive: -1, // 60 * 1000,
-    showFullErrors: false,
-    errorMessages: {
-        fatal: "A serious error occurred, please ask Cate what this should say."
-    }
+    defaultEntityCacheTimeToLive: -1 // 60 * 1000
 };
 
 var config = _.merge(defaults, localConfig);
