@@ -63,7 +63,12 @@ module.exports = function (inputOptions) {
         }, function (err, response, body) {
             var error = err || body.error;
             if (error) {
-                deferred.reject(carliError(error, response.statusCode));
+                if ( response ){
+                    deferred.reject(carliError(error, response.statusCode));
+                }
+                else {
+                    throw new Error("bad storeData request to: "+db_host+'/'+data.id);
+                }
             }
             else {
                 data._id = body.id;
