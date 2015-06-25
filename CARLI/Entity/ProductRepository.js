@@ -49,7 +49,7 @@ function loadProduct( productId, cycle ){
                 })
                 .catch(function(err){
                     // WARNING: this suppresses errors for entity references that are not found in the store
-                    console.warn('*** Cannot find reference in database to either vendor or license in product ', err);
+                    //console.warn('*** Cannot find reference in database to either vendor or license in product ', err);
                     deferred.resolve(product);
                 });
         })
