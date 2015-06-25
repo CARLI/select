@@ -1,7 +1,10 @@
-var chai   = require( 'chai' )
-  , expect = chai.expect
-  , CARLI  = require( '../../CARLI' )
-;
+var chai   = require( 'chai' );
+var expect = chai.expect;
+
+var testUtils = require('./utils');
+testUtils.setupTestDb();
+
+var CARLI  = require( '../../CARLI' );
 
 describe( 'CARLI', function() {
 

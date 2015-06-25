@@ -2,6 +2,7 @@ var _ = require('lodash')
   , localConfig = require('./local');
 
 var couchDbName = 'carli';
+var storeOptionsForCycles = null;
 
 var defaults = {
     alertTimeout: 10000,
@@ -51,6 +52,12 @@ config.getDbName = function() {
 };
 config.getMiddlewareUrl = function() {
     return config.middleware.url;
+};
+config.setStoreOptionsForCycles = function(storeOptions){
+    storeOptionsForCycles = storeOptions;
+};
+config.getStoreOptionsForCycles = function(){
+    return storeOptionsForCycles;
 };
 
 module.exports = config;
