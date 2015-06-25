@@ -41,7 +41,7 @@ function loadVendor( vendorId ){
                 })
                 .catch(function(err){
                     // WARNING: this suppresses errors for entity references that are not found in the store
-                    console.warn('*** Cannot find reference in database ', err);
+                    //console.warn('*** Cannot find reference in database ', err);
                     deferred.resolve(vendor);
                 });
         })

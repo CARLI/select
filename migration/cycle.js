@@ -1,6 +1,6 @@
 var CycleRepository = require('../CARLI').Cycle;
 var CouchDbStore = require('../CARLI').CouchDbStore;
-var couchUtils = require('../CARLI/Store/CouchDb/Utils');
+var couchUtils = require('../CARLI/Store/CouchDb/Utils')();
 var carliConfig = require('../CARLI').config;
 var StoreOptions = carliConfig.storeOptions;
 var Store = require('../CARLI').Store;

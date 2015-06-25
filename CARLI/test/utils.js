@@ -46,7 +46,8 @@ module.exports = {
     },
     setupTestDb: function () {
         config.setDbName(testDbName);
-        //_createMainTestDb();
+        config.storeOptions = getTestStoreOptions();
+        config.setStoreOptionsForCycles( getTestStoreOptions() );
     },
     deleteTestDbs: function() {
         var deferred = Q.defer();

@@ -9,6 +9,7 @@ module.exports = function () {
     var memoryStore = {};
 
     return {
+        getOptions: noOp,
         getDataFor: getDataFor,
         storeData: storeData,
         listDataFor: listDataFor,
@@ -69,4 +70,6 @@ module.exports = function () {
 
         return deferred.promise;
     }
+
+    function noOp(){}
 };

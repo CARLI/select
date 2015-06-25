@@ -1,10 +1,12 @@
 var chai = require( 'chai' );
 var expect = chai.expect;
-var couchUtils = require('../Store/CouchDb/Utils')();
 var testUtils = require('./utils');
 var Q = require('q');
 var storeOptions = require( '../../config').storeOptions;
 var uuid = require('node-uuid');
+
+var couchUtils = require('../Store/CouchDb/Utils')(testUtils.getTestDbStoreOptions());
+var couchUtilsPlain = require('../Store/CouchDb/Utils')(storeOptions);
 
 describe('Couch utilities', function () {
     describe('makeCouchDbName', function() {
@@ -77,9 +79,11 @@ describe('Couch utilities', function () {
                     });
                 })
                 .then(function(){
-                    return expect( couchUtils.getCouchDocuments(testDbName,testIds)).and.eventually.be.an('array')
-                        .and.have.property('length').equal(testIds.length);
-                });
+                    return couchUtils.getCouchDocuments(testDbName,testIds);
+                })
+                .then(function(results){
+                    return expect(results).to.be.an('array').and.have.property('length',testIds.length);
+                })
         });
     });
 
@@ -89,33 +93,33 @@ describe('Couch utilities', function () {
         var testUrl = storeOptions.couchDbUrl + '/' + testDbName + '/' + '_design/CARLI/_view/' + testViewName;
 
         it('should return the base for the correct database and view if given no additional arguments', function(){
-            expect(couchUtils.couchViewUrl(testDbName, testViewName)).to.equal(testUrl);
+            expect(couchUtilsPlain.couchViewUrl(testDbName, testViewName)).to.equal(testUrl);
         });
 
         it ('should return the base url with a quoted key in the query string if given a key', function() {
             var testKey = 'testKey';
             var urlWithKey = testUrl + '?key=%22' + testKey + '%22';
 
-            expect(couchUtils.couchViewUrl(testDbName, testViewName, testKey)).to.equal(urlWithKey);
+            expect(couchUtilsPlain.couchViewUrl(testDbName, testViewName, testKey)).to.equal(urlWithKey);
         });
 
         it ('should return the base url with an unquoted key in the query string if given an integer key', function() {
             var testKey = 1;
             var urlWithKey = testUrl + '?key='+testKey;
 
-            expect(couchUtils.couchViewUrl(testDbName, testViewName, testKey)).to.equal(urlWithKey);
+            expect(couchUtilsPlain.couchViewUrl(testDbName, testViewName, testKey)).to.equal(urlWithKey);
         });
 
         it ('should return the base url with group=true in the query string if given a truthy group argument', function() {
             var urlWithGroup = testUrl + '?group=true';
-            expect(couchUtils.couchViewUrl(testDbName, testViewName, null, true)).to.equal(urlWithGroup);
+            expect(couchUtilsPlain.couchViewUrl(testDbName, testViewName, null, true)).to.equal(urlWithGroup);
         });
 
         it ('should return the base url with both a quoted key and the group=true in the query string if given both a key and group arguments', function() {
             var testKey = 'testKey';
             var urlWithKeyAndGroup = testUrl + '?key=%22' + testKey + '%22&group=true';
 
-            expect(couchUtils.couchViewUrl(testDbName, testViewName, testKey, true)).to.equal(urlWithKeyAndGroup);
+            expect(couchUtilsPlain.couchViewUrl(testDbName, testViewName, testKey, true)).to.equal(urlWithKeyAndGroup);
         });
 
 

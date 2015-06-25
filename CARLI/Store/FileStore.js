@@ -22,6 +22,7 @@ module.exports = function (options) {
     _ensureStoreDirectoryExists(resourcePath);
 
     return {
+        getOptions: noOp,
         getDataFor: getDataFor,
         storeData: storeData,
         listDataFor: listDataFor,
@@ -99,4 +100,6 @@ module.exports = function (options) {
 
         return deferred.promise;
     }
+
+    function noOp(){}
 };

@@ -26,6 +26,10 @@ function test( storeTypeName, options ) {
             expect(DataStore).to.be.an('object');
         } );
 
+        it( 'should have a getOptions method', function() {
+            expect(DataStore.getOptions).to.be.a('function');
+        } );
+
         it( 'should have a save function', function() {
             expect(DataStore.save).to.be.a('function');
         } );
@@ -220,4 +224,4 @@ function test( storeTypeName, options ) {
 
 module.exports = {
     run: test
-}
+};
