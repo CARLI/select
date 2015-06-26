@@ -9,15 +9,78 @@ CycleRepository.setStore(Store(CouchDbStore(StoreOptions)));
 
 var cyclesToMigrate = [
     {
-        idalId: 200,
-        name: 'Calendar Year 2014',
-        cycleType: 'Calendar Year',
-        year: 2014,
+        id: 'one-time-purchase-products-cycle',
+        idalId: 100,
+        databaseName: 'cycle-one-time-purchase-products',
+        name: 'One Time Purchases',
+        cycleType: 'One-Time Purchase',
+        year: 0,
+        status: 5,
+        isArchived: false
+    },
+    {
+        idalId: 110,
+        name: 'Fiscal Year 2010',
+        cycleType: 'Fiscal Year',
+        year: 2010,
         status: 6,
-        isArchived: true,
-        startDateForSelections: '2013-10-15',
-        endDateForSelections: '2013-11-15',
-        productsAvailableDate: '2014-01-01'
+        isArchived: true
+    },
+    {
+        idalId: 120,
+        name: 'Calendar Year 2010',
+        cycleType: 'Calendar Year',
+        year: 2010,
+        status: 6,
+        isArchived: true
+    },
+    {
+        idalId: 130,
+        name: 'Fiscal Year 2011',
+        cycleType: 'Fiscal Year',
+        year: 2011,
+        status: 6,
+        isArchived: true
+    },
+    {
+        idalId: 140,
+        name: 'Calendar Year 2011',
+        cycleType: 'Calendar Year',
+        year: 2011,
+        status: 6,
+        isArchived: true
+    },
+    {
+        idalId: 150,
+        name: 'Fiscal Year 2012',
+        cycleType: 'Fiscal Year',
+        year: 2012,
+        status: 6,
+        isArchived: true
+    },
+    {
+        idalId: 160,
+        name: 'Calendar Year 2012',
+        cycleType: 'Calendar Year',
+        year: 2012,
+        status: 6,
+        isArchived: true
+    },
+    {
+        idalId: 170,
+        name: 'Fiscal Year 2013',
+        cycleType: 'Fiscal Year',
+        year: 2013,
+        status: 6,
+        isArchived: true
+    },
+    {
+        idalId: 180,
+        name: 'Calendar Year 2013',
+        cycleType: 'Calendar Year',
+        year: 2013,
+        status: 6,
+        isArchived: true
     },
     {
         idalId: 190,
@@ -31,14 +94,15 @@ var cyclesToMigrate = [
         productsAvailableDate: '2014-07-01'
     },
     {
-        id: 'one-time-purchase-products-cycle',
-        idalId: 100,
-        databaseName: 'cycle-one-time-purchase-products',
-        name: 'One Time Purchases',
-        cycleType: 'One-Time Purchase',
-        year: 0,
-        status: 5,
-        isArchived: false
+        idalId: 200,
+        name: 'Calendar Year 2014',
+        cycleType: 'Calendar Year',
+        year: 2014,
+        status: 6,
+        isArchived: true,
+        startDateForSelections: '2013-10-15',
+        endDateForSelections: '2013-11-15',
+        productsAvailableDate: '2014-01-01'
     }
 ];
 
