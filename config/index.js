@@ -57,7 +57,7 @@ config.setStoreOptionsForCycles = function(storeOptions){
     storeOptionsForCycles = storeOptions;
 };
 config.getStoreOptionsForCycles = function(){
-    return storeOptionsForCycles;
+    return storeOptionsForCycles || config.storeOptions;
 };
 
 module.exports = config;
