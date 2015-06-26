@@ -1,5 +1,10 @@
-var _ = require('lodash')
-  , localConfig = require('./local');
+var _ = require('lodash');
+var defaults = require('./defaults');
+var local = require('./local');
+var secure = {};
+var secureConfigPath = null;
+
+concealSecureConfigFromBrowserify();
 
 var couchDbName = 'carli';
 var storeOptionsForCycles = null;
@@ -32,6 +37,24 @@ var defaults = {
 };
 
 var config = _.merge(defaults, localConfig);
+
+function concealSecureConfigFromBrowserify() {
+    if (isSecureEnvironment()) {
+        secureConfigPath = './secure';
+    }
+
+    if (secureConfigPath) {
+        secure = require(secureConfigPath);
+    }
+
+    function isSecureEnvironment() {
+        return !isBrowserEnvironment();
+    }
+
+    function isBrowserEnvironment() {
+        return (typeof window !== 'undefined');
+    }
+}
 
 if (!config.storeOptions.privilegedCouchDbUrl) {
     config.storeOptions.privilegedCouchDbUrl = config.storeOptions.privilegedCouchUrlScheme +
