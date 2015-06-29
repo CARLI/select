@@ -5,7 +5,7 @@
     "port": 3000
   },
   "storeOptions": {
-    "couchDbName": "couchDbName",
+    "couchDbName": "carli",
     "couchDbUrl": "http://localhost:5984"
   },
   "memberDb": {
