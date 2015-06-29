@@ -31,7 +31,6 @@ angular.module('library.app', [
     $locationProvider.html5Mode(true);
 })
 .run(function($rootScope, authService, config) {
-    document.domain = config.cookieDomain;
     $rootScope.appState = 'pendingUser';
 
     if (authService.isRouteProtected()) {

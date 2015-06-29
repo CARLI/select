@@ -57,7 +57,6 @@ function runMiddlewareServer(){
                 .catch(sendError(res));
 
             function clearAuthCookie(authResponse) {
-                res.append('Set-Cookie', 'AuthSession=; Version=1; Expires=-1; Max-Age=-1; Path=/; Domain=' + config.cookieDomain);
                 res.append('Set-Cookie', 'AuthSession=; Version=1; Expires=-1; Max-Age=-1; Path=/');
                 request.clearAuth();
                 return authResponse;
@@ -207,6 +206,7 @@ function runMiddlewareServer(){
                 });
         });
         carliMiddleware.post('/update-su-pricing-for-product/:cycleId/:productId', function (req, res) {
+            // TODO: this is not how the real authentication works
             var authToken = getAuthTokenFromHeader(req);
             if (!authToken) {
                 res.status(401).send('missing authorization cookie');
