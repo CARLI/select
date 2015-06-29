@@ -4,6 +4,7 @@
   "description": "",
   "main": "vendor.js",
   "dependencies": {
+    "couchapp": "^0.11.0",
     "mysql": "~2.1.1"
   },
   "scripts": {
