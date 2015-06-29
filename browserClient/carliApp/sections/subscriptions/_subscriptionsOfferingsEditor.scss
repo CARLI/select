@@ -123,6 +123,15 @@
 
                     &.selected-last-year {
                         text-align: center;
+
+                        .fa-check-circle {
+                            @include font-size(22);
+                            color: $orange;
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                        }
                     }
 
                     &.library-view {
