@@ -45,8 +45,6 @@ module.exports = function (grunt) {
                 throw new Error('Couch container link not found');
             }
 
-            //var password = process.env.CARLI_COUCHDB_ADMIN_PASSWORD || 'relax';
-
             return {
                 privilegedCouchDbUrl: 'http://admin:relax@' + host + ':' + port,
                 couchDbUrl: 'http://' + host + ':' + port,
@@ -113,7 +111,6 @@ module.exports = function (grunt) {
     }
 
     function generateMemberDbConfig(instance) {
-        console.log("PW3 Generating Member DB config", process.env.CARLI_CRM_MYSQL_PASSWORD);
         return {
             connectionLimit: 10,
             host: 'mysql.carli.illinois.edu',
@@ -123,6 +120,7 @@ module.exports = function (grunt) {
         };
     }
 
+    // TODO: get rid of cookie stuff
     function getCookieDomain(instance) {
         //noinspection FunctionWithMultipleReturnPointsJS
         switch (instance) {
