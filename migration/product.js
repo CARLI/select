@@ -1,6 +1,9 @@
 var ProductRepository = require('../CARLI').Product;
 var Q = require('q');
 var util = require('./util');
+var uuid = require('node-uuid');
+
+var couchIdForIdalProduct = {};
 
 function migrateProducts(connection, cycle, vendorIdMapping, productLicenseMapping){
     var resultsPromise = Q.defer();
@@ -70,9 +73,13 @@ function createProduct( productRow, cycle, vendorIdMapping, productLicenseMappin
 }
 
 function extractProduct( row, cycle, vendorIdMapping, productLicenseMapping ){
-    var licenseMappingKey = util.makeUniqueProductIdFromDatabaseRow(row);
+    var legacyId = util.makeUniqueProductIdFromDatabaseRow(row);
+    var licenseMappingKey = legacyId;
+
+    var productCouchId = couchIdForIdalProduct[legacyId] || uuid.v4();
 
     return {
+        id: productCouchId,
         name: row.product_name,
         vendor: vendorIdMapping[row.vendor_id],
         cycle: cycle,
@@ -94,6 +101,73 @@ function extractProduct( row, cycle, vendorIdMapping, productLicenseMapping ){
     };
 }
 
+
+function generateCouchIdsForAllIdalProducts(connection){
+    var vendorIds = [];
+    var productIds = [];
+
+    return getIdalVendorIds(connection)
+        .then(function(vendorIdList){
+            vendorIds = vendorIdList;
+            return getIdalProductsIds(connection);
+        })
+        .then(function(productIdList){
+            productIds = productIdList;
+            return mapCouchIdsToLegacyProductIds();
+        });
+
+    function mapCouchIdsToLegacyProductIds(){
+        var results = {};
+
+        console.log('Generating couch IDs for ' + productIds.length + ' x ' + vendorIds.length + '  vendors');
+
+        vendorIds.forEach(function(vendorId){
+            productIds.forEach(function(productId){
+                var legacyId = util.makeProductLegacyId(vendorId, productId);
+                results[legacyId] = uuid.v4();
+            });
+        });
+
+        couchIdForIdalProduct = results;
+        return results;
+    }
+}
+
+function getIdalVendorIds(connection){
+    var vendorIdsPromise = Q.defer();
+
+    var query = "SELECT id FROM vendor";
+
+    connection.query(query, function(err, rows, fields) {
+        if(err) {
+            console.log('error getting vendor ids from IDAL', err);
+        }
+        vendorIdsPromise.resolve( rows.map(extractId) );
+    });
+
+    return vendorIdsPromise.promise;
+}
+
+function getIdalProductsIds(connection){
+    var productIdsPromise = Q.defer();
+
+    var query = "SELECT id FROM db";
+
+    connection.query(query, function(err, rows, fields) {
+        if(err) {
+            console.log('error getting product ids from IDAL', err);
+        }
+        productIdsPromise.resolve( rows.map(extractId) );
+    });
+
+    return productIdsPromise.promise;
+}
+
+function extractId( object ){
+    return object.id;
+}
+
 module.exports = {
-    migrateProducts: migrateProducts
+    migrateProducts: migrateProducts,
+    generateCouchIdsForAllIdalProducts: generateCouchIdsForAllIdalProducts
 };

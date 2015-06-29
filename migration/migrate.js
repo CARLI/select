@@ -114,9 +114,11 @@ function doMigration(){
         cycleIdMapping = cycleMapping;
         console.log('Migrated ' + Object.keys(cycleMapping).length + ' cycles');
 
-        var cycleCouchIds = listObjectValues(cycleMapping);
-        return Q.all( cycleCouchIds.map(migrateProductsForCycle) );
-
+        return productMigration.generateCouchIdsForAllIdalProducts(connection)
+            .then(function(){
+                var cycleCouchIds = listObjectValues(cycleMapping);
+                return Q.all( cycleCouchIds.map(migrateProductsForCycle) );
+            });
 
         function migrateProductsForCycle(cycleCouchId) {
             return CycleRepository.load(cycleCouchId).then(function (cycle) {
