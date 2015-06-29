@@ -103,16 +103,14 @@ module.exports = function (storeOptions) {
                     deferred.reject(carliError(data, statusCode));
                 }
                 else {
-                    data.authCookie = getCookieWithDomainAdded(response);
+                    data.authCookie = getAuthCookie(response);
                     deferred.resolve(data);
                 }
             }
         }
 
-        function getCookieWithDomainAdded(response) {
-            var cookie = response.headers[ 'set-cookie' ];
-            cookie += '; Domain=' + config.cookieDomain;
-            return cookie;
+        function getAuthCookie(response) {
+            return response.headers[ 'set-cookie' ];
         }
 
         return deferred.promise;

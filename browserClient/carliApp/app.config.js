@@ -25,7 +25,6 @@ angular.module('carli.app', [
     $locationProvider.html5Mode(true);
 })
 .run(function(authService, config) {
-    document.domain = config.cookieDomain;
     if (authService.isRouteProtected()) {
         authService.authenticateForStaffApp();
     }
