@@ -66,7 +66,7 @@ function authService($rootScope, $q, $location, appState, CarliModules) {
     function getCurrentUser() {
         console.log('getting user');
         if (!user) {
-            throw new Error('Asked for user that does not exist yet');
+            throw new Error('No user');
         }
         return user;
     }
