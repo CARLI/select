@@ -446,7 +446,11 @@ function getFlaggedState(offering){
 
         function canEnforcePriceCap() {
             var knowLastYear = (lastYear > 0);
-            return knowLastYear && offering.product.priceCap && offering.history;
+            return knowLastYear &&
+                   offering.product.priceCap &&
+                   offering.history &&
+                   offering.history[lastYear] &&
+                   offering.history[lastYear].pricing;
         }
         function checkSitePriceIncrease() {
             if (offering.pricing.site > priceCapMultiplier * offering.history[lastYear].pricing.site) {
@@ -476,7 +480,10 @@ function getFlaggedState(offering){
 
         function canEnforceDecrease() {
             var knowLastYear = (lastYear > 0);
-            return !!offering.history && knowLastYear;
+            return knowLastYear &&
+                   offering.history &&
+                   offering.history[lastYear] &&
+                   offering.history[lastYear].pricing;
         }
         function checkSitePriceDecrease() {
             if (offering.pricing.site < multiplier * offering.history[lastYear].pricing.site) {
