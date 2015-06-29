@@ -68,10 +68,10 @@ function loadConfiguration() {
 }
 
 config.setDbName = function(name) {
-    couchDbName = name;
+    config.storeOptions.couchDbName = name;
 };
 config.getDbName = function() {
-    return couchDbName;
+    return config.storeOptions.couchDbName;
 };
 config.getMiddlewareUrl = function() {
     return config.middleware.url;
