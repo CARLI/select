@@ -61,6 +61,10 @@ function populateHistoricalPricingForCycle( cycleId ){
                 console.log('  No matching cycles to get history from');
             }
             return Q.all(matchingCycles.map(populatePricingFromCycle));
+        })
+        .then(function(){
+            console.log('Update offerings for '+cycleToCopyPricesInto.name);
+            return offeringRepository.bulkUpdateOfferings(offeringsToCopyPricesInto, cycleToCopyPricesInto);
         });
 
     function loadOfferingsForCycle( cycle ){
