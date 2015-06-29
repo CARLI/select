@@ -46,7 +46,6 @@ function runMiddlewareServer(){
                 .catch(sendError(res));
 
             function copyAuthCookieFromResponse(authResponse) {
-                console.log('setting cookie');
                 res.append('Set-Cookie', authResponse.authCookie);
                 return authResponse;
             }
@@ -58,7 +57,6 @@ function runMiddlewareServer(){
                 .catch(sendError(res));
 
             function clearAuthCookie(authResponse) {
-                console.log('clearing cookie');
                 res.append('Set-Cookie', 'AuthSession=; Version=1; Expires=-1; Max-Age=-1; Path=/; Domain=' + config.cookieDomain);
                 res.append('Set-Cookie', 'AuthSession=; Version=1; Expires=-1; Max-Age=-1; Path=/');
                 request.clearAuth();
@@ -116,7 +114,6 @@ function runMiddlewareServer(){
             cycleCreation.create(req.body.newCycleData)
                 .then(function (newCycleId) {
                     res.send({ id: newCycleId });
-                    console.log('Asking master to launchCycleDatabaseWorker');
                     cluster.worker.send({
                         command: 'launchCycleDatabaseWorker',
                         sourceCycleId: req.body.sourceCycle.id,
@@ -167,7 +164,6 @@ function runMiddlewareServer(){
                 .catch(sendError(res));
         });
         carliMiddleware.get('/sync', function (req, res) {
-            console.log('Asking master to launchSynchronizationWorker');
             cluster.worker.send({
                 command: 'launchSynchronizationWorker'
             });

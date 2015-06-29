@@ -11,7 +11,6 @@ function deleteSession() {
 }
 
 function getSession() {
-    console.log("I am getting the session");
     return couchUtils.couchRequest({ url: config.storeOptions.couchDbUrl + '/_session', method: 'get' }).then(returnUserContext);
 
     function returnUserContext(response) {
