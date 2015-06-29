@@ -12,7 +12,10 @@ function loadConfiguration() {
     var config = {};
 
     concealSecureConfigFromBrowserify();
+
     config = _.merge(defaults, secure, local);
+
+    setMiddlewareUrl();
     setCouchDbUrl();
     setPrivilegedCouchDbUrl();
 
@@ -25,6 +28,13 @@ function loadConfiguration() {
 
         if (secureConfigPath) {
             secure = require(secureConfigPath);
+        }
+    }
+
+    function setMiddlewareUrl() {
+        if (isBrowserEnvironment()) {
+            var l = window.location;
+            config.middleware.url = l.protocol + '//' + l.host + '/api';
         }
     }
 

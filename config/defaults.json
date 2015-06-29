@@ -1,12 +1,12 @@
 {
   "alertTimeout": 10000,
   "middleware": {
-    "url": "http://vendor.carli.local:8080/api",
+    "url": "",
     "port": 3000
   },
   "storeOptions": {
     "couchDbName": "couchDbName",
-    "couchDbUrl": "http://staff.carli.local:8080/db"
+    "couchDbUrl": "http://localhost:5984"
   },
   "memberDb": {
     "connectionLimit": 10,

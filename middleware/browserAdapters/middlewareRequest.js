@@ -14,6 +14,7 @@ module.exports = function middlewareRequest(requestParams) {
         if (!requestParams.headers) {
             requestParams.headers = {};
         }
+        // TODO remove old fake auth stuff
         requestParams.headers['X-AuthToken'] = token;
     }
 
