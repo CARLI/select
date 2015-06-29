@@ -54,13 +54,18 @@ function populateHistoricalPricingForCycle( cycleId ){
         .then(loadOfferingsForCycle)
         .then(listPastCyclesOfSameTypeAsCycle)
         .then(function(matchingCycles){
-            console.log('  Populating history from '+matchingCycles.length+' previous cycle'+(matchingCycles.length > 1 ? 's':''));
+            if ( matchingCycles.length ){
+                console.log('  Populating history from '+matchingCycles.length+' previous cycle'+(matchingCycles.length == 1 ? 's':''));
+            }
+            else {
+                console.log('  No matching cycles to get history from');
+            }
             return Q.all(matchingCycles.map(populatePricingFromCycle));
         });
 
     function loadOfferingsForCycle( cycle ){
         cycleToCopyPricesInto = cycle;
-        console.log('Populate historical pricing for '+cycle.name);
+        console.log('\nPopulate historical pricing for '+cycle.name);
         return offeringRepository.listOfferingsUnexpanded(cycleToCopyPricesInto);
     }
 
@@ -82,10 +87,11 @@ function populateHistoricalPricingForCycle( cycleId ){
     }
 
     function populatePricingFromCycle( historicCycle ){
+        var year = historicCycle.year;
         var dbName = historicCycle.getDatabaseName();
         var url = couchBaseUrl + '/' + dbName + '/' + '_design/Migration/_view/listOfferingsByLibraryAndProduct';
 
-        return putHistoricalPricingDesignDoc(historicCycle.id) //TODO: put migration design doc in main cycle migration
+        return putHistoricalPricingDesignDoc(historicCycle.id) //TODO: put migration design doc in main cycle migration and trigger indexing
             .then(function(){
                 return couchUtils.couchRequest({ url: url })
                     .then(resolveWithRowValues)
@@ -93,26 +99,40 @@ function populateHistoricalPricingForCycle( cycleId ){
                         console.log('error getting historical pricing from ' + historicCycle.name, error);
                     });
             })
-            .then(function(historicalOfferingsResults){
-                console.log('    got '+Object.keys(historicalOfferingsResults).length+' historical offerings for '+historicCycle.name);
-            });
+            .then(copyHistoricalPricingFromOfferings);
+
+        function copyHistoricalPricingFromOfferings(historicalOfferingsResults){
+            var offeringsWithPricingCount = 0;
+            var offeringsWithSelectionsCount = 0;
+
+            offeringsToCopyPricesInto.forEach(copyHistoricalPricingForOffering);
+
+            console.log('    found '+offeringsWithPricingCount+' offerings with pricing, and '+offeringsWithSelectionsCount+' had selections.');
+
+            function copyHistoricalPricingForOffering(offering){
+                var legacyKey = offering.library + ',' + offering.product;
+                var legacyOffering =  historicalOfferingsResults[legacyKey];
 
 
-        function resolveWithRowValues(data) {
-            var resultObject = {};
+                if ( legacyOffering && legacyOffering.pricing ){
+                    var legacyPricing = legacyOffering.pricing || {};
 
-            if (data.rows) {
-                data.rows.forEach(function (row) {
-                    resultObject[row.key] = row.value;
-                });
+                    if ( legacyPricing.site || legacyPricing.su.length ){
+
+                        offering.history = offering.history || {};
+                        offering.history[year] = {
+                            pricing: legacyPricing
+                        };
+                        if (legacyOffering.selection ) {
+                            offering.history[year].selection = legacyOffering.selection;
+                            offeringsWithSelectionsCount++;
+                        }
+
+                        offeringsWithPricingCount++;
+                    }
+                }
             }
-            else {
-                console.log('bad results from historic pricing view: ',data);
-            }
-
-            return resultObject;
         }
-
     }
 }
 
@@ -160,6 +180,21 @@ function checkIfMigrationDesignDocExists(dbName){
 
 function migrationDesignDocUrl(dbName){
     return couchBaseUrl + '/' + dbName + '/' + migrationDesignDoc._id;
+}
+
+function resolveWithRowValues(data) {
+    var resultObject = {};
+
+    if (data.rows) {
+        data.rows.forEach(function (row) {
+            resultObject[row.key] = row.value;
+        });
+    }
+    else {
+        console.log('bad results from historic pricing view: ',data);
+    }
+
+    return resultObject;
 }
 
 
