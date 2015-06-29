@@ -1,0 +1,12 @@
+{
+  "storeOptions": {
+    "privilegedCouchUrlScheme": "http://",
+    "privilegedCouchUsername": "admin",
+    "privilegedCouchPassword": "relax",
+    "privilegedCouchHostname": "localhost:5984"
+  },
+  "memberDb": {
+    "user": "root",
+    "password": ""
+  }
+}

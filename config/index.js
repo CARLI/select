@@ -4,47 +4,58 @@ var local = require('./local');
 var secure = {};
 var secureConfigPath = null;
 
-concealSecureConfigFromBrowserify();
+var config = loadConfiguration();
 
-var couchDbName = 'carli';
 var storeOptionsForCycles = null;
 
-var defaults = {
-    alertTimeout: 10000,
-    cookieDomain: 'carli.local',
-    middleware: {
-        url: 'http://vendor.carli.local:8080/api',
-        port: 3000
-    },
-    storeOptions: {
-        couchDbName: couchDbName,
-        couchDbUrl: 'http://vendor.carli.local:8080/db',
-        privilegedCouchUsername: 'admin',
-        privilegedCouchPassword: 'relax',
-        privilegedCouchUrlScheme: 'http://',
-        privilegedCouchHostname: 'localhost:5984'
-    },
-    memberDb: {
-        connectionLimit: 10,
-        host: 'localhost',
-        user: 'root',
-        password: '',
-        database: 'carli_crm'
-    },
-    oneTimePurchaseProductsCycleDocId: 'one-time-purchase-products-cycle',
-    storePath: 'CouchDb/Store',
-    defaultEntityCacheTimeToLive: -1 // 60 * 1000
-};
+function loadConfiguration() {
+    var config = {};
 
-var config = _.merge(defaults, localConfig);
+    concealSecureConfigFromBrowserify();
+    config = _.merge(defaults, secure, local);
+    setCouchDbUrl();
+    setPrivilegedCouchDbUrl();
 
-function concealSecureConfigFromBrowserify() {
-    if (isSecureEnvironment()) {
-        secureConfigPath = './secure';
+    return config;
+
+    function concealSecureConfigFromBrowserify() {
+        if (isSecureEnvironment()) {
+            secureConfigPath = './secure';
+        }
+
+        if (secureConfigPath) {
+            secure = require(secureConfigPath);
+        }
     }
 
-    if (secureConfigPath) {
-        secure = require(secureConfigPath);
+    function setCouchDbUrl() {
+        if (isBrowserEnvironment()) {
+            setCouchDbUrlForBrowser();
+        } else {
+            setCouchDbUrlForMiddleware();
+        }
+
+        function setCouchDbUrlForBrowser() {
+            var l = window.location;
+            config.storeOptions.couchDbUrl = l.protocol + '//' + l.host + '/db';
+        }
+
+        function setCouchDbUrlForMiddleware() {
+            if (process.env.hasOwnProperty('CARLI_COUCHDB_PORT_5984_TCP_ADDR')) {
+                var host = process.env.CARLI_COUCHDB_PORT_5984_TCP_ADDR;
+                var port = process.env.CARLI_COUCHDB_PORT_5984_TCP_PORT;
+                config.storeOptions.couchDbUrl = 'http://' + host + ':' + port;
+            }
+        }
+    }
+
+    function setPrivilegedCouchDbUrl() {
+        if (isSecureEnvironment() && !config.storeOptions.privilegedCouchDbUrl) {
+            config.storeOptions.privilegedCouchDbUrl = config.storeOptions.privilegedCouchUrlScheme +
+                config.storeOptions.privilegedCouchUsername + ':' +
+                config.storeOptions.privilegedCouchPassword + '@' +
+                config.storeOptions.privilegedCouchHostname;
+        }
     }
 
     function isSecureEnvironment() {
@@ -54,13 +65,6 @@ function concealSecureConfigFromBrowserify() {
     function isBrowserEnvironment() {
         return (typeof window !== 'undefined');
     }
-}
-
-if (!config.storeOptions.privilegedCouchDbUrl) {
-    config.storeOptions.privilegedCouchDbUrl = config.storeOptions.privilegedCouchUrlScheme +
-        config.storeOptions.privilegedCouchUsername + ':' +
-        config.storeOptions.privilegedCouchPassword + '@' +
-        config.storeOptions.privilegedCouchHostname;
 }
 
 config.setDbName = function(name) {
