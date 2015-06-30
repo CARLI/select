@@ -95,7 +95,7 @@ function loginController ($q, $rootScope, $location, alertService, authService, 
         }
 
         function loginFailure(err) {
-            alertService.putAlert("Email or password is incorrect", { severity: err });
+            alertService.putAlert("Email or password is incorrect", { severity: 'danger' });
         }
     }
 
