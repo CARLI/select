@@ -203,3 +203,8 @@ section.content {
     text-align: center;
     margin-top: 1rem;
 }
+
+.modal-dialog {
+  overflow-y: scroll;
+  max-height: 95%;
+}

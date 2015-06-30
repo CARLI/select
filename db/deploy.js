@@ -175,10 +175,14 @@ function deployLocalAppDesignDoc() {
 
 function deployAppDesignDoc(instance) {
     return couchApp.putDesignDoc(instance.mainDbName, 'CARLI')
-        .then(deployDesignDocToUsers);
+        .then(deployDesignDocToUsers)
+        .then(deployDesignDocToResetRequest);
 
     function deployDesignDocToUsers() {
         return couchApp.putDesignDoc('_users', 'Users');
+    }
+    function deployDesignDocToResetRequest() {
+        return couchApp.putDesignDoc('user-reset-requests', 'UserResetRequest');
     }
 }
 
