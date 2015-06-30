@@ -50,7 +50,7 @@
 {{#if columns.selected_last_year }}
 <div role="gridcell" aria-describedby="selected-last-year-column-header" class="column selected-last-year">
     {{#if selectedLastYear}}
-    <span class="fa fa-star"></span>
+    <span class="fa fa-check-circle"></span>
     {{/if}}
 </div>
 {{/if}}
@@ -64,7 +64,7 @@
                     <strong>{{ lastYear }}</strong> Price
                 </div>
                 <div class="row">
-                    {{ currency offering.pricingLastYear.site }}
+                    {{ currency pricingLastYear.site }}
                 </div>
             </div>
             <div class="column">
@@ -89,7 +89,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {{#each offering.pricingLastYear.su }}
+                            {{#each pricingLastYear.su }}
                             <tr>
                                 <td>{{ currency price }}</td>
                                 <td>{{ users }}</td>

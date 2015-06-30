@@ -27,7 +27,18 @@ module.exports = function (storeOptions) {
                 deferred.reject(carliError(error, statusCode));
             }
             else {
-                data = (typeof body === 'string') ? JSON.parse(body) : body;
+                if ( typeof body === 'string' ){
+                    try {
+                        data = JSON.parse(body);
+                    }
+                    catch ( parseError ){
+                        console.log('Error parsing response from '+requestOptions.url);
+                        data = { error: 'error parsing '+body };
+                    }
+                }
+                else {
+                    data = body;
+                }
 
                 if (data && data.error) {
                     deferred.reject(carliError(data, statusCode));
