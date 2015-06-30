@@ -6,7 +6,7 @@ var cycleRepositoryForVendor = require('../CARLI/Entity/CycleRepositoryForVendor
 var vendorRepository = require('../CARLI/Entity/VendorRepository');
 var vendorStatusRepository = require('../CARLI/Entity/VendorStatusRepository');
 
-function createVendorDatabases(cycleId) {
+function createAndSyncVendorDatabases(cycleId) {
 
     return cycleRepository.load(cycleId)
         .then(function(cycle){
@@ -70,6 +70,6 @@ function createVendorStatusesForAllCycles(){
 }
 
 module.exports = {
-    createVendorDatabases: createVendorDatabases,
+    createAndSyncVendorDatabases: createAndSyncVendorDatabases,
     createVendorStatusesForAllCycles: createVendorStatusesForAllCycles
 };

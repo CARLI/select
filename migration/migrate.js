@@ -187,7 +187,7 @@ function doMigration(){
     function createVendorDatabases() {
         var cycleCouchIds = listObjectValues(cycleIdMapping);
 
-        return cycleCouchIds.map(vendorDatabases.createVendorDatabases);
+        return cycleCouchIds.map(vendorDatabases.createAndSyncVendorDatabases);
     }
 
     function finishMigration( offeringsResults ){
