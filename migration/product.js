@@ -25,7 +25,7 @@ function migrateProducts(connection, cycle, vendorIdMapping, productLicenseMappi
         "ORDER BY vendor_name, product_name";
 
     connection.query(query, function(err, rows, fields) {
-        console.log('  Migrating products for cycle "' + cycle.name + '" - got ' + rows.length + ' products');
+        console.log('  Migrating products for ' + cycle.name + ': ' + rows.length + ' products');
         if(err) { console.log(err); }
 
         extractProducts(rows, cycle, vendorIdMapping, productLicenseMapping).then(function(idMap){
