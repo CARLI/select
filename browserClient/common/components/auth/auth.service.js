@@ -59,6 +59,8 @@ function authService($rootScope, $q, $location, appState, CarliModules) {
     }
 
     function deleteSession() {
+        session = null;
+        user = null;
         return $q.when(CarliModules.AuthMiddleware.deleteSession()).then(redirectToLogin);
 
     }
@@ -90,7 +92,6 @@ function authService($rootScope, $q, $location, appState, CarliModules) {
 
         function saveUserReference(foundUser) {
             user = foundUser;
-            console.log('Setting user', user);
             appState.setUser(user);
             return foundUser;
         }

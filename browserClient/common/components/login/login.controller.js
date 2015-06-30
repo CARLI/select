@@ -1,7 +1,7 @@
 angular.module('common.login')
     .controller('loginController', loginController);
 
-function loginController ($rootScope, $location, alertService, authService, userService) {
+function loginController ($q, $rootScope, $location, alertService, authService, userService) {
     var vm = this;
 
     vm.userLogin = {};
@@ -41,8 +41,57 @@ function loginController ($rootScope, $location, alertService, authService, user
             .then(loginSuccess)
             .catch(loginFailure);
 
-        function loginSuccess() {
-            authService.authenticateForVendorApp().then(redirectIfLoggedIn);
+        function loginSuccess(userContext) {
+            var userType = getUserType();
+            var appType = getAppType();
+
+            ensureUserIsLoggingIntoTheAppropriateApp()
+                .then(authenticateForTheAppropriateApp)
+                ; // .catch(redirectUserToTheCorrectApp);
+
+            function ensureUserIsLoggingIntoTheAppropriateApp() {
+                if (userType !== appType) {
+                    throw new Error('User role mismatch');
+                }
+                return $q.when(true);
+            }
+
+            function authenticateForTheAppropriateApp() {
+                var authMethodName = 'authenticateFor' + capitalizeFirstLetter(userType) + 'App';
+                authService[authMethodName]().then(redirectIfLoggedIn);
+            }
+            function redirectUserToTheCorrectApp() {
+                // TODO: need to have the 3 app URL's in the config to do this.
+                // For now, this will just be treated like an invalid username/password.
+            }
+
+            function getUserType() {
+                //noinspection IfStatementWithTooManyBranchesJS
+                if (userContext.roles.indexOf('vendor') >= 0) {
+                    return 'vendor';
+                } else if (userContext.roles.indexOf('library') >= 0) {
+                    return 'library';
+                } else if (userContext.roles.indexOf('staff') >= 0) {
+                    return 'staff';
+                } else {
+                    throw new Error('Invalid user');
+                }
+            }
+
+            function getAppType() {
+                // TODO: add the 3 app urls to the config, and check that instead of this hack.
+                if (window.location.hostname.indexOf('vendor') >= 0) {
+                    return 'vendor';
+                } else if (window.location.hostname.indexOf('library') >= 0) {
+                    return 'library';
+                } else {
+                    return 'staff';
+                }
+            }
+
+            function capitalizeFirstLetter(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            }
         }
 
         function loginFailure(err) {
@@ -56,13 +105,11 @@ function loginController ($rootScope, $location, alertService, authService, user
             .catch(swallowAuthError);
 
         function swallowAuthError(err) {
-            console.log('ignoring error', err);
             return true;
         }
     }
 
     function redirectAfterLogin() {
-        console.log('redirecting');
         var returnTo = getReturnTo() || '/dashboard';
         $location.url(returnTo);
     }
