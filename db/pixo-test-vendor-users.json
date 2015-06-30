@@ -1,0 +1,72 @@
+[
+  {
+    "_id": "org.couchdb.user:bryan.vendor@pixotech.com",
+    "id": "org.couchdb.user:bryan.vendor@pixotech.com",
+    "name": "bryan.vendor@pixotech.com",
+    "email": "bryan.vendor@pixotech.com",
+    "fullName": "Bryan",
+    "roles": [ "vendor" ],
+    "type": "user",
+    "isActive": true
+  },
+  {
+    "_id": "org.couchdb.user:cate.vendor@pixotech.com",
+    "id": "org.couchdb.user:cate.vendor@pixotech.com",
+    "name": "cate.vendor@pixotech.com",
+    "email": "cate.vendor@pixotech.com",
+    "fullName": "Cate",
+    "roles": [ "vendor" ],
+    "type": "user",
+    "isActive": true
+  },
+  {
+    "_id": "org.couchdb.user:clay.vendor@pixotech.com",
+    "id": "org.couchdb.user:clay.vendor@pixotech.com",
+    "name": "clay.vendor@pixotech.com",
+    "email": "clay.vendor@pixotech.com",
+    "fullName": "Clay",
+    "roles": [ "vendor" ],
+    "type": "user",
+    "isActive": true
+  },
+  {
+    "_id": "org.couchdb.user:jessica.vendor@pixotech.com",
+    "id": "org.couchdb.user:jessica.vendor@pixotech.com",
+    "name": "jessica.vendor@pixotech.com",
+    "email": "jessica.vendor@pixotech.com",
+    "fullName": "Jessica",
+    "roles": [ "vendor" ],
+    "type": "user",
+    "isActive": true
+  },
+  {
+    "_id": "org.couchdb.user:marty.vendor@pixotech.com",
+    "id": "org.couchdb.user:marty.vendor@pixotech.com",
+    "name": "marty.vendor@pixotech.com",
+    "email": "marty.vendor@pixotech.com",
+    "fullName": "Marty",
+    "roles": [ "vendor" ],
+    "type": "user",
+    "isActive": true
+  },
+  {
+    "_id": "org.couchdb.user:tyla.vendor@pixotech.com",
+    "id": "org.couchdb.user:tyla.vendor@pixotech.com",
+    "name": "tyla.vendor@pixotech.com",
+    "email": "tyla.vendor@pixotech.com",
+    "fullName": "Tyla",
+    "roles": [ "vendor" ],
+    "type": "user",
+    "isActive": true
+  },
+  {
+    "_id": "org.couchdb.user:tyler.vendor@pixotech.com",
+    "id": "org.couchdb.user:tyler.vendor@pixotech.com",
+    "name": "tyler.vendor@pixotech.com",
+    "email": "tyler.vendor@pixotech.com",
+    "fullName": "Tyler",
+    "roles": [ "vendor" ],
+    "type": "user",
+    "isActive": true
+  }
+]
