@@ -38,7 +38,11 @@ function cycleChooserController($scope, cycleService, userService, vendorStatusS
         
         return vendorStatusService.getStatusForVendor( vm.vendor.id, cycle )
             .then(function(vendorStatus){
-                var isAllowedIn = !vendorStatus.isClosed;
+                var isAllowedIn = true;
+
+                if ( vendorStatus && vendorStatus.isClosed ){
+                    isAllowedIn = false;
+                }
 
                 if ( isAllowedIn ){
                     return readySelectedCycle(cycle);
