@@ -34,7 +34,7 @@ angular.module('library.app', [
     $rootScope.appState = 'pendingUser';
 
     if (authService.isRouteProtected()) {
-        authService.authenticateForLibraryApp();
+        authService.redirectToLogin();
     }
 })
 .value('cgBusyDefaults',{

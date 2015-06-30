@@ -30,7 +30,7 @@ angular.module('vendor.app', [
     $rootScope.appState = 'pendingUser';
 
     if (authService.isRouteProtected()) {
-        authService.authenticateForVendorApp();
+        authService.redirectToLogin();
     }
 })
 .value('cgBusyDefaults',{

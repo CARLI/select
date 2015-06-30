@@ -26,7 +26,7 @@ angular.module('carli.app', [
 })
 .run(function(authService, config) {
     if (authService.isRouteProtected()) {
-        authService.authenticateForStaffApp();
+        authService.redirectToLogin();
     }
 })
 .run(function($rootScope, cycleService){
