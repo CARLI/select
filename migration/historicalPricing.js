@@ -95,7 +95,7 @@ function populateHistoricalPricingForCycle( cycleId ){
         var dbName = historicCycle.getDatabaseName();
         var url = couchBaseUrl + '/' + dbName + '/' + '_design/Migration/_view/listOfferingsByLibraryAndProduct';
 
-        return putHistoricalPricingDesignDoc(historicCycle.id) //TODO: put migration design doc in main cycle migration and trigger indexing
+        return putHistoricalPricingDesignDoc(historicCycle.id)
             .then(function(){
                 return couchUtils.couchRequest({ url: url })
                     .then(resolveWithRowValues)
@@ -142,10 +142,7 @@ function populateHistoricalPricingForCycle( cycleId ){
 
 function putMigrationDesignDoc(dbName){
     var putDocPromise = Q.defer();
-
     var url = migrationDesignDocUrl(dbName);
-
-    console.log('Put migration design doc: '+url);
 
     couchApp.createApp(migrationDesignDoc, url, function(app) {
         app.push(function() {

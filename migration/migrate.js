@@ -7,7 +7,7 @@ var mysql = require('mysql');
 var carliConfig = require('../config');
 carliConfig.storeOptions.couchDbUrl = carliConfig.storeOptions.privilegedCouchDbUrl;
 
-var CycleRepository = require('../CARLI').Cycle;
+var cycleRepository = require('../CARLI').Cycle;
 var migrationConfig = require('./config');
 var notificationTemplates = require('./notificationTemplates');
 var vendorDatabases = require('./vendorDatabases');
@@ -15,6 +15,7 @@ var vendorDatabases = require('./vendorDatabases');
 var cycleMigration = require('./cycle');
 var libraryMigration = require('./library');
 var licenseMigration = require('./license');
+var historicalPricingMigration = require('./historicalPricing');
 var offeringMigration = require('./offering');
 var productMigration = require('./product');
 var selectionMigration = require('./selection');
@@ -28,7 +29,7 @@ var vendorMigration = require('./vendor');
 //function getPrivilegedStore() {
 //    return Store( StoreModule(storeOptions) );
 //}
-//CycleRepository.setStore( getPrivilegedStore() );
+//cycleRepository.setStore( getPrivilegedStore() );
 
 doMigration();
 
@@ -56,11 +57,12 @@ function doMigration(){
         .then(migrateProducts)
         .then(gatherSelections)
         .then(migrateOfferings)
+        .then(prepareForHistoricalPricingMigration)
         .then(makeVendorStatuses)
         .then(createVendorDatabases)
-        .then(finishMigration)
         .then(closeIdalConnection)
         .then(closeCrmConnection)
+        .then(finishMigration)
         .done();
 
     function createNotificationTemplates(){
@@ -137,7 +139,7 @@ function doMigration(){
             });
 
         function migrateProductsForCycle(cycleCouchId) {
-            return CycleRepository.load(cycleCouchId).then(function (cycle) {
+            return cycleRepository.load(cycleCouchId).then(function (cycle) {
                 return productMigration.migrateProducts(connection, cycle, vendorIdMapping, productLicenseMapping).then(function(mapping) {
                     productMappingsByCycle[cycleCouchId] = mapping;
                     return mapping;
@@ -151,7 +153,7 @@ function doMigration(){
         return Q.all( cycleCouchIds.map(gatherSelectionsForCycle) );
 
         function gatherSelectionsForCycle(cycleCouchId) {
-            return CycleRepository.load(cycleCouchId).then(function (cycle) {
+            return cycleRepository.load(cycleCouchId).then(function (cycle) {
                 return selectionMigration.gatherSelections(connection, cycle, productMappingsByCycle[cycleCouchId])
                     .then(function (selections) {
                         selectionsByCycle[cycleCouchId] = selections;
@@ -188,9 +190,14 @@ function doMigration(){
     }
 
     function migrateOfferingsForCycle(cycleId){
-        return CycleRepository.load(cycleId).then(function (cycle) {
+        return cycleRepository.load(cycleId).then(function (cycle) {
             return offeringMigration.migrateOfferings(connection, cycle, libraryIdMapping, productMappingsByCycle[cycleId], selectionsByCycle[cycleId]);
         });
+    }
+
+    function prepareForHistoricalPricingMigration(){
+        var cycleCouchIds = listObjectValues(cycleIdMapping);
+        return Q.all(cycleCouchIds.map(historicalPricingMigration.putHistoricalPricingDesignDoc));
     }
 
     function makeVendorStatuses(){
@@ -205,6 +212,7 @@ function doMigration(){
 
     function finishMigration(){
         console.log('Done with Migration');
+        console.log('Please run `migrateHistoricalPricing.js` when everything finishes indexing.');
     }
 
     function closeIdalConnection() {
