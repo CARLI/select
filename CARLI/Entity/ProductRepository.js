@@ -125,6 +125,27 @@ function getProductsById( ids, cycle ){
     return couchUtils.getCouchDocuments(cycle.getDatabaseName(), ids);
 }
 
+function getProductSelectionStatisticsForCycle( productId, cycle ){
+    if ( !productId ){
+        return Q.reject('getProductSelectionStatisticsForCycle: product Id required');
+    }
+
+    if ( !cycle || !cycle.getDatabaseName ){
+        return Q.reject('getProductSelectionStatisticsForCycle: fully expanded cycle required');
+    }
+
+    return couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listOfferingsForProductId', productId)
+        .then(function(offerings){
+            return {
+                numberOffered: offerings.length,
+                numberSelected: offerings.filter(selected).length
+            };
+        });
+
+    function selected(offering){
+        return offering.selection;
+    }
+}
 
 /* functions that get added as instance methods on loaded Products */
 var getIsActive = function(){
@@ -173,5 +194,6 @@ module.exports = {
     listProductCountsByVendorId: listProductCountsByVendorId,
     getProductsById: getProductsById,
     getProductDetailCodeOptions: getProductDetailCodeOptions,
-    isProductActive: isProductActive
+    isProductActive: isProductActive,
+    getProductSelectionStatisticsForCycle: getProductSelectionStatisticsForCycle
 };

@@ -9,6 +9,7 @@ var chai   = require( 'chai' )
     , ProductRepository = require('../Entity/ProductRepository' )
     , VendorRepository = require('../Entity/VendorRepository' )
     , LicenseRepository = require('../Entity/LicenseRepository' )
+    , OfferingRepository = require('../Entity/OfferingRepository' )
     , testUtils = require('./utils')
     , _ = require('lodash')
     , Q = require('q')
@@ -583,5 +584,55 @@ function runOneTimePurchaseProductTests(testCycle) {
         it('should be a function', function(){
             expect(ProductRepository.getProductsById).to.be.a('function');
         })
+    });
+
+    describe('getProductSelectionStatisticsForCycle', function(){
+        it('should be a function', function(){
+            expect(ProductRepository.getProductSelectionStatisticsForCycle).to.be.a('function');
+        });
+
+        it('should return an object with offering and selection counts', function(){
+            var testProductId = uuid.v4();
+
+            return setupTestData()
+                .then(function(){
+                    return ProductRepository.getProductSelectionStatisticsForCycle(testProductId, testCycle);
+                })
+                .then(function(productStats){
+                    return Q.all([
+                        expect(productStats).to.be.an('object'),
+                        expect(productStats).to.have.property('numberOffered', 3),
+                        expect(productStats).to.have.property('numberSelected', 1)
+                    ]);
+                });
+
+            function setupTestData(){
+                return Q.all([
+                    createEmptyTestOffering(),
+                    createEmptyTestOffering(),
+                    createTestOfferingWithSelection()
+                ]);
+
+                function createEmptyTestOffering(){
+                    return OfferingRepository.create({
+                        cycle: testCycle,
+                        library: uuid.v4(),
+                        product: testProductId
+                    }, testCycle);
+                }
+
+                function createTestOfferingWithSelection(){
+                    return OfferingRepository.create({
+                        cycle: testCycle,
+                        library: uuid.v4(),
+                        product: testProductId,
+                        selection: {
+                            users: 'Site License',
+                            price: 1
+                        }
+                    }, testCycle);
+                }
+            }
+        });
     });
 }

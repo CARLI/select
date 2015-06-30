@@ -99,6 +99,24 @@ function listActiveCycles() {
     return expandCycles( couchUtils.getCouchViewResultValues(config.getDbName(), 'listActiveCycles') );
 }
 
+function listPastFourCyclesMatchingCycle( cycle ){
+    return listCycles()
+        .then(filterPreviousCyclesMatchingType);
+
+    function filterPreviousCyclesMatchingType( cycleList ){
+        var pastCyclesOfType = cycleList.filter(function(cycleToFilter){
+            return cycleToFilter.cycleType === cycle.cycleType && cycleToFilter.year < cycle.year;
+        });
+
+        if ( pastCyclesOfType.length > 4 ){
+            return pastCyclesOfType.slice(0,4);
+        }
+        else {
+            return pastCyclesOfType;
+        }
+    }
+}
+
 /* functions that get added as instance methods on loaded Cycles */
 
 var functionsToAdd = {
@@ -162,5 +180,6 @@ module.exports = {
     listActiveCycles: listActiveCycles,
     isOpenToLibraries: isOpenToLibraries,
     isClosed: isClosed,
-    productsAreAvailable: productsAreAvailable
+    productsAreAvailable: productsAreAvailable,
+    listPastFourCyclesMatchingCycle: listPastFourCyclesMatchingCycle
 };

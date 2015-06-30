@@ -5,6 +5,7 @@ var test = require( './Entity/EntityInterface.spec' )
     , chaiAsPromised = require( 'chai-as-promised' )
     , CycleRepository = require( '../Entity/CycleRepository' )
     , CycleMiddleware = require('../../middleware/components/cycleCreation')
+    , Entity = require('../Entity')
     , ProductRepository = require( '../Entity/ProductRepository' )
     , config = require('../../config')
     , request = require('request')
@@ -90,6 +91,63 @@ describe('Additional Repository Functions', function() {
          return expect(cycleList).to.be.an('array').and.have.length(2);
          });
          */
+    });
+
+    describe('listPastFourCyclesMatchingCycle', function() {
+        it('should be a function', function(){
+            expect(CycleRepository.listPastFourCyclesMatchingCycle).to.be.a('function');
+        });
+
+        it('should return up to four past cycles that match the type of the cycle passed in', function(){
+            var testCycleType = 'Alternative Cycle';
+            var testYear = 2004;
+
+            var pastCycles = [
+                makeCycle(testCycleType, testYear - 5),
+                makeCycle(testCycleType, testYear - 4),
+                makeCycle(testCycleType, testYear - 3),
+                makeCycle(testCycleType, testYear - 2),
+                makeCycle(testCycleType, testYear - 1)
+            ];
+            var testCycle = makeCycle(testCycleType, testYear);
+
+            return setupTestData(pastCycles)
+                .then(function(){
+                    return CycleRepository.listPastFourCyclesMatchingCycle(testCycle);
+                })
+                .then(function(listResults){
+                    return Q.all([
+                        expect(listResults.length).to.equal(4),
+                        expect(listResults).to.satisfy(allCyclesHaveCorrectTypeAndYear)
+                    ]);
+                });
+
+            function allCyclesHaveCorrectTypeAndYear(cycleList){
+                return cycleList.every(cycleHasCorrectType) && cycleList.every(cycleHasCorrectYear);
+
+                function cycleHasCorrectYear(cycle){
+                    return cycle.year < testYear ;
+                }
+
+                function cycleHasCorrectType(cycle){
+                    return cycle.cycleType === testCycleType;
+                }
+            }
+        });
+
+        function makeCycle(type, year){
+            var cycle = validCycleData();
+            cycle.cycleType = type;
+            cycle.year = year;
+            cycle.name = 'Test Cycle for Past Cycle Matching Basic ' + uuid.v4();
+            return cycle;
+        }
+
+        function setupTestData(testCycles){
+            var cycleEntityRepo = Entity('Cycle');
+            cycleEntityRepo.setStore(testUtils.getTestDbStore());
+            return Q.all( testCycles.map(cycleEntityRepo.create));
+        }
     });
 });
 

@@ -48,7 +48,10 @@ function cycleService( CarliModules, $q, errorHandler ) {
         },
         syncDataToVendorDatabase: syncDataToVendorDatabase,
         syncDataToAllVendorDatabases: syncDataToAllVendorDatabases,
-        syncDataToAllVendorDatabasesForCycle: syncDataToAllVendorDatabasesForCycle
+        syncDataToAllVendorDatabasesForCycle: syncDataToAllVendorDatabasesForCycle,
+        listPastFourCyclesMatchingCycle: function( cycle ){
+            return $q.when( cycleModule.listPastFourCyclesMatchingCycle(cycle || currentCycle) );
+        }
     };
 
     function fixCycleName(newCycle) {
