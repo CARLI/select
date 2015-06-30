@@ -267,7 +267,7 @@ function setSuPricingForAllLibrariesForProduct( productId, newSuPricing, cycle )
     }
 }
 
-function updateSuPricingForAllLibrariesForProduct( productId, newSuPricing, cycle ){
+function updateSuPricingForAllLibrariesForProduct( vendorId, productId, newSuPricing, cycle ){
     return setSuPricingForAllLibrariesForProduct( productId, newSuPricing, cycle )
         .then(function( offerings ){
             return couchUtils.bulkUpdateDocuments(cycle.getDatabaseName(), offerings);
