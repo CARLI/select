@@ -61,12 +61,12 @@ function authService($rootScope, $q, $location, appState, CarliModules) {
     function deleteSession() {
         session = null;
         user = null;
+        $rootScope.isLoggedIn = false;
         return $q.when(CarliModules.AuthMiddleware.deleteSession()).then(redirectToLogin);
 
     }
 
     function getCurrentUser() {
-        console.log('getting user');
         if (!user) {
             throw new Error('No user');
         }
@@ -145,6 +145,7 @@ function authService($rootScope, $q, $location, appState, CarliModules) {
 
     function redirectToLogin(passthrough) {
         $rootScope.isLoggedIn = false;
+        $rootScope.returnTo = $location.url();
         $location.url('/login');
         return passthrough;
     }

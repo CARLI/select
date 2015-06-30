@@ -95,17 +95,7 @@ function runMiddlewareServer(){
                 .catch(send500Error(res));
         });
         carliMiddleware.get('/products-with-offerings-for-vendor/:vendorId/for-cycle/:cycleId', function (req, res) {
-            var authToken = getAuthTokenFromHeader(req);
-            if (!authToken) {
-                res.status(401).send('missing authorization cookie');
-                return;
-            }
-            if (!authToken.vendorId) {
-                res.status(400).send('invalid auth token');
-                return;
-            }
-            var vendorId = authToken.vendorId;
-            vendorSpecificProductQueries.listProductsWithOfferingsForVendorId(vendorId, req.params.cycleId)
+            vendorSpecificProductQueries.listProductsWithOfferingsForVendorId(req.params.vendorId, req.params.cycleId)
                 .then(sendResult(res))
                 .catch(sendError(res));
         });
@@ -205,26 +195,14 @@ function runMiddlewareServer(){
                     res.send({ error: err });
                 });
         });
-        carliMiddleware.post('/update-su-pricing-for-product/:cycleId/:productId', function (req, res) {
-            // TODO: this is not how the real authentication works
-            var authToken = getAuthTokenFromHeader(req);
-            if (!authToken) {
-                res.status(401).send('missing authorization cookie');
-                return;
-            }
-            if (!authToken.vendorId) {
-                res.status(400).send('invalid auth token');
-                return;
-            }
-            var vendorId = authToken.vendorId;
+        carliMiddleware.post('/update-su-pricing-for-product/:vendorId/:cycleId/:productId', function (req, res) {
 
-            var newSuPricing = {};
             if ( !req.body || !req.body.newSuPricing ){
                 res.status(400).send('missing pricing data');
                 return;
             }
 
-            vendorSpecificProductQueries.updateSuPricingForProduct(req.params.productId, vendorId, req.body.newSuPricing, req.params.cycleId)
+            vendorSpecificProductQueries.updateSuPricingForProduct(req.params.vendorId, req.params.productId, req.body.newSuPricing, req.params.cycleId)
                 .then(sendResult(res))
                 .catch(sendError(res));
 

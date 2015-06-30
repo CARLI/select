@@ -123,7 +123,9 @@ function loginController ($q, $rootScope, $location, alertService, authService, 
         }
 
         function rootScopeReturnTo() {
-            return $rootScope.returnTo;
+            var returnTo = $rootScope.returnTo;
+            $rootScope.returnTo = null;
+            return returnTo;
         }
     }
 

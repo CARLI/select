@@ -52,8 +52,8 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
         createOfferingsFor: function createOfferingsFor( product, libraryIds ){
             return $q.when( offeringModule.createOfferingsFor( product.id, product.vendor.id, libraryIds, cycleService.getCurrentCycle()) );
         },
-        updateSuPricingForAllLibrariesForProduct: function updateSuPricingForAllLibrariesForProduct( productId, newSuPricing ){
-            return $q.when( productMiddleware.updateSuPricingForProduct(productId, newSuPricing, cycleService.getCurrentCycle()) );
+        updateSuPricingForAllLibrariesForProduct: function updateSuPricingForAllLibrariesForProduct( vendorId, productId, newSuPricing ){
+            return $q.when( productMiddleware.updateSuPricingForProduct(vendorId, productId, newSuPricing, cycleService.getCurrentCycle()) );
         },
         getOfferingDisplayOptions: function() {
             var values = offeringModule.getOfferingDisplayOptions();

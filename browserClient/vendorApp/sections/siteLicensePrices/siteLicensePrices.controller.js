@@ -1,7 +1,7 @@
 angular.module('vendor.sections.siteLicensePrices')
     .controller('siteLicensePricesController', siteLicensePricesController);
 
-function siteLicensePricesController($scope, $q, $filter, cycleService, libraryService, offeringService, productService, userService, siteLicensePricesCsv, vendorStatusService){
+function siteLicensePricesController($scope, $q, $filter, authService, cycleService, libraryService, offeringService, productService, siteLicensePricesCsv, vendorStatusService){
     var vm = this;
 
     vm.loadingPromise = null;
@@ -19,7 +19,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     activate();
 
     function activate() {
-        vm.vendorId = userService.getUser().vendor.id;
+        vm.vendorId = authService.getCurrentUser().vendor.id;
 
         vm.viewOptions = {
             size: true,
@@ -46,7 +46,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
     }
 
     function loadProducts() {
-        return productService.listProductsWithOfferingsForVendorId( userService.getUser().vendor.id ).then(function (products) {
+        return productService.listProductsWithOfferingsForVendorId( authService.getCurrentUser().vendor.id ).then(function (products) {
             vm.products = $filter('orderBy')(products, 'name');
             initializeSelectedProductIds();
         });
@@ -323,7 +323,7 @@ function siteLicensePricesController($scope, $q, $filter, cycleService, libraryS
         }
 
         function makeFilename() {
-            var vendorName = userService.getUser().vendor.name;
+            var vendorName = authService.getCurrentUser().vendor.name;
             var cycleName = cycleService.getCurrentCycle().name;
             return vendorName + ' ' + cycleName + ' Site License Prices.csv';
         }

@@ -26,7 +26,6 @@ function transformFunction( user ){
 }
 
 function createUser( user ){
-    console.log('Creating user', user);
     if (user) {
         user.id = 'org.couchdb.user:' + user.email;
         user.name = user.email;

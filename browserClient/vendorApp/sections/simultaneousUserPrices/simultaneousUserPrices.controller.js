@@ -1,7 +1,7 @@
 angular.module('vendor.sections.simultaneousUserPrices')
     .controller('simultaneousUserPricesController', simultaneousUserPricesController);
 
-function simultaneousUserPricesController($scope, $q, $filter, cycleService, offeringService, productService, userService, vendorStatusService){
+function simultaneousUserPricesController($scope, $q, $filter, authService, cycleService, offeringService, productService, vendorStatusService){
     var vm = this;
     vm.changedProductIds = {};
     vm.loadingPromise = null;
@@ -23,7 +23,7 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
     activate();
 
     function activate() {
-        vm.vendorId = userService.getUser().vendor.id;
+        vm.vendorId = authService.getCurrentUser().vendor.id;
 
         vm.loadingPromise = loadProducts()
             .then(getSuPricingForAllProducts)
@@ -315,7 +315,7 @@ function simultaneousUserPricesController($scope, $q, $filter, cycleService, off
 
         function updateOfferingsForAllLibrariesForProduct( productId ){
             var newSuPricing = newSuPricingByProduct[productId];
-            return offeringService.updateSuPricingForAllLibrariesForProduct(productId, newSuPricing );
+            return offeringService.updateSuPricingForAllLibrariesForProduct(vm.vendorId, productId, newSuPricing );
         }
 
         function updateVendorStatus(){
