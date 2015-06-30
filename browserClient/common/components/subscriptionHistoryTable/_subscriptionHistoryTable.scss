@@ -1,0 +1,60 @@
+subscription-history-table {
+    display: block;
+
+    .headers {
+        @include flexbox;
+
+        .h2 {
+            @include flex(1 1 50%);
+        }
+    }
+
+    ul {
+        border: $default-border;
+        list-style: none;
+        padding: 0;
+
+        li {
+            border-top: $default-border;
+            @include flexbox;
+            margin: 0;
+            padding: 0;
+
+            &:first-child {
+                border-top: none;
+            }
+
+            .cell {
+                @include flex(1 1 50%);
+                padding: 1rem;
+
+                &:first-child {
+                    border-right: $default-border;
+                }
+
+                .year {
+                    font-weight: bold;
+                }
+            }
+
+            &.current {
+                .subscribers {
+                    font-weight: bold;
+
+                    &:after {
+                        content: "Current";
+                        color: $black;
+                        font-style: italic;
+                        font-weight: normal;
+                        margin-left: 0.5rem;
+                    }
+                }
+
+                .year,
+                .subscribers {
+                    color: $purple;
+                }
+            }
+        }
+    }
+}

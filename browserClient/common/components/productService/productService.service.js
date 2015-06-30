@@ -51,8 +51,7 @@ function productService( CarliModules, $q, cycleService, errorHandler ) {
         },
         getProductSelectionStatisticsForCycle: function( productId, cycle ){
             var cycleToUse = cycle || cycleService.getCurrentCycle();
-            return $q.when( productModule.getProductSelectionStatisticsForCycle(productId, cycleToUse) )
-                .catch(errorHandler);
+            return $q.when( productModule.getProductSelectionStatisticsForCycle(productId, cycleToUse) );
         },
         isProductActive: productModule.isProductActive,
         getProductDetailCodeOptions: productModule.getProductDetailCodeOptions,

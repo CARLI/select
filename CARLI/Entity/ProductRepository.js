@@ -126,6 +126,14 @@ function getProductsById( ids, cycle ){
 }
 
 function getProductSelectionStatisticsForCycle( productId, cycle ){
+    if ( !productId ){
+        return Q.reject('getProductSelectionStatisticsForCycle: product Id required');
+    }
+
+    if ( !cycle || !cycle.getDatabaseName ){
+        return Q.reject('getProductSelectionStatisticsForCycle: fully expanded cycle required');
+    }
+
     return couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listOfferingsForProductId', productId)
         .then(function(offerings){
             return {

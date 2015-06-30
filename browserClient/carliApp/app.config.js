@@ -8,6 +8,7 @@ angular.module('carli.app', [
     'common.errorHandler',
     'common.fa',
     'common.modalDialog',
+    'common.subscriptionHistoryTable',
     'common.warnIfUnsaved',
     'carli.admin',
     'carli.carliHeader',
