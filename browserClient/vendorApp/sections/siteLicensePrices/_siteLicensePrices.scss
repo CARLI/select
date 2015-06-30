@@ -21,6 +21,7 @@
                 border-left: none;
                 @include flex(1 1 auto);
                 padding: 1rem;
+                text-align: center;
             }
 
             li.header {
@@ -58,11 +59,19 @@
                     min-width: 5rem;
 
                     &:first-child {
-                        min-width: 26.78rem;
+                        @media screen and (min-width: $screen-lg) {
+                          min-width: 26.78rem;
+                        }
                     }
 
                     &.library {
                         display: block;
+
+                        @media screen and (max-width: $screen-lg) {
+                          overflow: hidden;
+                          text-overflow: ellipsis;
+                          white-space: nowrap;
+                        }
                     }
 
                     &.price-cap {

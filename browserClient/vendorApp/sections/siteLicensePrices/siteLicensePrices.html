@@ -19,10 +19,10 @@
     <div class="pricing-grid-controls">
         <ul>
             <li class="header">View Options</li>
-            <li><checkbox ng-model="vm.viewOptions.size">Size</checkbox></li>
-            <li><checkbox ng-model="vm.viewOptions.type">Type</checkbox></li>
-            <li><checkbox ng-model="vm.viewOptions.years">Years</checkbox></li>
-            <li><checkbox ng-model="vm.viewOptions.priceCap">Price Cap</checkbox></li>
+            <li ng-click="vm.checkViewOption('size')"><checkbox ng-model="vm.viewOptions.size">Size</checkbox></li>
+            <li ng-click="vm.checkViewOption('type')"><checkbox ng-model="vm.viewOptions.type">Type</checkbox></li>
+            <li ng-click="vm.checkViewOption('years')"><checkbox ng-model="vm.viewOptions.years">Years</checkbox></li>
+            <li ng-click="vm.checkViewOption('priceCap')"><checkbox ng-model="vm.viewOptions.priceCap">Price Cap</checkbox></li>
         </ul>
     </div>
     <div class="scroll-slider-container">
