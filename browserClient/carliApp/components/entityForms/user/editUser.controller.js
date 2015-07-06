@@ -97,12 +97,12 @@ function editUserController( $scope, $rootScope, $q, $location, alertService, au
             if (user.vendor) {
                 vendorService.load(user.vendor).then(function(vendor) {
                     vm.selectedVendor = vendor;
-                })
+                });
             }
             if (user.library) {
                 libraryService.load(user.library).then(function(library) {
                     vm.selectedLibrary = library;
-                })
+                });
             }
             return user;
         }
