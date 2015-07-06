@@ -13,7 +13,6 @@ function userService(CarliModules, $q, authService) {
             return $q.when( userMiddleware.create(user) );
         },
         update: function (user) {
-            console.log('calling update');
             return $q.when( userMiddleware.update(user) );
         },
         load: function (userId) {
