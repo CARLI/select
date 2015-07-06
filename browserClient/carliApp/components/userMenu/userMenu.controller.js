@@ -5,7 +5,6 @@ function userMenuController( $interval, authService, notificationService ){
     var vm = this;
 
     vm.userName = '';
-
     vm.logout = authService.deleteSession;
 
     activate();

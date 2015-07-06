@@ -3,7 +3,8 @@ angular.module('vendor.userMenu')
 
 function userMenuController(authService){
     var vm = this;
-    vm.fullName = null;
+
+    vm.userName = '';
     vm.logout = authService.deleteSession;
 
     activate();
@@ -14,7 +15,7 @@ function userMenuController(authService){
 
     function loadUserInfo() {
         authService.fetchCurrentUser().then(function (user) {
-            vm.fullName = user.fullName;
+            vm.userName = user.fullName;
         });
     }
 }
