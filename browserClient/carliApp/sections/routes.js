@@ -29,6 +29,19 @@ angular.module('carli.routes',[
         controllerAs:'vm'
     })
     .when('/user', {
+        redirectTo: '/user/staff'
+    })
+    .when('/user/staff', {
+        templateUrl: '/carliApp/sections/users/users.html',
+        controller:  'userController',
+        controllerAs:'vm'
+    })
+    .when('/user/vendor', {
+        templateUrl: '/carliApp/sections/users/users.html',
+        controller:  'userController',
+        controllerAs:'vm'
+    })
+    .when('/user/library', {
         templateUrl: '/carliApp/sections/users/users.html',
         controller:  'userController',
         controllerAs:'vm'
