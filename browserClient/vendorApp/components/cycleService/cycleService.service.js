@@ -1,10 +1,10 @@
 angular.module('vendor.cycleService')
     .service('cycleService', cycleService);
 
-function cycleService( CarliModules, config, $q, appState, errorHandler, userService ) {
+function cycleService( CarliModules, config, $q, appState, authService, errorHandler ) {
 
-    var currentUser = userService.getUser();
-    if (!currentUser.vendor) {
+    var currentUser = authService.getCurrentUser();
+    if (!currentUser || !currentUser.vendor) {
         throw new Error('Cycle Service was initialized without a valid user');
     }
     var cycleModule = CarliModules.Cycle(currentUser.vendor);

@@ -4,6 +4,7 @@ angular.module('library.app', [
     'ngAnimate',
     'ngRoute',
     'ngSanitize',
+    'common.auth',
     'common.alerts',
     'common.accordion',
     'common.config',
@@ -15,9 +16,9 @@ angular.module('library.app', [
     'common.productService',
     'common.scrollTo',
     'common.warnIfUnsaved',
-    'library.appState',
     'common.askCarliButton',
     'common.askCarliForm',
+    'library.appState',
     'library.cycleService',
     'library.libraryHeader',
     'library.navBar',
@@ -29,8 +30,12 @@ angular.module('library.app', [
 .config(function($locationProvider){
     $locationProvider.html5Mode(true);
 })
-.run(function($rootScope) {
+.run(function($rootScope, authService, config) {
     $rootScope.appState = 'pendingUser';
+
+    if (authService.isRouteProtected()) {
+        authService.redirectToLogin();
+    }
 })
 .value('cgBusyDefaults',{
     //message:'Loading Stuff',

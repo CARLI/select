@@ -5,12 +5,14 @@ angular.module('carli.app', [
     'ngSanitize',
     'common.auth',
     'common.alerts',
+    'common.config',
     'common.errorHandler',
     'common.fa',
     'common.modalDialog',
     'common.subscriptionHistoryTable',
     'common.warnIfUnsaved',
     'carli.admin',
+    'carli.appState',
     'carli.carliHeader',
     'carli.cycleService',
     'carli.debugPanel',
@@ -22,9 +24,9 @@ angular.module('carli.app', [
 .config(function($locationProvider){
     $locationProvider.html5Mode(true);
 })
-.run(function(authService) {
+.run(function(authService, config) {
     if (authService.isRouteProtected()) {
-        authService.authenticateForStaffApp();
+        authService.redirectToLogin();
     }
 })
 .run(function($rootScope, cycleService){

@@ -1,6 +1,8 @@
 /* This file exists to tell Browserify what to package into the carliModules for the library app. */
 
 module.exports = {
+    Auth: require('../CARLI/Auth'),
+    AuthMiddleware: require('../middleware/browserAdapters/auth'),
     config: require( '../config' ),
     CouchDbStore: require('../CARLI/Store/CouchDb/Store'),
     Cycle: require('../CARLI/Entity/CycleRepository'),

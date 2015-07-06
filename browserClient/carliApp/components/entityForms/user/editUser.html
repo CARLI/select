@@ -38,6 +38,16 @@
             <view-edit-radios radio-group-name="isActive" radio-group-legend="Product Status" items="vm.statusOptions" ng-model="vm.user.isActive" edit-mode="vm.editable" input-id="isActive">
                 {{ vm.user.isActive ? 'Active User' : 'Inactive User' }}
             </view-edit-radios>
+
+            <label ng-show="vm.userType === 'vendor'" for="selectedVendor">Vendor</label>
+            <view-edit-select-object ng-show="vm.userType === 'vendor'" ng-model="vm.selectedVendor" input-id="selectedVendor" objects="vm.vendors" label-property="name" track-by="id" edit-mode="vm.editable">
+                {{ vm.selectedVendor.name }}
+            </view-edit-select-object>
+
+            <label ng-show="vm.userType === 'library'" for="selectedLibrary">Library</label>
+            <view-edit-select-object ng-show="vm.userType === 'library'" ng-model="vm.selectedLibrary" input-id="selectedLibrary" objects="vm.libraries" label-property="name" track-by="id" edit-mode="vm.editable">
+                {{ vm.selectedLibrary.name }}
+            </view-edit-select-object>
         </fieldset>
     </section>
 

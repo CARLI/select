@@ -1,7 +1,8 @@
 angular.module('library.routes',[
         'library.sections.dashboard',
         'library.sections.addSubscriptions',
-        'library.sections.addOneTimePurchases'
+        'library.sections.addOneTimePurchases',
+        'library.sections.login'
     ])
     .config(function ($routeProvider) {
         $routeProvider
@@ -15,6 +16,21 @@ angular.module('library.routes',[
                 controller:  'addSubscriptionsController',
                 controllerAs:'vm'
             })
+            .when('/login', {
+                templateUrl: '/libraryApp/sections/login/login.html',
+                controller:  'loginPageController',
+                controllerAs:'vm'
+            })
+            .when('/reset/:key', {
+                templateUrl: '/libraryApp/sections/resetRequest/resetRequest.html',
+                controller:  'resetRequestPageController',
+                controllerAs:'vm'
+            })
+//            .when('/addSubscriptions', {
+//                templateUrl: '/libraryApp/sections/',
+//                controller:  'Controller',
+//                controllerAs:'vm'
+//            })
             .when('/addOneTimePurchases', {
                 templateUrl: '/libraryApp/sections/addOneTimePurchases/addOneTimePurchases.html',
                 controller:  'addOneTimePurchasesController',
@@ -42,7 +58,7 @@ angular.module('library.routes',[
             })
             */
             .otherwise({
-                redirectTo: '/dashboard'
+                redirectTo: '/login'
             })
         ;
     });

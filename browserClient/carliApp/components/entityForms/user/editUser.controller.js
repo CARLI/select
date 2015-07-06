@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.user')
     .controller('editUserController', editUserController);
 
-function editUserController( $scope, $rootScope, $q, alertService, authService, entityBaseService, userService  ) {
+function editUserController( $scope, $rootScope, $q, $location, alertService, authService, entityBaseService, userService, libraryService, vendorService  ) {
     var vm = this;
 
     var templates = {
@@ -18,9 +18,8 @@ function editUserController( $scope, $rootScope, $q, alertService, authService, 
     vm.saveUser = saveUser;
     vm.submitAction = submitAction;
     vm.submitLabel = submitLabel;
-
-
     vm.statusOptions = entityBaseService.getStatusOptions();
+    vm.userType = 'staff';
 
     setupModalClosingUnsavedChangesWarning();
     activate();
@@ -30,23 +29,47 @@ function editUserController( $scope, $rootScope, $q, alertService, authService, 
         vm.isCurrentUser = false;
 
         if ($scope.userId === undefined) {
-            return initializeForNewUser();
+            initializeForNewUser();
+            populateLinkingRoleDropdowns();
         }
         else {
-            return initializeForExistingUser();
+            initializeForExistingUser().then(populateLinkingRoleDropdowns);
         }
+
+        function populateLinkingRoleDropdowns() {
+            if (vm.userType == 'vendor') {
+                return loadVendorList();
+            }
+            if (vm.userType == 'library') {
+                return loadLibraryList();
+            }
+        }
+    }
+
+    function loadVendorList() {
+        return vendorService.list().then(function(vendors) {
+            vm.vendors = vendors;
+            return vendors;
+        });
+    }
+
+    function loadLibraryList() {
+        return libraryService.list().then(function(libraries) {
+            vm.libraries = libraries;
+            return libraries;
+        });
     }
 
     function initializeForNewUser() {
         vm.editable = true;
         vm.newUser = true;
+        vm.userType = $location.path().substring($location.path().lastIndexOf('/') + 1);
 
         vm.user = {
             type: 'user',
             email: '',
-            password: '',
             isActive: true,
-            roles: [ 'staff' ]
+            roles: [ vm.userType ]
         };
 
         setUserFormPristine();
@@ -60,16 +83,32 @@ function editUserController( $scope, $rootScope, $q, alertService, authService, 
 
         return userService.load($scope.userId)
             .then(setUserOnVm)
+            .then(loadLinkedRole)
             .then(determineIfUserIsCurrentUser);
 
         function setUserOnVm( user ) {
             vm.user = angular.copy(user);
+            vm.userType = vm.user.roles[0];
             setUserFormPristine();
             return user;
         }
 
+        function loadLinkedRole(user) {
+            if (user.vendor) {
+                vendorService.load(user.vendor).then(function(vendor) {
+                    vm.selectedVendor = vendor;
+                })
+            }
+            if (user.library) {
+                libraryService.load(user.library).then(function(library) {
+                    vm.selectedLibrary = library;
+                })
+            }
+            return user;
+        }
+
         function determineIfUserIsCurrentUser(userBeingEdited) {
-            return authService.getCurrentUser().then(function (currentUser) {
+            return authService.fetchCurrentUser().then(function (currentUser) {
                 if (currentUser.id === userBeingEdited.id) {
                     vm.isCurrentUser = true;
                 }
@@ -151,7 +190,19 @@ function editUserController( $scope, $rootScope, $q, alertService, authService, 
     }
 
     function saveUser(){
-        translateOptionalSelections();
+        if (!confirmPasswordsMatch()) {
+            alertService.putAlert('Passwords do not match', {severity: 'danger'});
+            return $q.reject('Passwords do not match');
+        }
+
+        if (vm.userType == 'vendor') {
+            vm.user.roles.push('vendor-' + vm.selectedVendor.id);
+            vm.user.vendor = vm.selectedVendor.id;
+        }
+        if (vm.userType == 'library') {
+            vm.user.roles.push('library-' + vm.selectedLibrary.id);
+            vm.user.library = vm.selectedLibrary.id;
+        }
 
         if (vm.userId === undefined) {
             return saveNewUser();
@@ -160,15 +211,7 @@ function editUserController( $scope, $rootScope, $q, alertService, authService, 
         }
     }
 
-    function translateOptionalSelections() {
-
-    }
-
     function saveExistingUser() {
-        if (!confirmPasswordsMatch()) {
-            alertService.putAlert('Passwords do not match', {severity: 'danger'});
-            return $q.reject('Passwords do not match');
-        }
         return userService.update(vm.user)
             .then(function () {
                 alertService.putAlert('User updated', {severity: 'success'});
@@ -184,14 +227,6 @@ function editUserController( $scope, $rootScope, $q, alertService, authService, 
     }
 
     function saveNewUser() {
-        if (!vm.user.password) {
-            alertService.putAlert('Password is required', {severity: 'danger'});
-            return $q.reject('Password is required');
-        }
-        if (!confirmPasswordsMatch()) {
-            alertService.putAlert('Passwords do not match', {severity: 'danger'});
-            return $q.reject('Passwords do not match');
-        }
         return userService.create(vm.user)
             .then(function () {
                 alertService.putAlert('User added', {severity: 'success'});

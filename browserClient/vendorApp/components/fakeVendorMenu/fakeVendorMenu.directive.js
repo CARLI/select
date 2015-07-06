@@ -1,5 +1,5 @@
 angular.module('vendor.fakeVendorMenu')
-    .directive('fakeVendorMenu', function ($q, $window, userService, CarliModules) {
+    .directive('fakeVendorMenu', function ($q, $window, appState, CarliModules) {
         return {
             restrict: 'E',
             templateUrl: '/vendorApp/components/fakeVendorMenu/fakeVendorMenu.html',
@@ -38,7 +38,7 @@ angular.module('vendor.fakeVendorMenu')
                         vendorId: vendor.id
                     };
                     $window.sessionStorage.setItem('authToken', JSON.stringify(authToken));
-                    userService.initializeUserFromToken(authToken);
+                    appState.setUser(user);
                 }
             }
         };
