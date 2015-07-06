@@ -1,1 +1,3 @@
-angular.module('common.askCarliForm',[]);
+angular.module('common.askCarliForm',[
+    'common.userService'
+]);

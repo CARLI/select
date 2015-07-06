@@ -1,7 +1,7 @@
 angular.module('common.userService')
     .service('userService', userService);
 
-function userService(CarliModules, $q, cycleService) {
+function userService(CarliModules, $q, authService) {
 
     var userMiddleware = CarliModules.UserMiddleware;
 
@@ -13,7 +13,6 @@ function userService(CarliModules, $q, cycleService) {
             return $q.when( userMiddleware.create(user) );
         },
         update: function (user) {
-            console.log('calling update');
             return $q.when( userMiddleware.update(user) );
         },
         load: function (userId) {
@@ -27,6 +26,9 @@ function userService(CarliModules, $q, cycleService) {
         },
         consumeKey: function (key, user) {
             return $q.when( userMiddleware.consumeKey(key, user) );
+        },
+        getUser: function () {
+            return authService.getCurrentUser();
         }
     };
 }

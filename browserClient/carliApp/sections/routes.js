@@ -20,15 +20,28 @@ angular.module('carli.routes',[
     })
     .when('/login', {
         templateUrl: '/carliApp/sections/login/login.html',
-        controller:  'loginController',
+        controller:  'loginPageController',
         controllerAs:'vm'
     })
     .when('/reset/:key', {
         templateUrl: '/carliApp/sections/resetRequest/resetRequest.html',
-        controller:  'resetRequestController',
+        controller:  'resetRequestPageController',
         controllerAs:'vm'
     })
     .when('/user', {
+        redirectTo: '/user/staff'
+    })
+    .when('/user/staff', {
+        templateUrl: '/carliApp/sections/users/users.html',
+        controller:  'userController',
+        controllerAs:'vm'
+    })
+    .when('/user/vendor', {
+        templateUrl: '/carliApp/sections/users/users.html',
+        controller:  'userController',
+        controllerAs:'vm'
+    })
+    .when('/user/library', {
         templateUrl: '/carliApp/sections/users/users.html',
         controller:  'userController',
         controllerAs:'vm'
@@ -114,7 +127,7 @@ angular.module('carli.routes',[
         controllerAs:'vm'
     })
     .otherwise({
-        redirectTo: '/dashboard'
+        redirectTo: '/login'
     })
     ;
 });

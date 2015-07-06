@@ -46,7 +46,6 @@ function runMiddlewareServer(){
                 .catch(sendError(res));
 
             function copyAuthCookieFromResponse(authResponse) {
-                console.log('setting cookie');
                 res.append('Set-Cookie', authResponse.authCookie);
                 return authResponse;
             }
@@ -58,8 +57,6 @@ function runMiddlewareServer(){
                 .catch(sendError(res));
 
             function clearAuthCookie(authResponse) {
-                console.log('clearing cookie');
-                res.append('Set-Cookie', 'AuthSession=; Version=1; Expires=-1; Max-Age=-1; Path=/; Domain=' + config.cookieDomain);
                 res.append('Set-Cookie', 'AuthSession=; Version=1; Expires=-1; Max-Age=-1; Path=/');
                 request.clearAuth();
                 return authResponse;
@@ -98,17 +95,7 @@ function runMiddlewareServer(){
                 .catch(send500Error(res));
         });
         carliMiddleware.get('/products-with-offerings-for-vendor/:vendorId/for-cycle/:cycleId', function (req, res) {
-            var authToken = getAuthTokenFromHeader(req);
-            if (!authToken) {
-                res.status(401).send('missing authorization cookie');
-                return;
-            }
-            if (!authToken.vendorId) {
-                res.status(400).send('invalid auth token');
-                return;
-            }
-            var vendorId = authToken.vendorId;
-            vendorSpecificProductQueries.listProductsWithOfferingsForVendorId(vendorId, req.params.cycleId)
+            vendorSpecificProductQueries.listProductsWithOfferingsForVendorId(req.params.vendorId, req.params.cycleId)
                 .then(sendResult(res))
                 .catch(sendError(res));
         });
@@ -116,7 +103,6 @@ function runMiddlewareServer(){
             cycleCreation.create(req.body.newCycleData)
                 .then(function (newCycleId) {
                     res.send({ id: newCycleId });
-                    console.log('Asking master to launchCycleDatabaseWorker');
                     cluster.worker.send({
                         command: 'launchCycleDatabaseWorker',
                         sourceCycleId: req.body.sourceCycle.id,
@@ -167,7 +153,6 @@ function runMiddlewareServer(){
                 .catch(sendError(res));
         });
         carliMiddleware.get('/sync', function (req, res) {
-            console.log('Asking master to launchSynchronizationWorker');
             cluster.worker.send({
                 command: 'launchSynchronizationWorker'
             });
@@ -210,25 +195,14 @@ function runMiddlewareServer(){
                     res.send({ error: err });
                 });
         });
-        carliMiddleware.post('/update-su-pricing-for-product/:cycleId/:productId', function (req, res) {
-            var authToken = getAuthTokenFromHeader(req);
-            if (!authToken) {
-                res.status(401).send('missing authorization cookie');
-                return;
-            }
-            if (!authToken.vendorId) {
-                res.status(400).send('invalid auth token');
-                return;
-            }
-            var vendorId = authToken.vendorId;
+        carliMiddleware.post('/update-su-pricing-for-product/:vendorId/:cycleId/:productId', function (req, res) {
 
-            var newSuPricing = {};
             if ( !req.body || !req.body.newSuPricing ){
                 res.status(400).send('missing pricing data');
                 return;
             }
 
-            vendorSpecificProductQueries.updateSuPricingForProduct(req.params.productId, vendorId, req.body.newSuPricing, req.params.cycleId)
+            vendorSpecificProductQueries.updateSuPricingForProduct(req.params.vendorId, req.params.productId, req.body.newSuPricing, req.params.cycleId)
                 .then(sendResult(res))
                 .catch(sendError(res));
 

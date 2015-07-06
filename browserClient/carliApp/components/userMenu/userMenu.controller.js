@@ -15,7 +15,7 @@ function userMenuController( $interval, authService, notificationService ){
     }
 
     function loadUserInfo() {
-        authService.getCurrentUser().then(function (user) {
+        authService.fetchCurrentUser().then(function (user) {
             vm.userName = user.fullName;
         });
     }

@@ -1,7 +1,7 @@
 angular.module('common.askCarliForm')
 .controller('askCarliFormController', askCarliFormController);
 
-function askCarliFormController($location, $q, $scope, askCarliService, userService) {
+function askCarliFormController($location, $scope, askCarliService, userService) {
     var vm = this;
 
     vm.draft = {};

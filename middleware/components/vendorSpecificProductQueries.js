@@ -27,7 +27,7 @@ function listProductsWithOfferingsForVendorId(vendorId, cycleId) {
 
 }
 
-function updateSuPricingForProduct( productId, vendorId, newSuPricing, cycleId ){
+function updateSuPricingForProduct( vendorId, productId, newSuPricing, cycleId ){
     var cycle = null;
     
     return vendorRepository.load(vendorId)
@@ -40,7 +40,7 @@ function updateSuPricingForProduct( productId, vendorId, newSuPricing, cycleId )
             return offeringRepository.ensureProductHasOfferingsForAllLibraries(productId, vendorId, cycle);
         }, catchNoCycle)
         .then(function(){
-            return offeringRepository.updateSuPricingForAllLibrariesForProduct(productId, newSuPricing, cycle);
+            return offeringRepository.updateSuPricingForAllLibrariesForProduct(vendorId, productId, newSuPricing, cycle);
         },catchEnsureError)
         .catch(updateSuPricingError);
 

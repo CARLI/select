@@ -1,7 +1,7 @@
 angular.module('carli.sections.users')
 .controller('userController', userController);
 
-function userController( $sce, userService ){
+function userController( $sce, $location, userService ){
     var vm = this;
     vm.activeCycles = [];
     vm.afterUserSubmit = populateUserList;
@@ -12,8 +12,14 @@ function userController( $sce, userService ){
     }
 
     function populateUserList() {
+        var userType = $location.path().substring($location.path().lastIndexOf('/') + 1);
+
         vm.loadingPromise = userService.list().then( function(userList){
-            vm.userList = userList;
+            vm.userList = userList.filter(filterByRole);
+
+            function filterByRole(user) {
+                return user.roles.indexOf(userType) >= 0;
+            }
         });
     }
 

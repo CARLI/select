@@ -1,0 +1,19 @@
+{
+  "alertTimeout": 10000,
+  "middleware": {
+    "url": "",
+    "port": 3000
+  },
+  "storeOptions": {
+    "couchDbName": "carli",
+    "couchDbUrl": "http://127.0.0.1:5984"
+  },
+  "memberDb": {
+    "connectionLimit": 10,
+    "host": "localhost",
+    "database": "carli_crm"
+  },
+  "oneTimePurchaseProductsCycleDocId": "one-time-purchase-products-cycle",
+  "storePath": "CouchDb/Store",
+  "defaultEntityCacheTimeToLive": -1
+}

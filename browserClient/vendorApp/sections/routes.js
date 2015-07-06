@@ -2,13 +2,24 @@ angular.module('vendor.routes',[
         'vendor.sections.dashboard',
         'vendor.sections.siteLicensePrices',
         'vendor.sections.simultaneousUserPrices',
-        'vendor.sections.descriptions'
+        'vendor.sections.descriptions',
+        'vendor.sections.login'
     ])
     .config(function ($routeProvider) {
         $routeProvider
             .when('/dashboard', {
                 templateUrl: '/vendorApp/sections/dashboard/dashboard.html',
                 controller:  'dashboardController',
+                controllerAs:'vm'
+            })
+            .when('/login', {
+                templateUrl: '/vendorApp/sections/login/login.html',
+                controller:  'loginPageController',
+                controllerAs:'vm'
+            })
+            .when('/reset/:key', {
+                templateUrl: '/vendorApp/sections/resetRequest/resetRequest.html',
+                controller:  'resetRequestPageController',
                 controllerAs:'vm'
             })
             .when('/siteLicensePrices', {
@@ -27,6 +38,6 @@ angular.module('vendor.routes',[
                 controllerAs:'vm'
             })
             .otherwise({
-                redirectTo: '/dashboard'
+                redirectTo: '/login'
             });
     });

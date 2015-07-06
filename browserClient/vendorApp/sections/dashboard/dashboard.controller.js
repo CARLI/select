@@ -1,9 +1,9 @@
 angular.module('vendor.sections.dashboard')
 .controller('dashboardController', dashboardController);
 
-function dashboardController($scope, cycleService, userService, vendorStatusService){
+function dashboardController($scope, authService, cycleService, vendorStatusService){
     var vm = this;
-    var currentUser = userService.getUser();
+    var currentUser = null;
     var cycle = cycleService.getCurrentCycle();
     var computeObjectEqualityDeeply = true;
 
@@ -15,9 +15,12 @@ function dashboardController($scope, cycleService, userService, vendorStatusServ
 
 
     function activate(){
-        vm.vendor = currentUser.vendor;
-        loadVendorStatus()
-            .then(watchVendorStatusChecklist);
+        authService.fetchCurrentUser().then(function (user) {
+            currentUser = user;
+            vm.vendor = currentUser.vendor;
+            loadVendorStatus()
+                .then(watchVendorStatusChecklist);
+        });
     }
 
     function loadVendorStatus(){
