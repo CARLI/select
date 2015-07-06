@@ -6,7 +6,7 @@
   },
   "storeOptions": {
     "couchDbName": "carli",
-    "couchDbUrl": "http://localhost:5984"
+    "couchDbUrl": "http://127.0.0.1:5984"
   },
   "memberDb": {
     "connectionLimit": 10,
