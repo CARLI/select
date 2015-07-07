@@ -55,6 +55,7 @@ function loadConfiguration() {
                 var host = process.env.CARLI_COUCHDB_PORT_5984_TCP_ADDR;
                 var port = process.env.CARLI_COUCHDB_PORT_5984_TCP_PORT;
                 config.storeOptions.couchDbUrl = 'http://' + host + ':' + port;
+                config.storeOptions.privilegedCouchHostname = host + ':' + port;
             }
         }
     }
