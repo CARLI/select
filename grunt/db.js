@@ -14,8 +14,6 @@ module.exports = function (grunt) {
     grunt.registerTask('create-pixo-users', function createAdminUser() {
         var done = this.async();
         deployDb.createUsersFromJson('./pixo-test-staff-users.json').then(done);
-        deployDb.createUsersFromJson('./pixo-test-library-users.json').then(done);
-        deployDb.createUsersFromJson('./pixo-test-vendor-users.json').then(done);
     });
     grunt.registerTask('deploy-db', [
         'deploy-app-db',
