@@ -14,7 +14,6 @@ module.exports = function (storeOptions) {
     function couchRequest(requestOptions) {
         var deferred = Q.defer();
 
-        console.log('couchUtils->couchRequest', requestOptions);
         request(requestOptions, handleCouchResponse);
 
         function handleCouchResponse(error, response, body) {
