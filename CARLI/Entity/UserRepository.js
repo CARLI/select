@@ -17,6 +17,7 @@ var userStoreOptions = {
     couchDbUrl: StoreOptions.privilegedCouchDbUrl,
     couchDbName: '_users'
 };
+console.log('UserRepository, storeOptions', userStoreOptions);
 UserRepository.setStore( Store( StoreModule(userStoreOptions) ) );
 
 var propertiesToTransform = [];
