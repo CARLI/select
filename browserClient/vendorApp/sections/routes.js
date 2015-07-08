@@ -3,8 +3,9 @@ angular.module('vendor.routes',[
         'vendor.sections.siteLicensePrices',
         'vendor.sections.simultaneousUserPrices',
         'vendor.sections.descriptions',
-        'vendor.sections.login'
-    ])
+        'vendor.sections.login',
+        'vendor.sections.resetRequest'
+])
     .config(function ($routeProvider) {
         $routeProvider
             .when('/dashboard', {
