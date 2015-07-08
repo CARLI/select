@@ -68,18 +68,31 @@ function carliEditingProductListController( $scope, alertService, cycleService, 
         if (vendor.products) {
             return;
         }
-        vm.loadingPromise[vendor.id] = productService.listActiveProductsForVendorId(vendor.id).then(function (products) {
-            vendor.products = products;
-            angular.forEach(products, function (product) {
-                product.selectionHistory = {};
-                for (var i = 0; i < vm.yearsToDisplay.length; i++) {
-                    var y = vm.yearsToDisplay[i];
-                    product.selectionHistory[y] = _pickRandomSelectionHistory();
-                    product.lastPrice = '$123,456';
-                }
-            });
+        vm.loadingPromise[vendor.id] = productService.listActiveProductsForVendorId(vendor.id)
+            .then(function (products) {
+                return $q.all( products.map(loadSelectionHistory) )
+                    .then(function(){
+                        vendor.products = products;
+                        return products;
+                    });
+/*
+                    product.selectionHistory = {};
+                    for (var i = 0; i < vm.yearsToDisplay.length; i++) {
+                        var y = vm.yearsToDisplay[i];
+                        product.selectionHistory[y] = _pickRandomSelectionHistory();
+                        product.lastPrice = '$123,456';
+                    }
+*/
         });
+
+        function loadSelectionHistory( product ){
+            //TODO: pull the logic out of subscriptionHistoryTable.controller.js into a service and share it here
+            //the logic to load the last four cycles and return a list of stats
+            //that controller and this one need slightly different shapes though.
+        }
     }
+
+
 
     function _pickRandomSelectionHistory() {
         switch (getRandomInt(0, 2)) {
