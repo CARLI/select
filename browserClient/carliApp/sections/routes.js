@@ -9,6 +9,7 @@ angular.module('carli.routes',[
     'carli.sections.licenses',
     'carli.sections.styleGuide',
     'carli.sections.login',
+    'carli.sections.resetRequest',
     'carli.sections.users'
 ])
 .config(function ($routeProvider) {

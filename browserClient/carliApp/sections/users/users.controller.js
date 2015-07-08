@@ -13,6 +13,7 @@ function userController( $sce, $location, userService ){
 
     function populateUserList() {
         var userType = $location.path().substring($location.path().lastIndexOf('/') + 1);
+        setUserTypeLabel(userType);
 
         vm.loadingPromise = userService.list().then( function(userList){
             vm.userList = userList.filter(filterByRole);
@@ -21,6 +22,20 @@ function userController( $sce, $location, userService ){
                 return user.roles.indexOf(userType) >= 0;
             }
         });
+    }
+
+    function setUserTypeLabel(userType) {
+        switch (userType) {
+            case 'staff':
+                vm.userTypeLabel = 'CARLI Staff';
+                break;
+            case 'vendor':
+                vm.userTypeLabel = 'Vendor';
+                break;
+            case 'library':
+                vm.userTypeLabel = 'Library';
+                break;
+        }
     }
 
     vm.userListColumns = [

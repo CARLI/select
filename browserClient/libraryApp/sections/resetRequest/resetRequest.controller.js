@@ -1,4 +1,4 @@
-angular.module('library.sections.login')
+angular.module('library.sections.resetRequest')
     .controller('resetRequestPageController', resetRequestPageController);
 
 function resetRequestPageController() {

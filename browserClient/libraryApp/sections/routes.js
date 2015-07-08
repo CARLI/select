@@ -2,8 +2,9 @@ angular.module('library.routes',[
         'library.sections.dashboard',
         'library.sections.addSubscriptions',
         'library.sections.addOneTimePurchases',
-        'library.sections.login'
-    ])
+        'library.sections.login',
+        'library.sections.resetRequest'
+])
     .config(function ($routeProvider) {
         $routeProvider
             .when('/dashboard', {

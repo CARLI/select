@@ -1,4 +1,4 @@
-angular.module('vendor.sections.login')
+angular.module('vendor.sections.resetRequest')
     .controller('resetRequestPageController', resetRequestPageController);
 
 function resetRequestPageController() {

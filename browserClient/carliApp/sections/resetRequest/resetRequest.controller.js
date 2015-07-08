@@ -1,4 +1,4 @@
-angular.module('carli.sections.login')
+angular.module('carli.sections.resetRequest')
     .controller('resetRequestPageController', resetRequestPageController);
 
 function resetRequestPageController() {
