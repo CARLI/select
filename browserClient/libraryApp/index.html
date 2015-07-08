@@ -41,7 +41,7 @@
         </div>
 
         <div ng-if="appState === 'ready'">
-            <nav nav-bar role="navigation" aria-label="main navigation"></nav>
+            <nav ng-if="isLoggedIn" nav-bar role="navigation" aria-label="main navigation"></nav>
             <alerts></alerts>
             <main role="main">
                 <div ng-view role="application"></div>
