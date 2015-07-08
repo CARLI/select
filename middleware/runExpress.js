@@ -12,6 +12,7 @@ var crmQueries = require('./components/crmQueries');
 var cycleCreation = require('./components/cycleCreation');
 var libraryQueries = require('./components/libraryQueries');
 var notifications = require('./components/notifications');
+var pdf = require('./components/pdf');
 var user = require('./components/user');
 var vendorDatabases = require('./components/vendorDatabases');
 var vendorSpecificProductQueries = require('./components/vendorSpecificProductQueries');
@@ -246,6 +247,11 @@ function runMiddlewareServer(){
         carliMiddleware.put('/user/consume-key/:key', function (req, res) {
             user.consumeKey(req.params.key, req.body)
                 .then(sendOk(res))
+                .catch(sendError(res));
+        });
+        carliMiddleware.get('/pdf/content/:type/:entityId/:cycleId', function(req, res) {
+            pdf.generatePdfContent(req.params.type, req.params.entityId, req.params.cycleId)
+                .then(sendResult(res))
                 .catch(sendError(res));
         });
     }
