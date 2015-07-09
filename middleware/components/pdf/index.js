@@ -1,5 +1,6 @@
 var cycleRepository = require('../../../CARLI/Entity/CycleRepository.js');
 var libraryRepository = require('../../../CARLI/Entity/LibraryRepository.js');
+var offeringRepository = require('../../../CARLI/Entity/OfferingRepository.js');
 var vendorRepository = require('../../../CARLI/Entity/VendorRepository.js');
 var Q = require('q');
 
@@ -57,14 +58,23 @@ function dataForPdf(type, entityId, cycle){
     return Q.reject('invalid type: '+type);
 
     function dataForLibrarySelections(libraryId){
-        return libraryRepository.load(libraryId)
-            .then(function(library){
-                return {
-                    cycle: cycle,
-                    library: library,
-                    data: {}
-                }
-            });
+        return Q.all([
+                libraryRepository.load(libraryId),
+                offeringRepository.listOfferingsWithSelectionsForLibrary(libraryId, cycle)
+            ])
+            .then(function(results){
+                var library = results[0];
+                var offerings = results[1];
+
+                return groupOfferingsForLibraryInvoice(offerings)
+                    .then(function(offeringsByVendor){
+                        return {
+                            cycle: cycle,
+                            library: library,
+                            data: offeringsByVendor
+                        }
+                    });
+            })
     }
 
     function dataForVendorReport(vendorId){
@@ -75,6 +85,36 @@ function dataForPdf(type, entityId, cycle){
                     vendor: vendor,
                     data: {}
                 }
+            });
+    }
+
+    function groupOfferingsForLibraryInvoice(offeringsList){
+        var offeringsByVendor = groupOfferingsByVendorId(offeringsList);
+        return groupOfferingsByVendorName(offeringsByVendor);
+    }
+
+    function groupOfferingsByVendorId(offeringsList){
+        var offeringsByVendor = {};
+
+        offeringsList.forEach(function(offering){
+            var vendorId = offering.vendorId;
+            offeringsByVendor[vendorId] = offeringsByVendor[vendorId] || [];
+            offeringsByVendor[vendorId].push(offering);
+        });
+
+        return offeringsByVendor;
+    }
+
+    function groupOfferingsByVendorName(offeringsByVendorId){
+        var offeringsByVendorName = {};
+        var vendorIds = Object.keys(offeringsByVendorId);
+
+        return vendorRepository.getVendorsById(vendorIds)
+            .then(function(vendors){
+                vendors.forEach(function(vendor){
+                    offeringsByVendorName[vendor.name] = offeringsByVendorId[vendor.id];
+                });
+                return offeringsByVendorName;
             });
     }
 }
