@@ -254,6 +254,15 @@ function runMiddlewareServer(){
                 .then(sendResult(res))
                 .catch(sendError(res));
         });
+        carliMiddleware.get('/pdf/export/:type/:entityId/:cycleId', function(req, res) {
+            pdf.exportPdf(req.params.type, req.params.entityId, req.params.cycleId)
+                .then(function(bufferContainingPdf){
+                    res.setHeader('Content-Disposition', 'attachment; filename="demo.pdf"');
+
+                    res.send(bufferContainingPdf);
+                })
+                .catch(sendError(res));
+        });
     }
 }
 
