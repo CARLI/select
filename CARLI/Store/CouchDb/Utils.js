@@ -267,20 +267,12 @@ module.exports = function (storeOptions) {
     }
 
     function createSecurityDocumentForType(dbName, databaseType, entity) {
-        var roles = [];
+        var roles = [ '_admin', 'staff' ];
 
         if (databaseType == couchUtils.DB_TYPE_VENDOR) {
-            roles.push('vendor');
             roles.push('vendor-' + entity.id);
         } else if (databaseType == couchUtils.DB_TYPE_LIBRARY) {
-            roles.push('library');
             roles.push('library-' + entity.id);
-        } else if (databaseType == couchUtils.DB_TYPE_STAFF) {
-            roles.push('staff');
-        }
-
-        if (roles.length === 0) {
-            return Q(false);
         }
 
         return couchRequest({
