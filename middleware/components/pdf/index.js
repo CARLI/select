@@ -1,10 +1,27 @@
-var cycleRepository = require('../../../CARLI/Entity/CycleRepository.js');
-var libraryRepository = require('../../../CARLI/Entity/LibraryRepository.js');
-var offeringRepository = require('../../../CARLI/Entity/OfferingRepository.js');
-var vendorRepository = require('../../../CARLI/Entity/VendorRepository.js');
+var cycleRepository = require('../../../CARLI/Entity/CycleRepository');
+var fs = require('fs');
+var handlebars = require('handlebars');
+var libraryRepository = require('../../../CARLI/Entity/LibraryRepository');
+var notificationTemplateRepository = require('../../../CARLI/Entity/NotificationTemplateRepository');
+var offeringRepository = require('../../../CARLI/Entity/OfferingRepository');
 var Q = require('q');
+var vendorRepository = require('../../../CARLI/Entity/VendorRepository');
 
+var templatesDirectory = 'components/pdf/templates/';
+var invoiceContentTemplate = loadAndCompileHandlebarsTemplate('invoiceContentTemplate.handlebars');
+var invoicePdfTemplate = loadAndCompileHandlebarsTemplate('invoicePdfTemplate.handlebars');
 
+/**
+ * This function combines data and Handlebars templates to return the HTML content which is transformed into a PDF.
+ * There are multiple steps to assembling the final HTML:
+ *   - Get the data for the PDF (depends on type of invoice/report, which library/vendor, and which cycle)
+ *   - Build the data content HTML - for invoices this is the list of selected products and prices + total
+ *   - Compile the data content into the notification template - this is the pre-amble and post-amble that CARLI staff
+ *     can customize. It wraps the data table content.
+ *   - Compile the previous results into the final PDF content - this wraps the content in the hard-coded PDF contents
+ *     (text that is not customizable, header, footer, etc.) and inclues the styles to format the PDF.
+ *
+ **/
 function generateContentForPdf(type, entityId, cycleId){
     console.log('Begin generateContentForPdf '+type+' '+entityId+' for cycle '+cycleId);
 
@@ -29,11 +46,41 @@ function generateContentForPdf(type, entityId, cycleId){
     }
 
     function htmlForLibrarySelections(dataForLibrarySelections){
-        /**/return dataForLibrarySelections;
+        return loadCycle(cycleId)
+            .then(function(cycle){
+                return fetchTemplateForContent(type, cycle);
+            })
+            .then(function(notificationTemplate){
+                var invoiceContent = invoiceContentTemplate(dataForLibrarySelections);
+                dataForLibrarySelections.invoiceContent = invoiceContent;
+
+                var pdfContentTemplate = handlebars.compile(notificationTemplate.pdfBody);
+                dataForLibrarySelections.pdfContent = pdfContentTemplate(dataForLibrarySelections);
+
+                return dataForLibrarySelections
+            })
+            .then(function(){
+                console.log('render invoice pdf with ',dataForLibrarySelections);
+                return invoicePdfTemplate(dataForLibrarySelections);
+            });
     }
 
     function htmlForVendorReport(dataForVendorReport){
         /**/return dataForVendorReport;
+    }
+
+    function fetchTemplateForContent(type, cycle){
+        if ( type === 'estimate' ){
+            if ( cycle.isOpenToLibraries() ){
+                return notificationTemplateRepository.loadTemplateForOpenCycleEstimates();
+            }
+            else {
+                return notificationTemplateRepository.loadTemplateForClosedCycleEstimates();
+            }
+        }
+        else {
+            return notificationTemplateRepository.loadTemplateForInvoices();
+        }
     }
 }
 
@@ -69,13 +116,13 @@ function generateDataForPdf(type, entityId, cycleId){
             .then(groupOfferingsForLibraryInvoice)
             .then(function(offeringsByVendor){
                 offerings = offeringsByVendor;
+                return libraryRepository.load(libraryId);
             })
-            .then(libraryRepository.load(libraryId))
-            .then(function(library){
+            .then(function(loadedLibrary){
                 return {
                     cycle: cycle,
-                    library: library,
-                    data: offerings
+                    library: loadedLibrary,
+                    selectionsByVendor: offerings
                 }
             });
 
@@ -181,6 +228,11 @@ function loadCycle(cycleId){
             return Q.reject('No cycle found with id '+cycleId);
         }
     }
+}
+
+function loadAndCompileHandlebarsTemplate(fileName){
+    var templateHtml = fs.readFileSync(templatesDirectory + fileName, 'utf8');
+    return handlebars.compile(templateHtml);
 }
 
 module.exports = {

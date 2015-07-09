@@ -1,0 +1,20 @@
+<ul id="invoiceContent">
+    <li class="headers">
+        <div class="vendor">Vendor</div>
+        <div class="database">Database</div>
+        <div class="amount">Amount</div>
+    </li>
+    {{#each selectionsByVendor }}
+    <li>
+        <div class="vendor">{{ @key }}</div>
+        <ul class="products">
+            {{#each this}}
+            <li>
+                <div class="database">{{ product.name }}</div>
+                <div class="amount">{{ selection.price }}</div>
+            </li>
+            {{/each}}
+        </ul>
+    </li>
+{{/each}}
+</ul>

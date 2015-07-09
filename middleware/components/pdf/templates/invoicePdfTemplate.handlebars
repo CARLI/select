@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>Sales Invoice for {{ library.name }}</title>
+    </head>
+    <body>
+        <div id="pageHeader">
+            CARLI
+        </div>
+        <div id="pageContent">
+            <h1>Sales Invoice</h1>
+            <h2>
+                Invoice Number: USIN[0000]<br>
+                Invoice Date: [DATE]
+            </h2>
+            <p>
+                Bill To:<br>
+                {{ library.name }}<br>
+                BatchID: USI[000]
+            </p>
+            {{{ pdfContent }}}
+        </div>
+        <div id="pageFooter">
+            {{ library.name }}
+        </div>
+    </body>
+</html>
