@@ -63,7 +63,6 @@ function authService($rootScope, $q, $location, appState, CarliModules) {
         user = null;
         $rootScope.isLoggedIn = false;
         return $q.when(CarliModules.AuthMiddleware.deleteSession()).then(redirectToLogin);
-
     }
 
     function getCurrentUser() {
