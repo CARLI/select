@@ -13,7 +13,7 @@ module.exports = function (vendor) {
 
             function createDatabaseIfNotExists(databaseExists) {
                 if (!databaseExists) {
-                    return couchUtils.createDatabase(targetCycleDatabaseName, couchUtils.DB_TYPE_VENDOR);
+                    return couchUtils.createDatabase(targetCycleDatabaseName, couchUtils.DB_TYPE_VENDOR, vendor);
                 } else {
                     return cycleId;
                 }
