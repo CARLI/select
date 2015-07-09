@@ -14,7 +14,7 @@
     "query-string": "^1.0.0",
     "tough-cookie": "^1.2.0",
     "tv4": "^1.1.4",
-    "tv4-formats": "^1.0.0"
+    "tv4-formats": "1.0.0"
   },
   "devDependencies": {
     "chai": "2",
