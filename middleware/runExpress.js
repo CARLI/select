@@ -250,7 +250,7 @@ function runMiddlewareServer(){
                 .catch(sendError(res));
         });
         carliMiddleware.get('/pdf/content/:type/:entityId/:cycleId', function(req, res) {
-            pdf.generatePdfContent(req.params.type, req.params.entityId, req.params.cycleId)
+            pdf.generateContentForPdf(req.params.type, req.params.entityId, req.params.cycleId)
                 .then(sendResult(res))
                 .catch(sendError(res));
         });
