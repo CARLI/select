@@ -5,80 +5,96 @@ var vendorRepository = require('../../../CARLI/Entity/VendorRepository.js');
 var Q = require('q');
 
 
-function generatePdfContent(type, entityId, cycleId){
-    console.log('Begin PDF content for '+type+' '+entityId+' for cycle '+cycleId);
+function generateContentForPdf(type, entityId, cycleId){
+    console.log('Begin generateContentForPdf '+type+' '+entityId+' for cycle '+cycleId);
 
-    if ( type.toLowerCase() !== 'invoice'  &&
-         type.toLowerCase() !== 'estimate' &&
-         type.toLowerCase() !== 'report'
-    ){
-        console.log('  Error: bad type');
-        return Q.reject('Invalid type for PDF content: '+type);
+    var error = validateArguments(type, entityId, cycleId);
+    if ( error ){
+        return Q.reject(error);
     }
 
-    if ( !entityId ){
-        console.log('  Error: no entityId');
-        return Q.reject('Missing entity id');
-    }
+    return generateDataForPdf(type, entityId, cycleId)
+        .then(htmlForPdf);
 
-    if ( !cycleId ){
-        console.log('  Error: no cycleId');
-        return Q.reject('Missing cycle id');
-    }
-
-    return cycleRepository.load(cycleId)
-        .then(function(cycle){
-            console.log('  Loaded cycle '+cycle.name);
-            return dataForPdf(type, entityId, cycle);
-        })
-        .catch(noCycle)
-
-    ;
-
-    function noCycle( err ){
-        console.log('  ERROR loading cycle', err);
-        if ( err.statusCode == 401 ){
-            return Q.reject('unauthorized');
+    function htmlForPdf(dataForPdf){
+        if ( typeIsForLibrarySelections(type) ){
+            return htmlForLibrarySelections(dataForPdf);
         }
-        else {
-            return Q.reject('No cycle found with id '+cycleId);
+
+        if ( typeIsForVendorReport(type) ){
+            return htmlForVendorReport(dataForPdf);
         }
+
+        return Q.reject('invalid type: '+type);
+    }
+
+    function htmlForLibrarySelections(dataForLibrarySelections){
+        /**/return dataForLibrarySelections;
+    }
+
+    function htmlForVendorReport(dataForVendorReport){
+        /**/return dataForVendorReport;
     }
 }
 
-function dataForPdf(type, entityId, cycle){
-    if ( typeIsForLibrarySelections(type) ){
-        return dataForLibrarySelections(entityId);
+function generateDataForPdf(type, entityId, cycleId){
+    console.log('Begin generateDataForPdf '+type+' '+entityId+' for cycle '+cycleId);
+
+    var error = validateArguments(type, entityId, cycleId);
+    if ( error ){
+        return Q.reject(error);
     }
 
-    if ( typeIsForVendorReport(type) ){
-        return dataForVendorReport(entityId);
-    }
+    return dataForPdf();
 
-    return Q.reject('invalid type: '+type);
+    function dataForPdf(){
+        if ( typeIsForLibrarySelections(type) ){
+            return dataForLibrarySelections(entityId);
+        }
+
+        if ( typeIsForVendorReport(type) ){
+            return dataForVendorReport(entityId);
+        }
+
+        return Q.reject('invalid type: '+type);
+    }
 
     function dataForLibrarySelections(libraryId){
-        return Q.all([
-                libraryRepository.load(libraryId),
-                offeringRepository.listOfferingsWithSelectionsForLibrary(libraryId, cycle)
-            ])
-            .then(function(results){
-                var library = results[0];
-                var offerings = results[1];
+        var cycle = null;
+        var offerings = null;
 
-                return groupOfferingsForLibraryInvoice(offerings)
-                    .then(function(offeringsByVendor){
-                        return {
-                            cycle: cycle,
-                            library: library,
-                            data: offeringsByVendor
-                        }
-                    });
+        return loadCycle(cycleId)
+            .then(saveCycle)
+            .then(loadSelections)
+            .then(groupOfferingsForLibraryInvoice)
+            .then(function(offeringsByVendor){
+                offerings = offeringsByVendor;
             })
+            .then(libraryRepository.load(libraryId))
+            .then(function(library){
+                return {
+                    cycle: cycle,
+                    library: library,
+                    data: offerings
+                }
+            });
+
+        function saveCycle(loadedCycle){
+            console.log('  loaded cycle '+loadedCycle.name);
+            cycle = loadedCycle;
+        }
+
+        function loadSelections(){
+            return offeringRepository.listOfferingsWithSelectionsForLibrary(libraryId, cycle);
+        }
     }
 
     function dataForVendorReport(vendorId){
-        return vendorRepository.load(vendorId)
+        var cycle = null;
+
+        return loadCycle(cycleId)
+            .then(saveCycle)
+            .then(vendorRepository.load(vendorId))
             .then(function(vendor){
                 return {
                     cycle: cycle,
@@ -86,7 +102,12 @@ function dataForPdf(type, entityId, cycle){
                     data: {}
                 }
             });
+
+        function saveCycle(loadedCycle){
+            cycle = loadedCycle;
+        }
     }
+
 
     function groupOfferingsForLibraryInvoice(offeringsList){
         var offeringsByVendor = groupOfferingsByVendorId(offeringsList);
@@ -119,7 +140,25 @@ function dataForPdf(type, entityId, cycle){
     }
 }
 
+function validateArguments(type, entityId, cycleId) {
+    if (type.toLowerCase() !== 'invoice' &&
+        type.toLowerCase() !== 'estimate' &&
+        type.toLowerCase() !== 'report'
+    ) {
+        console.log('  Error: bad type');
+        return 'Invalid type for PDF content: ' + type;
+    }
 
+    if (!entityId) {
+        console.log('  Error: no entityId');
+        return 'Missing entity id';
+    }
+
+    if (!cycleId) {
+        console.log('  Error: no cycleId');
+        return 'Missing cycle id';
+    }
+}
 
 function typeIsForLibrarySelections(type){
     return type.toLowerCase() === 'invoice' || type.toLowerCase() === 'estimate';
@@ -129,7 +168,22 @@ function typeIsForVendorReport(type){
     return type.toLowerCase() === 'report';
 }
 
+function loadCycle(cycleId){
+    return cycleRepository.load(cycleId)
+        .catch(noCycle);
+
+    function noCycle( err ){
+        console.log('  ERROR loading cycle', err);
+        if ( err.statusCode == 401 ){
+            return Q.reject('unauthorized');
+        }
+        else {
+            return Q.reject('No cycle found with id '+cycleId);
+        }
+    }
+}
 
 module.exports = {
-    generatePdfContent: generatePdfContent
+    generateContentForPdf: generateContentForPdf,
+    generateDataForPdf: generateDataForPdf
 };
