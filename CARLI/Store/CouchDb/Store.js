@@ -67,7 +67,7 @@ module.exports = function (inputOptions) {
                     deferred.reject(carliError(error, response.statusCode));
                 }
                 else {
-                    throw new Error("bad storeData request to: "+db_host+'/'+data.id);
+                    throw new Error("bad storeData request to: "+db_host+'/' + data.id + ': ' + error);
                 }
             }
             else {
