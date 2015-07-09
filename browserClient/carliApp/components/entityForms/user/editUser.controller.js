@@ -195,6 +195,8 @@ function editUserController( $scope, $rootScope, $q, $location, alertService, au
             return $q.reject('Passwords do not match');
         }
 
+        vm.user.roles = [ vm.userType ];
+
         if (vm.userType == 'vendor') {
             vm.user.roles.push('vendor-' + vm.selectedVendor.id);
             vm.user.vendor = vm.selectedVendor.id;
