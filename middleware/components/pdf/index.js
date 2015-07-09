@@ -4,12 +4,47 @@ var handlebars = require('handlebars');
 var libraryRepository = require('../../../CARLI/Entity/LibraryRepository');
 var notificationTemplateRepository = require('../../../CARLI/Entity/NotificationTemplateRepository');
 var offeringRepository = require('../../../CARLI/Entity/OfferingRepository');
+var pdf = require('html-pdf');
 var Q = require('q');
 var vendorRepository = require('../../../CARLI/Entity/VendorRepository');
 
 var templatesDirectory = 'components/pdf/templates/';
 var invoiceContentTemplate = loadAndCompileHandlebarsTemplate('invoiceContentTemplate.handlebars');
 var invoicePdfTemplate = loadAndCompileHandlebarsTemplate('invoicePdfTemplate.handlebars');
+
+
+function exportPdf(type, entityId, cycleId){
+    console.log('Begin generateContentForPdf '+type+' '+entityId+' for cycle '+cycleId);
+
+    var error = validateArguments(type, entityId, cycleId);
+    if ( error ){
+        return Q.reject(error);
+    }
+
+    var options = {
+        header: {
+            height: '5mm'
+        },
+        footer: {
+            height: '5mm',
+            contents: '<span>Page {{page}} / {{pages}}</span>'
+        }
+    };
+
+    return generateContentForPdf(type, entityId, cycleId)
+        .then(function (contentForPdf) {
+            var pdfPromise = Q.defer();
+
+            pdf.create(contentForPdf, options).toBuffer(function (err, result) {
+                if (err) {
+                    pdfPromise.reject(err);
+                }
+                pdfPromise.resolve(result);
+            });
+
+            return pdfPromise.promise;
+        });
+}
 
 /**
  * This function combines data and Handlebars templates to return the HTML content which is transformed into a PDF.
@@ -60,7 +95,6 @@ function generateContentForPdf(type, entityId, cycleId){
                 return dataForLibrarySelections
             })
             .then(function(){
-                console.log('render invoice pdf with ',dataForLibrarySelections);
                 return invoicePdfTemplate(dataForLibrarySelections);
             });
     }
@@ -127,7 +161,6 @@ function generateDataForPdf(type, entityId, cycleId){
             });
 
         function saveCycle(loadedCycle){
-            console.log('  loaded cycle '+loadedCycle.name);
             cycle = loadedCycle;
         }
 
@@ -236,6 +269,7 @@ function loadAndCompileHandlebarsTemplate(fileName){
 }
 
 module.exports = {
+    exportPdf: exportPdf,
     generateContentForPdf: generateContentForPdf,
     generateDataForPdf: generateDataForPdf
 };
