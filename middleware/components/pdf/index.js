@@ -47,11 +47,11 @@ function generatePdfContent(type, entityId, cycleId){
 }
 
 function dataForPdf(type, entityId, cycle){
-    if ( type.toLowerCase() === 'invoice' || type.toLowerCase() === 'estimate' ){
+    if ( typeIsForLibrarySelections(type) ){
         return dataForLibrarySelections(entityId);
     }
 
-    if ( type.toLowerCase() === 'report' ){
+    if ( typeIsForVendorReport(type) ){
         return dataForVendorReport(entityId);
     }
 
@@ -121,7 +121,13 @@ function dataForPdf(type, entityId, cycle){
 
 
 
+function typeIsForLibrarySelections(type){
+    return type.toLowerCase() === 'invoice' || type.toLowerCase() === 'estimate';
+}
 
+function typeIsForVendorReport(type){
+    return type.toLowerCase() === 'report';
+}
 
 
 module.exports = {
