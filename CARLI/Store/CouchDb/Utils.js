@@ -244,7 +244,7 @@ module.exports = function (storeOptions) {
         return name;
     }
 
-    function createDatabase(dbName, databaseType) {
+    function createDatabase(dbName, databaseType, associatedEntity) {
         var deferred = Q.defer();
 
         var dbType = (dbName == storeOptions.couchDbName) ? 'CARLI' : 'Cycle';
@@ -253,7 +253,7 @@ module.exports = function (storeOptions) {
             if (error) {
                 deferred.reject(error);
             } else if (response.statusCode >= 200 && response.statusCode <= 299) {
-                createSecurityDocumentForType(databaseType).then(function() {
+                createSecurityDocumentForType(dbName, databaseType, associatedEntity).then(function() {
                     couchApp.putDesignDoc(dbName, dbType).then(function () {
                         deferred.resolve();
                     });
@@ -266,8 +266,37 @@ module.exports = function (storeOptions) {
         return deferred.promise;
     }
 
-    function createSecurityDocumentForType(databaseType) {
-        return Q(true);
+    function createSecurityDocumentForType(dbName, databaseType, entity) {
+        var roles = [];
+
+        if (databaseType == couchUtils.DB_TYPE_VENDOR) {
+            roles.push('vendor');
+            roles.push('vendor-' + entity.id);
+        } else if (databaseType == couchUtils.DB_TYPE_LIBRARY) {
+            roles.push('library');
+            roles.push('library-' + entity.id);
+        } else if (databaseType == couchUtils.DB_TYPE_STAFF) {
+            roles.push('staff');
+        }
+
+        if (roles.length === 0) {
+            return Q(false);
+        }
+
+        return couchRequest({
+            url: storeOptions.privilegedCouchDbUrl + '/' + dbName + '/_security',
+            method: 'put',
+            json: {
+                admins: {
+                    names: [],
+                    roles:[]
+                },
+                members: {
+                    names: [],
+                    roles: roles
+                }
+            }
+        });
     }
 
     /**
@@ -458,9 +487,10 @@ module.exports = function (storeOptions) {
         }
     }
 
-    return {
+    var couchUtils = {
         DB_TYPE_TEST: 'db_type_test',
         DB_TYPE_STAFF: 'db_type_staff',
+        DB_TYPE_LIBRARY: 'db_type_library',
         DB_TYPE_VENDOR: 'db_type_vendor',
 
         couchViewUrl: couchViewUrl,
@@ -487,4 +517,5 @@ module.exports = function (storeOptions) {
         getCycleViewIndexingStatus: getCycleViewIndexingStatus
     };
 
+    return couchUtils;
 };
