@@ -144,7 +144,7 @@ function setStore(store) {
 }
 
 module.exports = {
-    setStore: VendorStatusRepository.setStore,
+    setStore: setStore,
     setCycle: setCycle,
     create: createVendorStatus,
     update: updateVendorStatus,
