@@ -33,7 +33,7 @@ function cycleService( CarliModules, $q, errorHandler ) {
         getCycleCreationStatus: function(cycleId){
             return $q.when( cycleMiddleware.getCycleCreationStatus(cycleId) )
                 .then(function (statusString) {
-                    return JSON.parse(statusString);
+                    return statusString;
                 });
         },
         getCycleDatabaseStatuses: getCycleDatabaseStatuses,
