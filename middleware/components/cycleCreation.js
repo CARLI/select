@@ -75,7 +75,7 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
             return vendorStatusRepository.ensureStatusExistsForVendor(vendor.id, newCycle);
         }
         function resetVendorStatus(vendor){
-            return vendorStatusRepository.getStatusForVendor(vendor.id)
+            return vendorStatusRepository.getStatusForVendor(vendor.id, newCycle)
                 .then(function(vendorStatus){
                     var resetStatus = vendorStatusRepository.reset(vendorStatus, newCycle);
                     return vendorStatusRepository.update(resetStatus);
