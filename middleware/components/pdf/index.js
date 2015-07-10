@@ -58,12 +58,13 @@ function exportPdf(type, entityId, cycleId){
  * This function combines data and Handlebars templates to return the HTML content which is transformed into a PDF.
  * There are multiple steps to assembling the final HTML:
  *   - Get the data for the PDF (depends on type of invoice/report, which library/vendor, and which cycle)
- *   - Build the data content HTML - for invoices this is the list of selected products and prices + total
- *   - Compile the data content into the notification template - this is the pre-amble and post-amble that CARLI staff
- *     can customize. It wraps the data table content.
- *   - Compile the previous results into the final PDF content - this wraps the content in the hard-coded PDF contents
- *     (text that is not customizable, header, footer, etc.) and inclues the styles to format the PDF.
+ *   - Build the data content HTML - for invoices and estimates this is the list of selected products and prices + total
+ *   - Load the NotificationTemplate for the appropriate type (same dependencies as the data).
+ *   - Compile the data table and text from the notification templates into the final PDF content.
+ *     This wraps the content in the hard-coded PDF contents (text that is not customizable, header, footer, etc.)
+ *     and inclues the styles to format the PDF.
  *
+ * This function returns an object with both the HTML results and the filename for the pdf.
  **/
 function generateContentForPdf(type, entityId, cycleId){
     console.log('Begin generateContentForPdf '+type+' '+entityId+' for cycle '+cycleId);
@@ -95,7 +96,8 @@ function generateContentForPdf(type, entityId, cycleId){
             })
             .then(function(notificationTemplate){
                 dataForLibrarySelections.invoiceContent = createInvoiceContent();
-                dataForLibrarySelections.pdfContent = createPdfBodyContent(notificationTemplate);
+                dataForLibrarySelections.beforeText = notificationTemplate.pdfBefore;
+                dataForLibrarySelections.afterText = notificationTemplate.pdfAfter;
 
                 return {
                     html: createFinalPdfContent(),
@@ -105,11 +107,6 @@ function generateContentForPdf(type, entityId, cycleId){
 
         function createInvoiceContent(){
             return invoiceContentTemplate(dataForLibrarySelections);
-        }
-
-        function createPdfBodyContent(notificationTemplate){
-            var pdfBodyTemplate = handlebars.compile(notificationTemplate.pdfBody);
-            return pdfBodyTemplate(dataForLibrarySelections);
         }
 
         function createFinalPdfContent(){
