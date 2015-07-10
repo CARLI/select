@@ -182,24 +182,27 @@ function generateDataForPdf(type, entityId, cycleId){
 
     function dataForLibrarySelections(libraryId){
         var cycle = null;
-        var offerings = null;
+        var invoiceData = null;
 
         return loadCycle(cycleId)
             .then(saveCycle)
             .then(loadSelections)
             .then(groupOfferingsForLibraryInvoice)
-            .then(function(offeringsByVendor){
-                offerings = offeringsByVendor;
+            .then(transformGroupedOfferingsToListForInvoiceTable)
+            .then(function(invoiceTableData){
+                invoiceData = invoiceTableData;
                 return libraryRepository.load(libraryId);
             })
             .then(function(loadedLibrary){
-                console.log('LIBRARY DATA',loadedLibrary);/**** XXX ********/
                 return {
                     cycle: cycle,
                     library: loadedLibrary,
-                    selectionsByVendor: offerings,
-                    invoiceTotal: computeInvoiceTotal(offerings)
+                    invoiceData: invoiceData,
+                    invoiceTotal: computeInvoiceTotal(invoiceData)
                 }
+            })
+            .catch(function(err){
+                console.log('ERROR getting data for library selections', err);
             });
 
         function saveCycle(loadedCycle){
@@ -260,15 +263,33 @@ function generateDataForPdf(type, entityId, cycleId){
             });
     }
 
-    function computeInvoiceTotal(offeringsByVendor){
-        var total = 0;
-        var vendors = Object.keys(offeringsByVendor);
+    function transformGroupedOfferingsToListForInvoiceTable(offeringsByVendorName){
+        var results = [];
+        var vendorNames = Object.keys(offeringsByVendorName).sort();
+        var vendorNameForFirstRowOnly = '';
 
-        vendors.forEach(function(vendor){
-            var offerings = offeringsByVendor[vendor];
-            offerings.forEach(function(offering){
-                total += offering.selection.price;
+        vendorNames.forEach(function(vendorName){
+            var offeringsForVendor = offeringsByVendorName[vendorName];
+            vendorNameForFirstRowOnly = vendorName;
+
+            offeringsForVendor.forEach(function(offering){
+                results.push({
+                    vendor: vendorNameForFirstRowOnly,
+                    product: offering.product.name,
+                    price: offering.selection.price
+                });
+                vendorNameForFirstRowOnly = '';
             });
+        });
+
+        return results;
+    }
+
+    function computeInvoiceTotal(invoiceRows){
+        var total = 0;
+
+        invoiceRows.forEach(function(row){
+            total += row.price;
         });
 
         return total;
