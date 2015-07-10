@@ -2,16 +2,21 @@ var cycleRepository = require('../../../CARLI/Entity/CycleRepository');
 var fs = require('fs');
 var handlebars = require('handlebars');
 var libraryRepository = require('../../../CARLI/Entity/LibraryRepository');
+var moment = require('moment');
 var notificationTemplateRepository = require('../../../CARLI/Entity/NotificationTemplateRepository');
+var numeral = require('numeral');
 var offeringRepository = require('../../../CARLI/Entity/OfferingRepository');
 var pdf = require('html-pdf');
 var Q = require('q');
 var vendorRepository = require('../../../CARLI/Entity/VendorRepository');
 
+setupHandlebarsHelpers();
 var templatesDirectory = 'components/pdf/templates/';
 var invoiceContentTemplate = loadAndCompileHandlebarsTemplate('invoiceContentTemplate.handlebars');
 var invoicePdfTemplate = loadAndCompileHandlebarsTemplate('invoicePdfTemplate.handlebars');
 
+var batchIdPrefix = 'USI';
+var invoiceNumberPrefix = 'USIN';
 
 function exportPdf(type, entityId, cycleId){
     console.log('Begin generateContentForPdf '+type+' '+entityId+' for cycle '+cycleId);
@@ -23,7 +28,7 @@ function exportPdf(type, entityId, cycleId){
 
     var options = {
         header: {
-            height: '5mm'
+            height: '15mm'
         },
         footer: {
             height: '5mm',
@@ -89,20 +94,42 @@ function generateContentForPdf(type, entityId, cycleId){
                 return fetchTemplateForContent(type, cycle);
             })
             .then(function(notificationTemplate){
-                var invoiceContent = invoiceContentTemplate(dataForLibrarySelections);
-                dataForLibrarySelections.invoiceContent = invoiceContent;
+                dataForLibrarySelections.invoiceContent = createInvoiceContent();
+                dataForLibrarySelections.pdfContent = createPdfBodyContent(notificationTemplate);
 
-                var pdfContentTemplate = handlebars.compile(notificationTemplate.pdfBody);
-                dataForLibrarySelections.pdfContent = pdfContentTemplate(dataForLibrarySelections);
-
-                return dataForLibrarySelections
-            })
-            .then(function () {
                 return {
-                    html: invoicePdfTemplate(dataForLibrarySelections),
+                    html: createFinalPdfContent(),
                     fileName: fileNameForLibrarySelections(dataForLibrarySelections, type)
                 };
             });
+
+        function createInvoiceContent(){
+            return invoiceContentTemplate(dataForLibrarySelections);
+        }
+
+        function createPdfBodyContent(notificationTemplate){
+            var pdfBodyTemplate = handlebars.compile(notificationTemplate.pdfBody);
+            return pdfBodyTemplate(dataForLibrarySelections);
+        }
+
+        function createFinalPdfContent(){
+            dataForLibrarySelections.invoiceNumber = getNextInvoiceNumber();
+            dataForLibrarySelections.invoiceDate = getInvoiceDate();
+            dataForLibrarySelections.batchId = getNextBatchId();
+            return invoicePdfTemplate(dataForLibrarySelections);
+
+            function getNextInvoiceNumber(){
+                return invoiceNumberPrefix + '94IA'; /* TODO: generate this letter + number string */
+            }
+
+            function getInvoiceDate(){
+                return new Date();
+            }
+
+            function getNextBatchId(){
+                return batchIdPrefix + '10031'; /* TODO: generate this number sequentially */
+            }
+        }
     }
 
     function htmlForVendorReport(dataForVendorReport){
@@ -166,10 +193,12 @@ function generateDataForPdf(type, entityId, cycleId){
                 return libraryRepository.load(libraryId);
             })
             .then(function(loadedLibrary){
+                console.log('LIBRARY DATA',loadedLibrary);/**** XXX ********/
                 return {
                     cycle: cycle,
                     library: loadedLibrary,
-                    selectionsByVendor: offerings
+                    selectionsByVendor: offerings,
+                    invoiceTotal: computeInvoiceTotal(offerings)
                 }
             });
 
@@ -201,7 +230,6 @@ function generateDataForPdf(type, entityId, cycleId){
         }
     }
 
-
     function groupOfferingsForLibraryInvoice(offeringsList){
         var offeringsByVendor = groupOfferingsByVendorId(offeringsList);
         return groupOfferingsByVendorName(offeringsByVendor);
@@ -230,6 +258,20 @@ function generateDataForPdf(type, entityId, cycleId){
                 });
                 return offeringsByVendorName;
             });
+    }
+
+    function computeInvoiceTotal(offeringsByVendor){
+        var total = 0;
+        var vendors = Object.keys(offeringsByVendor);
+
+        vendors.forEach(function(vendor){
+            var offerings = offeringsByVendor[vendor];
+            offerings.forEach(function(offering){
+                total += offering.selection.price;
+            });
+        });
+
+        return total;
     }
 }
 
@@ -275,6 +317,20 @@ function loadCycle(cycleId){
         }
     }
 }
+
+function formatCurrency( number ){
+    return numeral(number).format('0,0.00');
+}
+
+function formatDate( date ){
+    return moment(date).format('MM/DD/YYYY');
+}
+
+function setupHandlebarsHelpers(){
+    handlebars.registerHelper('currency', formatCurrency);
+    handlebars.registerHelper('date', formatDate);
+}
+
 
 function loadAndCompileHandlebarsTemplate(fileName){
     var templateHtml = fs.readFileSync(templatesDirectory + fileName, 'utf8');

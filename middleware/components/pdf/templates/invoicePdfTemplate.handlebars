@@ -1,26 +1,154 @@
 <html>
     <head>
         <title>Sales Invoice for {{ library.name }}</title>
+        <style>
+            body {
+                font-family: arial, sans-serif;
+                font-size: 13px;
+                margin: 5mm;
+                padding: 0;
+            }
+
+            #pageHeader {
+                background-repeat: no-repeat;
+                background-image: url(data:image/png;base64,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);
+                height: 15mm; /* For the final PDF export, this is atually determined by the 'header' option passed into the html-pdf module */
+            }
+
+            #pageContent {
+                margin: 0 5mm;
+            }
+
+            #pageFooter {
+                height: 5mm; /* For the final PDF export this is controlled by the 'footer' option and page numbers are filled in */
+            }
+
+            #pageFooter span {
+                float: right;
+                text-align: right;
+            }
+
+            .h1 {
+                float: left;
+                font-size: 18px;
+                text-transform: uppercase;
+                font-weight: bold;
+            }
+
+            .h2 {
+                float: right;
+                font-size: 13px;
+                text-align: right;
+                font-weight: bold;
+            }
+
+            p {
+                clear: both;
+            }
+
+            ul {
+                list-style: none;
+                padding: 0;
+            }
+
+            #invoiceContent > li {
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+            }
+
+            #invoiceContent > li.headers {
+                text-decoration: underline;
+            }
+
+            #invoiceContent > li.footer {
+                margin-top: 1cm;
+                font-weight: bold;
+            }
+
+            #invoiceContent > li.footer .vendor {
+                text-transform: uppercase;
+            }
+
+            #invoiceContent > li > .vendor {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1 1 30%;
+                flex: 1 1 20%;
+                width: 20%;
+                font-weight: bold;
+            }
+
+            #invoiceContent > li > .database {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1 1 50%;
+                flex: 1 1 60%;
+                width: 60%;
+            }
+
+            #invoiceContent > li > .amount {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1 1 20%;
+                flex: 1 1 20%;
+                width: 20%;
+            }
+
+            #invoiceContent > li > .products {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1 1 70%;
+                flex: 1 1 80%;
+                width: 80%;
+            }
+
+            #invoiceContent > li > ul.products > li {
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+            }
+
+            #invoiceContent > li > ul.products > li .database {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1 1 60%;
+                flex: 1 1 60%;
+                width: 60%;
+            }
+
+            #invoiceContent > li > ul.products > li .amount {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1 1 10%;
+                flex: 1 1 10%;
+                width: 10%;
+            }
+
+            .amount > .align {
+                display: inline-block;
+                min-width: 75px;
+                text-align: right;
+            }
+
+
+        </style>
     </head>
     <body>
-        <div id="pageHeader">
-            CARLI
-        </div>
+        <div id="pageHeader"></div>
         <div id="pageContent">
-            <h1>Sales Invoice</h1>
-            <h2>
-                Invoice Number: USIN[0000]<br>
-                Invoice Date: [DATE]
-            </h2>
+            <div class="h1">Sales Invoice</div>
+            <div class="h2">
+                Invoice Number: {{ invoiceNumber }}<br>
+                Invoice Date: {{ date invoiceDate }}
+            </div>
             <p>
                 Bill To:<br>
                 {{ library.name }}<br>
-                BatchID: USI[000]
+                BatchID: {{ batchId }}
+            </p>
+            <p>
+                Your GAR account number is: {{ library.gar }}<br>
+                Please include the GAR number and invoice number with your check.<br>
             </p>
             {{{ pdfContent }}}
-        </div>
-        <div id="pageFooter">
-            {{ library.name }}
+            <p>
+                BatchID: {{ batchId }}
+            </p>
         </div>
     </body>
 </html>

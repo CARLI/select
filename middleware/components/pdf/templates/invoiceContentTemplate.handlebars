@@ -11,10 +11,15 @@
             {{#each this}}
             <li>
                 <div class="database">{{ product.name }}</div>
-                <div class="amount">{{ selection.price }}</div>
+                <div class="amount">$<span class="align">{{ currency selection.price }}</span></div>
             </li>
             {{/each}}
         </ul>
     </li>
 {{/each}}
+    <li class="footer">
+        <div class="vendor">Please pay this total:</div>
+        <div class="database"></div>
+        <div class="amount">$<span class="align">{{ currency invoiceTotal }}</span></div>
+    </li>
 </ul>
