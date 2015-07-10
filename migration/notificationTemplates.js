@@ -22,8 +22,8 @@ var notificationTemplates = [
         name: 'Library Estimates - Open Cycle',
         subject: 'Estimate: LIBRARY Selections',
         emailBody: '',
-        pdfBefore: 'This text appears before the estimate invoice',
-        pdfAfter: 'This text appears after the estimate invoice',
+        pdfBefore: 'This text appears before the open cycle estimate invoice',
+        pdfAfter: 'This text appears after the open cycle estimate invoice',
         pdfContentIsEditable: true,
         notificationType: 'subscription'
     },
@@ -40,8 +40,8 @@ var notificationTemplates = [
         name: 'Library Estimates - Closed Cycle',
         subject: 'Estimate: LIBRARY Selections',
         emailBody: '',
-        pdfBefore: 'This text appears before the estimate invoice',
-        pdfAfter: 'This text appears after the estimate invoice',
+        pdfBefore: 'This text appears before the closed cycle estimate invoice',
+        pdfAfter: 'This text appears after the closed cycle estimate invoice',
         pdfContentIsEditable: true,
         notificationType: 'subscription'
     },

@@ -98,6 +98,7 @@ function generateContentForPdf(type, entityId, cycleId){
                 dataForLibrarySelections.invoiceContent = createInvoiceContent();
                 dataForLibrarySelections.beforeText = notificationTemplate.pdfBefore;
                 dataForLibrarySelections.afterText = notificationTemplate.pdfAfter;
+                dataForLibrarySelections.realInvoice = typeIsForRealInvoice(type);
 
                 return {
                     html: createFinalPdfContent(),
@@ -319,6 +320,10 @@ function typeIsForLibrarySelections(type){
 
 function typeIsForVendorReport(type){
     return type.toLowerCase() === 'report';
+}
+
+function typeIsForRealInvoice(type){
+    return type.toLowerCase() === 'invoice';
 }
 
 function loadCycle(cycleId){
