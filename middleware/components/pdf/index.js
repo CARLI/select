@@ -35,11 +35,14 @@ function exportPdf(type, entityId, cycleId){
         .then(function (contentForPdf) {
             var pdfPromise = Q.defer();
 
-            pdf.create(contentForPdf, options).toBuffer(function (err, result) {
+            pdf.create(contentForPdf.html, options).toBuffer(function (err, result) {
                 if (err) {
                     pdfPromise.reject(err);
                 }
-                pdfPromise.resolve(result);
+                pdfPromise.resolve({
+                    pdf: result,
+                    fileName: contentForPdf.fileName
+                });
             });
 
             return pdfPromise.promise;
@@ -94,8 +97,11 @@ function generateContentForPdf(type, entityId, cycleId){
 
                 return dataForLibrarySelections
             })
-            .then(function(){
-                return invoicePdfTemplate(dataForLibrarySelections);
+            .then(function () {
+                return {
+                    html: invoicePdfTemplate(dataForLibrarySelections),
+                    fileName: fileNameForLibrarySelections(dataForLibrarySelections, type)
+                };
             });
     }
 
@@ -115,6 +121,13 @@ function generateContentForPdf(type, entityId, cycleId){
         else {
             return notificationTemplateRepository.loadTemplateForInvoices();
         }
+    }
+
+    function fileNameForLibrarySelections(dataForLibrarySelections, type){
+        var data = dataForLibrarySelections;
+        var cycle = data.cycle;
+        var library = data.library;
+        return library.name + '-' + cycle.name + '-' + type + '.pdf';
     }
 }
 
