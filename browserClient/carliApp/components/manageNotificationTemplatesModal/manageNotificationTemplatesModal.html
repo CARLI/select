@@ -26,8 +26,11 @@
                     <textarea  id="templateEmailBody" ng-model="vm.templateToEdit.emailBody"></textarea>
 
                     <div ng-if="vm.templateToEdit.pdfContentIsEditable">
-                        <label for="templatePdfBody">Invoice Text:</label>
-                        <textarea  id="templatePdfBody" ng-model="vm.templateToEdit.pdfBody"></textarea>
+                        <label for="templatePdfBefore">Text Before Invoice:</label>
+                        <textarea  id="templatePdfBefore" ng-model="vm.templateToEdit.pdfBefore"></textarea>
+
+                        <label for="templatePdfAfter">Text After Invoice:</label>
+                        <textarea  id="templatePdfAfter" ng-model="vm.templateToEdit.pdfAfter"></textarea>
                     </div>
                 </form>
             </div>

@@ -12,7 +12,8 @@ var notificationTemplates = [
         name: 'Library Invoices',
         subject: 'CARLI Database Invoices',
         emailBody: '',
-        pdfBody: '{{ pdfContent }}',
+        pdfBefore: 'This text appears before the invoice contents',
+        pdfAfter: 'This text appears after the invoice contents',
         pdfContentIsEditable: true,
         notificationType: 'invoice'
     },
@@ -21,7 +22,8 @@ var notificationTemplates = [
         name: 'Library Estimates - Open Cycle',
         subject: 'Estimate: LIBRARY Selections',
         emailBody: '',
-        pdfBody: '{{ pdfContent }}',
+        pdfBefore: 'This text appears before the estimate invoice',
+        pdfAfter: 'This text appears after the estimate invoice',
         pdfContentIsEditable: true,
         notificationType: 'subscription'
     },
@@ -38,7 +40,8 @@ var notificationTemplates = [
         name: 'Library Estimates - Closed Cycle',
         subject: 'Estimate: LIBRARY Selections',
         emailBody: '',
-        pdfBody: '{{ pdfContent }}',
+        pdfBefore: 'This text appears before the estimate invoice',
+        pdfAfter: 'This text appears after the estimate invoice',
         pdfContentIsEditable: true,
         notificationType: 'subscription'
     },
@@ -47,7 +50,6 @@ var notificationTemplates = [
         name: 'Open System',
         subject: 'Open System',
         emailBody: '',
-        pdfBody: '{{ pdfContent }}',
         pdfContentIsEditable: false,
         notificationType: 'other'
     },
@@ -56,7 +58,6 @@ var notificationTemplates = [
         name: 'Vendor Reports',
         subject: 'Report: CARLI Library Selections',
         emailBody: '',
-        pdfBody: '{{ pdfContent }}',
         pdfContentIsEditable: false,
         notificationType: 'report'
     },
@@ -65,8 +66,9 @@ var notificationTemplates = [
         name: 'Annual Access Fee Invoices',
         subject: 'CARLI Annual Access Fee Invoices',
         emailBody: '',
-        pdfBody: '{{ pdfContent }}',
-        pdfContentIsEditable: false,
+        pdfBefore: 'This text appears before the invoice contents',
+        pdfAfter: 'This text appears after the invoice contents',
+        pdfContentIsEditable: true,
         notificationType: 'invoice'
     }
 ];
