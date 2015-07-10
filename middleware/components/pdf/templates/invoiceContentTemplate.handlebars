@@ -1,25 +1,18 @@
-<ul id="invoiceContent">
-    <li class="headers">
-        <div class="vendor">Vendor</div>
-        <div class="database">Database</div>
-        <div class="amount">Amount</div>
-    </li>
-    {{#each selectionsByVendor }}
-    <li>
-        <div class="vendor">{{ @key }}</div>
-        <ul class="products">
-            {{#each this}}
-            <li>
-                <div class="database">{{ product.name }}</div>
-                <div class="amount">$<span class="align">{{ currency selection.price }}</span></div>
-            </li>
-            {{/each}}
-        </ul>
-    </li>
-{{/each}}
-    <li class="footer">
-        <div class="vendor">Please pay this total:</div>
-        <div class="database"></div>
-        <div class="amount">$<span class="align">{{ currency invoiceTotal }}</span></div>
-    </li>
-</ul>
+<table id="invoiceContent">
+    <tr>
+        <th class="vendor">Vendor</th>
+        <th class="database">Database</th>
+        <th class="amount">Amount</th>
+    </tr>
+    {{#each invoiceData }}
+    <tr>
+        <td class="vendor">{{ vendor }}</td>
+        <td class="product">{{ product }}</td>
+        <td class="amount">$<span class="align">{{ currency price }}</span></td>
+    </tr>
+    {{/each}}
+    <tr class="footer">
+        <td class="vendor" colspan="2">Please pay this total:</td>
+        <td class="total amount">$<span class="align">{{ currency invoiceTotal }}</span></td>
+    </tr>
+</table>

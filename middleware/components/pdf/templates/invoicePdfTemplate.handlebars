@@ -46,77 +46,34 @@
                 clear: both;
             }
 
-            ul {
-                list-style: none;
-                padding: 0;
+            table {
+                margin: 5mm auto;
             }
 
-            #invoiceContent > li {
-                display: -webkit-box;
-                display: -webkit-flex;
-                display: flex;
-            }
-
-            #invoiceContent > li.headers {
+            th {
+                font-weight: normal;
+                text-align: left;
                 text-decoration: underline;
             }
 
-            #invoiceContent > li.footer {
-                margin-top: 1cm;
+            th,
+            td {
+                font-size: 13px;
+                padding: 0;
+            }
+
+            th + th,
+            td + td {
+                padding-left: 5mm;
+            }
+
+            th.vendor,
+            td.vendor {
                 font-weight: bold;
             }
 
-            #invoiceContent > li.footer .vendor {
-                text-transform: uppercase;
-            }
-
-            #invoiceContent > li > .vendor {
-                -webkit-box-flex: 1;
-                -webkit-flex: 1 1 30%;
-                flex: 1 1 20%;
-                width: 20%;
-                font-weight: bold;
-            }
-
-            #invoiceContent > li > .database {
-                -webkit-box-flex: 1;
-                -webkit-flex: 1 1 50%;
-                flex: 1 1 60%;
-                width: 60%;
-            }
-
-            #invoiceContent > li > .amount {
-                -webkit-box-flex: 1;
-                -webkit-flex: 1 1 20%;
-                flex: 1 1 20%;
-                width: 20%;
-            }
-
-            #invoiceContent > li > .products {
-                -webkit-box-flex: 1;
-                -webkit-flex: 1 1 70%;
-                flex: 1 1 80%;
-                width: 80%;
-            }
-
-            #invoiceContent > li > ul.products > li {
-                display: -webkit-box;
-                display: -webkit-flex;
-                display: flex;
-            }
-
-            #invoiceContent > li > ul.products > li .database {
-                -webkit-box-flex: 1;
-                -webkit-flex: 1 1 60%;
-                flex: 1 1 60%;
-                width: 60%;
-            }
-
-            #invoiceContent > li > ul.products > li .amount {
-                -webkit-box-flex: 1;
-                -webkit-flex: 1 1 10%;
-                flex: 1 1 10%;
-                width: 10%;
+            td.amount {
+                white-space: nowrap;
             }
 
             .amount > .align {
@@ -125,7 +82,14 @@
                 text-align: right;
             }
 
+            tr.footer td {
+                padding-top: 5mm;
+            }
 
+            td.total {
+                font-weight: bold;
+                text-transform: uppercase;
+            }
         </style>
     </head>
     <body>
