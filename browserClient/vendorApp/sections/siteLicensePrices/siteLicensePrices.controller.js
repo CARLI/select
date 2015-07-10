@@ -282,7 +282,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
                 } else if (mode == 'percentageIncrease') {
                     var originalValue = parseFloat($cell.text());
                     var newValue = (100 + value)/100 * originalValue;
-                    // TODO round this to the nearest cent?
+                    newValue = newValue.toFixed(2);
                     $cell.find('.price').text( newValue );
                 }
             }
