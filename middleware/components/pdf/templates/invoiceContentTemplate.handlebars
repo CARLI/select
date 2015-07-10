@@ -12,7 +12,12 @@
     </tr>
     {{/each}}
     <tr class="footer">
-        <td class="vendor" colspan="2">Please pay this total:</td>
+        <td class="vendor" colspan="2">
+            {{#if realInvoice }}
+                Please pay this total:</td>
+            {{ else }}
+                Total:
+            {{/if}}
         <td class="total amount">$<span class="align">{{ currency invoiceTotal }}</span></td>
     </tr>
 </table>

@@ -53,6 +53,8 @@
 
             table {
                 margin: 5mm auto;
+                position: relative;
+                z-index: 1;
             }
 
             th {
@@ -95,25 +97,45 @@
                 font-weight: bold;
                 text-transform: uppercase;
             }
+
+            #doNotPayWatermark {
+                text-transform: uppercase;
+                font-size: 3cm;
+                color: rgb(213, 230, 253);
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-50%) rotate(-45deg);
+                -webkit-transform: translate(-50%,-50%) rotate(-45deg);
+                white-space: nowrap;
+                z-index: 0;
+            }
         </style>
     </head>
     <body>
         <div id="pageHeader"></div>
         <div id="pageContent">
-            <div class="h1">Sales Invoice</div>
-            <div class="h2">
-                Invoice Number: {{ invoiceNumber }}<br>
-                Invoice Date: {{ date invoiceDate }}
+            {{#if realInvoice}}
+            <div id="realInvoiceContent">
+                <div class="h1">Sales Invoice</div>
+                <div class="h2">
+                    Invoice Number: {{ invoiceNumber }}<br>
+                    Invoice Date: {{ date invoiceDate }}
+                </div>
+                <p>
+                    Bill To:<br>
+                    {{ library.name }}<br>
+                    BatchID: {{ batchId }}
+                </p>
+                <p>
+                    Your GAR account number is: {{ library.gar }}<br>
+                    Please include the GAR number and invoice number with your check.<br>
+                </p>
             </div>
-            <p>
-                Bill To:<br>
-                {{ library.name }}<br>
-                BatchID: {{ batchId }}
-            </p>
-            <p>
-                Your GAR account number is: {{ library.gar }}<br>
-                Please include the GAR number and invoice number with your check.<br>
-            </p>
+            {{ else }}
+                Library: {{ library.name }}
+                <div id="doNotPayWatermark">Do Not Pay</div>
+            {{/if}}
 
             <pre>{{ beforeText }}</pre>
 
@@ -121,9 +143,11 @@
 
             <pre>{{ afterText }}</pre>
 
+            {{#if realInvoice}}
             <p>
                 BatchID: {{ batchId }}
             </p>
+            {{/if}}
         </div>
     </body>
 </html>
