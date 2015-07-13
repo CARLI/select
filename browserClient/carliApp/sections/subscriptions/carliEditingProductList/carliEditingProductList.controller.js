@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.carliEditingProductList')
     .controller('carliEditingProductListController', carliEditingProductListController);
 
-function carliEditingProductListController( $scope, alertService, cycleService, productService, vendorService ) {
+function carliEditingProductListController( $q, alertService, cycleService, historicalPricingService, productService, vendorService ) {
     var vm = this;
     vm.removeProduct = removeProduct;
     vm.openVendorPricing = openVendorPricing;
@@ -20,7 +20,10 @@ function carliEditingProductListController( $scope, alertService, cycleService, 
 
     function initYearsToDisplay() {
         vm.yearsToDisplay = [];
-        for (var y = 2010; y < 2015; y++) {
+        var maxYear = vm.cycle.year;
+        var minYear = maxYear - 4;
+
+        for (var y = minYear; y <= maxYear ; y++) {
             vm.yearsToDisplay.push(y);
         }
     }
@@ -75,20 +78,13 @@ function carliEditingProductListController( $scope, alertService, cycleService, 
                         vendor.products = products;
                         return products;
                     });
-/*
-                    product.selectionHistory = {};
-                    for (var i = 0; i < vm.yearsToDisplay.length; i++) {
-                        var y = vm.yearsToDisplay[i];
-                        product.selectionHistory[y] = _pickRandomSelectionHistory();
-                        product.lastPrice = '$123,456';
-                    }
-*/
         });
 
         function loadSelectionHistory( product ){
-            //TODO: pull the logic out of subscriptionHistoryTable.controller.js into a service and share it here
-            //the logic to load the last four cycles and return a list of stats
-            //that controller and this one need slightly different shapes though.
+            return historicalPricingService.getHistoricalPricingDataForProduct(product.id, vm.cycle)
+                .then(function(historicalPricingData){
+                    product.historicalPricing = historicalPricingData;
+                });
         }
     }
 
