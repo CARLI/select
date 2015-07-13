@@ -18,7 +18,10 @@
         },
         "lastActivity": {
             "description": "The date that the Vendor last made any modifications in the Vendor app",
-            "$ref": "./Date.json"
+            "oneOf": [
+                { "$ref": "./Date.json" },
+                { "type": "null" }
+            ]
         },
         "description": {
             "description": "A text description of the Vendor's pricing status",
