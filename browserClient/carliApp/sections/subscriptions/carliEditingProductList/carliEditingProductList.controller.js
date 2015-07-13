@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.carliEditingProductList')
     .controller('carliEditingProductListController', carliEditingProductListController);
 
-function carliEditingProductListController( $scope, alertService, cycleService, productService, vendorService ) {
+function carliEditingProductListController( $filter, $q, alertService, cycleService, historicalPricingService, productService, vendorService ) {
     var vm = this;
     vm.removeProduct = removeProduct;
     vm.openVendorPricing = openVendorPricing;
@@ -20,7 +20,10 @@ function carliEditingProductListController( $scope, alertService, cycleService, 
 
     function initYearsToDisplay() {
         vm.yearsToDisplay = [];
-        for (var y = 2010; y < 2015; y++) {
+        var maxYear = vm.cycle.year;
+        var minYear = maxYear - 4;
+
+        for (var y = minYear; y <= maxYear ; y++) {
             vm.yearsToDisplay.push(y);
         }
     }
@@ -68,29 +71,47 @@ function carliEditingProductListController( $scope, alertService, cycleService, 
         if (vendor.products) {
             return;
         }
-        vm.loadingPromise[vendor.id] = productService.listActiveProductsForVendorId(vendor.id).then(function (products) {
-            vendor.products = products;
-            angular.forEach(products, function (product) {
-                product.selectionHistory = {};
-                for (var i = 0; i < vm.yearsToDisplay.length; i++) {
-                    var y = vm.yearsToDisplay[i];
-                    product.selectionHistory[y] = _pickRandomSelectionHistory();
-                    product.lastPrice = '$123,456';
-                }
-            });
+        vm.loadingPromise[vendor.id] = productService.listActiveProductsForVendorId(vendor.id)
+            .then(function (products) {
+                return $q.all( products.map(loadSelectionHistory) )
+                    .then(function(){
+                        vendor.products = products;
+                        return products;
+                    });
         });
-    }
 
-    function _pickRandomSelectionHistory() {
-        switch (getRandomInt(0, 2)) {
-            case 0: return 'not offered';
-            case 1: return 'not selected';
-            case 2: return 'selected';
+        function loadSelectionHistory( product ){
+            return historicalPricingService.getHistoricalPricingDataForProduct(product.id, vm.cycle)
+                .then(function(historicalPricingData){
+                    product.historicalPricing = historicalPricingData;
+                    product.pricingLastYear = pricingForLastYear(historicalPricingData);
+                });
         }
     }
 
-    function getRandomInt(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+
+    function pricingForLastYear(historicalPricingData){
+        var thisYear = vm.cycle.year;
+        var lastYear = thisYear - 1;
+        var pricingData = historicalPricingData.filter(dataIsForLastYear)[0] || {};
+
+        var currency = $filter('currency');
+
+        if ( pricingData.minPrice && pricingData.maxPrice ){
+            if ( pricingData.minPrice === pricingData.maxPrice ){
+                return currency(pricingData.maxPrice);
+            }
+            else {
+                return currency(pricingData.minPrice) + ' - ' + currency(pricingData.maxPrice);
+            }
+        }
+        else {
+            return '-';
+        }
+
+        function dataIsForLastYear(pricingData){
+            return pricingData.year == lastYear;
+        }
     }
 
     function removeProduct( product ){

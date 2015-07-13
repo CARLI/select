@@ -138,12 +138,72 @@ function getProductSelectionStatisticsForCycle( productId, cycle ){
         .then(function(offerings){
             return {
                 numberOffered: offerings.length,
-                numberSelected: offerings.filter(selected).length
+                numberSelected: offerings.filter(selected).length,
+                minPrice: minPrice(offerings),
+                maxPrice: maxPrice(offerings)
             };
         });
 
     function selected(offering){
         return offering.selection;
+    }
+
+    function minPrice(offeringsList){
+        var minPriceSoFar = Infinity;
+
+        offeringsList.forEach(function(offering){
+            if ( offering.pricing ){
+                var minSuPrice = offering.pricing.su ? findMinSuPrice(offering.pricing.su) : Infinity;
+                var minPriceForOffering = Math.min(minSuPrice, offering.pricing.site);
+
+                if ( minPriceForOffering < minPriceSoFar ){
+                    minPriceSoFar = minPriceForOffering;
+                }
+            }
+        });
+
+        return minPriceSoFar;
+    }
+
+    function maxPrice(offeringsList){
+        var maxPriceSoFar = 0;
+
+        offeringsList.forEach(function(offering){
+            if ( offering.pricing ){
+                var maxSuPrice = offering.pricing.su ? findMaxSuPrice(offering.pricing.su) : 0;
+                var maxPriceForOffering = Math.max(maxSuPrice, offering.pricing.site);
+
+                if ( maxPriceForOffering > maxPriceSoFar ){
+                    maxPriceSoFar = maxPriceForOffering;
+                }
+            }
+        });
+
+        return maxPriceSoFar;
+    }
+
+    function findMinSuPrice( listOfSuPricingObjects ){
+        var minSuPrice = Infinity;
+
+        listOfSuPricingObjects.forEach(function(suPricing){
+            if ( suPricing.price < minSuPrice ){
+                minSuPrice = suPricing.price;
+            }
+        });
+
+        return minSuPrice;
+    }
+
+    function findMaxSuPrice( listOfSuPricingObjects ){
+        var maxSuPrice = 0;
+
+        listOfSuPricingObjects.forEach(function(suPricing){
+            if ( suPricing.price > maxSuPrice ){
+                maxSuPrice = suPricing.price;
+            }
+        });
+
+        return maxSuPrice;
     }
 }
 
