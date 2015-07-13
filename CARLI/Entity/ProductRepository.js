@@ -138,12 +138,44 @@ function getProductSelectionStatisticsForCycle( productId, cycle ){
         .then(function(offerings){
             return {
                 numberOffered: offerings.length,
-                numberSelected: offerings.filter(selected).length
+                numberSelected: offerings.filter(selected).length,
+                minPrice: minPrice(offerings),
+                maxPrice: maxPrice(offerings)
             };
         });
 
     function selected(offering){
         return offering.selection;
+    }
+
+    function minPrice(offeringsList){
+        var minPriceSoFar = Infinity;
+
+        offeringsList.forEach(function(offering){
+            if ( offering.pricing ){
+                var minPriceForOffering = offering.pricing.site;
+                if ( minPriceForOffering < minPriceSoFar ){
+                    minPriceSoFar = minPriceForOffering;
+                }
+            }
+        });
+
+        return minPriceSoFar;
+    }
+
+    function maxPrice(offeringsList){
+        var maxPriceSoFar = 0;
+
+        offeringsList.forEach(function(offering){
+            if ( offering.pricing ){
+                var maxPriceForOffering = offering.pricing.site;
+                if ( maxPriceForOffering > maxPriceSoFar ){
+                    maxPriceSoFar = maxPriceForOffering;
+                }
+            }
+        });
+
+        return maxPriceSoFar;
     }
 }
 
