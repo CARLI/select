@@ -153,7 +153,9 @@ function getProductSelectionStatisticsForCycle( productId, cycle ){
 
         offeringsList.forEach(function(offering){
             if ( offering.pricing ){
-                var minPriceForOffering = offering.pricing.site;
+                var minSuPrice = offering.pricing.su ? findMinSuPrice(offering.pricing.su) : Infinity;
+                var minPriceForOffering = Math.min(minSuPrice, offering.pricing.site);
+
                 if ( minPriceForOffering < minPriceSoFar ){
                     minPriceSoFar = minPriceForOffering;
                 }
@@ -168,7 +170,9 @@ function getProductSelectionStatisticsForCycle( productId, cycle ){
 
         offeringsList.forEach(function(offering){
             if ( offering.pricing ){
-                var maxPriceForOffering = offering.pricing.site;
+                var maxSuPrice = offering.pricing.su ? findMaxSuPrice(offering.pricing.su) : 0;
+                var maxPriceForOffering = Math.max(maxSuPrice, offering.pricing.site);
+
                 if ( maxPriceForOffering > maxPriceSoFar ){
                     maxPriceSoFar = maxPriceForOffering;
                 }
@@ -176,6 +180,30 @@ function getProductSelectionStatisticsForCycle( productId, cycle ){
         });
 
         return maxPriceSoFar;
+    }
+
+    function findMinSuPrice( listOfSuPricingObjects ){
+        var minSuPrice = Infinity;
+
+        listOfSuPricingObjects.forEach(function(suPricing){
+            if ( suPricing.price < minSuPrice ){
+                minSuPrice = suPricing.price;
+            }
+        });
+
+        return minSuPrice;
+    }
+
+    function findMaxSuPrice( listOfSuPricingObjects ){
+        var maxSuPrice = 0;
+
+        listOfSuPricingObjects.forEach(function(suPricing){
+            if ( suPricing.price > maxSuPrice ){
+                maxSuPrice = suPricing.price;
+            }
+        });
+
+        return maxSuPrice;
     }
 }
 

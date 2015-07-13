@@ -671,5 +671,48 @@ function runOneTimePurchaseProductTests(testCycle) {
                 ]);
             }
         });
+
+        it('should include su pricing in the ranges', function() {
+            var testProductId = uuid.v4();
+
+            return setupTestData()
+                .then(function () {
+                    return ProductRepository.getProductSelectionStatisticsForCycle(testProductId, testCycle);
+                })
+                .then(function (productStats) {
+                    return Q.all([
+                        expect(productStats).to.be.an('object'),
+                        expect(productStats).to.have.property('minPrice', 50),
+                        expect(productStats).to.have.property('maxPrice', 1000)
+                    ]);
+                });
+
+            function setupTestData() {
+                return Q.all([
+                    OfferingRepository.create({
+                        cycle: testCycle,
+                        library: uuid.v4(),
+                        product: testProductId,
+                        pricing: {
+                            site: 500,
+                            su: [
+                                { users: 1, price: 50 }
+                            ]
+                        }
+                    }, testCycle),
+                    OfferingRepository.create({
+                        cycle: testCycle,
+                        library: uuid.v4(),
+                        product: testProductId,
+                        pricing: {
+                            site: 500,
+                            su: [
+                                { users: 1, price: 1000 }
+                            ]
+                        }
+                    }, testCycle)
+                ]);
+            }
+        });
     });
 }
