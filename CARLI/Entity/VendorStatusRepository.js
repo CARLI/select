@@ -132,7 +132,7 @@ function setCycle(cycle) {
     if (cycle === undefined) {
         throw Error("Cycle is required");
     }
-    VendorStatusRepository.setStore(getStoreForCycle(cycle));
+    setStore(getStoreForCycle(cycle));
 }
 
 
