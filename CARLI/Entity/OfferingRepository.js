@@ -425,7 +425,7 @@ function getFlaggedState(offering){
         for ( var i = 0 ; i < max ; i++ ){
             var priceToCheck = offering.pricing.su[i].price;
             for ( var j = i ; j < max ; j++ ){
-                if ( offering.pricing.su[j].price > priceToCheck ){
+                if ( offering.pricing.su[j].price >= priceToCheck ){
                     return true;
                 }
             }
