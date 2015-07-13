@@ -95,6 +95,11 @@ function runMiddlewareServer(){
                 .then(sendResult(res))
                 .catch(send500Error(res));
         });
+        carliMiddleware.get('/get-historical-selection-data-for-library/:libraryId/for-product/:productId/from-cycle/:cycleId', function (req, res) {
+            libraryQueries.getHistoricalSelectionDataForLibraryForProduct(req.params.libraryId, req.params.productId, req.params.cycleId)
+                .then(sendResult(res))
+                .catch(send500Error(res));
+        });
         carliMiddleware.get('/products-with-offerings-for-vendor/:vendorId/for-cycle/:cycleId', function (req, res) {
             vendorSpecificProductQueries.listProductsWithOfferingsForVendorId(req.params.vendorId, req.params.cycleId)
                 .then(sendResult(res))

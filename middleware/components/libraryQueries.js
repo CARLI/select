@@ -68,7 +68,49 @@ function listOfferingsForLibraryWithExpandedProducts( libraryId, cycleId ){
     }
 }
 
+function getHistoricalSelectionDataForLibraryForProduct( libraryId, productId, cycleId ){
+    var selectionsByYear = {};
+
+    return cycleRepository.load(cycleId)
+        .then(function(currentCycle){
+            return cycleRepository.listPastFourCyclesMatchingCycle(currentCycle)
+                .then(function(cycleList){
+                    return cycleList.concat(currentCycle);
+                });
+        })
+        .then(getSelectionDataForCycles)
+        .thenResolve(selectionsByYear)
+        .catch(function(err){
+            console.log('Error getting historical selections for library '+libraryId+' from cycle '+cycle.name, err);
+        });
+
+    function getSelectionDataForCycles( cycles ){
+        return Q.all( cycles.map(getSelectionDataForCycle) );
+
+        function getSelectionDataForCycle(cycle){
+            return offeringRepository.listOfferingsForProductIdUnexpanded( productId, cycle )
+                .then(returnWhetherLibrarySelectedProductInCycle)
+                .catch(function(err){
+                    console.log('Error getting selection data for '+cycle.name, err);
+                });
+
+            function returnWhetherLibrarySelectedProductInCycle(offeringsForProductFromCycle){
+                var offering = offeringsForProductFromCycle.filter(offeringForLibrary)[0] || null;
+                var selected = !!(offering && offering.selection);
+                selectionsByYear[cycle.year] = selected;
+                console.log('results from '+cycle.name+':'+selected);
+                return selected;
+            }
+        }
+    }
+
+    function offeringForLibrary( offering ){
+        return offering.library == libraryId;
+    }
+}
+
 module.exports = {
     listSelectionsForLibraryFromCycle: listSelectionsForLibraryFromCycle,
-    listOfferingsForLibraryWithExpandedProducts: listOfferingsForLibraryWithExpandedProducts
+    listOfferingsForLibraryWithExpandedProducts: listOfferingsForLibraryWithExpandedProducts,
+    getHistoricalSelectionDataForLibraryForProduct: getHistoricalSelectionDataForLibraryForProduct
 };
