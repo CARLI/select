@@ -130,6 +130,19 @@ ul.product-list.subscriptions {
             .column.license-info {
                 border-left: none;
                 flex-basis: 66%;
+
+                .termsAndHistory {
+                    @include flexbox;
+
+                    .terms,
+                    subscription-history-table {
+                        @include flex(1 1 50%);
+                    }
+
+                    subscription-history-table {
+                        margin-left: 0.5rem;
+                    }
+                }
             }
 
             .column.select {
