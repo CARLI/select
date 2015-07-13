@@ -4,8 +4,8 @@ angular.module('common.subscriptionHistoryTable')
             restrict: 'E',
             template: [
                 '<div class="headers">',
-                '  <div class="h2">{{ vm.yearLabel }}</div>',
-                '  <div class="h2">Subscribers</div>',
+                '  <div class="label">{{ vm.yearLabel }}</div>',
+                '  <div class="label">Subscribers</div>',
                 '</div>',
                 '<ul>',
                 '  <li ng-repeat="row in vm.rows | orderBy:vm.orderBy:vm.reverse" class="{{ row.current }}">',
