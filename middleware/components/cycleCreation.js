@@ -1,15 +1,35 @@
 
 var Q = require('q');
+var _ = require('lodash');
 
-var couchUtils = require('../../CARLI/Store/CouchDb/Utils')();
+var config = require( '../../config' );
+var CouchUtils = require('../../CARLI/Store/CouchDb/Utils');
 var cycleRepository = require('../../CARLI/Entity/CycleRepository');
 var offeringRepository = require('../../CARLI/Entity/OfferingRepository');
+var Store = require( '../../CARLI/Store' );
+var StoreModule = require( '../../CARLI/Store/CouchDb/Store');
 var vendorRepository = require('../../CARLI/Entity/VendorRepository');
 var vendorStatusRepository = require('../../CARLI/Entity/VendorStatusRepository');
 
+var couchUtils = null;
+var StoreOptions = config.storeOptions;
+
+useAdminCouchCredentials();
+
+function useAdminCouchCredentials() {
+    var adminStoreOptions = _.clone(StoreOptions);
+    adminStoreOptions.couchDbUrl = StoreOptions.privilegedCouchDbUrl;
+
+    //config.setStoreOptionsForCycles(adminStoreOptions);
+    couchUtils = CouchUtils(adminStoreOptions);
+    cycleRepository.setStore(Store(StoreModule(adminStoreOptions)));
+    offeringRepository.setStore(Store(StoreModule(adminStoreOptions)));
+    vendorRepository.setStore(Store(StoreModule(adminStoreOptions)));
+    vendorStatusRepository.setStore(Store(StoreModule(adminStoreOptions)));
+}
+
 function create( newCycleData ) {
     return cycleRepository.create(newCycleData, couchUtils.DB_TYPE_STAFF);
-
 }
 
 function copyCycleDataFrom( sourceCycleId, newCycleId ){
@@ -56,10 +76,11 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
             return vendorStatusRepository.ensureStatusExistsForVendor(vendor.id, newCycle);
         }
         function resetVendorStatus(vendor){
-            return vendorStatusRepository.getStatusForVendor(vendor.id)
+            return vendorStatusRepository.getStatusForVendor(vendor.id, newCycle)
                 .then(function(vendorStatus){
                     var resetStatus = vendorStatusRepository.reset(vendorStatus, newCycle);
-                    return vendorStatusRepository.update(resetStatus);
+                    resetStatus.cycle = newCycle.id;
+                    return vendorStatusRepository.update(resetStatus, newCycle);
                 });
         }
     }
