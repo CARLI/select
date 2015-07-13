@@ -185,7 +185,7 @@
 {{#if columns.flag}}
 <div role="gridcell" aria-describedby="flag-column-header" class="column flag" data-offering-id="{{ offering.id }}">
     {{#if offering.flagged }}
-        <span class="fa fa-flag "></span>
+        <span class="fa fa-flag title="{{ offering.flaggedReason }}"></span>
     {{else}}
         <span class="fa fa-flag-o "></span>
     {{/if}}

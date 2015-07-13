@@ -283,6 +283,20 @@ function runOfferingSpecificTests(testCycle) {
                 expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(true);
             });
 
+            it('should compute true if there is a su price equal to the price for a larger number of users', function() {
+                var testOffering = validOfferingData();
+                testOffering.pricing = {
+                    site: 9999,
+                    su: [
+                        { users: 1, price: 1000 },
+                        { users: 2, price: 2000 },
+                        { users: 3, price: 2000 }
+                    ]
+                };
+
+                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(true);
+            });
+
             it('should compute true if increase from last years price exceeds the price cap', function() {
                 var testOffering = validOfferingData();
                 testOffering.cycle = testCycle;
