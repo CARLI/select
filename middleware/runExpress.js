@@ -7,6 +7,7 @@ var _ = require('lodash');
 var config = require('../config');
 var request = require('../config/environmentDependentModules/request');
 var auth = require('./components/auth');
+var carliAuth = require('../CARLI/Auth');
 var couchApp = require('./components/couchApp');
 var crmQueries = require('./components/crmQueries');
 var cycleCreation = require('./components/cycleCreation');
@@ -101,22 +102,30 @@ function runMiddlewareServer(){
                 .catch(sendError(res));
         });
         carliMiddleware.put('/cycle-from', function (req, res) {
-            cycleCreation.create(req.body.newCycleData)
-                .then(function (newCycleId) {
-                    res.send({ id: newCycleId });
-                    cluster.worker.send({
-                        command: 'launchCycleDatabaseWorker',
-                        sourceCycleId: req.body.sourceCycle.id,
-                        newCycleId: newCycleId
+            return carliAuth.requireStaff().then(createCycle);
+
+            function createCycle() {
+                return cycleCreation.create(req.body.newCycleData)
+                    .then(function (newCycleId) {
+                        res.send({ id: newCycleId });
+                        cluster.worker.send({
+                            command: 'launchCycleDatabaseWorker',
+                            sourceCycleId: req.body.sourceCycle.id,
+                            newCycleId: newCycleId
+                        });
+                    }).catch(function (err) {
+                        res.send({ error: err });
                     });
-                }).catch(function (err) {
-                    res.send({ error: err });
-                });
+            }
         });
         carliMiddleware.get('/cycle-creation-status/:id', function (req, res) {
-            cycleCreation.getCycleCreationStatus(req.params.id)
-                .then(sendResult(res))
-                .catch(sendError(res));
+            return carliAuth.requireStaff().then(getCycleCreationStatus);
+
+            function getCycleCreationStatus() {
+                return cycleCreation.getCycleCreationStatus(req.params.id)
+                    .then(sendResult(res))
+                    .catch(sendError(res));
+            }
         });
         carliMiddleware.get('/create-all-vendor-databases', function (req, res) {
             vendorDatabases.createVendorDatabasesForAllCycles()
