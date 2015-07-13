@@ -17,6 +17,9 @@ function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
         listActiveCyclesIncludingOneTimePurchase: listActiveCyclesIncludingOneTimePurchase,
         listOpenForSelectionsCycles: listOpenForSelectionsCycles,
         listOpenForSelectionsAndClosedCycles: listOpenForSelectionsAndClosedCycles,
+        listPastFourCyclesMatchingCycle: function( cycle ){
+            return $q.when( cycleModule.listPastFourCyclesMatchingCycle(cycle || currentCycle) );
+        },
         listSelectionsForCycle: listSelectionsForCycle,
         listAllOfferingsForCycle: listAllOfferingsForCycle,
         load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ).catch(errorHandler); },
