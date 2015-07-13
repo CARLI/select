@@ -10,6 +10,7 @@ var Entity = require('../Entity')
   , _ = require('lodash')
   ;
 
+var storeOptions = {};
 var VendorStatusRepository = Entity('VendorStatus');
 
 var propertiesToTransform = [/*'vendor'*/];
@@ -93,11 +94,7 @@ function newStatusForVendor( vendorId, cycle ){
 
 function ensureDefaultsForStatus( vendorStatus, cycle ){
     var defaults = newStatusForVendor( vendorStatus.vendor, cycle );
-    //_.extend only goes one level deep so we have to manually extend the checklist object too
-    var checklist = _.extend(defaults.checklist, vendorStatus.checklist);
-    var result = _.extend(defaults, vendorStatus);
-    result.checklist = checklist;
-    return result;
+    return _.merge(defaults, vendorStatus);
 }
 
 function ensureStatusExistsForVendor( vendorId, cycle ){
@@ -132,13 +129,14 @@ function setCycle(cycle) {
     if (cycle === undefined) {
         throw Error("Cycle is required");
     }
-    setStore(getStoreForCycle(cycle));
+    setStore(getStoreForCycle(cycle, storeOptions));
 }
 
 
 var functionsToAdd = {};
 
 function setStore(store) {
+    storeOptions = store.getOptions();
     VendorStatusRepository.setStore(store);
     couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
 }

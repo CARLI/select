@@ -20,6 +20,7 @@ function useAdminCouchCredentials() {
     var adminStoreOptions = _.clone(StoreOptions);
     adminStoreOptions.couchDbUrl = StoreOptions.privilegedCouchDbUrl;
 
+    //config.setStoreOptionsForCycles(adminStoreOptions);
     couchUtils = CouchUtils(adminStoreOptions);
     cycleRepository.setStore(Store(StoreModule(adminStoreOptions)));
     offeringRepository.setStore(Store(StoreModule(adminStoreOptions)));
@@ -78,7 +79,8 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
             return vendorStatusRepository.getStatusForVendor(vendor.id, newCycle)
                 .then(function(vendorStatus){
                     var resetStatus = vendorStatusRepository.reset(vendorStatus, newCycle);
-                    return vendorStatusRepository.update(resetStatus);
+                    resetStatus.cycle = newCycle.id;
+                    return vendorStatusRepository.update(resetStatus, newCycle);
                 });
         }
     }
