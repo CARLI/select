@@ -1,7 +1,7 @@
 angular.module('common.subscriptionHistoryTable')
     .controller('subscriptionHistoryTableController', subscriptionHistoryTableController);
 
-function subscriptionHistoryTableController($q, cycleService, productService){
+function subscriptionHistoryTableController(historicalPricingService){
     var vm = this;
 
     vm.loadingPromise = null;
@@ -17,45 +17,10 @@ function subscriptionHistoryTableController($q, cycleService, productService){
             vm.yearLabel = 'Your History';
         }
 
-        vm.loadingPromise = cycleService.listPastFourCyclesMatchingCycle(vm.cycle)
-            .then(setupDataForTable)
-            .catch(function(err){
-                //console.log('Error loading data for subscriptionHistoryTable',err);
+        vm.loadingPromise = historicalPricingService.getHistoricalPricingDataForProduct(vm.product.id, vm.cycle)
+            .then(function(historicalPricingData){
+                console.log('Subscription History Table got data for '+vm.product.name, historicalPricingData);
+                vm.rows = historicalPricingData;
             });
-    }
-
-    function setupDataForTable( pastCycles ){
-        var currentCycle = vm.cycle || cycleService.getCurrentCycle();
-
-        var cycleList = pastCycles.concat(currentCycle);
-
-        return $q.all( cycleList.map(loadProductStatsAndMakeRowForCycle) )
-            .then(function(results){
-                vm.rows = results;
-            });
-
-        function loadProductStatsAndMakeRowForCycle(cycle){
-            return productService.getProductSelectionStatisticsForCycle(vm.product.id, cycle)
-                .then(makeRow);
-
-            function makeRow(stats){
-                return {
-                    year: cycle.year,
-                    subscribers: subscriberCount(),
-                    current: (cycle.id === vm.cycle.id ? 'current' : '')
-                };
-
-                function subscriberCount(){
-                    var notOffered = '-';
-                    
-                    if ( stats.numberOffered > 0 ){
-                        return stats.numberSelected;
-                    }
-                    else {
-                        return notOffered;
-                    }
-                }
-            }
-        }
     }
 }

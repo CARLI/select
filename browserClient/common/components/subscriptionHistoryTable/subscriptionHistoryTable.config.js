@@ -1,1 +1,3 @@
-angular.module('common.subscriptionHistoryTable', []);
+angular.module('common.subscriptionHistoryTable', [
+    'common.historicalPricingService'
+]);
