@@ -12,6 +12,7 @@ var crmQueries = require('./components/crmQueries');
 var cycleCreation = require('./components/cycleCreation');
 var libraryQueries = require('./components/libraryQueries');
 var notifications = require('./components/notifications');
+var pdf = require('./components/pdf');
 var user = require('./components/user');
 var vendorDatabases = require('./components/vendorDatabases');
 var vendorSpecificProductQueries = require('./components/vendorSpecificProductQueries');
@@ -246,6 +247,21 @@ function runMiddlewareServer(){
         carliMiddleware.put('/user/consume-key/:key', function (req, res) {
             user.consumeKey(req.params.key, req.body)
                 .then(sendOk(res))
+                .catch(sendError(res));
+        });
+        carliMiddleware.get('/pdf/content/:type/:entityId/:cycleId', function(req, res) {
+            pdf.generateContentForPdf(req.params.type, req.params.entityId, req.params.cycleId)
+                .then(function(pdfContent){
+                    res.send(pdfContent.html);
+                })
+                .catch(sendError(res));
+        });
+        carliMiddleware.get('/pdf/export/:type/:entityId/:cycleId', function(req, res) {
+            pdf.exportPdf(req.params.type, req.params.entityId, req.params.cycleId)
+                .then(function(exportResults){
+                    res.setHeader('Content-Disposition', 'attachment; filename="'+ exportResults.fileName +'"');
+                    res.send(exportResults.pdf);
+                })
                 .catch(sendError(res));
         });
     }
