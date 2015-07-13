@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.carliEditingProductList')
     .controller('carliEditingProductListController', carliEditingProductListController);
 
-function carliEditingProductListController( $q, alertService, cycleService, historicalPricingService, productService, vendorService ) {
+function carliEditingProductListController( $filter, $q, alertService, cycleService, historicalPricingService, productService, vendorService ) {
     var vm = this;
     vm.removeProduct = removeProduct;
     vm.openVendorPricing = openVendorPricing;
@@ -84,22 +84,34 @@ function carliEditingProductListController( $q, alertService, cycleService, hist
             return historicalPricingService.getHistoricalPricingDataForProduct(product.id, vm.cycle)
                 .then(function(historicalPricingData){
                     product.historicalPricing = historicalPricingData;
+                    product.pricingLastYear = pricingForLastYear(historicalPricingData);
                 });
         }
     }
 
 
+    function pricingForLastYear(historicalPricingData){
+        var thisYear = vm.cycle.year;
+        var lastYear = thisYear - 1;
+        var pricingData = historicalPricingData.filter(dataIsForLastYear)[0] || {};
 
-    function _pickRandomSelectionHistory() {
-        switch (getRandomInt(0, 2)) {
-            case 0: return 'not offered';
-            case 1: return 'not selected';
-            case 2: return 'selected';
+        var currency = $filter('currency');
+
+        if ( pricingData.minPrice && pricingData.maxPrice ){
+            if ( pricingData.minPrice === pricingData.maxPrice ){
+                return currency(pricingData.maxPrice);
+            }
+            else {
+                return currency(pricingData.minPrice) + ' - ' + currency(pricingData.maxPrice);
+            }
         }
-    }
+        else {
+            return '-';
+        }
 
-    function getRandomInt(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+        function dataIsForLastYear(pricingData){
+            return pricingData.year == lastYear;
+        }
     }
 
     function removeProduct( product ){

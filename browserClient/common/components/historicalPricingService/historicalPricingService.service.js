@@ -29,7 +29,9 @@ function historicalPricingService($q, cycleService, productService, errorHandler
                         current: (cycle.id === currentCycle.id ? 'current' : ''),
                         description: productOfferingDescription(),
                         subscribers: subscriberCount(),
-                        year: cycle.year
+                        year: cycle.year,
+                        minPrice : productStatistics.minPrice,
+                        maxPrice: productStatistics.maxPrice
                     };
 
                     function productOfferingDescription(){
