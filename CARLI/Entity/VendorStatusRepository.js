@@ -138,7 +138,7 @@ var functionsToAdd = {};
 function setStore(store) {
     storeOptions = store.getOptions();
     VendorStatusRepository.setStore(store);
-    couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+    couchUtils = require('../Store/CouchDb/Utils')(storeOptions);
 }
 
 module.exports = {
