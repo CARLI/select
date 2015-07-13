@@ -19,7 +19,6 @@ function subscriptionHistoryTableController(historicalPricingService){
 
         vm.loadingPromise = historicalPricingService.getHistoricalPricingDataForProduct(vm.product.id, vm.cycle)
             .then(function(historicalPricingData){
-                console.log('Subscription History Table got data for '+vm.product.name, historicalPricingData);
                 vm.rows = historicalPricingData;
             });
     }
