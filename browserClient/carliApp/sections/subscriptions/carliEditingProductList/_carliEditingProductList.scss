@@ -3,7 +3,7 @@
         .vendor-accordion {
             ul.entity-list {
                 .column.product-name {
-                    @include flex(1 0 10%);
+                    @include flex(2 0 25%);
                     @include vendor-prefix('justify-content', 'flex-start');
                 }
                 .column.selection-history {
@@ -17,11 +17,14 @@
                     .fa {
                         color: $orange;
                         @include font-size(22);
+
+                        &.todo {
+                            color: steelblue;
+                        }
                     }
                 }
                 .column.last-price {
-                    @include flex(0 1 auto);
-                    width: 160px;
+                    @include flex(1 1 10%);
                     align-items: left;
                     justify-content: left;
                 }
