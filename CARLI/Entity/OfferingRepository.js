@@ -12,6 +12,7 @@ var Entity = require('../Entity')
   , _ = require('lodash')
   ;
 
+var storeOptions = {};
 var OfferingRepository = Entity('Offering');
 
 var propertiesToTransform = ['library', 'product'];
@@ -352,7 +353,7 @@ function setCycle(cycle) {
     if (cycle === undefined) {
         throw Error("Cycle is required");
     }
-    OfferingRepository.setStore(getStoreForCycle(cycle));
+    setStore(getStoreForCycle(cycle, storeOptions));
 }
 
 
@@ -589,8 +590,9 @@ function sortOfferingSuPricing( offering ){
 }
 
 function setStore(store) {
+    storeOptions = store.getOptions();
     OfferingRepository.setStore(store);
-    couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+    couchUtils = require('../Store/CouchDb/Utils')(storeOptions);
 }
 
 module.exports = {
