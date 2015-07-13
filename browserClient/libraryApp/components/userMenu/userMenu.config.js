@@ -1,3 +1,3 @@
 angular.module('library.userMenu',[
-    'library.userService'
+    'common.userService'
 ]);
