@@ -17,7 +17,10 @@
     "emailBody": {
       "type": "string"
     },
-    "pdfBody": {
+    "pdfBefore": {
+      "type": "string"
+    },
+    "pdfAfter": {
       "type": "string"
     },
     "pdfContentIsEditable": {
