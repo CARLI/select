@@ -634,5 +634,42 @@ function runOneTimePurchaseProductTests(testCycle) {
                 }
             }
         });
+
+        it('should return an object with price ranges for the product', function() {
+            var testProductId = uuid.v4();
+
+            return setupTestData()
+                .then(function () {
+                    return ProductRepository.getProductSelectionStatisticsForCycle(testProductId, testCycle);
+                })
+                .then(function (productStats) {
+                    return Q.all([
+                        expect(productStats).to.be.an('object'),
+                        expect(productStats).to.have.property('minPrice', 50),
+                        expect(productStats).to.have.property('maxPrice', 1000)
+                    ]);
+                });
+
+            function setupTestData() {
+                return Q.all([
+                    OfferingRepository.create({
+                        cycle: testCycle,
+                        library: uuid.v4(),
+                        product: testProductId,
+                        pricing: {
+                            site: 50
+                        }
+                    }, testCycle),
+                    OfferingRepository.create({
+                        cycle: testCycle,
+                        library: uuid.v4(),
+                        product: testProductId,
+                        pricing: {
+                            site: 1000
+                        }
+                    }, testCycle)
+                ]);
+            }
+        });
     });
 }
