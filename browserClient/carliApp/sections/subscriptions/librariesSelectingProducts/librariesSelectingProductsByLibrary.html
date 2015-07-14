@@ -7,7 +7,7 @@
                     <fa name="angle-down"></fa><span class="sr-only">Open offerings for {{ library.name }}</span>
                 </button>
                 <library-info library="::library" class="inline"></library-info>
-                <div class="library-status">{{ ::vm.getLibraryPricingStatus(library) }}</div>
+                <div class="library-status">{{ vm.getLibraryPricingStatus(library) }}</div>
             </div>
             <div class="content" ng-if="vm.openAccordion === library.id">
                 <div class="filter-controls">
