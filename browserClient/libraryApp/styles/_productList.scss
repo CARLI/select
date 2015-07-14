@@ -52,6 +52,10 @@ ul.product-list.subscriptions {
             padding-left: 2px;
         }
 
+        &.offering {
+            @extend [collapsible];
+        }
+
         &[collapsible].collapsed {
             border-left: $default-border;
             padding-left: 2px;
