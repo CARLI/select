@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.librariesSelectingProducts')
     .controller('librariesSelectingProductsByLibraryController', librariesSelectingProductsByLibraryController);
 
-function librariesSelectingProductsByLibraryController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, libraryService, offeringService, editOfferingService, productService, vendorService ) {
+function librariesSelectingProductsByLibraryController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, libraryService, libraryStatusService, offeringService, editOfferingService, productService, vendorService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadOfferingsForLibrary);
@@ -24,6 +24,7 @@ function librariesSelectingProductsByLibraryController( $scope, $q, accordionCon
         'site-license-price-current-only',
         'selection'
     ];
+    vm.libraryStatuses = {};
 
     activate();
 
@@ -49,9 +50,18 @@ function librariesSelectingProductsByLibraryController( $scope, $q, accordionCon
     }
 
     function initLibraryList(){
-        vm.libraryLoadingPromise = libraryService.listActiveLibraries().then(function(libraryList){
-            vm.libraryList = libraryList;
-        });
+        vm.libraryLoadingPromise = libraryService.listActiveLibraries()
+            .then(function(libraryList){
+                vm.libraryList = libraryList;
+                return libraryList;
+            })
+            .then(function(){
+                return libraryStatusService.getStatusesForAllLibraries(vm.cycle);
+            })
+            .then(function(libraryStatusMapping){
+                vm.libraryStatuses = libraryStatusMapping;
+                return libraryStatusMapping;
+            });
     }
 
     function initVendorMap(){
@@ -64,7 +74,8 @@ function librariesSelectingProductsByLibraryController( $scope, $q, accordionCon
     }
 
     function getLibraryPricingStatus(library) {
-        return "No activity";
+        var status = vm.libraryStatuses[library.id] || {};
+        return status.isComplete ? 'Selections Complete' : 'No Activity';
     }
 
     function filterOfferingBySelection( offering ){
