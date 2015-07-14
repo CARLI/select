@@ -37,6 +37,14 @@ subscription-history-table {
                     font-size: 0.9rem;
                     font-weight: bold;
                 }
+
+                .fa {
+                    color: $orange;
+                    font-size: 18px;
+                    margin-left: 5px;
+                    position: relative;
+                    top: 2px;
+                }
             }
 
             &.current {
