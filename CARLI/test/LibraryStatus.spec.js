@@ -139,5 +139,26 @@ function runLibraryStatusSpecificTests(testCycle) {
             });
         });
     });
+
+    describe('getStatusesForAllLibraries', function() {
+        it('should return the LibraryStatus documents for all Libraries, mapped by id', function () {
+            var testLibraryId = uuid.v4();
+            var testLibraryStatus = validLibraryStatusData();
+            testLibraryStatus.library = testLibraryId;
+
+            return libraryStatusRepository.create(testLibraryStatus, testCycle)
+                .then(function(){
+                    return libraryStatusRepository.getStatusesForAllLibraries(testCycle);
+                })
+                .then(function (statusesForAllLibraries) {
+                    console.log('statusesForAllLibraries', statusesForAllLibraries);
+                    return Q.all([
+                        expect(statusesForAllLibraries).to.be.an('object'),
+                        expect(statusesForAllLibraries[testLibraryId]).to.be.an('object'),
+                        expect(statusesForAllLibraries[testLibraryId]).to.have.property('type','LibraryStatus')
+                    ]);
+                });
+        });
+    });
 }
 
