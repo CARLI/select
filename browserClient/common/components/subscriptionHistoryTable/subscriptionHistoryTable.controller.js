@@ -36,12 +36,12 @@ function subscriptionHistoryTableController(cycleService, historicalPricingServi
     }
 
     function getHistoricalPricingDataOnly(){
-        return getHistoricalPricingData();
+        return getHistoricalPricingData()
+            .then(saveHistoricPricingDataToVm);
     }
 
     function getHistoricalPricingData(){
-        return historicalPricingService.getHistoricalPricingDataForProduct(vm.product.id, vm.cycle)
-            .then(saveHistoricPricingDataToVm);
+        return historicalPricingService.getHistoricalPricingDataForProduct(vm.product.id, vm.cycle);
     }
 
     function addSelectionData(historicPricingData){
