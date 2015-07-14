@@ -108,6 +108,21 @@ function markLibrarySelectionsComplete( libraryId, cycle ){
         });
 }
 
+function getStatusesForAllLibraries( cycle ){
+    return listLibraryStatuses(cycle)
+        .then(mapLibraryStatusesById);
+
+    function mapLibraryStatusesById( arrayOfStatusObjects ){
+        var statusMap = {};
+
+        arrayOfStatusObjects.forEach(function(statusObject){
+            statusMap[statusObject.library] = statusObject;
+        });
+
+        return statusMap;
+    }
+}
+
 function setStore(store) {
     LibraryStatusRepository.setStore(store);
     couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
@@ -123,5 +138,6 @@ module.exports = {
     list: listLibraryStatuses,
     load: loadLibraryStatus,
     getStatusForLibrary: getStatusForLibrary,
-    markLibrarySelectionsComplete: markLibrarySelectionsComplete
+    markLibrarySelectionsComplete: markLibrarySelectionsComplete,
+    getStatusesForAllLibraries: getStatusesForAllLibraries
 };
