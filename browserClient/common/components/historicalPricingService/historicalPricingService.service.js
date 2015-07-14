@@ -11,11 +11,11 @@ function historicalPricingService($q, cycleService, productService, errorHandler
         var currentCycle = cycle || cycleService.getCurrentCycle();
         
         return cycleService.listPastFourCyclesMatchingCycle(currentCycle)
-            .then(setupDataForTable)
+            .then(getHistoricalPricingForPastCycles)
             .catch(errorHandler);
 
 
-        function setupDataForTable( pastCycles ){
+        function getHistoricalPricingForPastCycles( pastCycles ){
             var cycleList = pastCycles.concat(currentCycle);
 
             return $q.all( cycleList.map(loadProductStatsForCycle) );

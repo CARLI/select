@@ -47,7 +47,8 @@ function subscriptionSelectionsController( $q, $window, cycleService, librarySta
     }
 
     function loadLibraryStatus(){
-        vm.libraryId = userService.getUser().library.id;
+        vm.library = userService.getUser().library;
+        vm.libraryId = vm.library.id;
         return libraryStatusService.getStatusForLibrary(vm.libraryId, vm.cycle)
             .then(function(status){
                 vm.libraryStatus = status;
