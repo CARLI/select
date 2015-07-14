@@ -4,7 +4,7 @@ subscription-history-table {
     .headers {
         @include flexbox;
 
-        .h2 {
+        .label {
             @include flex(1 1 50%);
         }
     }
@@ -33,7 +33,17 @@ subscription-history-table {
                 }
 
                 .year {
+                    color: $black;
+                    font-size: 0.9rem;
                     font-weight: bold;
+                }
+
+                .fa {
+                    color: $orange;
+                    font-size: 18px;
+                    margin-left: 5px;
+                    position: relative;
+                    top: 2px;
                 }
             }
 

@@ -21,6 +21,7 @@ function subscriptionSelectionsController( $q, $window, cycleService, librarySta
     vm.hasSelection = hasSelection;
     vm.isSelected = isSelected;
     vm.libraryId = null;
+    vm.openProduct = {};
     vm.returnToBeginning = returnToBeginning;
     vm.reviewSelections = reviewSelections;
     vm.startSelections = startSelections;
@@ -31,6 +32,7 @@ function subscriptionSelectionsController( $q, $window, cycleService, librarySta
     vm.showProgress = false;
     vm.sort = sort;
     vm.todo = todo;
+    vm.toggleProduct = toggleProduct;
     vm.unselected = unselected;
     vm.unSelectProduct = unSelectProduct;
     vm.unSelectAndUpdateProduct = unSelectAndUpdateProduct;
@@ -45,7 +47,8 @@ function subscriptionSelectionsController( $q, $window, cycleService, librarySta
     }
 
     function loadLibraryStatus(){
-        vm.libraryId = userService.getUser().library.id;
+        vm.library = userService.getUser().library;
+        vm.libraryId = vm.library.id;
         return libraryStatusService.getStatusForLibrary(vm.libraryId, vm.cycle)
             .then(function(status){
                 vm.libraryStatus = status;
@@ -313,5 +316,9 @@ function subscriptionSelectionsController( $q, $window, cycleService, librarySta
             vm.selectionProblems = listOfProblems;
             $('#selection-problems-modal').modal();
         }
+    }
+
+    function toggleProduct(product){
+        vm.openProduct[product.id] = !vm.openProduct[product.id];
     }
 }

@@ -16,7 +16,16 @@ function listOfferingsForLibraryWithExpandedProducts( libraryId, cycleId ){
     });
 }
 
+function getHistoricalSelectionDataForLibraryForProduct( libraryId, productId, cycleId ){
+    return middlewareRequest({
+        path: '/get-historical-selection-data-for-library/' + libraryId + '/for-product/' + productId + '/from-cycle/' + cycleId,
+        method: 'get',
+        json: true
+    });
+}
+
 module.exports = {
     listSelectionsForLibraryFromCycle: listSelectionsForLibraryFromCycle,
-    listOfferingsForLibraryWithExpandedProducts: listOfferingsForLibraryWithExpandedProducts
+    listOfferingsForLibraryWithExpandedProducts: listOfferingsForLibraryWithExpandedProducts,
+    getHistoricalSelectionDataForLibraryForProduct: getHistoricalSelectionDataForLibraryForProduct
 };
