@@ -151,7 +151,7 @@
 
                 <div>
                     <div class="column">
-                        <div class="h2">Specific Terms</div>
+                        <div class="label">Specific Terms</div>
                         <div><a data-toggle="modal" data-target="#terms-modal" ng-show="vm.shouldShowTermsEditLink()">Override License-Level Terms<fa name="edit"></fa></a></div>
                         <ul class="terms-list">
                             <li>
@@ -211,7 +211,7 @@
                     </div>
 
                     <div class="column">
-                        <subscription-history-table cycle="vm.product.cycle" product="vm.product" ng-if="vm.product && !newProduct"></subscription-history-table>
+                        <subscription-history-table cycle="vm.product.cycle" product="vm.product" ng-if="vm.product && !vm.newProduct"></subscription-history-table>
                     </div>
                 </div>
 
