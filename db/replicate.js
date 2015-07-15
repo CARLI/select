@@ -89,9 +89,35 @@ function replicateDesignDocsFrom(source) {
             var listCycleDbs = generateCycleDbLister(source);
             var replicateCycleDesignDocs = generateCycleDbDesignDocReplicator(source, target);
 
-            return replicator().designDocsOnly().from(dbInfo[source].mainDbUrl).to(dbInfo[target].mainDbUrl).replicate()
+            return replicateMainDesignDoc()
+                .then(replicateUserDesignDoc)
+                .then(replicateResetRequestDesignDoc)
                 .then(listCycleDbs)
                 .then(replicateCycleDesignDocs);
+
+            function replicateMainDesignDoc() {
+                return replicator()
+                    .designDocsOnly()
+                    .from(dbInfo[source].mainDbUrl)
+                    .to(dbInfo[target].mainDbUrl)
+                    .replicate()
+            }
+
+            function replicateUserDesignDoc() {
+                return replicator()
+                    .designDocsOnly()
+                    .from(dbInfo[source].baseUrl + '/_users')
+                    .to(dbInfo[target].baseUrl + '/_users')
+                    .replicate()
+            }
+
+            function replicateResetRequestDesignDoc() {
+                return replicator()
+                    .designDocsOnly()
+                    .from(dbInfo[source].baseUrl + '/user-reset-requests')
+                    .to(dbInfo[target].baseUrl + '/user-reset-requests')
+                    .replicate()
+            }
         }
     }
 }
