@@ -32,11 +32,10 @@ function createAndSyncVendorDatabases(cycleId) {
 }
 
 function createVendorStatusesForAllCycles(){
-    cycleRepository.list()
+    return cycleRepository.list()
         .then(function(cycleList){
             return Q.all( cycleList.map(ensureAllVendorsHaveStatusForCycle)) ;
-        })
-        .done();
+        });
 
     function ensureAllVendorsHaveStatusForCycle( cycle ){
 
