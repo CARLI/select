@@ -37,7 +37,8 @@
             <div ng-view role="application"></div>
         </main>
 
-        <!-- compiled JavaScript -->
+        <auth-timeout-alert ng-if="isLoggedIn"></auth-timeout-alert>
+
         <% scripts.forEach( function ( file ) { %>
             <script type="text/javascript" src="/<%= file %>"></script>
         <% }); %>
