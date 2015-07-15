@@ -12,5 +12,5 @@
         <entity-list values="vm.productList" columns="vm.productListColumns" entity-label="products" loading-promise="vm.loadingPromise"></entity-list>
     </section>
 
-    <edit-product-modal after-submit-fn="vm.afterProductSubmit"></edit-product-modal>
+    <edit-product-modal product="vm.newProduct" after-submit-fn="vm.afterProductSubmit"></edit-product-modal>
 </section>

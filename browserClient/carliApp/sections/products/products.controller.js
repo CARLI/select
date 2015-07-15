@@ -61,7 +61,7 @@ function productController($location, $routeParams, $scope, $sce, cycleService, 
     }
 
     function newProductSubmitted() {
-        vm.newProduct = newProduct(cycle);
+        vm.newProduct = newProduct();
         populateProductList();
     }
 

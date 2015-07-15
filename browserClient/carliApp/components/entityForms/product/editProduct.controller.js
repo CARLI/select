@@ -13,10 +13,8 @@ function editProductController( $q, $scope, $rootScope, $filter, alertService, e
     };
     vm.currentTemplate = templates.productFields;
 
-    vm.productId = $scope.productId;
-    var afterSubmitCallback = $scope.afterSubmitFn || function() {};
+    var afterSubmitCallback = vm.afterSubmitFn || function() {};
 
-    vm.activeCycles = [];
     vm.productOfferings = [];
     vm.toggleEditable = toggleEditable;
     vm.cancelEdit = cancelEdit;
@@ -49,33 +47,29 @@ function editProductController( $q, $scope, $rootScope, $filter, alertService, e
 
     vm.productDetailCodeOptions = productService.getProductDetailCodeOptions();
 
-    var initializeCyclesPromise = initializeCycles();
-
     setupModalClosingUnsavedChangesWarning();
     activate();
 
     function activate() {
+        console.log('Edit Product ',vm.product);
         vm.isModal = vm.newProduct;
 
-        if ($scope.productId === undefined) {
-            return initializeForNewProduct();
+        if ( isNewProduct() ) {
+            vm.loadingPromise = initializeForNewProduct();
         }
         else {
-            return initializeCyclesPromise.then(initializeForExistingProduct);
+            vm.loadingPromise = initializeForExistingProduct();
+        }
+
+        function isNewProduct(){
+            return !vm.product.id;
         }
     }
 
     function initializeForNewProduct() {
+        console.log(' edit new product');
         vm.editable = true;
         vm.newProduct = true;
-
-        vm.product = {
-            type: 'Product',
-            cycle: cycleService.getCurrentCycle() || { cycleType: '' },
-            isActive: true,
-            contacts: []
-        };
-
         vm.productOfferings = [];
 
         setProductFormPristine();
@@ -84,35 +78,23 @@ function editProductController( $q, $scope, $rootScope, $filter, alertService, e
     }
 
     function initializeForExistingProduct() {
+        console.log(' edit '+vm.product.name);
         vm.editable = false;
         vm.newProduct = false;
 
-        return productService.load($scope.productId).then( function( product ) {
-            vm.product = angular.copy(product);
-            copyFullCycleInstanceToProduct(vm.product);
-            initializeProductNameWatcher();
-            rememberOtpFields();
-            rememberTermFields();
+        setProductFormPristine();
 
-            setProductFormPristine();
+        initializeProductNameWatcher();
+        rememberOtpFields();
+        rememberTermFields();
 
-            if ( isOneTimePurchaseProduct(product) ){
-                return loadOfferingsForProduct(product)
-                    .then(ensureOneTimePurchaseProductHasEmptyOfferingsForAllLibraries);
-
-            }
-            else {
-                return $q.when();
-            }
-        } );
-    }
-
-    function copyFullCycleInstanceToProduct(product) {
-        vm.activeCycles.forEach(function (cycle) {
-            if (product.cycle.id === cycle.id) {
-                product.cycle = cycle;
-            }
-        });
+        if ( isOneTimePurchaseProduct(vm.product) ){
+            return loadOfferingsForProduct(vm.product)
+                .then(ensureOneTimePurchaseProductHasEmptyOfferingsForAllLibraries);
+        }
+        else {
+            return $q.when();
+        }
     }
 
     function initializeProductNameWatcher() {
@@ -126,20 +108,26 @@ function editProductController( $q, $scope, $rootScope, $filter, alertService, e
             }
         });
     }
+
     function revertOtpFields() {
         angular.copy(otpFieldsCopy, vm.productOfferings);
     }
+
     function rememberOtpFields() {
         angular.copy(vm.productOfferings, otpFieldsCopy);
     }
+
     function revertTermFields() {
         vm.product.terms = angular.copy(termFieldsCopy, {});
     }
+
     function rememberTermFields() {
         angular.copy(vm.product.terms, termFieldsCopy);
     }
-    function isOneTimePurchaseProduct(product){
-        return product.cycle.cycleType === 'One-Time Purchase';
+
+    function isOneTimePurchaseProduct(product) {
+        var cycle = product.cycle || {};
+        return cycle.cycleType === 'One-Time Purchase';
     }
 
     function toggleEditable(){
@@ -160,7 +148,17 @@ function editProductController( $q, $scope, $rootScope, $filter, alertService, e
     }
 
     function resetProductForm() {
-        return activate();
+        if ( vm.newProduct ) {
+            return $q.when(initializeForNewProduct());
+        }
+        else {
+            return productService.load(vm.product.id)
+                .then(function (freshCopyOfProduct) {
+                    vm.product = freshCopyOfProduct;
+                    return freshCopyOfProduct;
+                })
+                .then(initializeForExistingProduct);
+        }
     }
 
     function hideProductModal() {
@@ -206,22 +204,6 @@ function editProductController( $q, $scope, $rootScope, $filter, alertService, e
         }
     }
 
-    function initializeCycles(){
-        var loadCyclesPromise = cycleService.listActiveCycles().then(function(activeCycles) {
-            vm.activeCycles = activeCycles;
-        });
-
-        watchCurrentCycle();
-        return loadCyclesPromise;
-
-        function watchCurrentCycle() {
-            $scope.$watch(cycleService.getCurrentCycle, function (activeCycle) {
-                if (activeCycle) {
-                    activate();
-                }
-            });
-        }
-    }
 
     function loadOfferingsForProduct( product ){
         return offeringService.listOfferingsForProductId(product.id).then(function(offerings){
@@ -262,7 +244,7 @@ function editProductController( $q, $scope, $rootScope, $filter, alertService, e
 
         var savePromise = $q.when();
 
-        if (vm.productId === undefined) {
+        if (vm.newProduct) {
             savePromise = saveNewProduct();
         } else {
             savePreviousName();
