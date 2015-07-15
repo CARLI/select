@@ -17,7 +17,8 @@ function authTimeoutService($timeout, authService, config) {
         timeoutStateWarningPeriod: timeoutStateWarningPeriod,
         timeoutStateTimedOut: timeoutStateTimedOut,
 
-        getTimeoutState: getTimeoutState
+        getTimeoutState: getTimeoutState,
+        forceTimoutWarning: forceTimeoutWarning
     };
 
     function activate() {
@@ -50,5 +51,11 @@ function authTimeoutService($timeout, authService, config) {
 
     function enterTimeoutState() {
         currentState = timeoutStateTimedOut;
+    }
+
+    function forceTimeoutWarning() {
+        config.authMillisecondsUntilWarningAppears = 1000;
+        config.authWarningDurationInMilliseconds = 60000;
+        startAuthTimeoutWarningCountdown();
     }
 }

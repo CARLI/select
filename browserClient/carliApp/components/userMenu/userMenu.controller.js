@@ -1,11 +1,12 @@
 angular.module('carli.userMenu')
 .controller('userMenuController', userMenuController);
 
-function userMenuController( $interval, authService, notificationService ){
+function userMenuController( $interval, authService, notificationService, authTimeoutService ){
     var vm = this;
 
     vm.userName = '';
     vm.logout = authService.deleteSession;
+    vm.forceTimeoutWarning = authTimeoutService.forceTimoutWarning;
 
     activate();
 
