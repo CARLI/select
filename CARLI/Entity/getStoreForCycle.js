@@ -7,7 +7,7 @@ module.exports = function getStoreForCycle(cycle, storeOptions) {
     if (!cycleIsFullyExpanded(cycle)) {
         throw new Error('getStoreForCycle must be passed a fully expanded cycle instance');
     }
-    if (typeof storeOptions === 'undefined') {
+    if (typeof storeOptions === 'undefined' || !storeOptions.couchDbUrl) {
         storeOptions = config.getStoreOptionsForCycles();
     }
 

@@ -50,6 +50,10 @@ function populateHistoricalPricingForCycle( cycleId ){
     var cycleToCopyPricesInto;
     var offeringsToCopyPricesInto;
 
+    if ( cycleId === config.oneTimePurchaseProductsCycleDocId ){
+        return Q();
+    }
+
     return cycleRepository.load(cycleId)
         .then(loadOfferingsForCycle)
         .then(listPastCyclesOfSameTypeAsCycle)

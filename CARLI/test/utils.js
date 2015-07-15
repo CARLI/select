@@ -18,7 +18,17 @@ function getTestStoreOptions() {
 
 function _deleteDb(couchDbUrl, dbName) {
     var deferred = Q.defer();
-    request.del(couchDbUrl + '/' + dbName, function() {
+    var deletionUrl = couchDbUrl + '/' + dbName;
+    request.del(deletionUrl, function(error, response, body) {
+        var parsedBody = {};
+        if ( body ){
+            parsedBody = JSON.parse(body);
+        }
+
+        var err = error || parsedBody.error;
+        if (err){
+            deferred.reject('Error deleting '+deletionUrl,err);
+        }
         deferred.resolve();
     });
     return deferred.promise;
@@ -68,8 +78,15 @@ module.exports = {
                     promises.push(_deleteDb(testStoreOptions.privilegedCouchDbUrl, dbName));
                 }
             });
-            console.log('Deleted ' + count + ' databases');
-            Q.all(promises).then(deferred.resolve);
+            Q.all(promises)
+                .then(function(){
+                    console.log(' Deleted ' + count + ' databases');
+                    deferred.resolve();
+                })
+                .catch(function(err){
+                    console.log(' error deleting test DBs',err);
+                    deferred.resolve(); //report error but don't break the promise chain with a reject
+                });
         });
 
         return deferred.promise;
@@ -125,7 +142,13 @@ module.exports = {
             couchDbUrl = testStoreOptions.privilegedCouchDbUrl;
         }
 
-        return deleteAllReplicators().then(deleteAllNonSystemDatabases);
+        console.log('Nuke couch at '+couchDbUrl);
+
+        //return deleteAllReplicators()
+        return deleteAllNonSystemDatabases()
+            .catch(function(err){
+                console.log('Error nuking couch', err);
+            });
 
         function deleteAllReplicators() {
             var deferred = Q.defer();
@@ -146,8 +169,11 @@ module.exports = {
                         promises.push(promiseDeletion(replication.doc._id, replication.doc._rev));
                     }
                 });
-                console.log('Deleted ' + count + ' replicator documents');
-                Q.all(promises).then(deferred.resolve);
+                Q.all(promises)
+                    .then(function(){
+                        console.log('Deleted ' + count + ' replicator documents');
+                        deferred.resolve();
+                    });
             });
             return deferred.promise;
         }
@@ -159,7 +185,7 @@ module.exports = {
                 var err = error || parsedBody.error;
                 if (err) {
                     console.log('Failed to delete ' + id + ' rev: '+ rev +', ' + err + ': ' + parsedBody.reason);
-                    deletion.reject(error);
+                    deletion.reject(err);
                 } else {
                     deletion.resolve();
                 }
@@ -187,8 +213,14 @@ module.exports = {
                             }
                         }
                     );
-                    console.log('Deleted ' + count + ' databases');
-                    Q.all(promises).then(deferred.resolve);
+                    Q.all(promises)
+                        .then(function(){
+                            console.log('Deleted ' + count + ' databases');
+                            deferred.resolve();
+                        })
+                        .catch(function(err){
+                            console.log('error deleting databases ',err);
+                        });
                 }
             );
             return deferred.promise;

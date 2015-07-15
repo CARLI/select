@@ -26,7 +26,12 @@ module.exports = function (grunt) {
         var done = this.async();
         var config = require('../config');
         console.log(config.storeOptions);
-        testUtils.deleteTestReplicators().then(testUtils.deleteTestDbs).then(done);
+        testUtils.deleteTestReplicators()
+            .then(testUtils.deleteTestDbs)
+            .then(function(){
+                console.log('Done deleting test DBs');
+                done();
+            });
     });
     grunt.registerTask('nuke-couch', function() {
         var done = this.async();
