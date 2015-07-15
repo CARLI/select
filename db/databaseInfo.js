@@ -14,10 +14,10 @@ module.exports = {
         mainDbUrl: 'http://admin:relax@vmhost.i.pixotech.com:9091/carli'
     },
     qa: {
-        baseUrl: 'http://docker1.i.pixotech.com:9081',
+        baseUrl: 'http://admin:relax@docker1.i.pixotech.com:9081',
         publicBaseUrl: 'http://carli.qa.pixotech.com/db',
         mainDbName: 'carli',
-        mainDbUrl: 'http://docker1.i.pixotech.com:9081/carli'
+        mainDbUrl: 'http://admin:relax@docker1.i.pixotech.com:9081/carli'
     },
     prod: {
         baseUrl: 'http://select-prod.carli.illinois.edu/db',
