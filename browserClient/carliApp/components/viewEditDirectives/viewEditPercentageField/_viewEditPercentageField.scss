@@ -14,7 +14,6 @@ $input-width: 3.5em;
     }
 
     &:after {
-        background: $gray;
         border-radius: 0 4px 4px 0;
         content: '%';
         left: $input-width;
