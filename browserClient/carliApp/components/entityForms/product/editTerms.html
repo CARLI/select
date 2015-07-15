@@ -61,6 +61,13 @@
                         {{ vm.product.terms.eReservesTerms || vm.product.license.terms.eReservesTerms}}
                     </view-edit-yes-no-other>
                 </li>
+
+                <li>
+                    <label for="hasConfidentialityTermsModal">Confidentiality Language:</label>
+                    <view-edit-yes-no-other ng-model="vm.product.terms.hasConfidentialityTerms" edit-mode="true" input-id="hasConfidentialityTermsModal">
+                        {{ vm.product.terms.hasConfidentialityTerms || vm.product.license.terms.hasConfidentialityTerms}}
+                    </view-edit-yes-no-other>
+                </li>
             </ul>
 
         </fieldset>
