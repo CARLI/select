@@ -18,6 +18,7 @@ function authService($rootScope, $q, $location, appState, CarliModules) {
         getCurrentUser: getCurrentUser,
         fetchCurrentUser: fetchCurrentUser,
 
+        refreshSession: requireSession, // not a typo
         requireSession: requireSession,
         requireStaff: requireStaff,
         requireActive: requireActive,
