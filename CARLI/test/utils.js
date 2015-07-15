@@ -18,7 +18,8 @@ function getTestStoreOptions() {
 
 function _deleteDb(couchDbUrl, dbName) {
     var deferred = Q.defer();
-    request.del(couchDbUrl + '/' + dbName, function(error, response, body) {
+    var deletionUrl = couchDbUrl + '/' + dbName;
+    request.del(deletionUrl, function(error, response, body) {
         var parsedBody = {};
         if ( body ){
             parsedBody = JSON.parse(body);
@@ -26,7 +27,7 @@ function _deleteDb(couchDbUrl, dbName) {
 
         var err = error || parsedBody.error;
         if (err){
-            deferred.reject(err);
+            deferred.reject('Error deleting '+deletionUrl,err);
         }
         deferred.resolve();
     });
@@ -77,8 +78,15 @@ module.exports = {
                     promises.push(_deleteDb(testStoreOptions.privilegedCouchDbUrl, dbName));
                 }
             });
-            console.log('Deleted ' + count + ' databases');
-            Q.all(promises).then(deferred.resolve);
+            Q.all(promises)
+                .then(function(){
+                    console.log(' Deleted ' + count + ' databases');
+                    deferred.resolve();
+                })
+                .catch(function(err){
+                    console.log(' error deleting test DBs',err);
+                    deferred.resolve(); //report error but don't break the promise chain with a reject
+                });
         });
 
         return deferred.promise;
