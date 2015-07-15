@@ -1,3 +1,4 @@
 angular.module('common.auth', [
-    'common.carliModules'
+    'common.carliModules',
+    'common.config'
 ]);
