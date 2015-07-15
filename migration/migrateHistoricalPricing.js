@@ -10,7 +10,7 @@ migrateHistoricalPricingForAllCyclesSerially();
 
 
 function migrateHistoricalPricingForAllCyclesSerially() {
-    return cycleRepository.list()
+    return cycleRepository.listActiveCycles()
         .then(function (cycles) {
             var cycleList = cycles;
             return migrateHistoricalPricingForNextCycle();
