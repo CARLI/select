@@ -9,16 +9,19 @@ function authTimeoutAlert($interval, authService, authTimeoutService, config) {
             '<div class="alert alert-danger" ng-show="shouldShowAlert">',
             '  <div class="message">',
             '    <h1>Session Timeout</h1>',
-            '    <div>',
-            '    <p  ng-show="inWarningPeriod">Your session expires after 60 minutes of inactivity.  Any unsaved changes will be lost.</p>',
-            '    <p>If you\'re still working you may <a>continue your session</a>, or you may <a>log out</a> now.</p>',
+            '    <div ng-show="inWarningPeriod">',
+            '      <p>Your session expires after 60 minutes of inactivity.  Any unsaved changes will be lost.</p>',
+            '      <p>If you\'re still working you may <a ng-click="refreshSession()">continue your session</a>, or you may <a ng-click="deleteSession()">log out</a> now.</p>',
+            '      <p>Your session will expire in {{ countDownMessage }}.</p>',
             '    </div>',
-            '    <p>Your session will expire in {{ countDownMessage }}.</p>',
             '    <p ng-show="!inWarningPeriod">Your session has expired.</p>',
             '  </div>',
-            '  <div class="actions pull-right">',
+            '  <div ng-show="inWarningPeriod" class="actions pull-right">',
             '    <button class="carli-button secondary-button" ng-click="deleteSession()">Log out now ({{ countDownTime }})</button>',
             '    <button class="carli-button primary-button" ng-click="refreshSession()">Continue Session</button>',
+            '  </div>',
+            '  <div ng-show="!inWarningPeriod" class="actions pull-right">',
+            '    <button class="carli-button primary-button" ng-click="deleteSession()">Return to Login</button>',
             '  </div>',
             '</div>'
         ].join("\n"),
@@ -61,7 +64,6 @@ function authTimeoutAlert($interval, authService, authTimeoutService, config) {
 
         function watchTimeoutState() {
             return scope.$watch(authTimeoutService.getTimeoutState, function (timeoutState, previousState) {
-                console.log('watching', timeoutState, previousState);
                 if (timeoutState === previousState) {
                     return;
                 }
@@ -83,7 +85,7 @@ function authTimeoutAlert($interval, authService, authTimeoutService, config) {
         }
 
         function startWarningCounter() {
-            var expiresAtTime = new Date().getTime() + config.authMillisecondsUntilWarningAppears;
+            var expiresAtTime = new Date().getTime() + config.authWarningDurationInMilliseconds;
 
             return $interval(updateWarningCounter, 500);
 

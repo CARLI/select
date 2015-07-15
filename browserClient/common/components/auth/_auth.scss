@@ -10,18 +10,21 @@ auth-timeout-alert {
   }
 
   .alert {
-    $alert-width: 60%;
-    $alert-height: 30%;
+    $alert-width: 600px;
 
     position: absolute;
-    top: 50%;
+    top: 0;
     left: 50%;
 
     width: $alert-width;
-    height: $alert-height;
 
     margin-left: -0.5 * $alert-width;
-    margin-top: -0.5 * $alert-height;
+    margin-top: 30px;
+
+    h1 {
+      margin-top: 0;
+      color: $dark-purple;
+    }
   }
   
   .alert-danger {
