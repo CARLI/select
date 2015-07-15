@@ -4,7 +4,7 @@ select-cycle {
 }
 
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-    select-cycle {
+    select-cycle .carli-select {
       position: relative;
       top: 10x;
     }

@@ -278,11 +278,12 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
                 selectedProductIds.indexOf($cell.data('productId')) != -1) {
 
                 if (mode == 'dollarAmount') {
-                    $cell.find('.price').text(value);
+                    newValue = value.toFixed(2);
+                    $cell.find('.price').text(newValue);
                 } else if (mode == 'percentageIncrease') {
                     var originalValue = parseFloat($cell.text());
                     var newValue = (100 + value)/100 * originalValue;
-                    // TODO round this to the nearest cent?
+                    newValue = newValue.toFixed(2);
                     $cell.find('.price').text( newValue );
                 }
             }

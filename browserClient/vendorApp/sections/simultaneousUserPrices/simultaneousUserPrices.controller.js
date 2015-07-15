@@ -383,6 +383,7 @@ function simultaneousUserPricesController($scope, $q, $filter, authService, cycl
         function applySuPricingToSelectedProducts( pricingItem ){
             var users = pricingItem.users;
             var price = pricingItem.price;
+            price = price.toFixed(2);
 
             $('.price-row.su-'+users+' .offering').each(function(i, cell){
                 var $cell = $(cell);
@@ -410,7 +411,7 @@ function simultaneousUserPricesController($scope, $q, $filter, authService, cycl
                 function applyPercentageIncreaseToCell(){
                     var originalValue = parseFloat($cell.text());
                     var newValue = (100 + percentIncrease)/100 * originalValue;
-                    // TODO round this to the nearest cent?
+                    newValue = newValue.toFixed(2);
                     $('.price', $cell).text( newValue ).removeClass('no-pricing');
                     markProductChanged(productId);
                 }
