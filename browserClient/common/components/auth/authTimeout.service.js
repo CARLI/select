@@ -30,7 +30,7 @@ function authTimeoutService($timeout, authService, config) {
 
     function startAuthTimeoutWarningCountdown() {
         stopAuthTimeoutWarningCountdown();
-        authTimeoutWarningPromise = $timeout(enterWarningState, config.authTimeoutWarning);
+        authTimeoutWarningPromise = $timeout(enterWarningState, config.authWarningDurationInMilliseconds);
     }
 
     function stopAuthTimeoutWarningCountdown() {
@@ -44,7 +44,7 @@ function authTimeoutService($timeout, authService, config) {
 
     function enterWarningState() {
         authTimeoutWarningPromise = null;
-        authTimeoutPromise = $timeout(enterTimeoutState, config.authTimeout);
+        authTimeoutPromise = $timeout(enterTimeoutState, config.authMillisecondsUntilWarningAppears);
         currentState = timeoutStateWarningPeriod;
     }
 

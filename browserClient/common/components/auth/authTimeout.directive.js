@@ -46,7 +46,7 @@ function authTimeoutAlert($interval, authTimeoutService, config) {
         });
 
         function startWarningCounter() {
-            var expiresAtTime = new Date().getTime() + config.authTimeout;
+            var expiresAtTime = new Date().getTime() + config.authMillisecondsUntilWarningAppears;
             var twoMinutes = 1000 * 60 * 2;
 
             return $interval(updateWarningCounter, 500);
