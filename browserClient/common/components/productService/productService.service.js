@@ -17,8 +17,9 @@ function productService( CarliModules, $q, cycleService, errorHandler ) {
         update: function( product ) {
             return $q.when( productModule.update(product, product.cycle) );
         },
-        load:   function( productId ) {
-            return $q.when( productModule.load( productId, cycleService.getCurrentCycle()) )
+        load:   function( productId, cycle ) {
+            var cycleToUse = cycle || cycleService.getCurrentCycle();
+            return $q.when( productModule.load( productId, cycleToUse) )
                 .catch(errorHandler);
         },
         listAvailableOneTimePurchaseProducts: function(){
