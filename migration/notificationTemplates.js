@@ -25,7 +25,7 @@ var notificationTemplates = [
         pdfBefore: 'This text appears before the open cycle estimate invoice',
         pdfAfter: 'This text appears after the open cycle estimate invoice',
         pdfContentIsEditable: true,
-        notificationType: 'subscription'
+        notificationType: 'estimate'
     },
     {
         id: 'notification-template-library-reminder',
@@ -43,7 +43,7 @@ var notificationTemplates = [
         pdfBefore: 'This text appears before the closed cycle estimate invoice',
         pdfAfter: 'This text appears after the closed cycle estimate invoice',
         pdfContentIsEditable: true,
-        notificationType: 'subscription'
+        notificationType: 'estimate'
     },
     {
         id: 'notification-template-open-system',
