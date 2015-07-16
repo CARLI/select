@@ -33,7 +33,8 @@ function notificationModalController($q, $rootScope, $scope, alertService, error
         vm.draft = {
             subject: template.subject,
             emailBody: template.emailBody,
-            pdfBody: template.hasOwnProperty('pdfBody') ? template.pdfBody : '',
+            pdfBefore: template.hasOwnProperty('pdfBefore') ? template.pdfBefore : '',
+            pdfAfter:  template.hasOwnProperty('pdfAfter') ? template.pdfAfter : '',
             draftStatus: 'draft',
             notificationType: template.notificationType
         };
