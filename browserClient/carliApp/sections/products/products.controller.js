@@ -33,12 +33,13 @@ function productController($location, $routeParams, $scope, $sce, cycleService, 
 
     function completeActivation(cycle){
         vm.newProduct = newProduct(cycle);
+        populateProductList();
     }
 
     function watchCurrentCycle() {
-        $scope.$watch(cycleService.getCurrentCycle, function (newValue) {
-            if (newValue) {
-                populateProductList();
+        $scope.$watch(cycleService.getCurrentCycle, function (newCycle) {
+            if (newCycle) {
+                routeToCycle(newCycle.id);
             }
         });
     }
@@ -48,16 +49,21 @@ function productController($location, $routeParams, $scope, $sce, cycleService, 
 
         if ( currentCycle ){
             console.log('  route to current cycle '+currentCycle.name);
-            $location.path('/product/'+currentCycle.id);
+            var cycleId = currentCycle.id;
+            routeToCycle(cycleId);
         }
         else {
             return cycleService.listActiveCycles()
                 .then(function (activeCycles) {
                     var cycleId = activeCycles[0].id;
                     console.log('  route to default cycle ' + cycleId);
-                    $location.path('/product/' + cycleId);
+                    routeToCycle(cycleId);
                 });
         }
+    }
+
+    function routeToCycle(cycleId){
+        $location.path('/product/' + cycleId);
     }
 
     function newProductSubmitted() {
