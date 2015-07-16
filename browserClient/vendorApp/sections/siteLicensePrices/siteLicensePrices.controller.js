@@ -97,6 +97,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
             vm.offeringsForLibraryByProduct[product.id] = {};
 
             product.offerings.forEach(function (offering) {
+                offering.product = product;
                 vm.offeringsForLibraryByProduct[product.id][offering.library] = offering;
             });
         });
@@ -119,13 +120,16 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
             return row;
         }
         function generateOfferingCell(library, product) {
+            var cycle = cycleService.getCurrentCycle();
             var offering = vm.offeringsForLibraryByProduct[product.id][library.id] || { pricing: { site: '&nbsp;' }};
             var price = offering.pricing.site || '&nbsp;';
             var offeringWrapper = $('<div class="column offering input">');
-            if (offeringService.getFlaggedState(offering)) {
+
+            if (offeringService.getFlaggedState(offering, cycle)) {
                 offeringWrapper.addClass('flagged');
                 offeringWrapper.attr('title', offering.flaggedReason[0]);
             }
+
             var offeringCell = offeringWrapper.append(createReadOnlyOfferingCell(price));
 
             offeringWrapper.on('click', function() {

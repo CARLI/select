@@ -74,8 +74,8 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
         getOfferingDisplayLabels: function(){
             return offeringDisplayLabels;
         },
-        getFlaggedState: function (offering) {
-            return offeringModule.getFlaggedState(offering);
+        getFlaggedState: function (offering, optionalCycle) {
+            return offeringModule.getFlaggedState(offering, optionalCycle);
         }
     };
 }
