@@ -552,6 +552,11 @@ function generateNotificationForLibrary(libraryId, offeringsForAll, customizedTe
 
     function pdfLink(){
         var pdfType = customizedTemplate.notificationType;
+
+        if ( pdfType === 'invoice' && notification.isFeeInvoice ){
+            pdfType = 'access-fee-invoice';
+        }
+        
         var cycleId = notification.cycle ? notification.cycle.id : 'unknown-cycle-id';
         return '/pdf/content/' + pdfType + '/' + libraryId + '/' + cycleId;
     }
