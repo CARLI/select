@@ -1,11 +1,12 @@
 angular.module('carli.notificationList')
 .controller('notificationListController', notificationListController);
 
-function notificationListController($q, $scope, $rootScope, $filter, alertService, controllerBaseService, errorHandler, notificationService, notificationPreviewModalService){
+function notificationListController($q, $scope, $rootScope, $filter, $window, alertService, config, controllerBaseService, errorHandler, notificationService, notificationPreviewModalService){
     var vm = this;
 
     var datePickerFormat = 'M/D/YY';
 
+    vm.apiPath = config.getMiddlewareUrl();
     vm.filter = 'all';
 
     vm.filterByType = filterByType;
@@ -102,7 +103,7 @@ function notificationListController($q, $scope, $rootScope, $filter, alertServic
     }
 
     function previewPdf( notification ){
-        alert('TODO: show PDF');
+        $window.open( vm.apiPath + notification.pdfLink );
     }
 
     function removeDraft( notification ){
