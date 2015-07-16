@@ -17,9 +17,13 @@ function editProductModal() {
 function _editProductBaseDirective() {
     return {
         restrict: 'E',
-        scope: { productId: '=', afterSubmitFn: '=' },
+        scope: {
+            afterSubmitFn: '=' ,
+            product: '='
+        },
         controller: 'editProductController',
-        controllerAs: 'vm'
+        controllerAs: 'vm',
+        bindToController: true
     };
 }
 

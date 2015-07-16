@@ -92,7 +92,12 @@ angular.module('carli.routes',[
         controller:  'productsController',
         controllerAs:'vm'
     })
-    .when('/product/:id', {
+    .when('/product/:cycleId', {
+        templateUrl: '/carliApp/sections/products/products.html',
+        controller:  'productsController',
+        controllerAs:'vm'
+    })
+    .when('/product/:cycleId/:productId', {
         templateUrl: '/carliApp/sections/products/editProduct/editProduct.html',
         controller:  'editProductPageController',
         controllerAs:'vm'

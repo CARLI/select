@@ -61,7 +61,12 @@
       "$ref": "./ProductLicenseType.json"
     },
     "priceCap": {
+      "description": "The price cap (allowed percentage increase in price) for this product for the current cycle",
       "type": "number"
+    },
+    "futurePriceCaps": {
+      "description": "A map of future years to the price cap for this product in that year",
+      "type": "object"
     },
     "detailCode": {
       "$ref": "./ProductDetailCodes.json"

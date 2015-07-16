@@ -1,25 +1,74 @@
 angular.module('carli.sections.products')
 .controller('productsController', productController);
 
-function productController( $scope, $sce, cycleService, productService ){
+function productController($location, $routeParams, $scope, $sce, cycleService, productService ){
     var vm = this;
     vm.activeCycles = [];
-    vm.afterProductSubmit = populateProductList;
+    vm.afterProductSubmit = newProductSubmitted;
+    vm.cycleId = $routeParams.cycleId;
+    vm.newProduct = newProduct();
+
     activate();
 
     function activate() {
+        console.log('Products list page activate: cycleId = '+vm.cycleId);
+
         cycleService.listActiveCycles().then(function(activeCycles) {
             vm.activeCycles = activeCycles;
         });
+
         watchCurrentCycle();
+
+        if ( vm.cycleId ){
+            cycleService.load(vm.cycleId)
+                .then(function(cycle){
+                    cycleService.setCurrentCycle(cycle);
+                    completeActivation(cycle);
+                });
+        }
+        else {
+            routeToADefaultCycle();
+        }
+    }
+
+    function completeActivation(cycle){
+        vm.newProduct = newProduct(cycle);
+        populateProductList();
     }
 
     function watchCurrentCycle() {
-        $scope.$watch(cycleService.getCurrentCycle, function (newValue) {
-            if (newValue) {
-                populateProductList();
+        $scope.$watch(cycleService.getCurrentCycle, function (newCycle) {
+            if (newCycle) {
+                routeToCycle(newCycle.id);
             }
         });
+    }
+
+    function routeToADefaultCycle(){
+        var currentCycle = cycleService.getCurrentCycle();
+
+        if ( currentCycle ){
+            console.log('  route to current cycle '+currentCycle.name);
+            var cycleId = currentCycle.id;
+            routeToCycle(cycleId);
+        }
+        else {
+            return cycleService.listActiveCycles()
+                .then(function (activeCycles) {
+                    var cycleId = activeCycles[0].id;
+                    console.log('  route to default cycle ' + cycleId);
+                    routeToCycle(cycleId);
+                });
+        }
+    }
+
+    function routeToCycle(cycleId){
+        $location.path('/product/' + cycleId);
+    }
+
+    function newProductSubmitted() {
+        vm.newProduct = newProduct();
+        populateProductList();
     }
 
     function populateProductList() {
@@ -28,12 +77,22 @@ function productController( $scope, $sce, cycleService, productService ){
         });
     }
 
+    function newProduct(cycle){
+        return {
+            type: 'Product',
+            cycle: cycle || cycleService.getCurrentCycle(),
+            isActive: true,
+            contacts: [],
+            futurePriceCaps: {}
+        };
+    }
+
     vm.productListColumns = [
         {
             label: "Product Name",
             orderByProperty: 'name',
             contentFunction: function(product) {
-                return $sce.trustAsHtml('<a href="product/' + product.id + '">' + productService.getProductDisplayName(product) + '</a>');
+                return $sce.trustAsHtml('<a href="product/' + vm.cycleId + '/' + product.id + '">' + productService.getProductDisplayName(product) + '</a>');
             }
         },
         {

@@ -1,3 +1,4 @@
+#price-cap-list,
 #one-time-purchase-pricing {
     @extend .zebra-table;
     align-items: center;
@@ -8,6 +9,7 @@
         padding: 0.5rem;
     }
 
+    .column.year,
     .column.library {
         flex: 1 1 75%;
     }
@@ -36,6 +38,14 @@
     }
 }
 
+.add-price-cap {
+    border: 0;
+    height: auto;
+    padding: 0;
+    margin-top: 1rem;
+    text-align: center;
+}
+
 .view-edit-select input:disabled {
     color: #666;
 }
@@ -44,4 +54,23 @@
   checkbox {
     line-height: 20px;
   }
+
+    view-edit-percentage-field {
+        display: block;
+        margin-bottom: 1rem;
+    }
+
+    .edit-link-container {
+        margin-bottom: 1rem;
+
+        a {
+            color: $orange;
+
+            .fa {
+                font-size: 1.2rem;
+                margin-left: 0.5rem;
+                vertical-align: middle;
+            }
+        }
+    }
 }
