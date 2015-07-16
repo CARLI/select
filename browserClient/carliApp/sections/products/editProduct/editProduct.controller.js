@@ -13,20 +13,18 @@ function editProductPageController( $routeParams, cycleService, productService )
     activate();
 
     function activate(){
-        console.log('editProductPageController init with cycle '+cycleId);
         vm.loadingPromise = cycleService.load(cycleId)
             .then(loadProduct)
             .then(saveProductToVm);
     }
 
     function loadProduct(cycle){
-        console.log('  loaded '+cycle.name);
         vm.cycle = cycle;
-        return productService.load(productId);
+        return productService.load(productId, cycle);
     }
 
     function saveProductToVm(product){
-        console.log('  loaded '+product.name);
+        product.cycle = vm.cycle; //this cycle is full-expanded and has instance functions like getDatabaseName()
         vm.product = product;
         return product;
     }

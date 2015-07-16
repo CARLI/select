@@ -5,6 +5,7 @@ function editProductController( $q, $scope, $rootScope, $filter, alertService, e
     var vm = this;
     var otpFieldsCopy = [];
     var termFieldsCopy = {};
+    var priceCapsCopy = {};
     var originalProductName = null;
 
     var templates = {
@@ -16,25 +17,24 @@ function editProductController( $q, $scope, $rootScope, $filter, alertService, e
     var afterSubmitCallback = vm.afterSubmitFn || function() {};
 
     vm.productOfferings = [];
+    vm.addPriceCapRow = addPriceCapRow;
     vm.toggleEditable = toggleEditable;
     vm.cancelEdit = cancelEdit;
     vm.cancelOtpEdit = revertOtpFields;
     vm.rememberOtpFields = rememberOtpFields;
     vm.cancelTermsEdit = revertTermFields;
     vm.rememberTermFields = rememberTermFields;
+    vm.cancelPriceCapEdits = cancelPriceCapEdits;
+    vm.rememberPriceCaps = rememberPriceCaps;
     vm.saveProduct = saveProduct;
     vm.submitAction = submitAction;
     vm.submitLabel = submitLabel;
     vm.productLicenseIsValid = productLicenseIsValid;
     vm.getProductDisplayName = productService.getProductDisplayName;
 
-    vm.shouldShowOtpEditLink = function() {
-        return vm.editable && !vm.newProduct && isOneTimePurchaseProduct(vm.product);
-    };
-
-    vm.shouldShowTermsEditLink = function() {
-        return vm.editable && !vm.newProduct;
-    };
+    vm.shouldShowOtpEditLink = shouldShowOtpEditLink;
+    vm.shouldShowTermsEditLink = shouldShowTermsEditLink;
+    vm.shouldShowManagePriceCapLink = shouldShowManagePriceCapLink;
 
     vendorService.list().then( function( vendorList ){
        vm.vendorList = vendorList;
@@ -51,7 +51,6 @@ function editProductController( $q, $scope, $rootScope, $filter, alertService, e
     activate();
 
     function activate() {
-        console.log('Edit Product ',vm.product);
         vm.isModal = vm.newProduct;
 
         if ( isNewProduct() ) {
@@ -78,15 +77,20 @@ function editProductController( $q, $scope, $rootScope, $filter, alertService, e
     }
 
     function initializeForExistingProduct() {
-        console.log(' edit '+vm.product.name);
+        console.log(' edit '+vm.product.name, vm.product);
         vm.editable = false;
         vm.newProduct = false;
+
+        vm.year = vm.product.cycle.year;
 
         setProductFormPristine();
 
         initializeProductNameWatcher();
         rememberOtpFields();
         rememberTermFields();
+        rememberPriceCaps();
+
+        cycleService.setCurrentCycle(vm.product.cycle);
 
         if ( isOneTimePurchaseProduct(vm.product) ){
             return loadOfferingsForProduct(vm.product)
@@ -125,6 +129,14 @@ function editProductController( $q, $scope, $rootScope, $filter, alertService, e
         angular.copy(vm.product.terms, termFieldsCopy);
     }
 
+    function cancelPriceCapEdits(){
+        vm.product.terms = angular.copy(priceCapsCopy, {});
+    }
+
+    function rememberPriceCaps(){
+        angular.copy(vm.productOfferings, priceCapsCopy);
+    }
+
     function isOneTimePurchaseProduct(product) {
         var cycle = product.cycle || {};
         return cycle.cycleType === 'One-Time Purchase';
@@ -152,8 +164,10 @@ function editProductController( $q, $scope, $rootScope, $filter, alertService, e
             return $q.when(initializeForNewProduct());
         }
         else {
+            var expandedCycle = vm.product.cycle;
             return productService.load(vm.product.id)
-                .then(function (freshCopyOfProduct) {
+                .then(function (freshCopyOfProduct){
+                    freshCopyOfProduct.cycle = expandedCycle;
                     vm.product = freshCopyOfProduct;
                     return freshCopyOfProduct;
                 })
@@ -398,5 +412,28 @@ function editProductController( $q, $scope, $rootScope, $filter, alertService, e
 
     function productLicenseIsValid(){
         return vm.product && vm.product.license && typeof vm.product.license === 'object';
+    }
+
+    function shouldShowOtpEditLink() {
+        return vm.editable && !vm.newProduct && isOneTimePurchaseProduct(vm.product);
+    }
+
+    function shouldShowTermsEditLink() {
+        return vm.editable && !vm.newProduct;
+    }
+
+    function shouldShowManagePriceCapLink() {
+        return vm.editable && !vm.newProduct;
+    }
+
+    function addPriceCapRow(){
+        vm.product.futurePriceCaps = vm.product.futurePriceCaps || {};
+        var priceCaps = vm.product.futurePriceCaps;
+        var nextYear = findMaxPriceCapYear(priceCaps) + 1;
+        priceCaps[nextYear] = 0;
+
+        function findMaxPriceCapYear(priceCapsObject){
+            return  1 * (Object.keys(priceCapsObject).sort().reverse()[0] || vm.year);
+        }
     }
 }
