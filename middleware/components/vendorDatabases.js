@@ -280,7 +280,7 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
         }, catchNoCycle)
         .then(function(offeringsList){
             offeringsList.forEach(function(offering){
-                if ( offeringRepository.getFlaggedState(offering) ){
+                if ( offeringRepository.getFlaggedState(offering, cycle) ){
                     flaggedOfferingsCount++;
                     offering.flaggedReason.forEach(function(reason){
                         flaggedOfferingsReason[reason] = (flaggedOfferingsReason[reason] || 0) + 1;

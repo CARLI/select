@@ -62,7 +62,6 @@ module.exports = {
     deleteTestDbs: function() {
         var deferred = Q.defer();
 
-        console.log(testStoreOptions.privilegedCouchDbUrl);
         request.get(testStoreOptions.privilegedCouchDbUrl + '/_all_dbs', function (error, response, body) {
             if (error) {
                 deferred.reject(error);
@@ -94,15 +93,17 @@ module.exports = {
     deleteTestReplicators: function() {
         var deferred = Q.defer();
 
-        console.log(testStoreOptions.privilegedCouchDbUrl);
         request.get(testStoreOptions.privilegedCouchDbUrl + '/_replicator/_all_docs?include_docs=true', function (error, response, body) {
-            var parsedBody = JSON.parse(body);
-            var err = error || parsedBody.error;
-            if (err) {
+            if (error) {
                 deferred.reject(error);
                 return;
             }
             var jsonBody = JSON.parse(body);
+            var err = jsonBody.error;
+            if (err) {
+                deferred.reject(err);
+                return;
+            }
             var replicationList = jsonBody.rows;
             var count = 0;
             var promises = [];

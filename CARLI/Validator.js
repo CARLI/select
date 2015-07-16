@@ -60,7 +60,7 @@ function validate(data) {
     _loadSchemas();
     var result = tv4.validateResult(data, schemas[data.type]);
     if (result.error) {
-        deferred.reject(result.error.message);
+        deferred.reject(result.error.message + ':' + result.error.dataPath);
     }
     else {
         deferred.resolve();

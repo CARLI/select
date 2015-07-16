@@ -25,7 +25,7 @@ function vendorStatusService( CarliModules, $filter, $q, errorHandler ) {
     function updateVendorStatusActivity( activityMessage, vendorId, cycle ){
         return getStatusForVendor(vendorId, cycle)
             .then(function(vendorStatus){
-                vendorStatus.lastActivity = new Date();
+                vendorStatus.lastActivity = new Date().toISOString();
                 vendorStatus.description = activityMessage;
                 return updateVendorStatus(vendorStatus, cycle);
             });

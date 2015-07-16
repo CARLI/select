@@ -4,6 +4,7 @@ var uuid  = require( 'node-uuid' )
   , Q = require( 'q' )
   , entityCache = require('./entityCache')
   , config = require( '../../config' )
+  , _ = require('lodash')
 ;
 
 function throwIfDataIsEmpty ( data ) {
@@ -25,7 +26,7 @@ function validateUpdateData( data ){
 }
 
 function _cloneData ( data ) {
-    return JSON.parse( JSON.stringify( data ) );
+    return _.cloneDeep(data);
 }
 
 module.exports = function (type, timeout) {
