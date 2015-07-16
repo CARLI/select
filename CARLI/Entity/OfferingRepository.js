@@ -357,10 +357,20 @@ function setCycle(cycle) {
 }
 
 
-function getFlaggedState(offering){
-    var cycle = offering.cycle || {};
+function getFlaggedState(offering, cycleArgument) {
+    cycle = getCycleFromArguments();
     var thisYear = cycle.year || 1;
     var lastYear = thisYear - 1;
+
+    function getCycleFromArguments() {
+        var c = cycleArgument || offering.cycle;
+
+        if (!c || typeof c === 'string') {
+            throw new Error('Invalid cycle');
+        }
+
+        return c;
+    }
 
     if ( userFlaggedState() !== undefined ){
         return userFlaggedState();
