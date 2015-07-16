@@ -553,7 +553,8 @@ function generateNotificationForLibrary(libraryId, offeringsForAll, customizedTe
 
     function pdfLink(){
         var pdfType = customizedTemplate.notificationType;
-        return '/pdf/content/' + pdfType + '/' + libraryId + '/' + notification.cycle.id;
+        var cycleId = notification.cycle ? notification.cycle.id : 'unknown-cycle-id';
+        return '/pdf/content/' + pdfType + '/' + libraryId + '/' + cycleId;
     }
 }
 
