@@ -1,3 +1,3 @@
-<section id="products">
-    <edit-product product="vm.product"></edit-product>
+<section id="products" cg-busy="vm.loadingPromise">
+    <edit-product product="vm.product" ng-if="vm.product"></edit-product>
 </section>
