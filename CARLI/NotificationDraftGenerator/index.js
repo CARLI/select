@@ -471,7 +471,7 @@ function generateDraftNotification(template, notificationData) {
             return getVendorReportsForOne(template, notificationData);
         }
     } else if (notificationTypeIsForLibrary()) {
-        if (template.notificationType == 'subscription') {
+        if (template.notificationType == 'estimate') {
             if (shouldSendEverythingToEveryone()) {
                 return getLibraryEstimatesForAll(template, notificationData);
             }
@@ -537,10 +537,24 @@ function generateNotificationForLibrary(libraryId, offeringsForAll, customizedTe
         }
     }
 
+    if ( notificationShouldHavePdfLink() ){
+        notification.pdfLink = pdfLink();
+    }
+
     return notification;
 
     function onlyOfferingsForLibrary(offering){
         return offering.library.id  == libraryId;
+    }
+
+    function notificationShouldHavePdfLink(){
+        return customizedTemplate.notificationType === 'invoice' || customizedTemplate.notificationType === 'estimate';
+    }
+
+    function pdfLink(){
+        var pdfType = customizedTemplate.notificationType;
+        var cycleId = notification.cycle ? notification.cycle.id : 'unknown-cycle-id';
+        return '/pdf/content/' + pdfType + '/' + libraryId + '/' + cycleId;
     }
 }
 
@@ -571,7 +585,6 @@ function generateNotificationForEntity(entityId, customizedTemplate){
         targetEntity: entityId,
         subject: customizedTemplate.subject,
         emailBody: customizedTemplate.emailBody,
-        pdfBody: customizedTemplate.pdfBody,
         draftStatus: 'draft',
         notificationType: customizedTemplate.notificationType
     };

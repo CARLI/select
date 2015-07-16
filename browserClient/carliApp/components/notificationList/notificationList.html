@@ -28,8 +28,9 @@
             <div class="date">{{ ::notification.dateSent | date:'shortDate' }}</div>
         </div>
         <div class="column preview">
-            <a busy-click="vm.previewNotification(notification)">View</a> |
-            <a busy-click="vm.previewPdf(notification)">PDF</a>
+            <a busy-click="vm.previewNotification(notification)">View</a>
+            <span ng-show="notification.pdfLink">|</span>
+            <a busy-click="vm.previewPdf(notification)" ng-show="notification.pdfLink">PDF</a>
         </div>
         <div class="column remove" ng-if="::vm.showRemove">
             <button type="button" class="carli-button subdued-remove-button" busy-click="vm.removeDraft(notification)">

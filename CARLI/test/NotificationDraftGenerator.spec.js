@@ -32,9 +32,9 @@ describe('The notification draft generator', function() {
         }
         function getMockOfferingsForAnnualAccessFee(){
             return Q([
-                { library: { id: 'library', name: 'Test Library'}, product: { oneTimePurchaseAnnualAccessFee: 7 }, selection: { } },
-                { library: { id: 'library', name: 'Test Library'}, product: {} },
-                { library: {id: 'library2', name: 'Test Library2'}, product: {} }
+                { cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Test Library'}, product: { oneTimePurchaseAnnualAccessFee: 7 }, selection: { } },
+                { cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Test Library'}, product: {} },
+                { cycle: {id: 'mock-cycle'}, library: {id: 'library2', name: 'Test Library2'}, product: {} }
             ]);
         }
 
@@ -71,7 +71,8 @@ describe('The notification draft generator', function() {
                     expect(notifications.length).to.equal(1),
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('library'),
-                    expect(notifications[0].summaryTotal).to.be.a('number')
+                    expect(notifications[0].summaryTotal).to.be.a('number'),
+                    expect(notifications[0].pdfLink).to.be.a('string')
                 ]);
             });
         });
@@ -88,9 +89,9 @@ describe('The notification draft generator', function() {
         }
         function getMockOfferingsForAnnualAccessFee(){
             return Q([
-                { library: { id: 'library', name: 'Test Library'}, product: { oneTimePurchaseAnnualAccessFee: 7 }, selection: {} },
-                { library: { id: 'library', name: 'Test Library'}, product: {} },
-                { library: {id: 'library2', name: 'Test Library2'}, product: {} }
+                { cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Test Library'}, product: { oneTimePurchaseAnnualAccessFee: 7 }, selection: {} },
+                { cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Test Library'}, product: {} },
+                { cycle: {id: 'mock-cycle'}, library: {id: 'library2', name: 'Test Library2'}, product: {} }
             ]);
         }
 
@@ -126,7 +127,8 @@ describe('The notification draft generator', function() {
                     expect(notifications.length).to.equal(1),
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('library'),
-                    expect(notifications[0].summaryTotal).to.be.a('number')
+                    expect(notifications[0].summaryTotal).to.be.a('number'),
+                    expect(notifications[0].pdfLink).to.be.a('string')
                 ]);
             });
         });
@@ -183,7 +185,8 @@ describe('The notification draft generator', function() {
                     expect(notifications).to.be.an('array'),
                     expect(notifications.length).to.equal(1),
                     expect(notifications[0].type).to.equal('Notification'),
-                    expect(notifications[0].targetEntity).to.equal('library')
+                    expect(notifications[0].targetEntity).to.equal('library'),
+                    expect(notifications[0].pdfLink).to.be.an('undefined')
                 ]);
             });
         });
@@ -246,7 +249,8 @@ describe('The notification draft generator', function() {
                     expect(notifications.length).to.equal(2),
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('vendor1'),
-                    expect(notifications[0].summaryTotal).to.be.a('number')
+                    expect(notifications[0].summaryTotal).to.be.a('number'),
+                    expect(notifications[0].pdfLink).to.be.an('undefined')
                 ]);
             });
         });
@@ -306,7 +310,8 @@ describe('The notification draft generator', function() {
                     expect(notifications.length).to.equal(2),
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('vendor1'),
-                    expect(notifications[0].summaryTotal).to.be.a('number')
+                    expect(notifications[0].summaryTotal).to.be.a('number'),
+                    expect(notifications[0].pdfLink).to.be.an('undefined')
                 ]);
             });
         });
@@ -364,7 +369,8 @@ describe('The notification draft generator', function() {
                     expect(notifications.length).to.equal(1),
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('vendor1'),
-                    expect(notifications[0].summaryTotal).to.be.a('number')
+                    expect(notifications[0].summaryTotal).to.be.a('number'),
+                    expect(notifications[0].pdfLink).to.be.an('undefined')
                 ]);
             });
         });
@@ -381,8 +387,8 @@ describe('The notification draft generator', function() {
         }
         function getMockOfferingsForAllLibrariesAllProducts() {
             return Q([
-                { library: { id: 'library', name: 'Library'}, selection: { } },
-                { library: { id: 'library2', name: 'Library2'}, selection: { } }
+                { cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Library'}, selection: { } },
+                { cycle: {id: 'mock-cycle'}, library: { id: 'library2', name: 'Library2'}, selection: { } }
             ]);
         }
 
@@ -418,7 +424,8 @@ describe('The notification draft generator', function() {
                     expect(notifications.length).to.equal(2),
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('library'),
-                    expect(notifications[0].summaryTotal).to.be.a('number')
+                    expect(notifications[0].summaryTotal).to.be.a('number'),
+                    expect(notifications[0].pdfLink).to.satisfy(pdfLinkForInvoice)
                 ]);
             });
         });
@@ -437,9 +444,9 @@ describe('The notification draft generator', function() {
         }
         function getMockOfferingsForSomeLibrariesSomeProducts(){
             return Q([
-                { library: { id: 'library', name: 'Test Library'}, selection: { } },
-                { library: { id: 'library', name: 'Test Library'} },
-                { library: { id: 'library2', name: 'Test Library2'} }
+                { cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Test Library'}, selection: { } },
+                { cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Test Library'} },
+                { cycle: {id: 'mock-cycle'}, library: { id: 'library2', name: 'Test Library2'} }
             ]);
         }
 
@@ -476,7 +483,8 @@ describe('The notification draft generator', function() {
                     expect(notifications.length).to.equal(1),
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('library'),
-                    expect(notifications[0].summaryTotal).to.be.a('number')
+                    expect(notifications[0].summaryTotal).to.be.a('number'),
+                    expect(notifications[0].pdfLink).to.satisfy(pdfLinkForInvoice)
                 ]);
             });
         });
@@ -495,7 +503,7 @@ describe('The notification draft generator', function() {
         }
         function getMockOfferingsForOneLibrariesAllProducts() {
             return Q([
-                { library: { id: 'library', name: 'Test Library'}, selection: { } }
+                { cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Test Library'}, selection: { } }
             ]);
         }
 
@@ -530,7 +538,8 @@ describe('The notification draft generator', function() {
                     expect(notifications.length).to.equal(1),
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('library'),
-                    expect(notifications[0].summaryTotal).to.be.a('number')
+                    expect(notifications[0].summaryTotal).to.be.a('number'),
+                    expect(notifications[0].pdfLink).to.satisfy(pdfLinkForInvoice)
                 ]);
             });
         });
@@ -539,7 +548,7 @@ describe('The notification draft generator', function() {
     describe('specification for generateDraftNotification "All Libraries, All Products" Estimates', function() {
         var template = {
             id: 'irrelevant template id',
-            notificationType: 'subscription'
+            notificationType: 'estimate'
         };
         var notificationData = {};
         function getMockEntitiesForAllLibrariesAllProducts() {
@@ -547,8 +556,8 @@ describe('The notification draft generator', function() {
         }
         function getMockOfferingsForAllLibrariesAllProducts() {
             return Q([
-                { library: { id: 'library', name: 'Library'}, selection: { } },
-                { library: { id: 'library2', name: 'Library2'} }
+                { cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Library'}, selection: { } },
+                { cycle: {id: 'mock-cycle'}, library: { id: 'library2', name: 'Library2'} }
             ]);
         }
 
@@ -584,7 +593,8 @@ describe('The notification draft generator', function() {
                     expect(notifications.length).to.equal(2),
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('library'),
-                    expect(notifications[0].summaryTotal).to.be.a('number')
+                    expect(notifications[0].summaryTotal).to.be.a('number'),
+                    expect(notifications[0].pdfLink).to.satisfy(pdfLinkForEstimate)
                 ]);
             });
         });
@@ -593,7 +603,7 @@ describe('The notification draft generator', function() {
     xdescribe('specification for generateDraftNotification "One or more Libraries, One or more Products" Estimates', function() {
         var template = {
             id: 'irrelevant template id',
-            notificationType: 'subscription'
+            notificationType: 'estimate'
         };
         var notificationData = {
             offeringIds: [ 1, 2, 3 ]
@@ -626,7 +636,7 @@ describe('The notification draft generator', function() {
     xdescribe('specification for generateDraftNotification "One Library, All Products" Estimate', function() {
         var template = {
             id: 'irrelevant template id',
-            notificationType: 'subscription'
+            notificationType: 'estimate'
         };
         var notificationData = {
             recipientId: 'some library'
@@ -657,3 +667,18 @@ describe('The notification draft generator', function() {
     });
 });
 
+function pdfLinkForInvoice( testString ){
+    if ( !testString || typeof testString !== 'string' ){
+        return false;
+    }
+
+    return testString.indexOf('pdf') > 0 && testString.indexOf('invoice') > 0;
+}
+
+function pdfLinkForEstimate( testString ){
+    if ( !testString || typeof testString !== 'string' ){
+        return false;
+    }
+
+    return testString.indexOf('pdf') > 0 && testString.indexOf('estimate') > 0;
+}

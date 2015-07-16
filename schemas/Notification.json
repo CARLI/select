@@ -22,7 +22,7 @@
     "emailBody": {
       "type": "string"
     },
-    "pdfBody": {
+    "pdfLink": {
       "type": "string"
     },
     "cycle": {

@@ -151,7 +151,6 @@ function runLibraryStatusSpecificTests(testCycle) {
                     return libraryStatusRepository.getStatusesForAllLibraries(testCycle);
                 })
                 .then(function (statusesForAllLibraries) {
-                    console.log('statusesForAllLibraries', statusesForAllLibraries);
                     return Q.all([
                         expect(statusesForAllLibraries).to.be.an('object'),
                         expect(statusesForAllLibraries[testLibraryId]).to.be.an('object'),
