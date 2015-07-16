@@ -97,7 +97,8 @@ function manageNotificationTemplatesModalController( $scope, $rootScope, alertSe
             name: 'New Template',
             subject: '',
             emailBody: '',
-            pdfBody: '',
+            pdfBefore: '',
+            pdfAfter: '',
             pdfContentIsEditable: false,
             notificationType: 'other'
         };

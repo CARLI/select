@@ -111,6 +111,7 @@ function getRecipientLabel(recipientName, notificationType) {
 
     function getLabelForNotificationType(type) {
         var labels = {
+            'estimate': 'Subscription Contacts',
             'invoice': 'Invoice Contacts',
             'report': 'Report Contacts',
             'subscription': 'Subscription Contacts'
@@ -178,6 +179,7 @@ function getId(offering){
 
 function notificationTypeIsForLibrary(notificationType) {
     var results = {
+        'estimate': true,
         'invoice': true,
         'report': false,
         'subscription': true
@@ -186,6 +188,7 @@ function notificationTypeIsForLibrary(notificationType) {
 }
 function notificationTypeIsForVendor(notificationType) {
     var results = {
+        'estimate': false,
         'invoice': false,
         'report': true,
         'subscription': false
