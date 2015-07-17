@@ -16,6 +16,7 @@ function carliCheckingPricesController( $q, notificationService, notificationTem
 
         notificationTemplateService.load('notification-template-open-system')
             .then(function(openSystemTemplate){
+                vm.openSystemMessage.to = 'eresource_internal@carli.illinois.edu';
                 vm.openSystemMessage.subject = openSystemTemplate.subject;
                 vm.openSystemMessage.emailBody = openSystemTemplate.emailBody;
                 vm.openSystemMessage.draftStatus = 'draft';
