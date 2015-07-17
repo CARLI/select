@@ -1,7 +1,7 @@
 angular.module('common.vendorStatusService')
     .service('vendorStatusService', vendorStatusService);
 
-function vendorStatusService( CarliModules, $filter, $q, errorHandler ) {
+function vendorStatusService( CarliModules, $q, authService, errorHandler ) {
 
     var vendorStatusModule = CarliModules.VendorStatus;
     var VendorDatabaseModule = CarliModules.VendorDatabaseMiddleware;
@@ -27,6 +27,7 @@ function vendorStatusService( CarliModules, $filter, $q, errorHandler ) {
             .then(function(vendorStatus){
                 vendorStatus.lastActivity = new Date().toISOString();
                 vendorStatus.description = activityMessage;
+                vendorStatus.lastUser = authService.getCurrentUser().id;
                 return updateVendorStatus(vendorStatus, cycle);
             });
     }
