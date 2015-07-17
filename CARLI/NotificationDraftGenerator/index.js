@@ -552,12 +552,13 @@ function generateNotificationForLibrary(libraryId, offeringsForAll, customizedTe
 
     function pdfLink(){
         var pdfType = customizedTemplate.notificationType;
+        var cycleId = notification.cycle ? notification.cycle.id : 'unknown-cycle-id';
 
         if ( pdfType === 'invoice' && notification.isFeeInvoice ){
             pdfType = 'access-fee-invoice';
+            cycleId = config.oneTimePurchaseProductsCycleDocId;
         }
         
-        var cycleId = notification.cycle ? notification.cycle.id : 'unknown-cycle-id';
         return '/pdf/content/' + pdfType + '/' + libraryId + '/' + cycleId;
     }
 }
