@@ -1,0 +1,6 @@
+source "https://supermarket.chef.io"
+
+cookbook 'couchdb', '~> 2.5.2'
+cookbook 'nginx', '~> 2.7.6'
+
+metadata
