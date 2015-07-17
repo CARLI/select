@@ -47,11 +47,19 @@ function cycleChooserController($scope, authService, cycleService, vendorStatusS
                 }
 
                 if ( isAllowedIn ){
-                    return readySelectedCycle(cycle);
+                    return updateStatus().then(readyCycle);
                 }
                 else {
                     vm.noActiveCycles = true;
                     return false;
+                }
+
+                function updateStatus() {
+                    return vendorStatusService.updateVendorStatusActivity('Logged in', vm.vendor.id, cycle);
+                }
+
+                function readyCycle() {
+                    return readySelectedCycle(cycle);
                 }
             });
     }
