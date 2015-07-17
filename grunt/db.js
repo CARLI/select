@@ -13,7 +13,14 @@ module.exports = function (grunt) {
     });
     grunt.registerTask('create-pixo-users', function createAdminUser() {
         var done = this.async();
-        deployDb.createUsersFromJson('./pixo-test-staff-users.json').then(done);
+        createUsers().then(done);
+
+        function createUsers() {
+            return deployDb.createUsersFromJson('./pixo-staff-users.json')
+                .then(function () {
+                    return deployDb.createUsersFromJson('./carli-staff-users.json');
+                });
+        }
     });
     grunt.registerTask('deploy-db', [
         'deploy-app-db',
