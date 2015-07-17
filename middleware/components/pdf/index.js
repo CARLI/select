@@ -215,7 +215,6 @@ function generateDataForPdf(type, libraryId, cycleId){
             .then(groupOfferingsForLibraryInvoice)
             .then(transformGroupedOfferingsToListForAccessFeeInvoiceTable)
             .then(function(invoiceTableData){
-                console.log('-- INVOICE data:', invoiceTableData);
                 invoiceData = invoiceTableData;
                 return libraryRepository.load(libraryId);
             })
@@ -289,12 +288,15 @@ function generateDataForPdf(type, libraryId, cycleId){
             vendorNameForFirstRowOnly = vendorName;
 
             offeringsForVendor.forEach(function(offering){
-                results.push({
-                    vendor: vendorNameForFirstRowOnly,
-                    product: offering.product.name,
-                    price: priceForRow(offering)
-                });
-                vendorNameForFirstRowOnly = '';
+                var priceForThisRow = priceForRow(offering);
+                if ( priceForThisRow ) {
+                    results.push({
+                        vendor: vendorNameForFirstRowOnly,
+                        product: offering.product.name,
+                        price: priceForThisRow
+                    });
+                    vendorNameForFirstRowOnly = '';
+                }
             });
         });
 
