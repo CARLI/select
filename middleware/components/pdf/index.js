@@ -133,7 +133,7 @@ function generateContentForPdf(type, entityId, cycleId){
     }
 
     function fetchTemplateForContent(type, cycle){
-        if ( type === 'estimate' ){
+        if ( typeIsForSubscriptionInvoiceEstimate(type) ){
             if ( cycle.isOpenToLibraries() ){
                 return notificationTemplateRepository.loadTemplateForOpenCycleEstimates();
             }
@@ -141,8 +141,11 @@ function generateContentForPdf(type, entityId, cycleId){
                 return notificationTemplateRepository.loadTemplateForClosedCycleEstimates();
             }
         }
+        else if ( typeIsForAccessFeeInvoice(type) ) {
+            return notificationTemplateRepository.loadTemplateForAnnualAccessFeeInvoices();
+        }
         else {
-            return notificationTemplateRepository.loadTemplateForInvoices();
+            return notificationTemplateRepository.loadTemplateForSubscriptionInvoices();
         }
     }
 
@@ -343,16 +346,24 @@ function validateArguments(type, entityId, cycleId) {
     }
 }
 
-function typeIsForLibrarySelections(type){
-    return type.toLowerCase() === 'invoice' || type.toLowerCase() === 'estimate';
+function typeIsForSubscriptionInvoice(type){
+    return type.toLowerCase() === 'invoice';
+}
+
+function typeIsForSubscriptionInvoiceEstimate(type){
+    type.toLowerCase() === 'estimate';
 }
 
 function typeIsForAccessFeeInvoice(type){
     return type.toLowerCase() === 'access-fee-invoice';
 }
 
+function typeIsForLibrarySelections(type){
+    return typeIsForSubscriptionInvoice(type) || typeIsForSubscriptionInvoiceEstimate(type);
+}
+
 function typeIsForRealInvoice(type){
-    return type.toLowerCase() === 'invoice';
+    return typeIsForSubscriptionInvoice(type) || typeIsForAccessFeeInvoice(type);
 }
 
 function loadCycle(cycleId){
