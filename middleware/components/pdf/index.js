@@ -81,7 +81,7 @@ function generateContentForPdf(type, entityId, cycleId){
         }
 
         if ( typeIsForAccessFeeInvoice(type) ){
-            return htmlForAccessFeeInvoice(dataForPdf);
+            return htmlForLibrarySelections(dataForPdf);
         }
 
         return Q.reject('invalid type: '+type);
@@ -126,10 +126,6 @@ function generateContentForPdf(type, entityId, cycleId){
                 return batchIdPrefix + '10031'; /* TODO: generate this number sequentially */
             }
         }
-    }
-
-    function htmlForAccessFeeInvoice(dataForAccessFeeInvoice){
-        /**/return dataForAccessFeeInvoice;
     }
 
     function fetchTemplateForContent(type, cycle){
