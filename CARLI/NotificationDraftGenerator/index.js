@@ -32,7 +32,6 @@ function getAnnualAccessFeeDraftForOneLibrary(template, notificationData) {
             .then(function(offerings){
                 return actualRecipientIds.map(function(id){
                     var notification = generateNotificationForLibrary(id, offerings, customizedTemplate);
-                    notification.isFeeInvoice = true;
                     return notification;
                });
             });
@@ -78,7 +77,6 @@ function getAnnualAccessFeeDraftForAllLibraries(template, notificationData) {
             .then(function(offerings){
                 return actualRecipientIds.map(function(id){
                     var notification = generateNotificationForLibrary(id, offerings, customizedTemplate);
-                    notification.isFeeInvoice = true;
                     return notification;
                 });
             });
@@ -454,7 +452,7 @@ function generateDraftNotification(template, notificationData) {
     var offeringIds = notificationData.offeringIds;
     var recipientId = notificationData.recipientId;
 
-    if (isAnnualAccessFeeInvoice()) {
+    if (isAnnualAccessFeeInvoice(template.id)) {
         if (isASingleRecipient()) {
             return getAnnualAccessFeeDraftForOneLibrary(template, notificationData);
         } else {
@@ -486,9 +484,6 @@ function generateDraftNotification(template, notificationData) {
         }
     }
 
-    function isAnnualAccessFeeInvoice() {
-        return template.id === 'notification-template-annual-access-fee-invoices';
-    }
     function isReminder() {
         return template.id === 'notification-template-contact-non-players' ||
             template.id === 'notification-template-library-reminder';
@@ -511,6 +506,10 @@ function generateDraftNotification(template, notificationData) {
     function notificationTypeIsForVendor() {
         return notificationRepository.notificationTypeIsForVendor(template.notificationType);
     }
+}
+
+function isAnnualAccessFeeInvoice(templateId) {
+    return templateId === 'notification-template-annual-access-fee-invoices';
 }
 
 function convertEntityToRecipient(entity, template) {
@@ -554,6 +553,12 @@ function generateNotificationForLibrary(libraryId, offeringsForAll, customizedTe
     function pdfLink(){
         var pdfType = customizedTemplate.notificationType;
         var cycleId = notification.cycle ? notification.cycle.id : 'unknown-cycle-id';
+
+        if ( pdfType === 'invoice' && notification.isFeeInvoice ){
+            pdfType = 'access-fee-invoice';
+            cycleId = config.oneTimePurchaseProductsCycleDocId;
+        }
+        
         return '/pdf/content/' + pdfType + '/' + libraryId + '/' + cycleId;
     }
 }
@@ -586,7 +591,8 @@ function generateNotificationForEntity(entityId, customizedTemplate){
         subject: customizedTemplate.subject,
         emailBody: customizedTemplate.emailBody,
         draftStatus: 'draft',
-        notificationType: customizedTemplate.notificationType
+        notificationType: customizedTemplate.notificationType,
+        isFeeInvoice: isAnnualAccessFeeInvoice(customizedTemplate.id)
     };
 }
 

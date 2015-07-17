@@ -66,8 +66,8 @@ var notificationTemplates = [
         name: 'Annual Access Fee Invoices',
         subject: 'CARLI Annual Access Fee Invoices',
         emailBody: '',
-        pdfBefore: 'This text appears before the invoice contents',
-        pdfAfter: 'This text appears after the invoice contents',
+        pdfBefore: 'This text appears before the annual access fee invoice contents',
+        pdfAfter: 'This text appears after the annual access fee invoice contents',
         pdfContentIsEditable: true,
         notificationType: 'invoice'
     }

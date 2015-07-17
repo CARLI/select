@@ -31,6 +31,7 @@ function notificationModalController($q, $rootScope, $scope, alertService, error
         vm.template = template;
 
         vm.draft = {
+            id: template.id,
             subject: template.subject,
             emailBody: template.emailBody,
             pdfBefore: template.hasOwnProperty('pdfBefore') ? template.pdfBefore : '',

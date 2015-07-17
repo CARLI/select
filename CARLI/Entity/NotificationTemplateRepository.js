@@ -16,8 +16,12 @@ NotificationTemplateRepository.loadTemplateForClosedCycleEstimates = function() 
     return NotificationTemplateRepository.load('notification-template-library-estimates-closed');
 };
 
-NotificationTemplateRepository.loadTemplateForInvoices = function() {
+NotificationTemplateRepository.loadTemplateForSubscriptionInvoices = function() {
     return NotificationTemplateRepository.load('notification-template-library-invoices');
+};
+
+NotificationTemplateRepository.loadTemplateForAnnualAccessFeeInvoices = function() {
+    return NotificationTemplateRepository.load('notification-template-annual-access-fee-invoices');
 };
 
 module.exports = NotificationTemplateRepository;
