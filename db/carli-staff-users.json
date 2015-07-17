@@ -1,0 +1,98 @@
+[
+  {
+    "_id": "org.couchdb.user:clennon@uillinois.edu",
+    "id": "org.couchdb.user:clennon@uillinois.edu",
+    "name": "clennon@uillinois.edu",
+    "email": "clennon@uillinois.edu",
+    "fullName": "Cindy Clennon",
+    "roles": [
+      "staff"
+    ],
+    "type": "user",
+    "isActive": true
+  },
+  {
+    "_id": "org.couchdb.user:burkee@illinois.edu",
+    "id": "org.couchdb.user:burkee@illinois.edu",
+    "name": "burkee@illinois.edu",
+    "email": "burkee@illinois.edu",
+    "fullName": "Mary Burkee",
+    "roles": [
+      "staff"
+    ],
+    "type": "user",
+    "isActive": true
+  },
+  {
+    "_id": "org.couchdb.user:cdwalsh@uillinois.edu",
+    "id": "org.couchdb.user:cdwalsh@uillinois.edu",
+    "name": "cdwalsh@uillinois.edu",
+    "email": "cdwalsh@uillinois.edu",
+    "fullName": "Connie Walsh",
+    "roles": [
+      "staff"
+    ],
+    "type": "user",
+    "isActive": true
+  },
+  {
+    "_id": "org.couchdb.user:deday@uillinois.edu",
+    "id": "org.couchdb.user:deday@uillinois.edu",
+    "name": "deday@uillinois.edu",
+    "email": "deday@uillinois.edu",
+    "fullName": "Diane Day",
+    "roles": [
+      "staff"
+    ],
+    "type": "user",
+    "isActive": true
+  },
+  {
+    "_id": "org.couchdb.user:kllittle@uillinois.edu",
+    "id": "org.couchdb.user:kllittle@uillinois.edu",
+    "name": "kllittle@uillinois.edu",
+    "email": "kllittle@uillinois.edu",
+    "fullName": "Katrina Little",
+    "roles": [
+      "staff"
+    ],
+    "type": "user",
+    "isActive": true
+  },
+  {
+    "_id": "org.couchdb.user:carcher@uillinois.edu",
+    "id": "org.couchdb.user:carcher@uillinois.edu",
+    "name": "carcher@uillinois.edu",
+    "email": "carcher@uillinois.edu",
+    "fullName": "CJ Archer",
+    "roles": [
+      "staff"
+    ],
+    "type": "user",
+    "isActive": true
+  },
+  {
+    "_id": "org.couchdb.user:ssingle@uillinois.edu",
+    "id": "org.couchdb.user:ssingle@uillinois.edu",
+    "name": "ssingle@uillinois.edu",
+    "email": "ssingle@uillinois.edu",
+    "fullName": "Susan Singleton",
+    "roles": [
+      "staff"
+    ],
+    "type": "user",
+    "isActive": true
+  },
+  {
+    "_id": "org.couchdb.user:bgant@uillinois.edu",
+    "id": "org.couchdb.user:bgant@uillinois.edu",
+    "name": "bgant@uillinois.edu",
+    "email": "bgant@uillinois.edu",
+    "fullName": "Brandon Gant",
+    "roles": [
+      "staff"
+    ],
+    "type": "user",
+    "isActive": true
+  }
+]
