@@ -18,10 +18,10 @@ var invoicePdfTemplate = loadAndCompileHandlebarsTemplate('invoicePdfTemplate.ha
 var batchIdPrefix = 'USI';
 var invoiceNumberPrefix = 'USIN';
 
-function exportPdf(type, entityId, cycleId){
-    console.log('Begin generateContentForPdf '+type+' '+entityId+' for cycle '+cycleId);
+function exportPdf(type, libraryId, cycleId){
+    console.log('Begin generateContentForPdf '+type+' '+libraryId+' for cycle '+cycleId);
 
-    var error = validateArguments(type, entityId, cycleId);
+    var error = validateArguments(type, libraryId, cycleId);
     if ( error ){
         return Q.reject(error);
     }
@@ -36,7 +36,7 @@ function exportPdf(type, entityId, cycleId){
         }
     };
 
-    return generateContentForPdf(type, entityId, cycleId)
+    return generateContentForPdf(type, libraryId, cycleId)
         .then(function (contentForPdf) {
             var pdfPromise = Q.defer();
 
@@ -57,7 +57,7 @@ function exportPdf(type, entityId, cycleId){
 /**
  * This function combines data and Handlebars templates to return the HTML content which is transformed into a PDF.
  * There are multiple steps to assembling the final HTML:
- *   - Get the data for the PDF (depends on type of invoice/report, which library/vendor, and which cycle)
+ *   - Get the data for the PDF (depends on type of invoice, which library, and which cycle)
  *   - Build the data content HTML - for invoices and estimates this is the list of selected products and prices + total
  *   - Load the NotificationTemplate for the appropriate type (same dependencies as the data).
  *   - Compile the data table and text from the notification templates into the final PDF content.
@@ -67,8 +67,6 @@ function exportPdf(type, entityId, cycleId){
  * This function returns an object with both the HTML results and the filename for the pdf.
  **/
 function generateContentForPdf(type, entityId, cycleId){
-    console.log('Begin generateContentForPdf '+type+' '+entityId+' for cycle '+cycleId);
-
     var error = validateArguments(type, entityId, cycleId);
     if ( error ){
         return Q.reject(error);
@@ -82,8 +80,8 @@ function generateContentForPdf(type, entityId, cycleId){
             return htmlForLibrarySelections(dataForPdf);
         }
 
-        if ( typeIsForVendorReport(type) ){
-            return htmlForVendorReport(dataForPdf);
+        if ( typeIsForAccessFeeInvoice(type) ){
+            return htmlForLibrarySelections(dataForPdf);
         }
 
         return Q.reject('invalid type: '+type);
@@ -130,12 +128,8 @@ function generateContentForPdf(type, entityId, cycleId){
         }
     }
 
-    function htmlForVendorReport(dataForVendorReport){
-        /**/return dataForVendorReport;
-    }
-
     function fetchTemplateForContent(type, cycle){
-        if ( type === 'estimate' ){
+        if ( typeIsForSubscriptionInvoiceEstimate(type) ){
             if ( cycle.isOpenToLibraries() ){
                 return notificationTemplateRepository.loadTemplateForOpenCycleEstimates();
             }
@@ -143,8 +137,11 @@ function generateContentForPdf(type, entityId, cycleId){
                 return notificationTemplateRepository.loadTemplateForClosedCycleEstimates();
             }
         }
+        else if ( typeIsForAccessFeeInvoice(type) ) {
+            return notificationTemplateRepository.loadTemplateForAnnualAccessFeeInvoices();
+        }
         else {
-            return notificationTemplateRepository.loadTemplateForInvoices();
+            return notificationTemplateRepository.loadTemplateForSubscriptionInvoices();
         }
     }
 
@@ -156,10 +153,8 @@ function generateContentForPdf(type, entityId, cycleId){
     }
 }
 
-function generateDataForPdf(type, entityId, cycleId){
-    console.log('Begin generateDataForPdf '+type+' '+entityId+' for cycle '+cycleId);
-
-    var error = validateArguments(type, entityId, cycleId);
+function generateDataForPdf(type, libraryId, cycleId){
+    var error = validateArguments(type, libraryId, cycleId);
     if ( error ){
         return Q.reject(error);
     }
@@ -168,11 +163,11 @@ function generateDataForPdf(type, entityId, cycleId){
 
     function dataForPdf(){
         if ( typeIsForLibrarySelections(type) ){
-            return dataForLibrarySelections(entityId);
+            return dataForLibrarySelections(libraryId);
         }
 
-        if ( typeIsForVendorReport(type) ){
-            return dataForVendorReport(entityId);
+        if ( typeIsForAccessFeeInvoice(type) ){
+            return dataForAccessFeeInvoice(libraryId);
         }
 
         return Q.reject('invalid type: '+type);
@@ -186,7 +181,7 @@ function generateDataForPdf(type, entityId, cycleId){
             .then(saveCycle)
             .then(loadSelections)
             .then(groupOfferingsForLibraryInvoice)
-            .then(transformGroupedOfferingsToListForInvoiceTable)
+            .then(transformGroupedOfferingsToListForSubscriptionsInvoiceTable)
             .then(function(invoiceTableData){
                 invoiceData = invoiceTableData;
                 return libraryRepository.load(libraryId);
@@ -205,30 +200,43 @@ function generateDataForPdf(type, entityId, cycleId){
 
         function saveCycle(loadedCycle){
             cycle = loadedCycle;
-        }
-
-        function loadSelections(){
-            return offeringRepository.listOfferingsWithSelectionsForLibrary(libraryId, cycle);
+            return cycle;
         }
     }
 
-    function dataForVendorReport(vendorId){
+    function dataForAccessFeeInvoice(libraryId){
         var cycle = null;
+        var invoiceData = null;
 
         return loadCycle(cycleId)
             .then(saveCycle)
-            .then(vendorRepository.load(vendorId))
-            .then(function(vendor){
+            .then(loadSelections)
+            .then(groupOfferingsForLibraryInvoice)
+            .then(transformGroupedOfferingsToListForAccessFeeInvoiceTable)
+            .then(function(invoiceTableData){
+                invoiceData = invoiceTableData;
+                return libraryRepository.load(libraryId);
+            })
+            .then(function(loadedLibrary){
                 return {
                     cycle: cycle,
-                    vendor: vendor,
-                    data: {}
+                    library: loadedLibrary,
+                    invoiceData: invoiceData,
+                    invoiceTotal: computeInvoiceTotal(invoiceData)
                 }
+            })
+            .catch(function(err){
+                console.log('ERROR getting data for library access fee invoices', err);
             });
 
         function saveCycle(loadedCycle){
             cycle = loadedCycle;
+            return cycle;
         }
+    }
+
+    function loadSelections(cycle){
+        return offeringRepository.listOfferingsWithSelectionsForLibrary(libraryId, cycle);
     }
 
     function groupOfferingsForLibraryInvoice(offeringsList){
@@ -261,7 +269,15 @@ function generateDataForPdf(type, entityId, cycleId){
             });
     }
 
-    function transformGroupedOfferingsToListForInvoiceTable(offeringsByVendorName){
+    function transformGroupedOfferingsToListForSubscriptionsInvoiceTable(offeringsByVendorName){
+        return processOfferingsIntoPriceRow(offeringsByVendorName, false);
+    }
+
+    function transformGroupedOfferingsToListForAccessFeeInvoiceTable(offeringsByVendorName){
+        return processOfferingsIntoPriceRow(offeringsByVendorName, true);
+    }
+
+    function processOfferingsIntoPriceRow(offeringsByVendorName, useFeeForPriceInsteadOfSelectionPrice){
         var results = [];
         var vendorNames = Object.keys(offeringsByVendorName).sort();
         var vendorNameForFirstRowOnly = '';
@@ -271,16 +287,28 @@ function generateDataForPdf(type, entityId, cycleId){
             vendorNameForFirstRowOnly = vendorName;
 
             offeringsForVendor.forEach(function(offering){
-                results.push({
-                    vendor: vendorNameForFirstRowOnly,
-                    product: offering.product.name,
-                    price: offering.selection.price
-                });
-                vendorNameForFirstRowOnly = '';
+                var priceForThisRow = priceForRow(offering);
+                if ( priceForThisRow ) {
+                    results.push({
+                        vendor: vendorNameForFirstRowOnly,
+                        product: offering.product.name,
+                        price: priceForThisRow
+                    });
+                    vendorNameForFirstRowOnly = '';
+                }
             });
         });
 
         return results;
+
+        function priceForRow(offering){
+            if ( useFeeForPriceInsteadOfSelectionPrice ){
+                return offering.product.oneTimePurchaseAnnualAccessFee;
+            }
+            else {
+                return offering.selection.price;
+            }
+        }
     }
 
     function computeInvoiceTotal(invoiceRows){
@@ -297,7 +325,7 @@ function generateDataForPdf(type, entityId, cycleId){
 function validateArguments(type, entityId, cycleId) {
     if (type.toLowerCase() !== 'invoice' &&
         type.toLowerCase() !== 'estimate' &&
-        type.toLowerCase() !== 'report'
+        type.toLowerCase() !== 'access-fee-invoice'
     ) {
         console.log('  Error: bad type');
         return 'Invalid type for PDF content: ' + type;
@@ -314,16 +342,24 @@ function validateArguments(type, entityId, cycleId) {
     }
 }
 
-function typeIsForLibrarySelections(type){
-    return type.toLowerCase() === 'invoice' || type.toLowerCase() === 'estimate';
+function typeIsForSubscriptionInvoice(type){
+    return type.toLowerCase() === 'invoice';
 }
 
-function typeIsForVendorReport(type){
-    return type.toLowerCase() === 'report';
+function typeIsForSubscriptionInvoiceEstimate(type){
+    type.toLowerCase() === 'estimate';
+}
+
+function typeIsForAccessFeeInvoice(type){
+    return type.toLowerCase() === 'access-fee-invoice';
+}
+
+function typeIsForLibrarySelections(type){
+    return typeIsForSubscriptionInvoice(type) || typeIsForSubscriptionInvoiceEstimate(type);
 }
 
 function typeIsForRealInvoice(type){
-    return type.toLowerCase() === 'invoice';
+    return typeIsForSubscriptionInvoice(type) || typeIsForAccessFeeInvoice(type);
 }
 
 function loadCycle(cycleId){

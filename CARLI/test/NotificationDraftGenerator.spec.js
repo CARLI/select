@@ -72,7 +72,8 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('library'),
                     expect(notifications[0].summaryTotal).to.be.a('number'),
-                    expect(notifications[0].pdfLink).to.be.a('string')
+                    expect(notifications[0].pdfLink).to.satisfy(pdfLinkForAnnualAccessFeeInvoice),
+                    expect(notifications[0].isFeeInvoice).to.equal(true)
                 ]);
             });
         });
@@ -128,7 +129,8 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('library'),
                     expect(notifications[0].summaryTotal).to.be.a('number'),
-                    expect(notifications[0].pdfLink).to.be.a('string')
+                    expect(notifications[0].pdfLink).to.satisfy(pdfLinkForAnnualAccessFeeInvoice),
+                    expect(notifications[0].isFeeInvoice).to.equal(true)
                 ]);
             });
         });
@@ -186,7 +188,8 @@ describe('The notification draft generator', function() {
                     expect(notifications.length).to.equal(1),
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('library'),
-                    expect(notifications[0].pdfLink).to.be.an('undefined')
+                    expect(notifications[0].pdfLink).to.be.an('undefined'),
+                    expect(notifications[0].isFeeInvoice).to.equal(false)
                 ]);
             });
         });
@@ -250,7 +253,8 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('vendor1'),
                     expect(notifications[0].summaryTotal).to.be.a('number'),
-                    expect(notifications[0].pdfLink).to.be.an('undefined')
+                    expect(notifications[0].pdfLink).to.be.an('undefined'),
+                    expect(notifications[0].isFeeInvoice).to.equal(false)
                 ]);
             });
         });
@@ -311,7 +315,8 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('vendor1'),
                     expect(notifications[0].summaryTotal).to.be.a('number'),
-                    expect(notifications[0].pdfLink).to.be.an('undefined')
+                    expect(notifications[0].pdfLink).to.be.an('undefined'),
+                    expect(notifications[0].isFeeInvoice).to.equal(false)
                 ]);
             });
         });
@@ -370,7 +375,8 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('vendor1'),
                     expect(notifications[0].summaryTotal).to.be.a('number'),
-                    expect(notifications[0].pdfLink).to.be.an('undefined')
+                    expect(notifications[0].pdfLink).to.be.an('undefined'),
+                    expect(notifications[0].isFeeInvoice).to.equal(false)
                 ]);
             });
         });
@@ -425,7 +431,8 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('library'),
                     expect(notifications[0].summaryTotal).to.be.a('number'),
-                    expect(notifications[0].pdfLink).to.satisfy(pdfLinkForInvoice)
+                    expect(notifications[0].pdfLink).to.satisfy(pdfLinkForInvoice),
+                    expect(notifications[0].isFeeInvoice).to.equal(false)
                 ]);
             });
         });
@@ -484,7 +491,8 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('library'),
                     expect(notifications[0].summaryTotal).to.be.a('number'),
-                    expect(notifications[0].pdfLink).to.satisfy(pdfLinkForInvoice)
+                    expect(notifications[0].pdfLink).to.satisfy(pdfLinkForInvoice),
+                    expect(notifications[0].isFeeInvoice).to.equal(false)
                 ]);
             });
         });
@@ -539,7 +547,8 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('library'),
                     expect(notifications[0].summaryTotal).to.be.a('number'),
-                    expect(notifications[0].pdfLink).to.satisfy(pdfLinkForInvoice)
+                    expect(notifications[0].pdfLink).to.satisfy(pdfLinkForInvoice),
+                    expect(notifications[0].isFeeInvoice).to.equal(false)
                 ]);
             });
         });
@@ -594,7 +603,8 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('library'),
                     expect(notifications[0].summaryTotal).to.be.a('number'),
-                    expect(notifications[0].pdfLink).to.satisfy(pdfLinkForEstimate)
+                    expect(notifications[0].pdfLink).to.satisfy(pdfLinkForEstimate),
+                    expect(notifications[0].isFeeInvoice).to.equal(false)
                 ]);
             });
         });
@@ -666,6 +676,14 @@ describe('The notification draft generator', function() {
         });
     });
 });
+
+function pdfLinkForAnnualAccessFeeInvoice( testString ){
+    if ( !testString || typeof testString !== 'string' ){
+        return false;
+    }
+
+    return testString.indexOf('pdf') > 0 && testString.indexOf('access-fee-invoice') > 0;
+}
 
 function pdfLinkForInvoice( testString ){
     if ( !testString || typeof testString !== 'string' ){
