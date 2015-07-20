@@ -559,7 +559,7 @@ function generateNotificationForLibrary(libraryId, offeringsForAll, customizedTe
         offeringsForLibrary = offeringsForAll.filter(onlyOfferingsForLibrary);
 
         if ( offeringsForLibrary.length && saveOfferingIdsToNotification ){
-            notification.offeringIds = offeringsForLibrary;
+            notification.offeringIds = idsFromOfferings(offeringsForLibrary);
         }
 
         var summaryTotal = notificationRepository.getSummaryTotal(notification, offeringsForLibrary);
@@ -604,7 +604,7 @@ function generateNotificationForVendor(vendorId, offeringsForAll, customizedTemp
         offeringsForVendor = offeringsForAll.filter(onlyOfferingsForVendor);
 
         if ( offeringsForVendor.length && saveOfferingIdsToNotification ){
-            notification.offeringIds = offeringsForVendor;
+            notification.offeringIds = idsFromOfferings(offeringsForVendor);
         }
 
         var summaryTotal = notificationRepository.getSummaryTotal(notification, offeringsForVendor);
@@ -635,6 +635,12 @@ function generateNotificationForEntity(entityId, customizedTemplate){
 
 function extractArrayOfIdsFromObject( mapObject ){
     return Object.keys(mapObject);
+}
+
+function idsFromOfferings(arrayOfOfferings){
+    return arrayOfOfferings.map(function(offering){
+        return offering.id;
+    });
 }
 
 function onlyPurchasedOfferings(offering) {
