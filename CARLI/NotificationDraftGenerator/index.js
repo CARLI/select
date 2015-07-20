@@ -450,31 +450,25 @@ function getLibraryEstimatesForAll(template, notificationData) {
 
 
 function generateDraftNotification(template, notificationData) {
+    if ( !template || !notificationData ){
+        throwErrorForBadData();
+    }
+
     var offeringIds = notificationData.offeringIds;
     var recipientId = notificationData.recipientId;
 
-    if (notificationIsForAnnualAccessFeeInvoices()){
-        if (isASingleRecipient()) {
-            return getAnnualAccessFeeDraftForOneLibrary(template, notificationData);
-        } else {
-            return getAnnualAccessFeeDraftForAllLibraries(template, notificationData);
-        }
-    } else if (notificationIsReminder()) {
-        return getReminder(template, notificationData);
-    } else if (notificationIsForVendorReport()) {
-        if (shouldSendEverythingToEveryone()) {
-            return getVendorReportsForAll(template, notificationData);
-        } else if (doRecipientsComeFromOfferings()) {
-            return getVendorReportsForSome(template, notificationData);
-        } else if (isASingleRecipient()) {
-            return getVendorReportsForOne(template, notificationData);
-        }
-    } else if (notificationIsForLibrarySubscriptions()) {
-        if (notificationIsEstimate()) {
-            if (shouldSendEverythingToEveryone()) {
-                return getLibraryEstimatesForAll(template, notificationData);
+    if ( notificationIsForLibraries() ) {
+        if (notificationIsForAnnualAccessFeeInvoices()){
+            if (isASingleRecipient()) {
+                return getAnnualAccessFeeDraftForOneLibrary(template, notificationData);
+            } else {
+                return getAnnualAccessFeeDraftForAllLibraries(template, notificationData);
             }
-        } else if (notificationIsInvoice()) {
+        }
+        else if (notificationIsReminder()) {
+            return getReminder(template, notificationData);
+        }
+        else if (notificationIsInvoice()) {
             if (shouldSendEverythingToEveryone()) {
                 return getLibraryInvoicesForAll(template, notificationData);
             } else if (doRecipientsComeFromOfferings()) {
@@ -483,6 +477,23 @@ function generateDraftNotification(template, notificationData) {
                 return getLibraryInvoicesForOne(template, notificationData);
             }
         }
+        else if (notificationIsEstimate()) {
+            if (shouldSendEverythingToEveryone()) {
+                return getLibraryEstimatesForAll(template, notificationData);
+            }
+        }
+    }
+    else if (notificationIsForVendorReport()) {
+        if (shouldSendEverythingToEveryone()) {
+            return getVendorReportsForAll(template, notificationData);
+        } else if (doRecipientsComeFromOfferings()) {
+            return getVendorReportsForSome(template, notificationData);
+        } else if (isASingleRecipient()) {
+            return getVendorReportsForOne(template, notificationData);
+        }
+    }
+    else {
+        throwErrorForBadData();
     }
 
     function notificationIsForAnnualAccessFeeInvoices(){
@@ -509,11 +520,14 @@ function generateDraftNotification(template, notificationData) {
     function doRecipientsComeFromOfferings() {
         return !recipientId;
     }
-    function notificationIsForLibrarySubscriptions() {
+    function notificationIsForLibraries() {
         return notificationRepository.notificationTypeIsForLibrary(template.notificationType);
     }
     function notificationIsForVendorReport() {
         return notificationRepository.notificationTypeIsForVendor(template.notificationType);
+    }
+    function throwErrorForBadData(){
+        throw new Error('Bad data for generating notification drafts');
     }
 }
 
