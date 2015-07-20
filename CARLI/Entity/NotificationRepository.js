@@ -186,6 +186,7 @@ function notificationTypeIsForLibrary(notificationType) {
     };
     return results[notificationType];
 }
+
 function notificationTypeIsForVendor(notificationType) {
     var results = {
         'estimate': false,
@@ -194,6 +195,10 @@ function notificationTypeIsForVendor(notificationType) {
         'subscription': false
     };
     return results[notificationType];
+}
+
+function templateIsForAnnualAccessFeeInvoice(templateId) {
+    return templateId === 'notification-template-annual-access-fee-invoices';
 }
 
 function setStore(store) {
@@ -215,5 +220,6 @@ module.exports = {
     getRecipientLabel: getRecipientLabel,
     notificationTypeIsForLibrary: notificationTypeIsForLibrary,
     notificationTypeIsForVendor: notificationTypeIsForVendor,
+    templateIsForAnnualAccessFeeInvoice: templateIsForAnnualAccessFeeInvoice,
     getSummaryTotal: getSummaryTotal
 };
