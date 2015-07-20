@@ -18,6 +18,12 @@
 /config/local.json
 /config/environmentDependentModules/*.js
 
+#Vagrant
+/.vagrant
+
+#Chef
+Berksfile.lock
+
 #Couch
 couchdb.stderr
 couchdb.stdout
