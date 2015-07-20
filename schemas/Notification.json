@@ -29,6 +29,10 @@
       "description": "UUID of a cycle document, if notification contains offerings",
       "type": "string"
     },
+    "offeringIds": {
+      "description": "Array of offering ids, for generating invoices for specific products",
+      "type": "array"
+    },
     "draftStatus": {
         "type": "string",
         "enum": ["draft", "sent"]
