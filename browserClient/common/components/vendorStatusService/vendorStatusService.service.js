@@ -9,6 +9,7 @@ function vendorStatusService( CarliModules, $q, authService, errorHandler ) {
     return {
         list:   function(cycle) { return $q.when( vendorStatusModule.list(cycle)).catch(errorHandler); },
         create: function() { return $q.when( vendorStatusModule.create.apply(this, arguments) ); },
+        recordLastVendorLogin: recordLastVendorLogin,
         update: updateVendorStatus,
         updateVendorStatusActivity: updateVendorStatusActivity,
         updateVendorStatusFlaggedOfferings: updateVendorStatusFlaggedOfferings,
@@ -27,7 +28,16 @@ function vendorStatusService( CarliModules, $q, authService, errorHandler ) {
             .then(function(vendorStatus){
                 vendorStatus.lastActivity = new Date().toISOString();
                 vendorStatus.description = activityMessage;
-                vendorStatus.lastUserId = authService.getCurrentUser().id;
+                vendorStatus.lastActivityUserId = authService.getCurrentUser().id;
+                return updateVendorStatus(vendorStatus, cycle);
+            });
+    }
+
+    function recordLastVendorLogin( vendorId, cycle ){
+        return getStatusForVendor(vendorId, cycle)
+            .then(function(vendorStatus){
+                vendorStatus.lastLoginDate = new Date().toISOString();
+                vendorStatus.lastLoginUserId = authService.getCurrentUser().id;
                 return updateVendorStatus(vendorStatus, cycle);
             });
     }
