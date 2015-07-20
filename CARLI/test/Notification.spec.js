@@ -208,7 +208,7 @@ describe('the getRecipientLabel method', function () {
     });
 
     it('should return the correct label for a subscription related notification', function () {
-        var recipientLabel = notificationRepository.getRecipientLabel('Test Library', 'subscription');
+        var recipientLabel = notificationRepository.getRecipientLabel('Test Library', 'reminder');
         expect(recipientLabel).to.equal('Test Library Subscription Contacts');
     });
 });
@@ -306,7 +306,7 @@ describe('the notificationTypeIsForLibrary method', function () {
     });
 
     it('should return the correct value for a subscription related notification', function () {
-        expect(notificationRepository.notificationTypeIsForLibrary('subscription')).to.be.true;
+        expect(notificationRepository.notificationTypeIsForLibrary('reminder')).to.be.true;
     });
 });
 
@@ -324,7 +324,7 @@ describe('the notificationTypeIsForVendor method', function () {
     });
 
     it('should return the correct value for a subscription related notification', function () {
-        expect(notificationRepository.notificationTypeIsForVendor('subscription')).to.be.false;
+        expect(notificationRepository.notificationTypeIsForVendor('reminder')).to.be.false;
     });
 });
 
