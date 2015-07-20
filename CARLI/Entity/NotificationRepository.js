@@ -114,7 +114,7 @@ function getRecipientLabel(recipientName, notificationType) {
             'estimate': 'Subscription Contacts',
             'invoice': 'Invoice Contacts',
             'report': 'Report Contacts',
-            'subscription': 'Subscription Contacts'
+            'reminder': 'Subscription Contacts'
         };
         return labels[type];
     }
@@ -182,7 +182,7 @@ function notificationTypeIsForLibrary(notificationType) {
         'estimate': true,
         'invoice': true,
         'report': false,
-        'subscription': true
+        'reminder': true
     };
     return results[notificationType];
 }
@@ -192,7 +192,7 @@ function notificationTypeIsForVendor(notificationType) {
         'estimate': false,
         'invoice': false,
         'report': true,
-        'subscription': false
+        'reminder': false
     };
     return results[notificationType];
 }

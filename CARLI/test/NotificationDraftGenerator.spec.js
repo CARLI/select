@@ -139,7 +139,7 @@ describe('The notification draft generator', function() {
     describe('specification for generateDraftNotification "Reminder"', function() {
         var template = {
             id: 'notification-template-library-reminder',
-            notificationType: 'subscription'
+            notificationType: 'reminder'
         };
         var notificationData = {};
 

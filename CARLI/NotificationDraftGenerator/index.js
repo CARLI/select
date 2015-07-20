@@ -489,8 +489,7 @@ function generateDraftNotification(template, notificationData) {
         return isAnnualAccessFeeInvoice(template.id);
     }
     function notificationIsReminder() {
-        return template.id === 'notification-template-contact-non-players' ||
-            template.id === 'notification-template-library-reminder';
+        return template.notificationType === 'reminder';
     }
     function shouldSendEverythingToEveryone() {
         return doRecipientsComeFromOfferings() && isNotificationAboutAllOfferings();
