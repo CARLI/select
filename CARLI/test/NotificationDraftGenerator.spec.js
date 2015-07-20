@@ -278,10 +278,10 @@ describe('The notification draft generator', function() {
 
         function getMockOfferingsForSomeVendorsSomeProducts(){
             return Q([
-                { product: { id: 'product1', vendor: 'vendor1' }, selection: {} },
-                { product: { id: 'product1', vendor: 'vendor1' }, selection: {} },
-                { product: { id: 'product2', vendor: 'vendor2' }, selection: {} },
-                { product: { id: 'product2', vendor: 'vendor2' }, selection: {} }
+                { id: 'offering-id1', product: { id: 'product1', vendor: 'vendor1' }, selection: {} },
+                { id: 'offering-id2', product: { id: 'product1', vendor: 'vendor1' }, selection: {} },
+                { id: 'offering-id3', product: { id: 'product2', vendor: 'vendor2' }, selection: {} },
+                { id: 'offering-id4', product: { id: 'product2', vendor: 'vendor2' }, selection: {} }
             ]);
         }
 
@@ -321,7 +321,8 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].summaryTotal).to.be.a('number'),
                     expect(notifications[0].pdfLink).to.be.an('undefined'),
                     expect(notifications[0].isFeeInvoice).to.equal(false),
-                    expect(notifications[0].offeringIds).to.be.an('array')
+                    expect(notifications[0].offeringIds).to.be.an('array'),
+                    expect(notifications[0].offeringIds[0]).to.be.a('string')
                 ]);
             });
         });
@@ -458,9 +459,9 @@ describe('The notification draft generator', function() {
         }
         function getMockOfferingsForSomeLibrariesSomeProducts(){
             return Q([
-                { cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Test Library'}, selection: { } },
-                { cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Test Library'} },
-                { cycle: {id: 'mock-cycle'}, library: { id: 'library2', name: 'Test Library2'} }
+                { id: 'offering-id1', cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Test Library'}, selection: { } },
+                { id: 'offering-id2', cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Test Library'} },
+                { id: 'offering-id3', cycle: {id: 'mock-cycle'}, library: { id: 'library2', name: 'Test Library2'} }
             ]);
         }
 
@@ -500,7 +501,8 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].summaryTotal).to.be.a('number'),
                     expect(notifications[0].pdfLink).to.satisfy(pdfLinkForInvoice),
                     expect(notifications[0].isFeeInvoice).to.equal(false),
-                    expect(notifications[0].offeringIds).to.be.an('array')
+                    expect(notifications[0].offeringIds).to.be.an('array'),
+                    expect(notifications[0].offeringIds[0]).to.be.a('string')
                 ]);
             });
         });
