@@ -1,7 +1,7 @@
 angular.module('vendor.cycleChooser')
     .controller('cycleChooserController', cycleChooserController);
 
-function cycleChooserController($scope, authService, cycleService, vendorStatusService ) {
+function cycleChooserController($scope, alertService, authService, cycleService, vendorStatusService ) {
     var vm = this;
 
     vm.cycles = [];
@@ -47,7 +47,9 @@ function cycleChooserController($scope, authService, cycleService, vendorStatusS
                 }
 
                 if ( isAllowedIn ){
-                    return updateStatus().then(readyCycle);
+                    return updateStatus()
+                        .then(warnAboutOtherRecentVendorUsers)
+                        .then(readyCycle);
                 }
                 else {
                     vm.noActiveCycles = true;
@@ -62,6 +64,28 @@ function cycleChooserController($scope, authService, cycleService, vendorStatusS
                     return readySelectedCycle(cycle);
                 }
             });
+
+        function warnAboutOtherRecentVendorUsers() {
+            var currentUser = authService.getCurrentUser();
+            return vendorStatusService
+                .getStatusForVendor( currentUser.vendor.id, cycle)
+                .then(displayWarningOfRecentActivity);
+
+            function displayWarningOfRecentActivity(status) {
+                if (status.lastUserId === currentUser.id) {
+                    return status;
+                }
+                
+                var oneHourAgo = moment().subtract(1, 'hour');
+                var lastActivity = moment(status.lastActivity);
+
+                if (lastActivity.isAfter(oneHourAgo)) {
+                    alertService.putAlert(status.lastUserId + ' was logged in recently');
+                }
+
+                return status;
+            }
+        }
     }
 
     function readySelectedCycle(cycle) {

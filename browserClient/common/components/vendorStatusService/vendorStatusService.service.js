@@ -27,7 +27,7 @@ function vendorStatusService( CarliModules, $q, authService, errorHandler ) {
             .then(function(vendorStatus){
                 vendorStatus.lastActivity = new Date().toISOString();
                 vendorStatus.description = activityMessage;
-                vendorStatus.lastUser = authService.getCurrentUser().id;
+                vendorStatus.lastUserId = authService.getCurrentUser().id;
                 return updateVendorStatus(vendorStatus, cycle);
             });
     }
