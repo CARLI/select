@@ -1,7 +1,7 @@
 angular.module('vendor.cycleChooser')
     .controller('cycleChooserController', cycleChooserController);
 
-function cycleChooserController($scope, alertService, authService, cycleService, vendorStatusService ) {
+function cycleChooserController($scope, alertService, authService, config, cycleService, userService, vendorStatusService ) {
     var vm = this;
 
     vm.cycles = [];
@@ -47,8 +47,8 @@ function cycleChooserController($scope, alertService, authService, cycleService,
                 }
 
                 if ( isAllowedIn ){
-                    return updateStatus()
-                        .then(warnAboutOtherRecentVendorUsers)
+                    return warnAboutOtherRecentVendorUsers()
+                        .then(updateStatus)
                         .then(readyCycle);
                 }
                 else {
@@ -57,7 +57,7 @@ function cycleChooserController($scope, alertService, authService, cycleService,
                 }
 
                 function updateStatus() {
-                    return vendorStatusService.updateVendorStatusActivity('Logged in', vm.vendor.id, cycle);
+                    return vendorStatusService.recordLastVendorLogin(vm.vendor.id, cycle);
                 }
 
                 function readyCycle() {
@@ -67,23 +67,39 @@ function cycleChooserController($scope, alertService, authService, cycleService,
 
         function warnAboutOtherRecentVendorUsers() {
             var currentUser = authService.getCurrentUser();
+
             return vendorStatusService
                 .getStatusForVendor( currentUser.vendor.id, cycle)
-                .then(displayWarningOfRecentActivity);
+                .then(displayWarningIfRelevant);
 
-            function displayWarningOfRecentActivity(status) {
-                if (status.lastUserId === currentUser.id) {
-                    return status;
+            function displayWarningIfRelevant(status) {
+                if (warningIsRelevant()) {
+                    displayWarning();
                 }
-                
-                var oneHourAgo = moment().subtract(1, 'hour');
-                var lastActivity = moment(status.lastActivity);
-
-                if (lastActivity.isAfter(oneHourAgo)) {
-                    alertService.putAlert(status.lastUserId + ' was logged in recently');
-                }
-
                 return status;
+
+                function warningIsRelevant() {
+                    return lastUserIsNotThisUser() && lastUserIsWithinTimeoutPeriod();
+
+                    function lastUserIsNotThisUser() {
+                        return status.lastLoginUserId !== currentUser.id;
+                    }
+
+                    function lastUserIsWithinTimeoutPeriod() {
+                        var authTimeoutInMilliseconds = config.getAuthTimeoutDuration();
+                        var someTimeAgo = moment().subtract(authTimeoutInMilliseconds, 'milliseconds');
+                        var lastLogin = moment(status.lastLoginDate);
+
+                        return lastLogin.isAfter(someTimeAgo);
+                    }
+                }
+
+                function displayWarning() {
+                    userService.load(status.lastLoginUserId).then(function (lastUser) {
+                        console.log(lastUser);
+                        alertService.putAlert(lastUser.fullName + ' was logged in recently');
+                    });
+                }
             }
         }
     }

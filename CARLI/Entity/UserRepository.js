@@ -45,7 +45,9 @@ function listUsers(){
 function loadUser( userId ){
     var deferred = Q.defer();
 
-    UserRepository.load( 'org.couchdb.user:' + userId )
+    var id = normalizeUserId(userId);
+
+    UserRepository.load( id )
         .then(function (user) {
             EntityTransform.expandObjectFromPersistence( user, propertiesToTransform, functionsToAdd )
                 .then(function () {
@@ -62,6 +64,14 @@ function loadUser( userId ){
         });
 
     return deferred.promise;
+
+    function normalizeUserId(userId) {
+        if (userId.indexOf('org.couchdb.user:') !== 0) {
+            return 'org.couchdb.user:' + userId;
+        } else {
+            return userId;
+        }
+    }
 }
 
 /* functions that get added as instance methods on loaded users */
