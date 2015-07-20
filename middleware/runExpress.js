@@ -263,8 +263,15 @@ function runMiddlewareServer(){
                 .then(sendOk(res))
                 .catch(sendError(res));
         });
+        carliMiddleware.get('/pdf/content/:type/notification/:notificationId', function(req, res) {
+            pdf.generateContentForPdfForNotification(req.params.type, req.params.notificationId)
+                .then(function(pdfContent){
+                    res.send(pdfContent.html);
+                })
+                .catch(sendError(res));
+        });
         carliMiddleware.get('/pdf/content/:type/:entityId/:cycleId', function(req, res) {
-            pdf.generateContentForPdf(req.params.type, req.params.entityId, req.params.cycleId)
+            pdf.generateContentForPdfForAllProductsInCycle(req.params.type, req.params.entityId, req.params.cycleId)
                 .then(function(pdfContent){
                     res.send(pdfContent.html);
                 })
