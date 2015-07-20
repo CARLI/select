@@ -216,10 +216,12 @@ function getVendorReportsForSome(template, notificationData) {
     }
 
     function getNotificationsForVendorReportsForSome( customizedTemplate, actualRecipientIds ){
+        var saveOfferingIdsToNotification = true;
+
         return someVendorsDraft.getOfferings()
             .then(function(offerings){
                 return actualRecipientIds.map(function(id){
-                    return generateNotificationForVendor(id, offerings, customizedTemplate);
+                    return generateNotificationForVendor(id, offerings, customizedTemplate, saveOfferingIdsToNotification);
                 });
             });
     }
@@ -593,13 +595,18 @@ function generateNotificationForLibrary(libraryId, offeringsForAll, customizedTe
     }
 }
 
-function generateNotificationForVendor(vendorId, offeringsForAll, customizedTemplate){
+function generateNotificationForVendor(vendorId, offeringsForAll, customizedTemplate, saveOfferingIdsToNotification){
     var notification = generateNotificationForEntity(vendorId, customizedTemplate);
     var offeringsForVendor = null;
 
     if ( offeringsForAll && offeringsForAll.length ){
         notification.cycle = offeringsForAll[0].cycle;
         offeringsForVendor = offeringsForAll.filter(onlyOfferingsForVendor);
+
+        if ( offeringsForVendor.length && saveOfferingIdsToNotification ){
+            notification.offeringIds = offeringsForVendor;
+        }
+
         var summaryTotal = notificationRepository.getSummaryTotal(notification, offeringsForVendor);
         if ( typeof summaryTotal === 'number' ){
             notification.summaryTotal = summaryTotal;

@@ -321,7 +321,7 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].summaryTotal).to.be.a('number'),
                     expect(notifications[0].pdfLink).to.be.an('undefined'),
                     expect(notifications[0].isFeeInvoice).to.equal(false),
-                    expect(notifications[0].offeringIds).to.be.an('undefined')
+                    expect(notifications[0].offeringIds).to.be.an('array')
                 ]);
             });
         });
