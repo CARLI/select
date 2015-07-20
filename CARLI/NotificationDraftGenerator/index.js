@@ -1,4 +1,3 @@
-
 var config = require('../../config');
 var cycleRepository = require('../Entity/CycleRepository');
 var libraryRepository = require('../Entity/LibraryRepository');
@@ -91,6 +90,7 @@ function getAnnualAccessFeeDraftForAllLibraries(template, notificationData) {
     };
     return annualAccessAllLibrariesDraft;
 }
+
 function getReminder(template, notificationData) {
 
     function getLibrariesWithSelections() {
@@ -190,7 +190,6 @@ function getVendorReportsForAll(template, notificationData) {
     };
     return allVendorsDraft;
 }
-
 function getVendorReportsForSome(template, notificationData) {
     function getEntitiesForVendorReportsForSome() {
         return cycleRepository.load(notificationData.cycleId)
@@ -282,41 +281,7 @@ function getVendorReportsForOne(template, notificationData) {
     };
     return oneVendorDraft;
 }
-function getLibraryEstimatesForAll(template, notificationData) {
-    function getEntitiesForLibraryEstimatesForAll() {
-        return libraryRepository.list();
-    }
-    function getRecipientsForLibraryEstimatesForAll() {
-        return allLibrariesDraft.getEntities()
-            .then(function( allLibraries ) {
-                return allLibraries.map(function(vendor) {
-                    return convertEntityToRecipient(vendor, template);
-                });
-            });
-    }
-    function getOfferingsForLibraryEstimatesForAll(){
-        return cycleRepository.load(notificationData.cycleId).then(function (cycle) {
-            return offeringRepository.listOfferingsWithSelections(cycle);
-        });
-    }
-    function getNotificationsForLibraryEstimatesForAll(customizedTemplate, actualRecipientIds){
-        return allLibrariesDraft.getOfferings()
-            .then(function(offerings){
-                return actualRecipientIds.map(function(id){
-                    return generateNotificationForLibrary(id, offerings, customizedTemplate);
-                });
-            });
-    }
 
-    var allLibrariesDraft = {
-        getAudienceAndSubject: function() { return 'All Libraries, All Products'; },
-        getEntities: getEntitiesForLibraryEstimatesForAll,
-        getRecipients: getRecipientsForLibraryEstimatesForAll,
-        getOfferings: getOfferingsForLibraryEstimatesForAll,
-        getNotifications: getNotificationsForLibraryEstimatesForAll
-    };
-    return allLibrariesDraft;
-}
 function getLibraryInvoicesForAll(template, notificationData) {
     function getEntitiesForLibraryInvoicesForAll() {
         return cycleRepository.load(notificationData.cycleId)
@@ -445,6 +410,42 @@ function getLibraryInvoicesForOne(template, notificationData) {
         getNotifications: getNotificationsForLibraryInvoicesForOne
     };
     return oneLibraryDraft;
+}
+
+function getLibraryEstimatesForAll(template, notificationData) {
+    function getEntitiesForLibraryEstimatesForAll() {
+        return libraryRepository.list();
+    }
+    function getRecipientsForLibraryEstimatesForAll() {
+        return allLibrariesDraft.getEntities()
+            .then(function( allLibraries ) {
+                return allLibraries.map(function(vendor) {
+                    return convertEntityToRecipient(vendor, template);
+                });
+            });
+    }
+    function getOfferingsForLibraryEstimatesForAll(){
+        return cycleRepository.load(notificationData.cycleId).then(function (cycle) {
+            return offeringRepository.listOfferingsWithSelections(cycle);
+        });
+    }
+    function getNotificationsForLibraryEstimatesForAll(customizedTemplate, actualRecipientIds){
+        return allLibrariesDraft.getOfferings()
+            .then(function(offerings){
+                return actualRecipientIds.map(function(id){
+                    return generateNotificationForLibrary(id, offerings, customizedTemplate);
+                });
+            });
+    }
+
+    var allLibrariesDraft = {
+        getAudienceAndSubject: function() { return 'All Libraries, All Products'; },
+        getEntities: getEntitiesForLibraryEstimatesForAll,
+        getRecipients: getRecipientsForLibraryEstimatesForAll,
+        getOfferings: getOfferingsForLibraryEstimatesForAll,
+        getNotifications: getNotificationsForLibraryEstimatesForAll
+    };
+    return allLibrariesDraft;
 }
 
 
