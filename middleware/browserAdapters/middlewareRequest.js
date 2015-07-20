@@ -18,12 +18,7 @@ module.exports = function middlewareRequest(requestParams) {
         requestParams.headers['X-AuthToken'] = token;
     }
 
-    try {
-        request(requestParams, handleMiddlewareResponse);
-    } catch(ex) {
-        console.log('Middleware request exception', ex);
-        deferred.reject(carliError(ex));
-    }
+    request(requestParams, handleMiddlewareResponse);
 
     function handleMiddlewareResponse(error, response, body) {
         var data;
