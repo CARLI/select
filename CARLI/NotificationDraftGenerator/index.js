@@ -453,15 +453,15 @@ function generateDraftNotification(template, notificationData) {
     var offeringIds = notificationData.offeringIds;
     var recipientId = notificationData.recipientId;
 
-    if (isAnnualAccessFeeInvoice(template.id)) {
+    if (notificationIsForAnnualAccessFeeInvoices()){
         if (isASingleRecipient()) {
             return getAnnualAccessFeeDraftForOneLibrary(template, notificationData);
         } else {
             return getAnnualAccessFeeDraftForAllLibraries(template, notificationData);
         }
-    } else if (isReminder()) {
+    } else if (notificationIsReminder()) {
         return getReminder(template, notificationData);
-    } else if (notificationTypeIsForVendor()) {
+    } else if (notificationIsForVendorReport()) {
         if (shouldSendEverythingToEveryone()) {
             return getVendorReportsForAll(template, notificationData);
         } else if (doRecipientsComeFromOfferings()) {
@@ -469,7 +469,7 @@ function generateDraftNotification(template, notificationData) {
         } else if (isASingleRecipient()) {
             return getVendorReportsForOne(template, notificationData);
         }
-    } else if (notificationTypeIsForLibrary()) {
+    } else if (notificationIsForLibrarySubscriptions()) {
         if (template.notificationType == 'estimate') {
             if (shouldSendEverythingToEveryone()) {
                 return getLibraryEstimatesForAll(template, notificationData);
@@ -485,7 +485,10 @@ function generateDraftNotification(template, notificationData) {
         }
     }
 
-    function isReminder() {
+    function notificationIsForAnnualAccessFeeInvoices(){
+        return isAnnualAccessFeeInvoice(template.id);
+    }
+    function notificationIsReminder() {
         return template.id === 'notification-template-contact-non-players' ||
             template.id === 'notification-template-library-reminder';
     }
@@ -501,16 +504,16 @@ function generateDraftNotification(template, notificationData) {
     function doRecipientsComeFromOfferings() {
         return !recipientId;
     }
-    function notificationTypeIsForLibrary() {
+    function notificationIsForLibrarySubscriptions() {
         return notificationRepository.notificationTypeIsForLibrary(template.notificationType);
     }
-    function notificationTypeIsForVendor() {
+    function notificationIsForVendorReport() {
         return notificationRepository.notificationTypeIsForVendor(template.notificationType);
     }
 }
 
 function isAnnualAccessFeeInvoice(templateId) {
-    return templateId === 'notification-template-annual-access-fee-invoices';
+    return notificationRepository.templateIsForAnnualAccessFeeInvoice(templateId);
 }
 
 function convertEntityToRecipient(entity, template) {

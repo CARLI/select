@@ -327,3 +327,21 @@ describe('the notificationTypeIsForVendor method', function () {
         expect(notificationRepository.notificationTypeIsForVendor('subscription')).to.be.false;
     });
 });
+
+describe('the templateIsForAnnualAccessFeeInvoice method', function () {
+    it('should be a function', function(){
+        expect(notificationRepository.templateIsForAnnualAccessFeeInvoice).to.be.a('function');
+    });
+
+    it('should return the correct value for a non-matching template id', function () {
+        expect(notificationRepository.templateIsForAnnualAccessFeeInvoice('invoice')).to.equal(false);
+    });
+
+    it('should return the correct value for a matching id', function () {
+        expect(notificationRepository.templateIsForAnnualAccessFeeInvoice('notification-template-annual-access-fee-invoices')).to.equal(true);
+    });
+
+    it('should return the correct value for a bogus id', function () {
+        expect(notificationRepository.templateIsForAnnualAccessFeeInvoice('subscription')).to.equal(false);
+    });
+});
