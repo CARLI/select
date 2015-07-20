@@ -263,22 +263,15 @@ function runMiddlewareServer(){
                 .then(sendOk(res))
                 .catch(sendError(res));
         });
-        carliMiddleware.get('/pdf/content/:type/notification/:notificationId', function(req, res) {
-            pdf.generateContentForPdfForNotification(req.params.type, req.params.notificationId)
+        carliMiddleware.get('/pdf/content/:type/:notificationId', function(req, res) {
+            pdf.contentForPdf(req.params.type, req.params.notificationId)
                 .then(function(pdfContent){
                     res.send(pdfContent.html);
                 })
                 .catch(sendError(res));
         });
-        carliMiddleware.get('/pdf/content/:type/:entityId/:cycleId', function(req, res) {
-            pdf.generateContentForPdfForAllProductsInCycle(req.params.type, req.params.entityId, req.params.cycleId)
-                .then(function(pdfContent){
-                    res.send(pdfContent.html);
-                })
-                .catch(sendError(res));
-        });
-        carliMiddleware.get('/pdf/export/:type/:entityId/:cycleId', function(req, res) {
-            pdf.exportPdf(req.params.type, req.params.entityId, req.params.cycleId)
+        carliMiddleware.get('/pdf/export/:type/:notificationId', function(req, res) {
+            pdf.exportPdf(req.params.type, req.params.notificationId)
                 .then(function(exportResults){
                     res.setHeader('Content-Disposition', 'attachment; filename="'+ exportResults.fileName +'"');
                     res.send(exportResults.pdf);
