@@ -93,5 +93,8 @@ config.setStoreOptionsForCycles = function(storeOptions){
 config.getStoreOptionsForCycles = function(){
     return storeOptionsForCycles || config.storeOptions;
 };
+config.getAuthTimeoutDuration = function() {
+    return config.authMillisecondsUntilWarningAppears + config.authWarningDurationInMilliseconds;
+}
 
 module.exports = config;
