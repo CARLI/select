@@ -352,13 +352,15 @@ function getLibraryInvoicesForSome(template, notificationData) {
     }
 
     function getNotificationsForLibraryInvoicesForSome(customizedTemplate, actualRecipientIds){
+        var saveOfferingIdsToNotification = true;
+
         return someLibrariesDraft.getOfferings()
             .then(function(offerings) {
                 return offerings.filter(onlyPurchasedOfferings);
             })
             .then(function(offerings){
                 return actualRecipientIds.map(function(id){
-                    return generateNotificationForLibrary(id, offerings, customizedTemplate);
+                    return generateNotificationForLibrary(id, offerings, customizedTemplate, saveOfferingIdsToNotification);
                 });
             });
     }
@@ -546,13 +548,18 @@ function discardDuplicateIds(value, index, self) {
     return self.indexOf(value) === index;
 }
 
-function generateNotificationForLibrary(libraryId, offeringsForAll, customizedTemplate){
+function generateNotificationForLibrary(libraryId, offeringsForAll, customizedTemplate, saveOfferingIdsToNotification){
     var notification = generateNotificationForEntity(libraryId.toString(), customizedTemplate);
     var offeringsForLibrary = null;
 
     if ( offeringsForAll && offeringsForAll.length ){
         notification.cycle = offeringsForAll[0].cycle;
         offeringsForLibrary = offeringsForAll.filter(onlyOfferingsForLibrary);
+
+        if ( offeringsForLibrary.length && saveOfferingIdsToNotification ){
+            notification.offeringIds = offeringsForLibrary;
+        }
+
         var summaryTotal = notificationRepository.getSummaryTotal(notification, offeringsForLibrary);
         if ( typeof summaryTotal === 'number' ){
             notification.summaryTotal = summaryTotal;
