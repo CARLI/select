@@ -3,6 +3,7 @@ var fs = require('fs');
 var handlebars = require('handlebars');
 var libraryRepository = require('../../../CARLI/Entity/LibraryRepository');
 var moment = require('moment');
+var notificationRepository = require('../../../CARLI/Entity/NotificationRepository');
 var notificationTemplateRepository = require('../../../CARLI/Entity/NotificationTemplateRepository');
 var numeral = require('numeral');
 var offeringRepository = require('../../../CARLI/Entity/OfferingRepository');
@@ -36,7 +37,7 @@ function exportPdf(type, libraryId, cycleId){
         }
     };
 
-    return generateContentForPdf(type, libraryId, cycleId)
+    return generateContentForPdfForAllProductsInCycle(type, libraryId, cycleId)
         .then(function (contentForPdf) {
             var pdfPromise = Q.defer();
 
@@ -55,6 +56,36 @@ function exportPdf(type, libraryId, cycleId){
 }
 
 /**
+ * This function looks up a Notification and then passes control to the appropriate content function.
+ * If the Notification was an invoice for a sub-set of products, we need to use the offeringIds saved on it.
+ * If not, we can use the plain generateDataForPdf function to load all the data.
+ */
+function generateContentForPdfForNotification(type, notificationId){
+    if ( !notificationId ){
+        return Q.reject('Missing notification ID');
+    }
+
+    return notificationRepository.load(notificationId)
+        .then(function(notification){
+            console.log('Loaded notification for '+notification.targetEntity.name);
+            console.log(notification);
+
+            if ( notification.offeringIds ){
+                console.log('  generate data from offerings');
+                /*XXX*/return notification;
+            }
+            else {
+                var entityId = notification.targetEntity.id;
+                var cycleId = notification.cycle.id;
+                return generateContentForPdfForAllProductsInCycle(type, entityId, cycleId);
+            }
+        })
+        .catch(function(err){
+            console.log('Error in generateContentForPdfForNotification', err);
+        });
+}
+
+/**
  * This function combines data and Handlebars templates to return the HTML content which is transformed into a PDF.
  * There are multiple steps to assembling the final HTML:
  *   - Get the data for the PDF (depends on type of invoice, which library, and which cycle)
@@ -66,7 +97,7 @@ function exportPdf(type, libraryId, cycleId){
  *
  * This function returns an object with both the HTML results and the filename for the pdf.
  **/
-function generateContentForPdf(type, entityId, cycleId){
+function generateContentForPdfForAllProductsInCycle(type, entityId, cycleId){
     var error = validateArguments(type, entityId, cycleId);
     if ( error ){
         return Q.reject(error);
@@ -347,7 +378,7 @@ function typeIsForSubscriptionInvoice(type){
 }
 
 function typeIsForSubscriptionInvoiceEstimate(type){
-    type.toLowerCase() === 'estimate';
+    return type.toLowerCase() === 'estimate';
 }
 
 function typeIsForAccessFeeInvoice(type){
@@ -398,6 +429,7 @@ function loadAndCompileHandlebarsTemplate(fileName){
 
 module.exports = {
     exportPdf: exportPdf,
-    generateContentForPdf: generateContentForPdf,
+    generateContentForPdfForAllProductsInCycle: generateContentForPdfForAllProductsInCycle,
+    generateContentForPdfForNotification: generateContentForPdfForNotification,
     generateDataForPdf: generateDataForPdf
 };
