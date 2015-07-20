@@ -197,6 +197,18 @@ function notificationTypeIsForVendor(notificationType) {
     return results[notificationType];
 }
 
+function notificationTypeIsForInvoice(notificationType){
+    return notificationType === 'invoice';
+}
+
+function notificationTypeIsForEstimate(notificationType){
+    return notificationType === 'estimate';
+}
+
+function notificationTypeIsForReminder(notificationType){
+    return notificationType === 'reminder';
+}
+
 function templateIsForAnnualAccessFeeInvoice(templateId) {
     return templateId === 'notification-template-annual-access-fee-invoices';
 }
@@ -220,6 +232,9 @@ module.exports = {
     getRecipientLabel: getRecipientLabel,
     notificationTypeIsForLibrary: notificationTypeIsForLibrary,
     notificationTypeIsForVendor: notificationTypeIsForVendor,
+    notificationTypeIsForInvoice: notificationTypeIsForInvoice,
+    notificationTypeIsForEstimate: notificationTypeIsForEstimate,
+    notificationTypeIsForReminder: notificationTypeIsForReminder,
     templateIsForAnnualAccessFeeInvoice: templateIsForAnnualAccessFeeInvoice,
     getSummaryTotal: getSummaryTotal
 };
