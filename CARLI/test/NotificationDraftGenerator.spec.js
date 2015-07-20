@@ -610,70 +610,17 @@ describe('The notification draft generator', function() {
         });
     });
 
-    xdescribe('specification for generateDraftNotification "One or more Libraries, One or more Products" Estimates', function() {
-        var template = {
-            id: 'irrelevant template id',
-            notificationType: 'estimate'
-        };
-        var notificationData = {
-            offeringIds: [ 1, 2, 3 ]
-        };
-        function getMockEntitiesForSomeLibrariesSomeProducts() {
-            return Q([{id: 'library', name: 'Library'}]);
+    describe('generateDraftNotification with bad data', function(){
+        function generateDraftNotificationNoData(){
+            return notificationDraftGenerator.generateDraftNotification();
         }
 
-        it('should return a draft notification', function() {
-            var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
-            expect(draft).to.satisfy(implementsDraftNotificationInterface);
-            expect(draft.getAudienceAndSubject()).to.equal('One or more Libraries, One or more Products');
-        });
-
-        it('should generate a recipients list', function() {
-            var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
-            draft.getEntities = getMockEntitiesForSomeLibrariesSomeProducts;
-
-            return draft.getRecipients().then(function (recipients) {
-                return Q.all([
-                    expect(recipients).to.be.an('array'),
-                    expect(recipients.length).to.equal(1),
-                    expect(recipients[0].id).to.equal('library'),
-                    expect(recipients[0].label).to.equal('Library Subscription Contacts')
-                ]);
-            });
-        });
-    });
-
-    xdescribe('specification for generateDraftNotification "One Library, All Products" Estimate', function() {
-        var template = {
-            id: 'irrelevant template id',
-            notificationType: 'estimate'
-        };
-        var notificationData = {
-            recipientId: 'some library'
-        };
-        function getMockEntitiesForOneLibrariesAllProducts() {
-            return Q([{id: 'library', name: 'Library'}]);
+        function generateDraftNotificationBadData(){
+            return notificationDraftGenerator.generateDraftNotification('foobar', {});
         }
 
-        it('should return a draft notification', function() {
-            var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
-            expect(draft).to.satisfy(implementsDraftNotificationInterface);
-            expect(draft.getAudienceAndSubject()).to.equal('One Library, All Products');
-        });
-
-        it('should generate a recipients list', function() {
-            var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
-            draft.getEntities = getMockEntitiesForOneLibrariesAllProducts;
-
-            return draft.getRecipients().then(function (recipients) {
-                return Q.all([
-                    expect(recipients).to.be.an('array'),
-                    expect(recipients.length).to.equal(1),
-                    expect(recipients[0].id).to.equal('library'),
-                    expect(recipients[0].label).to.equal('Library Subscription Contacts')
-                ]);
-            });
-        });
+        expect( generateDraftNotificationNoData ).to.throw(/Bad data/);
+        expect( generateDraftNotificationBadData ).to.throw(/Bad data/);
     });
 });
 
