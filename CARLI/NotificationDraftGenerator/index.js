@@ -4,6 +4,7 @@ var libraryRepository = require('../Entity/LibraryRepository');
 var notificationRepository = require('../Entity/NotificationRepository');
 var offeringRepository = require('../Entity/OfferingRepository');
 var productRepository = require('../Entity/ProductRepository');
+var uuid = require('node-uuid');
 var vendorRepository = require('../Entity/VendorRepository');
 var Q = require('q');
 
@@ -583,15 +584,7 @@ function generateNotificationForLibrary(libraryId, offeringsForAll, customizedTe
     }
 
     function pdfLink(){
-        var pdfType = customizedTemplate.notificationType;
-        var cycleId = notification.cycle ? notification.cycle.id : 'unknown-cycle-id';
-
-        if ( pdfType === 'invoice' && notification.isFeeInvoice ){
-            pdfType = 'access-fee-invoice';
-            cycleId = config.oneTimePurchaseProductsCycleDocId;
-        }
-        
-        return '/pdf/content/' + pdfType + '/' + libraryId + '/' + cycleId;
+        return '/pdf/content/' + notification.id;
     }
 }
 
@@ -623,6 +616,7 @@ function generateNotificationForVendor(vendorId, offeringsForAll, customizedTemp
 
 function generateNotificationForEntity(entityId, customizedTemplate){
     return {
+        id: uuid.v4(),
         type: 'Notification',
         targetEntity: entityId,
         subject: customizedTemplate.subject,
