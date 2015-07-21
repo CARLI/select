@@ -9,6 +9,7 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
     vm.apiPath = config.getMiddlewareUrl();
     vm.filter = 'all';
 
+    vm.previewCsv = previewCsv;
     vm.filterByType = filterByType;
     vm.updateNotifications = updateNotifications;
     vm.previewNotification = previewNotification;
@@ -104,6 +105,10 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
 
     function previewPdf( notification ){
         $window.open( vm.apiPath + notification.pdfLink );
+    }
+
+    function previewCsv( notification ){
+        $window.open( vm.apiPath + notification.csvLink );
     }
 
     function removeDraft( notification ){

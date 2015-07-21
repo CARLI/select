@@ -31,6 +31,8 @@
             <a busy-click="vm.previewNotification(notification)">View</a>
             <span ng-show="notification.pdfLink">|</span>
             <a busy-click="vm.previewPdf(notification)" ng-show="notification.pdfLink">PDF</a>
+            <span ng-show="notification.csvLink">|</span>
+            <a busy-click="vm.previewCsv(notification)" ng-show="notification.csvLink">CSV</a>
         </div>
         <div class="column remove" ng-if="::vm.showRemove">
             <button type="button" class="carli-button subdued-remove-button" busy-click="vm.removeDraft(notification)">
