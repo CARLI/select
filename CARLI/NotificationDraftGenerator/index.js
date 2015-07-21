@@ -606,10 +606,16 @@ function generateNotificationForVendor(vendorId, offeringsForAll, customizedTemp
         }
     }
 
+    notification.csvLink = csvLink();
+
     return notification;
 
     function onlyOfferingsForVendor(offering){
         return offering.product.vendor === vendorId;
+    }
+
+    function csvLink(){
+        return '/csv/export/' + notification.id;
     }
 }
 
