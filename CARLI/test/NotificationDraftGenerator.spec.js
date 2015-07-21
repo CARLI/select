@@ -496,6 +496,7 @@ describe('The notification draft generator', function() {
                 return Q.all([
                     expect(notifications).to.be.an('array'),
                     expect(notifications.length).to.equal(1),
+                    expect(notifications[0].id).to.be.a('string'),
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('library'),
                     expect(notifications[0].summaryTotal).to.be.a('number'),
@@ -637,25 +638,21 @@ describe('The notification draft generator', function() {
 });
 
 function pdfLinkForAnnualAccessFeeInvoice( testString ){
-    if ( !testString || typeof testString !== 'string' ){
-        return false;
-    }
-
-    return testString.indexOf('pdf') > 0 && testString.indexOf('access-fee-invoice') > 0;
+    return pdfLink(testString);
 }
 
 function pdfLinkForInvoice( testString ){
-    if ( !testString || typeof testString !== 'string' ){
-        return false;
-    }
-
-    return testString.indexOf('pdf') > 0 && testString.indexOf('invoice') > 0;
+    return pdfLink(testString);
 }
 
 function pdfLinkForEstimate( testString ){
+    return pdfLink(testString);
+}
+
+function pdfLink( testString ){
     if ( !testString || typeof testString !== 'string' ){
         return false;
     }
 
-    return testString.indexOf('pdf') > 0 && testString.indexOf('estimate') > 0;
+    return testString.indexOf('pdf');
 }
