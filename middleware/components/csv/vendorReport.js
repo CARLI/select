@@ -58,7 +58,7 @@ function contentForVendorReport(notificationId){
                 .then(function(dataForReport){
                     return {
                         data: dataForReport,
-                        fileName: fileNameForReport(cycle, vendor)
+                        fileName: fileNameForReport(notification.cycle, vendor)
                     };
                 })
                 .catch(function(err){
