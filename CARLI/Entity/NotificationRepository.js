@@ -76,7 +76,7 @@ function loadNotification( notificationId  ){
 
 function sendNotification( notification ){
     notification.draftStatus = 'sent';
-    notification.dateSent = new Date();
+    notification.dateSent = new Date().toISOString();
     notification.subject = notification.targetEntity.name + ': ' + notification.subject;
 
     return updateNotification(notification);
@@ -114,7 +114,7 @@ function getRecipientLabel(recipientName, notificationType) {
             'estimate': 'Subscription Contacts',
             'invoice': 'Invoice Contacts',
             'report': 'Report Contacts',
-            'subscription': 'Subscription Contacts'
+            'reminder': 'Subscription Contacts'
         };
         return labels[type];
     }
@@ -182,18 +182,35 @@ function notificationTypeIsForLibrary(notificationType) {
         'estimate': true,
         'invoice': true,
         'report': false,
-        'subscription': true
+        'reminder': true
     };
     return results[notificationType];
 }
+
 function notificationTypeIsForVendor(notificationType) {
     var results = {
         'estimate': false,
         'invoice': false,
         'report': true,
-        'subscription': false
+        'reminder': false
     };
     return results[notificationType];
+}
+
+function notificationTypeIsForInvoice(notificationType){
+    return notificationType === 'invoice';
+}
+
+function notificationTypeIsForEstimate(notificationType){
+    return notificationType === 'estimate';
+}
+
+function notificationTypeIsForReminder(notificationType){
+    return notificationType === 'reminder';
+}
+
+function templateIsForAnnualAccessFeeInvoice(templateId) {
+    return templateId === 'notification-template-annual-access-fee-invoices';
 }
 
 function setStore(store) {
@@ -215,5 +232,9 @@ module.exports = {
     getRecipientLabel: getRecipientLabel,
     notificationTypeIsForLibrary: notificationTypeIsForLibrary,
     notificationTypeIsForVendor: notificationTypeIsForVendor,
+    notificationTypeIsForInvoice: notificationTypeIsForInvoice,
+    notificationTypeIsForEstimate: notificationTypeIsForEstimate,
+    notificationTypeIsForReminder: notificationTypeIsForReminder,
+    templateIsForAnnualAccessFeeInvoice: templateIsForAnnualAccessFeeInvoice,
     getSummaryTotal: getSummaryTotal
 };

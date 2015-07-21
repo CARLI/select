@@ -73,7 +73,8 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].targetEntity).to.equal('library'),
                     expect(notifications[0].summaryTotal).to.be.a('number'),
                     expect(notifications[0].pdfLink).to.satisfy(pdfLinkForAnnualAccessFeeInvoice),
-                    expect(notifications[0].isFeeInvoice).to.equal(true)
+                    expect(notifications[0].isFeeInvoice).to.equal(true),
+                    expect(notifications[0].offeringIds).to.be.an('undefined')
                 ]);
             });
         });
@@ -130,7 +131,8 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].targetEntity).to.equal('library'),
                     expect(notifications[0].summaryTotal).to.be.a('number'),
                     expect(notifications[0].pdfLink).to.satisfy(pdfLinkForAnnualAccessFeeInvoice),
-                    expect(notifications[0].isFeeInvoice).to.equal(true)
+                    expect(notifications[0].isFeeInvoice).to.equal(true),
+                    expect(notifications[0].offeringIds).to.be.an('undefined')
                 ]);
             });
         });
@@ -139,7 +141,7 @@ describe('The notification draft generator', function() {
     describe('specification for generateDraftNotification "Reminder"', function() {
         var template = {
             id: 'notification-template-library-reminder',
-            notificationType: 'subscription'
+            notificationType: 'reminder'
         };
         var notificationData = {};
 
@@ -189,7 +191,8 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('library'),
                     expect(notifications[0].pdfLink).to.be.an('undefined'),
-                    expect(notifications[0].isFeeInvoice).to.equal(false)
+                    expect(notifications[0].isFeeInvoice).to.equal(false),
+                    expect(notifications[0].offeringIds).to.be.an('undefined')
                 ]);
             });
         });
@@ -254,7 +257,8 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].targetEntity).to.equal('vendor1'),
                     expect(notifications[0].summaryTotal).to.be.a('number'),
                     expect(notifications[0].pdfLink).to.be.an('undefined'),
-                    expect(notifications[0].isFeeInvoice).to.equal(false)
+                    expect(notifications[0].isFeeInvoice).to.equal(false),
+                    expect(notifications[0].offeringIds).to.be.an('undefined')
                 ]);
             });
         });
@@ -274,10 +278,10 @@ describe('The notification draft generator', function() {
 
         function getMockOfferingsForSomeVendorsSomeProducts(){
             return Q([
-                { product: { id: 'product1', vendor: 'vendor1' }, selection: {} },
-                { product: { id: 'product1', vendor: 'vendor1' }, selection: {} },
-                { product: { id: 'product2', vendor: 'vendor2' }, selection: {} },
-                { product: { id: 'product2', vendor: 'vendor2' }, selection: {} }
+                { id: 'offering-id1', product: { id: 'product1', vendor: 'vendor1' }, selection: {} },
+                { id: 'offering-id2', product: { id: 'product1', vendor: 'vendor1' }, selection: {} },
+                { id: 'offering-id3', product: { id: 'product2', vendor: 'vendor2' }, selection: {} },
+                { id: 'offering-id4', product: { id: 'product2', vendor: 'vendor2' }, selection: {} }
             ]);
         }
 
@@ -316,7 +320,9 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].targetEntity).to.equal('vendor1'),
                     expect(notifications[0].summaryTotal).to.be.a('number'),
                     expect(notifications[0].pdfLink).to.be.an('undefined'),
-                    expect(notifications[0].isFeeInvoice).to.equal(false)
+                    expect(notifications[0].isFeeInvoice).to.equal(false),
+                    expect(notifications[0].offeringIds).to.be.an('array'),
+                    expect(notifications[0].offeringIds[0]).to.be.a('string')
                 ]);
             });
         });
@@ -376,7 +382,8 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].targetEntity).to.equal('vendor1'),
                     expect(notifications[0].summaryTotal).to.be.a('number'),
                     expect(notifications[0].pdfLink).to.be.an('undefined'),
-                    expect(notifications[0].isFeeInvoice).to.equal(false)
+                    expect(notifications[0].isFeeInvoice).to.equal(false),
+                    expect(notifications[0].offeringIds).to.be.an('undefined')
                 ]);
             });
         });
@@ -432,7 +439,8 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].targetEntity).to.equal('library'),
                     expect(notifications[0].summaryTotal).to.be.a('number'),
                     expect(notifications[0].pdfLink).to.satisfy(pdfLinkForInvoice),
-                    expect(notifications[0].isFeeInvoice).to.equal(false)
+                    expect(notifications[0].isFeeInvoice).to.equal(false),
+                    expect(notifications[0].offeringIds).to.be.an('undefined')
                 ]);
             });
         });
@@ -451,9 +459,9 @@ describe('The notification draft generator', function() {
         }
         function getMockOfferingsForSomeLibrariesSomeProducts(){
             return Q([
-                { cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Test Library'}, selection: { } },
-                { cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Test Library'} },
-                { cycle: {id: 'mock-cycle'}, library: { id: 'library2', name: 'Test Library2'} }
+                { id: 'offering-id1', cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Test Library'}, selection: { } },
+                { id: 'offering-id2', cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Test Library'} },
+                { id: 'offering-id3', cycle: {id: 'mock-cycle'}, library: { id: 'library2', name: 'Test Library2'} }
             ]);
         }
 
@@ -488,11 +496,14 @@ describe('The notification draft generator', function() {
                 return Q.all([
                     expect(notifications).to.be.an('array'),
                     expect(notifications.length).to.equal(1),
+                    expect(notifications[0].id).to.be.a('string'),
                     expect(notifications[0].type).to.equal('Notification'),
                     expect(notifications[0].targetEntity).to.equal('library'),
                     expect(notifications[0].summaryTotal).to.be.a('number'),
                     expect(notifications[0].pdfLink).to.satisfy(pdfLinkForInvoice),
-                    expect(notifications[0].isFeeInvoice).to.equal(false)
+                    expect(notifications[0].isFeeInvoice).to.equal(false),
+                    expect(notifications[0].offeringIds).to.be.an('array'),
+                    expect(notifications[0].offeringIds[0]).to.be.a('string')
                 ]);
             });
         });
@@ -548,7 +559,8 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].targetEntity).to.equal('library'),
                     expect(notifications[0].summaryTotal).to.be.a('number'),
                     expect(notifications[0].pdfLink).to.satisfy(pdfLinkForInvoice),
-                    expect(notifications[0].isFeeInvoice).to.equal(false)
+                    expect(notifications[0].isFeeInvoice).to.equal(false),
+                    expect(notifications[0].offeringIds).to.be.an('undefined')
                 ]);
             });
         });
@@ -604,99 +616,43 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].targetEntity).to.equal('library'),
                     expect(notifications[0].summaryTotal).to.be.a('number'),
                     expect(notifications[0].pdfLink).to.satisfy(pdfLinkForEstimate),
-                    expect(notifications[0].isFeeInvoice).to.equal(false)
+                    expect(notifications[0].isFeeInvoice).to.equal(false),
+                    expect(notifications[0].offeringIds).to.be.an('undefined')
                 ]);
             });
         });
     });
 
-    xdescribe('specification for generateDraftNotification "One or more Libraries, One or more Products" Estimates', function() {
-        var template = {
-            id: 'irrelevant template id',
-            notificationType: 'estimate'
-        };
-        var notificationData = {
-            offeringIds: [ 1, 2, 3 ]
-        };
-        function getMockEntitiesForSomeLibrariesSomeProducts() {
-            return Q([{id: 'library', name: 'Library'}]);
+    describe('generateDraftNotification with bad data', function(){
+        function generateDraftNotificationNoData(){
+            return notificationDraftGenerator.generateDraftNotification();
         }
 
-        it('should return a draft notification', function() {
-            var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
-            expect(draft).to.satisfy(implementsDraftNotificationInterface);
-            expect(draft.getAudienceAndSubject()).to.equal('One or more Libraries, One or more Products');
-        });
-
-        it('should generate a recipients list', function() {
-            var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
-            draft.getEntities = getMockEntitiesForSomeLibrariesSomeProducts;
-
-            return draft.getRecipients().then(function (recipients) {
-                return Q.all([
-                    expect(recipients).to.be.an('array'),
-                    expect(recipients.length).to.equal(1),
-                    expect(recipients[0].id).to.equal('library'),
-                    expect(recipients[0].label).to.equal('Library Subscription Contacts')
-                ]);
-            });
-        });
-    });
-
-    xdescribe('specification for generateDraftNotification "One Library, All Products" Estimate', function() {
-        var template = {
-            id: 'irrelevant template id',
-            notificationType: 'estimate'
-        };
-        var notificationData = {
-            recipientId: 'some library'
-        };
-        function getMockEntitiesForOneLibrariesAllProducts() {
-            return Q([{id: 'library', name: 'Library'}]);
+        function generateDraftNotificationBadData(){
+            return notificationDraftGenerator.generateDraftNotification('foobar', {});
         }
 
-        it('should return a draft notification', function() {
-            var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
-            expect(draft).to.satisfy(implementsDraftNotificationInterface);
-            expect(draft.getAudienceAndSubject()).to.equal('One Library, All Products');
-        });
-
-        it('should generate a recipients list', function() {
-            var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
-            draft.getEntities = getMockEntitiesForOneLibrariesAllProducts;
-
-            return draft.getRecipients().then(function (recipients) {
-                return Q.all([
-                    expect(recipients).to.be.an('array'),
-                    expect(recipients.length).to.equal(1),
-                    expect(recipients[0].id).to.equal('library'),
-                    expect(recipients[0].label).to.equal('Library Subscription Contacts')
-                ]);
-            });
-        });
+        expect( generateDraftNotificationNoData ).to.throw(/Bad data/);
+        expect( generateDraftNotificationBadData ).to.throw(/Bad data/);
     });
 });
 
 function pdfLinkForAnnualAccessFeeInvoice( testString ){
-    if ( !testString || typeof testString !== 'string' ){
-        return false;
-    }
-
-    return testString.indexOf('pdf') > 0 && testString.indexOf('access-fee-invoice') > 0;
+    return pdfLink(testString);
 }
 
 function pdfLinkForInvoice( testString ){
-    if ( !testString || typeof testString !== 'string' ){
-        return false;
-    }
-
-    return testString.indexOf('pdf') > 0 && testString.indexOf('invoice') > 0;
+    return pdfLink(testString);
 }
 
 function pdfLinkForEstimate( testString ){
+    return pdfLink(testString);
+}
+
+function pdfLink( testString ){
     if ( !testString || typeof testString !== 'string' ){
         return false;
     }
 
-    return testString.indexOf('pdf') > 0 && testString.indexOf('estimate') > 0;
+    return testString.indexOf('pdf');
 }

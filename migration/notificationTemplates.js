@@ -33,7 +33,7 @@ var notificationTemplates = [
         subject: 'Reminder: CARLI Selection System Open',
         emailBody: '',
         pdfContentIsEditable: false,
-        notificationType: 'subscription'
+        notificationType: 'reminder'
     },
     {
         id: 'notification-template-library-estimates-closed',
