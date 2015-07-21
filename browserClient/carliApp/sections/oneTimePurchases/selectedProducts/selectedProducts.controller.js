@@ -82,6 +82,7 @@
                 refreshOfferingsForLibrary(vm.library);
             })
             .catch(function(error){
+                alertService.putAlert('Product purchase was not successful, please try again.', {severity: 'danger'});
                 errorHandler(error);
                 refreshOfferingsForLibrary(vm.library);
             });
@@ -97,6 +98,7 @@
                 refreshOfferingsForLibrary(vm.library);
             })
             .catch(function(error){
+                alertService.putAlert('Product purchase was not cancelled, please try again.', {severity: 'danger'});
                 errorHandler(error);
                 refreshOfferingsForLibrary(vm.library);
             });

@@ -52,6 +52,9 @@ function editCycleController( $routeParams, cycleService, errorHandler ) {
                 cycleRouter.cycle = cycle;
                 cycleRouter.status = cycle.status;
             })
-            .catch(errorHandler);
+            .catch(function(error){
+                alertService.putAlert('Cycle did not proceed successfully. Please try again.', {severity: 'danger'});
+                errorHandler(error);
+            });
     }
 }
