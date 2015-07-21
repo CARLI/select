@@ -1,7 +1,6 @@
 var cycleRepository = require('../../../CARLI/Entity/CycleRepository');
 var fs = require('fs');
 var handlebars = require('handlebars');
-var libraryRepository = require('../../../CARLI/Entity/LibraryRepository');
 var moment = require('moment');
 var notificationRepository = require('../../../CARLI/Entity/NotificationRepository');
 var notificationTemplateRepository = require('../../../CARLI/Entity/NotificationTemplateRepository');
@@ -19,8 +18,8 @@ var invoicePdfTemplate = loadAndCompileHandlebarsTemplate('invoicePdfTemplate.ha
 var batchIdPrefix = 'USI';
 var invoiceNumberPrefix = 'USIN';
 
-function exportPdf(type, notificationId){
-    var error = validateArguments(type, notificationId);
+function exportPdf(notificationId){
+    var error = validateArguments(notificationId);
     if ( error ){
         return Q.reject(error);
     }
@@ -35,7 +34,7 @@ function exportPdf(type, notificationId){
         }
     };
 
-    return contentForPdf(type, notificationId)
+    return contentForPdf(notificationId)
         .then(function (contentForPdf) {
             var pdfPromise = Q.defer();
 
@@ -53,33 +52,34 @@ function exportPdf(type, notificationId){
         });
 }
 
-function contentForPdf(type, notificationId){
-    var error = validateArguments(type, notificationId);
+function contentForPdf(notificationId){
+    var error = validateArguments(notificationId);
     if ( error ){
         return Q.reject(error);
     }
 
     return notificationRepository.load(notificationId)
         .then(function(notification){
-            console.log('Loaded notification for '+notification.targetEntity.name);
-            //console.log(notification);
-
             var cycleId = notification.cycle.id;
             var library = notification.targetEntity;
+            var notificationType = notification.notificationType;
+            var isFeeInvoice = notification.isFeeInvoice;
+
+            var type = notificationType;
+            if ( isFeeInvoice ){
+                type = 'access-fee-invoice';
+            }
 
             return loadCycle(cycleId)
-                .then(function(cycle){
-                    console.log('  Loaded cycle '+cycle.name+' - get data');
+                .then(function(cycle) {
                     return dataForPdf(type, cycle, library, notification.offeringIds);
                 })
                 .then(function(data){
-                    console.log('  Got data - render html');
-                    console.log(data);
                     return htmlForPdf(type, data);
-                });
+                })
         })
         .catch(function(err){
-            console.log('Error in generateContentForPdfForNotification', err);
+            console.log('Error in contentForPdf', err);
         });
 }
 
@@ -92,6 +92,8 @@ function contentForPdf(type, notificationId){
  *        in the cycle.
  */
 function dataForPdf(type, cycle, library, specificOfferingIds ){
+    console.log('dataForPdf('+type+', '+cycle.name+', '+library.name+(specificOfferingIds?'['+specificOfferingIds.length+']':'')+')');
+
     var useFeeForPriceInsteadOfSelectionPrice = typeIsForAccessFeeInvoice(type);
 
     return loadOfferings(cycle, library.id, specificOfferingIds)
@@ -205,7 +207,7 @@ function htmlForPdf(type, dataForPdf){
     var invoiceContent = createInvoiceContent();
     var dataForRenderingPdfContent = dataForPdf;
     
-    return fetchTemplateForContent(type)
+    return fetchTemplateForContent(type, dataForPdf.cycle)
         .then(function(notificationTemplate){
             dataForRenderingPdfContent.invoiceContent = createInvoiceContent();
             dataForRenderingPdfContent.beforeText = notificationTemplate.pdfBefore;
@@ -242,7 +244,7 @@ function htmlForPdf(type, dataForPdf){
     }
 }
 
-function fetchTemplateForContent(type){
+function fetchTemplateForContent(type, cycle){
     if ( typeIsForSubscriptionInvoiceEstimate(type) ){
         if ( cycle.isOpenToLibraries() ){
             return notificationTemplateRepository.loadTemplateForOpenCycleEstimates();
@@ -266,15 +268,7 @@ function fileNameForPdf(dataForPdf, type){
     return library.name + '-' + cycle.name + '-' + type + '.pdf';
 }
 
-function validateArguments(type, notificationId) {
-    if (type.toLowerCase() !== 'invoice' &&
-        type.toLowerCase() !== 'estimate' &&
-        type.toLowerCase() !== 'access-fee-invoice'
-    ) {
-        console.log('  Error: bad type');
-        return 'Invalid type for PDF content: ' + type;
-    }
-
+function validateArguments(notificationId) {
     if (!notificationId) {
         console.log('  Error: no notificationId');
         return 'Missing notification id';
