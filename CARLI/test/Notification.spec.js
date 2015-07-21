@@ -208,7 +208,7 @@ describe('the getRecipientLabel method', function () {
     });
 
     it('should return the correct label for a subscription related notification', function () {
-        var recipientLabel = notificationRepository.getRecipientLabel('Test Library', 'subscription');
+        var recipientLabel = notificationRepository.getRecipientLabel('Test Library', 'reminder');
         expect(recipientLabel).to.equal('Test Library Subscription Contacts');
     });
 });
@@ -298,17 +298,72 @@ describe('the notificationTypeIsForLibrary method', function () {
     });
 
     it('should return the correct value for a library invoice', function () {
-        expect(notificationRepository.notificationTypeIsForLibrary('invoice')).to.be.true;
+        expect(notificationRepository.notificationTypeIsForLibrary('invoice')).to.equal(true);
     });
 
     it('should return the correct value for a vendor report', function () {
-        expect(notificationRepository.notificationTypeIsForLibrary('report')).to.be.false;
+        expect(notificationRepository.notificationTypeIsForLibrary('report')).to.equal(false);
     });
 
     it('should return the correct value for a subscription related notification', function () {
-        expect(notificationRepository.notificationTypeIsForLibrary('subscription')).to.be.true;
+        expect(notificationRepository.notificationTypeIsForLibrary('reminder')).to.equal(true);
     });
 });
+
+describe('the notificationTypeIsForInvoice method', function () {
+    it('should be a function', function(){
+        expect(notificationRepository.notificationTypeIsForInvoice).to.be.a('function');
+    });
+
+    it('should return the correct value for a library invoice', function () {
+        expect(notificationRepository.notificationTypeIsForInvoice('invoice')).to.equal(true);
+    });
+
+    it('should return the correct value for a vendor report', function () {
+        expect(notificationRepository.notificationTypeIsForInvoice('estimate')).to.equal(false);
+    });
+
+    it('should return the correct value for a bogus type', function () {
+        expect(notificationRepository.notificationTypeIsForInvoice('foobar')).to.equal(false);
+    });
+});
+
+describe('the notificationTypeIsForEstimate method', function () {
+    it('should be a function', function(){
+        expect(notificationRepository.notificationTypeIsForEstimate).to.be.a('function');
+    });
+
+    it('should return the correct value for a library estimate', function () {
+        expect(notificationRepository.notificationTypeIsForEstimate('estimate')).to.equal(true);
+    });
+
+    it('should return the correct value for a vendor report', function () {
+        expect(notificationRepository.notificationTypeIsForEstimate('report')).to.equal(false);
+    });
+
+    it('should return the correct value for a bogus type', function () {
+        expect(notificationRepository.notificationTypeIsForEstimate('foobar')).to.equal(false);
+    });
+});
+
+describe('the notificationTypeIsForReminder method', function () {
+    it('should be a function', function(){
+        expect(notificationRepository.notificationTypeIsForReminder).to.be.a('function');
+    });
+
+    it('should return the correct value for a library reminder', function () {
+        expect(notificationRepository.notificationTypeIsForReminder('reminder')).to.equal(true);
+    });
+
+    it('should return the correct value for a vendor report', function () {
+        expect(notificationRepository.notificationTypeIsForReminder('report')).to.equal(false);
+    });
+
+    it('should return the correct value for a bogus type', function () {
+        expect(notificationRepository.notificationTypeIsForReminder('foobar')).to.equal(false);
+    });
+});
+
 
 describe('the notificationTypeIsForVendor method', function () {
     it('should be a function', function(){
@@ -316,14 +371,32 @@ describe('the notificationTypeIsForVendor method', function () {
     });
 
     it('should return the correct value for a library invoice', function () {
-        expect(notificationRepository.notificationTypeIsForVendor('invoice')).to.be.false;
+        expect(notificationRepository.notificationTypeIsForVendor('invoice')).to.equal(false);
     });
 
     it('should return the correct value for a vendor report', function () {
-        expect(notificationRepository.notificationTypeIsForVendor('report')).to.be.true;
+        expect(notificationRepository.notificationTypeIsForVendor('report')).to.equal(true);
     });
 
     it('should return the correct value for a subscription related notification', function () {
-        expect(notificationRepository.notificationTypeIsForVendor('subscription')).to.be.false;
+        expect(notificationRepository.notificationTypeIsForVendor('reminder')).to.equal(false);
+    });
+});
+
+describe('the templateIsForAnnualAccessFeeInvoice method', function () {
+    it('should be a function', function(){
+        expect(notificationRepository.templateIsForAnnualAccessFeeInvoice).to.be.a('function');
+    });
+
+    it('should return the correct value for a non-matching template id', function () {
+        expect(notificationRepository.templateIsForAnnualAccessFeeInvoice('invoice')).to.equal(false);
+    });
+
+    it('should return the correct value for a matching id', function () {
+        expect(notificationRepository.templateIsForAnnualAccessFeeInvoice('notification-template-annual-access-fee-invoices')).to.equal(true);
+    });
+
+    it('should return the correct value for a bogus id', function () {
+        expect(notificationRepository.templateIsForAnnualAccessFeeInvoice('subscription')).to.equal(false);
     });
 });
