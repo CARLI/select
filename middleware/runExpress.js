@@ -16,6 +16,7 @@ var notifications = require('./components/notifications');
 var pdf = require('./components/pdf');
 var user = require('./components/user');
 var vendorDatabases = require('./components/vendorDatabases');
+var vendorReportCsv = require('./components/csv/vendorReport');
 var vendorSpecificProductQueries = require('./components/vendorSpecificProductQueries');
 
 function runMiddlewareServer(){
@@ -275,6 +276,23 @@ function runMiddlewareServer(){
                 .then(function(exportResults){
                     res.setHeader('Content-Disposition', 'attachment; filename="'+ exportResults.fileName +'"');
                     res.send(exportResults.pdf);
+                })
+                .catch(sendError(res));
+        });
+
+        carliMiddleware.get('/csv/data/:notificationId', function(req, res) {
+            vendorReportCsv.contentForVendorReport(req.params.notificationId)
+                .then(function(dataForReport){
+                    res.send(dataForReport);
+                })
+                .catch(sendError(res));
+        });
+        carliMiddleware.get('/csv/export/:notificationId', function(req, res) {
+            vendorReportCsv.exportCsvForVendorReport(req.params.notificationId)
+                .then(function(exportResults){
+                    res.setHeader('Content-Disposition', 'attachment; filename="'+ exportResults.fileName +'"');
+                    res.type('csv');
+                    res.send(exportResults.csv);
                 })
                 .catch(sendError(res));
         });
