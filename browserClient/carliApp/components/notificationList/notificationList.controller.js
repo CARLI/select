@@ -104,11 +104,15 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
     }
 
     function previewPdf( notification ){
-        $window.open( vm.apiPath + notification.pdfLink );
+        //$window.open( vm.apiPath + notification.pdfLink );
+        var pdfLink = '/pdf/content/' + notification.id;
+        $window.open( vm.apiPath + pdfLink );
     }
 
     function previewCsv( notification ){
-        $window.open( vm.apiPath + notification.csvLink );
+        //$window.open( vm.apiPath + notification.csvLink );
+        var csvLink = '/csv/export/' + notification.id;
+        $window.open( vm.apiPath + csvLink );
     }
 
     function removeDraft( notification ){
