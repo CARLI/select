@@ -491,7 +491,7 @@ function generateDraftNotification(template, notificationData) {
     else if (notificationIsForVendorReport()) {
         if (shouldSendEverythingToEveryone()) {
             return getVendorReportsForAll(template, notificationData);
-        } else if (doReportedProductsComeFromOfferings()) {
+        } else if (doRecipientsComeFromOfferings()) {
             return getVendorReportsForSome(template, notificationData);
         } else if (isASingleRecipient()) {
             return getVendorReportsForOne(template, notificationData);
@@ -524,9 +524,6 @@ function generateDraftNotification(template, notificationData) {
     }
     function doRecipientsComeFromOfferings() {
         return !recipientId;
-    }
-    function doReportedProductsComeFromOfferings(){
-        return !!recipientId;
     }
     function notificationIsForLibraries() {
         return notificationRepository.notificationTypeIsForLibrary(template.notificationType);
