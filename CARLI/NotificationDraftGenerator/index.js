@@ -100,7 +100,7 @@ function getReminder(template, notificationData) {
         });
     }
     function getAllLibraries() {
-        return libraryRepository.list();
+        return libraryRepository.listActiveLibraries();
     }
 
     function getRecipientsForReminder() {
@@ -419,7 +419,7 @@ function getLibraryInvoicesForOne(template, notificationData) {
 
 function getLibraryEstimatesForAll(template, notificationData) {
     function getEntitiesForLibraryEstimatesForAll() {
-        return libraryRepository.list();
+        return libraryRepository.listActiveLibraries();
     }
     function getRecipientsForLibraryEstimatesForAll() {
         return allLibrariesDraft.getEntities()
