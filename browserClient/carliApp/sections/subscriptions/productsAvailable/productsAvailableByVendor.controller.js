@@ -193,7 +193,6 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
         notificationModalService.sendStartDraftMessage({
             templateId: 'notification-template-vendor-reports',
             cycleId: vm.cycle.id,
-            recipientId: vendor.id,
             offeringIds: offeringsToReport
         });
     }
