@@ -96,7 +96,12 @@ function extractLicense( licenseRow ){
 
     function splitCurrentTerm( index ){
         if ( licenseRow.current_term ){
-            return licenseRow.current_term.split('-')[index];
+            var terms = licenseRow.current_term.split('-');
+            if (index < terms.length) {
+                return terms[index];
+            } else {
+                return '';
+            }
         }
         else {
             return '';
