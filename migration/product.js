@@ -86,7 +86,7 @@ function extractProduct( row, cycle, vendorIdMapping, productLicenseMapping ){
         productUrl: '',
         description: '',
         comments: '',
-        license: productLicenseMapping[licenseMappingKey],
+        license: productLicenseMapping[licenseMappingKey] || null,
         licenseType: {
             isThirdPartyProduct: false,
             isSoleSource: false,
