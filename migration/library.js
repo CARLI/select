@@ -53,6 +53,7 @@ function migrateLibraries(connection, crmLibraryMapping) {
     }
 
     function getCrmId(idalLibraryName) {
+        idalLibraryName = idalLibraryName.trim();
         if (idalBlacklist.indexOf(idalLibraryName) !== -1) {
             return null;
         }
