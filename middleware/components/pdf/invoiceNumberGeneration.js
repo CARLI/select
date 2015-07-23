@@ -1,10 +1,13 @@
 var fs = require('fs');
 var Q = require('q');
 
-var batchIdFileName = '/data/invoiceNumber';
-var invocieNumberFileName = '/data/invoiceNumber';
-
+var batchIdFileName = '/data/batchId';
+var batchIdPrefix = 'USI';
 var fallbackBatchId = 0;
+
+var invoiceNumberFileName = '/data/invoiceNumber';
+var invoiceNumberPrefix = 'USIN';
+var fallBackInvoiceNumber = '00AA';
 
 var readFileOptions = {
     encoding: 'utf8'
@@ -13,14 +16,9 @@ var readFileOptions = {
 function generateNextBatchId(){
     var lastBatchId = getLastBatchId();
     var nextBatchId = incrementBatchId(lastBatchId);
-
-    if ( isNaN(nextBatchId) ){
-        return Q.reject('  error getting next batch id: could not increment '+lastBatchId);
-    }
-
     saveBatchId(nextBatchId);
 
-    var result = Q( padWithZeroes(nextBatchId) );
+    var result = Q( batchIdPrefix + padWithZeroes(nextBatchId) );
 
     return result;
 
@@ -31,18 +29,7 @@ function generateNextBatchId(){
         catch(err){
             console.log('  error reading batchId file, using fallback '+fallbackBatchId);
             var fallbackResult = fallbackBatchId;
-            fallbackBatchId = incrementBatchId(fallbackBatchId);
             return fallbackResult;
-        }
-    }
-
-    function saveBatchId( valueToSave ) {
-        fallbackBatchId = valueToSave;
-        try {
-            fs.writeFileSync(batchIdFileName, nextBatchId);
-        }
-        catch (err) {
-            console.log('  error saving batchId file');
         }
     }
 
@@ -50,8 +37,18 @@ function generateNextBatchId(){
         return (1 * lastValue) + 1;
     }
 
+    function saveBatchId( valueToSave ) {
+        fallbackBatchId = valueToSave;
+        try {
+            fs.writeFileSync(batchIdFileName, valueToSave);
+        }
+        catch (err) {
+            console.log('  error saving batchId file '+err);
+        }
+    }
+
     function padWithZeroes( integerValue ){
-        var padLength = 4;
+        var padLength = 5;
         var stringValue = '' + integerValue;
         if ( stringValue.length > padLength ){
             return stringValue;
@@ -63,20 +60,89 @@ function generateNextBatchId(){
     }
 }
 
-
 function generateNextInvoiceNumber(){
-    var start = new Date();
-    console.log('>>> Begin generateNextInvoiceNumber');
+    var lastInvoiceNumber = getLastInvoiceNumber();
+    var nextInvoiceNumber = incrementInvoiceNumber(lastInvoiceNumber);
+    saveInvoiceNumber(nextInvoiceNumber);
 
-    var result = Q('INVOICE NUMBER');
+    var result = Q( invoiceNumberPrefix + nextInvoiceNumber );
 
-    var end = new Date();
-    var timing = (end-start);
-    console.log('<<< generateNextInvoiceNumber took '+timing+'ms');
     return result;
+
+    function getLastInvoiceNumber(){
+        try {
+            return fs.readFileSync(invoiceNumberFileName, readFileOptions);
+        }
+        catch(err){
+            console.log('  error reading invoiceNumber file, using fallback '+fallBackInvoiceNumber);
+            var fallbackResult = fallBackInvoiceNumber;
+            fallBackInvoiceNumber = incrementInvoiceNumber(fallBackInvoiceNumber);
+            return fallbackResult;
+        }
+    }
+
+    function saveInvoiceNumber( valueToSave ) {
+        fallBackInvoiceNumber = valueToSave;
+        try {
+            fs.writeFileSync(invoiceNumberFileName, valueToSave);
+        }
+        catch (err) {
+            console.log('  error saving InvoiceNumber file '+err);
+        }
+    }
+}
+
+function incrementInvoiceNumber( lastValue ){
+    var incrementThirdCharacter = false;
+    var incrementFourthCharacter = false;
+
+    var firstTwoCharacters = lastValue.substr(0,2);
+    var thirdCharacter = lastValue.substr(2,1);
+    var fourthCharacter = lastValue.substr(3,1);
+
+    var nextNumberForFirstTwoDigits = (1 * firstTwoCharacters) + 1;
+
+    var nextFirstTwoDigits = '' + nextNumberForFirstTwoDigits;
+    if ( nextNumberForFirstTwoDigits < 10 ){
+        nextFirstTwoDigits = '0' + nextFirstTwoDigits;
+    }
+    if ( nextNumberForFirstTwoDigits > 99 ){
+        nextFirstTwoDigits = '00';
+        incrementThirdCharacter = true;
+    }
+
+    var nextThirdDigit = thirdCharacter;
+    if ( incrementThirdCharacter ){
+        nextThirdDigit = incrementLetter(thirdCharacter);
+        if ( isPastZ(nextThirdDigit) ){
+            incrementFourthCharacter = true;
+            nextThirdDigit = 'A';
+        }
+    }
+
+    var nextFourthDigit = fourthCharacter;
+    if ( incrementFourthCharacter ) {
+        nextFourthDigit = incrementLetter(fourthCharacter);
+
+        if ( isPastZ(nextFourthDigit) ){
+            nextFourthDigit = 'A';
+        }
+    }
+
+    return '' + nextFirstTwoDigits + nextThirdDigit + nextFourthDigit;
+
+    function incrementLetter(letter){
+        var nextValue = letter.charCodeAt(0) + 1;
+        return String.fromCharCode(nextValue);
+    }
+
+    function isPastZ(character){
+        return character.charCodeAt(0) > 90;
+    }
 }
 
 module.exports = {
     generateNextBatchId: generateNextBatchId,
-    generateNextInvoiceNumber: generateNextInvoiceNumber
+    generateNextInvoiceNumber: generateNextInvoiceNumber,
+    incrementInvoiceNumber: incrementInvoiceNumber //exposed for unit testing
 };
