@@ -298,12 +298,12 @@ function runMiddlewareServer(){
         });
         carliMiddleware.get('/next-batch-id', function(req, res) {
             pdf.generateNextBatchId()
-                .then(sendResult(res))
+                .then(sendJsonResult(res))
                 .catch(sendError(res));
         });
         carliMiddleware.get('/next-invoice-number', function(req, res) {
             pdf.generateNextInvoiceNumber()
-                .then(sendResult(res))
+                .then(sendJsonResult(res))
                 .catch(sendError(res));
         });
     }
@@ -312,6 +312,11 @@ function runMiddlewareServer(){
 function sendResult(res) {
     return function (result) {
         res.send(result);
+    }
+}
+function sendJsonResult(res){
+    return function(result){
+        res.send( { result: result } );
     }
 }
 function sendOk(res) {
