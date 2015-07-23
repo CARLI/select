@@ -10,6 +10,8 @@ var Entity = require('../Entity')
     , Q = require('q')
     , uuid = require('node-uuid')
 ;
+
+var notifications = require('../../config/environmentDependentModules/notifications');
 var request = require('../../config/environmentDependentModules/request');
 
 
@@ -28,13 +30,20 @@ function createRequest( email ){
         date: new Date().toISOString()
     };
 
+    var user = null;
+
     return requireUserExists()
+        .then(saveLocalUserReference)
         .then(createResetRequest)
         .then(deleteExpiredResetRequests)
         .then(returnOk);
 
     function requireUserExists() {
         return UserRepository.load(email);
+    }
+
+    function saveLocalUserReference(u) {
+        user = u;
     }
 
     function createResetRequest() {
@@ -44,12 +53,23 @@ function createRequest( email ){
     }
 
     function sendResetInfoToUser(resetRequest) {
-        var url = config.getMiddlewareUrl() + '/tell-pixobot';
-        request.put({
-            url: url,
-            json: { message: "Reset password link generated for " + resetRequest.email + "\n  /reset/" + resetRequest.key }
-        });
-        return true;
+        return getPasswordResetTemplate()
+            .then(sendEmail);
+
+        function sendEmail(template) {
+            var variables = {
+                user: user,
+                resetLink: config.getWebBaseUrl() + '/reset/' + resetRequest.key
+            };
+            return notifications.sendNotification(resetRequest.email, template, variables);
+        }
+    }
+
+    function getPasswordResetTemplate() {
+        return Q(
+            "{{ user.fullName }},\n" +
+            "Something something password reset:\n" +
+            "{{ resetLink }}");
     }
 
     function returnOk() {

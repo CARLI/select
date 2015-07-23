@@ -68,14 +68,14 @@ function loadConfiguration() {
                 config.storeOptions.privilegedCouchHostname;
         }
     }
+}
 
-    function isSecureEnvironment() {
-        return !isBrowserEnvironment();
-    }
+function isSecureEnvironment() {
+    return !isBrowserEnvironment();
+}
 
-    function isBrowserEnvironment() {
-        return (typeof window !== 'undefined');
-    }
+function isBrowserEnvironment() {
+    return (typeof window !== 'undefined');
 }
 
 config.setDbName = function(name) {
@@ -95,6 +95,13 @@ config.getStoreOptionsForCycles = function(){
 };
 config.getAuthTimeoutDuration = function() {
     return config.authMillisecondsUntilWarningAppears + config.authWarningDurationInMilliseconds;
-}
+};
+config.getWebBaseUrl = function() {
+    if (isBrowserEnvironment()) {
+        return window.location.protocol + '//' + window.location.host;
+    } else {
+        return 'http://not-sure-which-app.carli.illinois.edu';
+    }
+};
 
 module.exports = config;
