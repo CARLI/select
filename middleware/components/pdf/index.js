@@ -1,6 +1,7 @@
 var cycleRepository = require('../../../CARLI/Entity/CycleRepository');
 var fs = require('fs');
 var handlebars = require('handlebars');
+var invoiceGeneration = require('./invoiceNumberGeneration');
 var moment = require('moment');
 var notificationRepository = require('../../../CARLI/Entity/NotificationRepository');
 var notificationTemplateRepository = require('../../../CARLI/Entity/NotificationTemplateRepository');
@@ -328,7 +329,10 @@ function loadAndCompileHandlebarsTemplate(fileName){
     return handlebars.compile(templateHtml);
 }
 
+
 module.exports = {
     exportPdf: exportPdf,
-    contentForPdf: contentForPdf
+    contentForPdf: contentForPdf,
+    generateNextBatchId: invoiceGeneration.generateNextBatchId,
+    generateNextInvoiceNumber: invoiceGeneration.generateNextInvoiceNumber
 };
