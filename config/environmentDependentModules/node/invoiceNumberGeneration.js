@@ -1,0 +1,1 @@
+module.exports = require('../../../middleware/components/pdf/invoiceNumberGeneration');
