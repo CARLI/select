@@ -1,6 +1,7 @@
 var cycleRepository = require('../../../CARLI/Entity/CycleRepository');
 var fs = require('fs');
 var handlebars = require('handlebars');
+var invoiceGeneration = require('./invoiceNumberGeneration');
 var moment = require('moment');
 var notificationRepository = require('../../../CARLI/Entity/NotificationRepository');
 var notificationTemplateRepository = require('../../../CARLI/Entity/NotificationTemplateRepository');
@@ -58,8 +59,12 @@ function contentForPdf(notificationId){
         return Q.reject(error);
     }
 
+    console.log('contentForPdf('+notificationId+')');
+
     return notificationRepository.load(notificationId)
         .then(function(notification){
+            console.log('  loaded notification',notification);
+
             var cycleId = notification.cycle.id;
             var library = notification.targetEntity;
             var notificationType = notification.notificationType;
@@ -72,14 +77,20 @@ function contentForPdf(notificationId){
 
             return loadCycle(cycleId)
                 .then(function(cycle) {
+                    console.log('  loaded cycle',cycle);
                     return dataForPdf(type, cycle, library, notification.offeringIds);
                 })
                 .then(function(data){
+                    if ( typeIsForRealInvoice(type) ){
+                        data.batchId = notification.batchId;
+                        data.invoiceNumber = notification.invoiceNumber;
+                    }
                     return htmlForPdf(type, data);
                 })
         })
         .catch(function(err){
             console.log('Error in contentForPdf', err);
+            return Q.reject(error);
         });
 }
 
@@ -209,7 +220,7 @@ function htmlForPdf(type, dataForPdf){
     
     return fetchTemplateForContent(type, dataForPdf.cycle)
         .then(function(notificationTemplate){
-            dataForRenderingPdfContent.invoiceContent = createInvoiceContent();
+            dataForRenderingPdfContent.invoiceContent = invoiceContent;
             dataForRenderingPdfContent.beforeText = notificationTemplate.pdfBefore;
             dataForRenderingPdfContent.afterText = notificationTemplate.pdfAfter;
             dataForRenderingPdfContent.realInvoice = typeIsForRealInvoice(type);
@@ -225,22 +236,8 @@ function htmlForPdf(type, dataForPdf){
     }
 
     function createFinalPdfContent(){
-        dataForRenderingPdfContent.invoiceNumber = getNextInvoiceNumber();
-        dataForRenderingPdfContent.invoiceDate = getInvoiceDate();
-        dataForRenderingPdfContent.batchId = getNextBatchId();
+        dataForRenderingPdfContent.invoiceDate = new Date();
         return invoicePdfTemplate(dataForRenderingPdfContent);
-
-        function getNextInvoiceNumber(){
-            return invoiceNumberPrefix + '94IA'; /* TODO: generate this letter + number string */
-        }
-
-        function getInvoiceDate(){
-            return new Date();
-        }
-
-        function getNextBatchId(){
-            return batchIdPrefix + '10031'; /* TODO: generate this number sequentially */
-        }
     }
 }
 
@@ -328,7 +325,10 @@ function loadAndCompileHandlebarsTemplate(fileName){
     return handlebars.compile(templateHtml);
 }
 
+
 module.exports = {
     exportPdf: exportPdf,
-    contentForPdf: contentForPdf
+    contentForPdf: contentForPdf,
+    generateNextBatchId: invoiceGeneration.generateNextBatchId,
+    generateNextInvoiceNumber: invoiceGeneration.generateNextInvoiceNumber
 };

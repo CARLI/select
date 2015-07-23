@@ -551,7 +551,9 @@ describe('The notification draft generator', function() {
             draft.getEntities = getMockEntitiesForOneLibrariesAllProducts;
             draft.getOfferings = getMockOfferingsForOneLibrariesAllProducts;
 
-            return draft.getNotifications(template).then(function(notifications){
+            var customizedRecipients = [ 'library' ];
+
+            return draft.getNotifications(template, customizedRecipients).then(function(notifications){
                 return Q.all([
                     expect(notifications).to.be.an('array'),
                     expect(notifications.length).to.equal(1),

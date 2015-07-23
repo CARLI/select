@@ -8,6 +8,7 @@ module.exports = function (grunt) {
         'couchApp',
         'crmQueries',
         'currentEnvironment',
+        'invoiceNumberGeneration',
         'request'
     ];
 

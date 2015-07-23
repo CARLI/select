@@ -49,6 +49,14 @@
     "isFeeInvoice": {
         "description": "If true, this notification is for oneTimePurchaseAnnualAccessFees, otherwise for the products themselves",
         "type": "boolean"
+    },
+    "batchId": {
+      "description": "If this notification is for an invoice this is the BatchID to display on the invoice",
+      "type": "string"
+    },
+    "invoiceNumber": {
+      "description": "If this notification is for an invoice this is the invoice number to display on the invoice",
+      "type": "string"
     }
   },
   "required": [ "subject", "emailBody", "draftStatus", "notificationType" ]
