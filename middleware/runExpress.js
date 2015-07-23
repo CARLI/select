@@ -296,6 +296,16 @@ function runMiddlewareServer(){
                 })
                 .catch(sendError(res));
         });
+        carliMiddleware.get('/next-batch-id', function(req, res) {
+            pdf.generateNextBatchId()
+                .then(sendResult(res))
+                .catch(sendError(res));
+        });
+        carliMiddleware.get('/next-invoice-number', function(req, res) {
+            pdf.generateNextInvoiceNumber()
+                .then(sendResult(res))
+                .catch(sendError(res));
+        });
     }
 }
 
