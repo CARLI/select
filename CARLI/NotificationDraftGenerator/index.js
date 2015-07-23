@@ -1,6 +1,7 @@
 var config = require('../../config');
 var cycleRepository = require('../Entity/CycleRepository');
 var libraryRepository = require('../Entity/LibraryRepository');
+var invoiceNumbers = require('../../config/environmentDependentModules/invoiceNumberGeneration');
 var notificationRepository = require('../Entity/NotificationRepository');
 var offeringRepository = require('../Entity/OfferingRepository');
 var productRepository = require('../Entity/ProductRepository');
@@ -30,10 +31,9 @@ function getAnnualAccessFeeDraftForOneLibrary(template, notificationData) {
                 return offerings.filter(onlyPurchasedOfferings).filter(onlyOfferingsWithFees);
             })
             .then(function(offerings){
-                return actualRecipientIds.map(function(id){
-                    var notification = generateNotificationForLibrary(id, offerings, customizedTemplate);
-                    return notification;
-               });
+                return Q.all(actualRecipientIds.map(function(id){
+                    return generateNotificationForLibrary(id, offerings, customizedTemplate);
+               }));
             });
     }
     var annualAccessOneLibraryDraft = {
@@ -75,10 +75,9 @@ function getAnnualAccessFeeDraftForAllLibraries(template, notificationData) {
                 return offerings.filter(onlyPurchasedOfferings).filter(onlyOfferingsWithFees);
             })
             .then(function(offerings){
-                return actualRecipientIds.map(function(id){
-                    var notification = generateNotificationForLibrary(id, offerings, customizedTemplate);
-                    return notification;
-                });
+                return Q.all(actualRecipientIds.map(function(id){
+                    return generateNotificationForLibrary(id, offerings, customizedTemplate);
+                }));
             });
     }
 
@@ -100,7 +99,7 @@ function getReminder(template, notificationData) {
         });
     }
     function getAllLibraries() {
-        return libraryRepository.list();
+        return libraryRepository.listActiveLibraries();
     }
 
     function getRecipientsForReminder() {
@@ -134,10 +133,9 @@ function getReminder(template, notificationData) {
     }
 
     function getNotificationsForReminder( customizedTemplate, actualRecipientIds ){
-        var notifications = actualRecipientIds.map(function(id){
+        return Q.all(actualRecipientIds.map(function(id){
             return generateNotificationForLibrary(id, null, customizedTemplate);
-        });
-        return Q(notifications);
+        }));
     }
 
     var reminderDraft = {
@@ -311,9 +309,9 @@ function getLibraryInvoicesForAll(template, notificationData) {
     function getNotificationsForLibraryInvoicesForAll(customizedTemplate, actualRecipientIds){
         return allLibrariesDraft.getOfferings()
             .then(function(offerings){
-                return actualRecipientIds.map(function(id){
+                return Q.all(actualRecipientIds.map(function(id){
                     return generateNotificationForLibrary(id, offerings, customizedTemplate);
-                });
+                }));
             });
     }
 
@@ -362,9 +360,9 @@ function getLibraryInvoicesForSome(template, notificationData) {
                 return offerings.filter(onlyPurchasedOfferings);
             })
             .then(function(offerings){
-                return actualRecipientIds.map(function(id){
+                return Q.all(actualRecipientIds.map(function(id){
                     return generateNotificationForLibrary(id, offerings, customizedTemplate, saveOfferingIdsToNotification);
-                });
+                }));
             });
     }
 
@@ -397,13 +395,15 @@ function getLibraryInvoicesForOne(template, notificationData) {
             return offeringRepository.listOfferingsForLibraryId(notificationData.recipientId, cycle);
         });
     }
-    function getNotificationsForLibraryInvoicesForOne(customizedTemplate){
+    function getNotificationsForLibraryInvoicesForOne(customizedTemplate, actualRecipientIds){
         return oneLibraryDraft.getOfferings()
             .then(function(offerings) {
                 return offerings.filter(onlyPurchasedOfferings);
             })
             .then(function(offerings){
-                return [ generateNotificationForLibrary(notificationData.recipientId, offerings, customizedTemplate) ];
+                return Q.all(actualRecipientIds.map(function(id){
+                    return generateNotificationForLibrary(id, offerings, customizedTemplate)
+                }));
             });
     }
 
@@ -419,7 +419,7 @@ function getLibraryInvoicesForOne(template, notificationData) {
 
 function getLibraryEstimatesForAll(template, notificationData) {
     function getEntitiesForLibraryEstimatesForAll() {
-        return libraryRepository.list();
+        return libraryRepository.listActiveLibraries();
     }
     function getRecipientsForLibraryEstimatesForAll() {
         return allLibrariesDraft.getEntities()
@@ -437,9 +437,9 @@ function getLibraryEstimatesForAll(template, notificationData) {
     function getNotificationsForLibraryEstimatesForAll(customizedTemplate, actualRecipientIds){
         return allLibrariesDraft.getOfferings()
             .then(function(offerings){
-                return actualRecipientIds.map(function(id){
+                return Q.all(actualRecipientIds.map(function(id){
                     return generateNotificationForLibrary(id, offerings, customizedTemplate);
-                });
+                }));
             });
     }
 
@@ -491,7 +491,7 @@ function generateDraftNotification(template, notificationData) {
     else if (notificationIsForVendorReport()) {
         if (shouldSendEverythingToEveryone()) {
             return getVendorReportsForAll(template, notificationData);
-        } else if (doReportedProductsComeFromOfferings()) {
+        } else if (doRecipientsComeFromOfferings()) {
             return getVendorReportsForSome(template, notificationData);
         } else if (isASingleRecipient()) {
             return getVendorReportsForOne(template, notificationData);
@@ -525,9 +525,6 @@ function generateDraftNotification(template, notificationData) {
     function doRecipientsComeFromOfferings() {
         return !recipientId;
     }
-    function doReportedProductsComeFromOfferings(){
-        return !!recipientId;
-    }
     function notificationIsForLibraries() {
         return notificationRepository.notificationTypeIsForLibrary(template.notificationType);
     }
@@ -555,6 +552,7 @@ function discardDuplicateIds(value, index, self) {
 }
 
 function generateNotificationForLibrary(libraryId, offeringsForAll, customizedTemplate, saveOfferingIdsToNotification){
+    var notificationPromise = Q();
     var notification = generateNotificationForEntity(libraryId.toString(), customizedTemplate);
     var offeringsForLibrary = null;
 
@@ -576,7 +574,12 @@ function generateNotificationForLibrary(libraryId, offeringsForAll, customizedTe
         notification.pdfLink = pdfLink();
     }
 
-    return notification;
+    if ( notificationNeedsInvoiceNumbers() ){
+        notificationPromise = getInvoiceNumbers();
+    }
+
+    return notificationPromise.thenResolve(notification);
+
 
     function onlyOfferingsForLibrary(offering){
         return offering.library.id  == libraryId;
@@ -586,8 +589,28 @@ function generateNotificationForLibrary(libraryId, offeringsForAll, customizedTe
         return customizedTemplate.notificationType === 'invoice' || customizedTemplate.notificationType === 'estimate';
     }
 
+    function notificationNeedsInvoiceNumbers(){
+        return customizedTemplate.notificationType === 'invoice';
+    }
+
     function pdfLink(){
         return '/pdf/content/' + notification.id;
+    }
+
+    function getInvoiceNumbers(){
+        var invoiceNumber;
+
+        return invoiceNumbers.generateNextInvoiceNumber()
+            .then(function(generatedInvoiceNumber){
+                invoiceNumber = generatedInvoiceNumber;
+                return invoiceNumbers.generateNextBatchId()
+                    .then(function(batchId){
+                        notification.batchId = batchId;
+                        notification.invoiceNumber = invoiceNumber;
+                        console.log('  ** Attach invoice number '+invoiceNumber+' and batch id '+batchId+' to notification');
+                        return notification;
+                    });
+            });
     }
 }
 
