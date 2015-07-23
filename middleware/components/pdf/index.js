@@ -76,11 +76,16 @@ function contentForPdf(notificationId){
                     return dataForPdf(type, cycle, library, notification.offeringIds);
                 })
                 .then(function(data){
+                    if ( typeIsForRealInvoice(type) ){
+                        data.batchId = notification.batchId;
+                        data.invoiceNumber = notification.invoiceNumber;
+                    }
                     return htmlForPdf(type, data);
                 })
         })
         .catch(function(err){
             console.log('Error in contentForPdf', err);
+            throw(err);
         });
 }
 
@@ -210,7 +215,7 @@ function htmlForPdf(type, dataForPdf){
     
     return fetchTemplateForContent(type, dataForPdf.cycle)
         .then(function(notificationTemplate){
-            dataForRenderingPdfContent.invoiceContent = createInvoiceContent();
+            dataForRenderingPdfContent.invoiceContent = invoiceContent;
             dataForRenderingPdfContent.beforeText = notificationTemplate.pdfBefore;
             dataForRenderingPdfContent.afterText = notificationTemplate.pdfAfter;
             dataForRenderingPdfContent.realInvoice = typeIsForRealInvoice(type);
@@ -226,22 +231,8 @@ function htmlForPdf(type, dataForPdf){
     }
 
     function createFinalPdfContent(){
-        dataForRenderingPdfContent.invoiceNumber = getNextInvoiceNumber();
-        dataForRenderingPdfContent.invoiceDate = getInvoiceDate();
-        dataForRenderingPdfContent.batchId = getNextBatchId();
+        dataForRenderingPdfContent.invoiceDate = new Date();
         return invoicePdfTemplate(dataForRenderingPdfContent);
-
-        function getNextInvoiceNumber(){
-            return invoiceNumberPrefix + '94IA'; /* TODO: generate this letter + number string */
-        }
-
-        function getInvoiceDate(){
-            return new Date();
-        }
-
-        function getNextBatchId(){
-            return batchIdPrefix + '10031'; /* TODO: generate this number sequentially */
-        }
     }
 }
 
