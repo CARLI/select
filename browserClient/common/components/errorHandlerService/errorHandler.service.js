@@ -11,6 +11,9 @@ function returnErrorHandlerFunction($rootScope, $location, alertService, authSer
         else if ( error.statusCode === 502 ){
             handleBackendUnavailable();
         }
+        else if ( error.statusCode === 504 ){
+            handleBackendTimeout();
+        }
         else {
             console.log('handled error ', error);
             showErrorToUser(error);
@@ -24,6 +27,10 @@ function returnErrorHandlerFunction($rootScope, $location, alertService, authSer
 
     function handleBackendUnavailable(error){
         showErrorToUser('The database is currently not reachable. This is an error that makes the system inoperable. Please notify CARLI.');
+    }
+
+    function handleBackendTimeout(error){
+        showErrorToUser('The database is currently under heavy load. Please try your request again at another time.');
     }
 
     function showErrorToUser(message){
