@@ -59,8 +59,12 @@ function contentForPdf(notificationId){
         return Q.reject(error);
     }
 
+    console.log('contentForPdf('+notificationId+')');
+
     return notificationRepository.load(notificationId)
         .then(function(notification){
+            console.log('  loaded notification',notification);
+
             var cycleId = notification.cycle.id;
             var library = notification.targetEntity;
             var notificationType = notification.notificationType;
@@ -73,6 +77,7 @@ function contentForPdf(notificationId){
 
             return loadCycle(cycleId)
                 .then(function(cycle) {
+                    console.log('  loaded cycle',cycle);
                     return dataForPdf(type, cycle, library, notification.offeringIds);
                 })
                 .then(function(data){
@@ -85,7 +90,7 @@ function contentForPdf(notificationId){
         })
         .catch(function(err){
             console.log('Error in contentForPdf', err);
-            throw(err);
+            return Q.reject(error);
         });
 }
 
