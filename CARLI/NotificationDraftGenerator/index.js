@@ -570,6 +570,10 @@ function generateNotificationForLibrary(libraryId, offeringsForAll, customizedTe
         }
     }
 
+    if ( notification.isFeeInvoice ){
+        notification.cycle = config.oneTimePurchaseProductsCycleDocId;
+    }
+
     if ( notificationShouldHavePdfLink() ){
         notification.pdfLink = pdfLink();
     }
