@@ -21,6 +21,8 @@ vendorRepository.setStore(getPrivilegedStore());
 
 var projectRoot = __dirname + '/..';
 
+var activityLogDbName = 'activity-log';
+
 function getDbUrl(dbName) {
     return config.storeOptions.privilegedCouchDbUrl + '/' + dbName;
 }
@@ -54,7 +56,8 @@ function deployDb(dbName) {
     return recreateDb(dbName)
         .then(addSecurityDoc)
         .then(addDesignDoc)
-        .then(deployResetRequestDb);
+        .then(deployResetRequestDb)
+        .then(deployActivityLogDb);
 
     function addSecurityDoc() {
         addSecurityDocWithRoles(dbName, [ '_admin', 'staff', 'vendor', 'library' ]);
@@ -77,6 +80,11 @@ function deployResetRequestDb() {
     function addResetDesignDoc() {
         return couchApp.putDesignDoc(dbName, 'UserResetRequest');
     }
+}
+
+function deployActivityLogDb(){
+    return recreateDb(activityLogDbName)
+        .then(deployDesignDocToActivityLog)
 }
 
 function createAdminUser() {
@@ -176,7 +184,8 @@ function deployLocalAppDesignDoc() {
 function deployAppDesignDoc(instance) {
     return couchApp.putDesignDoc(instance.mainDbName, 'CARLI')
         .then(deployDesignDocToUsers)
-        .then(deployDesignDocToResetRequest);
+        .then(deployDesignDocToResetRequest)
+        .then(deployDesignDocToActivityLog);
 
     function deployDesignDocToUsers() {
         return couchApp.putDesignDoc('_users', 'Users');
@@ -184,6 +193,10 @@ function deployAppDesignDoc(instance) {
     function deployDesignDocToResetRequest() {
         return couchApp.putDesignDoc('user-reset-requests', 'UserResetRequest');
     }
+}
+
+function deployDesignDocToActivityLog(){
+    return couchApp.putDesignDoc(activityLogDbName, 'ActivityLog')
 }
 
 function deployLocalCycleDesignDocs() {
