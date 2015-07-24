@@ -1,0 +1,58 @@
+activity-log-list {
+    clear: both;
+    display: block;
+    margin: 4rem auto;
+
+    .title {
+        display: inline-block;
+        @include font-size(17);
+        font-family: 'Merriweather', serif;
+        font-weight: bold;
+        color: $black;
+    }
+
+    .controls {
+        margin-bottom: 1rem;
+
+        .app-filter-controls {
+            float: left;
+            position: relative;
+            top: 2rem;
+
+            radio {
+                margin-right: 1rem;
+            }
+        }
+
+        .date-filter-controls {
+            float: right;
+
+            view-edit-date {
+                display: inline-block;
+                width: 100px;
+            }
+        }
+    }
+
+    ul {
+        clear: both;
+        @extend .zebra-table;
+
+        li {
+            .column {
+                @include flex(1 1 10%);
+                padding: .5rem 1rem;
+
+                &.date,
+                &.user,
+                &.cycle,
+                &.vendor,
+                &.product,
+                &.library,
+                &.action {
+
+                }
+            }
+        }
+    }
+}

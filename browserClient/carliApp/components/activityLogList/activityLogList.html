@@ -1,0 +1,27 @@
+<div class="controls clearfix">
+    <div class="app-filter-controls">
+        <radio name="'activity-log-list-staff-filter'" value="'staff'" ng-model="vm.appFilter">Show <strong>CARLI Staff Revisions</strong></radio>
+        <radio name="'activity-log-list-lib-filter'" value="'library'" ng-model="vm.appFilter">Show <strong>Library Revisions</strong></radio>
+        <radio name="'activity-log-list-all-filter'" value="'all'" ng-model="vm.appFilter">Show <strong>All Revisions</strong></radio>
+    </div>
+    <div class="date-filter-controls">
+        <view-edit-date ng-model="vm.dateFilterStartDate" edit-mode="true"></view-edit-date>
+        <view-edit-date ng-model="vm.dateFilterEndDate" edit-mode="true"></view-edit-date>
+        <button type="button" class="carli-button" ng-click="vm.updateActivityLogs()">Set Date Range</button>
+    </div>
+</div>
+
+<ul cg-busy="vm.loadingPromise">
+    <li class="column-headers">
+        <div class="column" ng-class="{ sortable: column.orderByProperty, activeSort: vm.orderBy === column.orderByProperty, reversedSort: vm.reverse }" ng-repeat="column in vm.columns" ng-click="vm.sort(column.orderByProperty)">{{ column.label }}</div>
+    </li>
+    <li class="activity-log-row" ng-repeat="activity in vm.logs | filter: vm.filterByApp | orderBy:vm.orderBy:vm.reverse as filteredResults track by activity.id">
+        <div class="column date">{{ activity.date | date }}</div>
+        <div class="column user">{{ activity.userEmail }}</div>
+        <div class="column cycle">{{ activity.cycleName }}</div>
+        <div class="column vendor">{{ activity.vendorName }}</div>
+        <div class="column product">{{ activity.productName }}</div>
+        <div class="column library">{{ activity.libraryName }}</div>
+        <div class="column action">{{ activity.actionDescription }}</div>
+    </li>
+</ul>
