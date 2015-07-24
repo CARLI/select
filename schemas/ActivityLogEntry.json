@@ -60,8 +60,17 @@
       "description": "Which app the activity occurred in",
       "type": "string",
       "enum": [ "staff", "vendor", "library", "system" ]
+    },
+    "category": {
+      "description": "General category of activity, for filtering on the list page",
+      "type": "string",
+      "enum": [
+        "cycleStatus",
+        "added",
+        "modified",
+        "selected"
+      ]
     }
-
   },
   "required": [ "date", "userName", "userEmail", "actionDescription", "app" ]
 }
