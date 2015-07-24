@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.editCycle')
     .controller('editCycleController', editCycleController);
 
-function editCycleController( $routeParams, cycleService, errorHandler ) {
+function editCycleController( $routeParams, activityLogService, cycleService, errorHandler ) {
     var cycleRouter = this;
     cycleRouter.cycleId = $routeParams.id;
     cycleRouter.shouldShowGroupByToggle = shouldShowGroupByToggle;
@@ -42,8 +42,9 @@ function editCycleController( $routeParams, cycleService, errorHandler ) {
 
     function saveCycleAndUpdateStatus(){
         var copyOfCycle = angular.copy(cycleRouter.cycle);
-        return cycleService.update(copyOfCycle).then(updateStatus);
-
+        return cycleService.update(copyOfCycle)
+            .then(updateStatus)
+            .then(logActivity);
     }
 
     function updateStatus(cycleId) {
@@ -56,5 +57,9 @@ function editCycleController( $routeParams, cycleService, errorHandler ) {
                 alertService.putAlert('Cycle did not proceed successfully. Please try again.', {severity: 'danger'});
                 errorHandler(error);
             });
+    }
+
+    function logActivity(){
+        return activityLogService.logCycleUpdate(cycleRouter.cycle);
     }
 }
