@@ -43,14 +43,16 @@ activity-log-list {
                 @include flex(1 1 10%);
                 padding: .5rem 1rem;
 
-                &.date,
-                &.user,
-                &.cycle,
-                &.vendor,
-                &.product,
-                &.library,
-                &.action {
+                &.Date,
+                &.User,
+                &.Cycle,
+                &.Vendor,
+                &.Product,
+                &.Library,
+                &.Action { }
 
+                &.Action {
+                    flex-grow: 4;
                 }
             }
         }
