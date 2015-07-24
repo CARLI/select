@@ -7,6 +7,7 @@ var chai   = require( 'chai' )
 chai.use( chaiAsPromised );
 
 var validTypes = [
+    'ActivityLogEntry',
     'Contact',
     'Cycle',
     'CycleType',
