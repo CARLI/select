@@ -13,15 +13,15 @@
 
 <ul cg-busy="vm.loadingPromise">
     <li class="column-headers">
-        <div class="column" ng-class="{ sortable: column.orderByProperty, activeSort: vm.orderBy === column.orderByProperty, reversedSort: vm.reverse }" ng-repeat="column in vm.columns" ng-click="vm.sort(column.orderByProperty)">{{ column.label }}</div>
+        <div class="column {{ column.label }}" ng-class="{ sortable: column.orderByProperty, activeSort: vm.orderBy === column.orderByProperty, reversedSort: vm.reverse }" ng-repeat="column in vm.columns" ng-click="vm.sort(column.orderByProperty)">{{ column.label }}</div>
     </li>
     <li class="activity-log-row" ng-repeat="activity in vm.logs | filter: vm.filterByApp | orderBy:vm.orderBy:vm.reverse as filteredResults track by activity.id">
-        <div class="column date">{{ activity.date | date }}</div>
-        <div class="column user">{{ activity.userEmail }}</div>
-        <div class="column cycle">{{ activity.cycleName }}</div>
-        <div class="column vendor">{{ activity.vendorName }}</div>
-        <div class="column product">{{ activity.productName }}</div>
-        <div class="column library">{{ activity.libraryName }}</div>
-        <div class="column action">{{ activity.actionDescription }}</div>
+        <div class="column Date">{{ activity.date | date }}</div>
+        <div class="column User">{{ activity.userEmail }}</div>
+        <div class="column Cycle">{{ activity.cycleName }}</div>
+        <div class="column Vendor">{{ activity.vendorName }}</div>
+        <div class="column Product">{{ activity.productName }}</div>
+        <div class="column Library">{{ activity.libraryName }}</div>
+        <div class="column Action">{{ activity.actionDescription }}</div>
     </li>
 </ul>

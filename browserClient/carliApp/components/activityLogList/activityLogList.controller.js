@@ -73,7 +73,7 @@ function activityLogListController(config, controllerBaseService, activityLogSer
                 orderByProperty: 'productName'
             },
             {
-                label: "library",
+                label: "Library",
                 orderByProperty: 'libraryName'
             },
             {
