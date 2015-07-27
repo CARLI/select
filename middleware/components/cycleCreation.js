@@ -6,6 +6,7 @@ var config = require( '../../config' );
 var CouchUtils = require('../../CARLI/Store/CouchDb/Utils');
 var cycleRepository = require('../../CARLI/Entity/CycleRepository');
 var offeringRepository = require('../../CARLI/Entity/OfferingRepository');
+var productRepository = require('../../CARLI/Entity/ProductRepository');
 var Store = require( '../../CARLI/Store' );
 var StoreModule = require( '../../CARLI/Store/CouchDb/Store');
 var vendorRepository = require('../../CARLI/Entity/VendorRepository');
@@ -24,6 +25,7 @@ function useAdminCouchCredentials() {
     couchUtils = CouchUtils(adminStoreOptions);
     cycleRepository.setStore(Store(StoreModule(adminStoreOptions)));
     offeringRepository.setStore(Store(StoreModule(adminStoreOptions)));
+    productRepository.setStore(Store(StoreModule(adminStoreOptions)));
     vendorRepository.setStore(Store(StoreModule(adminStoreOptions)));
     vendorStatusRepository.setStore(Store(StoreModule(adminStoreOptions)));
 }
