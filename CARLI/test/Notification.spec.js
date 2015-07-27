@@ -42,7 +42,7 @@ describe('The NotificationRepository', function(){
             .then(expectTargetEntityToBeaLibrary);
 
         function expectTargetEntityToBeaLibrary( notification ){
-            return expect(notification.targetEntity.type).to.equal('LibraryNonCrm');
+            return expect(notification.targetEntity.type).to.equal('Library');
         }
     });
 
