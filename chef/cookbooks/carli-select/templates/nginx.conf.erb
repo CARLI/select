@@ -26,6 +26,7 @@ http {
             try_files $uri /carliApp/index.html =404;
         }
         location /api/ {
+            rewrite ^/api/(.*)$ /$1 break;
             proxy_pass <%= node['carli']['nginx']['middleware_url'] %>;
             proxy_cookie_domain ~.* <%= node['carli']['nginx']['cookie_domain'] %>;
         }
@@ -49,6 +50,7 @@ http {
             try_files $uri /carliApp/index.html =404;
         }
         location /api/ {
+            rewrite ^/api/(.*)$ /$1 break;
             proxy_pass <%= node['carli']['nginx']['middleware_url'] %>;
             proxy_cookie_domain ~.* <%= node['carli']['nginx']['cookie_domain'] %>;
         }
@@ -72,6 +74,7 @@ http {
             try_files $uri <%= node['carli']['nginx']['library_app']['entrypoint'] %> =404;
         }
         location /api/ {
+            rewrite ^/api/(.*)$ /$1 break;
             proxy_pass <%= node['carli']['nginx']['middleware_url'] %>;
             proxy_cookie_domain ~.* <%= node['carli']['nginx']['cookie_domain'] %>;
         }
