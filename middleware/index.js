@@ -1,7 +1,8 @@
 var cluster = require('cluster');
 
-// var webWorkerCount = require('os').cpus().length;
-var expressWorkerCount = 4;
+process.chdir(__dirname);
+
+var expressWorkerCount = require('os').cpus().length;
 var expressWorkerSetup = { exec: './runExpress.js' };
 var cycleDatabaseWorkerSetup = { exec: './cycleDatabaseWorker.js' };
 var synchronizationWorkerSetup = { exec: './synchronizationWorker.js' };
