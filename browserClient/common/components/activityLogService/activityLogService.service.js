@@ -12,7 +12,9 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
         logCycleUpdate: logCycleUpdate,
         logEntityAdded: logEntityAdded,
         logEntityModified: logEntityModified,
-        logOfferingModified: logOfferingModified
+        logOfferingModified: logOfferingModified,
+        logOtpPurchase: logOtpPurchase,
+        logOtpPurchaseCancelled: logOtpPurchaseCancelled
     };
 
     function logActivity( activityLog ){
@@ -96,6 +98,36 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
         return logActivity(activity);
     }
 
+    function logOtpPurchase(offering, appOptional){
+        var app = appOptional || 'staff';
+        var activity = {
+            actionDescription: offering.product.name + ' selected (by ' + app + ')',
+            app: app,
+            category: 'selectionAdded'
+        };
+        activity.cycleId = cycle.id;
+        activity.cycleName = cycle.name;
+
+        addEntityProperties(activity, offering);
+
+        return logActivity(activity);
+    }
+
+    function logOtpPurchaseCancelled(offering, appOptional){
+        var app = appOptional || 'staff';
+        var activity = {
+            actionDescription: offering.product.name + ' cancelled (by ' + app + ')',
+            app: app,
+            category: 'selectionRemoved'
+        };
+        activity.cycleId = cycle.id;
+        activity.cycleName = cycle.name;
+
+        addEntityProperties(activity, offering);
+
+        return logActivity(activity);
+    }
+
     function addEntityProperties(activityData, entity){
         if ( entity.type === 'Library' ){
             activityData.libraryId = entity.id;
@@ -129,6 +161,5 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
         }
         activityData.affectedEntityId = entity.id || '';
         activityData.revision = entity._rev || '';
-
     }
 }
