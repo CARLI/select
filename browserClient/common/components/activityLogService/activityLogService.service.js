@@ -128,6 +128,14 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
         return logActivity(activity);
     }
 
+    function logLibrarySelectedProduct(offering){
+        console.log('Log Library Selected ', offering);
+    }
+
+    function logLibraryRemovedProduct(offering){
+        console.log('Log Library Removed ', offering);
+    }
+
     function addEntityProperties(activityData, entity){
         if ( entity.type === 'Library' ){
             activityData.libraryId = entity.id;
