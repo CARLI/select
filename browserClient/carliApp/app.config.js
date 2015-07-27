@@ -3,6 +3,7 @@ angular.module('carli.app', [
     'ngAnimate',
     'ngRoute',
     'ngSanitize',
+    'common.activityLogService',
     'common.auth',
     'common.alerts',
     'common.config',
