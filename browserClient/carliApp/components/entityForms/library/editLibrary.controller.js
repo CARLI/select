@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.library')
     .controller('editLibraryController', editLibraryController);
 
-function editLibraryController( $scope, $rootScope, alertService, entityBaseService, errorHandler, libraryService ) {
+function editLibraryController( $scope, $rootScope, activityLogService, alertService, entityBaseService, errorHandler, libraryService ) {
     var vm = this;
 
     vm.libraryId = $scope.libraryId;
@@ -66,6 +66,7 @@ function editLibraryController( $scope, $rootScope, alertService, entityBaseServ
                 alertService.putAlert('Library updated', {severity: 'success'});
                 resetLicenseForm();
                 afterSubmitCallback();
+                return logUpdateActivity();
             })
             .catch(errorHandler);
         }
@@ -74,6 +75,7 @@ function editLibraryController( $scope, $rootScope, alertService, entityBaseServ
                 alertService.putAlert('Library updated', {severity: 'success'});
                 resetLicenseForm();
                 afterSubmitCallback();
+                return logAddActivity();
             })
             .catch(errorHandler);
         }
@@ -92,5 +94,11 @@ function editLibraryController( $scope, $rootScope, alertService, entityBaseServ
         }
     }
 
+    function logUpdateActivity(){
+        return activityLogService.logEntityModified(vm.library);
+    }
 
+    function logAddActivity(){
+        return activityLogService.logEntityAdded(vm.library);
+    }
 }

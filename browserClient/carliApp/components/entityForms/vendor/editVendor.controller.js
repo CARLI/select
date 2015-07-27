@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.vendor')
     .controller('editVendorController', editVendorController);
 
-function editVendorController( $scope, $rootScope, entityBaseService, alertService, cycleService, errorHandler, licenseService, productService, vendorService ) {
+function editVendorController( $scope, $rootScope, activityLogService, entityBaseService, alertService, cycleService, errorHandler, licenseService, productService, vendorService ) {
     var vm = this;
 
     vm.vendorId = $scope.vendorId;
@@ -136,6 +136,7 @@ function editVendorController( $scope, $rootScope, entityBaseService, alertServi
                     resetVendorForm();
                     hideModal();
                     afterSubmitCallback();
+                    return logUpdateActivity();
                 })
                 .catch(errorHandler);
         }
@@ -146,6 +147,7 @@ function editVendorController( $scope, $rootScope, entityBaseService, alertServi
                     resetVendorForm();
                     hideModal();
                     afterSubmitCallback();
+                    return logAddActivity();
                 })
                 .catch(errorHandler);
         }
@@ -178,5 +180,13 @@ function editVendorController( $scope, $rootScope, entityBaseService, alertServi
 
     function _entityIsActive( entity ){
         return entity && entity.isActive;
+    }
+
+    function logUpdateActivity(){
+        return activityLogService.logEntityModified(vm.vendor);
+    }
+
+    function logAddActivity(){
+        return activityLogService.logEntityAdded(vm.vendor);
     }
 }

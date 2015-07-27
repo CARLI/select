@@ -17,7 +17,7 @@
       "type": "string"
     },
     "userEmail": {
-      "description": "The email address of the did the activity",
+      "description": "The email address of the user that did the activity",
       "type": "string"
     },
     "cycleId": {
@@ -66,10 +66,19 @@
       "type": "string",
       "enum": [
         "cycleStatus",
-        "added",
-        "modified",
-        "selected"
+        "staffAdded",
+        "staffModified",
+        "selected",
+        "vendorModified"
       ]
+    },
+    "affectedEntityId": {
+      "description": "Track the couch ID of the entity that was modified",
+      "type": "string"
+    },
+    "revision": {
+      "description": "The revision number of the entity before the activity modified it",
+      "type": "string"
     }
   },
   "required": [ "date", "userName", "userEmail", "actionDescription", "app" ]

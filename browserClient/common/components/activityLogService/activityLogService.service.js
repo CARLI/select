@@ -9,7 +9,10 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
         logActivity: logActivity,
         listActivityBetween: listActivityBetween,
         listActivitySince: listActivitySince,
-        logCycleUpdate: logCycleUpdate
+        logCycleUpdate: logCycleUpdate,
+        logEntityAdded: logEntityAdded,
+        logEntityModified: logEntityModified,
+        logOfferingModified: logOfferingModified
     };
 
     function logActivity( activityLog ){
@@ -43,5 +46,89 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
         });
     }
 
+    function logEntityAdded(entity){
+        var activity = {
+            actionDescription: description(),
+            app: 'staff',
+            category: 'staffAdded'
+        };
 
+        addEntityProperties(activity, entity);
+
+        return logActivity(activity);
+
+        function description(){
+            return 'Added ' + entity.type + ' ' + entity.name;
+        }
+    }
+
+    function logEntityModified(entity, appOptional){
+        var app = appOptional || 'staff';
+        var activity = {
+            actionDescription: description(),
+            app: app,
+            category: modificationCategoryForApp(app)
+        };
+
+        addEntityProperties(activity, entity);
+
+        return logActivity(activity);
+
+        function description(){
+            return 'Modified ' + entity.type + ' data ' + (entity.type === 'License' ? 'for ' + entity.name : '');
+        }
+
+        function modificationCategoryForApp(whichApp){
+            return whichApp === 'vendor' ? 'vendorModified' : 'staffModified';
+        }
+    }
+
+    function logOfferingModified(offering, cycle){
+        var activity = {
+            actionDescription: 'Modified offering data',
+            app: 'staff',
+            category: 'staffModified'
+        };
+        addEntityProperties(activity, offering);
+        activity.cycleId = cycle.id;
+        activity.cycleName = cycle.name;
+
+        return logActivity(activity);
+    }
+
+    function addEntityProperties(activityData, entity){
+        if ( entity.type === 'Library' ){
+            activityData.libraryId = entity.id;
+            activityData.libraryName = entity.name;
+        }
+        else if ( entity.type === 'License' ){
+            activityData.vendorId = entity.vendor.id;
+            activityData.vendorName = entity.vendor.name;
+        }
+        else if ( entity.type === 'Product' ){
+            activityData.cycleId = cycle.id;
+            activityData.cycleName = cycle.name;
+            activityData.productId = entity.id;
+            activityData.productName = entity.name;
+            activityData.vendorId = entity.vendor.id;
+            activityData.vendorName = entity.vendor.name;
+        }
+        else if ( entity.type === 'Offering' ){
+            activityData.libraryId = entity.library.id;
+            activityData.libraryName = entity.library.name;
+            activityData.productId = entity.product.id;
+            activityData.productName = entity.product.name;
+            activityData.vendorId = entity.vendorId;
+        }
+        else if ( entity.type === 'Vendor' ){
+            activityData.vendorId = entity.id;
+            activityData.vendorName = entity.name;
+        }
+        else {
+            console.log('** warning: logging activity about unknown entity type '+entity.type, entity);
+        }
+        activityData.affectedEntityId = entity.id || '';
+        activityData.revision = entity._rev || '';
+
+    }
 }

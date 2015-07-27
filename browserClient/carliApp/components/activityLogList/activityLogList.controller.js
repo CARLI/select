@@ -80,6 +80,6 @@ function activityLogListController(config, controllerBaseService, activityLogSer
                 label: "Action",
                 orderByProperty: 'action'
             }
-        ]
+        ];
     }
 }
