@@ -10,6 +10,8 @@ var Entity = require('../Entity')
   , _ = require('lodash')
   ;
 
+
+var storeOptions = {};
 var LibraryStatusRepository = Entity('LibraryStatus');
 
 var propertiesToTransform = [/*'library'*/];
@@ -91,7 +93,7 @@ function setCycle(cycle) {
     if (cycle === undefined) {
         throw Error("Cycle is required");
     }
-    LibraryStatusRepository.setStore(getStoreForCycle(cycle));
+    setStore(getStoreForCycle(cycle, storeOptions));
 }
 
 function markLibrarySelectionsComplete( libraryId, cycle ){
@@ -124,8 +126,9 @@ function getStatusesForAllLibraries( cycle ){
 }
 
 function setStore(store) {
+    storeOptions = store.getOptions();
     LibraryStatusRepository.setStore(store);
-    couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+    couchUtils = require('../Store/CouchDb/Utils')(storeOptions);
 }
 
 var functionsToAdd = {};
