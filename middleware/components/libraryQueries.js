@@ -28,11 +28,19 @@ function listSelectionsForLibraryFromCycle( libraryId, cycleId ){
         return Q.all(offeringsList.map(loadProduct));
 
         function loadProduct(offering){
-            return productRepository.load(offering.product.id, cycle)
+            return productRepository.load(productId(), cycle)
                 .then(function(product){
                     offering.product = product;
                     return offering;
+                })
+                .catch(function(err){
+                    console.log('error expanding product '+err.message);
                 });
+
+            function productId(){
+                return typeof offering.product === 'string' ? offering.product : offering.product.id;
+            }
+
         }
     }
 }
