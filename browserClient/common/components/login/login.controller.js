@@ -111,7 +111,9 @@ function loginController ($q, $rootScope, $location, alertService, authService, 
 
     function redirectAfterLogin() {
         var returnTo = getReturnTo() || '/dashboard';
-        $location.url(returnTo);
+        if (returnTo.indexOf('/reset') !== 0) {
+            $location.url(returnTo);
+        }
     }
 
     function getReturnTo() {
