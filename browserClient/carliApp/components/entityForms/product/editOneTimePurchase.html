@@ -1,5 +1,13 @@
 <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="oneTimePurchasePricingForm" warn-if-unsaved>
 
+    <div class="header">
+        <fieldset ng-show="!vm.newProduct">
+            <button type="button" class="carli-button save-button" data-dismiss="modal" busy-click="vm.rememberOtpFields()">
+                Save
+            </button>
+        </fieldset>
+    </div>
+
     <div class="page-header">
         <h1 ng-show="vm.newProduct">{{ vm.product.name }}</h1>
     </div>
