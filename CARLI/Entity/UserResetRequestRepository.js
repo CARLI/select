@@ -23,7 +23,7 @@ var userResetRequestStoreOptions = {
 };
 UserResetRequestRepository.setStore( Store( StoreModule(userResetRequestStoreOptions) ) );
 
-function createRequest( email ){
+function createRequest( email, baseUrl ){
     var resetRequest = {
         email: email,
         key: generateNonce(),
@@ -59,7 +59,7 @@ function createRequest( email ){
         function sendEmail(template) {
             var variables = {
                 user: user,
-                resetLink: config.getWebBaseUrl() + '/reset/' + resetRequest.key
+                resetLink: baseUrl + '/reset/' + resetRequest.key
             };
             return notifications.sendNotification(resetRequest.email, template, variables);
         }
