@@ -14,7 +14,10 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
         logEntityModified: logEntityModified,
         logOfferingModified: logOfferingModified,
         logOtpPurchase: logOtpPurchase,
-        logOtpPurchaseCancelled: logOtpPurchaseCancelled
+        logOtpPurchaseCancelled: logOtpPurchaseCancelled,
+        logLibrarySelectedProduct: logLibrarySelectedProduct,
+        logLibraryRemovedProduct: logLibraryRemovedProduct
+
     };
 
     function logActivity( activityLog ){
@@ -91,7 +94,9 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
             app: 'staff',
             category: 'staffModified'
         };
+
         addEntityProperties(activity, offering);
+        
         activity.cycleId = cycle.id;
         activity.cycleName = cycle.name;
 
@@ -105,10 +110,11 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
             app: app,
             category: 'selectionAdded'
         };
-        activity.cycleId = cycle.id;
-        activity.cycleName = cycle.name;
 
         addEntityProperties(activity, offering);
+
+        activity.cycleId = cycleId(offering);
+        activity.cycleName = cycleName(offering) || 'One Time Purchases';
 
         return logActivity(activity);
     }
@@ -120,20 +126,43 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
             app: app,
             category: 'selectionRemoved'
         };
-        activity.cycleId = cycle.id;
-        activity.cycleName = cycle.name;
 
         addEntityProperties(activity, offering);
+
+        activity.cycleId = cycleId(offering);
+        activity.cycleName = cycleName(offering) || 'One Time Purchases';
 
         return logActivity(activity);
     }
 
-    function logLibrarySelectedProduct(offering){
-        console.log('Log Library Selected ', offering);
+    function logLibrarySelectedProduct(offering, cycle){
+        var activity = {
+            actionDescription: offering.product.name + ' selected by library',
+            app: 'library',
+            category: 'selectionAdded'
+        };
+
+        addEntityProperties(activity, offering);
+
+        activity.cycleId = cycle.id;
+        activity.cycleName = cycle.name;
+
+        return logActivity(activity);
     }
 
-    function logLibraryRemovedProduct(offering){
-        console.log('Log Library Removed ', offering);
+    function logLibraryRemovedProduct(offering, cycle){
+        var activity = {
+            actionDescription: offering.product.name + ' removed by library',
+            app: 'library',
+            category: 'selectionRemoved'
+        };
+
+        addEntityProperties(activity, offering);
+
+        activity.cycleId = cycle.id;
+        activity.cycleName = cycle.name;
+
+        return logActivity(activity);
     }
 
     function addEntityProperties(activityData, entity){
@@ -159,6 +188,9 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
             activityData.productId = entity.product.id;
             activityData.productName = entity.product.name;
             activityData.vendorId = entity.vendorId;
+            if ( typeof entity.product.vendor === 'object' ){
+                activityData.vendorName = entity.product.vendor.name
+            }
         }
         else if ( entity.type === 'Vendor' ){
             activityData.vendorId = entity.id;
@@ -169,5 +201,20 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
         }
         activityData.affectedEntityId = entity.id || '';
         activityData.revision = entity._rev || '';
+    }
+
+    function cycleId(offering){
+        if ( typeof offering.cycle === 'string' ){
+            return offering.cycle;
+        }
+        else {
+            return offering.cycle.id;
+        }
+    }
+
+    function cycleName(offering){
+        if ( typeof offering.cycle === 'object' ){
+            return offering.cycle.name;
+        }
     }
 }
