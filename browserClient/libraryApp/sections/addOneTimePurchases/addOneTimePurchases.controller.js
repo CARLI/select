@@ -148,7 +148,7 @@ function addOneTimePurchasesController( $q, $window, config, activityLogService,
 
                 return offeringService.update(offering)
                     .then(function(){
-                        return activityLogService.logOtpPurchase(offering);
+                        return activityLogService.logOtpPurchase(offering, 'library');
                     });
             }
             else {

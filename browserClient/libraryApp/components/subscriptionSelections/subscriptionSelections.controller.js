@@ -118,7 +118,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, cycl
     function selectAndUpdateProduct(offering, users){
         selectProduct(offering, users);
         return updateOffering(offering)
-            .then(logProductRemoved);
+            .then(logProductSelected);
     }
 
     function selectLastYearsSelections(){
@@ -226,7 +226,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, cycl
     function unSelectAndUpdateProduct(offering){
         delete offering.selection;
         return updateOffering(offering)
-            .then(logProductSelected);
+            .then(logProductRemoved);
     }
 
     function updateOffering( offering ){
@@ -325,11 +325,11 @@ function subscriptionSelectionsController( $q, $window, activityLogService, cycl
     }
 
     function logProductSelected(offering){
-        return activityLogService.logLibrarySelectedProduct(offering);
+        return activityLogService.logLibrarySelectedProduct(offering, vm.cycle);
     }
 
     function logProductRemoved(offering){
-        return activityLogService.logLibrarySelectedProduct(offering);
+        return activityLogService.logLibraryRemovedProduct(offering, vm.cycle);
     }
 
 }
