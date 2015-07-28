@@ -9,6 +9,7 @@ module.exports = function (grunt) {
         'crmQueries',
         'currentEnvironment',
         'invoiceNumberGeneration',
+        'notifications',
         'request'
     ];
 
