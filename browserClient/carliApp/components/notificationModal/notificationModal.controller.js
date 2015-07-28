@@ -1,7 +1,7 @@
 angular.module('carli.notificationModal')
 .controller('notificationModalController', notificationModalController);
 
-function notificationModalController($q, $rootScope, $scope, alertService, errorHandler, notificationService, notificationModalService, notificationTemplateService) {
+function notificationModalController($q, $filter, $rootScope, $scope, alertService, errorHandler, notificationService, notificationModalService, notificationTemplateService) {
     var vm = this;
     var generator = null;
 
@@ -73,7 +73,7 @@ function notificationModalController($q, $rootScope, $scope, alertService, error
         function populateRecipients(draftNotification) {
             generator = notificationService.generateDraftNotification(vm.template, message);
             return generator.getRecipients().then(function (recipients) {
-                vm.recipients = recipients;
+                vm.recipients = $filter('orderBy')(recipients, 'label');
                 return draftNotification;
             });
         }
