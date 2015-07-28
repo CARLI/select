@@ -112,10 +112,6 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
         }
     }
 
-    function getVendorPricingStatus(vendor) {
-        return "No activity";
-    }
-
     function setOfferingEditable( offering ){
         vm.isEditing[offering.id] = true;
     }
