@@ -7,7 +7,8 @@ function quickPricingSiteController($rootScope){
     vm.quickPricingArguments = {
         mode: 'dollarAmount',
         dollarValue: null,
-        percentValue: null
+        percentValue: null,
+        byFteValue: null
     };
 
     vm.goToStep2 = goToStep2;
@@ -37,6 +38,9 @@ function quickPricingSiteController($rootScope){
         }
         if (vm.quickPricingArguments.mode == 'percentageIncrease') {
             vm.quickPricingCallback('percentageIncrease', vm.quickPricingArguments.percentValue);
+        }
+        if (vm.quickPricingArguments.mode == 'byFte' ){
+            vm.quickPricingCallback('byFte', vm.quickPricingArguments.byFteValue);
         }
     }
 
