@@ -37,6 +37,10 @@
         "type": "string",
         "enum": ["draft", "sent"]
     },
+    "dateCreated": {
+      "description": "When the draft was created",
+      "$ref": "./Date.json"
+    },
     "dateSent": {
         "$ref": "./Date.json"
     },

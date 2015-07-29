@@ -7,6 +7,7 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
     var datePickerFormat = 'M/D/YY';
 
     vm.apiPath = config.getMiddlewareUrl();
+    vm.defaultSort = 'dateCreated';
     vm.filter = 'all';
 
     vm.previewCsv = previewCsv;
@@ -20,7 +21,7 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
     vm.deleteAllDrafts = deleteAllDrafts;
     vm.formatSummaryTotal = formatSummaryTotal;
 
-    controllerBaseService.addSortable(vm, vm.defaultSort || 'subject');
+    controllerBaseService.addSortable(vm, vm.defaultSort || 'dateCreated');
 
     activate();
 
@@ -31,6 +32,7 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
         function setupTemplateConfigurationForMode(){
             vm.mode = vm.mode || 'draft';
             if ( vm.mode === 'sent' ){
+                vm.orderBy = 'dateSent';
                 vm.showRemove = false;
                 vm.showDateSent = true;
                 vm.showSendAll = false;
@@ -40,6 +42,7 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
                 vm.sentFilterEndDate = moment().endOf('day').format();
             }
             else {
+                vm.orderBy = 'dateCreated';
                 vm.showRemove = true;
                 vm.showDateSent = false;
                 vm.showSendAll = true;
