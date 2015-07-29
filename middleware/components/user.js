@@ -39,8 +39,8 @@ function update(user) {
     });
 }
 
-function requestPasswordReset(email) {
-    return userResetRequestRepository.create(email);
+function requestPasswordReset(email, resetLinkBaseUrl) {
+    return userResetRequestRepository.create(email, resetLinkBaseUrl);
 }
 
 function isKeyValid(key) {

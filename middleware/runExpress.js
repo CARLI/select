@@ -250,7 +250,8 @@ function runMiddlewareServer(){
                 .catch(sendError(res));
         });
         carliMiddleware.get('/user/:email/reset', function (req, res) {
-            user.requestPasswordReset(req.params.email)
+            var baseUrl = req.protocoal + '://' + req.hostname;
+            user.requestPasswordReset(req.params.email, baseUrl)
                 .then(sendOk(res))
                 .catch(sendError(res));
         });

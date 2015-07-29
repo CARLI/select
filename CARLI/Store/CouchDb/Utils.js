@@ -415,7 +415,7 @@ module.exports = function (storeOptions) {
     }
 
     function triggerViewIndexing(databaseName) {
-        var url = storeOptions.couchDbUrl + '/' + databaseName + '/' + '_design/CARLI/_view/docTypes?stale=update_after';
+        var url = storeOptions.privilegedCouchDbUrl + '/' + databaseName + '/' + '_design/CARLI/_view/docTypes?stale=update_after';
 
         return couchRequest({url : url});
     }
