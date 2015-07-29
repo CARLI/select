@@ -137,6 +137,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
             });
 
             offeringCell.data('libraryId', library.id);
+            offeringCell.data('fte', library.fte);
             offeringCell.data('productId', product.id);
             offeringCell.addClass(product.id);
 
@@ -287,6 +288,12 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
                 } else if (mode == 'percentageIncrease') {
                     var originalValue = parseFloat($cell.text());
                     var newValue = (100 + value)/100 * originalValue;
+                    newValue = newValue.toFixed(2);
+                    $cell.find('.price').text( newValue );
+                }
+                else if (mode == 'byFte'){
+                    var fte = $cell.data('fte');
+                    var newValue = value * fte;
                     newValue = newValue.toFixed(2);
                     $cell.find('.price').text( newValue );
                 }

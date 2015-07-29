@@ -23,4 +23,16 @@
                    ng-keypress="vm.setQuickPricingMode('percentageIncrease')"><span class="percent-sign">%</span>
         </div>
     </li>
+    <li class="dollars">
+        <radio name="'priceEntryMode'" value="'byFte'" ng-model="vm.quickPricingArguments.mode">
+            <span class="sr-only">Increase price by a factor per FTE</span>
+            <span aria-hidden="true">Price per FTE</span>
+        </radio>
+        <div class="input-wrapper">
+            <label class="sr-only" for="byFteIncreaseValue">Price per FTE</label>
+            <span class="dollar-sign">$</span><input type="number" id="byFteIncreaseValue" min="0" max="100" step="0.1"
+                   ng-model="vm.quickPricingArguments.byFteValue"
+                   ng-keypress="vm.setQuickPricingMode('byFte')">
+        </div>
+    </li>
 </ul>
