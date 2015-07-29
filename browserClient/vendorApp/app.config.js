@@ -3,6 +3,7 @@ angular.module('vendor.app', [
     'cgBusy',
     'ngAnimate',
     'ngRoute',
+    'common.activityLogService',
     'common.auth',
     'common.accordion',
     'common.alerts',

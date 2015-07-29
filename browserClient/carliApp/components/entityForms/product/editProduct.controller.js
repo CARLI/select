@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.product')
     .controller('editProductController', editProductController);
 
-function editProductController( $q, $scope, $rootScope, $filter, alertService, entityBaseService, errorHandler, cycleService, libraryService, licenseService, offeringService, productService, vendorService) {
+function editProductController( $q, $scope, $rootScope, $filter, activityLogService, alertService, entityBaseService, errorHandler, cycleService, libraryService, licenseService, offeringService, productService, vendorService) {
     var vm = this;
     var otpFieldsCopy = [];
     var termFieldsCopy = {};
@@ -293,6 +293,7 @@ function editProductController( $q, $scope, $rootScope, $filter, alertService, e
                 resetProductForm().then(function(){
                     hideProductModal();
                     afterSubmitCallback();
+                    return logUpdateActivity();
                 });
             })
             .catch(errorHandler);
@@ -307,6 +308,7 @@ function editProductController( $q, $scope, $rootScope, $filter, alertService, e
                 return resetProductForm().then(function(){
                     hideProductModal();
                     afterSubmitCallback();
+                    return logAddActivity();
                 });
             })
             .catch(errorHandler);
@@ -435,5 +437,13 @@ function editProductController( $q, $scope, $rootScope, $filter, alertService, e
         function findMaxPriceCapYear(priceCapsObject){
             return  1 * (Object.keys(priceCapsObject).sort().reverse()[0] || vm.year);
         }
+    }
+
+    function logUpdateActivity(){
+        return activityLogService.logEntityModified(vm.product);
+    }
+
+    function logAddActivity(){
+        return activityLogService.logEntityAdded(vm.product);
     }
 }

@@ -1,7 +1,7 @@
 angular.module('library.sections.addOneTimePurchases')
 .controller('addOneTimePurchasesController', addOneTimePurchasesController);
 
-function addOneTimePurchasesController( $q, $window, config, cycleService, offeringService, productService, userService ){
+function addOneTimePurchasesController( $q, $window, config, activityLogService, cycleService, offeringService, productService, userService ){
     var vm = this;
 
     vm.selectionStep = 'select';
@@ -146,7 +146,10 @@ function addOneTimePurchasesController( $q, $window, config, cycleService, offer
                 offering.selection.datePurchased = new Date().toJSON().slice(0, 10);
                 delete offering.selectionPendingReview;
 
-                return offeringService.update(offering);
+                return offeringService.update(offering)
+                    .then(function(){
+                        return activityLogService.logOtpPurchase(offering, 'library');
+                    });
             }
             else {
                 return $q.when();

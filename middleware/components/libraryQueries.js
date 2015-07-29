@@ -28,11 +28,19 @@ function listSelectionsForLibraryFromCycle( libraryId, cycleId ){
         return Q.all(offeringsList.map(loadProduct));
 
         function loadProduct(offering){
-            return productRepository.load(offering.product.id, cycle)
+            return productRepository.load(productId(), cycle)
                 .then(function(product){
                     offering.product = product;
                     return offering;
+                })
+                .catch(function(err){
+                    console.log('error expanding product '+err.message);
                 });
+
+            function productId(){
+                return typeof offering.product === 'string' ? offering.product : offering.product.id;
+            }
+
         }
     }
 }
@@ -47,23 +55,29 @@ function listOfferingsForLibraryWithExpandedProducts( libraryId, cycleId ){
     return cycleRepository.load(cycleId)
         .then(function(loadedCycle){
             cycle = loadedCycle;
-            console.log('listOfferingsForLibrary '+libraryId+' FromCycle '+cycle.name);
             return offeringRepository.listOfferingsForLibraryId(libraryId, cycle);
         })
         .then(populateProductsForOfferings)
         .catch(function(err){
-            console.log('Error listing selections for library '+libraryId+' from cycle '+cycle.name, err);
+            console.log('  ** Error populating products', err);
         });
 
     function populateProductsForOfferings( offeringsList ){
         return Q.all(offeringsList.map(loadProduct));
 
         function loadProduct(offering){
-            return productRepository.load(offering.product.id, cycle)
+            return productRepository.load(productId(), cycle)
                 .then(function(product){
                     offering.product = product;
                     return offering;
+                })
+                .catch(function(err){
+                    console.log('    error expanding product '+err.message);
                 });
+
+            function productId(){
+                return typeof offering.product === 'string' ? offering.product : offering.product.id;
+            }
         }
     }
 }

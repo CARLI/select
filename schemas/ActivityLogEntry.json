@@ -1,0 +1,87 @@
+{
+  "$schema": "json-schema.org/draft-04/schema",
+  "title": "ActivityLogEntry",
+  "schemaType": "ActivityLogEntry",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique identifier for the ActivityLogEntry record",
+      "type": "string"
+    },
+    "date": {
+      "description": "Timestamp when the activity was recorded",
+      "$ref": "./Date.json"
+    },
+    "userName": {
+      "description": "The name of the user who did the activity",
+      "type": "string"
+    },
+    "userEmail": {
+      "description": "The email address of the user that did the activity",
+      "type": "string"
+    },
+    "cycleId": {
+      "description": "The id of the cycle involved in the activity",
+      "type": "string"
+    },
+    "cycleName": {
+      "description": "The name of the cycle involved in the activity",
+      "type": "string"
+    },
+    "vendorId": {
+      "description": "The id of the vendor involved in the activity",
+      "type": "string"
+    },
+    "vendorName": {
+      "description": "The name of the vendor involved in the activity",
+      "type": "string"
+    },
+    "productId": {
+      "description": "The id of the product involved in the activity",
+      "type": "string"
+    },
+    "productName": {
+      "description": "The name of the product involved in the activity",
+      "type": "string"
+    },
+    "libraryId": {
+      "description": "The id of the library involved in the activity",
+      "type": "string"
+    },
+    "libraryName": {
+      "description": "The name of the library involved in the activity",
+      "type": "string"
+    },
+    "actionDescription": {
+      "description": "Text description of what the activity was",
+      "type": "string"
+    },
+    "app": {
+      "description": "Which app the activity occurred in",
+      "type": "string",
+      "enum": [ "staff", "vendor", "library", "system" ]
+    },
+    "category": {
+      "description": "General category of activity, for filtering on the list page",
+      "type": "string",
+      "enum": [
+        "cycleStatus",
+        "libraryModified",
+        "selectionAdded",
+        "selectionRemoved",
+        "staffAdded",
+        "staffModified",
+        "vendorModified"
+      ]
+    },
+    "affectedEntityId": {
+      "description": "Track the couch ID of the entity that was modified",
+      "type": "string"
+    },
+    "revision": {
+      "description": "The revision number of the entity before the activity modified it",
+      "type": "string"
+    }
+  },
+  "required": [ "date", "userName", "userEmail", "actionDescription", "app" ]
+}

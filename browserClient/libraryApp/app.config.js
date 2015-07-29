@@ -4,6 +4,7 @@ angular.module('library.app', [
     'ngAnimate',
     'ngRoute',
     'ngSanitize',
+    'common.activityLogService',
     'common.auth',
     'common.alerts',
     'common.accordion',
