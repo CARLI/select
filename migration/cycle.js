@@ -87,8 +87,8 @@ var cyclesToMigrate = [
         name: 'Fiscal Year 2014',
         cycleType: 'Fiscal Year',
         year: 2014,
-        status: 5,
-        isArchived: false,
+        status: 6,
+        isArchived: true,
         startDateForSelections: '2013-04-22',
         endDateForSelections: '2013-05-31',
         productsAvailableDate: '2014-07-01'
@@ -103,6 +103,39 @@ var cyclesToMigrate = [
         startDateForSelections: '2013-10-15',
         endDateForSelections: '2013-11-15',
         productsAvailableDate: '2014-01-01'
+    },
+    {
+        idalId: 210,
+        name: 'Fiscal Year 2015',
+        cycleType: 'Fiscal Year',
+        year: 2015,
+        status: 5,
+        isArchived: false,
+        startDateForSelections: '2014-04-15',
+        endDateForSelections: '2014-05-30',
+        productsAvailableDate: '2015-07-01'
+    },
+    {
+        idalId: 220,
+        name: 'Calendar Year 2015',
+        cycleType: 'Calendar Year',
+        year: 2015,
+        status: 5,
+        isArchived: false,
+        startDateForSelections: '2014-10-14',
+        endDateForSelections: '2014-11-14',
+        productsAvailableDate: '2015-01-01'
+    },
+    {
+        idalId: 230,
+        name: 'Fiscal Year 2016',
+        cycleType: 'Calendar Year',
+        year: 2016,
+        status: 5,
+        isArchived: false,
+        startDateForSelections: '2015-04-08',
+        endDateForSelections: '2015-05-15',
+        productsAvailableDate: '2016-07-01'
     }
 ];
 
