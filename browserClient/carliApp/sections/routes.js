@@ -7,6 +7,7 @@ angular.module('carli.routes',[
     'carli.sections.products',
     'carli.sections.libraries',
     'carli.sections.licenses',
+    'carli.sections.revisionHistory',
     'carli.sections.styleGuide',
     'carli.sections.login',
     'carli.sections.resetRequest',
@@ -125,6 +126,11 @@ angular.module('carli.routes',[
     .when('/notifications', {
         templateUrl: '/carliApp/sections/notifications/notifications.html',
         controller:  'notificationsController',
+        controllerAs:'vm'
+    })
+    .when('/revisionHistory', {
+        templateUrl: '/carliApp/sections/revisionHistory/revisionHistory.html',
+        controller:  'revisionHistoryController',
         controllerAs:'vm'
     })
     .when('/styleGuide', {

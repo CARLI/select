@@ -35,7 +35,7 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
                 offering.product.displayName = productService.getProductDisplayName(offering.product);
 
                 getOfferingTemplate().then(function (template) {
-                    offering.flagged = offeringService.getFlaggedState(offering);
+                    offering.flagged = offeringService.getFlaggedState(offering, scope.cycle);
 
                     var values = {
                         thisYear: scope.cycle.year,

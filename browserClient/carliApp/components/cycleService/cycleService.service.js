@@ -51,6 +51,9 @@ function cycleService( CarliModules, $q, errorHandler ) {
         syncDataToAllVendorDatabasesForCycle: syncDataToAllVendorDatabasesForCycle,
         listPastFourCyclesMatchingCycle: function( cycle ){
             return $q.when( cycleModule.listPastFourCyclesMatchingCycle(cycle || currentCycle) );
+        },
+        getLabelForCycleStatus: function getLabelForCycleStatus( status ){
+            return cycleModule.statusLabels[status];
         }
     };
 

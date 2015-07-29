@@ -1,5 +1,5 @@
 angular.module('carli.editOffering')
-    .directive('editOffering', function (alertService, cycleService, errorHandler, offeringService) {
+    .directive('editOffering', function (activityLogService, alertService, cycleService, errorHandler, offeringService) {
         return {
             restrict: 'E',
             scope: {
@@ -55,12 +55,13 @@ angular.module('carli.editOffering')
                         workaroundCouchStoreRevisionSmell(updatedOffering);
                         alertService.putAlert('Offering updated', {severity: 'success'});
                         vm.notifyParentOfSave(vm.offering);
+                        return logUpdateActivity();
                     })
                     .then(syncData)
                     .catch(errorHandler);
 
                 function updateOfferingFlaggedStatus( offering ){
-                    offering.flagged = offeringService.getFlaggedState(offering);
+                    offering.flagged = offeringService.getFlaggedState(offering, vm.cycle);
                     return offering;
                 }
 
@@ -92,6 +93,10 @@ angular.module('carli.editOffering')
 
             function userClickedFlag() {
                 userTouchedFlag = true;
+            }
+
+            function logUpdateActivity(){
+                return activityLogService.logOfferingModified(vm.offering, vm.cycle);
             }
         }
     });

@@ -50,6 +50,7 @@ function associateNonCrmDataWithListOfLibraries( libraryList ){
 function combineCrmDataAndNonCrmData( crmLibrary, nonCrmLibrary ){
     var result = _.extend({}, crmLibrary, nonCrmLibrary);
     result.id = crmLibrary.crmId;
+    result.type = 'Library';
     return result;
 }
 

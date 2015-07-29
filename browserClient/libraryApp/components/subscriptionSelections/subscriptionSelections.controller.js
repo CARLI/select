@@ -1,7 +1,7 @@
 angular.module('library.subscriptionSelections')
 .controller('subscriptionSelectionsController', subscriptionSelectionsController);
 
-function subscriptionSelectionsController( $q, $window, cycleService, libraryStatusService, offeringService, userService ){
+function subscriptionSelectionsController( $q, $window, activityLogService, cycleService, libraryStatusService, offeringService, userService ){
     var vm = this;
 
     vm.selectionStep = '';
@@ -117,7 +117,8 @@ function subscriptionSelectionsController( $q, $window, cycleService, librarySta
 
     function selectAndUpdateProduct(offering, users){
         selectProduct(offering, users);
-        return updateOffering(offering);
+        return updateOffering(offering)
+            .then(logProductSelected);
     }
 
     function selectLastYearsSelections(){
@@ -224,7 +225,8 @@ function subscriptionSelectionsController( $q, $window, cycleService, librarySta
 
     function unSelectAndUpdateProduct(offering){
         delete offering.selection;
-        return updateOffering(offering);
+        return updateOffering(offering)
+            .then(logProductRemoved);
     }
 
     function updateOffering( offering ){
@@ -321,4 +323,13 @@ function subscriptionSelectionsController( $q, $window, cycleService, librarySta
     function toggleProduct(product){
         vm.openProduct[product.id] = !vm.openProduct[product.id];
     }
+
+    function logProductSelected(offering){
+        return activityLogService.logLibrarySelectedProduct(offering, vm.cycle);
+    }
+
+    function logProductRemoved(offering){
+        return activityLogService.logLibraryRemovedProduct(offering, vm.cycle);
+    }
+
 }

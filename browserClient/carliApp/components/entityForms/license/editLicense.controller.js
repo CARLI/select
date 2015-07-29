@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.license')
     .controller('editLicenseController', editLicenseController);
 
-function editLicenseController( $scope, $rootScope, $location, alertService, cycleService, entityBaseService, errorHandler, licenseService, productService, vendorService ) {
+function editLicenseController( $scope, $rootScope, $location, activityLogService, alertService, cycleService, entityBaseService, errorHandler, licenseService, productService, vendorService ) {
     var vm = this;
     var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
@@ -127,6 +127,7 @@ function editLicenseController( $scope, $rootScope, $location, alertService, cyc
                     resetLicenseForm();
                     hideNewLicenseModal();
                     afterSubmitCallback();
+                    return logUpdateActivity();
                 })
                 .catch(errorHandler);
         }
@@ -137,6 +138,7 @@ function editLicenseController( $scope, $rootScope, $location, alertService, cyc
                     resetLicenseForm();
                     hideNewLicenseModal();
                     afterSubmitCallback();
+                    return logAddActivity();
                 })
                 .catch(errorHandler);
         }
@@ -160,6 +162,14 @@ function editLicenseController( $scope, $rootScope, $location, alertService, cyc
                 $location.path(path);
             });
         });
+    }
+
+    function logUpdateActivity(){
+        return activityLogService.logEntityModified(vm.license);
+    }
+
+    function logAddActivity(){
+        return activityLogService.logEntityAdded(vm.license);
     }
 }
 

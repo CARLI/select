@@ -5,6 +5,7 @@ var Q = require( 'q' );
 tv4.addFormat(formats);
 
 var schemas = {
+    ActivityLogEntry: require('../schemas/ActivityLogEntry.json'),
     Contact: require('../schemas/Contact.json'),
     Cycle: require('../schemas/Cycle.json'),
     CycleType: require('../schemas/CycleType.json'),

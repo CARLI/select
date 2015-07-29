@@ -9,6 +9,7 @@ var Entity = require('../Entity')
   , Q = require('q')
   ;
 
+var storeOptions = {};
 var ProductRepository = Entity('Product');
 
 var propertiesToTransform = ['cycle', 'vendor', 'license'];
@@ -118,7 +119,7 @@ function setCycle(cycle) {
     if (cycle === undefined) {
         throw Error("Cycle is required");
     }
-    ProductRepository.setStore(getStoreForCycle(cycle));
+    setStore(getStoreForCycle(cycle, storeOptions));
 }
 
 function getProductsById( ids, cycle ){
@@ -236,8 +237,9 @@ function getProductDetailCodeOptions(){
 }
 
 function setStore(store) {
+    storeOptions = store.getOptions();
     ProductRepository.setStore(store);
-    couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+    couchUtils = require('../Store/CouchDb/Utils')(storeOptions);
 }
 
 module.exports = {
