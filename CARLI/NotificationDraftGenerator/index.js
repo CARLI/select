@@ -657,6 +657,7 @@ function generateNotificationForEntity(entityId, customizedTemplate){
         targetEntity: entityId,
         subject: customizedTemplate.subject,
         emailBody: customizedTemplate.emailBody,
+        dateCreated: new Date().toISOString(),
         draftStatus: 'draft',
         notificationType: customizedTemplate.notificationType,
         isFeeInvoice: isAnnualAccessFeeInvoice(customizedTemplate.id)
