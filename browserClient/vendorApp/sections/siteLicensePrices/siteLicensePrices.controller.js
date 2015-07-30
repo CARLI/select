@@ -278,6 +278,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
 
 
         $('#site-pricing-grid .offering').each(function(i, cell) {
+            var newValue = 0;
             var $cell = $(cell);
             if (selectedLibraryIds.indexOf($cell.data('libraryId').toString()) != -1 &&
                 selectedProductIds.indexOf($cell.data('productId')) != -1) {
@@ -287,13 +288,13 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
                     $cell.find('.price').text(newValue);
                 } else if (mode == 'percentageIncrease') {
                     var originalValue = parseFloat($cell.text());
-                    var newValue = (100 + value)/100 * originalValue;
+                    newValue = (100 + value)/100 * originalValue;
                     newValue = newValue.toFixed(2);
                     $cell.find('.price').text( newValue );
                 }
                 else if (mode == 'byFte'){
                     var fte = $cell.data('fte');
-                    var newValue = value * fte;
+                    newValue = value * fte;
                     newValue = newValue.toFixed(2);
                     $cell.find('.price').text( newValue );
                 }
