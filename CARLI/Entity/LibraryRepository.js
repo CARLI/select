@@ -34,8 +34,8 @@ function associateNonCrmDataWithListOfLibraries( libraryList ){
         .then(function(nonCrmData){
             var nonCrmDataByCrmId = {};
 
-            nonCrmData.forEach(function(nonCrmLibrary){
-                nonCrmDataByCrmId[nonCrmLibrary.crmId] = nonCrmLibrary;
+            nonCrmData.forEach(function (nonCrmLibrary) {
+                nonCrmDataByCrmId[ nonCrmLibrary.crmId ] = nonCrmLibrary;
             });
 
             return nonCrmDataByCrmId;

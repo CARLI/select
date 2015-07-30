@@ -1,7 +1,7 @@
 angular.module('vendor.sections.siteLicensePrices')
     .controller('siteLicensePricesController', siteLicensePricesController);
 
-function siteLicensePricesController($scope, $q, $filter, authService, cycleService, libraryService, offeringService, productService, siteLicensePricesCsv, vendorStatusService){
+function siteLicensePricesController($scope, $q, $filter, alertService, authService, cycleService, libraryService, offeringService, productService, siteLicensePricesCsv, vendorStatusService){
     var vm = this;
 
     vm.loadingPromise = null;
@@ -14,7 +14,10 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
     vm.saveOfferings = saveOfferings;
     vm.downloadCsv = downloadCsv;
     vm.checkViewOption = checkViewOption;
-
+    vm.isCommentModeEnabled = false;
+    vm.toggleCommentMode = function () {
+        vm.isCommentModeEnabled = !vm.isCommentModeEnabled;
+    };
 
     activate();
 
@@ -149,15 +152,38 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
         }
     }
 
+    function showCommentModalFor(product) {
+        alertService.putAlert('TODO: open the comment modal');
+        console.log('showing comment modal', product);
+    }
+
     function createReadOnlyOfferingCell(price) {
         var cell = $('<div tabindex="0" class="price" role="gridcell">'+price+'</div>');
-        cell.on('focus', makeEditable);
+
+        cell.on('focus', onClick);
         return cell;
 
-        function makeEditable() {
-            var price = $(this).text();
+        function onClick() {
+            var clickAction = vm.isCommentModeEnabled ? editComment : makeEditable;
+            clickAction(this);
+        }
+
+        function editComment() {
+            var libraryId = cell.parent().data('libraryId');
+            var productId = cell.parent().data('productId');
+            var offering = vm.offeringsForLibraryByProduct[productId][libraryId];
+
+            showCommentModalFor(offering);
+            $scope.$apply(function() {
+                vm.isCommentModeEnabled = false;
+            });
+        }
+
+        function makeEditable(element) {
+            var $this = $(element);
+            var price = $this.text();
             var input = createEditableOfferingCell(price);
-            $(this).replaceWith(input);
+            $this.replaceWith(input);
             input.focus().select();
         }
     }
