@@ -92,6 +92,7 @@ function replicateDesignDocsFrom(source) {
             return replicateMainDesignDoc()
                 .then(replicateUserDesignDoc)
                 .then(replicateResetRequestDesignDoc)
+                .then(replicateActivityLogDesignDoc)
                 .then(listCycleDbs)
                 .then(replicateCycleDesignDocs);
 
@@ -116,6 +117,14 @@ function replicateDesignDocsFrom(source) {
                     .designDocsOnly()
                     .from(dbInfo[source].baseUrl + '/user-reset-requests')
                     .to(dbInfo[target].baseUrl + '/user-reset-requests')
+                    .replicate()
+            }
+
+            function replicateActivityLogDesignDoc() {
+                return replicator()
+                    .designDocsOnly()
+                    .from(dbInfo[source].baseUrl + '/activity-log')
+                    .to(dbInfo[target].baseUrl + '/activity-log')
                     .replicate()
             }
         }
