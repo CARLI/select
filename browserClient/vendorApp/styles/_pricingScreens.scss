@@ -1,3 +1,5 @@
+$background-pricing-old: rgba(224,180,237,.25);
+$background-flagged-flagged: rgba(255,18,0,.1);
 
 .pricing-container {
     @include flexbox();
@@ -72,10 +74,21 @@
                         height: 29px;
                         padding: 0.5rem 1rem;
                     }
+                }
+            }
 
-                    .price.no-pricing {
-                        background: #fefefe;
-                    }
+            .offering {
+                background-color: $background-pricing-old;
+                color: $purple;
+
+                &.updated {
+                    background-color: $white;
+                    color: $black;
+                }
+
+                &.flagged {
+                    background-color: rgba(255,18,0,.1);
+                    color: $red;
                 }
             }
         }
