@@ -7,7 +7,6 @@
                     <fa name="angle-down"></fa><span class="sr-only">Open offerings for {{ ::vendor.name }}</span>
                 </button>
                 {{ ::vendor.name }}
-                <span class="vendor-status">{{ ::vm.getVendorPricingStatus(vendor) }}</span>
             </div>
             <div class="content" ng-if="vm.openAccordion === vendor.id">
                 <ul class="product-list">
