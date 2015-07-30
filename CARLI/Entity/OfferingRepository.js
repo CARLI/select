@@ -139,6 +139,7 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
         function transformOfferingsBatch(offeringsBatch) {
             offeringsBatch.forEach(function (offering) {
                 copyOfferingHistoryForYear(offering, sourceCycle.year);
+                removeVendorModificationTracking(offering);
             });
             var updatePromises = [];
             return couchUtils.bulkUpdateDocuments(newCycle.getDatabaseName(), offeringsBatch);
@@ -185,6 +186,11 @@ function copyOfferingHistoryForYear(offering, year) {
         offering.history[year].selection = _.clone(offering.selection);
     }
     return offering;
+}
+
+function removeVendorModificationTracking(offering){
+    delete offering.siteLicensePriceUpdated;
+    delete offering.suPricesUpdated;
 }
 
 function loadOffering( offeringId, cycle ){
@@ -263,6 +269,7 @@ function setSuPricingForAllLibrariesForProduct( productId, newSuPricing, cycle )
         function applyNewSuPricingToOffering( offering ){
             offering.pricing = offering.pricing || {};
             offering.pricing.su = newSuPricing.slice(0);
+            offering.suPricesUpdated = new Date().toISOString();
             return offering;
         }
     }
