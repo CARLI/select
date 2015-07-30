@@ -59,12 +59,12 @@ angular.module('carli.editOffering')
                         vm.notifyParentOfSave(vm.offering);
                     })
                     .then(syncData)
-                    .then(replaceLibraryCommentsIfRemoved(tempLibraryComments))
+                    .then(replaceLibraryCommentsIfRemoved)
                     .catch(errorHandler);
 
-                function replaceLibraryCommentsIfRemoved(comments) {
-                    if (comments === vm.offering.product.comments) {
-                        vm.offering.libraryComments = comments;
+                function replaceLibraryCommentsIfRemoved() {
+                    if (tempLibraryComments === vm.offering.product.comments) {
+                        vm.offering.libraryComments = tempLibraryComments;
                     }
                 }
 
