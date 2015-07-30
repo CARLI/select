@@ -20,7 +20,12 @@ function vendorStatusService( CarliModules, $q, authService, errorHandler ) {
     };
 
     function updateVendorStatus( vendorStatus, cycle ){
-        return $q.when( vendorStatusModule.update(vendorStatus, cycle) );
+        if ( vendorStatus.id ){
+            return $q.when( vendorStatusModule.update(vendorStatus, cycle) );
+        }
+        else {
+            return $q.when( vendorStatusModule.create(vendorStatus, cycle) );
+        }
     }
 
     function updateVendorStatusActivity( activityMessage, vendorId, cycle ){

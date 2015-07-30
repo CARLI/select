@@ -13,6 +13,7 @@ function simultaneousUserPricesController($scope, $q, $filter, authService, cycl
     vm.suPricingByProduct = {};
     vm.suLevels = [];
     vm.totalProducts = 0;
+    vm.updatesByProductId = {};
 
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.addSuPricingLevel = addSuPricingLevel;
@@ -50,8 +51,9 @@ function simultaneousUserPricesController($scope, $q, $filter, authService, cycl
                 var representativeOffering = offering || {};
                 var pricingForProduct = representativeOffering.pricing || {};
                 var suPricingForProduct = pricingForProduct.su || [];
-
                 vm.suPricingByProduct[product.id] = convertArrayOfPricingObjectsToMappingObject(suPricingForProduct);
+
+                vm.updatesByProductId[product.id] = representativeOffering.suPricesUpdated;
 
                 return vm.suPricingByProduct[product.id];
             });
@@ -164,6 +166,10 @@ function simultaneousUserPricesController($scope, $q, $filter, authService, cycl
 
             offeringCell.data('productId', product.id);
             offeringCell.addClass(product.id);
+
+            if ( vm.updatesByProductId[product.id] ){
+                offeringCell.addClass('updated');
+            }
 
             return offeringCell;
         }

@@ -62,6 +62,14 @@
         "flagged": {
             "description": "If this is persisted it means the flag was cleared manually. If the property is absent the app computes the state.",
             "type": "boolean"
+        },
+        "siteLicensePriceUpdated": {
+            "description": "Starts empty when a new cycle is created, used to track whether the vendor has updated the pricing yet",
+            "$ref": "./Date.json"
+        },
+        "suPricesUpdated": {
+            "description": "Starts empty when a new cycle is created, used to track whether the vendor has updated the pricing yet",
+            "$ref": "./Date.json"
         }
     },
     "required": [ "cycle", "library", "product" ]
