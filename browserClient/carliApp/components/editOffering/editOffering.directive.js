@@ -38,7 +38,9 @@ angular.module('carli.editOffering')
             }
 
             function saveOffering() {
+                var tempLibraryComments = "";
                 if (vm.offering.libraryComments === vm.offering.product.comments) {
+                    tempLibraryComments = vm.offering.product.comments;
                     delete vm.offering.libraryComments;
                 }
                 if (!userTouchedFlag) {
@@ -58,7 +60,14 @@ angular.module('carli.editOffering')
                         return logUpdateActivity();
                     })
                     .then(syncData)
+                    .then(replaceLibraryCommentsIfRemoved)
                     .catch(errorHandler);
+
+                function replaceLibraryCommentsIfRemoved() {
+                    if (tempLibraryComments === vm.offering.product.comments) {
+                        vm.offering.libraryComments = tempLibraryComments;
+                    }
+                }
 
                 function updateOfferingFlaggedStatus( offering ){
                     offering.flagged = offeringService.getFlaggedState(offering, vm.cycle);

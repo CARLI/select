@@ -30,7 +30,7 @@
             <div class="column">
                 <label for="vendor">Vendor</label>
                 <view-edit-typeahead ng-model="vm.product.vendor" options="vm.vendorList" edit-mode="vm.newProduct" input-id="vendor">
-                    {{ vm.product.vendor.name }}
+                    <a ng-href="/vendor/{{ vm.product.vendor.id }}">{{ vm.product.vendor.name }}</a>
                 </view-edit-typeahead>
 
                 <label for="productUrl">Product URL <aside role="note">(Vendor can provide)</aside></label>
