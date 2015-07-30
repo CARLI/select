@@ -141,6 +141,10 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
             offeringCell.data('productId', product.id);
             offeringCell.addClass(product.id);
 
+            if ( offering.siteLicensePriceUpdated ){
+                offeringCell.addClass('updated');
+            }
+
             return offeringCell;
         }
     }
@@ -195,6 +199,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
                 }
                 else if ( newPrice !== 0 && newPrice != offering.pricing.site ){
                     offering.pricing.site = newPrice;
+                    offering.siteLicensePriceUpdated = new Date().toISOString();
                     changedOfferings.push(offering);
                 }
             }
@@ -211,7 +216,8 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
             product: productId,
             pricing: {
                 site: newPrice
-            }
+            },
+            siteLicensePriceUpdated: new Date().toISOString()
         };
     }
 
