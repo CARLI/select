@@ -1,11 +1,29 @@
 file-upload-list {
-    border: $default-border;
-    border-radius: 8px;
     display: block;
-    margin: 2rem auto;
-    padding: 2rem;
+    margin: 1rem auto;
+    @extend .clearfix;
+
+    ul {
+        @extend .zebra-table;
+
+        li {
+            padding: 1rem;
+
+            a.file {
+                color: $purple;
+                font-size: 1rem;
+            }
+        }
+    }
 
     input[type=file]{
         display: none;
+    }
+
+    button.upload {
+        @extend .ask-button;
+        float: right;
+        margin-top: 0.5rem;
+        padding: 0.5rem;
     }
 }
