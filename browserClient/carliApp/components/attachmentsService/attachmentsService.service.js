@@ -6,6 +6,7 @@ function attachmentsService( CarliModules, $q, errorHandler ) {
     var attachmentsModule = CarliModules.Attachments;
 
     return {
+        getAttachmentUrl: attachmentsModule.getAttachmentUrl,
         listAttachments: listAttachments,
         uploadFile: uploadFile
     };

@@ -35,9 +35,7 @@
                         {{ vm.license.redactedLicenseFile }}
                     </view-edit-text-field>
 
-                    <div class="placeholder">
-                        TODO: File upload
-                    </div>
+                    <file-upload-list document-id="vm.license.id" ng-if="vm.license.id"></file-upload-list>
 
                     <label for="fullLicenseFile">Full License</label>
                     <view-edit-text-field ng-model="vm.license.fullLicenseFile" edit-mode="vm.editable" input-id="fullLicenseFile">

@@ -3,18 +3,16 @@ angular.module('common.fileUploadList')
         return {
             restrict: 'E',
             template: [
-                '<h1>Files:</h1>',
                 '<ul>',
                 '  <li ng-repeat="file in vm.files | orderBy:vm.orderBy">',
-                '    <b>{{ file.name }}</b>',
+                '    <a ng-href="{{ file.link }}" class="file" target="_blank">{{ file.name }}</a>',
                 '  </li>',
                 '</ul>',
                 '<input type="file" ng-model="vm.fileToUpload" ng-change="vm.upload()">',
-                '<button type="button" class="upload">Upload</button>'
+                '<button type="button" class="upload">{{ vm.uploadButtonLabel }}</button>'
             ].join(''),
             scope: {
-                databaseName: '@',
-                documentId: '@'
+                documentId: '='
             },
             controller: 'fileUploadListController',
             controllerAs: 'vm',

@@ -1,8 +1,12 @@
 angular.module('common.fileUploadList')
     .controller('fileUploadListController', fileUploadListController);
 
-function fileUploadListController( attachmentsService, errorHandler ){
+function fileUploadListController( $filter, attachmentsService, errorHandler ){
     var vm = this;
+
+    vm.orderBy = 'order';
+
+    vm.uploadButtonLabel = vm.uploadButtonLabel || 'Upload new file';
 
     vm.attachFile = attachFile;
 
@@ -11,7 +15,7 @@ function fileUploadListController( attachmentsService, errorHandler ){
     function activate(){
         attachmentsService.listAttachments(vm.documentId)
             .then(function(attachmentsObject){
-                console.log('Loaded attachments', attachmentsObject);
+                vm.files = transformAttachmentsObjectToArray(attachmentsObject);
             });
     }
 
@@ -31,4 +35,17 @@ function fileUploadListController( attachmentsService, errorHandler ){
         }
     }
 
+    function transformAttachmentsObjectToArray(attachmentsObject){
+        return Object.keys(attachmentsObject).map(function(fileName){
+            var properties = attachmentsObject[fileName];
+            var fileUrl = attachmentsService.getAttachmentUrl(vm.documentId, fileName);
+
+            return {
+                link: fileUrl,
+                name: fileName,
+                size: properties['length'], //bytes
+                order: properties['revpos']
+            };
+        });
+    }
 }
