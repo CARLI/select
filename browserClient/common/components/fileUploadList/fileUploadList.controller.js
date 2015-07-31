@@ -1,7 +1,7 @@
 angular.module('common.fileUploadList')
     .controller('fileUploadListController', fileUploadListController);
 
-function fileUploadListController( $filter, attachmentsService, errorHandler ){
+function fileUploadListController( attachmentsService, errorHandler ){
     var vm = this;
 
     vm.orderBy = 'order';
@@ -13,7 +13,11 @@ function fileUploadListController( $filter, attachmentsService, errorHandler ){
     activate();
 
     function activate(){
-        attachmentsService.listAttachments(vm.documentId)
+        loadFileList();
+    }
+
+    function loadFileList(){
+        return attachmentsService.listAttachments(vm.documentId, vm.attachmentCategory)
             .then(function(attachmentsObject){
                 vm.files = transformAttachmentsObjectToArray(attachmentsObject);
             });
@@ -21,13 +25,13 @@ function fileUploadListController( $filter, attachmentsService, errorHandler ){
 
     function attachFile(fileInfo, fileContentsAsArrayBuffer){
         var fileName = fileInfo.name;
-        console.log('controller attach file '+fileName+' to '+vm.documentId);
         var fileType = fileInfo.type;
-        attachmentsService.uploadFile(vm.documentId, fileName, fileType, fileContentsAsArrayBuffer)
+        attachmentsService.uploadFile(vm.documentId, fileName, fileType, fileContentsAsArrayBuffer, vm.attachmentCategory)
             .then(attachSuccess, errorHandler, attachProgress);
 
         function attachSuccess(){
             console.log('Attachment successful!');
+            loadFileList();
         }
 
         function attachProgress(percent){
@@ -36,16 +40,29 @@ function fileUploadListController( $filter, attachmentsService, errorHandler ){
     }
 
     function transformAttachmentsObjectToArray(attachmentsObject){
-        return Object.keys(attachmentsObject).map(function(fileName){
+        var files = Object.keys(attachmentsObject).map(function(fileName){
             var properties = attachmentsObject[fileName];
             var fileUrl = attachmentsService.getAttachmentUrl(vm.documentId, fileName);
 
             return {
                 link: fileUrl,
                 name: fileName,
+                category: fileName.substring(0, fileName.indexOf('/')),
                 size: properties['length'], //bytes
                 order: properties['revpos']
             };
         });
+
+        if ( vm.attachmentCategory ){
+            files = files.filter(function(file){
+                return file.category === vm.attachmentCategory;
+            });
+
+            files.forEach(function(file){
+                file.name = file.name.substring(file.name.indexOf('/')+1);
+            });
+        }
+
+        return files;
     }
 }

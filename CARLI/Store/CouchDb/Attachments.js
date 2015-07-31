@@ -26,7 +26,7 @@ function Attachments(storeOptions) {
         listAttachments: listAttachments
     };
 
-    function setAttachment(documentId, attachmentName, contentType, content){
+    function setAttachment(documentId, attachmentName, contentType, content, optionalAttachmentCategory){
         if ( !documentId ){
             return Q.reject('setAttachment called without a document ID');
         }
@@ -42,7 +42,7 @@ function Attachments(storeOptions) {
         var putAttachmentRequestOptions = {
             body: content,
             method: 'put',
-            url: getAttachmentUrl( documentId, attachmentName ),
+            url: getAttachmentUrl( documentId, attachmentName, optionalAttachmentCategory ),
             headers: {
                 'Content-Type': contentType
             }
@@ -55,7 +55,7 @@ function Attachments(storeOptions) {
             });
     }
 
-    function getAttachment(documentId, attachmentName){
+    function getAttachment(documentId, attachmentName, optionalAttachmentCategory){
         if ( !documentId ){
             return Q.reject('setAttachment called without a document ID');
         }
@@ -66,7 +66,7 @@ function Attachments(storeOptions) {
 
         var getAttachmentRequestOptions = {
             method: 'get',
-            url: getAttachmentUrl( documentId, attachmentName )
+            url: getAttachmentUrl( documentId, attachmentName, optionalAttachmentCategory )
         };
 
         var deferred = Q.defer();
@@ -133,8 +133,8 @@ function Attachments(storeOptions) {
         return storeOptions.couchDbUrl + '/' + storeOptions.couchDbName + '/' + documentId;
     }
 
-    function getAttachmentUrl( documentId, attachmentName ){
-        return getDocumentUrl(documentId) + '/' + attachmentName;
+    function getAttachmentUrl( documentId, attachmentName, optionalAttachmentCategory ){
+        return getDocumentUrl(documentId) + '/' + ( optionalAttachmentCategory ? optionalAttachmentCategory + '/' : '') + attachmentName;
     }
 }
 

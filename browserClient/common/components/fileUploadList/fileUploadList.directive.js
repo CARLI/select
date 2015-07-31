@@ -12,7 +12,9 @@ angular.module('common.fileUploadList')
                 '<button type="button" class="upload">{{ vm.uploadButtonLabel }}</button>'
             ].join(''),
             scope: {
-                documentId: '='
+                documentId: '=',
+                attachmentCategory: '@',
+                uploadButtonLabel: '@'
             },
             controller: 'fileUploadListController',
             controllerAs: 'vm',
