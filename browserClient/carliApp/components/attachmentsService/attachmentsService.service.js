@@ -15,8 +15,8 @@ function attachmentsService( CarliModules, $q, errorHandler ) {
         return $q.when( attachmentsModule.listAttachments(documentId) );
     }
 
-    function uploadFile( documentId, fileName, fileType, fileContentsInArrayBuffer ){
-        var url = attachmentsModule.getAttachmentUrl(documentId, fileName);
+    function uploadFile( documentId, fileName, fileType, fileContentsInArrayBuffer, optionalAttachmentCategory ){
+        var url = attachmentsModule.getAttachmentUrl(documentId, fileName, optionalAttachmentCategory);
 
         return getDocumentRevision(documentId)
             .then(sendAttachmentRequest);

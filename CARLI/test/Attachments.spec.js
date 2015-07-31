@@ -10,8 +10,9 @@ var storeOptions = require( '../../config').storeOptions;
 var uuid = require('node-uuid');
 
 var attachmentsModule = null;
+var testAttachmentCategory = 'foo';
 var testAttachmentContent = 'test content ' + uuid.v4();
-var testAttachmentName = 'test attachment ' + uuid.v4();
+var testAttachmentName = 'test-attachment-' + uuid.v4();
 var testStoreOptions = testUtils.getTestDbStoreOptions();
 var textMimeType = 'text/plain';
 
@@ -77,6 +78,12 @@ context('The Attachments Module', function(){
                 .then(putAttachment)
                 .then(expectCouchAttachmentResult);
         });
+
+        it('should with when setting an category for an attachment', function(){
+            return putGenericTestDocument()
+                .then(putAttachmentWithCategory)
+                .then(expectCouchAttachmentResult);
+        });
     });
 
     describe('getAttachment', function() {
@@ -97,6 +104,15 @@ context('The Attachments Module', function(){
             return putGenericTestDocument()
                 .then(putAttachment)
                 .then(getAttachment)
+                .then(function(attachmentResults){
+                    return expect(attachmentResults).to.equal(testAttachmentContent);
+                })
+        });
+
+        it('should return the attachment content for a category', function(){
+            return putGenericTestDocument()
+                .then(putAttachmentWithCategory)
+                .then(getAttachmentWithCategory)
                 .then(function(attachmentResults){
                     return expect(attachmentResults).to.equal(testAttachmentContent);
                 })
@@ -147,6 +163,10 @@ function putAttachment(docId){
     return attachmentsModule.setAttachment(docId, testAttachmentName, textMimeType, testAttachmentContent);
 }
 
+function putAttachmentWithCategory(docId){
+    return attachmentsModule.setAttachment(docId, testAttachmentName, textMimeType, testAttachmentContent, testAttachmentCategory);
+}
+
 function expectCouchAttachmentResult(attachmentResult){
     return expect(attachmentResult).to.satisfy(couchAttachmentResponse);
 
@@ -161,3 +181,7 @@ function getAttachment(attachmentResult){
     return attachmentsModule.getAttachment(docId, testAttachmentName);
 }
 
+function getAttachmentWithCategory(attachmentResult){
+    var docId = attachmentResult.id;
+    return attachmentsModule.getAttachment(docId, testAttachmentName, testAttachmentCategory);
+}

@@ -35,16 +35,18 @@
                         {{ vm.license.redactedLicenseFile }}
                     </view-edit-text-field>
 
-                    <file-upload-list document-id="vm.license.id" ng-if="vm.license.id"></file-upload-list>
+                    <file-upload-list ng-if="vm.license.id" document-id="vm.license.id"
+                            attachment-category="redacted"
+                            upload-button-label="Upload Redacted License"></file-upload-list>
 
                     <label for="fullLicenseFile">Full License</label>
                     <view-edit-text-field ng-model="vm.license.fullLicenseFile" edit-mode="vm.editable" input-id="fullLicenseFile">
                         {{ vm.license.fullLicenseFile }}
                     </view-edit-text-field>
 
-                    <div class="placeholder">
-                        TODO: File upload
-                    </div>
+                    <file-upload-list ng-if="vm.license.id" document-id="vm.license.id"
+                              attachment-category="full"
+                              upload-button-label="Upload Full License"></file-upload-list>
 
                     <label for="eResourceComments">Internal E-Resource Comments</label>
                     <view-edit-text-area class="e-resource-comments" ng-model="vm.license.eResourceComments" edit-mode="vm.editable" input-id="eResourceComments">
