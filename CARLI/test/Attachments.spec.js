@@ -10,7 +10,8 @@ var storeOptions = require( '../../config').storeOptions;
 var uuid = require('node-uuid');
 
 var attachmentsModule = null;
-var testAttachmentContent = 'test content '+uuid.v4();
+var testAttachmentContent = 'test content ' + uuid.v4();
+var testAttachmentName = 'test attachment ' + uuid.v4();
 var testStoreOptions = testUtils.getTestDbStoreOptions();
 var textMimeType = 'text/plain';
 
@@ -102,6 +103,30 @@ context('The Attachments Module', function(){
         });
     });
 
+    describe.only('listAttachments', function(){
+        beforeEach(function(done){
+            attachmentsModule = Attachments(testStoreOptions);
+            done();
+        });
+
+        it('should reject if the document id is missing', function(){
+            return expect(attachmentsModule.listAttachments()).to.be.rejected;
+        });
+
+        it('should return the attachment content', function(){
+            return putGenericTestDocument()
+                .then(putAttachment)
+                .then(function(attachmentResult){
+                    return attachmentsModule.listAttachments(attachmentResult.id)
+                })
+                .then(function(attachmentListResults){
+                    return Q.all([
+                        expect(attachmentListResults).to.be.an('object'),
+                        expect(attachmentListResults[testAttachmentName]).to.be.an('object')
+                    ]);
+                })
+        });
+    });
 });
 
 function putGenericTestDocument(){
@@ -119,7 +144,7 @@ function putGenericTestDocument(){
 }
 
 function putAttachment(docId){
-    return attachmentsModule.setAttachment(docId, 'attachmentName', textMimeType, testAttachmentContent);
+    return attachmentsModule.setAttachment(docId, testAttachmentName, textMimeType, testAttachmentContent);
 }
 
 function expectCouchAttachmentResult(attachmentResult){
