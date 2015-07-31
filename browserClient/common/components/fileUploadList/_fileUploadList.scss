@@ -1,0 +1,11 @@
+file-upload-list {
+    border: $default-border;
+    border-radius: 8px;
+    display: block;
+    margin: 2rem auto;
+    padding: 2rem;
+
+    input[type=file]{
+        display: none;
+    }
+}

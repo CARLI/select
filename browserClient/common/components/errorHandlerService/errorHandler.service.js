@@ -8,6 +8,9 @@ function returnErrorHandlerFunction($rootScope, $location, alertService, authSer
         if (error.statusCode === 401) {
             handleAuthFailure();
         }
+        else if ( error.statusCode === 413 ){
+            handleFileTooLarge(error);
+        }
         else if ( error.statusCode === 502 ){
             handleBackendUnavailable();
         }
@@ -23,6 +26,10 @@ function returnErrorHandlerFunction($rootScope, $location, alertService, authSer
     function handleAuthFailure() {
         $rootScope.returnTo = $location.url();
         authService.deleteSession();
+    }
+
+    function handleFileTooLarge(error){
+        showErrorToUser('The file you tried to upload is too large.');
     }
 
     function handleBackendUnavailable(error){
