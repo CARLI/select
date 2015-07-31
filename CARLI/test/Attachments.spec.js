@@ -103,7 +103,7 @@ context('The Attachments Module', function(){
         });
     });
 
-    describe.only('listAttachments', function(){
+    describe('listAttachments', function(){
         beforeEach(function(done){
             attachmentsModule = Attachments(testStoreOptions);
             done();
@@ -158,6 +158,6 @@ function expectCouchAttachmentResult(attachmentResult){
 
 function getAttachment(attachmentResult){
     var docId = attachmentResult.id;
-    return attachmentsModule.getAttachment(docId, 'attachmentName');
+    return attachmentsModule.getAttachment(docId, testAttachmentName);
 }
 
