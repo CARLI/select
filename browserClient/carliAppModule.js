@@ -2,6 +2,7 @@
 
 module.exports = {
     ActivityLog: require('../CARLI/Entity/ActivityLogRepository'),
+    Attachments: require('../CARLI/Attachments'),
     Auth: require('../CARLI/Auth'),
     AuthMiddleware: require('../middleware/browserAdapters/auth'),
     CouchDbStore: require('../CARLI/Store/CouchDb/Store'),
