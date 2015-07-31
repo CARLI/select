@@ -1,7 +1,7 @@
 angular.module('vendor.sections.siteLicensePrices')
     .controller('siteLicensePricesController', siteLicensePricesController);
 
-function siteLicensePricesController($scope, $q, $filter, alertService, authService, cycleService, libraryService, offeringService, productService, siteLicensePricesCsv, vendorStatusService){
+function siteLicensePricesController($scope, $q, $filter, authService, cycleService, libraryService, offeringService, productService, siteLicensePricesCsv, vendorStatusService){
     var vm = this;
 
     vm.loadingPromise = null;
@@ -153,8 +153,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     }
 
     function showCommentModalFor(product) {
-        alertService.putAlert('TODO: open the comment modal');
-        console.log('showing comment modal', product);
+        $('#vendor-comment-modal').modal();
     }
 
     function createReadOnlyOfferingCell(price) {
