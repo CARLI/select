@@ -5,5 +5,6 @@ angular.module('vendor.sections.siteLicensePrices',[
     'common.libraryService',
     'common.productService',
     'vendor.horizontalScrollSlider',
-    'vendor.quickPricing'
+    'vendor.quickPricing',
+    'vendor.vendorCommentModal'
 ]);
