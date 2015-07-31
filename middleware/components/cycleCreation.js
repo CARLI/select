@@ -31,7 +31,7 @@ function useAdminCouchCredentials() {
 }
 
 function create( newCycleData ) {
-    return cycleRepository.create(newCycleData, couchUtils.DB_TYPE_STAFF);
+    return cycleRepository.create(newCycleData, couchUtils.DB_TYPE_STAFF | couchUtils.DB_TYPE_LIBRARY);
 }
 
 function copyCycleDataFrom( sourceCycleId, newCycleId ){

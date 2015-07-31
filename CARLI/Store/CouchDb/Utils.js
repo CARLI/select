@@ -170,6 +170,7 @@ module.exports = function (storeOptions) {
 
     function getCouchViewResultValues( dbName, viewName, key, group) {
         var url = couchViewUrl(dbName, viewName, key, group);
+        console.log(url);
         return getCouchViewValuesFromUrl(url);
     }
 
@@ -269,9 +270,9 @@ module.exports = function (storeOptions) {
     function createSecurityDocumentForType(dbName, databaseType, entity) {
         var roles = [ '_admin', 'staff' ];
 
-        if (databaseType == couchUtils.DB_TYPE_VENDOR) {
+        if (databaseType & couchUtils.DB_TYPE_VENDOR) {
             roles.push('vendor-' + entity.id);
-        } else if (databaseType == couchUtils.DB_TYPE_LIBRARY) {
+        } else if (databaseType & couchUtils.DB_TYPE_LIBRARY) {
             roles.push('library-' + entity.id);
         }
 
@@ -480,10 +481,10 @@ module.exports = function (storeOptions) {
     }
 
     var couchUtils = {
-        DB_TYPE_TEST: 'db_type_test',
-        DB_TYPE_STAFF: 'db_type_staff',
-        DB_TYPE_LIBRARY: 'db_type_library',
-        DB_TYPE_VENDOR: 'db_type_vendor',
+        DB_TYPE_TEST: 1,
+        DB_TYPE_STAFF: 2,
+        DB_TYPE_LIBRARY: 4,
+        DB_TYPE_VENDOR: 8,
 
         couchViewUrl: couchViewUrl,
         createDatabase: createDatabase,

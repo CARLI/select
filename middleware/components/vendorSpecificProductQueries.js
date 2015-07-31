@@ -7,7 +7,12 @@ var Q = require('q');
 function listProductsWithOfferingsForVendorId(vendorId, cycleId) {
     return vendorRepository.load(vendorId).then(function(vendor) {
         var cycleRepository = cycleRepositoryForVendor(vendor);
-        return cycleRepository.load(cycleId).then(loadProductsAndOfferings);
+        return cycleRepository.load(cycleId)
+            .then(function(cycle) {
+                console.log('Loaded ', cycle, ' for ', vendor);
+                return cycle;
+            })
+            .then(loadProductsAndOfferings);
     });
 
     function loadProductsAndOfferings(cycle) {
