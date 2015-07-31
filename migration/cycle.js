@@ -176,7 +176,7 @@ function createCycle(cycle){
 
     var couchIdPromise = Q.defer();
 
-    CycleRepository.create( cycle, couchUtils.DB_TYPE_STAFF )
+    CycleRepository.create( cycle, couchUtils.DB_TYPE_STAFF | couchUtils.DB_TYPE_LIBRARY )
         .then(function(id) {
             couchIdPromise.resolve({
                 couchId: id,
