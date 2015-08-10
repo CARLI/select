@@ -210,7 +210,7 @@
         function unselectHiddenProducts() {
             var key, product;
             for ( key in vm.offeringList ){
-                offering = vm.offeringList[key];
+                var offering = vm.offeringList[key];
                 if ( !filter(offering) ){
                     vm.selectedOfferings[offering.id] = false;
                 }

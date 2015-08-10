@@ -14,7 +14,12 @@ angular.module('vendor.vendorCommentModal')
             scope.saveOffering = saveOffering;
 
             function saveOffering(offering) {
-                return offeringService.update(offering);
+                return offeringService.update(offering)
+                    .then(offeringService.load)
+                    .then(function (updatedOffering) {
+                        offering._rev = updatedOffering._rev;
+                        return updatedOffering;
+                    });
             }
         }
 
