@@ -4,8 +4,8 @@ angular.module('common.fileUploadList')
 function fileUploadListController( attachmentsService, errorHandler ){
     var vm = this;
 
+    vm.loadingPromise = null;
     vm.orderBy = 'order';
-
     vm.uploadButtonLabel = vm.uploadButtonLabel || 'Upload new file';
 
     vm.attachFile = attachFile;
@@ -17,10 +17,12 @@ function fileUploadListController( attachmentsService, errorHandler ){
     }
 
     function loadFileList(){
-        return attachmentsService.listAttachments(vm.documentId, vm.attachmentCategory)
+        vm.loadingPromise = attachmentsService.listAttachments(vm.documentId, vm.attachmentCategory)
             .then(function(attachmentsObject){
                 vm.files = transformAttachmentsObjectToArray(attachmentsObject);
             });
+
+        return vm.loadingPromise;
     }
 
     function attachFile(fileInfo, fileContentsAsArrayBuffer){
