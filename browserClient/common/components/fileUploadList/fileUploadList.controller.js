@@ -40,7 +40,17 @@ function fileUploadListController( attachmentsService, errorHandler ){
     }
 
     function transformAttachmentsObjectToArray(attachmentsObject){
-        var files = Object.keys(attachmentsObject).map(function(fileName){
+        if ( !attachmentsObject ){
+            return [];
+        }
+
+        var attachmentKeys = Object.keys(attachmentsObject);
+
+        if ( !attachmentKeys || !attachmentKeys.length ){
+            return [];
+        }
+
+        var files = attachmentKeys.map(function(fileName){
             var properties = attachmentsObject[fileName];
             var fileUrl = attachmentsService.getAttachmentUrl(vm.documentId, fileName);
 
