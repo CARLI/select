@@ -3,7 +3,7 @@ angular.module('common.fileUploadList')
         return {
             restrict: 'E',
             template: [
-                '<ul>',
+                '<ul cg-busy="vm.loadingPromise">',
                 '  <li ng-repeat="file in vm.files | orderBy:vm.orderBy">',
                 '    <a ng-href="{{ file.link }}" class="file" target="_blank">{{ file.name }}</a>',
                 '  </li>',
