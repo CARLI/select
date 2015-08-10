@@ -1,6 +1,9 @@
 angular.module('common.fileReader')
     .service('fileReader', function($q){
+        var MAX_FILE_SIZE = 25 * 1000 * 1000;
+
         return {
+            maxFileSize: MAX_FILE_SIZE,
             read: readFile
         };
 

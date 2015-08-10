@@ -1,5 +1,5 @@
 angular.module('common.fileUploadList')
-    .directive('fileUploadList', function(fileReader){
+    .directive('fileUploadList', function(errorHandler, fileReader){
         return {
             restrict: 'E',
             template: [
@@ -8,8 +8,9 @@ angular.module('common.fileUploadList')
                 '    <a ng-href="{{ file.link }}" class="file" target="_blank">{{ file.name }}</a>',
                 '  </li>',
                 '</ul>',
-                '<input type="file" ng-model="vm.fileToUpload" ng-change="vm.upload()">',
-                '<button type="button" class="upload">{{ vm.uploadButtonLabel }}</button>'
+                '<input type="file" ng-model="vm.fileToUpload">',
+                '<button type="button" class="upload">{{ vm.uploadButtonLabel }}</button>',
+                '<div class="uploadProgress" ng-show="vm.uploadInProgress">Upload progress: {{ vm.uploadProgress }}%</div>'
             ].join(''),
             scope: {
                 documentId: '=',
@@ -35,22 +36,31 @@ angular.module('common.fileUploadList')
                     var fileList = fileInputElement.files;
                     var fileToUpload = fileList[0];
 
-                    fileReader.read( fileToUpload ).then(
-                        function success( result ){
-                            if ( controller ){
-                                controller.attachFile(fileToUpload, result);
+                    if ( fileToUpload.size > fileReader.maxFileSize ){
+                        scope.$apply(function(){
+                            errorHandler('Selected file is too large to upload');
+                        });
+                        return;
+                    }
+
+                    scope.$apply(function(){
+                        fileReader.read( fileToUpload ).then(
+                            function success( result ){
+                                if ( controller ){
+                                    controller.attachFile(fileToUpload, result);
+                                }
+                                else {
+                                    console.warn('File Upload controller is missing!');
+                                }
+                            },
+                            function error( err ){
+                                errorHandler('There was an error reading the file: '+err);
+                            },
+                            function progress( notification ){
+                                console.log('file read progress', notification);
                             }
-                            else {
-                                console.warn('File Upload controller is missing!');
-                            }
-                        },
-                        function error( err ){
-                            console.log('error reading file: ', error);
-                        },
-                        function progress( notification ){
-                            console.log('file upload progress', notification);
-                        }
-                    );
+                        );
+                    });
                 }
             }
         };

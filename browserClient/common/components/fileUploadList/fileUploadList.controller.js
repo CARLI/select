@@ -1,12 +1,14 @@
 angular.module('common.fileUploadList')
     .controller('fileUploadListController', fileUploadListController);
 
-function fileUploadListController( attachmentsService, errorHandler ){
+function fileUploadListController( alertService, attachmentsService, errorHandler ){
     var vm = this;
 
     vm.loadingPromise = null;
     vm.orderBy = 'order';
     vm.uploadButtonLabel = vm.uploadButtonLabel || 'Upload new file';
+    vm.uploadInProgress = false;
+    vm.uploadProgress = 0;
 
     vm.attachFile = attachFile;
 
@@ -26,18 +28,26 @@ function fileUploadListController( attachmentsService, errorHandler ){
     }
 
     function attachFile(fileInfo, fileContentsAsArrayBuffer){
+        vm.uploadInProgress = true;
+        vm.uploadProgress = 0;
         var fileName = fileInfo.name;
         var fileType = fileInfo.type;
         attachmentsService.uploadFile(vm.documentId, fileName, fileType, fileContentsAsArrayBuffer, vm.attachmentCategory)
-            .then(attachSuccess, errorHandler, attachProgress);
+            .then(attachSuccess, attachFailed, attachProgress);
 
         function attachSuccess(){
-            console.log('Attachment successful!');
-            loadFileList();
+            vm.uploadInProgress = false;
+            alertService.putAlert(fileName + ' successfully uploaded', {severity: 'success'});
+            return loadFileList();
         }
 
         function attachProgress(percent){
-            console.log('progress '+percent+'%');
+            vm.uploadProgress = percent;
+        }
+
+        function attachFailed(err){
+            vm.uploadInProgress = false;
+            errorHandler(err);
         }
     }
 
