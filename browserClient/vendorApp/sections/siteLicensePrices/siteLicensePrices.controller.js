@@ -133,6 +133,10 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
                 offeringWrapper.attr('title', offering.flaggedReason[0]);
             }
 
+            if (offering.vendorComment) {
+                offeringWrapper.addClass('has-comment');
+            }
+
             var offeringCell = offeringWrapper.append(createReadOnlyOfferingCell(price));
 
             offeringWrapper.on('click', function() {
@@ -152,22 +156,29 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
         }
     }
 
-    function showCommentModalFor(product) {
+    function showCommentModalFor(offering) {
+        vm.offeringSelectedForComment = offering;
         $('#vendor-comment-modal').modal();
     }
 
     function createReadOnlyOfferingCell(price) {
         var cell = $('<div tabindex="0" class="price" role="gridcell">'+price+'</div>');
-
         cell.on('focus', onClick);
+
+        var commentMarker = $('<div tabindex="0" class="comment-marker fa fa-comment-o"></div>');
+        commentMarker.on('focus', editComment);
+        cell.append(commentMarker);
+
         return cell;
 
         function onClick() {
+            console.log('1');
             var clickAction = vm.isCommentModeEnabled ? editComment : makeEditable;
             clickAction(this);
         }
 
         function editComment() {
+            console.log('2');
             var libraryId = cell.parent().data('libraryId');
             var productId = cell.parent().data('productId');
             var offering = vm.offeringsForLibraryByProduct[productId][libraryId];

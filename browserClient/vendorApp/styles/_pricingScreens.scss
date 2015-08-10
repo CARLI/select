@@ -90,6 +90,21 @@ $background-flagged-flagged: rgba(255,18,0,.1);
                     background-color: rgba(255,18,0,.1);
                     color: $red;
                 }
+
+                .comment-marker {
+                    display: none;
+                }
+
+                &.has-comment {
+                    position: relative;
+
+                    .comment-marker {
+                        display: block;
+                        position: absolute;
+                        top: 2px;
+                        right: 2px;
+                    }
+                }
             }
         }
     }
