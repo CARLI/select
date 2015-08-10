@@ -79,7 +79,7 @@ context('The Attachments Module', function(){
                 .then(expectCouchAttachmentResult);
         });
 
-        it('should with when setting an category for an attachment', function(){
+        it('should work when setting an category for an attachment', function(){
             return putGenericTestDocument()
                 .then(putAttachmentWithCategory)
                 .then(expectCouchAttachmentResult);
@@ -143,6 +143,29 @@ context('The Attachments Module', function(){
                 })
         });
     });
+
+    describe('deleteAttachment', function(){
+        beforeEach(function(done){
+            attachmentsModule = Attachments(testStoreOptions);
+            done();
+        });
+
+        it('should reject if the document id is missing', function(){
+            return expect(attachmentsModule.deleteAttachment()).to.be.rejected;
+        });
+
+        it('should reject if the attachment name is missing', function(){
+            return expect(attachmentsModule.deleteAttachment('documentId')).to.be.rejected;
+        });
+
+        it('should delete the attachment', function(){
+            return putGenericTestDocument()
+                .then(putAttachment)
+                .then(deleteAttachment)
+                .then(getAttachment)
+                .then(expectNotFoundResult);
+        });
+    });
 });
 
 function putGenericTestDocument(){
@@ -184,4 +207,15 @@ function getAttachment(attachmentResult){
 function getAttachmentWithCategory(attachmentResult){
     var docId = attachmentResult.id;
     return attachmentsModule.getAttachment(docId, testAttachmentName, testAttachmentCategory);
+}
+
+function deleteAttachment(attachmentResult){
+    console.log('delete test document ',attachmentResult);
+    var docId = attachmentResult.id;
+    return attachmentsModule.deleteAttachment(docId, testAttachmentName);
+}
+
+function expectNotFoundResult( result ){
+    var resultObj = JSON.parse(result);
+    return expect(resultObj).to.be.an('object').and.have.property('error','not_found');
 }

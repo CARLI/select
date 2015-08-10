@@ -8,7 +8,8 @@ function attachmentsService( CarliModules, $q, errorHandler ) {
     return {
         getAttachmentUrl: attachmentsModule.getAttachmentUrl,
         listAttachments: listAttachments,
-        uploadFile: uploadFile
+        uploadFile: uploadFile,
+        deleteFile: deleteFile
     };
 
     function listAttachments( documentId ){
@@ -78,6 +79,10 @@ function attachmentsService( CarliModules, $q, errorHandler ) {
                 });
             }
         }
+    }
+
+    function deleteFile( documentId, fileName, optionalAttachmentCategory ){
+        return $q.when( attachmentsModule.deleteAttachment(documentId, fileName, optionalAttachmentCategory) );
     }
 
     function getDocumentRevision(documentId){

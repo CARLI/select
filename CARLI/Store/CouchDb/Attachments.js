@@ -23,7 +23,8 @@ function Attachments(storeOptions) {
         getAttachment: getAttachment,
         getAttachmentUrl: getAttachmentUrl,
         getDocumentRevision: getDocumentRevision,
-        listAttachments: listAttachments
+        listAttachments: listAttachments,
+        deleteAttachment: deleteAttachment
     };
 
     function setAttachment(documentId, attachmentName, contentType, content, optionalAttachmentCategory){
@@ -127,6 +128,28 @@ function Attachments(storeOptions) {
                 return document._attachments;
             });
 
+    }
+
+    function deleteAttachment( documentId, attachmentName, optionalAttachmentCategory ){
+        if ( !documentId ){
+            return Q.reject('deleteAttachment called without a document ID');
+        }
+
+        if ( !attachmentName ){
+            return Q.reject('deleteAttachment called without an attachment name');
+        }
+
+        var deleteAttachmentRequestOptions = {
+            method: 'delete',
+            url: getAttachmentUrl( documentId, attachmentName, optionalAttachmentCategory ),
+            headers: {}
+        };
+
+        return getDocumentRevision(documentId)
+            .then(function(documentRevision){
+                deleteAttachmentRequestOptions.headers['If-Match'] = documentRevision;
+                return couchRequest(deleteAttachmentRequestOptions);
+            });
     }
 
     function getDocumentUrl( documentId ){
