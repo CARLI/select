@@ -80,6 +80,7 @@ $background-flagged-flagged: rgba(255,18,0,.1);
             .offering {
                 background-color: $background-pricing-old;
                 color: $purple;
+                position: relative;
 
                 &.updated {
                     background-color: $white;
@@ -95,15 +96,11 @@ $background-flagged-flagged: rgba(255,18,0,.1);
                     display: none;
                 }
 
-                &.has-comment {
-                    position: relative;
-
-                    .comment-marker {
-                        display: block;
-                        position: absolute;
-                        top: 2px;
-                        right: 2px;
-                    }
+                .comment-marker {
+                    display: block;
+                    position: absolute;
+                    top: 2px;
+                    right: 2px;
                 }
             }
         }
