@@ -1,7 +1,7 @@
 angular.module('vendor.sections.simultaneousUserPrices')
     .controller('simultaneousUserPricesController', simultaneousUserPricesController);
 
-function simultaneousUserPricesController($scope, $q, $filter, authService, cycleService, offeringService, productService, vendorStatusService){
+function simultaneousUserPricesController($scope, $q, $filter, alertService, authService, cycleService, offeringService, productService, vendorStatusService){
     var vm = this;
     vm.changedProductIds = {};
     vm.loadingPromise = null;
@@ -20,6 +20,10 @@ function simultaneousUserPricesController($scope, $q, $filter, authService, cycl
     vm.nextSuLevel = nextSuLevel;
     vm.saveOfferings = saveOfferings;
     vm.quickPricingCallback = quickPricingCallback;
+    vm.isCommentModeEnabled = false;
+    vm.toggleCommentMode = function () {
+        vm.isCommentModeEnabled = !vm.isCommentModeEnabled;
+    };
 
     activate();
 
@@ -175,6 +179,11 @@ function simultaneousUserPricesController($scope, $q, $filter, authService, cycl
         }
     }
 
+    function showCommentModalFor(product) {
+        alertService.putAlert('TODO: open the comment modal');
+        console.log('showing comment modal', product);
+    }
+
     function createOfferingCellContent(price){
         if ( price > 0 || price === 0 ){
             return createReadOnlyOfferingCell(price);
@@ -186,13 +195,14 @@ function simultaneousUserPricesController($scope, $q, $filter, authService, cycl
 
     function createReadOnlyOfferingCell(price) {
         var cell = $('<div tabindex="0" class="price" role="gridcell">'+price+'</div>');
-        cell.on('focus', makeEditable);
+        cell.on('focus', onReadOnlyClick);
+
         return cell;
     }
 
     function createEmptyOfferingCell(){
         var cell = $('<div tabindex="0" class="price no-pricing" role="gridcell">&nbsp;</div>');
-        cell.on('focus', makeEditable);
+        cell.on('focus', onReadOnlyClick);
         return cell;
     }
 
@@ -202,10 +212,16 @@ function simultaneousUserPricesController($scope, $q, $filter, authService, cycl
         return cell;
     }
 
-    function makeEditable() {
-        var price = $(this).text();
+    function onReadOnlyClick() {
+        var clickAction = vm.isCommentModeEnabled ? editComment : makeEditable;
+        clickAction(this);
+    }
+
+    function makeEditable(cell) {
+        var $cell = $(cell);
+        var price = $cell.text();
         var input = createEditableOfferingCell(price);
-        $(this).replaceWith(input);
+        $cell.replaceWith(input);
         input.focus().select();
     }
 
@@ -215,6 +231,16 @@ function simultaneousUserPricesController($scope, $q, $filter, authService, cycl
         var price = $cell.val();
         var div = createOfferingCellContent(price);
         $cell.replaceWith(div);
+    }
+
+    function editComment(cell) {
+        console.log('motherfucker', cell);
+
+
+        showCommentModalFor(null);
+        $scope.$apply(function() {
+            vm.isCommentModeEnabled = false;
+        });
     }
 
     function markProductChangedForCell( jqueryCell ){
