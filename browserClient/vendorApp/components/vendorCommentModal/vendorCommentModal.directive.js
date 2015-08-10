@@ -1,8 +1,21 @@
 angular.module('vendor.vendorCommentModal')
-    .directive('vendorCommentModal', function() {
+    .directive('vendorCommentModal', function(offeringService) {
         return {
             restrict: 'E',
+            scope: {
+                offering: '='
+            },
             replace: false,
-            templateUrl: '/vendorApp/components/vendorCommentModal/vendorCommentModal.html'
+            templateUrl: '/vendorApp/components/vendorCommentModal/vendorCommentModal.html',
+            link: vendorCommentModalPostLink
         };
+
+        function vendorCommentModalPostLink(scope, element, attrs) {
+            scope.saveOffering = saveOffering;
+
+            function saveOffering(offering) {
+                return offeringService.update(offering);
+            }
+        }
+
     });

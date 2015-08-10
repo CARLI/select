@@ -6,10 +6,10 @@
                 <h4 class="modal-title" id="modal-label">Add Comment</h4>
             </div>
             <div class="modal-body">
-
+                <textarea ng-model="offering.vendorComment"></textarea>
             </div>
             <div class="modal-footer">
-                <button type="button" class="carli-button primary-button" data-dismiss="modal">OK</button>
+                <button type="button" class="carli-button primary-button" busy-click="saveOffering(offering)" data-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
