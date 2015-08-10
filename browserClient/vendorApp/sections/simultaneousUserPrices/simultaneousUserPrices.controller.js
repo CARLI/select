@@ -179,9 +179,9 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         }
     }
 
-    function showCommentModalFor(product) {
-        alertService.putAlert('TODO: open the comment modal');
-        console.log('showing comment modal', product);
+    function showCommentModalFor(cell) {
+        vm.offeringSelectedForComment = null;
+        $('#vendor-comment-modal').modal();
     }
 
     function createOfferingCellContent(price){
@@ -234,10 +234,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     }
 
     function editComment(cell) {
-        console.log('motherfucker', cell);
-
-
-        showCommentModalFor(null);
+        showCommentModalFor(cell);
         $scope.$apply(function() {
             vm.isCommentModeEnabled = false;
         });
