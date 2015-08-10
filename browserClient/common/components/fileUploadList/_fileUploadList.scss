@@ -1,0 +1,45 @@
+file-upload-list {
+    display: block;
+    margin: 1rem auto;
+    @extend .clearfix;
+
+    ul {
+        @extend .zebra-table;
+
+        li {
+            padding: 1rem;
+            position: relative;
+
+            a.file {
+                color: $purple;
+                font-size: 1rem;
+            }
+
+            button.delete {
+                color: $dark-red;
+                display: none;
+                font-size: 1.5rem;
+                position: absolute;
+                right: 1rem;
+                top: 0.5rem;
+            }
+
+            &:hover {
+                button.delete {
+                    display: block;
+                }
+            }
+        }
+    }
+
+    input[type=file]{
+        display: none;
+    }
+
+    button.upload {
+        @extend .ask-button;
+        float: right;
+        margin-top: 0.5rem;
+        padding: 0.5rem;
+    }
+}
