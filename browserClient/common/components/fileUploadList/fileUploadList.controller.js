@@ -11,6 +11,7 @@ function fileUploadListController( alertService, attachmentsService, errorHandle
     vm.uploadProgress = 0;
 
     vm.attachFile = attachFile;
+    vm.deleteFile = deleteFile;
 
     activate();
 
@@ -86,5 +87,18 @@ function fileUploadListController( alertService, attachmentsService, errorHandle
         }
 
         return files;
+    }
+
+    function deleteFile(file){
+        var confirmDelete = confirm('Are you sure you want to delete '+file.name+'? This cannot be undone.');
+
+        if ( confirmDelete ){
+            return attachmentsService.deleteFile(vm.documentId, file.name, file.category)
+                .then(function(){
+                    alertService.putAlert(file.name + ' successfully deleted', {severity: 'success'});
+                    return loadFileList();
+                })
+                .catch(errorHandler);
+        }
     }
 }
