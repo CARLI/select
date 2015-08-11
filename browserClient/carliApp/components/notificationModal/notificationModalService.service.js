@@ -2,22 +2,21 @@ angular.module('carli.notificationModal')
     .factory('notificationModalService', notificationModalService);
 
 function notificationModalService() {
-    var message = null;
+    var draftMessage = null;
 
     return {
-        sendStartDraftMessage: sendMessage,
-        receiveStartDraftMessage: receiveMessage,
-        acknowledgeStartDraftMessage: acknowledgeMessage
+        sendStartDraftMessage: sendStartDraftMessage,
+        receiveStartDraftMessage: receiveStartDraftMessage,
+        acknowledgeStartDraftMessage: acknowledgeStartDraftMessage
     };
 
-    function sendMessage(newMessage) {
-        message = newMessage;
+    function sendStartDraftMessage(draftConfigurationAndTemplateData) {
+        draftMessage = draftConfigurationAndTemplateData;
     }
-    function receiveMessage() {
-        return message;
+    function receiveStartDraftMessage() {
+        return draftMessage;
     }
-    function acknowledgeMessage() {
-        message = null;
+    function acknowledgeStartDraftMessage() {
+        draftMessage = null;
     }
-
 }
