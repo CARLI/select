@@ -28,7 +28,8 @@
             <div class="date">{{ ::notification.dateSent | date:'shortDate' }}</div>
         </div>
         <div class="column preview">
-            <a busy-click="vm.previewNotification(notification)">View</a>
+            <a busy-click="vm.editDraft(notification)" ng-if="vm.showEdit">Edit</a>
+            <a busy-click="vm.previewNotification(notification)" ng-if="vm.showView">View</a>
             <span ng-show="notification.pdfLink">|</span>
             <a busy-click="vm.previewPdf(notification)" ng-show="notification.pdfLink">PDF</a>
             <span ng-show="notification.csvLink">|</span>

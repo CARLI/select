@@ -24,8 +24,8 @@ function notificationModalService() {
         draftMessage = null;
     }
 
-    function sendEditDraftMessage(notificationId) {
-        editMessage = notificationId;
+    function sendEditDraftMessage(notification) {
+        editMessage = notification;
     }
     function receiveEditDraftMessage() {
         return editMessage;
