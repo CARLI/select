@@ -66,10 +66,13 @@ function createRequest( email, baseUrl ){
     }
 
     function getPasswordResetTemplate() {
-        return Q(
-            "{{ user.fullName }},\n" +
-            "Something something password reset:\n" +
-            "{{ resetLink }}");
+        var template = "Hi {{ user.fullName }},\n\n" +
+            "An account for CARLI's e-resource pricing and selection system has been created for you.\n" +
+            "Your username is: {{ user.email }}\n" +
+            "Set your password here: {{ resetLink }}\n" +
+            "Please contact CARLI if you have any questions or need assistance: support@carli.illinois.edu";
+
+        return Q(template);
     }
 
     function returnOk() {
