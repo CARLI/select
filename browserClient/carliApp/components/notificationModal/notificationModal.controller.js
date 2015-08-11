@@ -9,6 +9,7 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
     vm.recipients = [];
     vm.template = null;
 
+    vm.cancel = cancel;
     vm.saveNotifications = saveNotifications;
     vm.useTemplate = useTemplate;
 
@@ -142,6 +143,13 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
             return $rootScope.forms.notificationForm.$dirty;
         }
         return false;
+    }
+
+    function cancel(){
+        if ( !notificationFormIsDirty() ){
+            resetNotificationForm();
+        }
+        hideModal();
     }
 
     function getNotifications(editedTemplate, recipientIds) {
