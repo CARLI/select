@@ -39,7 +39,6 @@ $background-flagged-flagged: rgba(255,18,0,.1);
             height: 30px;
             padding: 0.5rem 1rem;
             min-width: 160px;
-
             &.header {
                 font-weight: bold;
                 background: $light-gray;
@@ -70,6 +69,8 @@ $background-flagged-flagged: rgba(255,18,0,.1);
                 &.input {
                     input,
                     .price {
+                        position: absolute;
+                        width: 100%;
                         border: none;
                         height: 29px;
                         padding: 0.5rem 1rem;
