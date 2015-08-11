@@ -236,10 +236,7 @@ function getProductDetailCodeOptions(){
     return Validator.getEnumValuesFor('ProductDetailCodes');
 }
 
-var COUNT = 0;
 function setStore(store) {
-    COUNT++;
-    console.log(COUNT + " PRODUCT REPOSITORY setStore()", store.getOptions());
     storeOptions = store.getOptions();
     ProductRepository.setStore(store);
     couchUtils = require('../Store/CouchDb/Utils')(storeOptions);
