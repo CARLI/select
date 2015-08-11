@@ -3,11 +3,15 @@ angular.module('carli.notificationModal')
 
 function notificationModalService() {
     var draftMessage = null;
+    var editMessage = null;
 
     return {
         sendStartDraftMessage: sendStartDraftMessage,
         receiveStartDraftMessage: receiveStartDraftMessage,
-        acknowledgeStartDraftMessage: acknowledgeStartDraftMessage
+        acknowledgeStartDraftMessage: acknowledgeStartDraftMessage,
+        sendEditDraftMessage: sendEditDraftMessage,
+        receiveEditDraftMessage: receiveEditDraftMessage,
+        acknowledgeEditDraftMessage: acknowledgeEditDraftMessage
     };
 
     function sendStartDraftMessage(draftConfigurationAndTemplateData) {
@@ -18,5 +22,15 @@ function notificationModalService() {
     }
     function acknowledgeStartDraftMessage() {
         draftMessage = null;
+    }
+
+    function sendEditDraftMessage(notificationId) {
+        editMessage = notificationId;
+    }
+    function receiveEditDraftMessage() {
+        return editMessage;
+    }
+    function acknowledgeEditDraftMessage() {
+        editMessage = null;
     }
 }
