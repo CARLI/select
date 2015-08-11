@@ -170,7 +170,6 @@ module.exports = function (storeOptions) {
 
     function getCouchViewResultValues( dbName, viewName, key, group) {
         var url = couchViewUrl(dbName, viewName, key, group);
-        console.log(url);
         return getCouchViewValuesFromUrl(url);
     }
 
