@@ -7,13 +7,13 @@
 
     <div class="cycle-link-header">Jump to:</div>
     <ol class="cycle-link-list">
-        <li class="cycle-link" ng-repeat="cycle in vm.cycles">
+        <li class="cycle-link" ng-repeat="cycle in vm.cycles | orderBy:'-year' track by cycle.id">
             <button class="clear-button-styles" scroll-to="{{ cycle.id }}">Link to {{ cycle.name }}</button>
         </li>
     </ol>
 
     <ol class="cycle-list">
-        <li class="cycle" ng-repeat="cycle in vm.cycles track by cycle.id" id="{{ cycle.id }}">
+        <li class="cycle" ng-repeat="cycle in vm.cycles | orderBy:'-year' track by cycle.id" id="{{ cycle.id }}">
             <h2>{{ cycle.name }}</h2>
             <library-products-list cycle="cycle"></library-products-list>
 

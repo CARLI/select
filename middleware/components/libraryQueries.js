@@ -12,6 +12,7 @@ var Q = require('q');
  * (i.e. load the entities two-layers deep for the Offerings)
  */
 function listSelectionsForLibraryFromCycle( libraryId, cycleId ){
+    console.log('listSelectionsForLibraryFromCycle('+libraryId+', '+cycleId+')');
     var cycle = null;
 
     return cycleRepository.load(cycleId)
