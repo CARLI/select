@@ -29,6 +29,8 @@ http {
             rewrite ^/api/(.*)$ /$1 break;
             proxy_pass <%= node['carli']['nginx']['middleware_url'] %>;
             proxy_cookie_domain ~.* <%= node['carli']['nginx']['cookie_domain'] %>;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }
         location /db/ {
             rewrite ^/db/(.*)$ /$1 break;
@@ -53,6 +55,8 @@ http {
             rewrite ^/api/(.*)$ /$1 break;
             proxy_pass <%= node['carli']['nginx']['middleware_url'] %>;
             proxy_cookie_domain ~.* <%= node['carli']['nginx']['cookie_domain'] %>;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }
         location /db/ {
             rewrite ^/db/(.*)$ /$1 break;
@@ -77,6 +81,8 @@ http {
             rewrite ^/api/(.*)$ /$1 break;
             proxy_pass <%= node['carli']['nginx']['middleware_url'] %>;
             proxy_cookie_domain ~.* <%= node['carli']['nginx']['cookie_domain'] %>;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }
         location /db/ {
             rewrite ^/db/(.*)$ /$1 break;
