@@ -20,14 +20,6 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
         setupModalClosingUnsavedChangesWarning();
     }
 
-    function keepCustomTemplates(template) {
-        return template.type === 'other';
-    }
-
-    function useTemplate(){
-        initializeDraftFromTemplate( vm.template );
-    }
-
     function initializeDraftFromTemplate( template ){
         vm.template = template;
 

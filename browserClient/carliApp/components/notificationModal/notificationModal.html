@@ -15,12 +15,7 @@
                 <h4 class="modal-title" id="modal-label">Draft a Notification: {{ vm.template.name }}</h4>
             </div>
             <div class="modal-body">
-                <label for="templateMenu" ng-if="vm.templates">Choose a template:</label>
-                <div class="carli-select" ng-if="vm.templates">
-                    <select ng-model="vm.template" ng-options="template.name for template in vm.templates | filter:{notificationType: 'other'} track by template.id" ng-change="vm.useTemplate()" id="templateMenu"></select>
-                </div>
-
-                <form name="notificationForm" warn-if-unsaved ng-if="vm.template">
+                <form name="notificationForm" warn-if-unsaved>
                     <label for="recipients">To</label>
                     <tags-input ng-model="vm.recipients" placeholder="Add a recipient" display-property="label" add-on-space="true"></tags-input>
 
