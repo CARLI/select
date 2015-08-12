@@ -37,9 +37,8 @@
                     </view-edit-radios>
 
                     <label for="vendorAdminModule">Admin Module</label>
-                    <view-edit-text-area class="admin-module" ng-model="vm.vendor.adminModule" edit-mode="vm.editable" input-id="vendorAdminModule">
-                        {{ vm.vendor.adminModule }}
-                    </view-edit-text-area>
+                    <div ng-bind-html="vm.vendor.adminModule | linky:'_blank'" ng-hide="vm.editable"></div>
+                    <view-edit-text-area class="admin-module" ng-model="vm.vendor.adminModule" edit-mode="vm.editable" input-id="vendorAdminModule"></view-edit-text-area>
                 </div>
                 <div class="column">
                     <label for="vendorComments">Comments</label>
