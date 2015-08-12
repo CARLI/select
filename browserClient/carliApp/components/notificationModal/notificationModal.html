@@ -12,26 +12,31 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><fa aria-hidden="true" name="remove"></fa><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="modal-label">Draft a Notification: {{ vm.template.name }}</h4>
+                <h4 class="modal-title" id="modal-label">Edit Draft</h4>
             </div>
             <div class="modal-body">
                 <form name="notificationForm" warn-if-unsaved>
                     <label for="recipients">To</label>
-                    <tags-input ng-model="vm.recipients" placeholder="Add a recipient" display-property="label" add-on-space="true"></tags-input>
+
+                    <!-- recipientsEditable === 'yes' -->
+                    <tags-input ng-model="vm.recipients" placeholder="Add a recipient" display-property="label" add-on-space="true" ng-if="vm.recipientsEditable === 'yes'"></tags-input>
+
+                    <!-- recipientsEditable === 'remove-only' -->
+                    <div ng-if="vm.recipientsEditable === 'remove-only'">
+                        REMOVE ONLY: {{ vm.recipients }}
+                    </div>
+
+                    <!-- recipientsEditable === 'read-only' -->
+                    <div ng-if="vm.recipientsEditable === 'read-only'">
+                        READ ONLY: {{ vm.to }}
+                    </div>
+
 
                     <label for="subject">Subject Line</label>
                     <input id="subject" type="text" ng-model="vm.draft.subject">
 
                     <label for="emailBody">Email Text</label>
                     <textarea id="emailBody" ng-model="vm.draft.emailBody"></textarea>
-
-                    <div ng-show="vm.template.isPdfContentEditable">
-                        <label for="pdfBefore">Text Before Invoice:</label>
-                        <textarea id="pdfBefore" ng-model="vm.draft.pdfBefore"></textarea>
-
-                        <label for="pdfAfter">Text After Invoice:</label>
-                        <textarea  id="pdfAfter" ng-model="vm.draft.pdfAfter"></textarea>
-                    </div>
                 </form>
             </div>
             <div class="modal-footer">

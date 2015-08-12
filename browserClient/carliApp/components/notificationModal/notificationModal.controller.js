@@ -7,16 +7,17 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
 
     vm.draft = {};
     vm.recipients = [];
+    vm.recipientsEditable = true;
     vm.template = null;
 
     vm.cancel = cancel;
     vm.saveNotifications = saveNotifications;
-    vm.useTemplate = useTemplate;
 
     activate();
 
     function activate(){
         $scope.$watch(notificationModalService.receiveStartDraftMessage, receiveStartDraftMessage);
+        $scope.$watch(notificationModalService.receiveEditDraftMessage, receiveEditDraftMessage);
         setupModalClosingUnsavedChangesWarning();
     }
 
@@ -24,27 +25,44 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
         vm.template = template;
 
         vm.draft = {
-            id: template.id,
             subject: template.subject,
             emailBody: template.emailBody,
-            pdfBefore: template.hasOwnProperty('pdfBefore') ? template.pdfBefore : '',
-            pdfAfter:  template.hasOwnProperty('pdfAfter') ? template.pdfAfter : '',
-            draftStatus: 'draft',
-            notificationType: template.notificationType
+            notificationType: template.notificationType,
+            draftStatus: 'draft'
         };
+
+        var recipientsEditable = notificationService.notificationTypeAllowsRecipientsToBeEdited(template.notificationType);
+        vm.recipientsEditable = recipientsEditable ? 'yes' : 'remove-only';
 
         return vm.draft;
     }
 
-    /*
-     * Possible properties for message spec object:
+    function initializeDraftFromNotification( notification ){
+        vm.template = null;
+
+        vm.draft = notification;
+
+        var recipientsEditable = notificationService.notificationTypeAllowsRecipientsToBeEdited(notification.notificationType);
+        vm.recipientsEditable = recipientsEditable ? 'yes' : 'read-only';
+
+        return vm.draft;
+    }
+
+    /* Drafts can be started from subscription screens (invoices, reminders, and reports) or from the list screen
+     * with the 'Draft Message' button. In the former case, the start draft message is a set of data that determines
+     * who the recipients are and what the pricing / selection data is. The recipient are not editable in this case.
+     * The second case has no automatically generated data, so the recipients are completely free-form email addresses.
      *
-         {
-            templateId: '',
-            cycleId: '',
-            recipientId: '',
-            offeringIds: []
-         }
+     * Possible properties for message spec object from a subscription screen:
+     *
+     *   {
+     *      templateId: '',
+     *      cycleId: '',
+     *      recipientId: '',
+     *      offeringIds: [],
+     *   }
+     *
+     *   from the 'Draft Message' button the chosen notification template is passed in.
      */
     function receiveStartDraftMessage(message) {
         if (!message) {
@@ -53,9 +71,11 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
             notificationModalService.acknowledgeStartDraftMessage();
         }
 
+        var manualDraft = isMessageForManualDraft();
+
         showLoadingDataModal();
 
-        notificationTemplateService.load(message.templateId)
+        loadTemplate()
             .then(initializeDraftFromTemplate)
             .then(populateRecipients)
             .then(showEditDraftModal)
@@ -63,12 +83,35 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
                 console.log(err);
             });
 
+
+        function isMessageForManualDraft(){
+            return message.type === "NotificationTemplate";
+        }
+
+        function loadTemplate(){
+            if ( manualDraft ){
+                return $q.when(message);
+            }
+            else {
+                return notificationTemplateService.load(message.templateId);
+            }
+        }
+
         function populateRecipients(draftNotification) {
-            generator = notificationService.generateDraftNotification(vm.template, message);
-            return generator.getRecipients().then(function (recipients) {
-                vm.recipients = $filter('orderBy')(recipients, 'label');
+            if ( manualDraft ){
+                generator = null;
+                vm.recipients = [];
                 return draftNotification;
-            });
+            }
+            else {
+                generator = notificationService.generateDraftNotification(vm.template, message);
+
+                return generator.getRecipients()
+                    .then(function (recipients) {
+                        vm.recipients = $filter('orderBy')(recipients, 'label');
+                        return draftNotification;
+                    });
+            }
         }
 
         function showEditDraftModal() {
@@ -86,6 +129,21 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
         function hideLoadingDataModal(){
             $('#notification-loading-modal').modal('hide');
         }
+    }
+
+    function receiveEditDraftMessage( notification ){
+        if (!notification) {
+            return;
+        } else {
+            notificationModalService.acknowledgeEditDraftMessage();
+        }
+
+        initializeDraftFromNotification(notification);
+        vm.recipients = convertToStringToRecipientObjects(notification.to);
+
+        generator = null;
+
+        $('#notification-modal').modal('show');
     }
 
     function isNotificationGeneratedFromData(){
@@ -157,6 +215,8 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
         }
 
         function saveNotificationFromGenerator() {
+            console.log('Save notification from data', vm.draft);
+
             var recipientIds = getRecipientIds(vm.recipients);
 
             return getNotifications(vm.draft, recipientIds)
@@ -173,10 +233,23 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
         }
 
         function saveNotificationFromForm(){
-            vm.draft.to = vm.recipients.map(function (r) { return r.label; }).join(', ');
-            return notificationService.create(vm.draft)
-            .then(saveSuccess)
-            .catch(errorHandler);
+            vm.draft.dateCreated = new Date().toISOString();
+            vm.draft.to = convertRecipientTagsToString(vm.recipients);
+
+            return saveNotification()
+                .then(saveSuccess)
+                .catch(errorHandler);
+
+            function saveNotification(){
+                if ( vm.draft.type === 'Notification' ){
+                    console.log('UPDATE notification ',vm.draft);
+                    return notificationService.update(vm.draft);
+                }
+                else {
+                    console.log('Save notification from form', vm.draft);
+                    return notificationService.create(vm.draft);
+                }
+            }
         }
 
         function saveSuccess(results){
@@ -189,5 +262,16 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
                 vm.afterSubmitFn();
             }
         }
+    }
+
+    function convertRecipientTagsToString( recipientArray ){
+        return recipientArray.map(function (r) { return r.label; }).join(', ');
+    }
+
+    function convertToStringToRecipientObjects( toString ){
+        if ( !toString ){
+            return [];
+        }
+        return toString.split(',');
     }
 }
