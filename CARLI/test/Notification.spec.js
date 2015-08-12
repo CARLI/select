@@ -400,3 +400,21 @@ describe('the templateIsForAnnualAccessFeeInvoice method', function () {
         expect(notificationRepository.templateIsForAnnualAccessFeeInvoice('subscription')).to.equal(false);
     });
 });
+
+describe('the notificationTypeAllowsRecipientsToBeEdited method', function () {
+    it('should be a function', function(){
+        expect(notificationRepository.notificationTypeAllowsRecipientsToBeEdited).to.be.a('function');
+    });
+
+    it('should return false for a library invoice', function () {
+        expect(notificationRepository.notificationTypeAllowsRecipientsToBeEdited('invoice')).to.equal(false);
+    });
+
+    it('should return false for a vendor report', function () {
+        expect(notificationRepository.notificationTypeAllowsRecipientsToBeEdited('report')).to.equal(false);
+    });
+
+    it('should return true value for "other"', function () {
+        expect(notificationRepository.notificationTypeAllowsRecipientsToBeEdited('other')).to.equal(true);
+    });
+});
