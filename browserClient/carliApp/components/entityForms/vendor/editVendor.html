@@ -49,8 +49,18 @@
                 </div>
             </fieldset>
             <fieldset>
-
                 <div class="column">
+                    <div class="license-list" ng-if="!vm.editable">
+                        <div class="label">License Agreements</div>
+                        <ul class="zebra-table">
+                            <li ng-repeat="license in vm.licenseList">
+                                <div class="column">
+                                    <a ng-href="/license/{{ license.id }}">{{ license.name }}</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
                     <div class="product-list" ng-if="!vm.editable">
                         <label for="currentCycle">Products From:</label>
                         <select-cycle input-id="currentCycle"></select-cycle>
@@ -58,17 +68,6 @@
                             <li ng-repeat="product in vm.productList | orderBy:'name'">
                                 <div class="column">
                                     <a ng-href="/product/{{ product.id }}">{{ vm.getProductDisplayName(product) }}</a>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="license-list" ng-if="!vm.editable">
-                        <div class="label">License Agreements</div>
-                        <ul class="zebra-table">
-                            <li ng-repeat="license in vm.licenseList">
-                                <div class="column">
-                                    <a ng-href="/license/{{ license.id }}">{{ license.name }}</a>
                                 </div>
                             </li>
                         </ul>
