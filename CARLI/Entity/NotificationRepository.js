@@ -77,7 +77,6 @@ function loadNotification( notificationId  ){
 function sendNotification( notification ){
     notification.draftStatus = 'sent';
     notification.dateSent = new Date().toISOString();
-    notification.subject = notification.targetEntity.name + ': ' + notification.subject;
 
     return updateNotification(notification);
 }
