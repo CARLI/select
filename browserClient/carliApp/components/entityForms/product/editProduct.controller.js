@@ -301,6 +301,11 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
 
     function saveNewProduct() {
         return productService.create(vm.product)
+            .then(function(newProductId){
+                vm.product.id = newProductId;
+                logAddActivity();
+                return newProductId;
+            })
             .then(saveOfferingsForNewProduct)
             .then(function (offeringsIds) {
                 alertService.putAlert('Product added', {severity: 'success'});
@@ -308,7 +313,6 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
                 return resetProductForm().then(function(){
                     hideProductModal();
                     afterSubmitCallback();
-                    return logAddActivity();
                 });
             })
             .catch(errorHandler);
