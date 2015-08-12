@@ -11,6 +11,7 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
     vm.template = null;
 
     vm.cancel = cancel;
+    vm.removeRecipient = removeRecipient;
     vm.saveNotifications = saveNotifications;
 
     activate();
@@ -273,5 +274,9 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
             return [];
         }
         return toString.split(',');
+    }
+
+    function removeRecipient(index){
+        vm.recipients.splice(index, 1);
     }
 }

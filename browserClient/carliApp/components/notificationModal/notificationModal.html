@@ -16,21 +16,22 @@
             </div>
             <div class="modal-body">
                 <form name="notificationForm" warn-if-unsaved>
-                    <label for="recipients">To</label>
+                    <div class="label">To</div>
 
-                    <!-- recipientsEditable === 'yes' -->
-                    <tags-input ng-model="vm.recipients" placeholder="Add a recipient" display-property="label" add-on-space="true" ng-if="vm.recipientsEditable === 'yes'"></tags-input>
+                    <tags-input ng-if="vm.recipientsEditable === 'yes'" ng-model="vm.recipients" placeholder="Add a recipient" display-property="label" add-on-space="true"></tags-input>
 
-                    <!-- recipientsEditable === 'remove-only' -->
                     <div ng-if="vm.recipientsEditable === 'remove-only'">
-                        REMOVE ONLY: {{ vm.recipients }}
+                        <ul class="recipients-list">
+                            <li ng-repeat="recipient in vm.recipients | orderBy:'label' track by recipient.id">
+                                <span class="recipient-name">{{ recipient.label }}</span>
+                                <button class="clear-button-styles delete" ng-click="vm.removeRecipient($index)"><fa name="remove"></fa></button>
+                            </li>
+                        </ul>
                     </div>
 
-                    <!-- recipientsEditable === 'read-only' -->
                     <div ng-if="vm.recipientsEditable === 'read-only'">
                         READ ONLY: {{ vm.to }}
                     </div>
-
 
                     <label for="subject">Subject Line</label>
                     <input id="subject" type="text" ng-model="vm.draft.subject">
