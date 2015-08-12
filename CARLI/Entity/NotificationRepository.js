@@ -213,6 +213,10 @@ function templateIsForAnnualAccessFeeInvoice(templateId) {
     return templateId === 'notification-template-annual-access-fee-invoices';
 }
 
+function notificationTypeAllowsRecipientsToBeEdited(notificationType){
+    return notificationType === 'other';
+}
+
 function setStore(store) {
     NotificationRepository.setStore(store);
     couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
@@ -236,5 +240,6 @@ module.exports = {
     notificationTypeIsForEstimate: notificationTypeIsForEstimate,
     notificationTypeIsForReminder: notificationTypeIsForReminder,
     templateIsForAnnualAccessFeeInvoice: templateIsForAnnualAccessFeeInvoice,
+    notificationTypeAllowsRecipientsToBeEdited: notificationTypeAllowsRecipientsToBeEdited,
     getSummaryTotal: getSummaryTotal
 };
