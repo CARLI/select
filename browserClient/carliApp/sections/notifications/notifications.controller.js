@@ -1,8 +1,12 @@
 angular.module('carli.sections.notifications')
 .controller('notificationsController', notificationsController);
 
-function notificationsController( $scope, notificationService, notificationTemplateService ){
+function notificationsController( notificationModalService, notificationTemplateService ){
     var vm = this;
+
+    vm.newDraftTemplate = null;
+    vm.showTemplateChooser = showTemplateChooser;
+    vm.startDraft = startDraft;
 
     activate();
 
@@ -15,5 +19,18 @@ function notificationsController( $scope, notificationService, notificationTempl
         notificationTemplateService.list().then(function(notificationTemplates){
             vm.notificationTemplates = notificationTemplates;
         });
+    }
+
+    function startDraft(){
+        hideTempalateChooser();
+        notificationModalService.sendStartDraftMessage( vm.newDraftTemplate );
+    }
+
+    function hideTempalateChooser(){
+        $('#template-chooser').modal('hide');
+    }
+
+    function showTemplateChooser(){
+        $('#template-chooser').modal();
     }
 }
