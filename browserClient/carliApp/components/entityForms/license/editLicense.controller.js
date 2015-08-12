@@ -133,12 +133,13 @@ function editLicenseController( $scope, $rootScope, $location, activityLogServic
         }
         else {
             licenseService.create( vm.license )
-                .then(function(){
+                .then(function(newLicenseId){
                     alertService.putAlert('License added', {severity: 'success'});
+                    vm.license.id = newLicenseId;
+                    logAddActivity();
                     resetLicenseForm();
                     hideNewLicenseModal();
                     afterSubmitCallback();
-                    return logAddActivity();
                 })
                 .catch(errorHandler);
         }
