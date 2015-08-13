@@ -16,6 +16,10 @@
       "description": "The uuid of the recipient of this notification, either a library or vendor.",
       "type": "string"
     },
+    "targetEntityName": {
+      "description": "The name of the recipient of this notification, either a library or vendor.",
+      "type": "string"
+    },
     "subject": {
       "type": "string"
     },
