@@ -1,7 +1,7 @@
 angular.module('carli.notificationList')
 .controller('notificationListController', notificationListController);
 
-function notificationListController($q, $scope, $rootScope, $filter, $window, alertService, config, controllerBaseService, errorHandler, notificationService, notificationModalService, notificationPreviewModalService){
+function notificationListController($q, $scope, $rootScope, $filter, $window, alertService, authService, config, controllerBaseService, errorHandler, notificationService, notificationModalService, notificationPreviewModalService){
     var vm = this;
 
     var datePickerFormat = 'M/D/YY';
@@ -27,7 +27,7 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
 
     function activate(){
         setupTemplateConfigurationForMode();
-        vm.loadingPromise = loadNotifications();
+        vm.loadingPromise = loadUserInfo().then(loadNotifications);
 
         function setupTemplateConfigurationForMode(){
             vm.mode = vm.mode || 'draft';
@@ -56,6 +56,13 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
         }
 
         listenForNotificationChanges();
+    }
+
+    function loadUserInfo() {
+        return authService.fetchCurrentUser().then(function (user) {
+            vm.userName = user.fullName;
+            vm.userEmail = user.email;
+        });
     }
 
     function listenForNotificationChanges(){

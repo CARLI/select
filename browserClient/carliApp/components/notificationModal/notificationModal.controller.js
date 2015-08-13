@@ -1,7 +1,7 @@
 angular.module('carli.notificationModal')
 .controller('notificationModalController', notificationModalController);
 
-function notificationModalController($q, $filter, $rootScope, $scope, alertService, errorHandler, notificationService, notificationModalService, notificationTemplateService) {
+function notificationModalController($q, $filter, $rootScope, $scope, alertService, authService, errorHandler, notificationService, notificationModalService, notificationTemplateService) {
     var vm = this;
     var generator = null;
 
@@ -9,6 +9,8 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
     vm.recipients = [];
     vm.recipientsEditable = true;
     vm.template = null;
+    vm.userName = '';
+    vm.userEmail = '';
 
     vm.cancel = cancel;
     vm.removeRecipient = removeRecipient;
@@ -20,6 +22,14 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
         $scope.$watch(notificationModalService.receiveStartDraftMessage, receiveStartDraftMessage);
         $scope.$watch(notificationModalService.receiveEditDraftMessage, receiveEditDraftMessage);
         setupModalClosingUnsavedChangesWarning();
+        loadUserInfo();
+    }
+
+    function loadUserInfo() {
+        authService.fetchCurrentUser().then(function (user) {
+            vm.userName = user.fullName;
+            vm.userEmail = user.email;
+        });
     }
 
     function initializeDraftFromTemplate( template ){
@@ -232,6 +242,7 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
 
             return getNotifications(vm.draft, recipientIds)
                 .then(function (notifications) {
+                    notifications.forEach(addNotificationCreationInformation);
                     var promises = notifications.map(notificationService.create);
                     return $q.all(promises);
                 })
@@ -244,8 +255,8 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
         }
 
         function saveNotificationFromForm(){
-            vm.draft.dateCreated = new Date().toISOString();
             vm.draft.to = convertRecipientTagsToString(vm.recipients);
+            addNotificationCreationInformation(vm.draft);
 
             return saveNotification()
                 .then(saveSuccess)
@@ -253,7 +264,6 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
 
             function saveNotification(){
                 if ( vm.draft.type === 'Notification' ){
-                    console.log('UPDATE notification ',vm.draft);
                     return notificationService.update(vm.draft);
                 }
                 else {
@@ -275,6 +285,12 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
                 vm.afterSubmitFn();
             }
         }
+    }
+
+    function addNotificationCreationInformation(notification){
+        notification.dateCreated = new Date().toISOString().substr(0,16); //we don't care about second resolution
+        notification.ownerEmail = vm.userEmail;
+        notification.ownerName = vm.userName;
     }
 
     function convertRecipientTagsToString( recipientArray ){

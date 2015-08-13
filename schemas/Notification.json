@@ -37,6 +37,14 @@
         "type": "string",
         "enum": ["draft", "sent"]
     },
+    "ownerEmail": {
+      "description": "email address (couch ID) of the user who created this notification",
+      "type": "string"
+    },
+    "ownerName": {
+      "description": "Full name of the user who created this notification",
+      "type": "string"
+    },
     "dateCreated": {
       "description": "When the draft was created",
       "$ref": "./Date.json"
