@@ -77,9 +77,27 @@ function loadNotification( notificationId  ){
 function sendNotification( notification ){
     notification.draftStatus = 'sent';
     notification.dateSent = new Date().toISOString();
-    notification.subject = notification.targetEntity.name + ': ' + notification.subject;
 
-    return updateNotification(notification);
+    return setToField()
+        .then(updateNotification);
+
+    function setToField(){
+        if ( notification.targetEntity ){
+            var entityId = notification.targetEntity;
+            if ( typeof notification.targetEntity === 'object' ){
+                entityId = notification.targetEntity.id;
+            }
+
+            return getRecipientEmailAddresses(entityId, notification.notificationType)
+                .then(function(emailAddresses){
+                    notification.to = emailAddresses.join(',');
+                    return notification;
+                });
+        }
+        else {
+            return Q(notification);
+        }
+    }
 }
 
 function listDrafts(){
@@ -106,17 +124,42 @@ function listSentBetweenDates(startDate, endDate){
     return couchUtils.getCouchViewResultValuesWithinRange(config.getDbName(), 'listSentNotificationsByDate', startDate, endDate);
 }
 
-function getRecipientLabel(recipientName, notificationType) {
-    return recipientName + ' ' + getLabelForNotificationType(notificationType);
+function getCategoryNameForNotificationType(type) {
+    var labels = {
+        'estimate': libraryRepository.CONTACT_CATEGORY_ESTIMATE,
+        'invoice': libraryRepository.CONTACT_CATEGORY_INVOICE,
+        'report': vendorRepository.CONTACT_CATEGORY_REPORT,
+        'reminder': libraryRepository.CONTACT_CATEGORY_REMINDER
+    };
+    return labels[type];
+}
 
-    function getLabelForNotificationType(type) {
-        var labels = {
-            'estimate': 'Subscription Contacts',
-            'invoice': 'Invoice Contacts',
-            'report': 'Report Contacts',
-            'reminder': 'Subscription Contacts'
-        };
-        return labels[type];
+function getRecipientLabel(recipientName, notificationType) {
+    return recipientName + ' ' + getCategoryNameForNotificationType(notificationType);
+}
+
+function getRecipientEmailAddresses(recipientId, notificationType) {
+    if ( !recipientId ){
+        return [];
+    }
+
+    var notificationCategory = getCategoryNameForNotificationType(notificationType);
+
+    if (notificationTypeIsForLibrary(notificationType)) {
+        return libraryRepository.load(recipientId)
+            .then(function(library){
+                return libraryRepository.getContactEmailAddressesForNotification(library, notificationCategory);
+            });
+    }
+    else if (notificationTypeIsForVendor(notificationType)) {
+        return vendorRepository.load(recipientId)
+            .then(function(vendor) {
+                return vendorRepository.getContactEmailAddressesForNotification(vendor, notificationCategory);
+            });
+    }
+    else {
+        console.log('getRecipientEmailAddresses for unknown type: '+notificationType);
+        return Q('');
     }
 }
 
@@ -169,13 +212,20 @@ function getRecipientLabelForInstance() {
     return recipientLabel;
 }
 
-var functionsToAdd = {
-    getRecipientLabel: getRecipientLabelForInstance
-};
-
-function getId(offering){
-    return offering.id;
+function getRecipientEmailAddressesForInstance(){
+    var notification = this;
+    if ( notification.targetEntity ) {
+        return getRecipientEmailAddresses(notification.targetEntity.id, notification.notificationType);
+    }
+    else {
+        return Q([]);
+    }
 }
+
+var functionsToAdd = {
+    getRecipientLabel: getRecipientLabelForInstance,
+    getRecipientEmailAddresses: getRecipientEmailAddressesForInstance
+};
 
 function notificationTypeIsForLibrary(notificationType) {
     var results = {
@@ -213,6 +263,10 @@ function templateIsForAnnualAccessFeeInvoice(templateId) {
     return templateId === 'notification-template-annual-access-fee-invoices';
 }
 
+function notificationTypeAllowsRecipientsToBeEdited(notificationType){
+    return notificationType === 'other';
+}
+
 function setStore(store) {
     NotificationRepository.setStore(store);
     couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
@@ -230,11 +284,13 @@ module.exports = {
     listSent: listSent,
     listSentBetweenDates: listSentBetweenDates,
     getRecipientLabel: getRecipientLabel,
+    getRecipientEmailAddresses: getRecipientEmailAddresses,
     notificationTypeIsForLibrary: notificationTypeIsForLibrary,
     notificationTypeIsForVendor: notificationTypeIsForVendor,
     notificationTypeIsForInvoice: notificationTypeIsForInvoice,
     notificationTypeIsForEstimate: notificationTypeIsForEstimate,
     notificationTypeIsForReminder: notificationTypeIsForReminder,
     templateIsForAnnualAccessFeeInvoice: templateIsForAnnualAccessFeeInvoice,
+    notificationTypeAllowsRecipientsToBeEdited: notificationTypeAllowsRecipientsToBeEdited,
     getSummaryTotal: getSummaryTotal
 };

@@ -175,8 +175,8 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
             activityData.vendorName = entity.vendor.name;
         }
         else if ( entity.type === 'Product' ){
-            activityData.cycleId = cycle.id;
-            activityData.cycleName = cycle.name;
+            activityData.cycleId = entity.cycle.id;
+            activityData.cycleName = entity.cycle.name;
             activityData.productId = entity.id;
             activityData.productName = entity.name;
             activityData.vendorId = entity.vendor.id;

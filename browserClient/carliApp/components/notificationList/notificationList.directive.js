@@ -5,7 +5,7 @@ angular.module('carli.notificationList')
         templateUrl: '/carliApp/components/notificationList/notificationList.html',
         scope: {
             mode: '@',
-            title: '@',
+            listTitle: '@',
             subTitle: '@'
         },
         controller: notificationListController,

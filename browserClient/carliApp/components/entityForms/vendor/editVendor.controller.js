@@ -142,12 +142,13 @@ function editVendorController( $scope, $rootScope, activityLogService, entityBas
         }
         else {
             vendorService.create(vm.vendor)
-                .then(function () {
+                .then(function(newVendorId) {
                     alertService.putAlert('Vendor added', {severity: 'success'});
+                    vm.vendor.id = newVendorId;
+                    logAddActivity();
                     resetVendorForm();
                     hideModal();
                     afterSubmitCallback();
-                    return logAddActivity();
                 })
                 .catch(errorHandler);
         }

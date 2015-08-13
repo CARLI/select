@@ -1,5 +1,5 @@
 <div class="pull-left">
-    <div class="title">{{ ::vm.title }}</div>
+    <div class="title">{{ ::vm.listTitle }}</div>
     <div class="subtitle">{{ ::vm.subTitle }}</div>
 </div>
 
@@ -15,12 +15,13 @@
 </div>
 
 <ul cg-busy="vm.loadingPromise">
-    <li class="notification-row" ng-repeat="notification in vm.notifications | filter: vm.filterByType | orderBy:vm.orderBy:vm.reverse as filteredResults track by notification.id">
+    <li class="notification-row" ng-repeat="notification in vm.notifications | filter: vm.filterByType | orderBy:vm.orderBy as filteredResults track by notification.id">
         <div class="column subject">
             <span class="subject">
                 <span class="recipient" ng-show="::notification.targetEntity.name">{{ ::notification.targetEntity.name }}:</span>
                 <span class="subject">{{ ::notification.subject }}</span>
                 <span class="total">{{ ::vm.formatSummaryTotal(notification.summaryTotal) }}</span>
+                <span class="owner">{{ ::notification.ownerEmail }}</span>
             </span>
         </div>
         <div class="column date-sent" ng-if="::vm.showDateSent">
@@ -28,20 +29,29 @@
             <div class="date">{{ ::notification.dateSent | date:'shortDate' }}</div>
         </div>
         <div class="column preview">
-            <a busy-click="vm.previewNotification(notification)">View</a>
+            <a busy-click="vm.editDraft(notification)" ng-if="vm.showEdit">Edit</a>
+            <a busy-click="vm.previewNotification(notification)" ng-if="vm.showView">View</a>
             <span ng-show="notification.pdfLink">|</span>
             <a busy-click="vm.previewPdf(notification)" ng-show="notification.pdfLink">PDF</a>
             <span ng-show="notification.csvLink">|</span>
             <a busy-click="vm.previewCsv(notification)" ng-show="notification.csvLink">CSV</a>
         </div>
         <div class="column remove" ng-if="::vm.showRemove">
-            <button type="button" class="carli-button subdued-remove-button" busy-click="vm.removeDraft(notification)">
+            <button type="button" class="carli-button subdued-remove-button" busy-click="vm.removeDraft(notification)" ng-if="notification.ownerEmail === vm.userEmail">
                 Remove <span class="sr-only">draft for {{ ::notification.subject }}</span>
+            </button>
+            <button type="button" class="carli-button" disabled ng-if="notification.ownerEmail != vm.userEmail"
+                    title="You cannot remove this notification because you do not own it">
+                Remove <span class="sr-only">You cannot remove this notification because it is owned by {{ notification.ownerEmail }}</span>
             </button>
         </div>
         <div class="column send" >
-            <button type="button" class="carli-button" busy-click="vm.sendNotification(notification)">
+            <button type="button" class="carli-button" busy-click="vm.sendNotification(notification)" ng-if="notification.ownerEmail === vm.userEmail">
                 {{ ::vm.sendLabel }} <span class="sr-only">{{ ::vm.sendLabel }} notification {{ ::notification.subject }}</span>
+            </button>
+            <button type="button" class="carli-button" disabled ng-if="notification.ownerEmail != vm.userEmail"
+                    title="You cannot send this notification because you do not own it">
+                Send <span class="sr-only">You cannot send this notification because it is owned by {{ notification.ownerEmail }}</span>
             </button>
         </div>
     </li>

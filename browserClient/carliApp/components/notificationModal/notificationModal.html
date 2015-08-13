@@ -12,35 +12,37 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><fa aria-hidden="true" name="remove"></fa><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="modal-label">Draft a Notification: {{ vm.template.name }}</h4>
+                <h4 class="modal-title" id="modal-label">Edit Draft</h4>
             </div>
             <div class="modal-body">
-                <label for="templateMenu" ng-if="vm.templates">Choose a template:</label>
-                <div class="carli-select" ng-if="vm.templates">
-                    <select ng-model="vm.template" ng-options="template.name for template in vm.templates | filter:{notificationType: 'other'} track by template.id" ng-change="vm.useTemplate()" id="templateMenu"></select>
-                </div>
+                <form name="notificationForm" warn-if-unsaved>
+                    <div class="label">To</div>
 
-                <form name="notificationForm" warn-if-unsaved ng-if="vm.template">
-                    <label for="recipients">To</label>
-                    <tags-input ng-model="vm.recipients" placeholder="Add a recipient" display-property="label" add-on-space="true"></tags-input>
+                    <tags-input ng-if="vm.recipientsEditable === 'yes'" ng-model="vm.recipients" placeholder="Add a recipient" display-property="label" add-on-space="true"></tags-input>
+
+                    <div ng-if="vm.recipientsEditable === 'remove-only'">
+                        <ul class="recipients-list">
+                            <li ng-repeat="recipient in vm.recipients | orderBy:'label' track by recipient.id">
+                                <span class="recipient-name">{{ recipient.label }}</span>
+                                <button class="clear-button-styles delete" ng-click="vm.removeRecipient($index)"><fa name="remove"></fa></button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div ng-if="vm.recipientsEditable === 'read-only'">
+                        <strong class="purple">{{ vm.recipientLabel }}</strong>
+                        <span class="to">{{ vm.recipientEmail }}</span>
+                    </div>
 
                     <label for="subject">Subject Line</label>
                     <input id="subject" type="text" ng-model="vm.draft.subject">
 
                     <label for="emailBody">Email Text</label>
                     <textarea id="emailBody" ng-model="vm.draft.emailBody"></textarea>
-
-                    <div ng-show="vm.template.isPdfContentEditable">
-                        <label for="pdfBefore">Text Before Invoice:</label>
-                        <textarea id="pdfBefore" ng-model="vm.draft.pdfBefore"></textarea>
-
-                        <label for="pdfAfter">Text After Invoice:</label>
-                        <textarea  id="pdfAfter" ng-model="vm.draft.pdfAfter"></textarea>
-                    </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="carli-button cancel-button" data-dismiss="modal">Cancel</button>
+                <button type="button" class="carli-button cancel-button" ng-click="vm.cancel()">Cancel</button>
                 <button type="button" class="carli-button save-button" busy-click="vm.saveNotifications()">Save</button>
              </div>
         </div>

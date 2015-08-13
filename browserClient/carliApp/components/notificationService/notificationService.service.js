@@ -18,7 +18,8 @@ function notificationService($q, CarliModules, errorHandler) {
         sendNotification: function() { return $q.when( notificationModule.sendNotification.apply(this, arguments) ); },
         removeNotification: function() { return $q.when( notificationModule.delete.apply(this, arguments)); },
         getRecipientLabel: notificationModule.getRecipientLabel,
-        generateDraftNotification: CarliModules.NotificationDraftGenerator.generateDraftNotification
+        generateDraftNotification: CarliModules.NotificationDraftGenerator.generateDraftNotification,
+        notificationTypeAllowsRecipientsToBeEdited: notificationModule.notificationTypeAllowsRecipientsToBeEdited
     };
 
     function getBlankNotification(){

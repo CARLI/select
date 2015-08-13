@@ -48,13 +48,7 @@ function getAnnualAccessFeeDraftForOneLibrary(template, notificationData) {
 function getAnnualAccessFeeDraftForAllLibraries(template, notificationData) {
 
     function getEntitiesForAnnualAccessFeeDraftForAllLibraries() {
-        return cycleRepository.load(config.oneTimePurchaseProductsCycleDocId)
-            .then(function(cycle){
-                return libraryRepository.listLibrariesWithSelectionsInCycle(cycle);
-            })
-            .then(function(libraryIds){
-                return libraryRepository.getLibrariesById(libraryIds);
-            });
+        return loadLibrariesWithSelectionsInCycle(config.oneTimePurchaseProductsCycleDocId);
     }
     function getRecipientsForAnnualAccessFeeDraftForAllLibraries() {
         return annualAccessAllLibrariesDraft.getEntities()
@@ -285,13 +279,7 @@ function getVendorReportsForOne(template, notificationData) {
 
 function getLibraryInvoicesForAll(template, notificationData) {
     function getEntitiesForLibraryInvoicesForAll() {
-        return cycleRepository.load(notificationData.cycleId)
-            .then(function(cycle) {
-                return libraryRepository.listLibrariesWithSelectionsInCycle(cycle);
-            })
-            .then(function (libraryIds) {
-                return libraryRepository.getLibrariesById(libraryIds);
-            });
+        return loadLibrariesWithSelectionsInCycle(notificationData.cycleId);
     }
     function getRecipientsForLibraryInvoicesForAll() {
         return allLibrariesDraft.getEntities()
@@ -419,7 +407,7 @@ function getLibraryInvoicesForOne(template, notificationData) {
 
 function getLibraryEstimatesForAll(template, notificationData) {
     function getEntitiesForLibraryEstimatesForAll() {
-        return libraryRepository.listActiveLibraries();
+        return loadLibrariesWithSelectionsInCycle(notificationData.cycleId);
     }
     function getRecipientsForLibraryEstimatesForAll() {
         return allLibrariesDraft.getEntities()
@@ -657,7 +645,6 @@ function generateNotificationForEntity(entityId, customizedTemplate){
         targetEntity: entityId,
         subject: customizedTemplate.subject,
         emailBody: customizedTemplate.emailBody,
-        dateCreated: new Date().toISOString(),
         draftStatus: 'draft',
         notificationType: customizedTemplate.notificationType,
         isFeeInvoice: isAnnualAccessFeeInvoice(customizedTemplate.id)
@@ -679,6 +666,16 @@ function onlyPurchasedOfferings(offering) {
 }
 function onlyOfferingsWithFees(offering) {
     return offering.product.oneTimePurchaseAnnualAccessFee;
+}
+
+function loadLibrariesWithSelectionsInCycle( cycleId ){
+    return cycleRepository.load(cycleId)
+        .then(function(cycle) {
+            return libraryRepository.listLibrariesWithSelectionsInCycle(cycle);
+        })
+        .then(function (libraryIds) {
+            return libraryRepository.getLibrariesById(libraryIds);
+        });
 }
 
 module.exports = {
