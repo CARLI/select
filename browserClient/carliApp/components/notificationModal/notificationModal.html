@@ -30,7 +30,8 @@
                     </div>
 
                     <div ng-if="vm.recipientsEditable === 'read-only'">
-                        READ ONLY: {{ vm.to }}
+                        <strong class="purple">{{ vm.recipientLabel }}</strong>
+                        <span class="to">{{ vm.recipientEmail }}</span>
                     </div>
 
                     <label for="subject">Subject Line</label>

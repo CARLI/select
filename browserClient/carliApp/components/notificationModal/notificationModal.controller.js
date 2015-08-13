@@ -46,6 +46,18 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
         var recipientsEditable = notificationService.notificationTypeAllowsRecipientsToBeEdited(notification.notificationType);
         vm.recipientsEditable = recipientsEditable ? 'yes' : 'read-only';
 
+        vm.recipientLabel = notification.getRecipientLabel();
+
+        $q.when(notification.getRecipientEmailAddresses())
+            .then(function(emailAddresses){
+                if ( emailAddresses && emailAddresses.length ){
+                    vm.recipientEmail = '(' + emailAddresses + ')';
+                }
+                else {
+                    vm.recipientEmail = '(No contacts added!)';
+                }
+            });
+
         return vm.draft;
     }
 
