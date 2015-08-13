@@ -36,13 +36,21 @@
             <a busy-click="vm.previewCsv(notification)" ng-show="notification.csvLink">CSV</a>
         </div>
         <div class="column remove" ng-if="::vm.showRemove">
-            <button type="button" class="carli-button subdued-remove-button" busy-click="vm.removeDraft(notification)">
+            <button type="button" class="carli-button subdued-remove-button" busy-click="vm.removeDraft(notification)" ng-if="notification.ownerEmail === vm.userEmail">
                 Remove <span class="sr-only">draft for {{ ::notification.subject }}</span>
+            </button>
+            <button type="button" class="carli-button" disabled ng-if="notification.ownerEmail != vm.userEmail"
+                    title="You cannot remove this notification because you do not own it">
+                Remove <span class="sr-only">You cannot remove this notification because it is owned by {{ notification.ownerEmail }}</span>
             </button>
         </div>
         <div class="column send" >
-            <button type="button" class="carli-button" busy-click="vm.sendNotification(notification)">
+            <button type="button" class="carli-button" busy-click="vm.sendNotification(notification)" ng-if="notification.ownerEmail === vm.userEmail">
                 {{ ::vm.sendLabel }} <span class="sr-only">{{ ::vm.sendLabel }} notification {{ ::notification.subject }}</span>
+            </button>
+            <button type="button" class="carli-button" disabled ng-if="notification.ownerEmail != vm.userEmail"
+                    title="You cannot send this notification because you do not own it">
+                Send <span class="sr-only">You cannot send this notification because it is owned by {{ notification.ownerEmail }}</span>
             </button>
         </div>
     </li>
