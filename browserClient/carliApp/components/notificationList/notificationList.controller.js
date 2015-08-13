@@ -44,7 +44,7 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
                 vm.sentFilterEndDate = moment().endOf('day').format();
             }
             else {
-                vm.orderBy = '-dateCreated';
+                vm.orderBy = ['-dateCreated','targetEntity.name'];
                 vm.showRemove = true;
                 vm.showDateSent = false;
                 vm.showSendAll = true;

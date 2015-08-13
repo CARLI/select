@@ -1,5 +1,5 @@
 <div class="pull-left">
-    <div class="title">{{ ::vm.title }}</div>
+    <div class="title">{{ ::vm.listTitle }}</div>
     <div class="subtitle">{{ ::vm.subTitle }}</div>
 </div>
 
@@ -21,6 +21,7 @@
                 <span class="recipient" ng-show="::notification.targetEntity.name">{{ ::notification.targetEntity.name }}:</span>
                 <span class="subject">{{ ::notification.subject }}</span>
                 <span class="total">{{ ::vm.formatSummaryTotal(notification.summaryTotal) }}</span>
+                <span class="owner">{{ ::notification.ownerEmail }}</span>
             </span>
         </div>
         <div class="column date-sent" ng-if="::vm.showDateSent">

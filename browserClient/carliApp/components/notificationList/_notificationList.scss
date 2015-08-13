@@ -52,6 +52,10 @@ notification-list {
                     }
                 }
 
+                .owner {
+                    display: none;
+                }
+
                 &.date-sent,
                 &.preview,
                 &.remove,
