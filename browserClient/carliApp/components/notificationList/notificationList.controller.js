@@ -172,7 +172,12 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
             .catch(errorHandler);
 
         function sendNotificationSilently(notification){
-            return notificationService.sendNotification(notification);
+            if ( notification.ownerEmail === vm.userEmail ) {
+                return notificationService.sendNotification(notification);
+            }
+            else {
+                return $q.when();
+            }
         }
     }
 
