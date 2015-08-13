@@ -216,8 +216,6 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
         }
 
         function saveNotificationFromGenerator() {
-            console.log('Save notification from data', vm.draft);
-
             var recipientIds = getRecipientIds(vm.recipients);
 
             return getNotifications(vm.draft, recipientIds)
@@ -254,7 +252,9 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
         }
 
         function saveSuccess(results){
-            var message = angular.isArray(results) ? results.length + ' Notifications created' : 'Notification created';
+            var numberCreated = angular.isArray(results) ? results.length : 1;
+            var s = numberCreated === 1 ? '' : 's';
+            var message = numberCreated + ' Notification'+s +' created';
             alertService.putAlert(message, {severity: 'success'});
             $rootScope.$broadcast('notificationsUpdated', 'draftCreated');
             resetNotificationForm();
