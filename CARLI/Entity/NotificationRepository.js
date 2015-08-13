@@ -78,6 +78,10 @@ function sendNotification( notification ){
     notification.draftStatus = 'sent';
     notification.dateSent = new Date().toISOString();
 
+    if ( notification.targetEntity && notification.targetEntity.name ){
+        notification.targetEntityName = notification.targetEntity.name;
+    }
+
     return setToField()
         .then(updateNotification);
 

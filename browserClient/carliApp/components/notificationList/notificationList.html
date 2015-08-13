@@ -18,7 +18,7 @@
     <li class="notification-row" ng-repeat="notification in vm.notifications | filter: vm.filterByType | orderBy:vm.orderBy as filteredResults track by notification.id">
         <div class="column subject">
             <span class="subject">
-                <span class="recipient" ng-show="::notification.targetEntity.name">{{ ::notification.targetEntity.name }}:</span>
+                <span class="recipient" ng-show="notification.targetEntity.name || notification.targetEntityName">{{ notification.targetEntity.name || notification.targetEntityName }}:</span>
                 <span class="subject">{{ ::notification.subject }}</span>
                 <span class="total">{{ ::vm.formatSummaryTotal(notification.summaryTotal) }}</span>
                 <span class="owner">{{ ::notification.ownerEmail }}</span>
