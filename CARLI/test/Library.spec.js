@@ -202,3 +202,92 @@ describe('getLibrariesById', function(){
         expect(LibraryRepository.getLibrariesById).to.be.a('function');
     })
 });
+
+
+describe('getContactTypesForNotificationCategory', function(){
+    var getCategory = LibraryRepository.getContactTypesForNotificationCategory;
+
+    it('should be a function', function(){
+        expect(LibraryRepository.getContactTypesForNotificationCategory).to.be.a('function');
+    });
+
+    it('should return "Sales" contact type for notification category "Estimate"', function(){
+        expect(getCategory(LibraryRepository.CONTACT_CATEGORY_ESTIMATE)).to.be.an('array');
+        expect(getCategory(LibraryRepository.CONTACT_CATEGORY_ESTIMATE)[0]).to.equal('Billing');
+    });
+
+    it('should return "Sales" contact type for notification category "Invoice"', function(){
+        expect(getCategory(LibraryRepository.CONTACT_CATEGORY_INVOICE)[0]).to.equal('Billing');
+    });
+
+    it('should return "Sales" contact type for notification category "Reminder"', function(){
+        expect(getCategory(LibraryRepository.CONTACT_CATEGORY_REMINDER)[0]).to.equal('Billing');
+    });
+
+    it('should return "Unknown Category" contact type for a bogus category', function(){
+        expect(getCategory('bogus')[0]).to.equal('Unknown Category');
+    });
+});
+
+describe('getContactEmailAddressesForNotification', function(){
+    var testLibrary = validLibraryData();
+    testLibrary.contacts = [
+        {
+            name: 'Test Billing Contact',
+            email: 'test_billing@email.com',
+            contactType: 'Billing'
+        },
+        {
+            name: 'Test Sales Contact',
+            email: 'test_sales@email.com',
+            contactType: 'Sales'
+        },
+        {
+            name: 'Test Technical Contact',
+            email: 'test_technical@email.com',
+            contactType: 'Technical'
+        },
+        {
+            name: 'Test Director Contact',
+            email: 'test_director@email.com',
+            contactType: 'Director'
+        },
+        {
+            name: 'Test E-Resources Liaison Contact',
+            email: 'test_e_resources_liaison@email.com',
+            contactType: 'E-Resources Liaison'
+        },
+        {
+            name: 'Test Other Contact',
+            email: 'test_other@email.com',
+            contactType: 'Other'
+        },
+        {
+            name: 'Test Notification Only Contact',
+            email: 'test_notification_only@email.com',
+            contactType: 'Notification Only'
+        }
+    ];
+
+    it('should be a function', function(){
+        expect(LibraryRepository.getContactEmailAddressesForNotification).to.be.a('function');
+    });
+
+    var getEmail = LibraryRepository.getContactEmailAddressesForNotification;
+
+    it('should return the correct contacts for the Estimate category', function(){
+        var testEmails = getEmail(testLibrary, LibraryRepository.CONTACT_CATEGORY_ESTIMATE);
+        expect(testEmails).to.be.an('array');
+        expect(testEmails).to.include('test_billing@email.com');
+    });
+
+    it('should return the correct contacts for the Invoice category', function(){
+        var testEmails = getEmail(testLibrary, LibraryRepository.CONTACT_CATEGORY_INVOICE);
+        expect(testEmails).to.include('test_billing@email.com');
+    });
+
+    it('should return the correct contacts for the Reminder category', function(){
+        var testEmails = getEmail(testLibrary, LibraryRepository.CONTACT_CATEGORY_REMINDER);
+        expect(testEmails).to.include('test_billing@email.com');
+    });
+});

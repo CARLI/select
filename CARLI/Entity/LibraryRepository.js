@@ -11,6 +11,10 @@ var CrmLibraryEntity = require('./CrmLibraryEntity')
     , _ = require('lodash')
     ;
 
+var CONTACT_CATEGORY_ESTIMATE = 'Subscription Contacts';
+var CONTACT_CATEGORY_INVOICE  = 'Invoice Contacts';
+var CONTACT_CATEGORY_REMINDER = 'Subscription Contacts';
+
 var crmLibraryRepository = CrmLibraryEntity();
 
 var localLibraryRepository = Entity('LibraryNonCrm');
@@ -137,12 +141,51 @@ function getLibrariesById( ids ){
     }
 }
 
+function getContactTypesForNotificationCategory(contactCategory){
+    if ( contactCategory === CONTACT_CATEGORY_ESTIMATE ){
+        return ['Billing'];
+    }
+    if ( contactCategory === CONTACT_CATEGORY_INVOICE ){
+        return ['Billing'];
+    }
+    if ( contactCategory === CONTACT_CATEGORY_REMINDER ){
+        return ['Billing'];
+    }
+    else {
+        return ['Unknown Category'];
+    }
+}
+
+function getContactEmailAddressesForNotification(library, contactCategory){
+    var contactTypes = getContactTypesForNotificationCategory(contactCategory);
+    return getContactEmailAddressesForContactTypes(library, contactTypes);
+}
+
+function getContactEmailAddressesForContactTypes(library, arrayOfContactTypes){
+    if ( !library || !library.contacts ){
+        return [];
+    }
+
+    return library.contacts.filter(matchingTypes).map(extractEmail);
+
+    function matchingTypes(contact){
+        return arrayOfContactTypes.indexOf(contact.contactType) != -1;
+    }
+
+    function extractEmail(contact){
+        return contact.email;
+    }
+}
+
 function setStore(store) {
     localLibraryRepository.setStore(store);
     CouchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
 }
 
 module.exports = {
+    CONTACT_CATEGORY_ESTIMATE: CONTACT_CATEGORY_ESTIMATE,
+    CONTACT_CATEGORY_INVOICE: CONTACT_CATEGORY_INVOICE,
+    CONTACT_CATEGORY_REMINDER: CONTACT_CATEGORY_REMINDER,
     setStore: setStore,
     update: updateLibrary,
     list: listLibraries,
@@ -153,5 +196,7 @@ module.exports = {
     getMembershipLevelOptions: getMembershipLevelOptions,
     loadNonCrmLibraryForCrmId: loadNonCrmLibraryForCrmId,
     listLibrariesWithSelectionsInCycle: listLibrariesWithSelectionsInCycle,
-    getLibrariesById: getLibrariesById
+    getLibrariesById: getLibrariesById,
+    getContactTypesForNotificationCategory: getContactTypesForNotificationCategory,
+    getContactEmailAddressesForNotification: getContactEmailAddressesForNotification
 };
