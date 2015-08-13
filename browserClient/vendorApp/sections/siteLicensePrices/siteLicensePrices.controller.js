@@ -22,6 +22,8 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
     activate();
 
     function activate() {
+        affixControlsToTopOfPage();
+
         vm.vendorId = authService.getCurrentUser().vendor.id;
 
         vm.viewOptions = {
@@ -33,6 +35,27 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
 
         vm.loadingPromise = loadLibraries()
             .then(initializePricingGrid);
+    }
+
+    function affixControlsToTopOfPage() {
+        var headerPinnedEvent = 'affixed.bs.affix';
+        var headerUnpinnedEvent = 'affixed-top.bs.affix';
+
+        var heightOfSiteHeader = 165;
+        var heightOfPageHeader = 105;
+
+        $('.page-header').affix({ offset: { top: heightOfSiteHeader } });
+
+        $(document).on(headerPinnedEvent, headerPinned);
+        $(document).on(headerUnpinnedEvent, headerUnpinned);
+
+        function headerPinned(e) {
+            $('main > div[role="application"]').css('padding-top', heightOfPageHeader + 'px');
+        }
+
+        function headerUnpinned(e) {
+            $('main > div[role="application"]').css('padding-top', '0');
+        }
     }
 
     function initializePricingGrid(){
