@@ -15,7 +15,6 @@ function validNotificationData() {
         type: 'Notification',
         subject: 'Test subject',
         emailBody: 'To whom it may concern: Hi there. Yours sincerely, CARLI',
-        targetEntity: 'targetId',
         draftStatus: 'draft',
         notificationType: 'other',
         isFeeInvoice: false
@@ -67,6 +66,69 @@ describe('The NotificationRepository', function(){
             return expect(notification.targetEntity.type).to.equal('Vendor');
         }
     });
+});
+
+describe('The sendNotification method', function(){
+    it('should be a function', function(){
+        expect(notificationRepository.sendNotification).to.be.a('function');
+    });
+
+    it('should update the status of the notification to sent', function(){
+        var testNotification = validNotificationData();
+
+        return createAndSendNotification(testNotification)
+            .then(function(notification){
+                return expect(notification.draftStatus).to.equal('sent');
+            });
+    });
+
+    it('should set the "to" field to the contact email addresses for a vendor report', function(){
+        var testVendor = {
+            type: 'Vendor',
+            id: uuid.v4(),
+            name: 'Test Vendor For Sending Notifications',
+            contacts: [{
+                name: 'test report contact',
+                email: 'report@test.com',
+                contactType: 'Sales'
+            }]
+        };
+
+        var testNotification = validNotificationData();
+        testNotification.targetEntity = testVendor.id;
+        testNotification.notificationType = 'report';
+
+        return vendorRepository.create(testVendor)
+            .then(function(){
+                return createAndSendNotification(testNotification);
+            })
+            .then(function(notification){
+                return Q.all([
+                    expect(notification.draftStatus).to.equal('sent'),
+                    expect(notification.to).to.equal('report@test.com')
+                ]);
+            })
+    });
+
+    it('should leave the "to" field alone if the notification does not have a targetEntity', function(){
+        var testNotification = validNotificationData();
+        testNotification.to = uuid.v4();
+
+        return createAndSendNotification(testNotification)
+            .then(function(notification) {
+                return Q.all([
+                    expect(notification.draftStatus).to.equal('sent'),
+                    expect(notification.to).to.equal(testNotification.to)
+                ]);
+            });
+    });
+
+    function createAndSendNotification(notification){
+        return notificationRepository.create(notification)
+            .then(notificationRepository.load)
+            .then(notificationRepository.sendNotification)
+            .then(notificationRepository.load);
+    }
 });
 
 describe('the listDrafts method', function(){

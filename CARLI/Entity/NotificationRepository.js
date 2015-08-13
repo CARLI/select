@@ -78,7 +78,26 @@ function sendNotification( notification ){
     notification.draftStatus = 'sent';
     notification.dateSent = new Date().toISOString();
 
-    return updateNotification(notification);
+    return setToField()
+        .then(updateNotification);
+
+    function setToField(){
+        if ( notification.targetEntity ){
+            var entityId = notification.targetEntity;
+            if ( typeof notification.targetEntity === 'object' ){
+                entityId = notification.targetEntity.id;
+            }
+
+            return getRecipientEmailAddresses(entityId, notification.notificationType)
+                .then(function(emailAddresses){
+                    notification.to = emailAddresses.join(',');
+                    return notification;
+                });
+        }
+        else {
+            return Q(notification);
+        }
+    }
 }
 
 function listDrafts(){
