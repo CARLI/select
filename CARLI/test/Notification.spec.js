@@ -213,6 +213,38 @@ describe('the getRecipientLabel method', function () {
     });
 });
 
+describe('the getRecipientEmailAddresses method', function () {
+    it('should be a function', function(){
+        expect(notificationRepository.getRecipientEmailAddresses).to.be.a('function');
+    });
+
+    it('should return the correct label for a vendor report');
+    //sadly, this relies on CRM data, which is not easily modified or mocked.
+
+    it('should return the correct label for a vendor report', function () {
+        var testVendor = {
+            type: 'Vendor',
+            id: uuid.v4(),
+            name: 'Test Vendor',
+            contacts: [{
+                name: 'test contact',
+                email: 'test@email.com',
+                contactType: 'Sales'
+            }]
+        };
+        return vendorRepository.create(testVendor)
+            .then(function(){
+                return notificationRepository.getRecipientEmailAddresses(testVendor.id, 'report');
+            })
+            .then(function(recipientEmail){
+                return Q.all([
+                    expect(recipientEmail).to.be.an('array'),
+                    expect(recipientEmail[0]).to.equal('test@email.com')
+                ]);
+            });
+    });
+});
+
 describe('the getSummaryTotal method', function () {
     function getTestOfferings() {
         return [

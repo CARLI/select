@@ -105,17 +105,38 @@ function listSentBetweenDates(startDate, endDate){
     return couchUtils.getCouchViewResultValuesWithinRange(config.getDbName(), 'listSentNotificationsByDate', startDate, endDate);
 }
 
-function getRecipientLabel(recipientName, notificationType) {
-    return recipientName + ' ' + getLabelForNotificationType(notificationType);
+function getCategoryNameForNotificationType(type) {
+    var labels = {
+        'estimate': libraryRepository.CONTACT_CATEGORY_ESTIMATE,
+        'invoice': libraryRepository.CONTACT_CATEGORY_INVOICE,
+        'report': vendorRepository.CONTACT_CATEGORY_REPORT,
+        'reminder': libraryRepository.CONTACT_CATEGORY_REMINDER
+    };
+    return labels[type];
+}
 
-    function getLabelForNotificationType(type) {
-        var labels = {
-            'estimate': 'Subscription Contacts',
-            'invoice': 'Invoice Contacts',
-            'report': 'Report Contacts',
-            'reminder': 'Subscription Contacts'
-        };
-        return labels[type];
+function getRecipientLabel(recipientName, notificationType) {
+    return recipientName + ' ' + getCategoryNameForNotificationType(notificationType);
+}
+
+function getRecipientEmailAddresses(recipientId, notificationType) {
+    var notificationCategory = getCategoryNameForNotificationType(notificationType);
+
+    if (notificationTypeIsForLibrary(notificationType)) {
+        return libraryRepository.load(recipientId)
+            .then(function(library){
+                return libraryRepository.getContactEmailAddressesForNotification(library, notificationCategory);
+            });
+    }
+    else if (notificationTypeIsForVendor(notificationType)) {
+        return vendorRepository.load(recipientId)
+            .then(function(vendor) {
+                return vendorRepository.getContactEmailAddressesForNotification(vendor, notificationCategory);
+            });
+    }
+    else {
+        console.log('getRecipientEmailAddresses for unknown type: '+notificationType);
+        return Q('');
     }
 }
 
@@ -168,13 +189,15 @@ function getRecipientLabelForInstance() {
     return recipientLabel;
 }
 
-var functionsToAdd = {
-    getRecipientLabel: getRecipientLabelForInstance
-};
-
-function getId(offering){
-    return offering.id;
+function getRecipientEmailAddressesForInstance(){
+    var notification = this;
+    return getRecipientEmailAddresses(notification.targetEntity.id, notification.notificationType);
 }
+
+var functionsToAdd = {
+    getRecipientLabel: getRecipientLabelForInstance,
+    getRecipientEmailAddresses: getRecipientEmailAddressesForInstance
+};
 
 function notificationTypeIsForLibrary(notificationType) {
     var results = {
@@ -233,6 +256,7 @@ module.exports = {
     listSent: listSent,
     listSentBetweenDates: listSentBetweenDates,
     getRecipientLabel: getRecipientLabel,
+    getRecipientEmailAddresses: getRecipientEmailAddresses,
     notificationTypeIsForLibrary: notificationTypeIsForLibrary,
     notificationTypeIsForVendor: notificationTypeIsForVendor,
     notificationTypeIsForInvoice: notificationTypeIsForInvoice,
