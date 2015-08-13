@@ -5,17 +5,27 @@
         </div>
         <div class="controls">
             <button type="button" class="carli-button secondary-button" data-toggle="modal" data-target="#manage-notifications-templates-modal">Manage Notification Templates</button>
-            <button type="button" class="carli-button primary-button" data-toggle="modal" data-target="#notification-modal">Draft a Notification</button>
+            <button type="button" class="carli-button primary-button" ng-click="vm.showTemplateChooser()">Draft a Notification</button>
         </div>
     </div>
 
     <section class="content">
-        <notification-list title="Drafts" sub-title="(not sent)"></notification-list>
-        <notification-list mode="sent" title="Sent History"></notification-list>
+        <notification-list list-title="Drafts" sub-title="(not sent)"></notification-list>
+        <notification-list mode="sent" list-title="Sent History"></notification-list>
     </section>
 
-
-    <notification-modal templates="vm.notificationTemplates"></notification-modal>
+    <notification-modal></notification-modal>
     <manage-notification-templates-modal templates="vm.notificationTemplates"></manage-notification-templates-modal>
     <notification-preview-modal></notification-preview-modal>
+    <modal-dialog modal-id="'template-chooser'" modal-title="'Choose a Template'">
+        <div class="modal-body">
+            <label for="templateMenu">Choose a template:</label>
+            <div class="carli-select">
+                <select id="templateMenu"
+                        ng-model="vm.newDraftTemplate"
+                        ng-options="template.name for template in vm.notificationTemplates | filter:{notificationType: 'other'} track by template.id"
+                        ng-change="vm.startDraft()" ></select>
+            </div>
+        </div>
+    </modal-dialog>
 </section>

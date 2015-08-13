@@ -1,13 +1,12 @@
 angular.module('carli.notificationList')
 .controller('notificationListController', notificationListController);
 
-function notificationListController($q, $scope, $rootScope, $filter, $window, alertService, config, controllerBaseService, errorHandler, notificationService, notificationPreviewModalService){
+function notificationListController($q, $scope, $rootScope, $filter, $window, alertService, authService, config, controllerBaseService, errorHandler, notificationService, notificationModalService, notificationPreviewModalService){
     var vm = this;
 
     var datePickerFormat = 'M/D/YY';
 
     vm.apiPath = config.getMiddlewareUrl();
-    vm.defaultSort = 'dateCreated';
     vm.filter = 'all';
 
     vm.previewCsv = previewCsv;
@@ -20,14 +19,15 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
     vm.sendAllDrafts = sendAllDrafts;
     vm.deleteAllDrafts = deleteAllDrafts;
     vm.formatSummaryTotal = formatSummaryTotal;
+    vm.editDraft = editDraft;
 
-    controllerBaseService.addSortable(vm, vm.defaultSort || 'dateCreated');
+    controllerBaseService.addSortable(vm, '-dateCreated');
 
     activate();
 
     function activate(){
         setupTemplateConfigurationForMode();
-        vm.loadingPromise = loadNotifications();
+        vm.loadingPromise = loadUserInfo().then(loadNotifications);
 
         function setupTemplateConfigurationForMode(){
             vm.mode = vm.mode || 'draft';
@@ -38,20 +38,31 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
                 vm.showSendAll = false;
                 vm.sendLabel = 'Resend';
                 vm.showDateFilter = true;
+                vm.showView = true;
+                vm.showEdit = false;
                 vm.sentFilterStartDate = moment().subtract(2,'week').format();
                 vm.sentFilterEndDate = moment().endOf('day').format();
             }
             else {
-                vm.orderBy = 'dateCreated';
+                vm.orderBy = ['-dateCreated','targetEntity.name'];
                 vm.showRemove = true;
                 vm.showDateSent = false;
                 vm.showSendAll = true;
                 vm.sendLabel = 'Send';
                 vm.showDateFilter = false;
+                vm.showView = false;
+                vm.showEdit = true;
             }
         }
 
         listenForNotificationChanges();
+    }
+
+    function loadUserInfo() {
+        return authService.fetchCurrentUser().then(function (user) {
+            vm.userName = user.fullName;
+            vm.userEmail = user.email;
+        });
     }
 
     function listenForNotificationChanges(){
@@ -100,6 +111,10 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
         }
 
         return false;
+    }
+
+    function editDraft( notification ){
+        notificationModalService.sendEditDraftMessage(notification);
     }
 
     function previewNotification( notification ){

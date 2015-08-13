@@ -1,3 +1,36 @@
+#notification-modal {
+
+    .recipients-list {
+        border: $default-border;
+        display: block;
+        list-style: none;
+        padding: 1px;
+
+        li {
+            background: #eee;
+            border: 1px solid #acacac;
+            border-radius: 3px;
+            display: inline-block;
+            height: 26px;
+            line-height: 25px;
+            margin: 2px;
+            padding: 0 5px;
+
+            button.delete {
+                display: inline;
+                font: bold 16px Arial, sans-serif;
+                color: #585858;
+            }
+        }
+    }
+
+    .tags .tag-item .remove-button:hover,
+    .recipients-list button.delete:hover {
+        color: $dark-red;
+        text-decoration: none;
+    }
+}
+
 #notification-loading-modal {
     @mixin center-absolute(){
         transform: translate(-50%,-50%);
