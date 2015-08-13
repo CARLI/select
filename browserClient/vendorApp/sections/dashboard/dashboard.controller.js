@@ -38,6 +38,10 @@ function dashboardController($scope, authService, cycleService, vendorStatusServ
         if ( !newValue || angular.equals(newValue,oldValue) ){
             return;
         }
+        if (vm.statusUpdating) {
+            return;
+        }
+        vm.statusUpdating = true;
 
         return vendorStatusService.update(vm.vendorStatus, cycle)
             .then(function(){
@@ -46,6 +50,9 @@ function dashboardController($scope, authService, cycleService, vendorStatusServ
             })
             .catch(function(err){
                 console.log('error updating vendor status', err);
+            })
+            .finally(function() {
+                vm.statusUpdating = false;
             });
     }
 

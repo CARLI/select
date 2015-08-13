@@ -14,4 +14,10 @@ offering-comments {
     .library-comments {
         padding-left: .5rem;
     }
+
+  .internal-comments, .library-comments {
+        .view-comment {
+            word-wrap: break-word;
+        }
+  }
 }
