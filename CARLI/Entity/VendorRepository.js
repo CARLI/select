@@ -9,6 +9,8 @@ var Entity = require('../Entity')
     , Q = require('q')
     ;
 
+var CONTACT_CATEGORY_REPORT = 'Report Contacts';
+
 var VendorRepository = Entity('Vendor');
 VendorRepository.setStore( Store( StoreModule(StoreOptions) ) );
 
@@ -56,6 +58,36 @@ function getVendorsById( ids ){
     return couchUtils.getCouchDocuments(StoreOptions.couchDbName,ids);
 }
 
+function getContactTypesForNotificationCategory(contactCategory){
+    if ( contactCategory === CONTACT_CATEGORY_REPORT ){
+        return ['Sales'];
+    }
+    else {
+        return ['Unknown Category'];
+    }
+}
+
+function getContactEmailAddressesForNotification(vendor, contactCategory){
+    var contactTypes = getContactTypesForNotificationCategory(contactCategory);
+    return getContactEmailAddressesForContactTypes(vendor, contactTypes);
+}
+
+function getContactEmailAddressesForContactTypes(vendor, arrayOfContactTypes){
+    if ( !vendor || !vendor.contacts ){
+        return [];
+    }
+
+    return vendor.contacts.filter(matchingTypes).map(extractEmail);
+
+    function matchingTypes(contact){
+        return arrayOfContactTypes.indexOf(contact.contactType) != -1;
+    }
+
+    function extractEmail(contact){
+        return contact.email;
+    }
+}
+
 /* functions that get added as instance methods on loaded Vendors */
 
 var functionsToAdd = {
@@ -67,10 +99,13 @@ function setStore(store) {
 }
 
 module.exports = {
+    CONTACT_CATEGORY_REPORT: CONTACT_CATEGORY_REPORT,
     setStore: VendorRepository.setStore,
     create: createVendor,
     update: updateVendor,
     list: listVendors,
     load: loadVendor,
-    getVendorsById: getVendorsById
+    getVendorsById: getVendorsById,
+    getContactTypesForNotificationCategory: getContactTypesForNotificationCategory,
+    getContactEmailAddressesForNotification: getContactEmailAddressesForNotification
 };
