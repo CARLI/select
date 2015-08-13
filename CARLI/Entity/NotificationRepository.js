@@ -139,6 +139,10 @@ function getRecipientLabel(recipientName, notificationType) {
 }
 
 function getRecipientEmailAddresses(recipientId, notificationType) {
+    if ( !recipientId ){
+        return [];
+    }
+
     var notificationCategory = getCategoryNameForNotificationType(notificationType);
 
     if (notificationTypeIsForLibrary(notificationType)) {
@@ -210,7 +214,12 @@ function getRecipientLabelForInstance() {
 
 function getRecipientEmailAddressesForInstance(){
     var notification = this;
-    return getRecipientEmailAddresses(notification.targetEntity.id, notification.notificationType);
+    if ( notification.targetEntity ) {
+        return getRecipientEmailAddresses(notification.targetEntity.id, notification.notificationType);
+    }
+    else {
+        return Q([]);
+    }
 }
 
 var functionsToAdd = {
