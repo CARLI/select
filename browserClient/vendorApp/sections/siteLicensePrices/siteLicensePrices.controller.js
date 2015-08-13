@@ -42,7 +42,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
         var headerUnpinnedEvent = 'affixed-top.bs.affix';
 
         var heightOfSiteHeader = 165;
-        var heightOfPageHeader = 102;
+        var heightOfPageHeader = 105;
 
         $('.page-header').affix({ offset: { top: heightOfSiteHeader } });
 
@@ -50,11 +50,11 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
         $(document).on(headerUnpinnedEvent, headerUnpinned);
 
         function headerPinned(e) {
-            $('#siteLicensePrices').css('top', heightOfPageHeader + 'px');
+            $('main > div[role="application"]').css('padding-top', heightOfPageHeader + 'px');
         }
 
         function headerUnpinned(e) {
-            $('#siteLicensePrices').css('top', 'auto');
+            $('main > div[role="application"]').css('padding-top', '0');
         }
     }
 
