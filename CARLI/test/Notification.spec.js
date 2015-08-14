@@ -1,12 +1,14 @@
-var chai   = require( 'chai' )
-    , expect = chai.expect
-    , notificationRepository = require('../Entity/NotificationRepository' )
-    , test = require( './Entity/EntityInterface.spec' )
-    , testUtils = require('./utils')
-    , Q = require('q')
-    , uuid   = require( 'node-uuid' )
-    , vendorRepository = require('../Entity/VendorRepository' )
-    ;
+var chai = require('chai');
+var chaiAsPromised = require('chai-as-promised');
+var expect = chai.expect;
+var notificationRepository = require('../Entity/NotificationRepository');
+var test = require('./Entity/EntityInterface.spec');
+var testUtils = require('./utils');
+var Q = require('q');
+var uuid = require('node-uuid');
+var vendorRepository = require('../Entity/VendorRepository');
+
+chai.use(chaiAsPromised);
 
 testUtils.setupTestDb();
 
@@ -121,6 +123,17 @@ describe('The sendNotification method', function(){
                     expect(notification.to).to.equal(testNotification.to)
                 ]);
             });
+    });
+
+    it('should reject if the Notification was already sent', function(){
+        var testNotification = validNotificationData();
+
+        return expect(sendNotificationTwice()).to.be.rejected;
+
+        function sendNotificationTwice(){
+            return createAndSendNotification(testNotification)
+                .then(notificationRepository.sendNotification);
+        }
     });
 
     function createAndSendNotification(notification){
@@ -510,5 +523,18 @@ describe('the notificationTypeAllowsRecipientsToBeEdited method', function () {
 
     it('should return true value for "other"', function () {
         expect(notificationRepository.notificationTypeAllowsRecipientsToBeEdited('other')).to.equal(true);
+    });
+});
+
+describe('the listAllContacts method', function(){
+    it('should be a function', function(){
+        expect(notificationRepository.listAllContacts).to.be.a('function');
+    });
+
+    it('should return an array of contacts', function(){
+        return notificationRepository.listAllContacts()
+            .then(function(allContacts){
+                return expect(allContacts).to.be.an('array');
+            });
     });
 });

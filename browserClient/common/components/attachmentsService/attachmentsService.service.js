@@ -1,4 +1,4 @@
-angular.module('carli.attachments')
+angular.module('common.attachments')
     .service('attachmentsService', attachmentsService);
 
 function attachmentsService( CarliModules, $q, errorHandler ) {

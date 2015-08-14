@@ -5,6 +5,8 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
     var vm = this;
 
     var datePickerFormat = 'M/D/YY';
+    var sendFunction = function(){};
+    var postSendFunction = function(){};
 
     vm.apiPath = config.getMiddlewareUrl();
     vm.filter = 'all';
@@ -42,6 +44,7 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
                 vm.showEdit = false;
                 vm.sentFilterStartDate = moment().subtract(2,'week').format();
                 vm.sentFilterEndDate = moment().endOf('day').format();
+                sendFunction = notificationService.resend;
             }
             else {
                 vm.orderBy = ['-dateCreated','targetEntity.name'];
@@ -52,6 +55,10 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
                 vm.showDateFilter = false;
                 vm.showView = false;
                 vm.showEdit = true;
+                sendFunction = notificationService.sendNotification;
+                postSendFunction = function(){
+                    announceNotificationsChange('draftSent');
+                };
             }
         }
 
@@ -145,13 +152,13 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
     }
 
     function sendNotification( notification ){
-        notificationService.sendNotification(notification)
+        sendFunction(notification)
             .then(notificationSentSuccess)
+            .then(postSendFunction)
             .catch(errorHandler);
 
         function notificationSentSuccess(){
             alertService.putAlert('Notification sent', {severity: 'success'});
-            announceNotificationsChange('draftSent');
         }
     }
 

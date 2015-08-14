@@ -24,6 +24,7 @@ function notificationsController( notificationModalService, notificationTemplate
     function startDraft(){
         hideTempalateChooser();
         notificationModalService.sendStartDraftMessage( vm.newDraftTemplate );
+        vm.newDraftTemplate = null;
     }
 
     function hideTempalateChooser(){

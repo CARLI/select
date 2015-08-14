@@ -29,9 +29,11 @@ function libraryProductsListController( $q, controllerBaseService, cycleService 
     function selectionTotal(){
         var total = 0;
 
-        vm.selectedOfferings.forEach(function(offering){
-            total += offering.selection.price;
-        });
+        if ( vm.selectedOfferings ){
+            vm.selectedOfferings.forEach(function(offering){
+                total += offering.selection.price;
+            });
+        }
 
         return total;
     }

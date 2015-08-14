@@ -1,15 +1,15 @@
-var CrmLibraryEntity = require('./CrmLibraryEntity')
-    , Entity = require('../Entity')
-    , EntityTransform = require( './EntityTransformationUtils')
-    , config = require( '../../config' )
-    , StoreOptions = config.storeOptions
-    , Store = require( '../Store' )
-    , StoreModule = require( '../Store/CouchDb/Store')
-    , CouchUtils = require( '../Store/CouchDb/Utils')()
-    , Q = require('q')
-    , Validator = require('../Validator')
-    , _ = require('lodash')
-    ;
+var CrmLibraryEntity = require('./CrmLibraryEntity');
+var Entity = require('../Entity');
+var EntityTransform = require('./EntityTransformationUtils');
+var config = require('../../config');
+var StoreOptions = config.storeOptions;
+var Store = require('../Store');
+var StoreModule = require('../Store/CouchDb/Store');
+var CouchUtils = require('../Store/CouchDb/Utils')();
+var Q = require('q');
+var Validator = require('../Validator');
+var _ = require('lodash');
+
 
 var CONTACT_CATEGORY_ESTIMATE = 'Subscription Contacts';
 var CONTACT_CATEGORY_INVOICE  = 'Invoice Contacts';
@@ -177,6 +177,19 @@ function getContactEmailAddressesForContactTypes(library, arrayOfContactTypes){
     }
 }
 
+function listAllContacts(){
+    return listActiveLibraries()
+        .then(extractContacts);
+
+    function extractContacts( listOfLibraries ){
+        return _.flatten(listOfLibraries.map(extractContact));
+
+        function extractContact(library){
+            return library.contacts;
+        }
+    }
+}
+
 function setStore(store) {
     localLibraryRepository.setStore(store);
     CouchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
@@ -198,5 +211,6 @@ module.exports = {
     listLibrariesWithSelectionsInCycle: listLibrariesWithSelectionsInCycle,
     getLibrariesById: getLibrariesById,
     getContactTypesForNotificationCategory: getContactTypesForNotificationCategory,
-    getContactEmailAddressesForNotification: getContactEmailAddressesForNotification
+    getContactEmailAddressesForNotification: getContactEmailAddressesForNotification,
+    listAllContacts: listAllContacts
 };

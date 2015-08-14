@@ -1,14 +1,14 @@
-var Entity = require('../Entity')
-    , EntityTransform = require( './EntityTransformationUtils')
-    , config = require( '../../config' )
-    , couchUtils = require( '../Store/CouchDb/Utils')()
-    , libraryRepository = require('../Entity/LibraryRepository')
-    , vendorRepository = require('../Entity/VendorRepository')
-    , StoreOptions = config.storeOptions
-    , Store = require( '../Store' )
-    , StoreModule = require( '../Store/CouchDb/Store')
-    , Q = require('q')
-    ;
+var Entity = require('../Entity');
+var EntityTransform = require('./EntityTransformationUtils');
+var config = require('../../config');
+var couchUtils = require('../Store/CouchDb/Utils')();
+var libraryRepository = require('../Entity/LibraryRepository');
+var vendorRepository = require('../Entity/VendorRepository');
+var StoreOptions = config.storeOptions;
+var Store = require('../Store');
+var StoreModule = require('../Store/CouchDb/Store');
+var Q = require('q');
+var _ = require('lodash');
 
 var NotificationRepository = Entity('Notification');
 NotificationRepository.setStore( Store( StoreModule(StoreOptions) ) );
@@ -75,6 +75,10 @@ function loadNotification( notificationId  ){
 }
 
 function sendNotification( notification ){
+    if ( notification.draftStatus === 'sent' ){
+        return Q.reject('Notification has already been sent. Please reload the page for the updated list.');
+    }
+
     notification.draftStatus = 'sent';
     notification.dateSent = new Date().toISOString();
 
@@ -83,6 +87,7 @@ function sendNotification( notification ){
     }
 
     return setToField()
+        .then(sendNotificationEmail)
         .then(updateNotification);
 
     function setToField(){
@@ -102,6 +107,14 @@ function sendNotification( notification ){
             return Q(notification);
         }
     }
+}
+
+function sendNotificationEmail( notification ){
+    return Q( notification );
+}
+function resend( notification ){
+    return sendNotificationEmail(notification)
+        .thenResolve(notification.id);
 }
 
 function listDrafts(){
@@ -126,6 +139,16 @@ function listSent(){
 
 function listSentBetweenDates(startDate, endDate){
     return couchUtils.getCouchViewResultValuesWithinRange(config.getDbName(), 'listSentNotificationsByDate', startDate, endDate);
+}
+
+function listAllContacts(){
+    return Q.all([ //TODO: use allSettled
+            libraryRepository.listAllContacts(),
+            vendorRepository.listAllContacts()
+        ])
+        .then(function(arrayOfArraysOfContacts){
+            return _.flatten(arrayOfArraysOfContacts);
+        });
 }
 
 function getCategoryNameForNotificationType(type) {
@@ -284,9 +307,11 @@ module.exports = {
     load: loadNotification,
     delete: NotificationRepository.delete,
     sendNotification: sendNotification,
+    resend: resend,
     listDrafts: listDrafts,
     listSent: listSent,
     listSentBetweenDates: listSentBetweenDates,
+    listAllContacts: listAllContacts,
     getRecipientLabel: getRecipientLabel,
     getRecipientEmailAddresses: getRecipientEmailAddresses,
     notificationTypeIsForLibrary: notificationTypeIsForLibrary,

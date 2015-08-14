@@ -18,7 +18,7 @@
                     {{ ::offering.product.name }}
                 </div>
                 <div class="column selected-last-year">
-                    <fa name="star" ng-if="offering.selectedLastYear"></fa>
+                    <fa name="check-circle" ng-if="::vm.selectedLastYear(offering)"></fa>
                 </div>
                 <div class="column vendor">{{ ::offering.product.vendor.name }}</div>
                 <div class="column funded">
@@ -82,7 +82,7 @@
                         <subscription-history-table cycle="vm.cycle" product="::offering.product" library="vm.library"></subscription-history-table>
                     </div>
 
-                    <div class="label purple">Redacted License Agreement</div>
+                    <license-list license-id="offering.product.license.id"></license-list>
                 </div>
                 <div class="column select">
 
