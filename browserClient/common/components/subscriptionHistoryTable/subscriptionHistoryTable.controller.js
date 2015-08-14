@@ -1,7 +1,7 @@
 angular.module('common.subscriptionHistoryTable')
     .controller('subscriptionHistoryTableController', subscriptionHistoryTableController);
 
-function subscriptionHistoryTableController(cycleService, historicalPricingService){
+function subscriptionHistoryTableController(config, cycleService, historicalPricingService){
     var vm = this;
 
     vm.loadingPromise = null;
@@ -37,6 +37,7 @@ function subscriptionHistoryTableController(cycleService, historicalPricingServi
 
     function getHistoricalPricingDataOnly(){
         return getHistoricalPricingData()
+            .then(checkForOneTimePurchase)
             .then(saveHistoricPricingDataToVm);
     }
 
@@ -62,6 +63,15 @@ function subscriptionHistoryTableController(cycleService, historicalPricingServi
 
     function saveHistoricPricingDataToVm(historicPricingData){
         vm.rows = historicPricingData;
+        return historicPricingData;
+    }
+
+    function checkForOneTimePurchase(historicPricingData){
+        if ( vm.cycle.id === config.oneTimePurchaseProductsCycleDocId ){
+            historicPricingData[0].year = 'Total Subscribers';
+            delete historicPricingData[0].current;
+            vm.yearLabel = '';
+        }
         return historicPricingData;
     }
 
