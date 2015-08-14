@@ -1,13 +1,13 @@
-var Entity = require('../Entity')
-    , EntityTransform = require( './EntityTransformationUtils')
-    , config = require( '../../config' )
-    , couchUtils = require('../Store/CouchDb/Utils')()
-    , StoreOptions = config.storeOptions
-    , Store = require( '../Store' )
-    , StoreModule = require( '../Store/CouchDb/Store')
-    , moment = require('moment')
-    , Q = require('q')
-    ;
+var Entity = require('../Entity');
+var EntityTransform = require('./EntityTransformationUtils');
+var config = require('../../config');
+var couchUtils = require('../Store/CouchDb/Utils')();
+var StoreOptions = config.storeOptions;
+var Store = require('../Store');
+var StoreModule = require('../Store/CouchDb/Store');
+var moment = require('moment');
+var Q = require('q');
+var _ = require('lodash');
 
 var CONTACT_CATEGORY_REPORT = 'Report Contacts';
 

@@ -1,7 +1,7 @@
-var chai   = require( 'chai' );
+var chai = require('chai');
 var expect = chai.expect;
-var test = require( './Entity/EntityInterface.spec' );
-var vendorRepository = require('../Entity/VendorRepository' );
+var test = require('./Entity/EntityInterface.spec');
+var vendorRepository = require('../Entity/VendorRepository');
 
 function validVendorData() {
     return {

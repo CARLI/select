@@ -1,10 +1,9 @@
-var chai   = require( 'chai' )
-  , expect = chai.expect
-  , Entity = require('../Entity')
-  , LibraryRepository = require('../Entity/LibraryRepository' )
-  , testUtils = require('./utils')
-  , Q = require('q')
-  ;
+var chai   = require('chai');
+var expect = chai.expect;
+var Entity = require('../Entity');
+var LibraryRepository = require('../Entity/LibraryRepository');
+var testUtils = require('./utils');
+var Q = require('q');
 
 function validLibraryData() {
     return {

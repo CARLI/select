@@ -1,14 +1,13 @@
-var Entity = require('../Entity')
-    , EntityTransform = require( './EntityTransformationUtils')
-    , config = require( '../../config' )
-    , couchUtils = require( '../Store/CouchDb/Utils')()
-    , libraryRepository = require('../Entity/LibraryRepository')
-    , vendorRepository = require('../Entity/VendorRepository')
-    , StoreOptions = config.storeOptions
-    , Store = require( '../Store' )
-    , StoreModule = require( '../Store/CouchDb/Store')
-    , Q = require('q')
-    ;
+var Entity = require('../Entity');
+var EntityTransform = require('./EntityTransformationUtils');
+var config = require('../../config');
+var couchUtils = require('../Store/CouchDb/Utils')();
+var libraryRepository = require('../Entity/LibraryRepository');
+var vendorRepository = require('../Entity/VendorRepository');
+var StoreOptions = config.storeOptions;
+var Store = require('../Store');
+var StoreModule = require('../Store/CouchDb/Store');
+var Q = require('q');
 
 var NotificationRepository = Entity('Notification');
 NotificationRepository.setStore( Store( StoreModule(StoreOptions) ) );
