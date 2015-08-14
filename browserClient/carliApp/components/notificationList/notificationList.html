@@ -21,8 +21,10 @@
                 <span class="recipient" ng-show="notification.targetEntity.name || notification.targetEntityName">{{ notification.targetEntity.name || notification.targetEntityName }}:</span>
                 <span class="subject">{{ ::notification.subject }}</span>
                 <span class="total">{{ ::vm.formatSummaryTotal(notification.summaryTotal) }}</span>
-                <span class="owner">{{ ::notification.ownerEmail }}</span>
             </span>
+        </div>
+        <div class="column owner">
+            <span class="email">{{ ::notification.ownerEmail }}</span>
         </div>
         <div class="column date-sent" ng-if="::vm.showDateSent">
             <div class="time">{{ ::notification.dateSent | date:'shortTime' }}</div>
