@@ -1,12 +1,14 @@
-var chai   = require( 'chai' )
-    , expect = chai.expect
-    , notificationRepository = require('../Entity/NotificationRepository' )
-    , test = require( './Entity/EntityInterface.spec' )
-    , testUtils = require('./utils')
-    , Q = require('q')
-    , uuid   = require( 'node-uuid' )
-    , vendorRepository = require('../Entity/VendorRepository' )
-    ;
+var chai = require('chai');
+var chaiAsPromised = require('chai-as-promised');
+var expect = chai.expect;
+var notificationRepository = require('../Entity/NotificationRepository');
+var test = require('./Entity/EntityInterface.spec');
+var testUtils = require('./utils');
+var Q = require('q');
+var uuid = require('node-uuid');
+var vendorRepository = require('../Entity/VendorRepository');
+
+chai.use(chaiAsPromised);
 
 testUtils.setupTestDb();
 
