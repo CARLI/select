@@ -177,6 +177,19 @@ function getContactEmailAddressesForContactTypes(library, arrayOfContactTypes){
     }
 }
 
+function listAllContacts(){
+    return listActiveLibraries()
+        .then(extractContacts);
+
+    function extractContacts( listOfLibraries ){
+        return _.flatten(listOfLibraries.map(extractContact));
+
+        function extractContact(library){
+            return library.contacts;
+        }
+    }
+}
+
 function setStore(store) {
     localLibraryRepository.setStore(store);
     CouchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
@@ -198,5 +211,6 @@ module.exports = {
     listLibrariesWithSelectionsInCycle: listLibrariesWithSelectionsInCycle,
     getLibrariesById: getLibrariesById,
     getContactTypesForNotificationCategory: getContactTypesForNotificationCategory,
-    getContactEmailAddressesForNotification: getContactEmailAddressesForNotification
+    getContactEmailAddressesForNotification: getContactEmailAddressesForNotification,
+    listAllContacts: listAllContacts
 };

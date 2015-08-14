@@ -2,6 +2,7 @@ var chai = require('chai');
 var expect = chai.expect;
 var test = require('./Entity/EntityInterface.spec');
 var vendorRepository = require('../Entity/VendorRepository');
+var Q = require('q');
 
 function validVendorData() {
     return {
@@ -90,5 +91,34 @@ describe('getContactEmailAddressesForNotification', function(){
         var testEmails = getEmail(testVendor, vendorRepository.CONTACT_CATEGORY_REPORT);
         expect(testEmails).to.be.an('array');
         expect(testEmails).to.include('test_sales@email.com');
+    });
+});
+
+describe.only('the listAllContacts method', function(){
+    it('should be a function', function(){
+        expect(vendorRepository.listAllContacts).to.be.a('function');
+    });
+
+    it('should return an array of contacts', function(){
+        var testVendor = validVendorData();
+        testVendor.isActive = true;
+        testVendor.contacts = [
+            {
+                type: 'Contact',
+                name: 'Test Billing Contact',
+                email: 'test_billing@email.com',
+                contactType: 'Billing'
+            }
+        ];
+
+        return vendorRepository.create(testVendor)
+            .then(vendorRepository.listAllContacts)
+            .then(function(allContacts){
+                return Q.all([
+                    expect(allContacts).to.be.an('array'),
+                    expect(allContacts[0]).to.be.an('object'),
+                    expect(allContacts[0].type).to.equal('Contact')
+                ]);
+            });
     });
 });

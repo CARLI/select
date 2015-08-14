@@ -11,6 +11,7 @@ function notificationService($q, CarliModules, errorHandler) {
         listDrafts: function() { return $q.when( notificationModule.listDrafts() ).catch(errorHandler); },
         listSent: function() { return $q.when( notificationModule.listSent() ).catch(errorHandler); },
         listSentBetweenDates: function(startDate, endDate) { return $q.when( notificationModule.listSentBetweenDates(startDate, endDate) ).catch(errorHandler); },
+        listAllContacts: function() { return $q.when( notificationModule.listAllContacts.apply(this, arguments) ); },
         create: function() { return $q.when( notificationModule.create.apply(this, arguments) ); },
         update: function() { return $q.when( notificationModule.update.apply(this, arguments) ); },
         load:   function() { return $q.when( notificationModule.load.apply(this, arguments) ).catch(errorHandler); },

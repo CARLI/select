@@ -525,3 +525,16 @@ describe('the notificationTypeAllowsRecipientsToBeEdited method', function () {
         expect(notificationRepository.notificationTypeAllowsRecipientsToBeEdited('other')).to.equal(true);
     });
 });
+
+describe('the listAllContacts method', function(){
+    it('should be a function', function(){
+        expect(notificationRepository.listAllContacts).to.be.a('function');
+    });
+
+    it('should return an array of contacts', function(){
+        return notificationRepository.listAllContacts()
+            .then(function(allContacts){
+                return expect(allContacts).to.be.an('array');
+            });
+    });
+});
