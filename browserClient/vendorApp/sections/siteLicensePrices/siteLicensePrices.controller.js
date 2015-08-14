@@ -244,7 +244,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
         var offering = getOfferingForCell(cell);
         var commentMarker = cell.find('.comment-marker');
 
-        if (offering && offering.vendorComment) {
+        if (offering && offering.vendorComments) {
             commentMarker.show();
         } else {
             commentMarker.hide();
