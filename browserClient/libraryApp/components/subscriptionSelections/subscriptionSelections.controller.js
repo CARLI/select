@@ -25,6 +25,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, cycl
     vm.returnToBeginning = returnToBeginning;
     vm.reviewSelections = reviewSelections;
     vm.startSelections = startSelections;
+    vm.selectedLastYear = selectedLastYear;
     vm.selectLastYearsSelections = selectLastYearsSelections;
     vm.selectProduct = selectProduct;
     vm.selectAndUpdateProduct = selectAndUpdateProduct;
@@ -62,6 +63,15 @@ function subscriptionSelectionsController( $q, $window, activityLogService, cycl
             });
 
         return vm.loadingPromise;
+    }
+
+    function selectedLastYear(offering){
+        var lastYear = vm.cycle.year - 1;
+
+        if ( offering.history && offering.history[lastYear] ){
+            return offering.history[lastYear].selection;
+        }
+        return false;
     }
 
     function setSelectionScreenState(){
