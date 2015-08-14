@@ -325,7 +325,7 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
             id: contact.email,
             label: contact.email,
             nameAndEmail: contact.name + ' ('+contact.email+')'
-        }
+        };
     }
 
     function removeRecipient(index){
