@@ -1,7 +1,26 @@
 <h2>Thank you! You have completed your subscriptions</h2>
 <p>You can continue to make changes until <strong class="purple">{{ vm.cycle.endDateForSelections | date }}</strong></p>
 
-<ul class="subscriptions product-list complete">
+<ul class="subscriptions product-list complete" cg-busy="vm.loadingPromise">
+    <li class="column-headers">
+        <div class="sortable column" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.productName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.productName)">Product</div>
+        <div class="sortable column" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.vendorName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.vendorName)">Vendor</div>
+        <div class="column su">SU</div>
+        <div class="sortable column review-cost" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.selectionPrice, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.selectionPrice)">Cost</div>
+    </li>
+    <li ng-repeat="offering in vm.offerings | filter: vm.hasSelection | orderBy: vm.orderBy:vm.reverse track by offering.id">
+        <div class="column">{{ offering.product.name }}</div>
+        <div class="column">{{ offering.product.vendor.name }}</div>
+        <div class="column su">{{ offering.selection.users }}</div>
+        <div class="column review-cost">{{ offering.selection.price | currency }}</div>
+    </li>
+    <li class="summary-row">
+        <div class="column">
+            <aside>This is an estimate. Prices may have minor variations based on final vendor invoices.</aside>
+            <span class="total-label">Total</span>
+        </div>
+        <div class="column total">{{ vm.computeTotalPurchasesAmount() | currency}}</div>
+    </li>
     <li class="footer">
         <button type="button" busy-click="vm.startSelections()" class="carli-button arrow-left">Change Selections</button>
         <ask-carli-button context="ubscriptions complete"></ask-carli-button>
