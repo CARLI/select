@@ -9,7 +9,8 @@ subscription-selections {
         }
     }
 
-    ul.review.subscriptions {
+    ul.review.subscriptions,
+    ul.complete.subscriptions {
         .column-headers {
             padding-left: 0;
         }

@@ -255,6 +255,7 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
 
     function saveProduct(){
         translateOptionalSelections();
+        fixOtpDateFormat();
 
         var savePromise = $q.when();
 
@@ -276,6 +277,12 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
     function translateOptionalSelections() {
         if (vm.product.license === undefined) {
             vm.product.license = null;
+        }
+    }
+
+    function fixOtpDateFormat(){
+        if ( isOneTimePurchaseProduct(vm.product) && typeof vm.product.oneTimePurchaseAvailableForPurchaseThrough === 'object' ){
+            vm.product.oneTimePurchaseAvailableForPurchaseThrough = vm.product.oneTimePurchaseAvailableForPurchaseThrough.toISOString();
         }
     }
 

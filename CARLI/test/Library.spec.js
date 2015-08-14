@@ -1,10 +1,9 @@
-var chai   = require( 'chai' )
-  , expect = chai.expect
-  , Entity = require('../Entity')
-  , LibraryRepository = require('../Entity/LibraryRepository' )
-  , testUtils = require('./utils')
-  , Q = require('q')
-  ;
+var chai   = require('chai');
+var expect = chai.expect;
+var Entity = require('../Entity');
+var LibraryRepository = require('../Entity/LibraryRepository');
+var testUtils = require('./utils');
+var Q = require('q');
 
 function validLibraryData() {
     return {
@@ -289,5 +288,22 @@ describe('getContactEmailAddressesForNotification', function(){
     it('should return the correct contacts for the Reminder category', function(){
         var testEmails = getEmail(testLibrary, LibraryRepository.CONTACT_CATEGORY_REMINDER);
         expect(testEmails).to.include('test_billing@email.com');
+    });
+});
+
+describe('the listAllContacts method', function(){
+    it('should be a function', function(){
+        expect(LibraryRepository.listAllContacts).to.be.a('function');
+    });
+
+    it.skip('should return an array of contacts', function(){
+        return LibraryRepository.listAllContacts()
+            .then(function(allContacts){
+                return Q.all([
+                    expect(allContacts).to.be.an('array'),
+                    expect(allContacts[0]).to.be.an('object'),
+                    expect(allContacts[0].type).to.equal('Contact')
+                ]);
+            });
     });
 });

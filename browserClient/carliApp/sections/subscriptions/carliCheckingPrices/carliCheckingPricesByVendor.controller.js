@@ -7,7 +7,6 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
     accordionControllerMixin(vm, loadProductsForVendor);
 
     vm.toggleProductSection = toggleProductSection;
-    vm.getVendorPricingStatus = getVendorPricingStatus;
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.loadingPromise = {};
     vm.stopEditing = stopEditing;

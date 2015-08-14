@@ -201,6 +201,14 @@ ul.product-list.subscriptions {
         .column.selected-last-year {
             flex: none;
             width: $selected-last-year-column-width;
+            text-align: center;
+        }
+
+        &.offering .column.selected-last-year {
+            font-size: 22px;
+            line-height: 22px;
+            padding-bottom: 2px;
+            padding-top: 14px;
         }
 
         .column.funded {

@@ -21,15 +21,17 @@
                 <span class="recipient" ng-show="notification.targetEntity.name || notification.targetEntityName">{{ notification.targetEntity.name || notification.targetEntityName }}:</span>
                 <span class="subject">{{ ::notification.subject }}</span>
                 <span class="total">{{ ::vm.formatSummaryTotal(notification.summaryTotal) }}</span>
-                <span class="owner">{{ ::notification.ownerEmail }}</span>
             </span>
+        </div>
+        <div class="column owner">
+            <span class="email">{{ ::notification.ownerEmail }}</span>
         </div>
         <div class="column date-sent" ng-if="::vm.showDateSent">
             <div class="time">{{ ::notification.dateSent | date:'shortTime' }}</div>
             <div class="date">{{ ::notification.dateSent | date:'shortDate' }}</div>
         </div>
         <div class="column preview">
-            <a busy-click="vm.editDraft(notification)" ng-if="vm.showEdit">Edit</a>
+            <a busy-click="vm.editDraft(notification)" ng-if="vm.showEdit && notification.ownerEmail === vm.userEmail">Edit</a>
             <a busy-click="vm.previewNotification(notification)" ng-if="vm.showView">View</a>
             <span ng-show="notification.pdfLink">|</span>
             <a busy-click="vm.previewPdf(notification)" ng-show="notification.pdfLink">PDF</a>

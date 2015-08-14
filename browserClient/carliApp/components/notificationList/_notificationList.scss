@@ -42,20 +42,6 @@ notification-list {
             .column {
                 border-left: none;
 
-                &.subject {
-                    color: $black;
-                    @include font-size(14);
-                    font-family: 'Verdana', sans-serif;
-
-                    .total {
-                        font-weight: normal;
-                    }
-                }
-
-                .owner {
-                    display: none;
-                }
-
                 &.date-sent,
                 &.preview,
                 &.remove,
@@ -66,6 +52,32 @@ notification-list {
                     padding-top: 0;
                     padding-bottom: 0;
                     text-align: center;
+                }
+
+                &.subject {
+                    color: $black;
+                    flex-grow: 2;
+                    @include font-size(14);
+                    font-family: 'Verdana', sans-serif;
+
+                    .total {
+                        font-weight: normal;
+                    }
+                }
+
+                &.owner {
+                    flex: 1 0 1%;
+                    padding-right: 2rem;
+                    text-align: right;
+
+                    .email {
+                        font-size: 13px;
+                    }
+                }
+
+                &.preview {
+                    flex: none;
+                    width: 125px;
                 }
 
                 &.date-sent {
