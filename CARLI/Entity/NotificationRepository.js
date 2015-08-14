@@ -8,6 +8,7 @@ var StoreOptions = config.storeOptions;
 var Store = require('../Store');
 var StoreModule = require('../Store/CouchDb/Store');
 var Q = require('q');
+var _ = require('lodash');
 
 var NotificationRepository = Entity('Notification');
 NotificationRepository.setStore( Store( StoreModule(StoreOptions) ) );
@@ -138,6 +139,16 @@ function listSent(){
 
 function listSentBetweenDates(startDate, endDate){
     return couchUtils.getCouchViewResultValuesWithinRange(config.getDbName(), 'listSentNotificationsByDate', startDate, endDate);
+}
+
+function listAllContacts(){
+    return Q.all([ //TODO: use allSettled
+            libraryRepository.listAllContacts(),
+            vendorRepository.listAllContacts()
+        ])
+        .then(function(arrayOfArraysOfContacts){
+            return _.flatten(arrayOfArraysOfContacts);
+        });
 }
 
 function getCategoryNameForNotificationType(type) {
@@ -300,6 +311,7 @@ module.exports = {
     listDrafts: listDrafts,
     listSent: listSent,
     listSentBetweenDates: listSentBetweenDates,
+    listAllContacts: listAllContacts,
     getRecipientLabel: getRecipientLabel,
     getRecipientEmailAddresses: getRecipientEmailAddresses,
     notificationTypeIsForLibrary: notificationTypeIsForLibrary,

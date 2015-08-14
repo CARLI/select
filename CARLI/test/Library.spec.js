@@ -290,3 +290,20 @@ describe('getContactEmailAddressesForNotification', function(){
         expect(testEmails).to.include('test_billing@email.com');
     });
 });
+
+describe('the listAllContacts method', function(){
+    it('should be a function', function(){
+        expect(LibraryRepository.listAllContacts).to.be.a('function');
+    });
+
+    it.skip('should return an array of contacts', function(){
+        return LibraryRepository.listAllContacts()
+            .then(function(allContacts){
+                return Q.all([
+                    expect(allContacts).to.be.an('array'),
+                    expect(allContacts[0]).to.be.an('object'),
+                    expect(allContacts[0].type).to.equal('Contact')
+                ]);
+            });
+    });
+});

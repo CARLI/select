@@ -88,6 +88,28 @@ function getContactEmailAddressesForContactTypes(vendor, arrayOfContactTypes){
     }
 }
 
+function listAllContacts(){
+    return VendorRepository.list()
+        .then(filterActiveVendors)
+        .then(extractContacts);
+
+    function filterActiveVendors(listOfVendors){
+        return listOfVendors.filter(activeVendor);
+
+        function activeVendor(vendor){
+            return vendor.isActive;
+        }
+    }
+
+    function extractContacts( listOfVendors ){
+        return _.flatten(listOfVendors.map(extractContact));
+
+        function extractContact(vendor){
+            return vendor.contacts;
+        }
+    }
+}
+
 /* functions that get added as instance methods on loaded Vendors */
 
 var functionsToAdd = {
@@ -107,5 +129,6 @@ module.exports = {
     load: loadVendor,
     getVendorsById: getVendorsById,
     getContactTypesForNotificationCategory: getContactTypesForNotificationCategory,
-    getContactEmailAddressesForNotification: getContactEmailAddressesForNotification
+    getContactEmailAddressesForNotification: getContactEmailAddressesForNotification,
+    listAllContacts: listAllContacts
 };
