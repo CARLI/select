@@ -75,6 +75,10 @@ function loadNotification( notificationId  ){
 }
 
 function sendNotification( notification ){
+    if ( notification.draftStatus === 'sent' ){
+        return Q.reject('Notification has already been sent');
+    }
+
     notification.draftStatus = 'sent';
     notification.dateSent = new Date().toISOString();
 
