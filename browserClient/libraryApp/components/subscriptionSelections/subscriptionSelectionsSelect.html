@@ -18,7 +18,7 @@
                     {{ ::offering.product.name }}
                 </div>
                 <div class="column selected-last-year">
-                    <fa name="star" ng-if="offering.selectedLastYear"></fa>
+                    <fa name="check-circle" ng-if="::vm.selectedLastYear(offering)"></fa>
                 </div>
                 <div class="column vendor">{{ ::offering.product.vendor.name }}</div>
                 <div class="column funded">
