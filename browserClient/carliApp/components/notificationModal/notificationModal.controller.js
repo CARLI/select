@@ -5,6 +5,7 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
     var vm = this;
     var generator = null;
 
+    vm.contactsPromise = $q.when([]);
     vm.draft = {};
     vm.recipients = [];
     vm.recipientsEditable = true;
@@ -12,6 +13,7 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
     vm.userName = '';
     vm.userEmail = '';
 
+    vm.autocompleteContacts = autocompleteContacts;
     vm.cancel = cancel;
     vm.removeRecipient = removeRecipient;
     vm.saveNotifications = saveNotifications;
@@ -23,6 +25,7 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
         $scope.$watch(notificationModalService.receiveEditDraftMessage, receiveEditDraftMessage);
         setupModalClosingUnsavedChangesWarning();
         loadUserInfo();
+        loadAllContacts();
     }
 
     function loadUserInfo() {
@@ -30,6 +33,20 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
             vm.userName = user.fullName;
             vm.userEmail = user.email;
         });
+    }
+
+    function loadAllContacts(){
+        vm.contactsPromise = notificationService.listAllContacts()
+            .then(extractContactObjectsFromContacts)
+            .catch(function(err){
+                console.warn('error loading contacts',err);
+            });
+
+        return vm.contactsPromise;
+
+        function extractContactObjectsFromContacts(allContacts) {
+            return allContacts.map(convertContactToRecipientTag);
+        }
     }
 
     function initializeDraftFromTemplate( template ){
@@ -267,7 +284,6 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
                     return notificationService.update(vm.draft);
                 }
                 else {
-                    console.log('Save notification from form', vm.draft);
                     return notificationService.create(vm.draft);
                 }
             }
@@ -304,7 +320,23 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
         return toString.split(',');
     }
 
+    function convertContactToRecipientTag(contact){
+        return {
+            id: contact.email,
+            label: contact.email,
+            nameAndEmail: contact.name + ' ('+contact.email+')'
+        }
+    }
+
     function removeRecipient(index){
         vm.recipients.splice(index, 1);
+    }
+
+    function autocompleteContacts( textToMatch ){
+        return vm.contactsPromise.then(filterContacts);
+
+        function filterContacts(allContacts){
+            return $filter('filter')(allContacts, textToMatch);
+        }
     }
 }
