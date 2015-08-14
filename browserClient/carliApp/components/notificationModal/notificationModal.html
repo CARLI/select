@@ -18,7 +18,13 @@
                 <form name="notificationForm" warn-if-unsaved>
                     <div class="label">To</div>
 
-                    <tags-input ng-if="vm.recipientsEditable === 'yes'" ng-model="vm.recipients" placeholder="Add a recipient" display-property="label" add-on-space="true"></tags-input>
+                    <tags-input ng-if="vm.recipientsEditable === 'yes'"
+                                ng-model="vm.recipients"
+                                placeholder="Add a recipient" display-property="label" add-on-space="true">
+                        <auto-complete source="vm.autocompleteContacts($query)"
+                                       template="contact-autocomplete-template"
+                                       display-property="name"></auto-complete>
+                    </tags-input>
 
                     <div ng-if="vm.recipientsEditable === 'remove-only'">
                         <ul class="recipients-list">
@@ -48,3 +54,8 @@
         </div>
     </div>
 </div>
+<script type="text/ng-template" id="contact-autocomplete-template">
+    <div class="tag-template">
+        <span class="name-and-email" ng-bind-html="$highlight(data.nameAndEmail)"></span>
+    </div>
+</script>
