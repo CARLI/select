@@ -125,6 +125,17 @@ describe('The sendNotification method', function(){
             });
     });
 
+    it('should reject if the Notification was already sent', function(){
+        var testNotification = validNotificationData();
+
+        return expect(sendNotificationTwice()).to.be.rejected;
+
+        function sendNotificationTwice(){
+            return createAndSendNotification(testNotification)
+                .then(notificationRepository.sendNotification);
+        }
+    });
+
     function createAndSendNotification(notification){
         return notificationRepository.create(notification)
             .then(notificationRepository.load)
