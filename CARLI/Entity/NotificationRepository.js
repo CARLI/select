@@ -76,7 +76,7 @@ function loadNotification( notificationId  ){
 
 function sendNotification( notification ){
     if ( notification.draftStatus === 'sent' ){
-        return Q.reject('Notification has already been sent');
+        return Q.reject('Notification has already been sent. Please reload the page for the updated list.');
     }
 
     notification.draftStatus = 'sent';
@@ -87,6 +87,7 @@ function sendNotification( notification ){
     }
 
     return setToField()
+        .then(sendNotificationEmail)
         .then(updateNotification);
 
     function setToField(){
@@ -106,6 +107,14 @@ function sendNotification( notification ){
             return Q(notification);
         }
     }
+}
+
+function sendNotificationEmail( notification ){
+    return Q( notification );
+}
+function resend( notification ){
+    return sendNotificationEmail(notification)
+        .thenResolve(notification.id);
 }
 
 function listDrafts(){
@@ -288,6 +297,7 @@ module.exports = {
     load: loadNotification,
     delete: NotificationRepository.delete,
     sendNotification: sendNotification,
+    resend: resend,
     listDrafts: listDrafts,
     listSent: listSent,
     listSentBetweenDates: listSentBetweenDates,
