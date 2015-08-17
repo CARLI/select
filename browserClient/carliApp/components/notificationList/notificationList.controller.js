@@ -10,8 +10,10 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
 
     vm.apiPath = config.getMiddlewareUrl();
     vm.filter = 'all';
+    vm.ownerFilterEnabled = false;
 
     vm.previewCsv = previewCsv;
+    vm.filterByOwner = filterByOwner;
     vm.filterByType = filterByType;
     vm.updateNotifications = updateNotifications;
     vm.previewNotification = previewNotification;
@@ -109,6 +111,15 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
             return notificationService.listDrafts().then(function(drafts){
                 vm.notifications  = drafts;
             });
+        }
+    }
+
+    function filterByOwner(notification, index){
+        if ( vm.ownerFilterEnabled){
+            return currentUserOwnsNotification(notification);
+        }
+        else {
+            return true;
         }
     }
 
@@ -219,9 +230,11 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
     }
 
     function listOwnNotifications(){
-        return vm.notifications.filter(function(notification){
-            return notification.ownerEmail === vm.userEmail;
-        });
+        return vm.notifications.filter(currentUserOwnsNotification);
+    }
+
+    function currentUserOwnsNotification(notification){
+        return notification.ownerEmail === vm.userEmail;
     }
 
     function userHasNoDrafts(){
