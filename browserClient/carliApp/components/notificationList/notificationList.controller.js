@@ -22,6 +22,7 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
     vm.deleteAllDrafts = deleteAllDrafts;
     vm.formatSummaryTotal = formatSummaryTotal;
     vm.editDraft = editDraft;
+    vm.userHasNoDrafts = userHasNoDrafts;
 
     controllerBaseService.addSortable(vm, '-dateCreated');
 
@@ -83,6 +84,9 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
                  * and slow to load this could be a pain. A better approach would be to also broadcast the id of the
                  * notification that changed and then specifically remove it from both lists.
                  */
+                updateNotifications();
+            }
+            else if ( args === 'draftEdited' ){
                 updateNotifications();
             }
         });
@@ -169,11 +173,12 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
     }
 
     function sendAllDrafts(){
-        var sendPromises = vm.notifications.map(sendNotificationSilently);
+        var sendPromises = listOwnNotifications().map(sendNotificationSilently);
 
         $q.all(sendPromises)
             .then(function(results){
-                alertService.putAlert( results.length + ' notifications sent', {severity: 'success'});
+                var s = results === 1 ? '' : 's';
+                alertService.putAlert( results.length + ' notification'+s + ' sent', {severity: 'success'});
                 announceNotificationsChange('draftSent');
             })
             .catch(errorHandler);
@@ -189,7 +194,7 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
     }
 
     function deleteAllDrafts(){
-        return $q.all(vm.notifications.map(function(notification){
+        return $q.all(listOwnNotifications().map(function(notification){
                 return notificationService.delete(notification.id);
             }))
             .then(function(){
@@ -211,5 +216,15 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
 
     function announceNotificationsChange( typeOfChange ){
         $rootScope.$broadcast('notificationsUpdated', typeOfChange);
+    }
+
+    function listOwnNotifications(){
+        return vm.notifications.filter(function(notification){
+            return notification.ownerEmail === vm.userEmail;
+        });
+    }
+
+    function userHasNoDrafts(){
+        return listOwnNotifications().length == 0;
     }
 }

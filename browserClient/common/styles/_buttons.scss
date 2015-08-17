@@ -43,6 +43,7 @@ $arrow-fill-size: $arrow-border-size - 1;
     &.disabled {
         color: gray;
         background-color: $light-gray;
+        border: $default-border;
         pointer-events: none;
     }
 
