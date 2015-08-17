@@ -290,7 +290,7 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
                 }
                 else {
                     return notificationService.create(vm.draft)
-                        .then(alertCreateSuccess)
+                        .then(alertCreateSuccess);
                 }
             }
         }
