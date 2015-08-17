@@ -9,13 +9,24 @@
         <view-edit-date ng-model="vm.sentFilterEndDate" edit-mode="true"></view-edit-date>
         <button type="button" class="carli-button" ng-click="vm.updateNotifications()">Set Date Range</button>
     </div>
-    <radio name="'notifications-list'+listId+'-filter'"  value="'all'" ng-model="vm.filter">Show <strong>All Notifications</strong></radio>
-    <radio name="'notifications-list'+listId+'-filter'" value="'invoice'" ng-model="vm.filter">Show <strong>Library Invoices</strong></radio>
-    <radio name="'notifications-list'+listId+'-filter'" value="'report'" ng-model="vm.filter">Show <strong>Vendor Reports</strong></radio>
+    <div class="owner-filter-controls">
+        <div class="group-by-toggle">
+            <button type="button" class="toggle-button" ng-class="{ 'active': vm.ownerFilterEnabled }"
+                    ng-click="vm.enableOwnerFilter()">My Notifications</button
+            ><button type="button" class="toggle-button" ng-class="{ 'active': !vm.ownerFilterEnabled }"
+                    ng-click="vm.disableOwnerFilter()">All Notifications
+            </button>
+        </div>
+    </div>
+    <div class="type-filter-controls">
+        <radio name="'notifications-list'+listId+'-filter'" value="'all'" ng-model="vm.filter">Show <strong>All Notifications</strong></radio>
+        <radio name="'notifications-list'+listId+'-filter'" value="'invoice'" ng-model="vm.filter">Show <strong>Library Invoices</strong></radio>
+        <radio name="'notifications-list'+listId+'-filter'" value="'report'" ng-model="vm.filter">Show <strong>Vendor Reports</strong></radio>
+    </div>
 </div>
 
 <ul cg-busy="vm.loadingPromise">
-    <li class="notification-row" ng-repeat="notification in vm.notifications | filter: vm.filterByType | orderBy:vm.orderBy as filteredResults track by notification.id">
+    <li class="notification-row" ng-repeat="notification in vm.notifications | filter: vm.filterByType | filter: vm.filterByOwner | orderBy:vm.orderBy as filteredResults track by notification.id">
         <div class="column subject">
             <span class="subject">
                 <span class="recipient" ng-show="notification.targetEntity.name || notification.targetEntityName">{{ notification.targetEntity.name || notification.targetEntityName }}:</span>
@@ -60,6 +71,6 @@
 </ul>
 
 <div class="footer" ng-if="vm.showSendAll && filteredResults.length">
-    <button type="button" id="sendAll" class="carli-button primary-button" busy-click="vm.sendAllDrafts()">Send all drafts <fa name="paper-plane"></fa></button>
+    <button type="button" id="sendAll" class="carli-button primary-button" busy-click="vm.sendAllDrafts()" ng-disabled="vm.userHasNoDrafts()">Send all drafts <fa name="paper-plane"></fa></button>
     <button type="button" id="removeAll" class="carli-button primary-button" busy-click="vm.deleteAllDrafts()" ng-show="false">Delete all drafts <fa name="trash-o"></fa></button>
 </div>

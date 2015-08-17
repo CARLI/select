@@ -17,6 +17,7 @@ function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
         listActiveCyclesIncludingOneTimePurchase: listActiveCyclesIncludingOneTimePurchase,
         listOpenForSelectionsCycles: listOpenForSelectionsCycles,
         listOpenForSelectionsAndClosedCycles: listOpenForSelectionsAndClosedCycles,
+        listNonArchivedClosedCyclesIncludingOneTimePurchase: listNonArchivedClosedCyclesIncludingOneTimePurchase,
         listPastFourCyclesMatchingCycle: function( cycle ){
             return $q.when( cycleModule.listPastFourCyclesMatchingCycle(cycle || currentCycle) );
         },
@@ -65,6 +66,19 @@ function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
 
         function cycleIsOpenToLibrariesOrClosed( cycle ){
             return cycle.status === 4 || cycle.status === 5;
+        }
+    }
+
+    function listNonArchivedClosedCyclesIncludingOneTimePurchase(){
+        return $q.when(cycleModule.listActiveCycles())
+            .then(function( cycleList ){
+                return cycleList.filter(cycleIsOneTimePurchaseOrClosed);
+            })
+            .catch(errorHandler);
+
+        function cycleIsOneTimePurchaseOrClosed( cycle ){
+            console.log('  check ',cycle.name);
+            return cycle.cycleType === 'One-Time Purchase' || cycle.status === 5;
         }
     }
 
