@@ -238,6 +238,6 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
     }
 
     function userHasNoDrafts(){
-        return listOwnNotifications().length == 0;
+        return listOwnNotifications().length === 0;
     }
 }
