@@ -60,6 +60,6 @@
 </ul>
 
 <div class="footer" ng-if="vm.showSendAll && filteredResults.length">
-    <button type="button" id="sendAll" class="carli-button primary-button" busy-click="vm.sendAllDrafts()">Send all drafts <fa name="paper-plane"></fa></button>
+    <button type="button" id="sendAll" class="carli-button primary-button" busy-click="vm.sendAllDrafts()" ng-disabled="vm.userHasNoDrafts()">Send all drafts <fa name="paper-plane"></fa></button>
     <button type="button" id="removeAll" class="carli-button primary-button" busy-click="vm.deleteAllDrafts()" ng-show="false">Delete all drafts <fa name="trash-o"></fa></button>
 </div>
