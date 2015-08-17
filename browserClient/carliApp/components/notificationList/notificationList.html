@@ -9,13 +9,19 @@
         <view-edit-date ng-model="vm.sentFilterEndDate" edit-mode="true"></view-edit-date>
         <button type="button" class="carli-button" ng-click="vm.updateNotifications()">Set Date Range</button>
     </div>
-    <radio name="'notifications-list'+listId+'-filter'"  value="'all'" ng-model="vm.filter">Show <strong>All Notifications</strong></radio>
-    <radio name="'notifications-list'+listId+'-filter'" value="'invoice'" ng-model="vm.filter">Show <strong>Library Invoices</strong></radio>
-    <radio name="'notifications-list'+listId+'-filter'" value="'report'" ng-model="vm.filter">Show <strong>Vendor Reports</strong></radio>
+    <div class="ownerFilter">
+        <radio name="'notifications-list'+listId+'-owner-filter'" value="false" ng-model="vm.ownerFilterEnabled">Show <strong>Everyone's Notifications</strong></radio>
+        <radio name="'notifications-list'+listId+'-owner-filter'" value="true" ng-model="vm.ownerFilterEnabled">Show <strong>Only My Notifications</strong></radio>
+    </div>
+    <div class="typeFilter">
+        <radio name="'notifications-list'+listId+'-filter'" value="'all'" ng-model="vm.filter">Show <strong>All Notifications</strong></radio>
+        <radio name="'notifications-list'+listId+'-filter'" value="'invoice'" ng-model="vm.filter">Show <strong>Library Invoices</strong></radio>
+        <radio name="'notifications-list'+listId+'-filter'" value="'report'" ng-model="vm.filter">Show <strong>Vendor Reports</strong></radio>
+    </div>
 </div>
 
 <ul cg-busy="vm.loadingPromise">
-    <li class="notification-row" ng-repeat="notification in vm.notifications | filter: vm.filterByType | orderBy:vm.orderBy as filteredResults track by notification.id">
+    <li class="notification-row" ng-repeat="notification in vm.notifications | filter: vm.filterByType | filter: vm.filterByOwner | orderBy:vm.orderBy as filteredResults track by notification.id">
         <div class="column subject">
             <span class="subject">
                 <span class="recipient" ng-show="notification.targetEntity.name || notification.targetEntityName">{{ notification.targetEntity.name || notification.targetEntityName }}:</span>
