@@ -1,4 +1,6 @@
 notification-list {
+    $control-spacing-horizontal: 2rem;
+
     clear: both;
     display: block;
     margin: 4rem auto;
@@ -22,15 +24,34 @@ notification-list {
 
         radio {
             margin-left: 1rem;
+
+            &:first-child {
+                margin-left: 0;
+            }
         }
 
-        .date-filter-controls {
+        .date-filter-controls,
+        .owner-filter-controls,
+        .type-filter-controls {
             display: inline-block;
+            @extend .clearfix;
+        }
+
+
+        .date-filter-controls {
+            margin-right: $control-spacing-horizontal;
 
             view-edit-date {
                 display: inline-block;
                 width: 100px;
             }
+        }
+
+        .owner-filter-controls {
+            margin-right: $control-spacing-horizontal;
+        }
+
+        .type-filter-controls {
         }
     }
 

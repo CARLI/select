@@ -10,8 +10,12 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
 
     vm.apiPath = config.getMiddlewareUrl();
     vm.filter = 'all';
+    vm.ownerFilterEnabled = false;
 
+    vm.disableOwnerFilter = disableOwnerFilter;
+    vm.enableOwnerFilter = enableOwnerFilter;
     vm.previewCsv = previewCsv;
+    vm.filterByOwner = filterByOwner;
     vm.filterByType = filterByType;
     vm.updateNotifications = updateNotifications;
     vm.previewNotification = previewNotification;
@@ -22,6 +26,7 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
     vm.deleteAllDrafts = deleteAllDrafts;
     vm.formatSummaryTotal = formatSummaryTotal;
     vm.editDraft = editDraft;
+    vm.userHasNoDrafts = userHasNoDrafts;
 
     controllerBaseService.addSortable(vm, '-dateCreated');
 
@@ -85,6 +90,9 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
                  */
                 updateNotifications();
             }
+            else if ( args === 'draftEdited' ){
+                updateNotifications();
+            }
         });
     }
 
@@ -105,6 +113,15 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
             return notificationService.listDrafts().then(function(drafts){
                 vm.notifications  = drafts;
             });
+        }
+    }
+
+    function filterByOwner(notification, index){
+        if ( vm.ownerFilterEnabled){
+            return currentUserOwnsNotification(notification);
+        }
+        else {
+            return true;
         }
     }
 
@@ -169,11 +186,12 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
     }
 
     function sendAllDrafts(){
-        var sendPromises = vm.notifications.map(sendNotificationSilently);
+        var sendPromises = listOwnNotifications().map(sendNotificationSilently);
 
         $q.all(sendPromises)
             .then(function(results){
-                alertService.putAlert( results.length + ' notifications sent', {severity: 'success'});
+                var s = results === 1 ? '' : 's';
+                alertService.putAlert( results.length + ' notification'+s + ' sent', {severity: 'success'});
                 announceNotificationsChange('draftSent');
             })
             .catch(errorHandler);
@@ -189,7 +207,7 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
     }
 
     function deleteAllDrafts(){
-        return $q.all(vm.notifications.map(function(notification){
+        return $q.all(listOwnNotifications().map(function(notification){
                 return notificationService.delete(notification.id);
             }))
             .then(function(){
@@ -211,5 +229,25 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
 
     function announceNotificationsChange( typeOfChange ){
         $rootScope.$broadcast('notificationsUpdated', typeOfChange);
+    }
+
+    function listOwnNotifications(){
+        return vm.notifications.filter(currentUserOwnsNotification);
+    }
+
+    function currentUserOwnsNotification(notification){
+        return notification.ownerEmail === vm.userEmail;
+    }
+
+    function userHasNoDrafts(){
+        return listOwnNotifications().length === 0;
+    }
+
+    function disableOwnerFilter(){
+        vm.ownerFilterEnabled = false;
+    }
+
+    function enableOwnerFilter(){
+        vm.ownerFilterEnabled = true;
     }
 }
