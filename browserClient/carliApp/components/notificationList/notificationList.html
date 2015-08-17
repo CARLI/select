@@ -9,11 +9,16 @@
         <view-edit-date ng-model="vm.sentFilterEndDate" edit-mode="true"></view-edit-date>
         <button type="button" class="carli-button" ng-click="vm.updateNotifications()">Set Date Range</button>
     </div>
-    <div class="ownerFilter">
-        <radio name="'notifications-list'+listId+'-owner-filter'" value="false" ng-model="vm.ownerFilterEnabled">Show <strong>Everyone's Notifications</strong></radio>
-        <radio name="'notifications-list'+listId+'-owner-filter'" value="true" ng-model="vm.ownerFilterEnabled">Show <strong>Only My Notifications</strong></radio>
+    <div class="owner-filter-controls">
+        <div class="group-by-toggle">
+            <button type="button" class="toggle-button" ng-class="{ 'active': vm.ownerFilterEnabled }"
+                    ng-click="vm.enableOwnerFilter()">My Notifications</button
+            ><button type="button" class="toggle-button" ng-class="{ 'active': !vm.ownerFilterEnabled }"
+                    ng-click="vm.disableOwnerFilter()">All Notifications
+            </button>
+        </div>
     </div>
-    <div class="typeFilter">
+    <div class="type-filter-controls">
         <radio name="'notifications-list'+listId+'-filter'" value="'all'" ng-model="vm.filter">Show <strong>All Notifications</strong></radio>
         <radio name="'notifications-list'+listId+'-filter'" value="'invoice'" ng-model="vm.filter">Show <strong>Library Invoices</strong></radio>
         <radio name="'notifications-list'+listId+'-filter'" value="'report'" ng-model="vm.filter">Show <strong>Vendor Reports</strong></radio>

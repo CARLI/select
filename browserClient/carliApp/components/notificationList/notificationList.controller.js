@@ -12,6 +12,8 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
     vm.filter = 'all';
     vm.ownerFilterEnabled = false;
 
+    vm.disableOwnerFilter = disableOwnerFilter;
+    vm.enableOwnerFilter = enableOwnerFilter;
     vm.previewCsv = previewCsv;
     vm.filterByOwner = filterByOwner;
     vm.filterByType = filterByType;
@@ -239,5 +241,13 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
 
     function userHasNoDrafts(){
         return listOwnNotifications().length === 0;
+    }
+
+    function disableOwnerFilter(){
+        vm.ownerFilterEnabled = false;
+    }
+
+    function enableOwnerFilter(){
+        vm.ownerFilterEnabled = true;
     }
 }
