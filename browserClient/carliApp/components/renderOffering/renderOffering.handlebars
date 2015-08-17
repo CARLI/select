@@ -73,6 +73,7 @@
                 </div>
                 <div class="row">
                     {{ currency offering.pricing.site }}
+                    <div tabindex="0" class="comment-marker fa fa-comment-o"></div>
                 </div>
             </div>
         </div>
@@ -111,7 +112,10 @@
                             <tbody>
                             {{#each offering.pricing.su }}
                                 <tr>
-                                    <td>{{ currency price }}</td>
+                                    <td>
+                                        {{ currency price }}
+                                        <div tabindex="0" class="comment-marker fa fa-comment-o"></div>
+                                    </td>
                                     <td>{{ users }}</td>
                                 </tr>
                             {{/each}}
