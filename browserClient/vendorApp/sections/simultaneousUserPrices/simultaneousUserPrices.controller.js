@@ -11,6 +11,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     vm.selectedProductIds = {};
     vm.selectedSuLevelIds = {};
     vm.suPricingByProduct = {};
+    vm.suCommentsByProduct = {};
     vm.suLevels = [];
     vm.totalProducts = 0;
     vm.updatesByProductId = {};
@@ -55,8 +56,11 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                 var representativeOffering = offering || {};
                 var pricingForProduct = representativeOffering.pricing || {};
                 var suPricingForProduct = pricingForProduct.su || [];
-                vm.suPricingByProduct[product.id] = convertArrayOfPricingObjectsToMappingObject(suPricingForProduct);
+                var vendorComments = representativeOffering.vendorComments || {};
+                var suComments = vendorComments.su || [];
 
+                vm.suPricingByProduct[product.id] = convertArrayOfPricingObjectsToMappingObject(suPricingForProduct);
+                vm.suCommentsByProduct[product.id] = convertCommentsToMappingObject(suComments);
                 vm.updatesByProductId[product.id] = representativeOffering.suPricesUpdated;
 
                 return vm.suPricingByProduct[product.id];
@@ -68,6 +72,14 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                     suPricingMap[suPricingObject.users] = suPricingObject.price;
                 });
                 return suPricingMap;
+            }
+
+            function convertCommentsToMappingObject(comments) {
+                var commentsMap = {};
+                comments.forEach(function (suComment) {
+                    commentsMap[suComment.users] = suComment.comment;
+                });
+                return commentsMap;
             }
         }
     }
@@ -168,6 +180,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                 $(this).children().first().focus();
             });
 
+            offeringCell.data('numSu', suLevel.users);
             offeringCell.data('productId', product.id);
             offeringCell.addClass(product.id);
 
@@ -180,9 +193,34 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     }
 
     function showCommentModalFor(cell) {
-        vm.offeringSelectedForComment = null;
+        var productId = $(cell).parent().data('productId');
+        var numSu = $(cell).parent().data('numSu');
+
+        vm.modalCommentText = vm.suCommentsByProduct[productId][numSu] || '';
+
+        vm.saveModalComment = function(newCommentText) {
+            console.log('saving shit');
+            offeringService.updateSuCommentForAllLibrariesForProduct(vm.vendorId, productId, numSu, newCommentText);
+        };
         $('#vendor-comment-modal').modal();
     }
+
+    //function showCommentModalFor(offering) {
+    //    vm.modalCommentText = offering.vendorComments.site;
+    //    vm.saveModalComment = function() {
+    //        offering.vendorComments.site = vm.modalCommentText;
+    //
+    //        return offeringService.update(offering)
+    //            .then(offeringService.load)
+    //            .then(updateRevision);
+    //
+    //        function updateRevision(updatedOffering) {
+    //            offering._rev = updatedOffering._rev;
+    //            return updatedOffering;
+    //        }
+    //    };
+    //    $('#vendor-comment-modal').modal();
+    //}
 
     function createOfferingCellContent(price){
         if ( price > 0 || price === 0 ){

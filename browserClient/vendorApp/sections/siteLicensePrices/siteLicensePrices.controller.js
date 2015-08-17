@@ -178,8 +178,31 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
         }
     }
 
-    function showCommentModalFor(offering) {
-        vm.offeringSelectedForComment = offering;
+    function showCommentModalFor(offering, cell) {
+        offering.vendorComments = offering.vendorComments || {};
+        offering.vendorComments.site = offering.vendorComments.site || '';
+
+        vm.modalCommentText = offering.vendorComments.site;
+
+        vm.saveModalComment = function() {
+            offering.vendorComments.site = vm.modalCommentText;
+
+            return offeringService.update(offering)
+                .then(offeringService.load)
+                .then(updateRevision)
+                .then(updateCommentMarker);
+
+            function updateRevision(updatedOffering) {
+                offering._rev = updatedOffering._rev;
+                return updatedOffering;
+            }
+
+            function updateCommentMarker(passthrough) {
+                setCommentMarkerVisibility(cell);
+                return passthrough;
+            }
+        };
+
         $('#vendor-comment-modal').modal();
     }
 
@@ -201,7 +224,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
             var productId = cell.parent().data('productId');
             var offering = vm.offeringsForLibraryByProduct[productId][libraryId];
 
-            showCommentModalFor(offering);
+            showCommentModalFor(offering, cell);
             $scope.$apply(function() {
                 vm.isCommentModeEnabled = false;
             });
@@ -231,11 +254,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
             var offering = vm.offeringsForLibraryByProduct[productId][libraryId];
 
             $scope.$apply(function() {
-                showCommentModalFor(offering);
-            });
-
-            $('#vendor-comment-modal').on('hidden.bs.modal', function (e) {
-                setCommentMarkerVisibility(cell);
+                showCommentModalFor(offering, cell);
             });
         }
     }
@@ -244,7 +263,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
         var offering = getOfferingForCell(cell);
         var commentMarker = cell.find('.comment-marker');
 
-        if (offering && offering.vendorComments) {
+        if (offering && offering.vendorComments && offering.vendorComments.site) {
             commentMarker.show();
         } else {
             commentMarker.hide();

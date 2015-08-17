@@ -19,7 +19,20 @@ function updateSuPricingForProduct(vendorId, productId, newSuPricing, cycle){
     });
 }
 
+function updateSuCommentForProduct(vendorId, productId, numSu, newCommentText, cycle) {
+    return middlewareRequest({
+        path: '/update-su-comment-for-product/' + vendorId + '/' + cycle.id + '/' + productId,
+        method: 'post',
+        json: true,
+        body: {
+            users: numSu,
+            comment: newCommentText
+        }
+    });
+}
+
 module.exports = {
     listProductsWithOfferingsForVendorId: listProductsWithOfferingsForVendorId,
-    updateSuPricingForProduct: updateSuPricingForProduct
+    updateSuPricingForProduct: updateSuPricingForProduct,
+    updateSuCommentForProduct: updateSuCommentForProduct
 };
