@@ -263,7 +263,7 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
                     var promises = notifications.map(notificationService.create);
                     return $q.all(promises);
                 })
-                .then(saveSuccess)
+                .then(alertCreateSuccess)
                 .catch(errorHandler);
 
             function getRecipientIds(recipients) {
@@ -276,20 +276,26 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
             addNotificationCreationInformation(vm.draft);
 
             return saveNotification()
-                .then(saveSuccess)
                 .catch(errorHandler);
 
             function saveNotification(){
                 if ( vm.draft.type === 'Notification' ){
-                    return notificationService.update(vm.draft);
+                    return notificationService.update(vm.draft)
+                        .then(function(){
+                            alertService.putAlert('Notification draft edits saved', {severity: 'success'});
+                            $rootScope.$broadcast('notificationsUpdated', 'draftEdited');
+                            resetNotificationForm();
+                            hideModal();
+                        });
                 }
                 else {
-                    return notificationService.create(vm.draft);
+                    return notificationService.create(vm.draft)
+                        .then(alertCreateSuccess)
                 }
             }
         }
 
-        function saveSuccess(results){
+        function alertCreateSuccess(results){
             var numberCreated = angular.isArray(results) ? results.length : 1;
             var s = numberCreated === 1 ? '' : 's';
             var message = numberCreated + ' Notification'+s +' created';
