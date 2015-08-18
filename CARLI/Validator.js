@@ -105,7 +105,9 @@ function getNonIdPropertyMapFor( schemaType ){
     var propertyNames = listNonIdPropertiesFor(schemaType);
 
     propertyNames.forEach(function(propertyName) {
-        result[propertyName] = schema.properties[propertyName].type;
+        if ( !schema.properties[propertyName].enum ) {
+            result[propertyName] = schema.properties[propertyName].type;
+        }
     });
 
     return result;
