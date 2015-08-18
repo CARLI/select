@@ -99,9 +99,22 @@ function listNonIdPropertiesFor( schemaType ){
     });
 }
 
+function getNonIdPropertyMapFor( schemaType ){
+    var result = {};
+    var schema = schemas[schemaType];
+    var propertyNames = listNonIdPropertiesFor(schemaType);
+
+    propertyNames.forEach(function(propertyName) {
+        result[propertyName] = schema.properties[propertyName].type;
+    });
+
+    return result;
+}
+
 module.exports = {
     list: listValidTypes,
     validate: validate,
     getEnumValuesFor: getEnumValuesFor,
-    listNonIdPropertiesFor: listNonIdPropertiesFor
+    listNonIdPropertiesFor: listNonIdPropertiesFor,
+    getNonIdPropertyMapFor: getNonIdPropertyMapFor
 };

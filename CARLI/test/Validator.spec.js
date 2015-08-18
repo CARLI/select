@@ -225,4 +225,15 @@ describe( 'The Validator Module', function() {
         });
     });
 
+    describe('getNonIdPropertyMapFor', function(){
+        it('should return a map of property names to type for a schema, excluding id', function(){
+            var expectedMap = {
+                crmId: 'string',
+                fte: 'integer',
+                gar: 'string',
+                ipAddresses: 'string'
+            };
+            expect(Validator.getNonIdPropertyMapFor('LibraryNonCrm')).to.deep.equal(expectedMap);
+        });
+    });
 });
