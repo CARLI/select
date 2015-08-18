@@ -201,17 +201,20 @@ function setDefaultValuesForEntity(entity){
         }
     });
 }
-
 function setDefaultValueForStringProperty(entity, propertyName){
-    if ( typeof entity[propertyName] === 'undefined' ){
+    if ( propertyExistsAndHasUndefinedValue(entity, propertyName) ){
         entity[propertyName] = '';
     }
 }
 
 function setDefaultValueForIntegerProperty(entity, propertyName){
-    if ( typeof entity[propertyName] === 'undefined' ){
+    if ( propertyExistsAndHasUndefinedValue(entity, propertyName) ){
         entity[propertyName] = 0;
     }
+}
+
+function propertyExistsAndHasUndefinedValue(entity, propertyName){
+    return (propertyName in entity) && typeof entity[propertyName] === 'undefined'
 }
 
 setEntityLookupStores( Store( StoreModule(StoreOptions) ) );
