@@ -290,6 +290,7 @@ function updateSuCommentForAllLibrariesForProduct(vendorId, productId, numSu, ne
         .then(updateOfferings);
 
     function removeExistingSuComment(offerings) {
+        console.log('found ' + offerings.length + ' offerings');
         return offerings.map( removeComment );
 
         function removeComment(offering) {
@@ -320,8 +321,9 @@ function updateSuCommentForAllLibrariesForProduct(vendorId, productId, numSu, ne
     }
 
     function updateOfferings(offerings) {
-            return couchUtils.bulkUpdateDocuments(cycle.getDatabaseName(), offerings)
-                .then(returnSuccessfulBulkUpdateIds);
+        console.log('updating offerings', offerings);
+        return couchUtils.bulkUpdateDocuments(cycle.getDatabaseName(), offerings)
+            .then(returnSuccessfulBulkUpdateIds);
     }
 }
 
