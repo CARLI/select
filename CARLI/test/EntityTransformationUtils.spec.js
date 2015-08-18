@@ -13,6 +13,8 @@ EntityTransform.setEntityLookupStores( utils.getTestDbStore() );
 
 chai.use( chaiAsPromised );
 
+function undefinedValue(){}
+
 describe( 'The EntityTransform Module', function() {
 
     it( 'should be a module', function() {
@@ -108,7 +110,7 @@ describe('the setDefaultValueForStringProperty method', function(){
 
     it('should replace an undefined property on an object with an empty string', function(){
         var testObject = {
-            foo: undefined
+            foo: undefinedValue()
         };
         EntityTransform.setDefaultValueForStringProperty(testObject, 'foo');
         expect(testObject).to.have.property('foo', '');
@@ -130,7 +132,7 @@ describe('the setDefaultValueForIntegerProperty method', function(){
 
     it('should replace an undefined property on an object with zero', function(){
         var testObject = {
-            foo: undefined
+            foo: undefinedValue()
         };
         EntityTransform.setDefaultValueForIntegerProperty(testObject, 'foo');
         expect(testObject).to.have.property('foo', 0);
@@ -153,7 +155,7 @@ describe('the setDefaultValuesForEntity method', function(){
     it('should replace undefined string properties with empty strings', function(){
         var testOffering = {
             type: 'Offering',
-            libraryComments: undefined
+            libraryComments: undefinedValue()
         };
 
         EntityTransform.setDefaultValuesForEntity(testOffering);
@@ -163,8 +165,8 @@ describe('the setDefaultValuesForEntity method', function(){
     it('should replace undefined integer properties with zeroes', function(){
         var testLibraryNonCrm = {
             type: 'LibraryNonCrm',
-            gar: undefined,
-            fte: undefined
+            gar: undefinedValue(),
+            fte: undefinedValue()
         };
 
         EntityTransform.setDefaultValuesForEntity(testLibraryNonCrm);
