@@ -1,14 +1,13 @@
-var Q = require('q')
-  , CrmLibraryEntity = require('./CrmLibraryEntity')
-  , Entity = require('../Entity')
-  , config = require( '../../config' )
-  , StoreOptions = config.storeOptions
-  , Store = require( '../Store' )
-  , StoreModule = require( '../Store/CouchDb/Store')
-  , _ = require('lodash')
-  , Validator = require('../Validator')
-  , getStoreForCycle = require('./getStoreForCycle')
-  ;
+var config = require('../../config');
+var CrmLibraryEntity = require('./CrmLibraryEntity');
+var Entity = require('../Entity');
+var getStoreForCycle = require('./getStoreForCycle');
+var Store = require('../Store');
+var StoreOptions = config.storeOptions;
+var StoreModule = require('../Store/CouchDb/Store');
+var Q = require('q');
+var Validator = require('../Validator');
+var _ = require('lodash');
 
 /**
  * These are the basic Entity interactors rather than the full Repositories to avoid circular dependencies in Node, and
