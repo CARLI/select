@@ -190,7 +190,7 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
 
         $q.all(sendPromises)
             .then(function(results){
-                var s = results === 1 ? '' : 's';
+                var s = results.length === 1 ? '' : 's';
                 alertService.putAlert( results.length + ' notification'+s + ' sent', {severity: 'success'});
                 announceNotificationsChange('draftSent');
             })

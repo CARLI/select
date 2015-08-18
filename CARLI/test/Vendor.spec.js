@@ -94,7 +94,7 @@ describe('getContactEmailAddressesForNotification', function(){
     });
 });
 
-describe.only('the listAllContacts method', function(){
+describe('the listAllContacts method', function(){
     it('should be a function', function(){
         expect(vendorRepository.listAllContacts).to.be.a('function');
     });

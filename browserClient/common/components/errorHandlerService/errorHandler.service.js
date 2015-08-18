@@ -11,6 +11,15 @@ function returnErrorHandlerFunction($rootScope, $location, alertService, authSer
         else if ( error.statusCode === 413 ){
             handleFileTooLarge(error);
         }
+        else if ( error.statusCode === 500 ){
+            if ( errorLooksLikeMySql(error) ){
+                console.log('handled probable MySQL error', error);
+                handleBackendUnavailable();
+            }
+            else {
+                showErrorToUser(error);
+            }
+        }
         else if ( error.statusCode === 502 ){
             handleBackendUnavailable();
         }
@@ -42,5 +51,12 @@ function returnErrorHandlerFunction($rootScope, $location, alertService, authSer
 
     function showErrorToUser(message){
         alertService.putAlert(message, { severity: 'danger' });
+    }
+
+    function errorLooksLikeMySql(error){
+        return error.message === "unknown error" &&
+               typeof error.originalError === 'object' &&
+               error.originalError.code &&
+               error.originalError.syscall;
     }
 }
