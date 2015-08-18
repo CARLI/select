@@ -1,11 +1,9 @@
-var uuid  = require( 'node-uuid' )
-  , tv4   = require( 'tv4' )
-  , Validator = require( '../Validator' )
-  , Q = require( 'q' )
-  , entityCache = require('./entityCache')
-  , config = require( '../../config' )
-  , _ = require('lodash')
-;
+var config = require('../../config');
+var entityCache = require('./entityCache');
+var uuid = require('node-uuid');
+var Q = require('q');
+var Validator = require('../Validator');
+var _ = require('lodash');
 
 function throwIfDataIsEmpty ( data ) {
     if ( !data ){

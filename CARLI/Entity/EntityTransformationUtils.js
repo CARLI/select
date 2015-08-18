@@ -1,14 +1,14 @@
-var Q = require('q')
-  , CrmLibraryEntity = require('./CrmLibraryEntity')
-  , Entity = require('../Entity')
-  , config = require( '../../config' )
-  , StoreOptions = config.storeOptions
-  , Store = require( '../Store' )
-  , StoreModule = require( '../Store/CouchDb/Store')
-  , _ = require('lodash')
-  , Validator = require('../Validator')
-  , getStoreForCycle = require('./getStoreForCycle')
-  ;
+var config = require('../../config');
+var CrmLibraryEntity = require('./CrmLibraryEntity');
+var Entity = require('../Entity');
+var getStoreForCycle = require('./getStoreForCycle');
+var Store = require('../Store');
+var StoreOptions = config.storeOptions;
+var StoreModule = require('../Store/CouchDb/Store');
+var Q = require('q');
+var Validator = require('../Validator');
+var validTypes = Validator.list();
+var _ = require('lodash');
 
 /**
  * These are the basic Entity interactors rather than the full Repositories to avoid circular dependencies in Node, and
@@ -57,6 +57,7 @@ function transformObjectForPersistence(entity, propertiesToTransform) {
     _replaceObjectsWithIds(entity, propertiesToTransform);
     _removeHelperFunctions(entity);
     removeEmptyContactsFromEntity(entity);
+    setDefaultValuesForEntity(entity);
 }
 
 function _replaceObjectsWithIds(entity, propertiesToTransform) {
@@ -178,6 +179,44 @@ function extractValuesForSchema( entity, schemaType ){
     return extractValuesForProperties( entity, Validator.listNonIdPropertiesFor(schemaType) );
 }
 
+function setDefaultValuesForEntity(entity){
+    if ( !entity || !entity.type ){
+        return;
+    }
+
+    if ( validTypes.indexOf(entity.type) === -1 ){
+        return;
+    }
+
+    var propertiesForType = Validator.getNonIdPropertyMapFor(entity.type);
+    var propertyNames = Object.keys(propertiesForType);
+
+    propertyNames.forEach(function(propertyName){
+        var propertyType = propertiesForType[propertyName];
+        if ( propertyType === 'string' ){
+            setDefaultValueForStringProperty(entity, propertyName);
+        }
+        else if ( propertyType === 'integer' ){
+            setDefaultValueForIntegerProperty(entity, propertyName);
+        }
+    });
+}
+function setDefaultValueForStringProperty(entity, propertyName){
+    if ( propertyExistsAndHasUndefinedValue(entity, propertyName) ){
+        entity[propertyName] = '';
+    }
+}
+
+function setDefaultValueForIntegerProperty(entity, propertyName){
+    if ( propertyExistsAndHasUndefinedValue(entity, propertyName) ){
+        entity[propertyName] = 0;
+    }
+}
+
+function propertyExistsAndHasUndefinedValue(entity, propertyName){
+    return (propertyName in entity) && typeof entity[propertyName] === 'undefined'
+}
+
 setEntityLookupStores( Store( StoreModule(StoreOptions) ) );
 
 module.exports = {
@@ -187,5 +226,8 @@ module.exports = {
     expandListOfObjectsFromPersistence: expandListOfObjectsFromPersistence,
     setEntityLookupStores: setEntityLookupStores,
     extractValuesForProperties: extractValuesForProperties,
-    extractValuesForSchema: extractValuesForSchema
+    extractValuesForSchema: extractValuesForSchema,
+    setDefaultValuesForEntity: setDefaultValuesForEntity,
+    setDefaultValueForStringProperty: setDefaultValueForStringProperty,
+    setDefaultValueForIntegerProperty: setDefaultValueForIntegerProperty
 };

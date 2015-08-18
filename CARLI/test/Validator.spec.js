@@ -123,6 +123,18 @@ describe( 'The Validator Module', function() {
 
             return expect( Validator.validate(testLibrary) ).to.be.rejectedWith(/No enum match for/);
         });
+
+        it( 'should fail for an offering with an undefined library comment', function(){
+            var testOffering = {
+                type: 'Offering',
+                cycle: 'test-cycle',
+                library: 'test-library',
+                product: 'test-product',
+                libraryComments: undefined
+            };
+
+            return expect( Validator.validate(testOffering) ).to.be.rejectedWith(/Invalid type: undefined/);
+        });
     });
 
     it( 'should have a list method', function() {
@@ -213,4 +225,15 @@ describe( 'The Validator Module', function() {
         });
     });
 
+    describe('getNonIdPropertyMapFor', function(){
+        it('should return a map of property names to type for a schema, excluding id', function(){
+            var expectedMap = {
+                crmId: 'string',
+                fte: 'integer',
+                gar: 'string',
+                ipAddresses: 'string'
+            };
+            expect(Validator.getNonIdPropertyMapFor('LibraryNonCrm')).to.deep.equal(expectedMap);
+        });
+    });
 });
