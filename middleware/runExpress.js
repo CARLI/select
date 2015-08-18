@@ -223,6 +223,19 @@ function runMiddlewareServer(){
                 .catch(sendError(res));
 
         });
+        carliMiddleware.post('/update-su-comment-for-product/:vendorId/:cycleId/:productId', function (req, res) {
+
+            if ( !req.body || !req.body.users || typeof req.body.comment === 'undefined'){
+                res.status(400).send('missing comment data');
+                return;
+            }
+
+            vendorSpecificProductQueries.updateSuCommentForProduct(req.params.vendorId, req.params.productId, req.body.users, req.body.comment, req.params.cycleId)
+                .then(sendResult(res))
+                .catch(sendError(res));
+
+        });
+
         carliMiddleware.post('/update-flagged-offerings-for-vendor/:vendorId/for-cycle/:cycleId', function (req, res) {
             vendorDatabases.updateFlaggedOfferingsForVendor(req.params.vendorId, req.params.cycleId)
                 .then(sendOk(res))
