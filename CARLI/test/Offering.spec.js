@@ -37,6 +37,9 @@ function invalidOfferingData() {
         type: 'Offering'
     };
 }
+
+function undefinedValue(){}
+
 function testCycleData() {
     return {
         id: testCycleId,
@@ -74,7 +77,7 @@ function runOfferingSpecificTests(testCycle) {
                 cycle: 'test-cycle',
                 library: 'test-library',
                 product: 'test-product',
-                libraryComments: undefined
+                libraryComments: undefinedValue()
             };
 
             return expect( OfferingRepository.create(testOffering, testCycle) ).to.be.fulfilled;
