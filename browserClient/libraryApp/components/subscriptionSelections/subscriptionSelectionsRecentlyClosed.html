@@ -34,7 +34,7 @@
         <div class="column selected-last-year">Selected Last Year</div>
         <div class="sortable column vendor" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.vendorName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.vendorName)">Vendor</div>
         <div class="sortable column funded" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.funded, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.funded)">CARLI Funded</div>
-        <div class="sortable column select" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.selectionPrice, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.selectionPrice)">Selected</div>
+        <div class="column select" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.selectionPrice, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.selectionPrice)">Pricing</div>
     </li>
     <li collapsible class="offering collapsed display-{{ ::offering.display }}" ng-repeat="offering in vm.offerings | filter:vm.unselected | orderBy: vm.orderBy:vm.reverse track by offering.id" ng-if="::offering.display !== 'none'">
         <div class="collapsible-header">
