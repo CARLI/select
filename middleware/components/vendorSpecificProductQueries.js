@@ -9,7 +9,6 @@ function listProductsWithOfferingsForVendorId(vendorId, cycleId) {
         var cycleRepository = cycleRepositoryForVendor(vendor);
         return cycleRepository.load(cycleId)
             .then(function(cycle) {
-                console.log('Loaded ', cycle, ' for ', vendor);
                 return cycle;
             })
             .then(loadProductsAndOfferings);
@@ -34,7 +33,7 @@ function listProductsWithOfferingsForVendorId(vendorId, cycleId) {
 
 function updateSuPricingForProduct( vendorId, productId, newSuPricing, cycleId ){
     var cycle = null;
-    
+
     return vendorRepository.load(vendorId)
         .then(function(vendor) {
             var cycleRepository = cycleRepositoryForVendor(vendor);
@@ -63,7 +62,39 @@ function updateSuPricingForProduct( vendorId, productId, newSuPricing, cycleId )
     }
 }
 
+function updateSuCommentForProduct(vendorId, productId, numSu, newCommentText, cycleId) {
+    var cycle = null;
+
+    return vendorRepository.load(vendorId)
+        .then(function(vendor) {
+            var cycleRepository = cycleRepositoryForVendor(vendor);
+            return cycleRepository.load(cycleId);
+        }, catchNoVendor)
+        .then(function(loadedCycle){
+            cycle = loadedCycle;
+            return offeringRepository.ensureProductHasOfferingsForAllLibraries(productId, vendorId, cycle);
+        }, catchNoCycle)
+        .then(function(){
+            return offeringRepository.updateSuCommentForAllLibrariesForProduct(vendorId, productId, numSu, newCommentText, cycle);
+        },catchEnsureError)
+        .catch(updateSuPricingError);
+
+    function catchNoVendor( err ){
+        console.log('error updating comments for product '+ productId +' - No Vendor', err);
+    }
+    function catchNoCycle( err ){
+        console.log('error updating comments for product '+ productId +' - No Cycle', err);
+    }
+    function catchEnsureError( err ){
+        console.log('error updating comments for product '+ productId +' - Ensure Error', err);
+    }
+    function updateSuPricingError( err ){
+        console.log('error updating comments for product '+ productId +' - Updating Pricing ', err);
+    }
+}
+
 module.exports = {
     listProductsWithOfferingsForVendorId: listProductsWithOfferingsForVendorId,
-    updateSuPricingForProduct: updateSuPricingForProduct
+    updateSuPricingForProduct: updateSuPricingForProduct,
+    updateSuCommentForProduct: updateSuCommentForProduct
 };

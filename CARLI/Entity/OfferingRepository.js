@@ -283,6 +283,50 @@ function updateSuPricingForAllLibrariesForProduct( vendorId, productId, newSuPri
         .then(returnSuccessfulBulkUpdateIds);
 }
 
+function updateSuCommentForAllLibrariesForProduct(vendorId, productId, numSu, newCommentText, cycle) {
+    return listOfferingsForProductIdUnexpanded(productId, cycle)
+        .then(removeExistingSuComment)
+        .then(addNewSuComment)
+        .then(updateOfferings);
+
+    function removeExistingSuComment(offerings) {
+        return offerings.map( removeComment );
+
+        function removeComment(offering) {
+            if (offering.vendorComments && offering.vendorComments.su) {
+                offering.vendorComments.su = offering.vendorComments.su.filter(filterSuComment);
+            }
+
+            return offering;
+
+            function filterSuComment(suComment) {
+                return suComment.users != numSu;
+            }
+        }
+    }
+
+    function addNewSuComment(offerings) {
+        return offerings.map(addNewComment);
+
+        function addNewComment(offering) {
+            offering.vendorComments = offering.vendorComments || {};
+            offering.vendorComments.su = offering.vendorComments.su || [];
+
+            offering.vendorComments.su.push({
+                users: numSu,
+                comment: newCommentText
+            });
+
+            return offering;
+        }
+    }
+
+    function updateOfferings(offerings) {
+        return couchUtils.bulkUpdateDocuments(cycle.getDatabaseName(), offerings)
+            .then(returnSuccessfulBulkUpdateIds);
+    }
+}
+
 function returnSuccessfulBulkUpdateIds( bulkUpdateStatusArray ){
     return bulkUpdateStatusArray.filter(wasSuccessfulUpdate).map(getUpdatedId);
 
@@ -630,6 +674,7 @@ module.exports = {
     listOfferingsWithSelectionsForLibrary: listOfferingsWithSelectionsForLibrary,
     setSuPricingForAllLibrariesForProduct: setSuPricingForAllLibrariesForProduct,
     updateSuPricingForAllLibrariesForProduct: updateSuPricingForAllLibrariesForProduct,
+    updateSuCommentForAllLibrariesForProduct: updateSuCommentForAllLibrariesForProduct,
     listVendorsFromOfferingIds: listVendorsFromOfferingIds,
     createOfferingsFor: createOfferingsFor,
     ensureProductHasOfferingsForAllLibraries: ensureProductHasOfferingsForAllLibraries,
