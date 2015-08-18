@@ -68,6 +68,18 @@ describe('Run the Offering tests', function () {
 function runOfferingSpecificTests(testCycle) {
     describe('Offering Repository Tests', function () {
 
+        it('should not fail to create an offering with an undefined library comment', function(){
+            var testOffering = {
+                type: 'Offering',
+                cycle: 'test-cycle',
+                library: 'test-library',
+                product: 'test-product',
+                libraryComments: undefined
+            };
+
+            return expect( OfferingRepository.create(testOffering, testCycle) ).to.be.fulfilled;
+        });
+
         describe('Expanding referenced entities on load', function () {
 
             var testOffering = validOfferingData();
