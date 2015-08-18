@@ -289,7 +289,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
         }
     }
 
-    function saveOfferings(){
+    function saveOfferings() {
         var cycle = cycleService.getCurrentCycle();
         var changedOfferings = [];
         var newOfferings = [];

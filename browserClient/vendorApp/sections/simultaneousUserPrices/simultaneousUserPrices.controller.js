@@ -188,6 +188,8 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                 offeringCell.addClass('updated');
             }
 
+            setCommentMarkerVisibility(offeringCell);
+
             return offeringCell;
         }
     }
@@ -199,28 +201,24 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         vm.modalCommentText = vm.suCommentsByProduct[productId][numSu] || '';
 
         vm.saveModalComment = function(newCommentText) {
-            console.log('saving shit');
-            offeringService.updateSuCommentForAllLibrariesForProduct(vm.vendorId, productId, numSu, newCommentText);
+            return offeringService
+                .updateSuCommentForAllLibrariesForProduct(vm.vendorId, productId, numSu, newCommentText)
+                .then(updateMap)
+                .then(updateCommentMarker);
+
+            function updateMap(passthrough) {
+                vm.suCommentsByProduct[productId][numSu] = newCommentText;
+                return passthrough;
+            }
         };
+
+        function updateCommentMarker(passthrough) {
+            setCommentMarkerVisibility($(cell).parent());
+            return passthrough;
+        }
+
         $('#vendor-comment-modal').modal();
     }
-
-    //function showCommentModalFor(offering) {
-    //    vm.modalCommentText = offering.vendorComments.site;
-    //    vm.saveModalComment = function() {
-    //        offering.vendorComments.site = vm.modalCommentText;
-    //
-    //        return offeringService.update(offering)
-    //            .then(offeringService.load)
-    //            .then(updateRevision);
-    //
-    //        function updateRevision(updatedOffering) {
-    //            offering._rev = updatedOffering._rev;
-    //            return updatedOffering;
-    //        }
-    //    };
-    //    $('#vendor-comment-modal').modal();
-    //}
 
     function createOfferingCellContent(price){
         if ( price > 0 || price === 0 ){
@@ -234,6 +232,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     function createReadOnlyOfferingCell(price) {
         var cell = $('<div tabindex="0" class="price" role="gridcell">'+price+'</div>');
         cell.on('focus', onReadOnlyClick);
+        addCommentMarkerTo(cell);
 
         return cell;
     }
@@ -241,6 +240,8 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     function createEmptyOfferingCell(){
         var cell = $('<div tabindex="0" class="price no-pricing" role="gridcell">&nbsp;</div>');
         cell.on('focus', onReadOnlyClick);
+        addCommentMarkerTo(cell);
+
         return cell;
     }
 
@@ -269,6 +270,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         var price = $cell.val();
         var div = createOfferingCellContent(price);
         $cell.replaceWith(div);
+        setCommentMarkerVisibility(div);
     }
 
     function editComment(cell) {
@@ -276,6 +278,37 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         $scope.$apply(function() {
             vm.isCommentModeEnabled = false;
         });
+    }
+
+    function addCommentMarkerTo(cell) {
+        var commentMarker = $('<div tabindex="0" class="comment-marker fa fa-comment-o"></div>');
+        commentMarker.on('focus', editExistingComment);
+        cell.append(commentMarker);
+
+        commentMarker.hide();
+
+        return commentMarker;
+
+        function editExistingComment() {
+            $scope.$apply(function() {
+                showCommentModalFor(cell);
+            });
+        }
+    }
+
+    function setCommentMarkerVisibility(cell) {
+        var productId = $(cell).data('productId');
+        var numSu = $(cell).data('numSu');
+        var commentMarker = cell.find('.comment-marker');
+
+        var suComments = vm.suCommentsByProduct[productId] || {};
+        var commentText = suComments[numSu] || '';
+
+        if (commentText) {
+            commentMarker.show();
+        } else {
+            commentMarker.hide();
+        }
     }
 
     function markProductChangedForCell( jqueryCell ){
