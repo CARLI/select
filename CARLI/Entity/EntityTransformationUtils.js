@@ -7,6 +7,7 @@ var StoreOptions = config.storeOptions;
 var StoreModule = require('../Store/CouchDb/Store');
 var Q = require('q');
 var Validator = require('../Validator');
+var validTypes = Validator.list();
 var _ = require('lodash');
 
 /**
@@ -56,6 +57,7 @@ function transformObjectForPersistence(entity, propertiesToTransform) {
     _replaceObjectsWithIds(entity, propertiesToTransform);
     _removeHelperFunctions(entity);
     removeEmptyContactsFromEntity(entity);
+    setDefaultValuesForEntity(entity);
 }
 
 function _replaceObjectsWithIds(entity, propertiesToTransform) {
@@ -177,6 +179,41 @@ function extractValuesForSchema( entity, schemaType ){
     return extractValuesForProperties( entity, Validator.listNonIdPropertiesFor(schemaType) );
 }
 
+function setDefaultValuesForEntity(entity){
+    if ( !entity || !entity.type ){
+        return;
+    }
+
+    if ( validTypes.indexOf(entity.type) === -1 ){
+        return;
+    }
+
+    var propertiesForType = Validator.getNonIdPropertyMapFor(entity.type);
+    var propertyNames = Object.keys(propertiesForType);
+
+    propertyNames.forEach(function(propertyName){
+        var propertyType = propertiesForType[propertyName];
+        if ( propertyType === 'string' ){
+            setDefaultValueForStringProperty(entity, propertyName);
+        }
+        else if ( propertyType === 'integer' ){
+            setDefaultValueForIntegerProperty(entity, propertyName);
+        }
+    });
+}
+
+function setDefaultValueForStringProperty(entity, propertyName){
+    if ( typeof entity[propertyName] === 'undefined' ){
+        entity[propertyName] = '';
+    }
+}
+
+function setDefaultValueForIntegerProperty(entity, propertyName){
+    if ( typeof entity[propertyName] === 'undefined' ){
+        entity[propertyName] = 0;
+    }
+}
+
 setEntityLookupStores( Store( StoreModule(StoreOptions) ) );
 
 module.exports = {
@@ -186,5 +223,8 @@ module.exports = {
     expandListOfObjectsFromPersistence: expandListOfObjectsFromPersistence,
     setEntityLookupStores: setEntityLookupStores,
     extractValuesForProperties: extractValuesForProperties,
-    extractValuesForSchema: extractValuesForSchema
+    extractValuesForSchema: extractValuesForSchema,
+    setDefaultValuesForEntity: setDefaultValuesForEntity,
+    setDefaultValueForStringProperty: setDefaultValueForStringProperty,
+    setDefaultValueForIntegerProperty: setDefaultValueForIntegerProperty
 };
