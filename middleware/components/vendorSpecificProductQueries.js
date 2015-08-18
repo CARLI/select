@@ -9,7 +9,6 @@ function listProductsWithOfferingsForVendorId(vendorId, cycleId) {
         var cycleRepository = cycleRepositoryForVendor(vendor);
         return cycleRepository.load(cycleId)
             .then(function(cycle) {
-                console.log('Loaded ', cycle, ' for ', vendor);
                 return cycle;
             })
             .then(loadProductsAndOfferings);
