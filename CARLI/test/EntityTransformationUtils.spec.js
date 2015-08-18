@@ -101,6 +101,77 @@ describe('The transformObjectForPersistence function', function(){
     });
 });
 
+describe('the setDefaultValueForStringProperty method', function(){
+    it('should be a function', function(){
+        expect(EntityTransform.setDefaultValueForStringProperty).to.be.a('function');
+    });
+
+    it('should replace an undefined property on an object with an empty string', function(){
+        var testObject = {
+            foo: undefined
+        };
+        EntityTransform.setDefaultValueForStringProperty(testObject, 'foo');
+        expect(testObject).to.have.property('foo', '');
+    });
+
+    it('should not replace an property with a value', function(){
+        var testObject = {
+            foo: 'bar'
+        };
+        EntityTransform.setDefaultValueForStringProperty(testObject, 'foo');
+        expect(testObject).to.have.property('foo', 'bar');
+    });
+});
+
+describe('the setDefaultValueForIntegerProperty method', function(){
+    it('should be a function', function(){
+        expect(EntityTransform.setDefaultValueForIntegerProperty).to.be.a('function');
+    });
+
+    it('should replace an undefined property on an object with zero', function(){
+        var testObject = {
+            foo: undefined
+        };
+        EntityTransform.setDefaultValueForIntegerProperty(testObject, 'foo');
+        expect(testObject).to.have.property('foo', 0);
+    });
+
+    it('should not replace an property with a value', function(){
+        var testObject = {
+            foo: 3
+        };
+        EntityTransform.setDefaultValueForIntegerProperty(testObject, 'foo');
+        expect(testObject).to.have.property('foo', 3);
+    });
+});
+
+describe('the setDefaultValuesForEntity method', function(){
+    it('should be a function', function(){
+        expect(EntityTransform.setDefaultValuesForEntity).to.be.a('function');
+    });
+
+    it('should replace undefined string properties with empty strings', function(){
+        var testOffering = {
+            type: 'Offering',
+            libraryComments: undefined
+        };
+
+        EntityTransform.setDefaultValuesForEntity(testOffering);
+        expect(testOffering).to.have.property('libraryComments', '');
+    });
+
+    it('should replace undefined integer properties with zeroes', function(){
+        var testLibraryNonCrm = {
+            type: 'LibraryNonCrm',
+            gar: undefined,
+            fte: undefined
+        };
+
+        EntityTransform.setDefaultValuesForEntity(testLibraryNonCrm);
+        expect(testLibraryNonCrm).to.have.property('gar', '');
+        expect(testLibraryNonCrm).to.have.property('fte', 0);
+    });
+});
 
 describe('The expandObjectFromPersistence function', function(){
     it('should be a function', function () {
@@ -248,7 +319,6 @@ describe('The expandListOfObjectsFromPersistence', function(){
             .then( function () {
                 return expect( productList[0].license.name ).to.equal(newlicenseName);
             })
-
     });
 });
 
