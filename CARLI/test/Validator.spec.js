@@ -123,6 +123,18 @@ describe( 'The Validator Module', function() {
 
             return expect( Validator.validate(testLibrary) ).to.be.rejectedWith(/No enum match for/);
         });
+
+        it( 'should fail for an offering with an undefined library comment', function(){
+            var testOffering = {
+                type: 'Offering',
+                cycle: 'test-cycle',
+                library: 'test-library',
+                product: 'test-product',
+                libraryComments: undefined
+            };
+
+            return expect( Validator.validate(testOffering) ).to.be.rejectedWith(/Invalid type: undefined/);
+        });
     });
 
     it( 'should have a list method', function() {
