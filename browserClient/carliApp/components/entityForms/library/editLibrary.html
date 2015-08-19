@@ -119,17 +119,17 @@
                             TODO: Permissions checkboxes
                         </div>
                     </div>
-
-                    <div class="contacts-header">Active Products</div>
-
-                    <ol class="cycle-list">
-                        <li class="cycle" ng-repeat="cycle in vm.cycles | orderBy:'-year' track by cycle.id" id="{{ cycle.id }}">
-                            <h2>{{ cycle.name }}</h2>
-                            <library-products-list cycle="cycle" library-id="{{ vm.library.id }}"></library-products-list>
-                        </li>
-                    </ol>
                 </div>
             </fieldset>
+
+            <div class="h3">Active Products</div>
+            <ol class="cycle-list">
+                <li class="cycle" ng-repeat="cycle in vm.cycles | orderBy:'-year' track by cycle.id" id="{{ cycle.id }}">
+                    <h2>{{ cycle.name }}</h2>
+                    <library-products-list cycle="cycle" library-id="{{ vm.library.id }}"></library-products-list>
+                </li>
+            </ol>
+
         </section>
 
         <div class="footer" ng-show="vm.editable">
