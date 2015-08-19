@@ -7,6 +7,7 @@ function cycleService( CarliModules, $q, errorHandler ) {
     var cycleMiddleware = CarliModules.CycleMiddleware;
     var databaseStatusMiddleware = CarliModules.DatabaseStatusMiddleware;
     var VendorDatabaseModule = CarliModules.VendorDatabaseMiddleware;
+    var libraryMiddlewareModule = CarliModules.LibraryMiddleware;
 
     var currentCycle = null;
 
@@ -22,6 +23,8 @@ function cycleService( CarliModules, $q, errorHandler ) {
         listActiveCycles: listActiveCycles,
         listActiveCyclesOfType: listActiveCyclesOfType,
         listActiveSubscriptionCycles: listActiveSubscriptionCycles,
+        listNonArchivedClosedCyclesIncludingOneTimePurchase: listNonArchivedClosedCyclesIncludingOneTimePurchase,
+        listSelectionsForCycle: listSelectionsForCycle,
         create: function(newCycle) {
             fixCycleName(newCycle);
             return $q.when(cycleModule.create(newCycle));
@@ -104,6 +107,23 @@ function cycleService( CarliModules, $q, errorHandler ) {
         return listActiveCycles().then(function(activeCycleList){
             return activeCycleList.filter(filterMatchingType);
         });
+    }
+
+    function listNonArchivedClosedCyclesIncludingOneTimePurchase(){
+        return listActiveCycles()
+            .then(function( cycleList ){
+                return cycleList.filter(cycleIsClosed);
+            })
+            .catch(errorHandler);
+
+        function cycleIsClosed( cycle ){
+            return cycle.status === 5;
+        }
+    }
+
+    function listSelectionsForCycle( cycle, libraryId ){
+        return $q.when(libraryMiddlewareModule.listSelectionsForLibraryFromCycle(libraryId, cycle.id))
+            .catch(errorHandler);
     }
 
     function getCurrentCycle() {
