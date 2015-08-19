@@ -1,3 +1,3 @@
 angular.module('library.sections.dashboard',[
-    'library.libraryProductsList'
+    'common.libraryProductsList'
 ]);

@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.library')
     .controller('editLibraryController', editLibraryController);
 
-function editLibraryController( $scope, $rootScope, activityLogService, alertService, entityBaseService, errorHandler, libraryService ) {
+function editLibraryController( $scope, $rootScope, activityLogService, alertService, cycleService, entityBaseService, errorHandler, libraryService ) {
     var vm = this;
 
     vm.libraryId = $scope.libraryId;
@@ -31,12 +31,21 @@ function editLibraryController( $scope, $rootScope, activityLogService, alertSer
     }
 
     function initializeForExistingLibrary() {
-        libraryService.load(vm.libraryId).then(function (library) {
-            vm.library = angular.copy(library);
-            setLibraryFormPristine();
-        });
+        libraryService.load(vm.libraryId)
+            .then(function (library) {
+                vm.library = angular.copy(library);
+                setLibraryFormPristine();
+            })
+            .then(loadCyclesForActiveProductsDisplay);
         vm.editable = false;
         vm.newLibrary = false;
+    }
+
+    function loadCyclesForActiveProductsDisplay(){
+        return vm.loadingPromise = cycleService.listNonArchivedClosedCyclesIncludingOneTimePurchase()
+            .then(function(cycleList){
+                vm.cycles = cycleList;
+            });
     }
 
     function toggleEditable(){
