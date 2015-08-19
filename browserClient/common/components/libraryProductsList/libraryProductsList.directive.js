@@ -26,7 +26,8 @@ angular.module('common.libraryProductsList')
             '<div class="placeholder" style="width: 300px; margin: -45px 0 1rem;">Print | Export | Email</div>'
         ].join(''),
         scope: {
-            cycle: '='
+            cycle: '=',
+            libraryId: '@'
         },
         controller: libraryProductsListController,
         controllerAs: 'vm',
