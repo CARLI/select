@@ -1,4 +1,4 @@
-angular.module('library.libraryProductsList')
+angular.module('common.libraryProductsList')
 .controller('libraryProductsListController', libraryProductsListController);
 
 function libraryProductsListController( $q, controllerBaseService, cycleService ){
@@ -20,7 +20,7 @@ function libraryProductsListController( $q, controllerBaseService, cycleService 
     activate();
 
     function activate(){
-        vm.loadingPromise = cycleService.listSelectionsForCycle(vm.cycle)
+        vm.loadingPromise = cycleService.listSelectionsForCycle(vm.cycle, vm.libraryId)
             .then(function( offerings ){
                 vm.selectedOfferings = offerings;
             });

@@ -1,7 +1,7 @@
 angular.module('library.cycleService')
     .service('cycleService', cycleService);
 
-function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
+function cycleService( CarliModules, $q, errorHandler, userService ) {
 
     var currentUser = userService.getUser();
     if (!currentUser.library) {
@@ -77,13 +77,12 @@ function cycleService( CarliModules, $q, appState, errorHandler, userService ) {
             .catch(errorHandler);
 
         function cycleIsOneTimePurchaseOrClosed( cycle ){
-            console.log('  check ',cycle.name);
             return cycle.cycleType === 'One-Time Purchase' || cycle.status === 5;
         }
     }
 
-    function listSelectionsForCycle( cycle ){
-        return $q.when(middlewareModule.listSelectionsForLibraryFromCycle(currentUser.library.id, cycle.id))
+    function listSelectionsForCycle( cycle, libraryId ){
+        return $q.when(middlewareModule.listSelectionsForLibraryFromCycle(libraryId, cycle.id))
             .catch(errorHandler);
     }
 
