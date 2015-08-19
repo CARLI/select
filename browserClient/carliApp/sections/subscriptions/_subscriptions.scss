@@ -81,8 +81,24 @@
             .vendor-status,
             .library-status {
                 @include body-text();
-                line-height: 1.21429rem;
+                line-height: 1.5rem;
                 float: right;
+            }
+
+            .vendor-flag {
+                float: right;
+                margin-left: 1rem;
+
+                .fa {
+                    &.fa-flag-o {
+                        color: $gray;
+                    }
+
+                    &.fa-flag {
+                        color: $orange;
+                    }
+                    @include font-size(22);
+                }
             }
         }
 
