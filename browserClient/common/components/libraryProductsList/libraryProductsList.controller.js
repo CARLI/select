@@ -1,4 +1,4 @@
-angular.module('library.libraryProductsList')
+angular.module('common.libraryProductsList')
 .controller('libraryProductsListController', libraryProductsListController);
 
 function libraryProductsListController( $q, controllerBaseService, cycleService ){

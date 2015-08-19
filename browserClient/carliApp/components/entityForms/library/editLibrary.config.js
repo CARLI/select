@@ -1,6 +1,7 @@
 angular.module('carli.entityForms.library',[
     'common.alerts',
-    'carli.entityBaseService',
+    'common.libraryProductsList',
     'common.libraryService',
+    'carli.entityBaseService',
     'carli.viewEditDirectives'
 ]);
