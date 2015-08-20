@@ -3,6 +3,7 @@ angular.module('carli.entityForms.product')
 
 function editProductController( $q, $scope, $rootScope, $filter, activityLogService, alertService, entityBaseService, errorHandler, cycleService, libraryService, licenseService, offeringService, productService, vendorService) {
     var vm = this;
+
     var otpFieldsCopy = [];
     var termFieldsCopy = {};
     var priceCapsCopy = {};
@@ -17,6 +18,7 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
     var afterSubmitCallback = vm.afterSubmitFn || function() {};
 
     vm.productOfferings = [];
+    vm.hideOffering = {};
     vm.addPriceCapRow = addPriceCapRow;
     vm.toggleEditable = toggleEditable;
     vm.cancelEdit = cancelEdit;
@@ -67,7 +69,9 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
 
     function initializeForNewProduct() {
         console.log(' edit new product');
+        initSubFormData();
         vm.editable = true;
+        vm.hideOffering = {};
         vm.newProduct = true;
         vm.productOfferings = [];
 
@@ -78,6 +82,7 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
 
     function initializeForExistingProduct() {
         console.log(' edit '+vm.product.name, vm.product);
+        initSubFormData();
         vm.editable = false;
         vm.newProduct = false;
 
@@ -94,11 +99,19 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
 
         if ( isOneTimePurchaseProduct(vm.product) ){
             return loadOfferingsForProduct(vm.product)
+                .then(initializeHideOfferingsCheckboxModels)
                 .then(ensureOneTimePurchaseProductHasEmptyOfferingsForAllLibraries);
         }
         else {
             return $q.when();
         }
+    }
+
+    function initSubFormData() {
+        otpFieldsCopy = [];
+        termFieldsCopy = {};
+        priceCapsCopy = [];
+        originalProductName = null;
     }
 
     function initializeProductNameWatcher() {
@@ -130,7 +143,7 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
     }
 
     function cancelPriceCapEdits(){
-        vm.product.terms = angular.copy(priceCapsCopy, {});
+        vm.product.terms = angular.copy(priceCapsCopy, []);
     }
 
     function rememberPriceCaps(){
@@ -326,6 +339,8 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
     }
 
     function updateOfferingsForExistingProduct(){
+        setOfferingDisplayBasedOnHideColumnFromOneTimePurchaseForm();
+
         var savePromises = [];
 
         if ( vm.productOfferings ){
@@ -344,7 +359,10 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
     }
 
     function saveOfferingsForNewProduct( productId ){
+        setOfferingDisplayBasedOnHideColumnFromOneTimePurchaseForm();
+
         var savePromises = [];
+
         if ( vm.productOfferings.length ){
             vm.productOfferings.forEach(function(partialOffering){
                 savePromises.push( createNewOffering(partialOffering) );
@@ -394,6 +412,7 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
             var newOffering = {
                 type: 'Offering',
                 cycle: vm.product.cycle,
+                display: 'none',
                 library: library,
                 pricing: {}
             };
@@ -403,6 +422,16 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
             }
 
             return newOffering;
+        }
+    }
+
+    function setOfferingDisplayBasedOnHideColumnFromOneTimePurchaseForm(){
+        if ( isOneTimePurchaseProduct(vm.product) ){
+            vm.productOfferings.forEach(function(offering){
+                if (vm.hideOffering[offering.id]){
+                    offering.display = 'none';
+                }
+            });
         }
     }
 
@@ -456,5 +485,12 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
 
     function logAddActivity(){
         return activityLogService.logEntityAdded(vm.product);
+    }
+
+    function initializeHideOfferingsCheckboxModels(offerings){
+        vm.hideOffering = {};
+        offerings.forEach(function(offering){
+            vm.hideOffering[offering.id] = (offering.display === "none");
+        });
     }
 }

@@ -41,6 +41,11 @@
         }
     }
 
+    .column.hide-from-library {
+        flex: 1 0 50px;
+        text-align: center;
+    }
+
     label {
         margin: 0;
     }
