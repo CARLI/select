@@ -1,7 +1,7 @@
 angular.module('common.auth')
     .directive('authTimeoutAlert', authTimeoutAlert);
 
-function authTimeoutAlert($interval, authService, authTimeoutService, config) {
+function authTimeoutAlert($interval, $window, authService, authTimeoutService, config) {
     return {
         restrict: 'E',
         template: [
@@ -135,7 +135,14 @@ function authTimeoutAlert($interval, authService, authTimeoutService, config) {
         }
 
         function deleteSession() {
-            return authService.deleteSession().then(initialState);
+            return authService
+                .deleteSession()
+                .then(initialState)
+                .then(refreshPage);
+
+            function refreshPage() {
+                $window.location.reload();
+            }
         }
 
         function refreshSession() {

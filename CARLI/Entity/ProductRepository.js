@@ -208,6 +208,32 @@ function getProductSelectionStatisticsForCycle( productId, cycle ){
     }
 }
 
+function copyPriceCapsForNewCycle(cycle) {
+    setCycle(cycle);
+    listProducts(cycle)
+        .then(copyPriceCaps)
+        .then(saveProducts)
+        .then(function() {
+            return { ok: true };
+        });
+
+    function copyPriceCaps(products) {
+        return products.map(copyPriceCapForProduct);
+
+        function copyPriceCapForProduct(product) {
+            if (product.futurePriceCaps[cycle.year]) {
+                product.priceCap = product.futurePriceCaps[cycle.year];
+                delete product.futurePriceCaps[cycle.year];
+            }
+            return product;
+        }
+    }
+
+    function saveProducts(products) {
+        return couchUtils.bulkUpdateDocuments(cycle.getDatabaseName(), products);
+    }
+}
+
 /* functions that get added as instance methods on loaded Products */
 var getIsActive = function(){
     return isProductActive(this);
@@ -257,5 +283,6 @@ module.exports = {
     getProductsById: getProductsById,
     getProductDetailCodeOptions: getProductDetailCodeOptions,
     isProductActive: isProductActive,
-    getProductSelectionStatisticsForCycle: getProductSelectionStatisticsForCycle
+    getProductSelectionStatisticsForCycle: getProductSelectionStatisticsForCycle,
+    copyPriceCapsForNewCycle: copyPriceCapsForNewCycle
 };
