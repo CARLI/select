@@ -89,7 +89,7 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
     }
     function copyProductPriceCaps() {
         cycleRepository.createCycleLog('Copying price caps for ' + newCycle.databaseName);
-        return offeringRepository.copyPriceCapsForNewCycle(newCycle);
+        return productRepository.copyPriceCapsForNewCycle(newCycle);
     }
     function transformOfferings() {
         cycleRepository.createCycleLog('Transforming offerings for new cycle');
