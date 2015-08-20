@@ -217,6 +217,13 @@ function propertyExistsAndHasUndefinedValue(entity, propertyName){
     return (propertyName in entity) && typeof entity[propertyName] === 'undefined'
 }
 
+function convertDateObjectToString( dateObject ){
+    if ( typeof dateObject === 'object' && typeof dateObject.toISOString === 'function' ){
+        return dateObject.toISOString();
+    }
+    return '';
+}
+
 setEntityLookupStores( Store( StoreModule(StoreOptions) ) );
 
 module.exports = {
@@ -229,5 +236,6 @@ module.exports = {
     extractValuesForSchema: extractValuesForSchema,
     setDefaultValuesForEntity: setDefaultValuesForEntity,
     setDefaultValueForStringProperty: setDefaultValueForStringProperty,
-    setDefaultValueForIntegerProperty: setDefaultValueForIntegerProperty
+    setDefaultValueForIntegerProperty: setDefaultValueForIntegerProperty,
+    convertDateObjectToString: convertDateObjectToString
 };
