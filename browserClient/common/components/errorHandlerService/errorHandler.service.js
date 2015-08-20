@@ -8,6 +8,9 @@ function returnErrorHandlerFunction($rootScope, $location, alertService, authSer
         if (error.statusCode === 401) {
             handleAuthFailure();
         }
+        else if ( error.statusCode === 409 ){
+            handleConflict(error);
+        }
         else if ( error.statusCode === 413 ){
             handleFileTooLarge(error);
         }
@@ -35,6 +38,12 @@ function returnErrorHandlerFunction($rootScope, $location, alertService, authSer
     function handleAuthFailure() {
         $rootScope.returnTo = $location.url();
         authService.deleteSession();
+    }
+
+    function handleConflict(error){
+        showErrorToUser('Your changes could not be saved because of a conflict. Please reload the page and try again.');
+        //TODO: log conflict details for debugging
+        console.log('conflict: ',error);
     }
 
     function handleFileTooLarge(error){

@@ -105,8 +105,14 @@ function getNonIdPropertyMapFor( schemaType ){
     var propertyNames = listNonIdPropertiesFor(schemaType);
 
     propertyNames.forEach(function(propertyName) {
-        if ( !schema.properties[propertyName].enum ) {
-            result[propertyName] = schema.properties[propertyName].type;
+        var property = schema.properties[propertyName];
+        if ( !property.enum ) {
+            if ( property['$ref'] === './Date.json' || property['$ref'] === 'Date.json' ){
+                result[propertyName] = 'date';
+            }
+            else {
+                result[propertyName] = schema.properties[propertyName].type;
+            }
         }
     });
 
