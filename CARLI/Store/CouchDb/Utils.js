@@ -272,7 +272,7 @@ module.exports = function (storeOptions) {
         if (databaseType & couchUtils.DB_TYPE_VENDOR) {
             roles.push('vendor-' + entity.id);
         } else if (databaseType & couchUtils.DB_TYPE_LIBRARY) {
-            roles.push('library-' + entity.id);
+            roles.push('library');
         }
 
         return couchRequest({
