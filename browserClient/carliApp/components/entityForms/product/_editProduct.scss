@@ -31,6 +31,14 @@
     .column.purchased {
         flex: 0 0 90px;
         padding: 4px;
+        text-align: center;
+    }
+
+    span.purchased {
+        @include font-size(22);
+        .fa {
+            vertical-align: baseline;
+        }
     }
 
     label {
