@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.carliCheckingPrices')
     .controller('carliCheckingPricesByVendorController', carliCheckingPricesByVendorController);
 
-function carliCheckingPricesByVendorController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, vendorService, offeringService, editOfferingService, productService ) {
+function carliCheckingPricesByVendorController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, offeringService, editOfferingService, productService, vendorService, vendorStatusService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadProductsForVendor);
@@ -21,6 +21,7 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
         'site-license-price-both',
         'flag'
     ];
+    vm.vendorStatus = {};
 
     activate();
 
@@ -54,7 +55,8 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
             .then(filterActiveVendors)
             .then(function (vendors) {
                 vm.vendors = vendors;
-            });
+            })
+            .then(loadVendorStatuses);
     }
 
     function filterActiveVendors(vendorList){
@@ -63,6 +65,18 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
         function vendorIsActive(vendor){
             return vendor.isActive;
         }
+    }
+
+    function loadVendorStatuses(){
+        vm.vendorStatus = {};
+
+        return vendorStatusService.list(vm.cycle)
+            .then(function(vendorStatusList){
+                vendorStatusList.forEach(function(vendorStatus){
+                    vm.vendorStatus[vendorStatus.vendor] = vendorStatus;
+                });
+                return vm.vendorStatus;
+            });
     }
 
     function loadProductsForVendor(vendor) {
