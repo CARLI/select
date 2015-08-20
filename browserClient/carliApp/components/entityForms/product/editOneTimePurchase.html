@@ -28,6 +28,7 @@
                 <li class="column-headers">
                     <header class="column library">Library</header>
                     <header class="column price">Price</header>
+                    <header class="column hide-from-library">Hide</header>
                     <header class="column purchased">Purchased</header>
                 </li>
                 <li ng-repeat="offering in vm.productOfferings | orderBy:'library.name'">
@@ -38,6 +39,9 @@
                         <view-edit-price ng-model="offering.pricing.site" edit-mode="vm.editable && !offering.selection" input-id="oneTimePurchase_{{ offering.library.name }}">
                             <span class="price-display">{{ offering.pricing.site | currency }}</span>
                         </view-edit-price>
+                    </span>
+                    <span class="column hide-from-library">
+                        <checkbox id="'hide_' + offering.library.id" ng-model="vm.hideOffering[offering.id]"></checkbox>
                     </span>
                     <span class="column purchased">
                         <i class="fa fa-check-circle" ng-show="offering.selection"></i>
