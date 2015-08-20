@@ -13,6 +13,7 @@
         vm.purchaseProduct = purchaseProduct;
         vm.cancelPurchase = cancelPurchase;
         vm.computeTotalPurchasesAmount = computeTotalPurchasesAmount;
+        vm.englishSummaryOfDisplayProperty = englishSummaryOfDisplayProperty;
         vm.invoiceProducts = invoiceProducts;
         vm.reportProducts = reportProducts;
         vm.invoiceAnnualAccessFees = invoiceAnnualAccessFees;
@@ -168,6 +169,18 @@
             else {
                 vm.orderBy = newOrderBy;
                 vm.reverse = false;
+            }
+        }
+
+        function englishSummaryOfDisplayProperty(offering){
+            if ( offering.display === 'without-price' ){
+                return 'This product will be displayed to this library without a price.';
+            }
+            else if ( offering.display === 'none' ){
+                return 'This product will not be displayed to this library.';
+            }
+            else {
+                return 'This product will be displayed to this library normally.';
             }
         }
     }
