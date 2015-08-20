@@ -5,7 +5,7 @@ PUBLISH_PATH=/var/www/carli-select
 # Change to root directory of the project
 cd `git rev-parse --show-toplevel`
 
-. ./jenkins/functions.sh
+. ./jenkins/jobs/functions.sh
 
 ./install-dependencies.sh || fail "Failed to install dependencies"
 grunt jsenv:node || fail "Failed to set up javascript environment for node (1)"
