@@ -407,19 +407,20 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
 
                 if (mode == 'dollarAmount') {
                     newValue = value.toFixed(2);
-                    $cell.find('.price').text(newValue);
                 } else if (mode == 'percentageIncrease') {
                     var originalValue = parseFloat($cell.text());
+                    if (isNaN(originalValue)) {
+                        return;
+                    }
                     newValue = (100 + value)/100 * originalValue;
                     newValue = newValue.toFixed(2);
-                    $cell.find('.price').text( newValue );
                 }
                 else if (mode == 'byFte'){
                     var fte = $cell.data('fte');
                     newValue = value * fte;
                     newValue = newValue.toFixed(2);
-                    $cell.find('.price').text( newValue );
                 }
+                $cell.find('.price').text(newValue);
             }
         });
     }
