@@ -43,6 +43,7 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
         .then(indexViews)
         .then(waitForIndexingToFinish)
         .then(resetVendorStatuses)
+        .then(copyProductPriceCaps)
         .then(transformOfferings)
         .then(indexViews)
         .then(waitForIndexingToFinish)
@@ -85,6 +86,10 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
                     return vendorStatusRepository.update(resetStatus, newCycle);
                 });
         }
+    }
+    function copyProductPriceCaps() {
+        cycleRepository.createCycleLog('Copying price caps for ' + newCycle.databaseName);
+        return offeringRepository.copyPriceCapsForNewCycle(newCycle);
     }
     function transformOfferings() {
         cycleRepository.createCycleLog('Transforming offerings for new cycle');
