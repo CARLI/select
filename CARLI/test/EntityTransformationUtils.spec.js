@@ -175,6 +175,25 @@ describe('the setDefaultValuesForEntity method', function(){
     });
 });
 
+describe('the convertDateObjectToString method', function(){
+    it('should be a function', function(){
+        expect(EntityTransform.convertDateObjectToString).to.be.a('function');
+    });
+
+    it('should return an empty string when called with no arguments', function(){
+        expect(EntityTransform.convertDateObjectToString()).to.equal('');
+    });
+
+    it('should return an empty string for non-date Objects', function(){
+        expect(EntityTransform.convertDateObjectToString({})).to.equal('');
+    });
+
+    it('should return the ISO string for a date object', function(){
+        var testDate = new Date('January 1, 2015 00:00:01');
+        expect(EntityTransform.convertDateObjectToString(testDate)).to.equal('2015-01-01T06:00:01.000Z');
+    });
+});
+
 describe('The expandObjectFromPersistence function', function(){
     it('should be a function', function () {
         expect(EntityTransform.expandObjectFromPersistence).to.be.a('Function');
