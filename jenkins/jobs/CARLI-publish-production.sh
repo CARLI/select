@@ -7,7 +7,7 @@ WORKSPACE=/home/jenkins/carli-select
 PUBLISH_PATH=/var/www/carli-select
 
 . /home/jenkins/.carli-select.environment
-. $WORKSPACE/jenkins/functions.sh
+. $WORKSPACE/jenkins/jobs/functions.sh
 
 [ -n "$BUILD_NUMBER" ] || fail "Missing required argument (build number)"
 
