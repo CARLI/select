@@ -11,7 +11,7 @@ fail () {
 [ -n "$WORKSPACE" ] || fail "Missing required environment variable \$WORKSPACE"
 
 runTests() {
-    cd browserClient
+    cd $WORKSPACE
     grunt test
     status=$?
     cd - > /dev/null
