@@ -199,6 +199,9 @@ function setDefaultValuesForEntity(entity){
         else if ( propertyType === 'integer' ){
             setDefaultValueForIntegerProperty(entity, propertyName);
         }
+        else if ( propertyType === 'date' ){
+            entity[propertyName] = convertDateObjectToString(entity[propertyName]);
+        }
     });
 }
 function setDefaultValueForStringProperty(entity, propertyName){
@@ -218,10 +221,13 @@ function propertyExistsAndHasUndefinedValue(entity, propertyName){
 }
 
 function convertDateObjectToString( dateObject ){
+    if ( !dateObject ){
+        return '';
+    }
     if ( typeof dateObject === 'object' && typeof dateObject.toISOString === 'function' ){
         return dateObject.toISOString();
     }
-    return '';
+    return dateObject;
 }
 
 setEntityLookupStores( Store( StoreModule(StoreOptions) ) );
