@@ -15,6 +15,9 @@ chai.use( chaiAsPromised );
 
 function undefinedValue(){}
 
+var testDateString = 'January 1, 2015 00:00:01';
+var testDateIsoStr = '2015-01-01T06:00:01.000Z';
+
 describe( 'The EntityTransform Module', function() {
 
     it( 'should be a module', function() {
@@ -172,6 +175,39 @@ describe('the setDefaultValuesForEntity method', function(){
         EntityTransform.setDefaultValuesForEntity(testLibraryNonCrm);
         expect(testLibraryNonCrm).to.have.property('gar', '');
         expect(testLibraryNonCrm).to.have.property('fte', 0);
+    });
+
+    it('should replace Date objects with ISO strings', function(){
+        var testOffering = {
+            type: 'License',
+            vendor: 'test',
+            effectiveDate: new Date(testDateString)
+        };
+
+        EntityTransform.setDefaultValuesForEntity(testOffering);
+        expect(testOffering).to.have.property('effectiveDate', testDateIsoStr);
+    });
+});
+
+describe('the convertDateObjectToString method', function(){
+    it('should be a function', function(){
+        expect(EntityTransform.convertDateObjectToString).to.be.a('function');
+    });
+
+    it('should return an empty string when called with no arguments', function(){
+        expect(EntityTransform.convertDateObjectToString()).to.equal('');
+    });
+
+    it('should return the original value if the argument is not a Date object', function(){
+        var testObj = {};
+        var testString = "foobar";
+        expect(EntityTransform.convertDateObjectToString(testObj)).to.equal(testObj);
+        expect(EntityTransform.convertDateObjectToString(testString)).to.equal(testString);
+    });
+
+    it('should return the ISO string for a date object', function(){
+        var testDate = new Date(testDateString);
+        expect(EntityTransform.convertDateObjectToString(testDate)).to.equal(testDateIsoStr);
     });
 });
 
