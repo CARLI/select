@@ -10,7 +10,7 @@
                 <span class="vendor-status">{{ ::vm.getVendorPricingStatus(vendor) }}</span>
             </div>
             <div class="content" ng-if="vm.openAccordion === vendor.id">
-                <ul class="product-list">
+                <ul class="vendor-product-list">
                     <li ng-repeat="product in ::vendor.products | orderBy: 'name' track by product.id">
                         <div affix class="product-header" ng-class="{ dontAffix: !vm.expandedProducts[product.id], expanded: vm.expandedProducts[product.id] }"
                              ng-click="vm.toggleProductSection(product)" cg-busy="vm.loadingPromise[product.id]">
