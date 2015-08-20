@@ -235,5 +235,16 @@ describe( 'The Validator Module', function() {
             };
             expect(Validator.getNonIdPropertyMapFor('LibraryNonCrm')).to.deep.equal(expectedMap);
         });
+
+        it('should call properties with $ref == ./Date.json type "date"', function(){
+            var expectedMap = {
+                cycle: 'string',
+                library: 'string',
+                lastActivity: 'date',
+                description: 'string',
+                isComplete: 'boolean'
+            };
+            expect(Validator.getNonIdPropertyMapFor('LibraryStatus')).to.deep.equal(expectedMap);
+        });
     });
 });
