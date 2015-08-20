@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# This helper script is suitable for the QA and Production environments.
+# Ubuntu 14.04 as configured by the `carli-select` Chef recipe.
+
+command=$1
+services="couchdb carli-select nginx"
+
+usage () {
+    echo "Usage: $0 <command>"
+    echo
+    echo "Valid commands:"
+    echo "  log"
+    echo "  restart"
+    echo "  start"
+    echo "  status"
+    echo "  stop"
+}
+
+if [ -z "$command" -o "$command" = "help" -o "$command" = "--help" ]; then
+    usage
+    exit 0
+fi
+
+if [ "$command" = "log" ]; then
+    tail -f /var/log/carli-select.log /var/log/nginx/*.log /var/log/couchdb/couch.log
+else
+    for service in $services; do
+        echo "-- $service $command --"
+        service $service $command
+        echo
+    done
+fi
