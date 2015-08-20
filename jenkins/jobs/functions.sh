@@ -10,6 +10,14 @@ fail () {
 [ -n "$BUILD_NUMBER" ] || fail "Missing required environment variable \$BUILD_NUMBER"
 [ -n "$WORKSPACE" ] || fail "Missing required environment variable \$WORKSPACE"
 
+linkSecureConfiguration() {
+    cd config
+    [ -e /home/jenkins/.carli-secure.json ] || fail "Server is missing the secure configuration file for CARLI"
+    rm -f secure.json
+    ln -s /home/jenkins/.carli-secure.json secure.json
+    cd - > /dev/null
+}
+
 runTests() {
     cd $WORKSPACE
     grunt test
