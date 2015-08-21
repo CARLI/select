@@ -73,7 +73,9 @@
                 </div>
                 <div class="row">
                     {{ currency offering.pricing.site }}
-                    <div tabindex="0" class="comment-marker fa fa-comment-o"></div>
+                    {{#if offering.vendorComments.site }}
+                        <div tabindex="0" class="comment-marker fa fa-comment-o"></div>
+                    {{/if}}
                 </div>
             </div>
         </div>
@@ -114,7 +116,9 @@
                                 <tr>
                                     <td>
                                         {{ currency price }}
-                                        <div tabindex="0" class="comment-marker fa fa-comment-o"></div>
+                                        {{#if comment }}
+                                            <div tabindex="0" class="comment-marker fa fa-comment-o"></div>
+                                        {{/if}}
                                     </td>
                                     <td>{{ users }}</td>
                                 </tr>

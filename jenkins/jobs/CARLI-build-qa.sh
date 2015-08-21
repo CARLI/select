@@ -14,6 +14,7 @@ grunt jsenv:node || fail "Failed to set up javascript environment for node (1)"
 
 buildBrowserClients || fail "Failed to build browser clients"
 archiveBrowserClients || fail "Failed to create browser clients archive"
+archiveMiddleware || fail "Failed to create middleware archive"
 
 publishBrowserClients || fail "Failed to publish browser clients"
 publishMiddleware || fail "Failed to publish middleware"
