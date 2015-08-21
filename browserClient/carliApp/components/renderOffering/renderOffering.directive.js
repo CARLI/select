@@ -33,6 +33,7 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
                 var lastYear = scope.cycle.year - 1;
                 offering.pricing.su = $filter('orderBy')(offering.pricing.su, 'users');
                 offering.product.displayName = productService.getProductDisplayName(offering.product);
+                copyVendorCommentsToPricing(offering);
 
                 getOfferingTemplate().then(function (template) {
                     offering.flagged = offeringService.getFlaggedState(offering, scope.cycle);
@@ -62,6 +63,19 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
                     }
                     return {};
                 }
+
+                function copyVendorCommentsToPricing(offering) {
+                    if (!offering.vendorComments || !offering.vendorComments.su) {
+                        return;
+                    }
+                    offering.vendorComments.su.forEach(function (suComment) {
+                        offering.pricing.su.forEach(function (suPricing) {
+                            if (suPricing.users == suComment.users) {
+                                suPricing.comment = suComment.comment;
+                            }
+                        });
+                    });
+                }
             }
 
             function getOfferingTemplate() {
@@ -70,7 +84,7 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
 
                     $http.get('/carliApp/components/renderOffering/renderOffering.handlebars').then(function (response) {
                         var source = response.data;
-                        var offeringTemplate = Handlebars.compile(source);
+                        var offeringTemplate = Handlebars.compile(source, {});
                         offeringTemplatePromise.resolve(offeringTemplate);
                     });
                 }
@@ -169,7 +183,6 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
             return users === 1 ? ' User' : ' Users';
         }
     }
-
 
     function registerHandlebarsHelpers() {
         Handlebars.registerHelper('currency', currency);
