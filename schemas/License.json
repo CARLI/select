@@ -54,17 +54,11 @@
         },
         "currentTermStartDate": {
             "description": "Start date of license current term",
-            "oneOf": [
-                { "$ref": "./Date.json" },
-                { "type": "null" }
-            ]
+            "$ref": "./Date.json"
         },
         "currentTermEndDate": {
             "description": "End date of license current term",
-            "oneOf": [
-                { "$ref": "./Date.json" },
-                { "type": "null" }
-            ]
+            "$ref": "./Date.json"
         },
         "remainingRenewals": {
             "description": "Number of renewals remaining in contract",
