@@ -7,6 +7,9 @@ function dashboardController( cycleService, userService ){
     vm.cycles = [];
     vm.library = {};
     vm.loadingPromise = null;
+    vm.cycleForUnselectedProducts = null;
+
+    vm.viewUnselectedProductsFor = viewUnselectedProductsFor;
 
     activate();
 
@@ -17,5 +20,10 @@ function dashboardController( cycleService, userService ){
         vm.loadingPromise = cycleService.listNonArchivedClosedCyclesIncludingOneTimePurchase().then(function(cycleList){
             vm.cycles = cycleList;
         });
+    }
+
+    function viewUnselectedProductsFor(cycle){
+        vm.cycleForUnselectedProducts = cycle;
+        $('#unselected-products-modal').modal(true);
     }
 }

@@ -1,13 +1,19 @@
 angular.module('carli.sections.subscriptions.carliEditingProductList')
     .controller('carliEditingProductListController', carliEditingProductListController);
 
-function carliEditingProductListController( $filter, $q, alertService, cycleService, historicalPricingService, productService, vendorService ) {
+function carliEditingProductListController( $filter, $q, alertService, cycleService, historicalPricingService, productService, vendorService, vendorStatusService ) {
     var vm = this;
-    vm.removeProduct = removeProduct;
-    vm.openVendorPricing = openVendorPricing;
-    vm.loadProductsForVendor = loadProductsForVendor;
-    vm.getProductDisplayName = productService.getProductDisplayName;
+
     vm.loadingPromise = {};
+    vm.vendorStatus = {};
+
+    vm.getProductDisplayName = productService.getProductDisplayName;
+    vm.loadProductsForVendor = loadProductsForVendor;
+    vm.openVendorPricing = openVendorPricing;
+    vm.removeProduct = removeProduct;
+    vm.saveReviewStatus = saveReviewStatus;
+    vm.clearReviewStatus = clearReviewStatus;
+
     activate();
 
     function activate () {
@@ -56,7 +62,8 @@ function carliEditingProductListController( $filter, $q, alertService, cycleServ
             .then(filterActiveVendors)
             .then(function (vendors) {
                 vm.vendors = vendors;
-            });
+            })
+            .then(loadVendorStatuses);
     }
 
     function filterActiveVendors(vendorList){
@@ -65,6 +72,18 @@ function carliEditingProductListController( $filter, $q, alertService, cycleServ
         function vendorIsActive(vendor){
             return vendor.isActive;
         }
+    }
+
+    function loadVendorStatuses(){
+        vm.vendorStatus = {};
+
+        return vendorStatusService.list(vm.cycle)
+            .then(function(vendorStatusList){
+                vendorStatusList.forEach(function(vendorStatus){
+                    vm.vendorStatus[vendorStatus.vendor] = vendorStatus;
+                });
+                return vm.vendorStatus;
+            });
     }
 
     function loadProductsForVendor(vendor) {
@@ -124,6 +143,28 @@ function carliEditingProductListController( $filter, $q, alertService, cycleServ
         .then(function syncData(){
             return cycleService.syncDataToVendorDatabase( product.vendor.id, vm.cycle );
         });
+    }
+
+    function saveReviewStatus( vendor ){
+        if ( !vendor ) {
+            return;
+        }
+
+        return vendorStatusService.markProductsForVendorReviewed(vendor.id, vm.cycle)
+            .then(function(){
+                vm.vendorStatus[vendor.id].productsReviewed = true;
+            });
+    }
+
+    function clearReviewStatus( vendor ){
+        if ( !vendor ) {
+            return;
+        }
+
+        return vendorStatusService.clearProductsForVendorReviewed(vendor.id, vm.cycle)
+            .then(function(){
+                vm.vendorStatus[vendor.id].productsReviewed = false;
+            });
     }
 
     function openVendorPricing(){
