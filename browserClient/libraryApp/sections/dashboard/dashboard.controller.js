@@ -23,7 +23,7 @@ function dashboardController( cycleService, userService ){
     }
 
     function viewUnselectedProductsFor(cycle){
-        console.log('view unselected products ',cycle.name);
         vm.cycleForUnselectedProducts = cycle;
+        $('#unselected-products-modal').modal(true);
     }
 }
