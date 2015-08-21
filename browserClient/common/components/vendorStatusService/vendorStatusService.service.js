@@ -15,6 +15,8 @@ function vendorStatusService( CarliModules, $q, authService, errorHandler ) {
         updateVendorStatusFlaggedOfferings: updateVendorStatusFlaggedOfferings,
         load:   function() { return $q.when( vendorStatusModule.load.apply(this, arguments) ).catch(errorHandler); },
         getStatusForVendor: getStatusForVendor,
+        markProductsForVendorReviewed: markProductsForVendorReviewed,
+        clearProductsForVendorReviewed: clearProductsForVendorReviewed,
         closePricingForVendor: closePricingForVendor,
         openPricingForVendor: openPricingForVendor
     };
@@ -26,6 +28,22 @@ function vendorStatusService( CarliModules, $q, authService, errorHandler ) {
         else {
             return $q.when( vendorStatusModule.create(vendorStatus, cycle) );
         }
+    }
+
+    function markProductsForVendorReviewed( vendorId, cycle ){
+        return getStatusForVendor(vendorId, cycle)
+            .then(function(vendorStatus){
+                vendorStatus.productsReviewed = true;
+                return updateVendorStatus(vendorStatus, cycle);
+            });
+    }
+
+    function clearProductsForVendorReviewed( vendorId, cycle ){
+        return getStatusForVendor(vendorId, cycle)
+            .then(function(vendorStatus){
+                vendorStatus.productsReviewed = false;
+                return updateVendorStatus(vendorStatus, cycle);
+            });
     }
 
     function updateVendorStatusActivity( activityMessage, vendorId, cycle ){
