@@ -314,7 +314,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     function markProductChangedForCell( jqueryCell ){
         var classList = jqueryCell.attr('class').split(/\s+/);
         classList.forEach(function(className){
-            if ( className !== 'column' && className !== 'offering' && className !== 'input' ){
+            if ( className !== 'column' && className !== 'offering' && className !== 'input' && className !== 'updated'){
                 vm.changedProductIds[className] = true;
             }
         });
@@ -405,7 +405,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                 return updateVendorFlaggedOfferings()
                     .then(updateVendorStatus)
                     .then(syncData) //Enhancement: get couch replication job progress, show it in the 2nd progress bar
-                    .then(function(){
+                    .finally(function(){
                         $('#progress-modal').modal('hide');
                         $scope.warningForm.$setPristine();
                         saveAllProductsPromise.resolve();
