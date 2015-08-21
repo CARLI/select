@@ -38,7 +38,8 @@ buildBrowserClients() {
 
 archiveBrowserClients() {
     cd browserClient/build
-    tar zcf ../../artifacts/browserClients.tgz .
+    rm -f $WORKSPACE/artifacts/browserClients.tgz
+    tar zcf $WORKSPACE/artifacts/browserClients.tgz .
     status=$?
     cd - > /dev/null
 
@@ -48,7 +49,6 @@ archiveBrowserClients() {
 publishBrowserClients() {
     mkdir -p $PUBLISH_PATH/$BUILD_NUMBER/browserClients
     cd $PUBLISH_PATH/$BUILD_NUMBER/browserClients
-    rm -f $WORKSPACE/artifacts/browserClients.tgz
     tar zxf $WORKSPACE/artifacts/browserClients.tgz
     status=$?
     cd - > /dev/null
