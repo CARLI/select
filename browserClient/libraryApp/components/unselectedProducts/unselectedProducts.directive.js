@@ -7,6 +7,7 @@ angular.module('library.unselectedProducts')
                 cycle: '='
             },
             controller: 'unselectedProductsController',
-            controllerAs: 'vm'
+            controllerAs: 'vm',
+            bindToController: true
         };
     });

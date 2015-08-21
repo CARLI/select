@@ -1,22 +1,20 @@
 angular.module('library.unselectedProducts')
     .controller('unselectedProductsController', unselectedProductsController);
 
-function unselectedProductsController($scope){
+function unselectedProductsController($scope, cycleService){
     var vm = this;
 
     vm.loadingPromise = null;
 
+    vm.unselected = unselected;
+
     activate();
 
     function activate(){
-        console.log('unselectedProductsController Activate');
-
-        $scope.$watch('cycle', cycleUpdated);
+        $scope.$watch('vm.cycle', cycleUpdated);
     }
 
     function cycleUpdated(newCycle){
-        console.log('  cycle updated', newCycle);
-
         if ( newCycle ){
             loadUnselectedProductsForCycle();
         }
@@ -26,11 +24,26 @@ function unselectedProductsController($scope){
     }
 
     function loadUnselectedProductsForCycle(){
-        vm.loadingPromise = $scope.cycle.id;
-        console.log('    show modal');
+        vm.loadingPromise = loadOfferingsFor(vm.cycle);
+        $('#unselected-products-modal').modal(true);
     }
 
     function hideUnselectedProductsModal(){
-        console.log('    hide modal');
+        $('#unselected-products-modal').modal('hide');
+    }
+
+    function loadOfferingsFor(cycle){
+        return cycleService.listAllOfferingsForCycle(cycle)
+            .then(function(offeringsList){
+                vm.offerings = offeringsList.filter(unselected);
+            });
+    }
+
+    function hasSelection( offering ){
+        return offering.selection;
+    }
+
+    function unselected( offering ){
+        return !hasSelection( offering );
     }
 }
