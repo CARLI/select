@@ -6,6 +6,7 @@ angular.module('vendor.sections.simultaneousUserPrices',[
     'common.productService',
     'vendor.addSuLevelButton',
     'vendor.horizontalScrollSlider',
+    'vendor.offeringColorKey',
     'vendor.quickPricing',
     'vendor.vendorCommentsModal'
 ]);

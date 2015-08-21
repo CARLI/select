@@ -266,11 +266,14 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
 
     function makeReadOnly() {
         var $cell = $(this);
-        markProductChangedForCell( $cell.parent() );
+        var offeringCell = $cell.parent();
+        var productId = offeringCell.data('productId');
+        markProductChangedForCell(offeringCell);
         var price = $cell.val();
         var div = createOfferingCellContent(price);
         $cell.replaceWith(div);
         setCommentMarkerVisibility(div);
+        updateFlaggedStatusForProduct(productId);
     }
 
     function editComment(cell) {
@@ -314,30 +317,36 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     function markProductChangedForCell( jqueryCell ){
         var classList = jqueryCell.attr('class').split(/\s+/);
         classList.forEach(function(className){
-            if ( className !== 'column' && className !== 'offering' && className !== 'input' ){
+            if ( className !== 'column' && className !== 'offering' && className !== 'input' && className !== 'updated' && className !== 'flagged'){
                 vm.changedProductIds[className] = true;
             }
         });
+    }
+
+    function getSuPricingFromFormForProduct(productId){
+        var result = [];
+
+        vm.suLevels.forEach(function(suLevel){
+            var users = suLevel.users;
+            var $productCellForSu = $('.price-row.su-'+users+' .'+productId);
+            var newPrice = parseFloat( $productCellForSu.text() );
+
+            if ( !isNaN(newPrice) ){
+                result.push({
+                    users: users,
+                    price: newPrice
+                });
+            }
+        });
+
+        return result;
     }
 
     function saveOfferings(){
         var newSuPricingByProduct = {};
 
         vm.products.forEach(function(product){
-            newSuPricingByProduct[product.id] = [];
-
-            vm.suLevels.forEach(function(suLevel){
-                var users = suLevel.users;
-                var $productCellForSu = $('.price-row.su-'+users+' .'+product.id);
-                var newPrice = parseFloat( $productCellForSu.text() );
-
-                if ( !isNaN(newPrice) ){
-                    newSuPricingByProduct[product.id].push({
-                        users: users,
-                        price: newPrice
-                    });
-                }
-            });
+            newSuPricingByProduct[product.id] = getSuPricingFromFormForProduct(product.id);
         });
 
         var productIdsToUpdate = Object.keys(vm.changedProductIds).filter(function(id){
@@ -405,7 +414,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                 return updateVendorFlaggedOfferings()
                     .then(updateVendorStatus)
                     .then(syncData) //Enhancement: get couch replication job progress, show it in the 2nd progress bar
-                    .then(function(){
+                    .finally(function(){
                         $('#progress-modal').modal('hide');
                         $scope.warningForm.$setPristine();
                         saveAllProductsPromise.resolve();
@@ -535,5 +544,22 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             }
         });
         return max + 1;
+    }
+
+    function updateFlaggedStatusForProduct(productId) {
+        var suPricing = getSuPricingFromFormForProduct(productId);
+        var testOffering = {
+            product: {},
+            pricing: {
+                site: Infinity,
+                su: suPricing
+            }
+        };
+        if ( offeringService.getFlaggedState(testOffering, {}) ){
+            $('.'+productId).addClass('flagged');
+        }
+        else {
+            $('.'+productId).removeClass('flagged');
+        }
     }
 }
