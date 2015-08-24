@@ -1,7 +1,7 @@
 angular.module('vendor.sections.simultaneousUserPrices')
     .controller('simultaneousUserPricesController', simultaneousUserPricesController);
 
-function simultaneousUserPricesController($scope, $q, $filter, alertService, authService, cycleService, offeringService, productService, vendorStatusService){
+function simultaneousUserPricesController($scope, $q, $filter, alertService, authService, cycleService, offeringService, productService, simultaneousUserPricesCsv, vendorStatusService){
     var vm = this;
     vm.changedProductIds = {};
     vm.loadingPromise = null;
@@ -16,6 +16,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     vm.totalProducts = 0;
     vm.updatesByProductId = {};
 
+    vm.downloadCsv = downloadCsv;
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.addSuPricingLevel = addSuPricingLevel;
     vm.nextSuLevel = nextSuLevel;
@@ -161,6 +162,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     function makeSuPricingRow(level) {
         var row = $('<div class="price-row">');
         row.addClass('su-'+level.users);
+        row.data('su', level.users);
 
         vm.products.forEach(function (product) {
             row.append(generateOfferingCell(level, product));
@@ -315,12 +317,8 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     }
 
     function markProductChangedForCell( jqueryCell ){
-        var classList = jqueryCell.attr('class').split(/\s+/);
-        classList.forEach(function(className){
-            if ( className !== 'column' && className !== 'offering' && className !== 'input' && className !== 'updated' && className !== 'flagged'){
-                vm.changedProductIds[className] = true;
-            }
-        });
+        var productId = jqueryCell.data('productId');
+        vm.changedProductIds[productId] = true;
     }
 
     function getSuPricingFromFormForProduct(productId){
@@ -560,6 +558,53 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         }
         else {
             $('.'+productId).removeClass('flagged');
+        }
+    }
+
+    function downloadCsv() {
+        var csvData = gatherDataForCsvExport();
+
+        vm.loadingPromise = simultaneousUserPricesCsv(vm.products, vm.suLevels, csvData)
+            .then(triggerDownload)
+            .catch(function (err) {
+                console.log('CSV generation failed', err);
+            });
+
+        return vm.loadingPromise;
+
+        function gatherDataForCsvExport(){
+            var suPricesByProduct = {};
+
+            vm.suLevels.forEach(function(suLevel){
+                var users = suLevel.users;
+                suPricesByProduct[users] = {};
+
+                var $productRow = $('.pricing-grid .price-row.su-'+users);
+
+                $('.offering', $productRow).each(function(){
+                    var $cell = $(this);
+                    var productId = $cell.data('productId');
+                    var price = parseFloat( $cell.text() );
+
+                    if ( !isNaN(price) ){
+                        suPricesByProduct[users][productId] = price;
+                    }
+                });
+            });
+
+            return suPricesByProduct;
+        }
+
+        //TODO: move this and the Site License one into a browserDownload service
+        function triggerDownload(csvString) {
+            var blob = new Blob([csvString], {type: "text/csv;charset=utf-8"});
+            saveAs(blob, makeFilename());
+        }
+
+        function makeFilename() {
+            var vendorName = authService.getCurrentUser().vendor.name;
+            var cycleName = cycleService.getCurrentCycle().name;
+            return vendorName + ' ' + cycleName + ' SU Prices.csv';
         }
     }
 }
