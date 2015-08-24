@@ -141,6 +141,9 @@ var functionsToAdd = {
             return resultArray[0];
         });
     },
+    exportForBanner: function exportForBanner() {
+
+    },
     isOpenToLibraries: function(){
         return isOpenToLibraries(this);
     },

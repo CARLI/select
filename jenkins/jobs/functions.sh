@@ -58,7 +58,7 @@ publishBrowserClients() {
 
 archiveMiddleware() {
     rm -f $WORKSPACE/artifacts/middleware.tgz
-    tar zcf $WORKSPACE/artifacts/middleware.tgz CARLI config db/designDocs middleware schemas
+    tar zcf $WORKSPACE/artifacts/middleware.tgz CARLI config db middleware schemas
 }
 
 publishMiddleware() {
