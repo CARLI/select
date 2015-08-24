@@ -426,26 +426,23 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
     }
 
     function downloadCsv() {
-        //vm.loadingPromise = saveOfferings()
-        //    .then(generateCsvData)
-        //    .then(triggerDownload);
-
-        generateCsvData()
+        vm.loadingPromise = generateCsvData()
             .then(triggerDownload)
             .catch(function (err) {
                 console.log('CSV generation failed', err);
             });
+
+        return vm.loadingPromise;
 
         function generateCsvData() {
             return siteLicensePricesCsv(vm.viewOptions, getCsvProductList(), getCsvLibraryList(), vm.offeringsForLibraryByProduct);
         }
 
         function triggerDownload(csvString) {
+            console.log('Got CSV');
             var blob = new Blob([csvString], {type: "text/csv;charset=utf-8"});
-            saveAs(blob, makeFilename());
+            window.saveAs(blob, makeFilename());
         }
-
-        return vm.loadingPromise;
 
         function getCsvProductList() {
             return vm.products.filter(function (product) {
@@ -463,16 +460,9 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
             var cycleName = cycleService.getCurrentCycle().name;
             return vendorName + ' ' + cycleName + ' Site License Prices.csv';
         }
-
     }
 
     function checkViewOption(option) {
-
-        if (vm.viewOptions[option] === true ) {
-            vm.viewOptions[option] = false;
-        }
-        else {
-            vm.viewOptions[option] = true;
-        }
+        vm.viewOptions[option] = !vm.viewOptions[option];
     }
 }
