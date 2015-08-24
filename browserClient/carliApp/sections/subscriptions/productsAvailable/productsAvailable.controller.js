@@ -4,6 +4,7 @@ angular.module('carli.sections.subscriptions.productsAvailable')
 function productsAvailableController( $q, alertService ) {
     var vm = this;
     vm.undoCloseSystem = undoCloseSystem;
+    vm.exportForBanner = exportForBanner;
 
     vm.updateSelectionAndInvoiceTotals = updateSelectionAndInvoiceTotals;
 
@@ -21,5 +22,9 @@ function productsAvailableController( $q, alertService ) {
 
     function undoCloseSystem(){
         return vm.cycleRouter.previous();
+    }
+
+    function exportForBanner() {
+        return vm.cycle.exportForBanner();
     }
 }
