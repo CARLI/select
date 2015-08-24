@@ -44,6 +44,13 @@
     <add-su-level-button add-su-pricing-level="vm.addSuPricingLevel" next-su-level="vm.nextSuLevel"></add-su-level-button>
 </section>
 
+<section class="content">
+    <div class="pull-right">
+        <button ng-click="vm.downloadCsv()" class="carli-button">Export to CSV</button>
+    </div>
+</section>
+
+
 <modal-dialog modal-id="'progress-modal'" modal-title="'Saving Pricing'">
     <div class="modal-body">
         <div>Your changes are being saved. Please leave this window open.</div>
