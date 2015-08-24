@@ -4,6 +4,8 @@ angular.module('carli.renderOffering')
 var offeringTemplatePromise;
 var editOfferingHandlerAttached;
 var flagOfferingHandlerAttached;
+var commentHandlerAttached;
+var offeringsById = {};
 
 function renderOfferingDirective($http, $q, $filter, alertService, editOfferingService, errorHandler, offeringService, productService){
     registerHandlebarsHelpers();
@@ -17,14 +19,20 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
             cycle: '=',
             columns: '='
         },
+        template: '<div id="rendered-offering-{{ offeringId }}"></div>' +
+            '<modal-dialog modal-id="vendor-comment-{{ offeringId }}" modal-title="Vendor Comments" ></modal-dialog>',
         link: function postLink(scope, element, attrs) {
             attachEditButtonHandlers();
             attachFlagButtonHandlers();
+            attachCommentHandlers();
 
             scope.$watch('offering',renderOfferingWhenReady, true);
 
             function renderOfferingWhenReady(newValue, oldValue) {
                 if (newValue) {
+                    offeringsById[newValue.id] = newValue;
+                    scope.offeringId = newValue.id;
+
                     render(newValue);
                 }
             }
@@ -152,6 +160,40 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
                         enableFlagAction(updatedOffering.id);
 
                         return updatedOffering;
+                    }
+                }
+            }
+
+            function attachCommentHandlers() {
+                if (commentHandlerAttached){
+                    return;
+                }
+
+                commentHandlerAttached = true;
+                $('body').on('click', '.comment-marker', showComment);
+
+                function showComment() {
+                    var $this = $(this);
+
+                    var type = $this.data('comment-type');
+                    var offeringId = $this.data('offering-id');
+                    var offering = offeringsById[offeringId];
+
+                    console.log(offeringId, offering.vendorComments);
+
+                    if (type === 'site') {
+                        scope.$apply(function() {
+                            alertService.putAlert(offering.vendorComments.site);
+                        });
+                    } else if (type === 'su') {
+                        var users = $this.data('users');
+                        offering.vendorComments.su.forEach(function (suComment) {
+                            if (suComment.users == users) {
+                                scope.$apply(function() {
+                                    alertService.putAlert(suComment.comment);
+                                });
+                            }
+                        });
                     }
                 }
             }
