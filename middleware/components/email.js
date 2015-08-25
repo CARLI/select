@@ -1,10 +1,10 @@
+var config = require('../../config');
 var handlebars = require('handlebars');
 var mailer = require('nodemailer');
 var mailTransport = mailer.createTransport(null);
+var notificationRepository = require('../../CARLI/Entity/NotificationRepository.js');
 var Q = require('q');
 var request = require('request');
-
-var config = require('../../config');
 
 function tellPixobot(envelope) {
     if (typeof envelope === 'string') {
@@ -41,6 +41,20 @@ function sendPasswordResetMessage(to, template, variables) {
     return sendTemplatedMessage(to, resetSubject, template, variables);
 }
 
+function sendNotificationEmail( notificationId ){
+    return notificationRepository.load(notificationId)
+        .then(function(notification){
+            var options = {
+                to: config.notifications.overrideTo ? config.notifications.overrideTo : notification.to,
+                from: notification.ownerEmail,
+                subject: notification.subject,
+                text: notification.emailBody
+                //TODO: PDF / CSV attachment
+            };
+            return sendMail(options);
+        });
+}
+
 
 function sendMail(options) {
     var deferred = Q.defer();
@@ -64,5 +78,6 @@ function sendMail(options) {
 module.exports = {
     tellPixobot: tellPixobot,
     sendTemplatedMessage: sendTemplatedMessage,
-    sendPasswordResetMessage: sendPasswordResetMessage
+    sendPasswordResetMessage: sendPasswordResetMessage,
+    sendNotificationEmail: sendNotificationEmail
 };

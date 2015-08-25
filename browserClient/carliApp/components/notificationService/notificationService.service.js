@@ -4,6 +4,7 @@ angular.module('carli.notificationService')
 function notificationService($q, CarliModules, errorHandler) {
 
     var notificationModule = CarliModules.Notification;
+    var emailMiddleware = CarliModules.EmailMiddleware;
 
     return {
         getBlankNotification: getBlankNotification,
@@ -16,13 +17,24 @@ function notificationService($q, CarliModules, errorHandler) {
         update: function() { return $q.when( notificationModule.update.apply(this, arguments) ); },
         load:   function() { return $q.when( notificationModule.load.apply(this, arguments) ).catch(errorHandler); },
         delete:   function() { return $q.when( notificationModule.delete.apply(this, arguments) ); },
-        sendNotification: function() { return $q.when( notificationModule.sendNotification.apply(this, arguments) ); },
-        resend: function() { return $q.when( notificationModule.resend.apply(this, arguments) ); },
+        sendNotification: sendNotification,
+        resend: resend,
         removeNotification: function() { return $q.when( notificationModule.delete.apply(this, arguments)); },
         getRecipientLabel: notificationModule.getRecipientLabel,
         generateDraftNotification: CarliModules.NotificationDraftGenerator.generateDraftNotification,
         notificationTypeAllowsRecipientsToBeEdited: notificationModule.notificationTypeAllowsRecipientsToBeEdited
     };
+
+    function sendNotification(notification){
+        return $q.when( notificationModule.sendNotification(notification) )
+            .then(function(){
+                return $q.when(emailMiddleware.sendNotificationEmail(notification.id));
+            });
+    }
+
+    function resend(notification){
+        return $q.when(emailMiddleware.sendNotificationEmail(notification.id));
+    }
 
     function getBlankNotification(){
         return {

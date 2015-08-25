@@ -10,6 +10,7 @@ module.exports = {
     Cycle: require('../CARLI/Entity/CycleRepository'),
     CycleMiddleware: require('../middleware/browserAdapters/cycleCreation'),
     DatabaseStatusMiddleware: require('../middleware/browserAdapters/vendorDatabases'),
+    EmailMiddleware: require('../middleware/browserAdapters/email'),
     Library: require('../CARLI/Entity/LibraryRepository'),
     LibraryMiddleware: require('../middleware/browserAdapters/libraryQueries'),
     LibraryStatus: require('../CARLI/Entity/LibraryStatusRepository'),
