@@ -17,7 +17,7 @@ function tellPixobot(envelope) {
     });
 }
 
-function sendNotification(to, template, variables) {
+function sendNotification(to, template, variables) { //sendTemplatedMessage
     var realTo = config.notifications.overrideTo ? config.notifications.overrideTo : to;
     var emailBodyText = fillTemplate(template, variables);
 
