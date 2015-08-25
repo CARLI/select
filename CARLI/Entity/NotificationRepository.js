@@ -87,7 +87,6 @@ function sendNotification( notification ){
     }
 
     return setToField()
-        .then(sendNotificationEmail)
         .then(updateNotification);
 
     function setToField(){
@@ -107,14 +106,6 @@ function sendNotification( notification ){
             return Q(notification);
         }
     }
-}
-
-function sendNotificationEmail( notification ){
-    return Q( notification );
-}
-function resend( notification ){
-    return sendNotificationEmail(notification)
-        .thenResolve(notification.id);
 }
 
 function listDrafts(){
@@ -307,7 +298,6 @@ module.exports = {
     load: loadNotification,
     delete: NotificationRepository.delete,
     sendNotification: sendNotification,
-    resend: resend,
     listDrafts: listDrafts,
     listSent: listSent,
     listSentBetweenDates: listSentBetweenDates,
