@@ -11,7 +11,7 @@ var Entity = require('../Entity')
     , uuid = require('node-uuid')
 ;
 
-var notifications = require('../../config/environmentDependentModules/notifications');
+var email = require('../../config/environmentDependentModules/email');
 var request = require('../../config/environmentDependentModules/request');
 
 
@@ -61,7 +61,7 @@ function createRequest( email, baseUrl ){
                 user: user,
                 resetLink: baseUrl + '/reset/' + resetRequest.key
             };
-            return notifications.sendNotification(resetRequest.email, template, variables);
+            return email.sendPasswordResetMessage(resetRequest.email, template, variables);
         }
     }
 

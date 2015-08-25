@@ -1,10 +1,10 @@
+var config = require('../../config');
 var handlebars = require('handlebars');
 var mailer = require('nodemailer');
 var mailTransport = mailer.createTransport(null);
+var notificationRepository = require('../../CARLI/Entity/NotificationRepository.js');
 var Q = require('q');
 var request = require('request');
-
-var config = require('../../config');
 
 function tellPixobot(envelope) {
     if (typeof envelope === 'string') {
@@ -17,24 +17,44 @@ function tellPixobot(envelope) {
     });
 }
 
-function sendNotification(to, template, variables) {
+function sendTemplatedMessage(to, subject, template, variables ){
     var realTo = config.notifications.overrideTo ? config.notifications.overrideTo : to;
     var emailBodyText = fillTemplate(template, variables);
 
     var options = {
-        from: config.notifications.from,
         to: realTo,
-        subject: 'Reset your CARLI Select password',
+        from: config.notifications.from,
+        subject: subject,
         text: emailBodyText
     };
 
     return sendMail(options);
+
+    function fillTemplate(template, variables) {
+        var compiled = handlebars.compile(template);
+        return compiled(variables);
+    }
 }
 
-function fillTemplate(template, variables) {
-    var compiled = handlebars.compile(template);
-    return compiled(variables);
+function sendPasswordResetMessage(to, template, variables) {
+    var resetSubject = 'Reset your CARLI Select password';
+    return sendTemplatedMessage(to, resetSubject, template, variables);
 }
+
+function sendNotificationEmail( notificationId ){
+    return notificationRepository.load(notificationId)
+        .then(function(notification){
+            var options = {
+                to: config.notifications.overrideTo ? config.notifications.overrideTo : notification.to,
+                from: notification.ownerEmail,
+                subject: notification.subject,
+                text: notification.emailBody
+                //TODO: PDF / CSV attachment
+            };
+            return sendMail(options);
+        });
+}
+
 
 function sendMail(options) {
     var deferred = Q.defer();
@@ -57,5 +77,7 @@ function sendMail(options) {
 
 module.exports = {
     tellPixobot: tellPixobot,
-    sendNotification: sendNotification
+    sendTemplatedMessage: sendTemplatedMessage,
+    sendPasswordResetMessage: sendPasswordResetMessage,
+    sendNotificationEmail: sendNotificationEmail
 };

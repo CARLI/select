@@ -12,7 +12,7 @@ var couchApp = require('./components/couchApp');
 var crmQueries = require('./components/crmQueries');
 var cycleCreation = require('./components/cycleCreation');
 var libraryQueries = require('./components/libraryQueries');
-var notifications = require('./components/notifications');
+var email = require('./components/email');
 var pdf = require('./components/pdf');
 var user = require('./components/user');
 var vendorDatabases = require('./components/vendorDatabases');
@@ -74,7 +74,7 @@ function runMiddlewareServer(){
                 .catch(sendError(res));
         });
         carliMiddleware.put('/tell-pixobot', function (req, res) {
-            notifications.tellPixobot(req.body);
+            email.tellPixobot(req.body);
             res.send(req.body);
         });
         carliMiddleware.get('/library', function (req, res) {
@@ -318,6 +318,11 @@ function runMiddlewareServer(){
         carliMiddleware.get('/next-invoice-number', function(req, res) {
             pdf.generateNextInvoiceNumber()
                 .then(sendJsonResult(res))
+                .catch(sendError(res));
+        });
+        carliMiddleware.post('/send-notification-email/:notificationId', function(req, res) {
+            email.sendNotificationEmail(req.params.notificationId)
+                .then(sendOk(res))
                 .catch(sendError(res));
         });
     }
