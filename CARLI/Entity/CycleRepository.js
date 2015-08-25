@@ -117,6 +117,11 @@ function listPastFourCyclesMatchingCycle( cycle ){
     }
 }
 
+function getDataForBannerExport(cycle) {
+    var exportData = {};
+    return exportData;
+}
+
 /* functions that get added as instance methods on loaded Cycles */
 
 var functionsToAdd = {
@@ -140,9 +145,6 @@ var functionsToAdd = {
         return couchUtils.getCouchViewResultValues(this.getDatabaseName(), 'getCycleSelectionAndInvoiceTotals').then(function(resultArray){
             return resultArray[0];
         });
-    },
-    exportForBanner: function exportForBanner() {
-
     },
     isOpenToLibraries: function(){
         return isOpenToLibraries(this);
@@ -184,5 +186,6 @@ module.exports = {
     isOpenToLibraries: isOpenToLibraries,
     isClosed: isClosed,
     productsAreAvailable: productsAreAvailable,
-    listPastFourCyclesMatchingCycle: listPastFourCyclesMatchingCycle
+    listPastFourCyclesMatchingCycle: listPastFourCyclesMatchingCycle,
+    getDataForBannerExport: getDataForBannerExport
 };
