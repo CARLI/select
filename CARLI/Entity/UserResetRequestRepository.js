@@ -61,7 +61,7 @@ function createRequest( email, baseUrl ){
                 user: user,
                 resetLink: baseUrl + '/reset/' + resetRequest.key
             };
-            return email.sendNotification(resetRequest.email, template, variables); //sendTemplatedMessage
+            return email.sendPasswordResetMessage(resetRequest.email, template, variables);
         }
     }
 
