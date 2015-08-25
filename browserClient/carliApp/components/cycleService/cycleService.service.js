@@ -55,6 +55,9 @@ function cycleService( CarliModules, $q, errorHandler ) {
         listPastFourCyclesMatchingCycle: function( cycle ){
             return $q.when( cycleModule.listPastFourCyclesMatchingCycle(cycle || currentCycle) );
         },
+        getDataForBannerExport: function (cycle) {
+            return $q.when( cycleModule.getDataForBannerExport(cycle || currentCycle) );
+        },
         getLabelForCycleStatus: function getLabelForCycleStatus( status ){
             return cycleModule.statusLabels[status];
         }
