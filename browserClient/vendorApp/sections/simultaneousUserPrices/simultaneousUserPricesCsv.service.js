@@ -1,7 +1,7 @@
 angular.module('vendor.sections.simultaneousUserPrices')
-    .service('simultaneousUserPricesCsv', simultaneousUserPricesCsv);
+    .service('simultaneousUserPricesCsvData', simultaneousUserPricesCsvData);
 
-function simultaneousUserPricesCsv($q, CarliModules) {
+function simultaneousUserPricesCsvData($q) {
 
     return generateCsv;
 
@@ -26,21 +26,6 @@ function simultaneousUserPricesCsv($q, CarliModules) {
             csvData.push(nextRow);
         });
 
-        console.log('export ',columns, csvData);
-
-        var csvExportOptions = {
-            columns: columns,
-            header: true
-        };
-
-        var deferred = $q.defer();
-        CarliModules.Csv.stringify(csvData, csvExportOptions, function(err, out) {
-            if (err) {
-                deferred.reject(err);
-            } else {
-                deferred.resolve(out);
-            }
-        });
-        return deferred.promise;
+        return $q.when(csvData);
     }
 }

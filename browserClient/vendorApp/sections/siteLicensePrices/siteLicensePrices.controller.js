@@ -1,7 +1,7 @@
 angular.module('vendor.sections.siteLicensePrices')
     .controller('siteLicensePricesController', siteLicensePricesController);
 
-function siteLicensePricesController($scope, $q, $filter, authService, cycleService, libraryService, offeringService, productService, siteLicensePricesCsv, vendorStatusService){
+function siteLicensePricesController($scope, $q, $filter, authService, csvExportService, cycleService, libraryService, offeringService, productService, siteLicensePricesCsvData, vendorStatusService){
     var vm = this;
 
     vm.loadingPromise = null;
@@ -427,7 +427,10 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
 
     function downloadCsv() {
         vm.loadingPromise = generateCsvData()
-            .then(triggerDownload)
+            .then(csvExportService.exportToCsv)
+            .then(function(csvContent){
+                csvExportService.browserDownloadCsv(csvContent, makeFilename());
+            })
             .catch(function (err) {
                 console.log('CSV generation failed', err);
             });
@@ -435,24 +438,19 @@ function siteLicensePricesController($scope, $q, $filter, authService, cycleServ
         return vm.loadingPromise;
 
         function generateCsvData() {
-            return siteLicensePricesCsv(vm.viewOptions, getCsvProductList(), getCsvLibraryList(), vm.offeringsForLibraryByProduct);
-        }
+            return siteLicensePricesCsvData(vm.viewOptions, getCsvProductList(), getCsvLibraryList(), vm.offeringsForLibraryByProduct);
 
-        function triggerDownload(csvString) {
-            console.log('Got CSV');
-            var blob = new Blob([csvString], {type: "text/csv;charset=utf-8"});
-            window.saveAs(blob, makeFilename());
-        }
+            function getCsvProductList() {
+                return vm.products.filter(function (product) {
+                    return vm.selectedProductIds[product.id];
+                });
+            }
 
-        function getCsvProductList() {
-            return vm.products.filter(function (product) {
-                return vm.selectedProductIds[product.id];
-            });
-        }
-        function getCsvLibraryList() {
-            return vm.libraries.filter(function (library) {
-                return vm.selectedLibraryIds[library.id];
-            });
+            function getCsvLibraryList() {
+                return vm.libraries.filter(function (library) {
+                    return vm.selectedLibraryIds[library.id];
+                });
+            }
         }
 
         function makeFilename() {
