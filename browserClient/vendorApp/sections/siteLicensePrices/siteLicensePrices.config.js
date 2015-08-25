@@ -2,6 +2,7 @@ angular.module('vendor.sections.siteLicensePrices',[
     'cgBusy',
     'common.carliModules',
     'common.checkbox',
+    'common.csvExport',
     'common.libraryService',
     'common.productService',
     'vendor.horizontalScrollSlider',

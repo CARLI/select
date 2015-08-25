@@ -1,7 +1,7 @@
 angular.module('vendor.sections.simultaneousUserPrices')
     .controller('simultaneousUserPricesController', simultaneousUserPricesController);
 
-function simultaneousUserPricesController($scope, $q, $filter, alertService, authService, cycleService, offeringService, productService, simultaneousUserPricesCsv, vendorStatusService){
+function simultaneousUserPricesController($scope, $q, $filter, alertService, authService, csvExportService, cycleService, offeringService, productService, simultaneousUserPricesCsvData, vendorStatusService){
     var vm = this;
     vm.changedProductIds = {};
     vm.loadingPromise = null;
@@ -562,17 +562,20 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     }
 
     function downloadCsv() {
-        var csvData = gatherDataForCsvExport();
+        var pricingData = gatherPricingDataForCsvExport();
 
-        vm.loadingPromise = simultaneousUserPricesCsv(vm.products, vm.suLevels, csvData)
-            .then(triggerDownload)
+        vm.loadingPromise = simultaneousUserPricesCsvData(vm.products, vm.suLevels, pricingData)
+            .then(csvExportService.exportToCsv)
+            .then(function(csvContent){
+                csvExportService.browserDownloadCsv(csvContent, makeFilename());
+            })
             .catch(function (err) {
                 console.log('CSV generation failed', err);
             });
 
         return vm.loadingPromise;
 
-        function gatherDataForCsvExport(){
+        function gatherPricingDataForCsvExport(){
             var suPricesByProduct = {};
 
             vm.suLevels.forEach(function(suLevel){
@@ -593,12 +596,6 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             });
 
             return suPricesByProduct;
-        }
-
-        //TODO: move this and the Site License one into a browserDownload service
-        function triggerDownload(csvString) {
-            var blob = new Blob([csvString], {type: "text/csv;charset=utf-8"});
-            saveAs(blob, makeFilename());
         }
 
         function makeFilename() {

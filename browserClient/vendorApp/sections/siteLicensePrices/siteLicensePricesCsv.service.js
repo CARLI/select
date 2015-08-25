@@ -1,7 +1,7 @@
 angular.module('vendor.sections.siteLicensePrices')
-    .service('siteLicensePricesCsv', siteLicensePricesCsv);
+    .service('siteLicensePricesCsvData', siteLicensePricesCsvData);
 
-function siteLicensePricesCsv($q, CarliModules) {
+function siteLicensePricesCsvData($q) {
 
     return generateCsv;
 
@@ -13,7 +13,7 @@ function siteLicensePricesCsv($q, CarliModules) {
         columns = columns.concat(viewOptionColumns);
         columns = columns.concat(productsToInclude.map(getName));
 
-        csvData.push(generateHeaderRow());
+        //csvData.push(generateHeaderRow());
 
         if (viewOptions.priceCap) {
             csvData.push(generateCsvPriceCapRow(viewOptionColumns, productsToInclude));
@@ -21,15 +21,8 @@ function siteLicensePricesCsv($q, CarliModules) {
 
         librariesToInclude.forEach(generateRowForLibrary);
 
-        var deferred = $q.defer();
-        CarliModules.Csv.stringify(csvData, { columns: columns }, function(err, out) {
-            if (err) {
-                deferred.reject(err);
-            } else {
-                deferred.resolve(out);
-            }
-        });
-        return deferred.promise;
+        return $q.when(csvData);
+
 
         function getName(entity) {
             return entity.name;
