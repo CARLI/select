@@ -17,24 +17,30 @@ function tellPixobot(envelope) {
     });
 }
 
-function sendNotification(to, template, variables) { //sendTemplatedMessage
+function sendTemplatedMessage(to, subject, template, variables ){
     var realTo = config.notifications.overrideTo ? config.notifications.overrideTo : to;
     var emailBodyText = fillTemplate(template, variables);
 
     var options = {
-        from: config.notifications.from,
         to: realTo,
-        subject: 'Reset your CARLI Select password',
+        from: config.notifications.from,
+        subject: subject,
         text: emailBodyText
     };
 
     return sendMail(options);
+
+    function fillTemplate(template, variables) {
+        var compiled = handlebars.compile(template);
+        return compiled(variables);
+    }
 }
 
-function fillTemplate(template, variables) {
-    var compiled = handlebars.compile(template);
-    return compiled(variables);
+function sendPasswordResetMessage(to, template, variables) {
+    var resetSubject = 'Reset your CARLI Select password';
+    return sendTemplatedMessage(to, resetSubject, template, variables);
 }
+
 
 function sendMail(options) {
     var deferred = Q.defer();
@@ -57,5 +63,6 @@ function sendMail(options) {
 
 module.exports = {
     tellPixobot: tellPixobot,
-    sendNotification: sendNotification
+    sendTemplatedMessage: sendTemplatedMessage,
+    sendPasswordResetMessage: sendPasswordResetMessage
 };
