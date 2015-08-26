@@ -61,8 +61,7 @@ function sendNotificationEmail( notificationId ){
                     return sendMail(options);
                 })
                 .catch(function(err){ console.log('EMAIL ERROR ', err); })
-        })
-        .catch(function(err){ console.log('NOTIFICATION EMAIL ERROR ', err); });
+        });
 
     function includeAttachmentsIfNecessary( emailOptions, notification ){
         if ( notification.pdfLink ){
