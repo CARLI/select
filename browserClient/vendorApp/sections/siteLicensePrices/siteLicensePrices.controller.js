@@ -24,6 +24,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
     function activate() {
         affixControlsToTopOfPage();
 
+        vm.cycle = cycleService.getCurrentCycle();
         vm.vendorId = authService.getCurrentUser().vendor.id;
 
         vm.viewOptions = {
@@ -129,6 +130,17 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
         });
     }
 
+    function applyCssClassesToOfferingCell( cell, offering ){
+        if (offeringService.getFlaggedState(offering, vm.cycle)) {
+            cell.addClass('flagged');
+            cell.attr('title', offering.flaggedReason[0]);
+        }
+
+        if ( offering.siteLicensePriceUpdated ){
+            cell.addClass('updated');
+        }
+    }
+
     function buildPricingGrid() {
         $('.offering').remove();
 
@@ -146,33 +158,23 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
             return row;
         }
         function generateOfferingCell(library, product) {
-            var cycle = cycleService.getCurrentCycle();
             var offering = vm.offeringsForLibraryByProduct[product.id][library.id] || { pricing: { site: '&nbsp;' }};
             var price = offering.pricing.site || '&nbsp;';
-            var offeringWrapper = $('<div class="column offering input">');
+            var cellContents = createReadOnlyOfferingCell(price);
 
-            if (offeringService.getFlaggedState(offering, cycle)) {
-                offeringWrapper.addClass('flagged');
-                offeringWrapper.attr('title', offering.flaggedReason[0]);
-            }
+            var offeringCell = $('<div class="column offering input">')
+                .addClass(product.id)
+                .append(cellContents)
+                .on('click', function() {
+                    $(this).children().first().focus();
+                })
+                .data('libraryId', library.id)
+                .data('fte', library.fte)
+                .data('productId', product.id);
 
-            var cell = createReadOnlyOfferingCell(price);
-            var offeringCell = offeringWrapper.append(cell);
+            applyCssClassesToOfferingCell(offeringCell, offering);
 
-            offeringWrapper.on('click', function() {
-                $(this).children().first().focus();
-            });
-
-            offeringCell.data('libraryId', library.id);
-            offeringCell.data('fte', library.fte);
-            offeringCell.data('productId', product.id);
-            offeringCell.addClass(product.id);
-
-            if ( offering.siteLicensePriceUpdated ){
-                offeringCell.addClass('updated');
-            }
-
-            setCommentMarkerVisibility(cell);
+            setCommentMarkerVisibility(cellContents);
 
             return offeringCell;
         }
@@ -290,7 +292,6 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
     }
 
     function saveOfferings() {
-        var cycle = cycleService.getCurrentCycle();
         var changedOfferings = [];
         var newOfferings = [];
         var offeringCells = $('#site-pricing-grid .offering');
@@ -309,7 +310,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
             if ($(element).is(":visible")) {
                 if ( !offering ){
                     if ( newPrice !== 0 ){
-                        offering = generateNewOffering(libraryId, productId, cycle, newPrice);
+                        offering = generateNewOffering(libraryId, productId, newPrice);
                         newOfferings.push(offering);
                     }
                 }
@@ -325,9 +326,9 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
         return vm.loadingPromise;
     }
 
-    function generateNewOffering(libraryId, productId, cycle, newPrice) {
+    function generateNewOffering(libraryId, productId, newPrice) {
         return {
-            cycle: cycle,
+            cycle: vm.cycle,
             library: libraryId.toString(),
             product: productId,
             pricing: {
@@ -374,11 +375,11 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
             .catch(syncDataError);
 
         function updateVendorStatus(){
-            return vendorStatusService.updateVendorStatusActivity( 'Site License Prices Updated', vm.vendorId, cycleService.getCurrentCycle() );
+            return vendorStatusService.updateVendorStatusActivity( 'Site License Prices Updated', vm.vendorId, vm.cycle );
         }
 
         function updateVendorFlaggedOfferings(){
-            return vendorStatusService.updateVendorStatusFlaggedOfferings( vm.vendorId, cycleService.getCurrentCycle() );
+            return vendorStatusService.updateVendorStatusFlaggedOfferings( vm.vendorId, vm.cycle );
         }
 
         function syncData(){
