@@ -64,7 +64,7 @@
             </button>
             <button type="button" class="carli-button" disabled ng-if="notification.ownerEmail != vm.userEmail"
                     title="You cannot send this notification because you do not own it">
-                Send <span class="sr-only">You cannot send this notification because it is owned by {{ notification.ownerEmail }}</span>
+                {{ ::vm.sendLabel }} <span class="sr-only">You cannot {{ ::vm.sendLabel }} this notification because it is owned by {{ notification.ownerEmail }}</span>
             </button>
         </div>
     </li>

@@ -16,9 +16,6 @@ var templatesDirectory = 'components/pdf/templates/';
 var invoiceContentTemplate = loadAndCompileHandlebarsTemplate('invoiceContentTemplate.handlebars');
 var invoicePdfTemplate = loadAndCompileHandlebarsTemplate('invoicePdfTemplate.handlebars');
 
-var batchIdPrefix = 'USI';
-var invoiceNumberPrefix = 'USIN';
-
 function exportPdf(notificationId){
     var error = validateArguments(notificationId);
     if ( error ){
@@ -59,12 +56,8 @@ function contentForPdf(notificationId){
         return Q.reject(error);
     }
 
-    console.log('contentForPdf('+notificationId+')');
-
     return notificationRepository.load(notificationId)
         .then(function(notification){
-            console.log('  loaded notification',notification);
-
             var cycleId = notification.cycle.id;
             var library = notification.targetEntity;
             var notificationType = notification.notificationType;
@@ -77,7 +70,6 @@ function contentForPdf(notificationId){
 
             return loadCycle(cycleId)
                 .then(function(cycle) {
-                    console.log('  loaded cycle',cycle);
                     return dataForPdf(type, cycle, library, notification.offeringIds);
                 })
                 .then(function(data){
