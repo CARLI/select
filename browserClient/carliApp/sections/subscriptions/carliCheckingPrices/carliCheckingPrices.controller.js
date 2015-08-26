@@ -1,29 +1,44 @@
 angular.module('carli.sections.subscriptions.carliCheckingPrices')
     .controller('carliCheckingPricesController', carliCheckingPricesController);
 
-function carliCheckingPricesController( $q, notificationService, notificationTemplateService ) {
+function carliCheckingPricesController( $q, authService, config, notificationService, notificationTemplateService ) {
     var vm = this;
     vm.doNotCreateNotification = false;
     vm.undoCloseVendorPricing = undoCloseVendorPricing;
     vm.openSystem = openSystem;
     vm.openSystemMessage = {};
     vm.openSystemDialogComplete = openSystemDialogComplete;
+    vm.userName = '';
+    vm.userEmail = '';
 
     activate();
 
     function activate(){
         vm.doNotCreateNotification = false;
 
-        notificationTemplateService.load('notification-template-open-system')
+        loadUserInfo()
+            .then(function(){
+                return notificationTemplateService.load('notification-template-open-system');
+            })
             .then(function(openSystemTemplate){
-                vm.openSystemMessage.to = 'eresource_internal@carli.illinois.edu';
+                vm.openSystemMessage.to = config.notifications.carliListServe;
                 vm.openSystemMessage.subject = openSystemTemplate.subject;
                 vm.openSystemMessage.emailBody = openSystemTemplate.emailBody;
                 vm.openSystemMessage.draftStatus = 'draft';
                 vm.openSystemMessage.notificationType = openSystemTemplate.notificationType;
+                vm.openSystemMessage.dateCreated = new Date().toISOString().substr(0,16); //we don't care about second resolution
+                vm.openSystemMessage.ownerEmail = vm.userEmail;
+                vm.openSystemMessage.ownerName = vm.userName;
             });
     }
 
+    function loadUserInfo() {
+        return authService.fetchCurrentUser()
+            .then(function (user) {
+                vm.userName = user.fullName;
+                vm.userEmail = user.email;
+            });
+    }
 
     function undoCloseVendorPricing(){
         return vm.cycleRouter.previous();
