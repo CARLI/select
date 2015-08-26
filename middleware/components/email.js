@@ -111,7 +111,7 @@ function sendOneTimePurchaseMessage( productId, libraryId ){
             console.log('loaded '+product.name);
 
             var realTo = config.notifications.overrideTo ? config.notifications.overrideTo : config.notifications.carliListServe;
-            
+
             var options = {
                 to: realTo,
                 from: config.notifications.from,

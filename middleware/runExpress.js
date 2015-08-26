@@ -328,7 +328,7 @@ function runMiddlewareServer(){
                 .then(sendOk(res))
                 .catch(sendError(res));
         });
-        carliMiddleware.post('/notification-carli-of-one-time-purchase/:productId/by/:libraryId', function(req, res) {
+        carliMiddleware.post('/notify-carli-of-one-time-purchase/:productId/by/:libraryId', function(req, res) {
             carliAuth.requireSession()
                 .then(function(){
                     return email.sendOneTimePurchaseMessage(req.params.productId, req.params.libraryId);
