@@ -130,7 +130,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
     }
 
     function buildPricingGrid() {
-        $('#su-pricing-grid .price-row:not(.product-name-row):not(.price-cap)').remove();
+        $('.offering').remove();
 
         vm.libraries.forEach(function (library) {
             var row = generateLibraryRow(library);
