@@ -1,9 +1,12 @@
 var config = require('../../config');
+var cycleRepository = require('../../CARLI/Entity/CycleRepository.js');
 var handlebars = require('handlebars');
+var libraryRepository = require('../../CARLI/Entity/LibraryRepository.js');
 var mailer = require('nodemailer');
 var mailTransport = mailer.createTransport(null);
 var notificationRepository = require('../../CARLI/Entity/NotificationRepository.js');
 var pdf = require('./pdf');
+var productRepository = require('../../CARLI/Entity/ProductRepository.js');
 var Q = require('q');
 var request = require('request');
 var vendorReportCsv = require('./csv/vendorReport');
@@ -97,6 +100,41 @@ function sendNotificationEmail( notificationId ){
     }
 }
 
+function sendOneTimePurchaseMessage( productId, libraryId ){
+    var libraryName = '';
+
+    return libraryRepository.load(libraryId)
+        .then(saveLibraryData)
+        .then(loadOneTimePurchaseCycle)
+        .then(loadOneTimePurchaseProduct)
+        .then(function(product){
+            console.log('loaded '+product.name);
+
+            var realTo = config.notifications.overrideTo ? config.notifications.overrideTo : config.notifications.carliListServe;
+            
+            var options = {
+                to: realTo,
+                from: config.notifications.from,
+                subject: 'New One-Time Purchase Product Selection',
+                text: libraryName + ' purchased '+product.name
+            };
+
+            return sendMail(options);
+        });
+
+    function saveLibraryData(library){
+        libraryName = library.name;
+        return library;
+    }
+
+    function loadOneTimePurchaseCycle(){
+        return cycleRepository.load(config.oneTimePurchaseProductsCycleDocId);
+    }
+
+    function loadOneTimePurchaseProduct(oneTimePurchaseCycle){
+        return productRepository.load(productId, oneTimePurchaseCycle);
+    }
+}
 
 function sendMail(options) {
     var deferred = Q.defer();
@@ -121,5 +159,6 @@ module.exports = {
     tellPixobot: tellPixobot,
     sendTemplatedMessage: sendTemplatedMessage,
     sendPasswordResetMessage: sendPasswordResetMessage,
-    sendNotificationEmail: sendNotificationEmail
+    sendNotificationEmail: sendNotificationEmail,
+    sendOneTimePurchaseMessage: sendOneTimePurchaseMessage
 };
