@@ -1,7 +1,7 @@
 angular.module('library.sections.addOneTimePurchases')
 .controller('addOneTimePurchasesController', addOneTimePurchasesController);
 
-function addOneTimePurchasesController( $q, $window, config, activityLogService, cycleService, offeringService, productService, userService ){
+function addOneTimePurchasesController( $q, $window, config, activityLogService, cycleService, offeringService, notificationService, userService ){
     var vm = this;
 
     vm.selectionStep = 'select';
@@ -149,6 +149,9 @@ function addOneTimePurchasesController( $q, $window, config, activityLogService,
                 return offeringService.update(offering)
                     .then(function(){
                         return activityLogService.logOtpPurchase(offering, 'library');
+                    })
+                    .then(function(){
+                        return notificationService.sendOneTimePurchaseMessage(offering.product.id, offering.library.id);
                     });
             }
             else {
