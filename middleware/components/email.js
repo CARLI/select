@@ -48,6 +48,7 @@ function sendNotificationEmail( notificationId ){
         .then(function(notification){
             var options = {
                 to: config.notifications.overrideTo ? config.notifications.overrideTo : notification.to,
+                bcc: notification.ownerEmail,
                 from: notification.ownerEmail,
                 subject: notification.subject,
                 text: notification.emailBody,
