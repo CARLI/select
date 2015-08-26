@@ -134,7 +134,7 @@ function runMiddlewareServer(){
             }
         });
         carliMiddleware.get('/create-all-vendor-databases', function (req, res) {
-            vendorDatabases.createVendorDatabasesForAllCycles()
+            vendorDatabases.createVendorDatabasesForActiveCycles()
                 .then(sendOk(res))
                 .catch(sendError(res));
         });

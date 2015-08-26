@@ -7,8 +7,8 @@ var offeringRepository = require('../../CARLI/Entity/OfferingRepository.js');
 var vendorRepository = require('../../CARLI/Entity/VendorRepository');
 var vendorStatusRepository = require('../../CARLI/Entity/VendorStatusRepository.js');
 
-function createVendorDatabasesForAllCycles() {
-    return cycleRepository.list().then(function (cycles) {
+function createVendorDatabasesForActiveCycles() {
+    return cycleRepository.listActiveCycles().then(function (cycles) {
         return Q.all( cycles.map(createDatabases) );
 
         function createDatabases(cycle) {
@@ -96,21 +96,22 @@ function replicateDataFromVendorsForCycle(cycleId) {
 }
 
 function syncEverything() {
-    log("Creating vendor databases (if needed)")();
-    return createVendorDatabasesForAllCycles()
-        .then(log('Replicating data to vendors'))
+    tap("Creating vendor databases (if needed)")();
+    return createVendorDatabasesForActiveCycles()
+        .then(tap('Replicating data to vendors'))
         .then(replicateDataToVendorsForAllCycles)
-        .then(log('Replicating data from vendors'))
+        .then(tap('Replicating data from vendors'))
         .then(replicateDataFromVendorsForAllCycles)
-        .then(log('Trigging indexing of views'))
+        .then(tap('Trigging indexing of views'))
         .then(triggerIndexingForAllCycles)
         .catch(function(err) {
-            log(' *ERROR*',err);
+            tap(' *ERROR*',err);
         });
 
-    function log(message) {
-        return function () {
+    function tap(message) {
+        return function (a) {
             console.log("[SYNC] " + message);
+            return a;
         }
     }
 }
@@ -317,7 +318,7 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
 }
 
 module.exports = {
-    createVendorDatabasesForAllCycles: createVendorDatabasesForAllCycles,
+    createVendorDatabasesForActiveCycles: createVendorDatabasesForActiveCycles,
     createVendorDatabasesForCycle: createVendorDatabasesForCycle,
     replicateDataToVendorsForAllCycles: replicateDataToVendorsForAllCycles,
     replicateDataToVendorsForCycle: replicateDataToVendorsForCycle,
