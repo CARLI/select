@@ -1,6 +1,6 @@
 var middlewareRequest = require('./middlewareRequest')
 
-function createVendorDatabasesForAllCycles() {
+function createVendorDatabasesForActiveCycles() {
     return middlewareRequest({
         path: '/create-all-vendor-databases',
         method: 'post'
@@ -98,7 +98,7 @@ function updateFlaggedOfferingsForVendor(vendorId, cycle){
 }
 
 module.exports = {
-    createVendorDatabasesForAllCycles: createVendorDatabasesForAllCycles,
+    createVendorDatabasesForActiveCycles: createVendorDatabasesForActiveCycles,
     createVendorDatabasesForCycle: createVendorDatabasesForCycle,
     replicateDataToVendorsForAllCycles: replicateDataToVendorsForAllCycles,
     replicateDataToVendorsForCycle: replicateDataToVendorsForCycle,
