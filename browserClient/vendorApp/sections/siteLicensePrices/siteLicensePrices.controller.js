@@ -130,14 +130,27 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
         });
     }
 
+    function offeringForProductAndLibrary( productId, libraryId ){
+        return vm.offeringsForLibraryByProduct[productId][libraryId] || { pricing: { site: '&nbsp;' }};
+    }
+
     function applyCssClassesToOfferingCell( cell, offering ){
         if (offeringService.getFlaggedState(offering, vm.cycle)) {
             cell.addClass('flagged');
             cell.attr('title', offering.flaggedReason[0]);
+            console.log('cell flagged', offering.flaggedReason[0]);
+        }
+        else {
+            cell.removeClass('flagged');
+            cell.attr('title', '');
+            console.log('cell unflagged');
         }
 
         if ( offering.siteLicensePriceUpdated ){
             cell.addClass('updated');
+        }
+        else {
+            cell.removeClass('updated');
         }
     }
 
@@ -158,7 +171,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
             return row;
         }
         function generateOfferingCell(library, product) {
-            var offering = vm.offeringsForLibraryByProduct[product.id][library.id] || { pricing: { site: '&nbsp;' }};
+            var offering = offeringForProductAndLibrary(product.id, library.id);
             var price = offering.pricing.site || '&nbsp;';
             var cellContents = createReadOnlyOfferingCell(price);
 
@@ -284,9 +297,17 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
         return cell;
 
         function makeReadOnly() {
-            var price = $(this).val();
+            var $this = $(this);
+            var offeringCell = $this.parent();
+            var offering = getOfferingForCell($this);
+
+            offering.siteLicensePriceUpdated = new Date().toISOString();
+
+            applyCssClassesToOfferingCell(offeringCell, offering);
+
+            var price = $this.val();
             var div = createReadOnlyOfferingCell(price);
-            $(this).replaceWith(div);
+            $this.replaceWith(div);
             setCommentMarkerVisibility(div);
         }
     }
