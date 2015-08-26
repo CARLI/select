@@ -49,6 +49,17 @@ function getUser(email) {
     }
 }
 
+function requireSession() {
+    return getSession()
+        .then(function (userContext) {
+            if (userContext.name) {
+                return true;
+            }
+            throw new Error('Unauthorized');
+        });
+}
+
+
 function requireStaff() {
     return getSession().then(function (userContext) {
         if (userContext.roles.indexOf('staff') >= 0) {
@@ -63,5 +74,6 @@ module.exports = {
     deleteSession: deleteSession,
     getSession: getSession,
     getUser: getUser,
+    requireSession: requireSession,
     requireStaff: requireStaff
 };
