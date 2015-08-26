@@ -1,0 +1,18 @@
+#!/usr/bin/env node
+
+var auth = require('../CARLI/Auth');
+var config = require('../config');
+var vendorDatabases = require('../middleware/components/vendorDatabases');
+
+loginToCouch()
+    .then(vendorDatabases.syncEverything)
+    .catch(function(error) {
+        console.log('Sync Failed', error);
+    });
+
+function loginToCouch() {
+    return auth.createSession({
+        email: config.storeOptions.privilegedCouchUsername,
+        password: config.storeOptions.privilegedCouchPassword
+    });
+}
