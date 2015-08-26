@@ -3,8 +3,10 @@ var handlebars = require('handlebars');
 var mailer = require('nodemailer');
 var mailTransport = mailer.createTransport(null);
 var notificationRepository = require('../../CARLI/Entity/NotificationRepository.js');
+var pdf = require('./pdf');
 var Q = require('q');
 var request = require('request');
+var vendorReportCsv = require('./csv/vendorReport');
 
 function tellPixobot(envelope) {
     if (typeof envelope === 'string') {
@@ -48,11 +50,51 @@ function sendNotificationEmail( notificationId ){
                 to: config.notifications.overrideTo ? config.notifications.overrideTo : notification.to,
                 from: notification.ownerEmail,
                 subject: notification.subject,
-                text: notification.emailBody
-                //TODO: PDF / CSV attachment
+                text: notification.emailBody,
+                attachments: []
             };
-            return sendMail(options);
-        });
+
+            return includeAttachmentsIfNecessary( options, notification )
+                .then(function() {
+                    console.log('send email to '+notification.to);
+                    return sendMail(options);
+                })
+                .catch(function(err){ console.log('EMAIL ERROR ', err); })
+        })
+        .catch(function(err){ console.log('NOTIFICATION EMAIL ERROR ', err); });
+
+    function includeAttachmentsIfNecessary( emailOptions, notification ){
+        if ( notification.pdfLink ){
+            console.log('  generating PDF to attach');
+            return pdf.exportPdf(notification.id)
+                .then(function(exportResults){
+                    console.log('    attaching PDF '+exportResults.fileName);
+                    emailOptions.attachments.push({
+                        content: exportResults.pdf,
+                        contentType: 'application/pdf',
+                        filename: exportResults.fileName
+                    });
+                })
+                .catch(function(err){ console.log('PDF ERROR ', err); })
+        }
+        else if ( notification.csvLink ) {
+            console.log('  generating CSV to attach');
+            return vendorReportCsv.exportCsvForVendorReport(notification.id)
+                .then(function(exportResults){
+                    console.log('    attaching CSV '+exportResults.fileName);
+                    emailOptions.attachments.push({
+                        content: exportResults.csv,
+                        contentType: 'text/csv',
+                        filename: exportResults.fileName
+                    });
+                })
+                .catch(function(err){ console.log('CSV ERROR ', err); })
+        }
+        else {
+            console.log('  no attachments');
+            return Q(true);
+        }
+    }
 }
 
 

@@ -27,6 +27,11 @@
       "type": "string"
     },
     "pdfLink": {
+      "description": "If the notification has an attached PDF, this will link to the API call to generate it",
+      "type": "string"
+    },
+    "csvLink": {
+      "description": "If the notification has an attached CSV file, this will link to the API call to generate it",
       "type": "string"
     },
     "cycle": {

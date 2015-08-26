@@ -16,9 +16,6 @@ var templatesDirectory = 'components/pdf/templates/';
 var invoiceContentTemplate = loadAndCompileHandlebarsTemplate('invoiceContentTemplate.handlebars');
 var invoicePdfTemplate = loadAndCompileHandlebarsTemplate('invoicePdfTemplate.handlebars');
 
-var batchIdPrefix = 'USI';
-var invoiceNumberPrefix = 'USIN';
-
 function exportPdf(notificationId){
     var error = validateArguments(notificationId);
     if ( error ){
