@@ -7,7 +7,15 @@ function sendNotificationEmail(notificationId) {
     });
 }
 
+function sendOneTimePurchaseMessage(productId, libraryId){
+    return middlewareRequest({
+        path: '/notify-carli-of-one-time-purchase/' + productId + '/by/' + libraryId,
+        method: 'post'
+    });
+}
+
 module.exports = {
     tellPixobot: function () {},
-    sendNotificationEmail: sendNotificationEmail
+    sendNotificationEmail: sendNotificationEmail,
+    sendOneTimePurchaseMessage: sendOneTimePurchaseMessage
 };
