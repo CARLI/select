@@ -336,6 +336,14 @@ function runMiddlewareServer(){
                 .then(sendOk(res))
                 .catch(sendError(res));
         });
+        carliMiddleware.post('/ask-carli', function(req, res) {
+            carliAuth.requireSession()
+                .then(function(){
+                    return email.sendAskCarliMessage(req.body);
+                })
+                .then(sendOk(res))
+                .catch(sendError(res));
+        });
     }
 }
 

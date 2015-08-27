@@ -14,8 +14,18 @@ function sendOneTimePurchaseMessage(offeringId){
     });
 }
 
+function sendAskCarliMessage(messageObject){
+    return middlewareRequest({
+        path: '/ask-carli',
+        method: 'post',
+        json: true,
+        body: messageObject
+    });
+}
+
 module.exports = {
     tellPixobot: function () {},
     sendNotificationEmail: sendNotificationEmail,
-    sendOneTimePurchaseMessage: sendOneTimePurchaseMessage
+    sendOneTimePurchaseMessage: sendOneTimePurchaseMessage,
+    sendAskCarliMessage: sendAskCarliMessage
 };
