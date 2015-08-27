@@ -71,20 +71,20 @@
                 <div class="column">
                     <label for="effectiveDate">Date Effective</label>
                     <view-edit-date ng-model="vm.license.effectiveDate" edit-mode="vm.editable" input-id="effectiveDate">
-                        {{ vm.license.effectiveDate | date:'MM/d/yy' }}
+                        {{ vm.license.effectiveDate | date:'MM/dd/yyyy' }}
                     </view-edit-date>
                     <label for="totalTermStartDate">Total Contract Term</label>
                     <div class="date-range">
                         <div class="date-group">
                             <label for="totalTermStartDate">Start Date</label>
                             <view-edit-date class="start-date" ng-model="vm.license.totalTermStartDate" edit-mode="vm.editable" input-id="totalTermStartDate">
-                                {{ vm.license.totalTermStartDate | date:'MM/d/yy' }}
+                                {{ vm.license.totalTermStartDate | date:'MM/dd/yyyy' }}
                             </view-edit-date>
                         </div>
                         <div class="date-group">
                             <label for="totalTermEndDate">End Date</label>
                             <view-edit-date class="end-date" ng-model="vm.license.totalTermEndDate" edit-mode="vm.editable" input-id="totalTermEndDate">
-                                {{ vm.license.totalTermEndDate | date:'MM/d/yy' }}
+                                {{ vm.license.totalTermEndDate | date:'MM/dd/yyyy' }}
                             </view-edit-date>
                         </div>
                     </div>
@@ -94,13 +94,13 @@
                         <div class="date-group">
                             <label for="currentTermStartDate">Start Date</label>
                             <view-edit-date class="start-date" ng-model="vm.license.currentTermStartDate" edit-mode="vm.editable" input-id="currentTermStartDate">
-                                {{ vm.license.currentTermStartDate | date:'MM/d/yy' }}
+                                {{ vm.license.currentTermStartDate | date:'MM/dd/yyyy' }}
                             </view-edit-date>
                         </div>
                         <div class="date-group">
                             <label for="currentTermEndDate">End Date</label>
                             <view-edit-date class="end-date" ng-model="vm.license.currentTermEndDate" edit-mode="vm.editable" input-id="currentTermEndDate">
-                                {{ vm.license.currentTermEndDate | date:'MM/d/yy' }}
+                                {{ vm.license.currentTermEndDate | date:'MM/dd/yyyy' }}
                             </view-edit-date>
                         </div>
                     </div>
