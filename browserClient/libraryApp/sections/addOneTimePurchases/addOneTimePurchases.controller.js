@@ -151,7 +151,7 @@ function addOneTimePurchasesController( $q, $window, config, activityLogService,
                         return activityLogService.logOtpPurchase(offering, 'library');
                     })
                     .then(function(){
-                        return notificationService.sendOneTimePurchaseMessage(offering.product.id, offering.library.id);
+                        return notificationService.sendOneTimePurchaseMessage(offering.id);
                     });
             }
             else {

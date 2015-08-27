@@ -7,9 +7,9 @@ function sendNotificationEmail(notificationId) {
     });
 }
 
-function sendOneTimePurchaseMessage(productId, libraryId){
+function sendOneTimePurchaseMessage(offeringId){
     return middlewareRequest({
-        path: '/notify-carli-of-one-time-purchase/' + productId + '/by/' + libraryId,
+        path: '/notify-carli-of-one-time-purchase/' + offeringId,
         method: 'post'
     });
 }

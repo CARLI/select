@@ -8,7 +8,7 @@ function notificationService($q, CarliModules){
         sendOneTimePurchaseMessage: sendOneTimePurchaseMessage
     };
 
-    function sendOneTimePurchaseMessage(productId, libraryId){
-        return $q.when(emailMiddleware.sendOneTimePurchaseMessage(productId, libraryId));
+    function sendOneTimePurchaseMessage(offeringId){
+        return $q.when(emailMiddleware.sendOneTimePurchaseMessage(offeringId));
     }
 }

@@ -1,12 +1,12 @@
 var config = require('../../config');
 var cycleRepository = require('../../CARLI/Entity/CycleRepository.js');
 var handlebars = require('handlebars');
-var libraryRepository = require('../../CARLI/Entity/LibraryRepository.js');
 var mailer = require('nodemailer');
 var mailTransport = mailer.createTransport(null);
 var notificationRepository = require('../../CARLI/Entity/NotificationRepository.js');
+var numeral = require('numeral');
 var pdf = require('./pdf');
-var productRepository = require('../../CARLI/Entity/ProductRepository.js');
+var offeringRepository = require('../../CARLI/Entity/OfferingRepository.js');
 var Q = require('q');
 var request = require('request');
 var vendorReportCsv = require('./csv/vendorReport');
@@ -100,39 +100,33 @@ function sendNotificationEmail( notificationId ){
     }
 }
 
-function sendOneTimePurchaseMessage( productId, libraryId ){
-    var libraryName = '';
-
-    return libraryRepository.load(libraryId)
-        .then(saveLibraryData)
-        .then(loadOneTimePurchaseCycle)
-        .then(loadOneTimePurchaseProduct)
-        .then(function(product){
-            console.log('loaded '+product.name);
-
+function sendOneTimePurchaseMessage( offeringId ){
+        return loadOneTimePurchaseCycle()
+        .then(loadOffering)
+        .then(function(offering){
             var realTo = config.notifications.overrideTo ? config.notifications.overrideTo : config.notifications.carliListServe;
 
             var options = {
                 to: realTo,
                 from: config.notifications.from,
                 subject: 'New One-Time Purchase Product Selection',
-                text: libraryName + ' purchased '+product.name
+                text: messageText(offering)
             };
 
             return sendMail(options);
         });
 
-    function saveLibraryData(library){
-        libraryName = library.name;
-        return library;
-    }
-
     function loadOneTimePurchaseCycle(){
         return cycleRepository.load(config.oneTimePurchaseProductsCycleDocId);
     }
 
-    function loadOneTimePurchaseProduct(oneTimePurchaseCycle){
-        return productRepository.load(productId, oneTimePurchaseCycle);
+    function loadOffering(oneTimePurchaseCycle){
+        return offeringRepository.load(offeringId, oneTimePurchaseCycle);
+    }
+
+    function messageText(offering){
+        return offering.library.name + ' purchased ' +
+               offering.product.name + ' for $' + formatCurrency(offering.selection.price);
     }
 }
 
@@ -153,6 +147,10 @@ function sendMail(options) {
     //    subject: 'May the force be with you',
     //    text: 'Easy, sending email from node is.',
     //});
+}
+
+function formatCurrency( number ){
+    return numeral(number).format('0,0.00');
 }
 
 module.exports = {
