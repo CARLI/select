@@ -484,7 +484,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
         });
 
         function cellShouldBeUpdated(libraryId, productId){
-            return selectedLibraryIds.indexOf(libraryId) != -1 && selectedProductIds.indexOf(productId) != -1
+            return selectedLibraryIds.indexOf(libraryId) != -1 && selectedProductIds.indexOf(productId) != -1;
         }
     }
 
