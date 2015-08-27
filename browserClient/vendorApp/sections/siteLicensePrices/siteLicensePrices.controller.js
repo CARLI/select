@@ -155,8 +155,12 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
 
         function generateOfferingCell(library, product) {
             var offering = offeringForProductAndLibrary(product.id, library.id);
-            var price = offering.pricing.site || '&nbsp;';
-            var cellContents = createReadOnlyOfferingCell(price);
+            var textForPrice = '';
+            if ( offering && offering.pricing ){
+                textForPrice = offering.pricing.site;
+            }
+
+            var cellContents = createReadOnlyOfferingCell(textForPrice);
 
             var offeringCell = $('<div class="column offering">')
                 .addClass(product.id)
@@ -205,7 +209,10 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
     }
 
     function createReadOnlyOfferingCell(price) {
-        var cell = $('<div tabindex="0" class="price" role="gridcell">'+price+'</div>');
+        if ( typeof price !== 'undefined' && price !== null && typeof price.toFixed === 'function' ){
+            price = price.toFixed(2);
+        }
+        var cell = $('<div tabindex="0" class="price" role="gridcell"></div>').text(price);
         cell.on('focus', onClick);
 
         addCommentMarkerTo(cell);
@@ -291,6 +298,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
 
         if ( !offering ){
             if ( newPrice !== null ){
+                //console.log('no offering, add new one with price ', newPrice);
                 var productId = offeringCell.data('productId');
                 var libraryId = offeringCell.data('libraryId');
                 offering = generateNewOffering(libraryId, productId, newPrice);
@@ -298,6 +306,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
             }
         }
         else if ( newPrice !== null && newPrice != offering.pricing.site ){
+            //console.log('set offering price to '+newPrice+' (was '+offering.pricing.site+')');
             offering.pricing.site = newPrice;
             offering.siteLicensePriceUpdated = new Date().toISOString();
             vm.changedOfferings.push(offering);
@@ -339,7 +348,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
     }
 
     function createEditableOfferingCell(price) {
-        var cell = $('<input class="price-editable" role="textbox" type="text" step=".01" min="0" value="' + price + '">');
+        var cell = $('<input class="price-editable" role="textbox" type="text" step=".01" min="0">').val(price);
         cell.on('blur', makeReadOnly);
         return cell;
 
@@ -352,7 +361,12 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
 
             applyCssClassesToOfferingCell(offeringCell, offering);
 
-            var newReadOnlyCellContents = createReadOnlyOfferingCell(offering.pricing.site || '');
+            var textForOfferingPrice = '';
+            if ( offering && offering.pricing ){
+                textForOfferingPrice = offering.pricing.site;
+            }
+
+            var newReadOnlyCellContents = createReadOnlyOfferingCell(textForOfferingPrice);
             $this.replaceWith(newReadOnlyCellContents);
             setCommentMarkerVisibility(newReadOnlyCellContents);
         }
@@ -431,7 +445,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
         }
     }
 
-    function quickPricingCallback(mode, value) {
+    function quickPricingCallback(mode, quickPricingValue) {
         var selectedLibraryIds = Object.keys(vm.selectedLibraryIds).filter(function (libraryId) {
             return vm.selectedLibraryIds[libraryId];
         });
@@ -439,31 +453,39 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
             return vm.selectedProductIds[productId];
         });
 
-
         $('#site-pricing-grid .offering').each(function(i, cell) {
-            var newValue = 0;
-            var $cell = $(cell);
-            if (selectedLibraryIds.indexOf($cell.data('libraryId').toString()) != -1 &&
-                selectedProductIds.indexOf($cell.data('productId')) != -1) {
+            var newValue = null;
+            var $offeringCell = $(cell);
 
+            var libraryId = $offeringCell.data('libraryId');
+            var productId = $offeringCell.data('productId');
+            var offering = offeringForProductAndLibrary(productId, libraryId);
+
+            if ( cellShouldBeUpdated(libraryId, productId) ) {
                 if (mode == 'dollarAmount') {
-                    newValue = value.toFixed(2);
-                } else if (mode == 'percentageIncrease') {
-                    var originalValue = parseFloat($cell.text());
+                    newValue = quickPricingValue;
+                }
+                else if (mode == 'percentageIncrease') {
+                    var originalValue = parseFloat($offeringCell.text());
                     if (isNaN(originalValue)) {
                         return;
                     }
-                    newValue = (100 + value)/100 * originalValue;
-                    newValue = newValue.toFixed(2);
+                    newValue = (100 + quickPricingValue)/100 * originalValue;
                 }
                 else if (mode == 'byFte'){
-                    var fte = $cell.data('fte');
-                    newValue = value * fte;
-                    newValue = newValue.toFixed(2);
+                    var fte = $offeringCell.data('fte');
+                    newValue = quickPricingValue * fte;
                 }
-                $cell.find('.price').text(newValue);
+
+                applyNewCellPricingToOffering($offeringCell, offering, newValue);
+                $offeringCell.find('.price').text(offering.pricing.site.toFixed(2));
+                applyCssClassesToOfferingCell($offeringCell, offering);
             }
         });
+
+        function cellShouldBeUpdated(libraryId, productId){
+            return selectedLibraryIds.indexOf(libraryId) != -1 && selectedProductIds.indexOf(productId) != -1
+        }
     }
 
     function downloadCsv() {
