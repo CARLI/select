@@ -136,30 +136,6 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
         });
     }
 
-    function applyCssClassesToOfferingCell( offeringCell, offering ){
-        if ( offering ){
-            delete offering.flaggedReason;
-        }
-
-        if (offeringService.getFlaggedState(offering, vm.cycle)) {
-            offeringCell.addClass('flagged');
-            offeringCell.attr('title', offering.flaggedReason[0]);
-            //console.log('cell flagged', offering.flaggedReason[0]);
-        }
-        else {
-            offeringCell.removeClass('flagged');
-            offeringCell.attr('title', '');
-            //console.log('cell unflagged');
-        }
-
-        if ( offering.siteLicensePriceUpdated ){
-            offeringCell.addClass('updated');
-        }
-        else {
-            offeringCell.removeClass('updated');
-        }
-    }
-
     function buildPricingGrid() {
         $('.offering').remove();
 
@@ -327,6 +303,37 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
             offering.pricing.site = newPrice;
             offering.siteLicensePriceUpdated = new Date().toISOString();
             vm.changedOfferings.push(offering);
+        }
+    }
+
+    function applyCssClassesToOfferingCell( offeringCell, offering ){
+        if ( offering ){
+            delete offering.flaggedReason;
+        }
+
+        if ( offering.siteLicensePriceUpdated ){
+            offeringCell.addClass('updated');
+
+            if (offeringService.getFlaggedState(offering, vm.cycle)) {
+                addFlagDisplay();
+            }
+            else {
+                removeFlagDisplay();
+            }
+        }
+        else {
+            offeringCell.removeClass('updated');
+            removeFlagDisplay();
+        }
+
+        function addFlagDisplay(){
+            offeringCell.addClass('flagged');
+            offeringCell.attr('title', offering.flaggedReason[0]);
+        }
+
+        function removeFlagDisplay(){
+            offeringCell.removeClass('flagged');
+            offeringCell.attr('title', '');
         }
     }
 
