@@ -4,7 +4,10 @@ angular.module('vendor.sections.siteLicensePrices')
 function siteLicensePricesController($scope, $q, $filter, authService, csvExportService, cycleService, libraryService, offeringService, productService, siteLicensePricesCsvData, vendorStatusService){
     var vm = this;
 
+    vm.changedOfferings = [];
     vm.loadingPromise = null;
+    vm.newOfferings = [];
+    vm.products = [];
     vm.viewOptions = {};
     vm.selectedProductIds = {};
     vm.selectedLibraryIds = {};
@@ -24,6 +27,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
     function activate() {
         affixControlsToTopOfPage();
 
+        vm.cycle = cycleService.getCurrentCycle();
         vm.vendorId = authService.getCurrentUser().vendor.id;
 
         vm.viewOptions = {
@@ -59,6 +63,8 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
     }
 
     function initializePricingGrid(){
+        vm.products = [];
+
         return loadProducts()
             .then(buildPriceArray)
             .then(buildPricingGrid);
@@ -117,6 +123,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
     }
 
     function buildPriceArray() {
+        vm.changedOfferings = [];
         vm.offeringsForLibraryByProduct = {};
 
         vm.products.forEach(function (product) {
@@ -130,7 +137,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
     }
 
     function buildPricingGrid() {
-        $('#su-pricing-grid .price-row:not(.product-name-row):not(.price-cap)').remove();
+        $('.offering').remove();
 
         vm.libraries.forEach(function (library) {
             var row = generateLibraryRow(library);
@@ -145,34 +152,29 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
             row.addClass('' + library.id);
             return row;
         }
+
         function generateOfferingCell(library, product) {
-            var cycle = cycleService.getCurrentCycle();
-            var offering = vm.offeringsForLibraryByProduct[product.id][library.id] || { pricing: { site: '&nbsp;' }};
-            var price = offering.pricing.site || '&nbsp;';
-            var offeringWrapper = $('<div class="column offering input">');
-
-            if (offeringService.getFlaggedState(offering, cycle)) {
-                offeringWrapper.addClass('flagged');
-                offeringWrapper.attr('title', offering.flaggedReason[0]);
+            var offering = offeringForProductAndLibrary(product.id, library.id);
+            var textForPrice = '';
+            if ( offering && offering.pricing ){
+                textForPrice = offering.pricing.site;
             }
 
-            var cell = createReadOnlyOfferingCell(price);
-            var offeringCell = offeringWrapper.append(cell);
+            var cellContents = createReadOnlyOfferingCell(textForPrice);
 
-            offeringWrapper.on('click', function() {
-                $(this).children().first().focus();
-            });
+            var offeringCell = $('<div class="column offering">')
+                .addClass(product.id)
+                .append(cellContents)
+                .on('click', function() {
+                    $(this).children().first().focus();
+                })
+                .data('libraryId', library.id)
+                .data('fte', library.fte)
+                .data('productId', product.id);
 
-            offeringCell.data('libraryId', library.id);
-            offeringCell.data('fte', library.fte);
-            offeringCell.data('productId', product.id);
-            offeringCell.addClass(product.id);
+            applyCssClassesToOfferingCell(offeringCell, offering);
 
-            if ( offering.siteLicensePriceUpdated ){
-                offeringCell.addClass('updated');
-            }
-
-            setCommentMarkerVisibility(cell);
+            setCommentMarkerVisibility(cellContents);
 
             return offeringCell;
         }
@@ -207,7 +209,10 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
     }
 
     function createReadOnlyOfferingCell(price) {
-        var cell = $('<div tabindex="0" class="price" role="gridcell">'+price+'</div>');
+        if ( typeof price !== 'undefined' && price !== null && typeof price.toFixed === 'function' ){
+            price = price.toFixed(2);
+        }
+        var cell = $('<div tabindex="0" class="price" role="gridcell"></div>').text(price);
         cell.on('focus', onClick);
 
         addCommentMarkerTo(cell);
@@ -260,7 +265,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
     }
 
     function setCommentMarkerVisibility(cell) {
-        var offering = getOfferingForCell(cell);
+        var offering = getOfferingForCellContents(cell);
         var commentMarker = cell.find('.comment-marker');
 
         if (offering && offering.vendorComments && offering.vendorComments.site) {
@@ -270,64 +275,106 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
         }
     }
 
-    function getOfferingForCell(cell) {
-        var productId = cell.parent().data('productId');
-        var libraryId = cell.parent().data('libraryId');
-        return (productId && libraryId) ? vm.offeringsForLibraryByProduct[productId][libraryId] : null;
+    function offeringForProductAndLibrary( productId, libraryId ){
+        return vm.offeringsForLibraryByProduct[productId][libraryId] || null;
+    }
+
+    function getOfferingForCellContents(cellContents){
+        return getOfferingForCell( cellContents.parent() );
+    }
+
+    function getOfferingForCell(offeringCell) {
+        var productId = offeringCell.data('productId');
+        var libraryId = offeringCell.data('libraryId');
+        return offeringForProductAndLibrary(productId, libraryId);
+    }
+
+    function applyNewCellPricingToOffering(offeringCell, offering, newPriceValue ){
+        var newPrice = parseFloat( newPriceValue );
+
+        if ( isNaN(newPrice) ){
+            return;
+        }
+
+        if ( !offering ){
+            if ( newPrice !== null ){
+                //console.log('no offering, add new one with price ', newPrice);
+                var productId = offeringCell.data('productId');
+                var libraryId = offeringCell.data('libraryId');
+                offering = generateNewOffering(libraryId, productId, newPrice);
+                vm.newOfferings.push(offering);
+            }
+        }
+        else if ( newPrice !== null && newPrice != offering.pricing.site ){
+            //console.log('set offering price to '+newPrice+' (was '+offering.pricing.site+')');
+            offering.pricing.site = newPrice;
+            offering.siteLicensePriceUpdated = new Date().toISOString();
+            vm.changedOfferings.push(offering);
+        }
+    }
+
+    function applyCssClassesToOfferingCell( offeringCell, offering ){
+        if ( offering ){
+            delete offering.flaggedReason;
+        }
+        else {
+            return;
+        }
+
+        if ( offering.siteLicensePriceUpdated ){
+            offeringCell.addClass('updated');
+
+            if (offeringService.getFlaggedState(offering, vm.cycle)) {
+                addFlagDisplay();
+            }
+            else {
+                removeFlagDisplay();
+            }
+        }
+        else {
+            offeringCell.removeClass('updated');
+            removeFlagDisplay();
+        }
+
+        function addFlagDisplay(){
+            offeringCell.addClass('flagged');
+            offeringCell.attr('title', offering.flaggedReason[0]);
+        }
+
+        function removeFlagDisplay(){
+            offeringCell.removeClass('flagged');
+            offeringCell.attr('title', '');
+        }
     }
 
     function createEditableOfferingCell(price) {
-        var cell = $('<input class="price-editable" role="textbox" type="text" step=".01" min="0" value="' + price + '">');
+        var cell = $('<input class="price-editable" role="textbox" type="text" step=".01" min="0">').val(price);
         cell.on('blur', makeReadOnly);
         return cell;
 
         function makeReadOnly() {
-            var price = $(this).val();
-            var div = createReadOnlyOfferingCell(price);
-            $(this).replaceWith(div);
-            setCommentMarkerVisibility(div);
+            var $this = $(this);
+            var offeringCell = $this.parent();
+            var offering = getOfferingForCell(offeringCell);
+
+            applyNewCellPricingToOffering(offeringCell, offering, $this.val());
+
+            applyCssClassesToOfferingCell(offeringCell, offering);
+
+            var textForOfferingPrice = '';
+            if ( offering && offering.pricing ){
+                textForOfferingPrice = offering.pricing.site;
+            }
+
+            var newReadOnlyCellContents = createReadOnlyOfferingCell(textForOfferingPrice);
+            $this.replaceWith(newReadOnlyCellContents);
+            setCommentMarkerVisibility(newReadOnlyCellContents);
         }
     }
 
-    function saveOfferings() {
-        var cycle = cycleService.getCurrentCycle();
-        var changedOfferings = [];
-        var newOfferings = [];
-        var offeringCells = $('#site-pricing-grid .offering');
-
-        offeringCells.each(function(index, element){
-            var offeringCell = $(element);
-            var libraryId = offeringCell.data('libraryId');
-            var productId = offeringCell.data('productId');
-            var offering = vm.offeringsForLibraryByProduct[productId][libraryId];
-            var newPrice = parseFloat( offeringCell.text() );
-
-            if ( isNaN(newPrice) ){
-                newPrice = 0;
-            }
-
-            if ($(element).is(":visible")) {
-                if ( !offering ){
-                    if ( newPrice !== 0 ){
-                        offering = generateNewOffering(libraryId, productId, cycle, newPrice);
-                        newOfferings.push(offering);
-                    }
-                }
-                else if ( newPrice !== 0 && newPrice != offering.pricing.site ){
-                    offering.pricing.site = newPrice;
-                    offering.siteLicensePriceUpdated = new Date().toISOString();
-                    changedOfferings.push(offering);
-                }
-            }
-        });
-
-        vm.loadingPromise = saveAllOfferings( newOfferings, changedOfferings );
-        return vm.loadingPromise;
-    }
-
-    function generateNewOffering(libraryId, productId, cycle, newPrice) {
+    function generateNewOffering(libraryId, productId, newPrice) {
         return {
-            cycle: cycle,
+            cycle: vm.cycle,
             library: libraryId.toString(),
             product: productId,
             pricing: {
@@ -335,6 +382,11 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
             },
             siteLicensePriceUpdated: new Date().toISOString()
         };
+    }
+
+    function saveOfferings() {
+        vm.loadingPromise = saveAllOfferings( vm.newOfferings, vm.changedOfferings );
+        return vm.loadingPromise;
     }
 
     function saveAllNewOfferings( newOfferings ){
@@ -358,6 +410,9 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
                 console.log('created '+newOfferingsCreated+' new offerings');
                 console.log('updated '+oldOfferingsUpdated+' old offerings');
 
+                vm.newOfferings = [];
+                vm.changedOfferings = [];
+
                 if ( count ){
                     return initializePricingGrid();
                 }
@@ -374,11 +429,11 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
             .catch(syncDataError);
 
         function updateVendorStatus(){
-            return vendorStatusService.updateVendorStatusActivity( 'Site License Prices Updated', vm.vendorId, cycleService.getCurrentCycle() );
+            return vendorStatusService.updateVendorStatusActivity( 'Site License Prices Updated', vm.vendorId, vm.cycle );
         }
 
         function updateVendorFlaggedOfferings(){
-            return vendorStatusService.updateVendorStatusFlaggedOfferings( vm.vendorId, cycleService.getCurrentCycle() );
+            return vendorStatusService.updateVendorStatusFlaggedOfferings( vm.vendorId, vm.cycle );
         }
 
         function syncData(){
@@ -390,7 +445,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
         }
     }
 
-    function quickPricingCallback(mode, value) {
+    function quickPricingCallback(mode, quickPricingValue) {
         var selectedLibraryIds = Object.keys(vm.selectedLibraryIds).filter(function (libraryId) {
             return vm.selectedLibraryIds[libraryId];
         });
@@ -398,31 +453,39 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
             return vm.selectedProductIds[productId];
         });
 
-
         $('#site-pricing-grid .offering').each(function(i, cell) {
-            var newValue = 0;
-            var $cell = $(cell);
-            if (selectedLibraryIds.indexOf($cell.data('libraryId').toString()) != -1 &&
-                selectedProductIds.indexOf($cell.data('productId')) != -1) {
+            var newValue = null;
+            var $offeringCell = $(cell);
 
+            var libraryId = $offeringCell.data('libraryId');
+            var productId = $offeringCell.data('productId');
+            var offering = offeringForProductAndLibrary(productId, libraryId);
+
+            if ( cellShouldBeUpdated(libraryId, productId) ) {
                 if (mode == 'dollarAmount') {
-                    newValue = value.toFixed(2);
-                } else if (mode == 'percentageIncrease') {
-                    var originalValue = parseFloat($cell.text());
+                    newValue = quickPricingValue;
+                }
+                else if (mode == 'percentageIncrease') {
+                    var originalValue = parseFloat($offeringCell.text());
                     if (isNaN(originalValue)) {
                         return;
                     }
-                    newValue = (100 + value)/100 * originalValue;
-                    newValue = newValue.toFixed(2);
+                    newValue = (100 + quickPricingValue)/100 * originalValue;
                 }
                 else if (mode == 'byFte'){
-                    var fte = $cell.data('fte');
-                    newValue = value * fte;
-                    newValue = newValue.toFixed(2);
+                    var fte = $offeringCell.data('fte');
+                    newValue = quickPricingValue * fte;
                 }
-                $cell.find('.price').text(newValue);
+
+                applyNewCellPricingToOffering($offeringCell, offering, newValue);
+                $offeringCell.find('.price').text(offering.pricing.site.toFixed(2));
+                applyCssClassesToOfferingCell($offeringCell, offering);
             }
         });
+
+        function cellShouldBeUpdated(libraryId, productId){
+            return selectedLibraryIds.indexOf(libraryId) != -1 && selectedProductIds.indexOf(productId) != -1
+        }
     }
 
     function downloadCsv() {
