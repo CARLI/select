@@ -1,7 +1,7 @@
-angular.module('library.notificationService')
-    .service('notificationService', notificationService);
+angular.module('common.emailService')
+    .service('emailService', emailService);
 
-function notificationService($q, CarliModules){
+function emailService($q, CarliModules){
     var emailMiddleware = CarliModules.EmailMiddleware;
 
     return {

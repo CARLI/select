@@ -7,6 +7,7 @@ module.exports = {
     config: require( '../config' ),
     Csv: require('../CARLI/Csv'),
     Cycle: require('../CARLI/Entity/CycleRepositoryForVendor'),
+    EmailMiddleware: require('../middleware/browserAdapters/email'),
     Library: require('../CARLI/Entity/LibraryRepository'),
     Offering: require('../CARLI/Entity/OfferingRepository'),
     Product: require('../CARLI/Entity/ProductRepository'),
