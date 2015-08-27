@@ -269,7 +269,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
     }
 
     function offeringForProductAndLibrary( productId, libraryId ){
-        return vm.offeringsForLibraryByProduct[productId][libraryId] || { pricing: { site: '&nbsp;' }};
+        return vm.offeringsForLibraryByProduct[productId][libraryId] || null;
     }
 
     function getOfferingForCellContents(cellContents){
@@ -286,20 +286,18 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
         var newPrice = parseFloat( newPriceValue );
 
         if ( isNaN(newPrice) ){
-            newPrice = 0;
+            return;
         }
 
         if ( !offering ){
-            if ( newPrice !== 0 ){
+            if ( newPrice !== null ){
                 var productId = offeringCell.data('productId');
                 var libraryId = offeringCell.data('libraryId');
                 offering = generateNewOffering(libraryId, productId, newPrice);
                 vm.newOfferings.push(offering);
-                console.log('make new offering pricing to ',offeringCell, offering);
             }
         }
-        else if ( newPrice !== 0 && newPrice != offering.pricing.site ){
-            console.log('set price on offering', newPrice);
+        else if ( newPrice !== null && newPrice != offering.pricing.site ){
             offering.pricing.site = newPrice;
             offering.siteLicensePriceUpdated = new Date().toISOString();
             vm.changedOfferings.push(offering);
@@ -309,6 +307,9 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
     function applyCssClassesToOfferingCell( offeringCell, offering ){
         if ( offering ){
             delete offering.flaggedReason;
+        }
+        else {
+            return;
         }
 
         if ( offering.siteLicensePriceUpdated ){
@@ -346,8 +347,6 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
             var $this = $(this);
             var offeringCell = $this.parent();
             var offering = getOfferingForCell(offeringCell);
-
-            offering.siteLicensePriceUpdated = new Date().toISOString();
 
             applyNewCellPricingToOffering(offeringCell, offering, $this.val());
 
