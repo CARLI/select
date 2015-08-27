@@ -1,7 +1,7 @@
 angular.module('common.askCarliForm')
     .factory('askCarliService', askCarliService);
 
-function askCarliService( $http, config ) {
+function askCarliService( emailService ) {
     var message = null;
 
     return {
@@ -22,7 +22,6 @@ function askCarliService( $http, config ) {
     }
 
     function sendAskCarliMessage( messageObject ){
-        var url = config.getMiddlewareUrl() + '/tell-pixobot';
-        return $http.put(url, {message: "Ask CARLI: " + messageObject.message.messageBody+' ('+messageObject.message.context+')'});
+        return emailService.sendAskCarliMessage(messageObject);
     }
 }
