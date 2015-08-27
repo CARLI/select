@@ -9,7 +9,8 @@
   "notifications": {
     "overrideTo": "carli-notifications@pixotech.com",
     "from": "carli@pixotech.com",
-    "carliListServe": "eresource_internal@carli.illinois.edu"
+    "carliListServe": "eresource_internal@carli.illinois.edu",
+    "carliSupport": "support@carli.illinois.edu"
   },
   "storeOptions": {
     "couchDbName": "carli",

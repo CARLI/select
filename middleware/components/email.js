@@ -130,6 +130,48 @@ function sendOneTimePurchaseMessage( offeringId ){
     }
 }
 
+/**
+ * @param message:
+ * {
+ *     text: question typed by user in the form
+ *     context: some text associated with the location of the instance of the ask carli button that send the message
+ *     page: the URL the user was on when they sent the message
+ *     user: the user that was logged in - a sanitized version
+ *          {
+ *              email
+ *              fullName
+ *              libraryName
+ *          }
+ * }
+ */
+function sendAskCarliMessage( message ){
+    console.log('ask carli ', message);
+
+    var messageText = message.text;
+    var messageContext = message.context || '';
+    var page = message.page || '';
+    var userEmail = message.user.email;
+    var userName = message.user.fullName;
+    var libraryName = message.user.libraryName;
+
+    var realTo = config.notifications.overrideTo ? config.notifications.overrideTo : config.notifications.carliSupport;
+
+    var options = {
+        to: realTo,
+        from: userEmail,
+        subject: 'ASK CARLI from ' + libraryName + ' by ' + userName,
+        text: messageBody()
+    };
+
+    return sendMail(options);
+
+    function messageBody(){
+        return userName + ' from ' + libraryName + ' asks: \n\n' +
+               messageText + '\n\n' +
+              'They were on ' + page + ' when the message was sent, using the button near ' + messageContext;
+    }
+}
+
 function sendMail(options) {
     var deferred = Q.defer();
     mailTransport.sendMail(options, sendMailCallback);
@@ -158,5 +200,6 @@ module.exports = {
     sendTemplatedMessage: sendTemplatedMessage,
     sendPasswordResetMessage: sendPasswordResetMessage,
     sendNotificationEmail: sendNotificationEmail,
-    sendOneTimePurchaseMessage: sendOneTimePurchaseMessage
+    sendOneTimePurchaseMessage: sendOneTimePurchaseMessage,
+    sendAskCarliMessage: sendAskCarliMessage
 };
