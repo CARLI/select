@@ -1,10 +1,10 @@
 angular.module('carli.sections.membership')
 .controller('membershipController', membershipController);
 
-function membershipController( $location, $routeParams, libraryService, membershipService ){
+function membershipController( $location, $q, $routeParams, alertService, errorHandler, libraryService, membershipService ){
     var vm = this;
 
-    vm.currentYear = new Date().getFullYear();
+    vm.currentYear = currentYear();
     vm.libraries = [];
     vm.loadingPromise = null;
     vm.displayYear = null;
@@ -18,7 +18,7 @@ function membershipController( $location, $routeParams, libraryService, membersh
     activate();
 
     function activate(){
-        vm.displayYear = $routeParams.year;
+        vm.displayYear = parseInt( $routeParams.year );
 
         if ( vm.displayYear ){
             initializeMembershipData();
@@ -40,7 +40,6 @@ function membershipController( $location, $routeParams, libraryService, membersh
             })
             .then(loadMembershipDataForDisplayYear)
             .then(function(membershipData){
-                vm.membershipData = membershipData;
                 console.log('got data for ' + vm.displayYear, membershipData);
 
                 if ( membershipData.length === 0 ){
@@ -49,6 +48,9 @@ function membershipController( $location, $routeParams, libraryService, membersh
                         year: vm.displayYear,
                         data: {}
                     };
+                }
+                else {
+                    vm.membershipData = membershipData[0];
                 }
 
                 return vm.membershipData;
@@ -62,11 +64,40 @@ function membershipController( $location, $routeParams, libraryService, membersh
     }
 
     function saveMembershipData(){
-        return membershipService.save(vm.membershipData);
+        var savePromise = $q.when(true);
+
+        if ( vm.membershipData.id ){
+            savePromise = membershipService.update(vm.membershipData);
+        }
+        else {
+            savePromise = membershipService.create(vm.membershipData);
+        }
+
+        return savePromise
+            .then(workaroundCouchSmell)
+            .then(saveSuccess)
+            .catch(errorHandler);
+
+        function workaroundCouchSmell(documentId){
+            return membershipService.load(documentId)
+                .then(function(updatedDoc){
+                    vm.membershipData.id = documentId;
+                    vm.membershipData._rev = updatedDoc._rev;
+                });
+        }
+
+        function saveSuccess(){
+            alertService.putAlert('Membership data saved', {severity: 'success'});
+        }
     }
 
     function ishareTotal(){
         var sum = 0;
+
+        if (!vm.membershipData){
+            return 0;
+        }
+
         membershipDataItems().forEach(function(item){
             sum += item.ishare || 0;
         });
@@ -75,6 +106,11 @@ function membershipController( $location, $routeParams, libraryService, membersh
 
     function membershipTotal(){
         var sum = 0;
+
+        if (!vm.membershipData){
+            return 0;
+        }
+
         membershipDataItems().forEach(function(item){
             sum += item.membership || 0;
         });
@@ -83,6 +119,11 @@ function membershipController( $location, $routeParams, libraryService, membersh
 
     function grandTotal(){
         var sum = 0;
+
+        if (!vm.membershipData){
+            return 0;
+        }
+
         membershipDataItems().forEach(function(item){
             sum += item.ishare || 0;
             sum += item.membership || 0;
@@ -94,5 +135,9 @@ function membershipController( $location, $routeParams, libraryService, membersh
         return Object.keys(vm.membershipData.data).map(function(libraryId){
             return vm.membershipData.data[libraryId];
         });
+    }
+
+    function currentYear(){
+        return parseInt( new Date().getFullYear() );
     }
 }
