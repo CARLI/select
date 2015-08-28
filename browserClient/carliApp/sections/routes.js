@@ -129,6 +129,11 @@ angular.module('carli.routes',[
         controller:  'membershipController',
         controllerAs:'vm'
     })
+    .when('/membership/:year', {
+        templateUrl: '/carliApp/sections/membership/membership.html',
+        controller:  'membershipController',
+        controllerAs:'vm'
+    })
     .when('/notifications', {
         templateUrl: '/carliApp/sections/notifications/notifications.html',
         controller:  'notificationsController',

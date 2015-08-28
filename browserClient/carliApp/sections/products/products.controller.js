@@ -11,8 +11,6 @@ function productController($location, $routeParams, $scope, $sce, cycleService, 
     activate();
 
     function activate() {
-        console.log('Products list page activate: cycleId = '+vm.cycleId);
-
         cycleService.listActiveCycles().then(function(activeCycles) {
             vm.activeCycles = activeCycles;
         });
