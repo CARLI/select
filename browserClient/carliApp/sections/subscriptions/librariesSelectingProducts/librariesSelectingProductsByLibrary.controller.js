@@ -24,6 +24,12 @@ function librariesSelectingProductsByLibraryController( $scope, $q, accordionCon
         'site-license-price-current-only',
         'selection'
     ];
+    vm.sortOptions = {
+        product: 'product.name',
+        vendor: ['product.vendor.name', 'product.name'],
+        selectedLastYear: [orderBySelection, 'product.name'],
+        pricing: orderBySitePricing
+    };
     vm.libraryStatuses = {};
 
     activate();
@@ -137,5 +143,17 @@ function librariesSelectingProductsByLibraryController( $scope, $q, accordionCon
     }
     function stopEditing(offering) {
         vm.isEditing[offering.id] = false;
+    }
+
+    function orderBySelection(offering){
+        return !(offering &&
+                 offering.history &&
+                 offering.history[vm.lastYear] &&
+                 offering.history[vm.lastYear].selection);
+    }
+
+    function orderBySitePricing(offering){
+        return offering.pricing.site || 0;
+
     }
 }

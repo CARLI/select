@@ -9,7 +9,6 @@ function productsAvailableByLibraryController( $scope, $q, accordionControllerMi
     vm.loadingPromise = {};
     vm.offerings = {};
     vm.stopEditing = stopEditing;
-    vm.getLibraryPricingStatus = getLibraryPricingStatus;
     vm.computeSelectionTotalForLibrary = computeSelectionTotalForLibrary;
     vm.offeringFilter = {};
     vm.filterOfferingBySelection = filterOfferingBySelection;
@@ -32,6 +31,12 @@ function productsAvailableByLibraryController( $scope, $q, accordionControllerMi
         'site-license-price-current-only',
         'selection'
     ];
+    vm.sortOptions = {
+        product: 'product.name',
+        vendor: ['product.vendor.name', 'product.name'],
+        selectedLastYear: [orderBySelection, 'product.name'],
+        pricing: orderBySitePricing
+    };
 
     activate();
 
@@ -69,10 +74,6 @@ function productsAvailableByLibraryController( $scope, $q, accordionControllerMi
             });
             return vendorList;
         });
-    }
-
-    function getLibraryPricingStatus(library) {
-        return "No activity";
     }
 
     function filterOfferingBySelection( offering ){
@@ -195,5 +196,17 @@ function productsAvailableByLibraryController( $scope, $q, accordionControllerMi
             templateId: 'notification-template-library-estimates-closed',
             cycleId: vm.cycle.id
         });
+    }
+
+    function orderBySelection(offering){
+        return !(offering &&
+        offering.history &&
+        offering.history[vm.lastYear] &&
+        offering.history[vm.lastYear].selection);
+    }
+
+    function orderBySitePricing(offering){
+        return offering.pricing.site || 0;
+
     }
 }

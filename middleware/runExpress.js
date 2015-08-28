@@ -328,10 +328,18 @@ function runMiddlewareServer(){
                 .then(sendOk(res))
                 .catch(sendError(res));
         });
-        carliMiddleware.post('/notify-carli-of-one-time-purchase/:productId/by/:libraryId', function(req, res) {
+        carliMiddleware.post('/notify-carli-of-one-time-purchase/:offeringId', function(req, res) {
             carliAuth.requireSession()
                 .then(function(){
-                    return email.sendOneTimePurchaseMessage(req.params.productId, req.params.libraryId);
+                    return email.sendOneTimePurchaseMessage(req.params.offeringId);
+                })
+                .then(sendOk(res))
+                .catch(sendError(res));
+        });
+        carliMiddleware.post('/ask-carli', function(req, res) {
+            carliAuth.requireSession()
+                .then(function(){
+                    return email.sendAskCarliMessage(req.body);
                 })
                 .then(sendOk(res))
                 .catch(sendError(res));

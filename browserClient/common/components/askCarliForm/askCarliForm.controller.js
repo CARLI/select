@@ -4,7 +4,10 @@ angular.module('common.askCarliForm')
 function askCarliFormController($location, $scope, askCarliService, userService) {
     var vm = this;
 
-    vm.draft = {};
+    vm.draft = {
+        context: '',
+        messageText: ''
+    };
 
     vm.sendMessage = sendMessage;
 
@@ -63,9 +66,10 @@ function askCarliFormController($location, $scope, askCarliService, userService)
         var user = userService.getUser();
 
         var message = {
-            message: vm.draft,
+            text: vm.draft.messageText,
+            context: vm.draft.context,
             page: page,
-            user: user
+            user: sanitizeUserForMiddleware(user)
         };
 
         return askCarliService.sendAskCarliMessage(message)
@@ -75,6 +79,14 @@ function askCarliFormController($location, $scope, askCarliService, userService)
             hideDraftMessageModal();
             showMessageSentModal();
             resetForm();
+        }
+
+        function sanitizeUserForMiddleware(user){
+            return {
+                email: user.email,
+                fullName: user.fullName,
+                libraryName: user.library.name
+            }
         }
     }
 }

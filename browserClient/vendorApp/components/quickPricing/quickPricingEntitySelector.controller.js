@@ -15,6 +15,10 @@ function quickPricingEntitySelectorController() {
     activate();
 
     function activate() {
+        if ( !vm.orderBy ){
+            vm.orderBy = 'name';
+        }
+
         filterFunctions = {
             'a-f': makeAlphaFilterFunction('a', 'f'),
             'g-l': makeAlphaFilterFunction('g', 'l'),
