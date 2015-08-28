@@ -7,6 +7,7 @@ angular.module('carli.routes',[
     'carli.sections.products',
     'carli.sections.libraries',
     'carli.sections.licenses',
+    'carli.sections.membership',
     'carli.sections.revisionHistory',
     'carli.sections.styleGuide',
     'carli.sections.login',
@@ -121,6 +122,16 @@ angular.module('carli.routes',[
     .when('/license/:id', {
         templateUrl: '/carliApp/sections/licenses/editLicense/editLicense.html',
         controller:  'editLicensePageController',
+        controllerAs:'vm'
+    })
+    .when('/membership', {
+        templateUrl: '/carliApp/sections/membership/membership.html',
+        controller:  'membershipController',
+        controllerAs:'vm'
+    })
+    .when('/membership/:year', {
+        templateUrl: '/carliApp/sections/membership/membership.html',
+        controller:  'membershipController',
         controllerAs:'vm'
     })
     .when('/notifications', {

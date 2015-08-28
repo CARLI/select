@@ -17,6 +17,7 @@ var schemas = {
     LibraryStatus: require('../schemas/LibraryStatus.json'),
     License: require('../schemas/License.json'),
     MembershipLevel: require('../schemas/MembershipLevel.json'),
+    Membership: require('../schemas/Membership.json'),
     Notification: require('../schemas/Notification.json'),
     NotificationTemplate: require('../schemas/NotificationTemplate.json'),
     NotificationType: require('../schemas/NotificationType.json'),

@@ -1,0 +1,59 @@
+#membership {
+    .content,
+    .list-page-header {
+        @media (max-width: 1200px) {
+            padding-left: 30px;
+            padding-right: 30px;
+        }
+    }
+
+    .entity-list {
+        .column {
+            font-size: 1rem;
+            padding: 0;
+            flex-basis: 10%;
+
+            &.library {
+                flex-grow: 3;
+                line-height: 2rem;
+                padding-left: 0.5rem;
+            }
+
+            &.ishare {
+                width: 150px;
+            }
+
+            &.membership {
+                width: 150px;
+            }
+
+            &.total {
+                line-height: 2rem;
+                padding-left: 0.5rem;
+            }
+            
+            input {
+                background: transparent;
+                border: 0;
+                color: black;
+                padding: 4px 4px 4px 16px;
+            }
+        }
+
+        .column-headers {
+            .column {
+                line-height: 2rem;
+                padding: 0.5rem;
+            }
+        }
+
+        .totals {
+            .column {
+                color: black;
+                padding: 0.5rem;
+            }
+        }
+    }
+
+
+}

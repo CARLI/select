@@ -18,6 +18,7 @@ var validTypes = [
     'LibraryNonCrm',
     'LibraryStatus',
     'License',
+    'Membership',
     'MembershipLevel',
     'Notification',
     'NotificationTemplate',
