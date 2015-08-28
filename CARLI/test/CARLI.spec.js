@@ -52,6 +52,10 @@ describe( 'CARLI', function() {
         expect(CARLI.Cycle).to.be.an('Object');
     } );
 
+    it( 'should export the Membership module', function() {
+        expect(CARLI.Membership).to.be.an('Object');
+    } );
+
     it( 'should export the NotificationTemplate module', function() {
         expect(CARLI.NotificationTemplate).to.be.an('Object');
     } );
