@@ -1,5 +1,38 @@
 
-<section class="content" id="membership" cg-busy="vm.loadingPromise">
-    <h1>Membership: {{ vm.displayYear }}</h1>
+<section id="membership">
+    <div class="list-page-header">
+        <h1>Membership: {{ vm.displayYear }}</h1>
+        <button class="carli-button save-button" busy-click="vm.saveMembershipData()">Save</button>
+    </div>
 
+    <section class="content list-content">
+        <ul class="entity-list">
+            <li class="column-headers">
+                <div class="column library">Institution</div>
+                <div class="column ishare">I-Share Assessment</div>
+                <div class="column membership">Membership</div>
+                <div class="column total">Total</div>
+            </li>
+            <li  ng-repeat="library in vm.libraries | orderBy:'name'">
+                <div class="column library">
+                    {{ library.name }}
+                </div>
+                <div class="column ishare">
+                    <input type="number" min="0" step=".01" ng-model="vm.membershipData.data[library.id].ishare">
+                </div>
+                <div class="column membership">
+                    <input type="number" min="0" step=".01" ng-model="vm.membershipData.data[library.id].membership">
+                </div>
+                <div class="column total">
+                    {{ vm.membershipData.data[library.id].ishare + vm.membershipData.data[library.id].membership | currency }}
+                </div>
+            </li>
+            <li class="totals">
+                <div class="column library">Total</div>
+                <div class="column ishare">{{ vm.ishareTotal() | currency }}</div>
+                <div class="column membership">{{ vm.membershipTotal() | currency }}</div>
+                <div class="column total">{{ vm.grandTotal() | currency }}</div>
+            </li>
+        </ul>
+    </section>
 </section>
