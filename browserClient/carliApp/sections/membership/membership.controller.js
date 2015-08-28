@@ -9,27 +9,37 @@ function membershipController( $location, $q, $routeParams, alertService, errorH
     vm.loadingPromise = null;
     vm.displayYear = null;
     vm.membershipData = null;
+    vm.nextYear = null;
+    vm.previousYear = null;
 
     vm.saveMembershipData = saveMembershipData;
     vm.ishareTotal = ishareTotal;
     vm.membershipTotal = membershipTotal;
     vm.grandTotal = grandTotal;
+    vm.viewNextYear = viewNextYear;
+    vm.viewPreviousYear = viewPreviousYear;
 
     activate();
 
     function activate(){
-        vm.displayYear = parseInt( $routeParams.year );
+        initVmYearsFromArgument();
 
         if ( vm.displayYear ){
             initializeMembershipData();
         }
         else {
-            routeToDefaultYear();
+            routeToYear(vm.currentYear);
         }
     }
 
-    function routeToDefaultYear(){
-        $location.path('/membership/' + vm.currentYear);
+    function initVmYearsFromArgument(){
+        vm.displayYear = parseInt( $routeParams.year );
+        vm.nextYear = vm.displayYear + 1;
+        vm.previousYear = vm.displayYear - 1;
+    }
+
+    function routeToYear(year){
+        $location.path('/membership/' + year);
     }
 
     function initializeMembershipData(){
@@ -139,5 +149,13 @@ function membershipController( $location, $q, $routeParams, alertService, errorH
 
     function currentYear(){
         return parseInt( new Date().getFullYear() );
+    }
+
+    function viewNextYear(){
+        routeToYear(vm.nextYear);
+    }
+
+    function viewPreviousYear(){
+        routeToYear(vm.previousYear);
     }
 }

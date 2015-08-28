@@ -2,7 +2,19 @@
 <section id="membership">
     <div class="list-page-header">
         <h1>Membership: {{ vm.displayYear }}</h1>
-        <button class="carli-button save-button" busy-click="vm.saveMembershipData()">Save</button>
+        <div class="button-container">
+            <button class="carli-button" busy-click="vm.viewPreviousYear()">
+                View {{ vm.previousYear }}
+            </button>
+            <button class="carli-button" busy-click="vm.viewNextYear()" ng-if="vm.displayYear === vm.currentYear">
+                Start {{ vm.nextYear }}
+            </button>
+            <button class="carli-button" busy-click="vm.viewNextYear()" ng-if="vm.displayYear  <  vm.currentYear">
+                View {{ vm.nextYear }}
+            </button>
+
+            <button class="carli-button save-button" busy-click="vm.saveMembershipData()">Save</button>
+        </div>
     </div>
 
     <section class="content list-content">
