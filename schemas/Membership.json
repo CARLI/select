@@ -14,15 +14,7 @@
     },
     "data" : {
       "description": "Fees and dues per institution (Library)",
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "libraryId":  {"type": "string" },
-          "ishare":     {"type": "number" },
-          "membership": {"type": "number" }
-        }
-      }
+      "type": "object"
     }
   },
   "required": [
