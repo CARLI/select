@@ -16,6 +16,7 @@ module.exports = {
     LibraryStatus: require('../CARLI/Entity/LibraryStatusRepository'),
     License: require('../CARLI/Entity/LicenseRepository'),
     MemoryStore: require('../CARLI/Store/MemoryStore'),
+    Membership: require('../CARLI/Entity/MembershipRepository'),
     Notification: require('../CARLI/Entity/NotificationRepository'),
     NotificationDraftGenerator: require('../CARLI/NotificationDraftGenerator'),
     NotificationTemplate: require('../CARLI/Entity/NotificationTemplateRepository'),

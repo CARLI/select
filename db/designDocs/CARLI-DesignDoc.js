@@ -48,6 +48,13 @@ ddoc = {
                     emit( doc.dateSent, doc );
                 }
             }
+        },
+        membershipByYear: {
+            map: function( doc ) {
+                if ( doc.type === 'Membership' ){
+                    emit( doc.year, doc );
+                }
+            }
         }
     }
 };

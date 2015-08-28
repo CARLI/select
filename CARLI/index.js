@@ -6,6 +6,7 @@ module.exports = {
     Cycle: require('./Entity/CycleRepository'),
     Library: require('./Entity/LibraryRepository'),
     License: require('./Entity/LicenseRepository'),
+    Membership: require('./Entity/MembershipRepository'),
     Notification: require('./Entity/NotificationRepository'),
     NotificationTemplate: require('./Entity/NotificationTemplateRepository'),
     NotificationDraftGenerator: require('./NotificationDraftGenerator'),

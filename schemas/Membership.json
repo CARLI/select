@@ -1,0 +1,31 @@
+{
+  "$schema": "json-schema.org/draft-04/schema",
+  "title": "Membership",
+  "schemaType": "Membership",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique identifier for the Membership record",
+      "type": "string"
+    },
+    "year": {
+      "description": "The calendar year that this document tracks membership data for",
+      "type": "integer"
+    },
+    "data" : {
+      "description": "Fees and dues per institution (Library)",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "libraryId":  {"type": "string" },
+          "ishare":     {"type": "number" },
+          "membership": {"type": "number" }
+        }
+      }
+    }
+  },
+  "required": [
+    "year"
+  ]
+}
