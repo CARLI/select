@@ -1,1 +1,3 @@
-angular.module('carli.sections.reports',[]);
+angular.module('carli.sections.reports',[
+    'common.libraryService'
+]);
