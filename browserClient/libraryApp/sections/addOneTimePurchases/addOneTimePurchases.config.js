@@ -1,6 +1,6 @@
 angular.module('library.sections.addOneTimePurchases',[
     'common.collapsible',
-    'library.notificationService',
+    'common.emailService',
     'library.subscriptionProgress',
     'library.subscriptionButton'
 ]);

@@ -7,15 +7,25 @@ function sendNotificationEmail(notificationId) {
     });
 }
 
-function sendOneTimePurchaseMessage(productId, libraryId){
+function sendOneTimePurchaseMessage(offeringId){
     return middlewareRequest({
-        path: '/notify-carli-of-one-time-purchase/' + productId + '/by/' + libraryId,
+        path: '/notify-carli-of-one-time-purchase/' + offeringId,
         method: 'post'
+    });
+}
+
+function sendAskCarliMessage(messageObject){
+    return middlewareRequest({
+        path: '/ask-carli',
+        method: 'post',
+        json: true,
+        body: messageObject
     });
 }
 
 module.exports = {
     tellPixobot: function () {},
     sendNotificationEmail: sendNotificationEmail,
-    sendOneTimePurchaseMessage: sendOneTimePurchaseMessage
+    sendOneTimePurchaseMessage: sendOneTimePurchaseMessage,
+    sendAskCarliMessage: sendAskCarliMessage
 };
