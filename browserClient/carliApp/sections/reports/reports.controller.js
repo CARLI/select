@@ -1,14 +1,33 @@
 angular.module('carli.sections.reports')
 .controller('reportsController', reportsController);
 
-function reportsController( $q, alertService, errorHandler, libraryService ){
+function reportsController( $q, alertService, cycleService, errorHandler, libraryService ){
     var vm = this;
 
+    vm.reportOptions = {};
     vm.reportRunningPromise = null;
     vm.selectedReport = null;
-    vm.reportOptions = [
+
+    /**
+     * Reports
+     *
+     * name: display name
+     * controls: which parameters of the report can be adjusted.
+     * columns: columns of the report output that are optional and can be disabled by the user.
+     *
+     */
+    vm.availableReports = [
         {
-            name: 'Selected Products'
+            name: 'Selected Products',
+            controls: {
+                cycle: 'all'
+            },
+            columns: [
+                'vendor',
+                'selection',
+                'price',
+                'detailCode'
+            ]
         },
         {
             name: 'Contacts'
@@ -32,22 +51,45 @@ function reportsController( $q, alertService, errorHandler, libraryService ){
             name: 'Product Names'
         },
         {
-            name: 'List Libraries plus Info'
-        },
-        {
-            name: 'List Libraries'
+            name: 'List Libraries',
+            columns: [
+                'fte',
+                'institutionType',
+                'institutionYears',
+                'membership',
+                'ishare',
+                'status'
+            ]
         }
     ];
 
+    vm.downloadReportCsv = downloadReportCsv;
     vm.setupSelectedReport = setupSelectedReport;
 
     activate();
 
     function activate(){
+        initDataForControls();
+    }
 
+    function initDataForControls(){
+        vm.reportRunningPromise = cycleService.list()
+            .then(function(cycleList){
+                vm.cycles = cycleList;
+            });
     }
 
     function setupSelectedReport(){
-        console.log('setup ',vm.selectedReport);
+        vm.reportOptions = {
+            columns: {}
+        };
+
+        vm.selectedReport.columns.forEach(function(column){
+            vm.reportOptions.columns[column] = true;
+        });
+    }
+
+    function downloadReportCsv(){
+        console.log('download csv for ', vm.reportOptions);
     }
 }

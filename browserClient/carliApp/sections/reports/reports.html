@@ -7,16 +7,37 @@
 
     <section class="content" cg-busy="vm.reportRunning">
         <div class="choose-report">
-            <label for="report">Select</label>
+            <label for="report">Select Report</label>
             <select id="report"
                     ng-model="vm.selectedReport"
                     ng-change="vm.setupSelectedReport()"
-                    ng-options="report.name for report in vm.reportOptions">
+                    ng-options="report.name for report in vm.availableReports">
                 <option value="">-- choose report --</option>
             </select>
         </div>
+
         <div class="report-controls" ng-if="vm.selectedReport">
-            Report Controls
+            <label for="reportCycle">Select Cycle(s)</label>
+            <select id="reportCycle" multiple="true"
+                    ng-if="vm.selectedReport.controls.cycle"
+                    ng-model="vm.reportOptions.cycle"
+                    ng-options="cycle.name for cycle in vm.cycles"></select>
+
+            <div class="report-columns">
+                <div class="label">Choose Optional Columns</div>
+                <ul>
+                    <li ng-repeat="column in vm.selectedReport.columns">
+                        <checkbox ng-model="vm.reportOptions.columns[column]">{{ column }}</checkbox>
+                    </li>
+                </ul>
+            </div>
+
+            <button class="carli-button save-button export-csv" busy-click="vm.downloadReportCsv()">Download CSV</button>
         </div>
     </section>
+
+    <pre>
+
+        {{ vm.reportOptions | json }}
+    </pre>
 </section>
