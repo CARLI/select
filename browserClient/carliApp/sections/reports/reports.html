@@ -17,11 +17,15 @@
         </div>
 
         <div class="report-controls" ng-if="vm.selectedReport">
-            <label for="reportCycle">Select Cycle(s)</label>
-            <select id="reportCycle" multiple="true"
-                    ng-if="vm.selectedReport.controls.cycle"
-                    ng-model="vm.reportOptions.cycle"
-                    ng-options="cycle.name for cycle in vm.cycles"></select>
+
+            <div class="report-parameters">
+                <div class="cycle" ng-if="vm.selectedReport.controls.cycle">
+                    <label for="reportCycle">Select Cycle(s)</label>
+                    <select id="reportCycle" multiple="multiple"
+                            ng-model="vm.reportOptions.parameters.cycle"
+                            ng-options="cycle.name for cycle in vm.cycles"></select>
+                </div>
+            </div>
 
             <div class="report-columns">
                 <div class="label">Choose Optional Columns</div>
@@ -36,8 +40,5 @@
         </div>
     </section>
 
-    <pre>
-
-        {{ vm.reportOptions | json }}
-    </pre>
+    <pre>{{ vm.reportOptions | json }}</pre>
 </section>

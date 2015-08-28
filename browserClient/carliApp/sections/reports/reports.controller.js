@@ -1,7 +1,7 @@
 angular.module('carli.sections.reports')
 .controller('reportsController', reportsController);
 
-function reportsController( $q, alertService, cycleService, errorHandler, libraryService ){
+function reportsController( $q, alertService, cycleService, errorHandler, reportDataService ){
     var vm = this;
 
     vm.reportOptions = {};
@@ -90,6 +90,10 @@ function reportsController( $q, alertService, cycleService, errorHandler, librar
     }
 
     function downloadReportCsv(){
-        console.log('download csv for ', vm.reportOptions);
+        var reportName = vm.selectedReport.name;
+        var parameters = vm.reportOptions.parameters;
+        var columns = vm.reportOptions.columns;
+
+        return reportDataService.getDataForReport(reportName, parameters, columns);
     }
 }
