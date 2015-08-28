@@ -1,4 +1,12 @@
 #membership {
+    .content,
+    .list-page-header {
+        @media (max-width: 1200px) {
+            padding-left: 30px;
+            padding-right: 30px;
+        }
+    }
+
     .entity-list {
         .column {
             font-size: 1rem;
@@ -6,7 +14,7 @@
             flex-basis: 10%;
 
             &.library {
-                flex-grow: 2;
+                flex-grow: 3;
                 line-height: 2rem;
                 padding-left: 0.5rem;
             }
