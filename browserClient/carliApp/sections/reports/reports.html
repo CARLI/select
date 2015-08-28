@@ -1,0 +1,22 @@
+<section id="reports" class="edit-form">
+    <div class="page-header">
+        <div class="headings">
+            <h1>Reports</h1>
+        </div>
+    </div>
+
+    <section class="content" cg-busy="vm.reportRunning">
+        <div class="choose-report">
+            <label for="report">Select</label>
+            <select id="report"
+                    ng-model="vm.selectedReport"
+                    ng-change="vm.setupSelectedReport()"
+                    ng-options="report.name for report in vm.reportOptions">
+                <option value="">-- choose report --</option>
+            </select>
+        </div>
+        <div class="report-controls" ng-if="vm.selectedReport">
+            Report Controls
+        </div>
+    </section>
+</section>
