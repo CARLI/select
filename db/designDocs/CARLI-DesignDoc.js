@@ -55,6 +55,16 @@ ddoc = {
                     emit( doc.year, doc );
                 }
             }
+        },
+        listInvoiceNotificationsByCycle: {
+            map: function(doc) {
+                if (isAnInvoiceNotification())
+                    emit(doc.cycle, doc);
+
+                function isAnInvoiceNotification() {
+                    return doc.type === 'Notification' && doc.batchId;
+                }
+            }
         }
     }
 };
