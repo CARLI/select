@@ -122,7 +122,6 @@ function listPastFourCyclesMatchingCycle( cycle ){
 
 function getDataForBannerExport(cycle, batchId) {
     var librariesById = {};
-    var batchId = 'USI00002';
 
     return LibraryRepository.listActiveLibraries()
         .then(groupLibrariesById)
