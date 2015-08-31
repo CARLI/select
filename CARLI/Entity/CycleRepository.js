@@ -2,7 +2,9 @@ var Entity = require('../Entity')
     , EntityTransform = require('./EntityTransformationUtils')
     , config = require('../../config')
     , couchUtils = require('../Store/CouchDb/Utils')()
+    , LibraryRepository = require('./LibraryRepository')
     , moment = require('moment')
+    , NotificationRepository = require('./NotificationRepository')
     , StoreOptions = config.storeOptions
     , Store = require('../Store')
     , StoreModule = require('../Store/CouchDb/Store')
@@ -118,8 +120,75 @@ function listPastFourCyclesMatchingCycle( cycle ){
 }
 
 function getDataForBannerExport(cycle) {
-    var exportData = {};
-    return exportData;
+    var librariesById = {};
+
+    return LibraryRepository.listActiveLibraries()
+        .then(groupLibrariesById)
+        .then(loadInvoiceNotifications)
+        .then(groupDataByBatchId)
+        //.then(collapseInvoices)
+        //.then(formatBatchesAsBannerFeeds)
+        .catch(function (err) {
+            alertService.putAlert('Error exporting Banner Feed', { severity: 'error' });
+            console.log('Error exporting Banner Feed', err);
+        });
+
+    function groupLibrariesById(libraries) {
+        libraries.forEach(function (library) {
+            librariesById[library.id] = library;
+        });
+        return true;
+    }
+
+    function loadInvoiceNotifications() {
+        return NotificationRepository.listInvoiceNotificationsForCycleId(cycle.id);
+    }
+
+    function groupDataByBatchId(notifications) {
+        var dataByBatch = {};
+
+        notifications.forEach(groupByBatch);
+
+        return dataByBatch;
+
+        function groupByBatch(notification) {
+            if ( ! dataByBatch.hasOwnProperty(notification.batchId) ) {
+                dataByBatch[notification.batchId] = [];
+            }
+
+            var bannerFeedData = {
+                batchId: notification.batchId,
+                date: notification.dateCreated,
+                library: notification.targetEntity, // librariesById[notification.targetEntity],
+                dollarAmount: notification.summaryTotal,
+                invoiceNumber: notification.invoiceNumber
+            };
+
+            dataByBatch[notification.batchId].push(bannerFeedData);
+        }
+    }
+
+    //function collapseInvoices(batches) {
+    //    Object.keys(batches).forEach(function (batchId) {
+    //        var batch = batches[batchId];
+    //        collapseInvoices(batch);
+    //    });
+    //    return batches;
+    //}
+    //
+    //function formatBatchesAsBannerFeeds(batches) {
+    //    var lines = [];
+    //
+    //    Object.keys(batches).forEach(function (batchId) {
+    //        var batch = batches[batchId];
+    //        lines.push(generateBannerRow(batch));
+    //    });
+    //
+    //    lines.unshift(generateBannerHeader());
+    //    return lines;
+    //
+    //    function
+    //}
 }
 
 /* functions that get added as instance methods on loaded Cycles */
