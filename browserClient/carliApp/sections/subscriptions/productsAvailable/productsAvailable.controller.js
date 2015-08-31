@@ -25,6 +25,9 @@ function productsAvailableController( $q, cycleService ) {
     }
 
     function exportForBanner() {
-        return cycleService.getDataForBannerExport(vm.cycle);
+        return cycleService.getDataForBannerExport(vm.cycle)
+            .then(function(what) {
+                console.log('got it', what);
+            });
     }
 }
