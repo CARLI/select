@@ -1,9 +1,12 @@
 angular.module('carli.sections.reports')
     .service('reportDataService', reportDataService);
 
-function reportDataService( libraryService ){
+function reportDataService( CarliModules ){
+
+    var reportsDataMiddleware = CarliModules.ReportsData;
+
     var dataFunctionForReportName = {
-        'Selected Products': dataForSelectedProducts,
+        'Selected Products': reportsDataMiddleware.selectedProductsReport,
         'Contacts': dataForContacts,
         'Statistics': dataForStatistics,
         'Selections by Vendor': dataForSelectionsByVendor,
@@ -23,13 +26,11 @@ function reportDataService( libraryService ){
         if ( typeof dataFunction !== 'function' ){
             return { error: 'unknown report: ' + reportName };
         }
-        return dataFunction(parameters, columns);
-    }
 
-    function dataForSelectedProducts(parameters, columns){
-        console.log('selected products parameters', parameters);
-        console.log('selected products columns', columns);
-
+        return dataFunction(parameters, columns)
+            .then(function(middlewareResult){
+                return middlewareResult.result;
+            });
     }
 
     function dataForContacts(parameters, columns){

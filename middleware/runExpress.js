@@ -14,6 +14,7 @@ var cycleCreation = require('./components/cycleCreation');
 var libraryQueries = require('./components/libraryQueries');
 var email = require('./components/email');
 var pdf = require('./components/pdf');
+var reports = require('./components/reports');
 var user = require('./components/user');
 var vendorDatabases = require('./components/vendorDatabases');
 var vendorReportCsv = require('./components/csv/vendorReport');
@@ -342,6 +343,11 @@ function runMiddlewareServer(){
                     return email.sendAskCarliMessage(req.body);
                 })
                 .then(sendOk(res))
+                .catch(sendError(res));
+        });
+        carliMiddleware.get('/reports/selected-products/:parameters/:columns', function(req, res) {
+            reports.selectedProductsReport(req.params.parameters, req.params.columns)
+                .then(sendJsonResult(res))
                 .catch(sendError(res));
         });
     }

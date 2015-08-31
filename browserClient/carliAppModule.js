@@ -23,6 +23,7 @@ module.exports = {
     NotificationTemplate: require('../CARLI/Entity/NotificationTemplateRepository'),
     Offering: require('../CARLI/Entity/OfferingRepository'),
     Product: require('../CARLI/Entity/ProductRepository'),
+    ReportsData: require('../middleware/browserAdapters/reports'),
     Store: require('../CARLI/Store'),
     User: require('../CARLI/Entity/UserRepository'),
     UserMiddleware: require('../middleware/browserAdapters/user'),
