@@ -30,25 +30,32 @@ function reportsController( csvExportService, cycleService, errorHandler, report
             ]
         },
         {
-            name: 'Contacts'
+            name: 'Contacts',
+            columns: []
         },
         {
-            name: 'Statistics'
+            name: 'Statistics',
+            columns: []
         },
         {
-            name: 'Selections by Vendor'
+            name: 'Selections by Vendor',
+            columns: []
         },
         {
-            name: 'Totals'
+            name: 'Totals',
+            columns: []
         },
         {
-            name: 'List all Products for Vendor'
+            name: 'List all Products for Vendor',
+            columns: []
         },
         {
-            name: 'Contracts'
+            name: 'Contracts',
+            columns: []
         },
         {
-            name: 'Product Names'
+            name: 'Product Names',
+            columns: []
         },
         {
             name: 'List Libraries',
@@ -81,7 +88,8 @@ function reportsController( csvExportService, cycleService, errorHandler, report
 
     function setupSelectedReport(){
         vm.reportOptions = {
-            columns: {}
+            columns: {},
+            parameters: {}
         };
 
         vm.selectedReport.columns.forEach(function(column){

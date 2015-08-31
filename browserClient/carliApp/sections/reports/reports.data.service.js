@@ -7,13 +7,13 @@ function reportDataService( $q, CarliModules ){
 
     var dataFunctionForReportName = {
         'Selected Products': reportsDataMiddleware.selectedProductsReport,
-        'Contacts': dataForContacts,
-        'Statistics': dataForStatistics,
-        'Selections by Vendor': dataForSelectionsByVendor,
-        'Totals': dataForTotals,
-        'List all Products for Vendor': dataForListProductsForVendor,
-        'Contracts': dataForContracts,
-        'Product Names': dataForProductNames,
+        'Contacts': reportsDataMiddleware.contactsReport,
+        'Statistics': reportsDataMiddleware.statisticsReport,
+        'Selections by Vendor': reportsDataMiddleware.selectionsByVendorReport,
+        'Totals': reportsDataMiddleware.totalsReport,
+        'List all Products for Vendor': reportsDataMiddleware.listProductsForVendorReport,
+        'Contracts': reportsDataMiddleware.contractsReport,
+        'Product Names': reportsDataMiddleware.productNamesReport,
         'List Libraries': reportsDataMiddleware.listLibrariesReport
     };
 
@@ -31,33 +31,5 @@ function reportDataService( $q, CarliModules ){
             .then(function(middlewareResult){
                 return middlewareResult.result;
             });
-    }
-
-    function dataForContacts(parameters, columns){
-
-    }
-
-    function dataForStatistics(parameters, columns){
-
-    }
-
-    function dataForSelectionsByVendor(parameters, columns){
-
-    }
-
-    function dataForTotals(parameters, columns){
-
-    }
-
-    function dataForListProductsForVendor(parameters, columns){
-
-    }
-
-    function dataForContracts(parameters, columns){
-
-    }
-
-    function dataForProductNames(parameters, columns){
-
     }
 }
