@@ -16,14 +16,13 @@
             </select>
         </div>
 
-        <div class="report-controls" ng-if="vm.selectedReport">
-
+        <form id="reports-form" name="reports" class="report-controls" ng-if="vm.selectedReport">
             <div class="report-parameters">
                 <div class="cycle" ng-if="vm.selectedReport.controls.cycle">
                     <label for="reportCycle">Select Cycle(s)</label>
                     <select id="reportCycle" multiple="multiple"
                             ng-model="vm.reportOptions.parameters.cycle"
-                            ng-options="cycle.name for cycle in vm.cycles"></select>
+                            ng-options="cycle.id as cycle.name for cycle in vm.cycles"></select>
                 </div>
             </div>
 
@@ -37,7 +36,7 @@
             </div>
 
             <button class="carli-button save-button export-csv" busy-click="vm.downloadReportCsv()">Download CSV</button>
-        </div>
+        </form>
     </section>
 
     <pre>{{ vm.reportOptions | json }}</pre>

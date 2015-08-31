@@ -1,7 +1,7 @@
 angular.module('carli.sections.reports')
 .controller('reportsController', reportsController);
 
-function reportsController( $q, alertService, cycleService, errorHandler, reportDataService ){
+function reportsController( $scope, $q, alertService, cycleService, errorHandler, reportDataService ){
     var vm = this;
 
     vm.reportOptions = {};
@@ -94,6 +94,9 @@ function reportsController( $q, alertService, cycleService, errorHandler, report
         var parameters = vm.reportOptions.parameters;
         var columns = vm.reportOptions.columns;
 
-        return reportDataService.getDataForReport(reportName, parameters, columns);
+        return reportDataService.getDataForReport(reportName, parameters, columns)
+            .then(function(reportData){
+                console.log('report data', reportData);
+            });
     }
 }
