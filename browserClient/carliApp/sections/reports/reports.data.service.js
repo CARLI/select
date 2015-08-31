@@ -1,7 +1,7 @@
 angular.module('carli.sections.reports')
     .service('reportDataService', reportDataService);
 
-function reportDataService( CarliModules ){
+function reportDataService( $q, CarliModules ){
 
     var reportsDataMiddleware = CarliModules.ReportsData;
 
@@ -14,7 +14,7 @@ function reportDataService( CarliModules ){
         'List all Products for Vendor': dataForListProductsForVendor,
         'Contracts': dataForContracts,
         'Product Names': dataForProductNames,
-        'List Libraries': dataForListLibraries
+        'List Libraries': reportsDataMiddleware.listLibrariesReport
     };
 
     return {
@@ -27,7 +27,7 @@ function reportDataService( CarliModules ){
             return { error: 'unknown report: ' + reportName };
         }
 
-        return dataFunction(parameters, columns)
+        return $q.when(dataFunction(parameters, columns))
             .then(function(middlewareResult){
                 return middlewareResult.result;
             });
@@ -59,10 +59,5 @@ function reportDataService( CarliModules ){
 
     function dataForProductNames(parameters, columns){
 
-    }
-
-    function dataForListLibraries(parameters, columns){
-        console.log('list libraries parameters', parameters);
-        console.log('list libraries columns', columns);
     }
 }

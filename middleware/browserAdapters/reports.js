@@ -7,8 +7,16 @@ function selectedProductsReport(reportParameters, reportColumns) {
     });
 }
 
+function listLibrariesReport(reportParameters, reportColumns) {
+    return middlewareRequest({
+        path: '/reports/list-libraries/' + reportQuery(reportParameters, reportColumns),
+        method: 'get'
+    });
+}
+
 module.exports = {
-    selectedProductsReport: selectedProductsReport
+    selectedProductsReport: selectedProductsReport,
+    listLibrariesReport: listLibrariesReport
 };
 
 
