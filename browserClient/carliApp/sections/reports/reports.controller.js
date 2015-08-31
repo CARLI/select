@@ -1,7 +1,7 @@
 angular.module('carli.sections.reports')
 .controller('reportsController', reportsController);
 
-function reportsController( $scope, $q, alertService, cycleService, errorHandler, reportDataService ){
+function reportsController( $scope, $q, alertService, csvExportService, cycleService, errorHandler, reportDataService ){
     var vm = this;
 
     vm.reportOptions = {};
@@ -96,7 +96,17 @@ function reportsController( $scope, $q, alertService, cycleService, errorHandler
 
         return reportDataService.getDataForReport(reportName, parameters, columns)
             .then(function(reportData){
-                console.log('report data', reportData);
+                return csvExportService.exportToCsv(reportData.data, reportData.columns);
+            })
+            .then(function(csvContent){
+                csvExportService.browserDownloadCsv(csvContent, makeFilename());
+            })
+            .catch(function (err) {
+                console.log('CSV generation failed', err);
             });
+
+        function makeFilename(){
+            return 'CARLI-'+ reportName +'-report-' + new Date().toISOString().substr(0,16).replace('T','-');
+        }
     }
 }
