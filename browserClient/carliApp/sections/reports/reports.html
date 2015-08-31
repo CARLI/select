@@ -22,7 +22,7 @@
                     <label for="reportCycle">Select Cycle(s)</label>
                     <select id="reportCycle" multiple="multiple"
                             ng-model="vm.reportOptions.parameters.cycle"
-                            ng-options="cycle.id as cycle.name for cycle in vm.cycles"></select>
+                            ng-options="cycle.id as cycle.name for cycle in vm.cycles | orderBy:'name'"></select>
                 </div>
             </div>
 
