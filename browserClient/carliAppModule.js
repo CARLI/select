@@ -8,6 +8,7 @@ module.exports = {
     Banner: require('../CARLI/Banner'),
     CouchDbStore: require('../CARLI/Store/CouchDb/Store'),
     config: require('../config'),
+    Csv: require('../CARLI/Csv'),
     Cycle: require('../CARLI/Entity/CycleRepository'),
     CycleMiddleware: require('../middleware/browserAdapters/cycleCreation'),
     DatabaseStatusMiddleware: require('../middleware/browserAdapters/vendorDatabases'),
