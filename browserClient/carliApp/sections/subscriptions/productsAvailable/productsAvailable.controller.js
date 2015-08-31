@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.productsAvailable')
     .controller('productsAvailableController', productsAvailableController);
 
-function productsAvailableController( $q, cycleService ) {
+function productsAvailableController( $q, alertService, cycleService ) {
     var vm = this;
     vm.undoCloseSystem = undoCloseSystem;
     vm.exportForBanner = exportForBanner;
@@ -28,6 +28,10 @@ function productsAvailableController( $q, cycleService ) {
         return cycleService.getDataForBannerExport(vm.cycle)
             .then(function(what) {
                 console.log('got it', what);
+            })
+            .catch(function (error) {
+                alertService.putAlert(error.message, { severity: 'error' });
+                console.log(error);
             });
     }
 }
