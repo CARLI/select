@@ -1,7 +1,7 @@
 angular.module('common.csvExport')
     .service('csvExportService', csvExportService);
 
-function csvExportService($q, $window, CarliModules){
+function csvExportService($q, $window, CarliModules, browserDownloadService){
     var csvModule = CarliModules.Csv;
 
     return {
@@ -29,9 +29,7 @@ function csvExportService($q, $window, CarliModules){
     }
 
     function browserDownloadCsv( csvString, fileName ){
-        var blob = new Blob([csvString], {type: "text/csv;charset=utf-8"});
-        //TODO: feature detect saveAs and try a workaround if it's missing, or at least show an error
-        $window.saveAs(blob, fileName);
+        browserDownloadService.browserDownload(fileName, 'text/csv;charset=utf-8', csvString);
     }
 
 }
