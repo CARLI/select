@@ -1,4 +1,5 @@
 var cycleRepository = require('../../CARLI/Entity/CycleRepository.js');
+var libraryRepository = require('../../CARLI/Entity/LibraryRepository.js');
 var offeringRepository = require('../../CARLI/Entity/OfferingRepository.js');
 var vendorRepository = require('../../CARLI/Entity/VendorRepository.js');
 var Q = require('q');
@@ -6,6 +7,13 @@ var Q = require('q');
 var columnName = {
     cycle: 'Cycle',
     detailCode: 'Detail Code',
+    fte: 'FTE',
+    institutionType: 'Institution Type',
+    institutionYears: 'Years',
+    membershipLevel: 'Membership Level',
+    name: 'Name',
+    isIshareMember: 'I-Share Member',
+    isActive: 'Active',
     library: 'Library',
     price: 'Price',
     product: 'Product',
@@ -112,6 +120,55 @@ function selectedProductsReport( reportParametersStr, userSelectedColumnsStr ){
     }
 }
 
+function listLibrariesReport( reportParametersStr, userSelectedColumnsStr ){
+    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
+    var enabledUserSelectedColumns = enabledColumns(userSelectedColumns);
+
+    var defaultReportColumns = ['name'];
+    var columns = defaultReportColumns.concat(userSelectedColumns);
+
+    return libraryRepository.list()
+        .then(function(allLibraries){
+            return allLibraries.map(transformLibraryToResultRow)
+        })
+        .then(function(results) {
+            return {
+                columns: columnNames(columns),
+                data: results
+            };
+        });
+
+    function transformLibraryToResultRow( library ){
+        var result = {
+            name: library.name
+        };
+
+        enabledUserSelectedColumns.forEach(function(column){
+            result[column] = library[column];
+        });
+
+        if ( userSelectedColumns.isIshareMember ) {
+            if ('isIshareMember' in library) {
+                result.isIshareMember = !!library.isIshareMember ? 'yes' : 'no';
+            }
+            else {
+                result.isIshareMember = '';
+            }
+        }
+
+        if ( userSelectedColumns.isActive ) {
+            if ('isActive' in library) {
+                result.isActive = !!library.isActive ? 'yes' : 'no';
+            }
+            else {
+                result.isActive = '';
+            }
+        }
+
+        return result;
+    }
+}
+
 function enabledColumns(columnDefinitions){
     var columns = [];
 
@@ -137,5 +194,6 @@ function columnNames( columnList ){
 }
 
 module.exports = {
-    selectedProductsReport: selectedProductsReport
+    selectedProductsReport: selectedProductsReport,
+    listLibrariesReport: listLibrariesReport
 };

@@ -1,7 +1,7 @@
 angular.module('carli.sections.reports')
 .controller('reportsController', reportsController);
 
-function reportsController( $scope, $q, alertService, csvExportService, cycleService, errorHandler, reportDataService ){
+function reportsController( csvExportService, cycleService, errorHandler, reportDataService ){
     var vm = this;
 
     vm.reportOptions = {};
@@ -56,9 +56,9 @@ function reportsController( $scope, $q, alertService, csvExportService, cycleSer
                 'fte',
                 'institutionType',
                 'institutionYears',
-                'membership',
-                'ishare',
-                'status'
+                'membershipLevel',
+                'isIshareMember',
+                'isActive'
             ]
         }
     ];

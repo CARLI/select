@@ -350,6 +350,11 @@ function runMiddlewareServer(){
                 .then(sendJsonResult(res))
                 .catch(sendError(res));
         });
+        carliMiddleware.get('/reports/list-libraries/:parameters/:columns', function(req, res) {
+            reports.listLibrariesReport(req.params.parameters, req.params.columns)
+                .then(sendJsonResult(res))
+                .catch(sendError(res));
+        });
     }
 }
 
