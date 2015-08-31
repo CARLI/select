@@ -120,6 +120,91 @@ function selectedProductsReport( reportParametersStr, userSelectedColumnsStr ){
     }
 }
 
+
+function contactsReport( reportParametersStr, userSelectedColumnsStr ){
+    var results = [];
+
+    var reportParameters = JSON.parse(reportParametersStr);
+    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
+
+    var defaultReportColumns = [];
+    var columns = defaultReportColumns.concat(enabledColumns(userSelectedColumns));
+
+    console.log('contactsReport', reportParameters); return Q({ columns: [], data: []});
+}
+
+function statisticsReport( reportParametersStr, userSelectedColumnsStr ){
+    var results = [];
+
+    var reportParameters = JSON.parse(reportParametersStr);
+    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
+
+    var defaultReportColumns = [];
+    var columns = defaultReportColumns.concat(enabledColumns(userSelectedColumns));
+
+    console.log('statisticsReport', reportParameters); return Q({ columns: [], data: []});
+}
+
+function selectionsByVendorReport( reportParametersStr, userSelectedColumnsStr ){
+    var results = [];
+
+    var reportParameters = JSON.parse(reportParametersStr);
+    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
+
+    var defaultReportColumns = [];
+    var columns = defaultReportColumns.concat(enabledColumns(userSelectedColumns));
+
+    console.log('selectionsByVendorReport', reportParameters); return Q({ columns: [], data: []});
+}
+
+function totalsReport( reportParametersStr, userSelectedColumnsStr ){
+    var results = [];
+
+    var reportParameters = JSON.parse(reportParametersStr);
+    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
+
+    var defaultReportColumns = [];
+    var columns = defaultReportColumns.concat(enabledColumns(userSelectedColumns));
+
+    console.log('totalsReport', reportParameters); return Q({ columns: [], data: []});
+}
+
+function listProductsForVendorReport( reportParametersStr, userSelectedColumnsStr ){
+    var results = [];
+
+    var reportParameters = JSON.parse(reportParametersStr);
+    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
+
+    var defaultReportColumns = [];
+    var columns = defaultReportColumns.concat(enabledColumns(userSelectedColumns));
+
+    console.log('listProductsForVendorReport', reportParameters); return Q({ columns: [], data: []});
+}
+
+function contractsReport( reportParametersStr, userSelectedColumnsStr ){
+    var results = [];
+
+    var reportParameters = JSON.parse(reportParametersStr);
+    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
+
+    var defaultReportColumns = [];
+    var columns = defaultReportColumns.concat(enabledColumns(userSelectedColumns));
+
+    console.log('contractsReport', reportParameters); return Q({ columns: [], data: []});
+}
+
+function productNamesReport( reportParametersStr, userSelectedColumnsStr ){
+    var results = [];
+
+    var reportParameters = JSON.parse(reportParametersStr);
+    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
+
+    var defaultReportColumns = [];
+    var columns = defaultReportColumns.concat(enabledColumns(userSelectedColumns));
+
+    console.log('productNamesReport', reportParameters); return Q({ columns: [], data: []});
+}
+
 function listLibrariesReport( reportParametersStr, userSelectedColumnsStr ){
     var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
     var enabledUserSelectedColumns = enabledColumns(userSelectedColumns);
@@ -195,5 +280,12 @@ function columnNames( columnList ){
 
 module.exports = {
     selectedProductsReport: selectedProductsReport,
+    contactsReport: contactsReport,
+    statisticsReport: statisticsReport,
+    selectionsByVendorReport: selectionsByVendorReport,
+    totalsReport: totalsReport,
+    listProductsForVendorReport: listProductsForVendorReport,
+    contractsReport: contractsReport,
+    productNamesReport: productNamesReport,
     listLibrariesReport: listLibrariesReport
 };

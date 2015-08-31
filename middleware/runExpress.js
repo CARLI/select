@@ -350,6 +350,41 @@ function runMiddlewareServer(){
                 .then(sendJsonResult(res))
                 .catch(sendError(res));
         });
+        carliMiddleware.get('/reports/contacts/:parameters/:columns', function(req, res) {
+            reports.contactsReport(req.params.parameters, req.params.columns)
+                .then(sendJsonResult(res))
+                .catch(sendError(res));
+        });
+        carliMiddleware.get('/reports/statistics/:parameters/:columns', function(req, res) {
+            reports.statisticsReport(req.params.parameters, req.params.columns)
+                .then(sendJsonResult(res))
+                .catch(sendError(res));
+        });
+        carliMiddleware.get('/reports/selections-by-vendor/:parameters/:columns', function(req, res) {
+            reports.selectionsByVendorReport(req.params.parameters, req.params.columns)
+                .then(sendJsonResult(res))
+                .catch(sendError(res));
+        });
+        carliMiddleware.get('/reports/totals/:parameters/:columns', function(req, res) {
+            reports.totalsReport(req.params.parameters, req.params.columns)
+                .then(sendJsonResult(res))
+                .catch(sendError(res));
+        });
+        carliMiddleware.get('/reports/list-products-for-vendor/:parameters/:columns', function(req, res) {
+            reports.listProductsForVendorReport(req.params.parameters, req.params.columns)
+                .then(sendJsonResult(res))
+                .catch(sendError(res));
+        });
+        carliMiddleware.get('/reports/contracts/:parameters/:columns', function(req, res) {
+            reports.contractsReport(req.params.parameters, req.params.columns)
+                .then(sendJsonResult(res))
+                .catch(sendError(res));
+        });
+        carliMiddleware.get('/reports/product-names/:parameters/:columns', function(req, res) {
+            reports.productNamesReport(req.params.parameters, req.params.columns)
+                .then(sendJsonResult(res))
+                .catch(sendError(res));
+        });
         carliMiddleware.get('/reports/list-libraries/:parameters/:columns', function(req, res) {
             reports.listLibrariesReport(req.params.parameters, req.params.columns)
                 .then(sendJsonResult(res))
