@@ -26,8 +26,8 @@ function productsAvailableController( $q, alertService, cycleService ) {
 
     function exportForBanner() {
         return cycleService.getDataForBannerExport(vm.cycle)
-            .then(function(what) {
-                console.log('got it', what);
+            .then(function(data) {
+                console.log(data);
             })
             .catch(function (error) {
                 alertService.putAlert(error.message, { severity: 'error' });
