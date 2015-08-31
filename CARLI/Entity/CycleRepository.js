@@ -122,7 +122,7 @@ function listPastFourCyclesMatchingCycle( cycle ){
 
 function getDataForBannerExport(cycle, batchId) {
     var librariesById = {};
-    var batchId = 'USI00001';
+    var batchId = 'USI00002';
 
     return LibraryRepository.listActiveLibraries()
         .then(groupLibrariesById)
@@ -198,21 +198,22 @@ function getDataForBannerExport(cycle, batchId) {
         var lines = [];
         var bannerHeaderIndicator = '1';
         var bannerRecordIndicator = '2';
-        var carliDepartmentIdentifierForHeader = padRight('9CARLI', 8);
-        var carliDepartmentIdentifierForRecord = padRight('9CARLI', 30);
+        var carliDepartmentIdentifierForHeader = padRight('9CARLI', 8, ' ');
+        var carliDepartmentIdentifierForRecord = padRight('9CARLI', 30, ' ');
         var detailCode = 'USIJ';
+        var dollarAmountFieldWidth = 12;
 
-        var twoSpaces = padRight('', 2);
-        var sixSpaces = padRight('', 6);
-        var eightSpaces = padRight('', 8);
-        var nineSpaces = padRight('', 9);
+        var twoSpaces = padRight('', 2, ' ');
+        var sixSpaces = padRight('', 6, ' ');
+        var eightSpaces = padRight('', 8, ' ');
+        var nineSpaces = padRight('', 9, ' ');
 
         var effectiveDate = eightSpaces;
         var billDate = eightSpaces;
         var dueDate = eightSpaces;
         var tnumPaid = eightSpaces;
         var entityCode = twoSpaces;
-        var notes = padRight('', 20);
+        var notes = padRight('', 20, ' ');
         var transDate = eightSpaces;
 
         var totalDollars = 0;
@@ -235,7 +236,7 @@ function getDataForBannerExport(cycle, batchId) {
                 nineSpaces,
                 carliDepartmentIdentifierForRecord,
                 detailCode,
-                invoiceData.dollarAmount,
+                formatDollarAmountWithLeftPadding(invoiceData.dollarAmount),
                 sixSpaces,
                 twoSpaces,
                 twoSpaces,
@@ -255,15 +256,23 @@ function getDataForBannerExport(cycle, batchId) {
                 bannerHeaderIndicator,
                 batchId,
                 formatBatchCreateDate(),
-                batch.length,
-                totalDollars,
+                padLeft(batch.length, 5, '0'),
+                formatDollarAmountWithLeftPadding(totalDollars),
                 carliDepartmentIdentifierForHeader
             ].join('');
         }
 
-        function padRight(str, count) {
-            for (var i = str.length; i < count; i++) {
-                str += ' ';
+        function padRight(str, width, char) {
+            for (var i = str.length; i < width; i++) {
+                str += char;
+            }
+            return str;
+        }
+
+        function padLeft(str, width, char) {
+            str = str.toString();
+            for (var i = str.length; i < width; i++) {
+                str = char + str;
             }
             return str;
         }
@@ -281,6 +290,14 @@ function getDataForBannerExport(cycle, batchId) {
             }
 
             return '' + mm + dd + d.getFullYear();
+        }
+
+        function formatDollarAmountWithLeftPadding(amount) {
+            var formatted = '' + amount.toFixed(2);
+            while (formatted.length < dollarAmountFieldWidth) {
+                formatted = '0' + formatted;
+            }
+            return formatted;
         }
     }
 }
