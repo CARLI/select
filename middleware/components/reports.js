@@ -20,6 +20,7 @@ var columnName = {
     phoneNumber: 'Phone Number',
     price: 'Price',
     product: 'Product',
+    selected: 'Number Selected',
     selection: 'Selection',
     vendor: 'Vendor'
 };
@@ -44,14 +45,6 @@ function selectedProductsReport( reportParametersStr, userSelectedColumnsStr ){
             data: results
         });
 
-    function getSelectedProductsForEachCycle( listOfCycles ){
-        return Q.all( listOfCycles.map(getSelectedProductsForCycle) );
-
-        function getSelectedProductsForCycle( cycle ){
-            return offeringRepository.listOfferingsWithSelections(cycle);
-        }
-    }
-
     function combineCycleResultsForReport( listOfResults ){
         ensureResultListsAreInReverseChronologicalCycleOrder(listOfResults);
 
@@ -61,7 +54,7 @@ function selectedProductsReport( reportParametersStr, userSelectedColumnsStr ){
             listOfOfferings.forEach(addOfferingToResult);
 
             function addOfferingToResult( offering ){
-                results.push( transformOfferingToResultRow(offering) );
+                results.push( transformOfferingToSelectedProductsResultRow(offering) );
             }
         }
 
@@ -98,7 +91,7 @@ function selectedProductsReport( reportParametersStr, userSelectedColumnsStr ){
         }
     }
 
-    function transformOfferingToResultRow( offering ){
+    function transformOfferingToSelectedProductsResultRow( offering ){
         var row = {
             library: offering.library.name,
             cycle: offering.cycle.name,
@@ -124,7 +117,6 @@ function selectedProductsReport( reportParametersStr, userSelectedColumnsStr ){
         return row;
     }
 }
-
 
 function contactsReport( reportParametersStr, userSelectedColumnsStr ){
     var results = [];
@@ -164,10 +156,73 @@ function statisticsReport( reportParametersStr, userSelectedColumnsStr ){
     var reportParameters = JSON.parse(reportParametersStr);
     var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
 
-    var defaultReportColumns = [];
+    var defaultReportColumns = ['cycle', 'vendor', 'product', 'selected'];
     var columns = defaultReportColumns.concat(enabledColumns(userSelectedColumns));
 
-    console.log('statisticsReport', reportParameters); return Q({ columns: [], data: []});
+    var cyclesToQuery = reportParameters.cycle;
+
+    return cycleRepository.getCyclesById(cyclesToQuery)
+        .then(getSelectedProductsForEachCycle)
+        .then(combineCycleResultsForReport)
+        .then(fillInVendorNames)
+        .thenResolve({
+            columns: columnNames(columns),
+            data: results
+        });
+
+    function combineCycleResultsForReport( listOfResults ){
+        ensureResultListsAreInReverseChronologicalCycleOrder(listOfResults);
+
+        listOfResults.forEach(addOfferingsToResults);
+
+        function addOfferingsToResults( listOfOfferings ){
+            listOfOfferings.forEach(addOfferingToResult);
+
+            function addOfferingToResult( offering ){
+                results.push( transformOfferingToStatisticsReportResultRow(offering) );
+            }
+        }
+
+        return results;
+    }
+
+    function fillInVendorNames(){
+        return collectVendorIds()
+            .then(vendorRepository.getVendorsById)
+            .then(mapVendorsById)
+            .then(replaceVendorIdsWithNames)
+            .thenResolve(results);
+
+        function collectVendorIds(){
+            return Q(results.map(getVendor));
+
+            function getVendor(row){ return row.vendor; }
+        }
+
+        function mapVendorsById(listOfVendors){
+            var vendorsById = {};
+
+            listOfVendors.forEach(function(vendor){
+                vendorsById[vendor.id] = vendor;
+            });
+
+            return vendorsById;
+        }
+
+        function replaceVendorIdsWithNames(vendorsById){
+            return results.map(function(row){
+                row.vendor = vendorsById[row.vendor].name;
+            });
+        }
+    }
+
+    function transformOfferingToStatisticsReportResultRow( offering ){
+        return {
+            cycle: offering.cycle.name,
+            product: offering.product.name,
+            vendor: offering.product.vendor
+        };
+    }
 }
 
 function selectionsByVendorReport( reportParametersStr, userSelectedColumnsStr ){
@@ -301,6 +356,14 @@ function columnNames( columnList ){
     });
 
     return results;
+}
+
+function getSelectedProductsForEachCycle( listOfCycles ){
+    return Q.all( listOfCycles.map(getSelectedProductsForCycle) );
+
+    function getSelectedProductsForCycle( cycle ){
+        return offeringRepository.listOfferingsWithSelections(cycle);
+    }
 }
 
 function ensureResultListsAreInReverseChronologicalCycleOrder( listOfListsOfOfferings ){

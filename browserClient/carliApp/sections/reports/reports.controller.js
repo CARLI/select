@@ -35,6 +35,9 @@ function reportsController( csvExportService, cycleService, errorHandler, report
         },
         {
             name: 'Statistics',
+            controls: {
+                cycle: 'all'
+            },
             columns: []
         },
         {
