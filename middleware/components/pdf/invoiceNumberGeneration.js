@@ -1,11 +1,12 @@
+var config = require('../../../config');
 var fs = require('fs');
 var Q = require('q');
 
-var batchIdFileName = '/data/batchId';
+var batchIdFileName = config.invoiceDataDir + '/batchId';
 var batchIdPrefix = 'USI';
 var fallbackBatchId = 0;
 
-var invoiceNumberFileName = '/data/invoiceNumber';
+var invoiceNumberFileName = config.invoiceDataDir + '/invoiceNumber';
 var invoiceNumberPrefix = 'USIN';
 var fallBackInvoiceNumber = '00AA';
 

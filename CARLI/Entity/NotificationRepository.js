@@ -132,6 +132,10 @@ function listSentBetweenDates(startDate, endDate){
     return couchUtils.getCouchViewResultValuesWithinRange(config.getDbName(), 'listSentNotificationsByDate', startDate, endDate);
 }
 
+function listInvoiceNotificationsForCycleId(cycleId){
+    return couchUtils.getCouchViewResultValues(config.getDbName(), 'listInvoiceNotificationsByCycle', cycleId);
+}
+
 function listAllContacts(){
     return Q.all([ //TODO: use allSettled
             libraryRepository.listAllContacts(),
@@ -311,5 +315,6 @@ module.exports = {
     notificationTypeIsForReminder: notificationTypeIsForReminder,
     templateIsForAnnualAccessFeeInvoice: templateIsForAnnualAccessFeeInvoice,
     notificationTypeAllowsRecipientsToBeEdited: notificationTypeAllowsRecipientsToBeEdited,
+    listInvoiceNotificationsForCycleId: listInvoiceNotificationsForCycleId,
     getSummaryTotal: getSummaryTotal
 };

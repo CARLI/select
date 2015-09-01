@@ -1,10 +1,6 @@
 <products-available-by-vendor ng-if="vm.cycleRouter.groupBy === 'vendor'" on-offering-saved="vm.updateSelectionAndInvoiceTotals"></products-available-by-vendor>
 <products-available-by-library ng-if="vm.cycleRouter.groupBy === 'library'" on-offering-saved="vm.updateSelectionAndInvoiceTotals"></products-available-by-library>
 
-<div class="placeholder" style="width: 400px; margin-bottom: 1rem;">
-    TODO: Archive Button
-</div>
-
 <div class="invoice-summary">
     <div class="row">
         <span class="label">Vendor Invoices Received Total:</span> {{ vm.cycleTotals.invoicePrice | currency }}
@@ -17,4 +13,10 @@
     </div>
 </div>
 
+
 <button type="button" class="carli-button pull-left" busy-click="vm.undoCloseSystem()">Undo Close System</button>
+<!-- button type="button" class="carli-button" busy-click="vm.exportForBanner()">Export for Banner</button -->
+
+<div class="placeholder" style="width: 400px; margin-bottom: 1rem;">
+    TODO: Archive Button
+</div>

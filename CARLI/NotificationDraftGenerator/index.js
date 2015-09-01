@@ -27,14 +27,17 @@ function getAnnualAccessFeeDraftForOneLibrary(template, notificationData) {
     }
     function getNotificationsForAnnualAccessFeeDraftForOneLibrary( customizedTemplate, actualRecipientIds ){
         return annualAccessOneLibraryDraft.getOfferings()
-            .then(function(offerings) {
-                return offerings.filter(onlyPurchasedOfferings).filter(onlyOfferingsWithFees);
-            })
-            .then(function(offerings){
-                return Q.all(actualRecipientIds.map(function(id){
-                    return generateNotificationForLibrary(id, offerings, customizedTemplate);
-               }));
-            });
+            .then(filterOnlyPurchasedOfferingsWithFees)
+            .then(generateNotifications);
+
+        function generateNotifications(offerings){
+            return invoiceNumbers.generateNextBatchId()
+                .then(function (batchId) {
+                    return Q.all(actualRecipientIds.map(function(id){
+                        return generateNotificationForLibrary(id, offerings, customizedTemplate, batchId)
+                    }));
+                });
+        }
     }
     var annualAccessOneLibraryDraft = {
         getAudienceAndSubject: function() { return 'One Library, Annual Access Fee'; },
@@ -65,14 +68,17 @@ function getAnnualAccessFeeDraftForAllLibraries(template, notificationData) {
     }
     function getNotificationsForAnnualAccessFeeDraftForAllLibraries( customizedTemplate, actualRecipientIds ){
         return annualAccessAllLibrariesDraft.getOfferings()
-            .then(function(offerings) {
-                return offerings.filter(onlyPurchasedOfferings).filter(onlyOfferingsWithFees);
-            })
-            .then(function(offerings){
-                return Q.all(actualRecipientIds.map(function(id){
-                    return generateNotificationForLibrary(id, offerings, customizedTemplate);
-                }));
-            });
+            .then(filterOnlyPurchasedOfferingsWithFees)
+            .then(generateNotifications);
+
+        function generateNotifications(offerings){
+            return invoiceNumbers.generateNextBatchId()
+                .then(function (batchId) {
+                    return Q.all(actualRecipientIds.map(function(id){
+                        return generateNotificationForLibrary(id, offerings, customizedTemplate, batchId)
+                    }));
+                });
+        }
     }
 
     var annualAccessAllLibrariesDraft = {
@@ -296,11 +302,16 @@ function getLibraryInvoicesForAll(template, notificationData) {
     }
     function getNotificationsForLibraryInvoicesForAll(customizedTemplate, actualRecipientIds){
         return allLibrariesDraft.getOfferings()
-            .then(function(offerings){
-                return Q.all(actualRecipientIds.map(function(id){
-                    return generateNotificationForLibrary(id, offerings, customizedTemplate);
-                }));
-            });
+            .then(generateNotifications);
+
+        function generateNotifications(offerings){
+            return invoiceNumbers.generateNextBatchId()
+                .then(function (batchId) {
+                    return Q.all(actualRecipientIds.map(function(id){
+                        return generateNotificationForLibrary(id, offerings, customizedTemplate, batchId)
+                    }));
+                });
+        }
     }
 
     var allLibrariesDraft = {
@@ -344,14 +355,17 @@ function getLibraryInvoicesForSome(template, notificationData) {
         var saveOfferingIdsToNotification = true;
 
         return someLibrariesDraft.getOfferings()
-            .then(function(offerings) {
-                return offerings.filter(onlyPurchasedOfferings);
-            })
-            .then(function(offerings){
-                return Q.all(actualRecipientIds.map(function(id){
-                    return generateNotificationForLibrary(id, offerings, customizedTemplate, saveOfferingIdsToNotification);
-                }));
-            });
+            .then(filterOnlyPurchasedOfferings)
+            .then(generateNotifications);
+
+        function generateNotifications(offerings){
+            return invoiceNumbers.generateNextBatchId()
+                .then(function (batchId) {
+                    return Q.all(actualRecipientIds.map(function(id){
+                        return generateNotificationForLibrary(id, offerings, customizedTemplate, batchId, saveOfferingIdsToNotification)
+                    }));
+                });
+        }
     }
 
     var someLibrariesDraft = {
@@ -363,7 +377,7 @@ function getLibraryInvoicesForSome(template, notificationData) {
     };
     return someLibrariesDraft;
 }
-function getLibraryInvoicesForOne(template, notificationData) {
+function getLibraryInvoicesForOne(template, notificationData, batchId) {
 
     function getEntitiesForLibraryInvoicesForOne() {
         return libraryRepository.load(notificationData.recipientId).then(function (library) {
@@ -385,14 +399,17 @@ function getLibraryInvoicesForOne(template, notificationData) {
     }
     function getNotificationsForLibraryInvoicesForOne(customizedTemplate, actualRecipientIds){
         return oneLibraryDraft.getOfferings()
-            .then(function(offerings) {
-                return offerings.filter(onlyPurchasedOfferings);
-            })
-            .then(function(offerings){
-                return Q.all(actualRecipientIds.map(function(id){
-                    return generateNotificationForLibrary(id, offerings, customizedTemplate)
-                }));
-            });
+            .then(filterOnlyPurchasedOfferings)
+            .then(generateNotifications);
+
+        function generateNotifications(offerings){
+            return invoiceNumbers.generateNextBatchId()
+                .then(function (batchId) {
+                    return Q.all(actualRecipientIds.map(function(id){
+                        return generateNotificationForLibrary(id, offerings, customizedTemplate, batchId)
+                    }));
+                });
+        }
     }
 
     var oneLibraryDraft = {
@@ -539,7 +556,7 @@ function discardDuplicateIds(value, index, self) {
     return self.indexOf(value) === index;
 }
 
-function generateNotificationForLibrary(libraryId, offeringsForAll, customizedTemplate, saveOfferingIdsToNotification){
+function generateNotificationForLibrary(libraryId, offeringsForAll, customizedTemplate, batchId, saveOfferingIdsToNotification){
     var notificationPromise = Q();
     var notification = generateNotificationForEntity(libraryId.toString(), customizedTemplate);
     var offeringsForLibrary = null;
@@ -590,19 +607,16 @@ function generateNotificationForLibrary(libraryId, offeringsForAll, customizedTe
     }
 
     function getInvoiceNumbers(){
-        var invoiceNumber;
-
         return invoiceNumbers.generateNextInvoiceNumber()
-            .then(function(generatedInvoiceNumber){
-                invoiceNumber = generatedInvoiceNumber;
-                return invoiceNumbers.generateNextBatchId()
-                    .then(function(batchId){
-                        notification.batchId = batchId;
-                        notification.invoiceNumber = invoiceNumber;
-                        console.log('  ** Attach invoice number '+invoiceNumber+' and batch id '+batchId+' to notification');
-                        return notification;
-                    });
-            });
+            .then(addInvoiceNumberAndBatchIdToNotification);
+
+        function addInvoiceNumberAndBatchIdToNotification(invoiceNumber){
+            notification.batchId = batchId;
+            notification.invoiceNumber = invoiceNumber;
+            console.log('  ** Attach invoice number '+invoiceNumber+' and batch id '+batchId+' to notification, '+
+                'libraryId = ' + notification.targetEntity);
+            return notification;
+        }
     }
 }
 
@@ -661,8 +675,14 @@ function idsFromOfferings(arrayOfOfferings){
     });
 }
 
+function filterOnlyPurchasedOfferings(offerings) {
+    return offerings.filter(onlyPurchasedOfferings);
+}
 function onlyPurchasedOfferings(offering) {
     return offering.selection;
+}
+function filterOnlyPurchasedOfferingsWithFees(offerings) {
+    return offerings.filter(onlyPurchasedOfferings).filter(onlyOfferingsWithFees);
 }
 function onlyOfferingsWithFees(offering) {
     return offering.product.oneTimePurchaseAnnualAccessFee;

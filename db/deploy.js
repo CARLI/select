@@ -220,12 +220,20 @@ function deployLocalCycleDesignDocsForVendorDatabases( cycle ) {
         function pushDesignDocForVendor(vendor) {
             var repoForVendor = cycleRepositoryForVendor(vendor);
             return repoForVendor.load(cycle.id)
-                .then(function(cycleForVendor){
+                .then(putDesignDocIfCycleExists);
+
+            function putDesignDocIfCycleExists(cycleForVendor){
+                return cycleForVendor.databaseExists().then(function (exists) {
+                    if (!exists) {
+                        return Q();
+                    }
+
                     return couchApp.putDesignDoc( cycleForVendor.getDatabaseName(), 'Cycle' )
                         .catch(function(err){
                             console.log('error deploying '+vendor.id+' design doc: ',err);
                         });
-                })
+                });
+            }
         }
 }
 
