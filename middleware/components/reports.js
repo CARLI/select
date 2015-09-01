@@ -5,6 +5,7 @@ var vendorRepository = require('../../CARLI/Entity/VendorRepository.js');
 var Q = require('q');
 
 var columnName = {
+    averagePrice: 'Average Price',
     contactType: 'Contact Type',
     cycle: 'Cycle',
     detailCode: 'Detail Code',
@@ -13,7 +14,9 @@ var columnName = {
     institutionType: 'Institution Type',
     institutionYears: 'Years',
     membershipLevel: 'Membership Level',
+    minPrice: 'Minimum Price',
     name: 'Name',
+    numberSelected: 'Number Selected',
     isIshareMember: 'I-Share Member',
     isActive: 'Active',
     library: 'Library',
@@ -22,6 +25,7 @@ var columnName = {
     product: 'Product',
     selected: 'Number Selected',
     selection: 'Selection',
+    totalPrice: 'Total Price',
     vendor: 'Vendor'
 };
 
@@ -203,15 +207,59 @@ function selectionsByVendorReport( reportParametersStr, userSelectedColumnsStr )
 }
 
 function totalsReport( reportParametersStr, userSelectedColumnsStr ){
-    var results = [];
-
     var reportParameters = JSON.parse(reportParametersStr);
     var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
 
-    var defaultReportColumns = [];
+    var defaultReportColumns = ['cycle', 'numberSelected', 'minPrice', 'totalPrice', 'averagePrice'];
     var columns = defaultReportColumns.concat(enabledColumns(userSelectedColumns));
 
-    console.log('totalsReport', reportParameters); return Q({ columns: [], data: []});
+    var cyclesToQuery = reportParameters.cycle;
+
+    return cycleRepository.getCyclesById(cyclesToQuery)
+        .then(getSelectedProductsForEachCycle)
+        .then(sumOfferingTotals)
+        .then(function(results) {
+            return {
+                columns: columnNames(columns),
+                data: results
+            };
+        });
+
+    function sumOfferingTotals( listOfListOfOfferingsPerCycle ){
+        ensureResultListsAreInReverseChronologicalCycleOrder(listOfListOfOfferingsPerCycle);
+
+        return listOfListOfOfferingsPerCycle.map(sumCycleTotals);
+
+        function sumCycleTotals(listOfOfferingsForCycle) {
+            var cycle = listOfOfferingsForCycle[0].cycle;
+
+            var result = {
+                cycle: cycle.name,
+                numberSelected: listOfOfferingsForCycle.length,
+                minPrice: Infinity,
+                totalPrice: 0,
+                averagePrice: 0
+            };
+
+            listOfOfferingsForCycle.forEach(sumPricesAndFindMinimumPrice);
+
+            result.minPrice = result.minPrice.toFixed(2);
+            result.totalPrice = result.totalPrice.toFixed(2);
+            result.averagePrice = (result.totalPrice / result.numberSelected).toFixed(2);
+
+            return result;
+
+            function sumPricesAndFindMinimumPrice(offering) {
+                var price = offering.selection.price;
+
+                result.totalPrice += price;
+
+                if ( price < result.minPrice ){
+                    result.minPrice = price;
+                }
+            }
+        }
+    }
 }
 
 function listProductsForVendorReport( reportParametersStr, userSelectedColumnsStr ){
@@ -333,12 +381,12 @@ function getSelectedProductsForEachCycle( listOfCycles ){
 
 function combineCycleResultsForReport( transformFunction ){
 
-    return function( listOfOfferings ) {
+    return function( listOfListOfOfferingsPerCycle ) {
         var results = [];
 
-        ensureResultListsAreInReverseChronologicalCycleOrder(listOfOfferings);
+        ensureResultListsAreInReverseChronologicalCycleOrder(listOfListOfOfferingsPerCycle);
 
-        listOfOfferings.forEach(addOfferingsToResults);
+        listOfListOfOfferingsPerCycle.forEach(addOfferingsToResults);
 
         function addOfferingsToResults(listOfOfferings) {
             listOfOfferings.forEach(addOfferingToResult);
