@@ -117,6 +117,7 @@ function statisticsReport( reportParametersStr, userSelectedColumnsStr ){
         .then(getSelectedProductsForEachCycle)
         .then(combineCycleResultsForReport(transformOfferingToStatisticsReportResultRow))
         .then(fillInVendorNames)
+        .then(groupRowsByVendor)
         .then(function(results) {
             return {
                 columns: columnNames(columns),
@@ -127,9 +128,45 @@ function statisticsReport( reportParametersStr, userSelectedColumnsStr ){
     function transformOfferingToStatisticsReportResultRow( offering ){
         return {
             cycle: offering.cycle.name,
-            product: offering.product.name,
-            vendor: offering.product.vendor
+            vendor: offering.product.vendor,
+            product: offering.product.name
         };
+    }
+
+    function groupRowsByVendor( results ){
+        var groupedResults = [];
+        var vendorProductCounts = {};
+
+        results.forEach(recordProductCounts);
+        Object.keys(vendorProductCounts).forEach(function(cycle){
+            var vendors = vendorProductCounts[cycle];
+
+            Object.keys(vendors).forEach(function(vendor){
+                var products = vendors[vendor];
+
+                Object.keys(products).forEach(function(product){
+                    var count = products[product];
+                    groupedResults.push({
+                        cycle: cycle,
+                        vendor: vendor,
+                        product: product,
+                        selected: count
+                    });
+                });
+            });
+        });
+        return groupedResults;
+
+        function recordProductCounts( row ){
+            var cycle = row.cycle;
+            var vendor = row.vendor;
+            var product = row.product;
+
+            vendorProductCounts[cycle] = vendorProductCounts[cycle] || {};
+            vendorProductCounts[cycle][vendor] = vendorProductCounts[cycle][vendor] || {};
+            vendorProductCounts[cycle][vendor][product] = vendorProductCounts[cycle][vendor][product] || 0;
+            vendorProductCounts[cycle][vendor][product]++;
+        }
     }
 }
 
