@@ -1,1 +1,3 @@
-angular.module('common.csvExport', []);
+angular.module('common.csvExport', [
+    'common.browserDownload'
+]);
