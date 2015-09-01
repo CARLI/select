@@ -1,7 +1,7 @@
 angular.module('carli.notificationModal')
 .controller('notificationModalController', notificationModalController);
 
-function notificationModalController($q, $filter, $rootScope, $scope, alertService, authService, browserDownloadService, cycleService, errorHandler, notificationService, notificationModalService, notificationTemplateService) {
+function notificationModalController($q, $filter, $rootScope, $scope, alertService, authService, bannerService, browserDownloadService, errorHandler, notificationService, notificationModalService, notificationTemplateService) {
     var vm = this;
     var generator = null;
 
@@ -279,31 +279,12 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
 
             function downloadBannerExportForInvoices(passthrough) {
                 if (vm.draft.notificationType === 'invoice') {
-                    return cycleService.getDataForBannerExport(cycle, batchId)
-                        .then(function(exportData) {
-                            browserDownloadService.browserDownload(getBannerExportFilename(), 'text/plain;charset=utf-8', exportData);
-                        })
+                    return bannerService.downloadBannerExportForInvoices(cycle, batchId)
                         .then(function () {
                             return passthrough;
                         });
-                }
-                return passthrough;
-
-                function getBannerExportFilename() {
-                    var d = new Date();
-                    var month = pad(d.getMonth());
-                    var day = pad(d.getDate());
-                    var hour = pad(d.getHours());
-                    var minute = pad(d.getMinutes());
-                    var second = pad(d.getSeconds());
-
-                    var timestamp = '' + d.getFullYear() + month + day + hour + minute + second;
-
-                    return 'fi_ar_general_feeder.9carli.' + timestamp + '.txt';
-
-                    function pad(n) {
-                        return (n < 10) ? '0' + n : '' + n;
-                    }
+                } else {
+                    return passthrough;
                 }
             }
         }
