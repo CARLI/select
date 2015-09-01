@@ -32,14 +32,10 @@ var columnName = {
     vendor: 'Vendor'
 };
 
-function selectedProductsReport( reportParametersStr, userSelectedColumnsStr ){
-    var reportParameters = JSON.parse(reportParametersStr);
-    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
-
-    var defaultReportColumns = ['library', 'cycle', 'product'];
-    var columns = defaultReportColumns.concat(enabledColumns(userSelectedColumns));
-
-    var cyclesToQuery = reportParameters.cycle;
+function selectedProductsReport( reportParameters, userSelectedColumns ){
+    var defaultReportColumns = ['library', 'cycle', 'product', 'selection', 'price'];
+    var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
+    var cyclesToQuery = getCycleParameter(reportParameters);
 
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getSelectedProductsForEachCycle)
@@ -56,22 +52,13 @@ function selectedProductsReport( reportParametersStr, userSelectedColumnsStr ){
         var row = {
             library: offering.library.name,
             cycle: offering.cycle.name,
-            product: offering.product.name
+            vendor: offering.product.vendor,
+            product: offering.product.name,
+            selection: offering.selection.users,
+            price: offering.selection.price
         };
-
-        if ( userSelectedColumns.vendor ){
-            row.vendor = offering.product.vendor;
-        }
-
-        if ( userSelectedColumns.selection ){
-            row.selection = offering.selection.users;
-        }
-
-        if ( userSelectedColumns.price ){
-            row.price = offering.selection.price;
-        }
-
-        if ( userSelectedColumns.detailCode ){
+        
+        if ( columns.detailCode ){
             row.detailCode = offering.product.detailCode || '';
         }
 
@@ -79,22 +66,15 @@ function selectedProductsReport( reportParametersStr, userSelectedColumnsStr ){
     }
 }
 
-function contactsReport( reportParametersStr, userSelectedColumnsStr ){
-    var results = [];
-
-    var reportParameters = JSON.parse(reportParametersStr);
-    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
-
-    var defaultReportColumns = [];
-    var columns = defaultReportColumns.concat(enabledColumns(userSelectedColumns));
+function contactsReport( reportParameters, userSelectedColumns ){
+    var defaultReportColumns = ['name', 'email'];
+    var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
 
     return libraryRepository.listAllContacts()
         .then(function(listOfContacts){
-            console.log('got library contacts ', listOfContacts);
             return listOfContacts.map(transformContactToResultRow);
         })
         .then(function(results){
-            console.log('contact report results',results);
             return {
                 columns: columns,
                 data: results
@@ -111,14 +91,10 @@ function contactsReport( reportParametersStr, userSelectedColumnsStr ){
     }
 }
 
-function statisticsReport( reportParametersStr, userSelectedColumnsStr ){
-    var reportParameters = JSON.parse(reportParametersStr);
-    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
-
+function statisticsReport( reportParameters, userSelectedColumns ){
     var defaultReportColumns = ['cycle', 'vendor', 'product', 'selected'];
-    var columns = defaultReportColumns.concat(enabledColumns(userSelectedColumns));
-
-    var cyclesToQuery = reportParameters.cycle;
+    var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
+    var cyclesToQuery = getCycleParameter(reportParameters);
 
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getSelectedProductsForEachCycle)
@@ -177,14 +153,10 @@ function statisticsReport( reportParametersStr, userSelectedColumnsStr ){
     }
 }
 
-function selectionsByVendorReport( reportParametersStr, userSelectedColumnsStr ){
-    var reportParameters = JSON.parse(reportParametersStr);
-    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
-
+function selectionsByVendorReport( reportParameters, userSelectedColumns ){
     var defaultReportColumns = ['cycle', 'vendor', 'product', 'selection', 'price'];
-    var columns = defaultReportColumns.concat(enabledColumns(userSelectedColumns));
-
-    var cyclesToQuery = reportParameters.cycle;
+    var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
+    var cyclesToQuery = getCycleParameter(reportParameters);
 
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getSelectedProductsForEachCycle)
@@ -209,14 +181,10 @@ function selectionsByVendorReport( reportParametersStr, userSelectedColumnsStr )
     }
 }
 
-function totalsReport( reportParametersStr, userSelectedColumnsStr ){
-    var reportParameters = JSON.parse(reportParametersStr);
-    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
-
+function totalsReport( reportParameters, userSelectedColumns ){
     var defaultReportColumns = ['cycle', 'numberSelected', 'minPrice', 'totalPrice', 'averagePrice'];
-    var columns = defaultReportColumns.concat(enabledColumns(userSelectedColumns));
-
-    var cyclesToQuery = reportParameters.cycle;
+    var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
+    var cyclesToQuery = getCycleParameter(reportParameters);
 
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getSelectedProductsForEachCycle)
@@ -265,14 +233,10 @@ function totalsReport( reportParametersStr, userSelectedColumnsStr ){
     }
 }
 
-function listProductsForVendorReport( reportParametersStr, userSelectedColumnsStr ){
-    var reportParameters = JSON.parse(reportParametersStr);
-    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
-
+function listProductsForVendorReport( reportParameters, userSelectedColumns ){
     var defaultReportColumns = ['cycle', 'vendor', 'product'];
-    var columns = defaultReportColumns.concat(enabledColumns(userSelectedColumns));
-
-    var cyclesToQuery = reportParameters.cycle;
+    var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
+    var cyclesToQuery = getCycleParameter(reportParameters);
 
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getOfferedProductsForEachCycle)
@@ -293,14 +257,10 @@ function listProductsForVendorReport( reportParametersStr, userSelectedColumnsSt
     }
 }
 
-function contractsReport( reportParametersStr, userSelectedColumnsStr ){
-    var reportParameters = JSON.parse(reportParametersStr);
-    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
-
+function contractsReport( reportParameters, userSelectedColumns ){
     var defaultReportColumns = ['cycle', 'vendor', 'product', 'license'];
-    var columns = defaultReportColumns.concat(enabledColumns(userSelectedColumns));
-
-    var cyclesToQuery = reportParameters.cycle;
+    var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
+    var cyclesToQuery = getCycleParameter(reportParameters);
 
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getOfferedProductsForEachCycle)
@@ -322,24 +282,16 @@ function contractsReport( reportParametersStr, userSelectedColumnsStr ){
     }
 }
 
-function productNamesReport( reportParametersStr, userSelectedColumnsStr ){
-    var results = [];
-
-    var reportParameters = JSON.parse(reportParametersStr);
-    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
-
+function productNamesReport( reportParameters, userSelectedColumns ){
     var defaultReportColumns = [];
-    var columns = defaultReportColumns.concat(enabledColumns(userSelectedColumns));
+    var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
 
     console.log('productNamesReport', reportParameters); return Q({ columns: [], data: []});
 }
 
-function listLibrariesReport( reportParametersStr, userSelectedColumnsStr ){
-    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
-    var enabledUserSelectedColumns = enabledColumns(userSelectedColumns);
-
+function listLibrariesReport( reportParameters, userSelectedColumns ){
     var defaultReportColumns = ['name'];
-    var columns = defaultReportColumns.concat(userSelectedColumns);
+    var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
 
     return libraryRepository.list()
         .then(function(allLibraries){
@@ -357,11 +309,23 @@ function listLibrariesReport( reportParametersStr, userSelectedColumnsStr ){
             name: library.name
         };
 
-        enabledUserSelectedColumns.forEach(function(column){
-            result[column] = library[column];
-        });
+        if ( columns.fte ){
+            result.fte = library.fte;
+        }
 
-        if ( userSelectedColumns.isIshareMember ) {
+        if ( columns.institutionType ){
+            result.institutionType = library.institutionType;
+        }
+
+        if ( columns.institutionYears ){
+            result.institutionYears = library.institutionYears;
+        }
+
+        if ( columns.membershipLevel ){
+            result.membershipLevel = library.membershipLevel;
+        }
+
+        if ( columns.isIshareMember ) {
             if ('isIshareMember' in library) {
                 result.isIshareMember = !!library.isIshareMember ? 'yes' : 'no';
             }
@@ -370,7 +334,7 @@ function listLibrariesReport( reportParametersStr, userSelectedColumnsStr ){
             }
         }
 
-        if ( userSelectedColumns.isActive ) {
+        if ( columns.isActive ) {
             if ('isActive' in library) {
                 result.isActive = !!library.isActive ? 'yes' : 'no';
             }
@@ -383,16 +347,23 @@ function listLibrariesReport( reportParametersStr, userSelectedColumnsStr ){
     }
 }
 
-function enabledColumns(columnDefinitions){
-    var columns = [];
+function enabledUserColumns(userSelectedColumns){
+    var columnDefinitions = JSON.parse(userSelectedColumns);
+
+    var enabledColumns = [];
 
     Object.keys(columnDefinitions).forEach(function(columnName){
         if ( columnDefinitions[columnName] ){
-            columns.push(columnName);
+            enabledColumns.push(columnName);
         }
     });
 
-    return columns;
+    return enabledColumns;
+}
+
+function getCycleParameter(userSelectedColumnsStr){
+    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
+    return userSelectedColumns.cycle;
 }
 
 function columnNames( columnList ){

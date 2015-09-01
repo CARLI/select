@@ -13,7 +13,7 @@ function reportsController( csvExportService, cycleService, errorHandler, report
      *
      * name: display name
      * controls: which parameters of the report can be adjusted.
-     * columns: columns of the report output that are optional and can be disabled by the user.
+     * optionalColumns: Columns of the report output that are optional and can be disabled by the user.
      *
      */
     vm.availableReports = [
@@ -22,59 +22,56 @@ function reportsController( csvExportService, cycleService, errorHandler, report
             controls: {
                 cycle: 'all'
             },
-            columns: [
-                'vendor',
-                'selection',
-                'price',
+            optionalColumns: [
                 'detailCode'
             ]
         },
         {
             name: 'Library Contacts',
-            columns: []
+            optionalColumns: []
         },
         {
             name: 'Statistics',
             controls: {
                 cycle: 'all'
             },
-            columns: []
+            optionalColumns: []
         },
         {
             name: 'Selections by Vendor',
             controls: {
                 cycle: 'all'
             },
-            columns: []
+            optionalColumns: []
         },
         {
             name: 'Totals',
             controls: {
                 cycle: 'all'
             },
-            columns: []
+            optionalColumns: []
         },
         {
             name: 'List all Products for Vendor',
             controls: {
                 cycle: 'all'
             },
-            columns: []
+            optionalColumns: []
         },
         {
             name: 'Contracts',
             controls: {
                 cycle: 'all'
             },
-            columns: []
+            optionalColumns: []
         },
         {
             name: 'Product Names',
-            columns: []
+            optionalColumns: []
         },
         {
             name: 'List Libraries',
-            columns: [
+            optionalColumns: [
                 'fte',
                 'institutionType',
                 'institutionYears',
@@ -103,21 +100,21 @@ function reportsController( csvExportService, cycleService, errorHandler, report
 
     function setupSelectedReport(){
         vm.reportOptions = {
-            columns: {},
+            optionalColumns: {},
             parameters: {}
         };
 
-        vm.selectedReport.columns.forEach(function(column){
-            vm.reportOptions.columns[column] = true;
+        vm.selectedReport.optionalColumns.forEach(function(column){
+            vm.reportOptions.optionalColumns[column] = true;
         });
     }
 
     function downloadReportCsv(){
         var reportName = vm.selectedReport.name;
         var parameters = vm.reportOptions.parameters;
-        var columns = vm.reportOptions.columns;
+        var optionalColumns = vm.reportOptions.optionalColumns;
 
-        return reportDataService.getDataForReport(reportName, parameters, columns)
+        return reportDataService.getDataForReport(reportName, parameters, optionalColumns)
             .then(function(reportData){
                 return csvExportService.exportToCsv(reportData.data, reportData.columns);
             })

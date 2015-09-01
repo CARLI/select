@@ -26,11 +26,11 @@
                 </div>
             </div>
 
-            <div class="report-columns" ng-if="vm.selectedReport.columns.length">
+            <div class="report-columns" ng-if="vm.selectedReport.optionalColumns.length">
                 <div class="label">Choose Optional Columns</div>
                 <ul>
-                    <li ng-repeat="column in vm.selectedReport.columns">
-                        <checkbox ng-model="vm.reportOptions.columns[column]">{{ column }}</checkbox>
+                    <li ng-repeat="column in vm.selectedReport.optionalColumns">
+                        <checkbox ng-model="vm.reportOptions.optionalColumns[column]">{{ column }}</checkbox>
                     </li>
                 </ul>
             </div>
