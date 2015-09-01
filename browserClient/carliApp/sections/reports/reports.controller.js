@@ -30,7 +30,7 @@ function reportsController( csvExportService, cycleService, errorHandler, report
             ]
         },
         {
-            name: 'Contacts',
+            name: 'Library Contacts',
             columns: []
         },
         {

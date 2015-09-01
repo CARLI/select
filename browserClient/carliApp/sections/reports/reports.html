@@ -26,7 +26,7 @@
                 </div>
             </div>
 
-            <div class="report-columns">
+            <div class="report-columns" ng-if="vm.selectedReport.columns.length">
                 <div class="label">Choose Optional Columns</div>
                 <ul>
                     <li ng-repeat="column in vm.selectedReport.columns">
