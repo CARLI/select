@@ -50,6 +50,8 @@ function selectedProductsReport( reportParametersStr, userSelectedColumnsStr ){
     }
 
     function combineCycleResultsForReport( listOfResults ){
+        ensureResultListsAreInReverseChronologicalCycleOrder(listOfResults);
+
         listOfResults.forEach(addOfferingsToResults);
 
         function addOfferingsToResults( listOfOfferings ){
@@ -276,6 +278,17 @@ function columnNames( columnList ){
     });
 
     return results;
+}
+
+function ensureResultListsAreInReverseChronologicalCycleOrder( listOfListsOfOfferings ){
+    listOfListsOfOfferings.sort(reverseChronologicalSortListOfOfferings);
+
+    function reverseChronologicalSortListOfOfferings(listA, listB){
+        var yearA = listA[0].cycle.year;
+        var yearB = listB[0].cycle.year;
+
+        return yearB - yearA;
+    }
 }
 
 module.exports = {
