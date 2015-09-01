@@ -26,8 +26,6 @@ var columnName = {
 };
 
 function selectedProductsReport( reportParametersStr, userSelectedColumnsStr ){
-    var results = [];
-
     var reportParameters = JSON.parse(reportParametersStr);
     var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
 
@@ -40,40 +38,12 @@ function selectedProductsReport( reportParametersStr, userSelectedColumnsStr ){
         .then(getSelectedProductsForEachCycle)
         .then(combineCycleResultsForReport(transformOfferingToSelectedProductsResultRow))
         .then(fillInVendorNames)
-        .thenResolve({
-            columns: columnNames(columns),
-            data: results
+        .then(function(results) {
+            return {
+                columns: columnNames(columns),
+                data: results
+            };
         });
-
-    function fillInVendorNames(){
-        return collectVendorIds()
-            .then(vendorRepository.getVendorsById)
-            .then(mapVendorsById)
-            .then(replaceVendorIdsWithNames)
-            .thenResolve(results);
-
-        function collectVendorIds(){
-            return Q(results.map(getVendor));
-
-            function getVendor(row){ return row.vendor; }
-        }
-
-        function mapVendorsById(listOfVendors){
-            var vendorsById = {};
-
-            listOfVendors.forEach(function(vendor){
-                vendorsById[vendor.id] = vendor;
-            });
-
-            return vendorsById;
-        }
-
-        function replaceVendorIdsWithNames(vendorsById){
-            return results.map(function(row){
-                row.vendor = vendorsById[row.vendor].name;
-            });
-        }
-    }
 
     function transformOfferingToSelectedProductsResultRow( offering ){
         var row = {
@@ -135,8 +105,6 @@ function contactsReport( reportParametersStr, userSelectedColumnsStr ){
 }
 
 function statisticsReport( reportParametersStr, userSelectedColumnsStr ){
-    var results = [];
-
     var reportParameters = JSON.parse(reportParametersStr);
     var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
 
@@ -149,40 +117,12 @@ function statisticsReport( reportParametersStr, userSelectedColumnsStr ){
         .then(getSelectedProductsForEachCycle)
         .then(combineCycleResultsForReport(transformOfferingToStatisticsReportResultRow))
         .then(fillInVendorNames)
-        .thenResolve({
-            columns: columnNames(columns),
-            data: results
+        .then(function(results) {
+            return {
+                columns: columnNames(columns),
+                data: results
+            };
         });
-
-    function fillInVendorNames(){
-        return collectVendorIds()
-            .then(vendorRepository.getVendorsById)
-            .then(mapVendorsById)
-            .then(replaceVendorIdsWithNames)
-            .thenResolve(results);
-
-        function collectVendorIds(){
-            return Q(results.map(getVendor));
-
-            function getVendor(row){ return row.vendor; }
-        }
-
-        function mapVendorsById(listOfVendors){
-            var vendorsById = {};
-
-            listOfVendors.forEach(function(vendor){
-                vendorsById[vendor.id] = vendor;
-            });
-
-            return vendorsById;
-        }
-
-        function replaceVendorIdsWithNames(vendorsById){
-            return results.map(function(row){
-                row.vendor = vendorsById[row.vendor].name;
-            });
-        }
-    }
 
     function transformOfferingToStatisticsReportResultRow( offering ){
         return {
@@ -363,6 +303,36 @@ function ensureResultListsAreInReverseChronologicalCycleOrder( listOfListsOfOffe
         var yearB = listB[0].cycle.year;
 
         return yearB - yearA;
+    }
+}
+
+function fillInVendorNames(results){
+    return collectVendorIds()
+        .then(vendorRepository.getVendorsById)
+        .then(mapVendorsById)
+        .then(replaceVendorIdsWithNames)
+        .thenResolve(results);
+
+    function collectVendorIds(){
+        return Q(results.map(getVendor));
+
+        function getVendor(row){ return row.vendor; }
+    }
+
+    function mapVendorsById(listOfVendors){
+        var vendorsById = {};
+
+        listOfVendors.forEach(function(vendor){
+            vendorsById[vendor.id] = vendor;
+        });
+
+        return vendorsById;
+    }
+
+    function replaceVendorIdsWithNames(vendorsById){
+        return results.map(function(row){
+            row.vendor = vendorsById[row.vendor].name;
+        });
     }
 }
 
