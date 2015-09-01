@@ -38,28 +38,12 @@ function selectedProductsReport( reportParametersStr, userSelectedColumnsStr ){
 
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getSelectedProductsForEachCycle)
-        .then(combineCycleResultsForReport)
+        .then(combineCycleResultsForReport(transformOfferingToSelectedProductsResultRow))
         .then(fillInVendorNames)
         .thenResolve({
             columns: columnNames(columns),
             data: results
         });
-
-    function combineCycleResultsForReport( listOfResults ){
-        ensureResultListsAreInReverseChronologicalCycleOrder(listOfResults);
-
-        listOfResults.forEach(addOfferingsToResults);
-
-        function addOfferingsToResults( listOfOfferings ){
-            listOfOfferings.forEach(addOfferingToResult);
-
-            function addOfferingToResult( offering ){
-                results.push( transformOfferingToSelectedProductsResultRow(offering) );
-            }
-        }
-
-        return results;
-    }
 
     function fillInVendorNames(){
         return collectVendorIds()
@@ -163,28 +147,12 @@ function statisticsReport( reportParametersStr, userSelectedColumnsStr ){
 
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getSelectedProductsForEachCycle)
-        .then(combineCycleResultsForReport)
+        .then(combineCycleResultsForReport(transformOfferingToStatisticsReportResultRow))
         .then(fillInVendorNames)
         .thenResolve({
             columns: columnNames(columns),
             data: results
         });
-
-    function combineCycleResultsForReport( listOfResults ){
-        ensureResultListsAreInReverseChronologicalCycleOrder(listOfResults);
-
-        listOfResults.forEach(addOfferingsToResults);
-
-        function addOfferingsToResults( listOfOfferings ){
-            listOfOfferings.forEach(addOfferingToResult);
-
-            function addOfferingToResult( offering ){
-                results.push( transformOfferingToStatisticsReportResultRow(offering) );
-            }
-        }
-
-        return results;
-    }
 
     function fillInVendorNames(){
         return collectVendorIds()
@@ -363,6 +331,27 @@ function getSelectedProductsForEachCycle( listOfCycles ){
 
     function getSelectedProductsForCycle( cycle ){
         return offeringRepository.listOfferingsWithSelections(cycle);
+    }
+}
+
+function combineCycleResultsForReport( transformFunction ){
+
+    return function( listOfOfferings ) {
+        var results = [];
+
+        ensureResultListsAreInReverseChronologicalCycleOrder(listOfOfferings);
+
+        listOfOfferings.forEach(addOfferingsToResults);
+
+        function addOfferingsToResults(listOfOfferings) {
+            listOfOfferings.forEach(addOfferingToResult);
+
+            function addOfferingToResult(offering) {
+                results.push(transformFunction(offering));
+            }
+        }
+
+        return results;
     }
 }
 
