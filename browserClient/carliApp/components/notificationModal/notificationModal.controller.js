@@ -1,7 +1,7 @@
 angular.module('carli.notificationModal')
 .controller('notificationModalController', notificationModalController);
 
-function notificationModalController($q, $filter, $rootScope, $scope, alertService, authService, errorHandler, notificationService, notificationModalService, notificationTemplateService) {
+function notificationModalController($q, $filter, $rootScope, $scope, alertService, authService, browserDownloadService, cycleService, errorHandler, notificationService, notificationModalService, notificationTemplateService) {
     var vm = this;
     var generator = null;
 
@@ -256,18 +256,55 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
 
         function saveNotificationFromGenerator() {
             var recipientIds = getRecipientIds(vm.recipients);
+            var batchId = null;
+            var cycle = null;
 
             return getNotifications(vm.draft, recipientIds)
                 .then(function (notifications) {
+                    if (vm.draft.notificationType === 'invoice') {
+                        batchId = notifications[0].batchId;
+                        cycle = notifications[0 ].cycle;
+                    }
                     notifications.forEach(addNotificationCreationInformation);
                     var promises = notifications.map(notificationService.create);
                     return $q.all(promises);
                 })
+                .then(downloadBannerExportForInvoices)
                 .then(alertCreateSuccess)
                 .catch(errorHandler);
 
             function getRecipientIds(recipients) {
                 return recipients.map(function (r) { return r.id.toString(); });
+            }
+
+            function downloadBannerExportForInvoices(passthrough) {
+                if (vm.draft.notificationType === 'invoice') {
+                    return cycleService.getDataForBannerExport(cycle, batchId)
+                        .then(function(exportData) {
+                            browserDownloadService.browserDownload(getBannerExportFilename(), 'text/plain;charset=utf-8', exportData);
+                        })
+                        .then(function () {
+                            return passthrough;
+                        });
+                }
+                return passthrough;
+
+                function getBannerExportFilename() {
+                    var d = new Date();
+                    var month = pad(d.getMonth());
+                    var day = pad(d.getDate());
+                    var hour = pad(d.getHours());
+                    var minute = pad(d.getMinutes());
+                    var second = pad(d.getSeconds());
+
+                    var timestamp = '' + d.getFullYear() + month + day + hour + minute + second;
+
+                    return 'fi_ar_general_feeder.9carli.' + timestamp + '.txt';
+
+                    function pad(n) {
+                        return (n < 10) ? '0' + n : '' + n;
+                    }
+                }
             }
         }
 
