@@ -53,6 +53,7 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
         vm.template = template;
 
         vm.draft = {
+            templateId: template.id,
             subject: template.subject,
             emailBody: template.emailBody,
             notificationType: template.notificationType,
