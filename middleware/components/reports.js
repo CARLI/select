@@ -1,8 +1,10 @@
 var cycleRepository = require('../../CARLI/Entity/CycleRepository.js');
 var libraryRepository = require('../../CARLI/Entity/LibraryRepository.js');
 var offeringRepository = require('../../CARLI/Entity/OfferingRepository.js');
+var productRepository = require('../../CARLI/Entity/ProductRepository.js');
 var vendorRepository = require('../../CARLI/Entity/VendorRepository.js');
 var Q = require('q');
+var _ = require('lodash');
 
 var columnName = {
     averagePrice: 'Average Price',
@@ -263,15 +265,39 @@ function totalsReport( reportParametersStr, userSelectedColumnsStr ){
 }
 
 function listProductsForVendorReport( reportParametersStr, userSelectedColumnsStr ){
-    var results = [];
-
     var reportParameters = JSON.parse(reportParametersStr);
     var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
 
-    var defaultReportColumns = [];
+    var defaultReportColumns = ['cycle', 'vendor', 'product'];
     var columns = defaultReportColumns.concat(enabledColumns(userSelectedColumns));
 
-    console.log('listProductsForVendorReport', reportParameters); return Q({ columns: [], data: []});
+    var cyclesToQuery = reportParameters.cycle;
+
+    return cycleRepository.getCyclesById(cyclesToQuery)
+        .then(getOfferedProductsForEachCycle)
+        .then(combineCycleResultsForReport(transformProductToResultRow))
+        .then(function(results) {
+            return {
+                columns: columnNames(columns),
+                data: results
+            };
+        });
+
+    function getOfferedProductsForEachCycle( listOfCycles ) {
+        return Q.all( listOfCycles.map(getProductsForCycle) );
+
+        function getProductsForCycle(cycle) {
+            return productRepository.list(cycle)
+        }
+    }
+
+    function transformProductToResultRow(product){
+        return {
+            cycle: product.cycle.name,
+            vendor: product.vendor.name,
+            product: product.name
+        };
+    }
 }
 
 function contractsReport( reportParametersStr, userSelectedColumnsStr ){
