@@ -22,6 +22,7 @@ var columnName = {
     isIshareMember: 'I-Share Member',
     isActive: 'Active',
     library: 'Library',
+    license: 'License',
     phoneNumber: 'Phone Number',
     price: 'Price',
     product: 'Product',
@@ -283,14 +284,6 @@ function listProductsForVendorReport( reportParametersStr, userSelectedColumnsSt
             };
         });
 
-    function getOfferedProductsForEachCycle( listOfCycles ) {
-        return Q.all( listOfCycles.map(getProductsForCycle) );
-
-        function getProductsForCycle(cycle) {
-            return productRepository.list(cycle)
-        }
-    }
-
     function transformProductToResultRow(product){
         return {
             cycle: product.cycle.name,
@@ -301,15 +294,32 @@ function listProductsForVendorReport( reportParametersStr, userSelectedColumnsSt
 }
 
 function contractsReport( reportParametersStr, userSelectedColumnsStr ){
-    var results = [];
-
     var reportParameters = JSON.parse(reportParametersStr);
     var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
 
-    var defaultReportColumns = [];
+    var defaultReportColumns = ['cycle', 'vendor', 'product', 'license'];
     var columns = defaultReportColumns.concat(enabledColumns(userSelectedColumns));
 
-    console.log('contractsReport', reportParameters); return Q({ columns: [], data: []});
+    var cyclesToQuery = reportParameters.cycle;
+
+    return cycleRepository.getCyclesById(cyclesToQuery)
+        .then(getOfferedProductsForEachCycle)
+        .then(combineCycleResultsForReport(transformProductToResultRow))
+        .then(function(results) {
+            return {
+                columns: columnNames(columns),
+                data: results
+            };
+        });
+
+    function transformProductToResultRow(product){
+        return {
+            cycle: product.cycle.name,
+            vendor: product.vendor.name,
+            product: product.name,
+            license: product.license ? product.license.name : ''
+        };
+    }
 }
 
 function productNamesReport( reportParametersStr, userSelectedColumnsStr ){
@@ -402,6 +412,14 @@ function getSelectedProductsForEachCycle( listOfCycles ){
 
     function getSelectedProductsForCycle( cycle ){
         return offeringRepository.listOfferingsWithSelections(cycle);
+    }
+}
+
+function getOfferedProductsForEachCycle( listOfCycles ) {
+    return Q.all( listOfCycles.map(getProductsForCycle) );
+
+    function getProductsForCycle(cycle) {
+        return productRepository.list(cycle)
     }
 }
 

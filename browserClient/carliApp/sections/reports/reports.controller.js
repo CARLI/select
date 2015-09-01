@@ -63,6 +63,9 @@ function reportsController( csvExportService, cycleService, errorHandler, report
         },
         {
             name: 'Contracts',
+            controls: {
+                cycle: 'all'
+            },
             columns: []
         },
         {
