@@ -661,7 +661,7 @@ function generateNotificationForEntity(entityId, customizedTemplate){
         emailBody: customizedTemplate.emailBody,
         draftStatus: 'draft',
         notificationType: customizedTemplate.notificationType,
-        isFeeInvoice: isAnnualAccessFeeInvoice(customizedTemplate.id)
+        isFeeInvoice: isAnnualAccessFeeInvoice(customizedTemplate.templateId)
     };
 }
 
