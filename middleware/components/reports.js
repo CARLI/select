@@ -5,8 +5,10 @@ var vendorRepository = require('../../CARLI/Entity/VendorRepository.js');
 var Q = require('q');
 
 var columnName = {
+    contactType: 'Contact Type',
     cycle: 'Cycle',
     detailCode: 'Detail Code',
+    email: 'Email',
     fte: 'FTE',
     institutionType: 'Institution Type',
     institutionYears: 'Years',
@@ -15,6 +17,7 @@ var columnName = {
     isIshareMember: 'I-Share Member',
     isActive: 'Active',
     library: 'Library',
+    phoneNumber: 'Phone Number',
     price: 'Price',
     product: 'Product',
     selection: 'Selection',
@@ -132,7 +135,27 @@ function contactsReport( reportParametersStr, userSelectedColumnsStr ){
     var defaultReportColumns = [];
     var columns = defaultReportColumns.concat(enabledColumns(userSelectedColumns));
 
-    console.log('contactsReport', reportParameters); return Q({ columns: [], data: []});
+    return libraryRepository.listAllContacts()
+        .then(function(listOfContacts){
+            console.log('got library contacts ', listOfContacts);
+            return listOfContacts.map(transformContactToResultRow);
+        })
+        .then(function(results){
+            console.log('contact report results',results);
+            return {
+                columns: columns,
+                data: results
+            }
+        });
+
+    function transformContactToResultRow( contact ){
+        return {
+            name: contact.name,
+            email: contact.email,
+            phoneNumber: contact.phoneNumber,
+            contactType: contact.contactType
+        };
+    }
 }
 
 function statisticsReport( reportParametersStr, userSelectedColumnsStr ){
