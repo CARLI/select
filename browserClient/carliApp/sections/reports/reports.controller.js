@@ -42,6 +42,9 @@ function reportsController( csvExportService, cycleService, errorHandler, report
         },
         {
             name: 'Selections by Vendor',
+            controls: {
+                cycle: 'all'
+            },
             columns: []
         },
         {
