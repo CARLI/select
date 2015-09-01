@@ -171,15 +171,35 @@ function statisticsReport( reportParametersStr, userSelectedColumnsStr ){
 }
 
 function selectionsByVendorReport( reportParametersStr, userSelectedColumnsStr ){
-    var results = [];
-
     var reportParameters = JSON.parse(reportParametersStr);
     var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
 
-    var defaultReportColumns = [];
+    var defaultReportColumns = ['cycle', 'vendor', 'product', 'selection', 'price'];
     var columns = defaultReportColumns.concat(enabledColumns(userSelectedColumns));
 
-    console.log('selectionsByVendorReport', reportParameters); return Q({ columns: [], data: []});
+    var cyclesToQuery = reportParameters.cycle;
+
+    return cycleRepository.getCyclesById(cyclesToQuery)
+        .then(getSelectedProductsForEachCycle)
+        .then(combineCycleResultsForReport(transformOfferingToSelectionsByVendorResultRow))
+        .then(fillInVendorNames)
+        .then(function(results) {
+            return {
+                columns: columnNames(columns),
+                data: results
+            };
+        });
+
+    function transformOfferingToSelectionsByVendorResultRow( offering ){
+        return {
+            cycle: offering.cycle.name,
+            vendor: offering.product.vendor,
+            product: offering.product.name,
+            library: offering.library.name,
+            selection: offering.selection.users,
+            price: offering.selection.price
+        };
+    }
 }
 
 function totalsReport( reportParametersStr, userSelectedColumnsStr ){
