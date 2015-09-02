@@ -6,6 +6,7 @@ function reportsController( csvExportService, cycleService, errorHandler, report
 
     vm.reportOptions = {};
     vm.reportRunningPromise = null;
+    vm.cycleControlIsMissingValue = cycleControlIsMissingValue;
     vm.selectedReport = null;
 
     /**
@@ -112,12 +113,20 @@ function reportsController( csvExportService, cycleService, errorHandler, report
         });
     }
 
+    function cycleControlIsMissingValue(){
+        var value = false;
+        if ( vm.selectedReport.controls ){
+            value = vm.selectedReport.controls.cycle && !vm.reportOptions.parameters.cycle;
+        }
+        return value;
+    }
+
     function downloadReportCsv(){
         var reportName = vm.selectedReport.name;
         var parameters = vm.reportOptions.parameters;
         var optionalColumns = vm.reportOptions.optionalColumns;
 
-        return reportDataService.getDataForReport(reportName, parameters, optionalColumns)
+        vm.reportRunningPromise = reportDataService.getDataForReport(reportName, parameters, optionalColumns)
             .then(function(reportData){
                 return csvExportService.exportToCsv(reportData.data, reportData.columns);
             })
@@ -127,6 +136,8 @@ function reportsController( csvExportService, cycleService, errorHandler, report
             .catch(function (err) {
                 console.log('CSV generation failed', err);
             });
+
+        return vm.reportRunningPromise;
 
         function makeFilename(){
             return 'CARLI-'+ reportName +'-report-' + new Date().toISOString().substr(0,16).replace('T','-');
