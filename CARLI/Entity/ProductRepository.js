@@ -220,7 +220,7 @@ function getProductSelectionStatisticsForCycle( productId, cycle ){
 
 function copyPriceCapsForNewCycle(cycle) {
     setCycle(cycle);
-    listProducts(cycle)
+    return listProducts(cycle)
         .then(copyPriceCaps)
         .then(saveProducts)
         .then(function() {
@@ -231,7 +231,7 @@ function copyPriceCapsForNewCycle(cycle) {
         return products.map(copyPriceCapForProduct);
 
         function copyPriceCapForProduct(product) {
-            if (product.futurePriceCaps[cycle.year]) {
+            if (product.futurePriceCaps && product.futurePriceCaps[cycle.year]) {
                 product.priceCap = product.futurePriceCaps[cycle.year];
                 delete product.futurePriceCaps[cycle.year];
             }
@@ -276,6 +276,7 @@ function setStore(store) {
     storeOptions = store.getOptions();
     ProductRepository.setStore(store);
     couchUtils = require('../Store/CouchDb/Utils')(storeOptions);
+    // EntityTransform.setEntityLookupStores(store);
 }
 
 module.exports = {
