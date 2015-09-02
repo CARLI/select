@@ -379,6 +379,16 @@ function combineCycleResultsForReport( transformFunction ){
             listOfOfferings.forEach(addOfferingToResult);
 
             function addOfferingToResult(offering) {
+                if ( !offering ){ console.log('  * bad offering object: undefined', offering); return; }
+                if ( !offering.cycle ){ console.log('  ** bad offering cycle', offering.id); return; }
+                if ( !offering.library ){ console.log('  ** bad offering library from '+offering.cycle.name, offering.id); return; }
+                if ( !offering.product ){ console.log('  ** bad offering product from '+offering.cycle.name, offering.id); return; }
+
+                if ( !offering.cycle.name || !offering.library.name || !offering.product.name ){
+                    console.log('  *** bad offering property names', offering);
+                    return;
+                }
+
                 results.push(transformFunction(offering));
             }
         }
