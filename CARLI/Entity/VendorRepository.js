@@ -32,6 +32,17 @@ function listVendors(){
     return EntityTransform.expandListOfObjectsFromPersistence( VendorRepository.list(), propertiesToTransform, functionsToAdd);
 }
 
+function listActive(){
+    return VendorRepository.list()
+        .then(function(vendorList){
+            return vendorList.filter(activeVendor);
+        });
+
+    function activeVendor(vendor){
+        return vendor.isActive;
+    }
+}
+
 function loadVendor( vendorId ){
     var deferred = Q.defer();
 
@@ -127,6 +138,7 @@ module.exports = {
     create: createVendor,
     update: updateVendor,
     list: listVendors,
+    listActive: listActive,
     load: loadVendor,
     getVendorsById: getVendorsById,
     getContactTypesForNotificationCategory: getContactTypesForNotificationCategory,
