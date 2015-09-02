@@ -68,6 +68,30 @@ function requireStaff() {
         throw new Error('Unauthorized');
     });
 }
+function requireStaffOrLibrary() {
+    return getSession().then(function (userContext) {
+        if (userContext.roles.indexOf('staff') >= 0 || userContext.roles.indexOf('library') >= 0) {
+            return true;
+        }
+        throw new Error('Unauthorized');
+    });
+}
+function requireStaffOrSpecificVendor(vendorId) {
+    return getSession().then(function (userContext) {
+        if (userContext.roles.indexOf('staff') >= 0 || userContext.roles.indexOf('vendor-' + vendorId) >=0) {
+            return true;
+        }
+        throw new Error('Unauthorized');
+    });
+}
+function requireStaffOrLibraryOrSpecificVendor(vendorId) {
+    return getSession().then(function (userContext) {
+        if (userContext.roles.indexOf('staff') >= 0 || userContext.roles.indexOf('library') >= 0 || userContext.roles.indexOf('vendor-' + vendorId) >=0) {
+            return true;
+        }
+        throw new Error('Unauthorized');
+    });
+}
 
 module.exports = {
     createSession: createSession,
@@ -75,5 +99,8 @@ module.exports = {
     getSession: getSession,
     getUser: getUser,
     requireSession: requireSession,
-    requireStaff: requireStaff
+    requireStaff: requireStaff,
+    requireStaffOrLibrary: requireStaffOrLibrary,
+    requireStaffOrSpecificVendor: requireStaffOrSpecificVendor,
+    requireStaffOrLibraryOrSpecificVendor: requireStaffOrLibraryOrSpecificVendor
 };
