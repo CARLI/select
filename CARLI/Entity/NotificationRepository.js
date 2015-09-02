@@ -292,6 +292,7 @@ function notificationTypeAllowsRecipientsToBeEdited(notificationType){
 function setStore(store) {
     NotificationRepository.setStore(store);
     couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+    EntityTransform.setEntityLookupStores(store);
 }
 
 module.exports = {
