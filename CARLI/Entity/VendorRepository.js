@@ -118,7 +118,6 @@ var functionsToAdd = {
 function setStore(store) {
     VendorRepository.setStore(store);
     couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
-    EntityTransform.setEntityLookupStores(store);
 }
 
 module.exports = {

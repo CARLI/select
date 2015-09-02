@@ -28,7 +28,6 @@ function listActivitySince(startDate){
 function setStore(store) {
     ActivityLog.setStore(store);
     couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
-    EntityTransform.setEntityLookupStores(store);
 }
 
 module.exports = {

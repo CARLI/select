@@ -1,8 +1,15 @@
 
 var auth = require('../../CARLI/Auth');
 
+function createSession(userLogin) {
+    return auth.createSession(userLogin);
+}
+
+function deleteSession() {
+    return auth.deleteSession();
+}
+
 module.exports = {
-    createSession: auth.createSession,
-    deleteSession: auth.deleteSession,
-    getSession: auth.getSession
+    createSession: createSession,
+    deleteSession: deleteSession
 };

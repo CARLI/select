@@ -162,7 +162,6 @@ var functionsToAdd = {
 function setStore(store) {
     CycleRepository.setStore(store);
     couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
-    EntityTransform.setEntityLookupStores(store);
 }
 
 function isOpenToLibraries( cycle ){
