@@ -1,5 +1,6 @@
 var cycleRepository = require('../../CARLI/Entity/CycleRepository.js');
 var libraryRepository = require('../../CARLI/Entity/LibraryRepository.js');
+var licenseRepository = require('../../CARLI/Entity/LicenseRepository.js');
 var offeringRepository = require('../../CARLI/Entity/OfferingRepository.js');
 var productRepository = require('../../CARLI/Entity/ProductRepository.js');
 var vendorRepository = require('../../CARLI/Entity/VendorRepository.js');
@@ -374,7 +375,8 @@ function getOfferedProductsForEachCycle( listOfCycles ) {
     function getProductsForCycle(cycle) {
         return productRepository.listActiveProductsUnexpanded(cycle)
                 .then(fillInCycle(cycle))
-                .then(fillInVendors);
+                .then(fillInVendors)
+                .then(fillInLicenses);
     }
 }
 
@@ -478,6 +480,18 @@ function fillInVendors(products){
     }
 }
 
+function fillInLicenses(products){
+    return initLicenseMap()
+        .then(replaceLicenseIdsWithLicenseObjects)
+        .thenResolve(products);
+
+    function replaceLicenseIdsWithLicenseObjects(licensesById){
+        products.forEach(function(product){
+            product.license = licensesById[product.license] || {};
+        });
+    }
+}
+
 function attachVendorToOfferings(offerings){
     return initVendorMap()
         .then(attachVendorObjects)
@@ -534,6 +548,18 @@ function initVendorMap(){
                 vendorMap[vendor.id] = vendor;
             });
             return vendorMap;
+        });
+}
+
+function initLicenseMap(){
+    var licenseMap = {};
+
+    return licenseRepository.listLicensesUnexpanded()
+        .then(function(licenseList){
+            licenseList.forEach(function(license){
+                licenseMap[license.id] = license;
+            });
+            return licenseMap;
         });
 }
 
