@@ -83,6 +83,7 @@ var functionsToAdd = {
 function setStore(store) {
     UserRepository.setStore(store);
     couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+    EntityTransform.setEntityLookupStores(store);
 }
 
 module.exports = {
