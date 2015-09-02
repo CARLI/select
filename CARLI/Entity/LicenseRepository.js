@@ -76,6 +76,7 @@ function getOfferingTypeOptions(){
 function setStore(store) {
     LicenseRepository.setStore(store);
     CouchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
+    EntityTransform.setEntityLookupStores(store);
 }
 
 module.exports = {
