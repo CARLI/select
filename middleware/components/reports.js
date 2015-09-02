@@ -248,10 +248,22 @@ function contractsReport( reportParameters, userSelectedColumns ){
 }
 
 function productNamesReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = [];
+    var defaultReportColumns = ['cycle', 'product'];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
 
-    console.log('productNamesReport', reportParameters); return Q({ columns: [], data: []});
+    var cyclesToQuery = getCycleParameter(reportParameters);
+
+    return cycleRepository.getCyclesById(cyclesToQuery)
+        .then(getOfferedProductsForEachCycle)
+        .then(combineCycleResultsForReport(transformProductToResultRow))
+        .then(returnReportResults(columns));
+
+    function transformProductToResultRow(product){
+        return {
+            cycle: product.cycle.name,
+            product: product.name
+        };
+    }
 }
 
 function listLibrariesReport( reportParameters, userSelectedColumns ){
