@@ -33,7 +33,7 @@ var columnName = {
 };
 
 function selectedProductsReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['library', 'cycle', 'product', 'selection', 'price'];
+    var defaultReportColumns = ['cycle', 'library', 'product', 'selection', 'price'];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
     var cyclesToQuery = getCycleParameter(reportParameters);
 
@@ -41,12 +41,7 @@ function selectedProductsReport( reportParameters, userSelectedColumns ){
         .then(getSelectedProductsForEachCycle)
         .then(combineCycleResultsForReport(transformOfferingToSelectedProductsResultRow))
         .then(fillInVendorNames)
-        .then(function(results) {
-            return {
-                columns: columnNames(columns),
-                data: results
-            };
-        });
+        .then(returnReportResults(columns));
 
     function transformOfferingToSelectedProductsResultRow( offering ){
         var row = {
@@ -74,12 +69,7 @@ function contactsReport( reportParameters, userSelectedColumns ){
         .then(function(listOfContacts){
             return listOfContacts.map(transformContactToResultRow);
         })
-        .then(function(results){
-            return {
-                columns: columns,
-                data: results
-            }
-        });
+        .then(returnReportResults(columns, ['asc']));
 
     function transformContactToResultRow( contact ){
         return {
@@ -101,12 +91,7 @@ function statisticsReport( reportParameters, userSelectedColumns ){
         .then(combineCycleResultsForReport(transformOfferingToStatisticsReportResultRow))
         .then(fillInVendorNames)
         .then(groupRowsByVendor)
-        .then(function(results) {
-            return {
-                columns: columnNames(columns),
-                data: results
-            };
-        });
+        .then(returnReportResults(columns));
 
     function transformOfferingToStatisticsReportResultRow( offering ){
         return {
@@ -162,12 +147,7 @@ function selectionsByVendorReport( reportParameters, userSelectedColumns ){
         .then(getSelectedProductsForEachCycle)
         .then(combineCycleResultsForReport(transformOfferingToSelectionsByVendorResultRow))
         .then(fillInVendorNames)
-        .then(function(results) {
-            return {
-                columns: columnNames(columns),
-                data: results
-            };
-        });
+        .then(returnReportResults(columns));
 
     function transformOfferingToSelectionsByVendorResultRow( offering ){
         return {
@@ -189,12 +169,7 @@ function totalsReport( reportParameters, userSelectedColumns ){
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getSelectedProductsForEachCycle)
         .then(sumOfferingTotals)
-        .then(function(results) {
-            return {
-                columns: columnNames(columns),
-                data: results
-            };
-        });
+        .then(returnReportResults(columns));
 
     function sumOfferingTotals( listOfListOfOfferingsPerCycle ){
         ensureResultListsAreInReverseChronologicalCycleOrder(listOfListOfOfferingsPerCycle);
@@ -241,12 +216,7 @@ function listProductsForVendorReport( reportParameters, userSelectedColumns ){
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getOfferedProductsForEachCycle)
         .then(combineCycleResultsForReport(transformProductToResultRow))
-        .then(function(results) {
-            return {
-                columns: columnNames(columns),
-                data: results
-            };
-        });
+        .then(returnReportResults(columns));
 
     function transformProductToResultRow(product){
         return {
@@ -265,12 +235,7 @@ function contractsReport( reportParameters, userSelectedColumns ){
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getOfferedProductsForEachCycle)
         .then(combineCycleResultsForReport(transformProductToResultRow))
-        .then(function(results) {
-            return {
-                columns: columnNames(columns),
-                data: results
-            };
-        });
+        .then(returnReportResults(columns));
 
     function transformProductToResultRow(product){
         return {
@@ -297,12 +262,7 @@ function listLibrariesReport( reportParameters, userSelectedColumns ){
         .then(function(allLibraries){
             return allLibraries.map(transformLibraryToResultRow)
         })
-        .then(function(results) {
-            return {
-                columns: columnNames(columns),
-                data: results
-            };
-        });
+        .then(returnReportResults(columns));
 
     function transformLibraryToResultRow( library ){
         var result = {
@@ -453,6 +413,17 @@ function fillInVendorNames(results){
         return results.map(function(row){
             row.vendor = vendorsById[row.vendor].name;
         });
+    }
+}
+
+function returnReportResults(resultColumns, columnSortOrderOverride){
+    // cycle is first in most reports, which should be descending and the rest default to ascending
+    var columnSortOrder =  columnSortOrderOverride || ['desc', 'asc', 'asc'];
+    return function( reportResults ){
+        return {
+            columns: columnNames(resultColumns),
+            data: _.sortByOrder(reportResults, resultColumns, columnSortOrder)
+        };
     }
 }
 
