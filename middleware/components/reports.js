@@ -90,7 +90,6 @@ function statisticsReport( reportParameters, userSelectedColumns ){
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getSelectedProductsForEachCycle)
         .then(combineCycleResultsForReport(transformOfferingToStatisticsReportResultRow))
-        .then(attachVendorToOfferings)
         .then(groupRowsByVendor)
         .then(returnReportResults(columns))
         .catch(stackTraceError);
@@ -98,7 +97,7 @@ function statisticsReport( reportParameters, userSelectedColumns ){
     function transformOfferingToStatisticsReportResultRow( offering ){
         return {
             cycle: offering.cycle.name,
-            vendor: offering.product.vendor,
+            vendor: offering.vendor.name,
             product: offering.product.name
         };
     }
@@ -148,14 +147,13 @@ function selectionsByVendorReport( reportParameters, userSelectedColumns ){
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getSelectedProductsForEachCycle)
         .then(combineCycleResultsForReport(transformOfferingToSelectionsByVendorResultRow))
-        .then(attachVendorToOfferings)
         .then(returnReportResults(columns))
         .catch(stackTraceError);
 
     function transformOfferingToSelectionsByVendorResultRow( offering ){
         return {
             cycle: offering.cycle.name,
-            vendor: offering.product.vendor,
+            vendor: offering.vendor.name,
             product: offering.product.name,
             library: offering.library.name,
             selection: offering.selection.users,
@@ -362,7 +360,11 @@ function getSelectedProductsForEachCycle( listOfCycles ){
     return Q.all( listOfCycles.map(getSelectedProductsForCycle) );
 
     function getSelectedProductsForCycle( cycle ){
-        return offeringRepository.listOfferingsWithSelections(cycle);
+        return offeringRepository.listOfferingsWithSelectionsUnexpanded(cycle)
+            .then(fillInCycle(cycle))
+            .then(fillInProducts(cycle))
+            .then(fillInLibraries)
+            .then(attachVendorToOfferings);
     }
 }
 
@@ -392,11 +394,6 @@ function combineCycleResultsForReport( transformFunction ){
                 if ( !offering.library ){ console.log('  ** bad offering library from '+offering.cycle.name, offering.id); return; }
                 if ( !offering.product ){ console.log('  ** bad offering product from '+offering.cycle.name, offering.id); return; }
 
-                if ( !offering.cycle.name || !offering.library.name || !offering.product.name ){
-                    console.log('  *** bad offering property names', offering);
-                    return;
-                }
-
                 results.push(transformFunction(offering));
             }
         }
@@ -416,32 +413,49 @@ function ensureResultListsAreInReverseChronologicalCycleOrder( listOfListsOfOffe
     }
 }
 
-function fillInVendorNames(results){
-    return collectVendorIds()
-        .then(vendorRepository.getVendorsById)
-        .then(mapVendorsById)
-        .then(replaceVendorIdsWithNames)
-        .thenResolve(results);
-
-    function collectVendorIds(){
-        return Q(results.map(getVendor));
-
-        function getVendor(row){ return row.vendor; }
-    }
-
-    function mapVendorsById(listOfVendors){
-        var vendorsById = {};
-
-        listOfVendors.forEach(function(vendor){
-            vendorsById[vendor.id] = vendor;
+function fillInCycle(cycle){
+    return function(offerings) {
+        offerings.forEach(function(offering) {
+            offering.cycle = cycle || {};
         });
-
-        return vendorsById;
+        return offerings;
     }
+}
 
-    function replaceVendorIdsWithNames(vendorsById){
-        return results.map(function(row){
-            row.vendor = vendorsById[row.vendor].name;
+function fillInLibraries(offerings){
+    return initLibraryMap()
+        .then(replaceLibraryIdsWithObjects)
+        .thenResolve(offerings);
+
+    function replaceLibraryIdsWithObjects(librariesById){
+        offerings.forEach(function(offering){
+            offering.library = librariesById[offering.library] || {};
+        });
+    }
+}
+
+function fillInProducts(cycle){
+    return function(offerings){
+        return initProductMap(cycle)
+            .then(replaceProductIdsWithProductObjects)
+            .thenResolve(offerings);
+
+        function replaceProductIdsWithProductObjects(productsById){
+            offerings.forEach(function(offering){
+                offering.product = productsById[offering.product] || {};
+            });
+        }
+    }
+}
+
+function attachVendorToOfferings(offerings){
+    return initVendorMap()
+        .then(attachVendorObjects)
+        .thenResolve(offerings);
+
+    function attachVendorObjects(vendorsById){
+        offerings.forEach(function(offering){
+            offering.vendor = vendorsById[offering.vendorId] ? vendorsById[offering.vendorId].name : '';
         });
     }
 }
@@ -455,6 +469,42 @@ function returnReportResults(resultColumns, columnSortOrderOverride){
             data: _.sortByOrder(reportResults, resultColumns, columnSortOrder)
         };
     }
+}
+
+function initLibraryMap(){
+    var libraryMap = {};
+
+    return libraryRepository.listActiveLibraries()
+        .then(function(libraryList){
+            libraryList.forEach(function(library){
+                libraryMap[library.id] = library;
+            });
+            return libraryMap;
+        });
+}
+
+function initProductMap( cycle ){
+    var productMap = {};
+
+    return productRepository.listActiveProductsUnexpanded(cycle)
+        .then(function(productList){
+            productList.forEach(function(product){
+                productMap[product.id] = product;
+            });
+            return productMap;
+        });
+}
+
+function initVendorMap(){
+    var vendorMap = {};
+
+    return vendorRepository.listActive()
+        .then(function(vendorList){
+            vendorList.forEach(function(vendor){
+                vendorMap[vendor.id] = vendor;
+            });
+            return vendorMap;
+        });
 }
 
 function stackTraceError(err){
