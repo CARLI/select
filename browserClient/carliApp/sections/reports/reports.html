@@ -1,0 +1,43 @@
+<section id="reports" class="edit-form">
+    <div class="page-header">
+        <div class="headings">
+            <h1>Reports</h1>
+        </div>
+    </div>
+
+    <section class="content" cg-busy="vm.reportRunning">
+        <div class="choose-report">
+            <label for="report">Select Report</label>
+            <select id="report"
+                    ng-model="vm.selectedReport"
+                    ng-change="vm.setupSelectedReport()"
+                    ng-options="report.name for report in vm.availableReports">
+                <option value="">-- choose report --</option>
+            </select>
+        </div>
+
+        <form id="reports-form" name="reports" class="report-controls" ng-if="vm.selectedReport">
+            <div class="report-parameters">
+                <div class="cycle" ng-if="vm.selectedReport.controls.cycle">
+                    <label for="reportCycle">Select Cycle(s)</label>
+                    <select id="reportCycle" multiple="multiple"
+                            ng-model="vm.reportOptions.parameters.cycle"
+                            ng-options="cycle.id as cycle.name for cycle in vm.cycles | orderBy:'name':true"></select>
+                </div>
+            </div>
+
+            <div class="report-columns" ng-if="vm.selectedReport.optionalColumns.length">
+                <div class="label">Choose Optional Columns</div>
+                <ul>
+                    <li ng-repeat="column in vm.selectedReport.optionalColumns">
+                        <checkbox ng-model="vm.reportOptions.optionalColumns[column]">{{ column }}</checkbox>
+                    </li>
+                </ul>
+            </div>
+
+            <button class="carli-button save-button export-csv" busy-click="vm.downloadReportCsv()">Download CSV</button>
+        </form>
+    </section>
+
+    <pre>{{ vm.reportOptions | json }}</pre>
+</section>
