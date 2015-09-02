@@ -280,7 +280,7 @@ function listLibrariesReport( reportParameters, userSelectedColumns ){
         .then(function(allLibraries){
             return allLibraries.map(transformLibraryToResultRow)
         })
-        .then(returnReportResults(columns))
+        .then(returnReportResults(columns, ['asc']))
         .catch(stackTraceError);
 
     function transformLibraryToResultRow( library ){
