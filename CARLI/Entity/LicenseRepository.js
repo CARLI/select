@@ -66,6 +66,10 @@ function loadLicense( licenseId ){
     return deferred.promise;
 }
 
+function listLicensesUnexpanded(){
+    return LicenseRepository.list();
+}
+
 function listLicensesForVendorId( vendorId ){
     return CouchUtils.getCouchViewResultValues(config.getDbName(), 'listLicensesForVendorId', vendorId);
 }
@@ -84,6 +88,7 @@ module.exports = {
     update: updateLicense,
     list: listLicenses,
     load: loadLicense,
+    listLicensesUnexpanded: listLicensesUnexpanded,
     listLicensesForVendorId: listLicensesForVendorId,
     getOfferingTypeOptions: getOfferingTypeOptions
 };

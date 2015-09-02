@@ -1,5 +1,6 @@
 var cycleRepository = require('../../CARLI/Entity/CycleRepository.js');
 var libraryRepository = require('../../CARLI/Entity/LibraryRepository.js');
+var licenseRepository = require('../../CARLI/Entity/LicenseRepository.js');
 var offeringRepository = require('../../CARLI/Entity/OfferingRepository.js');
 var productRepository = require('../../CARLI/Entity/ProductRepository.js');
 var vendorRepository = require('../../CARLI/Entity/VendorRepository.js');
@@ -40,14 +41,14 @@ function selectedProductsReport( reportParameters, userSelectedColumns ){
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getSelectedProductsForEachCycle)
         .then(combineCycleResultsForReport(transformOfferingToSelectedProductsResultRow))
-        .then(fillInVendorNames)
-        .then(returnReportResults(columns));
+        .then(returnReportResults(columns))
+        .catch(stackTraceError);
 
     function transformOfferingToSelectedProductsResultRow( offering ){
         var row = {
             library: offering.library.name,
             cycle: offering.cycle.name,
-            vendor: offering.product.vendor,
+            vendor: offering.vendor.name,
             product: offering.product.name,
             selection: offering.selection.users,
             price: offering.selection.price
@@ -69,7 +70,8 @@ function contactsReport( reportParameters, userSelectedColumns ){
         .then(function(listOfContacts){
             return listOfContacts.map(transformContactToResultRow);
         })
-        .then(returnReportResults(columns, ['asc']));
+        .then(returnReportResults(columns, ['asc']))
+        .catch(stackTraceError);
 
     function transformContactToResultRow( contact ){
         return {
@@ -89,14 +91,14 @@ function statisticsReport( reportParameters, userSelectedColumns ){
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getSelectedProductsForEachCycle)
         .then(combineCycleResultsForReport(transformOfferingToStatisticsReportResultRow))
-        .then(fillInVendorNames)
         .then(groupRowsByVendor)
-        .then(returnReportResults(columns));
+        .then(returnReportResults(columns))
+        .catch(stackTraceError);
 
     function transformOfferingToStatisticsReportResultRow( offering ){
         return {
             cycle: offering.cycle.name,
-            vendor: offering.product.vendor,
+            vendor: offering.vendor.name,
             product: offering.product.name
         };
     }
@@ -146,13 +148,13 @@ function selectionsByVendorReport( reportParameters, userSelectedColumns ){
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getSelectedProductsForEachCycle)
         .then(combineCycleResultsForReport(transformOfferingToSelectionsByVendorResultRow))
-        .then(fillInVendorNames)
-        .then(returnReportResults(columns));
+        .then(returnReportResults(columns))
+        .catch(stackTraceError);
 
     function transformOfferingToSelectionsByVendorResultRow( offering ){
         return {
             cycle: offering.cycle.name,
-            vendor: offering.product.vendor,
+            vendor: offering.vendor.name,
             product: offering.product.name,
             library: offering.library.name,
             selection: offering.selection.users,
@@ -169,7 +171,8 @@ function totalsReport( reportParameters, userSelectedColumns ){
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getSelectedProductsForEachCycle)
         .then(sumOfferingTotals)
-        .then(returnReportResults(columns));
+        .then(returnReportResults(columns))
+        .catch(stackTraceError);
 
     function sumOfferingTotals( listOfListOfOfferingsPerCycle ){
         ensureResultListsAreInReverseChronologicalCycleOrder(listOfListOfOfferingsPerCycle);
@@ -215,8 +218,9 @@ function listProductsForVendorReport( reportParameters, userSelectedColumns ){
 
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getOfferedProductsForEachCycle)
-        .then(combineCycleResultsForReport(transformProductToResultRow))
-        .then(returnReportResults(columns));
+        .then(combineCycleProductsForReport(transformProductToResultRow))
+        .then(returnReportResults(columns))
+        .catch(stackTraceError);
 
     function transformProductToResultRow(product){
         return {
@@ -234,8 +238,9 @@ function contractsReport( reportParameters, userSelectedColumns ){
 
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getOfferedProductsForEachCycle)
-        .then(combineCycleResultsForReport(transformProductToResultRow))
-        .then(returnReportResults(columns));
+        .then(combineCycleProductsForReport(transformProductToResultRow))
+        .then(returnReportResults(columns))
+        .catch(stackTraceError);
 
     function transformProductToResultRow(product){
         return {
@@ -255,8 +260,9 @@ function productNamesReport( reportParameters, userSelectedColumns ){
 
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getOfferedProductsForEachCycle)
-        .then(combineCycleResultsForReport(transformProductToResultRow))
-        .then(returnReportResults(columns));
+        .then(combineCycleProductsForReport(transformProductToResultRow))
+        .then(returnReportResults(columns))
+        .catch(stackTraceError);
 
     function transformProductToResultRow(product){
         return {
@@ -274,7 +280,8 @@ function listLibrariesReport( reportParameters, userSelectedColumns ){
         .then(function(allLibraries){
             return allLibraries.map(transformLibraryToResultRow)
         })
-        .then(returnReportResults(columns));
+        .then(returnReportResults(columns))
+        .catch(stackTraceError);
 
     function transformLibraryToResultRow( library ){
         var result = {
@@ -354,7 +361,11 @@ function getSelectedProductsForEachCycle( listOfCycles ){
     return Q.all( listOfCycles.map(getSelectedProductsForCycle) );
 
     function getSelectedProductsForCycle( cycle ){
-        return offeringRepository.listOfferingsWithSelections(cycle);
+        return offeringRepository.listOfferingsWithSelectionsUnexpanded(cycle)
+            .then(fillInCycle(cycle))
+            .then(fillInProducts(cycle))
+            .then(fillInLibraries)
+            .then(attachVendorToOfferings);
     }
 }
 
@@ -362,7 +373,10 @@ function getOfferedProductsForEachCycle( listOfCycles ) {
     return Q.all( listOfCycles.map(getProductsForCycle) );
 
     function getProductsForCycle(cycle) {
-        return productRepository.list(cycle)
+        return productRepository.listActiveProductsUnexpanded(cycle)
+                .then(fillInCycle(cycle))
+                .then(fillInVendors)
+                .then(fillInLicenses);
     }
 }
 
@@ -384,13 +398,24 @@ function combineCycleResultsForReport( transformFunction ){
                 if ( !offering.library ){ console.log('  ** bad offering library from '+offering.cycle.name, offering.id); return; }
                 if ( !offering.product ){ console.log('  ** bad offering product from '+offering.cycle.name, offering.id); return; }
 
-                if ( !offering.cycle.name || !offering.library.name || !offering.product.name ){
-                    console.log('  *** bad offering property names', offering);
-                    return;
-                }
-
                 results.push(transformFunction(offering));
             }
+        }
+
+        return results;
+    }
+}
+
+function combineCycleProductsForReport( transformFunction ){
+    return function( listOfListOfProductsPerCycle ){
+        var results = [];
+
+        listOfListOfProductsPerCycle.forEach(addProductsToResults);
+
+        function addProductsToResults(listOfProducts) {
+            listOfProducts.forEach(function(product){
+                results.push(transformFunction(product));
+            });
         }
 
         return results;
@@ -408,32 +433,73 @@ function ensureResultListsAreInReverseChronologicalCycleOrder( listOfListsOfOffe
     }
 }
 
-function fillInVendorNames(results){
-    return collectVendorIds()
-        .then(vendorRepository.getVendorsById)
-        .then(mapVendorsById)
-        .then(replaceVendorIdsWithNames)
-        .thenResolve(results);
-
-    function collectVendorIds(){
-        return Q(results.map(getVendor));
-
-        function getVendor(row){ return row.vendor; }
-    }
-
-    function mapVendorsById(listOfVendors){
-        var vendorsById = {};
-
-        listOfVendors.forEach(function(vendor){
-            vendorsById[vendor.id] = vendor;
+function fillInCycle(cycle){
+    return function(entities) {
+        entities.forEach(function(entity) {
+            entity.cycle = cycle || {};
         });
-
-        return vendorsById;
+        return entities;
     }
+}
 
-    function replaceVendorIdsWithNames(vendorsById){
-        return results.map(function(row){
-            row.vendor = vendorsById[row.vendor].name;
+function fillInLibraries(offerings){
+    return initLibraryMap()
+        .then(replaceLibraryIdsWithObjects)
+        .thenResolve(offerings);
+
+    function replaceLibraryIdsWithObjects(librariesById){
+        offerings.forEach(function(offering){
+            offering.library = librariesById[offering.library] || {};
+        });
+    }
+}
+
+function fillInProducts(cycle){
+    return function(offerings){
+        return initProductMap(cycle)
+            .then(replaceProductIdsWithProductObjects)
+            .thenResolve(offerings);
+
+        function replaceProductIdsWithProductObjects(productsById){
+            offerings.forEach(function(offering){
+                offering.product = productsById[offering.product] || {};
+            });
+        }
+    }
+}
+
+function fillInVendors(products){
+    return initVendorMap()
+        .then(replaceVendorIdsWithVendorObjects)
+        .thenResolve(products);
+
+    function replaceVendorIdsWithVendorObjects(vendorsById){
+        products.forEach(function(product){
+            product.vendor = vendorsById[product.vendor] || {};
+        });
+    }
+}
+
+function fillInLicenses(products){
+    return initLicenseMap()
+        .then(replaceLicenseIdsWithLicenseObjects)
+        .thenResolve(products);
+
+    function replaceLicenseIdsWithLicenseObjects(licensesById){
+        products.forEach(function(product){
+            product.license = licensesById[product.license] || {};
+        });
+    }
+}
+
+function attachVendorToOfferings(offerings){
+    return initVendorMap()
+        .then(attachVendorObjects)
+        .thenResolve(offerings);
+
+    function attachVendorObjects(vendorsById){
+        offerings.forEach(function(offering){
+            offering.vendor = vendorsById[offering.vendorId] ? vendorsById[offering.vendorId] : '';
         });
     }
 }
@@ -447,6 +513,58 @@ function returnReportResults(resultColumns, columnSortOrderOverride){
             data: _.sortByOrder(reportResults, resultColumns, columnSortOrder)
         };
     }
+}
+
+function initLibraryMap(){
+    var libraryMap = {};
+
+    return libraryRepository.listActiveLibraries()
+        .then(function(libraryList){
+            libraryList.forEach(function(library){
+                libraryMap[library.id] = library;
+            });
+            return libraryMap;
+        });
+}
+
+function initProductMap( cycle ){
+    var productMap = {};
+
+    return productRepository.listActiveProductsUnexpanded(cycle)
+        .then(function(productList){
+            productList.forEach(function(product){
+                productMap[product.id] = product;
+            });
+            return productMap;
+        });
+}
+
+function initVendorMap(){
+    var vendorMap = {};
+
+    return vendorRepository.listActive()
+        .then(function(vendorList){
+            vendorList.forEach(function(vendor){
+                vendorMap[vendor.id] = vendor;
+            });
+            return vendorMap;
+        });
+}
+
+function initLicenseMap(){
+    var licenseMap = {};
+
+    return licenseRepository.listLicensesUnexpanded()
+        .then(function(licenseList){
+            licenseList.forEach(function(license){
+                licenseMap[license.id] = license;
+            });
+            return licenseMap;
+        });
+}
+
+function stackTraceError(err){
+    console.log('ERROR',err.stack);
 }
 
 module.exports = {

@@ -35,9 +35,14 @@
                 </ul>
             </div>
 
-            <button class="carli-button save-button export-csv" busy-click="vm.downloadReportCsv()">Download CSV</button>
+            <div class="">
+                <button class="carli-button save-button export-csv"
+                        ng-disabled="vm.cycleControlIsMissingValue()"
+                        busy-click="vm.downloadReportCsv()">
+                    Download CSV
+                </button>
+                <span ng-if="vm.cycleControlIsMissingValue()" class="warning">Please choose a cycle</span>
+            </div>
         </form>
     </section>
-
-    <pre>{{ vm.reportOptions | json }}</pre>
 </section>
