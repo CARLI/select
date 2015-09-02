@@ -61,6 +61,16 @@ function loadProduct( productId, cycle ){
     return deferred.promise;
 }
 
+function listActiveProductsUnexpanded(cycle){
+    setCycle(cycle);
+    return ProductRepository.list(cycle.getDatabaseName())
+        .then(function(productList){
+            return productList.filter(function(product){
+                return product.isActive;
+            });
+        });
+}
+
 function listAvailableOneTimePurchaseProducts(){
     var deferred = Q.defer();
 
@@ -276,6 +286,7 @@ module.exports = {
     update: updateProduct,
     list: listProducts,
     load: loadProduct,
+    listActiveProductsUnexpanded: listActiveProductsUnexpanded,
     listAvailableOneTimePurchaseProducts: listAvailableOneTimePurchaseProducts,
     listProductsForLicenseId: listProductsForLicenseId,
     listProductsForVendorId: listProductsForVendorId,
