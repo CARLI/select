@@ -63,9 +63,11 @@ describe('The notification draft generator', function() {
             draft.getEntities = getMockEntitiesForAnnualAccessFee;
             draft.getOfferings = getMockOfferingsForAnnualAccessFee;
 
+            var customizedTemplate = template;
+            customizedTemplate.templateId = template.id;
             var customizedRecipients = [ 'library' ];
 
-            return draft.getNotifications(template, customizedRecipients).then(function(notifications){
+            return draft.getNotifications(customizedTemplate, customizedRecipients).then(function(notifications){
                 return Q.all([
                     expect(notifications).to.be.an('array'),
                     expect(notifications.length).to.equal(1),
@@ -121,6 +123,8 @@ describe('The notification draft generator', function() {
             draft.getEntities = getMockEntitiesForAnnualAccessFee;
             draft.getOfferings = getMockOfferingsForAnnualAccessFee;
 
+            var customizedTemplate = template;
+            customizedTemplate.templateId = template.id;
             var customizedRecipients = [ 'library' ];
 
             return draft.getNotifications(template, customizedRecipients).then(function(notifications){
@@ -140,7 +144,7 @@ describe('The notification draft generator', function() {
 
     describe('specification for generateDraftNotification "Reminder"', function() {
         var template = {
-            id: 'notification-template-library-reminder',
+            templateId: 'notification-template-library-reminder',
             notificationType: 'reminder'
         };
         var notificationData = {};
