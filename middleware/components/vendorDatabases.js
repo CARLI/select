@@ -30,7 +30,7 @@ function createVendorDatabasesForCycle(cycleId) {
 }
 
 function replicateDataToVendorsForAllCycles() {
-    return cycleRepository.list().then(function (cycles) {
+    return cycleRepository.listActiveCycles().then(function (cycles) {
         return Q.all( cycles.map(replicateData) );
 
         function replicateData(cycle) {
@@ -72,7 +72,7 @@ function replicateDataToOneVendorForCycle(vendorId, cycleId){
 }
 
 function replicateDataFromVendorsForAllCycles() {
-    return cycleRepository.list().then(function (cycles) {
+    return cycleRepository.listActiveCycles().then(function (cycles) {
         return Q.all( cycles.map(replicateData) );
 
         function replicateData(cycle) {
@@ -117,7 +117,7 @@ function syncEverything() {
 }
 
 function triggerIndexingForAllCycles() {
-    return cycleRepository.list().then(function (cycles) {
+    return cycleRepository.listActiveCycles().then(function (cycles) {
         return Q.all( cycles.map(triggerIndexing) );
 
         function triggerIndexing(cycle) {
@@ -155,7 +155,7 @@ function triggerIndexingForCycle(cycle) {
 }
 
 function getCycleStatusForAllVendorsAllCycles() {
-    return cycleRepository.list().then(gatherStatuses);
+    return cycleRepository.listActiveCycles().then(gatherStatuses);
 
     function gatherStatuses(cycles) {
         return Q.all(cycles.map(gatherStatusesForCycle))
