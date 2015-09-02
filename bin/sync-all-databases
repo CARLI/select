@@ -6,13 +6,17 @@ var vendorDatabases = require('../middleware/components/vendorDatabases');
 
 loginToCouch()
     .then(vendorDatabases.syncEverything)
-    .catch(function(error) {
-        console.log('Sync Failed', error);
-    });
+    .then(vendorDatabases.triggerIndexingForAllCycles)
+    .catch(logError)
+    .finally(auth.deleteSession);
 
 function loginToCouch() {
     return auth.createSession({
         email: config.storeOptions.privilegedCouchUsername,
         password: config.storeOptions.privilegedCouchPassword
     });
+}
+
+function logError(error) {
+    console.log('Sync Failed', error);
 }
