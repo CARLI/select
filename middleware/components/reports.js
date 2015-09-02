@@ -217,7 +217,7 @@ function listProductsForVendorReport( reportParameters, userSelectedColumns ){
 
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getOfferedProductsForEachCycle)
-        .then(combineCycleResultsForReport(transformProductToResultRow))
+        .then(combineCycleProductsForReport(transformProductToResultRow))
         .then(returnReportResults(columns))
         .catch(stackTraceError);
 
@@ -237,7 +237,7 @@ function contractsReport( reportParameters, userSelectedColumns ){
 
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getOfferedProductsForEachCycle)
-        .then(combineCycleResultsForReport(transformProductToResultRow))
+        .then(combineCycleProductsForReport(transformProductToResultRow))
         .then(returnReportResults(columns))
         .catch(stackTraceError);
 
@@ -259,7 +259,7 @@ function productNamesReport( reportParameters, userSelectedColumns ){
 
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getOfferedProductsForEachCycle)
-        .then(combineCycleResultsForReport(transformProductToResultRow))
+        .then(combineCycleProductsForReport(transformProductToResultRow))
         .then(returnReportResults(columns))
         .catch(stackTraceError);
 
@@ -372,7 +372,9 @@ function getOfferedProductsForEachCycle( listOfCycles ) {
     return Q.all( listOfCycles.map(getProductsForCycle) );
 
     function getProductsForCycle(cycle) {
-        return productRepository.list(cycle)
+        return productRepository.listActiveProductsUnexpanded(cycle)
+                .then(fillInCycle(cycle))
+                .then(fillInVendors);
     }
 }
 
@@ -402,6 +404,22 @@ function combineCycleResultsForReport( transformFunction ){
     }
 }
 
+function combineCycleProductsForReport( transformFunction ){
+    return function( listOfListOfProductsPerCycle ){
+        var results = [];
+
+        listOfListOfProductsPerCycle.forEach(addProductsToResults);
+
+        function addProductsToResults(listOfProducts) {
+            listOfProducts.forEach(function(product){
+                results.push(transformFunction(product));
+            });
+        }
+
+        return results;
+    }
+}
+
 function ensureResultListsAreInReverseChronologicalCycleOrder( listOfListsOfOfferings ){
     listOfListsOfOfferings.sort(reverseChronologicalSortListOfOfferings);
 
@@ -414,11 +432,11 @@ function ensureResultListsAreInReverseChronologicalCycleOrder( listOfListsOfOffe
 }
 
 function fillInCycle(cycle){
-    return function(offerings) {
-        offerings.forEach(function(offering) {
-            offering.cycle = cycle || {};
+    return function(entities) {
+        entities.forEach(function(entity) {
+            entity.cycle = cycle || {};
         });
-        return offerings;
+        return entities;
     }
 }
 
@@ -448,6 +466,18 @@ function fillInProducts(cycle){
     }
 }
 
+function fillInVendors(products){
+    return initVendorMap()
+        .then(replaceVendorIdsWithVendorObjects)
+        .thenResolve(products);
+
+    function replaceVendorIdsWithVendorObjects(vendorsById){
+        products.forEach(function(product){
+            product.vendor = vendorsById[product.vendor] || {};
+        });
+    }
+}
+
 function attachVendorToOfferings(offerings){
     return initVendorMap()
         .then(attachVendorObjects)
@@ -455,7 +485,7 @@ function attachVendorToOfferings(offerings){
 
     function attachVendorObjects(vendorsById){
         offerings.forEach(function(offering){
-            offering.vendor = vendorsById[offering.vendorId] ? vendorsById[offering.vendorId].name : '';
+            offering.vendor = vendorsById[offering.vendorId] ? vendorsById[offering.vendorId] : '';
         });
     }
 }
