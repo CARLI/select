@@ -40,14 +40,14 @@ function selectedProductsReport( reportParameters, userSelectedColumns ){
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getSelectedProductsForEachCycle)
         .then(combineCycleResultsForReport(transformOfferingToSelectedProductsResultRow))
-        .then(fillInVendorNames)
-        .then(returnReportResults(columns));
+        .then(returnReportResults(columns))
+        .catch(stackTraceError);
 
     function transformOfferingToSelectedProductsResultRow( offering ){
         var row = {
             library: offering.library.name,
             cycle: offering.cycle.name,
-            vendor: offering.product.vendor,
+            vendor: offering.vendor.name,
             product: offering.product.name,
             selection: offering.selection.users,
             price: offering.selection.price
@@ -69,7 +69,8 @@ function contactsReport( reportParameters, userSelectedColumns ){
         .then(function(listOfContacts){
             return listOfContacts.map(transformContactToResultRow);
         })
-        .then(returnReportResults(columns, ['asc']));
+        .then(returnReportResults(columns, ['asc']))
+        .catch(stackTraceError);
 
     function transformContactToResultRow( contact ){
         return {
@@ -89,9 +90,10 @@ function statisticsReport( reportParameters, userSelectedColumns ){
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getSelectedProductsForEachCycle)
         .then(combineCycleResultsForReport(transformOfferingToStatisticsReportResultRow))
-        .then(fillInVendorNames)
+        .then(attachVendorToOfferings)
         .then(groupRowsByVendor)
-        .then(returnReportResults(columns));
+        .then(returnReportResults(columns))
+        .catch(stackTraceError);
 
     function transformOfferingToStatisticsReportResultRow( offering ){
         return {
@@ -146,8 +148,9 @@ function selectionsByVendorReport( reportParameters, userSelectedColumns ){
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getSelectedProductsForEachCycle)
         .then(combineCycleResultsForReport(transformOfferingToSelectionsByVendorResultRow))
-        .then(fillInVendorNames)
-        .then(returnReportResults(columns));
+        .then(attachVendorToOfferings)
+        .then(returnReportResults(columns))
+        .catch(stackTraceError);
 
     function transformOfferingToSelectionsByVendorResultRow( offering ){
         return {
@@ -169,7 +172,8 @@ function totalsReport( reportParameters, userSelectedColumns ){
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getSelectedProductsForEachCycle)
         .then(sumOfferingTotals)
-        .then(returnReportResults(columns));
+        .then(returnReportResults(columns))
+        .catch(stackTraceError);
 
     function sumOfferingTotals( listOfListOfOfferingsPerCycle ){
         ensureResultListsAreInReverseChronologicalCycleOrder(listOfListOfOfferingsPerCycle);
@@ -216,7 +220,8 @@ function listProductsForVendorReport( reportParameters, userSelectedColumns ){
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getOfferedProductsForEachCycle)
         .then(combineCycleResultsForReport(transformProductToResultRow))
-        .then(returnReportResults(columns));
+        .then(returnReportResults(columns))
+        .catch(stackTraceError);
 
     function transformProductToResultRow(product){
         return {
@@ -235,7 +240,8 @@ function contractsReport( reportParameters, userSelectedColumns ){
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getOfferedProductsForEachCycle)
         .then(combineCycleResultsForReport(transformProductToResultRow))
-        .then(returnReportResults(columns));
+        .then(returnReportResults(columns))
+        .catch(stackTraceError);
 
     function transformProductToResultRow(product){
         return {
@@ -256,7 +262,8 @@ function productNamesReport( reportParameters, userSelectedColumns ){
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getOfferedProductsForEachCycle)
         .then(combineCycleResultsForReport(transformProductToResultRow))
-        .then(returnReportResults(columns));
+        .then(returnReportResults(columns))
+        .catch(stackTraceError);
 
     function transformProductToResultRow(product){
         return {
@@ -274,7 +281,8 @@ function listLibrariesReport( reportParameters, userSelectedColumns ){
         .then(function(allLibraries){
             return allLibraries.map(transformLibraryToResultRow)
         })
-        .then(returnReportResults(columns));
+        .then(returnReportResults(columns))
+        .catch(stackTraceError);
 
     function transformLibraryToResultRow( library ){
         var result = {
@@ -447,6 +455,10 @@ function returnReportResults(resultColumns, columnSortOrderOverride){
             data: _.sortByOrder(reportResults, resultColumns, columnSortOrder)
         };
     }
+}
+
+function stackTraceError(err){
+    console.log('ERROR',err.stack);
 }
 
 module.exports = {
