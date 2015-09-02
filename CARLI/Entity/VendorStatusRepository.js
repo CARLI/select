@@ -139,7 +139,6 @@ function setStore(store) {
     storeOptions = store.getOptions();
     VendorStatusRepository.setStore(store);
     couchUtils = require('../Store/CouchDb/Utils')(storeOptions);
-    EntityTransform.setEntityLookupStores(store);
 }
 
 module.exports = {

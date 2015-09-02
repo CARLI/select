@@ -193,7 +193,6 @@ function listAllContacts(){
 function setStore(store) {
     localLibraryRepository.setStore(store);
     CouchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
-    EntityTransform.setEntityLookupStores(store);
 }
 
 module.exports = {
