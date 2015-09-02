@@ -120,6 +120,10 @@ function listPastFourCyclesMatchingCycle( cycle ){
     }
 }
 
+function getCyclesById( ids ){
+    return expandCycles( couchUtils.getCouchDocuments(StoreOptions.couchDbName, ids) );
+}
+
 /* functions that get added as instance methods on loaded Cycles */
 
 var functionsToAdd = {
@@ -181,6 +185,7 @@ module.exports = {
     load: loadCycle,
     statusLabels: statusLabels,
     listActiveCycles: listActiveCycles,
+    getCyclesById: getCyclesById,
     isOpenToLibraries: isOpenToLibraries,
     isClosed: isClosed,
     productsAreAvailable: productsAreAvailable,
