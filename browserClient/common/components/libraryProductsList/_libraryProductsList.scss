@@ -4,8 +4,13 @@ ul.product-list.selected-products {
     }
 
     .column.cost {
+        color: black;
         flex: none;
         width: 200px;
+    }
+
+    .column.su {
+        color: black;
     }
 
     li.summary-row {
