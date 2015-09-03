@@ -7,10 +7,19 @@ function getDataForBannerExport(cycle, batchId) {
     var librariesById = {};
 
     return LibraryRepository.listActiveLibraries()
+        .then(filterLibraries)
         .then(groupLibrariesById)
         .then(loadInvoiceNotifications)
         .then(groupDataByBatchId)
         .then(formatBatchAsBannerFeed);
+
+    function filterLibraries(libraries) {
+        return libraries.filter(shouldAppearInBannerFeed);
+
+        function shouldAppearInBannerFeed(library) {
+            return !library.excludeFromBannerFeed;
+        }
+    }
 
     function groupLibrariesById(libraries) {
         libraries.forEach(function (library) {

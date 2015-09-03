@@ -17,8 +17,12 @@
             "type": "integer"
         },
         "gar": {
-            "description": "General Account Receivable",
+            "description": "General Account Receivable.  Required for the Banner feed export.",
             "type": "string"
+        },
+        "excludeFromBannerFeed": {
+            "description": "If true do not include this library in Banner feed export.",
+            "type": "boolean"
         },
         "ipAddresses": {
             "description": "List of IP Addresses",
