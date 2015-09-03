@@ -233,6 +233,7 @@ describe( 'The Validator Module', function() {
                 crmId: 'string',
                 fte: 'integer',
                 gar: 'string',
+                excludeFromBannerFeed: "boolean",
                 ipAddresses: 'string'
             };
             expect(Validator.getNonIdPropertyMapFor('LibraryNonCrm')).to.deep.equal(expectedMap);
