@@ -220,6 +220,7 @@ describe( 'The Validator Module', function() {
                 'crmId',
                 'fte',
                 'gar',
+                'excludeFromBannerFeed',
                 'ipAddresses'
             ];
             expect( Validator.listNonIdPropertiesFor('LibraryNonCrm')).to.have.members( expectedValues );
