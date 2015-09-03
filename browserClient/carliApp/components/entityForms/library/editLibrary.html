@@ -53,6 +53,11 @@
                         {{ vm.library.gar }}
                     </view-edit-text-field>
 
+                    <label for="excludeFromBannerFeed">Exclude from Banner export</label>
+                    <view-edit-checkbox ng-model="vm.library.excludeFromBannerFeed" edit-mode="vm.editable" input-id="excludeFromBannerFeed">
+                        {{ vm.library.excludeFromBannerFeed ? 'Yes' : 'No' }}
+                    </view-edit-checkbox>
+
                     <div class="label">Library Status</div>
                     <view-edit-radios radio-group-name="isActive" radio-group-legend="Library Status" items="vm.statusOptions" ng-model="vm.library.isActive" edit-mode="false" input-id="libraryIsActive">
                         <h3>{{ vm.library.isActive ? 'Active' : 'Inactive' }}</h3>
