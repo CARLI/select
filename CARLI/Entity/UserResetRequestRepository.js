@@ -23,9 +23,9 @@ var userResetRequestStoreOptions = {
 };
 UserResetRequestRepository.setStore( Store( StoreModule(userResetRequestStoreOptions) ) );
 
-function createRequest( email, baseUrl ){
+function createRequest( userEmail, baseUrl ){
     var resetRequest = {
-        email: email,
+        email: userEmail,
         key: generateNonce(),
         date: new Date().toISOString()
     };
@@ -39,7 +39,7 @@ function createRequest( email, baseUrl ){
         .then(returnOk);
 
     function requireUserExists() {
-        return UserRepository.load(email);
+        return UserRepository.load(userEmail);
     }
 
     function saveLocalUserReference(u) {
