@@ -35,6 +35,21 @@ function invalidMembershipData() {
 
 test.run('Membership', validMembershipData, invalidMembershipData);
 
+describe('the listOfferingsWithDuesForYear', function(){
+    it('should be a function', function(){
+        expect(membershipRepository.listLibrariesWithDues).to.be.a('function');
+    });
+
+    it('should return an array of library ids', function(){
+        var testMembershipData = validMembershipData();
+        testMembershipData.data['4'] = {};
+
+        var testIds = membershipRepository.listLibrariesWithDues( testMembershipData );
+        expect(testIds).to.be.an('array');
+        expect(testIds.length).to.equal(3);
+    });
+});
+
 describe('the getMembershipDuesAsOfferings method', function(){
     it('should be a function', function(){
         expect(membershipRepository.getMembershipDuesAsOfferings).to.be.a('function');
