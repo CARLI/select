@@ -302,8 +302,8 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     }
 
     function setCommentMarkerVisibility(cell) {
-        var productId = $(cell).data('productId');
-        var numSu = $(cell).data('numSu');
+        var productId = $(cell).data('productId') || $(cell).parent().data('productId');
+        var numSu = $(cell).data('numSu') || $(cell).parent().data('numSu');
         var commentMarker = cell.find('.comment-marker');
 
         var suComments = vm.suCommentsByProduct[productId] || {};
