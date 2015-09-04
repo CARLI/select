@@ -508,6 +508,24 @@ describe('the templateIsForAnnualAccessFeeInvoice method', function () {
     });
 });
 
+describe('the templateIsForMembershipDues method', function () {
+    it('should be a function', function(){
+        expect(notificationRepository.templateIsForMembershipDues).to.be.a('function');
+    });
+
+    it('should return the correct value for a non-matching template id', function () {
+        expect(notificationRepository.templateIsForMembershipDues('notification-template-annual-access-fee-invoices')).to.equal(false);
+    });
+
+    it('should return the correct value for a matching id', function () {
+        expect(notificationRepository.templateIsForMembershipDues('notification-template-membership-invoices')).to.equal(true);
+    });
+
+    it('should return the correct value for a bogus id', function () {
+        expect(notificationRepository.templateIsForMembershipDues('subscription')).to.equal(false);
+    });
+});
+
 describe('the notificationTypeAllowsRecipientsToBeEdited method', function () {
     it('should be a function', function(){
         expect(notificationRepository.notificationTypeAllowsRecipientsToBeEdited).to.be.a('function');
