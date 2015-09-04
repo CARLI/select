@@ -232,7 +232,10 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     }
 
     function createReadOnlyOfferingCell(price) {
-        var cell = $('<div tabindex="0" class="price" role="gridcell">'+price+'</div>');
+        if ( typeof price !== 'undefined' && price !== null && typeof price.toFixed === 'function' ){
+            price = price.toFixed(2);
+        }
+        var cell = $('<div tabindex="0" class="price" role="gridcell"></div>').text(price);
         cell.on('focus', onReadOnlyClick);
         addCommentMarkerTo(cell);
 
@@ -248,7 +251,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     }
 
     function createEditableOfferingCell(price) {
-        var cell = $('<input class="price-editable" role="textbox" type="text" step=".01" min="0" value="' + price + '">');
+        var cell = $('<input class="price-editable" role="textbox" type="text" step=".01" min="0">').val(price);
         cell.on('blur', makeReadOnly);
         return cell;
     }
@@ -270,9 +273,12 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         var $cell = $(this);
         var offeringCell = $cell.parent();
         var productId = offeringCell.data('productId');
+
         markProductChangedForCell(offeringCell);
-        var price = $cell.val();
+
+        var price = parseFloat( $cell.val() );
         var div = createOfferingCellContent(price);
+
         $cell.replaceWith(div);
         setCommentMarkerVisibility(div);
         updateFlaggedStatusForProduct(productId);
