@@ -57,7 +57,8 @@ function cycleService( CarliModules, $q, errorHandler ) {
         },
         getLabelForCycleStatus: function getLabelForCycleStatus( status ){
             return cycleModule.statusLabels[status];
-        }
+        },
+        fiscalYearHasStartedForDate: cycleModule.fiscalYearHasStartedForDate
     };
 
     function fixCycleName(newCycle) {

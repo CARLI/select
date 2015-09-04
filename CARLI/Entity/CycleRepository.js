@@ -173,6 +173,15 @@ function productsAreAvailable( cycle ){
     return moment().isAfter(cycle.productsAvailableDate);
 }
 
+function fiscalYearHasStartedForDate( dateToCheck ){
+    var momentToCheck = moment(dateToCheck);
+
+    var fiscalYearStartDate = '07-01';
+    var fiscalYearStartDateForDateToCheck = momentToCheck.format('YYYY')+'-'+fiscalYearStartDate;
+
+    return !momentToCheck.isBefore(fiscalYearStartDateForDateToCheck);
+}
+
 module.exports = {
     setStore: setStore,
     create: createCycle,
@@ -186,5 +195,6 @@ module.exports = {
     isOpenToLibraries: isOpenToLibraries,
     isClosed: isClosed,
     productsAreAvailable: productsAreAvailable,
-    listPastFourCyclesMatchingCycle: listPastFourCyclesMatchingCycle
+    listPastFourCyclesMatchingCycle: listPastFourCyclesMatchingCycle,
+    fiscalYearHasStartedForDate: fiscalYearHasStartedForDate
 };
