@@ -190,7 +190,7 @@ function runMiddlewareServer(){
                 .then(sendOk(res))
                 .catch(sendError(res));
         });
-        authorizedRoute('post', '/replicate-data-from-vendors-for-cycle/:cycleId', carliAuth.requireStaff, function (req, res) {
+        authorizedRoute('post', '/replicate-data-from-vendors-for-cycle/:cycleId', carliAuth.requireSession, function (req, res) {
             vendorDatabases.replicateDataFromVendorsForCycle(req.params.cycleId)
                 .then(sendOk(res))
                 .catch(sendError(res));
