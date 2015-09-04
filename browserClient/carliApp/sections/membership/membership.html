@@ -46,5 +46,9 @@
                 <div class="column total">{{ vm.grandTotal() | currency }}</div>
             </li>
         </ul>
+
+        <button class="carli-button save-button" busy-click="vm.createMembershipInvoices()">Invoice FY {{ vm.currentYear }}</button>
     </section>
 </section>
+
+<notification-modal></notification-modal>

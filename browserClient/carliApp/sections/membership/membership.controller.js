@@ -1,7 +1,7 @@
 angular.module('carli.sections.membership')
 .controller('membershipController', membershipController);
 
-function membershipController( $location, $q, $routeParams, alertService, cycleService, errorHandler, libraryService, membershipService ){
+function membershipController( $location, $q, $routeParams, alertService, cycleService, errorHandler, libraryService, membershipService, notificationModalService ){
     var vm = this;
 
     vm.libraries = [];
@@ -11,10 +11,11 @@ function membershipController( $location, $q, $routeParams, alertService, cycleS
     vm.nextYear = null;
     vm.previousYear = null;
 
-    vm.saveMembershipData = saveMembershipData;
+    vm.createMembershipInvoices = createMembershipInvoices;
     vm.ishareTotal = ishareTotal;
     vm.grandTotal = grandTotal;
     vm.membershipTotal = membershipTotal;
+    vm.saveMembershipData = saveMembershipData;
     vm.viewNextYear = viewNextYear;
     vm.viewPreviousYear = viewPreviousYear;
 
@@ -164,5 +165,12 @@ function membershipController( $location, $q, $routeParams, alertService, cycleS
 
     function viewPreviousYear(){
         routeToYear(vm.previousYear);
+    }
+
+    function createMembershipInvoices(){
+        notificationModalService.sendStartDraftMessage({
+            templateId: 'notification-template-membership-invoices',
+            year: vm.currentYear
+        });
     }
 }
