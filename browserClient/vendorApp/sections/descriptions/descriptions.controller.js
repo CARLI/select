@@ -6,6 +6,7 @@ function descriptionsController( $scope, $rootScope, $q, cycleService, productSe
 
     vm.productChanged = productChanged;
     vm.noProductsHaveChanged = noProductsHaveChanged;
+    vm.productsNotAllValid = checkIfProductsNotAllValid;
     vm.saveProducts = saveProducts;
 
     activate();
@@ -38,10 +39,20 @@ function descriptionsController( $scope, $rootScope, $q, cycleService, productSe
 
     function productChanged( productId ){
         vm.changedProducts[productId] = true;
+        checkIfProductsNotAllValid();
     }
 
     function noProductsHaveChanged(){
         return Object.keys(vm.changedProducts).length === 0;
+    }
+
+    function checkIfProductsNotAllValid(){
+        if ($scope.productForm.$invalid || ($rootScope.forms && $rootScope.forms.productForm.$invalid)) {
+            vm.productsNotAllValid = true;
+        }
+        else {
+            vm.productsNotAllValid = false;
+        }
     }
 
     function listChangedProducts(){
