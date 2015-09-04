@@ -1,0 +1,21 @@
+
+<section class="content" id="report" cg-busy="vm.loadingPromise">
+    <h1>Report</h1>
+    <h2>Choose a cycle and year to generate a report</h2>
+    <p>Note that Fiscal and Calendar Year only reflect CARLI Subscriptions Cycles, not all purchases from a given Fiscal or Calendar year.</p>
+
+    <label for="reportCycle">Select Cycle(s)</label>
+    <select id="reportCycle" multiple="multiple"
+            ng-model="vm.selectedCycles"
+            ng-options="cycle as cycle.name for cycle in vm.cycles | orderBy:'name':true">
+    </select>
+
+    <div class="controls">
+        <button class="carli-button save-button export-csv"
+                ng-disabled="!vm.selectedCycles.length"
+                busy-click="vm.downloadReportCsv()">
+            Download CSV
+        </button>
+        <span ng-if="!vm.selectedCycles.length" class="warning">Please choose a cycle</span>
+    </div>
+</section>
