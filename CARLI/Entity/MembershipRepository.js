@@ -34,4 +34,14 @@ MembershipRepository.getMembershipDuesAsOfferings = function (membershipData) {
     });
 };
 
+MembershipRepository.listLibrariesWithDues = function(membershipData){
+    var allLibraryIds = Object.keys(membershipData.data);
+    return allLibraryIds.filter(libraryHasMembershipDues);
+
+    function libraryHasMembershipDues(libraryId){
+        var dues = membershipData.data[libraryId];
+        return dues.ishare || dues.membership;
+    }
+};
+
 module.exports = MembershipRepository;
