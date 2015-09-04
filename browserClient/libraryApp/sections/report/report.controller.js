@@ -41,12 +41,12 @@ function reportController( $q, $filter, csvExportService, cycleService, userServ
                 return csvExportService.exportToCsv(results, columns);
             })
             .then(function(csvContent){
-                return csvExportService.browserDownloadCsv(csvContent, makeFilename())
+                return csvExportService.browserDownloadCsv(csvContent, makeFilename());
             });
 
 
         function makeFilename(){
-            return currentLibrary.name + ' Selected Products ' + new Date().toISOString().substr(0,16).replace('T','-');;
+            return currentLibrary.name + ' Selected Products ' + new Date().toISOString().substr(0,16).replace('T','-');
         }
     }
 
