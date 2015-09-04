@@ -9,7 +9,7 @@
       "type": "string"
     },
     "year": {
-      "description": "The calendar year that this document tracks membership data for",
+      "description": "The fiscal year that this document tracks membership data for",
       "type": "integer"
     },
     "data" : {
