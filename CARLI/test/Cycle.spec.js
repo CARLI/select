@@ -369,3 +369,15 @@ describe('the productsAreAvailable method', function(){
         expect(CycleRepository.productsAreAvailable(testCycle)).to.be.false;
     });
 });
+
+describe('the fiscalYearHasStartedForDate method', function(){
+    it('should return false if the date is before the start of the fiscal year', function(){
+        var testDate = '2010-05-01';
+        expect(CycleRepository.fiscalYearHasStartedForDate(testDate)).to.equal(false);
+    });
+
+    it('should return true if the date is on or after the start of the fiscal year', function(){
+        var testDate = '2010-07-15';
+        expect(CycleRepository.fiscalYearHasStartedForDate(testDate)).to.equal(true);
+    });
+});
