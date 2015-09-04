@@ -385,6 +385,28 @@ describe('the getSummaryTotal method', function () {
 
         expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(20);
     });
+
+    it('should return the sum of dues from fake offerings if the notification is for membership dues', function(){
+        var notification = validNotificationData();
+        notification.isMembershipDuesInvoice = true;
+
+        var offerings = [
+            {
+                pricing: {
+                    ishare: 100,
+                    membership: 100
+                }
+            },
+            {
+                pricing: {
+                    ishare: 100,
+                    membership: 100
+                }
+            }
+        ];
+
+        expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(400);
+    });
 });
 
 describe('Adding functions to Notification instances', function () {
