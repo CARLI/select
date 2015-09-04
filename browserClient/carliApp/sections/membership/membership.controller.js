@@ -1,10 +1,9 @@
 angular.module('carli.sections.membership')
 .controller('membershipController', membershipController);
 
-function membershipController( $location, $q, $routeParams, alertService, errorHandler, libraryService, membershipService ){
+function membershipController( $location, $q, $routeParams, alertService, cycleService, errorHandler, libraryService, membershipService ){
     var vm = this;
 
-    vm.currentYear = currentYear();
     vm.libraries = [];
     vm.loadingPromise = null;
     vm.displayYear = null;
@@ -14,8 +13,8 @@ function membershipController( $location, $q, $routeParams, alertService, errorH
 
     vm.saveMembershipData = saveMembershipData;
     vm.ishareTotal = ishareTotal;
-    vm.membershipTotal = membershipTotal;
     vm.grandTotal = grandTotal;
+    vm.membershipTotal = membershipTotal;
     vm.viewNextYear = viewNextYear;
     vm.viewPreviousYear = viewPreviousYear;
 
@@ -28,11 +27,12 @@ function membershipController( $location, $q, $routeParams, alertService, errorH
             initializeMembershipData();
         }
         else {
-            routeToYear(vm.currentYear);
+            routeToYear( currentFiscalYear() );
         }
     }
 
     function initVmYearsFromArgument(){
+        vm.currentYear = currentFiscalYear();
         vm.displayYear = parseInt( $routeParams.year );
         vm.nextYear = vm.displayYear + 1;
         vm.previousYear = vm.displayYear - 1;
@@ -50,8 +50,6 @@ function membershipController( $location, $q, $routeParams, alertService, errorH
             })
             .then(loadMembershipDataForDisplayYear)
             .then(function(membershipData){
-                console.log('got data for ' + vm.displayYear, membershipData);
-
                 if ( membershipData.length === 0 ){
                     vm.membershipData = {
                         type: 'Membership',
@@ -147,8 +145,17 @@ function membershipController( $location, $q, $routeParams, alertService, errorH
         });
     }
 
-    function currentYear(){
+    function currentCalendarYear(){
         return parseInt( new Date().getFullYear() );
+    }
+
+    function currentFiscalYear(){
+        if ( cycleService.fiscalYearHasStartedForDate(new Date()) ){
+            return currentCalendarYear();
+        }
+        else {
+            return currentCalendarYear() - 1;
+        }
     }
 
     function viewNextYear(){
