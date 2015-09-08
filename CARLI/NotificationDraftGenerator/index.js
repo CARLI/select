@@ -676,8 +676,6 @@ function generateNotificationForLibrary(libraryId, offeringsForAll, customizedTe
         function addInvoiceNumberAndBatchIdToNotification(invoiceNumber){
             notification.batchId = batchId;
             notification.invoiceNumber = invoiceNumber;
-            console.log('  ** Attach invoice number '+invoiceNumber+' and batch id '+batchId+' to notification, '+
-                'libraryId = ' + notification.targetEntity);
             return notification;
         }
     }
