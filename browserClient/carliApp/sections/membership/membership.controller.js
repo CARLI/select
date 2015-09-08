@@ -170,7 +170,7 @@ function membershipController( $location, $q, $routeParams, alertService, cycleS
     function createMembershipInvoices(){
         notificationModalService.sendStartDraftMessage({
             templateId: 'notification-template-membership-invoices',
-            year: vm.currentYear
+            fiscalYear: vm.currentYear
         });
     }
 }

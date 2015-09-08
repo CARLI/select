@@ -461,7 +461,7 @@ function getLibraryEstimatesForAll(template, notificationData) {
 
 function getMembershipDuesDraftForAllLibraries(template, notificationData){
     function getEntitiesForMembershipDuesDraftForAllLibraries(){
-        return membershipRepository.loadDataForYear(notificationData.year)
+        return membershipRepository.loadDataForYear(notificationData.fiscalYear)
             .then(membershipRepository.listLibrariesWithDues)
             .then(libraryRepository.getLibrariesById);
     }
@@ -476,7 +476,7 @@ function getMembershipDuesDraftForAllLibraries(template, notificationData){
     }
 
     function getOfferingsForMembershipDuesDraftForAllLibraries(){
-        return membershipRepository.loadDataForYear(notificationData.year)
+        return membershipRepository.loadDataForYear(notificationData.fiscalYear)
             .then(membershipRepository.getMembershipDuesAsOfferings);
     }
 
@@ -490,7 +490,15 @@ function getMembershipDuesDraftForAllLibraries(template, notificationData){
                     return Q.all(actualRecipientIds.map(function(id){
                         return generateNotificationForLibrary(id, offerings, customizedTemplate, batchId)
                     }));
+                })
+                .then(function(arrayOfNotifications){
+                    return arrayOfNotifications.map(addFiscalYearProperty);
                 });
+        }
+
+        function addFiscalYearProperty(notification){
+            notification.fiscalYear = notificationData.fiscalYear;
+            return notification;
         }
     }
 
