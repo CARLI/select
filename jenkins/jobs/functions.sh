@@ -70,3 +70,7 @@ publishMiddleware() {
 
     return $status
 }
+
+fetchAndResetToMaster () {
+    git fetch && git reset --hard origin/master
+}

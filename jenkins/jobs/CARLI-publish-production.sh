@@ -13,6 +13,9 @@ PUBLISH_PATH=/var/www/carli-select
 
 cd $WORKSPACE
 
+fetchAndResetToMaster || fail "Failed to sync production with master branch"
+linkSecureConfiguration || fail "Failed to link secure configuration"
+
 publishBrowserClients || fail "Failed to publish browser clients"
 publishMiddleware || fail "Failed to publish middleware"
 
