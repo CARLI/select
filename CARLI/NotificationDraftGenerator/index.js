@@ -462,9 +462,7 @@ function getLibraryEstimatesForAll(template, notificationData) {
 function getMembershipDuesDraftForAllLibraries(template, notificationData){
     function getEntitiesForMembershipDuesDraftForAllLibraries(){
         return membershipRepository.loadDataForYear(notificationData.year)
-            .then(function(membershipDocument){
-                return membershipRepository.listLibrariesWithDues(membershipDocument[0]);
-            })
+            .then(membershipRepository.listLibrariesWithDues)
             .then(libraryRepository.getLibrariesById);
     }
 
@@ -479,9 +477,7 @@ function getMembershipDuesDraftForAllLibraries(template, notificationData){
 
     function getOfferingsForMembershipDuesDraftForAllLibraries(){
         return membershipRepository.loadDataForYear(notificationData.year)
-            .then(function(membershipDocument){
-                return membershipRepository.getMembershipDuesAsOfferings(membershipDocument[0]);
-            });
+            .then(membershipRepository.getMembershipDuesAsOfferings);
     }
 
     function getNotificationsForMembershipDuesDraftForAllLibraries( customizedTemplate, actualRecipientIds ){
