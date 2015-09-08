@@ -3,6 +3,7 @@ var fs = require('fs');
 var handlebars = require('handlebars');
 var invoiceGeneration = require('./invoiceNumberGeneration');
 var moment = require('moment');
+var membershipRepository = require('../../../CARLI/Entity/MembershipRepository');
 var notificationRepository = require('../../../CARLI/Entity/NotificationRepository');
 var notificationTemplateRepository = require('../../../CARLI/Entity/NotificationTemplateRepository');
 var numeral = require('numeral');
@@ -75,18 +76,23 @@ function dataForPdfFromNotification(notification){
 }
 
 function dataForMembershipDuesInvoicePdf(notification){
+    var library = notification.targetEntity;
     var year = notification.fiscalYear;
-    var invoiceData = [];
 
-    return Q({
-        batchId: notification.batchId,
-        cycle: {},
-        library: notification.targetEntity,
-        invoiceData: invoiceData,
-        invoiceNumber: notification.invoiceNumber,
-        invoiceTotal: computeInvoiceTotal(invoiceData),
-        notification: notification
-    });
+    return membershipRepository.getMembershipFeesForLibrary(library.id, year)
+        .then(function(membershipData){
+            return {
+                batchId: notification.batchId,
+                cycle: {},
+                library: library,
+                invoiceNumber: notification.invoiceNumber,
+                invoiceTotal: membershipData.ishare + membershipData.membership,
+                ishare: membershipData.ishare,
+                membership: membershipData.membership,
+                notification: notification,
+                year: year
+            };
+        });
 }
 
 function dataForSubscriptionInvoicePdf(notification){
