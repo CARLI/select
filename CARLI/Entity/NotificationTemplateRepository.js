@@ -24,4 +24,8 @@ NotificationTemplateRepository.loadTemplateForAnnualAccessFeeInvoices = function
     return NotificationTemplateRepository.load('notification-template-annual-access-fee-invoices');
 };
 
+NotificationTemplateRepository.loadTemplateForMembershipDuesInvoices = function() {
+    return NotificationTemplateRepository.load('notification-template-membership-invoices');
+};
+
 module.exports = NotificationTemplateRepository;

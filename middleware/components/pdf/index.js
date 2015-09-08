@@ -249,6 +249,9 @@ function fetchTemplateForContent(type, cycle){
     else if ( typeIsForAccessFeeInvoice(type) ) {
         return notificationTemplateRepository.loadTemplateForAnnualAccessFeeInvoices();
     }
+    else if ( typeIsForMembershipDuesInvoice(type) ){
+        return notificationTemplateRepository.loadTemplateForMembershipDuesInvoices();
+    }
     else {
         return notificationTemplateRepository.loadTemplateForSubscriptionInvoices();
     }
@@ -292,12 +295,18 @@ function typeIsForAccessFeeInvoice(type){
     return type.toLowerCase() === 'access-fee-invoice';
 }
 
+function typeIsForMembershipDuesInvoice(type){
+    return type.toLowerCase() === 'membership-dues-invoice';
+}
+
 function typeIsForLibrarySelections(type){
     return typeIsForSubscriptionInvoice(type) || typeIsForSubscriptionInvoiceEstimate(type);
 }
 
 function typeIsForRealInvoice(type){
-    return typeIsForSubscriptionInvoice(type) || typeIsForAccessFeeInvoice(type);
+    return typeIsForSubscriptionInvoice(type) ||
+           typeIsForAccessFeeInvoice(type) ||
+           typeIsForMembershipDuesInvoice(type);
 }
 
 function loadCycle(cycleId){
