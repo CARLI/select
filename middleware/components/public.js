@@ -3,7 +3,9 @@ var _ = require('lodash');
 
 var auth = require('../../CARLI/Auth');
 var config = require( '../../config' );
+var LibraryRepository = require('../../CARLI/Entity/LibraryRepository');
 var ProductRepository = require('../../CARLI/Entity/ProductRepository');
+var OfferingRepository = require('../../CARLI/Entity/OfferingRepository');
 
 function loginToCouch() {
     return auth.createSession({
@@ -45,22 +47,31 @@ function listProductsWithTermsForPublicWebsite() {
 }
 
 function listSubscriptionsForLibrary(libraryId) {
-    console.log('Listing subscriptions for library', libraryId);
     return loginToCouch()
-        .then(returnAnEmptyArray)
+        .then(loadLibrary)
+        .then(listSelectedProductsFromActiveCyclesForLibrary)
+        .then(restrictToDataForPublicWebsite)
         .then(logoutOfCouch);
 
-    /*
-     productName,
-     vendorName,
-     funding,
-     cycleName,
-     cycleYear
-     */
-    function returnAnEmptyArray() {
-        return [
+    function loadLibrary() {
+        return LibraryRepository.load(libraryId);
+    }
 
-        ];
+    function listSelectedProductsFromActiveCyclesForLibrary(library) {
+        return OfferingRepository.listSelectedProductsFromActiveCyclesForLibrary(library);
+    }
+    function restrictToDataForPublicWebsite(offerings) {
+        return offerings.map(restrictOfferingToPublicData);
+
+        function restrictOfferingToPublicData(offering) {
+            return {
+                productName: offering.product.name,
+                vendorName: offering.vendor,
+                funding: {},
+                cycleName: offering.cycle.name,
+                cycleYear: offering.cycle.year
+            }
+        }
     }
 }
 
