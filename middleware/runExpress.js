@@ -19,6 +19,7 @@ var user = require('./components/user');
 var vendorDatabases = require('./components/vendorDatabases');
 var vendorReportCsv = require('./components/csv/vendorReport');
 var vendorSpecificProductQueries = require('./components/vendorSpecificProductQueries');
+var publicApi = require('./components/public');
 
 function runMiddlewareServer(){
     var carliMiddleware = express();
@@ -63,31 +64,13 @@ function runMiddlewareServer(){
             });
         }
 
-        carliMiddleware.post('/login', function (req, res) {
-            auth.createSession(req.body)
-                .then(copyAuthCookieFromResponse)
-                .then(sendResult(res))
-                .catch(sendError(res));
-
-            function copyAuthCookieFromResponse(authResponse) {
-                res.append('Set-Cookie', authResponse.authCookie);
-                return authResponse;
-            }
-        });
-        carliMiddleware.delete('/login', function (req, res) {
-            auth.deleteSession()
-                .then(clearAuthCookie)
-                .then(sendResult(res))
-                .catch(sendError(res));
-
-            function clearAuthCookie(authResponse) {
-                res.append('Set-Cookie', 'AuthSession=; Version=1; Expires=-1; Max-Age=-1; Path=/');
-                request.clearAuth();
-                return authResponse;
-            }
-        });
         carliMiddleware.get('/version', function (req, res) {
             res.send({ version: require('./package.json').version });
+        });
+
+        carliMiddleware.put('/tell-pixobot', function (req, res) {
+            email.tellPixobot(req.body);
+            res.send(req.body);
         });
 
         authorizedRoute('put', '/design-doc/:dbName', carliAuth.requireStaff, function (req, res) {
@@ -98,46 +81,74 @@ function runMiddlewareServer(){
             });
         });
 
-        carliMiddleware.put('/tell-pixobot', function (req, res) {
-            email.tellPixobot(req.body);
-            res.send(req.body);
-        });
+        defineRoutesForAuthentication();
+        defineRoutesForLibraries();
+        defineRoutesForCycleDatabases();
+        defineRoutesForOfferings();
+        defineRoutesForUserManagement();
+        defineRoutesForExports();
+        defineRoutesForInvoices();
+        defineRoutesForNotifications();
+        defineRoutesForReports();
+        defineRoutesForTheDrupalSite();
 
-        authorizedRoute('get', '/library', carliAuth.requireSession, function (req, res) {
-            crmQueries.listLibraries()
-                .then(sendResult(res))
-                .catch(send500Error(res));
-        });
-
-        authorizedRoute('get', '/library/:id', carliAuth.requireSession, function (req, res) {
-            crmQueries.loadLibrary(req.params.id)
-                .then(sendResult(res))
-                .catch(send500Error(res));
-        });
-        authorizedRoute('get', '/list-selections-for-library/:libraryId/from-cycle/:cycleId', carliAuth.requireStaffOrLibrary, function (req, res) {
-            libraryQueries.listSelectionsForLibraryFromCycle(req.params.libraryId, req.params.cycleId)
-                .then(sendResult(res))
-                .catch(send500Error(res));
-        });
-        authorizedRoute('get', '/list-offerings-for-library-with-expanded-products/:libraryId/from-cycle/:cycleId', carliAuth.requireStaffOrLibrary, function (req, res) {
-            libraryQueries.listOfferingsForLibraryWithExpandedProducts(req.params.libraryId, req.params.cycleId)
-                .then(sendResult(res))
-                .catch(send500Error(res));
-        });
-        authorizedRoute('get', '/get-historical-selection-data-for-library/:libraryId/for-product/:productId/from-cycle/:cycleId', carliAuth.requireStaffOrLibrary, function (req, res) {
-            libraryQueries.getHistoricalSelectionDataForLibraryForProduct(req.params.libraryId, req.params.productId, req.params.cycleId)
-                .then(sendResult(res))
-                .catch(send500Error(res));
-        });
-        authorizedRouteWithVendorIdParam('get', '/products-with-offerings-for-vendor/:vendorId/for-cycle/:cycleId', carliAuth.requireStaffOrLibraryOrSpecificVendor, function (req, res) {
-            vendorSpecificProductQueries.listProductsWithOfferingsForVendorId(req.params.vendorId, req.params.cycleId)
-                .then(sendResult(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('put', '/cycle-from', carliAuth.requireStaff, function (req, res) {
-            return carliAuth.requireStaff().then(createCycle);
-
-            function createCycle() {
+        function defineRoutesForAuthentication() {
+            carliMiddleware.post('/login', function (req, res) {
+                auth.createSession(req.body)
+                    .then(copyAuthCookieFromResponse)
+                    .then(sendResult(res))
+                    .catch(sendError(res));
+                function copyAuthCookieFromResponse(authResponse) {
+                    res.append('Set-Cookie', authResponse.authCookie);
+                    return authResponse;
+                }
+            });
+            carliMiddleware.delete('/login', function (req, res) {
+                auth.deleteSession()
+                    .then(clearAuthCookie)
+                    .then(sendResult(res))
+                    .catch(sendError(res));
+                function clearAuthCookie(authResponse) {
+                    res.append('Set-Cookie', 'AuthSession=; Version=1; Expires=-1; Max-Age=-1; Path=/');
+                    request.clearAuth();
+                    return authResponse;
+                }
+            });
+        }
+        function defineRoutesForLibraries() {
+            authorizedRoute('get', '/library', carliAuth.requireSession, function (req, res) {
+                crmQueries.listLibraries()
+                    .then(sendResult(res))
+                    .catch(send500Error(res));
+            });
+            authorizedRoute('get', '/library/:id', carliAuth.requireSession, function (req, res) {
+                crmQueries.loadLibrary(req.params.id)
+                    .then(sendResult(res))
+                    .catch(send500Error(res));
+            });
+            authorizedRoute('get', '/list-selections-for-library/:libraryId/from-cycle/:cycleId', carliAuth.requireStaffOrLibrary, function (req, res) {
+                libraryQueries.listSelectionsForLibraryFromCycle(req.params.libraryId, req.params.cycleId)
+                    .then(sendResult(res))
+                    .catch(send500Error(res));
+            });
+            authorizedRoute('get', '/list-offerings-for-library-with-expanded-products/:libraryId/from-cycle/:cycleId', carliAuth.requireStaffOrLibrary, function (req, res) {
+                libraryQueries.listOfferingsForLibraryWithExpandedProducts(req.params.libraryId, req.params.cycleId)
+                    .then(sendResult(res))
+                    .catch(send500Error(res));
+            });
+            authorizedRoute('get', '/get-historical-selection-data-for-library/:libraryId/for-product/:productId/from-cycle/:cycleId', carliAuth.requireStaffOrLibrary, function (req, res) {
+                libraryQueries.getHistoricalSelectionDataForLibraryForProduct(req.params.libraryId, req.params.productId, req.params.cycleId)
+                    .then(sendResult(res))
+                    .catch(send500Error(res));
+            });
+            authorizedRouteWithVendorIdParam('get', '/products-with-offerings-for-vendor/:vendorId/for-cycle/:cycleId', carliAuth.requireStaffOrLibraryOrSpecificVendor, function (req, res) {
+                vendorSpecificProductQueries.listProductsWithOfferingsForVendorId(req.params.vendorId, req.params.cycleId)
+                    .then(sendResult(res))
+                    .catch(sendError(res));
+            });
+        }
+        function defineRoutesForCycleDatabases() {
+            authorizedRoute('put', '/cycle-from', carliAuth.requireStaff, function (req, res) {
                 return cycleCreation.create(req.body.newCycleData)
                     .then(function (newCycleId) {
                         res.send({ id: newCycleId });
@@ -149,273 +160,285 @@ function runMiddlewareServer(){
                     }).catch(function (err) {
                         res.send({ error: err });
                     });
-            }
-        });
-        authorizedRoute('get', '/cycle-creation-status/:id', carliAuth.requireStaff, function (req, res) {
-            return carliAuth.requireStaff().then(getCycleCreationStatus);
-
-            function getCycleCreationStatus() {
-                return cycleCreation.getCycleCreationStatus(req.params.id)
+            });
+            authorizedRoute('get', '/cycle-creation-status/:id', carliAuth.requireStaff, function (req, res) {
+                return carliAuth.requireStaff().then(getCycleCreationStatus);
+                function getCycleCreationStatus() {
+                    return cycleCreation.getCycleCreationStatus(req.params.id)
+                        .then(sendResult(res))
+                        .catch(sendError(res));
+                }
+            });
+            authorizedRoute('get', '/create-all-vendor-databases', carliAuth.requireStaff, function (req, res) {
+                vendorDatabases.createVendorDatabasesForActiveCycles()
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('post', '/replicate-all-data-to-vendors', carliAuth.requireStaff, function (req, res) {
+                vendorDatabases.replicateDataToVendorsForAllCycles()
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('post', '/replicate-all-data-from-vendors', carliAuth.requireStaff, function (req, res) {
+                vendorDatabases.replicateDataFromVendorsForAllCycles()
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('post', '/create-vendor-databases-for-cycle/:cycleId', carliAuth.requireStaff, function (req, res) {
+                vendorDatabases.createVendorDatabasesForCycle(req.params.cycleId)
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('post', '/replicate-data-to-vendors-for-cycle/:cycleId', carliAuth.requireStaff, function (req, res) {
+                vendorDatabases.replicateDataToVendorsForCycle(req.params.cycleId)
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('post', '/replicate-data-to-one-vendor-for-cycle/:vendorId/:cycleId', carliAuth.requireSession, function (req, res) {
+                vendorDatabases.replicateDataToOneVendorForCycle(req.params.vendorId, req.params.cycleId)
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('post', '/replicate-data-from-vendors-for-cycle/:cycleId', carliAuth.requireSession, function (req, res) {
+                vendorDatabases.replicateDataFromVendorsForCycle(req.params.cycleId)
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('get', '/sync', carliAuth.requireStaff, function (req, res) {
+                cluster.worker.send({
+                    command: 'launchSynchronizationWorker'
+                });
+                sendOk(res);
+            });
+            authorizedRoute('get', '/index-all-cycles', carliAuth.requireStaff, function (req, res) {
+                vendorDatabases.triggerIndexingForAllCycles()
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('get', '/index-cycle/:cycleId', carliAuth.requireStaff, function (req, res) {
+                vendorDatabases.triggerIndexingForCycleId(req.params.cycleId)
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('get', '/cycle-database-status/', carliAuth.requireSession, function (req, res) {
+                vendorDatabases.getCycleStatusForAllVendorsAllCycles()
+                    .then(function (arrayOfStatusObjects) {
+                        res.send(arrayOfStatusObjects);
+                    })
+                    .catch(function (err) {
+                        res.send({ error: err });
+                    });
+            });
+            authorizedRoute('get', '/cycle-database-status/:cycleId', carliAuth.requireSession, function (req, res) {
+                vendorDatabases.getCycleStatusForAllVendors(req.params.cycleId)
+                    .then(function (arrayOfStatusObjects) {
+                        res.send(arrayOfStatusObjects);
+                    })
+                    .catch(function (err) {
+                        res.send({ error: err });
+                    });
+            });
+            authorizedRoute('get', '/cycle-database-status/:cycleId/for-vendor/:vendorId', carliAuth.requireSession, function (req, res) {
+                vendorDatabases.getCycleStatusForVendorId(req.params.vendorId, req.params.cycleId)
+                    .then(function (statusObject) {
+                        res.send(statusObject);
+                    })
+                    .catch(function (err) {
+                        res.send({ error: err });
+                    });
+            });
+        }
+        function defineRoutesForOfferings() {
+            authorizedRouteWithVendorIdParam('post', '/update-su-pricing-for-product/:vendorId/:cycleId/:productId', carliAuth.requireStaffOrSpecificVendor, function (req, res) {
+                if (!req.body || !req.body.newSuPricing) {
+                    res.status(400).send('missing pricing data');
+                    return;
+                }
+                vendorSpecificProductQueries.updateSuPricingForProduct(req.params.vendorId, req.params.productId, req.body.newSuPricing, req.params.cycleId)
                     .then(sendResult(res))
                     .catch(sendError(res));
-            }
-        });
-        authorizedRoute('get', '/create-all-vendor-databases', carliAuth.requireStaff, function (req, res) {
-            vendorDatabases.createVendorDatabasesForActiveCycles()
-                .then(sendOk(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('post', '/replicate-all-data-to-vendors', carliAuth.requireStaff, function (req, res) {
-            vendorDatabases.replicateDataToVendorsForAllCycles()
-                .then(sendOk(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('post', '/replicate-all-data-from-vendors', carliAuth.requireStaff, function (req, res) {
-            vendorDatabases.replicateDataFromVendorsForAllCycles()
-                .then(sendOk(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('post', '/create-vendor-databases-for-cycle/:cycleId', carliAuth.requireStaff, function (req, res) {
-            vendorDatabases.createVendorDatabasesForCycle(req.params.cycleId)
-                .then(sendOk(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('post', '/replicate-data-to-vendors-for-cycle/:cycleId', carliAuth.requireStaff, function (req, res) {
-            vendorDatabases.replicateDataToVendorsForCycle(req.params.cycleId)
-                .then(sendOk(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('post', '/replicate-data-to-one-vendor-for-cycle/:vendorId/:cycleId', carliAuth.requireSession, function(req, res) {
-            vendorDatabases.replicateDataToOneVendorForCycle(req.params.vendorId,req.params.cycleId)
-                .then(sendOk(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('post', '/replicate-data-from-vendors-for-cycle/:cycleId', carliAuth.requireSession, function (req, res) {
-            vendorDatabases.replicateDataFromVendorsForCycle(req.params.cycleId)
-                .then(sendOk(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('get', '/sync', carliAuth.requireStaff, function (req, res) {
-            cluster.worker.send({
-                command: 'launchSynchronizationWorker'
             });
-            sendOk(res);
-        });
-        authorizedRoute('get', '/index-all-cycles', carliAuth.requireStaff, function (req, res) {
-            vendorDatabases.triggerIndexingForAllCycles()
-                .then(sendOk(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('get', '/index-cycle/:cycleId', carliAuth.requireStaff, function (req, res) {
-            vendorDatabases.triggerIndexingForCycleId(req.params.cycleId)
-                .then(sendOk(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('get', '/cycle-database-status/', carliAuth.requireSession, function (req, res) {
-            vendorDatabases.getCycleStatusForAllVendorsAllCycles()
-                .then(function (arrayOfStatusObjects) {
-                    res.send(arrayOfStatusObjects);
-                })
-                .catch(function (err) {
-                    res.send({ error: err });
-                });
-        });
-        authorizedRoute('get', '/cycle-database-status/:cycleId', carliAuth.requireSession, function (req, res) {
-            vendorDatabases.getCycleStatusForAllVendors(req.params.cycleId)
-                .then(function (arrayOfStatusObjects) {
-                    res.send(arrayOfStatusObjects);
-                })
-                .catch(function (err) {
-                    res.send({ error: err });
-                });
-        });
-        authorizedRoute('get', '/cycle-database-status/:cycleId/for-vendor/:vendorId', carliAuth.requireSession, function (req, res) {
-            vendorDatabases.getCycleStatusForVendorId(req.params.vendorId, req.params.cycleId)
-                .then(function (statusObject) {
-                    res.send(statusObject);
-                })
-                .catch(function (err) {
-                    res.send({ error: err });
-                });
-        });
-        authorizedRouteWithVendorIdParam('post', '/update-su-pricing-for-product/:vendorId/:cycleId/:productId', carliAuth.requireStaffOrSpecificVendor, function (req, res) {
-
-            if ( !req.body || !req.body.newSuPricing ){
-                res.status(400).send('missing pricing data');
-                return;
-            }
-
-            vendorSpecificProductQueries.updateSuPricingForProduct(req.params.vendorId, req.params.productId, req.body.newSuPricing, req.params.cycleId)
-                .then(sendResult(res))
-                .catch(sendError(res));
-
-        });
-        authorizedRouteWithVendorIdParam('post', '/update-su-comment-for-product/:vendorId/:cycleId/:productId', carliAuth.requireStaffOrSpecificVendor, function (req, res) {
-
-            if ( !req.body || !req.body.users || typeof req.body.comment === 'undefined'){
-                res.status(400).send('missing comment data');
-                return;
-            }
-
-            vendorSpecificProductQueries.updateSuCommentForProduct(req.params.vendorId, req.params.productId, req.body.users, req.body.comment, req.params.cycleId)
-                .then(sendResult(res))
-                .catch(sendError(res));
-
-        });
-
-        authorizedRouteWithVendorIdParam('post', '/update-flagged-offerings-for-vendor/:vendorId/for-cycle/:cycleId', carliAuth.requireStaffOrSpecificVendor, function (req, res) {
-            vendorDatabases.updateFlaggedOfferingsForVendor(req.params.vendorId, req.params.cycleId)
-                .then(sendOk(res))
-                .catch(sendError(res));
-        });
-
-        authorizedRoute('get', '/user', carliAuth.requireSession, function (req, res) {
-            user.list()
-                .then(sendResult(res))
-                .catch(sendError(res));
-        });
-        carliMiddleware.get('/user/:email', function (req, res) {
-            user.load(req.params.email)
-                .then(sendResult(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('post', '/user', carliAuth.requireStaffOrLibrary, function (req, res) {
-            user.create(req.body)
-                .then(sendOk(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('put', '/user/:email', carliAuth.requireStaffOrLibrary, function (req, res) {
-            user.update(req.body)
-                .then(sendOk(res))
-                .catch(sendError(res));
-        });
-        carliMiddleware.get('/user/:email/reset', function (req, res) {
-            var baseUrl = req.protocol + '://' + req.hostname;
-            user.requestPasswordReset(req.params.email, baseUrl)
-                .then(sendOk(res))
-                .catch(sendError(res));
-        });
-        carliMiddleware.get('/user/validate-key/:key', function (req, res) {
-            user.isKeyValid(req.params.key)
-                .then(sendResult(res))
-                .catch(sendError(res));
-        });
-        carliMiddleware.put('/user/consume-key/:key', function (req, res) {
-            user.consumeKey(req.params.key, req.body)
-                .then(sendOk(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('get', '/pdf/content/:notificationId', carliAuth.requireStaffOrLibrary, function(req, res) {
-            pdf.contentForPdf(req.params.notificationId)
-                .then(function(pdfContent){
-                    res.send(pdfContent.html);
-                })
-                .catch(sendError(res));
-        });
-        authorizedRoute('get', '/pdf/export/:notificationId', carliAuth.requireStaffOrLibrary, function(req, res) {
-            pdf.exportPdf(req.params.notificationId)
-                .then(function(exportResults){
-                    res.setHeader('Content-Disposition', 'attachment; filename="'+ exportResults.fileName +'"');
-                    res.send(exportResults.pdf);
-                })
-                .catch(sendError(res));
-        });
-
-        authorizedRoute('get', '/csv/data/:notificationId', carliAuth.requireStaff, function(req, res) {
-            vendorReportCsv.contentForVendorReport(req.params.notificationId)
-                .then(function(dataForReport){
-                    res.send(dataForReport);
-                })
-                .catch(sendError(res));
-        });
-        authorizedRoute('get', '/csv/export/:notificationId', carliAuth.requireStaff, function(req, res) {
-            vendorReportCsv.exportCsvForVendorReport(req.params.notificationId)
-                .then(function(exportResults){
-                    res.setHeader('Content-Disposition', 'attachment; filename="'+ exportResults.fileName +'"');
-                    res.type('csv');
-                    res.send(exportResults.csv);
-                })
-                .catch(sendError(res));
-        });
-        authorizedRoute('get', '/next-batch-id', carliAuth.requireStaff, function(req, res) {
-            pdf.generateNextBatchId()
-                .then(sendJsonResult(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('get', '/next-invoice-number', carliAuth.requireStaff, function(req, res) {
-            pdf.generateNextInvoiceNumber()
-                .then(sendJsonResult(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('post', '/send-notification-email/:notificationId', carliAuth.requireStaff, function(req, res) {
-            carliAuth.requireStaff()
-                .then(function(){
-                    return email.sendNotificationEmail(req.params.notificationId);
-                })
-                .then(sendOk(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('post', '/notify-carli-of-one-time-purchase/:offeringId', carliAuth.requireSession, function(req, res) {
-            carliAuth.requireSession()
-                .then(function(){
-                    return email.sendOneTimePurchaseMessage(req.params.offeringId);
-                })
-                .then(sendOk(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('post', '/ask-carli', carliAuth.requireSession, function(req, res) {
-            carliAuth.requireSession()
-                .then(function(){
-                    return email.sendAskCarliMessage(req.body);
-                })
-                .then(sendOk(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('get', '/reports/selected-products/:parameters/:columns', carliAuth.requireStaff, function(req, res) {
-            reports.selectedProductsReport(req.params.parameters, req.params.columns)
-                .then(sendJsonResult(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('get', '/reports/contacts/:parameters/:columns', carliAuth.requireStaff, function(req, res) {
-            reports.contactsReport(req.params.parameters, req.params.columns)
-                .then(sendJsonResult(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('get', '/reports/statistics/:parameters/:columns', carliAuth.requireStaff, function(req, res) {
-            reports.statisticsReport(req.params.parameters, req.params.columns)
-                .then(sendJsonResult(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('get', '/reports/selections-by-vendor/:parameters/:columns', carliAuth.requireStaff, function(req, res) {
-            reports.selectionsByVendorReport(req.params.parameters, req.params.columns)
-                .then(sendJsonResult(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('get', '/reports/totals/:parameters/:columns', carliAuth.requireStaff, function(req, res) {
-            reports.totalsReport(req.params.parameters, req.params.columns)
-                .then(sendJsonResult(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('get', '/reports/list-products-for-vendor/:parameters/:columns', carliAuth.requireStaff, function(req, res) {
-            reports.listProductsForVendorReport(req.params.parameters, req.params.columns)
-                .then(sendJsonResult(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('get', '/reports/contracts/:parameters/:columns', carliAuth.requireStaff, function(req, res) {
-            reports.contractsReport(req.params.parameters, req.params.columns)
-                .then(sendJsonResult(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('get', '/reports/product-names/:parameters/:columns', carliAuth.requireStaff, function(req, res) {
-            reports.productNamesReport(req.params.parameters, req.params.columns)
-                .then(sendJsonResult(res))
-                .catch(sendError(res));
-        });
-        authorizedRoute('get', '/reports/list-libraries/:parameters/:columns', carliAuth.requireStaff, function(req, res) {
-            reports.listLibrariesReport(req.params.parameters, req.params.columns)
-                .then(sendJsonResult(res))
-                .catch(sendError(res));
-        });
+            authorizedRouteWithVendorIdParam('post', '/update-su-comment-for-product/:vendorId/:cycleId/:productId', carliAuth.requireStaffOrSpecificVendor, function (req, res) {
+                if (!req.body || !req.body.users || typeof req.body.comment === 'undefined') {
+                    res.status(400).send('missing comment data');
+                    return;
+                }
+                vendorSpecificProductQueries.updateSuCommentForProduct(req.params.vendorId, req.params.productId, req.body.users, req.body.comment, req.params.cycleId)
+                    .then(sendResult(res))
+                    .catch(sendError(res));
+            });
+            authorizedRouteWithVendorIdParam('post', '/update-flagged-offerings-for-vendor/:vendorId/for-cycle/:cycleId', carliAuth.requireStaffOrSpecificVendor, function (req, res) {
+                vendorDatabases.updateFlaggedOfferingsForVendor(req.params.vendorId, req.params.cycleId)
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
+        }
+        function defineRoutesForUserManagement() {
+            authorizedRoute('get', '/user', carliAuth.requireSession, function (req, res) {
+                user.list()
+                    .then(sendResult(res))
+                    .catch(sendError(res));
+            });
+            carliMiddleware.get('/user/:email', function (req, res) {
+                user.load(req.params.email)
+                    .then(sendResult(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('post', '/user', carliAuth.requireStaffOrLibrary, function (req, res) {
+                user.create(req.body)
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('put', '/user/:email', carliAuth.requireStaffOrLibrary, function (req, res) {
+                user.update(req.body)
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
+            carliMiddleware.get('/user/:email/reset', function (req, res) {
+                var baseUrl = req.protocol + '://' + req.hostname;
+                user.requestPasswordReset(req.params.email, baseUrl)
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
+            carliMiddleware.get('/user/validate-key/:key', function (req, res) {
+                user.isKeyValid(req.params.key)
+                    .then(sendResult(res))
+                    .catch(sendError(res));
+            });
+            carliMiddleware.put('/user/consume-key/:key', function (req, res) {
+                user.consumeKey(req.params.key, req.body)
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
+        }
+        function defineRoutesForExports() {
+            authorizedRoute('get', '/pdf/content/:notificationId', carliAuth.requireStaffOrLibrary, function (req, res) {
+                pdf.contentForPdf(req.params.notificationId)
+                    .then(function (pdfContent) {
+                        res.send(pdfContent.html);
+                    })
+                    .catch(sendError(res));
+            });
+            authorizedRoute('get', '/pdf/export/:notificationId', carliAuth.requireStaffOrLibrary, function (req, res) {
+                pdf.exportPdf(req.params.notificationId)
+                    .then(function (exportResults) {
+                        res.setHeader('Content-Disposition', 'attachment; filename="' + exportResults.fileName + '"');
+                        res.send(exportResults.pdf);
+                    })
+                    .catch(sendError(res));
+            });
+            authorizedRoute('get', '/csv/data/:notificationId', carliAuth.requireStaff, function (req, res) {
+                vendorReportCsv.contentForVendorReport(req.params.notificationId)
+                    .then(function (dataForReport) {
+                        res.send(dataForReport);
+                    })
+                    .catch(sendError(res));
+            });
+            authorizedRoute('get', '/csv/export/:notificationId', carliAuth.requireStaff, function (req, res) {
+                vendorReportCsv.exportCsvForVendorReport(req.params.notificationId)
+                    .then(function (exportResults) {
+                        res.setHeader('Content-Disposition', 'attachment; filename="' + exportResults.fileName + '"');
+                        res.type('csv');
+                        res.send(exportResults.csv);
+                    })
+                    .catch(sendError(res));
+            });
+        }
+        function defineRoutesForInvoices() {
+            authorizedRoute('get', '/next-batch-id', carliAuth.requireStaff, function (req, res) {
+                pdf.generateNextBatchId()
+                    .then(sendJsonResult(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('get', '/next-invoice-number', carliAuth.requireStaff, function (req, res) {
+                pdf.generateNextInvoiceNumber()
+                    .then(sendJsonResult(res))
+                    .catch(sendError(res));
+            });
+        }
+        function defineRoutesForNotifications() {
+            authorizedRoute('post', '/send-notification-email/:notificationId', carliAuth.requireStaff, function (req, res) {
+                carliAuth.requireStaff()
+                    .then(function () {
+                        return email.sendNotificationEmail(req.params.notificationId);
+                    })
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('post', '/notify-carli-of-one-time-purchase/:offeringId', carliAuth.requireSession, function (req, res) {
+                carliAuth.requireSession()
+                    .then(function () {
+                        return email.sendOneTimePurchaseMessage(req.params.offeringId);
+                    })
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('post', '/ask-carli', carliAuth.requireSession, function (req, res) {
+                carliAuth.requireSession()
+                    .then(function () {
+                        return email.sendAskCarliMessage(req.body);
+                    })
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
+        }
+        function defineRoutesForReports() {
+            authorizedRoute('get', '/reports/selected-products/:parameters/:columns', carliAuth.requireStaff, function (req, res) {
+                reports.selectedProductsReport(req.params.parameters, req.params.columns)
+                    .then(sendJsonResult(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('get', '/reports/contacts/:parameters/:columns', carliAuth.requireStaff, function (req, res) {
+                reports.contactsReport(req.params.parameters, req.params.columns)
+                    .then(sendJsonResult(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('get', '/reports/statistics/:parameters/:columns', carliAuth.requireStaff, function (req, res) {
+                reports.statisticsReport(req.params.parameters, req.params.columns)
+                    .then(sendJsonResult(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('get', '/reports/selections-by-vendor/:parameters/:columns', carliAuth.requireStaff, function (req, res) {
+                reports.selectionsByVendorReport(req.params.parameters, req.params.columns)
+                    .then(sendJsonResult(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('get', '/reports/totals/:parameters/:columns', carliAuth.requireStaff, function (req, res) {
+                reports.totalsReport(req.params.parameters, req.params.columns)
+                    .then(sendJsonResult(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('get', '/reports/list-products-for-vendor/:parameters/:columns', carliAuth.requireStaff, function (req, res) {
+                reports.listProductsForVendorReport(req.params.parameters, req.params.columns)
+                    .then(sendJsonResult(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('get', '/reports/contracts/:parameters/:columns', carliAuth.requireStaff, function (req, res) {
+                reports.contractsReport(req.params.parameters, req.params.columns)
+                    .then(sendJsonResult(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('get', '/reports/product-names/:parameters/:columns', carliAuth.requireStaff, function (req, res) {
+                reports.productNamesReport(req.params.parameters, req.params.columns)
+                    .then(sendJsonResult(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('get', '/reports/list-libraries/:parameters/:columns', carliAuth.requireStaff, function (req, res) {
+                reports.listLibrariesReport(req.params.parameters, req.params.columns)
+                    .then(sendJsonResult(res))
+                    .catch(sendError(res));
+            });
+        }
+        function defineRoutesForTheDrupalSite() {
+            carliMiddleware.get('/public/list-all-products', function (req, res) {
+                publicApi.listProductsWithTermsForPublicWebsite()
+                    .then(sendJsonResult(res))
+                    .catch(sendError(res));
+            });
+            carliMiddleware.get('/public/list-subscriptions-for-library/:libraryId', function (req, res) {
+                throw new Error('Not implemented');
+            });
+        }
     }
 }
 
