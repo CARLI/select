@@ -280,9 +280,6 @@ function listActiveProductsFromActiveCycles() {
         .then(listProductsForAllCycles)
         .then(returnConsolidatedProductList);
 
-    function sortCyclesByYear(cycles) {
-        return sortArrayOfObjectsByKeyDescending(cycles, 'year');
-    }
     function listProductsForAllCycles(cycles) {
         var productPromises = [];
 
@@ -305,12 +302,6 @@ function listActiveProductsFromActiveCycles() {
                 return activeProducts;
             }
         }
-
-        function filterActiveProducts(products) {
-            return products.filter(function(product) {
-                return product.getIsActive();
-            });
-        }
     }
     function returnConsolidatedProductList() {
         var products = [];
@@ -323,11 +314,21 @@ function listActiveProductsFromActiveCycles() {
     }
 }
 
+function filterActiveProducts(products) {
+    return products.filter(function(product) {
+        return product.getIsActive();
+    });
+}
+
 function setStore(store) {
     storeOptions = store.getOptions();
     ProductRepository.setStore(store);
     couchUtils = require('../Store/CouchDb/Utils')(storeOptions);
     // EntityTransform.setEntityLookupStores(store);
+}
+
+function sortCyclesByYear(cycles) {
+    return sortArrayOfObjectsByKeyDescending(cycles, 'year');
 }
 
 function sortArrayOfObjectsByKeyAscending(arr, key) {

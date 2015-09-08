@@ -263,6 +263,48 @@ function listOfferingsWithSelectionsForLibrary( libraryId, cycle ){
     return expandOfferings( couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listOfferingsWithSelections', libraryId), cycle )
 }
 
+function listSelectedProductsFromActiveCyclesForLibrary(library) {
+    var consolidatedOfferingsById = {};
+
+    return cycleRepository.listActiveCycles()
+        .then(sortCyclesByYear)
+        .then(listProductsForAllCyclesForLibrary)
+        .then(returnConsolidatedProductList);
+
+    function listProductsForAllCyclesForLibrary(cycles) {
+        var offeringPromises = [];
+
+        cycles.forEach(listOfferingsFromCycle);
+
+        return Q.all(offeringPromises);
+
+        function listOfferingsFromCycle(cycle) {
+            var listOfferingsPromise = listOfferingsWithSelectionsForLibrary(library.id, cycle)
+                .then(addToList);
+
+            offeringPromises.push(listOfferingsPromise);
+
+            function addToList(offerings) {
+                offerings.forEach(function (product) {
+                    if (!consolidatedOfferingsById.hasOwnProperty(product.id)) {
+                        consolidatedOfferingsById[product.id] = product;
+                    }
+                });
+                return offerings;
+            }
+        }
+    }
+    function returnConsolidatedProductList() {
+        var products = [];
+
+        Object.keys(consolidatedOfferingsById).forEach(function (productId) {
+            products.push(consolidatedOfferingsById[productId]);
+        });
+
+        return sortArrayOfObjectsByKeyAscending(products, 'name');
+    }
+}
+
 function setSuPricingForAllLibrariesForProduct( productId, newSuPricing, cycle ){
     return listOfferingsForProductIdUnexpanded(productId, cycle)
         .then(applyNewSuPricingToAllOfferings);
@@ -585,7 +627,6 @@ function getFlaggedState(offering, cycleArgument) {
     }
 }
 
-
 /* functions that get added as instance methods on loaded Offerings */
 var functionsToAdd = {
     //warning: some Offering views are in the Middleware and cross the http layer, which strips these functions
@@ -661,6 +702,26 @@ function setStore(store) {
     couchUtils = require('../Store/CouchDb/Utils')(storeOptions);
 }
 
+function sortCyclesByYear(cycles) {
+    return sortArrayOfObjectsByKeyDescending(cycles, 'year');
+}
+
+function sortArrayOfObjectsByKeyAscending(arr, key) {
+    return arr.sort(function(a, b) {
+        var x = a[key];
+        var y = b[key];
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    });
+}
+
+function sortArrayOfObjectsByKeyDescending(arr, key) {
+    return arr.sort(function(a, b) {
+        var x = a[key];
+        var y = b[key];
+        return -1 * ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    });
+}
+
 module.exports = {
     setStore: setStore,
     setCycle: setCycle,
@@ -677,6 +738,7 @@ module.exports = {
     listOfferingsWithSelections: listOfferingsWithSelections,
     listOfferingsWithSelectionsUnexpanded: listOfferingsWithSelectionsUnexpanded,
     listOfferingsWithSelectionsForLibrary: listOfferingsWithSelectionsForLibrary,
+    listSelectedProductsFromActiveCyclesForLibrary: listSelectedProductsFromActiveCyclesForLibrary,
     setSuPricingForAllLibrariesForProduct: setSuPricingForAllLibrariesForProduct,
     updateSuPricingForAllLibrariesForProduct: updateSuPricingForAllLibrariesForProduct,
     updateSuCommentForAllLibrariesForProduct: updateSuCommentForAllLibrariesForProduct,
