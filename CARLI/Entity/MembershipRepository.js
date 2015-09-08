@@ -47,4 +47,11 @@ MembershipRepository.listLibrariesWithDues = function(membershipData){
     }
 };
 
+MembershipRepository.getMembershipFeesForLibrary = function(libraryId, year){
+    return MembershipRepository.loadDataForYear(year)
+        .then(function(membershipData){
+            return membershipData.data[libraryId];
+        });
+};
+
 module.exports = MembershipRepository;
