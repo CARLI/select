@@ -14,7 +14,8 @@ var vendorRepository = require('../../../CARLI/Entity/VendorRepository');
 
 setupHandlebarsHelpers();
 var templatesDirectory = 'components/pdf/templates/';
-var invoiceContentTemplate = loadAndCompileHandlebarsTemplate('invoiceContentTemplate.handlebars');
+var subscriptionInvoiceContentTemplate = loadAndCompileHandlebarsTemplate('subscriptionInvoiceContentTemplate.handlebars');
+var membershipInvoiceContentTemplate = loadAndCompileHandlebarsTemplate('membershipInvoiceContentTemplate.handlebars');
 var invoicePdfTemplate = loadAndCompileHandlebarsTemplate('invoicePdfTemplate.handlebars');
 
 function exportPdf(notificationId){
@@ -234,7 +235,12 @@ function htmlForPdf(dataForPdf){
         });
 
     function createInvoiceContent(){
-        return invoiceContentTemplate(dataForPdf);
+        if ( typeIsForMembershipDuesInvoice(type) ){
+            return membershipInvoiceContentTemplate(dataForPdf);
+        }
+        else {
+            return subscriptionInvoiceContentTemplate(dataForPdf);
+        }
     }
 
     function createFinalPdfContent(){
