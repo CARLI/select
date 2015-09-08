@@ -13,6 +13,7 @@ function cycleService( CarliModules, $q, errorHandler, userService ) {
     var currentCycle = null;
 
     return {
+        list: function() { return $q.when(cycleModule.list()).catch(errorHandler); },
         listActiveCycles: listActiveCycles,
         listActiveCyclesIncludingOneTimePurchase: listActiveCyclesIncludingOneTimePurchase,
         listOpenForSelectionsCycles: listOpenForSelectionsCycles,

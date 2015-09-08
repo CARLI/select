@@ -3,6 +3,7 @@ angular.module('library.routes',[
         'library.sections.addSubscriptions',
         'library.sections.addOneTimePurchases',
         'library.sections.login',
+        'library.sections.report',
         'library.sections.resetRequest'
 ])
     .config(function ($routeProvider) {
@@ -27,22 +28,17 @@ angular.module('library.routes',[
                 controller:  'resetRequestPageController',
                 controllerAs:'vm'
             })
-//            .when('/addSubscriptions', {
-//                templateUrl: '/libraryApp/sections/',
-//                controller:  'Controller',
-//                controllerAs:'vm'
-//            })
             .when('/addOneTimePurchases', {
                 templateUrl: '/libraryApp/sections/addOneTimePurchases/addOneTimePurchases.html',
                 controller:  'addOneTimePurchasesController',
                 controllerAs:'vm'
             })
-            /*.when('/report', {
-                templateUrl: '/libraryApp/sections/',
-                controller:  'Controller',
+            .when('/report', {
+                templateUrl: '/libraryApp/sections/report/report.html',
+                controller:  'reportController',
                 controllerAs:'vm'
             })
-            .when('/notifications', {
+/*            .when('/notifications', {
                 templateUrl: '/libraryApp/sections/',
                 controller:  'Controller',
                 controllerAs:'vm'

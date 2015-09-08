@@ -194,7 +194,15 @@ function getSummaryTotal(notification, offerings) {
         return 0;
     }
 
-    return (notification.isFeeInvoice) ? getSummaryOfAccessFees() : getSummaryOfSelectedOfferings();
+    if ( notification.isFeeInvoice ){
+        return getSummaryOfAccessFees();
+    }
+    else if ( notification.isMembershipDuesInvoice ){
+        return getMembershipDuesSummary();
+    }
+    else {
+        return getSummaryOfSelectedOfferings();
+    }
 
     function getSummaryOfAccessFees() {
         return offerings ? offerings.reduce(sumOfFees, 0) : 0;
@@ -214,6 +222,18 @@ function getSummaryTotal(notification, offerings) {
         function sumOfPrices(sum, offering) {
             if (offering.selection) {
                 return sum + offering.selection.price;
+            } else {
+                return sum;
+            }
+        }
+    }
+
+    function getMembershipDuesSummary(){
+        return offerings ? offerings.reduce(sumOfDues, 0) : 0;
+
+        function sumOfDues(sum, offering) {
+            if (offering.pricing) {
+                return sum + offering.pricing.ishare + offering.pricing.membership;
             } else {
                 return sum;
             }
@@ -285,6 +305,10 @@ function templateIsForAnnualAccessFeeInvoice(templateId) {
     return templateId === 'notification-template-annual-access-fee-invoices';
 }
 
+function templateIsForMembershipDues(templateId) {
+    return templateId === 'notification-template-membership-invoices';
+}
+
 function notificationTypeAllowsRecipientsToBeEdited(notificationType){
     return notificationType === 'other';
 }
@@ -314,6 +338,7 @@ module.exports = {
     notificationTypeIsForEstimate: notificationTypeIsForEstimate,
     notificationTypeIsForReminder: notificationTypeIsForReminder,
     templateIsForAnnualAccessFeeInvoice: templateIsForAnnualAccessFeeInvoice,
+    templateIsForMembershipDues: templateIsForMembershipDues,
     notificationTypeAllowsRecipientsToBeEdited: notificationTypeAllowsRecipientsToBeEdited,
     listInvoiceNotificationsForCycleId: listInvoiceNotificationsForCycleId,
     getSummaryTotal: getSummaryTotal

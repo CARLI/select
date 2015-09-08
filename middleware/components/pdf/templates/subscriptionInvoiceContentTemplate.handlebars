@@ -14,10 +14,11 @@
     <tr class="footer">
         <td class="vendor" colspan="2">
             {{#if realInvoice }}
-                Please pay this total:</td>
+                Please pay this total:
             {{ else }}
                 Total:
             {{/if}}
+        </td>
         <td class="total amount">$<span class="align">{{ currency invoiceTotal }}</span></td>
     </tr>
 </table>

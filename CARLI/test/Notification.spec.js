@@ -385,6 +385,28 @@ describe('the getSummaryTotal method', function () {
 
         expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(20);
     });
+
+    it('should return the sum of dues from fake offerings if the notification is for membership dues', function(){
+        var notification = validNotificationData();
+        notification.isMembershipDuesInvoice = true;
+
+        var offerings = [
+            {
+                pricing: {
+                    ishare: 100,
+                    membership: 100
+                }
+            },
+            {
+                pricing: {
+                    ishare: 100,
+                    membership: 100
+                }
+            }
+        ];
+
+        expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(400);
+    });
 });
 
 describe('Adding functions to Notification instances', function () {
@@ -505,6 +527,24 @@ describe('the templateIsForAnnualAccessFeeInvoice method', function () {
 
     it('should return the correct value for a bogus id', function () {
         expect(notificationRepository.templateIsForAnnualAccessFeeInvoice('subscription')).to.equal(false);
+    });
+});
+
+describe('the templateIsForMembershipDues method', function () {
+    it('should be a function', function(){
+        expect(notificationRepository.templateIsForMembershipDues).to.be.a('function');
+    });
+
+    it('should return the correct value for a non-matching template id', function () {
+        expect(notificationRepository.templateIsForMembershipDues('notification-template-annual-access-fee-invoices')).to.equal(false);
+    });
+
+    it('should return the correct value for a matching id', function () {
+        expect(notificationRepository.templateIsForMembershipDues('notification-template-membership-invoices')).to.equal(true);
+    });
+
+    it('should return the correct value for a bogus id', function () {
+        expect(notificationRepository.templateIsForMembershipDues('subscription')).to.equal(false);
     });
 });
 

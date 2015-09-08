@@ -10,7 +10,48 @@ var MembershipRepository = Entity('Membership');
 MembershipRepository.setStore(Store(StoreModule(StoreOptions)));
 
 MembershipRepository.loadDataForYear = function (year) {
-    return couchUtils.getCouchViewResultValues(StoreOptions.couchDbName, 'membershipByYear', year);
+    return couchUtils.getCouchViewResultValues(StoreOptions.couchDbName, 'membershipByYear', year)
+        .then(function(viewResults) {
+            return viewResults[0];
+        });
+};
+
+MembershipRepository.getMembershipDuesAsOfferings = function (membershipData) {
+    var libraryIds = Object.keys(membershipData.data);
+    var year = membershipData.year;
+
+    return libraryIds.map(function convertMembershipDuesToOffering(libraryId) {
+        var dues = membershipData.data[libraryId];
+        return {
+            cycle: {
+                year: year
+            },
+            library: {
+                id: libraryId
+            },
+            pricing: {
+                ishare: dues.ishare,
+                membership: dues.membership
+            }
+        }
+    });
+};
+
+MembershipRepository.listLibrariesWithDues = function(membershipData){
+    var allLibraryIds = Object.keys(membershipData.data);
+    return allLibraryIds.filter(libraryHasMembershipDues);
+
+    function libraryHasMembershipDues(libraryId){
+        var dues = membershipData.data[libraryId];
+        return dues.ishare || dues.membership;
+    }
+};
+
+MembershipRepository.getMembershipFeesForLibrary = function(libraryId, year){
+    return MembershipRepository.loadDataForYear(year)
+        .then(function(membershipData){
+            return membershipData.data[libraryId];
+        });
 };
 
 module.exports = MembershipRepository;

@@ -70,6 +70,16 @@ var notificationTemplates = [
         pdfAfter: 'This text appears after the annual access fee invoice contents',
         pdfContentIsEditable: true,
         notificationType: 'invoice'
+    },
+    {
+        id: 'notification-template-membership-invoices',
+        name: 'Membership Invoices',
+        subject: 'CARLI Membership Invoices',
+        emailBody: '',
+        pdfBefore: 'This text appears before the membership invoice contents',
+        pdfAfter: 'This text appears after the membership invoice contents',
+        pdfContentIsEditable: true,
+        notificationType: 'invoice'
     }
 ];
 
