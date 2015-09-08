@@ -1,28 +1,29 @@
-var Entity = require('../Entity')
-    , config = require( '../../config' )
-    , StoreOptions = config.storeOptions
-    , Store = require( '../Store' )
-    , StoreModule = require( '../Store/CouchDb/Store')
-    , EntityTransform = require( './EntityTransformationUtils')
-    , CouchUtils = require( '../Store/CouchDb/Utils')()
-    , Q = require('q')
-    , Validator = require('../Validator')
-    ;
+
+var Q = require('q');
+
+var config = require( '../../config' );
+var CouchUtils = require( '../Store/CouchDb/Utils')();
+var CycleRepository = require('./CycleRepository');
+var Entity = require('../Entity');
+var EntityTransform = require( './EntityTransformationUtils');
+var ProductRepository = require('./ProductRepository');
+var Store = require( '../Store' );
+var StoreModule = require( '../Store/CouchDb/Store');
+var Validator = require('../Validator');
 
 var LicenseRepository = Entity('License');
-LicenseRepository.setStore( Store( StoreModule(StoreOptions) ) );
-
+LicenseRepository.setStore( Store( StoreModule(config.storeOptions) ) );
 
 /* functions that get added as instance methods on loaded licenses */
-var getIsActive = function(){
-    if ( this.vendor && this.vendor.isActive != undefined) {
+function getIsActive() {
+    if ( this.vendor && this.vendor.isActive !== undefined) {
         return this.isActive && this.vendor.isActive;
     }
     return this.isActive;
-};
+}
 
 var functionsToAdd = {
-    'getIsActive': getIsActive
+    getIsActive: getIsActive
 };
 
 var propertiesToTransform = ['vendor'];

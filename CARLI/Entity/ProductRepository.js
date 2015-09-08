@@ -1,16 +1,17 @@
-var Entity = require('../Entity')
-  , EntityTransform = require( './EntityTransformationUtils')
-  , CycleRepository = require('./CycleRepository')
-  , config = require( '../../config' )
-  , couchUtils = require( '../Store/CouchDb/Utils')()
-  , getStoreForCycle = require('./getStoreForCycle')
-  , Validator = require('../Validator')
-  , moment = require('moment')
-  , Q = require('q')
-  ;
 
-var storeOptions = {};
+var moment = require('moment');
+var Q = require('q');
+
+var config = require( '../../config' );
+var couchUtils = require( '../Store/CouchDb/Utils')();
+var CycleRepository = require('./CycleRepository');
+var Entity = require('../Entity');
+var EntityTransform = require( './EntityTransformationUtils');
+var getStoreForCycle = require('./getStoreForCycle');
+var Validator = require('../Validator');
+
 var ProductRepository = Entity('Product');
+var storeOptions = {};
 
 var propertiesToTransform = ['cycle', 'vendor', 'license'];
 
@@ -21,7 +22,6 @@ function transformFunction( product ){
 function expandProducts( listPromise, cycle ){
     return EntityTransform.expandListOfObjectsFromPersistence( listPromise, propertiesToTransform, functionsToAdd);
 }
-
 
 function createProduct( product, cycle ){
     setCycle(cycle);
@@ -272,12 +272,80 @@ function getProductDetailCodeOptions(){
     return Validator.getEnumValuesFor('ProductDetailCodes');
 }
 
+function listActiveProductsFromActiveCycles() {
+    var consolidatedProductsById = {};
+
+    return CycleRepository.listActiveCycles()
+        .then(sortCyclesByYear)
+        .then(listProductsForAllCycles)
+        .then(returnConsolidatedProductList);
+
+    function sortCyclesByYear(cycles) {
+        return sortArrayOfObjectsByKeyDescending(cycles, 'year');
+    }
+    function listProductsForAllCycles(cycles) {
+        var productPromises = [];
+
+        cycles.forEach(listProductsFromCycle);
+
+        return Q.all(productPromises);
+
+        function listProductsFromCycle(cycle) {
+            var listProductsPromise = listProducts(cycle)
+                .then(filterActiveProducts)
+                .then(addToProductList);
+            productPromises.push(listProductsPromise);
+
+            function addToProductList(activeProducts) {
+                activeProducts.forEach(function (product) {
+                    if (!consolidatedProductsById.hasOwnProperty(product.id)) {
+                        consolidatedProductsById[product.id] = product;
+                    }
+                });
+                return activeProducts;
+            }
+        }
+
+        function filterActiveProducts(products) {
+            return products.filter(function(product) {
+                return product.getIsActive();
+            });
+        }
+    }
+    function returnConsolidatedProductList() {
+        var products = [];
+
+        Object.keys(consolidatedProductsById).forEach(function (productId) {
+            products.push(consolidatedProductsById[productId]);
+        });
+
+        return sortArrayOfObjectsByKeyAscending(products, 'name');
+    }
+}
+
 function setStore(store) {
     storeOptions = store.getOptions();
     ProductRepository.setStore(store);
     couchUtils = require('../Store/CouchDb/Utils')(storeOptions);
     // EntityTransform.setEntityLookupStores(store);
 }
+
+function sortArrayOfObjectsByKeyAscending(arr, key) {
+    return arr.sort(function(a, b) {
+        var x = a[key];
+        var y = b[key];
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    });
+}
+
+function sortArrayOfObjectsByKeyDescending(arr, key) {
+    return arr.sort(function(a, b) {
+        var x = a[key];
+        var y = b[key];
+        return -1 * ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    });
+}
+
 
 module.exports = {
     setStore: setStore,
@@ -292,6 +360,7 @@ module.exports = {
     listProductsForVendorId: listProductsForVendorId,
     listActiveProductsForVendorId: listActiveProductsForVendorId,
     listProductCountsByVendorId: listProductCountsByVendorId,
+    listActiveProductsFromActiveCycles: listActiveProductsFromActiveCycles,
     getProductsById: getProductsById,
     getProductDetailCodeOptions: getProductDetailCodeOptions,
     isProductActive: isProductActive,
