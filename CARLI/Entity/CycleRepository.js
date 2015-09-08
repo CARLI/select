@@ -1,17 +1,14 @@
-var Entity = require('../Entity')
-    , EntityTransform = require('./EntityTransformationUtils')
-    , carliError = require('../Error')
-    , config = require('../../config')
-    , couchUtils = require('../Store/CouchDb/Utils')()
-    , LibraryRepository = require('./LibraryRepository')
-    , moment = require('moment')
-    , NotificationRepository = require('./NotificationRepository')
-    , StoreOptions = config.storeOptions
-    , Store = require('../Store')
-    , StoreModule = require('../Store/CouchDb/Store')
-    , Q = require('q')
-    , _ = require('lodash')
-    ;
+var config = require('../../config');
+var couchUtils = require('../Store/CouchDb/Utils')();
+var Entity = require('../Entity');
+var EntityTransform = require('./EntityTransformationUtils');
+var LibraryRepository = require('./LibraryRepository');
+var moment = require('moment');
+var StoreOptions = config.storeOptions;
+var Store = require('../Store');
+var StoreModule = require('../Store/CouchDb/Store');
+var Q = require('q');
+var _ = require('lodash');
 
 var CycleRepository = Entity('Cycle');
 
@@ -176,6 +173,15 @@ function productsAreAvailable( cycle ){
     return moment().isAfter(cycle.productsAvailableDate);
 }
 
+function fiscalYearHasStartedForDate( dateToCheck ){
+    var momentToCheck = moment(dateToCheck);
+
+    var fiscalYearStartDate = '07-01';
+    var fiscalYearStartDateForDateToCheck = momentToCheck.format('YYYY')+'-'+fiscalYearStartDate;
+
+    return !momentToCheck.isBefore(fiscalYearStartDateForDateToCheck);
+}
+
 module.exports = {
     setStore: setStore,
     create: createCycle,
@@ -189,5 +195,6 @@ module.exports = {
     isOpenToLibraries: isOpenToLibraries,
     isClosed: isClosed,
     productsAreAvailable: productsAreAvailable,
-    listPastFourCyclesMatchingCycle: listPastFourCyclesMatchingCycle
+    listPastFourCyclesMatchingCycle: listPastFourCyclesMatchingCycle,
+    fiscalYearHasStartedForDate: fiscalYearHasStartedForDate
 };

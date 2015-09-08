@@ -71,6 +71,14 @@
         "description": "If true, this notification is for oneTimePurchaseAnnualAccessFees, otherwise for the products themselves",
         "type": "boolean"
     },
+    "isMembershipDuesInvoice": {
+        "description": "If true, this notification is for membership dues",
+        "type": "boolean"
+    },
+    "fiscalYear": {
+         "description": "If this notification is for a membership fees invoice, use this year to fetch the amounts",
+         "type": "integer"
+    },
     "batchId": {
       "description": "If this notification is for an invoice this is the BatchID to display on the invoice",
       "type": "string"

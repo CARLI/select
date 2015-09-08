@@ -22,7 +22,8 @@ function notificationService($q, CarliModules, errorHandler) {
         removeNotification: function() { return $q.when( notificationModule.delete.apply(this, arguments)); },
         getRecipientLabel: notificationModule.getRecipientLabel,
         generateDraftNotification: CarliModules.NotificationDraftGenerator.generateDraftNotification,
-        notificationTypeAllowsRecipientsToBeEdited: notificationModule.notificationTypeAllowsRecipientsToBeEdited
+        notificationTypeAllowsRecipientsToBeEdited: notificationModule.notificationTypeAllowsRecipientsToBeEdited,
+        templateIsForMembershipDues: notificationModule.templateIsForMembershipDues
     };
 
     function sendNotification(notification){

@@ -1,18 +1,16 @@
-var test = require( './Entity/EntityInterface.spec' )
-    , chai = require( 'chai' )
-    , expect = chai.expect
-    , uuid = require( 'node-uuid' )
-    , chaiAsPromised = require( 'chai-as-promised' )
-    , CycleRepository = require( '../Entity/CycleRepository' )
-    , CycleMiddleware = require('../../middleware/components/cycleCreation')
-    , Entity = require('../Entity')
-    , ProductRepository = require( '../Entity/ProductRepository' )
-    , config = require('../../config')
-    , request = require('request')
-    , storeOptions = config.storeOptions
-    , testUtils = require('./utils')
-    , Q = require('q')
-;
+var chai = require( 'chai' );
+var config = require('../../config');
+var CycleRepository = require( '../Entity/CycleRepository' );
+var Entity = require('../Entity');
+var expect = chai.expect;
+var ProductRepository = require( '../Entity/ProductRepository' );
+var request = require('request');
+var storeOptions = config.storeOptions;
+var testUtils = require('./utils');
+var test = require( './Entity/EntityInterface.spec' );
+var uuid = require( 'node-uuid' );
+
+var Q = require('q');
 
 testUtils.setupTestDb();
 
@@ -369,5 +367,17 @@ describe('the productsAreAvailable method', function(){
         var testCycle = validCycleData();
         testCycle.productsAvailableDate = '3000-11-31';
         expect(CycleRepository.productsAreAvailable(testCycle)).to.be.false;
+    });
+});
+
+describe('the fiscalYearHasStartedForDate method', function(){
+    it('should return false if the date is before the start of the fiscal year', function(){
+        var testDate = '2010-05-01';
+        expect(CycleRepository.fiscalYearHasStartedForDate(testDate)).to.equal(false);
+    });
+
+    it('should return true if the date is on or after the start of the fiscal year', function(){
+        var testDate = '2010-07-15';
+        expect(CycleRepository.fiscalYearHasStartedForDate(testDate)).to.equal(true);
     });
 });

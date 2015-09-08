@@ -1,7 +1,7 @@
 angular.module('library.sections.addOneTimePurchases')
 .controller('addOneTimePurchasesController', addOneTimePurchasesController);
 
-function addOneTimePurchasesController( $q, $window, config, activityLogService, cycleService, emailService, offeringService, userService ){
+function addOneTimePurchasesController( $q, $location, config, activityLogService, cycleService, emailService, offeringService, userService ){
     var vm = this;
 
     vm.selectionStep = 'select';
@@ -161,7 +161,8 @@ function addOneTimePurchasesController( $q, $window, config, activityLogService,
     }
 
     function returnToBeginning(){
-        $window.location.reload();
+        startSelections();
+        activate();
     }
 
     function todo(){

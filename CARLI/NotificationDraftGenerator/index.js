@@ -2,6 +2,7 @@ var config = require('../../config');
 var cycleRepository = require('../Entity/CycleRepository');
 var libraryRepository = require('../Entity/LibraryRepository');
 var invoiceNumbers = require('../../config/environmentDependentModules/invoiceNumberGeneration');
+var membershipRepository = require('../Entity/MembershipRepository');
 var notificationRepository = require('../Entity/NotificationRepository');
 var offeringRepository = require('../Entity/OfferingRepository');
 var productRepository = require('../Entity/ProductRepository');
@@ -458,6 +459,58 @@ function getLibraryEstimatesForAll(template, notificationData) {
     return allLibrariesDraft;
 }
 
+function getMembershipDuesDraftForAllLibraries(template, notificationData){
+    function getEntitiesForMembershipDuesDraftForAllLibraries(){
+        return membershipRepository.loadDataForYear(notificationData.fiscalYear)
+            .then(membershipRepository.listLibrariesWithDues)
+            .then(libraryRepository.getLibrariesById);
+    }
+
+    function getRecipientsForMembershipDuesDraftForAllLibraries(){
+        return membershipDuesAllLibrariesDraft.getEntities()
+            .then(function( libraries ) {
+                return libraries.map(function(library) {
+                    return convertEntityToRecipient(library, template);
+                });
+            });
+    }
+
+    function getOfferingsForMembershipDuesDraftForAllLibraries(){
+        return membershipRepository.loadDataForYear(notificationData.fiscalYear)
+            .then(membershipRepository.getMembershipDuesAsOfferings);
+    }
+
+    function getNotificationsForMembershipDuesDraftForAllLibraries( customizedTemplate, actualRecipientIds ){
+        return membershipDuesAllLibrariesDraft.getOfferings()
+            .then(generateNotifications);
+
+        function generateNotifications(offerings){
+            return invoiceNumbers.generateNextBatchId()
+                .then(function (batchId) {
+                    return Q.all(actualRecipientIds.map(function(id){
+                        return generateNotificationForLibrary(id, offerings, customizedTemplate, batchId)
+                    }));
+                })
+                .then(function(arrayOfNotifications){
+                    return arrayOfNotifications.map(addFiscalYearProperty);
+                });
+        }
+
+        function addFiscalYearProperty(notification){
+            notification.fiscalYear = notificationData.fiscalYear;
+            return notification;
+        }
+    }
+
+    var membershipDuesAllLibrariesDraft = {
+        getAudienceAndSubject: function() { return 'All Libraries, Membership Dues'; },
+        getEntities: getEntitiesForMembershipDuesDraftForAllLibraries,
+        getRecipients: getRecipientsForMembershipDuesDraftForAllLibraries,
+        getOfferings: getOfferingsForMembershipDuesDraftForAllLibraries,
+        getNotifications: getNotificationsForMembershipDuesDraftForAllLibraries
+    };
+    return membershipDuesAllLibrariesDraft;
+}
 
 function generateDraftNotification(template, notificationData) {
     if ( !template || !notificationData ){
@@ -474,6 +527,9 @@ function generateDraftNotification(template, notificationData) {
             } else {
                 return getAnnualAccessFeeDraftForAllLibraries(template, notificationData);
             }
+        }
+        else if (notificationIsForMembershipDues()) {
+            return getMembershipDuesDraftForAllLibraries(template, notificationData);
         }
         else if (notificationIsReminder()) {
             return getReminder(template, notificationData);
@@ -536,6 +592,9 @@ function generateDraftNotification(template, notificationData) {
     function notificationIsForVendorReport() {
         return notificationRepository.notificationTypeIsForVendor(template.notificationType);
     }
+    function notificationIsForMembershipDues() {
+        return isMembershipDuesInvoice(template.id);
+    }
     function throwErrorForBadData(){
         throw new Error('Bad data for generating notification drafts');
     }
@@ -543,6 +602,10 @@ function generateDraftNotification(template, notificationData) {
 
 function isAnnualAccessFeeInvoice(templateId) {
     return notificationRepository.templateIsForAnnualAccessFeeInvoice(templateId);
+}
+
+function isMembershipDuesInvoice(templateId){
+    return notificationRepository.templateIsForMembershipDues(templateId);
 }
 
 function convertEntityToRecipient(entity, template) {
@@ -613,8 +676,6 @@ function generateNotificationForLibrary(libraryId, offeringsForAll, customizedTe
         function addInvoiceNumberAndBatchIdToNotification(invoiceNumber){
             notification.batchId = batchId;
             notification.invoiceNumber = invoiceNumber;
-            console.log('  ** Attach invoice number '+invoiceNumber+' and batch id '+batchId+' to notification, '+
-                'libraryId = ' + notification.targetEntity);
             return notification;
         }
     }
@@ -661,7 +722,8 @@ function generateNotificationForEntity(entityId, customizedTemplate){
         emailBody: customizedTemplate.emailBody,
         draftStatus: 'draft',
         notificationType: customizedTemplate.notificationType,
-        isFeeInvoice: isAnnualAccessFeeInvoice(customizedTemplate.templateId)
+        isFeeInvoice: isAnnualAccessFeeInvoice(customizedTemplate.templateId),
+        isMembershipDuesInvoice: isMembershipDuesInvoice(customizedTemplate.templateId)
     };
 }
 
