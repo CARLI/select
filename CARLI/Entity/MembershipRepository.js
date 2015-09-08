@@ -10,7 +10,10 @@ var MembershipRepository = Entity('Membership');
 MembershipRepository.setStore(Store(StoreModule(StoreOptions)));
 
 MembershipRepository.loadDataForYear = function (year) {
-    return couchUtils.getCouchViewResultValues(StoreOptions.couchDbName, 'membershipByYear', year);
+    return couchUtils.getCouchViewResultValues(StoreOptions.couchDbName, 'membershipByYear', year)
+        .then(function(viewResults) {
+            return viewResults[0];
+        });
 };
 
 MembershipRepository.getMembershipDuesAsOfferings = function (membershipData) {

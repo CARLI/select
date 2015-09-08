@@ -51,15 +51,15 @@ function membershipController( $location, $q, $routeParams, alertService, cycleS
             })
             .then(loadMembershipDataForDisplayYear)
             .then(function(membershipData){
-                if ( membershipData.length === 0 ){
+                if ( membershipData ){
+                    vm.membershipData = membershipData;
+                }
+                else {
                     vm.membershipData = {
                         type: 'Membership',
                         year: vm.displayYear,
                         data: {}
                     };
-                }
-                else {
-                    vm.membershipData = membershipData[0];
                 }
 
                 return vm.membershipData;
