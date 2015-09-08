@@ -45,7 +45,23 @@ function listProductsWithTermsForPublicWebsite() {
 }
 
 function listSubscriptionsForLibrary(libraryId) {
+    console.log('Listing subscriptions for library', libraryId);
+    return loginToCouch()
+        .then(returnAnEmptyArray)
+        .then(logoutOfCouch);
 
+    /*
+     productName,
+     vendorName,
+     funding,
+     cycleName,
+     cycleYear
+     */
+    function returnAnEmptyArray() {
+        return [
+
+        ];
+    }
 }
 
 module.exports = {
