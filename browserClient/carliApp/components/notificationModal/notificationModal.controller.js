@@ -279,13 +279,18 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
             }
 
             function downloadBannerExportForInvoices(passthrough) {
-                if (vm.draft.notificationType === 'invoice') {
+                if ( shouldGenerateBannerFile() ) {
                     return bannerService.downloadBannerExportForInvoices(cycle, batchId)
                         .then(function () {
                             return passthrough;
                         });
                 } else {
                     return passthrough;
+                }
+
+                function shouldGenerateBannerFile(){
+                    return vm.draft.notificationType === 'invoice' &&
+                          !notificationService.templateIsForMembershipDues(vm.draft.templateId);
                 }
             }
         }
