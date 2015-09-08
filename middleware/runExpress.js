@@ -436,7 +436,9 @@ function runMiddlewareServer(){
                     .catch(sendError(res));
             });
             carliMiddleware.get('/public/list-subscriptions-for-library/:libraryId', function (req, res) {
-                throw new Error('Not implemented');
+                publicApi.listSubscriptionsForLibrary(req.params.libraryId)
+                    .then(sendJsonResult(res))
+                    .then(sendError(res));
             });
         }
     }
