@@ -57,60 +57,68 @@ function contentForPdf(notificationId){
     }
 
     return notificationRepository.load(notificationId)
-        .then(function(notification){
-            var cycleId = notification.cycle.id;
-            var library = notification.targetEntity;
-            var notificationType = notification.notificationType;
-            var isFeeInvoice = notification.isFeeInvoice;
-
-            var type = notificationType;
-            if ( isFeeInvoice ){
-                type = 'access-fee-invoice';
-            }
-
-            return loadCycle(cycleId)
-                .then(function(cycle) {
-                    return dataForPdf(type, cycle, library, notification.offeringIds);
-                })
-                .then(function(data){
-                    if ( typeIsForRealInvoice(type) ){
-                        data.batchId = notification.batchId;
-                        data.invoiceNumber = notification.invoiceNumber;
-                    }
-                    return htmlForPdf(type, data);
-                })
-        })
+        .then(dataForPdfFromNotification)
+        .then(htmlForPdf)
         .catch(function(err){
-            console.log('Error in contentForPdf', err);
+            console.log('Error in contentForPdf', err, err.stack);
             return Q.reject(error);
         });
 }
 
-/**
- * @param type - one of the PDF types
- * @param cycle - a fully-expanded Cycle Object
- * @param library - a fully-expanded Library Object
- * @param specificOfferingIds - could be undefined. If this is an array of IDs, use those
- *        offerings for the invoice data. If undefined, find all offerings with selections
- *        in the cycle.
- */
-function dataForPdf(type, cycle, library, specificOfferingIds ){
-    console.log('dataForPdf('+type+', '+cycle.name+', '+library.name+(specificOfferingIds?'['+specificOfferingIds.length+']':'')+')');
+function dataForPdfFromNotification(notification){
+    if ( notification.isMembershipDuesInvoice ) {
+        return dataForMembershipDuesInvoicePdf(notification);
+    }
+    else {
+        return dataForSubscriptionInvoicePdf(notification);
+    }
+}
 
-    var useFeeForPriceInsteadOfSelectionPrice = typeIsForAccessFeeInvoice(type);
+function dataForMembershipDuesInvoicePdf(notification){
+    var year = notification.fiscalYear;
+    var invoiceData = [];
 
-    return loadOfferings(cycle, library.id, specificOfferingIds)
+    return Q({
+        batchId: notification.batchId,
+        cycle: {},
+        library: notification.targetEntity,
+        invoiceData: invoiceData,
+        invoiceNumber: notification.invoiceNumber,
+        invoiceTotal: computeInvoiceTotal(invoiceData),
+        notification: notification
+    });
+}
+
+function dataForSubscriptionInvoicePdf(notification){
+    var cycle = null;
+
+    var pdfType = pdfTypeFromNotification(notification);
+    var cycleId = notification.cycle.id;
+    var library = notification.targetEntity;
+    var specificOfferingIds = notification.offeringIds;
+
+    var useFeeForPriceInsteadOfSelectionPrice = typeIsForAccessFeeInvoice(pdfType);
+
+    return cycleRepository.load(cycleId)
+        .then(function(loadedcycle){
+            cycle = loadedcycle;
+            console.log('dataForSubscriptionInvoicePdf('+pdfType+', '+cycle.name+', '+library.name+(specificOfferingIds?'['+specificOfferingIds.length+']':'')+')');
+            return loadOfferings(cycle, library.id, specificOfferingIds);
+        })
         .then(groupOfferingsForLibraryInvoice)
         .then(function(groupedOfferings){
             return transformOfferingsToPriceRows(groupedOfferings, useFeeForPriceInsteadOfSelectionPrice);
         })
         .then(function(invoiceData){
             return {
+                batchId: notification.batchId,
                 cycle: cycle,
                 library: library,
                 invoiceData: invoiceData,
-                invoiceTotal: computeInvoiceTotal(invoiceData)
-            }
+                invoiceNumber: notification.invoiceNumber,
+                invoiceTotal: computeInvoiceTotal(invoiceData),
+                notification: notification
+            };
         })
         .catch(function(err){
             console.log('ERROR getting data for library selections', err);
@@ -200,13 +208,9 @@ function computeInvoiceTotal(invoiceRows){
     return total;
 }
 
+function htmlForPdf(dataForPdf){
 
-/**
- * Takes the data returned by dataForPdf and processes Handlebars templates to produce HTML
- * Actually returns an object with both the HTML string and the filename included
- */
-function htmlForPdf(type, dataForPdf){
-
+    var type = pdfTypeFromNotification(dataForPdf.notification);
     var invoiceContent = createInvoiceContent();
     var dataForRenderingPdfContent = dataForPdf;
     
@@ -261,6 +265,18 @@ function validateArguments(notificationId) {
     if (!notificationId) {
         console.log('  Error: no notificationId');
         return 'Missing notification id';
+    }
+}
+
+function pdfTypeFromNotification(notification){
+    if ( notification.isFeeInvoice ){
+        return 'access-fee-invoice';
+    }
+    else if ( notification.isMembershipDuesInvoice ) {
+        return 'membership-dues-invoice';
+    }
+    else {
+        return notification.notificationType;
     }
 }
 
