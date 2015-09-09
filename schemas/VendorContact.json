@@ -1,6 +1,6 @@
 {
-  "title": "Contact",
-  "schemaType": "Contact",
+  "title": "VendorContact",
+  "schemaType": "VendorContact",
   "type": "object",
   "properties": {
     "name": {

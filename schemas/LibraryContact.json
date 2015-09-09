@@ -1,6 +1,6 @@
 {
-  "title": "Contact",
-  "schemaType": "Contact",
+  "title": "LibraryContact",
+  "schemaType": "LibraryContact",
   "type": "object",
   "properties": {
     "firstName": {
