@@ -9,6 +9,9 @@
     "lastName": {
       "type": "string"
     },
+    "title": {
+      "type": "string"
+    },
     "responsibility": {
       "type": "string"
     },
