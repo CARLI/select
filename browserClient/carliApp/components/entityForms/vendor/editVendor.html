@@ -81,7 +81,7 @@
                         <button type="button" class="pull-right add-contact" id="add-billing-contact" ng-show="vm.editable" ng-click="vm.addContact('Billing')">Add Contact</button>
 
                         <div class="contact-list-item" ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Billing' }">
-                            <view-edit-vendor-contact contact="contact" edit-mode="vm.editable" input-id="billing{{ $index }}"></view-edit-contact>
+                            <view-edit-vendor-contact contact="contact" edit-mode="vm.editable" input-id="billing{{ $index }}"></view-edit-vendor-contact>
                             <button type="button" class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</button>
                         </div>
                     </div>
@@ -91,7 +91,7 @@
                         <button type="button" class="pull-right add-contact" id="add-sales-contact" ng-show="vm.editable" ng-click="vm.addContact('Sales')">Add Contact</button>
 
                         <div class="contact-list-item" ng-repeat="contact in vm.vendor.contacts | filter:{ contactType: 'Sales' }">
-                            <view-edit-vendor-contact contact="contact" edit-mode="vm.editable" input-id="sales{{ $index }}"></view-edit-contact>
+                            <view-edit-vendor-contact contact="contact" edit-mode="vm.editable" input-id="sales{{ $index }}"></view-edit-vendor-contact>
                             <button type="button" class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</button>
                         </div>
                     </div>
