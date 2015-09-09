@@ -19,14 +19,5 @@ linkSecureConfiguration || fail "Failed to link secure configuration"
 publishBrowserClients || fail "Failed to publish browser clients"
 publishMiddleware || fail "Failed to publish middleware"
 
-cd $PUBLISH_PATH
-rm latest && ln -s $BUILD_NUMBER latest
-cd - > /dev/null
-
-sudo service nginx stop
-sudo service carli-select stop
-sudo service couchdb stop
-
-sudo service couchdb start
-sudo service carli-select start
-sudo service nginx start
+setLatestLink || fail "Failed to set the latest link"
+restartServices || fail "Failed to restart services"
