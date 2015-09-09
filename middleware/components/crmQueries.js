@@ -92,21 +92,21 @@ function listCrmContactsForLibrary( libraryCrmId ){
         'p.address_id = a.address_id AND ',
         'p.member_id = ? AND ',
         "(p.director = 'y' or p.eres_liaison = 'y')"
-    ].join();
+    ].join('');
 
     var deferred = Q.defer();
     pool.getConnection(function(err, connection) {
         if ( err ){
             return handleError( deferred, 'pool.getConnection error loading library', err);
         }
-
+        
         connection.query(queryString, [libraryCrmId], function (err, rows, fields) {
                 if ( err ){
                     handleError( deferred, 'query error loading library', err);
                 }
                 else {
-                    var libraries = extractRowsFromResponse(err, rows, convertCrmLibraryContact);
-                    deferred.resolve(libraries[0]);
+                    var contacts = extractRowsFromResponse(err, rows, convertCrmLibraryContact);
+                    deferred.resolve(contacts);
                 }
             }
         );
@@ -126,13 +126,8 @@ function extractRowsFromResponse(err, rows, processCallback) {
         processCallback = function identity(x) { return x; };
     }
 
-    var returnRows = [];
-
     if (rows) {
-        rows.forEach(function (row) {
-            returnRows.push(processCallback(row));
-        });
-        return returnRows;
+        return rows.map(processCallback);
     }
 
     return false;
@@ -226,5 +221,6 @@ function handleError( promise, message, error ){
 
 module.exports = {
     listLibraries: listLibraries,
-    loadLibrary: loadLibrary
+    loadLibrary: loadLibrary,
+    listCrmContactsForLibrary: listCrmContactsForLibrary
 };
