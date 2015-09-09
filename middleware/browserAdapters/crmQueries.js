@@ -14,8 +14,16 @@ function loadLibrary(id) {
         json: true
     });
 }
+function listCrmContactsForLibrary(id) {
+    return middlewareRequest({
+        path: '/library/contacts/' + id,
+        method: 'get',
+        json: true
+    });
+}
 
 module.exports = {
     listLibraries: listLibraries,
-    loadLibrary: loadLibrary
+    loadLibrary: loadLibrary,
+    listCrmContactsForLibrary: listCrmContactsForLibrary
 };
