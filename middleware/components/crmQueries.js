@@ -192,12 +192,11 @@ function convertCrmLibraryContact(row){
         title: row.title,
         responsibility: row.funct_resp,
         email: row.email,
-        phone: row.phone,
-        phone2: row.phone2,
-        phone3: row.phone3,
+        phoneNumber: row.phone,
+        phoneNumber2: row.phone2,
+        phoneNumber3: row.phone3,
         fax: row.fax,
-        director: row.director,
-        eResource: row.eres_liaison,
+        contactType: contactType(),
         notes: row.notes,
         officeAddress: row.office_add,
         address1: row.address_line1,
@@ -208,6 +207,18 @@ function convertCrmLibraryContact(row){
         libraryPhone: row.library_phone,
         libraryFax: row.library_fax
     };
+
+    function contactType(){
+        if ( row.director === 'y' ){
+            return 'Director';
+        }
+        else if ( row.eres_liaison === 'y' ){
+            return 'E-Resources Liaison';
+        }
+        else {
+            return 'Other';
+        }
+    }
 }
 
 function handleError( promise, message, error ){
