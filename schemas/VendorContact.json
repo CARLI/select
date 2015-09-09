@@ -1,0 +1,25 @@
+{
+    "title": "Contact",
+    "schemaType": "Contact",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "email": {
+            "type": "string"
+        },
+        "phoneNumber": {
+            "type": "string"
+        },
+        "contactType": {
+            "type": "string",
+            "enum": [
+                "Sales",
+                "Technical",
+                "Other"
+            ]
+        }
+    },
+    "required": [ "name", "email", "contactType" ]
+}
