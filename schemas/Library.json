@@ -37,9 +37,9 @@
             "items":  { "$ref": "./OutstandingBalances.json" }
         },
         "contacts": {
-            "description": "List of library contacts",
+            "description": "List of library contacts that were added in the select system. Note that some are imported from the CRM as well.",
             "type": "array",
-            "items": { "$ref": "./Contact.json" }
+            "items": { "$ref": "./LibraryContact.json" }
         }
     },
     "required": [ "name" ]
