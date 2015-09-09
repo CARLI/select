@@ -212,5 +212,6 @@ module.exports = {
     getLibrariesById: getLibrariesById,
     getContactTypesForNotificationCategory: getContactTypesForNotificationCategory,
     getContactEmailAddressesForNotification: getContactEmailAddressesForNotification,
+    listCrmContactsForLibrary: crmLibraryRepository.listCrmContactsForLibrary,
     listAllContacts: listAllContacts
 };

@@ -4,6 +4,7 @@ angular.module('carli.entityForms.library')
 function editLibraryController( $scope, $rootScope, activityLogService, alertService, cycleService, entityBaseService, errorHandler, libraryService ) {
     var vm = this;
 
+    vm.crmContacts = [];
     vm.libraryId = $scope.libraryId;
     var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
@@ -36,7 +37,9 @@ function editLibraryController( $scope, $rootScope, activityLogService, alertSer
                 vm.library = angular.copy(library);
                 setLibraryFormPristine();
             })
+            .then(loadCrmContactsForLibrary)
             .then(loadCyclesForActiveProductsDisplay);
+
         vm.editable = false;
         vm.newLibrary = false;
     }
@@ -45,6 +48,13 @@ function editLibraryController( $scope, $rootScope, activityLogService, alertSer
         return vm.loadingPromise = cycleService.listNonArchivedClosedCyclesIncludingOneTimePurchase()
             .then(function(cycleList){
                 vm.cycles = cycleList;
+            });
+    }
+
+    function loadCrmContactsForLibrary(){
+        return libraryService.listCrmContactsForLibrary(vm.libraryId)
+            .then(function(contacts){
+                vm.crmContacts = contacts;
             });
     }
 
