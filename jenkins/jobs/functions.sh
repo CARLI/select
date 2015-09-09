@@ -18,6 +18,13 @@ linkSecureConfiguration() {
     cd - > /dev/null
 }
 
+initialize() {
+    linkSecureConfiguration || fail "Failed to link secure configuration"
+
+    ./install-dependencies.sh || fail "Failed to install dependencies"
+    grunt jsenv:node || fail "Failed to set up javascript environment for node (1)"
+}
+
 runTests() {
     cd $WORKSPACE
     grunt test
@@ -73,4 +80,31 @@ publishMiddleware() {
 
 fetchAndResetToMaster () {
     git fetch && git reset --hard origin/master
+}
+
+updateMasterIfRequested () {
+    commitish=$1
+
+    if [ "$commitish" != "master" ]; then
+        echo "Resetting master branch to $commitish"
+        git branch -f master $commitish
+        git checkout master
+        git push -f origin master
+    fi
+}
+
+setLatestLink() {
+    cd $PUBLISH_PATH
+    rm latest && ln -s $BUILD_NUMBER latest
+    cd - > /dev/null
+}
+
+restartServices() {
+    sudo service nginx stop
+    sudo service carli-select stop
+    sudo service couchdb stop
+
+    sudo service couchdb start
+    sudo service carli-select start
+    sudo service nginx start
 }
