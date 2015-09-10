@@ -75,10 +75,10 @@ function getDataForBannerExport(cycle, batchId) {
         }
 
         function throwIfDuplicateInvoiceNumber(notification) {
-            if (seenInvoiceNumbers.hasOwnProperty(notification.targetEntity)) {
+            if (seenInvoiceNumbers.hasOwnProperty(notification.invoiceNumber)) {
                 throw carliError('An invoice number should not appear twice in a single batch');
             } else {
-                seenInvoiceNumbers[notification.targetEntity] = true;
+                seenInvoiceNumbers[notification.invoiceNumber] = true;
             }
         }
     }
