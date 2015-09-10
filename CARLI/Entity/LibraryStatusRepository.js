@@ -109,7 +109,7 @@ function markLibrarySelectionsComplete( libraryId, cycle ){
     return getStatusForLibrary(libraryId, cycle)
         .then(function(libraryStatus){
             libraryStatus.isComplete = true;
-            createOrUpdateLibraryStatus(libraryStatus, cycle);
+            return createOrUpdateLibraryStatus(libraryStatus, cycle);
         });
 }
 
@@ -135,7 +135,7 @@ function updateLastActivity(libraryId, cycle) {
     return getStatusForLibrary(libraryId, cycle)
         .then(function(libraryStatus){
             libraryStatus.lastActivity = new Date().toISOString();
-            createOrUpdateLibraryStatus(libraryStatus, cycle);
+            return createOrUpdateLibraryStatus(libraryStatus, cycle);
         })
         .catch(function (error) {
             throw carliError(error);
