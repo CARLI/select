@@ -74,30 +74,34 @@
     </div>
 </div>
 <div class="view-contact" ng-show="!editMode">
-    <div class="contact-name">{{ contact.firstName }} {{ contact.lastName }}</div>
-    <div class="contact-responsibility">{{ contact.responsibility }}</div>
 
-    <div class="contact-contact-methods">
+    <div class="info">
+        <div class="contact-name">{{ contact.firstName }} {{ contact.lastName }}</div>
+        <div class="contact-responsibility">{{ contact.responsibility }}</div>
+
+        <a class="contact-email" href="mailto:{{ contact.email }}">{{ contact.email }}</a>
         <a class="contact-phone" href="tel:{{ contact.phoneNumber }}" ng-if="contact.phoneNumber">{{ contact.phoneNumber }}</a>
+
         <span ng-if="contact.phoneNumber2">
             , <a class="contact-phone" href="tel:{{ contact.phoneNumber2 }}">{{ contact.phoneNumber2 }}</a>
         </span>
         <span ng-if="contact.phoneNumber3">
             , <a class="contact-phone" href="tel:{{ contact.phoneNumber3 }}">{{ contact.phoneNumber3 }}</a>
         </span>
-        <a class="contact-email" href="mailto:{{ contact.email }}">{{ contact.email }}</a>
-        <span class="contact-fax">Fax: {{ contact.fax }}</span>
-        <p class="contact-notes">{{ contact.notes }}</p>
-        <p class="contact-address">
-            Address:
+
+        <div class="contact-fax" ng-if="contact.fax">Fax: {{ contact.fax }}</div>
+        <div class="library-phone" ng-if="contact.libraryPhone">Library Phone: {{ contact.libraryPhone }}</div>
+        <div class="library-fax" ng-if="contact.libraryFax">Library Fax: {{ contact.libraryFax }}</div>
+    </div>
+    <div class="info">
+        <div class="contact-address">
             <div class="address">{{ contact.address1 }}</div>
             <div class="address">{{ contact.address2 }}</div>
-            <div class="city">{{ contact.city }}</div>
-            <div class="state">{{ contact.state }}</div>
+            <div class="city-state">{{ contact.city }}, {{ contact.state }}</span>
+            </div>
             <div class="zip">{{ contact.zip }}</div>
-            <span class="office">Office Address: {{ contact.officeAddress }}</span>
-        </p>
-        <span class="library-phone">Library Phone: {{ contact.libraryPhone }}</span>
-        <span class="library-fax">Library Fax: {{ contact.libraryFax }}</span>
+        </div>
+        <div class="office" ng-if="contact.officeAddress">Office Address: {{ contact.officeAddress }}</div>
+        <p class="contact-notes">{{ contact.notes }}</p>
     </div>
 </div>

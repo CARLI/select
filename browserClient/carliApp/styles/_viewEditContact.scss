@@ -1,6 +1,21 @@
 $add-contact-color: $orange;
 $plus-icon-padding: .5em;
 
+.view-contact {
+    a {
+        display: block;
+        font-size: 12px;
+
+        &.contact-phone {
+            color: $black;
+        }
+
+        &.contact-email {
+            color: $purple;
+        }
+    }
+}
+
 .add-contact,
 .delete-contact {
     @include vendor-prefix(appearance, 'none');

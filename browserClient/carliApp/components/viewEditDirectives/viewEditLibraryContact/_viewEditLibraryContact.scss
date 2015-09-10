@@ -4,6 +4,40 @@ view-edit-library-contact {
     }
 
     .view-contact {
+        @include flexbox();
 
+        .info {
+            @include flex(1 1 50%);
+            padding: 0.5rem;
+        }
+
+        .info + .info {
+            border-left: $default-border;
+        }
+
+        .contact-name {
+            @include font-size(15);
+        }
+
+        .contact-responsibility {
+
+        }
+
+        .contact-email {
+
+        }
+
+        .contact-phone {
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-address {
+
+        }
+
+        .contact-notes {
+            margin: 0.5rem 0 0;
+            font-style: italic;
+        }
     }
 }
