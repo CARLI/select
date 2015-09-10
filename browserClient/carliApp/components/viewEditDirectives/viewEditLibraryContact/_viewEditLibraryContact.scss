@@ -1,5 +1,46 @@
 view-edit-library-contact {
     .edit-contact {
+        @include flexbox();
+
+        label {
+            margin-bottom: 0;
+            margin-top: 0.5rem;
+        }
+
+        .form-group {
+            margin: 0;
+        }
+
+        .info {
+            @include flex(1 1 50%);
+            padding: 0.5rem;
+
+            .name {
+                @include flexbox();
+
+                .form-group {
+                    @include flex(1 1 50%);
+                }
+            }
+
+            .phone-numbers,
+            .city-state-zip {
+                @include flexbox();
+
+                .form-group {
+                    @include flex(1 1 33%);
+                }
+            }
+
+            .name,
+            .phone-numbers,
+            .city-state-zip {
+                .form-group + .form-group {
+                    margin-left: 0.5rem;
+                }
+            }
+        }
+
 
     }
 
