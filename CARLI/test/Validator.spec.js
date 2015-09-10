@@ -8,13 +8,13 @@ chai.use( chaiAsPromised );
 
 var validTypes = [
     'ActivityLogEntry',
-    'Contact',
     'Cycle',
     'CycleType',
     'Date',
     'InstitutionType',
     'InstitutionYears',
     'Library',
+    'LibraryContact',
     'LibraryNonCrm',
     'LibraryStatus',
     'License',
@@ -32,6 +32,7 @@ var validTypes = [
     'user',
     'UserResetRequest',
     'Vendor',
+    'VendorContact',
     'VendorStatus'
 ];
 
@@ -194,15 +195,12 @@ describe( 'The Validator Module', function() {
         it( 'should return expected values for an enum property of a schema', function(){
             var expectedValues = [
                 "Billing",
-                "Sales",
-                "Technical",
                 "Director",
                 "E-Resources Liaison",
-                "Other",
-                "Notification Only"
+                "Other"
             ];
 
-            expect( Validator.getEnumValuesFor('Contact', 'contactType') ).to.have.members( expectedValues );
+            expect( Validator.getEnumValuesFor('LibraryContact', 'contactType') ).to.have.members( expectedValues );
         });
     });
 
@@ -221,7 +219,8 @@ describe( 'The Validator Module', function() {
                 'fte',
                 'gar',
                 'excludeFromBannerFeed',
-                'ipAddresses'
+                'ipAddresses',
+                'contacts'
             ];
             expect( Validator.listNonIdPropertiesFor('LibraryNonCrm')).to.have.members( expectedValues );
         });
@@ -234,7 +233,8 @@ describe( 'The Validator Module', function() {
                 fte: 'integer',
                 gar: 'string',
                 excludeFromBannerFeed: "boolean",
-                ipAddresses: 'string'
+                ipAddresses: 'string',
+                contacts: 'array'
             };
             expect(Validator.getNonIdPropertyMapFor('LibraryNonCrm')).to.deep.equal(expectedMap);
         });

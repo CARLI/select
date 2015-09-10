@@ -1,7 +1,4 @@
 .edit-form {
-    $add-contact-color: $orange;
-    $plus-icon-padding: .5em;
-
     .page-header {
         h1 {
             color: $purple;
@@ -19,6 +16,10 @@
 
     .label {
         margin-bottom: $label-margin-bottom + 3;
+
+        em {
+            color: $purple;
+        }
     }
 
     .unlabeled-element {
@@ -37,99 +38,6 @@
         input[type=text],
         textarea {
             width: 100%;
-        }
-
-        .contacts-header {
-            @extend .h3;
-            color: black;
-            font-weight: bold;
-        }
-
-        .contact-list {
-            border-bottom: $default-border;
-            padding-bottom: 1rem;
-
-            &:last-child {
-                border-bottom: none;
-            }
-
-            @include clearfix();
-            em {
-                color: $purple;
-            }
-
-            .add-contact,
-            .delete-contact {
-                @include vendor-prefix(appearance, 'none');
-                background: none;
-                border: 0;
-            }
-
-            .add-contact {
-                cursor: pointer;
-                margin-top: $label-margin-top;
-                color: $add-contact-color;
-                padding-right: $plus-icon-padding;
-                &:after {
-                    color: $add-contact-color;
-                    content: "\f055"; // fa-plus-circle
-                    font-size: 1.25em;
-                    font-family: "FontAwesome";
-                    position: relative;
-                    top: .05em;
-                    left: $plus-icon-padding;
-                }
-            }
-            .delete-contact {
-                cursor: pointer;
-                color: $purple;
-                font-size: 12px;
-                margin-top: 2px;
-            }
-        }
-    }
-
-    .contact-list-item {
-        @include clearfix();
-    }
-
-    &.viewMode {
-        .contact-list-item {
-            border: $default-border;
-            border-top: 0;
-
-            &:first-of-type {
-                border-top: $default-border;
-            }
-
-            &:nth-child(2n) {
-                background: $light-gray;
-            }
-
-            .view-contact {
-                .contact-name {
-                    padding: 1rem;
-                    border-right: $default-border;
-                    font-size: 15px;
-                }
-
-                .contact-contact-methods {
-                    padding: 0.5rem 1rem;
-
-                    a {
-                        display: block;
-                        font-size: 12px;
-
-                        &.contact-phone {
-                            color: $black;
-                        }
-
-                        &.contact-email {
-                            color: $purple;
-                        }
-                    }
-                }
-            }
         }
     }
 

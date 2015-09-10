@@ -1,14 +1,84 @@
-.license-list > ul > li {
-    a {
-        font-family: 'Verdana', 'Helvetica', 'Arial', sans-serif;
-        font-weight: normal;
-        @include font-size(15);
-    }
-}
-.product-list > ul {
-    margin-top: 22px;
-}
+#vendors {
+    .contact-list {
+        border-bottom: $default-border;
+        padding-bottom: 1rem;
 
-.product-list > select-cycle {
-    margin-bottom: 0px;
+        &:last-child {
+            border-bottom: none;
+        }
+
+        @include clearfix();
+        em {
+            color: $purple;
+        }
+
+        .contact-list-item {
+            @include clearfix();
+        }
+    }
+
+    .viewMode {
+        .contact-list-item {
+            border: $default-border;
+            border-top: 0;
+
+            &:first-of-type {
+                border-top: $default-border;
+            }
+
+            &:nth-child(2n) {
+                background: $light-gray;
+            }
+
+            .view-contact {
+                @include flexbox;
+
+                .contact-name,
+                .contact-contact-methods {
+                    @include flex(1 1 50%);
+                }
+
+                .contact-name {
+                    padding: 1rem;
+                    border-right: $default-border;
+                    font-size: 15px;
+                }
+
+                .contact-contact-methods {
+                    padding: 0.5rem 1rem;
+                }
+            }
+        }
+    }
+
+    .edit-contact {
+        @include grid-row();
+        .form-group {
+            @include grid-column(4);
+            margin-bottom: 0;
+            padding-left: 10px;
+            label {
+                font-weight: normal;
+                margin-top: 0;
+            }
+        }
+        .form-group:first-child {
+            padding-left: 0;
+        }
+    }
+
+    .license-list > ul > li {
+        a {
+            font-family: 'Verdana', 'Helvetica', 'Arial', sans-serif;
+            font-weight: normal;
+            @include font-size(15);
+        }
+    }
+    .product-list > ul {
+        margin-top: 22px;
+    }
+
+    .product-list > select-cycle {
+        margin-bottom: 0px;
+    }
 }

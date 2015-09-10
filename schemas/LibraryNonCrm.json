@@ -27,6 +27,11 @@
         "ipAddresses": {
             "description": "List of IP Addresses",
             "type": "string"
+        },
+        "contacts": {
+            "description": "List of library contacts that were added in the select system.",
+            "type": "array",
+            "items": { "$ref": "./LibraryContact.json" }
         }
     },
     "required": [ "crmId" ]

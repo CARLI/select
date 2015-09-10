@@ -1,0 +1,75 @@
+{
+  "title": "LibraryContact",
+  "schemaType": "LibraryContact",
+  "type": "object",
+  "properties": {
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "responsibility": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "phoneNumber": {
+      "type": "string"
+    },
+    "phoneNumber2": {
+      "type": "string"
+    },
+    "phoneNumber3": {
+      "type": "string"
+    },
+    "fax": {
+      "type": "string"
+    },
+    "contactType": {
+      "type": "string",
+      "enum": [
+        "Billing",
+        "Director",
+        "E-Resources Liaison",
+        "Other"
+      ]
+    },
+    "notes": {
+      "type": "string"
+    },
+    "officeAddress": {
+      "type": "string"
+    },
+    "address1": {
+      "type": "string"
+    },
+    "address2": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "zip": {
+      "type": "string"
+    },
+    "libraryPhone": {
+      "type": "string"
+    },
+    "libraryFax": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "firstName",
+    "email",
+    "contactType"
+  ]
+}

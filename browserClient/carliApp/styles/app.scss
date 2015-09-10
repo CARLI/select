@@ -12,7 +12,7 @@
 @import "../../common/styles/carli";
 
 @import "tagsInput";
-
+@import "viewEditContact";
 
 @import "../../common/components/alerts/alerts";
 @import "../../common/components/auth/auth";
@@ -32,6 +32,7 @@
 @import "../components/entityForms/editForm";
 @import "../components/goodSelect/goodSelect";
 @import "../components/carliHeader/carliHeader";
+@import "../components/entityForms/library/editLibrary";
 @import "../components/entityForms/license/editLicense";
 @import "../components/entityForms/product/editProduct";
 @import "../components/entityForms/vendor/editVendor";
@@ -48,11 +49,12 @@
 @import "../components/subscriptionScreenComponents/offeringComments/offeringComments";
 @import "../components/subscriptionScreenComponents/offeringPricing/offeringPricing";
 @import "../components/viewEditDirectives/viewEditCheckbox/viewEditCheckbox";
-@import "../components/viewEditDirectives/viewEditContact/viewEditContact";
 @import "../components/viewEditDirectives/viewEditDate/viewEditDate";
+@import "../components/viewEditDirectives/viewEditLibraryContact/viewEditLibraryContact";
+@import "../components/viewEditDirectives/viewEditPercentageField/viewEditPercentageField";
 @import "../components/viewEditDirectives/viewEditRadios/viewEditRadios";
 @import "../components/viewEditDirectives/viewEditSuPricing/viewEditSuPricing";
-@import "../components/viewEditDirectives/viewEditPercentageField/viewEditPercentageField";
+@import "../components/viewEditDirectives/viewEditVendorContact/viewEditVendorContact";
 
 @import "../sections/libraries/libraries";
 @import "../sections/licenses/licenses";
