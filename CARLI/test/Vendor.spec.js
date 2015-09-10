@@ -105,9 +105,9 @@ describe('the listAllContacts method', function(){
         testVendor.contacts = [
             {
                 type: 'Contact',
-                name: 'Test Billing Contact',
-                email: 'test_billing@email.com',
-                contactType: 'Billing'
+                name: 'Test Sales Contact',
+                email: 'test_sales@email.com',
+                contactType: 'Sales'
             }
         ];
 

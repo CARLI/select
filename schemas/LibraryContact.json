@@ -68,7 +68,7 @@
     }
   },
   "required": [
-    "name",
+    "firstName",
     "email",
     "contactType"
   ]

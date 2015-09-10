@@ -37,7 +37,11 @@ describe('The LibraryRepository', function(){
             var testNonCrmLibrary = {
                 type: 'LibraryNonCrm',
                 crmId: '1',
-                fte: 1111
+                fte: 1111,
+                contacts: [
+                    { firstName: 'test1', email: 'test@test.com', contactType: 'Other' },
+                    { firstName: 'test2', email: 'test@test.com', contactType: 'Other' }
+                ]
             };
 
             return localLibraryRepository.create(testNonCrmLibrary)
@@ -47,7 +51,8 @@ describe('The LibraryRepository', function(){
                 .then(function(loadedLibrary){
                     return Q.all([
                         expect(loadedLibrary).to.be.an('object').and.have.property('id','1'),
-                        expect(loadedLibrary).to.have.property('fte',testNonCrmLibrary.fte)
+                        expect(loadedLibrary).to.have.property('fte',testNonCrmLibrary.fte),
+                        expect(loadedLibrary.contacts).to.be.an('array').and.have.property('length',2)
                     ]);
                 });
         });

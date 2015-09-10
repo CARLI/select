@@ -219,7 +219,8 @@ describe( 'The Validator Module', function() {
                 'fte',
                 'gar',
                 'excludeFromBannerFeed',
-                'ipAddresses'
+                'ipAddresses',
+                'contacts'
             ];
             expect( Validator.listNonIdPropertiesFor('LibraryNonCrm')).to.have.members( expectedValues );
         });
@@ -232,7 +233,8 @@ describe( 'The Validator Module', function() {
                 fte: 'integer',
                 gar: 'string',
                 excludeFromBannerFeed: "boolean",
-                ipAddresses: 'string'
+                ipAddresses: 'string',
+                contacts: 'array'
             };
             expect(Validator.getNonIdPropertyMapFor('LibraryNonCrm')).to.deep.equal(expectedMap);
         });
