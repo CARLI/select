@@ -61,14 +61,15 @@ function combineCrmDataAndNonCrmData( crmLibrary, nonCrmLibrary ){
 function updateLibrary( library ){
     var localData = EntityTransform.extractValuesForSchema(library, 'LibraryNonCrm');
     return loadNonCrmLibraryForCrmId(library.id).then(function (libraryNonCrm) {
-        localData = _.extend({}, libraryNonCrm, localData);
-        localData.crmId = library.id;
+        var nonCrmData = _.extend(libraryNonCrm, localData);
+        nonCrmData.crmId = library.id;
+        nonCrmData.contacts = localData.contacts.slice(0);
 
-        if ( localData.id ){
-            return localLibraryRepository.update( localData, transformFunction );
+        if ( nonCrmData.id ){
+            return localLibraryRepository.update( nonCrmData, transformFunction );
         }
         else {
-            return localLibraryRepository.create( localData, transformFunction );
+            return localLibraryRepository.create( nonCrmData, transformFunction );
         }
     });
 }
@@ -212,5 +213,6 @@ module.exports = {
     getLibrariesById: getLibrariesById,
     getContactTypesForNotificationCategory: getContactTypesForNotificationCategory,
     getContactEmailAddressesForNotification: getContactEmailAddressesForNotification,
+    listCrmContactsForLibrary: crmLibraryRepository.listCrmContactsForLibrary,
     listAllContacts: listAllContacts
 };

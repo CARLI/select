@@ -13,7 +13,9 @@ function libraryService( CarliModules, $q, errorHandler ) {
         listLibrariesWithSelectionsInCycle: function(cycle){
             return $q.when(libraryModule.listLibrariesWithSelectionsInCycle(cycle)).catch(errorHandler);
         },
-
+        listCrmContactsForLibrary: function(libraryId) {
+            return $q.when(libraryModule.listCrmContactsForLibrary(libraryId)).catch(errorHandler);
+        },
         getInstitutionTypeOptions: libraryModule.getInstitutionTypeOptions,
         getInstitutionYearsOptions: libraryModule.getInstitutionYearsOptions,
         getMembershipLevelOptions: libraryModule.getMembershipLevelOptions,

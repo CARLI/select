@@ -1,0 +1,56 @@
+#libraries {
+    .crm-contacts,
+    .custom-contacts {
+        .label {
+            display: block;
+            em {
+                color: $purple;
+            }
+        }
+
+        ul {
+            border-bottom: $default-border;
+            clear: both;
+            list-style: none;
+
+            > li {
+                background: $white;
+                border: $default-border;
+                border-bottom: 0;
+                padding: 0;
+
+                &:nth-child(2n+1) {
+                    background: $zebra-table-color;
+                }
+            }
+        }
+    }
+
+    .editMode {
+        .custom-contacts {
+            position: relative;
+
+            .add-contact {
+                margin-top: 0;
+                position: absolute;
+                right: 0;
+            }
+
+            .delete-contact {
+                margin-top: 4px;
+            }
+
+            ul {
+                border-bottom: none;
+
+                li {
+                    background: white;
+                    border: none;
+                    border-bottom: $default-border;
+                    padding-bottom: 2rem;
+                    margin-bottom: 2rem;
+                }
+            }
+        }
+    }
+}

@@ -63,6 +63,60 @@ function loadLibrary(id) {
     return deferred.promise;
 }
 
+function listCrmContactsForLibrary( libraryCrmId ){
+    var queryString = [
+    'SELECT ',
+        'p.first_name,',
+        'p.last_name,',
+        'p.title,',
+        'p.email,',
+        'p.phone,',
+        'p.phone2,',
+        'p.phone3,',
+        'p.fax,',
+        'p.funct_resp,',
+        'p.director,',
+        'p.eres_liaison,',
+        'p.notes,',
+        'p.office_add,',
+        'a.address_line1,',
+        'a.address_line2,',
+        'a.city,',
+        'a.state,',
+        'a.zip,',
+        'a.library_phone,',
+        'a.library_fax ',
+    'FROM carli_crm.people p,',
+        ' carli_crm.address a ',
+    'WHERE ',
+        'p.address_id = a.address_id AND ',
+        'p.member_id = ? AND ',
+        "(p.director = 'y' or p.eres_liaison = 'y')"
+    ].join('');
+
+    var deferred = Q.defer();
+    pool.getConnection(function(err, connection) {
+        if ( err ){
+            return handleError( deferred, 'pool.getConnection error loading library', err);
+        }
+        
+        connection.query(queryString, [libraryCrmId], function (err, rows, fields) {
+                if ( err ){
+                    handleError( deferred, 'query error loading library', err);
+                }
+                else {
+                    var contacts = extractRowsFromResponse(err, rows, convertCrmLibraryContact);
+                    deferred.resolve(contacts);
+                }
+            }
+        );
+
+        connection.release();
+    });
+
+    return deferred.promise;
+}
+
 function extractRowsFromResponse(err, rows, processCallback) {
     if (err) {
         throw new Error(err);
@@ -72,13 +126,8 @@ function extractRowsFromResponse(err, rows, processCallback) {
         processCallback = function identity(x) { return x; };
     }
 
-    var returnRows = [];
-
     if (rows) {
-        rows.forEach(function (row) {
-            returnRows.push(processCallback(row));
-        });
-        return returnRows;
+        return rows.map(processCallback);
     }
 
     return false;
@@ -136,6 +185,42 @@ function convertCrmLibrary(crm) {
     }
 }
 
+function convertCrmLibraryContact(row){
+    return {
+        firstName: row.first_name,
+        lastName: row.last_name,
+        title: row.title,
+        responsibility: row.funct_resp,
+        email: row.email,
+        phoneNumber: row.phone,
+        phoneNumber2: row.phone2,
+        phoneNumber3: row.phone3,
+        fax: row.fax,
+        contactType: contactType(),
+        notes: row.notes,
+        officeAddress: row.office_add,
+        address1: row.address_line1,
+        address2: row.address_line2,
+        city: row.city,
+        state: row.state,
+        zip: row.zip,
+        libraryPhone: row.library_phone,
+        libraryFax: row.library_fax
+    };
+
+    function contactType(){
+        if ( row.director === 'y' ){
+            return 'Director';
+        }
+        else if ( row.eres_liaison === 'y' ){
+            return 'E-Resources Liaison';
+        }
+        else {
+            return 'Other';
+        }
+    }
+}
+
 function handleError( promise, message, error ){
     var errorObject = {
         message: message,
@@ -147,5 +232,6 @@ function handleError( promise, message, error ){
 
 module.exports = {
     listLibraries: listLibraries,
-    loadLibrary: loadLibrary
+    loadLibrary: loadLibrary,
+    listCrmContactsForLibrary: listCrmContactsForLibrary
 };

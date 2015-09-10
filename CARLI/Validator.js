@@ -6,13 +6,13 @@ tv4.addFormat(formats);
 
 var schemas = {
     ActivityLogEntry: require('../schemas/ActivityLogEntry.json'),
-    Contact: require('../schemas/Contact.json'),
     Cycle: require('../schemas/Cycle.json'),
     CycleType: require('../schemas/CycleType.json'),
     Date: require('../schemas/Date.json'),
     InstitutionType: require('../schemas/InstitutionType.json'),
     InstitutionYears: require('../schemas/InstitutionYears.json'),
     Library: require('../schemas/Library.json'),
+    LibraryContact: require('../schemas/LibraryContact.json'),
     LibraryNonCrm: require('../schemas/LibraryNonCrm.json'),
     LibraryStatus: require('../schemas/LibraryStatus.json'),
     License: require('../schemas/License.json'),
@@ -30,6 +30,7 @@ var schemas = {
     user: require('../schemas/user.json'),
     UserResetRequest: require('../schemas/UserResetRequest.json'),
     Vendor: require('../schemas/Vendor.json'),
+    VendorContact: require('../schemas/VendorContact.json'),
     VendorStatus: require('../schemas/VendorStatus.json')
 };
 

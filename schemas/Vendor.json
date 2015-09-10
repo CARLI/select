@@ -23,7 +23,7 @@
         "contacts": {
             "description": "List of vendor contacts",
             "type": "array",
-            "items": { "$ref": "./Contact.json" }
+            "items": { "$ref": "./VendorContact.json" }
         },
         "comments": {
             "description": "Vendor comments",

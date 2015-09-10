@@ -46,7 +46,9 @@ module.exports = function (timeout) {
             } else {
                 return cachedResult.promise;
             }
-        }
+        },
+
+        listCrmContactsForLibrary: crmQueries.listCrmContactsForLibrary
     };
 
 };
