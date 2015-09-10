@@ -22,7 +22,8 @@ initialize() {
     linkSecureConfiguration || fail "Failed to link secure configuration"
 
     ./install-dependencies.sh || fail "Failed to install dependencies"
-    grunt jsenv:node || fail "Failed to set up javascript environment for node (1)"
+    grunt jsenv:node || fail "Failed to set up javascript environment for node"
+    grunt ensure-local-config
 }
 
 runTests() {
