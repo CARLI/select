@@ -1,24 +1,31 @@
-.edit-contact {
-    @include grid-row();
-    .form-group {
-        @include grid-column(4);
-        margin-bottom: 0;
-        padding-left: 10px;
-        label {
-            font-weight: normal;
-            margin-top: 0;
-        }
-    }
-    .form-group:first-child {
-        padding-left: 0;
-    }
+$add-contact-color: $orange;
+$plus-icon-padding: .5em;
+
+.add-contact,
+.delete-contact {
+    @include vendor-prefix(appearance, 'none');
+    background: none;
+    border: 0;
 }
 
-.view-contact {
-    @include flexbox;
-
-    .contact-name,
-    .contact-contact-methods {
-        @include flex(1 1 50%);
+.add-contact {
+    cursor: pointer;
+    margin-top: $label-margin-top;
+    color: $add-contact-color;
+    padding-right: $plus-icon-padding;
+    &:after {
+        color: $add-contact-color;
+        content: "\f055"; // fa-plus-circle
+        font-size: 1.25em;
+        font-family: "FontAwesome";
+        position: relative;
+        top: .05em;
+        left: $plus-icon-padding;
     }
+}
+.delete-contact {
+    cursor: pointer;
+    color: $purple;
+    font-size: 12px;
+    margin-top: 2px;
 }

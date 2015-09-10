@@ -66,73 +66,84 @@
                 </div>
 
                 <div class="column">
+                    <div class="crm-contacts">
+                        <div class="label">CRM Contacts</div>
 
-                    <div class="contacts-header">CRM Contacts</div>
-                    <div class="contact-list">
                         <div class="label"><em>Director</em></div>
-                        <div class="contact-list-item" ng-repeat="contact in vm.crmContacts | filter:{ contactType: 'Director' }">
-                            <view-edit-library-contact contact="contact" edit-mode="false"></view-edit-library-contact>
-                        </div>
-                    </div>
-                    <div class="contact-list">
+                        <ul>
+                            <li class="contact-list-item" ng-repeat="contact in vm.crmContacts | filter:{ contactType: 'Director' }">
+                                <view-edit-library-contact contact="contact" edit-mode="false"></view-edit-library-contact>
+                            </li>
+                        </ul>
+
                         <div class="label"><em>E-Resources Liaison</em></div>
-                        <div class="contact-list-item" ng-repeat="contact in vm.crmContacts | filter:{ contactType: 'E-Resources Liaison' }">
-                            <view-edit-library-contact contact="contact" edit-mode="false"></view-edit-library-contact>
-                        </div>
-                    </div>
-                    <div class="contact-list">
+                        <ul>
+                            <li class="contact-list-item" ng-repeat="contact in vm.crmContacts | filter:{ contactType: 'E-Resources Liaison' }">
+                                <view-edit-library-contact contact="contact" edit-mode="false"></view-edit-library-contact>
+                            </li>
+                        </ul>
+
                         <div class="label"><em>Billing Staff</em></div>
-                        <div class="contact-list-item" ng-repeat="contact in vm.crmContacts | filter:{ contactType: 'Notification Only' }">
-                            <view-edit-library-contact contact="contact" edit-mode="false"></view-edit-library-contact>
-                        </div>
-                    </div>
-                    <div class="contact-list">
+                        <ul>
+                            <li class="contact-list-item" ng-repeat="contact in vm.crmContacts | filter:{ contactType: 'Notification Only' }">
+                                <view-edit-library-contact contact="contact" edit-mode="false"></view-edit-library-contact>
+                            </li>
+                        </ul>
+
                         <div class="label"><em>Additional Users</em></div>
-                        <div class="contact-list-item" ng-repeat="contact in vm.crmContacts | filter:{ contactType: 'Other' }">
-                            <view-edit-library-contact contact="contact" edit-mode="false"></view-edit-library-contact>
-                        </div>
+                        <ul>
+                            <li class="contact-list-item" ng-repeat="contact in vm.crmContacts | filter:{ contactType: 'Other' }">
+                                <view-edit-library-contact contact="contact" edit-mode="false"></view-edit-library-contact>
+                            </li>
+                        </ul>
                     </div>
 
-                    <div class="contacts-header">Custom Contacts</div>
+                    <div class="custom-contacts">
+                        <div class="label">Custom Contacts</div>
 
-                    <div class="contact-list">
-                        <div class="label"><em>Director</em></div>
-                        <button type="button" class="pull-right add-contact" id="add-director-contact" ng-show="vm.editable" ng-click="vm.addContact('Director')">Add Contact</button>
-
-                        <div class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Director' }">
-                            <view-edit-library-contact contact="contact" edit-mode="vm.editable" input-id="director{{ $index }}"></view-edit-library-contact>
-                            <button type="button" class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</button>
+                        <div class="label">
+                            <em>Director</em>
+                            <button type="button" class="add-contact" id="add-director-contact" ng-show="vm.editable" ng-click="vm.addContact('Director')">Add Contact</button>
                         </div>
-                    </div>
+                        <ul>
+                            <li class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Director' }">
+                                <view-edit-library-contact contact="contact" edit-mode="vm.editable" input-id="director{{ $index }}"></view-edit-library-contact>
+                                <button type="button" class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</button>
+                            </li>
+                        </ul>
 
-                    <div class="contact-list">
-                        <div class="label"><em>E-Resources Liaison</em></div>
-                        <button type="button" class="pull-right add-contact" id="add-e-resources-liaison-contact" ng-show="vm.editable" ng-click="vm.addContact('E-Resources Liaison')">Add Contact</button>
-
-                        <div class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'E-Resources Liaison' }">
-                            <view-edit-library-contact contact="contact" edit-mode="vm.editable" input-id="eresource{{ $index }}"></view-edit-library-contact>
-                            <button type="button" class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</button>
+                        <div class="label">
+                            <em>E-Resources Liaison</em>
+                            <button type="button" class="add-contact" id="add-e-resources-liaison-contact" ng-show="vm.editable" ng-click="vm.addContact('E-Resources Liaison')">Add Contact</button>
                         </div>
-                    </div>
+                        <ul>
+                            <li class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'E-Resources Liaison' }">
+                                <view-edit-library-contact contact="contact" edit-mode="vm.editable" input-id="eresource{{ $index }}"></view-edit-library-contact>
+                                <button type="button" class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</button>
+                            </li>
+                        </ul>
 
-                    <div class="contact-list">
-                        <div class="label"><em>Billing Staff</em></div>
-                        <button type="button" class="pull-right add-contact" id="add-notification-only-contact" ng-show="vm.editable" ng-click="vm.addContact('Notification Only')">Add Contact</button>
-
-                        <div class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Notification Only' }">
-                            <view-edit-library-contact contact="contact" edit-mode="vm.editable" input-id="notification{{ $index }}"></view-edit-library-contact>
-                            <button type="button" class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</button>
+                        <div class="label">
+                            <em>Billing Staff</em>
+                            <button type="button" class="add-contact" id="add-notification-only-contact" ng-show="vm.editable" ng-click="vm.addContact('Notification Only')">Add Contact</button>
                         </div>
-                    </div>
+                        <ul>
+                            <li class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Notification Only' }">
+                                <view-edit-library-contact contact="contact" edit-mode="vm.editable" input-id="notification{{ $index }}"></view-edit-library-contact>
+                                <button type="button" class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</button>
+                            </li>
+                        </ul>
 
-                    <div class="contact-list">
-                        <div class="label"><em>Additional Users</em></div>
-                        <button type="button" class="pull-right add-contact" id="add-other-contact" ng-show="vm.editable" ng-click="vm.addContact('Other')">Add Contact</button>
-
-                        <div class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Other' }">
-                            <view-edit-library-contact contact="contact" edit-mode="vm.editable" input-id="other{{ $index }}"></view-edit-library-contact>
-                            <button type="button" class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</button>
+                        <div class="label">
+                            <em>Additional Users</em>
+                            <button type="button" class="add-contact" id="add-other-contact" ng-show="vm.editable" ng-click="vm.addContact('Other')">Add Contact</button>
                         </div>
+                        <ul>
+                            <li class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Other' }">
+                                <view-edit-library-contact contact="contact" edit-mode="vm.editable" input-id="other{{ $index }}"></view-edit-library-contact>
+                                <button type="button" class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</button>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </fieldset>
