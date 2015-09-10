@@ -113,7 +113,7 @@
         <div class="contact-address">
             <div class="address">{{ contact.address1 }}</div>
             <div class="address">{{ contact.address2 }}</div>
-            <div class="city-state">{{ contact.city }}, {{ contact.state }}</span>
+            <div class="city-state">{{ contact.city }}<span ng-if="contact.state">,</span> {{ contact.state }}</span>
             </div>
             <div class="zip">{{ contact.zip }}</div>
         </div>
