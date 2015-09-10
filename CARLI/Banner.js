@@ -53,15 +53,17 @@ function getDataForBannerExport(cycle, batchId) {
             throwIfDuplicateLibraries(notification);
             throwIfDuplicateInvoiceNumber(notification);
 
-            var bannerFeedData = {
-                batchId: notification.batchId,
-                date: notification.dateCreated,
-                library: librariesById[notification.targetEntity],
-                dollarAmount: notification.summaryTotal,
-                invoiceNumber: notification.invoiceNumber
-            };
+            if (notification.summaryTotal) {
+                var bannerFeedData = {
+                    batchId: notification.batchId,
+                    date: notification.dateCreated,
+                    library: librariesById[ notification.targetEntity ],
+                    dollarAmount: notification.summaryTotal,
+                    invoiceNumber: notification.invoiceNumber
+                };
 
-            dataByBatch[notification.batchId].push(bannerFeedData);
+                dataByBatch[ notification.batchId ].push(bannerFeedData);
+            }
         }
 
         function throwIfDuplicateLibraries(notification) {
@@ -73,10 +75,10 @@ function getDataForBannerExport(cycle, batchId) {
         }
 
         function throwIfDuplicateInvoiceNumber(notification) {
-            if (seenInvoiceNumbers.hasOwnProperty(notification.targetEntity)) {
+            if (seenInvoiceNumbers.hasOwnProperty(notification.invoiceNumber)) {
                 throw carliError('An invoice number should not appear twice in a single batch');
             } else {
-                seenInvoiceNumbers[notification.targetEntity] = true;
+                seenInvoiceNumbers[notification.invoiceNumber] = true;
             }
         }
     }
