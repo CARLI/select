@@ -126,6 +126,11 @@ function runMiddlewareServer(){
                     .then(sendResult(res))
                     .catch(send500Error(res));
             });
+            authorizedRoute('get', '/library/contacts/:id', carliAuth.requireSession, function (req, res) {
+                crmQueries.listCrmContactsForLibrary(req.params.id)
+                    .then(sendResult(res))
+                    .catch(send500Error(res));
+            });
             authorizedRoute('get', '/list-selections-for-library/:libraryId/from-cycle/:cycleId', carliAuth.requireStaffOrLibrary, function (req, res) {
                 libraryQueries.listSelectionsForLibraryFromCycle(req.params.libraryId, req.params.cycleId)
                     .then(sendResult(res))
