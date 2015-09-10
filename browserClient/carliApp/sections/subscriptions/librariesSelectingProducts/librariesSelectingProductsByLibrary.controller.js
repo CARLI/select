@@ -65,6 +65,7 @@ function librariesSelectingProductsByLibraryController( $scope, $q, accordionCon
                 return libraryStatusService.getStatusesForAllLibraries(vm.cycle);
             })
             .then(function(libraryStatusMapping){
+                console.log(libraryStatusMapping);
                 vm.libraryStatuses = libraryStatusMapping;
                 return libraryStatusMapping;
             });
@@ -81,7 +82,16 @@ function librariesSelectingProductsByLibraryController( $scope, $q, accordionCon
 
     function getLibraryPricingStatus(library) {
         var status = vm.libraryStatuses[library.id] || {};
-        return status.isComplete ? 'Selections Complete' : 'No Activity';
+        var statusText = 'No Activity';
+
+        if (status.lastActivity) {
+            statusText = 'In Progress';
+        }
+        if (status.isComplete) {
+            statusText = 'Selections Complete';
+        }
+
+        return statusText;
     }
 
     function filterOfferingBySelection( offering ){

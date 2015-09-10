@@ -12,7 +12,8 @@ function libraryStatusService( CarliModules, $q, errorHandler ) {
         load:   function() { return $q.when( libraryStatusModule.load.apply(this, arguments) ).catch(errorHandler); },
         getStatusForLibrary: getStatusForLibrary,
         markLibrarySelectionsComplete: markLibrarySelectionsComplete,
-        getStatusesForAllLibraries: getStatusesForAllLibraries
+        getStatusesForAllLibraries: getStatusesForAllLibraries,
+        updateLastActivity: updateLastActivity
     };
 
     function updateLibraryStatus( libraryStatus, cycle ){
@@ -31,6 +32,11 @@ function libraryStatusService( CarliModules, $q, errorHandler ) {
 
     function getStatusesForAllLibraries( cycle ){
         return $q.when( libraryStatusModule.getStatusesForAllLibraries(cycle) )
+            .catch(errorHandler);
+    }
+
+    function updateLastActivity( libraryId, cycle ){
+        return $q.when( libraryStatusModule.updateLastActivity(libraryId, cycle) )
             .catch(errorHandler);
     }
 }
