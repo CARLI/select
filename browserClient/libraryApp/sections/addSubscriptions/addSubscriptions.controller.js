@@ -1,7 +1,7 @@
 angular.module('library.sections.addSubscriptions')
 .controller('addSubscriptionsController', addSubscriptionsController);
 
-function addSubscriptionsController( cycleService ){
+function addSubscriptionsController( cycleService, authService, libraryStatusService ){
     var vm = this;
 
     vm.activeCycle = null;
@@ -49,6 +49,12 @@ function addSubscriptionsController( cycleService ){
         vm.noCycles = false;
 
         cycleService.setCurrentCycle(cycle);
+        updateLastActivityForCurrentLibrary(cycle);
+    }
+
+    function updateLastActivityForCurrentLibrary(cycle) {
+        var u = authService.getCurrentUser();
+        libraryStatusService.updateLastActivity(u.library.id, cycle);
     }
 
     function multipleCycles(){
