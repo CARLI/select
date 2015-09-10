@@ -129,6 +129,8 @@ function editVendorController( $scope, $rootScope, activityLogService, entityBas
     }
 
     function saveVendor() {
+        removeEmptyContacts();
+
         if (vm.vendorId !== undefined) {
             vendorService.update(vm.vendor)
                 .then(function () {
@@ -176,6 +178,21 @@ function editVendorController( $scope, $rootScope, activityLogService, entityBas
         var contactIndex = vm.vendor.contacts.indexOf(contact);
         if (contactIndex >= 0) {
             vm.vendor.contacts.splice(contactIndex, 1);
+        }
+    }
+
+    function removeEmptyContacts() {
+        var nonEmptyContacts = [];
+
+        vm.vendor.contacts.forEach(keepNonEmptyContact);
+        vm.vendor.contacts = nonEmptyContacts;
+
+        function keepNonEmptyContact(contact){
+            if ((contact.name && contact.name.length > 0) ||
+                (contact.email && contact.email > 0) ||
+                (contact.phoneNumber && contact.phoneNumber > 0)) {
+                nonEmptyContacts.push(contact);
+            }
         }
     }
 
