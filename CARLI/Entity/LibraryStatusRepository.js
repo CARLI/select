@@ -1,15 +1,15 @@
-var Entity = require('../Entity')
-  , EntityTransform = require( './EntityTransformationUtils')
-  , CycleRepository = require('./CycleRepository')
-  , config = require( '../../config' )
-  , couchUtils = require( '../Store/CouchDb/Utils')()
-  , getStoreForCycle = require('./getStoreForCycle')
-  , Validator = require('../Validator')
-  , moment = require('moment')
-  , Q = require('q')
-  , _ = require('lodash')
-  ;
+var _ = require('lodash');
+var moment = require('moment');
+var Q = require('q');
 
+var carliError = require('../Error');
+var config = require( '../../config' );
+var couchUtils = require( '../Store/CouchDb/Utils')();
+var CycleRepository = require('./CycleRepository');
+var Entity = require('../Entity');
+var EntityTransform = require( './EntityTransformationUtils');
+var getStoreForCycle = require('./getStoreForCycle');
+var Validator = require('../Validator');
 
 var storeOptions = {};
 var LibraryStatusRepository = Entity('LibraryStatus');
@@ -32,6 +32,15 @@ function createLibraryStatus( libraryStatus, cycle ){
 function updateLibraryStatus( libraryStatus, cycle ){
     setCycle(cycle);
     return LibraryStatusRepository.update( libraryStatus, transformFunction );
+}
+
+function createOrUpdateLibraryStatus(libraryStatus, cycle) {
+    if ( libraryStatus.id ){
+        return updateLibraryStatus(libraryStatus, cycle);
+    }
+    else {
+        return createLibraryStatus(libraryStatus, cycle);
+    }
 }
 
 function listLibraryStatuses(cycle){
@@ -100,13 +109,7 @@ function markLibrarySelectionsComplete( libraryId, cycle ){
     return getStatusForLibrary(libraryId, cycle)
         .then(function(libraryStatus){
             libraryStatus.isComplete = true;
-
-            if ( libraryStatus.id ){
-                return updateLibraryStatus(libraryStatus, cycle);
-            }
-            else {
-                return createLibraryStatus(libraryStatus, cycle);
-            }
+            createOrUpdateLibraryStatus(libraryStatus, cycle);
         });
 }
 
@@ -123,6 +126,20 @@ function getStatusesForAllLibraries( cycle ){
 
         return statusMap;
     }
+}
+
+function updateLastActivity(libraryId, cycle) {
+    if (!libraryId) {
+        throw carliError('No library');
+    }
+    return getStatusForLibrary(libraryId, cycle)
+        .then(function(libraryStatus){
+            libraryStatus.lastActivity = new Date().toISOString();
+            createOrUpdateLibraryStatus(libraryStatus, cycle);
+        })
+        .catch(function (error) {
+            throw carliError(error);
+        });
 }
 
 function setStore(store) {
@@ -142,5 +159,6 @@ module.exports = {
     load: loadLibraryStatus,
     getStatusForLibrary: getStatusForLibrary,
     markLibrarySelectionsComplete: markLibrarySelectionsComplete,
-    getStatusesForAllLibraries: getStatusesForAllLibraries
+    getStatusesForAllLibraries: getStatusesForAllLibraries,
+    updateLastActivity: updateLastActivity
 };
