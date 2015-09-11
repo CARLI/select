@@ -48,6 +48,10 @@ angular.module('carli.editOffering')
                 }
                 userTouchedFlag = false;
 
+                if ( 'selection' in vm.offering && typeof vm.offering.selection === 'undefined' ){
+                    delete vm.offering.selection;
+                }
+
                 keepValidSuPricingRows();
 
                 return offeringService.update(vm.offering)
