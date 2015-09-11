@@ -1,18 +1,19 @@
 angular.module('vendor.sections.dashboard')
 .controller('dashboardController', dashboardController);
 
-function dashboardController($scope, authService, cycleService, vendorStatusService){
+function dashboardController($scope, authService, cycleService, emailService, vendorStatusService){
     var vm = this;
     var currentUser = null;
     var cycle = cycleService.getCurrentCycle();
     var computeObjectEqualityDeeply = true;
 
     vm.vendorStatus = null;
+    vm.vendorDoneEnteringPrices = false;
 
+    vm.doneEnteringPrices = doneEnteringPrices;
     vm.updateVendorStatus = updateVendorStatus;
 
     activate();
-
 
     function activate(){
         authService.fetchCurrentUser().then(function (user) {
@@ -27,6 +28,7 @@ function dashboardController($scope, authService, cycleService, vendorStatusServ
         return vendorStatusService.getStatusForVendor(vm.vendor.id, cycle)
             .then(function(vendorStatus){
                 vm.vendorStatus = vendorStatus;
+                checkIfVendorIsDoneEnteringPrices();
             });
     }
 
@@ -44,19 +46,41 @@ function dashboardController($scope, authService, cycleService, vendorStatusServ
         vm.statusUpdating = true;
 
         return vendorStatusService.update(vm.vendorStatus, cycle)
-            .then(function(){
-                return syncData()
-                    .then(loadVendorStatus);
-            })
+            .then(syncData)
             .catch(function(err){
                 console.log('error updating vendor status', err);
             })
             .finally(function() {
                 vm.statusUpdating = false;
+                return loadVendorStatus();
             });
     }
 
     function syncData(){
         return cycleService.syncDataBackToCarli();
+    }
+
+    function doneEnteringPrices(){
+        vm.statusUpdating = true;
+
+        return vendorStatusService.updateVendorStatusActivity('Done Entering Prices', vm.vendor.id, cycle)
+            .then(notifyCarliThatVendorIsDoneEnteringPrices)
+            .then(syncData)
+            .then(checkIfVendorIsDoneEnteringPrices)
+            .catch(function(err){
+                console.log('error updating vendor status', err);
+            })
+            .finally(function() {
+                vm.statusUpdating = false;
+                return loadVendorStatus();
+            });
+
+        function notifyCarliThatVendorIsDoneEnteringPrices(){
+            return emailService.sendVendorDoneEnteringPricingMessage(vm.vendor.id);
+        }
+    }
+
+    function checkIfVendorIsDoneEnteringPrices() {
+        vm.vendorDoneEnteringPrices = (vm.vendorStatus.description === 'Done Entering Prices');
     }
 }
