@@ -22,5 +22,6 @@
         <checkbox ng-change="vm.updateVendorStatus()" ng-model="vm.vendorStatus.checklist.siteLicense" ng-disabled="vm.statusUpdating">Site License Prices</checkbox>
         <checkbox ng-change="vm.updateVendorStatus()" ng-model="vm.vendorStatus.checklist.simultaneousUsers" ng-disabled="vm.statusUpdating">Simultaneous User Prices</checkbox>
         <checkbox ng-change="vm.updateVendorStatus()" ng-model="vm.vendorStatus.checklist.descriptions" ng-disabled="vm.statusUpdating">Product Descriptions</checkbox>
+        <button class="carli-button" ng-disabled="vm.vendorDoneEnteringPrices" ng-click="vm.doneEnteringPrices()">Done Entering Prices</button>
     </section>
 </section>
