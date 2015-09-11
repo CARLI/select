@@ -10,6 +10,7 @@ var offeringRepository = require('../../CARLI/Entity/OfferingRepository.js');
 var Q = require('q');
 var request = require('request');
 var vendorReportCsv = require('./csv/vendorReport');
+var vendorRepository = require('../../CARLI/Entity/VendorRepository.js');
 
 function tellPixobot(envelope) {
     if (typeof envelope === 'string') {
@@ -130,20 +131,27 @@ function sendOneTimePurchaseMessage( offeringId ){
     }
 }
 
-/**
- * @param message:
- * {
- *     text: question typed by user in the form
- *     context: some text associated with the location of the instance of the ask carli button that send the message
- *     page: the URL the user was on when they sent the message
- *     user: the user that was logged in - a sanitized version
- *          {
- *              email
- *              fullName
- *              libraryName
- *          }
- * }
- */
+function sendVendorDoneEnteringPricingMessage( vendorId ){
+    return vendorRepository.load(vendorId)
+        .then(function(vendor){
+            var realTo = config.notifications.overrideTo ? config.notifications.overrideTo : config.notifications.carliListServe;
+
+            var options = {
+                to: realTo,
+                from: config.notifications.from,
+                subject: 'Vendor ' + vendor.name + ' done entering prices',
+                text: messageText(vendor)
+            };
+
+            return sendMail(options);
+        });
+
+    function messageText(vendor){
+        return vendor.name + ' has indicated that their pricing has been completely entered for this cycle. ' +
+        vendor.name + ' will be able to continue editing their prices until you take the step of closing the vendor pricing in the staff app.';
+    }
+}
+
 function sendAskCarliMessage( message ){
     console.log('ask carli ', message);
 
@@ -153,20 +161,26 @@ function sendAskCarliMessage( message ){
     var userEmail = message.user.email;
     var userName = message.user.fullName;
     var libraryName = message.user.libraryName;
+    var vendorName = message.user.vendorName;
+
+    var fromName = libraryName || vendorName || '';
+    if ( fromName ){
+        fromName = ' from ' + fromName;
+    }
 
     var realTo = config.notifications.overrideTo ? config.notifications.overrideTo : config.notifications.carliSupport;
 
     var options = {
         to: realTo,
         from: userEmail,
-        subject: 'ASK CARLI from ' + libraryName + ' by ' + userName,
+        subject: 'ASK CARLI' + fromName + ' by ' + userName,
         text: messageBody()
     };
 
     return sendMail(options);
 
     function messageBody(){
-        return userName + ' from ' + libraryName + ' asks: \n\n' +
+        return userName + fromName + ' asks: \n\n' +
                messageText + '\n\n' +
               'They were on ' + page + ' when the message was sent, using the button near ' + messageContext;
     }
@@ -201,5 +215,6 @@ module.exports = {
     sendPasswordResetMessage: sendPasswordResetMessage,
     sendNotificationEmail: sendNotificationEmail,
     sendOneTimePurchaseMessage: sendOneTimePurchaseMessage,
+    sendVendorDoneEnteringPricingMessage: sendVendorDoneEnteringPricingMessage,
     sendAskCarliMessage: sendAskCarliMessage
 };

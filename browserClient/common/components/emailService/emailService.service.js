@@ -6,11 +6,16 @@ function emailService($q, CarliModules){
 
     return {
         sendOneTimePurchaseMessage: sendOneTimePurchaseMessage,
+        sendVendorDoneEnteringPricingMessage: sendVendorDoneEnteringPricingMessage,
         sendAskCarliMessage: sendAskCarliMessage
     };
 
     function sendOneTimePurchaseMessage(offeringId){
         return $q.when(emailMiddleware.sendOneTimePurchaseMessage(offeringId));
+    }
+
+    function sendVendorDoneEnteringPricingMessage(vendorId){
+        return $q.when(emailMiddleware.sendVendorDoneEnteringPricingMessage(vendorId));
     }
 
     function sendAskCarliMessage(messageObject){

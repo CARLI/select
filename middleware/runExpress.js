@@ -378,6 +378,14 @@ function runMiddlewareServer(){
                     .then(sendOk(res))
                     .catch(sendError(res));
             });
+            authorizedRoute('post', '/notify-carli-of-vendor-done-entering-pricing/:vendorId', carliAuth.requireSession, function (req, res) {
+                carliAuth.requireSession()
+                    .then(function () {
+                        return email.sendVendorDoneEnteringPricingMessage(req.params.vendorId);
+                    })
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
             authorizedRoute('post', '/ask-carli', carliAuth.requireSession, function (req, res) {
                 carliAuth.requireSession()
                     .then(function () {
