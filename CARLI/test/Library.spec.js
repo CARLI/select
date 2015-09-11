@@ -225,7 +225,7 @@ describe('getContactTypesForNotificationCategory', function(){
     });
 
     it('should return "Sales" contact type for notification category "Reminder"', function(){
-        expect(getCategory(LibraryRepository.CONTACT_CATEGORY_REMINDER)[0]).to.equal('Billing');
+        expect(getCategory(LibraryRepository.CONTACT_CATEGORY_REMINDER)[0]).to.equal('Director');
     });
 
     it('should return "Unknown Category" contact type for a bogus category', function(){
@@ -291,7 +291,7 @@ describe('getContactEmailAddressesForNotification', function(){
 
     it('should return the correct contacts for the Reminder category', function(){
         var testEmails = getEmail(listOfContacts, LibraryRepository.CONTACT_CATEGORY_REMINDER);
-        expect(testEmails).to.include('test_billing@email.com');
+        expect(testEmails).to.include('test_director@email.com');
     });
 });
 

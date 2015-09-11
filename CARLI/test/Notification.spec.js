@@ -284,7 +284,7 @@ describe('the getRecipientLabel method', function () {
 
     it('should return the correct label for a subscription related notification', function () {
         var recipientLabel = notificationRepository.getRecipientLabel('Test Library', 'reminder');
-        expect(recipientLabel).to.equal('Test Library Subscription Contacts');
+        expect(recipientLabel).to.equal('Test Library Reminder Contacts');
     });
 });
 
