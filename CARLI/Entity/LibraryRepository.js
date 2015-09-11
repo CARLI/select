@@ -157,17 +157,17 @@ function getContactTypesForNotificationCategory(contactCategory){
     }
 }
 
-function getContactEmailAddressesForNotification(library, contactCategory){
+function getContactEmailAddressesForNotification(listOfContacts, contactCategory){
     var contactTypes = getContactTypesForNotificationCategory(contactCategory);
-    return getContactEmailAddressesForContactTypes(library, contactTypes);
+    return getContactEmailAddressesForContactTypes(listOfContacts, contactTypes);
 }
 
-function getContactEmailAddressesForContactTypes(library, arrayOfContactTypes){
-    if ( !library || !library.contacts ){
+function getContactEmailAddressesForContactTypes(listOfContacts, arrayOfContactTypes){
+    if ( !listOfContacts ){
         return [];
     }
 
-    return library.contacts.filter(matchingTypes).map(extractEmail);
+    return listOfContacts.filter(matchingTypes).map(extractEmail);
 
     function matchingTypes(contact){
         return arrayOfContactTypes.indexOf(contact.contactType) != -1;
@@ -176,6 +176,16 @@ function getContactEmailAddressesForContactTypes(library, arrayOfContactTypes){
     function extractEmail(contact){
         return contact.email;
     }
+}
+
+function listAllContactsForLibrary(libraryId){
+    return Q.all([
+            localLibraryRepository.load(libraryId),
+            crmLibraryRepository.listCrmContactsForLibrary(libraryId)
+        ])
+        .then(function(arrayOfContactLists){
+            return _.flatten(arrayOfContactLists);
+        });
 }
 
 function listAllContacts(){
@@ -214,5 +224,6 @@ module.exports = {
     getContactTypesForNotificationCategory: getContactTypesForNotificationCategory,
     getContactEmailAddressesForNotification: getContactEmailAddressesForNotification,
     listCrmContactsForLibrary: crmLibraryRepository.listCrmContactsForLibrary,
+    listAllContactsForLibrary: listAllContactsForLibrary,
     listAllContacts: listAllContacts
 };
