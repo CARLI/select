@@ -271,8 +271,21 @@ function runOfferingSpecificTests(testCycle) {
                 expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(false);
             });
 
+            it('should compute false if the offering has not been updated', function(){
+                var testOffering = validOfferingData();
+                testOffering.pricing = {
+                    site: 1000,
+                    su: [
+                        { users: 2, price: 2000 },
+                        { users: 3, price: 300 }
+                    ]
+                };
+                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(false);
+            });
+
             it('should compute true if the offering has an su price greater than the site license price', function() {
                 var testOffering = validOfferingData();
+                testOffering.suPricesUpdated = '2015-01-01';
                 testOffering.pricing = {
                     site: 1000,
                     su: [{
@@ -284,8 +297,36 @@ function runOfferingSpecificTests(testCycle) {
                 expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(true);
             });
 
+            it('should compute true if the offering has an su price greater than a site license price of zero', function() {
+                var testOffering = validOfferingData();
+                testOffering.suPricesUpdated = '2015-01-01';
+                testOffering.pricing = {
+                    site: 0,
+                    su: [{
+                        users: 2,
+                        price: 2000
+                    }]
+                };
+
+                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(true);
+            });
+
+            it('should compute false if the offering has su pricing but no site license price', function() {
+                var testOffering = validOfferingData();
+                testOffering.suPricesUpdated = '2015-01-01';
+                testOffering.pricing = {
+                    su: [{
+                        users: 2,
+                        price: 2000
+                    }]
+                };
+
+                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(false);
+            });
+
             it('should compute true if there is a su price higher than the price for a larger number of users', function() {
                 var testOffering = validOfferingData();
+                testOffering.suPricesUpdated = '2015-01-01';
                 testOffering.pricing = {
                     site: 9999,
                     su: [
@@ -300,6 +341,7 @@ function runOfferingSpecificTests(testCycle) {
 
             it('should compute true if there is a su price equal to the price for a larger number of users', function() {
                 var testOffering = validOfferingData();
+                testOffering.suPricesUpdated = '2015-01-01';
                 testOffering.pricing = {
                     site: 9999,
                     su: [
@@ -314,6 +356,7 @@ function runOfferingSpecificTests(testCycle) {
 
             it('should compute true if increase from last years price exceeds the price cap', function() {
                 var testOffering = validOfferingData();
+                testOffering.suPricesUpdated = '2015-01-01';
                 testOffering.cycle = testCycle;
                 testOffering.product.priceCap = 10;
                 testOffering.pricing = {
@@ -342,6 +385,7 @@ function runOfferingSpecificTests(testCycle) {
 
             it('should compute true if decrease from last years price exceeds 5%', function() {
                 var testOffering = validOfferingData();
+                testOffering.siteLicensePriceUpdated = '2015-01-01';
                 testOffering.cycle = testCycle;
                 testOffering.product.priceCap = 10;
                 testOffering.pricing = {
@@ -370,6 +414,7 @@ function runOfferingSpecificTests(testCycle) {
 
             it('should compute false if increase or decrease is within acceptable range', function() {
                 var testOffering = validOfferingData();
+                testOffering.siteLicensePriceUpdated = '2015-01-01';
                 testOffering.cycle = testCycle;
                 testOffering.product.priceCap = 10;
                 testOffering.pricing = {

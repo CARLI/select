@@ -13,7 +13,7 @@ var _ = require('lodash');
 
 var CONTACT_CATEGORY_ESTIMATE = 'Subscription Contacts';
 var CONTACT_CATEGORY_INVOICE  = 'Invoice Contacts';
-var CONTACT_CATEGORY_REMINDER = 'Subscription Contacts';
+var CONTACT_CATEGORY_REMINDER = 'Reminder Contacts';
 
 var crmLibraryRepository = CrmLibraryEntity();
 
@@ -150,24 +150,24 @@ function getContactTypesForNotificationCategory(contactCategory){
         return ['Billing'];
     }
     if ( contactCategory === CONTACT_CATEGORY_REMINDER ){
-        return ['Billing'];
+        return ['Director', 'E-Resources Liaison'];
     }
     else {
         return ['Unknown Category'];
     }
 }
 
-function getContactEmailAddressesForNotification(library, contactCategory){
+function getContactEmailAddressesForNotification(listOfContacts, contactCategory){
     var contactTypes = getContactTypesForNotificationCategory(contactCategory);
-    return getContactEmailAddressesForContactTypes(library, contactTypes);
+    return getContactEmailAddressesForContactTypes(listOfContacts, contactTypes);
 }
 
-function getContactEmailAddressesForContactTypes(library, arrayOfContactTypes){
-    if ( !library || !library.contacts ){
+function getContactEmailAddressesForContactTypes(listOfContacts, arrayOfContactTypes){
+    if ( !listOfContacts ){
         return [];
     }
 
-    return library.contacts.filter(matchingTypes).map(extractEmail);
+    return listOfContacts.filter(matchingTypes).map(extractEmail);
 
     function matchingTypes(contact){
         return arrayOfContactTypes.indexOf(contact.contactType) != -1;
@@ -175,6 +175,23 @@ function getContactEmailAddressesForContactTypes(library, arrayOfContactTypes){
 
     function extractEmail(contact){
         return contact.email;
+    }
+}
+
+function listAllContactsForLibrary(libraryId){
+    return Q.all([
+            getCustomContactsForLibrary(libraryId),
+            crmLibraryRepository.listCrmContactsForLibrary(libraryId)
+        ])
+        .then(function(arrayOfContactLists){
+            return _.flatten(arrayOfContactLists);
+        });
+
+    function getCustomContactsForLibrary(libraryId){
+        return loadNonCrmLibraryForCrmId(libraryId)
+            .then(function(library){
+                return library.contacts;
+            });
     }
 }
 
@@ -214,5 +231,6 @@ module.exports = {
     getContactTypesForNotificationCategory: getContactTypesForNotificationCategory,
     getContactEmailAddressesForNotification: getContactEmailAddressesForNotification,
     listCrmContactsForLibrary: crmLibraryRepository.listCrmContactsForLibrary,
+    listAllContactsForLibrary: listAllContactsForLibrary,
     listAllContacts: listAllContacts
 };
