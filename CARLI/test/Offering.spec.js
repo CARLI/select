@@ -297,6 +297,33 @@ function runOfferingSpecificTests(testCycle) {
                 expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(true);
             });
 
+            it('should compute true if the offering has an su price greater than a site license price of zero', function() {
+                var testOffering = validOfferingData();
+                testOffering.suPricesUpdated = '2015-01-01';
+                testOffering.pricing = {
+                    site: 0,
+                    su: [{
+                        users: 2,
+                        price: 2000
+                    }]
+                };
+
+                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(true);
+            });
+
+            it('should compute false if the offering has su pricing but no site license price', function() {
+                var testOffering = validOfferingData();
+                testOffering.suPricesUpdated = '2015-01-01';
+                testOffering.pricing = {
+                    su: [{
+                        users: 2,
+                        price: 2000
+                    }]
+                };
+
+                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(false);
+            });
+
             it('should compute true if there is a su price higher than the price for a larger number of users', function() {
                 var testOffering = validOfferingData();
                 testOffering.suPricesUpdated = '2015-01-01';
