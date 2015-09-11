@@ -150,7 +150,7 @@ function getContactTypesForNotificationCategory(contactCategory){
         return ['Billing'];
     }
     if ( contactCategory === CONTACT_CATEGORY_REMINDER ){
-        return ['Billing'];
+        return ['Director', 'E-Resources Liaison'];
     }
     else {
         return ['Unknown Category'];
