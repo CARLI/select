@@ -14,6 +14,13 @@ function sendOneTimePurchaseMessage(offeringId){
     });
 }
 
+function sendVendorDoneEnteringPricingMessage(vendorId){
+    return middlewareRequest({
+        path: '/notify-carli-of-vendor-done-entering-pricing/' + vendorId,
+        method: 'post'
+    });
+}
+
 function sendAskCarliMessage(messageObject){
     return middlewareRequest({
         path: '/ask-carli',
@@ -27,5 +34,6 @@ module.exports = {
     tellPixobot: function () {},
     sendNotificationEmail: sendNotificationEmail,
     sendOneTimePurchaseMessage: sendOneTimePurchaseMessage,
+    sendVendorDoneEnteringPricingMessage: sendVendorDoneEnteringPricingMessage,
     sendAskCarliMessage: sendAskCarliMessage
 };
