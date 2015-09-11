@@ -176,7 +176,7 @@ describe('The notification draft generator', function() {
                     expect(recipients).to.be.an('array'),
                     expect(recipients.length).to.equal(1),
                     expect(recipients[0].id).to.equal('library-without-selections'),
-                    expect(recipients[0].label).to.equal('Library without selections Subscription Contacts')
+                    expect(recipients[0].label).to.equal('Library without selections Reminder Contacts')
                 ]);
             });
         });
