@@ -38,6 +38,8 @@
                     </li>
                 </ul>
                 <div class="vendor footer">
+                    <button class="carli-button" busy-click="vm.exportOfferingList(vendor)">Export</button>
+
                     <button class="carli-button" busy-click="vm.openVendorPricing(vendor)" ng-if="vm.vendorStatus[vendor.id].isClosed">Re-Open {{ vendor.name }} Pricing</button>
                     <button class="carli-button" busy-click="vm.closeVendorPricing(vendor)" ng-if="!vm.vendorStatus[vendor.id].isClosed">Close {{ vendor.name }} Pricing</button>
 
