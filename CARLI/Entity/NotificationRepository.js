@@ -168,9 +168,9 @@ function getRecipientEmailAddresses(recipientId, notificationType) {
     var notificationCategory = getCategoryNameForNotificationType(notificationType);
 
     if (notificationTypeIsForLibrary(notificationType)) {
-        return libraryRepository.load(recipientId)
-            .then(function(library){
-                return libraryRepository.getContactEmailAddressesForNotification(library, notificationCategory);
+        return libraryRepository.listAllContactsForLibrary(recipientId)
+            .then(function(allContactsForLibrary){
+                return libraryRepository.getContactEmailAddressesForNotification(allContactsForLibrary, notificationCategory);
             });
     }
     else if (notificationTypeIsForVendor(notificationType)) {
