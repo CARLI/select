@@ -515,11 +515,15 @@ function getFlaggedState(offering, cycleArgument) {
     }
 
     function isThereAnSuOfferingForMoreThanTheSiteLicensePrice(){
-        var sitePrice = offering.pricing.site || 0;
-        for ( var i in offering.pricing.su ){
-            if ( offering.pricing.site !== 0 && offering.pricing.su[i].price !== 0 ){
-                if ( offering.pricing.su[i].price > sitePrice ){
-                    return true;
+        var sitePrice = offering.pricing.site;
+        var hasSitePrice = ('site' in offering.pricing && sitePrice !== null && typeof sitePrice !== 'undefined');
+
+        if ( hasSitePrice ) {
+            for (var i in offering.pricing.su) {
+                if (offering.pricing.su[i].price !== 0) {
+                    if (offering.pricing.su[i].price > sitePrice) {
+                        return true;
+                    }
                 }
             }
         }
