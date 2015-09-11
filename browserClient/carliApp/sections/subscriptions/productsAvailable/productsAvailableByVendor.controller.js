@@ -6,22 +6,22 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
 
     accordionControllerMixin(vm, loadProductsForVendor);
 
-    vm.toggleProductSection = toggleProductSection;
-    vm.getVendorPricingStatus = getVendorPricingStatus;
-    vm.stopEditing = stopEditing;
-    vm.computeSelectionTotalForVendor = computeSelectionTotalForVendor;
     vm.computeInvoiceTotalForVendor = computeInvoiceTotalForVendor;
+    vm.computeSelectionTotalForVendor = computeSelectionTotalForVendor;
+    vm.exportOfferingList = exportOfferingList;
     vm.getProductDisplayName = productService.getProductDisplayName;
-    vm.loadingPromise = {};
-    vm.vendors = [];
-    vm.isEditing = {};
-    vm.expandedProducts = {};
-    vm.cycle = {};
-    vm.lastYear = '';
-    vm.selectedOfferings = {};
-    vm.reportCheckedProductsForVendor = reportCheckedProductsForVendor;
+    vm.getVendorPricingStatus = getVendorPricingStatus;
     vm.reportAllProductsForVendor = reportAllProductsForVendor;
     vm.reportAllVendors = reportAllVendors;
+    vm.reportCheckedProductsForVendor = reportCheckedProductsForVendor;
+    vm.stopEditing = stopEditing;
+    vm.toggleProductSection = toggleProductSection;
+
+    vm.cycle = {};
+    vm.expandedProducts = {};
+    vm.isEditing = {};
+    vm.lastYear = '';
+    vm.loadingPromise = {};
     vm.offeringColumns = [
         'library',
         'library-view',
@@ -30,6 +30,8 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
         'selection',
         'vendor-invoice'
     ];
+    vm.selectedOfferings = {};
+    vm.vendors = [];
 
     activate();
 
@@ -228,5 +230,9 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
             var stop = new Date();
             console.log('digest ' + numberOfOfferings + ' vendor offerings took '+ (stop-startTime)/1000 + 's');
         });
+    }
+
+    function exportOfferingList(vendor) {
+
     }
 }

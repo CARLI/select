@@ -6,21 +6,23 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
 
     accordionControllerMixin(vm, loadProductsForVendor);
 
-    vm.toggleProductSection = toggleProductSection;
+    vm.exportOfferingList = exportOfferingList;
     vm.getProductDisplayName = productService.getProductDisplayName;
-    vm.loadingPromise = {};
     vm.stopEditing = stopEditing;
-    vm.vendors = [];
-    vm.isEditing = {};
-    vm.expandedProducts = {};
+    vm.toggleProductSection = toggleProductSection;
+
     vm.cycle = {};
+    vm.expandedProducts = {};
+    vm.isEditing = {};
     vm.lastYear = '';
+    vm.loadingPromise = {};
     vm.offeringColumns = [
         'library',
         'library-view',
         'site-license-price-both',
         'flag'
     ];
+    vm.vendors = [];
     vm.vendorStatus = {};
 
     activate();
@@ -130,5 +132,9 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
     }
     function stopEditing(offering) {
         vm.isEditing[offering.id] = false;
+    }
+
+    function exportOfferingList(vendor) {
+
     }
 }

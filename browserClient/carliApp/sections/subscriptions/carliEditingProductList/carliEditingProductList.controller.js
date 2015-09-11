@@ -4,15 +4,16 @@ angular.module('carli.sections.subscriptions.carliEditingProductList')
 function carliEditingProductListController( $filter, $q, alertService, cycleService, historicalPricingService, productService, vendorService, vendorStatusService ) {
     var vm = this;
 
-    vm.loadingPromise = {};
-    vm.vendorStatus = {};
-
+    vm.clearReviewStatus = clearReviewStatus;
+    vm.exportOfferingList = exportOfferingList;
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.loadProductsForVendor = loadProductsForVendor;
     vm.openVendorPricing = openVendorPricing;
     vm.removeProduct = removeProduct;
     vm.saveReviewStatus = saveReviewStatus;
-    vm.clearReviewStatus = clearReviewStatus;
+
+    vm.loadingPromise = {};
+    vm.vendorStatus = {};
 
     activate();
 
@@ -174,5 +175,9 @@ function carliEditingProductListController( $filter, $q, alertService, cycleServ
 
     function openVendorPricing(){
         return vm.cycleRouter.next();
+    }
+
+    function exportOfferingList(vendor) {
+
     }
 }
