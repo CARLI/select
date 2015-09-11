@@ -6,25 +6,27 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
 
     accordionControllerMixin(vm, loadProductsForVendor);
 
-    vm.toggleProductSection = toggleProductSection;
-    vm.getVendorPricingStatus = getVendorPricingStatus;
+    vm.closeVendorPricing = closeVendorPricing;
+    vm.exportOfferingList = exportOfferingList;
     vm.getProductDisplayName = productService.getProductDisplayName;
-    vm.loadingPromise = {};
+    vm.getVendorPricingStatus = getVendorPricingStatus;
+    vm.openVendorPricing = openVendorPricing;
     vm.stopEditing = stopEditing;
-    vm.vendors = [];
-    vm.isEditing = {};
-    vm.expandedProducts = {};
+    vm.toggleProductSection = toggleProductSection;
+
     vm.cycle = {};
+    vm.expandedProducts = {};
+    vm.isEditing = {};
     vm.lastYear = '';
+    vm.loadingPromise = {};
     vm.offeringColumns = [
         'library',
         'library-view',
         'site-license-price-both',
         'flag'
     ];
+    vm.vendors = [];
     vm.vendorStatus = {};
-    vm.closeVendorPricing = closeVendorPricing;
-    vm.openVendorPricing = openVendorPricing;
 
     activate();
 
@@ -171,5 +173,9 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
     }
     function stopEditing(offering) {
         vm.isEditing[offering.id] = false;
+    }
+
+    function exportOfferingList(vendor) {
+
     }
 }

@@ -6,16 +6,18 @@ function librariesSelectingProductsByLibraryController( $scope, $q, accordionCon
 
     accordionControllerMixin(vm, loadOfferingsForLibrary);
 
-    vm.loadingPromise = {};
-    vm.offerings = {};
-    vm.stopEditing = stopEditing;
-    vm.getLibraryPricingStatus = getLibraryPricingStatus;
-    vm.offeringFilter = {};
+    vm.exportOfferingList = exportOfferingList;
     vm.filterOfferingBySelection = filterOfferingBySelection;
-    vm.vendorMap = {};
-    vm.isEditing = {};
+    vm.getLibraryPricingStatus = getLibraryPricingStatus;
+    vm.stopEditing = stopEditing;
+
     vm.cycle = {};
+    vm.isEditing = {};
     vm.lastYear = '';
+    vm.libraryStatuses = {};
+    vm.loadingPromise = {};
+    vm.offeringFilter = {};
+    vm.offerings = {};
     vm.offeringColumns = [
         'product',
         'vendor',
@@ -30,7 +32,7 @@ function librariesSelectingProductsByLibraryController( $scope, $q, accordionCon
         selectedLastYear: [orderBySelection, 'product.name'],
         pricing: orderBySitePricing
     };
-    vm.libraryStatuses = {};
+    vm.vendorMap = {};
 
     activate();
 
@@ -164,6 +166,9 @@ function librariesSelectingProductsByLibraryController( $scope, $q, accordionCon
 
     function orderBySitePricing(offering){
         return offering.pricing.site || 0;
+    }
+
+    function exportOfferingList(library) {
 
     }
 }
