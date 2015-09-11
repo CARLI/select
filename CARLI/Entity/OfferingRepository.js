@@ -484,7 +484,7 @@ function getFlaggedState(offering, cycleArgument) {
     }
 
     function systemFlaggedState(){
-        if ( offering.pricing && offering.pricing.su ){
+        if ( offering.pricing && offering.pricing.su && vendorHasTouchedPricing(offering) ){
             var flagSiteLicensePrice = isThereAnSuOfferingForMoreThanTheSiteLicensePrice();
             var flagSuPrices = isThereAnSuOfferingForMoreUsersWithASmallerPrice();
             var flagExceedsPriceCap = doesIncreaseFromLastYearExceedPriceCap();
@@ -625,6 +625,18 @@ function getFlaggedState(offering, cycleArgument) {
             }
         }
     }
+}
+
+function vendorHasTouchedPricing(offering){
+    return vendorHasTouchedSiteLicensePricing(offering) || vendorHasTouchedSuPricing(offering);
+}
+
+function vendorHasTouchedSiteLicensePricing(offering){
+    return !!offering.siteLicensePriceUpdated;
+}
+
+function vendorHasTouchedSuPricing(offering){
+    return !!offering.suPricesUpdated;
 }
 
 /* functions that get added as instance methods on loaded Offerings */
