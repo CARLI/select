@@ -67,7 +67,6 @@ function librariesSelectingProductsByLibraryController( $scope, $q, accordionCon
                 return libraryStatusService.getStatusesForAllLibraries(vm.cycle);
             })
             .then(function(libraryStatusMapping){
-                console.log(libraryStatusMapping);
                 vm.libraryStatuses = libraryStatusMapping;
                 return libraryStatusMapping;
             });
