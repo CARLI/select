@@ -1,16 +1,16 @@
 
 <section id="membership">
     <div class="list-page-header">
-        <h1>Membership: {{ vm.displayYear }}</h1>
+        <h1>Membership: FY{{ vm.displayYear }}</h1>
         <div class="button-container">
             <button class="carli-button" busy-click="vm.viewPreviousYear()">
-                View {{ vm.previousYear }}
+                View FY{{ vm.previousYear }}
             </button>
             <button class="carli-button" busy-click="vm.viewNextYear()" ng-if="vm.displayYear === vm.currentYear">
-                Start {{ vm.nextYear }}
+                Start FY{{ vm.nextYear }}
             </button>
             <button class="carli-button" busy-click="vm.viewNextYear()" ng-if="vm.displayYear  <  vm.currentYear">
-                View {{ vm.nextYear }}
+                View FY{{ vm.nextYear }}
             </button>
 
             <button class="carli-button save-button" busy-click="vm.saveMembershipData()">Save</button>
@@ -47,7 +47,7 @@
             </li>
         </ul>
 
-        <button class="carli-button save-button" busy-click="vm.createMembershipInvoices()">Invoice FY {{ vm.currentYear }}</button>
+        <button class="carli-button save-button" busy-click="vm.createMembershipInvoices()">Invoice FY{{ vm.currentYear }}</button>
     </section>
 </section>
 
