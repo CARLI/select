@@ -13,7 +13,7 @@ var _ = require('lodash');
 
 var CONTACT_CATEGORY_ESTIMATE = 'Subscription Contacts';
 var CONTACT_CATEGORY_INVOICE  = 'Invoice Contacts';
-var CONTACT_CATEGORY_REMINDER = 'Subscription Contacts';
+var CONTACT_CATEGORY_REMINDER = 'Reminder Contacts';
 
 var crmLibraryRepository = CrmLibraryEntity();
 
@@ -188,7 +188,7 @@ function listAllContactsForLibrary(libraryId){
         });
 
     function getCustomContactsForLibrary(libraryId){
-        return localLibraryRepository.load(libraryId)
+        return loadNonCrmLibraryForCrmId(libraryId)
             .then(function(library){
                 return library.contacts;
             });
