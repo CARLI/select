@@ -85,7 +85,8 @@ function askCarliFormController($location, $scope, askCarliService, userService)
             return {
                 email: user.email,
                 fullName: user.fullName,
-                libraryName: user.library.name
+                libraryName: user.library ? user.library.name : '',
+                vendorName: user.vendor ? user.vendor.name : ''
             }
         }
     }
