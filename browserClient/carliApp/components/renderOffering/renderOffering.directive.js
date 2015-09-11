@@ -132,12 +132,10 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
 
                     disableFlagAction(offeringId);
 
-                    scope.$apply(function() {
-                        editOfferingService.toggleOfferingUserFlaggedState(offeringId)
-                            .then(alertSuccess, errorHandler)
-                            .then(offeringService.load)
-                            .then(updateFlagCssClass);
-                    });
+                    editOfferingService.toggleOfferingUserFlaggedState(offeringId)
+                        .then(alertSuccess, errorHandler)
+                        .then(offeringService.load)
+                        .then(updateFlagCssClass);
 
                     function alertSuccess(offeringId) {
                         alertService.putAlert('Offering updated', {severity: 'success'});
