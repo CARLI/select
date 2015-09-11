@@ -180,12 +180,19 @@ function getContactEmailAddressesForContactTypes(listOfContacts, arrayOfContactT
 
 function listAllContactsForLibrary(libraryId){
     return Q.all([
-            localLibraryRepository.load(libraryId),
+            getCustomContactsForLibrary(libraryId),
             crmLibraryRepository.listCrmContactsForLibrary(libraryId)
         ])
         .then(function(arrayOfContactLists){
             return _.flatten(arrayOfContactLists);
         });
+
+    function getCustomContactsForLibrary(libraryId){
+        return localLibraryRepository.load(libraryId)
+            .then(function(library){
+                return library.contacts;
+            });
+    }
 }
 
 function listAllContacts(){
