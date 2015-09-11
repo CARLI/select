@@ -1,7 +1,7 @@
 angular.module('vendor.sections.dashboard')
 .controller('dashboardController', dashboardController);
 
-function dashboardController($scope, authService, cycleService, userService, vendorStatusService){
+function dashboardController($scope, authService, cycleService, emailService, vendorStatusService){
     var vm = this;
     var currentUser = null;
     var cycle = cycleService.getCurrentCycle();
@@ -14,7 +14,6 @@ function dashboardController($scope, authService, cycleService, userService, ven
     vm.updateVendorStatus = updateVendorStatus;
 
     activate();
-
 
     function activate(){
         authService.fetchCurrentUser().then(function (user) {
@@ -62,10 +61,10 @@ function dashboardController($scope, authService, cycleService, userService, ven
     }
 
     function doneEnteringPrices(){
-        var vendorId = userService.getUser().vendor.id;
         vm.statusUpdating = true;
 
-        return vendorStatusService.updateVendorStatusActivity('Done Entering Prices', vendorId, cycle)
+        return vendorStatusService.updateVendorStatusActivity('Done Entering Prices', vm.vendor.id, cycle)
+            .then(notifyCarliThatVendorIsDoneEnteringPrices)
             .then(syncData)
             .then(checkIfVendorIsDoneEnteringPrices)
             .catch(function(err){
@@ -75,6 +74,10 @@ function dashboardController($scope, authService, cycleService, userService, ven
                 vm.statusUpdating = false;
                 return loadVendorStatus();
             });
+
+        function notifyCarliThatVendorIsDoneEnteringPrices(){
+            return emailService.sendVendorDoneEnteringPricingMessage(vm.vendor.id);
+        }
     }
 
     function checkIfVendorIsDoneEnteringPrices() {
