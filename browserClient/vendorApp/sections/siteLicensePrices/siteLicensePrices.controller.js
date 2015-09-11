@@ -321,7 +321,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
             return;
         }
 
-        if ( offering.siteLicensePriceUpdated ){
+        if ( offering.siteLicensePriceUpdated || offering.suPricesUpdated ){
             offeringCell.addClass('updated');
 
             if (offeringService.getFlaggedState(offering, vm.cycle)) {

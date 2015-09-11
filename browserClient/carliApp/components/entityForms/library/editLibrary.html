@@ -85,7 +85,7 @@
 
                         <div class="label"><em>Billing Staff</em></div>
                         <ul>
-                            <li class="contact-list-item" ng-repeat="contact in vm.crmContacts | filter:{ contactType: 'Notification Only' }">
+                            <li class="contact-list-item" ng-repeat="contact in vm.crmContacts | filter:{ contactType: 'Billing' }">
                                 <view-edit-library-contact contact="contact" edit-mode="false"></view-edit-library-contact>
                             </li>
                         </ul>
@@ -125,10 +125,10 @@
 
                         <div class="label">
                             <em>Billing Staff</em>
-                            <button type="button" class="add-contact" id="add-notification-only-contact" ng-show="vm.editable" ng-click="vm.addContact('Notification Only')">Add Contact</button>
+                            <button type="button" class="add-contact" id="add-notification-only-contact" ng-show="vm.editable" ng-click="vm.addContact('Billing')">Add Contact</button>
                         </div>
                         <ul>
-                            <li class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Notification Only' }">
+                            <li class="contact-list-item" ng-repeat="contact in vm.library.contacts | filter:{ contactType: 'Billing' }">
                                 <view-edit-library-contact contact="contact" edit-mode="vm.editable" input-id="notification{{ $index }}"></view-edit-library-contact>
                                 <button type="button" class="pull-right delete-contact" ng-show="vm.editable" ng-click="vm.deleteContact(contact)">Delete</button>
                             </li>

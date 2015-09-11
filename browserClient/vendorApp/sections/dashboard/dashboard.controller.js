@@ -13,15 +13,17 @@ function dashboardController($scope, authService, cycleService, emailService, ve
     vm.doneEnteringPrices = doneEnteringPrices;
     vm.updateVendorStatus = updateVendorStatus;
 
-    activate();
+    vm.loadingPromise = activate();
 
     function activate(){
-        authService.fetchCurrentUser().then(function (user) {
-            currentUser = user;
-            vm.vendor = currentUser.vendor;
-            loadVendorStatus()
-                .then(watchVendorStatusChecklist);
-        });
+        return authService.fetchCurrentUser()
+            .then(function (user) {
+                currentUser = user;
+                vm.vendor = currentUser.vendor;
+            })
+            .then(updateVendorFlaggedOfferings)
+            .then(loadVendorStatus)
+            .then(watchVendorStatusChecklist);
     }
 
     function loadVendorStatus(){
@@ -54,6 +56,10 @@ function dashboardController($scope, authService, cycleService, emailService, ve
                 vm.statusUpdating = false;
                 return loadVendorStatus();
             });
+    }
+
+    function updateVendorFlaggedOfferings(){
+        return vendorStatusService.updateVendorStatusFlaggedOfferings(vm.vendor.id, cycle);
     }
 
     function syncData(){

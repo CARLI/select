@@ -234,8 +234,7 @@ describe('getContactTypesForNotificationCategory', function(){
 });
 
 describe('getContactEmailAddressesForNotification', function(){
-    var testLibrary = validLibraryData();
-    testLibrary.contacts = [
+    var listOfContacts = [
         {
             name: 'Test Billing Contact',
             email: 'test_billing@email.com',
@@ -280,18 +279,18 @@ describe('getContactEmailAddressesForNotification', function(){
     var getEmail = LibraryRepository.getContactEmailAddressesForNotification;
 
     it('should return the correct contacts for the Estimate category', function(){
-        var testEmails = getEmail(testLibrary, LibraryRepository.CONTACT_CATEGORY_ESTIMATE);
+        var testEmails = getEmail(listOfContacts, LibraryRepository.CONTACT_CATEGORY_ESTIMATE);
         expect(testEmails).to.be.an('array');
         expect(testEmails).to.include('test_billing@email.com');
     });
 
     it('should return the correct contacts for the Invoice category', function(){
-        var testEmails = getEmail(testLibrary, LibraryRepository.CONTACT_CATEGORY_INVOICE);
+        var testEmails = getEmail(listOfContacts, LibraryRepository.CONTACT_CATEGORY_INVOICE);
         expect(testEmails).to.include('test_billing@email.com');
     });
 
     it('should return the correct contacts for the Reminder category', function(){
-        var testEmails = getEmail(testLibrary, LibraryRepository.CONTACT_CATEGORY_REMINDER);
+        var testEmails = getEmail(listOfContacts, LibraryRepository.CONTACT_CATEGORY_REMINDER);
         expect(testEmails).to.include('test_billing@email.com');
     });
 });
