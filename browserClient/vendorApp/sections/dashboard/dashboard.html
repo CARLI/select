@@ -6,7 +6,7 @@
 
     <p>CARLI Prices reflects the dollar amount that these products were offered at last year until you begin editing the prices.</p>
 
-    <section id="alerts">
+    <section id="alerts" cg-busy="vm.loadingPromise">
         <div class="header">Alerts</div>
         <p>You have <strong>{{ vm.vendorStatus.flaggedOfferingsCount }}</strong> pricing issues.</p>
         <ul>
