@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.carliEditingProductList')
     .controller('carliEditingProductListController', carliEditingProductListController);
 
-function carliEditingProductListController( $filter, $q, alertService, cycleService, historicalPricingService, productService, vendorService, vendorStatusService ) {
+function carliEditingProductListController( $filter, $q, alertService, csvExportService, cycleService, historicalPricingService, productService, vendorService, vendorStatusService ) {
     var vm = this;
 
     vm.clearReviewStatus = clearReviewStatus;
@@ -178,6 +178,38 @@ function carliEditingProductListController( $filter, $q, alertService, cycleServ
     }
 
     function exportOfferingList(vendor) {
+        var data = [];
 
+        vendor.products.forEach(function(product) {
+            data.push( getExportRow(product) );
+        });
+
+        csvExportService.exportToCsv(data, getExportHeaders())
+            .then(function(csvString) {
+                csvExportService.browserDownloadCsv(csvString, getExportFilename());
+            });
+
+        function getExportFilename() {
+            return vm.cycle.name + ' - ' + vendor.name + '.csv';
+        }
+
+        function getExportHeaders() {
+            return [ 'Product' ].concat( vm.yearsToDisplay ).concat([ 'Last Price', 'Funded' ]);
+        }
+
+        function getExportRow(product) {
+            var row = [ product.name ];
+            vm.yearsToDisplay.forEach(function (y) {
+                product.historicalPricing.forEach(function(history) {
+                    if (history.year === y) {
+                        row.push(history.description);
+                    }
+                });
+            });
+            row.push(product.pricingLastYear);
+            // TODO Funding
+            row.push('');
+            return row;
+        }
     }
 }

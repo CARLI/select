@@ -34,7 +34,7 @@
             </ul>
             <div class="footer">
                 <div class="placeholder" style="width: 300px;">Print / Export / Email</div>
-                <button class="carli-button" busy-click="vm.exportProductList(vendor)">Export</button>
+                <button class="carli-button" busy-click="vm.exportOfferingList(vendor)">Export</button>
 
                 <button class="carli-button pull-right" ng-if="!vm.vendorStatus[vendor.id].productsReviewed" busy-click="vm.saveReviewStatus(vendor)">Mark products as reviewed</button>
                 <button class="carli-button pull-right" ng-if="vm.vendorStatus[vendor.id].productsReviewed" busy-click="vm.clearReviewStatus(vendor)">Clear reviewed status</button>
