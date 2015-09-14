@@ -84,7 +84,7 @@ fetchAndResetToMaster () {
 }
 
 updateMasterIfRequested () {
-    commitish=$1
+    commitish="$1"
 
     if [ "$commitish" != "master" ]; then
         echo "Resetting master branch to $commitish"
