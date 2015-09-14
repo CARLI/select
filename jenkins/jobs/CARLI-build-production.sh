@@ -7,7 +7,7 @@ cd `git rev-parse --show-toplevel`
 
 . ./jenkins/jobs/functions.sh
 
-updateMasterIfRequested $CARLI_PUBLISH_COMMITISH
+updateMasterIfRequested "$CARLI_PUBLISH_COMMITISH"
 
 initialize
 
