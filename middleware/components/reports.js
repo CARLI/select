@@ -34,7 +34,7 @@ var columnName = {
 };
 
 function selectedProductsReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['cycle', 'library', 'product', 'selection', 'price'];
+    var defaultReportColumns = ['cycle', 'library', 'license', 'product', 'selection', 'price'];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
     var cyclesToQuery = getCycleParameter(reportParameters);
 
@@ -46,9 +46,9 @@ function selectedProductsReport( reportParameters, userSelectedColumns ){
 
     function transformOfferingToSelectedProductsResultRow( offering ){
         var row = {
-            library: offering.library.name,
             cycle: offering.cycle.name,
-            vendor: offering.vendor.name,
+            library: offering.library.name,
+            license: offering.product.license.name,
             product: offering.product.name,
             selection: offering.selection.users,
             price: offering.selection.price
@@ -364,6 +364,7 @@ function getSelectedProductsForEachCycle( listOfCycles ){
         return offeringRepository.listOfferingsWithSelectionsUnexpanded(cycle)
             .then(fillInCycle(cycle))
             .then(fillInProducts(cycle))
+            .then(fillInOfferingProductLicenses)
             .then(fillInLibraries)
             .then(attachVendorToOfferings);
     }
@@ -465,6 +466,19 @@ function fillInProducts(cycle){
                 offering.product = productsById[offering.product] || {};
             });
         }
+    }
+}
+
+function fillInOfferingProductLicenses(offerings){
+    return initLicenseMap()
+        .then(attachLicenseObjectsToProducts)
+        .thenResolve(offerings);
+
+    function attachLicenseObjectsToProducts(licensesById){
+        offerings.forEach(function(offering){
+            var licenseId = offering.product.license;
+            offering.product.license = licensesById[licenseId] ? licensesById[licenseId] : { name: ''};
+        });
     }
 }
 
