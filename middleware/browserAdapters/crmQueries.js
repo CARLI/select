@@ -22,8 +22,17 @@ function listCrmContactsForLibrary(id) {
     });
 }
 
+function listCrmContactsForLibraryIds(ids){
+    return middlewareRequest({
+        path: '/library/contacts/' + ids,
+        method: 'get',
+        json: true
+    });
+}
+
 module.exports = {
     listLibraries: listLibraries,
     loadLibrary: loadLibrary,
-    listCrmContactsForLibrary: listCrmContactsForLibrary
+    listCrmContactsForLibrary: listCrmContactsForLibrary,
+    listCrmContactsForLibraryIds: listCrmContactsForLibraryIds
 };

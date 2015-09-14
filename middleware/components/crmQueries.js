@@ -63,9 +63,9 @@ function loadLibrary(id) {
     return deferred.promise;
 }
 
-function listCrmContactsForLibrary( libraryCrmId ){
-    var queryString = [
-    'SELECT ',
+function crmContactQuery(crmIdArguments) {
+    var crmContactQuery = [
+        'SELECT ',
         'p.first_name,',
         'p.last_name,',
         'p.title,',
@@ -86,14 +86,29 @@ function listCrmContactsForLibrary( libraryCrmId ){
         'a.zip,',
         'a.library_phone,',
         'a.library_fax ',
-    'FROM carli_crm.people p,',
+        'FROM carli_crm.people p,',
         ' carli_crm.address a ',
-    'WHERE ',
-        'p.address_id = a.address_id AND ',
-        'p.member_id = ? AND ',
-        "(p.director = 'y' or p.eres_liaison = 'y')"
+        'WHERE',
+        ' p.address_id = a.address_id AND',
+        " (p.director = 'y' or p.eres_liaison = 'y')"
     ].join('');
 
+    var singleIdClause = ' AND p.member_id = ?';
+    var multipleIdClause = ' AND p.member_id IN (?)';
+
+    if ( typeof crmIdArguments === 'string' ){
+        return crmContactQuery + singleIdClause;
+    }
+    else if ( crmIdArguments.length ){
+        return crmContactQuery + multipleIdClause;
+    }
+    else {
+        return crmContactQuery;
+    }
+}
+
+function listCrmContactsForLibrary( libraryCrmId ){
+    var queryString = crmContactQuery(libraryCrmId);
     var deferred = Q.defer();
     pool.getConnection(function(err, connection) {
         if ( err ){
@@ -101,6 +116,31 @@ function listCrmContactsForLibrary( libraryCrmId ){
         }
         
         connection.query(queryString, [libraryCrmId], function (err, rows, fields) {
+                if ( err ){
+                    handleError( deferred, 'query error loading library', err);
+                }
+                else {
+                    var contacts = extractRowsFromResponse(err, rows, convertCrmLibraryContact);
+                    deferred.resolve(contacts);
+                }
+            }
+        );
+
+        connection.release();
+    });
+
+    return deferred.promise;
+}
+
+function listCrmContactsForLibraryIds( libraryCrmsIds ){
+    var queryString = crmContactQuery(libraryCrmsIds);
+    var deferred = Q.defer();
+    pool.getConnection(function(err, connection) {
+        if ( err ){
+            return handleError( deferred, 'pool.getConnection error loading library', err);
+        }
+        
+        connection.query(queryString, [libraryCrmsIds], function (err, rows, fields) {
                 if ( err ){
                     handleError( deferred, 'query error loading library', err);
                 }
@@ -233,5 +273,6 @@ function handleError( promise, message, error ){
 module.exports = {
     listLibraries: listLibraries,
     loadLibrary: loadLibrary,
-    listCrmContactsForLibrary: listCrmContactsForLibrary
+    listCrmContactsForLibrary: listCrmContactsForLibrary,
+    listCrmContactsForLibraryIds: listCrmContactsForLibraryIds
 };
