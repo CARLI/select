@@ -2,9 +2,6 @@
 
 ### This script is run on the production server, not in the Jenkin's build environment
 
-echo "Skipping publish step"
-exit
-
 BUILD_NUMBER=$1
 WORKSPACE=/home/jenkins/carli-select
 PUBLISH_PATH=/var/www/carli-select
