@@ -141,7 +141,7 @@ function statisticsReport( reportParameters, userSelectedColumns ){
 }
 
 function selectionsByVendorReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['cycle', 'vendor', 'product', 'selection', 'price'];
+    var defaultReportColumns = ['cycle', 'license', 'product', 'library', 'selection', 'price'];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
     var cyclesToQuery = getCycleParameter(reportParameters);
 
@@ -154,7 +154,7 @@ function selectionsByVendorReport( reportParameters, userSelectedColumns ){
     function transformOfferingToSelectionsByVendorResultRow( offering ){
         return {
             cycle: offering.cycle.name,
-            vendor: offering.vendor.name,
+            license: offering.product.license.name,
             product: offering.product.name,
             library: offering.library.name,
             selection: offering.selection.users,
