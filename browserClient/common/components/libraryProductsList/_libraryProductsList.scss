@@ -3,6 +3,10 @@ ul.product-list.selected-products {
         flex-grow: 2;
     }
 
+    .column.license {
+        cursor: pointer;
+    }
+
     .column.cost {
         color: black;
         flex: none;
