@@ -124,7 +124,7 @@ describe('Additional Repository Functions', function() {
                 return cycleList.every(cycleHasCorrectType) && cycleList.every(cycleHasCorrectYear);
 
                 function cycleHasCorrectYear(cycle){
-                    return cycle.year < testYear ;
+                    return cycle.year < testYear && cycle.year >= (testYear - 4);
                 }
 
                 function cycleHasCorrectType(cycle){
