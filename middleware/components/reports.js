@@ -54,11 +54,15 @@ function selectedProductsReport( reportParameters, userSelectedColumns ){
             price: offering.selection.price
         };
         
-        if ( columns.detailCode ){
+        if ( isEnabled('detailCode') ){
             row.detailCode = offering.product.detailCode || '';
         }
 
         return row;
+    }
+
+    function isEnabled(columnName){
+        return columns.indexOf(columnName) !== -1;
     }
 }
 
@@ -288,23 +292,23 @@ function listLibrariesReport( reportParameters, userSelectedColumns ){
             name: library.name
         };
 
-        if ( columns.fte ){
+        if ( isEnabled('fte') ){
             result.fte = library.fte;
         }
 
-        if ( columns.institutionType ){
+        if ( isEnabled('institutionType') ){
             result.institutionType = library.institutionType;
         }
 
-        if ( columns.institutionYears ){
+        if ( isEnabled('institutionYears') ){
             result.institutionYears = library.institutionYears;
         }
 
-        if ( columns.membershipLevel ){
+        if ( isEnabled('membershipLevel') ){
             result.membershipLevel = library.membershipLevel;
         }
 
-        if ( columns.isIshareMember ) {
+        if ( isEnabled('isIshareMember') ) {
             if ('isIshareMember' in library) {
                 result.isIshareMember = !!library.isIshareMember ? 'yes' : 'no';
             }
@@ -313,7 +317,7 @@ function listLibrariesReport( reportParameters, userSelectedColumns ){
             }
         }
 
-        if ( columns.isActive ) {
+        if ( isEnabled('isActive') ) {
             if ('isActive' in library) {
                 result.isActive = !!library.isActive ? 'yes' : 'no';
             }
@@ -323,6 +327,10 @@ function listLibrariesReport( reportParameters, userSelectedColumns ){
         }
 
         return result;
+    }
+
+    function isEnabled(columnName){
+        return columns.indexOf(columnName) !== -1;
     }
 }
 
