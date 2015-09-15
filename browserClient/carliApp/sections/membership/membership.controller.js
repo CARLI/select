@@ -1,7 +1,7 @@
 angular.module('carli.sections.membership')
 .controller('membershipController', membershipController);
 
-function membershipController( $location, $q, $routeParams, activityLogService, alertService, cycleService, errorHandler, libraryService, membershipService, notificationModalService ){
+function membershipController( $location, $q, $routeParams, $scope, activityLogService, alertService, cycleService, errorHandler, libraryService, membershipService, notificationModalService ){
     var vm = this;
 
     vm.libraries = [];
@@ -85,6 +85,7 @@ function membershipController( $location, $q, $routeParams, activityLogService, 
         return savePromise
             .then(workaroundCouchSmell)
             .then(saveSuccess)
+            .then(setMembershipFormPristine)
             .then(logActivity)
             .catch(errorHandler);
 
@@ -177,5 +178,11 @@ function membershipController( $location, $q, $routeParams, activityLogService, 
             templateId: 'notification-template-membership-invoices',
             fiscalYear: vm.displayYear
         });
+    }
+
+    function setMembershipFormPristine(){
+        if ($scope.membershipForm) {
+            $scope.membershipForm.$setPristine();
+        }
     }
 }

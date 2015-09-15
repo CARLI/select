@@ -21,6 +21,7 @@ angular.module('carli.app', [
     'carli.navBar',
     'carli.routes',
     'carli.userMenu',
+    'common.warnIfUnsaved',
     'common.vendorStatusService'
 ])
     .config(function ($locationProvider) {
