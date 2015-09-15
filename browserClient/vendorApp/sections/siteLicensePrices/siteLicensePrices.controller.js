@@ -137,7 +137,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
     }
 
     function buildPricingGrid() {
-        $('.offering').remove();
+        $('.offering-row').remove();
 
         vm.libraries.forEach(function (library) {
             var row = generateLibraryRow(library);
@@ -148,7 +148,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
         });
 
         function generateLibraryRow(library) {
-            var row = $('<div class="price-row">');
+            var row = $('<div class="price-row offering-row">');
             row.addClass('' + library.id);
             return row;
         }
