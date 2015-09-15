@@ -44,6 +44,10 @@ module.exports = function (grunt) {
         var done = this.async();
         deployDb.deployLocalAppDesignDoc().then(done);
     });
+    grunt.registerTask('deploy-activity-log-design-doc', function() {
+        var done = this.async();
+        deployDb.deployDesignDocToActivityLog().then(done);
+    });
     grunt.registerTask('deploy-cycle-design-docs', function() {
         var done = this.async();
         deployDb.deployLocalCycleDesignDocs().then(done)
