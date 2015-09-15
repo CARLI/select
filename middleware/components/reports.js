@@ -8,7 +8,9 @@ var Q = require('q');
 var _ = require('lodash');
 
 var columnName = {
+    address: 'Address',
     averagePrice: 'Average Price',
+    city: 'City',
     contactType: 'Contact Type',
     cycle: 'Cycle',
     detailCode: 'Detail Code',
@@ -16,21 +18,24 @@ var columnName = {
     fte: 'FTE',
     institutionType: 'Institution Type',
     institutionYears: 'Years',
+    isActive: 'Active',
+    isIshareMember: 'I-Share Member',
+    library: 'Library',
+    license: 'License',
     membershipLevel: 'Membership Level',
     minPrice: 'Minimum Price',
     name: 'Name',
     numberSelected: 'Number Selected',
-    isIshareMember: 'I-Share Member',
-    isActive: 'Active',
-    library: 'Library',
-    license: 'License',
     phoneNumber: 'Phone Number',
     price: 'Price',
     product: 'Product',
     selected: 'Number Selected',
     selection: 'Selection',
+    state: 'State',
     totalPrice: 'Total Price',
-    vendor: 'Vendor'
+    type: 'Type',
+    vendor: 'Vendor',
+    zip: 'Zip'
 };
 
 function selectedProductsReport( reportParameters, userSelectedColumns ){
@@ -67,7 +72,7 @@ function selectedProductsReport( reportParameters, userSelectedColumns ){
 }
 
 function contactsReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['name', 'email'];
+    var defaultReportColumns = ['library', 'type', 'name', 'email', 'phoneNumber', 'address', 'city', 'state', 'zip'];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
 
     return libraryRepository.listAllContacts()
@@ -79,10 +84,15 @@ function contactsReport( reportParameters, userSelectedColumns ){
 
     function transformContactToResultRow( contact ){
         return {
-            name: contact.name,
+            library: contact.library,
+            type: contact.contactType,
+            name: contact.firstName + ' ' + contact.lastName,
             email: contact.email,
             phoneNumber: contact.phoneNumber,
-            contactType: contact.contactType
+            address: contact.address,
+            city: contact.city,
+            state: contact.state,
+            zip: contact.zip
         };
     }
 }
