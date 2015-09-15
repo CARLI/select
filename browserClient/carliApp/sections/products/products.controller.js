@@ -46,7 +46,7 @@ function productController($location, $routeParams, $scope, $sce, cycleService, 
         var currentCycle = cycleService.getCurrentCycle();
 
         if ( currentCycle ){
-            console.log('  route to current cycle '+currentCycle.name);
+            //console.log('  route to current cycle '+currentCycle.name);
             var cycleId = currentCycle.id;
             routeToCycle(cycleId);
         }
@@ -54,7 +54,7 @@ function productController($location, $routeParams, $scope, $sce, cycleService, 
             return cycleService.listActiveCycles()
                 .then(function (activeCycles) {
                     var cycleId = activeCycles[0].id;
-                    console.log('  route to default cycle ' + cycleId);
+                    //console.log('  route to default cycle ' + cycleId);
                     routeToCycle(cycleId);
                 });
         }
@@ -97,8 +97,8 @@ function productController($location, $routeParams, $scope, $sce, cycleService, 
             label: "Vendor",
             orderByProperty: ['vendor.name','name'],
             contentFunction: function(product) {
-                var vendor = product.vendor || {};
-                if (vendor) {
+                var vendor = product.vendor;
+                if (vendor && vendor.name) {
                     return $sce.trustAsHtml('<a href="vendor/' + vendor.id + '">' + vendor.name + '</a>');
                 } else {
                     return '';
@@ -109,9 +109,9 @@ function productController($location, $routeParams, $scope, $sce, cycleService, 
             label: "License",
             orderByProperty: ['license.name','name'],
             contentFunction: function(product) {
-                var license = product.license || {};
-                if (license) {
-                    return $sce.trustAsHtml('<a href="license/' + license.id + '">' + license.name + '</a>');
+                var license = product.license;
+                if (license && license.name) {
+                    return $sce.trustAsHtml('<a href="license/' + license.id + '">' + license.name || '' + '</a>');
                 } else {
                     return '';
                 }
