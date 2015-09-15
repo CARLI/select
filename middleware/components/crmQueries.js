@@ -66,6 +66,7 @@ function loadLibrary(id) {
 function crmContactQuery(crmIdArguments) {
     var crmContactQuery = [
         'SELECT ',
+        'm.institution_name as library,',
         'p.first_name,',
         'p.last_name,',
         'p.title,',
@@ -87,9 +88,11 @@ function crmContactQuery(crmIdArguments) {
         'a.library_phone,',
         'a.library_fax ',
         'FROM carli_crm.people p,',
-        ' carli_crm.address a ',
+        ' carli_crm.address a, ',
+        ' carli_crm.members m ',
         'WHERE',
         ' p.address_id = a.address_id AND',
+        ' p.member_id = m.member_id AND',
         " (p.director = 'y' or p.eres_liaison = 'y')"
     ].join('');
 
@@ -245,7 +248,8 @@ function convertCrmLibraryContact(row){
         state: row.state,
         zip: row.zip,
         libraryPhone: row.library_phone,
-        libraryFax: row.library_fax
+        libraryFax: row.library_fax,
+        library: row.library
     };
 
     function contactType(){
