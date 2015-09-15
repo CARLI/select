@@ -151,9 +151,7 @@ function carliEditingProductListController( $filter, $q, alertService, cycleServ
         }
 
         return vendorStatusService.markProductsForVendorReviewed(vendor.id, vm.cycle)
-            .then(function(){
-                vm.vendorStatus[vendor.id].productsReviewed = true;
-            });
+            .then(updateVendorStatus(vendor.id));
     }
 
     function clearReviewStatus( vendor ){
@@ -162,9 +160,16 @@ function carliEditingProductListController( $filter, $q, alertService, cycleServ
         }
 
         return vendorStatusService.clearProductsForVendorReviewed(vendor.id, vm.cycle)
-            .then(function(){
-                vm.vendorStatus[vendor.id].productsReviewed = false;
-            });
+            .then(updateVendorStatus(vendor.id));
+    }
+
+    function updateVendorStatus(vendorId){
+        return function(vendorStatusId) {
+            return vendorStatusService.load(vendorStatusId, vm.cycle)
+                .then(function (updatedVendorStatus) {
+                    vm.vendorStatus[vendorId] = updatedVendorStatus;
+                });
+        }
     }
 
     function openVendorPricing(){
