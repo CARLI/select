@@ -48,7 +48,8 @@ module.exports = function (timeout) {
             }
         },
 
-        listCrmContactsForLibrary: crmQueries.listCrmContactsForLibrary
+        listCrmContactsForLibrary: crmQueries.listCrmContactsForLibrary,
+        listCrmContactsForLibraryIds: crmQueries.listCrmContactsForLibraryIds
     };
 
 };
