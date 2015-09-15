@@ -177,6 +177,14 @@ function runMiddlewareServer(){
                         res.send({ error: err });
                     });
             });
+            authorizedRoute('put', '/cycle', carliAuth.requireStaff, function (req, res) {
+                return cycleCreation.create(req.body.newCycleData)
+                    .then(function (newCycleId) {
+                        res.send({ id: newCycleId });
+                    }).catch(function (err) {
+                        res.send({ error: err });
+                    });
+            });
             authorizedRoute('get', '/cycle-creation-status/:id', carliAuth.requireStaff, function (req, res) {
                 return carliAuth.requireStaff().then(getCycleCreationStatus);
                 function getCycleCreationStatus() {
