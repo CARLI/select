@@ -9,6 +9,7 @@ var offeringRepository = require('../../CARLI/Entity/OfferingRepository');
 var productRepository = require('../../CARLI/Entity/ProductRepository');
 var Store = require( '../../CARLI/Store' );
 var StoreModule = require( '../../CARLI/Store/CouchDb/Store');
+var vendorDatabases = require('./vendorDatabases');
 var vendorRepository = require('../../CARLI/Entity/VendorRepository');
 var vendorStatusRepository = require('../../CARLI/Entity/VendorStatusRepository');
 
@@ -31,7 +32,8 @@ function useAdminCouchCredentials() {
 }
 
 function create( newCycleData ) {
-    return cycleRepository.create(newCycleData, couchUtils.DB_TYPE_STAFF | couchUtils.DB_TYPE_LIBRARY);
+    return cycleRepository.create(newCycleData, couchUtils.DB_TYPE_STAFF | couchUtils.DB_TYPE_LIBRARY)
+        .then(vendorDatabases.createVendorDatabasesForCycle);
 }
 
 function copyCycleDataFrom( sourceCycleId, newCycleId ){
