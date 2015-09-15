@@ -195,16 +195,35 @@ function listAllContactsForLibrary(libraryId){
     }
 }
 
+//This method adds the library name to the contacts since this is mainly used by the Contacts report
 function listAllContacts(){
-    return listActiveLibraries()
-        .then(extractContacts);
+    var customContacts = [];
 
-    function extractContacts( listOfLibraries ){
-        return _.flatten(listOfLibraries.map(extractContact));
+    return listActiveLibraries()
+        .then(extractCustomContacts)
+        .then(queryForCrmContacts)
+        .then(function(crmContacts){
+            return crmContacts.concat(customContacts);
+        });
+
+    function extractCustomContacts( listOfLibraries ){
+        customContacts = _.flatten(listOfLibraries.map(extractContact));
 
         function extractContact(library){
-            return library.contacts;
+            return library.contacts.map(addLibraryName);
+
+            function addLibraryName(contact){
+                contact.library = library.name;
+                return contact;
+            }
         }
+
+        return listOfLibraries;
+    }
+
+    function queryForCrmContacts( listOfLibraries ){
+        var libraryIds = listOfLibraries.map(function(library){ return library.id });
+        return crmLibraryRepository.listCrmContactsForLibraryIds(libraryIds);
     }
 }
 

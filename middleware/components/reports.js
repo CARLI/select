@@ -84,15 +84,15 @@ function contactsReport( reportParameters, userSelectedColumns ){
 
     function transformContactToResultRow( contact ){
         return {
-            library: contact.library,
-            type: contact.contactType,
-            name: contact.firstName + ' ' + contact.lastName,
-            email: contact.email,
-            phoneNumber: contact.phoneNumber,
-            address: contact.address,
-            city: contact.city,
-            state: contact.state,
-            zip: contact.zip
+            library: contact.library || ' ',
+            type: contact.contactType || ' ',
+            name: contact.firstName + ' ' + contact.lastName || ' ',
+            email: contact.email || ' ',
+            phoneNumber: contact.phoneNumber || ' ',
+            address: (contact.address1 || '') + ' ' + (contact.address2 || ''),
+            city: contact.city || ' ',
+            state: contact.state || ' ',
+            zip: contact.zip || ' '
         };
     }
 }
