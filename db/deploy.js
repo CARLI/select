@@ -183,8 +183,7 @@ function deployLocalAppDesignDoc() {
 function deployAppDesignDoc(instance) {
     return couchApp.putDesignDoc(instance.mainDbName, 'CARLI')
         .then(deployDesignDocToUsers)
-        .then(deployDesignDocToResetRequest)
-        .then(deployDesignDocToActivityLog);
+        .then(deployDesignDocToResetRequest);
 
     function deployDesignDocToUsers() {
         return couchApp.putDesignDoc('_users', 'Users');
@@ -247,6 +246,7 @@ if (require.main === module) {
         createUsersFromJson: createUsersFromJson,
         createOneTimePurchaseCycle: createOneTimePurchaseCycle,
         deployLocalAppDesignDoc: deployLocalAppDesignDoc,
-        deployLocalCycleDesignDocs: deployLocalCycleDesignDocs
+        deployLocalCycleDesignDocs: deployLocalCycleDesignDocs,
+        deployDesignDocToActivityLog: deployDesignDocToActivityLog
     };
 }
