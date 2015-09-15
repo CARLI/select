@@ -550,7 +550,7 @@ function returnReportResults(resultColumns, columnSortOrderOverride){
 function initLibraryMap(){
     var libraryMap = {};
 
-    return libraryRepository.listActiveLibraries()
+    return libraryRepository.list()
         .then(function(libraryList){
             libraryList.forEach(function(library){
                 libraryMap[library.id] = library;
