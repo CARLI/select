@@ -13,11 +13,11 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
         logEntityAdded: logEntityAdded,
         logEntityModified: logEntityModified,
         logOfferingModified: logOfferingModified,
+        logMembershipModified: logMembershipModified,
         logOtpPurchase: logOtpPurchase,
         logOtpPurchaseCancelled: logOtpPurchaseCancelled,
         logLibrarySelectedProduct: logLibrarySelectedProduct,
         logLibraryRemovedProduct: logLibraryRemovedProduct
-
     };
 
     function logActivity( activityLog ){
@@ -101,6 +101,17 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
         activity.cycleName = cycle.name;
 
         return logActivity(activity);
+    }
+
+    function logMembershipModified(year, membershipData){
+        return logActivity({
+            cycleName: year ? 'FY'+year.toString() : '',
+            actionDescription: 'Modified membership pricing',
+            app: 'staff',
+            category: 'staffModified',
+            affectedEntityId: membershipData.id || '',
+            revision: membershipData._rev || ''
+        });
     }
 
     function logOtpPurchase(offering, appOptional){
