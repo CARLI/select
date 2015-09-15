@@ -2,7 +2,10 @@ angular.module('carli.exportServices')
     .factory('vendorsSettingPricesByVendorExport', vendorsSettingPricesByVendorExport);
 
 function vendorsSettingPricesByVendorExport($q, csvExportService) {
+    var suOfferingsByYearLookupCache = {};
+
     return exportOfferingList;
+
 
     function exportOfferingList(vendor, cycle, offeringColumns) {
         var exportFilename = cycle.name + ' - ' + vendor.name + '.csv';
@@ -10,16 +13,22 @@ function vendorsSettingPricesByVendorExport($q, csvExportService) {
 
         return gatherData()
             .then(generateExport)
-            .then(downloadExport);
+            .then(downloadExport)
+            .then(resetCache);
 
         function gatherData() {
-            return $q.when(vendor.products.map(getExportRow));
+            var groupsOfRows = vendor.products.map(getExportRowsForProduct);
+            return $q.when(groupsOfRows.reduce(flattenArrays));
         }
         function generateExport(data) {
             return csvExportService.exportToCsv(data, exportHeaders);
         }
         function downloadExport(csvString) {
             return csvExportService.browserDownloadCsv(csvString, exportFilename);
+        }
+        function resetCache(o) {
+            suOfferingsByYearLookupCache = {};
+            return o;
         }
 
         function getExportHeaders() {
@@ -30,11 +39,17 @@ function vendorsSettingPricesByVendorExport($q, csvExportService) {
                 return exportColumns.reduce(flattenArrays);
             }
         }
-        function getExportRow(product) {
-            return [ product.name ].concat( getExportRowForOfferingColumns() );
+        function getExportRowsForProduct(product) {
+            return product.offerings.map(getExportRow);
+        }
+        function getExportRow(offering) {
+            return [ offering.product.name ].concat( getExportRowForOfferingColumns() );
 
             function getExportRowForOfferingColumns() {
-                return [];
+                var exportColumns = offeringColumns.map(function (offeringColumn) {
+                    return getExportRowForOfferingColumn(offering, offeringColumn)
+                });
+                return exportColumns.reduce(flattenArrays);
             }
         }
 
@@ -68,47 +83,100 @@ function vendorsSettingPricesByVendorExport($q, csvExportService) {
         }
 
         function getExportHeadersForPricingForYear(year) {
-            return [ year + ' Site Pricing' ].concat(lookupSuOfferingsForYear());
+            return [ year + ' Site Pricing' ].concat(lookupSuOfferingsForYear(year).map(formatHeader));
 
-            function lookupSuOfferingsForYear() {
-                var suList = [];
+            function formatHeader(suUsers) {
+                return year + ' ' + suUsers + ' User Pricing';
+            }
+        }
 
-                forEachOffering(addSuPriceHeaderForOffering);
+        function getExportRowForOfferingColumn(offering, offeringColumn) {
+            var exportColumns = null;
 
-                suList.sort();
-                return suList.map(formatHeader);
+            switch (offeringColumn) {
+                case 'library':
+                    exportColumns = [ offering.library.name,
+                        offering.library.size,
+                        offering.library.institutionYears,
+                        offering.library.institutionType
+                    ];
+                    break;
+                case 'library-view':
+                    exportColumns = [
+                        offering.display,
+                        offering.internalComments,
+                        offering.libraryComments
+                    ];
+                    break;
+                case 'site-license-price-both':
+                    exportColumns = getExportDataForPricingForYear(offering, cycle.year - 1);
+                    exportColumns = exportColumns.concat( getExportDataForPricingForYear(offering, cycle.year) );
+                    break;
+                case 'flag':
+                    exportColumns = [ offering.flagged ];
+                    break;
+                default:
+                    exportColumns = [];
+            }
 
-                function forEachOffering(iterate) {
-                    vendor.products.forEach(function (product) {
-                        product.offerings.forEach(iterate);
-                    });
-                }
+            return exportColumns;
+        }
 
-                function addSuPriceHeaderForOffering(offering) {
-                    var pricingObject = getPricingObjectFromOfferingForYear(offering, year);
-                    pricingObject.su.forEach(addSuToList);
-                }
+        function getExportDataForPricingForYear(offering, year) {
+            var pricing = getPricingFromOfferingForYear(offering, year);
 
-                function addSuToList(suPricing) {
-                    if (suList.indexOf(suPricing.users) === -1) {
-                        suList.push(suPricing.users);
+            return [ pricing.site ].concat(lookupSuOfferingsForYear(year).map(getPriceForUsers));
+
+            function getPriceForUsers(suUsers) {
+                var price = '';
+                pricing.su.forEach(function (suPricing) {
+                    if (suPricing.users === suUsers) {
+                        price = suPricing.price;
                     }
-                }
+                });
+                return price;
+            }
+        }
 
-                function formatHeader(suUsers) {
-                    return year + ' ' + suUsers + ' User Pricing';
+        function lookupSuOfferingsForYear(year) {
+            if (suOfferingsByYearLookupCache[year]) {
+                return suOfferingsByYearLookupCache[year];
+            }
+
+            var suList = [];
+
+            forEachOffering(addSuForOffering);
+
+            suList.sort();
+            suOfferingsByYearLookupCache[year] = suList;
+            return suList;
+
+            function forEachOffering(iterate) {
+                vendor.products.forEach(function (product) {
+                    product.offerings.forEach(iterate);
+                });
+            }
+
+            function addSuForOffering(offering) {
+                var pricing = getPricingFromOfferingForYear(offering, year);
+                pricing.su.forEach(addSuToList);
+            }
+
+            function addSuToList(suPricing) {
+                if (suList.indexOf(suPricing.users) === -1) {
+                    suList.push(suPricing.users);
                 }
             }
         }
 
-        function getPricingObjectFromOfferingForYear(offering, year) {
-            var pricingObject = { su: {} };
+        function getPricingFromOfferingForYear(offering, year) {
+            var pricing = { su: {} };
             if (cycle.year == year) {
-                pricingObject = offering.pricing;
+                pricing = offering.pricing;
             } else if (offering.history.hasOwnProperty(year)) {
-                pricingObject = offering.history[year].pricing;
+                pricing = offering.history[year].pricing;
             }
-            return pricingObject;
+            return pricing;
         }
         // ---
     }
