@@ -1,7 +1,7 @@
 angular.module('carli.sections.membership')
 .controller('membershipController', membershipController);
 
-function membershipController( $location, $q, $routeParams, alertService, cycleService, errorHandler, libraryService, membershipService, notificationModalService ){
+function membershipController( $location, $q, $routeParams, activityLogService, alertService, cycleService, errorHandler, libraryService, membershipService, notificationModalService ){
     var vm = this;
 
     vm.libraries = [];
@@ -85,6 +85,7 @@ function membershipController( $location, $q, $routeParams, alertService, cycleS
         return savePromise
             .then(workaroundCouchSmell)
             .then(saveSuccess)
+            .then(logActivity)
             .catch(errorHandler);
 
         function workaroundCouchSmell(documentId){
@@ -97,6 +98,10 @@ function membershipController( $location, $q, $routeParams, alertService, cycleS
 
         function saveSuccess(){
             alertService.putAlert('Membership data saved', {severity: 'success'});
+        }
+
+        function logActivity(){
+            return activityLogService.logMembershipModified(vm.displayYear, vm.membershipData);
         }
     }
 
