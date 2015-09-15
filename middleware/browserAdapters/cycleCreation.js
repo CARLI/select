@@ -1,5 +1,20 @@
 var middlewareRequest = require('./middlewareRequest');
 
+function create(newCycleData) {
+    var request = {
+        path: '/cycle',
+        method: 'put',
+        json: true,
+        body: {
+            newCycleData: newCycleData
+        }
+    };
+
+    return middlewareRequest(request).then(function (response) {
+        return response.id;
+    });
+}
+
 function createCycleFrom(sourceCycle, newCycleData) {
     var request = {
         path: '/cycle-from',
@@ -26,6 +41,7 @@ function getCycleCreationStatus( cycleId ){
 }
 
 module.exports = {
+    create: create,
     createCycleFrom: createCycleFrom,
     getCycleCreationStatus: getCycleCreationStatus
 };

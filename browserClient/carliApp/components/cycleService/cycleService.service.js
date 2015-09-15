@@ -27,7 +27,7 @@ function cycleService( CarliModules, $q, errorHandler ) {
         listSelectionsForCycle: listSelectionsForCycle,
         create: function(newCycle) {
             fixCycleName(newCycle);
-            return $q.when(cycleModule.create(newCycle));
+            return $q.when(cycleMiddleware.create(newCycle));
         },
         createCycleFrom: function( sourceCycle, newCycle ) {
             fixCycleName(newCycle);
