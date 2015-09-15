@@ -562,7 +562,7 @@ function initLibraryMap(){
 function initProductMap( cycle ){
     var productMap = {};
 
-    return productRepository.listActiveProductsUnexpanded(cycle)
+    return productRepository.list(cycle)
         .then(function(productList){
             productList.forEach(function(product){
                 productMap[product.id] = product;
@@ -574,7 +574,7 @@ function initProductMap( cycle ){
 function initVendorMap(){
     var vendorMap = {};
 
-    return vendorRepository.listActive()
+    return vendorRepository.list()
         .then(function(vendorList){
             vendorList.forEach(function(vendor){
                 vendorMap[vendor.id] = vendor;
