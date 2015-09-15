@@ -8,7 +8,9 @@ var Q = require('q');
 var _ = require('lodash');
 
 var columnName = {
+    address: 'Address',
     averagePrice: 'Average Price',
+    city: 'City',
     contactType: 'Contact Type',
     cycle: 'Cycle',
     detailCode: 'Detail Code',
@@ -16,25 +18,28 @@ var columnName = {
     fte: 'FTE',
     institutionType: 'Institution Type',
     institutionYears: 'Years',
+    isActive: 'Active',
+    isIshareMember: 'I-Share Member',
+    library: 'Library',
+    license: 'License',
     membershipLevel: 'Membership Level',
     minPrice: 'Minimum Price',
     name: 'Name',
     numberSelected: 'Number Selected',
-    isIshareMember: 'I-Share Member',
-    isActive: 'Active',
-    library: 'Library',
-    license: 'License',
     phoneNumber: 'Phone Number',
     price: 'Price',
     product: 'Product',
     selected: 'Number Selected',
     selection: 'Selection',
+    state: 'State',
     totalPrice: 'Total Price',
-    vendor: 'Vendor'
+    type: 'Type',
+    vendor: 'Vendor',
+    zip: 'Zip'
 };
 
 function selectedProductsReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['cycle', 'library', 'product', 'selection', 'price'];
+    var defaultReportColumns = ['cycle', 'library', 'license', 'product', 'selection', 'price'];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
     var cyclesToQuery = getCycleParameter(reportParameters);
 
@@ -46,24 +51,28 @@ function selectedProductsReport( reportParameters, userSelectedColumns ){
 
     function transformOfferingToSelectedProductsResultRow( offering ){
         var row = {
-            library: offering.library.name,
             cycle: offering.cycle.name,
-            vendor: offering.vendor.name,
+            library: offering.library.name,
+            license: offering.product.license.name,
             product: offering.product.name,
             selection: offering.selection.users,
             price: offering.selection.price
         };
         
-        if ( columns.detailCode ){
+        if ( isEnabled('detailCode') ){
             row.detailCode = offering.product.detailCode || '';
         }
 
         return row;
     }
+
+    function isEnabled(columnName){
+        return columns.indexOf(columnName) !== -1;
+    }
 }
 
 function contactsReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['name', 'email'];
+    var defaultReportColumns = ['library', 'type', 'name', 'email', 'phoneNumber', 'address', 'city', 'state', 'zip'];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
 
     return libraryRepository.listAllContacts()
@@ -75,10 +84,15 @@ function contactsReport( reportParameters, userSelectedColumns ){
 
     function transformContactToResultRow( contact ){
         return {
-            name: contact.name,
-            email: contact.email,
-            phoneNumber: contact.phoneNumber,
-            contactType: contact.contactType
+            library: contact.library || ' ',
+            type: contact.contactType || ' ',
+            name: contact.firstName + ' ' + contact.lastName || ' ',
+            email: contact.email || ' ',
+            phoneNumber: contact.phoneNumber || ' ',
+            address: (contact.address1 || '') + ' ' + (contact.address2 || ''),
+            city: contact.city || ' ',
+            state: contact.state || ' ',
+            zip: contact.zip || ' '
         };
     }
 }
@@ -141,7 +155,7 @@ function statisticsReport( reportParameters, userSelectedColumns ){
 }
 
 function selectionsByVendorReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['cycle', 'vendor', 'product', 'selection', 'price'];
+    var defaultReportColumns = ['cycle', 'license', 'product', 'library', 'selection', 'price'];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
     var cyclesToQuery = getCycleParameter(reportParameters);
 
@@ -154,7 +168,7 @@ function selectionsByVendorReport( reportParameters, userSelectedColumns ){
     function transformOfferingToSelectionsByVendorResultRow( offering ){
         return {
             cycle: offering.cycle.name,
-            vendor: offering.vendor.name,
+            license: offering.product.license.name,
             product: offering.product.name,
             library: offering.library.name,
             selection: offering.selection.users,
@@ -288,23 +302,23 @@ function listLibrariesReport( reportParameters, userSelectedColumns ){
             name: library.name
         };
 
-        if ( columns.fte ){
+        if ( isEnabled('fte') ){
             result.fte = library.fte;
         }
 
-        if ( columns.institutionType ){
+        if ( isEnabled('institutionType') ){
             result.institutionType = library.institutionType;
         }
 
-        if ( columns.institutionYears ){
+        if ( isEnabled('institutionYears') ){
             result.institutionYears = library.institutionYears;
         }
 
-        if ( columns.membershipLevel ){
+        if ( isEnabled('membershipLevel') ){
             result.membershipLevel = library.membershipLevel;
         }
 
-        if ( columns.isIshareMember ) {
+        if ( isEnabled('isIshareMember') ) {
             if ('isIshareMember' in library) {
                 result.isIshareMember = !!library.isIshareMember ? 'yes' : 'no';
             }
@@ -313,7 +327,7 @@ function listLibrariesReport( reportParameters, userSelectedColumns ){
             }
         }
 
-        if ( columns.isActive ) {
+        if ( isEnabled('isActive') ) {
             if ('isActive' in library) {
                 result.isActive = !!library.isActive ? 'yes' : 'no';
             }
@@ -323,6 +337,10 @@ function listLibrariesReport( reportParameters, userSelectedColumns ){
         }
 
         return result;
+    }
+
+    function isEnabled(columnName){
+        return columns.indexOf(columnName) !== -1;
     }
 }
 
@@ -364,6 +382,7 @@ function getSelectedProductsForEachCycle( listOfCycles ){
         return offeringRepository.listOfferingsWithSelectionsUnexpanded(cycle)
             .then(fillInCycle(cycle))
             .then(fillInProducts(cycle))
+            .then(fillInOfferingProductLicenses)
             .then(fillInLibraries)
             .then(attachVendorToOfferings);
     }
@@ -465,6 +484,19 @@ function fillInProducts(cycle){
                 offering.product = productsById[offering.product] || {};
             });
         }
+    }
+}
+
+function fillInOfferingProductLicenses(offerings){
+    return initLicenseMap()
+        .then(attachLicenseObjectsToProducts)
+        .thenResolve(offerings);
+
+    function attachLicenseObjectsToProducts(licensesById){
+        offerings.forEach(function(offering){
+            var licenseId = offering.product.license;
+            offering.product.license = licensesById[licenseId] ? licensesById[licenseId] : { name: ''};
+        });
     }
 }
 

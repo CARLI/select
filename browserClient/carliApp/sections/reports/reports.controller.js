@@ -24,7 +24,7 @@ function reportsController( csvExportService, cycleService, errorHandler, report
                 cycle: 'all'
             },
             optionalColumns: [
-                'detailCode'
+                //'detailCode'
             ]
         },
         {

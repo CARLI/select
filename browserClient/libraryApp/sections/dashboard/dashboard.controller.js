@@ -8,7 +8,9 @@ function dashboardController( cycleService, userService ){
     vm.library = {};
     vm.loadingPromise = null;
     vm.cycleForUnselectedProducts = null;
+    vm.selectedLicenseId = null;
 
+    vm.showLicenseAgreements = showLicenseAgreements;
     vm.viewUnselectedProductsFor = viewUnselectedProductsFor;
 
     activate();
@@ -25,5 +27,10 @@ function dashboardController( cycleService, userService ){
     function viewUnselectedProductsFor(cycle){
         vm.cycleForUnselectedProducts = cycle;
         $('#unselected-products-modal').modal(true);
+    }
+
+    function showLicenseAgreements(licenseId){
+        vm.selectedLicenseId = licenseId;
+        $('#redacted-license-popup').modal(true);
     }
 }

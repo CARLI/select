@@ -30,8 +30,8 @@ function activityLogListController(config, controllerBaseService, activityLogSer
     }
 
     function loadActivity(){
-        var startDate = moment(vm.sentFilterStartDate).format();
-        var endDate = moment(vm.sentFilterEndDate).endOf('day').format();
+        var startDate = moment(vm.dateFilterStartDate).format();
+        var endDate = moment(vm.dateFilterEndDate).endOf('day').format();
 
         return activityLogService.listActivityBetween(startDate, endDate).then(function(logs){
             vm.logs = logs;

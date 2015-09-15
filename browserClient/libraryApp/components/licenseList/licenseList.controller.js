@@ -1,7 +1,7 @@
 angular.module('library.licenseList')
     .controller('licenseListController', licenseListController);
 
-function licenseListController( attachmentsService, errorHandler ){
+function licenseListController( $scope, attachmentsService, errorHandler ){
     var vm = this;
 
     vm.attachmentCategory = 'redacted';
@@ -11,11 +11,16 @@ function licenseListController( attachmentsService, errorHandler ){
     activate();
 
     function activate(){
-        loadFileList();
+        $scope.$watch('vm.licenseId', loadFileList);
     }
 
-    function loadFileList(){
-        console.log('license list load '+vm.licenseId+' '+vm.attachmentCategory);
+    function loadFileList(newLicenseId){
+        if ( newLicenseId ){
+            loadLicenseAttachments();
+        }
+    }
+
+    function loadLicenseAttachments(){
         vm.loadingPromise = attachmentsService.listAttachments(vm.licenseId, vm.attachmentCategory)
             .then(function(attachmentsObject){
                 vm.files = transformAttachmentsObjectToArray(attachmentsObject);

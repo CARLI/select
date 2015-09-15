@@ -11,10 +11,10 @@ angular.module('common.libraryProductsList')
             '        <div class="sortable column su" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.su, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.su)">S.U.</div>',
             '        <div class="sortable column cost" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.cost, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.cost)">Cost</div>',
             '    </li>',
-            '    <li ng-repeat="offering in vm.selectedOfferings | orderBy: vm.orderBy:vm.reverse track by offering.id">',
+            '    <li class="product" ng-repeat="offering in vm.selectedOfferings | orderBy: vm.orderBy:vm.reverse track by offering.id">',
             '        <div class="column product">{{ offering.product.name }}</div>',
             '        <div class="column vendor">{{ offering.product.vendor.name }}</div>',
-            '        <div class="column license">{{ offering.product.license.name }}</div>',
+            '        <div class="column license" data-license-id="{{ offering.product.license.id }}">{{ offering.product.license.name }}</div>',
             '        <div class="column su">{{ offering.selection.users }}</div>',
             '        <div class="column cost">{{ offering.selection.price | currency }}</div>',
             '    </li>',
@@ -27,10 +27,24 @@ angular.module('common.libraryProductsList')
         ].join(''),
         scope: {
             cycle: '=',
-            libraryId: '@'
+            libraryId: '@',
+            licenseOnClick: '='
         },
         controller: libraryProductsListController,
         controllerAs: 'vm',
-        bindToController: true
+        bindToController: true,
+        link: libraryProductsListLink
     };
+
+    function libraryProductsListLink( scope, element, attrs, controller ){
+        element.on('click', '.product-list li.product .column.license', function(e){
+            var licenseId = $(this).data('licenseId');
+            if ( controller.licenseOnClick ){
+                scope.$apply(function(){
+                    controller.licenseOnClick(licenseId);
+                });
+            }
+        });
+    }
+
 });
