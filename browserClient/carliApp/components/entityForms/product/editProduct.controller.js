@@ -68,7 +68,7 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
     }
 
     function initializeForNewProduct() {
-        console.log(' edit new product');
+        //console.log(' edit new product');
         initSubFormData();
         vm.editable = true;
         vm.hideOffering = {};
@@ -81,7 +81,7 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
     }
 
     function initializeForExistingProduct() {
-        console.log(' edit '+vm.product.name, vm.product);
+        //console.log(' edit '+vm.product.name, vm.product);
         initSubFormData();
         vm.editable = false;
         vm.newProduct = false;
