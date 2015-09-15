@@ -56,8 +56,7 @@ function deployDb(dbName) {
     return recreateDb(dbName)
         .then(addSecurityDoc)
         .then(addDesignDoc)
-        .then(deployResetRequestDb)
-        .then(deployActivityLogDb);
+        .then(deployResetRequestDb);
 
     function addSecurityDoc() {
         addSecurityDocWithRoles(dbName, [ '_admin', 'staff', 'vendor', 'library' ]);
