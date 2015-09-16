@@ -9,7 +9,7 @@
         <div class="sortable column review-cost" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.selectionPrice, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.selectionPrice)">Cost</div>
     </li>
     <li ng-repeat="offering in vm.offerings | filter: vm.hasSelection | orderBy: vm.orderBy:vm.reverse track by offering.id">
-        <div class="column">{{ offering.product.name }}</div>
+        <div class="column">{{ vm.getProductDisplayName(offering.product) }}</div>
         <div class="column">{{ offering.product.vendor.name }}</div>
         <div class="column su">{{ offering.selection.users }}</div>
         <div class="column review-cost">{{ offering.selection.price | currency }}</div>

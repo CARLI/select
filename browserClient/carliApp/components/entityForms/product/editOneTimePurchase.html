@@ -14,11 +14,6 @@
 
     <section class="content">
         <div class="one-time-purchase-settings">
-            <label for="annualAccessFee">Annual Access Fee</label>
-            <view-edit-price ng-model="vm.product.oneTimePurchaseAnnualAccessFee" edit-mode="vm.editable" input-id="annualAccessFee">
-                {{ vm.product.oneTimePurchaseAnnualAccessFee | currency }}
-            </view-edit-price>
-
             <label for="availableForPurchaseThrough">Available for Purchase Through</label>
             <view-edit-date ng-model="vm.product.oneTimePurchaseAvailableForPurchaseThrough" edit-mode="vm.editable" input-id="availableForPurchaseThrough">
                 {{ vm.product.oneTimePurchaseAvailableForPurchaseThrough }}
@@ -28,6 +23,7 @@
                 <li class="column-headers">
                     <header class="column library">Library</header>
                     <header class="column price">Price</header>
+                    <header class="column access-fee">Access Fee</header>
                     <header class="column hide-from-library">Hide</header>
                     <header class="column purchased">Purchased</header>
                 </li>
@@ -40,8 +36,13 @@
                             <span class="price-display">{{ offering.pricing.site | currency }}</span>
                         </view-edit-price>
                     </span>
+                    <span class="column access-fee">
+                        <view-edit-price ng-model="offering.oneTimePurchaseAnnualAccessFee" edit-mode="vm.editable && !offering.selection" input-id="accessFee_{{ offering.library.name }}">
+                            <span class="price-display">{{ offering.oneTimePurchaseAnnualAccessFee | currency }}</span>
+                        </view-edit-price>
+                    </span>
                     <span class="column hide-from-library">
-                        <checkbox id="'hide_' + offering.library.id" ng-model="vm.hideOffering[offering.id]"></checkbox>
+                        <checkbox id="'hide_' + offering.library.id" ng-model="vm.hideOffering[offering.id]" ng-if="offering.id"></checkbox>
                     </span>
                     <span class="column purchased">
                         <i class="fa fa-check-circle" ng-show="offering.selection"></i>

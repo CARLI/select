@@ -1,7 +1,7 @@
 angular.module('library.subscriptionSelections')
 .controller('subscriptionSelectionsController', subscriptionSelectionsController);
 
-function subscriptionSelectionsController( $q, $window, activityLogService, cycleService, libraryStatusService, offeringService, userService ){
+function subscriptionSelectionsController( $q, $window, activityLogService, cycleService, libraryStatusService, offeringService, productService, userService ){
     var vm = this;
 
     vm.selectionStep = '';
@@ -18,6 +18,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, cycl
 
     vm.completeSelections = completeSelections;
     vm.computeTotalPurchasesAmount = computeTotalPurchasesAmount;
+    vm.getProductDisplayName = productService.getProductDisplayName;
     vm.hasSelection = hasSelection;
     vm.isSelected = isSelected;
     vm.libraryId = null;

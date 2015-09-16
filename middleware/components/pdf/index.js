@@ -172,6 +172,7 @@ function groupOfferingsByVendorName(offeringsByVendorId){
 }
 
 function transformOfferingsToPriceRows(offeringsByVendorName, useFeeForPriceInsteadOfSelectionPrice){
+    console.log('offerings ' + useFeeForPriceInsteadOfSelectionPrice, offeringsByVendorName);
     var results = [];
     var vendorNames = Object.keys(offeringsByVendorName).sort();
     var vendorNameForFirstRowOnly = '';
@@ -197,7 +198,7 @@ function transformOfferingsToPriceRows(offeringsByVendorName, useFeeForPriceInst
 
     function priceForRow(offering){
         if ( useFeeForPriceInsteadOfSelectionPrice ){
-            return offering.product.oneTimePurchaseAnnualAccessFee;
+            return offering.oneTimePurchaseAnnualAccessFee || 0;
         }
         else {
             return offering.selection.price;

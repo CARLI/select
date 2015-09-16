@@ -247,6 +247,7 @@ if (require.main === module) {
         createOneTimePurchaseCycle: createOneTimePurchaseCycle,
         deployLocalAppDesignDoc: deployLocalAppDesignDoc,
         deployLocalCycleDesignDocs: deployLocalCycleDesignDocs,
-        deployDesignDocToActivityLog: deployDesignDocToActivityLog
+        deployDesignDocToActivityLog: deployDesignDocToActivityLog,
+        deployActivityLogDb: deployActivityLogDb
     };
 }
