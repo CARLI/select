@@ -40,6 +40,10 @@ module.exports = function (grunt) {
         deployDb.createOneTimePurchaseCycle().then(done);
         //grunt.task.run(['subdir-exec:'+projectRoot+'/db:./deploy.sh ' + testUtils.testDbName ]);
     });
+    grunt.registerTask('deploy-activity-log-db', function() {
+        var done = this.async();
+        deployDb.deployActivityLogDb().then(done);
+    });
     grunt.registerTask('deploy-app-design-doc', function() {
         var done = this.async();
         deployDb.deployLocalAppDesignDoc().then(done);
