@@ -158,10 +158,10 @@ function membershipController( $location, $q, $routeParams, $scope, activityLogS
 
     function currentFiscalYear(){
         if ( cycleService.fiscalYearHasStartedForDate(new Date()) ){
-            return currentCalendarYear();
+            return currentCalendarYear() + 1;
         }
         else {
-            return currentCalendarYear() - 1;
+            return currentCalendarYear();
         }
     }
 
