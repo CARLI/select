@@ -1,15 +1,13 @@
 angular.module('carli.exportServices')
-    .factory('vendorsSettingPricesByVendorExport', vendorsSettingPricesByVendorExport);
+    .factory('vendorsSettingPricesByLibraryExport', vendorsSettingPricesByLibraryExport);
 
-function vendorsSettingPricesByVendorExport($q, csvExportService, subscriptionsExportHelper) {
-    var suOfferingsByYearLookupCache = {};
-
+function vendorsSettingPricesByLibraryExport($q, csvExportService, subscriptionsExportHelper) {
     return exportOfferingList;
 
-    function exportOfferingList(vendor, cycle, offeringColumns) {
-        var exportHelper = subscriptionsExportHelper(cycle, vendorOfferingsIterator);
+    function exportOfferingList(library, vendorMap, offerings, cycle, offeringColumns) {
+        var exportHelper = subscriptionsExportHelper(cycle, libraryOfferingsIterator);
 
-        var exportFilename = cycle.name + ' - ' + vendor.name + '.csv';
+        var exportFilename = cycle.name + ' - ' + library.name + '.csv';
         var exportHeaders = getExportHeaders();
 
         return gatherData()
@@ -18,8 +16,9 @@ function vendorsSettingPricesByVendorExport($q, csvExportService, subscriptionsE
             .then(resetCache);
 
         function gatherData() {
-            var groupsOfRows = vendor.products.map(getExportRowsForProduct);
-            return $q.when(groupsOfRows.reduce(flattenArrays));
+            var rows = offerings.map(getExportRow);
+            return $q.when(rows);
+            //return $q.when(rows.reduce(flattenArrays));
         }
         function generateExport(data) {
             return csvExportService.exportToCsv(data, exportHeaders);
@@ -33,22 +32,19 @@ function vendorsSettingPricesByVendorExport($q, csvExportService, subscriptionsE
         }
 
         function getExportHeaders() {
-            return [ 'Product' ].concat( getExportColumnsForOfferingColumns() );
+            return getExportColumnsForOfferingColumns();
 
             function getExportColumnsForOfferingColumns() {
                 var exportColumns = offeringColumns.map(exportHelper.getExportHeadersForOfferingColumn);
                 return exportColumns.reduce(flattenArrays);
             }
         }
-        function getExportRowsForProduct(product) {
-            return product.offerings.map(getExportRow);
-        }
         function getExportRow(offering) {
-            return [ offering.product.name ].concat( getExportRowForOfferingColumns() );
+            return getExportRowForOfferingColumns();
 
             function getExportRowForOfferingColumns() {
                 var exportColumns = offeringColumns.map(function (offeringColumn) {
-                    return exportHelper.getExportRowForOfferingColumn(offering, offeringColumn)
+                    return exportHelper.getExportRowForOfferingColumn(offering, offeringColumn, vendorMap);
                 });
                 return exportColumns.reduce(flattenArrays);
             }
@@ -58,10 +54,8 @@ function vendorsSettingPricesByVendorExport($q, csvExportService, subscriptionsE
             return a.concat(b);
         }
 
-        function vendorOfferingsIterator(iterate) {
-            vendor.products.forEach(function (product) {
-                product.offerings.forEach(iterate);
-            });
+        function libraryOfferingsIterator(iterate) {
+            offerings.forEach(iterate);
         }
     }
 }
