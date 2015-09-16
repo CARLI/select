@@ -490,7 +490,9 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
     function initializeHideOfferingsCheckboxModels(offerings){
         vm.hideOffering = {};
         offerings.forEach(function(offering){
-            vm.hideOffering[offering.id] = (offering.display === "none");
+            if ( offering.id ) {
+                vm.hideOffering[offering.id] = (offering.display === "none");
+            }
         });
     }
 }
