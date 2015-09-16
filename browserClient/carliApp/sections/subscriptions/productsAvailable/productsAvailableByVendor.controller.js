@@ -95,14 +95,12 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
             return $q.when(product.offerings);
         }
 
-        vm.loadingPromise[product.id] = offeringService.listOfferingsForProductId(product.id)
+        return offeringService.listOfferingsForProductId(product.id)
             .then(filterActiveLibraries)
             .then(function(offerings){
                 product.offerings = offerings;
                 return offerings;
             });
-
-        return vm.loadingPromise[product.id];
     }
 
     function filterActiveLibraries(offeringsList){
@@ -116,9 +114,10 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
             delete vm.expandedProducts[product.id];
         }
         else {
-            loadOfferingsForProduct(product).then(function(){
+            var loadingPromise = loadOfferingsForProduct(product).then(function(){
                 vm.expandedProducts[product.id] = true;
             });
+            vm.loadingPromise[product.id] = loadingPromise;
         }
     }
 
