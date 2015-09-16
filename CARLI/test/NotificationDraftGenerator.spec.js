@@ -32,9 +32,9 @@ describe('The notification draft generator', function() {
         }
         function getMockOfferingsForAnnualAccessFee(){
             return Q([
-                { cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Test Library'}, product: { oneTimePurchaseAnnualAccessFee: 7 }, selection: { } },
-                { cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Test Library'}, product: {} },
-                { cycle: {id: 'mock-cycle'}, library: {id: 'library2', name: 'Test Library2'}, product: {} }
+                { cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Test Library'}, oneTimePurchaseAnnualAccessFee: 7, selection: { } },
+                { cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Test Library'} },
+                { cycle: {id: 'mock-cycle'}, library: {id: 'library2', name: 'Test Library2'} }
             ]);
         }
 
@@ -93,7 +93,7 @@ describe('The notification draft generator', function() {
         }
         function getMockOfferingsForAnnualAccessFee(){
             return Q([
-                { cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Test Library'}, product: { oneTimePurchaseAnnualAccessFee: 7 }, selection: {} },
+                { cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Test Library'}, oneTimePurchaseAnnualAccessFee: 7, selection: {} },
                 { cycle: {id: 'mock-cycle'}, library: { id: 'library', name: 'Test Library'}, product: {} },
                 { cycle: {id: 'mock-cycle'}, library: {id: 'library2', name: 'Test Library2'}, product: {} }
             ]);

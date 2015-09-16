@@ -92,6 +92,10 @@
         "suPricesUpdated": {
             "description": "Starts empty when a new cycle is created, used to track whether the vendor has updated the pricing yet",
             "$ref": "./Date.json"
+        },
+        "oneTimePurchaseAnnualAccessFee": {
+            "description": "If the product is a one-time purchase product, this is its annual access fee for the library",
+            "type": "number"
         }
     },
     "required": [ "cycle", "library", "product" ]

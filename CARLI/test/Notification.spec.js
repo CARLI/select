@@ -357,8 +357,8 @@ describe('the getSummaryTotal method', function () {
         var offerings = getTestOfferings();
 
         notification.isFeeInvoice = true;
-        offerings[0].product = { oneTimePurchaseAnnualAccessFee: 10 };
-        offerings[1].product = { oneTimePurchaseAnnualAccessFee: 20 };
+        offerings[0].oneTimePurchaseAnnualAccessFee = 10;
+        offerings[1].oneTimePurchaseAnnualAccessFee = 20;
 
         expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(30);
     });
@@ -368,8 +368,8 @@ describe('the getSummaryTotal method', function () {
         var offerings = getTestOfferings();
 
         notification.isFeeInvoice = true;
-        offerings[0].product = { oneTimePurchaseAnnualAccessFee: 10 };
-        offerings[1].product = { oneTimePurchaseAnnualAccessFee: 0 };
+        offerings[0].oneTimePurchaseAnnualAccessFee = 10;
+        offerings[1].oneTimePurchaseAnnualAccessFee = 0;
 
         expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(10);
     });
@@ -379,9 +379,9 @@ describe('the getSummaryTotal method', function () {
         var offerings = getTestOfferings();
 
         notification.isFeeInvoice = true;
-        offerings[0].product = { oneTimePurchaseAnnualAccessFee: 10 };
+        offerings[0].oneTimePurchaseAnnualAccessFee = 10;
         delete offerings[0].selection;
-        offerings[1].product = { oneTimePurchaseAnnualAccessFee: 20 };
+        offerings[1].oneTimePurchaseAnnualAccessFee = 20;
 
         expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(20);
     });

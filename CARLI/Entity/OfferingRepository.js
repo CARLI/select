@@ -687,8 +687,10 @@ function createOfferingsFor( productId, vendorId, libraryIds, cycle ){
     }) );*/
 
     function createOfferingForLibrary( libraryId ){
+        var newId = uuid.v4();
         return {
-            id: uuid.v4(),
+            _id: newId,
+            id: newId,
             type: 'Offering',
             cycle: cycle,
             library: libraryId.toString(),

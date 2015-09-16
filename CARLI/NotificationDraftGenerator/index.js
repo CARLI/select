@@ -747,7 +747,7 @@ function filterOnlyPurchasedOfferingsWithFees(offerings) {
     return offerings.filter(onlyPurchasedOfferings).filter(onlyOfferingsWithFees);
 }
 function onlyOfferingsWithFees(offering) {
-    return offering.product.oneTimePurchaseAnnualAccessFee;
+    return !!offering.oneTimePurchaseAnnualAccessFee;
 }
 
 function loadLibrariesWithSelectionsInCycle( cycleId ){
