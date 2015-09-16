@@ -12,7 +12,7 @@ angular.module('common.libraryProductsList')
             '        <div class="sortable column cost" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.cost, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.cost)">Cost</div>',
             '    </li>',
             '    <li class="product" ng-repeat="offering in vm.selectedOfferings | orderBy: vm.orderBy:vm.reverse track by offering.id">',
-            '        <div class="column product">{{ offering.product.name }}</div>',
+            '        <div class="column product">{{ vm.getProductDisplayName(offering.product) }}</div>',
             '        <div class="column vendor">{{ offering.product.vendor.name }}</div>',
             '        <div class="column license" data-license-id="{{ offering.product.license.id }}">{{ offering.product.license.name }}</div>',
             '        <div class="column su">{{ offering.selection.users }}</div>',

@@ -7,7 +7,7 @@
         <div class="sortable column review-cost" ng-class="{ activeSort: vm.orderByAvailable === vm.sortOptions.selectionPrice, reversedSort: vm.reverseAvailable }" ng-click="vm.sortAvailable(vm.sortOptions.selectionPrice)">Cost</div>
     </li>
     <li ng-repeat="offering in vm.availableForPurchase | filter: vm.hasPendingSelection | orderBy: vm.orderByAvailable:vm.reverseAvailable track by offering.id">
-        <div class="column">{{ offering.product.name }}</div>
+        <div class="column">{{ vm.getProductDisplayName(offering.product) }}</div>
         <div class="column">{{ offering.product.vendor.name }}</div>
         <div class="column review-cost">{{ offering.selectionPendingReview.price | currency }}</div>
     </li>

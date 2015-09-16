@@ -1,7 +1,7 @@
 angular.module('library.sections.addOneTimePurchases')
 .controller('addOneTimePurchasesController', addOneTimePurchasesController);
 
-function addOneTimePurchasesController( $q, $location, config, activityLogService, cycleService, emailService, offeringService, userService ){
+function addOneTimePurchasesController( $q, $location, config, activityLogService, cycleService, emailService, offeringService, productService, userService ){
     var vm = this;
 
     vm.selectionStep = 'select';
@@ -23,6 +23,7 @@ function addOneTimePurchasesController( $q, $location, config, activityLogServic
 
     vm.completeSelections = completeSelections;
     vm.computeTotalPurchasesAmount = computeTotalPurchasesAmount;
+    vm.getProductDisplayName = productService.getProductDisplayName;
     vm.hasPendingSelection = hasPendingSelection;
     vm.returnToBeginning = returnToBeginning;
     vm.reviewSelections = reviewSelections;
