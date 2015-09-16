@@ -1,1 +1,3 @@
-angular.module('common.libraryProductsList',[]);
+angular.module('common.libraryProductsList',[
+    'common.productService'
+]);

@@ -1,7 +1,7 @@
 angular.module('library.sections.report')
     .controller('reportController', reportController);
 
-function reportController( $q, $filter, csvExportService, cycleService, userService ){
+function reportController( $q, $filter, csvExportService, cycleService, productService, userService ){
     var vm = this;
 
     var currentUser = userService.getUser();
@@ -81,7 +81,7 @@ function reportController( $q, $filter, csvExportService, cycleService, userServ
                 listOfResults.forEach(function(offering){
                     results.push({
                         cycle: offering.cycle.name,
-                        product: offering.product.name,
+                        product: productService.getProductDisplayName(offering.product),
                         vendor: offering.product.vendor.name,
                         selection: offering.selection.users,
                         price: offering.selection.price,

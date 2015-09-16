@@ -1,7 +1,7 @@
 angular.module('common.libraryProductsList')
 .controller('libraryProductsListController', libraryProductsListController);
 
-function libraryProductsListController( $q, controllerBaseService, cycleService ){
+function libraryProductsListController( $q, controllerBaseService, cycleService, productService ){
     var vm = this;
 
     vm.loadingPromise = null;
@@ -15,6 +15,7 @@ function libraryProductsListController( $q, controllerBaseService, cycleService 
     };
 
     vm.selectionTotal = selectionTotal;
+    vm.getProductDisplayName = productService.getProductDisplayName;
 
     controllerBaseService.addSortable(vm, vm.sortOptions.productName);
     activate();
@@ -37,5 +38,6 @@ function libraryProductsListController( $q, controllerBaseService, cycleService 
 
         return total;
     }
+
 
 }
