@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.carliCheckingPrices')
     .controller('carliCheckingPricesByVendorController', carliCheckingPricesByVendorController);
 
-function carliCheckingPricesByVendorController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, offeringService, editOfferingService, productService, vendorService, vendorStatusService ) {
+function carliCheckingPricesByVendorController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, offeringService, editOfferingService, offeringsByVendorExport, productService, vendorService, vendorStatusService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadProductsForVendor);
@@ -135,6 +135,12 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
     }
 
     function exportOfferingList(vendor) {
+        return loadOfferingsForVendor().then(function() {
+            return offeringsByVendorExport(vendor, vm.cycle, vm.offeringColumns);
+        });
 
+        function loadOfferingsForVendor() {
+            return $q.all(vendor.products.map(loadOfferingsForProduct));
+        }
     }
 }
