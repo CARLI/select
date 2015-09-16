@@ -7,6 +7,11 @@ ul.product-list.selected-products {
         cursor: pointer;
     }
 
+    .column.comment {
+        color: black;
+        font-size: .9rem;
+    }
+
     .column.cost {
         color: black;
         flex: none;
