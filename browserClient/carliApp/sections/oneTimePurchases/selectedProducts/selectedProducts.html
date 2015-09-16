@@ -55,7 +55,7 @@
                                 </div>
                             </div>
                             <div class="product-boolean-item" ng-show=""><fa name="check"></fa> Funded</div>
-                            <div class="product-boolean-item" ng-show="offering.product.oneTimePurchaseAnnualAccessFee"><fa name="check"></fa> Requires Annual Access Fee</div>
+                            <div class="product-boolean-item" ng-show="offering.oneTimePurchaseAnnualAccessFee"><fa name="check"></fa> Requires Annual Access Fee of {{ offering.oneTimePurchaseAnnualAccessFee | currency  }}</div>
                             <div class="product-boolean-item">{{ ::vm.englishSummaryOfDisplayProperty(offering) }}</div>
                         </div>
                         <div class="column">
