@@ -197,7 +197,7 @@ function transformOfferingsToPriceRows(offeringsByVendorName, useFeeForPriceInst
 
     function priceForRow(offering){
         if ( useFeeForPriceInsteadOfSelectionPrice ){
-            return offering.product.oneTimePurchaseAnnualAccessFee;
+            return offering.oneTimePurchaseAnnualAccessFee;
         }
         else {
             return offering.selection.price;
