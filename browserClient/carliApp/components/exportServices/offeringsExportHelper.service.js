@@ -1,12 +1,12 @@
 angular.module('carli.exportServices')
-    .factory('subscriptionsExportHelper', subscriptionsExportHelper);
+    .factory('offeringsExportHelper', offeringsExportHelper);
 
-function subscriptionsExportHelper() {
+function offeringsExportHelper() {
     var suOfferingsByYearLookupCache = {};
 
-    return createHelperWithIterator;
+    return createHelperWithOfferingsIterator;
 
-    function createHelperWithIterator(cycle, offeringsIterator) {
+    function createHelperWithOfferingsIterator(cycle, offeringsIterator) {
         return {
             getExportHeadersForOfferingColumn: getExportHeadersForOfferingColumn,
             getExportRowForOfferingColumn: getExportRowForOfferingColumn

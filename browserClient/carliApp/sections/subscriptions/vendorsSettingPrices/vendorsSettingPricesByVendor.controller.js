@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.vendorsSettingPrices')
     .controller('vendorsSettingPricesByVendorController', vendorsSettingPricesByVendorController);
 
-function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionControllerMixin, controllerBaseService, cycleService, offeringService, editOfferingService, productService, vendorService, vendorStatusService, vendorsSettingPricesByVendorExport ) {
+function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionControllerMixin, controllerBaseService, cycleService, offeringService, editOfferingService, offeringsByVendorExport, productService, vendorService, vendorStatusService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadProductsForVendor);
@@ -177,7 +177,7 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
 
     function exportOfferingList(vendor) {
         return loadOfferingsForVendor().then(function() {
-            return vendorsSettingPricesByVendorExport(vendor, vm.cycle, vm.offeringColumns);
+            return offeringsByVendorExport(vendor, vm.cycle, vm.offeringColumns);
         });
 
         function loadOfferingsForVendor() {
