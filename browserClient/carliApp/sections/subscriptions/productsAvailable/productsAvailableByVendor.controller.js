@@ -233,6 +233,12 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
     }
 
     function exportOfferingList(vendor) {
+        return loadOfferingsForVendor().then(function() {
+            return offeringsByVendorExport(vendor, vm.cycle, vm.offeringColumns);
+        });
 
+        function loadOfferingsForVendor() {
+            return $q.all(vendor.products.map(loadOfferingsForProduct));
+        }
     }
 }

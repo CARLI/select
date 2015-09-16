@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.librariesSelectingProducts')
     .controller('librariesSelectingProductsByLibraryController', librariesSelectingProductsByLibraryController);
 
-function librariesSelectingProductsByLibraryController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, libraryService, libraryStatusService, offeringService, editOfferingService, productService, vendorService ) {
+function librariesSelectingProductsByLibraryController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, libraryService, libraryStatusService, offeringService, offeringsByLibraryExport, editOfferingService, productService, vendorService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadOfferingsForLibrary);
@@ -168,6 +168,6 @@ function librariesSelectingProductsByLibraryController( $scope, $q, accordionCon
     }
 
     function exportOfferingList(library) {
-
+        return offeringsByLibraryExport(library, vm.vendorMap, vm.offerings[library.id], vm.cycle, vm.offeringColumns);
     }
 }
