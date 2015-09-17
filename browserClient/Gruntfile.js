@@ -335,7 +335,20 @@ module.exports = function ( grunt ) {
         },
 
         ngAnnotate: {
-            /* TODO for compile task for each app */
+            carli: {
+                src: user_config.carli_app.all_js,
+                dest: user_config.annotated_js_file('carli')
+            },
+
+            library: {
+                src: user_config.carli_app.all_js,
+                dest: user_config.annotated_js_file('library')
+            },
+
+            vendor: {
+                src: user_config.carli_app.all_js,
+                dest: user_config.annotated_js_file('vendor')
+            }
         },
 
         ngdocs: {
