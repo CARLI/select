@@ -28,12 +28,24 @@ function offeringsExportHelper() {
                 case 'library-view':
                     exportColumns = [ 'Display Mode', 'Internal Comments', 'Comments for Libraries' ];
                     break;
+                case 'selected-last-year':
+                    exportColumns = [ 'Selected Last Year' ];
+                    break;
+                case 'site-license-price-current-only':
+                    exportColumns = getExportHeadersForPricingForYear(cycle.year);
+                    break;
                 case 'site-license-price-both':
                     exportColumns = getExportHeadersForPricingForYear(cycle.year - 1);
                     exportColumns = exportColumns.concat(getExportHeadersForPricingForYear(cycle.year));
                     break;
                 case 'flag':
                     exportColumns = [ 'Flag' ];
+                    break;
+                case 'selection':
+                    exportColumns = [ 'Selection', 'Price' ];
+                    break;
+                case 'vendor-invoice':
+                    exportColumns = [ 'Vendor Price', 'Invoice #' ];
                     break;
                 default:
                     exportColumns = [];
@@ -74,6 +86,12 @@ function offeringsExportHelper() {
                         offering.libraryComments
                     ];
                     break;
+                case 'selected-last-year':
+                    exportColumns = wasSelectedLastYear() ? [ 'true' ] : [ 'false' ];
+                    break;
+                case 'site-license-price-current-only':
+                    exportColumns = getExportDataForPricingForYear(offering, cycle.year);
+                    break;
                 case 'site-license-price-both':
                     exportColumns = getExportDataForPricingForYear(offering, cycle.year - 1);
                     exportColumns = exportColumns.concat(getExportDataForPricingForYear(offering, cycle.year));
@@ -81,11 +99,49 @@ function offeringsExportHelper() {
                 case 'flag':
                     exportColumns = [ offering.flagged ];
                     break;
+                case 'selection':
+                    exportColumns = getSelectionColumns(offering);
+                    break;
+                case 'vendor-invoice':
+                    exportColumns = getInvoiceColumns(offering);
+                    break;
                 default:
                     exportColumns = [];
             }
 
             return exportColumns;
+
+            function wasSelectedLastYear() {
+                var lastYear = cycle.year - 1;
+                return offering.history && offering.history[lastYear] && offering.history[lastYear].selection;
+            }
+            function getSelectionColumns(offering) {
+                var selection = '';
+                var price = '';
+                if (offering.selection) {
+                    selection = formatSelection(offering.selection.users);
+                    price = offering.selection.price;
+                }
+                return [ selection, price ];
+
+                function formatSelection( users ) {
+                    return users === 'site' ? 'Site' : users + usersLabel(users);
+
+                    function usersLabel(users) {
+                        return users === 1 ? ' User' : ' Users';
+                    }
+                }
+            }
+            function getInvoiceColumns(offering) {
+                var price = '';
+                var number = '';
+                if (offering.invoice) {
+                    price = offering.invoice.price;
+                    number = offering.invoice.number;
+                }
+                return [ price, number ];
+            }
+
         }
 
         function getExportDataForPricingForYear(offering, year) {
