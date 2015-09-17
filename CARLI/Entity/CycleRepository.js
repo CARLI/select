@@ -108,6 +108,14 @@ function listPastFourCyclesMatchingCycle( cycle ){
             return cycleToFilter.cycleType === cycle.cycleType && cycleToFilter.year < cycle.year;
         });
 
+        pastCyclesOfType.sort(function (a,b) {
+            if (a.year < b.year)
+                return 1;
+            if (b.year > a.year)
+                return -1;
+            return 0;
+        });
+
         if ( pastCyclesOfType.length > 4 ){
             return pastCyclesOfType.slice(0,4);
         }

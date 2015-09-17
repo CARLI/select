@@ -34,6 +34,8 @@
                     </li>
                 </ul>
                 <div class="footer clearfix">
+                    <button class="carli-button" busy-click="vm.exportOfferingList(library)">Export</button>
+
                     <div class="total">
                         <span class="label">Total:</span>
                         <span>{{ vm.computeSelectionTotalForLibrary(library) | currency }}</span>

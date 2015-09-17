@@ -1,27 +1,29 @@
 angular.module('carli.sections.subscriptions.productsAvailable')
     .controller('productsAvailableByLibraryController', productsAvailableByLibraryController);
 
-function productsAvailableByLibraryController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, libraryService, notificationModalService, offeringService, editOfferingService, productService, vendorService ) {
+function productsAvailableByLibraryController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, libraryService, notificationModalService, offeringService, offeringsByLibraryExport, editOfferingService, productService, vendorService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadOfferingsForLibrary);
 
-    vm.loadingPromise = {};
-    vm.offerings = {};
-    vm.stopEditing = stopEditing;
     vm.computeSelectionTotalForLibrary = computeSelectionTotalForLibrary;
-    vm.offeringFilter = {};
-    vm.filterOfferingBySelection = filterOfferingBySelection;
-    vm.vendorMap = {};
-    vm.isEditing = {};
-    vm.cycle = {};
-    vm.lastYear = '';
-    vm.selectedOfferings = {};
-    vm.invoiceCheckedProductsForLibrary = invoiceCheckedProductsForLibrary;
-    vm.invoiceAllProductsForLibrary = invoiceAllProductsForLibrary;
-    vm.invoiceAllLibraries = invoiceAllLibraries;
     vm.contactNonPlayers = contactNonPlayers;
     vm.estimateAllLibraries = estimateAllLibraries;
+    vm.exportOfferingList = exportOfferingList;
+    vm.filterOfferingBySelection = filterOfferingBySelection;
+    vm.invoiceAllLibraries = invoiceAllLibraries;
+    vm.invoiceAllProductsForLibrary = invoiceAllProductsForLibrary;
+    vm.invoiceCheckedProductsForLibrary = invoiceCheckedProductsForLibrary;
+    vm.stopEditing = stopEditing;
+
+    vm.cycle = {};
+    vm.isEditing = {};
+    vm.lastYear = '';
+    vm.loadingPromise = {};
+    vm.offeringFilter = {};
+    vm.offerings = {};
+    vm.selectedOfferings = {};
+    vm.vendorMap = {};
 
     vm.offeringColumns = [
         'product',
@@ -207,6 +209,9 @@ function productsAvailableByLibraryController( $scope, $q, accordionControllerMi
 
     function orderBySitePricing(offering){
         return offering.pricing.site || 0;
+    }
 
+    function exportOfferingList(library) {
+        return offeringsByLibraryExport(library, vm.vendorMap, vm.offerings[library.id], vm.cycle, vm.offeringColumns);
     }
 }

@@ -1,12 +1,13 @@
 angular.module('carli.sections.subscriptions.vendorsSettingPrices', [
     'common.accordion',
-    'carli.cycleService',
     'common.offeringService',
     'common.productService',
-    'carli.vendorService',
-    'carli.viewEditDirectives',
+    'carli.cycleService',
+    'carli.editOffering',
+    'carli.exportServices',
     'carli.notificationService',
-    'carli.subscriptionScreenComponents',
     'carli.renderOffering',
-    'carli.editOffering'
+    'carli.subscriptionScreenComponents',
+    'carli.vendorService',
+    'carli.viewEditDirectives'
 ]);

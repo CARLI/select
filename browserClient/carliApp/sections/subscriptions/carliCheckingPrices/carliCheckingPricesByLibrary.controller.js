@@ -1,18 +1,19 @@
 angular.module('carli.sections.subscriptions.carliCheckingPrices')
     .controller('carliCheckingPricesByLibraryController', carliCheckingPricesByLibraryController);
 
-function carliCheckingPricesByLibraryController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, libraryService, offeringService, editOfferingService, productService, vendorService ) {
+function carliCheckingPricesByLibraryController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, libraryService, offeringService, offeringsByLibraryExport, editOfferingService, productService, vendorService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadOfferingsForLibrary);
 
+    vm.exportOfferingList = exportOfferingList;
+    vm.stopEditing = stopEditing;
+
+    vm.cycle = {};
+    vm.isEditing = {};
+    vm.lastYear = '';
     vm.loadingPromise = {};
     vm.offerings = {};
-    vm.stopEditing = stopEditing;
-    vm.vendorMap = {};
-    vm.isEditing = {};
-    vm.cycle = {};
-    vm.lastYear = '';
     vm.offeringColumns = [
         'product',
         'vendor',
@@ -20,6 +21,7 @@ function carliCheckingPricesByLibraryController( $scope, $q, accordionController
         'site-license-price-both',
         'flag'
     ];
+    vm.vendorMap = {};
 
     activate();
 
@@ -97,5 +99,9 @@ function carliCheckingPricesByLibraryController( $scope, $q, accordionController
     }
     function stopEditing(offering) {
         vm.isEditing[offering.id] = false;
+    }
+
+    function exportOfferingList(library) {
+        return offeringsByLibraryExport(library, vm.vendorMap, vm.offerings[library.id], vm.cycle, vm.offeringColumns);
     }
 }

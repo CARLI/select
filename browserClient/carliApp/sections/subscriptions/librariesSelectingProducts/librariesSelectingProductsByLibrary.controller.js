@@ -1,21 +1,23 @@
 angular.module('carli.sections.subscriptions.librariesSelectingProducts')
     .controller('librariesSelectingProductsByLibraryController', librariesSelectingProductsByLibraryController);
 
-function librariesSelectingProductsByLibraryController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, libraryService, libraryStatusService, offeringService, editOfferingService, productService, vendorService ) {
+function librariesSelectingProductsByLibraryController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, libraryService, libraryStatusService, offeringService, offeringsByLibraryExport, editOfferingService, productService, vendorService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadOfferingsForLibrary);
 
-    vm.loadingPromise = {};
-    vm.offerings = {};
-    vm.stopEditing = stopEditing;
-    vm.getLibraryPricingStatus = getLibraryPricingStatus;
-    vm.offeringFilter = {};
+    vm.exportOfferingList = exportOfferingList;
     vm.filterOfferingBySelection = filterOfferingBySelection;
-    vm.vendorMap = {};
-    vm.isEditing = {};
+    vm.getLibraryPricingStatus = getLibraryPricingStatus;
+    vm.stopEditing = stopEditing;
+
     vm.cycle = {};
+    vm.isEditing = {};
     vm.lastYear = '';
+    vm.libraryStatuses = {};
+    vm.loadingPromise = {};
+    vm.offeringFilter = {};
+    vm.offerings = {};
     vm.offeringColumns = [
         'product',
         'vendor',
@@ -30,7 +32,7 @@ function librariesSelectingProductsByLibraryController( $scope, $q, accordionCon
         selectedLastYear: [orderBySelection, 'product.name'],
         pricing: orderBySitePricing
     };
-    vm.libraryStatuses = {};
+    vm.vendorMap = {};
 
     activate();
 
@@ -65,7 +67,6 @@ function librariesSelectingProductsByLibraryController( $scope, $q, accordionCon
                 return libraryStatusService.getStatusesForAllLibraries(vm.cycle);
             })
             .then(function(libraryStatusMapping){
-                console.log(libraryStatusMapping);
                 vm.libraryStatuses = libraryStatusMapping;
                 return libraryStatusMapping;
             });
@@ -164,6 +165,9 @@ function librariesSelectingProductsByLibraryController( $scope, $q, accordionCon
 
     function orderBySitePricing(offering){
         return offering.pricing.site || 0;
+    }
 
+    function exportOfferingList(library) {
+        return offeringsByLibraryExport(library, vm.vendorMap, vm.offerings[library.id], vm.cycle, vm.offeringColumns);
     }
 }
