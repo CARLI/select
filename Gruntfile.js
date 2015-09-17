@@ -18,6 +18,9 @@ module.exports = function(grunt) {
             },
             serveHeadless: {
                 tasks: ['subdir-grunt:middleware:serve', 'subdir-grunt:browserClient:serve:headless' ]
+            },
+            serveCompiled: {
+                tasks: ['subdir-grunt:middleware:serve', 'subdir-grunt:browserClient:serveCompiled']
             }
         }
     });
@@ -25,6 +28,7 @@ module.exports = function(grunt) {
     grunt.registerTask('serve', ["concurrent:serve"]);
     grunt.registerTask('serve:protractor', ["concurrent:serve:protractor"]);
     grunt.registerTask('serve:headless', ["concurrent:serve:headless"]);
+    grunt.registerTask('serve:compiled', ["concurrent:serveCompiled"]);
 
     grunt.registerTask('test', function(arg) {
         grunt.task.run(['subdir-grunt:CARLI:test:' + arg]);
