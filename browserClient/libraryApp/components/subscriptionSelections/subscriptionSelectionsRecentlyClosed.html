@@ -3,13 +3,13 @@
 <ul class="subscriptions product-list review" cg-busy="vm.loadingPromise">
     <li class="column-headers">
         <div class="sortable column" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.productName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.productName)">Product</div>
-        <div class="sortable column" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.vendorName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.vendorName)">Vendor</div>
+        <div class="sortable column vendor" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.vendorName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.vendorName)">Vendor</div>
         <div class="column su">SU</div>
         <div class="sortable column review-cost" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.selectionPrice, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.selectionPrice)">Cost</div>
     </li>
     <li ng-repeat="offering in vm.offerings | filter: vm.hasSelection | orderBy: vm.orderBy:vm.reverse track by offering.id">
         <div class="column">{{ vm.getProductDisplayName(offering.product) }}</div>
-        <div class="column">{{ offering.product.vendor.name }}</div>
+        <div class="column vendor">{{ offering.product.vendor.name }}</div>
         <div class="column su">{{ offering.selection.users }}</div>
         <div class="column review-cost">{{ offering.selection.price | currency }}</div>
     </li>
