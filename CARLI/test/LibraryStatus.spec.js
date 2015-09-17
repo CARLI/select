@@ -138,6 +138,45 @@ function runLibraryStatusSpecificTests(testCycle) {
                     });
             });
         });
+
+        describe('marking a library status "selections incomplete"', function(){
+            it('should create a new status document if one does not already exist', function(){
+                var testLibraryId = uuid.v4();
+
+                return libraryStatusRepository.markLibrarySelectionsIncomplete(testLibraryId, testCycle)
+                    .then(function(){
+                        return libraryStatusRepository.getStatusForLibrary(testLibraryId, testCycle);
+                    })
+                    .then(function( statusForLibrary ){
+                        return Q.all([
+                            expect(statusForLibrary.id).to.be.ok,
+                            expect(statusForLibrary.library).to.equal(testLibraryId),
+                            expect(statusForLibrary.isComplete).to.equal(false)
+                        ]);
+                    });
+            });
+
+            it('should update an existing status document if there is one ', function(){
+                var testLibraryId = uuid.v4();
+                var testLibraryStatus = validLibraryStatusData();
+                testLibraryStatus.library = testLibraryId;
+
+                return libraryStatusRepository.create(testLibraryStatus, testCycle)
+                    .then(function(){
+                        return libraryStatusRepository.markLibrarySelectionsIncomplete(testLibraryId, testCycle);
+                    })
+                    .then(function(){
+                        return libraryStatusRepository.getStatusForLibrary(testLibraryId, testCycle);
+                    })
+                    .then(function( statusForLibrary ){
+                        return Q.all([
+                            expect(statusForLibrary.id).to.be.ok,
+                            expect(statusForLibrary.library).to.equal(testLibraryId),
+                            expect(statusForLibrary.isComplete).to.equal(false)
+                        ]);
+                    });
+            });
+        });
     });
 
     describe('getStatusesForAllLibraries', function() {

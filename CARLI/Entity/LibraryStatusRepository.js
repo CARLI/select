@@ -113,6 +113,14 @@ function markLibrarySelectionsComplete( libraryId, cycle ){
         });
 }
 
+function markLibrarySelectionsIncomplete( libraryId, cycle ){
+    return getStatusForLibrary(libraryId, cycle)
+        .then(function(libraryStatus){
+            libraryStatus.isComplete = false;
+            return createOrUpdateLibraryStatus(libraryStatus, cycle);
+        });
+}
+
 function getStatusesForAllLibraries( cycle ){
     return listLibraryStatuses(cycle)
         .then(mapLibraryStatusesById);
@@ -159,6 +167,7 @@ module.exports = {
     load: loadLibraryStatus,
     getStatusForLibrary: getStatusForLibrary,
     markLibrarySelectionsComplete: markLibrarySelectionsComplete,
+    markLibrarySelectionsIncomplete: markLibrarySelectionsIncomplete,
     getStatusesForAllLibraries: getStatusesForAllLibraries,
     updateLastActivity: updateLastActivity
 };
