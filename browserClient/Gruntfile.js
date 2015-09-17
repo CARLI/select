@@ -37,13 +37,37 @@ module.exports = function ( grunt ) {
                     src: 'vendorAppModule.js',
                     dest: user_config.vendor_app.build_dir + user_config.logic_files.build
                 }]
+            },
+            compile: {
+                files: [
+                    {
+                        src: 'carliAppModule.js',
+                        dest: user_config.browserify_file('carli')
+                    },
+                    {
+                        src: 'libraryAppModule.js',
+                        dest: user_config.browserify_file('library')
+                    },
+                    {
+                        src: 'vendorAppModule.js',
+                        dest: user_config.browserify_file('vendor')
+                    }
+                ]
             }
         },
 
-        clean: [ user_config.build_dir, user_config.compile_dir ],
-
-        concat: {
-            /* TODO for each app */
+        clean: {
+            build: [user_config.build_dir, user_config.compile_dir ],
+            compileCleanup: [
+                user_config.common_components.annotated_js_file,
+                user_config.common_components.annotated_iife_js_file,
+                user_config.annotated_js_file('carli'),
+                user_config.annotated_js_file('library'),
+                user_config.annotated_js_file('vendor'),
+                user_config.annotated_iife_js_file('carli'),
+                user_config.annotated_iife_js_file('library'),
+                user_config.annotated_iife_js_file('vendor')
+            ]
         },
 
         connect: {
@@ -177,6 +201,7 @@ module.exports = function ( grunt ) {
                         dest: user_config.compile_dir,
                         expand: true
                     }
+                    //TODO: favicons
                 ]
             }
         },
@@ -346,16 +371,18 @@ module.exports = function ( grunt ) {
         },
 
         ngAnnotate: {
+            common: {
+                src: user_config.common_components.all_js,
+                dest: user_config.common_components.annotated_js_file
+            },
             carli: {
                 src: user_config.carli_app.all_js,
                 dest: user_config.annotated_js_file('carli')
             },
-
             library: {
                 src: user_config.carli_app.all_js,
                 dest: user_config.annotated_js_file('library')
             },
-
             vendor: {
                 src: user_config.carli_app.all_js,
                 dest: user_config.annotated_js_file('vendor')
@@ -443,6 +470,41 @@ module.exports = function ( grunt ) {
         },
 
         uglify: {
+            compile: {
+                options: {
+                    compress: false,
+                    mangle: false
+                },
+                files: [
+                    {
+                        src: [
+                            user_config.bower_js,
+                            user_config.browserify_file('carli'),
+                            user_config.common_components.annotated_iife_js_file,
+                            user_config.annotated_iife_js_file('carli')
+                        ],
+                        dest: user_config.compiled_js_file('carli')
+                    },
+                    {
+                        src: [
+                            user_config.bower_js,
+                            user_config.browserify_file('library'),
+                            user_config.common_components.annotated_iife_js_file,
+                            user_config.annotated_iife_js_file('library')
+                        ],
+                        dest: user_config.compiled_js_file('library')
+                    },
+                    {
+                        src: [
+                            user_config.bower_js,
+                            user_config.browserify_file('vendor'),
+                            user_config.common_components.annotated_iife_js_file,
+                            user_config.annotated_iife_js_file('vendor')
+                        ],
+                        dest: user_config.compiled_js_file('vendor')
+                    }
+                ]
+            },
             wrapInIIFE: {
                 options: {
                     compress: false,
@@ -451,6 +513,10 @@ module.exports = function ( grunt ) {
                     footer: '})( window, window.angular );'
                 },
                 files: [
+                    {
+                        src: [user_config.common_components.annotated_js_file],
+                        dest: user_config.common_components.annotated_iife_js_file
+                    },
                     {
                         src: [user_config.annotated_js_file('carli')],
                         dest: user_config.annotated_iife_js_file('carli')
@@ -537,7 +603,8 @@ module.exports = function ( grunt ) {
                 return grunt.template.process( contents, {
                     data: {
                         scripts: jsFiles,
-                        styles: cssFiles
+                        styles: cssFiles,
+                        appCss: options.base + '/app.css'
                     }
                 });
             }
@@ -645,7 +712,6 @@ module.exports = function ( grunt ) {
      * This does not require the dev server to be running
      */
     grunt.registerTask( 'test:unit', [
-        'clean',
         'build',
         'karma:carli',
         'karma:library',
@@ -667,19 +733,28 @@ module.exports = function ( grunt ) {
         'watch'
     ]);
 
+    grunt.registerTask( 'browserifyCompile', [
+        'jsenv:browser',
+        'browserify:compile',
+        'jsenv:node'
+    ]);
+
     /**
      * The `compile` task gets your app ready for deployment by concatenating and
      * minifying your code.
      */
     grunt.registerTask( 'compile', [
-        'clean',
-        'build',
+        'clean:build',
+        'copy:compile',
+        'sass:compile',
+        'browserifyCompile',
         'ngAnnotate',
-        'ngdocs',
-        'concat:compile_js',
-        'uglify',
-        'index:compile'
+        'uglify:wrapInIIFE',
+        'uglify:compile',
+        'indexCompile',
+        'clean:compileCleanup'
     ]);
+
     /**
      * The default task is to build and compile.
      */

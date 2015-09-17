@@ -7,10 +7,36 @@ var compile_dir = 'compile';
 var package_json = require('./package.json');
 var version = package_json.version;
 
+function compile_base(app){
+    return compile_dir + '/' + app + 'App/';
+}
+
 var bower_css = [
     'bower_modules/angular-busy/angular-busy.css',
     'bower_modules/font-awesome/css/font-awesome.min.css',
-    'bower_modules/ng-tags-input/ng-tags-input.css'
+    'bower_modules/ng-tags-input/ng-tags-input.css',
+    'bower_modules/angular-slider/slider.css'
+];
+
+var bower_js = [
+    'bower_modules/jquery/dist/jquery.js',
+    'bower_modules/angular/angular.js',
+    'bower_modules/angular-animate/angular-animate.js',
+    'bower_modules/angular-busy/angular-busy.js',
+    'bower_modules/angular-busyclick/src/busyClick.directive.js',
+    'bower_modules/angular-route/angular-route.js',
+    'bower_modules/angular-resource/angular-resource.js',
+    'bower_modules/angular-sanitize/angular-sanitize.js',
+    'bower_modules/angular-slider/slider.js',
+    'bower_modules/bootstrap-sass-official/assets/javascripts/bootstrap.js',
+    'bower_modules/angular-bootstrap/ui-bootstrap.js',
+    'bower_modules/angular-bootstrap/ui-bootstrap-tpls.js',
+    'bower_modules/FileSaver/FileSaver.js',
+    'bower_modules/gsap/src/minified/TweenMax.min.js',
+    'bower_modules/gsap/src/minified/jquery.gsap.min.js',
+    'bower_modules/handlebars/handlebars.js',
+    'bower_modules/moment/moment.js',
+    'bower_modules/ng-tags-input/ng-tags-input.js'
 ];
 
 module.exports = {
@@ -22,14 +48,23 @@ module.exports = {
     build_dir: build_dir,
     compile_dir: compile_dir,
 
+    browserify_file: function(app){
+        return compile_base(app) + 'browserify.js';
+    },
     annotated_js_file: function(app){
-        return compile_dir + '/' + app + 'App/app.annotated.js'
+        return compile_base(app) + 'app.annotated.js';
     },
     annotated_iife_js_file: function(app){
-        return compile_dir + '/' + app + 'App/app.annotated.iffe.js'
+        return compile_base(app) + 'app.annotated.iffe.js';
     },
-    compiled_css_file: function(app) {
-        return compile_dir + '/' + app + 'App/app.' + version + '.css';
+    compiled_js_file: function(app){
+        return compile_base(app) + 'app.' + version +'.js';
+    },
+    compiled_css_file: function(app){
+        return compile_base(app) + 'app.' + version + '.css';
+    },
+    compiled_index_file: function(app){
+        return compile_base(app) + 'index.html';
     },
 
     common_components: {
@@ -37,6 +72,12 @@ module.exports = {
             'common/**/*',
             '!common/**/*.spec.js'
         ],
+        all_js: [
+            'common/**/*.js',
+            '!common/**/*.spec.js'
+        ],
+        annotated_js_file: compile_dir + '/common/common.annotated.js',
+        annotated_iife_js_file: compile_dir + '/common/common.annotated.iife.js',
         sass_all: 'common/**/*.scss'
     },
 
@@ -107,26 +148,8 @@ module.exports = {
     },
 
     bower_css: bower_css,
-    bower_files: bower_css.concat([
-        'bower_modules/jquery/dist/jquery.js',
-        'bower_modules/angular/angular.js',
-        'bower_modules/angular-animate/angular-animate.js',
-        'bower_modules/angular-busy/angular-busy.js',
-        'bower_modules/angular-busyclick/src/busyClick.directive.js',
-        'bower_modules/angular-route/angular-route.js',
-        'bower_modules/angular-resource/angular-resource.js',
-        'bower_modules/angular-sanitize/angular-sanitize.js',
-        'bower_modules/angular-slider/slider.*',
-        'bower_modules/bootstrap-sass-official/assets/javascripts/bootstrap.js',
-        'bower_modules/angular-bootstrap/ui-bootstrap.js',
-        'bower_modules/angular-bootstrap/ui-bootstrap-tpls.js',
-        'bower_modules/FileSaver/FileSaver.js',
-        'bower_modules/gsap/src/minified/TweenMax.min.js',
-        'bower_modules/gsap/src/minified/jquery.gsap.min.js',
-        'bower_modules/handlebars/handlebars.js',
-        'bower_modules/moment/moment.js',
-        'bower_modules/ng-tags-input/ng-tags-input.js',
-
+    bower_js: bower_js,
+    bower_files: bower_css.concat(bower_js).concat([
         'bower_modules/font-awesome/fonts/fontawesome-webfont.*'
     ]),
 
