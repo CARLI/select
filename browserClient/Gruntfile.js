@@ -117,6 +117,23 @@ module.exports = function ( grunt ) {
                             optBase.map(function(path){ return connect.static(path); }));
                     }
                 }
+            },
+
+            serveCompiledCarli: {
+                options: {
+                    base: 'compile/',
+                    open: 'http://staff.carli.local:8080',
+                    port: 8000,
+                    keepalive: true,
+                    livereload: false,
+                    middleware: function (connect, options) {
+                        var optBase = (typeof options.base === 'string') ? [options.base] : options.base;
+                        var modRewrite = require('connect-modrewrite');
+
+                        return [modRewrite(['!(\\..+)$ /carliApp/index.html [L]'])].concat(
+                            optBase.map(function(path){ return connect.static(path); }));
+                    }
+                }
             }
         },
 
@@ -731,6 +748,11 @@ module.exports = function ( grunt ) {
         'connect:serveLibrary',
         'connect:serveVendor',
         'watch'
+    ]);
+
+    grunt.registerTask( 'serveCompiled', [
+        'compile',
+        'connect:serveCompiledCarli'
     ]);
 
     grunt.registerTask( 'browserifyCompile', [
