@@ -158,6 +158,26 @@ module.exports = function ( grunt ) {
                     src: user_config.bower_files,
                     dest: user_config.vendor_app.build_dir
                 }]
+            },
+
+            compile: {
+                files: [
+                    {
+                        src: user_config.carli_app.all_html,
+                        dest: user_config.compile_dir,
+                        expand: true
+                    },
+                    {
+                        src: user_config.library_app.all_html,
+                        dest: user_config.compile_dir,
+                        expand: true
+                    },
+                    {
+                        src: user_config.vendor_app.all_html,
+                        dest: user_config.compile_dir,
+                        expand: true
+                    }
+                ]
             }
         },
 

@@ -1,14 +1,27 @@
 /**
  * This file/module contains all configuration for the build process.
  */
+
+var build_dir = 'build';
+var compile_dir = 'compile';
+var package_json = require('./package.json');
+var version = package_json.version;
+
 module.exports = {
     /**
      * The `build_dir` folder is where our projects are compiled during
      * development and the `compile_dir` folder is where our carliApp resides once it's
      * completely built.
      */
-    build_dir: 'build',
-    compile_dir: 'dist',
+    build_dir: build_dir,
+    compile_dir: compile_dir,
+
+    annotated_js_file: function(app){
+        return compile_dir + '/' + app + 'App/app.annotated.js'
+    },
+    compiled_css_file: function(app) {
+        return compile_dir + '/' + app + 'App/app.' + version + '.css';
+    },
 
     common_components: {
         all_files: [
@@ -23,12 +36,16 @@ module.exports = {
             'carliApp/**/*',
             '!carliApp/**/*.spec.js'
         ],
+        all_html: [
+            'carliApp/**/*.html'
+        ],
         all_js: [
             'carliApp/*.js',
             'carliApp/**/*.js',
             '!carliApp/**/*.spec.js'
         ],
-        build_dir: 'build/carliApp/',
+        build_dir: build_dir + '/carliApp/',
+        compile_dir: compile_dir + '/carliApp/',
         sass_main: 'carliApp/styles/app.scss',
         sass_all: 'carliApp/**/*.scss',
         test_js: [
@@ -41,12 +58,16 @@ module.exports = {
             'libraryApp/**/*',
             '!libraryApp/**/*.spec.js'
         ],
+        all_html: [
+            'libraryApp/**/*.html'
+        ],
         all_js: [
             'libraryApp/*.js',
             'libraryApp/**/*.js',
             '!libraryApp/**/*.spec.js'
         ],
-        build_dir: 'build/libraryApp/',
+        build_dir: build_dir + '/libraryApp/',
+        compile_dir: compile_dir + '/libraryApp/',
         sass_main: 'libraryApp/styles/app.scss',
         sass_all: 'libraryApp/**/*.scss',
         test_js: [
@@ -59,12 +80,16 @@ module.exports = {
             'vendorApp/**/*',
             '!vendorApp/**/*.spec.js'
         ],
+        all_html: [
+            'vendorApp/**/*.html'
+        ],
         all_js: [
             'vendorApp/*.js',
             'vendorApp/**/*.js',
             '!vendorApp/**/*.spec.js'
         ],
-        build_dir: 'build/vendorApp/',
+        build_dir: build_dir + '/vendorApp/',
+        compile_dir: compile_dir + '/vendorApp',
         sass_main: 'vendorApp/styles/app.scss',
         sass_all: 'vendorApp/**/*.scss',
         test_js: [
