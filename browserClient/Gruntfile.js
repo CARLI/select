@@ -432,7 +432,28 @@ module.exports = function ( grunt ) {
         },
 
         uglify: {
-            /* TODO for compile task for each app */
+            wrapInIIFE: {
+                options: {
+                    compress: false,
+                    mangle: false,
+                    banner: '(function ( window, angular, undefined ) {',
+                    footer: '})( window, window.angular );'
+                },
+                files: [
+                    {
+                        src: [user_config.annotated_js_file('carli')],
+                        dest: user_config.annotated_iife_js_file('carli')
+                    },
+                    {
+                        src: [user_config.annotated_js_file('library')],
+                        dest: user_config.annotated_iife_js_file('library')
+                    },
+                    {
+                        src: [user_config.annotated_js_file('vendor')],
+                        dest: user_config.annotated_iife_js_file('vendor')
+                    }
+                ]
+            }
         },
 
         watch: {
