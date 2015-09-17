@@ -235,15 +235,26 @@ module.exports = function ( grunt ) {
                         '**/*.js'
                     ]
                 }]
+            }
+        },
+
+        indexCompile: {
+            carli: {
+                options: {
+                    base: 'carli'
+                }
             },
 
-            /**
-             * When it is time to have a completely compiled application, we can
-             * alter the above to include only a single JavaScript and a single CSS
-             * file. Now we're back!
-             */
-            compile: {
-                /* TODO: for each app */
+            library: {
+                options: {
+                    base: 'library'
+                }
+            },
+
+            vendor: {
+                options: {
+                    base: 'vendor'
+                }
             }
         },
 
@@ -553,8 +564,31 @@ module.exports = function ( grunt ) {
         }
     });
 
+    grunt.registerMultiTask( 'indexCompile', 'Process index.html template using compiled js and css', function () {
+        var options = this.options();
+        var app = options.base;
+
+        var indexFile = app + 'App/index.html';
+        var targetIndexFile = user_config.compiled_index_file(app);
+
+        var compiled_js = user_config.compiled_js_file(app).replace(user_config.compile_dir+'/', '');
+        var complied_css = user_config.compiled_css_file(app).replace(user_config.compile_dir+'/', '');
+
+        grunt.file.copy(indexFile, targetIndexFile, {
+            process: function( contents, path ) {
+                return grunt.template.process( contents, {
+                    data: {
+                        scripts: [compiled_js],
+                        styles: [],
+                        appCss: complied_css
+                    }
+                });
+            }
+        });
+    });
+
     grunt.registerTask( 'build', [
-        'clean',
+        'clean:build',
         'build:carli',
         'build:library',
         'build:vendor'
