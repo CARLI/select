@@ -16,13 +16,16 @@ function subscriptionSelectionsController( $q, $window, activityLogService, cycl
         selectionPrice: ['selection.price', 'product.name']
     };
 
+    vm.libraryId = null;
+    vm.openProduct = {};
+    vm.selectionProblems = [];
+    vm.showProgress = false;
+
     vm.completeSelections = completeSelections;
     vm.computeTotalPurchasesAmount = computeTotalPurchasesAmount;
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.hasSelection = hasSelection;
     vm.isSelected = isSelected;
-    vm.libraryId = null;
-    vm.openProduct = {};
     vm.returnToBeginning = returnToBeginning;
     vm.reviewSelections = reviewSelections;
     vm.startSelections = startSelections;
@@ -30,8 +33,6 @@ function subscriptionSelectionsController( $q, $window, activityLogService, cycl
     vm.selectLastYearsSelections = selectLastYearsSelections;
     vm.selectProduct = selectProduct;
     vm.selectAndUpdateProduct = selectAndUpdateProduct;
-    vm.selectionProblems = [];
-    vm.showProgress = false;
     vm.sort = sort;
     vm.todo = todo;
     vm.toggleProduct = toggleProduct;
@@ -281,8 +282,12 @@ function subscriptionSelectionsController( $q, $window, activityLogService, cycl
         }
     }
 
+    function startSelections() {
+        return libraryStatusService.markLibrarySelectionsIncomplete(vm.libraryId, vm.cycle)
+            .then(selectionsStarted);
+    }
 
-    function startSelections(){
+    function selectionsStarted(){
         vm.selectionStep = 'select';
         vm.showProgress = true;
     }
