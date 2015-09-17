@@ -30,13 +30,15 @@
                                     <render-offering ng-if="!vm.isEditing[offering.id]" offering="offering" cycle="::vm.cycle" columns="::vm.offeringColumns"></render-offering>
                                 </li>
                             </ul>
-                            <div class="footer">
-                                <div class="placeholder pull-left" style="width: 250px;">Print Email Export</div>
-                                <div class="placeholder pull-right" style="width: 250px;">Vendor Pricing Entry</div>
-                            </div>
                         </div>
                     </li>
                 </ul>
+                <div class="footer">
+                    <button class="carli-button" busy-click="vm.exportOfferingList(vendor)">Export</button>
+
+                    <div class="placeholder pull-left" style="width: 250px;">Print Email Export</div>
+                    <div class="placeholder pull-right" style="width: 250px;">Vendor Pricing Entry</div>
+                </div>
             </div>
         </li>
     </ul>

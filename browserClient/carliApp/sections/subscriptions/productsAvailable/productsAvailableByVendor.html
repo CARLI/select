@@ -38,6 +38,8 @@
                     </li>
                 </ul>
                 <div class="vendor footer">
+                    <button class="carli-button" busy-click="vm.exportOfferingList(vendor)">Export</button>
+
                     <div class="total">
                         <span class="label">Selection Total:</span>
                         <span>{{ vm.selectionTotal[vendor.id] | currency }}</span>

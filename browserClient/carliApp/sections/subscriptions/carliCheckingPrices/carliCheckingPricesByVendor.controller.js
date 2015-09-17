@@ -1,26 +1,28 @@
 angular.module('carli.sections.subscriptions.carliCheckingPrices')
     .controller('carliCheckingPricesByVendorController', carliCheckingPricesByVendorController);
 
-function carliCheckingPricesByVendorController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, offeringService, editOfferingService, productService, vendorService, vendorStatusService ) {
+function carliCheckingPricesByVendorController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, offeringService, editOfferingService, offeringsByVendorExport, productService, vendorService, vendorStatusService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadProductsForVendor);
 
-    vm.toggleProductSection = toggleProductSection;
+    vm.exportOfferingList = exportOfferingList;
     vm.getProductDisplayName = productService.getProductDisplayName;
-    vm.loadingPromise = {};
     vm.stopEditing = stopEditing;
-    vm.vendors = [];
-    vm.isEditing = {};
-    vm.expandedProducts = {};
+    vm.toggleProductSection = toggleProductSection;
+
     vm.cycle = {};
+    vm.expandedProducts = {};
+    vm.isEditing = {};
     vm.lastYear = '';
+    vm.loadingPromise = {};
     vm.offeringColumns = [
         'library',
         'library-view',
         'site-license-price-both',
         'flag'
     ];
+    vm.vendors = [];
     vm.vendorStatus = {};
 
     activate();
@@ -98,14 +100,12 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
             return $q.when(product.offerings);
         }
 
-        vm.loadingPromise[product.id] = offeringService.listOfferingsForProductId(product.id)
+        return offeringService.listOfferingsForProductId(product.id)
             .then(filterActiveLibraries)
             .then(function(offerings){
                 product.offerings = offerings;
                 return offerings;
             });
-
-        return vm.loadingPromise[product.id];
     }
 
     function filterActiveLibraries(offeringsList){
@@ -119,9 +119,10 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
             delete vm.expandedProducts[product.id];
         }
         else {
-            loadOfferingsForProduct(product).then(function(){
+            var loadingPromise = loadOfferingsForProduct(product).then(function(){
                 vm.expandedProducts[product.id] = true;
             });
+            vm.loadingPromise[product.id] = loadingPromise;
         }
     }
 
@@ -130,5 +131,15 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
     }
     function stopEditing(offering) {
         vm.isEditing[offering.id] = false;
+    }
+
+    function exportOfferingList(vendor) {
+        return loadOfferingsForVendor().then(function() {
+            return offeringsByVendorExport(vendor, vm.cycle, vm.offeringColumns);
+        });
+
+        function loadOfferingsForVendor() {
+            return $q.all(vendor.products.map(loadOfferingsForProduct));
+        }
     }
 }

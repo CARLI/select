@@ -1,27 +1,27 @@
 angular.module('carli.sections.subscriptions.productsAvailable')
     .controller('productsAvailableByVendorController', productsAvailableByVendorController);
 
-function productsAvailableByVendorController( $scope, $timeout, $q, accordionControllerMixin, notificationModalService, controllerBaseService, cycleService, vendorService, offeringService, editOfferingService,  productService ) {
+function productsAvailableByVendorController( $scope, $timeout, $q, accordionControllerMixin, notificationModalService, controllerBaseService, cycleService, vendorService, offeringService, offeringsByVendorExport, editOfferingService,  productService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadProductsForVendor);
 
-    vm.toggleProductSection = toggleProductSection;
-    vm.getVendorPricingStatus = getVendorPricingStatus;
-    vm.stopEditing = stopEditing;
-    vm.computeSelectionTotalForVendor = computeSelectionTotalForVendor;
     vm.computeInvoiceTotalForVendor = computeInvoiceTotalForVendor;
+    vm.computeSelectionTotalForVendor = computeSelectionTotalForVendor;
+    vm.exportOfferingList = exportOfferingList;
     vm.getProductDisplayName = productService.getProductDisplayName;
-    vm.loadingPromise = {};
-    vm.vendors = [];
-    vm.isEditing = {};
-    vm.expandedProducts = {};
-    vm.cycle = {};
-    vm.lastYear = '';
-    vm.selectedOfferings = {};
-    vm.reportCheckedProductsForVendor = reportCheckedProductsForVendor;
+    vm.getVendorPricingStatus = getVendorPricingStatus;
     vm.reportAllProductsForVendor = reportAllProductsForVendor;
     vm.reportAllVendors = reportAllVendors;
+    vm.reportCheckedProductsForVendor = reportCheckedProductsForVendor;
+    vm.stopEditing = stopEditing;
+    vm.toggleProductSection = toggleProductSection;
+
+    vm.cycle = {};
+    vm.expandedProducts = {};
+    vm.isEditing = {};
+    vm.lastYear = '';
+    vm.loadingPromise = {};
     vm.offeringColumns = [
         'library',
         'library-view',
@@ -30,6 +30,8 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
         'selection',
         'vendor-invoice'
     ];
+    vm.selectedOfferings = {};
+    vm.vendors = [];
 
     activate();
 
@@ -93,14 +95,12 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
             return $q.when(product.offerings);
         }
 
-        vm.loadingPromise[product.id] = offeringService.listOfferingsForProductId(product.id)
+        return offeringService.listOfferingsForProductId(product.id)
             .then(filterActiveLibraries)
             .then(function(offerings){
                 product.offerings = offerings;
                 return offerings;
             });
-
-        return vm.loadingPromise[product.id];
     }
 
     function filterActiveLibraries(offeringsList){
@@ -114,9 +114,10 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
             delete vm.expandedProducts[product.id];
         }
         else {
-            loadOfferingsForProduct(product).then(function(){
+            var loadingPromise = loadOfferingsForProduct(product).then(function(){
                 vm.expandedProducts[product.id] = true;
             });
+            vm.loadingPromise[product.id] = loadingPromise;
         }
     }
 
@@ -228,5 +229,15 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
             var stop = new Date();
             console.log('digest ' + numberOfOfferings + ' vendor offerings took '+ (stop-startTime)/1000 + 's');
         });
+    }
+
+    function exportOfferingList(vendor) {
+        return loadOfferingsForVendor().then(function() {
+            return offeringsByVendorExport(vendor, vm.cycle, vm.offeringColumns);
+        });
+
+        function loadOfferingsForVendor() {
+            return $q.all(vendor.products.map(loadOfferingsForProduct));
+        }
     }
 }
