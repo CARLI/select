@@ -7,6 +7,12 @@ var compile_dir = 'compile';
 var package_json = require('./package.json');
 var version = package_json.version;
 
+var bower_css = [
+    'bower_modules/angular-busy/angular-busy.css',
+    'bower_modules/font-awesome/css/font-awesome.min.css',
+    'bower_modules/ng-tags-input/ng-tags-input.css'
+];
+
 module.exports = {
     /**
      * The `build_dir` folder is where our projects are compiled during
@@ -97,11 +103,8 @@ module.exports = {
         ]
     },
 
-    bower_files: [
-        'bower_modules/angular-busy/angular-busy.css',
-        'bower_modules/font-awesome/css/font-awesome.min.css',
-        'bower_modules/ng-tags-input/ng-tags-input.css',
-
+    bower_css: bower_css,
+    bower_files: bower_css.concat([
         'bower_modules/jquery/dist/jquery.js',
         'bower_modules/angular/angular.js',
         'bower_modules/angular-animate/angular-animate.js',
@@ -122,7 +125,7 @@ module.exports = {
         'bower_modules/ng-tags-input/ng-tags-input.js',
 
         'bower_modules/font-awesome/fonts/fontawesome-webfont.*'
-    ],
+    ]),
 
     /**
      * Stand-alone JavaScript files that get packaged by Browserify.

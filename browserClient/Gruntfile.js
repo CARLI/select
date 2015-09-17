@@ -401,6 +401,33 @@ module.exports = function ( grunt ) {
                     expand: true,
                     flatten: true
                 }]
+            },
+
+            compile: {
+                options: {
+                    sourcemap: 'none',
+                    style: 'compressed'
+                },
+                files: [
+                    {
+                        src: [user_config.carli_app.sass_main, user_config.bower_css],
+                        dest: user_config.compiled_css_file('carli'),
+                        ext: '.css',
+                        flatten: true
+                    },
+                    {
+                        src: [user_config.library_app.sass_main, user_config.bower_css],
+                        dest: user_config.compiled_css_file('library'),
+                        ext: '.css',
+                        flatten: true
+                    },
+                    {
+                        src: [user_config.vendor_app.sass_main, user_config.bower_css],
+                        dest: user_config.compiled_css_file('vendor'),
+                        ext: '.css',
+                        flatten: true
+                    }
+                ]
             }
         },
 
