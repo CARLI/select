@@ -25,6 +25,9 @@ module.exports = {
     annotated_js_file: function(app){
         return compile_dir + '/' + app + 'App/app.annotated.js'
     },
+    annotated_iife_js_file: function(app){
+        return compile_dir + '/' + app + 'App/app.annotated.iffe.js'
+    },
     compiled_css_file: function(app) {
         return compile_dir + '/' + app + 'App/app.' + version + '.css';
     },
