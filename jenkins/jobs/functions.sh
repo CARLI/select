@@ -45,8 +45,27 @@ buildBrowserClients() {
     return $status
 }
 
+buildCompiledBrowserClients() {
+    cd browserClient
+    grunt compile
+    status=$?
+    cd - > /dev/null
+
+    return $status
+}
+
 archiveBrowserClients() {
     cd browserClient/build
+    rm -f $WORKSPACE/artifacts/browserClients.tgz
+    tar zcf $WORKSPACE/artifacts/browserClients.tgz .
+    status=$?
+    cd - > /dev/null
+
+    return $status
+}
+
+archiveCompiledBrowserClients() {
+    cd browserClient/compile
     rm -f $WORKSPACE/artifacts/browserClients.tgz
     tar zcf $WORKSPACE/artifacts/browserClients.tgz .
     status=$?
