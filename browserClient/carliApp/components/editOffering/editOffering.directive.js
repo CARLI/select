@@ -38,7 +38,7 @@ angular.module('carli.editOffering')
             }
 
             function saveOffering() {
-                var tempLibraryComments = "";
+                var tempLibraryComments = "an arbitrary string that is very unlikely to be an actual product comment";
                 if (vm.offering.libraryComments === vm.offering.product.comments) {
                     tempLibraryComments = vm.offering.product.comments;
                     delete vm.offering.libraryComments;
