@@ -165,9 +165,6 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
             var offeringCell = $('<div class="column offering">')
                 .addClass(product.id)
                 .append(cellContents)
-                .on('click', function() {
-                    $(this).children().first().focus();
-                })
                 .data('libraryId', library.id)
                 .data('fte', library.fte)
                 .data('productId', product.id);
