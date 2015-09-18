@@ -1,7 +1,7 @@
 angular.module('library.sections.addOneTimePurchases')
 .controller('addOneTimePurchasesController', addOneTimePurchasesController);
 
-function addOneTimePurchasesController( $q, $location, config, activityLogService, cycleService, emailService, offeringService, productService, userService ){
+function addOneTimePurchasesController( $q, $location, config, activityLogService, csvExportService, cycleService, emailService, offeringService, productService, userService ){
     var vm = this;
 
     vm.selectionStep = 'select';
@@ -33,6 +33,7 @@ function addOneTimePurchasesController( $q, $location, config, activityLogServic
     vm.sortPurchased = function sortPurchased(newSort){ sort(newSort, 'Purchased'); };
     vm.todo = todo;
     vm.unSelectProduct = unselectProduct;
+    vm.exportProductList = exportProductList;
 
     activate();
 
@@ -168,5 +169,48 @@ function addOneTimePurchasesController( $q, $location, config, activityLogServic
 
     function todo(){
         alert("TODO");
+    }
+
+    function exportProductList(offerings) {
+        var fileName = 'One-time Purchase Product List.csv';
+        var exportHeaders = [
+            'Product',
+            'Vendor',
+            'CARLI Funded',
+            'Selected License',
+            'Selected Price'
+        ];
+
+        var exportData = offerings.map(exportOffering);
+
+        return csvExportService.exportToCsv(exportData, exportHeaders)
+            .then(function (csvString) {
+                return csvExportService.browserDownloadCsv(csvString, fileName);
+            });
+
+        function exportOffering(offering) {
+            return [
+                vm.getProductDisplayName(offering.product),
+                offering.product.vendor.name,
+                offering.product.funded || '',
+                getSelectionUsers(offering),
+                getSelectionPrice(offering)
+            ];
+        }
+
+        function getSelectionUsers(offering) {
+            var price = '';
+            if (offering.selection) {
+                price = offering.selection.users;
+            }
+            return price;
+        }
+        function getSelectionPrice(offering) {
+            var price = '';
+            if (offering.selection) {
+                price = offering.selection.price;
+            }
+            return price;
+        }
     }
 }

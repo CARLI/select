@@ -1,7 +1,7 @@
 angular.module('library.subscriptionSelections')
 .controller('subscriptionSelectionsController', subscriptionSelectionsController);
 
-function subscriptionSelectionsController( $q, $window, activityLogService, cycleService, libraryStatusService, offeringService, productService, userService ){
+function subscriptionSelectionsController( $q, $window, activityLogService, csvExportService, cycleService, libraryStatusService, offeringService, productService, userService ){
     var vm = this;
 
     vm.selectionStep = '';
@@ -16,13 +16,16 @@ function subscriptionSelectionsController( $q, $window, activityLogService, cycl
         selectionPrice: ['selection.price', 'product.name']
     };
 
+    vm.libraryId = null;
+    vm.openProduct = {};
+    vm.selectionProblems = [];
+    vm.showProgress = false;
+
     vm.completeSelections = completeSelections;
     vm.computeTotalPurchasesAmount = computeTotalPurchasesAmount;
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.hasSelection = hasSelection;
     vm.isSelected = isSelected;
-    vm.libraryId = null;
-    vm.openProduct = {};
     vm.returnToBeginning = returnToBeginning;
     vm.reviewSelections = reviewSelections;
     vm.startSelections = startSelections;
@@ -30,14 +33,13 @@ function subscriptionSelectionsController( $q, $window, activityLogService, cycl
     vm.selectLastYearsSelections = selectLastYearsSelections;
     vm.selectProduct = selectProduct;
     vm.selectAndUpdateProduct = selectAndUpdateProduct;
-    vm.selectionProblems = [];
-    vm.showProgress = false;
     vm.sort = sort;
     vm.todo = todo;
     vm.toggleProduct = toggleProduct;
     vm.unselected = unselected;
     vm.unSelectProduct = unSelectProduct;
     vm.unSelectAndUpdateProduct = unSelectAndUpdateProduct;
+    vm.exportProductList = exportProductList;
 
     activate();
 
@@ -281,8 +283,12 @@ function subscriptionSelectionsController( $q, $window, activityLogService, cycl
         }
     }
 
+    function startSelections() {
+        return libraryStatusService.markLibrarySelectionsIncomplete(vm.libraryId, vm.cycle)
+            .then(selectionsStarted);
+    }
 
-    function startSelections(){
+    function selectionsStarted(){
         vm.selectionStep = 'select';
         vm.showProgress = true;
     }
@@ -342,4 +348,51 @@ function subscriptionSelectionsController( $q, $window, activityLogService, cycl
         return activityLogService.logLibraryRemovedProduct(offering, vm.cycle);
     }
 
+    function exportProductList() {
+        var fileName = vm.cycle.name + ' Product List.csv';
+        var exportHeaders = [
+            'Product',
+            'Last Year\'s Selected License',
+            'Last Year\'s Selected Price',
+            'Vendor',
+            'CARLI Funded',
+            'Selected License',
+            'Selected Price'
+        ];
+
+        var exportData = vm.offerings.map(exportOffering);
+
+        return csvExportService.exportToCsv(exportData, exportHeaders)
+            .then(function (csvString) {
+                return csvExportService.browserDownloadCsv(csvString, fileName);
+            });
+
+        function exportOffering(offering) {
+            var lastYearsSelection = vm.selectedLastYear(offering);
+            return [
+                vm.getProductDisplayName(offering.product),
+                lastYearsSelection ? lastYearsSelection.users : '',
+                lastYearsSelection ? lastYearsSelection.price : '',
+                offering.product.vendor.name,
+                offering.product.funded || '',
+                getSelectionUsers(offering),
+                getSelectionPrice(offering)
+            ];
+        }
+
+        function getSelectionUsers(offering) {
+            var price = '';
+            if (offering.selection) {
+                price = offering.selection.users;
+            }
+            return price;
+        }
+        function getSelectionPrice(offering) {
+            var price = '';
+            if (offering.selection) {
+                price = offering.selection.price;
+            }
+            return price;
+        }
+    }
 }
