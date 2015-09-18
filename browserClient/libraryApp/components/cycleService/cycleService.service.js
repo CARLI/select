@@ -24,6 +24,7 @@ function cycleService( CarliModules, $q, errorHandler, userService ) {
         },
         listSelectionsForCycle: listSelectionsForCycle,
         listAllOfferingsForCycle: listAllOfferingsForCycle,
+        listClosedAndArchivedCycles: listClosedAndArchivedCycles,
         getHistoricalSelectionDataForProductForCycle: getHistoricalSelectionDataForProductForCycle,
         load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ).catch(errorHandler); },
         getCurrentCycle: getCurrentCycle,
@@ -79,6 +80,17 @@ function cycleService( CarliModules, $q, errorHandler, userService ) {
 
         function cycleIsOneTimePurchaseOrClosed( cycle ){
             return cycle.cycleType === 'One-Time Purchase' || cycle.status === 5;
+        }
+    }
+
+    function listClosedAndArchivedCycles(){
+        return $q.when(cycleModule.list())
+            .then(function(allCycles){
+                return allCycles.filter(cycleIsClosedOrArchived);
+            });
+
+        function cycleIsClosedOrArchived(cycle){
+            return cycle.status > 5; //TODO: use constants from the cycleModule for these status numbers
         }
     }
 
