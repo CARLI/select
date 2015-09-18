@@ -161,9 +161,16 @@ module.exports = function ( grunt ) {
             },
             carli_app_bower_files: {
                 files: [{
-                    src: user_config.bower_files,
-                    dest: user_config.carli_app.build_dir
-                }]
+                        src: user_config.bower_files,
+                        dest: user_config.carli_app.build_dir
+                    },
+                    {
+                        src: user_config.bower_fonts,
+                        dest: user_config.carli_app.build_dir + '/fonts/',
+                        expand: true,
+                        flatten: true
+                    }
+                ]
             },
 
             library_app_common_components: {
@@ -182,9 +189,16 @@ module.exports = function ( grunt ) {
             },
             library_app_bower_files: {
                 files: [{
-                    src: user_config.bower_files,
-                    dest: user_config.library_app.build_dir
-                }]
+                        src: user_config.bower_files,
+                        dest: user_config.library_app.build_dir
+                    },
+                    {
+                        src: user_config.bower_fonts,
+                        dest: user_config.library_app.build_dir + '/fonts/',
+                        expand: true,
+                        flatten: true
+                    }
+                ]
             },
 
             vendor_app_common_components: {
@@ -202,10 +216,18 @@ module.exports = function ( grunt ) {
                 }]
             },
             vendor_app_bower_files: {
-                files: [{
-                    src: user_config.bower_files,
-                    dest: user_config.vendor_app.build_dir
-                }]
+                files: [
+                    {
+                        src: user_config.bower_files,
+                        dest: user_config.vendor_app.build_dir
+                    },
+                    {
+                        src: user_config.bower_fonts,
+                        dest: user_config.vendor_app.build_dir + '/fonts/',
+                        expand: true,
+                        flatten: true
+                    }
+                ]
             },
 
             compile: {
