@@ -6,8 +6,8 @@
         <% styles.forEach( function ( file ) { %>
             <link type="text/css" rel="stylesheet" href="/<%= file %>">
         <% }); %>
-        <link type="text/css" rel="stylesheet" href="/vendorApp/app.css">
-
+        <link type="text/css" rel="stylesheet" href="/<%= appCss %>">
+        
         <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/vendorApp/common/favicons/apple-touch-icon-57x57.png" />
         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/vendorApp/common/favicons/apple-touch-icon-114x114.png" />
         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/vendorApp/common/favicons/apple-touch-icon-72x72.png" />
