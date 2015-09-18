@@ -18,6 +18,10 @@ var bower_css = [
     'bower_modules/angular-slider/slider.css'
 ];
 
+var bower_fonts = [
+    'bower_modules/font-awesome/fonts/fontawesome-webfont.*'
+];
+
 var bower_js = [
     'bower_modules/jquery/dist/jquery.js',
     'bower_modules/angular/angular.js',
@@ -56,6 +60,9 @@ module.exports = {
     },
     annotated_iife_js_file: function(app){
         return compile_base(app) + 'app.annotated.iffe.js';
+    },
+    processed_sass_file: function(app){
+        return compile_base(app) + 'app.compiled.css';
     },
     compiled_js_file: function(app){
         return compile_base(app) + 'app.' + version +'.js';
@@ -152,10 +159,9 @@ module.exports = {
     },
 
     bower_css: bower_css,
+    bower_fonts: bower_fonts,
     bower_js: bower_js,
-    bower_files: bower_css.concat(bower_js).concat([
-        'bower_modules/font-awesome/fonts/fontawesome-webfont.*'
-    ]),
+    bower_files: bower_css.concat(bower_js).concat(bower_fonts),
 
     /**
      * Stand-alone JavaScript files that get packaged by Browserify.

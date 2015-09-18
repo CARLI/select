@@ -59,14 +59,21 @@ module.exports = function ( grunt ) {
         clean: {
             build: [user_config.build_dir, user_config.compile_dir ],
             compileCleanup: [
-                user_config.common_components.annotated_js_file,
-                user_config.common_components.annotated_iife_js_file,
+                user_config.processed_sass_file('carli'),
+                user_config.processed_sass_file('library'),
+                user_config.processed_sass_file('vendor'),
+                user_config.browserify_file('carli'),
+                user_config.browserify_file('library'),
+                user_config.browserify_file('vendor'),
                 user_config.annotated_js_file('carli'),
                 user_config.annotated_js_file('library'),
                 user_config.annotated_js_file('vendor'),
                 user_config.annotated_iife_js_file('carli'),
                 user_config.annotated_iife_js_file('library'),
-                user_config.annotated_iife_js_file('vendor')
+                user_config.annotated_iife_js_file('vendor'),
+                user_config.compile_dir + '/common/',
+                user_config.common_components.annotated_js_file,
+                user_config.common_components.annotated_iife_js_file
             ]
         },
 
@@ -230,6 +237,44 @@ module.exports = function ( grunt ) {
                     {
                         src: user_config.common_components.favicons,
                         dest: user_config.vendor_app.compile_dir
+                    },
+                    //fonts
+                    {
+                        src: user_config.bower_fonts,
+                        dest: user_config.carli_app.compile_dir + '/fonts/',
+                        expand: true,
+                        flatten: true
+                    },
+                    {
+                        src: user_config.bower_fonts,
+                        dest: user_config.library_app.compile_dir + '/fonts/',
+                        expand: true,
+                        flatten: true
+                    },
+                    {
+                        src: user_config.bower_fonts,
+                        dest: user_config.vendor_app.compile_dir + '/fonts/',
+                        expand: true,
+                        flatten: true
+                    }
+                ]
+            }
+        },
+
+        cssmin: {
+            compile: {
+                files: [
+                    {
+                        src: [user_config.processed_sass_file('carli'), user_config.bower_css],
+                        dest: user_config.compiled_css_file('carli')
+                    },
+                    {
+                        src: [user_config.processed_sass_file('library'), user_config.bower_css],
+                        dest: user_config.compiled_css_file('library')
+                    },
+                    {
+                        src: [user_config.processed_sass_file('vendor'), user_config.bower_css],
+                        dest: user_config.compiled_css_file('vendor')
                     }
                 ]
             }
@@ -477,20 +522,20 @@ module.exports = function ( grunt ) {
                 },
                 files: [
                     {
-                        src: [user_config.carli_app.sass_main, user_config.bower_css],
-                        dest: user_config.compiled_css_file('carli'),
+                        src: user_config.carli_app.sass_main,
+                        dest: user_config.processed_sass_file('carli'),
                         ext: '.css',
                         flatten: true
                     },
                     {
-                        src: [user_config.library_app.sass_main, user_config.bower_css],
-                        dest: user_config.compiled_css_file('library'),
+                        src: user_config.library_app.sass_main,
+                        dest: user_config.processed_sass_file('library'),
                         ext: '.css',
                         flatten: true
                     },
                     {
-                        src: [user_config.vendor_app.sass_main, user_config.bower_css],
-                        dest: user_config.compiled_css_file('vendor'),
+                        src: user_config.vendor_app.sass_main,
+                        dest: user_config.processed_sass_file('vendor'),
                         ext: '.css',
                         flatten: true
                     }
@@ -781,6 +826,7 @@ module.exports = function ( grunt ) {
         'clean:build',
         'copy:compile',
         'sass:compile',
+        'cssmin:compile',
         'browserifyCompile',
         'ngAnnotate',
         'uglify:wrapInIIFE',
