@@ -1,7 +1,7 @@
 angular.module('library.subscriptionSelections')
 .controller('subscriptionSelectionsController', subscriptionSelectionsController);
 
-function subscriptionSelectionsController( $q, $window, activityLogService, cycleService, libraryStatusService, offeringService, productService, userService ){
+function subscriptionSelectionsController( $q, $window, activityLogService, csvExportService, cycleService, libraryStatusService, offeringService, productService, userService ){
     var vm = this;
 
     vm.selectionStep = '';
@@ -39,6 +39,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, cycl
     vm.unselected = unselected;
     vm.unSelectProduct = unSelectProduct;
     vm.unSelectAndUpdateProduct = unSelectAndUpdateProduct;
+    vm.exportProductList = exportProductList;
 
     activate();
 
@@ -347,4 +348,39 @@ function subscriptionSelectionsController( $q, $window, activityLogService, cycl
         return activityLogService.logLibraryRemovedProduct(offering, vm.cycle);
     }
 
+    function exportProductList() {
+        var fileName = vm.cycle.name + ' Product List.csv';
+        var exportHeaders = [
+            'Product',
+            'Selected Last Year',
+            'Vendor',
+            'CARLI Funded',
+            'Selected'
+        ];
+
+        var exportData = vm.offerings.map(exportOffering);
+
+        return csvExportService.exportToCsv(exportData, exportHeaders)
+            .then(function (csvString) {
+                return csvExportService.browserDownloadCsv(csvString, fileName);
+            });
+
+        function exportOffering(offering) {
+            return [
+                vm.getProductDisplayName(offering.product),
+                vm.selectedLastYear(offering),
+                offering.product.vendor.name,
+                offering.product.funded || '',
+                getSelectionPrice(offering)
+            ];
+        }
+
+        function getSelectionPrice(offering) {
+            var price = '';
+            if (offering.selection) {
+                price = offering.selection.price;
+            }
+            return price;
+        }
+    }
 }
