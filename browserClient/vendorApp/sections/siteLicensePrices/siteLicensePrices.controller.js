@@ -165,9 +165,6 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
             var offeringCell = $('<div class="column offering">')
                 .addClass(product.id)
                 .append(cellContents)
-                .on('click', function() {
-                    $(this).children().first().focus();
-                })
                 .data('libraryId', library.id)
                 .data('fte', library.fte)
                 .data('productId', product.id);
@@ -276,7 +273,10 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
     }
 
     function offeringForProductAndLibrary( productId, libraryId ){
-        return vm.offeringsForLibraryByProduct[productId][libraryId] || null;
+        if (vm.offeringsForLibraryByProduct[productId] && vm.offeringsForLibraryByProduct[productId][libraryId]) {
+            return vm.offeringsForLibraryByProduct[productId][libraryId];
+        }
+        return null;
     }
 
     function getOfferingForCellContents(cellContents){
