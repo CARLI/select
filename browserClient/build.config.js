@@ -78,6 +78,7 @@ module.exports = {
         ],
         annotated_js_file: compile_dir + '/common/common.annotated.js',
         annotated_iife_js_file: compile_dir + '/common/common.annotated.iife.js',
+        favicons: 'common/favicons/*',
         sass_all: 'common/**/*.scss'
     },
 
@@ -86,8 +87,9 @@ module.exports = {
             'carliApp/**/*',
             '!carliApp/**/*.spec.js'
         ],
-        all_html: [
-            'carliApp/**/*.html'
+        all_html_and_images: [
+            'carliApp/**/*.html',
+            'carliApp/**/*.png'
         ],
         all_js: [
             'carliApp/*.js',
@@ -108,8 +110,9 @@ module.exports = {
             'libraryApp/**/*',
             '!libraryApp/**/*.spec.js'
         ],
-        all_html: [
-            'libraryApp/**/*.html'
+        all_html_and_images: [
+            'libraryApp/**/*.html',
+            'libraryApp/**/*.png'
         ],
         all_js: [
             'libraryApp/*.js',
@@ -130,8 +133,9 @@ module.exports = {
             'vendorApp/**/*',
             '!vendorApp/**/*.spec.js'
         ],
-        all_html: [
-            'vendorApp/**/*.html'
+        all_html_and_images: [
+            'vendorApp/**/*.html',
+            'vendorApp/**/*.png'
         ],
         all_js: [
             'vendorApp/*.js',
@@ -139,7 +143,7 @@ module.exports = {
             '!vendorApp/**/*.spec.js'
         ],
         build_dir: build_dir + '/vendorApp/',
-        compile_dir: compile_dir + '/vendorApp',
+        compile_dir: compile_dir + '/vendorApp/',
         sass_main: 'vendorApp/styles/app.scss',
         sass_all: 'vendorApp/**/*.scss',
         test_js: [
