@@ -352,10 +352,12 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
         var fileName = vm.cycle.name + ' Product List.csv';
         var exportHeaders = [
             'Product',
-            'Selected Last Year',
+            'Last Year\'s Selected License',
+            'Last Year\'s Selected Price',
             'Vendor',
             'CARLI Funded',
-            'Selected'
+            'Selected License',
+            'Selected Price'
         ];
 
         var exportData = vm.offerings.map(exportOffering);
@@ -366,15 +368,25 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
             });
 
         function exportOffering(offering) {
+            var lastYearsSelection = vm.selectedLastYear(offering);
             return [
                 vm.getProductDisplayName(offering.product),
-                vm.selectedLastYear(offering),
+                lastYearsSelection ? lastYearsSelection.users : '',
+                lastYearsSelection ? lastYearsSelection.price : '',
                 offering.product.vendor.name,
                 offering.product.funded || '',
+                getSelectionUsers(offering),
                 getSelectionPrice(offering)
             ];
         }
 
+        function getSelectionUsers(offering) {
+            var price = '';
+            if (offering.selection) {
+                price = offering.selection.users;
+            }
+            return price;
+        }
         function getSelectionPrice(offering) {
             var price = '';
             if (offering.selection) {
