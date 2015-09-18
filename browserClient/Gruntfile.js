@@ -204,21 +204,33 @@ module.exports = function ( grunt ) {
             compile: {
                 files: [
                     {
-                        src: user_config.carli_app.all_html,
+                        src: user_config.carli_app.all_html_and_images,
                         dest: user_config.compile_dir,
                         expand: true
                     },
                     {
-                        src: user_config.library_app.all_html,
+                        src: user_config.library_app.all_html_and_images,
                         dest: user_config.compile_dir,
                         expand: true
                     },
                     {
-                        src: user_config.vendor_app.all_html,
+                        src: user_config.vendor_app.all_html_and_images,
                         dest: user_config.compile_dir,
                         expand: true
+                    },
+                    //favicons
+                    {
+                        src: user_config.common_components.favicons,
+                        dest: user_config.carli_app.compile_dir
+                    },
+                    {
+                        src: user_config.common_components.favicons,
+                        dest: user_config.library_app.compile_dir
+                    },
+                    {
+                        src: user_config.common_components.favicons,
+                        dest: user_config.vendor_app.compile_dir
                     }
-                    //TODO: favicons
                 ]
             }
         },
