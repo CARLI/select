@@ -37,13 +37,44 @@ module.exports = function ( grunt ) {
                     src: 'vendorAppModule.js',
                     dest: user_config.vendor_app.build_dir + user_config.logic_files.build
                 }]
+            },
+            compile: {
+                files: [
+                    {
+                        src: 'carliAppModule.js',
+                        dest: user_config.browserify_file('carli')
+                    },
+                    {
+                        src: 'libraryAppModule.js',
+                        dest: user_config.browserify_file('library')
+                    },
+                    {
+                        src: 'vendorAppModule.js',
+                        dest: user_config.browserify_file('vendor')
+                    }
+                ]
             }
         },
 
-        clean: [ user_config.build_dir, user_config.compile_dir ],
-
-        concat: {
-            /* TODO for each app */
+        clean: {
+            build: [user_config.build_dir, user_config.compile_dir ],
+            compileCleanup: [
+                user_config.processed_sass_file('carli'),
+                user_config.processed_sass_file('library'),
+                user_config.processed_sass_file('vendor'),
+                user_config.browserify_file('carli'),
+                user_config.browserify_file('library'),
+                user_config.browserify_file('vendor'),
+                user_config.annotated_js_file('carli'),
+                user_config.annotated_js_file('library'),
+                user_config.annotated_js_file('vendor'),
+                user_config.annotated_iife_js_file('carli'),
+                user_config.annotated_iife_js_file('library'),
+                user_config.annotated_iife_js_file('vendor'),
+                user_config.compile_dir + '/common/',
+                user_config.common_components.annotated_js_file,
+                user_config.common_components.annotated_iife_js_file
+            ]
         },
 
         connect: {
@@ -93,6 +124,23 @@ module.exports = function ( grunt ) {
                             optBase.map(function(path){ return connect.static(path); }));
                     }
                 }
+            },
+
+            serveCompiledCarli: {
+                options: {
+                    base: 'compile/',
+                    open: 'http://staff.carli.local:8080',
+                    port: 8000,
+                    keepalive: true,
+                    livereload: false,
+                    middleware: function (connect, options) {
+                        var optBase = (typeof options.base === 'string') ? [options.base] : options.base;
+                        var modRewrite = require('connect-modrewrite');
+
+                        return [modRewrite(['!(\\..+)$ /carliApp/index.html [L]'])].concat(
+                            optBase.map(function(path){ return connect.static(path); }));
+                    }
+                }
             }
         },
 
@@ -113,9 +161,16 @@ module.exports = function ( grunt ) {
             },
             carli_app_bower_files: {
                 files: [{
-                    src: user_config.bower_files,
-                    dest: user_config.carli_app.build_dir
-                }]
+                        src: user_config.bower_files,
+                        dest: user_config.carli_app.build_dir
+                    },
+                    {
+                        src: user_config.bower_fonts,
+                        dest: user_config.carli_app.build_dir + '/fonts/',
+                        expand: true,
+                        flatten: true
+                    }
+                ]
             },
 
             library_app_common_components: {
@@ -134,9 +189,16 @@ module.exports = function ( grunt ) {
             },
             library_app_bower_files: {
                 files: [{
-                    src: user_config.bower_files,
-                    dest: user_config.library_app.build_dir
-                }]
+                        src: user_config.bower_files,
+                        dest: user_config.library_app.build_dir
+                    },
+                    {
+                        src: user_config.bower_fonts,
+                        dest: user_config.library_app.build_dir + '/fonts/',
+                        expand: true,
+                        flatten: true
+                    }
+                ]
             },
 
             vendor_app_common_components: {
@@ -154,10 +216,89 @@ module.exports = function ( grunt ) {
                 }]
             },
             vendor_app_bower_files: {
-                files: [{
-                    src: user_config.bower_files,
-                    dest: user_config.vendor_app.build_dir
-                }]
+                files: [
+                    {
+                        src: user_config.bower_files,
+                        dest: user_config.vendor_app.build_dir
+                    },
+                    {
+                        src: user_config.bower_fonts,
+                        dest: user_config.vendor_app.build_dir + '/fonts/',
+                        expand: true,
+                        flatten: true
+                    }
+                ]
+            },
+
+            compile: {
+                files: [
+                    {
+                        src: user_config.carli_app.all_html_and_images,
+                        dest: user_config.compile_dir,
+                        expand: true
+                    },
+                    {
+                        src: user_config.library_app.all_html_and_images,
+                        dest: user_config.compile_dir,
+                        expand: true
+                    },
+                    {
+                        src: user_config.vendor_app.all_html_and_images,
+                        dest: user_config.compile_dir,
+                        expand: true
+                    },
+                    //favicons
+                    {
+                        src: user_config.common_components.favicons,
+                        dest: user_config.carli_app.compile_dir
+                    },
+                    {
+                        src: user_config.common_components.favicons,
+                        dest: user_config.library_app.compile_dir
+                    },
+                    {
+                        src: user_config.common_components.favicons,
+                        dest: user_config.vendor_app.compile_dir
+                    },
+                    //fonts
+                    {
+                        src: user_config.bower_fonts,
+                        dest: user_config.carli_app.compile_dir + '/fonts/',
+                        expand: true,
+                        flatten: true
+                    },
+                    {
+                        src: user_config.bower_fonts,
+                        dest: user_config.library_app.compile_dir + '/fonts/',
+                        expand: true,
+                        flatten: true
+                    },
+                    {
+                        src: user_config.bower_fonts,
+                        dest: user_config.vendor_app.compile_dir + '/fonts/',
+                        expand: true,
+                        flatten: true
+                    }
+                ]
+            }
+        },
+
+        cssmin: {
+            compile: {
+                files: [
+                    {
+                        src: [user_config.processed_sass_file('carli'), user_config.bower_css],
+                        dest: user_config.compiled_css_file('carli')
+                    },
+                    {
+                        src: [user_config.processed_sass_file('library'), user_config.bower_css],
+                        dest: user_config.compiled_css_file('library')
+                    },
+                    {
+                        src: [user_config.processed_sass_file('vendor'), user_config.bower_css],
+                        dest: user_config.compiled_css_file('vendor')
+                    }
+                ]
             }
         },
 
@@ -215,15 +356,26 @@ module.exports = function ( grunt ) {
                         '**/*.js'
                     ]
                 }]
+            }
+        },
+
+        indexCompile: {
+            carli: {
+                options: {
+                    base: 'carli'
+                }
             },
 
-            /**
-             * When it is time to have a completely compiled application, we can
-             * alter the above to include only a single JavaScript and a single CSS
-             * file. Now we're back!
-             */
-            compile: {
-                /* TODO: for each app */
+            library: {
+                options: {
+                    base: 'library'
+                }
+            },
+
+            vendor: {
+                options: {
+                    base: 'vendor'
+                }
             }
         },
 
@@ -315,7 +467,22 @@ module.exports = function ( grunt ) {
         },
 
         ngAnnotate: {
-            /* TODO for compile task for each app */
+            common: {
+                src: user_config.common_components.all_js,
+                dest: user_config.common_components.annotated_js_file
+            },
+            carli: {
+                src: user_config.carli_app.all_js,
+                dest: user_config.annotated_js_file('carli')
+            },
+            library: {
+                src: user_config.carli_app.all_js,
+                dest: user_config.annotated_js_file('library')
+            },
+            vendor: {
+                src: user_config.carli_app.all_js,
+                dest: user_config.annotated_js_file('vendor')
+            }
         },
 
         ngdocs: {
@@ -368,11 +535,98 @@ module.exports = function ( grunt ) {
                     expand: true,
                     flatten: true
                 }]
+            },
+
+            compile: {
+                options: {
+                    sourcemap: 'none',
+                    style: 'compressed'
+                },
+                files: [
+                    {
+                        src: user_config.carli_app.sass_main,
+                        dest: user_config.processed_sass_file('carli'),
+                        ext: '.css',
+                        flatten: true
+                    },
+                    {
+                        src: user_config.library_app.sass_main,
+                        dest: user_config.processed_sass_file('library'),
+                        ext: '.css',
+                        flatten: true
+                    },
+                    {
+                        src: user_config.vendor_app.sass_main,
+                        dest: user_config.processed_sass_file('vendor'),
+                        ext: '.css',
+                        flatten: true
+                    }
+                ]
             }
         },
 
         uglify: {
-            /* TODO for compile task for each app */
+            compile: {
+                options: {
+                    compress: false,
+                    mangle: false
+                },
+                files: [
+                    {
+                        src: [
+                            user_config.bower_js,
+                            user_config.browserify_file('carli'),
+                            user_config.common_components.annotated_iife_js_file,
+                            user_config.annotated_iife_js_file('carli')
+                        ],
+                        dest: user_config.compiled_js_file('carli')
+                    },
+                    {
+                        src: [
+                            user_config.bower_js,
+                            user_config.browserify_file('library'),
+                            user_config.common_components.annotated_iife_js_file,
+                            user_config.annotated_iife_js_file('library')
+                        ],
+                        dest: user_config.compiled_js_file('library')
+                    },
+                    {
+                        src: [
+                            user_config.bower_js,
+                            user_config.browserify_file('vendor'),
+                            user_config.common_components.annotated_iife_js_file,
+                            user_config.annotated_iife_js_file('vendor')
+                        ],
+                        dest: user_config.compiled_js_file('vendor')
+                    }
+                ]
+            },
+            wrapInIIFE: {
+                options: {
+                    compress: false,
+                    mangle: false,
+                    banner: '(function ( window, angular, undefined ) {',
+                    footer: '})( window, window.angular );'
+                },
+                files: [
+                    {
+                        src: [user_config.common_components.annotated_js_file],
+                        dest: user_config.common_components.annotated_iife_js_file
+                    },
+                    {
+                        src: [user_config.annotated_js_file('carli')],
+                        dest: user_config.annotated_iife_js_file('carli')
+                    },
+                    {
+                        src: [user_config.annotated_js_file('library')],
+                        dest: user_config.annotated_iife_js_file('library')
+                    },
+                    {
+                        src: [user_config.annotated_js_file('vendor')],
+                        dest: user_config.annotated_iife_js_file('vendor')
+                    }
+                ]
+            }
         },
 
         watch: {
@@ -445,7 +699,8 @@ module.exports = function ( grunt ) {
                 return grunt.template.process( contents, {
                     data: {
                         scripts: jsFiles,
-                        styles: cssFiles
+                        styles: cssFiles,
+                        appCss: options.base + '/app.css'
                     }
                 });
             }
@@ -472,8 +727,31 @@ module.exports = function ( grunt ) {
         }
     });
 
+    grunt.registerMultiTask( 'indexCompile', 'Process index.html template using compiled js and css', function () {
+        var options = this.options();
+        var app = options.base;
+
+        var indexFile = app + 'App/index.html';
+        var targetIndexFile = user_config.compiled_index_file(app);
+
+        var compiled_js = user_config.compiled_js_file(app).replace(user_config.compile_dir+'/', '');
+        var complied_css = user_config.compiled_css_file(app).replace(user_config.compile_dir+'/', '');
+
+        grunt.file.copy(indexFile, targetIndexFile, {
+            process: function( contents, path ) {
+                return grunt.template.process( contents, {
+                    data: {
+                        scripts: [compiled_js],
+                        styles: [],
+                        appCss: complied_css
+                    }
+                });
+            }
+        });
+    });
+
     grunt.registerTask( 'build', [
-        'clean',
+        'clean:build',
         'build:carli',
         'build:library',
         'build:vendor'
@@ -530,7 +808,6 @@ module.exports = function ( grunt ) {
      * This does not require the dev server to be running
      */
     grunt.registerTask( 'test:unit', [
-        'clean',
         'build',
         'karma:carli',
         'karma:library',
@@ -552,19 +829,34 @@ module.exports = function ( grunt ) {
         'watch'
     ]);
 
+    grunt.registerTask( 'serveCompiled', [
+        'compile',
+        'connect:serveCompiledCarli'
+    ]);
+
+    grunt.registerTask( 'browserifyCompile', [
+        'jsenv:browser',
+        'browserify:compile',
+        'jsenv:node'
+    ]);
+
     /**
      * The `compile` task gets your app ready for deployment by concatenating and
      * minifying your code.
      */
     grunt.registerTask( 'compile', [
-        'clean',
-        'build',
+        'clean:build',
+        'copy:compile',
+        'sass:compile',
+        'cssmin:compile',
+        'browserifyCompile',
         'ngAnnotate',
-        'ngdocs',
-        'concat:compile_js',
-        'uglify',
-        'index:compile'
+        'uglify:wrapInIIFE',
+        'uglify:compile',
+        'indexCompile',
+        'clean:compileCleanup'
     ]);
+
     /**
      * The default task is to build and compile.
      */

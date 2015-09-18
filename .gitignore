@@ -42,7 +42,7 @@ bower_components
 #Builds
 artifacts
 build
-dist
+compile
 .sass-cache
 # Except docker/build, that's not a build dir, that's an image named "build"
 !docker/build

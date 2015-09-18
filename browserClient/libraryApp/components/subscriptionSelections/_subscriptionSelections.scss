@@ -15,12 +15,18 @@ subscription-selections {
             padding-left: 0;
         }
 
+        .column.vendor {
+            color: black;
+        }
+
         .column.su {
+            color: black;
             flex: none;
             width: $su-column-width;
         }
 
         .column.review-cost {
+            color: black;
             flex: none;
             width: $cost-column-width;
         }
