@@ -1,5 +1,6 @@
 angular.module('library.subscriptionSelections',[
     'common.collapsible',
+    'common.csvExport',
     'common.modalDialog',
     'common.subscriptionHistoryTable',
     'library.licenseList',

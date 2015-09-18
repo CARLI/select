@@ -32,15 +32,7 @@
     <body>
         <header library-header role="banner"></header>
 
-        <div ng-if="appState === 'pendingUser'">
-            <!-- user-lookup></user-lookup -->
-            <alerts></alerts>
-            <main role="main">
-                <div ng-view role="application"></div>
-            </main>
-        </div>
-
-        <div ng-if="appState === 'ready'">
+        <div>
             <nav ng-if="isLoggedIn" nav-bar role="navigation" aria-label="main navigation"></nav>
             <alerts></alerts>
             <main role="main">

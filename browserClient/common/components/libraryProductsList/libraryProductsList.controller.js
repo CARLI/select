@@ -1,7 +1,7 @@
 angular.module('common.libraryProductsList')
 .controller('libraryProductsListController', libraryProductsListController);
 
-function libraryProductsListController( $q, controllerBaseService, cycleService, productService ){
+function libraryProductsListController( $q, controllerBaseService, csvExportService, cycleService, productService ){
     var vm = this;
 
     vm.loadingPromise = null;
@@ -16,6 +16,7 @@ function libraryProductsListController( $q, controllerBaseService, cycleService,
 
     vm.selectionTotal = selectionTotal;
     vm.getProductDisplayName = productService.getProductDisplayName;
+    vm.exportProductList = exportProductList;
 
     controllerBaseService.addSortable(vm, vm.sortOptions.productName);
     activate();
@@ -39,5 +40,33 @@ function libraryProductsListController( $q, controllerBaseService, cycleService,
         return total;
     }
 
+    function exportProductList() {
+        var fileName = vm.cycle.name + ' Product List.csv';
+        var exportHeaders = [
+            'Product',
+            'Vendor',
+            'License Agreement',
+            'Comments',
+            'S.U.',
+            'Cost'
+        ];
 
+        var exportData = vm.selectedOfferings.map(exportOffering);
+
+        return csvExportService.exportToCsv(exportData, exportHeaders)
+            .then(function (csvString) {
+                return csvExportService.browserDownloadCsv(csvString, fileName);
+            });
+
+        function exportOffering(offering) {
+            return [
+                vm.getProductDisplayName(offering.product),
+                offering.product.vendor.name,
+                offering.product.license.name,
+                offering.libraryComments,
+                offering.selection.users,
+                offering.selection.price
+            ];
+        }
+    }
 }
