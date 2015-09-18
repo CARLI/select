@@ -9,8 +9,8 @@ cd `git rev-parse --show-toplevel`
 
 initialize
 
-buildBrowserClients || fail "Failed to build browser clients"
-archiveBrowserClients || fail "Failed to create browser clients archive"
+buildCompiledBrowserClients || fail "Failed to build browser clients"
+archiveCompiledBrowserClients || fail "Failed to create browser clients archive"
 archiveMiddleware || fail "Failed to create middleware archive"
 
 publishBrowserClients || fail "Failed to publish browser clients"
