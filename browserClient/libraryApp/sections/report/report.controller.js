@@ -19,7 +19,7 @@ function reportController( $q, $filter, csvExportService, cycleService, productS
     }
 
     function initDataForControls(){
-        vm.loadingPromise = cycleService.list()
+        vm.loadingPromise = cycleService.listClosedAndArchivedCycles()
             .then(function(cycleList){
                 vm.cycles = cycleList;
             });
