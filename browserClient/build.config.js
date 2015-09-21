@@ -93,8 +93,9 @@ module.exports = {
             'carliApp/**/*',
             '!carliApp/**/*.spec.js'
         ],
-        all_html_and_images: [
+        all_web_files: [
             'carliApp/**/*.html',
+            'carliApp/**/*.handlebars',
             'carliApp/**/*.png'
         ],
         all_js: [
@@ -116,8 +117,9 @@ module.exports = {
             'libraryApp/**/*',
             '!libraryApp/**/*.spec.js'
         ],
-        all_html_and_images: [
+        all_web_files: [
             'libraryApp/**/*.html',
+            'libraryApp/**/*.handlebars',
             'libraryApp/**/*.png'
         ],
         all_js: [
@@ -139,8 +141,9 @@ module.exports = {
             'vendorApp/**/*',
             '!vendorApp/**/*.spec.js'
         ],
-        all_html_and_images: [
+        all_web_files: [
             'vendorApp/**/*.html',
+            'vendorApp/**/*.handlebars',
             'vendorApp/**/*.png'
         ],
         all_js: [

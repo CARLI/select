@@ -231,19 +231,20 @@ module.exports = function ( grunt ) {
             },
 
             compile: {
+                //non-JS files
                 files: [
                     {
-                        src: user_config.carli_app.all_html_and_images,
+                        src: user_config.carli_app.all_web_files,
                         dest: user_config.compile_dir,
                         expand: true
                     },
                     {
-                        src: user_config.library_app.all_html_and_images,
+                        src: user_config.library_app.all_web_files,
                         dest: user_config.compile_dir,
                         expand: true
                     },
                     {
-                        src: user_config.vendor_app.all_html_and_images,
+                        src: user_config.vendor_app.all_web_files,
                         dest: user_config.compile_dir,
                         expand: true
                     },
