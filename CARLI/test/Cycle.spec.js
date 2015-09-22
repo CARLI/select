@@ -1,9 +1,9 @@
 var chai = require( 'chai' );
 var config = require('../../config');
-var CycleRepository = require( '../Entity/CycleRepository' );
+var cycleRepository = require( '../Entity/CycleRepository' );
 var Entity = require('../Entity');
 var expect = chai.expect;
-var ProductRepository = require( '../Entity/ProductRepository' );
+var productRepository = require( '../Entity/ProductRepository' );
 var request = require('request');
 var storeOptions = config.storeOptions;
 var testUtils = require('./utils');
@@ -35,6 +35,18 @@ function invalidCycleData() {
 
 test.run('Cycle', validCycleData, invalidCycleData);
 
+describe('Cycle Status string constants', function(){
+    it('should export variables', function() {
+        expect(cycleRepository.CYCLE_STATUS_DATA_PROCESSING).to.not.be.undefined;
+        expect(cycleRepository.CYCLE_STATUS_EDITING_PRODUCT_LIST).to.be.ok;
+        expect(cycleRepository.CYCLE_STATUS_VENDOR_PRICING).to.be.ok;
+        expect(cycleRepository.CYCLE_STATUS_CHECKING_PRICES).to.be.ok;
+        expect(cycleRepository.CYCLE_STATUS_OPEN_TO_LIBRARIES).to.be.ok;
+        expect(cycleRepository.CYCLE_STATUS_CLOSED).to.be.ok;
+        expect(cycleRepository.CYCLE_STATUS_ARCHIVED).to.be.ok;
+    });
+});
+
 describe('Additional Repository Functions', function() {
     describe('createCycle', function () {
         //'it' refers to the test.run() block above. At least one of those should have created a cycle DB
@@ -45,7 +57,7 @@ describe('Additional Repository Functions', function() {
             });
         });
         it ('should have saved the databaseName to the cycle document', function () {
-            return CycleRepository.list().then(function(cycleList) {
+            return cycleRepository.list().then(function(cycleList) {
                 function allCyclesHaveDatabaseName(cycles) {
                     var result = true;
                     cycles.forEach(function (cycle) {
@@ -62,7 +74,7 @@ describe('Additional Repository Functions', function() {
 
     describe('listActiveCycles View', function () {
         it('should have a listActiveCycles method', function(){
-            expect(CycleRepository.listActiveCycles).to.be.a('function');
+            expect(cycleRepository.listActiveCycles).to.be.a('function');
         });
 
         var cycle1 = validCycleData();
@@ -75,15 +87,15 @@ describe('Additional Repository Functions', function() {
         /* This test would depend on starting with no cycles in the database, which is not currently the case */
         /*
          function(){
-         return CycleRepository.create( cycle1 )
+         return cycleRepository.create( cycle1 )
          .then( function() {
-         return CycleRepository.create( cycle2 );
+         return cycleRepository.create( cycle2 );
          })
          .then (function () {
-         return CycleRepository.create( cycle3 );
+         return cycleRepository.create( cycle3 );
          })
          .then(function(){
-         return CycleRepository.listActiveCycles();
+         return cycleRepository.listActiveCycles();
          })
          .then(function ( cycleList ) {
          return expect(cycleList).to.be.an('array').and.have.length(2);
@@ -93,7 +105,7 @@ describe('Additional Repository Functions', function() {
 
     describe('listPastFourCyclesMatchingCycle', function() {
         it('should be a function', function(){
-            expect(CycleRepository.listPastFourCyclesMatchingCycle).to.be.a('function');
+            expect(cycleRepository.listPastFourCyclesMatchingCycle).to.be.a('function');
         });
 
         it('should return up to four past cycles that match the type of the cycle passed in', function(){
@@ -111,7 +123,7 @@ describe('Additional Repository Functions', function() {
 
             return setupTestData(pastCycles)
                 .then(function(){
-                    return CycleRepository.listPastFourCyclesMatchingCycle(testCycle);
+                    return cycleRepository.listPastFourCyclesMatchingCycle(testCycle);
                 })
                 .then(function(listResults){
                     return Q.all([
@@ -147,6 +159,18 @@ describe('Additional Repository Functions', function() {
             return Q.all( testCycles.map(cycleEntityRepo.create));
         }
     });
+
+    describe('the getStatusLabel repository function', function(){
+        it('should be a function', function(){
+            expect(cycleRepository.getStatusLabel).to.be.a('function');
+        });
+
+        it('should return the text status label for a cycle status value', function(){
+            expect(cycleRepository.getStatusLabel(cycleRepository.CYCLE_STATUS_DATA_PROCESSING)).to.equal('Cycle Data Processing');
+            expect(cycleRepository.getStatusLabel(cycleRepository.CYCLE_STATUS_CHECKING_PRICES)).to.equal('CARLI Checking Prices');
+            expect(cycleRepository.getStatusLabel(cycleRepository.CYCLE_STATUS_ARCHIVED)).to.equal('Archived');
+        });
+    });
 });
 
 describe('Adding functions to Cycle instances', function() {
@@ -154,9 +178,9 @@ describe('Adding functions to Cycle instances', function() {
     it('should add functions to cycle instances', function () {
         var cycle = validCycleData();
 
-        return CycleRepository.create(cycle)
+        return cycleRepository.create(cycle)
             .then(function (cycleId) {
-                return CycleRepository.load(cycleId);
+                return cycleRepository.load(cycleId);
             })
             .then(function (loadedCycle) {
                 return Q.all([
@@ -172,9 +196,9 @@ describe('Adding functions to Cycle instances', function() {
     it('should add a getStatusLabel method to instances of Cycle', function () {
         var cycle = validCycleData();
 
-        return CycleRepository.create(cycle)
+        return cycleRepository.create(cycle)
             .then(function (cycleId) {
-                return CycleRepository.load(cycleId);
+                return cycleRepository.load(cycleId);
             })
             .then(function (loadedCycle) {
                 return expect(loadedCycle.getStatusLabel).to.be.a('function');
@@ -185,9 +209,9 @@ describe('Adding functions to Cycle instances', function() {
         it('should return the label for the cycles current status', function () {
             var cycle = validCycleData();
 
-            return CycleRepository.create(cycle)
+            return cycleRepository.create(cycle)
                 .then(function (cycleId) {
-                    return CycleRepository.load(cycleId);
+                    return cycleRepository.load(cycleId);
                 })
                 .then(function (loadedCycle) {
                     return expect(loadedCycle.getStatusLabel()).to.equal('Cycle Data Processing');
@@ -199,9 +223,9 @@ describe('Adding functions to Cycle instances', function() {
             cycle.status = 2;
             cycle.isArchived = true;
 
-            return CycleRepository.create(cycle)
+            return cycleRepository.create(cycle)
                 .then(function (cycleId) {
-                    return CycleRepository.load(cycleId);
+                    return cycleRepository.load(cycleId);
                 })
                 .then(function (loadedCycle) {
                     return expect(loadedCycle.getStatusLabel()).to.equal('Archived');
@@ -212,9 +236,9 @@ describe('Adding functions to Cycle instances', function() {
     it('should add a proceedToNextStep method to instances of Cycle', function(){
         var cycle = validCycleData();
 
-        return CycleRepository.create(cycle)
+        return cycleRepository.create(cycle)
             .then(function (cycleId) {
-                return CycleRepository.load(cycleId);
+                return cycleRepository.load(cycleId);
             })
             .then(function (loadedCycle) {
                 return expect(loadedCycle.proceedToNextStep).to.be.a('function');
@@ -225,9 +249,9 @@ describe('Adding functions to Cycle instances', function() {
         it('should increment the status for the cycle', function () {
             var cycle = validCycleData();
 
-            return CycleRepository.create(cycle)
+            return cycleRepository.create(cycle)
                 .then(function (cycleId) {
-                    return CycleRepository.load(cycleId);
+                    return cycleRepository.load(cycleId);
                 })
                 .then(function (loadedCycle) {
                     loadedCycle.proceedToNextStep();
@@ -239,9 +263,9 @@ describe('Adding functions to Cycle instances', function() {
             var cycle = validCycleData();
             cycle.status = 6;
 
-            return CycleRepository.create(cycle)
+            return cycleRepository.create(cycle)
                 .then(function (cycleId) {
-                    return CycleRepository.load(cycleId);
+                    return cycleRepository.load(cycleId);
                 })
                 .then(function (loadedCycle) {
                     loadedCycle.proceedToNextStep();
@@ -253,9 +277,9 @@ describe('Adding functions to Cycle instances', function() {
     it('should add a returnToPreviousStep method to instances of Cycle', function(){
         var cycle = validCycleData();
 
-        return CycleRepository.create(cycle)
+        return cycleRepository.create(cycle)
             .then(function (cycleId) {
-                return CycleRepository.load(cycleId);
+                return cycleRepository.load(cycleId);
             })
             .then(function (loadedCycle) {
                 return expect(loadedCycle.returnToPreviousStep).to.be.a('function');
@@ -267,9 +291,9 @@ describe('Adding functions to Cycle instances', function() {
             var cycle = validCycleData();
             cycle.status = 4;
 
-            return CycleRepository.create(cycle)
+            return cycleRepository.create(cycle)
                 .then(function (cycleId) {
-                    return CycleRepository.load(cycleId);
+                    return cycleRepository.load(cycleId);
                 })
                 .then(function (loadedCycle) {
                     loadedCycle.returnToPreviousStep();
@@ -280,9 +304,9 @@ describe('Adding functions to Cycle instances', function() {
         it('should not decrement the status less than 0', function () {
             var cycle = validCycleData();
 
-            return CycleRepository.create(cycle)
+            return cycleRepository.create(cycle)
                 .then(function (cycleId) {
-                    return CycleRepository.load(cycleId);
+                    return cycleRepository.load(cycleId);
                 })
                 .then(function (loadedCycle) {
                     loadedCycle.returnToPreviousStep();
@@ -295,8 +319,8 @@ describe('Adding functions to Cycle instances', function() {
         it('should return a database name', function () {
             var cycle = validCycleData();
 
-            return CycleRepository.create(cycle)
-                .then(CycleRepository.load)
+            return cycleRepository.create(cycle)
+                .then(cycleRepository.load)
                 .then(function (loadedCycle) {
                     return expect(loadedCycle.getDatabaseName()).to.equal(loadedCycle.databaseName);
                 });
@@ -309,24 +333,24 @@ describe('the isOpenToLibraries method', function(){
         var testCycle = validCycleData();
         testCycle.status = 4;
 
-        expect(CycleRepository.isOpenToLibraries(testCycle)).to.be.true;
+        expect(cycleRepository.isOpenToLibraries(testCycle)).to.be.true;
     });
 
     it('should return false for any other status', function(){
         var testCycle = validCycleData();
-        expect(CycleRepository.isOpenToLibraries(testCycle)).to.be.false;
+        expect(cycleRepository.isOpenToLibraries(testCycle)).to.be.false;
 
         testCycle.status = 1;
-        expect(CycleRepository.isOpenToLibraries(testCycle)).to.be.false;
+        expect(cycleRepository.isOpenToLibraries(testCycle)).to.be.false;
 
         testCycle.status = 2;
-        expect(CycleRepository.isOpenToLibraries(testCycle)).to.be.false;
+        expect(cycleRepository.isOpenToLibraries(testCycle)).to.be.false;
 
         testCycle.status = 3;
-        expect(CycleRepository.isOpenToLibraries(testCycle)).to.be.false;
+        expect(cycleRepository.isOpenToLibraries(testCycle)).to.be.false;
 
         testCycle.status = 5;
-        expect(CycleRepository.isOpenToLibraries(testCycle)).to.be.false;
+        expect(cycleRepository.isOpenToLibraries(testCycle)).to.be.false;
     });
 });
 
@@ -335,24 +359,24 @@ describe('the isClosed method', function(){
         var testCycle = validCycleData();
         testCycle.status = 5;
 
-        expect(CycleRepository.isClosed(testCycle)).to.be.true;
+        expect(cycleRepository.isClosed(testCycle)).to.be.true;
     });
 
     it('should return false for any other status', function(){
         var testCycle = validCycleData();
-        expect(CycleRepository.isClosed(testCycle)).to.be.false;
+        expect(cycleRepository.isClosed(testCycle)).to.be.false;
 
         testCycle.status = 1;
-        expect(CycleRepository.isClosed(testCycle)).to.be.false;
+        expect(cycleRepository.isClosed(testCycle)).to.be.false;
 
         testCycle.status = 2;
-        expect(CycleRepository.isClosed(testCycle)).to.be.false;
+        expect(cycleRepository.isClosed(testCycle)).to.be.false;
 
         testCycle.status = 3;
-        expect(CycleRepository.isClosed(testCycle)).to.be.false;
+        expect(cycleRepository.isClosed(testCycle)).to.be.false;
 
         testCycle.status = 4;
-        expect(CycleRepository.isClosed(testCycle)).to.be.false;
+        expect(cycleRepository.isClosed(testCycle)).to.be.false;
     });
 });
 
@@ -360,24 +384,24 @@ describe('the productsAreAvailable method', function(){
     it('should return true if today is equal to after the cycle end date', function(){
         var testCycle = validCycleData();
         testCycle.productsAvailableDate = '2000-01-01';
-        expect(CycleRepository.productsAreAvailable(testCycle)).to.be.true;
+        expect(cycleRepository.productsAreAvailable(testCycle)).to.be.true;
     });
 
     it('should return false if today is before the end date', function(){
         var testCycle = validCycleData();
         testCycle.productsAvailableDate = '3000-11-31';
-        expect(CycleRepository.productsAreAvailable(testCycle)).to.be.false;
+        expect(cycleRepository.productsAreAvailable(testCycle)).to.be.false;
     });
 });
 
 describe('the fiscalYearHasStartedForDate method', function(){
     it('should return false if the date is before the start of the fiscal year', function(){
         var testDate = '2010-05-01';
-        expect(CycleRepository.fiscalYearHasStartedForDate(testDate)).to.equal(false);
+        expect(cycleRepository.fiscalYearHasStartedForDate(testDate)).to.equal(false);
     });
 
     it('should return true if the date is on or after the start of the fiscal year', function(){
         var testDate = '2010-07-15';
-        expect(CycleRepository.fiscalYearHasStartedForDate(testDate)).to.equal(true);
+        expect(cycleRepository.fiscalYearHasStartedForDate(testDate)).to.equal(true);
     });
 });

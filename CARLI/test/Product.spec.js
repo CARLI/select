@@ -1,19 +1,18 @@
-var chai   = require( 'chai' )
-    , config = require('../../config')
-    , expect = chai.expect
-    , uuid   = require( 'node-uuid' )
-    , chaiAsPromised = require( 'chai-as-promised' )
-    , moment = require('moment')
-    , test = require( './Entity/EntityInterface.spec' )
-    , CycleRepository = require('../Entity/CycleRepository' )
-    , ProductRepository = require('../Entity/ProductRepository' )
-    , VendorRepository = require('../Entity/VendorRepository' )
-    , LicenseRepository = require('../Entity/LicenseRepository' )
-    , OfferingRepository = require('../Entity/OfferingRepository' )
-    , testUtils = require('./utils')
-    , _ = require('lodash')
-    , Q = require('q')
-    ;
+var chai = require('chai');
+var chaiAsPromised = require('chai-as-promised');
+var config = require('../../config');
+var cycleRepository = require('../Entity/CycleRepository');
+var expect = chai.expect;
+var LicenseRepository = require('../Entity/LicenseRepository');
+var moment = require('moment');
+var offeringRepository = require('../Entity/OfferingRepository');
+var productRepository = require('../Entity/ProductRepository');
+var Q = require('q');
+var test = require('./Entity/EntityInterface.spec');
+var testUtils = require('./utils');
+var uuid = require('node-uuid');
+var vendorRepository = require('../Entity/VendorRepository');
+var _ = require('lodash');
 
 chai.use( chaiAsPromised );
 
@@ -67,8 +66,8 @@ function unavailableOneTimePurchaseProduct() {
 
 describe('Run the product tests', function () {
     it ('runs product tests', function (done) {
-        return CycleRepository.create(testCycleData())
-            .then(CycleRepository.load)
+        return cycleRepository.create(testCycleData())
+            .then(cycleRepository.load)
             .then(function (testCycle) {
                 test.run('Product', validProductData, invalidProductData, testCycle);
                 runProductSpecificTests(testCycle);
@@ -76,7 +75,7 @@ describe('Run the product tests', function () {
             });
     });
     it ('also runs one time purchase product tests', function (done) {
-         return CycleRepository.load(config.oneTimePurchaseProductsCycleDocId)
+         return cycleRepository.load(config.oneTimePurchaseProductsCycleDocId)
             .then(function (testCycle) {
                 runOneTimePurchaseProductTests(testCycle);
                 done();
@@ -106,15 +105,15 @@ function runProductSpecificTests(testCycle) {
 
                 var testProduct;
 
-                return VendorRepository.create(vendor)
+                return vendorRepository.create(vendor)
                     .then(function () {
                         return LicenseRepository.create(license);
                     })
                     .then(function () {
-                        return ProductRepository.create(product, testCycle);
+                        return productRepository.create(product, testCycle);
                     })
                     .then(function (productId) {
-                        return ProductRepository.load(productId, testCycle);
+                        return productRepository.load(productId, testCycle);
                     })
                     .then(function (loadedProduct) {
                         testProduct = loadedProduct;
@@ -129,9 +128,9 @@ function runProductSpecificTests(testCycle) {
                 var product = validProductData();
                 product.vendor = vendor.id;
 
-                return ProductRepository.create(product, testCycle)
+                return productRepository.create(product, testCycle)
                     .then(function (productId) {
-                        return ProductRepository.load(productId, testCycle);
+                        return productRepository.load(productId, testCycle);
                     })
                     .then(function (loadedProduct) {
                         return expect(loadedProduct.vendor).to.be.an('object').and.have.property('name');
@@ -142,7 +141,7 @@ function runProductSpecificTests(testCycle) {
 
     describe('ListProductsForLicenseId View', function () {
         it('should have a listProductsForLicenseId method', function () {
-            expect(ProductRepository.listProductsForLicenseId).to.be.a('function');
+            expect(productRepository.listProductsForLicenseId).to.be.a('function');
         });
 
         var license1 = {id: uuid.v4(), type: "License", name: "my license 1 name", isActive: true};
@@ -184,18 +183,18 @@ function runProductSpecificTests(testCycle) {
         };
 
         it('should return products associated with a license', function () {
-            return ProductRepository.create(product1, testCycle)
+            return productRepository.create(product1, testCycle)
                 .then(function () {
-                    return ProductRepository.create(product2, testCycle);
+                    return productRepository.create(product2, testCycle);
                 })
                 .then(function () {
-                return ProductRepository.create(product3, testCycle);
+                return productRepository.create(product3, testCycle);
             })
                 .then(function () {
-                return ProductRepository.create(product4, testCycle);
+                return productRepository.create(product4, testCycle);
             })
                 .then(function () {
-                    return ProductRepository.listProductsForLicenseId(license1.id, testCycle);
+                    return productRepository.listProductsForLicenseId(license1.id, testCycle);
                 })
                 .then(function (productList) {
 
@@ -220,7 +219,7 @@ function runProductSpecificTests(testCycle) {
 
     describe('listProductsForVendorId View', function () {
         it('should have a listProductsForVendorId method', function () {
-            expect(ProductRepository.listProductsForVendorId).to.be.a('function');
+            expect(productRepository.listProductsForVendorId).to.be.a('function');
         });
 
         var vendor1 = {id: uuid.v4(), type: "Vendor", name: "my vendor 1 name", isActive: true};
@@ -260,14 +259,14 @@ function runProductSpecificTests(testCycle) {
 
         it('should return expanded products associated with a vendor', function () {
             return Q.all([
-                VendorRepository.create(vendor1),
-                ProductRepository.create(product1, testCycle),
-                ProductRepository.create(product2, testCycle),
-                ProductRepository.create(product3, testCycle),
-                ProductRepository.create(product4, testCycle)
+                vendorRepository.create(vendor1),
+                productRepository.create(product1, testCycle),
+                productRepository.create(product2, testCycle),
+                productRepository.create(product3, testCycle),
+                productRepository.create(product4, testCycle)
             ])
             .then(function () {
-                return ProductRepository.listProductsForVendorId(vendor1.id, testCycle);
+                return productRepository.listProductsForVendorId(vendor1.id, testCycle);
             })
             .then(function (productList) {
                 function allProductsHaveExpandedVendor(productList) {
@@ -308,15 +307,15 @@ function runProductSpecificTests(testCycle) {
             cycle: testCycleId
         };
         it('should have a listProductCountsByVendorId method', function () {
-            expect(ProductRepository.listProductCountsByVendorId).to.be.a('function');
+            expect(productRepository.listProductCountsByVendorId).to.be.a('function');
         });
         it('should return products associated with a vendor', function () {
-            return ProductRepository.create(product1, testCycle)
+            return productRepository.create(product1, testCycle)
                 .then(function () {
-                    return ProductRepository.create(product2, testCycle);
+                    return productRepository.create(product2, testCycle);
                 })
                 .then(function () {
-                    return ProductRepository.listProductCountsByVendorId(testCycle);
+                    return productRepository.listProductCountsByVendorId(testCycle);
                 })
                 .then(function (countsByVendorId) {
                     return expect(countsByVendorId).to.have.property(vendor1.id, 2);
@@ -329,9 +328,9 @@ function runProductSpecificTests(testCycle) {
         it('should add a getIsActive method to instances of Product', function () {
             var product = validProductData();
 
-            return ProductRepository.create(product, testCycle)
+            return productRepository.create(product, testCycle)
                 .then(function (productId) {
-                    return ProductRepository.load(productId, testCycle);
+                    return productRepository.load(productId, testCycle);
                 })
                 .then(function (loadedProduct) {
                     return expect(loadedProduct.getIsActive).to.be.a('function');
@@ -343,13 +342,13 @@ function runProductSpecificTests(testCycle) {
                 var vendor = {id: uuid.v4(), type: "Vendor", name: "my vendor name", isActive: true};
                 var product = {id: uuid.v4(), type: "Product", name: "my product name", isActive: true, cycle: testCycleId };
 
-                return VendorRepository.create(vendor)
+                return vendorRepository.create(vendor)
                     .then(function () {
                         product.vendor = vendor;
-                        return ProductRepository.create(product, testCycle);
+                        return productRepository.create(product, testCycle);
                     })
                     .then(function () {
-                    return ProductRepository.load(product.id, testCycle);
+                    return productRepository.load(product.id, testCycle);
                 })
                     .then(function (loadedProduct) {
                     return expect(loadedProduct.getIsActive()).to.equal(true);
@@ -361,13 +360,13 @@ function runProductSpecificTests(testCycle) {
                 var vendor = {id: uuid.v4(), type: "Vendor", name: "my vendor name", isActive: false};
                 var product = {id: uuid.v4(), type: "Product", name: "my product name", isActive: true, cycle: testCycleId};
 
-                return VendorRepository.create(vendor)
+                return vendorRepository.create(vendor)
                     .then(function () {
                         product.vendor = vendor;
-                        return ProductRepository.create(product, testCycle);
+                        return productRepository.create(product, testCycle);
                     })
                     .then(function () {
-                    return ProductRepository.load(product.id, testCycle);
+                    return productRepository.load(product.id, testCycle);
                 })
                     .then(function (loadedProduct) {
                     return expect(loadedProduct.getIsActive()).to.equal(false);
@@ -379,13 +378,13 @@ function runProductSpecificTests(testCycle) {
                 var vendor = {id: uuid.v4(), type: "Vendor", name: "my vendor name", isActive: false};
                 var product = {id: uuid.v4(), type: "Product", name: "my product name", isActive: false, cycle: testCycleId};
 
-                return VendorRepository.create(vendor)
+                return vendorRepository.create(vendor)
                     .then(function () {
                         product.vendor = vendor;
-                        return ProductRepository.create(product, testCycle);
+                        return productRepository.create(product, testCycle);
                     })
                     .then(function () {
-                    return ProductRepository.load(product.id, testCycle);
+                    return productRepository.load(product.id, testCycle);
                 })
                     .then(function (loadedProduct) {
                     return expect(loadedProduct.getIsActive()).to.equal(false);
@@ -396,13 +395,13 @@ function runProductSpecificTests(testCycle) {
                 var vendor = {id: uuid.v4(), type: "Vendor", name: "my vendor name", isActive: true};
                 var product = {id: uuid.v4(), type: "Product", name: "my product name", isActive: false, cycle: testCycleId};
 
-                return VendorRepository.create(vendor)
+                return vendorRepository.create(vendor)
                     .then(function () {
                         product.vendor = vendor;
-                        return ProductRepository.create(product, testCycle);
+                        return productRepository.create(product, testCycle);
                     })
                     .then(function () {
-                    return ProductRepository.load(product.id, testCycle);
+                    return productRepository.load(product.id, testCycle);
                 })
                     .then(function (loadedProduct) {
                     return expect(loadedProduct.getIsActive()).to.equal(false);
@@ -416,16 +415,16 @@ function runProductSpecificTests(testCycle) {
                 var license = {id: uuid.v4(), type: "License", name: "my license name", isActive: true, vendor: vendor};
                 var product = {id: uuid.v4(), type: "Product", name: "my product name", isActive: true, cycle: testCycleId, vendor: vendor };
 
-                return VendorRepository.create(vendor)
+                return vendorRepository.create(vendor)
                     .then(function(){
                         LicenseRepository.create(license);
                     })
                     .then(function () {
                         product.license = license;
-                        return ProductRepository.create(product, testCycle);
+                        return productRepository.create(product, testCycle);
                     })
                     .then(function () {
-                        return ProductRepository.load(product.id, testCycle);
+                        return productRepository.load(product.id, testCycle);
                     })
                     .then(function (loadedProduct) {
                         return expect(loadedProduct.getIsActive()).to.equal(true);
@@ -437,16 +436,16 @@ function runProductSpecificTests(testCycle) {
                 var license = {id: uuid.v4(), type: "License", name: "my license name", isActive: false, vendor: vendor};
                 var product = {id: uuid.v4(), type: "Product", name: "my product name", isActive: true, cycle: testCycleId, vendor: vendor};
 
-                return VendorRepository.create(vendor)
+                return vendorRepository.create(vendor)
                     .then(function(){
                         LicenseRepository.create(license);
                     })
                     .then(function () {
                         product.license = license;
-                        return ProductRepository.create(product, testCycle);
+                        return productRepository.create(product, testCycle);
                     })
                     .then(function () {
-                        return ProductRepository.load(product.id, testCycle);
+                        return productRepository.load(product.id, testCycle);
                     })
                     .then(function (loadedProduct) {
                         return expect(loadedProduct.getIsActive()).to.equal(false);
@@ -461,10 +460,10 @@ function runProductSpecificTests(testCycle) {
                 return LicenseRepository.create(license)
                     .then(function () {
                         product.license = license;
-                        return ProductRepository.create(product, testCycle);
+                        return productRepository.create(product, testCycle);
                     })
                     .then(function () {
-                        return ProductRepository.load(product.id, testCycle);
+                        return productRepository.load(product.id, testCycle);
                     })
                     .then(function (loadedProduct) {
                         return expect(loadedProduct.getIsActive()).to.equal(false);
@@ -478,10 +477,10 @@ function runProductSpecificTests(testCycle) {
                 return LicenseRepository.create(license)
                     .then(function () {
                         product.license = license;
-                        return ProductRepository.create(product, testCycle);
+                        return productRepository.create(product, testCycle);
                     })
                     .then(function () {
-                        return ProductRepository.load(product.id, testCycle);
+                        return productRepository.load(product.id, testCycle);
                     })
                     .then(function (loadedProduct) {
                         return expect(loadedProduct.getIsActive()).to.equal(false);
@@ -493,7 +492,7 @@ function runProductSpecificTests(testCycle) {
     describe('Helper functions for getting Enum values from the Product Schema', function () {
 
         it('should have a getProductDetailCodeOptions function', function () {
-            expect(ProductRepository.getProductDetailCodeOptions).to.be.a('function');
+            expect(productRepository.getProductDetailCodeOptions).to.be.a('function');
         });
 
         describe('the getProductDetailCodeOptions function', function () {
@@ -513,20 +512,20 @@ function runProductSpecificTests(testCycle) {
                     "USIN - Database Pre-Pay"
                 ];
 
-                expect(ProductRepository.getProductDetailCodeOptions()).to.have.members(testData);
+                expect(productRepository.getProductDetailCodeOptions()).to.have.members(testData);
             });
         });
     });
 }
 
 function runOneTimePurchaseProductTests(testCycle) {
-    describe('ProductRepository.listOneTimePurchaseProducts()', function (done) {
+    describe('productRepository.listOneTimePurchaseProducts()', function (done) {
         it('should list a product that is available through tomorrow', function () {
             var availableProduct = availableOneTimePurchaseProduct();
 
-            return ProductRepository.create(availableProduct, testCycle)
+            return productRepository.create(availableProduct, testCycle)
                 .then(function () {
-                    return ProductRepository.listAvailableOneTimePurchaseProducts(testCycle)
+                    return productRepository.listAvailableOneTimePurchaseProducts(testCycle)
                 })
                 .then(function (oneTimePurchaseProductList) {
 
@@ -550,9 +549,9 @@ function runOneTimePurchaseProductTests(testCycle) {
         it('should not list a product that was available through yesterday', function () {
             var unavailableProduct = unavailableOneTimePurchaseProduct();
 
-            return ProductRepository.create(unavailableProduct, testCycle)
+            return productRepository.create(unavailableProduct, testCycle)
                 .then(function () {
-                    return ProductRepository.listAvailableOneTimePurchaseProducts()
+                    return productRepository.listAvailableOneTimePurchaseProducts()
                 },
                 function catchCreate(err) {
                     console.log('Create failed: ' + err);
@@ -582,13 +581,13 @@ function runOneTimePurchaseProductTests(testCycle) {
 
     describe('getProductsById', function(){
         it('should be a function', function(){
-            expect(ProductRepository.getProductsById).to.be.a('function');
+            expect(productRepository.getProductsById).to.be.a('function');
         })
     });
 
     describe('getProductSelectionStatisticsForCycle', function(){
         it('should be a function', function(){
-            expect(ProductRepository.getProductSelectionStatisticsForCycle).to.be.a('function');
+            expect(productRepository.getProductSelectionStatisticsForCycle).to.be.a('function');
         });
 
         it('should return an object with offering and selection counts', function(){
@@ -596,7 +595,7 @@ function runOneTimePurchaseProductTests(testCycle) {
 
             return setupTestData()
                 .then(function(){
-                    return ProductRepository.getProductSelectionStatisticsForCycle(testProductId, testCycle);
+                    return productRepository.getProductSelectionStatisticsForCycle(testProductId, testCycle);
                 })
                 .then(function(productStats){
                     return Q.all([
@@ -614,7 +613,7 @@ function runOneTimePurchaseProductTests(testCycle) {
                 ]);
 
                 function createEmptyTestOffering(){
-                    return OfferingRepository.create({
+                    return offeringRepository.create({
                         cycle: testCycle,
                         library: uuid.v4(),
                         product: testProductId
@@ -622,12 +621,12 @@ function runOneTimePurchaseProductTests(testCycle) {
                 }
 
                 function createTestOfferingWithSelection(){
-                    return OfferingRepository.create({
+                    return offeringRepository.create({
                         cycle: testCycle,
                         library: uuid.v4(),
                         product: testProductId,
                         selection: {
-                            users: 'Site License',
+                            users: offeringRepository.siteLicenseSelectionUsers,
                             price: 1
                         }
                     }, testCycle);
@@ -640,7 +639,7 @@ function runOneTimePurchaseProductTests(testCycle) {
 
             return setupTestData()
                 .then(function () {
-                    return ProductRepository.getProductSelectionStatisticsForCycle(testProductId, testCycle);
+                    return productRepository.getProductSelectionStatisticsForCycle(testProductId, testCycle);
                 })
                 .then(function (productStats) {
                     return Q.all([
@@ -652,7 +651,7 @@ function runOneTimePurchaseProductTests(testCycle) {
 
             function setupTestData() {
                 return Q.all([
-                    OfferingRepository.create({
+                    offeringRepository.create({
                         cycle: testCycle,
                         library: uuid.v4(),
                         product: testProductId,
@@ -660,7 +659,7 @@ function runOneTimePurchaseProductTests(testCycle) {
                             site: 50
                         }
                     }, testCycle),
-                    OfferingRepository.create({
+                    offeringRepository.create({
                         cycle: testCycle,
                         library: uuid.v4(),
                         product: testProductId,
@@ -677,7 +676,7 @@ function runOneTimePurchaseProductTests(testCycle) {
 
             return setupTestData()
                 .then(function () {
-                    return ProductRepository.getProductSelectionStatisticsForCycle(testProductId, testCycle);
+                    return productRepository.getProductSelectionStatisticsForCycle(testProductId, testCycle);
                 })
                 .then(function (productStats) {
                     return Q.all([
@@ -689,7 +688,7 @@ function runOneTimePurchaseProductTests(testCycle) {
 
             function setupTestData() {
                 return Q.all([
-                    OfferingRepository.create({
+                    offeringRepository.create({
                         cycle: testCycle,
                         library: uuid.v4(),
                         product: testProductId,
@@ -700,7 +699,7 @@ function runOneTimePurchaseProductTests(testCycle) {
                             ]
                         }
                     }, testCycle),
-                    OfferingRepository.create({
+                    offeringRepository.create({
                         cycle: testCycle,
                         library: uuid.v4(),
                         product: testProductId,
