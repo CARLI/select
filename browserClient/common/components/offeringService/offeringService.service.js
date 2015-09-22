@@ -79,6 +79,7 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
         },
         getFlaggedState: function (offering, optionalCycle) {
             return offeringModule.getFlaggedState(offering, optionalCycle);
-        }
+        },
+        siteLicenseSelectionUsers: offeringModule.siteLicenseSelectionUsers
     };
 }
