@@ -108,7 +108,7 @@ updateMasterIfRequested () {
 
     if [ "$commitish" != "master" ]; then
         echo "Resetting master branch to $commitish"
-        git branch -f master $commitish
+        git branch -f master "$commitish"
         git checkout master
         git push -f origin master
     fi
