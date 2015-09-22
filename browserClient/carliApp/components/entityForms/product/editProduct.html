@@ -141,8 +141,11 @@
                     </div>
                 </div>
 
-                <div class="placeholder">
-                    TODO: Funded for Governing: X%
+                <div ng-show="!vm.newProduct" class="funding">
+                    <div class="label">Funding</div>
+                    <div class="edit-link-container" ng-show="vm.shouldShowFundingLink()">
+                        <a data-toggle="modal" data-target="#funding-modal">Add or Edit Funding<fa name="edit"></fa></a>
+                    </div>
                 </div>
 
                 <div>
@@ -232,6 +235,10 @@
     </div>
 
 </form>
+
+    <modal-dialog modal-id="'funding-modal'" modal-title="'Edit Funding'"  modal-class="modal-lg">
+        <ng-include src="'carliApp/components/entityForms/product/editFunding.html'"></ng-include>
+    </modal-dialog>
 
     <modal-dialog modal-id="'otp-modal'" modal-title="'One-Time Purchase'" modal-class="modal-lg">
         <ng-include src="'carliApp/components/entityForms/product/editOneTimePurchase.html'"></ng-include>
