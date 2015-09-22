@@ -77,7 +77,7 @@ function addOneTimePurchasesController( $q, $location, config, activityLogServic
         offering.selectionPendingReview = {
             datePurchased: new Date().toJSON().slice(0, 10),
             price: offering.pricing.site,
-            users: 'site'
+            users: offeringService.siteLicenseSelectionUsers
         };
 
         return updatePendingSelection(offering);
