@@ -1,7 +1,7 @@
 angular.module('carli.viewEditDirectives.viewEditOfferingSelection')
     .controller('viewEditOfferingSelectionController', viewEditOfferingSelectionController);
 
-function viewEditOfferingSelectionController($scope){
+function viewEditOfferingSelectionController($scope, offeringService){
     var vm = this;
 
     activate();
@@ -19,7 +19,7 @@ function viewEditOfferingSelectionController($scope){
         }
 
         var siteOption = {
-            users: 'Site License',
+            users: offeringService.siteLicenseSelectionUsers,
             price: offering.pricing.site
         };
 
