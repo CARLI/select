@@ -1,14 +1,14 @@
 var chai = require('chai');
-var config = require('../../config');
-var expect = chai.expect;
-var uuid = require('node-uuid');
 var chaiAsPromised = require('chai-as-promised');
-var test = require('./Entity/EntityInterface.spec');
+var config = require('../../config');
 var CycleRepository = require('../Entity/CycleRepository');
+var expect = chai.expect;
 var OfferingRepository = require('../Entity/OfferingRepository');
 var ProductRepository = require('../Entity/ProductRepository');
-var testUtils = require('./utils');
 var Q = require('q');
+var test = require('./Entity/EntityInterface.spec');
+var testUtils = require('./utils');
+var uuid = require('node-uuid');
 var _ = require('lodash');
 
 chai.use( chaiAsPromised );

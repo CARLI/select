@@ -1,14 +1,14 @@
-var Entity = require('../Entity');
-var EntityTransform = require('./EntityTransformationUtils');
 var config = require('../../config');
 var couchUtils = require('../Store/CouchDb/Utils')();
 var cycleRepository = require('./CycleRepository');
+var Entity = require('../Entity');
+var EntityTransform = require('./EntityTransformationUtils');
 var getStoreForCycle = require('./getStoreForCycle');
 var libraryRepository = require('./LibraryRepository');
 var productRepository = require('./ProductRepository');
+var Q = require('q');
 var uuid = require('node-uuid');
 var Validator = require('../Validator');
-var Q = require('q');
 var _ = require('lodash');
 
 var storeOptions = {};
