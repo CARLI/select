@@ -1,4 +1,5 @@
-.funding-list,
+#bulk-funding,
+#funding-list,
 #price-cap-list,
 #one-time-purchase-pricing {
     @extend .zebra-table;
@@ -47,13 +48,21 @@
         }
     }
 
-    .column.by-percentage,
-    .column.by-price {
-        flex:  0 0 50px;
+    .column.funding-mode {
+        flex:  0 0 110px;
+        .btn {
+            width: 40px;
+        }
+    }
+    .column.funded-amount {
+        flex:  0 0 150px;
+        view-edit-percentage-field {
+            margin-bottom: 0;
+        }
     }
 
-    .column.apply-funding {
-        flex: 1 1 75%;
+    .column.apply-bulk-funding {
+        flex: 1 0 200px;
     }
 
     label {
@@ -95,5 +104,17 @@
                 vertical-align: middle;
             }
         }
+    }
+}
+
+#funding-modal {
+    p {
+        padding: 15px 40px;
+    }
+}
+#bulk-funding {
+    width: 200%; // I don't know why
+    .column.library {
+        flex: 0 0 300px;
     }
 }
