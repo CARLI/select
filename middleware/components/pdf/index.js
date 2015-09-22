@@ -82,14 +82,17 @@ function dataForMembershipDuesInvoicePdf(notification){
 
     return membershipRepository.getMembershipFeesForLibrary(library.id, year)
         .then(function(membershipData){
+            var membership = membershipData.membership || 0;
+            var ishare = membershipData.ishare || 0;
+
             return {
                 batchId: notification.batchId,
                 cycle: {},
                 library: library,
                 invoiceNumber: notification.invoiceNumber,
-                invoiceTotal: membershipData.ishare + membershipData.membership,
-                ishare: membershipData.ishare,
-                membership: membershipData.membership,
+                invoiceTotal: ishare + membership,
+                ishare: ishare,
+                membership: membership,
                 notification: notification,
                 year: year
             };

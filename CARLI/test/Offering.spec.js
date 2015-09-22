@@ -1,16 +1,15 @@
-var chai   = require( 'chai' )
-    , config = require('../../config')
-    , expect = chai.expect
-    , uuid   = require( 'node-uuid' )
-    , chaiAsPromised = require( 'chai-as-promised' )
-    , test = require( './Entity/EntityInterface.spec' )
-    , CycleRepository = require('../Entity/CycleRepository' )
-    , OfferingRepository = require('../Entity/OfferingRepository' )
-    , ProductRepository = require('../Entity/ProductRepository' )
-    , testUtils = require('./utils')
-    , Q = require('q')
-    , _ = require('lodash')
-    ;
+var chai = require('chai');
+var chaiAsPromised = require('chai-as-promised');
+var config = require('../../config');
+var CycleRepository = require('../Entity/CycleRepository');
+var expect = chai.expect;
+var offeringRepository = require('../Entity/OfferingRepository');
+var ProductRepository = require('../Entity/ProductRepository');
+var Q = require('q');
+var test = require('./Entity/EntityInterface.spec');
+var testUtils = require('./utils');
+var uuid = require('node-uuid');
+var _ = require('lodash');
 
 chai.use( chaiAsPromised );
 
@@ -55,7 +54,13 @@ function testCycleData() {
     };
 }
 
-describe('Run the Offering tests', function () {
+describe('String constants in the Offering module', function(){
+    it('should export a constant for Site License selections', function(){
+        expect(offeringRepository.siteLicenseSelectionUsers).to.equal('Site License');
+    });
+});
+
+describe('Run the cycle-dependent Offering tests', function () {
     it ('runs Offering tests', function (done) {
         return CycleRepository.create(testCycleData())
             .then(CycleRepository.load)
@@ -80,7 +85,7 @@ function runOfferingSpecificTests(testCycle) {
                 libraryComments: undefinedValue()
             };
 
-            return expect( OfferingRepository.create(testOffering, testCycle) ).to.be.fulfilled;
+            return expect( offeringRepository.create(testOffering, testCycle) ).to.be.fulfilled;
         });
 
         describe('Expanding referenced entities on load', function () {
@@ -95,10 +100,10 @@ function runOfferingSpecificTests(testCycle) {
 
                 return ProductRepository.create(testProduct, testCycle)
                     .then(function() {
-                        return OfferingRepository.create(testOffering, testCycle);
+                        return offeringRepository.create(testOffering, testCycle);
                     })
                     .then(function( offeringId ){
-                        return OfferingRepository.load(offeringId, testCycle);
+                        return offeringRepository.load(offeringId, testCycle);
                     })
                     .then(function (loadedOfferingData) {
                         loadedOffering = loadedOfferingData;
@@ -111,7 +116,7 @@ function runOfferingSpecificTests(testCycle) {
         });
 
         it('should have a listOfferingsForLibraryId method', function () {
-            expect(OfferingRepository.listOfferingsForLibraryId).to.be.a('function');
+            expect(offeringRepository.listOfferingsForLibraryId).to.be.a('function');
         });
 
         describe('listOfferingsForLibraryId View', function () {
@@ -119,7 +124,7 @@ function runOfferingSpecificTests(testCycle) {
         });
 
         it('should have a listOfferingsForProductId method', function () {
-            expect(OfferingRepository.listOfferingsForProductId).to.be.a('function');
+            expect(offeringRepository.listOfferingsForProductId).to.be.a('function');
         });
 
         describe('listOfferingsForProductId View', function () {
@@ -127,7 +132,7 @@ function runOfferingSpecificTests(testCycle) {
         });
 
         it('should have a listOfferingsWithSelections method', function () {
-            expect(OfferingRepository.listOfferingsWithSelections).to.be.a('function');
+            expect(offeringRepository.listOfferingsWithSelections).to.be.a('function');
         });
 
         describe('listOfferingsWithSelections View', function () {
@@ -141,7 +146,7 @@ function runOfferingSpecificTests(testCycle) {
 
                 return clearAllTestOfferings()
                     .then(setupTestOfferings)
-                    .then(OfferingRepository.listOfferingsWithSelections)
+                    .then(offeringRepository.listOfferingsWithSelections)
                     .then(function(offerings){
                         return Q.all([
                             expect(offerings).to.be.an('array'),
@@ -156,14 +161,14 @@ function runOfferingSpecificTests(testCycle) {
                         .thenResolve(testCycle);
 
                     function createTestOffering(offering){
-                        return OfferingRepository.create(offering, testCycle);
+                        return offeringRepository.create(offering, testCycle);
                     }
                 }
             });
         });
 
         it('should have a listVendorsFromOfferingIds method', function () {
-            expect(OfferingRepository.listVendorsFromOfferingIds).to.be.a('function');
+            expect(offeringRepository.listVendorsFromOfferingIds).to.be.a('function');
         });
 
         describe('listVendorsForOfferings', function () {
@@ -180,7 +185,7 @@ function runOfferingSpecificTests(testCycle) {
 
                 return setupTestData()
                     .then(function( listOfOfferingIds ){
-                        return OfferingRepository.listVendorsFromOfferingIds( listOfOfferingIds, testCycle );
+                        return offeringRepository.listVendorsFromOfferingIds( listOfOfferingIds, testCycle );
                     })
                     .then(function( listOfVendorIds ){
                         return Q.all([
@@ -209,7 +214,7 @@ function runOfferingSpecificTests(testCycle) {
                         return Q.all( testOfferings.map(createTestOffering) );
 
                         function createTestOffering(offering){
-                            return OfferingRepository.create(offering, testCycle);
+                            return offeringRepository.create(offering, testCycle);
                         }
                     }
                 }
@@ -222,13 +227,13 @@ function runOfferingSpecificTests(testCycle) {
                 originalOffering.cycle = _.clone(testCycle);
                 originalOffering.cycle.year = 2014;
 
-                var transformedOffering = OfferingRepository.copyOfferingHistoryForYear(originalOffering, 2014);
+                var transformedOffering = offeringRepository.copyOfferingHistoryForYear(originalOffering, 2014);
                 expect(transformedOffering.history['2014'].pricing).to.deep.equal(originalOffering.pricing);
 
                 transformedOffering.cycle = _.clone(testCycle);
                 transformedOffering.cycle.year = 2015;
 
-                transformedOffering = OfferingRepository.copyOfferingHistoryForYear(transformedOffering, 2015);
+                transformedOffering = offeringRepository.copyOfferingHistoryForYear(transformedOffering, 2015);
                 expect(transformedOffering.history['2014'].pricing).to.deep.equal(originalOffering.pricing);
                 expect(transformedOffering.history['2015'].pricing).to.deep.equal(originalOffering.pricing);
 
@@ -239,13 +244,13 @@ function runOfferingSpecificTests(testCycle) {
                 originalOffering.cycle.year = 2014;
                 originalOffering.selection = { foo: 'bar' };
 
-                var transformedOffering = OfferingRepository.copyOfferingHistoryForYear(originalOffering, 2014);
+                var transformedOffering = offeringRepository.copyOfferingHistoryForYear(originalOffering, 2014);
                 expect(transformedOffering.history['2014'].selection).to.deep.equal(originalOffering.selection);
 
                 transformedOffering.cycle = _.clone(testCycle);
                 transformedOffering.cycle.year = 2015;
 
-                transformedOffering = OfferingRepository.copyOfferingHistoryForYear(transformedOffering, 2015);
+                transformedOffering = offeringRepository.copyOfferingHistoryForYear(transformedOffering, 2015);
                 expect(transformedOffering.history['2014'].selection).to.deep.equal(originalOffering.selection);
                 expect(transformedOffering.history['2015'].selection).to.deep.equal(originalOffering.selection);
             });
@@ -256,19 +261,19 @@ function runOfferingSpecificTests(testCycle) {
                 var testOffering = validOfferingData();
                 testOffering.flagged = true;
 
-                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(true);
+                expect(offeringRepository.getFlaggedState(testOffering)).to.equal(true);
             });
 
             it('should return false if the offering has property set to false', function() {
                 var testOffering = validOfferingData();
                 testOffering.flagged = false;
 
-                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(false);
+                expect(offeringRepository.getFlaggedState(testOffering)).to.equal(false);
             });
 
             it('should compute false if the offering has valid pricing data', function() {
                 var testOffering = validOfferingData();
-                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(false);
+                expect(offeringRepository.getFlaggedState(testOffering)).to.equal(false);
             });
 
             it('should compute false if the offering has not been updated', function(){
@@ -280,7 +285,7 @@ function runOfferingSpecificTests(testCycle) {
                         { users: 3, price: 300 }
                     ]
                 };
-                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(false);
+                expect(offeringRepository.getFlaggedState(testOffering)).to.equal(false);
             });
 
             it('should compute true if the offering has an su price greater than the site license price', function() {
@@ -294,7 +299,7 @@ function runOfferingSpecificTests(testCycle) {
                     }]
                 };
 
-                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(true);
+                expect(offeringRepository.getFlaggedState(testOffering)).to.equal(true);
             });
 
             it('should compute true if the offering has an su price greater than a site license price of zero', function() {
@@ -308,7 +313,7 @@ function runOfferingSpecificTests(testCycle) {
                     }]
                 };
 
-                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(true);
+                expect(offeringRepository.getFlaggedState(testOffering)).to.equal(true);
             });
 
             it('should compute false if the offering has su pricing but no site license price', function() {
@@ -321,7 +326,7 @@ function runOfferingSpecificTests(testCycle) {
                     }]
                 };
 
-                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(false);
+                expect(offeringRepository.getFlaggedState(testOffering)).to.equal(false);
             });
 
             it('should compute true if there is a su price higher than the price for a larger number of users', function() {
@@ -336,7 +341,7 @@ function runOfferingSpecificTests(testCycle) {
                     ]
                 };
 
-                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(true);
+                expect(offeringRepository.getFlaggedState(testOffering)).to.equal(true);
             });
 
             it('should compute true if there is a su price equal to the price for a larger number of users', function() {
@@ -351,7 +356,7 @@ function runOfferingSpecificTests(testCycle) {
                     ]
                 };
 
-                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(true);
+                expect(offeringRepository.getFlaggedState(testOffering)).to.equal(true);
             });
 
             it('should compute true if increase from last years price exceeds the price cap', function() {
@@ -380,7 +385,7 @@ function runOfferingSpecificTests(testCycle) {
                     }
                 };
 
-                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(true);
+                expect(offeringRepository.getFlaggedState(testOffering)).to.equal(true);
             });
 
             it('should compute true if decrease from last years price exceeds 5%', function() {
@@ -409,7 +414,7 @@ function runOfferingSpecificTests(testCycle) {
                     }
                 };
 
-                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(true);
+                expect(offeringRepository.getFlaggedState(testOffering)).to.equal(true);
             });
 
             it('should compute false if increase or decrease is within acceptable range', function() {
@@ -438,18 +443,18 @@ function runOfferingSpecificTests(testCycle) {
                     }
                 };
 
-                expect(OfferingRepository.getFlaggedState(testOffering)).to.equal(false);
+                expect(offeringRepository.getFlaggedState(testOffering)).to.equal(false);
             });
         });
 
         describe('getOfferingsById', function(){
             it('should be a function', function(){
-                expect(OfferingRepository.getOfferingsById).to.be.a('function');
+                expect(offeringRepository.getOfferingsById).to.be.a('function');
             })
         });
 
         it('should have a createOfferingsFor method', function () {
-            expect(OfferingRepository.createOfferingsFor).to.be.a('function');
+            expect(offeringRepository.createOfferingsFor).to.be.a('function');
         });
 
         describe('createOfferingsFor', function(){
@@ -458,7 +463,7 @@ function runOfferingSpecificTests(testCycle) {
                 testVendorId = 'test-vendor-id';
                 testLibraryIds = [ '1', '2', '3' ];
 
-                return OfferingRepository.createOfferingsFor( testProductId, testVendorId, testLibraryIds, testCycle )
+                return offeringRepository.createOfferingsFor( testProductId, testVendorId, testLibraryIds, testCycle )
                     .then(function( offeringIds ){
                         return Q.all([
                             expect(offeringIds).to.be.an('array'),
@@ -469,7 +474,7 @@ function runOfferingSpecificTests(testCycle) {
 
 
                 function verifyOfferingsHaveCorrectProperties(offeringIds){
-                    return OfferingRepository.load(offeringIds[0], testCycle).then(function(offering){
+                    return offeringRepository.load(offeringIds[0], testCycle).then(function(offering){
                         return expect(offering.product).to.equal(testProductId);
                     });
                 }
@@ -477,7 +482,7 @@ function runOfferingSpecificTests(testCycle) {
         });
 
         it('should have a setSuPricingForAllLibrariesForProduct method', function(){
-            expect(OfferingRepository.setSuPricingForAllLibrariesForProduct).to.be.a('function');
+            expect(offeringRepository.setSuPricingForAllLibrariesForProduct).to.be.a('function');
         });
 
         describe('setSuPricingForAllLibrariesForProduct', function(){
@@ -492,7 +497,7 @@ function runOfferingSpecificTests(testCycle) {
 
                 return setupTestData()
                     .then(function(){
-                        return OfferingRepository.setSuPricingForAllLibrariesForProduct(testProductId, testNewSuPricing, testCycle);
+                        return offeringRepository.setSuPricingForAllLibrariesForProduct(testProductId, testNewSuPricing, testCycle);
                     })
                     .then(verifyAllOfferingsGotNewPricing);
 
@@ -520,7 +525,7 @@ function runOfferingSpecificTests(testCycle) {
                     ];
 
                     return Q.all( testOfferings.map(function(offering){
-                        return OfferingRepository.create( offering, testCycle );
+                        return offeringRepository.create( offering, testCycle );
                     }) );
                 }
 
@@ -538,11 +543,11 @@ function runOfferingSpecificTests(testCycle) {
                 }
             });
 
-            it('does not call OfferingRepository.update on the offerings');
+            it('does not call offeringRepository.update on the offerings');
         });
 
         it('should have an updateSuPricingForAllLibrariesForProduct method', function(){
-            expect(OfferingRepository.updateSuPricingForAllLibrariesForProduct).to.be.a('function');
+            expect(offeringRepository.updateSuPricingForAllLibrariesForProduct).to.be.a('function');
         });
 
         describe('updateSuPricingForAllLibrariesForProduct', function(){
@@ -550,7 +555,7 @@ function runOfferingSpecificTests(testCycle) {
         });
 
         it('should have an ensureProductHasOfferingsForAllLibraries', function(){
-            expect(OfferingRepository.ensureProductHasOfferingsForAllLibraries).to.be.a('function');
+            expect(offeringRepository.ensureProductHasOfferingsForAllLibraries).to.be.a('function');
         });
 
         describe('ensureProductHasOfferingsForAllLibraries', function(){
@@ -560,10 +565,10 @@ function runOfferingSpecificTests(testCycle) {
 
 
     function clearAllTestOfferings(){
-        return OfferingRepository.list(testCycle)
+        return offeringRepository.list(testCycle)
             .then(function(offeringsList){
                 return Q.allSettled(offeringsList.map(function(entity){
-                    return OfferingRepository.delete(entity.id, testCycle);
+                    return offeringRepository.delete(entity.id, testCycle);
                 }));
             });
     }

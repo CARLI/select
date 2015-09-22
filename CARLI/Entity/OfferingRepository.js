@@ -1,16 +1,15 @@
-var Entity = require('../Entity')
-  , EntityTransform = require( './EntityTransformationUtils')
-  , config = require( '../../config' )
-  , couchUtils = require( '../Store/CouchDb/Utils')()
-  , cycleRepository = require('./CycleRepository')
-  , getStoreForCycle = require('./getStoreForCycle')
-  , libraryRepository = require('./LibraryRepository')
-  , productRepository = require('./ProductRepository')
-  , uuid = require('node-uuid')
-  , Validator = require('../Validator')
-  , Q = require('q')
-  , _ = require('lodash')
-  ;
+var config = require('../../config');
+var couchUtils = require('../Store/CouchDb/Utils')();
+var cycleRepository = require('./CycleRepository');
+var Entity = require('../Entity');
+var EntityTransform = require('./EntityTransformationUtils');
+var getStoreForCycle = require('./getStoreForCycle');
+var libraryRepository = require('./LibraryRepository');
+var productRepository = require('./ProductRepository');
+var Q = require('q');
+var uuid = require('node-uuid');
+var Validator = require('../Validator');
+var _ = require('lodash');
 
 var storeOptions = {};
 var OfferingRepository = Entity('Offering');
@@ -770,5 +769,6 @@ module.exports = {
     transformOfferingsForNewCycle: transformOfferingsForNewCycle,
     copyOfferingHistoryForYear: copyOfferingHistoryForYear,
 
-    getFlaggedState: getFlaggedState
+    getFlaggedState: getFlaggedState,
+    siteLicenseSelectionUsers: 'Site License'
 };

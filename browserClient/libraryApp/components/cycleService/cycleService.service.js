@@ -28,7 +28,14 @@ function cycleService( CarliModules, $q, errorHandler, userService ) {
         getHistoricalSelectionDataForProductForCycle: getHistoricalSelectionDataForProductForCycle,
         load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ).catch(errorHandler); },
         getCurrentCycle: getCurrentCycle,
-        setCurrentCycle: setCurrentCycle
+        setCurrentCycle: setCurrentCycle,
+        CYCLE_STATUS_DATA_PROCESSING: cycleModule.CYCLE_STATUS_DATA_PROCESSING,
+        CYCLE_STATUS_EDITING_PRODUCT_LIST: cycleModule.CYCLE_STATUS_EDITING_PRODUCT_LIST,
+        CYCLE_STATUS_VENDOR_PRICING: cycleModule.CYCLE_STATUS_VENDOR_PRICING,
+        CYCLE_STATUS_CHECKING_PRICES: cycleModule.CYCLE_STATUS_CHECKING_PRICES,
+        CYCLE_STATUS_OPEN_TO_LIBRARIES: cycleModule.CYCLE_STATUS_OPEN_TO_LIBRARIES,
+        CYCLE_STATUS_CLOSED: cycleModule.CYCLE_STATUS_CLOSED,
+        CYCLE_STATUS_ARCHIVED: cycleModule.CYCLE_STATUS_ARCHIVED
     };
 
     function listActiveCycles(){
@@ -55,7 +62,7 @@ function cycleService( CarliModules, $q, errorHandler, userService ) {
             .catch(errorHandler);
 
         function cycleIsOpenToLibraries( cycle ){
-            return cycle.status === 4;
+            return cycle.status === CYCLE_STATUS_OPEN_TO_LIBRARIES;
         }
     }
 
@@ -67,7 +74,7 @@ function cycleService( CarliModules, $q, errorHandler, userService ) {
             .catch(errorHandler);
 
         function cycleIsOpenToLibrariesOrClosed( cycle ){
-            return cycle.status === 4 || cycle.status === 5;
+            return cycle.status === CYCLE_STATUS_OPEN_TO_LIBRARIES || cycle.status === CYCLE_STATUS_CLOSED;
         }
     }
 
@@ -79,7 +86,7 @@ function cycleService( CarliModules, $q, errorHandler, userService ) {
             .catch(errorHandler);
 
         function cycleIsOneTimePurchaseOrClosed( cycle ){
-            return cycle.cycleType === 'One-Time Purchase' || cycle.status === 5;
+            return cycle.cycleType === 'One-Time Purchase' || cycle.status === CYCLE_STATUS_CLOSED;
         }
     }
 
@@ -90,7 +97,7 @@ function cycleService( CarliModules, $q, errorHandler, userService ) {
             });
 
         function cycleIsClosedOrArchived(cycle){
-            return cycle.status > 5; //TODO: use constants from the cycleModule for these status numbers
+            return cycle.status >= CYCLE_STATUS_CLOSED;
         }
     }
 

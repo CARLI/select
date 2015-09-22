@@ -55,10 +55,15 @@ function cycleService( CarliModules, $q, errorHandler ) {
         listPastFourCyclesMatchingCycle: function( cycle ){
             return $q.when( cycleModule.listPastFourCyclesMatchingCycle(cycle || currentCycle) );
         },
-        getLabelForCycleStatus: function getLabelForCycleStatus( status ){
-            return cycleModule.statusLabels[status];
-        },
-        fiscalYearHasStartedForDate: cycleModule.fiscalYearHasStartedForDate
+        getLabelForCycleStatus: cycleModule.getStatusLabel,
+        fiscalYearHasStartedForDate: cycleModule.fiscalYearHasStartedForDate,
+        CYCLE_STATUS_DATA_PROCESSING: cycleModule.CYCLE_STATUS_DATA_PROCESSING,
+        CYCLE_STATUS_EDITING_PRODUCT_LIST: cycleModule.CYCLE_STATUS_EDITING_PRODUCT_LIST,
+        CYCLE_STATUS_VENDOR_PRICING: cycleModule.CYCLE_STATUS_VENDOR_PRICING,
+        CYCLE_STATUS_CHECKING_PRICES: cycleModule.CYCLE_STATUS_CHECKING_PRICES,
+        CYCLE_STATUS_OPEN_TO_LIBRARIES: cycleModule.CYCLE_STATUS_OPEN_TO_LIBRARIES,
+        CYCLE_STATUS_CLOSED: cycleModule.CYCLE_STATUS_CLOSED,
+        CYCLE_STATUS_ARCHIVED: cycleModule.CYCLE_STATUS_ARCHIVED
     };
 
     function fixCycleName(newCycle) {
@@ -68,7 +73,7 @@ function cycleService( CarliModules, $q, errorHandler ) {
 
     function cycleDefaults() {
         return  {
-            status: 0,
+            status: cycleModule.CYCLE_STATUS_DATA_PROCESSING,
             isArchived: false
         };
     }
@@ -118,7 +123,7 @@ function cycleService( CarliModules, $q, errorHandler ) {
             .catch(errorHandler);
 
         function cycleIsClosed( cycle ){
-            return cycle.status === 5;
+            return cycle.status === CYCLE_STATUS_CLOSED;
         }
     }
 

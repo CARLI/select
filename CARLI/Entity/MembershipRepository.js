@@ -30,8 +30,8 @@ MembershipRepository.getMembershipDuesAsOfferings = function (membershipData) {
                 id: libraryId
             },
             pricing: {
-                ishare: dues.ishare,
-                membership: dues.membership
+                ishare: dues.ishare || 0,
+                membership: dues.membership || 0
             }
         }
     });

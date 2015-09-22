@@ -109,7 +109,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
             users: users
         };
 
-        if ( users === 'Site License' ){
+        if ( users === offeringService.siteLicenseSelectionUsers ){
             offering.selection.price = offering.pricing.site;
         }
         else {
@@ -214,8 +214,8 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
             return false;
         }
 
-        if ( users === 'Site License' ){
-            return offering.selection.users === 'Site License';
+        if ( users === offeringService.siteLicenseSelectionUsers ){
+            return offering.selection.users === offeringService.siteLicenseSelectionUsers;
         }
         else {
             return offering.selection.users === users;

@@ -1,7 +1,7 @@
 angular.module('carli.exportServices')
     .factory('offeringsExportHelper', offeringsExportHelper);
 
-function offeringsExportHelper() {
+function offeringsExportHelper(offeringService) {
     var suOfferingsByYearLookupCache = {};
 
     return createHelperWithOfferingsIterator;
@@ -125,7 +125,7 @@ function offeringsExportHelper() {
                 return [ selection, price ];
 
                 function formatSelection( users ) {
-                    return users === 'site' ? 'Site' : users + usersLabel(users);
+                    return users === offeringService.siteLicenseSelectionUsers ? 'Site License' : users + usersLabel(users);
 
                     function usersLabel(users) {
                         return users === 1 ? ' User' : ' Users';
