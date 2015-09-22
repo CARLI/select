@@ -217,7 +217,7 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
     }
 
     function formatSelection( users ) {
-        return users === 'site' ? 'Site' : users + usersLabel(users);
+        return users === offeringService.siteLicenseSelectionUsers ? 'Site License' : users + usersLabel(users);
 
         function usersLabel(users) {
             return users === 1 ? ' User' : ' Users';
