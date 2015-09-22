@@ -54,7 +54,13 @@ function testCycleData() {
     };
 }
 
-describe('Run the Offering tests', function () {
+describe('String constants in the Offering module', function(){
+    it('should export a constant for Site License selections', function(){
+        expect(offeringRepository.siteLicenseSelectionUsers).to.equal('Site License');
+    });
+});
+
+describe('Run the cycle-dependent Offering tests', function () {
     it ('runs Offering tests', function (done) {
         return CycleRepository.create(testCycleData())
             .then(CycleRepository.load)
