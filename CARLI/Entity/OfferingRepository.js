@@ -769,5 +769,6 @@ module.exports = {
     transformOfferingsForNewCycle: transformOfferingsForNewCycle,
     copyOfferingHistoryForYear: copyOfferingHistoryForYear,
 
-    getFlaggedState: getFlaggedState
+    getFlaggedState: getFlaggedState,
+    siteLicenseSelectionUsers: 'Site License'
 };
