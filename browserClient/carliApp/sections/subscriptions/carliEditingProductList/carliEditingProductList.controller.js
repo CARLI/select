@@ -105,14 +105,13 @@ function carliEditingProductListController( $filter, $q, alertService, carliEdit
                 .then(function(historicalPricingData){
                     product.historicalPricing = historicalPricingData;
                     product.pricingLastYear = pricingForLastYear(historicalPricingData);
+                    product.fundingIcon = pricingIsFunded(historicalPricingData);
                 });
         }
     }
 
 
     function pricingForLastYear(historicalPricingData){
-        var thisYear = vm.cycle.year;
-        var lastYear = thisYear - 1;
         var pricingData = historicalPricingData.filter(dataIsForLastYear)[0] || {};
 
         var currency = $filter('currency');
@@ -128,10 +127,22 @@ function carliEditingProductListController( $filter, $q, alertService, carliEdit
         else {
             return '-';
         }
+    }
 
-        function dataIsForLastYear(pricingData){
-            return pricingData.year == lastYear;
-        }
+    function pricingIsFunded(historicalPricingData) {
+        var pricingData = historicalPricingData.filter(dataIsForThisYear)[0] || {};
+
+        return {
+            name: pricingData.funded ? 'check-circle' : 'times-circle',
+            color: pricingData.funded ? 'orange' : 'black'
+        };
+    }
+
+    function dataIsForLastYear(pricingData){
+        return pricingData.year == vm.cycle.year - 1;
+    }
+    function dataIsForThisYear(pricingData){
+        return pricingData.year == vm.cycle.year;
     }
 
     function removeProduct( product ){

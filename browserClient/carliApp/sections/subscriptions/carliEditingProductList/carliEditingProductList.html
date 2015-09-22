@@ -26,7 +26,7 @@
                         <product-selection-history-icon selected="{{ history.description }}"></product-selection-history-icon>
                     </div>
                     <div role="gridcell" aria-describedby="last-price-column-header" class="column last-price">{{ product.pricingLastYear }}</div>
-                    <div role="gridcell" aria-describedby="funded-column-header" class="column funded"><fa name="question-circle" class="todo"></fa></div>
+                    <div role="gridcell" aria-describedby="funded-column-header" class="column funded"><span class="fa fa-{{ product.fundingIcon.name }} {{ product.fundingIcon.color }}"></span></div>
                     <div role="gridcell" aria-describedby="remove-column-header" class="column remove">
                         <button class="carli-button subdued-remove-button" busy-click="vm.removeProduct(product)">Remove <fa name="times"></fa></button>
                     </div>

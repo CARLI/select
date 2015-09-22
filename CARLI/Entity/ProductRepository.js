@@ -151,7 +151,8 @@ function getProductSelectionStatisticsForCycle( productId, cycle ){
                 numberOffered: offerings.length,
                 numberSelected: offerings.filter(selected).length,
                 minPrice: minPrice(offerings),
-                maxPrice: maxPrice(offerings)
+                maxPrice: maxPrice(offerings),
+                funded: isAnyOfferingFunded(offerings)
             };
         });
 
@@ -191,6 +192,25 @@ function getProductSelectionStatisticsForCycle( productId, cycle ){
         });
 
         return maxPriceSoFar;
+    }
+
+    function isAnyOfferingFunded(offerings) {
+        return offerings.reduce(anyOfferingIsFundedReduction, false);
+
+        function anyOfferingIsFundedReduction(anyOfferingIsFunded, offering) {
+            return anyOfferingIsFunded || isOfferingFunded(offering);
+        }
+
+        function isOfferingFunded(offering) {
+            if (offering.funding) {
+                if (offering.funding.fundedByPercentage) {
+                    return offering.funding.fundedPercent > 0;
+                } else {
+                    return offering.funding.fundedPrice > 0;
+                }
+            }
+            return false;
+        }
     }
 
     function findMinSuPrice( listOfSuPricingObjects ){
