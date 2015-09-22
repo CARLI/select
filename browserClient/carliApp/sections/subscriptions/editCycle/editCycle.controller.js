@@ -27,7 +27,11 @@ function editCycleController( $routeParams, activityLogService, cycleService, er
     }
 
     function shouldShowGroupByToggle() {
-        return (cycleRouter.status === 2 || cycleRouter.status === 3 || cycleRouter.status === 5 );
+        return (
+            cycleRouter.status === cycleService.CYCLE_STATUS_VENDOR_PRICING ||
+            cycleRouter.status === cycleService.CYCLE_STATUS_CHECKING_PRICES ||
+            cycleRouter.status === cycleService.CYCLE_STATUS_CLOSED
+        );
     }
 
     function cycleRouterNext(){
