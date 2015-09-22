@@ -1,16 +1,15 @@
-var chai   = require( 'chai' )
-    , config = require('../../config')
-    , expect = chai.expect
-    , uuid   = require( 'node-uuid' )
-    , chaiAsPromised = require( 'chai-as-promised' )
-    , test = require( './Entity/EntityInterface.spec' )
-    , CycleRepository = require('../Entity/CycleRepository' )
-    , OfferingRepository = require('../Entity/OfferingRepository' )
-    , ProductRepository = require('../Entity/ProductRepository' )
-    , testUtils = require('./utils')
-    , Q = require('q')
-    , _ = require('lodash')
-    ;
+var chai = require('chai');
+var config = require('../../config');
+var expect = chai.expect;
+var uuid = require('node-uuid');
+var chaiAsPromised = require('chai-as-promised');
+var test = require('./Entity/EntityInterface.spec');
+var CycleRepository = require('../Entity/CycleRepository');
+var OfferingRepository = require('../Entity/OfferingRepository');
+var ProductRepository = require('../Entity/ProductRepository');
+var testUtils = require('./utils');
+var Q = require('q');
+var _ = require('lodash');
 
 chai.use( chaiAsPromised );
 

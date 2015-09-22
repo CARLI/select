@@ -1,16 +1,15 @@
-var Entity = require('../Entity')
-  , EntityTransform = require( './EntityTransformationUtils')
-  , config = require( '../../config' )
-  , couchUtils = require( '../Store/CouchDb/Utils')()
-  , cycleRepository = require('./CycleRepository')
-  , getStoreForCycle = require('./getStoreForCycle')
-  , libraryRepository = require('./LibraryRepository')
-  , productRepository = require('./ProductRepository')
-  , uuid = require('node-uuid')
-  , Validator = require('../Validator')
-  , Q = require('q')
-  , _ = require('lodash')
-  ;
+var Entity = require('../Entity');
+var EntityTransform = require('./EntityTransformationUtils');
+var config = require('../../config');
+var couchUtils = require('../Store/CouchDb/Utils')();
+var cycleRepository = require('./CycleRepository');
+var getStoreForCycle = require('./getStoreForCycle');
+var libraryRepository = require('./LibraryRepository');
+var productRepository = require('./ProductRepository');
+var uuid = require('node-uuid');
+var Validator = require('../Validator');
+var Q = require('q');
+var _ = require('lodash');
 
 var storeOptions = {};
 var OfferingRepository = Entity('Offering');
