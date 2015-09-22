@@ -123,7 +123,7 @@ function cycleService( CarliModules, $q, errorHandler ) {
             .catch(errorHandler);
 
         function cycleIsClosed( cycle ){
-            return cycle.status === CYCLE_STATUS_CLOSED;
+            return cycle.status === cycleModule.CYCLE_STATUS_CLOSED;
         }
     }
 
