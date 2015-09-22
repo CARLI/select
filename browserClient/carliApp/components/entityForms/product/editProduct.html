@@ -143,6 +143,9 @@
 
                 <div ng-show="!vm.newProduct" class="funding">
                     <div class="label">Funding</div>
+                    <ul class="funding-list">
+                        <li ng-repeat="summary in vm.fundingSummaries">{{ summary }}</li>
+                    </ul>
                     <div class="edit-link-container" ng-show="vm.shouldShowFundingLink()">
                         <a data-toggle="modal" data-target="#funding-modal">Add or Edit Funding<fa name="edit"></fa></a>
                     </div>

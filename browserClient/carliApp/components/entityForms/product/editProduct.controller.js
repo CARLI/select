@@ -18,10 +18,11 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
     var afterSubmitCallback = vm.afterSubmitFn || function() {};
 
     vm.bulkFundedByPercentage = true;
-    vm.bulkFundedPrice = 0;
     vm.bulkFundedPercent = 100;
-    vm.productOfferings = [];
+    vm.bulkFundedPrice = 0;
+    vm.fundingSummaries = [];
     vm.hideOffering = {};
+    vm.productOfferings = [];
 
     vm.addPriceCapRow = addPriceCapRow;
     vm.applyBulkFunding = applyBulkFunding;
@@ -106,11 +107,13 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
 
         if ( isOneTimePurchaseProduct(vm.product) ){
             return loadOfferingsForProduct(vm.product)
+                .then(updateFundingSummary)
                 .then(initializeHideOfferingsCheckboxModels)
                 .then(ensureOneTimePurchaseProductHasEmptyOfferingsForAllLibraries);
         }
         else {
-            return loadOfferingsForProduct(vm.product);
+            return loadOfferingsForProduct(vm.product)
+                .then(updateFundingSummary);
         }
     }
 
@@ -139,8 +142,8 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
     }
 
     function rememberOfferings() {
-        console.log(vm.productOfferings);
         angular.copy(vm.productOfferings, offeringsCopy);
+        updateFundingSummary();
     }
 
     function revertTermFields() {
@@ -517,5 +520,85 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
             offering.funding.fundedPercent = vm.bulkFundedPercent;
             offering.funding.fundedPrice = vm.bulkFundedPrice;
         });
+    }
+
+    function updateFundingSummary(promise) {
+        var fullyFundedCount = 0;
+        var partiallyFundedCount = 0;
+        var offeringCount = vm.productOfferings.length;
+
+        if (offeringCount === 0) {
+            vm.fundingSummaries = [];
+            return promise;
+        }
+
+        vm.productOfferings.forEach(tallyFunding);
+        updateSummaryBasedOnTally();
+
+        return promise;
+
+        function tallyFunding(offering) {
+            if (offering.funding) {
+                if (offering.funding.fundedByPercentage) {
+                    tallyFundingByPercent();
+                } else {
+                    tallyFundingByPrice();
+                }
+            }
+
+            function tallyFundingByPercent() {
+                if (offering.funding.fundedPercent == 100) {
+                    fullyFundedCount++;
+                } else if (offering.funding.fundedPercent > 0) {
+                    partiallyFundedCount++;
+                }
+            }
+            function tallyFundingByPrice() {
+                if (offering.funding.fundedPrice > 0) {
+                    partiallyFundedCount++;
+                }
+            }
+        }
+
+        function updateSummaryBasedOnTally() {
+            if (productIsNotFunded()) {
+                summarizeNoFunding();
+            } else if (productIsFullyFundedForAll()) {
+                summarizeFullFundingForAll();
+            } else if (productIsPartiallyFundedForAll()) {
+                summarizePartialFundingForAll();
+            } else {
+                summarizeMixedFunding();
+            }
+
+            function productIsNotFunded() {
+                return fullyFundedCount === 0 && partiallyFundedCount === 0;
+            }
+            function productIsFullyFundedForAll() {
+                return fullyFundedCount === offeringCount;
+            }
+            function productIsPartiallyFundedForAll() {
+                return partiallyFundedCount === offeringCount;
+            }
+
+            function summarizeNoFunding() {
+                vm.fundingSummaries = [ 'Not funded.' ];
+            }
+            function summarizeFullFundingForAll() {
+                vm.fundingSummaries = [ 'Fully funded for all libraries.' ];
+            }
+            function summarizePartialFundingForAll() {
+                vm.fundingSummaries = [ 'Partially funded for all libraries.' ];
+            }
+            function summarizeMixedFunding() {
+                vm.fundingSummaries = [];
+                if (fullyFundedCount > 0) {
+                    vm.fundingSummaries.push('Fully funded for some libraries.');
+                }
+                if (partiallyFundedCount > 0) {
+                    vm.fundingSummaries.push('Partially funded for some libraries.');
+                }
+            }
+        }
     }
 }
