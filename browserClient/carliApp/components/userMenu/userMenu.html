@@ -4,7 +4,9 @@
    <li><a href="/notifications" active-tab>Notifications</a></li>
     <li><a href="/revisionHistory">Revision History</a></li>
     <li class="dropdown">
-        <a href="">Hi, {{ vm.userName }}!
+        <a data-toggle="dropdown"
+           data-target="#user-menu"
+           href="">Hi, {{ vm.userName }}!
             <button id="user-menu-label"
                     class="clear-button-styles"
                     type="button"
