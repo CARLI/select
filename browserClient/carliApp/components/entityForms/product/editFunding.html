@@ -1,0 +1,83 @@
+<form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="productLicenseTermsOverrideForm">
+
+    <div class="page-header">
+        <fieldset>
+            <ul class="funding-list">
+                <li class="column-headers">
+                    <header class="column library">Library</header>
+                    <header class="column by-percentage">%</header>
+                    <header class="column percentage">Percentage Funded</header>
+                    <header class="column by-price">$</header>
+                    <header class="column fixed-price">Fixed Price</header>
+                    <header class="column apply-funding"></header>
+                </li>
+                <li>
+                    <span class="column library">
+                        All Libraries
+                    </span>
+                    <span class="column by-percentage">
+                        <radio name="'fundedByPercentage'" value="true" ng-model="vm.exampleRadio"></radio>
+                    </span>
+                    <span class="column percentage">
+                        <view-edit-percentage-field ng-model="offering.funding.fundedPercent" edit-mode="true">{{ offering.funding.fundedPercent }}</view-edit-percentage-field>
+                    </span>
+                    <span class="column by-price">
+                        <radio name="'fundedByPercentage'" value="false" ng-model="vm.exampleRadio"></radio>
+                    </span>
+                    <span class="column fixed-price">
+                        <view-edit-price ng-model="offering.funding.fundedPrice" edit-mode="true">
+                            <span class="price-display">{{ offering.funding.fundedPrice | currency }}</span>
+                        </view-edit-price>
+                    </span>
+                    <span class="column apply-funding">
+                        <button class="carli-button">Apply to all libraries</button>
+                    </span>
+                </li>
+            </ul>
+        </fieldset>
+    </div>
+
+    <section class="content">
+        <fieldset>
+            <ul class="funding-list">
+                <li class="column-headers">
+                    <header class="column library">Library</header>
+                    <header class="column by-percentage">%</header>
+                    <header class="column percentage">Percentage Funded</header>
+                    <header class="column by-price">$</header>
+                    <header class="column fixed-price">Fixed Price</header>
+                </li>
+                <li ng-repeat="offering in vm.productOfferings | orderBy:'library.name'">
+                    <span class="column library">
+                        {{ offering.library.name }}
+                    </span>
+                    <span class="column by-percentage">
+                        <radio name="'fundedByPercentage'" value="true" ng-model="vm.exampleRadio"></radio>
+                    </span>
+                    <span class="column percentage">
+                        <view-edit-percentage-field ng-model="offering.funding.fundedPercent" edit-mode="true">{{ offering.funding.fundedPercent }}</view-edit-percentage-field>
+                    </span>
+                    <span class="column by-price">
+                        <radio name="'fundedByPercentage'" value="false" ng-model="vm.exampleRadio"></radio>
+                    </span>
+                    <span class="column fixed-price">
+                        <view-edit-price ng-model="offering.funding.fundedPrice" edit-mode="true">
+                            <span class="price-display">{{ offering.funding.fundedPrice | currency }}</span>
+                        </view-edit-price>
+                    </span>
+                </li>
+            </ul>
+        </fieldset>
+    </section>
+    <div class="footer">
+        <fieldset>
+            <button type="button" class="carli-button cancel-button" data-dismiss="modal" ng-click="vm.cancelFundingEdit()">
+                Cancel
+            </button>
+            <button type="button" class="carli-button save-button" data-dismiss="modal" ng-click="vm.rememberFundingFields()">
+                Ok
+            </button>
+        </fieldset>
+    </div>
+
+</form>

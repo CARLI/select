@@ -1,3 +1,4 @@
+.funding-list,
 #price-cap-list,
 #one-time-purchase-pricing {
     @extend .zebra-table;
@@ -44,6 +45,15 @@
         .fa {
             vertical-align: baseline;
         }
+    }
+
+    .column.by-percentage,
+    .column.by-price {
+        flex:  0 0 50px;
+    }
+
+    .column.apply-funding {
+        flex: 1 1 75%;
     }
 
     label {
