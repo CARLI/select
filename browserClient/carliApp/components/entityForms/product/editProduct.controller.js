@@ -4,6 +4,7 @@ angular.module('carli.entityForms.product')
 function editProductController( $q, $scope, $rootScope, $filter, activityLogService, alertService, entityBaseService, errorHandler, cycleService, libraryService, licenseService, offeringService, productService, vendorService) {
     var vm = this;
 
+    var fundingCopy = {};
     var otpFieldsCopy = [];
     var termFieldsCopy = {};
     var priceCapsCopy = {};
@@ -22,6 +23,8 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
     vm.addPriceCapRow = addPriceCapRow;
     vm.toggleEditable = toggleEditable;
     vm.cancelEdit = cancelEdit;
+    vm.cancelFundingEdit = revertFundingFields;
+    vm.rememberFundingFields = rememberFundingFields;
     vm.cancelOtpEdit = revertOtpFields;
     vm.rememberOtpFields = rememberOtpFields;
     vm.cancelTermsEdit = revertTermFields;
@@ -34,6 +37,7 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
     vm.productLicenseIsValid = productLicenseIsValid;
     vm.getProductDisplayName = productService.getProductDisplayName;
 
+    vm.shouldShowFundingLink = shouldShowFundingLink;
     vm.shouldShowOtpEditLink = shouldShowOtpEditLink;
     vm.shouldShowTermsEditLink = shouldShowTermsEditLink;
     vm.shouldShowManagePriceCapLink = shouldShowManagePriceCapLink;
@@ -103,11 +107,12 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
                 .then(ensureOneTimePurchaseProductHasEmptyOfferingsForAllLibraries);
         }
         else {
-            return $q.when();
+            return loadOfferingsForProduct(vm.product);
         }
     }
 
     function initSubFormData() {
+        fundingCopy = {};
         otpFieldsCopy = [];
         termFieldsCopy = {};
         priceCapsCopy = [];
@@ -124,6 +129,14 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
                 vm.shouldShowPreviousNameOption = true;
             }
         });
+    }
+
+    function revertFundingFields() {
+        angular.copy(fundingCopy, vm.funding);
+    }
+
+    function rememberFundingFields() {
+        angular.copy(vm.funding, fundingCopy);
     }
 
     function revertOtpFields() {
@@ -143,11 +156,11 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
     }
 
     function cancelPriceCapEdits(){
-        vm.product.terms = angular.copy(priceCapsCopy, []);
+        vm.product.futurePriceCaps = angular.copy(priceCapsCopy, []);
     }
 
     function rememberPriceCaps(){
-        angular.copy(vm.productOfferings, priceCapsCopy);
+        angular.copy(vm.product.futurePriceCaps, priceCapsCopy);
     }
 
     function isOneTimePurchaseProduct(product) {
@@ -454,6 +467,10 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
 
     function productLicenseIsValid(){
         return vm.product && vm.product.license && typeof vm.product.license === 'object';
+    }
+
+    function shouldShowFundingLink() {
+        return vm.editable && !vm.newProduct;
     }
 
     function shouldShowOtpEditLink() {
