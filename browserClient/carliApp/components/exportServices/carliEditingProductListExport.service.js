@@ -24,10 +24,10 @@ function carliEditingProductListExport($q, csvExportService) {
         }
 
         function getExportHeaders() {
-            return [ 'Product' ].concat( yearsToExport ).concat([ 'Last Price', 'Funding' ]);
+            return [ 'Product' ].concat( yearsToExport ).concat([ 'Last Price', 'Funded' ]);
         }
         function getExportRow(product) {
-            return [ product.name ].concat( getSelectionHistory() ).concat([ product.pricingLastYear, productFundingTodo ]);
+            return [ product.name ].concat( getSelectionHistory() ).concat([ product.pricingLastYear, isFundedThisYear() ]);
 
             function getSelectionHistory() {
                 return yearsToExport.map(getHistoricalDescription);
@@ -41,6 +41,16 @@ function carliEditingProductListExport($q, csvExportService) {
                     });
                     return description;
                 }
+            }
+
+            function isFundedThisYear() {
+                var funded = false;
+                product.historicalPricing.forEach(function(history) {
+                    if (history.year === cycle.year) {
+                        funded = history.funded;
+                    }
+                });
+                return funded ? 'true' : 'false';
             }
         }
     }
