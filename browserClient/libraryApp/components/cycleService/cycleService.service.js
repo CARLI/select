@@ -90,7 +90,7 @@ function cycleService( CarliModules, $q, errorHandler, userService ) {
             });
 
         function cycleIsClosedOrArchived(cycle){
-            return cycle.status > 5; //TODO: use constants from the cycleModule for these status numbers
+            return cycle.status >= 5; //TODO: use constants from the cycleModule for these status numbers
         }
     }
 
