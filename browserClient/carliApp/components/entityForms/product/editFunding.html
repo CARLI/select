@@ -40,6 +40,7 @@
                     </span>
                     <span class="column apply-bulk-funding">
                         <button class="carli-button" ng-click="vm.applyBulkFunding()">Apply</button>
+                        <button class="carli-button" ng-click="vm.removeBulkFunding()">Remove All Funding</button>
                     </span>
                 </li>
             </ul>
@@ -47,6 +48,7 @@
     </div>
 
     <p>Use the section below to set funding amounts at an individual library level.</p>
+    
     <section class="content">
         <fieldset>
             <ul id="funding-list">
@@ -54,6 +56,7 @@
                     <header class="column library">Library</header>
                     <span class="column funding-mode">Funding Mode</span>
                     <span class="column funded-amount">Funding Amount</span>
+                    <span class="column delete-funding"></span>
                 </li>
                 <li ng-repeat="offering in vm.productOfferings | orderBy:'library.name'">
                     <span class="column library">
@@ -78,6 +81,9 @@
                         <view-edit-price ng-model="offering.funding.fundedPrice" edit-mode="true" ng-show="!offering.funding.fundedByPercentage">
                             <span class="price-display">{{ offering.funding.fundedPrice | currency }}</span>
                         </view-edit-price>
+                    </span>
+                    <span class="column delete-funding">
+                        <button class="carli-button" ng-click="vm.removeFunding(offering)">Remove</button>
                     </span>
                 </li>
             </ul>
