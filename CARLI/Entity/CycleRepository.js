@@ -22,15 +22,15 @@ var CYCLE_STATUS_OPEN_TO_LIBRARIES = 4;
 var CYCLE_STATUS_CLOSED = 5;
 var CYCLE_STATUS_ARCHIVED = 6;
 
-var statusLabels = {
-    CYCLE_STATUS_DATA_PROCESSING: "Cycle Data Processing",
-    CYCLE_STATUS_EDITING_PRODUCT_LIST: "CARLI Editing Product List",
-    CYCLE_STATUS_VENDOR_PRICING: "Vendor Pricing in Progress",
-    CYCLE_STATUS_CHECKING_PRICES: "CARLI Checking Prices",
-    CYCLE_STATUS_OPEN_TO_LIBRARIES: "Libraries Selecting Products",
-    CYCLE_STATUS_CLOSED: "Selections Made",
-    CYCLE_STATUS_ARCHIVED: "Archived"
-};
+var statusLabels = {};
+
+statusLabels[CYCLE_STATUS_DATA_PROCESSING] = "Cycle Data Processing";
+statusLabels[CYCLE_STATUS_EDITING_PRODUCT_LIST] = "CARLI Editing Product List";
+statusLabels[CYCLE_STATUS_VENDOR_PRICING] = "Vendor Pricing in Progress";
+statusLabels[CYCLE_STATUS_CHECKING_PRICES] = "CARLI Checking Prices";
+statusLabels[CYCLE_STATUS_OPEN_TO_LIBRARIES] = "Libraries Selecting Products";
+statusLabels[CYCLE_STATUS_CLOSED] = "Selections Made";
+statusLabels[CYCLE_STATUS_ARCHIVED] = "Archived";
 var propertiesToTransform = [];
 
 function expandCycles(result) {
@@ -137,14 +137,18 @@ function getCyclesById( ids ){
     return expandCycles( couchUtils.getCouchDocuments(StoreOptions.couchDbName, ids) );
 }
 
+function getStatusLabel( status ){
+    return statusLabels[status];
+}
+
 /* functions that get added as instance methods on loaded Cycles */
 
 var functionsToAdd = {
     getStatusLabel: function () {
-        return this.isArchived ? 'Archived' : statusLabels[this.status];
+        return this.isArchived ? statusLabels[CYCLE_STATUS_ARCHIVED] : getStatusLabel(this.status);
     },
     proceedToNextStep: function() {
-        if (this.status < statusLabels.length - 1){
+        if (this.status < CYCLE_STATUS_ARCHIVED){
             ++this.status;
         }
     },
@@ -178,11 +182,11 @@ function setStore(store) {
 }
 
 function isOpenToLibraries( cycle ){
-    return cycle.status === statusLabels.indexOf("Libraries Selecting Products");
+    return cycle.status === CYCLE_STATUS_OPEN_TO_LIBRARIES;
 }
 
 function isClosed( cycle ){
-    return cycle.status === statusLabels.indexOf("Selections Made");
+    return cycle.status === CYCLE_STATUS_CLOSED;
 }
 
 function productsAreAvailable( cycle ){
@@ -205,7 +209,7 @@ module.exports = {
     update: updateCycle,
     list: listCycles,
     load: loadCycle,
-    statusLabels: statusLabels,
+    getStatusLabel: getStatusLabel,
     listActiveCycles: listActiveCycles,
     getCyclesById: getCyclesById,
     isOpenToLibraries: isOpenToLibraries,

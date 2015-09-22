@@ -159,6 +159,18 @@ describe('Additional Repository Functions', function() {
             return Q.all( testCycles.map(cycleEntityRepo.create));
         }
     });
+
+    describe('the getStatusLabel repository function', function(){
+        it('should be a function', function(){
+            expect(cycleRepository.getStatusLabel).to.be.a('function');
+        });
+
+        it('should return the text status label for a cycle status value', function(){
+            expect(cycleRepository.getStatusLabel(cycleRepository.CYCLE_STATUS_DATA_PROCESSING)).to.equal('Cycle Data Processing');
+            expect(cycleRepository.getStatusLabel(cycleRepository.CYCLE_STATUS_CHECKING_PRICES)).to.equal('CARLI Checking Prices');
+            expect(cycleRepository.getStatusLabel(cycleRepository.CYCLE_STATUS_ARCHIVED)).to.equal('Archived');
+        });
+    });
 });
 
 describe('Adding functions to Cycle instances', function() {
