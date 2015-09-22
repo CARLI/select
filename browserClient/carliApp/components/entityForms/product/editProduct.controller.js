@@ -37,6 +37,8 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
     vm.rememberOtpFields = rememberOfferings;
     vm.rememberPriceCaps = rememberPriceCaps;
     vm.rememberTermFields = rememberTermFields;
+    vm.removeBulkFunding = removeBulkFunding;
+    vm.removeFunding = removeFunding;
     vm.saveProduct = saveProduct;
     vm.shouldShowFundingLink = shouldShowFundingLink;
     vm.shouldShowManagePriceCapLink = shouldShowManagePriceCapLink;
@@ -520,6 +522,18 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
             offering.funding.fundedPercent = vm.bulkFundedPercent;
             offering.funding.fundedPrice = vm.bulkFundedPrice;
         });
+    }
+
+    function removeBulkFunding() {
+        vm.bulkFundedByPercentage = true;
+        vm.bulkFundedPercent = 0;
+        applyBulkFunding();
+    }
+
+    function removeFunding(offering) {
+        offering.funding = offering.funding || {};
+        offering.funding.fundedByPercentage = true;
+        offering.funding.fundedPercent = 0;
     }
 
     function updateFundingSummary(promise) {
