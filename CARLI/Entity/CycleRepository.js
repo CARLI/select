@@ -14,15 +14,23 @@ var CycleRepository = Entity('Cycle');
 
 CycleRepository.setStore( Store( StoreModule(StoreOptions) ) );
 
-var statusLabels = [
-    "Cycle Data Processing",
-    "CARLI Editing Product List",
-    "Vendor Pricing in Progress",
-    "CARLI Checking Prices",
-    "Libraries Selecting Products",
-    "Selections Made",
-    "Archived"
-];
+var CYCLE_STATUS_DATA_PROCESSING = 0;
+var CYCLE_STATUS_EDITING_PRODUCT_LIST = 1;
+var CYCLE_STATUS_VENDOR_PRICING = 2;
+var CYCLE_STATUS_CHECKING_PRICES = 3;
+var CYCLE_STATUS_OPEN_TO_LIBRARIES = 4;
+var CYCLE_STATUS_CLOSED = 5;
+var CYCLE_STATUS_ARCHIVED = 6;
+
+var statusLabels = {
+    CYCLE_STATUS_DATA_PROCESSING: "Cycle Data Processing",
+    CYCLE_STATUS_EDITING_PRODUCT_LIST: "CARLI Editing Product List",
+    CYCLE_STATUS_VENDOR_PRICING: "Vendor Pricing in Progress",
+    CYCLE_STATUS_CHECKING_PRICES: "CARLI Checking Prices",
+    CYCLE_STATUS_OPEN_TO_LIBRARIES: "Libraries Selecting Products",
+    CYCLE_STATUS_CLOSED: "Selections Made",
+    CYCLE_STATUS_ARCHIVED: "Archived"
+};
 var propertiesToTransform = [];
 
 function expandCycles(result) {
@@ -204,5 +212,12 @@ module.exports = {
     isClosed: isClosed,
     productsAreAvailable: productsAreAvailable,
     listPastFourCyclesMatchingCycle: listPastFourCyclesMatchingCycle,
-    fiscalYearHasStartedForDate: fiscalYearHasStartedForDate
+    fiscalYearHasStartedForDate: fiscalYearHasStartedForDate,
+    CYCLE_STATUS_DATA_PROCESSING: CYCLE_STATUS_DATA_PROCESSING,
+    CYCLE_STATUS_EDITING_PRODUCT_LIST: CYCLE_STATUS_EDITING_PRODUCT_LIST,
+    CYCLE_STATUS_VENDOR_PRICING: CYCLE_STATUS_VENDOR_PRICING,
+    CYCLE_STATUS_CHECKING_PRICES: CYCLE_STATUS_CHECKING_PRICES,
+    CYCLE_STATUS_OPEN_TO_LIBRARIES: CYCLE_STATUS_OPEN_TO_LIBRARIES,
+    CYCLE_STATUS_CLOSED: CYCLE_STATUS_CLOSED,
+    CYCLE_STATUS_ARCHIVED: CYCLE_STATUS_ARCHIVED
 };

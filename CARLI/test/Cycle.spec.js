@@ -35,6 +35,18 @@ function invalidCycleData() {
 
 test.run('Cycle', validCycleData, invalidCycleData);
 
+describe('Cycle Status string constants', function(){
+    it('should export variables', function() {
+        expect(cycleRepository.CYCLE_STATUS_DATA_PROCESSING).to.not.be.undefined;
+        expect(cycleRepository.CYCLE_STATUS_EDITING_PRODUCT_LIST).to.be.ok;
+        expect(cycleRepository.CYCLE_STATUS_VENDOR_PRICING).to.be.ok;
+        expect(cycleRepository.CYCLE_STATUS_CHECKING_PRICES).to.be.ok;
+        expect(cycleRepository.CYCLE_STATUS_OPEN_TO_LIBRARIES).to.be.ok;
+        expect(cycleRepository.CYCLE_STATUS_CLOSED).to.be.ok;
+        expect(cycleRepository.CYCLE_STATUS_ARCHIVED).to.be.ok;
+    });
+});
+
 describe('Additional Repository Functions', function() {
     describe('createCycle', function () {
         //'it' refers to the test.run() block above. At least one of those should have created a cycle DB
