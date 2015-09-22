@@ -626,7 +626,7 @@ function runOneTimePurchaseProductTests(testCycle) {
                         library: uuid.v4(),
                         product: testProductId,
                         selection: {
-                            users: 'Site License',
+                            users: offeringRepository.siteLicenseSelectionUsers,
                             price: 1
                         }
                     }, testCycle);
