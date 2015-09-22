@@ -4,8 +4,7 @@ angular.module('carli.entityForms.product')
 function editProductController( $q, $scope, $rootScope, $filter, activityLogService, alertService, entityBaseService, errorHandler, cycleService, libraryService, licenseService, offeringService, productService, vendorService) {
     var vm = this;
 
-    var fundingCopy = {};
-    var otpFieldsCopy = [];
+    var offeringsCopy = [];
     var termFieldsCopy = {};
     var priceCapsCopy = {};
     var originalProductName = null;
@@ -18,29 +17,33 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
 
     var afterSubmitCallback = vm.afterSubmitFn || function() {};
 
+    vm.bulkFundedByPercentage = true;
+    vm.bulkFundedPrice = 0;
+    vm.bulkFundedPercent = 100;
     vm.productOfferings = [];
     vm.hideOffering = {};
-    vm.addPriceCapRow = addPriceCapRow;
-    vm.toggleEditable = toggleEditable;
-    vm.cancelEdit = cancelEdit;
-    vm.cancelFundingEdit = revertFundingFields;
-    vm.rememberFundingFields = rememberFundingFields;
-    vm.cancelOtpEdit = revertOtpFields;
-    vm.rememberOtpFields = rememberOtpFields;
-    vm.cancelTermsEdit = revertTermFields;
-    vm.rememberTermFields = rememberTermFields;
-    vm.cancelPriceCapEdits = cancelPriceCapEdits;
-    vm.rememberPriceCaps = rememberPriceCaps;
-    vm.saveProduct = saveProduct;
-    vm.submitAction = submitAction;
-    vm.submitLabel = submitLabel;
-    vm.productLicenseIsValid = productLicenseIsValid;
-    vm.getProductDisplayName = productService.getProductDisplayName;
 
+    vm.addPriceCapRow = addPriceCapRow;
+    vm.applyBulkFunding = applyBulkFunding;
+    vm.cancelEdit = cancelEdit;
+    vm.cancelFundingEdit = revertOfferings;
+    vm.cancelOtpEdit = revertOfferings;
+    vm.cancelPriceCapEdits = cancelPriceCapEdits;
+    vm.cancelTermsEdit = revertTermFields;
+    vm.getProductDisplayName = productService.getProductDisplayName;
+    vm.productLicenseIsValid = productLicenseIsValid;
+    vm.rememberFundingFields = rememberOfferings;
+    vm.rememberOtpFields = rememberOfferings;
+    vm.rememberPriceCaps = rememberPriceCaps;
+    vm.rememberTermFields = rememberTermFields;
+    vm.saveProduct = saveProduct;
     vm.shouldShowFundingLink = shouldShowFundingLink;
+    vm.shouldShowManagePriceCapLink = shouldShowManagePriceCapLink;
     vm.shouldShowOtpEditLink = shouldShowOtpEditLink;
     vm.shouldShowTermsEditLink = shouldShowTermsEditLink;
-    vm.shouldShowManagePriceCapLink = shouldShowManagePriceCapLink;
+    vm.submitAction = submitAction;
+    vm.submitLabel = submitLabel;
+    vm.toggleEditable = toggleEditable;
 
     vendorService.list().then( function( vendorList ){
        vm.vendorList = vendorList;
@@ -95,7 +98,7 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
         setProductFormPristine();
 
         initializeProductNameWatcher();
-        rememberOtpFields();
+        rememberOfferings();
         rememberTermFields();
         rememberPriceCaps();
 
@@ -113,7 +116,7 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
 
     function initSubFormData() {
         fundingCopy = {};
-        otpFieldsCopy = [];
+        offeringsCopy = [];
         termFieldsCopy = {};
         priceCapsCopy = [];
         originalProductName = null;
@@ -131,20 +134,13 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
         });
     }
 
-    function revertFundingFields() {
-        angular.copy(fundingCopy, vm.funding);
+    function revertOfferings() {
+        angular.copy(offeringsCopy, vm.productOfferings);
     }
 
-    function rememberFundingFields() {
-        angular.copy(vm.funding, fundingCopy);
-    }
-
-    function revertOtpFields() {
-        angular.copy(otpFieldsCopy, vm.productOfferings);
-    }
-
-    function rememberOtpFields() {
-        angular.copy(vm.productOfferings, otpFieldsCopy);
+    function rememberOfferings() {
+        console.log(vm.productOfferings);
+        angular.copy(vm.productOfferings, offeringsCopy);
     }
 
     function revertTermFields() {
@@ -293,7 +289,12 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
         }
 
         return savePromise
+            .then(saveFunding)
             .then(syncData);
+
+        function saveFunding() {
+            console.log('TODO: save funding');
+        }
 
         function syncData(){
             return cycleService.syncDataToVendorDatabase( vm.product.vendor.id, vm.product.cycle );
@@ -510,6 +511,15 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
             if ( offering.id ) {
                 vm.hideOffering[offering.id] = (offering.display === "none");
             }
+        });
+    }
+
+    function applyBulkFunding() {
+        vm.productOfferings.forEach(function (offering) {
+            offering.funding = offering.funding || {};
+            offering.funding.fundedByPercentage = vm.bulkFundedByPercentage;
+            offering.funding.fundedPercent = vm.bulkFundedPercent;
+            offering.funding.fundedPrice = vm.bulkFundedPrice;
         });
     }
 }
