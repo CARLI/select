@@ -62,7 +62,7 @@ function cycleService( CarliModules, $q, errorHandler, userService ) {
             .catch(errorHandler);
 
         function cycleIsOpenToLibraries( cycle ){
-            return cycle.status === CYCLE_STATUS_OPEN_TO_LIBRARIES;
+            return cycle.status === cycleModule.CYCLE_STATUS_OPEN_TO_LIBRARIES;
         }
     }
 
@@ -74,7 +74,7 @@ function cycleService( CarliModules, $q, errorHandler, userService ) {
             .catch(errorHandler);
 
         function cycleIsOpenToLibrariesOrClosed( cycle ){
-            return cycle.status === CYCLE_STATUS_OPEN_TO_LIBRARIES || cycle.status === CYCLE_STATUS_CLOSED;
+            return cycle.status === cycleModule.CYCLE_STATUS_OPEN_TO_LIBRARIES || cycle.status === cycleModule.CYCLE_STATUS_CLOSED;
         }
     }
 
@@ -86,7 +86,7 @@ function cycleService( CarliModules, $q, errorHandler, userService ) {
             .catch(errorHandler);
 
         function cycleIsOneTimePurchaseOrClosed( cycle ){
-            return cycle.cycleType === 'One-Time Purchase' || cycle.status === CYCLE_STATUS_CLOSED;
+            return cycle.cycleType === 'One-Time Purchase' || cycle.status === cycleModule.CYCLE_STATUS_CLOSED;
         }
     }
 
@@ -97,7 +97,7 @@ function cycleService( CarliModules, $q, errorHandler, userService ) {
             });
 
         function cycleIsClosedOrArchived(cycle){
-            return cycle.status >= CYCLE_STATUS_CLOSED;
+            return cycle.status >= cycleModule.CYCLE_STATUS_CLOSED;
         }
     }
 
