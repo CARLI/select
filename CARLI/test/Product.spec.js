@@ -1,19 +1,18 @@
-var chai   = require( 'chai' )
-    , config = require('../../config')
-    , expect = chai.expect
-    , uuid   = require( 'node-uuid' )
-    , chaiAsPromised = require( 'chai-as-promised' )
-    , moment = require('moment')
-    , test = require( './Entity/EntityInterface.spec' )
-    , CycleRepository = require('../Entity/CycleRepository' )
-    , ProductRepository = require('../Entity/ProductRepository' )
-    , VendorRepository = require('../Entity/VendorRepository' )
-    , LicenseRepository = require('../Entity/LicenseRepository' )
-    , OfferingRepository = require('../Entity/OfferingRepository' )
-    , testUtils = require('./utils')
-    , _ = require('lodash')
-    , Q = require('q')
-    ;
+var chai = require('chai');
+var chaiAsPromised = require('chai-as-promised');
+var config = require('../../config');
+var CycleRepository = require('../Entity/CycleRepository');
+var expect = chai.expect;
+var LicenseRepository = require('../Entity/LicenseRepository');
+var moment = require('moment');
+var OfferingRepository = require('../Entity/OfferingRepository');
+var ProductRepository = require('../Entity/ProductRepository');
+var Q = require('q');
+var test = require('./Entity/EntityInterface.spec');
+var testUtils = require('./utils');
+var uuid = require('node-uuid');
+var VendorRepository = require('../Entity/VendorRepository');
+var _ = require('lodash');
 
 chai.use( chaiAsPromised );
 
