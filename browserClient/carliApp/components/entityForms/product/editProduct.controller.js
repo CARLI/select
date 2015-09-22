@@ -292,10 +292,6 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
             .then(saveFunding)
             .then(syncData);
 
-        function saveFunding() {
-            console.log('TODO: save funding');
-        }
-
         function syncData(){
             return cycleService.syncDataToVendorDatabase( vm.product.vendor.id, vm.product.cycle );
         }
