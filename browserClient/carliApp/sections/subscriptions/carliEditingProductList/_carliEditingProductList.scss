@@ -15,12 +15,7 @@
                     text-align: center;
                     width: 80px;
                     .fa {
-                        color: $orange;
                         @include font-size(22);
-
-                        &.todo {
-                            color: steelblue;
-                        }
                     }
                 }
                 .column.last-price {
