@@ -78,7 +78,7 @@ module.exports = function (vendor) {
     return {
         createDatabase: createDatabaseForVendor,
         load: loadCycleForVendor,
-        statusLabels: baseRepository.statusLabels,
+        getStatusLabel: baseRepository.getStatusLabel,
         listActiveCycles: listActiveCyclesForVendor,
         vendor: vendor
     };

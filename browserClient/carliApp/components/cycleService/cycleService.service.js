@@ -55,9 +55,7 @@ function cycleService( CarliModules, $q, errorHandler ) {
         listPastFourCyclesMatchingCycle: function( cycle ){
             return $q.when( cycleModule.listPastFourCyclesMatchingCycle(cycle || currentCycle) );
         },
-        getLabelForCycleStatus: function getLabelForCycleStatus( status ){
-            return cycleModule.statusLabels[status];
-        },
+        getLabelForCycleStatus: cycleModule.getStatusLabel,
         fiscalYearHasStartedForDate: cycleModule.fiscalYearHasStartedForDate
     };
 
