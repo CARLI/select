@@ -1,67 +1,81 @@
 <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="productLicenseTermsOverrideForm">
 
+    <p>Use this form to edit funding in bulk.  Funding may by a percentage which is paid by CARLI
+        or by a specifying a fixed dollar amount that is paid by the library.  Applying funding
+        in bulk will overwrite any library specific funding that was previously set. </p>
+
     <div class="page-header">
+
         <fieldset>
-            <ul class="funding-list">
+            <ul id="bulk-funding">
                 <li class="column-headers">
                     <header class="column library">Library</header>
-                    <header class="column by-percentage">%</header>
-                    <header class="column percentage">Percentage Funded</header>
-                    <header class="column by-price">$</header>
-                    <header class="column fixed-price">Fixed Price</header>
-                    <header class="column apply-funding"></header>
+                    <span class="column funding-mode">Funding Mode</span>
+                    <span class="column funded-amount">Funding Amount</span>
+                    <span class="column apply-bulk-funding">Apply to All</span>
                 </li>
                 <li>
                     <span class="column library">
                         All Libraries
                     </span>
-                    <span class="column by-percentage">
-                        <radio name="'fundedByPercentage'" value="true" ng-model="vm.exampleRadio"></radio>
+                    <span class="column funding-mode">
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-default"
+                                    ng-click="vm.bulkFundedByPercentage = true"
+                                    ng-class="{ active: vm.bulkFundedByPercentage }">
+                                %</button>
+                            <button type="button" class="btn btn-default"
+                                    ng-click="vm.bulkFundedByPercentage = false"
+                                    ng-class="{ active: !vm.bulkFundedByPercentage }">
+                                $</button>
+                        </div>
                     </span>
-                    <span class="column percentage">
-                        <view-edit-percentage-field ng-model="offering.funding.fundedPercent" edit-mode="true">{{ offering.funding.fundedPercent }}</view-edit-percentage-field>
-                    </span>
-                    <span class="column by-price">
-                        <radio name="'fundedByPercentage'" value="false" ng-model="vm.exampleRadio"></radio>
-                    </span>
-                    <span class="column fixed-price">
-                        <view-edit-price ng-model="offering.funding.fundedPrice" edit-mode="true">
-                            <span class="price-display">{{ offering.funding.fundedPrice | currency }}</span>
+                    <span class="column funded-amount">
+                        <view-edit-percentage-field ng-model="vm.bulkFundedPercent" edit-mode="true" ng-show="vm.bulkFundedByPercentage">
+                            {{ vm.bulkFundedPercent }}
+                        </view-edit-percentage-field>
+                        <view-edit-price ng-model="vm.bulkFundedPrice" edit-mode="true" ng-show="!vm.bulkFundedByPercentage">
+                            <span class="price-display">{{ vm.bulkFundedPrice | currency }}</span>
                         </view-edit-price>
                     </span>
-                    <span class="column apply-funding">
-                        <button class="carli-button">Apply to all libraries</button>
+                    <span class="column apply-bulk-funding">
+                        <button class="carli-button" ng-click="vm.applyBulkFunding()">Apply</button>
                     </span>
                 </li>
             </ul>
         </fieldset>
     </div>
 
+    <p>Use the section below to set funding amounts at an individual library level.</p>
     <section class="content">
         <fieldset>
-            <ul class="funding-list">
+            <ul id="funding-list">
                 <li class="column-headers">
                     <header class="column library">Library</header>
-                    <header class="column by-percentage">%</header>
-                    <header class="column percentage">Percentage Funded</header>
-                    <header class="column by-price">$</header>
-                    <header class="column fixed-price">Fixed Price</header>
+                    <span class="column funding-mode">Funding Mode</span>
+                    <span class="column funded-amount">Funding Amount</span>
                 </li>
                 <li ng-repeat="offering in vm.productOfferings | orderBy:'library.name'">
                     <span class="column library">
                         {{ offering.library.name }}
                     </span>
-                    <span class="column by-percentage">
-                        <radio name="'fundedByPercentage'" value="true" ng-model="vm.exampleRadio"></radio>
+                    <span class="column funding-mode">
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-default"
+                                    ng-click="offering.funding.fundedByPercentage = true"
+                                    ng-class="{ active: offering.funding.fundedByPercentage }">
+                                %</button>
+                            <button type="button" class="btn btn-default"
+                                    ng-click="offering.funding.fundedByPercentage = false"
+                                    ng-class="{ active: !offering.funding.fundedByPercentage }">
+                                $</button>
+                        </div>
                     </span>
-                    <span class="column percentage">
-                        <view-edit-percentage-field ng-model="offering.funding.fundedPercent" edit-mode="true">{{ offering.funding.fundedPercent }}</view-edit-percentage-field>
-                    </span>
-                    <span class="column by-price">
-                        <radio name="'fundedByPercentage'" value="false" ng-model="vm.exampleRadio"></radio>
-                    </span>
-                    <span class="column fixed-price">
-                        <view-edit-price ng-model="offering.funding.fundedPrice" edit-mode="true">
+                    <span class="column funded-amount">
+                        <view-edit-percentage-field ng-model="offering.funding.fundedPercent" edit-mode="true" ng-show="offering.funding.fundedByPercentage">
+                            {{ offering.funding.fundedPercent }}
+                        </view-edit-percentage-field>
+                        <view-edit-price ng-model="offering.funding.fundedPrice" edit-mode="true" ng-show="!offering.funding.fundedByPercentage">
                             <span class="price-display">{{ offering.funding.fundedPrice | currency }}</span>
                         </view-edit-price>
                     </span>
