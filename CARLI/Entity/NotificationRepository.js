@@ -4,6 +4,7 @@ var config = require('../../config');
 var couchUtils = require('../Store/CouchDb/Utils')();
 var libraryRepository = require('../Entity/LibraryRepository');
 var vendorRepository = require('../Entity/VendorRepository');
+var offeringRepository = require('../Entity/OfferingRepository');
 var StoreOptions = config.storeOptions;
 var Store = require('../Store');
 var StoreModule = require('../Store/CouchDb/Store');
@@ -221,29 +222,11 @@ function getSummaryTotal(notification, offerings) {
 
         function sumOfPrices(sum, offering) {
             if (offering.selection) {
-                return sum + getFundedPriceOfOffering(offering);
+                return sum + offeringRepository.getFundedPrice(offering);
             } else {
                 return sum;
             }
         }
-    }
-
-    function getFundedPriceOfOffering(offering) {
-        var price = offering.selection.price;
-
-        if (offering.funding) {
-            if (offering.funding.fundedByPercentage) {
-                var percent = (offering.funding.fundedPercent / 100);
-                return roundToNearestCent(price - (percent * price));
-            } else if (offering.funding.fundedPrice) {
-                return offering.funding.fundedPrice;
-            }
-        }
-        return offering.selection.price;
-    }
-
-    function roundToNearestCent(amount) {
-        return Math.round(100 * amount) / 100;
     }
 
     function getMembershipDuesSummary(){
