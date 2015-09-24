@@ -2,15 +2,21 @@
 
 var Q = require('q');
 
-var auth = require('../CARLI/Auth');
+var cli = require('../CARLI/CommandLine');
 var config = require('../config');
 var couchUtils = require('../CARLI/Store/CouchDb/Utils')();
 var notificationRepository = require('../CARLI/Entity/NotificationRepository');
 
-loginToCouch()
+cli.loginToCouch()
+    .then(confirmDeletion)
     .then(deleteAllNotifications)
-    .catch(logError)
-    .finally(logoutOfCouch);
+    .catch(cli.logError)
+    .finally(cli.logoutOfCouch);
+
+function confirmDeletion() {
+    var question = 'Delete ALL notifications from ' + config.storeOptions.couchDbUrl + ' ? ';
+    return cli.confirmOrExit(question);
+}
 
 function deleteAllNotifications() {
     return notificationRepository.list()
@@ -26,28 +32,13 @@ function logCountOfNotifications(notifications) {
 function deleteNotifications(notifications) {
     var documentsToDelete = notifications.map(markNotificationDeleted);
     return couchUtils.bulkUpdateDocuments('carli', documentsToDelete);
+
+    function markNotificationDeleted(notification) {
+        return {
+            _id: notification.id,
+            _rev: notification._rev,
+            _deleted: true
+        };
+    }
 }
 
-function markNotificationDeleted(notification) {
-    return {
-        _id: notification.id,
-        _rev: notification._rev,
-        _deleted: true
-    };
-}
-
-function loginToCouch() {
-    return auth.createSession({
-        email: config.storeOptions.privilegedCouchUsername,
-        password: config.storeOptions.privilegedCouchPassword
-    });
-}
-
-function logoutOfCouch() {
-    console.log('Done');
-    auth.deleteSession();
-}
-
-function logError(error) {
-    console.log(error);
-}
