@@ -1,0 +1,53 @@
+#!/usr/bin/env node
+
+var Q = require('q');
+
+var auth = require('../CARLI/Auth');
+var config = require('../config');
+var couchUtils = require('../CARLI/Store/CouchDb/Utils')();
+var notificationRepository = require('../CARLI/Entity/NotificationRepository');
+
+loginToCouch()
+    .then(deleteAllNotifications)
+    .catch(logError)
+    .finally(logoutOfCouch);
+
+function deleteAllNotifications() {
+    return notificationRepository.list()
+        .then(logCountOfNotifications)
+        .then(deleteNotifications);
+}
+
+function logCountOfNotifications(notifications) {
+    console.log('Deleting ' + notifications.length + ' notifications');
+    return notifications;
+}
+
+function deleteNotifications(notifications) {
+    var documentsToDelete = notifications.map(markNotificationDeleted);
+    return couchUtils.bulkUpdateDocuments('carli', documentsToDelete);
+}
+
+function markNotificationDeleted(notification) {
+    return {
+        _id: notification.id,
+        _rev: notification._rev,
+        _deleted: true
+    };
+}
+
+function loginToCouch() {
+    return auth.createSession({
+        email: config.storeOptions.privilegedCouchUsername,
+        password: config.storeOptions.privilegedCouchPassword
+    });
+}
+
+function logoutOfCouch() {
+    console.log('Done');
+    auth.deleteSession();
+}
+
+function logError(error) {
+    console.log(error);
+}
