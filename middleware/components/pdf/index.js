@@ -1,15 +1,16 @@
-var cycleRepository = require('../../../CARLI/Entity/CycleRepository');
 var fs = require('fs');
 var handlebars = require('handlebars');
-var invoiceGeneration = require('./invoiceNumberGeneration');
 var moment = require('moment');
+var numeral = require('numeral');
+var pdf = require('html-pdf');
+var Q = require('q');
+
+var cycleRepository = require('../../../CARLI/Entity/CycleRepository');
+var invoiceGeneration = require('./invoiceNumberGeneration');
 var membershipRepository = require('../../../CARLI/Entity/MembershipRepository');
 var notificationRepository = require('../../../CARLI/Entity/NotificationRepository');
 var notificationTemplateRepository = require('../../../CARLI/Entity/NotificationTemplateRepository');
-var numeral = require('numeral');
 var offeringRepository = require('../../../CARLI/Entity/OfferingRepository');
-var pdf = require('html-pdf');
-var Q = require('q');
 var vendorRepository = require('../../../CARLI/Entity/VendorRepository');
 
 setupHandlebarsHelpers();
