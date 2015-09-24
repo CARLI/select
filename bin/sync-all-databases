@@ -3,8 +3,7 @@
 var cli = require('../CARLI/CommandLine');
 var vendorDatabases = require('../middleware/components/vendorDatabases');
 
-cli.loginToCouch()
-    .then(vendorDatabases.syncEverything)
-    .then(vendorDatabases.triggerIndexingForAllCycles)
-    .catch(cli.logError)
-    .finally(cli.logoutOfCouch);
+cli.asCouchAdmin(function() {
+    vendorDatabases.syncEverything()
+        .then(vendorDatabases.triggerIndexingForAllCycles);
+});

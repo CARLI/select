@@ -9,6 +9,13 @@ var rl = readline.createInterface({
     output: process.stdout
 });
 
+function asCouchAdmin(doSomething) {
+    return loginToCouch()
+        .then(doSomething)
+        .catch(logError)
+        .finally(logoutOfCouch);
+}
+
 function loginToCouch() {
     return auth.createSession({
         email: config.storeOptions.privilegedCouchUsername,
@@ -44,6 +51,7 @@ function confirmOrExit(question) {
 }
 
 module.exports = {
+    asCouchAdmin: asCouchAdmin,
     loginToCouch: loginToCouch,
     logoutOfCouch: logoutOfCouch,
     logError: logError,
