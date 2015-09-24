@@ -31,7 +31,8 @@ function historicalPricingService($q, cycleService, productService, errorHandler
                         subscribers: subscriberCount(),
                         year: cycle.year,
                         minPrice : productStatistics.minPrice,
-                        maxPrice: productStatistics.maxPrice
+                        maxPrice: productStatistics.maxPrice,
+                        funded: productStatistics.funded
                     };
 
                     function productOfferingDescription(){

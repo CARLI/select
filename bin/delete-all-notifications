@@ -1,0 +1,44 @@
+#!/usr/bin/env node
+
+var Q = require('q');
+
+var cli = require('../CARLI/CommandLine');
+var config = require('../config');
+var couchUtils = require('../CARLI/Store/CouchDb/Utils')();
+var notificationRepository = require('../CARLI/Entity/NotificationRepository');
+
+cli.loginToCouch()
+    .then(confirmDeletion)
+    .then(deleteAllNotifications)
+    .catch(cli.logError)
+    .finally(cli.logoutOfCouch);
+
+function confirmDeletion() {
+    var question = 'Delete ALL notifications from ' + config.storeOptions.couchDbUrl + ' ? ';
+    return cli.confirmOrExit(question);
+}
+
+function deleteAllNotifications() {
+    return notificationRepository.list()
+        .then(logCountOfNotifications)
+        .then(deleteNotifications);
+}
+
+function logCountOfNotifications(notifications) {
+    console.log('Deleting ' + notifications.length + ' notifications');
+    return notifications;
+}
+
+function deleteNotifications(notifications) {
+    var documentsToDelete = notifications.map(markNotificationDeleted);
+    return couchUtils.bulkUpdateDocuments('carli', documentsToDelete);
+
+    function markNotificationDeleted(notification) {
+        return {
+            _id: notification.id,
+            _rev: notification._rev,
+            _deleted: true
+        };
+    }
+}
+
