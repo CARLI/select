@@ -4,6 +4,7 @@ var config = require('../../config');
 var couchUtils = require('../Store/CouchDb/Utils')();
 var libraryRepository = require('../Entity/LibraryRepository');
 var vendorRepository = require('../Entity/VendorRepository');
+var offeringRepository = require('../Entity/OfferingRepository');
 var StoreOptions = config.storeOptions;
 var Store = require('../Store');
 var StoreModule = require('../Store/CouchDb/Store');
@@ -221,7 +222,7 @@ function getSummaryTotal(notification, offerings) {
 
         function sumOfPrices(sum, offering) {
             if (offering.selection) {
-                return sum + offering.selection.price;
+                return sum + offeringRepository.getFundedPrice(offering);
             } else {
                 return sum;
             }

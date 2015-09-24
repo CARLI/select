@@ -561,6 +561,41 @@ function runOfferingSpecificTests(testCycle) {
         describe('ensureProductHasOfferingsForAllLibraries', function(){
             it('lists libraries that do not already have offerings for a product and calls createOfferingsFor');
         });
+
+        it('should have an getFundedPrice function', function(){
+            expect(OfferingRepository.getFundedPrice).to.be.a('function');
+        });
+
+        describe('getFundedPrice',function() {
+            it ('should return the discounted price by percent', function() {
+                var fundedPrice = OfferingRepository.getFundedPrice({
+                    selection: { price: 100 },
+                    funding: { fundedByPercentage: true, fundedPercent: 25 }
+                });
+                return expect(fundedPrice).to.equal(75);
+            });
+            it ('should return the discounted price by fixed amount', function() {
+                var fundedPrice = OfferingRepository.getFundedPrice({
+                    selection: { price: 100 },
+                    funding: { fundedByPercentage: false, fundedPrice: 83 }
+                });
+                return expect(fundedPrice).to.equal(83);
+            });
+            it ('should treat zero percent funding as full price', function() {
+                var fundedPrice = OfferingRepository.getFundedPrice({
+                    selection: { price: 100 },
+                    funding: { fundedByPercentage: true, fundedPercent: 0 }
+                });
+                return expect(fundedPrice).to.equal(100);
+            });
+            it ('should treat a zero fixed price as not funded', function() {
+                var fundedPrice = OfferingRepository.getFundedPrice({
+                    selection: { price: 100 },
+                    funding: { fundedByPercentage: false, fundedPrice: 0 }
+                });
+                return expect(fundedPrice).to.equal(100);
+            });
+        });
     });
 
 

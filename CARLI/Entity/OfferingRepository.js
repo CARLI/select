@@ -703,6 +703,24 @@ function createOfferingsFor( productId, vendorId, libraryIds, cycle ){
     }
 }
 
+function getFundedPrice(offering) {
+    var price = offering.selection.price;
+
+    if (offering.funding) {
+        if (offering.funding.fundedByPercentage) {
+            var percent = (offering.funding.fundedPercent / 100);
+            return roundToNearestCent(price - (percent * price));
+        } else if (offering.funding.fundedPrice) {
+            return offering.funding.fundedPrice;
+        }
+    }
+    return offering.selection.price;
+
+    function roundToNearestCent(amount) {
+        return Math.round(100 * amount) / 100;
+    }
+}
+
 function sortOfferingSuPricing( offering ){
     if ( offering.pricing.su ){
         offering.pricing.su.sort(sortByUsers);
@@ -770,5 +788,6 @@ module.exports = {
     copyOfferingHistoryForYear: copyOfferingHistoryForYear,
 
     getFlaggedState: getFlaggedState,
-    siteLicenseSelectionUsers: 'Site License'
+    siteLicenseSelectionUsers: 'Site License',
+    getFundedPrice: getFundedPrice
 };

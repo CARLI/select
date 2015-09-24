@@ -1,15 +1,16 @@
-var cycleRepository = require('../../../CARLI/Entity/CycleRepository');
 var fs = require('fs');
 var handlebars = require('handlebars');
-var invoiceGeneration = require('./invoiceNumberGeneration');
 var moment = require('moment');
+var numeral = require('numeral');
+var pdf = require('html-pdf');
+var Q = require('q');
+
+var cycleRepository = require('../../../CARLI/Entity/CycleRepository');
+var invoiceGeneration = require('./invoiceNumberGeneration');
 var membershipRepository = require('../../../CARLI/Entity/MembershipRepository');
 var notificationRepository = require('../../../CARLI/Entity/NotificationRepository');
 var notificationTemplateRepository = require('../../../CARLI/Entity/NotificationTemplateRepository');
-var numeral = require('numeral');
 var offeringRepository = require('../../../CARLI/Entity/OfferingRepository');
-var pdf = require('html-pdf');
-var Q = require('q');
 var vendorRepository = require('../../../CARLI/Entity/VendorRepository');
 
 setupHandlebarsHelpers();
@@ -175,7 +176,6 @@ function groupOfferingsByVendorName(offeringsByVendorId){
 }
 
 function transformOfferingsToPriceRows(offeringsByVendorName, useFeeForPriceInsteadOfSelectionPrice){
-    console.log('offerings ' + useFeeForPriceInsteadOfSelectionPrice, offeringsByVendorName);
     var results = [];
     var vendorNames = Object.keys(offeringsByVendorName).sort();
     var vendorNameForFirstRowOnly = '';
@@ -204,7 +204,7 @@ function transformOfferingsToPriceRows(offeringsByVendorName, useFeeForPriceInst
             return offering.oneTimePurchaseAnnualAccessFee || 0;
         }
         else {
-            return offering.selection.price;
+            return offeringRepository.getFundedPrice(offering);
         }
     }
 }
