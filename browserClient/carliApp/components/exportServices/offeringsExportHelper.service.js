@@ -26,7 +26,7 @@ function offeringsExportHelper(offeringService) {
                     exportColumns = [ 'Library', 'Size', 'Institution Years', 'Institution Type' ];
                     break;
                 case 'library-view':
-                    exportColumns = [ 'Display Mode', 'Internal Comments', 'Comments for Libraries' ];
+                    exportColumns = [ 'Display Mode', 'Internal Discussion', 'Comments for Libraries' ];
                     break;
                 case 'selected-last-year':
                     exportColumns = [ 'Selected Last Year' ];
