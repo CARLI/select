@@ -239,8 +239,8 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
         return '';
     }
 
-    function fundedPrice(offering) {
-        return offeringService.getFundedPrice(offering);
+    function fundedSelectionPrice(offering) {
+        return offeringService.getFundedSelectionPrice(offering);
     }
 
     function registerHandlebarsHelpers() {
@@ -248,7 +248,7 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
         Handlebars.registerHelper('displayLabel', displayLabel);
         Handlebars.registerHelper('formatSelection', formatSelection);
         Handlebars.registerHelper('fundingIndicator', fundingIndicator);
-        Handlebars.registerHelper('fundedPrice', fundedPrice);
+        Handlebars.registerHelper('fundedSelectionPrice', fundedSelectionPrice);
     }
 
     function translateColumnArrayToObject( columns ){
