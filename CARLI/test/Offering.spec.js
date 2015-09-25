@@ -598,11 +598,11 @@ function runOfferingSpecificTests(testCycle) {
         });
     });
 
-    xit('should have an getFundedSiteLicensePrice function', function(){
+    it('should have an getFundedSiteLicensePrice function', function(){
         expect(offeringRepository.getFundedSiteLicensePrice).to.be.a('function');
     });
 
-    xdescribe('getFundedSiteLicensePrice',function() {
+    describe('getFundedSiteLicensePrice',function() {
         it ('should return the discounted price by percent', function() {
             var fundedPrice = offeringRepository.getFundedSiteLicensePrice({
                 pricing: { site: 100 },
@@ -633,11 +633,11 @@ function runOfferingSpecificTests(testCycle) {
         });
     });
 
-    xit('should have an getFundedSuLicensePrice function', function(){
+    it('should have an getFundedSuLicensePrice function', function(){
         expect(offeringRepository.getFundedSuLicensePrice).to.be.a('function');
     });
 
-    xdescribe('getFundedSuLicensePrice',function() {
+    describe('getFundedSuLicensePrice',function() {
         var numSu = 2;
         it ('should return the discounted price by percent', function() {
             var fundedPrice = offeringRepository.getFundedSuLicensePrice(numSu, {

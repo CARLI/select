@@ -704,21 +704,60 @@ function createOfferingsFor( productId, vendorId, libraryIds, cycle ){
 }
 
 function getFundedSelectionPrice(offering) {
-    var price = offering.selection.price;
+    return getFundedPrice(offering.selection.price, offering.funding);
+}
 
-    if (offering.funding) {
-        if (offering.funding.fundedByPercentage) {
-            var percent = (offering.funding.fundedPercent / 100);
-            return roundToNearestCent(price - (percent * price));
-        } else if (offering.funding.fundedPrice) {
-            return offering.funding.fundedPrice;
+function getFundedSiteLicensePrice(offering) {
+    return getFundedPrice(offering.pricing.site, offering.funding);
+}
+
+function getFundedSuLicensePrice(numSu, offering) {
+    var fundedPrice = null;
+
+    if (offering.pricing.su) {
+        var suPricing = null;
+
+        offering.pricing.su.forEach(function (p) {
+            if (p.users == numSu) {
+                suPricing = p;
+            }
+        });
+
+        if (suPricing) {
+            fundedPrice = getFundedPrice(suPricing.price, offering.funding);
         }
     }
-    return offering.selection.price;
 
-    function roundToNearestCent(amount) {
-        return Math.round(100 * amount) / 100;
+    return fundedPrice;
+}
+
+function getFundedPrice(price, funding) {
+    var fundedPrice = price;
+
+    if (funding) {
+        calculateFundedPrice();
     }
+
+    return fundedPrice;
+
+    function calculateFundedPrice() {
+        if (funding.fundedByPercentage) {
+            calculateFundedPriceByPercent();
+        } else if (funding.fundedPrice) {
+            calculateFundedPriceByAmount();
+        }
+    }
+    function calculateFundedPriceByPercent() {
+        var percent = (funding.fundedPercent / 100);
+        fundedPrice = roundToNearestCent(price - (percent * price));
+    }
+    function calculateFundedPriceByAmount() {
+        fundedPrice = funding.fundedPrice;
+    }
+}
+
+function roundToNearestCent(amount) {
+    return Math.round(100 * amount) / 100;
 }
 
 function sortOfferingSuPricing( offering ){
@@ -789,5 +828,7 @@ module.exports = {
 
     getFlaggedState: getFlaggedState,
     siteLicenseSelectionUsers: 'Site License',
-    getFundedSelectionPrice: getFundedSelectionPrice
+    getFundedSelectionPrice: getFundedSelectionPrice,
+    getFundedSiteLicensePrice: getFundedSiteLicensePrice,
+    getFundedSuLicensePrice: getFundedSuLicensePrice
 };
