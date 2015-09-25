@@ -38,6 +38,12 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
         getFundedSelectionPrice: function( offering ) {
             return $q.when( offeringModule.getFundedSelectionPrice(offering) );
         },
+        getFundedSiteLicensePrice: function( offering ) {
+            return $q.when( offeringModule.getFundedSiteLicensePrice(offering) );
+        },
+        getFundedSuLicensePrice: function( numSu, offering ) {
+            return $q.when( offeringModule.getFundedSuLicensePrice(numSu, offering) );
+        },
         getOneOfferingForProductId: function ( productId ) {
             return $q.when( offeringModule.listOfferingsForProductId( productId, cycleService.getCurrentCycle(), 1))
                 .then(function(offerings){
