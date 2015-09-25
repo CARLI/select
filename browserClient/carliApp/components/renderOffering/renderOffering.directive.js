@@ -243,12 +243,22 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
         return offeringService.getFundedSelectionPrice(offering);
     }
 
+    function fundedSiteLicensePrice(offering) {
+        return offeringService.fundedSiteLicensePrice(offering);
+    }
+
+    function fundedSuLicensePrice(numSu, offering) {
+        return offeringService.fundedSuLicensePrice(numSu, offering);
+    }
+
     function registerHandlebarsHelpers() {
         Handlebars.registerHelper('currency', currency);
         Handlebars.registerHelper('displayLabel', displayLabel);
         Handlebars.registerHelper('formatSelection', formatSelection);
         Handlebars.registerHelper('fundingIndicator', fundingIndicator);
         Handlebars.registerHelper('fundedSelectionPrice', fundedSelectionPrice);
+        Handlebars.registerHelper('fundedSiteLicensePrice', fundedSiteLicensePrice);
+        Handlebars.registerHelper('fundedSuLicensePrice', fundedSuLicensePrice);
     }
 
     function translateColumnArrayToObject( columns ){
