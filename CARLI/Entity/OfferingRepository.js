@@ -703,7 +703,7 @@ function createOfferingsFor( productId, vendorId, libraryIds, cycle ){
     }
 }
 
-function getFundedPrice(offering) {
+function getFundedSelectionPrice(offering) {
     var price = offering.selection.price;
 
     if (offering.funding) {
@@ -789,5 +789,5 @@ module.exports = {
 
     getFlaggedState: getFlaggedState,
     siteLicenseSelectionUsers: 'Site License',
-    getFundedPrice: getFundedPrice
+    getFundedSelectionPrice: getFundedSelectionPrice
 };
