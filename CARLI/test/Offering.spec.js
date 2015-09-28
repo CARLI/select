@@ -562,34 +562,34 @@ function runOfferingSpecificTests(testCycle) {
             it('lists libraries that do not already have offerings for a product and calls createOfferingsFor');
         });
 
-        it('should have an getFundedPrice function', function(){
-            expect(offeringRepository.getFundedPrice).to.be.a('function');
+        it('should have an getFundedSelectionPrice function', function(){
+            expect(offeringRepository.getFundedSelectionPrice).to.be.a('function');
         });
 
-        describe('getFundedPrice',function() {
+        describe('getFundedSelectionPrice',function() {
             it ('should return the discounted price by percent', function() {
-                var fundedPrice = offeringRepository.getFundedPrice({
+                var fundedPrice = offeringRepository.getFundedSelectionPrice({
                     selection: { price: 100 },
                     funding: { fundedByPercentage: true, fundedPercent: 25 }
                 });
                 return expect(fundedPrice).to.equal(75);
             });
             it ('should return the discounted price by fixed amount', function() {
-                var fundedPrice = offeringRepository.getFundedPrice({
+                var fundedPrice = offeringRepository.getFundedSelectionPrice({
                     selection: { price: 100 },
                     funding: { fundedByPercentage: false, fundedPrice: 83 }
                 });
                 return expect(fundedPrice).to.equal(83);
             });
             it ('should treat zero percent funding as full price', function() {
-                var fundedPrice = offeringRepository.getFundedPrice({
+                var fundedPrice = offeringRepository.getFundedSelectionPrice({
                     selection: { price: 100 },
                     funding: { fundedByPercentage: true, fundedPercent: 0 }
                 });
                 return expect(fundedPrice).to.equal(100);
             });
             it ('should treat a zero fixed price as not funded', function() {
-                var fundedPrice = offeringRepository.getFundedPrice({
+                var fundedPrice = offeringRepository.getFundedSelectionPrice({
                     selection: { price: 100 },
                     funding: { fundedByPercentage: false, fundedPrice: 0 }
                 });
@@ -598,6 +598,40 @@ function runOfferingSpecificTests(testCycle) {
         });
     });
 
+    it('should have an getFundedSiteLicensePrice function', function(){
+        expect(offeringRepository.getFundedSiteLicensePrice).to.be.a('function');
+    });
+
+    describe('getFundedSiteLicensePrice',function() {
+        it ('should return the discounted price by percent', function() {
+            var fundedPrice = offeringRepository.getFundedSiteLicensePrice({
+                pricing: { site: 100 },
+                funding: { fundedByPercentage: true, fundedPercent: 25 }
+            });
+            return expect(fundedPrice).to.equal(75);
+        });
+        it ('should return the discounted price by fixed amount', function() {
+            var fundedPrice = offeringRepository.getFundedSiteLicensePrice({
+                pricing: { site: 100 },
+                funding: { fundedByPercentage: false, fundedPrice: 83 }
+            });
+            return expect(fundedPrice).to.equal(83);
+        });
+        it ('should treat zero percent funding as full price', function() {
+            var fundedPrice = offeringRepository.getFundedSiteLicensePrice({
+                pricing: { site: 100 },
+                funding: { fundedByPercentage: true, fundedPercent: 0 }
+            });
+            return expect(fundedPrice).to.equal(100);
+        });
+        it ('should treat a zero fixed price as not funded', function() {
+            var fundedPrice = offeringRepository.getFundedSiteLicensePrice({
+                pricing: { site: 100 },
+                funding: { fundedByPercentage: false, fundedPrice: 0 }
+            });
+            return expect(fundedPrice).to.equal(100);
+        });
+    });
 
     function clearAllTestOfferings(){
         return offeringRepository.list(testCycle)

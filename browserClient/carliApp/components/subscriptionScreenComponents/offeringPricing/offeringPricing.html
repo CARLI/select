@@ -6,10 +6,10 @@
     <div class="column">
         <div class="header"><strong>{{ ::vm.year }}</strong> Price</div>
         <div class="row">
-            <view-edit-price ng-model="vm.offering.pricing.site" input-id="offering-pricing-site" edit-mode="vm.editMode">
+            <view-edit-price ng-model="vm.offering.pricing.site" funded-price="vm.fundedPrice" input-id="offering-pricing-site" edit-mode="vm.editMode">
                 {{ vm.offering.pricing.site | currency }}
             </view-edit-price>
-            <div tabindex="0" class="comment-marker fa fa-comment-o"></div>
+            <!--<div tabindex="0" class="comment-marker fa fa-comment-o"></div>-->
         </div>
     </div>
 </div>
