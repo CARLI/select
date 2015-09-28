@@ -5,6 +5,7 @@ angular.module('carli.viewEditDirectives.viewEditPrice')
             templateUrl: '/carliApp/components/viewEditDirectives/viewEditPrice/viewEditPrice.html',
             scope: {
                 ngModel: '=',
+                fundedPrice: '=',
                 editMode: '=',
                 inputId: '@'
             },

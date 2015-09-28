@@ -95,3 +95,13 @@ offering-pricing {
         float: right;
     }
 }
+
+.is-funded {
+    .full-price {
+        width: 50%;
+        display: inline-block;
+    }
+    .funded-price {
+        width: 50%;
+    }
+}

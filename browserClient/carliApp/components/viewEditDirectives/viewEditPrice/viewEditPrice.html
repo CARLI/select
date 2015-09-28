@@ -1,4 +1,5 @@
-<div ng-show="editMode">
-    <input type="number" step=".01" min="0" ng-model="ngModel" id="{{ inputId }}">
+<div ng-show="editMode" ng-class="{ 'is-funded': fundedPrice }">
+    <input class="full-price" type="number" step=".01" min="0" ng-model="ngModel" id="{{ inputId }}">
+    <span class="funded-price" ng-if="fundedPrice">Funded Price: {{ fundedPrice }}</span>
 </div>
 <div ng-show="!editMode" ng-transclude></div>
