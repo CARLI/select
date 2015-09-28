@@ -228,7 +228,6 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
         var indicator = '(Funded)';
 
         if (offering.funding) {
-            console.log(offering.funding);
             if (offering.funding.fundedByPercentage && offering.funding.fundedPercent > 0) {
                 return indicator;
             }
@@ -240,15 +239,11 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
     }
 
     function fundedSelectionPrice(offering) {
-        return offeringService.getFundedSelectionPrice(offering);
+        return currency( offeringService.getFundedSelectionPrice(offering) );
     }
 
     function fundedSiteLicensePrice(offering) {
-        return offeringService.fundedSiteLicensePrice(offering);
-    }
-
-    function fundedSuLicensePrice(numSu, offering) {
-        return offeringService.fundedSuLicensePrice(numSu, offering);
+        return currency( offeringService.getFundedSiteLicensePrice(offering) );
     }
 
     function registerHandlebarsHelpers() {
@@ -258,7 +253,6 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
         Handlebars.registerHelper('fundingIndicator', fundingIndicator);
         Handlebars.registerHelper('fundedSelectionPrice', fundedSelectionPrice);
         Handlebars.registerHelper('fundedSiteLicensePrice', fundedSiteLicensePrice);
-        Handlebars.registerHelper('fundedSuLicensePrice', fundedSuLicensePrice);
     }
 
     function translateColumnArrayToObject( columns ){
