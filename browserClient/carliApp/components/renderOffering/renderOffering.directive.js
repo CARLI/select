@@ -225,17 +225,17 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
     }
 
     function fundingIndicator(offering) {
-        var indicator = '(Funded)';
+        var indicator = '';
 
         if (offering.funding) {
             if (offering.funding.fundedByPercentage && offering.funding.fundedPercent > 0) {
-                return indicator;
+                return '('+ offering.funding.fundedPercent +'% Funded)';
             }
             if (!offering.funding.fundedByPercentage && offering.funding.fundedPrice > 0) {
-                return indicator;
+                return '(Funded)';
             }
         }
-        return '';
+        return indicator;
     }
 
     function fundedSelectionPrice(offering) {
