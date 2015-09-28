@@ -73,7 +73,7 @@
                     <span class='funding-indicator'>{{ fundingIndicator offering }}</span>
                 </div>
                 <div class="row">
-                    {{ currency offering.pricing.site }}
+                    {{ fundedSiteLicensePrice offering }}
                     {{#if offering.vendorComments.site }}
                         <div tabindex="0"
                              data-offering-id="{{ offering.id }}"
@@ -150,16 +150,18 @@
         <div class="offering-pricing">
             <div class="site-pricing single-column">
                 <div class="column">
-                    <div class="header"><strong>Site License</strong></div>
+                    <div class="header">
+                        <strong>Site License</strong>
+                        <span class='funding-indicator'>{{ fundingIndicator offering }}</span>
+                    </div>
                     <div class="row">
-                        {{ currency offering.pricing.site }}
+                        {{ fundedSiteLicensePrice offering }}
                     </div>
                 </div>
             </div>
             <div class="su-pricing single-column">
                 <div class="header">
                     <strong>Simultaneous User Prices</strong>
-                    <span class='funding-indicator'>{{ fundingIndicator offering }}</span>
                 </div>
                 <div class="column">
                     <div class="edit-su-pricing">

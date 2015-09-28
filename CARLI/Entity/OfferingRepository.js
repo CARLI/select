@@ -711,26 +711,6 @@ function getFundedSiteLicensePrice(offering) {
     return getFundedPrice(offering.pricing.site, offering.funding);
 }
 
-function getFundedSuLicensePrice(numSu, offering) {
-    var fundedPrice = null;
-
-    if (offering.pricing.su) {
-        var suPricing = null;
-
-        offering.pricing.su.forEach(function (p) {
-            if (p.users == numSu) {
-                suPricing = p;
-            }
-        });
-
-        if (suPricing) {
-            fundedPrice = getFundedPrice(suPricing.price, offering.funding);
-        }
-    }
-
-    return fundedPrice;
-}
-
 function getFundedPrice(price, funding) {
     var fundedPrice = price;
 
@@ -829,6 +809,5 @@ module.exports = {
     getFlaggedState: getFlaggedState,
     siteLicenseSelectionUsers: 'Site License',
     getFundedSelectionPrice: getFundedSelectionPrice,
-    getFundedSiteLicensePrice: getFundedSiteLicensePrice,
-    getFundedSuLicensePrice: getFundedSuLicensePrice
+    getFundedSiteLicensePrice: getFundedSiteLicensePrice
 };
