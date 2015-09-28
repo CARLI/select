@@ -41,7 +41,6 @@ activity-log-list {
         li {
             .column {
                 @include flex(1 1 10%);
-                overflow: scroll;
                 padding: .5rem 1rem;
 
                 &.Date,
