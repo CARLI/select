@@ -222,7 +222,7 @@ function getSummaryTotal(notification, offerings) {
 
         function sumOfPrices(sum, offering) {
             if (offering.selection) {
-                return sum + offeringRepository.getFundedPrice(offering);
+                return sum + offeringRepository.getFundedSelectionPrice(offering);
             } else {
                 return sum;
             }

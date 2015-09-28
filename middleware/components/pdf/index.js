@@ -204,7 +204,7 @@ function transformOfferingsToPriceRows(offeringsByVendorName, useFeeForPriceInst
             return offering.oneTimePurchaseAnnualAccessFee || 0;
         }
         else {
-            return offeringRepository.getFundedPrice(offering);
+            return offeringRepository.getFundedSelectionPrice(offering);
         }
     }
 }

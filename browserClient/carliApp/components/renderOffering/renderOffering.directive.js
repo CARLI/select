@@ -224,10 +224,35 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
         }
     }
 
+    function fundingIndicator(offering) {
+        var indicator = '';
+
+        if (offering.funding) {
+            if (offering.funding.fundedByPercentage && offering.funding.fundedPercent > 0) {
+                return '('+ offering.funding.fundedPercent +'% Funded)';
+            }
+            if (!offering.funding.fundedByPercentage && offering.funding.fundedPrice > 0) {
+                return '(Funded)';
+            }
+        }
+        return indicator;
+    }
+
+    function fundedSelectionPrice(offering) {
+        return currency( offeringService.getFundedSelectionPrice(offering) );
+    }
+
+    function fundedSiteLicensePrice(offering) {
+        return currency( offeringService.getFundedSiteLicensePrice(offering) );
+    }
+
     function registerHandlebarsHelpers() {
         Handlebars.registerHelper('currency', currency);
         Handlebars.registerHelper('displayLabel', displayLabel);
         Handlebars.registerHelper('formatSelection', formatSelection);
+        Handlebars.registerHelper('fundingIndicator', fundingIndicator);
+        Handlebars.registerHelper('fundedSelectionPrice', fundedSelectionPrice);
+        Handlebars.registerHelper('fundedSiteLicensePrice', fundedSiteLicensePrice);
     }
 
     function translateColumnArrayToObject( columns ){

@@ -70,9 +70,10 @@
             <div class="column">
                 <div class="header">
                     <strong>{{ thisYear }}</strong> Price
+                    <span class='funding-indicator'>{{ fundingIndicator offering }}</span>
                 </div>
                 <div class="row">
-                    {{ currency offering.pricing.site }}
+                    {{ fundedSiteLicensePrice offering }}
                     {{#if offering.vendorComments.site }}
                         <div tabindex="0"
                              data-offering-id="{{ offering.id }}"
@@ -90,7 +91,9 @@
                         <table>
                             <thead>
                             <tr>
-                                <th><strong>{{ lastYear }}</strong> Price</th>
+                                <th>
+                                    <strong>{{ lastYear }}</strong> Price
+                                </th>
                                 <th>User(s)</th>
                             </tr>
                             </thead>
@@ -110,7 +113,9 @@
                         <table>
                             <thead>
                             <tr>
-                                <th><strong>{{ thisYear }}</strong> Price</th>
+                                <th>
+                                    <strong>{{ thisYear }}</strong> Price
+                                </th>
                                 <th>User(s)</th>
                             </tr>
                             </thead>
@@ -145,20 +150,27 @@
         <div class="offering-pricing">
             <div class="site-pricing single-column">
                 <div class="column">
-                    <div class="header"><strong>Site License</strong></div>
+                    <div class="header">
+                        <strong>Site License</strong>
+                        <span class='funding-indicator'>{{ fundingIndicator offering }}</span>
+                    </div>
                     <div class="row">
-                        {{ currency offering.pricing.site }}
+                        {{ fundedSiteLicensePrice offering }}
                     </div>
                 </div>
             </div>
             <div class="su-pricing single-column">
-                <div class="header"><strong>Simultaneous User Prices</strong></div>
+                <div class="header">
+                    <strong>Simultaneous User Prices</strong>
+                </div>
                 <div class="column">
                     <div class="edit-su-pricing">
                         <table>
                             <thead>
                             <tr>
-                                <th><strong>Price</strong></th>
+                                <th>
+                                    <strong>Price</strong>
+                                </th>
                                 <th>User(s)</th>
                             </tr>
                             </thead>
