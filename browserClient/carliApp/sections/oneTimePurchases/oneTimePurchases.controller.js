@@ -8,7 +8,7 @@ function oneTimePurchasesController( $sce, notificationModalService, libraryServ
 
     vm.libraryListColumns = [
         {
-            label: "Library",
+            label: "Institution Name",
             orderByProperty: 'name',
             contentFunction: function(library) {
                 return $sce.trustAsHtml('<a href="oneTimePurchases/' + library.id + '">' + library.name + '</a>');

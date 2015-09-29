@@ -1,7 +1,7 @@
     <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="libraryForm" ng-submit="vm.saveLibrary()" warn-if-unsaved>
         <div class="page-header">
             <div class="headings">
-                <label for="libraryName">Library Name</label>
+                <label for="libraryName">Institution Name</label>
                 <view-edit-text-field ng-model="vm.library.name" edit-mode="false" input-id="libraryName">
                     <h1>{{ vm.library.name }}</h1>
                 </view-edit-text-field>
