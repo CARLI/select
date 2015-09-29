@@ -6,6 +6,7 @@ var CouchUtils = require( '../Store/CouchDb/Utils')();
 var CycleRepository = require('./CycleRepository');
 var Entity = require('../Entity');
 var EntityTransform = require( './EntityTransformationUtils');
+var moment = require('moment');
 var ProductRepository = require('./ProductRepository');
 var Store = require( '../Store' );
 var StoreModule = require( '../Store/CouchDb/Store');
@@ -22,8 +23,15 @@ function getIsActive() {
     return this.isActive;
 }
 
+function currentTermEndsSoon() {
+    var termEndDate = moment(new Date(this.currentTermEndDate));
+    var nineMonthsBeforeTermEnds = termEndDate.subtract(9, 'months');
+    return moment().isAfter(nineMonthsBeforeTermEnds);
+}
+
 var functionsToAdd = {
-    getIsActive: getIsActive
+    getIsActive: getIsActive,
+    currentTermEndsSoon: currentTermEndsSoon
 };
 
 var propertiesToTransform = ['vendor'];
