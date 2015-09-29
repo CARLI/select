@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.user')
     .controller('editUserController', editUserController);
 
-function editUserController( $scope, $rootScope, $q, $location, alertService, authService, entityBaseService, userService, libraryService, vendorService  ) {
+function editUserController( $filter, $scope, $rootScope, $q, $location, alertService, authService, entityBaseService, userService, libraryService, vendorService  ) {
     var vm = this;
 
     var templates = {
@@ -48,15 +48,17 @@ function editUserController( $scope, $rootScope, $q, $location, alertService, au
 
     function loadVendorList() {
         return vendorService.list().then(function(vendors) {
-            vm.vendors = vendors;
-            return vendors;
+            var sortedVendors = $filter('orderBy')(vendors, 'name');
+            vm.vendors = sortedVendors;
+            return sortedVendors;
         });
     }
 
     function loadLibraryList() {
         return libraryService.list().then(function(libraries) {
-            vm.libraries = libraries;
-            return libraries;
+            var sortedLibraries = $filter('orderBy')(libraries, 'name');
+            vm.libraries = sortedLibraries;
+            return sortedLibraries;
         });
     }
 

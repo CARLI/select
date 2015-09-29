@@ -1,0 +1,9 @@
+#licenses {
+    .entity-list {
+        .fa-flag {
+            color: $orange;
+            margin-left: 1rem;
+            @include font-size(20);
+        }
+    }
+}

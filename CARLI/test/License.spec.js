@@ -2,6 +2,7 @@ var chai   = require( 'chai' )
     , expect = chai.expect
     , chaiAsPromised = require( 'chai-as-promised' )
     , VendorRepository = require('../Entity/VendorRepository' )
+    , moment = require('moment')
     , LicenseRepository = require('../Entity/LicenseRepository' )
     , uuid   = require( 'node-uuid' )
     , test = require( './Entity/EntityInterface.spec' )
@@ -55,6 +56,39 @@ describe('Converting referenced entities', function() {
                     return expect(testLicense.vendor).to.be.an('object').and.have.property('name');
                 });
         });
+    });
+});
+
+describe.only('instance methods added to License objects', function(){ //TODO: REMOVE ONLY
+    it('should add a currentTermEndsSoon method', function(){
+        var testLicense = validLicenseData();
+        return LicenseRepository.create(testLicense)
+            .then(LicenseRepository.load)
+            .then(function(expandedLicense){
+                return expect(expandedLicense.currentTermEndsSoon).to.be.a('function');
+            });
+    });
+
+    it('should return true if the currentTermEnds date is less than nine months away', function(){
+        var testLicense = validLicenseData();
+        testLicense.currentTermEndDate = moment().subtract(3, 'days').format();
+
+        return LicenseRepository.create(testLicense)
+            .then(LicenseRepository.load)
+            .then(function(expandedLicense){
+                return expect(expandedLicense.currentTermEndsSoon()).to.be.true;
+            });
+    });
+
+    it('should return false if the currentTermEnds date is more than nine months away', function(){
+        var testLicense = validLicenseData();
+        testLicense.currentTermEndDate = moment().add(10, 'months').format();
+
+        return LicenseRepository.create(testLicense)
+            .then(LicenseRepository.load)
+            .then(function(expandedLicense){
+                return expect(expandedLicense.currentTermEndsSoon()).to.be.false;
+            });
     });
 });
 
