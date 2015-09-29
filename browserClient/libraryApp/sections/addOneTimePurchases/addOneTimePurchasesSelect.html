@@ -15,7 +15,7 @@
                 </div>
                 <div class="column vendor">{{ offering.product.vendor.name }}</div>
                 <div class="column funded">
-                    <span>{{ offering.product.funded | currency }}</span>
+                    <fa name="check-circle" ng-if="::vm.isFunded(offering)"></fa>
                 </div>
                 <div class="column select">
                     <span ng-if="offering.selectionPendingReview" class="price">{{ offering.selectionPendingReview.price | currency }}</span>
