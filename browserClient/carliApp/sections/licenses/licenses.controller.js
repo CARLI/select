@@ -33,6 +33,13 @@ function licensesController( $sce, licenseService ){
             label: "Contract Number",
             orderByProperty: ['contractNumber','name'],
             contentFunction: function(license) { return license.contractNumber; }
+        },
+        {
+            label: "Current Term Ends",
+            orderByProperty: ['currentTermEndDate','name'],
+            contentFunction: function(license) {
+                return license.currentTermEndDate;
+            }
         }
     ];
 }
