@@ -128,11 +128,12 @@
                     {{ offering.product.vendor.name }}
                 </div>
                 <div class="column purchase">
-                    Your library purchased this item
+                    <span ng-show="vm.wasFullyFunded(offering)">This product was fully funded by CARLI</span>
+                    <span ng-show="!vm.wasFullyFunded(offering)">Your library purchased this item</span>
                     <span ng-show="offering.selection.datePurchased">on</span>
                     <span class="date">{{ offering.selection.datePurchased | date:shortDate }}</span>
-                    <span ng-show="vm.getFundedSelectionPrice(offering)">for</span>
-                    <span class="price">{{ vm.getFundedSelectionPrice(offering) | currency }}</span>
+                    <span ng-show="vm.getFundedSelectionPrice(offering) && !vm.wasFullyFunded(offering)">for</span>
+                    <span ng-show="!vm.wasFullyFunded(offering)" class="price">{{ vm.getFundedSelectionPrice(offering) | currency }}</span>
                 </div>
             </div>
             <div class="content">
