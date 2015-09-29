@@ -293,9 +293,7 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
             savePromise = saveExistingProduct();
         }
 
-        return savePromise
-            .then(saveFunding)
-            .then(syncData);
+        return savePromise.then(syncData);
 
         function syncData(){
             return cycleService.syncDataToVendorDatabase( vm.product.vendor.id, vm.product.cycle );
