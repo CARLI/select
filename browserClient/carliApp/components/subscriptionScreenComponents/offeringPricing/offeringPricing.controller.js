@@ -15,7 +15,6 @@ function offeringPricingController($scope, offeringService){
     }
 
     function copyFundedPriceToViewModel() {
-        console.log('updated price');
         vm.fundedPrice = offeringService.getFundedSiteLicensePrice(vm.offering);
     }
 }

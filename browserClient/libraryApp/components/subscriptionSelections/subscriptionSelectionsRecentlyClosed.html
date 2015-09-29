@@ -11,7 +11,7 @@
         <div class="column">{{ vm.getProductDisplayName(offering.product) }}</div>
         <div class="column vendor">{{ offering.product.vendor.name }}</div>
         <div class="column su">{{ offering.selection.users }}</div>
-        <div class="column review-cost">{{ offering.selection.price | currency }}</div>
+        <div class="column review-cost">{{ vm.getFundedSelectionPrice(offering) | currency }}</div>
     </li>
     <li class="summary-row">
         <div class="column">
@@ -52,7 +52,7 @@
                 <span>{{ offering.product.funded | currency }}</span>
             </div>
             <div class="column select">
-                <span ng-if="offering.selection" class="price">{{ offering.selection.price | currency }}</span>
+                <span ng-if="offering.selection" class="price">{{ vm.getFundedSelectionPrice(offering) | currency }}</span>
             </div>
         </div>
         <div class="content">

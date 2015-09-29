@@ -23,17 +23,22 @@ function addOneTimePurchasesController( $q, $location, config, activityLogServic
 
     vm.completeSelections = completeSelections;
     vm.computeTotalPurchasesAmount = computeTotalPurchasesAmount;
+    vm.exportProductList = exportProductList;
+    vm.getFundedSelectionPrice = getFundedSelectionPrice;
+    vm.getFundedSelectionPendingPrice = getFundedSelectionPendingPrice;
+    vm.getFundedSiteLicensePrice = getFundedSiteLicensePrice;
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.hasPendingSelection = hasPendingSelection;
+    vm.isFunded = isFunded;
     vm.returnToBeginning = returnToBeginning;
     vm.reviewSelections = reviewSelections;
-    vm.startSelections = startSelections;
     vm.selectProduct = selectProduct;
     vm.sortAvailable = function sortAvailable(newSort){ sort(newSort, 'Available'); };
     vm.sortPurchased = function sortPurchased(newSort){ sort(newSort, 'Purchased'); };
+    vm.startSelections = startSelections;
     vm.todo = todo;
     vm.unSelectProduct = unselectProduct;
-    vm.exportProductList = exportProductList;
+    vm.wasFullyFunded = wasFullyFunded;
 
     activate();
 
@@ -208,9 +213,25 @@ function addOneTimePurchasesController( $q, $location, config, activityLogServic
         function getSelectionPrice(offering) {
             var price = '';
             if (offering.selection) {
-                price = offering.selection.price;
+                price = getFundedSelectionPrice(offering);
             }
             return price;
         }
+    }
+    function isFunded(offering) {
+        return offeringService.isFunded(offering);
+    }
+    function getFundedSelectionPrice(offering) {
+        return offeringService.getFundedSelectionPrice(offering);
+    }
+    function getFundedSelectionPendingPrice(offering) {
+        return offeringService.getFundedSelectionPendingPrice(offering);
+    }
+    function getFundedSiteLicensePrice(offering) {
+        return offeringService.getFundedSiteLicensePrice(offering);
+    }
+    function wasFullyFunded(offering) {
+        var pricePaid = getFundedSelectionPrice(offering);
+        return pricePaid === 0 || pricePaid === 0.01;
     }
 }
