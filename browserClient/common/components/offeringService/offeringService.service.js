@@ -41,6 +41,9 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
         getFundedSelectionPrice: function( offering ) {
             return offeringModule.getFundedSelectionPrice(offering);
         },
+        getFundedSelectionPendingPrice: function( offering ) {
+            return offeringModule.getFundedSelectionPendingPrice(offering);
+        },
         getFundedSiteLicensePrice: function( offering ) {
             return offeringModule.getFundedSiteLicensePrice(offering);
         },
