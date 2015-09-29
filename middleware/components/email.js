@@ -1,16 +1,18 @@
-var config = require('../../config');
-var cycleRepository = require('../../CARLI/Entity/CycleRepository.js');
 var handlebars = require('handlebars');
 var mailer = require('nodemailer');
-var mailTransport = mailer.createTransport(null);
-var notificationRepository = require('../../CARLI/Entity/NotificationRepository.js');
 var numeral = require('numeral');
-var pdf = require('./pdf');
-var offeringRepository = require('../../CARLI/Entity/OfferingRepository.js');
 var Q = require('q');
 var request = require('request');
+
+var config = require('../../config');
+var cycleRepository = require('../../CARLI/Entity/CycleRepository.js');
+var notificationRepository = require('../../CARLI/Entity/NotificationRepository.js');
+var offeringRepository = require('../../CARLI/Entity/OfferingRepository.js');
+var pdf = require('./pdf');
 var vendorReportCsv = require('./csv/vendorReport');
 var vendorRepository = require('../../CARLI/Entity/VendorRepository.js');
+
+var mailTransport = mailer.createTransport(null);
 
 function tellPixobot(envelope) {
     if (typeof envelope === 'string') {
@@ -127,7 +129,7 @@ function sendOneTimePurchaseMessage( offeringId ){
 
     function messageText(offering){
         return offering.library.name + ' purchased ' +
-               offering.product.name + ' for $' + formatCurrency(offering.selection.price);
+               offering.product.name + ' for $' + formatCurrency(offeringRepository.getFundedSelectionPrice(offering));
     }
 }
 
