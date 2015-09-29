@@ -211,7 +211,7 @@ function addOneTimePurchasesController( $q, $location, config, activityLogServic
         function getSelectionPrice(offering) {
             var price = '';
             if (offering.selection) {
-                price = offering.selection.price;
+                price = getFundedSelectionPrice(offering);
             }
             return price;
         }
@@ -221,6 +221,9 @@ function addOneTimePurchasesController( $q, $location, config, activityLogServic
     }
     function getFundedSelectionPrice(offering) {
         return offeringService.getFundedSelectionPrice(offering);
+    }
+    function getFundedSelectionPendingPrice(offering) {
+        return offeringService.getFundedSelectionPendingPrice(offering);
     }
     function getFundedSiteLicensePrice(offering) {
         return offeringService.getFundedSiteLicensePrice(offering);

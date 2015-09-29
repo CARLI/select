@@ -18,7 +18,7 @@
                     <fa name="check-circle" ng-if="::vm.isFunded(offering)"></fa>
                 </div>
                 <div class="column select">
-                    <span ng-if="offering.selectionPendingReview" class="price">{{ offering.selectionPendingReview.price | currency }}</span>
+                    <span ng-if="offering.selectionPendingReview" class="price">{{ vm.getFundedSelectionPendingPrice(offering) | currency }}</span>
                 </div>
             </div>
             <div class="content">
@@ -77,7 +77,7 @@
                 </div>
                 <div class="column select">
                     <div class="subscription-buttons">
-                        <subscription-button title="Site License" price="{{ offering.pricing.site }}"
+                        <subscription-button title="Site License" price="{{ vm.getFundedSiteLicensePrice(offering) }}"
                                              selected="offering.selectionPendingReview"
                                              busy-click="vm.selectProduct(offering)"
                                              ng-if="offering.pricing.site">
@@ -131,8 +131,8 @@
                     Your library purchased this item
                     <span ng-show="offering.selection.datePurchased">on</span>
                     <span class="date">{{ offering.selection.datePurchased | date:shortDate }}</span>
-                    <span ng-show="offering.selection.price">for</span>
-                    <span class="price">{{ offering.selection.price | currency }}</span>
+                    <span ng-show="vm.getFundedSelectionPrice(offering)">for</span>
+                    <span class="price">{{ vm.getFundedSelectionPrice(offering) | currency }}</span>
                 </div>
             </div>
             <div class="content">
