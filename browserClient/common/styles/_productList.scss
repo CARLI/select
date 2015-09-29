@@ -204,7 +204,8 @@ ul.product-list.subscriptions {
             text-align: center;
         }
 
-        &.offering .column.selected-last-year {
+        &.offering .column.selected-last-year,
+        &.offering .column.funded {
             font-size: 22px;
             line-height: 22px;
             padding-bottom: 2px;
@@ -214,6 +215,7 @@ ul.product-list.subscriptions {
         .column.funded {
             flex: none;
             width: $funded-column-width;
+            text-align: center;
         }
 
         .column.select {
