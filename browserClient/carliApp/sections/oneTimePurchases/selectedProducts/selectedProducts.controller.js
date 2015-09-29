@@ -19,6 +19,9 @@
         vm.invoiceAnnualAccessFees = invoiceAnnualAccessFees;
         vm.sort = sort;
         vm.getProductDisplayName = productService.getProductDisplayName;
+        vm.isFunded = isFunded;
+        vm.getFundedSelectionPrice = getFundedSelectionPrice;
+        vm.getFundedSiteLicensePrice = getFundedSiteLicensePrice;
 
         initFilterableByPurchased($scope, vm);
         activate();
@@ -182,6 +185,16 @@
             else {
                 return 'This product will be displayed to this library normally.';
             }
+        }
+
+        function isFunded(offering) {
+            return offeringService.isFunded(offering);
+        }
+        function getFundedSelectionPrice(offering) {
+            return offeringService.getFundedSelectionPrice(offering);
+        }
+        function getFundedSiteLicensePrice(offering) {
+            return offeringService.getFundedSiteLicensePrice(offering);
         }
     }
 

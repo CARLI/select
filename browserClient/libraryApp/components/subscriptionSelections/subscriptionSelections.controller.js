@@ -23,23 +23,26 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
 
     vm.completeSelections = completeSelections;
     vm.computeTotalPurchasesAmount = computeTotalPurchasesAmount;
+    vm.exportProductList = exportProductList;
+    vm.getFundedSelectionPrice = getFundedSelectionPrice;
+    vm.getFundedSiteLicensePrice = getFundedSiteLicensePrice;
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.hasSelection = hasSelection;
+    vm.isFunded = isFunded;
     vm.isSelected = isSelected;
     vm.returnToBeginning = returnToBeginning;
     vm.reviewSelections = reviewSelections;
-    vm.startSelections = startSelections;
+    vm.selectAndUpdateProduct = selectAndUpdateProduct;
     vm.selectedLastYear = selectedLastYear;
     vm.selectLastYearsSelections = selectLastYearsSelections;
     vm.selectProduct = selectProduct;
-    vm.selectAndUpdateProduct = selectAndUpdateProduct;
     vm.sort = sort;
+    vm.startSelections = startSelections;
     vm.todo = todo;
     vm.toggleProduct = toggleProduct;
+    vm.unSelectAndUpdateProduct = unSelectAndUpdateProduct;
     vm.unselected = unselected;
     vm.unSelectProduct = unSelectProduct;
-    vm.unSelectAndUpdateProduct = unSelectAndUpdateProduct;
-    vm.exportProductList = exportProductList;
 
     activate();
 
@@ -394,5 +397,15 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
             }
             return price;
         }
+    }
+
+    function isFunded(offering) {
+        return offeringService.isFunded(offering);
+    }
+    function getFundedSelectionPrice(offering) {
+        return offeringService.getFundedSelectionPrice(offering);
+    }
+    function getFundedSiteLicensePrice(offering) {
+        return offeringService.getFundedSiteLicensePrice(offering);
     }
 }

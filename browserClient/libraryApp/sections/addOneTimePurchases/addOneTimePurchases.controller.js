@@ -23,17 +23,20 @@ function addOneTimePurchasesController( $q, $location, config, activityLogServic
 
     vm.completeSelections = completeSelections;
     vm.computeTotalPurchasesAmount = computeTotalPurchasesAmount;
+    vm.exportProductList = exportProductList;
+    vm.getFundedSelectionPrice = getFundedSelectionPrice;
+    vm.getFundedSiteLicensePrice = getFundedSiteLicensePrice;
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.hasPendingSelection = hasPendingSelection;
+    vm.isFunded = isFunded;
     vm.returnToBeginning = returnToBeginning;
     vm.reviewSelections = reviewSelections;
-    vm.startSelections = startSelections;
     vm.selectProduct = selectProduct;
     vm.sortAvailable = function sortAvailable(newSort){ sort(newSort, 'Available'); };
     vm.sortPurchased = function sortPurchased(newSort){ sort(newSort, 'Purchased'); };
+    vm.startSelections = startSelections;
     vm.todo = todo;
     vm.unSelectProduct = unselectProduct;
-    vm.exportProductList = exportProductList;
 
     activate();
 
@@ -212,5 +215,14 @@ function addOneTimePurchasesController( $q, $location, config, activityLogServic
             }
             return price;
         }
+    }
+    function isFunded(offering) {
+        return offeringService.isFunded(offering);
+    }
+    function getFundedSelectionPrice(offering) {
+        return offeringService.getFundedSelectionPrice(offering);
+    }
+    function getFundedSiteLicensePrice(offering) {
+        return offeringService.getFundedSiteLicensePrice(offering);
     }
 }
