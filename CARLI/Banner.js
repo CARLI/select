@@ -53,11 +53,12 @@ function getDataForBannerExport(cycle, batchId) {
             throwIfDuplicateLibraries(notification);
             throwIfDuplicateInvoiceNumber(notification);
 
-            if (notification.summaryTotal) {
+            var library = librariesById[ notification.targetEntity ];
+            if (library && notification.summaryTotal) {
                 var bannerFeedData = {
                     batchId: notification.batchId,
                     date: notification.dateCreated,
-                    library: librariesById[ notification.targetEntity ],
+                    library: library,
                     dollarAmount: notification.summaryTotal,
                     invoiceNumber: notification.invoiceNumber
                 };
