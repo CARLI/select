@@ -5,6 +5,7 @@
 
     <div class="controls">
         <button type="button" id="toggle-comment-mode" class="toggle-button" ng-class="{ active: vm.isCommentModeEnabled }" busy-click="vm.toggleCommentMode()">Add Comment for CARLI<i class="fa fa-comment-o"></i></button>
+        <button busy-click="vm.downloadCsv()" class="carli-button">Export to CSV</button>
         <button type="button" id="save-site-license-prices" class="carli-button" busy-click="vm.saveOfferings()">Save Changes<i class="fa fa-floppy-o"></i></button>
     </div>
 </div>
@@ -60,7 +61,7 @@
                     <div class="column header {{ ::product.id }}" ng-repeat="product in vm.products | orderBy:'name'">{{ ::product.priceCap }}%</div>
                 </div>
                 <div class="price-row product-name-row">
-                    <div class="column header {{ ::product.id }}" ng-repeat="product in vm.products | orderBy:'name'">{{ ::product.name }}</div>
+                    <div class="column header {{ ::product.id }}" title="{{ ::product.name }}" ng-repeat="product in vm.products | orderBy:'name'">{{ ::product.name }}</div>
                 </div>
             </div>
         </div>
@@ -69,6 +70,7 @@
 <section class="content">
     <div class="pull-right">
         <button busy-click="vm.downloadCsv()" class="carli-button">Export to CSV</button>
+        <button type="button" id="save-site-license-prices" class="carli-button" busy-click="vm.saveOfferings()">Save Changes<i class="fa fa-floppy-o"></i></button>
     </div>
 </section>
 
