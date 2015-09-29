@@ -1,7 +1,7 @@
 angular.module('carli.sections.licenses')
 .controller('licensesController', licensesController);
 
-function licensesController( $sce, licenseService ){
+function licensesController( $filter, $sce, licenseService ){
     var vm = this;
     vm.afterLicenseSubmit = populateLicenseList;
     activate();
@@ -33,6 +33,20 @@ function licensesController( $sce, licenseService ){
             label: "Contract Number",
             orderByProperty: ['contractNumber','name'],
             contentFunction: function(license) { return license.contractNumber; }
+        },
+        {
+            label: "Current Term Ends",
+            orderByProperty: ['currentTermEndDate','name'],
+            contentFunction: function(license) {
+                var endDate = $filter('date')(license.currentTermEndDate, 'MM/dd/yyyy');
+                var flag = '';
+
+                if ( license.currentTermEndsSoon() ){
+                    flag = '<span class="fa fa-flag"></span>';
+                }
+
+                return endDate + flag;
+            }
         }
     ];
 }

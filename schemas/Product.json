@@ -57,9 +57,6 @@
       "description": "Terms of the license that this Product overrides",
       "$ref": "./LicenseTerms.json"
     },
-    "licenseType": {
-      "$ref": "./ProductLicenseType.json"
-    },
     "priceCap": {
       "description": "The price cap (allowed percentage increase in price) for this product for the current cycle",
       "type": "number"
