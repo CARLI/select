@@ -39,7 +39,7 @@
                         </div>
                         <div class="column">{{ ::offering.product.vendor.name }}</div>
                         <div class="column">
-                            <span ng-if="offering.selection" class="price">{{ offering.pricing.site | currency }}</span>
+                            <span ng-if="offering.selection" class="price">{{ vm.getFundedSelectionPrice(offering) | currency }}</span>
                         </div>
                     </div>
                     <div class="content">
@@ -54,7 +54,7 @@
                                     <p>{{ offering.selection.datePurchased | date:shortDate }}</p>
                                 </div>
                             </div>
-                            <div class="product-boolean-item" ng-show=""><fa name="check"></fa> Funded</div>
+                            <div class="product-boolean-item"><fa name="check-circle" ng-if="::vm.isFunded(offering)"></fa></div>
                             <div class="product-boolean-item" ng-show="offering.oneTimePurchaseAnnualAccessFee"><fa name="check"></fa> Requires Annual Access Fee of {{ offering.oneTimePurchaseAnnualAccessFee | currency  }}</div>
                             <div class="product-boolean-item">{{ ::vm.englishSummaryOfDisplayProperty(offering) }}</div>
                         </div>
@@ -71,7 +71,7 @@
                                 </div>
                                 <div ng-if="offering.pricing.site">
                                     <div class="label">Add Product</div>
-                                    <div ng-click="vm.purchaseProduct(offering)" class="carli-button ask-button">{{ offering.pricing.site | currency }} <fa name="plus-circle"></fa></div>
+                                    <div ng-click="vm.purchaseProduct(offering)" class="carli-button ask-button">{{ vm.getFundedSiteLicensePrice(offering) | currency }} <fa name="plus-circle"></fa></div>
                                 </div>
                             </div>
                             <div ng-if="offering.selection">
