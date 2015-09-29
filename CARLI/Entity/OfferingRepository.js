@@ -729,6 +729,10 @@ function getFundedSelectionPrice(offering) {
     return getFundedPrice(offering.selection.price, offering.funding);
 }
 
+function getFundedSelectionPendingPrice(offering) {
+    return getFundedPrice(offering.selectionPendingReview.price, offering.funding);
+}
+
 function getFundedSiteLicensePrice(offering) {
     return getFundedPrice(offering.pricing.site, offering.funding);
 }
@@ -832,5 +836,6 @@ module.exports = {
     siteLicenseSelectionUsers: 'Site License',
     isFunded: isFunded,
     getFundedSelectionPrice: getFundedSelectionPrice,
+    getFundedSelectionPendingPrice: getFundedSelectionPendingPrice,
     getFundedSiteLicensePrice: getFundedSiteLicensePrice
 };
