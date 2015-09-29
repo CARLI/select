@@ -12,7 +12,7 @@
         <div class="column">{{ vm.getProductDisplayName(offering.product) }}</div>
         <div class="column vendor">{{ offering.product.vendor.name }}</div>
         <div class="column su">{{ offering.selection.users }}</div>
-        <div class="column review-cost">{{ offering.selection.price | currency }}</div>
+        <div class="column review-cost">{{ vm.getFundedSelectionPrice(offering) | currency }}</div>
     </li>
     <li class="summary-row">
         <div class="column">

@@ -703,8 +703,34 @@ function createOfferingsFor( productId, vendorId, libraryIds, cycle ){
     }
 }
 
+function isFunded(offering) {
+    var funding = offering.funding;
+
+    return (hasFundingData() && isFundedByPercentOrPrice());
+
+    function hasFundingData() {
+        return !!funding;
+    }
+
+    function isFundedByPercentOrPrice() {
+        return isFundedByPercent() || isFundedByPrice();
+    }
+
+    function isFundedByPercent() {
+        return funding.fundedByPercentage && funding.fundedPercent > 0;
+    }
+
+    function isFundedByPrice() {
+        return !funding.fundedByPercentage && funding.fundedPrice > 0;
+    }
+}
+
 function getFundedSelectionPrice(offering) {
     return getFundedPrice(offering.selection.price, offering.funding);
+}
+
+function getFundedSelectionPendingPrice(offering) {
+    return getFundedPrice(offering.selectionPendingReview.price, offering.funding);
 }
 
 function getFundedSiteLicensePrice(offering) {
@@ -808,6 +834,8 @@ module.exports = {
 
     getFlaggedState: getFlaggedState,
     siteLicenseSelectionUsers: 'Site License',
+    isFunded: isFunded,
     getFundedSelectionPrice: getFundedSelectionPrice,
+    getFundedSelectionPendingPrice: getFundedSelectionPendingPrice,
     getFundedSiteLicensePrice: getFundedSiteLicensePrice
 };
