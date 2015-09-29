@@ -632,7 +632,7 @@ function generateNotificationForLibrary(libraryId, offeringsForAll, customizedTe
             notification.offeringIds = idsFromOfferings(offeringsForLibrary);
         }
 
-        var summaryTotal = notificationRepository.getSummaryTotal(notification, offeringsForLibrary);
+        var summaryTotal = notificationRepository.getSummaryFundedTotal(notification, offeringsForLibrary);
         if ( typeof summaryTotal === 'number' ){
             notification.summaryTotal = summaryTotal;
         }
