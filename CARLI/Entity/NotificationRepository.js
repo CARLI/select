@@ -186,7 +186,17 @@ function getRecipientEmailAddresses(recipientId, notificationType) {
     }
 }
 
+function getSummaryFundedTotal(notification, offerings) {
+    return getSummaryTotalWithPriceGetter(notification, offerings, offeringRepository.getFundedSelectionPrice);
+}
 function getSummaryTotal(notification, offerings) {
+    return getSummaryTotalWithPriceGetter(notification, offerings, getFullPrice);
+
+    function getFullPrice(offering) {
+        return offering.selection.price;
+    }
+}
+function getSummaryTotalWithPriceGetter(notification, offerings, getPriceFromOffering) {
     if ( !offerings ){
         return;
     }
@@ -222,7 +232,7 @@ function getSummaryTotal(notification, offerings) {
 
         function sumOfPrices(sum, offering) {
             if (offering.selection) {
-                return sum + offeringRepository.getFundedSelectionPrice(offering);
+                return sum + getPriceFromOffering(offering);
             } else {
                 return sum;
             }
@@ -342,5 +352,6 @@ module.exports = {
     templateIsForMembershipDues: templateIsForMembershipDues,
     notificationTypeAllowsRecipientsToBeEdited: notificationTypeAllowsRecipientsToBeEdited,
     listInvoiceNotificationsForCycleId: listInvoiceNotificationsForCycleId,
+    getSummaryFundedTotal: getSummaryFundedTotal,
     getSummaryTotal: getSummaryTotal
 };

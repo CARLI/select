@@ -352,6 +352,75 @@ describe('the getSummaryTotal method', function () {
     };
 
     it('should be a repository function', function () {
+        expect(notificationRepository.getSummaryFundedTotal).to.be.a('function');
+    });
+
+    it('should return the total of all selected prices in the given offerings for a non-fee invoice', function () {
+        var notification = validNotificationData();
+        var offerings = getTestOfferings();
+        expect(notificationRepository.getSummaryFundedTotal(notification, offerings)).to.equal(200);
+    });
+
+    it('should return treat 0% funding the same as full price', function () {
+        var notification = validNotificationData();
+        var offerings = getTestOfferings();
+
+        offerings[0].funding = zeroPercentFunded;
+        offerings[1].funding = zeroPercentFunded;
+
+        expect(notificationRepository.getSummaryFundedTotal(notification, offerings)).to.equal(200);
+    });
+
+    it('should reflect the reduction in price when a percentage is funded by CARLI', function () {
+        var notification = validNotificationData();
+        var offerings = getTestOfferings();
+
+        offerings[0].funding = fiftyPercentFunded;
+
+        expect(notificationRepository.getSummaryFundedTotal(notification, offerings)).to.equal(150);
+    });
+
+    it('should round prices independently when calculating funded price', function () {
+        var notification = validNotificationData();
+        var offerings = getTestOfferings();
+
+        offerings[0].selection.price = 10.33;
+        offerings[0].funding = fiftyPercentFunded;
+        offerings[1].selection.price = 10.33;
+        offerings[1].funding = fiftyPercentFunded;
+
+        expect(notificationRepository.getSummaryFundedTotal(notification, offerings)).to.equal(10.34);
+    });
+
+    it('should reflect the discounted price when a product is funded to a fixed amount', function () {
+        var notification = validNotificationData();
+        var offerings = getTestOfferings();
+
+        offerings[0].funding = {
+            fundedByPercentage: false,
+            fundedPrice: 25
+        };
+
+        expect(notificationRepository.getSummaryFundedTotal(notification, offerings)).to.equal(125);
+    });
+
+    it('should treat a fixed price of zero as not funded', function () {
+        var notification = validNotificationData();
+        var offerings = getTestOfferings();
+
+        offerings[0].funding = {
+            fundedByPercentage: false,
+            fundedPrice: 0
+        };
+        offerings[1].funding = {
+            fundedByPercentage: false,
+            fundedPrice: 0
+        };
+
+        expect(notificationRepository.getSummaryFundedTotal(notification, offerings)).to.equal(200);
+    });
+
+    it('should be a repository function', function () {
         expect(notificationRepository.getSummaryTotal).to.be.a('function');
     });
 
@@ -371,28 +440,16 @@ describe('the getSummaryTotal method', function () {
         expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(200);
     });
 
-    it('should reflect the reduction in price when a percentage is funded by CARLI', function () {
+    it('should NOT reflect the reduction in price when a percentage is funded by CARLI', function () {
         var notification = validNotificationData();
         var offerings = getTestOfferings();
 
         offerings[0].funding = fiftyPercentFunded;
 
-        expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(150);
+        expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(200);
     });
 
-    it('should round prices independently when calculating funded price', function () {
-        var notification = validNotificationData();
-        var offerings = getTestOfferings();
-
-        offerings[0].selection.price = 10.33;
-        offerings[0].funding = fiftyPercentFunded;
-        offerings[1].selection.price = 10.33;
-        offerings[1].funding = fiftyPercentFunded;
-
-        expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(10.34);
-    });
-
-    it('should reflect the discounted price when a product is funded to a fixed amount', function () {
+    it('should NOT reflect the discounted price when a product is funded to a fixed amount', function () {
         var notification = validNotificationData();
         var offerings = getTestOfferings();
 
@@ -401,7 +458,7 @@ describe('the getSummaryTotal method', function () {
             fundedPrice: 25
         };
 
-        expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(125);
+        expect(notificationRepository.getSummaryTotal(notification, offerings)).to.equal(200);
     });
 
     it('should treat a fixed price of zero as not funded', function () {
