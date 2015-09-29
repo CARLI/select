@@ -81,27 +81,21 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
     }
 
     function setSelectionScreenState(){
-        console.log('library status', vm.libraryStatus);
-
         var cycleIsOpen = vm.cycle.isOpenToLibraries();
         var cycleIsClosed = vm.cycle.isClosed();
         var libraryIsComplete = (vm.libraryStatus && vm.libraryStatus.isComplete);
         var productsAreAvailable = vm.cycle.productsAreAvailable();
 
         if ( cycleIsOpen && !libraryIsComplete ){
-            console.log('cycle is open, library not complete');
             startSelections();
         }
         else if ( cycleIsOpen && libraryIsComplete ){
-            console.log('cycle is open, library complete');
             selectionsComplete();
         }
         else if ( cycleIsClosed && !productsAreAvailable ){
-            console.log('cycle is closed, products not yet available');
             cycleRecentlyClosed();
         }
         else {
-            console.log('cycle is closed, products are available');
             cycleClosed();
         }
     }
