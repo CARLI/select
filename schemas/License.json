@@ -20,14 +20,6 @@
             "description": "Name of License Agreement",
             "type": "string"
         },
-        "redactedLicenseFile": {
-            "description": "Redacted License File",
-            "type": "string"
-        },
-        "fullLicenseFile": {
-            "description": "Full License File",
-            "type": "string"
-        },
         "eResourcesComments": {
             "description": "Internal E-Resource Comments",
             "type": "string"
