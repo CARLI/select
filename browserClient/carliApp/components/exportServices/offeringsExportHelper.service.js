@@ -32,17 +32,19 @@ function offeringsExportHelper(offeringService) {
                     exportColumns = [ 'Selected Last Year' ];
                     break;
                 case 'site-license-price-current-only':
-                    exportColumns = getExportHeadersForPricingForYear(cycle.year);
+                    exportColumns = [ 'Funded', 'Funded Price' ];
+                    exportColumns = exportColumns.concat(getExportHeadersForPricingForYear(cycle.year));
                     break;
                 case 'site-license-price-both':
                     exportColumns = getExportHeadersForPricingForYear(cycle.year - 1);
+                    exportColumns = exportColumns.concat([ 'Funded', 'Funded Price' ]);
                     exportColumns = exportColumns.concat(getExportHeadersForPricingForYear(cycle.year));
                     break;
                 case 'flag':
                     exportColumns = [ 'Flag' ];
                     break;
                 case 'selection':
-                    exportColumns = [ 'Selection', 'Price', 'Funded', 'Funded Price' ];
+                    exportColumns = [ 'Selection', 'Price' ];
                     break;
                 case 'vendor-invoice':
                     exportColumns = [ 'Vendor Price', 'Invoice #' ];
@@ -90,10 +92,12 @@ function offeringsExportHelper(offeringService) {
                     exportColumns = wasSelectedLastYear() ? [ 'true' ] : [ 'false' ];
                     break;
                 case 'site-license-price-current-only':
-                    exportColumns = getExportDataForPricingForYear(offering, cycle.year);
+                    exportColumns = getFundingExportColumns(offering);
+                    exportColumns = exportColumns.concat(getExportDataForPricingForYear(offering, cycle.year));
                     break;
                 case 'site-license-price-both':
                     exportColumns = getExportDataForPricingForYear(offering, cycle.year - 1);
+                    exportColumns = exportColumns.concat(getFundingExportColumns(offering));
                     exportColumns = exportColumns.concat(getExportDataForPricingForYear(offering, cycle.year));
                     break;
                 case 'flag':
@@ -118,15 +122,13 @@ function offeringsExportHelper(offeringService) {
             function getSelectionColumns(offering) {
                 var selection = '';
                 var price = '';
-                var isFunded = offeringService.isFunded(offering);
-                var fundedPrice = offeringService.getFundedSiteLicensePrice(offering);
 
                 if (offering.selection) {
                     selection = formatSelection(offering.selection.users);
                     price = offering.selection.price;
                 }
 
-                return [ selection, price, isFunded, fundedPrice ];
+                return [ selection, price ];
 
                 function formatSelection( users ) {
                     return users === offeringService.siteLicenseSelectionUsers ? 'Site License' : users + usersLabel(users);
@@ -146,6 +148,13 @@ function offeringsExportHelper(offeringService) {
                 return [ price, number ];
             }
 
+        }
+
+        function getFundingExportColumns(offering) {
+            var isFunded = offeringService.isFunded(offering) ? 'true' : 'false';
+            var fundedPrice = offeringService.getFundedSiteLicensePrice(offering);
+
+            return [ isFunded, fundedPrice ];
         }
 
         function getExportDataForPricingForYear(offering, year) {
