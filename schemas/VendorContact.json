@@ -15,6 +15,7 @@
     "contactType": {
       "type": "string",
       "enum": [
+        "Billing",
         "Sales",
         "Technical",
         "Other"
