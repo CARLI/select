@@ -25,7 +25,6 @@ angular.module('common.libraryProductsList')
             '        <div class="column cost">{{ vm.selectionTotal() | currency }}</div>',
             '    </li>',
             '</ul>',
-            '<div class="placeholder" style="width: 300px; margin: -45px 0 1rem;">Print | Export | Email</div>',
             '<button class="carli-button" busy-click="vm.exportProductList()">Export</button>'
         ].join(''),
         scope: {
