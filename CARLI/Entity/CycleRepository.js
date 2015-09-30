@@ -161,9 +161,10 @@ var functionsToAdd = {
         return this.databaseName;
     },
     getCycleSelectionAndInvoiceTotals: function getCycleSelectionAndInvoiceTotals() {
-        return couchUtils.getCouchViewResultValues(this.getDatabaseName(), 'getCycleSelectionAndInvoiceTotals').then(function(resultArray){
-            return resultArray[0];
-        });
+        return couchUtils.getCouchViewResultValues(this.getDatabaseName(), 'getCycleSelectionAndInvoiceTotals')
+            .then(function(resultArray){
+                return resultArray[0];
+            });
     },
     isOpenToLibraries: function(){
         return isOpenToLibraries(this);

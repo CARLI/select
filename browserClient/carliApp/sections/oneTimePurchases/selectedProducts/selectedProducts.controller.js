@@ -117,7 +117,7 @@
             for (var i=0; i<vm.offeringList.length; i++) {
                 offering = vm.offeringList[i];
                 if (vm.filter(offering) && offering.selection) {
-                    totalAmount += offering.selection.price;
+                    totalAmount += offeringService.getFundedSelectionPrice(offering);
                 }
             }
             return totalAmount;
