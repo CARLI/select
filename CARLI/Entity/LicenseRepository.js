@@ -86,6 +86,10 @@ function getOfferingTypeOptions(){
     return Validator.getEnumValuesFor('License', 'offeringType');
 }
 
+function getLicensesById( ids ){
+    return CouchUtils.getCouchDocuments(config.getDbName(), ids);
+}
+
 function setStore(store) {
     LicenseRepository.setStore(store);
     CouchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
@@ -99,5 +103,6 @@ module.exports = {
     load: loadLicense,
     listLicensesUnexpanded: listLicensesUnexpanded,
     listLicensesForVendorId: listLicensesForVendorId,
-    getOfferingTypeOptions: getOfferingTypeOptions
+    getOfferingTypeOptions: getOfferingTypeOptions,
+    getLicensesById: getLicensesById
 };
