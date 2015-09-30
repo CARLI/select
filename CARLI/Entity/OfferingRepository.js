@@ -746,6 +746,13 @@ function getFundedSiteLicensePrice(offering) {
     return getFundedPrice(offering.pricing.site, offering.funding);
 }
 
+function getAmountPaidByCarli(offering) {
+    var amountPaidByLibrary = getFundedSelectionPrice(offering);
+    var totalAmount = offering.selection.price;
+
+    return totalAmount - amountPaidByLibrary;
+}
+
 function getFundedPrice(price, funding) {
     var fundedPrice = price;
 
@@ -846,5 +853,6 @@ module.exports = {
     isFunded: isFunded,
     getFundedSelectionPrice: getFundedSelectionPrice,
     getFundedSelectionPendingPrice: getFundedSelectionPendingPrice,
-    getFundedSiteLicensePrice: getFundedSiteLicensePrice
+    getFundedSiteLicensePrice: getFundedSiteLicensePrice,
+    getAmountPaidByCarli: getAmountPaidByCarli
 };
