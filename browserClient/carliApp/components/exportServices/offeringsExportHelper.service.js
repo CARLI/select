@@ -42,7 +42,7 @@ function offeringsExportHelper(offeringService) {
                     exportColumns = [ 'Flag' ];
                     break;
                 case 'selection':
-                    exportColumns = [ 'Selection', 'Price' ];
+                    exportColumns = [ 'Selection', 'Price', 'Funded', 'Funded Price' ];
                     break;
                 case 'vendor-invoice':
                     exportColumns = [ 'Vendor Price', 'Invoice #' ];
@@ -118,11 +118,15 @@ function offeringsExportHelper(offeringService) {
             function getSelectionColumns(offering) {
                 var selection = '';
                 var price = '';
+                var isFunded = offeringService.isFunded(offering);
+                var fundedPrice = offeringService.getFundedSiteLicensePrice(offering);
+
                 if (offering.selection) {
                     selection = formatSelection(offering.selection.users);
                     price = offering.selection.price;
                 }
-                return [ selection, price ];
+
+                return [ selection, price, isFunded, fundedPrice ];
 
                 function formatSelection( users ) {
                     return users === offeringService.siteLicenseSelectionUsers ? 'Site License' : users + usersLabel(users);
