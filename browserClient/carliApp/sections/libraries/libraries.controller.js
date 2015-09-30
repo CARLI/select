@@ -19,7 +19,7 @@ function libraryController( $sce, libraryService ){
 
     vm.entityListColumns = [
         {
-            'label': 'Library Name',
+            'label': 'Institution Name',
             orderByProperty: 'name',
             'contentFunction': function(library) { return $sce.trustAsHtml('<a href="/library/' + library.id +'">' + library.name + '</a>'); }
         },
