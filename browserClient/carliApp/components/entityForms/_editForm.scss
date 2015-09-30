@@ -22,6 +22,14 @@
         }
     }
 
+    .value {
+        color: $purple;
+
+        a {
+            color: $purple;
+        }
+    }
+
     .unlabeled-element {
         margin-top: $label-margin-top;
     }
