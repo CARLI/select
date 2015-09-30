@@ -197,9 +197,9 @@ function addOneTimePurchasesController( $q, $location, config, activityLogServic
             return [
                 vm.getProductDisplayName(offering.product),
                 offering.product.vendor.name,
-                offering.product.funded || '',
+                offeringService.isFunded(offering) ? 'true' : 'false',
                 getSelectionUsers(offering),
-                getSelectionPrice(offering)
+                offeringService.getFundedSelectionPrice(offering)
             ];
         }
 
@@ -207,13 +207,6 @@ function addOneTimePurchasesController( $q, $location, config, activityLogServic
             var price = '';
             if (offering.selection) {
                 price = offering.selection.users;
-            }
-            return price;
-        }
-        function getSelectionPrice(offering) {
-            var price = '';
-            if (offering.selection) {
-                price = getFundedSelectionPrice(offering);
             }
             return price;
         }
