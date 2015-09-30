@@ -59,7 +59,7 @@ describe('Converting referenced entities', function() {
     });
 });
 
-describe.only('instance methods added to License objects', function(){ //TODO: REMOVE ONLY
+describe('instance methods added to License objects', function(){
     it('should add a currentTermEndsSoon method', function(){
         var testLicense = validLicenseData();
         return LicenseRepository.create(testLicense)
