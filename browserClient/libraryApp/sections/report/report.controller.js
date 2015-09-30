@@ -1,7 +1,7 @@
 angular.module('library.sections.report')
     .controller('reportController', reportController);
 
-function reportController( $q, $filter, csvExportService, cycleService, productService, userService ){
+function reportController( $q, $filter, csvExportService, cycleService, offeringService, productService, userService ){
     var vm = this;
 
     var currentUser = userService.getUser();
@@ -31,6 +31,7 @@ function reportController( $q, $filter, csvExportService, cycleService, productS
             cycle: 'Cycle',
             product: 'Product',
             vendor: 'Vendor',
+            isFunded: 'Funded',
             selection: 'Selection',
             price: 'Price',
             comment: 'Comments'
@@ -83,8 +84,9 @@ function reportController( $q, $filter, csvExportService, cycleService, productS
                         cycle: offering.cycle.name,
                         product: productService.getProductDisplayName(offering.product),
                         vendor: offering.product.vendor.name,
+                        isFunded: offeringService.isFunded(offering) ? 'true' : 'false',
                         selection: offering.selection.users,
-                        price: offering.selection.price,
+                        price: offeringService.getFundedSelectionPrice(offering),
                         comment: offering.libraryComments
                     });
                 });

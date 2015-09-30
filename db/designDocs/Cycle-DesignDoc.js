@@ -114,12 +114,24 @@ ddoc = {
         getCycleSelectionAndInvoiceTotals: {
             map: function(doc) {
                 if (doc.type == 'Offering') {
-                    selectionPrice = doc.selection ? doc.selection.price : 0;
-                    invoicePrice = doc.invoice ? doc.invoice.price || 0 : 0;
+                    var selectionPrice = doc.selection ? doc.selection.price : 0;
+                    var vendorInvoicePrice = doc.invoice ? doc.invoice.price || 0 : 0;
+
+                    if (doc.funding) {
+                        if (doc.funding.fundedByPercentage) {
+                            if (doc.funding.fundedPercent > 0) {
+                                selectionPrice = selectionPrice - (doc.funding.fundedPercent * selectionPrice);
+                            }
+                        } else {
+                            if (doc.funding.fundedPrice > 0) {
+                                selectionPrice = doc.funding.fundedPrice;
+                            }
+                        }
+                    }
 
                     emit(null, {
                         selectionPrice: selectionPrice,
-                        invoicePrice: invoicePrice
+                        invoicePrice: vendorInvoicePrice
                     });
                 }
             },

@@ -726,15 +726,31 @@ function isFunded(offering) {
 }
 
 function getFundedSelectionPrice(offering) {
+    if (!offering.selection) {
+        return null;
+    }
     return getFundedPrice(offering.selection.price, offering.funding);
 }
 
 function getFundedSelectionPendingPrice(offering) {
+    if (!offering.selectionPendingReview) {
+        return null;
+    }
     return getFundedPrice(offering.selectionPendingReview.price, offering.funding);
 }
 
 function getFundedSiteLicensePrice(offering) {
+    if (!offering.pricing) {
+        return null;
+    }
     return getFundedPrice(offering.pricing.site, offering.funding);
+}
+
+function getAmountPaidByCarli(offering) {
+    var amountPaidByLibrary = getFundedSelectionPrice(offering);
+    var totalAmount = offering.selection.price;
+
+    return totalAmount - amountPaidByLibrary;
 }
 
 function getFundedPrice(price, funding) {
@@ -837,5 +853,6 @@ module.exports = {
     isFunded: isFunded,
     getFundedSelectionPrice: getFundedSelectionPrice,
     getFundedSelectionPendingPrice: getFundedSelectionPendingPrice,
-    getFundedSiteLicensePrice: getFundedSiteLicensePrice
+    getFundedSiteLicensePrice: getFundedSiteLicensePrice,
+    getAmountPaidByCarli: getAmountPaidByCarli
 };

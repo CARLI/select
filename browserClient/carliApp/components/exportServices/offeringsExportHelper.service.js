@@ -32,10 +32,12 @@ function offeringsExportHelper(offeringService) {
                     exportColumns = [ 'Selected Last Year' ];
                     break;
                 case 'site-license-price-current-only':
-                    exportColumns = getExportHeadersForPricingForYear(cycle.year);
+                    exportColumns = [ 'Funded', 'Funded Price' ];
+                    exportColumns = exportColumns.concat(getExportHeadersForPricingForYear(cycle.year));
                     break;
                 case 'site-license-price-both':
                     exportColumns = getExportHeadersForPricingForYear(cycle.year - 1);
+                    exportColumns = exportColumns.concat([ 'Funded', 'Funded Price' ]);
                     exportColumns = exportColumns.concat(getExportHeadersForPricingForYear(cycle.year));
                     break;
                 case 'flag':
@@ -90,10 +92,12 @@ function offeringsExportHelper(offeringService) {
                     exportColumns = wasSelectedLastYear() ? [ 'true' ] : [ 'false' ];
                     break;
                 case 'site-license-price-current-only':
-                    exportColumns = getExportDataForPricingForYear(offering, cycle.year);
+                    exportColumns = getFundingExportColumns(offering);
+                    exportColumns = exportColumns.concat(getExportDataForPricingForYear(offering, cycle.year));
                     break;
                 case 'site-license-price-both':
                     exportColumns = getExportDataForPricingForYear(offering, cycle.year - 1);
+                    exportColumns = exportColumns.concat(getFundingExportColumns(offering));
                     exportColumns = exportColumns.concat(getExportDataForPricingForYear(offering, cycle.year));
                     break;
                 case 'flag':
@@ -118,10 +122,12 @@ function offeringsExportHelper(offeringService) {
             function getSelectionColumns(offering) {
                 var selection = '';
                 var price = '';
+
                 if (offering.selection) {
                     selection = formatSelection(offering.selection.users);
                     price = offering.selection.price;
                 }
+
                 return [ selection, price ];
 
                 function formatSelection( users ) {
@@ -142,6 +148,13 @@ function offeringsExportHelper(offeringService) {
                 return [ price, number ];
             }
 
+        }
+
+        function getFundingExportColumns(offering) {
+            var isFunded = offeringService.isFunded(offering) ? 'true' : 'false';
+            var fundedPrice = offeringService.getFundedSiteLicensePrice(offering);
+
+            return [ isFunded, fundedPrice ];
         }
 
         function getExportDataForPricingForYear(offering, year) {
