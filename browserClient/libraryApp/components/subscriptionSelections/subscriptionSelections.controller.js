@@ -261,7 +261,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
 
         function addSelectionAmount( offering ){
             if ( offering.selection ){
-                totalAmount += offering.selection.price;
+                totalAmount += offeringService.getFundedSelectionPrice(offering);
             }
         }
     }
