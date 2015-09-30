@@ -30,55 +30,35 @@
             <div class="column">
                 <label for="vendor">Vendor</label>
                 <view-edit-typeahead ng-model="vm.product.vendor" options="vm.vendorList" edit-mode="vm.newProduct" input-id="vendor">
-                    <a ng-href="/vendor/{{ vm.product.vendor.id }}">{{ vm.product.vendor.name }}</a>
+                    <span class="value"><a ng-href="/vendor/{{ vm.product.vendor.id }}">{{ vm.product.vendor.name }}</a></span>
                 </view-edit-typeahead>
 
                 <label for="productUrl">Product URL <aside role="note">(Vendor can provide)</aside></label>
                 <view-edit-text-field ng-model="vm.product.productUrl" edit-mode="vm.editable" input-id="productUrl">
-                    {{ vm.product.productUrl }}
+                    <span class="value">{{ vm.product.productUrl }}</span>
                 </view-edit-text-field>
 
                 <label for="description">Product Description <aside role="note">(Vendor can provide)</aside></label>
                 <view-edit-text-area ng-model="vm.product.description" edit-mode="vm.editable" input-id="description">
-                    {{ vm.product.description }}
+                    <span class="value">{{ vm.product.description }}</span>
                 </view-edit-text-area>
 
                 <label for="comments">Comments for Libraries</label>
                 <view-edit-text-area ng-model="vm.product.comments" edit-mode="vm.editable" input-id="comments">
-                    {{ vm.product.comments }}
+                    <span class="value">{{ vm.product.comments }}</span>
                 </view-edit-text-area>
 
                 <div class="column">
                     <div class="label">Type</div>
-
-                    <view-edit-checkbox label="3rd Party Product" ng-model="" edit-mode="false" input-id="isThirdPartyProduct">
-                        3rd Party Product: {{ vm.product.license.licenseType.isThirdPartyProduct ? 'Yes' : 'No' }}
-                    </view-edit-checkbox>
-
-                    <view-edit-checkbox label="Sole Source" ng-model="" edit-mode="false" input-id="soleSource">
-                        Sole Source: {{ vm.product.license.licenseType.isSoleSource ? 'Yes' : 'No' }}
-                    </view-edit-checkbox>
-
-                    <view-edit-checkbox label="Sealed Bid" ng-model="" edit-mode="false" input-id="sealedBid">
-                        Sealed Bid: {{ vm.product.license.licenseType.isSealedBid ? 'Yes' : 'No' }}
-                    </view-edit-checkbox>
-
-                    <view-edit-checkbox label="Consolidated List" ng-model="" edit-mode="false" input-id="consolidatedList">
-                        Consolidated List: {{ vm.product.license.licenseType.isConsolidatedList ? 'Yes' : 'No' }}
-                    </view-edit-checkbox>
-
-                    <view-edit-checkbox label="RFP" ng-model="" edit-mode="false" input-id="rfp">
-                        RFP: {{ vm.product.license.licenseType.isRfp ? 'Yes' : 'No' }}
-                    </view-edit-checkbox>
-
-                    <view-edit-checkbox label="Other" ng-model="" edit-mode="false" input-id="other">
-                        Other: {{ vm.product.license.licenseType.isOtherType ? vm.product.license.licenseType.otherType : 'No' }}
-                    </view-edit-checkbox>
-
-                    <br>
+                        <div>3rd Party Product: <span class="value">{{ vm.product.license.licenseType.isThirdPartyProduct ? 'Yes' : 'No' }}</span></div>
+                        <div>Sole Source: <span class="value">{{ vm.product.license.licenseType.isSoleSource ? 'Yes' : 'No' }}</span></div>
+                        <div>Sealed Bid: <span class="value">{{ vm.product.license.licenseType.isSealedBid ? 'Yes' : 'No' }}</span></div>
+                        <div>Consolidated List: <span class="value">{{ vm.product.license.licenseType.isConsolidatedList ? 'Yes' : 'No' }}</span></div>
+                        <div>RFP: <span class="value">{{ vm.product.license.licenseType.isRfp ? 'Yes' : 'No' }}</span></div>
+                        <div>Other: <span class="value">{{ vm.product.license.licenseType.isOtherType ? vm.product.license.licenseType.otherType : 'No' }}</span></div>
 
                     <view-edit-checkbox label="Archive Capital Fee" ng-model="vm.product.licenseType.hasArchiveCapitalFee" edit-mode="vm.editable" input-id="hasArchiveCapitalFee">
-                        Archive Capital Fee: {{ vm.product.licenseType.hasArchiveCapitalFee ? 'Yes' : 'No' }}
+                        Archive Capital Fee: <span class="value">{{ vm.product.licenseType.hasArchiveCapitalFee ? 'Yes' : 'No' }}</span>
                     </view-edit-checkbox>
 
                     <div ng-show="vm.editable" class="placeholder" style="white-space: nowrap">
@@ -95,7 +75,7 @@
                 <div class="column">
                     <div class="label">Product Status</div>
                     <view-edit-radios radio-group-name="isActive" radio-group-legend="Product Status" items="vm.statusOptions" ng-model="vm.product.isActive" edit-mode="vm.editable" input-id="isActive">
-                        {{ vm.product.isActive ? 'Active Product' : 'Inactive Product' }}
+                        <span class="value">{{ vm.product.isActive ? 'Active Product' : 'Inactive Product' }}</span>
                     </view-edit-radios>
                 </div>
             </div>
@@ -107,7 +87,7 @@
 
                         <label for="priceCap">Price Cap</label>
                         <view-edit-percentage-field ng-model="vm.product.priceCap" edit-mode="vm.editable" input-id="priceCap">
-                            {{ vm.product.priceCap }}%
+                            <span class="value">{{ vm.product.priceCap }}%</span>
                         </view-edit-percentage-field>
 
                         <div class="edit-link-container" ng-show="vm.shouldShowManagePriceCapLink()">
@@ -115,7 +95,7 @@
                         </div>
 
                         <label for="cycle">Cycle</label>
-                        {{ vm.product.cycle.name }}
+                        <div class="value">{{ vm.product.cycle.name }}</div>
                         <a data-toggle="modal" data-target="#otp-modal" ng-show="vm.shouldShowOtpEditLink()">Edit One-Time Purchases <fa name="edit"></fa></a>
                     </div>
 
@@ -125,17 +105,17 @@
                             <div ng-show="vm.editable" class="readonly input">{{ vm.noLicensesMessage }}</div>
                         </div>
                         <view-edit-select-object ng-show="!vm.noLicensesMessage" ng-model="vm.product.license" objects="vm.licenseList" label-property="name" track-by="id" edit-mode="vm.editable" input-id="license">
-                            <a ng-href="/license/{{ vm.product.license.id }}">{{ vm.product.license.name }}</a>
+                            <span class="value"><a ng-href="/license/{{ vm.product.license.id }}">{{ vm.product.license.name }}</a><span class="value">
                         </view-edit-select-object>
                         <div class="warning" ng-show="!vm.productLicenseIsValid()">Invalid License</div>
                         <label for="contractNumber">Contract Number</label>
                         <div>
-                            {{ vm.product.license.contractNumber }}
+                            <span class="value">{{ vm.product.license.contractNumber }}</span>
                         </div>
 
                         <label for="detailCode">Detail Codes</label>
                         <view-edit-select ng-model="vm.product.detailCode" items="vm.productDetailCodeOptions" edit-mode="vm.editable" input-id="detailCode">
-                            {{ vm.product.detailCode }}
+                            <span class="value">{{ vm.product.detailCode }}</span>
                         </view-edit-select>
                     </div>
                 </div>
@@ -160,14 +140,14 @@
                             <li>
                                 <label for="downloadTermsDisplay">Download:</label>
                                 <view-edit-yes-no-other ng-model="vm.product.terms.downloadTerms" edit-mode="false" input-id="downloadTermsDisplay">
-                                    {{ vm.product.terms.downloadTerms || vm.product.license.terms.downloadTerms }}
+                                    <span class="value">{{ vm.product.terms.downloadTerms || vm.product.license.terms.downloadTerms }}</span>
                                 </view-edit-yes-no-other>
                             </li>
 
                             <li>
                                 <label for="interLibraryLoanTermsDisplay">ILL:</label>
                                 <view-edit-yes-no-other ng-model="vm.product.terms.interLibraryLoanTerms" edit-mode="false" input-id="interLibraryLoanTermsDisplay">
-                                    {{ vm.product.terms.interLibraryLoanTerms || vm.product.license.terms.interLibraryLoanTerms }}
+                                    <span class="value">{{ vm.product.terms.interLibraryLoanTerms || vm.product.license.terms.interLibraryLoanTerms }}</span>
                                 </view-edit-yes-no-other>
 
                             </li>
@@ -175,7 +155,7 @@
                             <li>
                                 <label for="coursePacksTermsDisplay">Course Packs:</label>
                                 <view-edit-yes-no-other ng-model="vm.product.terms.coursePacksTerms" edit-mode="false" input-id="coursePacksTermsDisplay">
-                                    {{ vm.product.terms.coursePacksTerms || vm.product.license.terms.coursePacksTerms }}
+                                    <span class="value">{{ vm.product.terms.coursePacksTerms || vm.product.license.terms.coursePacksTerms }}</span>
                                 </view-edit-yes-no-other>
 
                             </li>
@@ -183,7 +163,7 @@
                             <li>
                                 <label for="printTermsDisplay">Print:</label>
                                 <view-edit-yes-no-other ng-model="vm.product.terms.printTerms" edit-mode="false" input-id="printTermsDisplay">
-                                    {{ vm.product.terms.printTerms || vm.product.license.terms.printTerms}}
+                                    <span class="value">{{ vm.product.terms.printTerms || vm.product.license.terms.printTerms}}</span>
                                 </view-edit-yes-no-other>
 
                             </li>
@@ -191,7 +171,7 @@
                             <li>
                                 <label for="limitedScholarlySharingTermsDisplay">Limited Sharing for Scholarly Purposes:</label>
                                 <view-edit-yes-no-other ng-model="vm.product.terms.limitedScholarlySharingTerms" edit-mode="false" input-id="limitedScholarlySharingTermsDisplay">
-                                    {{ vm.product.terms.limitedScholarlySharingTerms || vm.product.license.terms.limitedScholarlySharingTerms}}
+                                    <span class="value">{{ vm.product.terms.limitedScholarlySharingTerms || vm.product.license.terms.limitedScholarlySharingTerms}}</span>
                                 </view-edit-yes-no-other>
 
                             </li>
@@ -199,7 +179,7 @@
                             <li>
                                 <label for="walkinTermsDisplay">Use by Walk-ins:</label>
                                 <view-edit-yes-no-other ng-model="vm.product.terms.walkinTerms" edit-mode="false" input-id="walkinTermsDisplay">
-                                    {{ vm.product.terms.walkinTerms || vm.product.license.terms.walkinTerms}}
+                                    <span class="value">{{ vm.product.terms.walkinTerms || vm.product.license.terms.walkinTerms}}</span>
                                 </view-edit-yes-no-other>
 
                             </li>
@@ -207,14 +187,14 @@
                             <li>
                                 <label for="eReservesTermsDisplay">E-Reserves:</label>
                                 <view-edit-yes-no-other ng-model="vm.product.terms.eReservesTerms" edit-mode="false" input-id="eReservesTermsDisplay">
-                                    {{ vm.product.terms.eReservesTerms || vm.product.license.terms.eReservesTerms}}
+                                    <span class="value">{{ vm.product.terms.eReservesTerms || vm.product.license.terms.eReservesTerms}}</span>
                                 </view-edit-yes-no-other>
                             </li>
 
                             <li>
                                 <label for="hasConfidentialityTermsDisplay">Confidentiality Language:</label>
                                 <view-edit-yes-no-other ng-model="vm.product.terms.hasConfidentialityTerms" edit-mode="false" input-id="hasConfidentialityTermsDisplay">
-                                    {{ vm.product.terms.hasConfidentialityTerms || vm.product.license.terms.hasConfidentialityTerms}}
+                                    <span class="value">{{ vm.product.terms.hasConfidentialityTerms || vm.product.license.terms.hasConfidentialityTerms}}</span>
                                 </view-edit-yes-no-other>
                             </li>
                         </ul>
