@@ -17,7 +17,6 @@
         .date-range {
             display: flex;
             flex-flow: row wrap;
-            align-items: flex-end;
 
             .term,
             .date-group {
@@ -35,11 +34,6 @@
 
                 select {
                     width: 100%;
-                }
-
-                .display {
-                    font-weight: bold;
-                    color: $purple;
                 }
             }
 

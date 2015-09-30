@@ -23,27 +23,28 @@
                 <div class="column">
                     <label for="vendorWebsite">Vendor Website</label>
                     <view-edit-text-field ng-model="vm.vendor.websiteUrl" edit-mode="vm.editable" input-id="vendorWebsite">
-                        <span class="h3" ng-bind-html="vm.vendor.websiteUrl | linky:'_blank'"></span>
+                        <span class="value" ng-bind-html="vm.vendor.websiteUrl | linky:'_blank'"></span>
+                        <span class="value" ng-if="!vm.vendor.websiteUrl">-</span>
                     </view-edit-text-field>
 
                     <div class="label">Vendor Status</div>
                     <view-edit-radios radio-group-name="isActive" radio-group-legend="Vendor Status" items="vm.statusOptions" ng-model="vm.vendor.isActive" edit-mode="vm.editable" input-id="vendorStatus">
-                        <span class="h3">{{ vm.vendor.isActive ? 'Active' : 'Inactive' }}</span>
+                        <span class="value">{{ vm.vendor.isActive ? 'Active' : 'Inactive' }}</span>
                     </view-edit-radios>
 
                     <div class="label">One-Time Purchase Access</div>
                     <view-edit-radios radio-group-name="mayOfferOneTimePurchaseProducts" radio-group-legend="One-Time Purchase Access" items="vm.otpAccessOptions" ng-model="vm.vendor.mayOfferOneTimePurchaseProducts" edit-mode="vm.editable" input-id="mayOfferOneTimePurchaseProducts">
-                        <span class="h3">May <strong>{{ vm.vendor.mayOfferOneTimePurchaseProducts ? '' : 'not' }}</strong> offer one-time purchase products</span>
+                        <span class="value">May <strong>{{ vm.vendor.mayOfferOneTimePurchaseProducts ? '' : 'not' }}</strong> offer one-time purchase products</span>
                     </view-edit-radios>
 
                     <label for="vendorAdminModule">Admin Module</label>
-                    <div ng-bind-html="vm.vendor.adminModule | linky:'_blank'" ng-hide="vm.editable"></div>
+                    <div class="value" ng-bind-html="vm.vendor.adminModule | linky:'_blank'" ng-hide="vm.editable"></div>
                     <view-edit-text-area class="admin-module" ng-model="vm.vendor.adminModule" edit-mode="vm.editable" input-id="vendorAdminModule"></view-edit-text-area>
                 </div>
                 <div class="column">
                     <label for="vendorComments">Comments</label>
                     <view-edit-text-area class="comments" ng-model="vm.vendor.comments" edit-mode="vm.editable" input-id="vendorComments">
-                        {{ vm.vendor.comments }}
+                        <span class="value">{{ vm.vendor.comments || '-' }}</span>
                     </view-edit-text-area>
                 </div>
             </fieldset>
