@@ -371,9 +371,9 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
                 lastYearsSelection ? lastYearsSelection.users : '',
                 lastYearsSelection ? lastYearsSelection.price : '',
                 offering.product.vendor.name,
-                offering.product.funded || '',
+                offeringService.isFunded(offering) ? 'true' : 'false',
                 getSelectionUsers(offering),
-                getSelectionPrice(offering)
+                offeringService.getFundedSelectionPrice(offering)
             ];
         }
 
@@ -381,13 +381,6 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
             var price = '';
             if (offering.selection) {
                 price = offering.selection.users;
-            }
-            return price;
-        }
-        function getSelectionPrice(offering) {
-            var price = '';
-            if (offering.selection) {
-                price = offering.selection.price;
             }
             return price;
         }

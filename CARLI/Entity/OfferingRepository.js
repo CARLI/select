@@ -726,14 +726,23 @@ function isFunded(offering) {
 }
 
 function getFundedSelectionPrice(offering) {
+    if (!offering.selection) {
+        return null;
+    }
     return getFundedPrice(offering.selection.price, offering.funding);
 }
 
 function getFundedSelectionPendingPrice(offering) {
+    if (!offering.selectionPendingReview) {
+        return null;
+    }
     return getFundedPrice(offering.selectionPendingReview.price, offering.funding);
 }
 
 function getFundedSiteLicensePrice(offering) {
+    if (!offering.pricing) {
+        return null;
+    }
     return getFundedPrice(offering.pricing.site, offering.funding);
 }
 
