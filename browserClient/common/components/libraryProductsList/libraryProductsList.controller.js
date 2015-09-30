@@ -1,7 +1,7 @@
 angular.module('common.libraryProductsList')
 .controller('libraryProductsListController', libraryProductsListController);
 
-function libraryProductsListController( $q, controllerBaseService, csvExportService, cycleService, productService ){
+function libraryProductsListController( $q, controllerBaseService, csvExportService, cycleService, offeringService, productService ){
     var vm = this;
 
     vm.loadingPromise = null;
@@ -33,7 +33,7 @@ function libraryProductsListController( $q, controllerBaseService, csvExportServ
 
         if ( vm.selectedOfferings ){
             vm.selectedOfferings.forEach(function(offering){
-                total += offering.selection.price;
+                total += offeringService.getFundedSelectionPrice(offering);
             });
         }
 
