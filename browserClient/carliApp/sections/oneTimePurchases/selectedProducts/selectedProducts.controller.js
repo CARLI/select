@@ -77,6 +77,7 @@
 
         function purchaseProduct(offering) {
             offering.selection = {
+                users: offeringService.siteLicenseSelectionUsers,
                 price: offering.pricing.site,
                 datePurchased: new Date().toJSON().slice(0, 10)
             };
@@ -94,7 +95,6 @@
         }
 
         function cancelPurchase(offering) {
-            var oldDate = offering.selection.datePurchased;
             delete offering.selection;
             
             offeringService.update(offering)
