@@ -1,17 +1,19 @@
 angular.module('vendor.cycleChooser')
     .controller('cycleChooserController', cycleChooserController);
 
-function cycleChooserController($scope, alertService, authService, config, cycleService, userService, vendorStatusService ) {
+function cycleChooserController($scope, alertService, authService, config, cycleService, userService, vendorDataService, vendorStatusService ) {
     var vm = this;
 
     vm.cycles = [];
     vm.loadingPromise = null;
+    vm.user = {};
     vm.vendor = {};
 
     activate();
 
     function activate() {
         authService.fetchCurrentUser().then(function (user) {
+            vm.user = user;
             vm.vendor = user.vendor;
             vm.loadingPromise = loadCycles();
 
@@ -38,15 +40,9 @@ function cycleChooserController($scope, alertService, authService, config, cycle
             return;
         }
         
-        return vendorStatusService.getStatusForVendor( vm.vendor.id, cycle )
-            .then(function(vendorStatus){
-                var isAllowedIn = true;
-
-                if ( vendorStatus && vendorStatus.isClosed ){
-                    isAllowedIn = false;
-                }
-
-                if ( isAllowedIn ){
+        return vendorDataService.isVendorAllowedToMakeChangesToCycle(vm.user, cycle)
+            .then(function(isAllowedIn){
+                if (isAllowedIn) {
                     return warnAboutOtherRecentVendorUsers()
                         .then(updateStatus)
                         .then(readyCycle);

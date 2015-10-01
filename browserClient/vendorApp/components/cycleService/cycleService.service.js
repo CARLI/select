@@ -17,7 +17,8 @@ function cycleService( CarliModules, config, $q, appState, authService, errorHan
         load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ).catch(errorHandler); },
         getCurrentCycle: getCurrentCycle,
         setCurrentCycle: setCurrentCycle,
-        syncDataBackToCarli: syncDataBackToCarli
+        syncDataBackToCarli: syncDataBackToCarli,
+        CYCLE_STATUS_VENDOR_PRICING: cycleModule.CYCLE_STATUS_VENDOR_PRICING
     };
 
 
