@@ -21,17 +21,17 @@
                             <button type="button" class="angle-icon-container">
                                 <fa name="angle-down"></fa>
                             </button>
-                            {{ ::vm.getProductDisplayName(product) }}
+                            {{ ::vm.getProductDisplayName(offering.product) }}
                         </div>
                         <div class="column selected-last-year">
                             <fa name="check-circle" ng-if="::vm.selectedLastYear(offering)"></fa>
                         </div>
                         <div class="column vendor">{{ ::offering.product.vendor.name }}</div>
                         <div class="column funded">
-                            <span>{{ offering.product.funded | currency }}</span>
+                            <fa name="check-circle" ng-if="::vm.isFunded(offering)"></fa>
                         </div>
                         <div class="column select">
-                            <span ng-if="offering.selection" class="price">{{ offering.selection.price | currency }}</span>
+                            <span ng-if="offering.selection" class="price">{{ ::vm.getFundedSiteLicensePrice(offering) | currency }}</span>
                         </div>
                     </div>
                     <div class="content">
@@ -92,7 +92,7 @@
 
                             <div class="subscription-buttons" ng-if="offering.display === 'with-price'">
                                 <subscription-button ng-if="offering.pricing.site"
-                                                     title="Site License" price="{{ ::offering.pricing.site }}" disabled>
+                                                     title="Site License" price="{{ ::vm.getFundedSiteLicensePrice(offering) }}" disabled>
                                 </subscription-button>
                                 <div class="su-buttons" ng-if="offering.pricing.su && offering.pricing.su.length">
                                     <subscription-button ng-repeat="su in ::offering.pricing.su | orderBy:users track by su.users"
