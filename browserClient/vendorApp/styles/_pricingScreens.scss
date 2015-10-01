@@ -63,7 +63,13 @@ $background-flagged-flagged: rgba(255,18,0,.1);
                 width: 150px;
 
                 &.header {
+                    overflow: auto;
                     padding: 0.5rem;
+                    position: relative;
+
+                    .product-name {
+                        position: absolute;
+                    }
                 }
 
                 &.offering {

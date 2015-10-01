@@ -61,7 +61,9 @@
                     <div class="column header {{ ::product.id }}" ng-repeat="product in vm.products | orderBy:'name'">{{ ::product.priceCap }}%</div>
                 </div>
                 <div class="price-row product-name-row">
-                    <div class="column header {{ ::product.id }}" title="{{ ::product.name }}" ng-repeat="product in vm.products | orderBy:'name'">{{ ::product.name }}</div>
+                    <div class="column header {{ ::product.id }}" title="{{ ::product.name }}" ng-repeat="product in vm.products | orderBy:'name'">
+                        <div class="product-name">{{ ::product.name }}</div>
+                    </div>
                 </div>
             </div>
         </div>
