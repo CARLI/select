@@ -67,7 +67,7 @@ function listSubscriptionsForLibrary(libraryId) {
             return {
                 productName: offering.product.name,
                 vendorName: offering.vendor,
-                funding: {},
+                funding: offering.funding,
                 cycleName: offering.cycle.name,
                 cycleYear: offering.cycle.year
             }
