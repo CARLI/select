@@ -1,11 +1,14 @@
 angular.module('library.unselectedProducts')
     .controller('unselectedProductsController', unselectedProductsController);
 
-function unselectedProductsController($scope, cycleService){
+function unselectedProductsController($scope, cycleService, offeringService, productService){
     var vm = this;
 
     vm.loadingPromise = null;
 
+    vm.getFundedSiteLicensePrice = getFundedSiteLicensePrice;
+    vm.getProductDisplayName = productService.getProductDisplayName;
+    vm.isFunded = isFunded;
     vm.unselected = unselected;
 
     activate();
@@ -45,5 +48,12 @@ function unselectedProductsController($scope, cycleService){
 
     function unselected( offering ){
         return !hasSelection( offering );
+    }
+
+    function isFunded(offering) {
+        return offeringService.isFunded(offering);
+    }
+    function getFundedSiteLicensePrice(offering) {
+        return offeringService.getFundedSiteLicensePrice(offering);
     }
 }
