@@ -22,7 +22,7 @@ angular.module('vendor.app', [
     'vendor.cycleService',
     'vendor.userLookup',
     'vendor.userMenu',
-    'vendor.fakeVendorMenu'
+    'vendor.vendorDataService'
 ])
 .config(function($locationProvider){
     $locationProvider.html5Mode(true);
