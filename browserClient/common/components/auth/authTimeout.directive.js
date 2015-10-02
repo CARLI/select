@@ -146,6 +146,7 @@ function authTimeoutAlert($interval, $window, authService, authTimeoutService, c
         }
 
         function refreshSession() {
+            authTimeoutService.stopLogoutTimeout();
             return authService.refreshSession().then(initialState);
         }
     }
