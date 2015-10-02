@@ -1,7 +1,7 @@
 angular.module('vendor.cycleChooser')
     .controller('cycleChooserController', cycleChooserController);
 
-function cycleChooserController($scope, alertService, authService, config, cycleService, userService, vendorDataService, vendorStatusService ) {
+function cycleChooserController($scope, alertService, authService, config, cycleService, productService, userService, vendorDataService, vendorStatusService ) {
     var vm = this;
 
     vm.cycles = [];
@@ -39,8 +39,16 @@ function cycleChooserController($scope, alertService, authService, config, cycle
         if (!cycle) {
             return;
         }
-        
+
         return vendorDataService.isVendorAllowedToMakeChangesToCycle(vm.user, cycle)
+            .then(function(isAllowedIn){
+                if ( isAllowedIn ){
+                    return doesVendorHaveProductsInCycle(cycle);
+                }
+                else {
+                    return false;
+                }
+            })
             .then(function(isAllowedIn){
                 if (isAllowedIn) {
                     return warnAboutOtherRecentVendorUsers()
@@ -55,7 +63,7 @@ function cycleChooserController($scope, alertService, authService, config, cycle
                 function readyCycle() {
                     return readySelectedCycle(cycle);
                 }
-                
+
                 function updateStatus() {
                     return vendorStatusService.recordLastVendorLogin(vm.vendor.id, cycle)
                         .then(cycleService.syncDataBackToCarli);
@@ -101,6 +109,15 @@ function cycleChooserController($scope, alertService, authService, config, cycle
                 }
             }
         }
+    }
+
+    function doesVendorHaveProductsInCycle(cycle) {
+        return productService.listProductsWithOfferingsForVendorId(vm.vendor.id, cycle)
+            .then(function (products) {
+                var vendorHasProducts = !!products.length;
+                console.log('  vendor has products in cycle: '+vendorHasProducts+' ('+products.length+')');
+                return vendorHasProducts;
+            });
     }
 
     function readySelectedCycle(cycle) {

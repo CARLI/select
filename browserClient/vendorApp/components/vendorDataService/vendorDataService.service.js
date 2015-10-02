@@ -8,6 +8,7 @@ function vendorDataService(cycleService, vendorStatusService) {
     };
 
     function isVendorAllowedToMakeChangesToCycle(user, cycle) {
+        console.log('Checking vendor permissions for '+cycle.name);
         var vendor = user.vendor;
 
         return vendorStatusService.getStatusForVendor(vendor.id, cycle)
@@ -18,14 +19,19 @@ function vendorDataService(cycleService, vendorStatusService) {
             });
 
         function cycleIsOpenToVendorsForPricing(){
-            return cycle.cycleStatus === cycleService.CYCLE_STATUS_VENDOR_PRICING;
+            var cycleIsOpen = (cycle.cycleStatus === cycleService.CYCLE_STATUS_VENDOR_PRICING);
+            console.log('  cycle is open to vendors for pricing: '+cycleIsOpen);
+            return cycleIsOpen;
         }
 
         function pricingIsStillOpenToVendor(vendorStatus){
-            return !vendorStatus.isClosed;
+            var pricingIsOpenToVendor = (vendorStatus && !vendorStatus.isClosed);
+            console.log('  vendor pricing is still open: '+pricingIsOpenToVendor);
+            return pricingIsOpenToVendor;
         }
 
         function userIsActive(){
+            console.log('  user is active: '+user.isActive);
             return user.isActive;
         }
     }
