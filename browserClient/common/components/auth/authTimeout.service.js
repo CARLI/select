@@ -16,8 +16,8 @@ function authTimeoutService($timeout, config) {
     return {
         timeoutStateWarningPeriod: timeoutStateWarningPeriod,
         timeoutStateTimedOut: timeoutStateTimedOut,
-
         getTimeoutState: getTimeoutState,
+        stopLogoutTimeout: stopLogoutTimeout
     };
 
     function activate() {
@@ -35,20 +35,38 @@ function authTimeoutService($timeout, config) {
 
     function stopAuthTimeoutWarningCountdown() {
         currentState = timeoutStateDefault;
+        cancelAuthTimeoutWarningPromise();
+    }
 
+    function enterWarningState() {
+        cancelAuthTimeoutWarningPromise();
+        startLogoutTimeout();
+        currentState = timeoutStateWarningPeriod;
+    }
+
+    function startLogoutTimeout() {
+        authTimeoutPromise = $timeout(enterTimeoutState, config.authWarningDurationInMilliseconds);
+    }
+
+    function stopLogoutTimeout() {
+        cancelAuthTimeoutPromise();
+        startAuthTimeoutWarningCountdown();
+    }
+
+    function enterTimeoutState() {
+        currentState = timeoutStateTimedOut;
+    }
+
+    function cancelAuthTimeoutWarningPromise() {
         if (authTimeoutWarningPromise) {
             $timeout.cancel(authTimeoutWarningPromise);
             authTimeoutWarningPromise = null;
         }
     }
-
-    function enterWarningState() {
-        authTimeoutWarningPromise = null;
-        authTimeoutPromise = $timeout(enterTimeoutState, config.authWarningDurationInMilliseconds);
-        currentState = timeoutStateWarningPeriod;
-    }
-
-    function enterTimeoutState() {
-        currentState = timeoutStateTimedOut;
+    function cancelAuthTimeoutPromise() {
+        if (authTimeoutPromise) {
+            $timeout.cancel(authTimeoutPromise);
+            authTimeoutPromise = null;
+        }
     }
 }
