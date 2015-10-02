@@ -38,8 +38,9 @@ function productService( CarliModules, $q, cycleService, errorHandler ) {
             return $q.when( productModule.listActiveProductsForVendorId(vendorId, cycleService.getCurrentCycle()) )
                 .catch(errorHandler);
         },
-        listProductsWithOfferingsForVendorId: function (vendorId) {
-            return $q.when( productMiddleware.listProductsWithOfferingsForVendorId( vendorId, cycleService.getCurrentCycle()) )
+        listProductsWithOfferingsForVendorId: function (vendorId, cycle) {
+            var cycleToUse = cycle || cycleService.getCurrentCycle();
+            return $q.when( productMiddleware.listProductsWithOfferingsForVendorId( vendorId, cycleToUse) )
                 .catch(errorHandler);
         },
         listProductCountsByVendorId: function(){

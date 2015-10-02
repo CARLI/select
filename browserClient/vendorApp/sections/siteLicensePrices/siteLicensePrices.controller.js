@@ -1,7 +1,7 @@
 angular.module('vendor.sections.siteLicensePrices')
     .controller('siteLicensePricesController', siteLicensePricesController);
 
-function siteLicensePricesController($scope, $q, $filter, authService, csvExportService, cycleService, libraryService, offeringService, productService, siteLicensePricesCsvData, vendorStatusService){
+function siteLicensePricesController($scope, $q, $filter, alertService, authService, csvExportService, cycleService, libraryService, offeringService, productService, siteLicensePricesCsvData, vendorDataService, vendorStatusService){
     var vm = this;
 
     vm.changedOfferings = [];
@@ -28,7 +28,9 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
         affixControlsToTopOfPage();
 
         vm.cycle = cycleService.getCurrentCycle();
-        vm.vendorId = authService.getCurrentUser().vendor.id;
+        vm.user = authService.getCurrentUser();
+        vm.vendor = vm.user.vendor;
+        vm.vendorId = vm.vendor.id;
 
         vm.viewOptions = {
             size: true,
@@ -385,7 +387,16 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
     }
 
     function saveOfferings() {
-        vm.loadingPromise = saveAllOfferings( vm.newOfferings, vm.changedOfferings );
+        vm.loadingPromise = vendorDataService.isVendorAllowedToMakeChangesToCycle(vm.user, cycle)
+            .then(function(vendorIsAllowedToSavePrices) {
+                if (vendorIsAllowedToSavePrices) {
+                    return saveAllOfferings(vm.newOfferings, vm.changedOfferings);
+                }
+                else {
+                    alertService.putAlert('Pricing for the current cycle has been closed. Please contact CARLI staff for more information.', {severity: 'danger'});
+                    return false;
+                }
+            });
         return vm.loadingPromise;
     }
 
