@@ -1,7 +1,7 @@
 angular.module('common.auth')
     .service('authTimeoutService', authTimeoutService);
 
-function authTimeoutService($timeout, authService, config) {
+function authTimeoutService($timeout, config) {
     var authTimeoutWarningPromise = null;
     var authTimeoutPromise = null;
 
@@ -16,9 +16,8 @@ function authTimeoutService($timeout, authService, config) {
     return {
         timeoutStateWarningPeriod: timeoutStateWarningPeriod,
         timeoutStateTimedOut: timeoutStateTimedOut,
-
         getTimeoutState: getTimeoutState,
-        forceTimoutWarning: forceTimeoutWarning
+        stopLogoutTimeout: stopLogoutTimeout
     };
 
     function activate() {
@@ -36,26 +35,38 @@ function authTimeoutService($timeout, authService, config) {
 
     function stopAuthTimeoutWarningCountdown() {
         currentState = timeoutStateDefault;
-
-        if (authTimeoutWarningPromise) {
-            $timeout.cancel(authTimeoutWarningPromise);
-            authTimeoutWarningPromise = null;
-        }
+        cancelAuthTimeoutWarningPromise();
     }
 
     function enterWarningState() {
-        authTimeoutWarningPromise = null;
-        authTimeoutPromise = $timeout(enterTimeoutState, config.authWarningDurationInMilliseconds);
+        cancelAuthTimeoutWarningPromise();
+        startLogoutTimeout();
         currentState = timeoutStateWarningPeriod;
+    }
+
+    function startLogoutTimeout() {
+        authTimeoutPromise = $timeout(enterTimeoutState, config.authWarningDurationInMilliseconds);
+    }
+
+    function stopLogoutTimeout() {
+        cancelAuthTimeoutPromise();
+        startAuthTimeoutWarningCountdown();
     }
 
     function enterTimeoutState() {
         currentState = timeoutStateTimedOut;
     }
 
-    function forceTimeoutWarning() {
-        config.authMillisecondsUntilWarningAppears = 1000;
-        config.authWarningDurationInMilliseconds = 60000;
-        startAuthTimeoutWarningCountdown();
+    function cancelAuthTimeoutWarningPromise() {
+        if (authTimeoutWarningPromise) {
+            $timeout.cancel(authTimeoutWarningPromise);
+            authTimeoutWarningPromise = null;
+        }
+    }
+    function cancelAuthTimeoutPromise() {
+        if (authTimeoutPromise) {
+            $timeout.cancel(authTimeoutPromise);
+            authTimeoutPromise = null;
+        }
     }
 }
