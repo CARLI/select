@@ -1,19 +1,21 @@
 angular.module('vendor.sections.descriptions')
 .controller('descriptionsController', descriptionsController);
 
-function descriptionsController( $scope, $rootScope, $q, cycleService, productService, userService, vendorStatusService ){
+function descriptionsController( $scope, $rootScope, $q, alertService, cycleService, productService, userService, vendorDataService, vendorStatusService ){
     var vm = this;
 
     vm.productChanged = productChanged;
     vm.noProductsHaveChanged = noProductsHaveChanged;
     vm.productsNotAllValid = checkIfProductsNotAllValid;
     vm.saveProducts = saveProducts;
+    vm.user = {};
 
     activate();
 
 
     function activate(){
-        vm.vendorId = userService.getUser().vendor.id;
+        vm.user = userService.getUser();
+        vm.vendorId = vm.user.vendor.id;
 
         setProductFormPristine();
         loadProducts();
@@ -63,21 +65,32 @@ function descriptionsController( $scope, $rootScope, $q, cycleService, productSe
 
     function saveProducts(){
         var changedProducts = listChangedProducts();
-
         var cycle = cycleService.getCurrentCycle();
-        var saveAllProducts = $q.all( changedProducts.map(saveProduct) );
 
-        function saveProduct( product ){
-            product.cycle = cycle;
-            return productService.update(product);
+        return vendorDataService.isVendorAllowedToMakeChangesToCycle(vm.user, cycle)
+            .then(function(vendorAllowedToSave){
+                if ( vendorAllowedToSave ){
+                    return saveAllProducts()
+                        .then(alertSuccess)
+                        .catch(alertError)
+                        .then(updateVendorStatus)
+                        .then(syncData)
+                        .catch(syncDataError);
+                }
+                else {
+                    alertService.putAlert('Pricing for the current cycle has been closed. Please contact CARLI staff for more information.', {severity: 'danger'});
+                    return false;
+                }
+            });
+
+        function saveAllProducts(){
+            return $q.all( changedProducts.map(saveProduct) );
+
+            function saveProduct( product ){
+                product.cycle = cycle;
+                return productService.update(product);
+            }
         }
-
-        return saveAllProducts
-            .then(alertSuccess)
-            .catch(alertError)
-            .then(updateVendorStatus)
-            .then(syncData)
-            .catch(syncDataError);
 
         function alertSuccess(){
             Logger.log('saved '+changedProducts.length+' products');
