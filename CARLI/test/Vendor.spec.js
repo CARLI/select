@@ -100,6 +100,7 @@ describe('the listAllContacts method', function(){
     });
 
     it('should return an array of contacts', function(){
+        this.timeout(5000);
         var testVendor = validVendorData();
         testVendor.isActive = true;
         testVendor.contacts = [
