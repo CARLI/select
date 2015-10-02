@@ -25,7 +25,7 @@ function migrateHistoricalPricingForAllCyclesSerially() {
                 return historicalPricingMigration.populateHistoricalPricingForCycle(cycle.id)
                     .then(migrateHistoricalPricingForNextCycle)
                     .catch(function (e) {
-                        console.log(e);
+                        Logger.log(e);
                     });
             }
         })
@@ -35,6 +35,6 @@ function migrateHistoricalPricingForAllCyclesSerially() {
 function populateOneCycle(cycleId){
     return historicalPricingMigration.populateHistoricalPricingForCycle(cycleId)
         .catch(function (e) {
-            console.log(e);
+            Logger.log(e);
         });
 }

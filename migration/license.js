@@ -12,7 +12,7 @@ function migrateLicenses(connection){
 
     var query = "select id, contract_type, database_type, current_term, extension_date, purchase_date, download, ill, limited_sharing, ereserves, course_packs, print, walkins, description from contracts";
     connection.query(query, function(err, rows, fields) {
-        if(err) { console.log(err); }
+        if(err) { Logger.log(err); }
 
         extractLicenses(rows)
             .then(function(idMap){
@@ -115,7 +115,7 @@ function attachVendorsToLicenses( connection, licenseIdMapping, vendorIdMapping 
 
     var query = "SELECT contract_id, vendor_id FROM contract_vendor_db GROUP BY contract_id;";
     connection.query(query, function(err, rows, fields) {
-        if(err) { console.log(err); }
+        if(err) { Logger.log(err); }
 
         Q.all( rows.map(linkVendorToLicense))
             .then(function(){
@@ -154,7 +154,7 @@ function generateProductLicenseAssociations( connection, licenseIdMapping ){
     var query = "SELECT * FROM contract_vendor_db";
     connection.query(query, function(err, rows, fields) {
         if (err){
-            console.log(err);
+            Logger.log(err);
             resultsPromise.reject(err);
         }
 

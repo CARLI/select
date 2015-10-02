@@ -38,7 +38,7 @@ function attachmentsService( CarliModules, $q, errorHandler ) {
             attachmentRequest.setRequestHeader('Content-Type', fileType);
             attachmentRequest.setRequestHeader('If-Match', revision);
 
-            //console.log('send couch attachment '+url);
+            //Logger.log('send couch attachment '+url);
 
             attachmentRequest.send(fileContentsInArrayBuffer);
 

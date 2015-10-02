@@ -28,7 +28,7 @@ function generateNextBatchId(){
             return fs.readFileSync(batchIdFileName, readFileOptions);
         }
         catch(err){
-            console.log('  error reading batchId file, using fallback '+fallbackBatchId);
+            Logger.log('  error reading batchId file, using fallback '+fallbackBatchId);
             var fallbackResult = fallbackBatchId;
             return fallbackResult;
         }
@@ -44,7 +44,7 @@ function generateNextBatchId(){
             fs.writeFileSync(batchIdFileName, valueToSave);
         }
         catch (err) {
-            console.log('  error saving batchId file '+err);
+            Logger.log('  error saving batchId file '+err);
         }
     }
 
@@ -75,7 +75,7 @@ function generateNextInvoiceNumber(){
             return fs.readFileSync(invoiceNumberFileName, readFileOptions);
         }
         catch(err){
-            console.log('  error reading invoiceNumber file, using fallback '+fallBackInvoiceNumber);
+            Logger.log('  error reading invoiceNumber file, using fallback '+fallBackInvoiceNumber);
             var fallbackResult = fallBackInvoiceNumber;
             fallBackInvoiceNumber = incrementInvoiceNumber(fallBackInvoiceNumber);
             return fallbackResult;
@@ -88,7 +88,7 @@ function generateNextInvoiceNumber(){
             fs.writeFileSync(invoiceNumberFileName, valueToSave);
         }
         catch (err) {
-            console.log('  error saving InvoiceNumber file '+err);
+            Logger.log('  error saving InvoiceNumber file '+err);
         }
     }
 }

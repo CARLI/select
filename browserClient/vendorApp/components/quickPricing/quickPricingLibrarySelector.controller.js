@@ -45,10 +45,10 @@ function quickPricingLibrarySelectorController($scope) {
         var skipYearFilter = !shouldFilterByYear();
         var skipTypeFilter = !shouldFilterByType();
 
-        console.log('applying filters');
-        console.log('  -- by FTE: ', !skipFteFilter);
-        console.log('  -- by Year: ', !skipYearFilter);
-        console.log('  -- by Type: ', !skipTypeFilter);
+        Logger.log('applying filters');
+        Logger.log('  -- by FTE: ', !skipFteFilter);
+        Logger.log('  -- by Year: ', !skipYearFilter);
+        Logger.log('  -- by Type: ', !skipTypeFilter);
 
         if (skipFteFilter && skipYearFilter && skipTypeFilter) {
             selectAllLibraries();

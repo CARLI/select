@@ -19,27 +19,27 @@ CARLI.Product.setStore( store );
 CARLI.Cycle.setStore( store );
 
 generateCycleFixtures().then( function(){
-    console.log('Done creating Cycles');
+    Logger.log('Done creating Cycles');
 });
 
 generateLibraryFixtures().then( function( results ){
-    console.log('Done creating Libraries');
+    Logger.log('Done creating Libraries');
 
     generateProductFixtures()
         .then( function (results){
-            console.log('Finished generating Products');
+            Logger.log('Finished generating Products');
         })
         .catch( function (err) {
-            console.log(err);
+            Logger.log(err);
         });
 });
 
 generateLicenseFixtures().then( function( results ){
-    console.log('Done creating Licenses');
+    Logger.log('Done creating Licenses');
 });
 
 generateVendorFixtures().then( function( results ){
-    console.log('Done creating Vendors');
+    Logger.log('Done creating Vendors');
 });
 
 function addIds(things) {
@@ -50,7 +50,7 @@ function addIds(things) {
 
 function generateCycleFixtures() {
     var entityCreationPromises = [];
-    console.log("Generate Cycles");
+    Logger.log("Generate Cycles");
 
     var testCycles = [
         {"type":"Cycle", "name":"Calendar Year 2013", "cycleType":"Calendar Year", "year":2013, "status":4, "isArchived":true},
@@ -72,7 +72,7 @@ function generateCycleFixtures() {
 
 function generateLibraryFixtures() {
     var entityCreationPromises = [];
-    console.log("Generate Libraries");
+    Logger.log("Generate Libraries");
 
     var testLibraries = [
         {"type":"Library", "isActive":true, "name":"Test Library", "institutionYears":"2 Year", "institutionType":"Public", "contacts":[]},
@@ -91,7 +91,7 @@ function generateLibraryFixtures() {
 
 function generateLicenseFixtures() {
     var entityCreationPromises = [];
-    console.log("Generate Licenses");
+    Logger.log("Generate Licenses");
 
     var testLicenses = [
         {"type": "License", "isActive":true, "name": "ACME License 1", "contractNumber": "Contract Number 1", "vendor": "ACME Publishing"},
@@ -110,7 +110,7 @@ function generateLicenseFixtures() {
 
 function generateVendorFixtures() {
     var entityCreationPromises = [];
-    console.log("Generate Vendors");
+    Logger.log("Generate Vendors");
 
     var testVendors = [
         {"type": "Vendor", "name": "ACME Publishing", "contacts": [{"contactType":"Billing","name":"Name","email":"Email","phoneNumber":"Phone"},{"contactType":"Billing","name":"Name2","email":"Email2","phoneNumber":"Phone2"},{"contactType":"Sales","name":"Name","email":"Email","phoneNumber":"Phone"}], "websiteUrl": "http://www.acme.com", "isActive": true, "comments": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus enim est, rhoncus ut ligula a, rhoncus maximus urna. Sed orci augue, cursus eget quam et, dignissim rhoncus enim. Nulla nec gravida dui. Nam at ligula quis nisi condimentum interdum id ac dolor.",adminModule:"Morbi pharetra nisl sed faucibus dictum. Vivamus laoreet orci ex, eget feugiat enim consequat quis. Vestibulum ac ornare nisi. Aliquam eros lacus, sodales vitae iaculis et, finibus eget dui. Mauris et convallis ligula."},
@@ -132,7 +132,7 @@ function generateVendorFixtures() {
 
 function generateProductFixtures() {
     var testProductPromises = [];
-    console.log("Generate Products");
+    Logger.log("Generate Products");
 
     var testProducts = [
         {"type": "Product", "isActive": true, "name": "Fiscal Year Product", "cycleType": "Fiscal Year", vendor: "ACME Publishing", license: "ACME License 1" },
@@ -178,7 +178,7 @@ function generateProductFixtures() {
         return Q.all(testProductPromises);
     })
     .catch( function(result){
-        console.log('ListLibrary promised rejected: ',result);
+        Logger.log('ListLibrary promised rejected: ',result);
     });
 
     return listLibrariesPromise;

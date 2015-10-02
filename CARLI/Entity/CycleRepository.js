@@ -45,9 +45,9 @@ function createCycleLog(msg, data) {
     var timestamp = new Date().toISOString();
     var prefix = timestamp + ' [Cycle Creation]: ';
     if (data) {
-        console.log(prefix + msg, data);
+        Logger.log(prefix + msg, data);
     } else {
-        console.log(prefix + msg);
+        Logger.log(prefix + msg);
     }
 }
 

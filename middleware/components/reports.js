@@ -412,10 +412,10 @@ function combineCycleResultsForReport( transformFunction ){
             listOfOfferings.forEach(addOfferingToResult);
 
             function addOfferingToResult(offering) {
-                if ( !offering ){ console.log('  * bad offering object: undefined', offering); return; }
-                if ( !offering.cycle ){ console.log('  ** bad offering cycle', offering.id); return; }
-                if ( !offering.library ){ console.log('  ** bad offering library from '+offering.cycle.name, offering.id); return; }
-                if ( !offering.product ){ console.log('  ** bad offering product from '+offering.cycle.name, offering.id); return; }
+                if ( !offering ){ Logger.log('  * bad offering object: undefined', offering); return; }
+                if ( !offering.cycle ){ Logger.log('  ** bad offering cycle', offering.id); return; }
+                if ( !offering.library ){ Logger.log('  ** bad offering library from '+offering.cycle.name, offering.id); return; }
+                if ( !offering.product ){ Logger.log('  ** bad offering product from '+offering.cycle.name, offering.id); return; }
 
                 results.push(transformFunction(offering));
             }
@@ -596,7 +596,7 @@ function initLicenseMap(){
 }
 
 function stackTraceError(err){
-    console.log('ERROR',err.stack);
+    Logger.log('ERROR',err.stack);
 }
 
 module.exports = {

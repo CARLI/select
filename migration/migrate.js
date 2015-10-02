@@ -68,7 +68,7 @@ function doMigration(){
     function createNotificationTemplates(){
         return notificationTemplates.migrateNotificationTemplates()
             .then(function(migrateNotificationTemplatesResults){
-                console.log('Added ' + migrateNotificationTemplatesResults.length + ' notification templates');
+                Logger.log('Added ' + migrateNotificationTemplatesResults.length + ' notification templates');
             });
     }
 
@@ -76,7 +76,7 @@ function doMigration(){
         return libraryMigration.loadCrmLibraryMapping(crmConnection)
             .then(function saveCrmLibraryMapping(crmLibraryMapping){
                 crmLibraryIdMapping = crmLibraryMapping;
-                console.log('Loaded ' + Object.keys(crmLibraryMapping).length + ' CRM libraries');
+                Logger.log('Loaded ' + Object.keys(crmLibraryMapping).length + ' CRM libraries');
             });
     }
 
@@ -84,7 +84,7 @@ function doMigration(){
         return libraryMigration.migrateLibraries(connection, crmLibraryIdMapping)
             .then(function saveLibraryIdMapping(libraryMapping){
                 libraryIdMapping = libraryMapping;
-                console.log('Migrated ' + Object.keys(libraryMapping).length + ' libraries');
+                Logger.log('Migrated ' + Object.keys(libraryMapping).length + ' libraries');
             });
     }
 
@@ -92,7 +92,7 @@ function doMigration(){
         return vendorMigration.migrateVendors(connection)
             .then(function saveVendorMapping(vendorMapping){
                 vendorIdMapping = vendorMapping;
-                console.log('Migrated ' + Object.keys(vendorMapping).length + ' vendors');
+                Logger.log('Migrated ' + Object.keys(vendorMapping).length + ' vendors');
             });
     }
 
@@ -100,14 +100,14 @@ function doMigration(){
         return licenseMigration.migrateLicenses(connection)
             .then(function saveLicenseMapping(licenseMapping){
                 licenseIdMapping = licenseMapping;
-                console.log('Migrated ' + Object.keys(licenseMapping).length + ' licenses');
+                Logger.log('Migrated ' + Object.keys(licenseMapping).length + ' licenses');
             })
     }
 
     function attachVendorsToLicenses(){
         return licenseMigration.attachVendorsToLicenses(connection, licenseIdMapping, vendorIdMapping)
             .then(function(licenseVendorAssociationsCount){
-                console.log('Attached Vendors to ' + licenseVendorAssociationsCount + ' Licenses.');
+                Logger.log('Attached Vendors to ' + licenseVendorAssociationsCount + ' Licenses.');
             })
     }
 
@@ -115,7 +115,7 @@ function doMigration(){
         return licenseMigration.generateProductLicenseAssociations(connection, licenseIdMapping)
             .then(function saveProductLicenseMap(productLicenseMap){
                 productLicenseMapping = productLicenseMap;
-                console.log('Generated license associations for ' + Object.keys(productLicenseMap).length + ' products');
+                Logger.log('Generated license associations for ' + Object.keys(productLicenseMap).length + ' products');
             });
     }
 
@@ -123,7 +123,7 @@ function doMigration(){
         return cycleMigration.migrateCycles(connection)
             .then(function saveCycleMapping(cycleMapping){
                 cycleIdMapping = cycleMapping;
-                console.log('Migrated ' + Object.keys(cycleMapping).length + ' cycles');
+                Logger.log('Migrated ' + Object.keys(cycleMapping).length + ' cycles');
             });
     }
 
@@ -135,7 +135,7 @@ function doMigration(){
             })
             .then(function(productMigrationResults){
                 var productTotals = flattenCycleMigrationResults(productMigrationResults);
-                console.log('Migrated ' + Object.keys(productTotals).length + ' products');
+                Logger.log('Migrated ' + Object.keys(productTotals).length + ' products');
             });
 
         function migrateProductsForCycle(cycleCouchId) {
@@ -210,16 +210,16 @@ function doMigration(){
     }
 
     function finishMigration(){
-        console.log('Done with Migration');
-        console.log('Please run `migrateHistoricalPricing.js` when everything finishes indexing.');
+        Logger.log('Done with Migration');
+        Logger.log('Please run `migrateHistoricalPricing.js` when everything finishes indexing.');
     }
 
     function closeIdalConnection() {
-        console.log('Closing the IDAL database connection');
+        Logger.log('Closing the IDAL database connection');
         connection.end();
     }
     function closeCrmConnection() {
-        console.log('Closing the CRM database connection');
+        Logger.log('Closing the CRM database connection');
         crmConnection.end();
     }
 }

@@ -24,9 +24,9 @@ function relaunchWebWorkers() {
     cluster.on('exit', restartCrashedWorker);
 
     function restartCrashedWorker(worker) {
-        console.log('worker '+worker.id+' exited');
+        Logger.log('worker '+worker.id+' exited');
         if (!worker.suicide) {
-            console.log('Worker ' + worker.id + ' died, launching replacement');
+            Logger.log('Worker ' + worker.id + ' died, launching replacement');
             cluster.setupMaster(expressWorkerSetup);
             cluster.fork();
         }
@@ -40,13 +40,13 @@ function listenForMessages() {
 
     function dispatchMessage(message) {
         if (message.command == 'launchCycleDatabaseWorker') {
-            console.log('Master is launching cycle database worker');
+            Logger.log('Master is launching cycle database worker');
             launchCycleDatabaseWorker(message.sourceCycleId, message.newCycleId);
         } else if (message.command == 'launchSynchronizationWorker') {
-            console.log('Master is launching synchronization worker');
+            Logger.log('Master is launching synchronization worker');
             launchSynchronizationWorker();
         } else {
-            console.log('Unrecognized message: ' + JSON.stringify(message));
+            Logger.log('Unrecognized message: ' + JSON.stringify(message));
         }
     }
 }

@@ -33,7 +33,7 @@ function exportCsvForVendorReport(notificationId){
             return csvPromise.promise;
         })
         .catch(function(err){
-            console.log('exportCsvForVendorReport error',err);
+            Logger.log('exportCsvForVendorReport error',err);
         });
 }
 
@@ -62,11 +62,11 @@ function contentForVendorReport(notificationId){
                     };
                 })
                 .catch(function(err){
-                    console.log('  could not load cycle '+cycleId, err);
+                    Logger.log('  could not load cycle '+cycleId, err);
                 });
         })
         .catch(function(err){
-            console.log('Error in contentForVendorReport', err);
+            Logger.log('Error in contentForVendorReport', err);
         });
 }
 
@@ -75,12 +75,12 @@ function typeIsNotForVendorReport( type ){
 }
 
 function dataForVendorReport(cycle, vendor, specificOfferingIds){
-    console.log('dataForVendorReport('+cycle.name+', '+vendor.name+(specificOfferingIds?'['+specificOfferingIds.length+']':'')+')');
+    Logger.log('dataForVendorReport('+cycle.name+', '+vendor.name+(specificOfferingIds?'['+specificOfferingIds.length+']':'')+')');
 
     return loadOfferings(cycle, vendor.id, specificOfferingIds)
         .then(groupOfferingsForVendorReport)
         .catch(function(err){
-            console.log('  ERROR getting offerings for vendor report', err);
+            Logger.log('  ERROR getting offerings for vendor report', err);
         });
 
     function loadOfferings(cycle, vendorId, offeringsToLoad){
@@ -98,7 +98,7 @@ function dataForVendorReport(cycle, vendor, specificOfferingIds){
 
                 function filterOfferingsForVendor(offeringsList){
                     var end = new Date();
-                    console.log('  Loaded '+offeringsList.length+' offerings - took '+((end-start)/1000)+'s');
+                    Logger.log('  Loaded '+offeringsList.length+' offerings - took '+((end-start)/1000)+'s');
                     return offeringsList.filter(function(offering){
                         return offering.vendorId === vendorId;
                     });

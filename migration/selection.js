@@ -18,11 +18,11 @@ function gatherSelections(connection, cycle, productMapping){
         "AND vendor_db_su.collection_id = "+ cycle.idalId + ";";
 
     connection.query(query, function(err, rows, fields) {
-        if(err) { console.log(err); }
+        if(err) { Logger.log(err); }
 
         var results = {};
 
-        console.log('  Found ' + rows.length + ' selections for ' + cycle.name);
+        Logger.log('  Found ' + rows.length + ' selections for ' + cycle.name);
 
         rows.forEach(addSelectionToResults);
 

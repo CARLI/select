@@ -80,12 +80,12 @@ function descriptionsController( $scope, $rootScope, $q, cycleService, productSe
             .catch(syncDataError);
 
         function alertSuccess(){
-            console.log('saved '+changedProducts.length+' products');
+            Logger.log('saved '+changedProducts.length+' products');
             activate();
         }
 
         function alertError( err ){
-            console.log( err );
+            Logger.log( err );
         }
 
         function updateVendorStatus(){
@@ -97,7 +97,7 @@ function descriptionsController( $scope, $rootScope, $q, cycleService, productSe
         }
 
         function syncDataError( err ){
-            console.log( 'error syncing data',err );
+            Logger.log( 'error syncing data',err );
         }
     }
 }
