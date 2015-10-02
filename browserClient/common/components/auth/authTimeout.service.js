@@ -1,7 +1,7 @@
 angular.module('common.auth')
     .service('authTimeoutService', authTimeoutService);
 
-function authTimeoutService($timeout, authService, config) {
+function authTimeoutService($timeout, config) {
     var authTimeoutWarningPromise = null;
     var authTimeoutPromise = null;
 
@@ -18,7 +18,6 @@ function authTimeoutService($timeout, authService, config) {
         timeoutStateTimedOut: timeoutStateTimedOut,
 
         getTimeoutState: getTimeoutState,
-        forceTimoutWarning: forceTimeoutWarning
     };
 
     function activate() {
@@ -51,11 +50,5 @@ function authTimeoutService($timeout, authService, config) {
 
     function enterTimeoutState() {
         currentState = timeoutStateTimedOut;
-    }
-
-    function forceTimeoutWarning() {
-        config.authMillisecondsUntilWarningAppears = 1000;
-        config.authWarningDurationInMilliseconds = 60000;
-        startAuthTimeoutWarningCountdown();
     }
 }

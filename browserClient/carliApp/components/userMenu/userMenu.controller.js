@@ -6,7 +6,6 @@ function userMenuController( $interval, authService, notificationService, authTi
 
     vm.userName = '';
     vm.logout = authService.deleteSession;
-    vm.forceTimeoutWarning = authTimeoutService.forceTimoutWarning;
 
     activate();
 
