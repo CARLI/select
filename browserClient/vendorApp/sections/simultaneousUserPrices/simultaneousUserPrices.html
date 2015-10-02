@@ -35,7 +35,11 @@
         <div class="pricing-grid-container" id="su-pricing-grid-container">
             <div class="pricing-grid" id="su-pricing-grid">
                 <div class="price-row product-name-row">
-                    <div class="column header {{ ::product.id }}" ng-repeat="product in ::vm.products | orderBy:'name' track by product.id">{{ ::product.name }}</div>
+                    <div class="column header {{ ::product.id }}" ng-repeat="product in ::vm.products | orderBy:'name' track by product.id">
+                        <div class="product-name">
+                            {{ ::product.name }}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,7 +1,7 @@
 angular.module('vendor.sections.simultaneousUserPrices')
     .controller('simultaneousUserPricesController', simultaneousUserPricesController);
 
-function simultaneousUserPricesController($scope, $q, $filter, alertService, authService, csvExportService, cycleService, offeringService, productService, simultaneousUserPricesCsvData, vendorStatusService){
+function simultaneousUserPricesController($scope, $q, $filter, alertService, authService, csvExportService, cycleService, offeringService, productService, simultaneousUserPricesCsvData, vendorDataService, vendorStatusService){
     var vm = this;
     vm.changedProductIds = {};
     vm.loadingPromise = null;
@@ -30,7 +30,10 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     activate();
 
     function activate() {
-        vm.vendorId = authService.getCurrentUser().vendor.id;
+        vm.cycle = cycleService.getCurrentCycle();
+        vm.user = authService.getCurrentUser();
+        vm.vendor = vm.user.vendor;
+        vm.vendorId = vm.vendor.id;
 
         vm.loadingPromise = loadProducts()
             .then(getSuPricingForAllProducts)
@@ -357,12 +360,19 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             return vm.changedProductIds[id];
         });
 
-        if ( productIdsToUpdate.length < 4 ){
-            vm.loadingPromise = updateChangedProductsConcurrently();
-        }
-        else {
-            vm.loadingPromise = updateChangedProductsSeriallyWithProgressBar();
-        }
+        vm.loadingPromise = vendorDataService.isVendorAllowedToMakeChangesToCycle(vm.user, vm.cycle)
+            .then(function(vendorIsAllowedToSavePrices){
+                if ( !vendorIsAllowedToSavePrices ){
+                    alertService.putAlert('Pricing for the current cycle has been closed. Please contact CARLI staff for more information.', {severity: 'danger'});
+                    return false;
+                }
+                else if ( productIdsToUpdate.length < 4 ){
+                    return updateChangedProductsConcurrently();
+                }
+                else {
+                    return updateChangedProductsSeriallyWithProgressBar();
+                }
+            });
 
         return vm.loadingPromise;
 
@@ -432,11 +442,11 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         }
 
         function updateVendorStatus(){
-            return vendorStatusService.updateVendorStatusActivity( 'Simultaneous User Prices Updated', vm.vendorId, cycleService.getCurrentCycle() );
+            return vendorStatusService.updateVendorStatusActivity( 'Simultaneous User Prices Updated', vm.vendorId, vm.cycle );
         }
 
         function updateVendorFlaggedOfferings(){
-            return vendorStatusService.updateVendorStatusFlaggedOfferings( vm.vendorId, cycleService.getCurrentCycle() );
+            return vendorStatusService.updateVendorStatusFlaggedOfferings( vm.vendorId, vm.cycle );
         }
 
         function syncData(){

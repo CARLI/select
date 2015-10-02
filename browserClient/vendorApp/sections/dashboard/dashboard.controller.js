@@ -58,8 +58,9 @@ function dashboardController($scope, authService, cycleService, emailService, ve
             });
     }
 
-    function updateVendorFlaggedOfferings(){
-        return vendorStatusService.updateVendorStatusFlaggedOfferings(vm.vendor.id, cycle);
+    function updateVendorFlaggedOfferings() {
+        return vendorStatusService.updateVendorStatusFlaggedOfferings(vm.vendor.id, cycle)
+            .then(syncData);
     }
 
     function syncData(){
