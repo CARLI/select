@@ -3,7 +3,8 @@ angular.module('vendor.vendorDataService')
 
 function vendorDataService(cycleService, vendorStatusService) {
     return {
-        isVendorAllowedToMakeChangesToCycle: isVendorAllowedToMakeChangesToCycle
+        isVendorAllowedToMakeChangesToCycle: isVendorAllowedToMakeChangesToCycle,
+        updateAndSyncVendorStatus: updateAndSyncVendorStatus
     };
 
     function isVendorAllowedToMakeChangesToCycle(user, cycle) {
@@ -27,5 +28,10 @@ function vendorDataService(cycleService, vendorStatusService) {
         function userIsActive(){
             return user.isActive;
         }
+    }
+
+    function updateAndSyncVendorStatus(vendorStatus, cycle) {
+        return updateVendorStatus(vendorStatus, cycle)
+            .then(cycleService.syncDataBackToCarli);
     }
 }

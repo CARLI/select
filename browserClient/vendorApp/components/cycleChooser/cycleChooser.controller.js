@@ -44,20 +44,21 @@ function cycleChooserController($scope, alertService, authService, config, cycle
             .then(function(isAllowedIn){
                 if (isAllowedIn) {
                     return warnAboutOtherRecentVendorUsers()
-                        .then(updateStatus)
-                        .then(readyCycle);
+                        .then(readyCycle)
+                        .then(updateStatus);
                 }
                 else {
                     vm.noActiveCycles = true;
                     return false;
                 }
 
-                function updateStatus() {
-                    return vendorStatusService.recordLastVendorLogin(vm.vendor.id, cycle);
-                }
-
                 function readyCycle() {
                     return readySelectedCycle(cycle);
+                }
+                
+                function updateStatus() {
+                    return vendorStatusService.recordLastVendorLogin(vm.vendor.id, cycle)
+                        .then(cycleService.syncDataBackToCarli);
                 }
             });
 
