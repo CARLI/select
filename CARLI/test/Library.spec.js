@@ -301,6 +301,7 @@ describe('the listAllContacts method', function(){
     });
 
     it.skip('should return an array of contacts', function(){
+        this.timeout(5000);
         return LibraryRepository.listAllContacts()
             .then(function(allContacts){
                 return Q.all([
