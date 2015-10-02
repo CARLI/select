@@ -49,16 +49,16 @@ function updateSuPricingForProduct( vendorId, productId, newSuPricing, cycleId )
         .catch(updateSuPricingError);
 
     function catchNoVendor( err ){
-        console.log('error updating Su Pricing For Product '+ productId +' - No Vendor', err);
+        Logger.log('error updating Su Pricing For Product '+ productId +' - No Vendor', err);
     }
     function catchNoCycle( err ){
-        console.log('error updating Su Pricing For Product '+ productId +' - No Cycle', err);
+        Logger.log('error updating Su Pricing For Product '+ productId +' - No Cycle', err);
     }
     function catchEnsureError( err ){
-        console.log('error updating Su Pricing For Product '+ productId +' - Ensure Error', err);
+        Logger.log('error updating Su Pricing For Product '+ productId +' - Ensure Error', err);
     }
     function updateSuPricingError( err ){
-        console.log('error updating Su Pricing For Product '+ productId +' - Updating Pricing ', err);
+        Logger.log('error updating Su Pricing For Product '+ productId +' - Updating Pricing ', err);
     }
 }
 
@@ -80,16 +80,16 @@ function updateSuCommentForProduct(vendorId, productId, numSu, newCommentText, c
         .catch(updateSuPricingError);
 
     function catchNoVendor( err ){
-        console.log('error updating comments for product '+ productId +' - No Vendor', err);
+        Logger.log('error updating comments for product '+ productId +' - No Vendor', err);
     }
     function catchNoCycle( err ){
-        console.log('error updating comments for product '+ productId +' - No Cycle', err);
+        Logger.log('error updating comments for product '+ productId +' - No Cycle', err);
     }
     function catchEnsureError( err ){
-        console.log('error updating comments for product '+ productId +' - Ensure Error', err);
+        Logger.log('error updating comments for product '+ productId +' - Ensure Error', err);
     }
     function updateSuPricingError( err ){
-        console.log('error updating comments for product '+ productId +' - Updating Pricing ', err);
+        Logger.log('error updating comments for product '+ productId +' - Updating Pricing ', err);
     }
 }
 

@@ -63,7 +63,7 @@ function contentForPdf(notificationId){
         .then(dataForPdfFromNotification)
         .then(htmlForPdf)
         .catch(function(err){
-            console.log('Error in contentForPdf', err, err.stack);
+            Logger.log('Error in contentForPdf', err, err.stack);
             return Q.reject(error);
         });
 }
@@ -113,7 +113,7 @@ function dataForSubscriptionInvoicePdf(notification){
     return cycleRepository.load(cycleId)
         .then(function(loadedcycle){
             cycle = loadedcycle;
-            console.log('dataForSubscriptionInvoicePdf('+pdfType+', '+cycle.name+', '+library.name+(specificOfferingIds?'['+specificOfferingIds.length+']':'')+')');
+            Logger.log('dataForSubscriptionInvoicePdf('+pdfType+', '+cycle.name+', '+library.name+(specificOfferingIds?'['+specificOfferingIds.length+']':'')+')');
             return loadOfferings(cycle, library.id, specificOfferingIds);
         })
         .then(groupOfferingsForLibraryInvoice)
@@ -132,7 +132,7 @@ function dataForSubscriptionInvoicePdf(notification){
             };
         })
         .catch(function(err){
-            console.log('ERROR getting data for library selections', err);
+            Logger.log('ERROR getting data for library selections', err);
         });
 }
 
@@ -282,7 +282,7 @@ function fileNameForPdf(dataForPdf, type){
 
 function validateArguments(notificationId) {
     if (!notificationId) {
-        console.log('  Error: no notificationId');
+        Logger.log('  Error: no notificationId');
         return 'Missing notification id';
     }
 }
@@ -330,7 +330,7 @@ function loadCycle(cycleId){
         .catch(noCycle);
 
     function noCycle( err ){
-        console.log('  ERROR loading cycle', err);
+        Logger.log('  ERROR loading cycle', err);
         if ( err.statusCode == 401 ){
             return Q.reject('unauthorized');
         }

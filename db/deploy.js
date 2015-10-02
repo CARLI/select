@@ -40,7 +40,7 @@ function recreateDb(dbName) {
             if (err) {
                 deferred.reject(err);
             } else {
-                console.log("Created database " + dbName);
+                Logger.log("Created database " + dbName);
                 deferred.resolve();
             }
         });
@@ -105,7 +105,7 @@ function createAdminUser() {
         }
 
         if (data && data.error) {
-            console.log('Error creating admin user', carliError(data, response.statusCode));
+            Logger.log('Error creating admin user', carliError(data, response.statusCode));
             deferred.reject(carliError(data, response.statusCode));
         }
         else {
@@ -120,7 +120,7 @@ function createUsersFromJson(file) {
 
     return Q.all(users.map(createUser))
         .catch(function(err) {
-            console.log(err);
+            Logger.log(err);
         });
 
     function createUser(user) {
@@ -206,7 +206,7 @@ function deployLocalCycleDesignDocs() {
         });
         return Q.all(promises);
     })
-        .catch(function (err) { console.log('>>> Not allowed to list cycles', err); });
+        .catch(function (err) { Logger.log('>>> Not allowed to list cycles', err); });
 }
 
 function deployLocalCycleDesignDocsForVendorDatabases( cycle ) {
@@ -228,7 +228,7 @@ function deployLocalCycleDesignDocsForVendorDatabases( cycle ) {
 
                     return couchApp.putDesignDoc( cycleForVendor.getDatabaseName(), 'Cycle' )
                         .catch(function(err){
-                            console.log('error deploying '+vendor.id+' design doc: ',err);
+                            Logger.log('error deploying '+vendor.id+' design doc: ',err);
                         });
                 });
             }

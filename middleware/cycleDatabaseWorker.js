@@ -6,7 +6,7 @@ var vendorDatabases = require('./components/vendorDatabases');
 var sourceCycleId = process.env.sourceCycleId;
 var newCycleId = process.env.newCycleId;
 
-console.log('Cycle database worker started', sourceCycleId, newCycleId);
+Logger.log('Cycle database worker started', sourceCycleId, newCycleId);
 
 cycleCreation.copyCycleDataFrom( sourceCycleId, newCycleId )
     .then(vendorDatabases.createVendorDatabasesForCycle)
@@ -14,7 +14,7 @@ cycleCreation.copyCycleDataFrom( sourceCycleId, newCycleId )
     .then(vendorDatabases.triggerIndexingForCycleId)
     .then(exitWorker)
     .catch(function (err) {
-        console.log('Cycle creation failed', err);
+        Logger.log('Cycle creation failed', err);
     });
 
 function exitWorker() {

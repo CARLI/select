@@ -12,7 +12,7 @@ function migrateVendors(connection) {
 
     var query = "select * from vendor";
     connection.query(query, function(err, rows, fields) {
-        if(err) { console.log(err); }
+        if(err) { Logger.log(err); }
 
         extractVendors(rows).then(function(idMap){
             resultsPromise.resolve(idMap);
@@ -45,7 +45,7 @@ function extractVendors(vendors) {
 }
 
 function createVendor(vendorRow){
-    //console.log('  creating vendor ' + vendorRow.name);
+    //Logger.log('  creating vendor ' + vendorRow.name);
 
     var couchIdPromise = Q.defer();
     var vendor = extractVendor(vendorRow);
@@ -58,7 +58,7 @@ function createVendor(vendorRow){
             });
         })
         .catch(function(err) {
-            console.log('Error creating vendor:', err);
+            Logger.log('Error creating vendor:', err);
             couchIdPromise.reject();
         });
 

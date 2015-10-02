@@ -14,7 +14,7 @@ var Q = require('q');
  * (i.e. load the entities two-layers deep for the Offerings)
  */
 function listSelectionsForLibraryFromCycle( libraryId, cycleId ){
-    console.log('listSelectionsForLibraryFromCycle('+libraryId+', '+cycleId+')');
+    Logger.log('listSelectionsForLibraryFromCycle('+libraryId+', '+cycleId+')');
     var cycle = null;
 
     return cycleRepository.load(cycleId)
@@ -24,7 +24,7 @@ function listSelectionsForLibraryFromCycle( libraryId, cycleId ){
         })
         .then(populateProductsForOfferings)
         .catch(function(err){
-            console.log('Error listing selections for library '+libraryId+' from cycle '+cycle.name, err.stack);
+            Logger.log('Error listing selections for library '+libraryId+' from cycle '+cycle.name, err.stack);
         });
 
     function populateProductsForOfferings( offeringsList ){
@@ -142,7 +142,7 @@ function listOfferingsForLibraryWithExpandedProducts( libraryId, cycleId ){
         })
         .then(populateProductsForOfferings)
         .catch(function(err){
-            console.log('  ** Error populating products', err);
+            Logger.log('  ** Error populating products', err);
         });
 
     function populateProductsForOfferings( offeringsList ){
@@ -155,7 +155,7 @@ function listOfferingsForLibraryWithExpandedProducts( libraryId, cycleId ){
                     return offering;
                 })
                 .catch(function(err){
-                    console.log('    error expanding product '+err.message);
+                    Logger.log('    error expanding product '+err.message);
                 });
 
             function productId(){
@@ -178,7 +178,7 @@ function getHistoricalSelectionDataForLibraryForProduct( libraryId, productId, c
         .then(getSelectionDataForCycles)
         .thenResolve(selectionsByYear)
         .catch(function(err){
-            console.log('Error getting historical selections for library '+libraryId+' from cycle '+cycle.name, err);
+            Logger.log('Error getting historical selections for library '+libraryId+' from cycle '+cycle.name, err);
         });
 
     function getSelectionDataForCycles( cycles ){
@@ -188,14 +188,14 @@ function getHistoricalSelectionDataForLibraryForProduct( libraryId, productId, c
             return offeringRepository.listOfferingsForProductIdUnexpanded( productId, cycle )
                 .then(returnWhetherLibrarySelectedProductInCycle)
                 .catch(function(err){
-                    console.log('Error getting selection data for '+cycle.name, err);
+                    Logger.log('Error getting selection data for '+cycle.name, err);
                 });
 
             function returnWhetherLibrarySelectedProductInCycle(offeringsForProductFromCycle){
                 var offering = offeringsForProductFromCycle.filter(offeringForLibrary)[0] || null;
                 var selected = !!(offering && offering.selection);
                 selectionsByYear[cycle.year] = selected;
-                console.log('results from '+cycle.name+':'+selected);
+                Logger.log('results from '+cycle.name+':'+selected);
                 return selected;
             }
         }

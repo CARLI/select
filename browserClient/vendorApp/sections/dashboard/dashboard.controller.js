@@ -50,7 +50,7 @@ function dashboardController($scope, authService, cycleService, emailService, ve
         return vendorStatusService.update(vm.vendorStatus, cycle)
             .then(syncData)
             .catch(function(err){
-                console.log('error updating vendor status', err);
+                Logger.log('error updating vendor status', err);
             })
             .finally(function() {
                 vm.statusUpdating = false;
@@ -74,7 +74,7 @@ function dashboardController($scope, authService, cycleService, emailService, ve
             .then(syncData)
             .then(checkIfVendorIsDoneEnteringPrices)
             .catch(function(err){
-                console.log('error updating vendor status', err);
+                Logger.log('error updating vendor status', err);
             })
             .finally(function() {
                 vm.statusUpdating = false;

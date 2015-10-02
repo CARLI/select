@@ -110,7 +110,7 @@ function syncEverything() {
 
     function tap(message) {
         return function (a) {
-            console.log("[SYNC] " + message);
+            Logger.log("[SYNC] " + message);
             return a;
         }
     }
@@ -256,7 +256,7 @@ function getDatabaseStatusForVendor(vendor, cycleId) {
         ]).then(function(info) {
             var vendorDatabaseInfo = info[0];
             var vendorDesignDocInfo =  info[1];
-            //console.log(vendorDatabaseInfo);
+            //Logger.log(vendorDatabaseInfo);
             status.viewIndexDelta = vendorDatabaseInfo.update_seq - vendorDesignDocInfo.view_index.update_seq;
 
             //return couchUtils.getVendorDatabaseReplicationStatus(vendorCycle.getSourceDatabaseName(), vendorDatabaseInfo.update_seq, vendor.id)
@@ -291,7 +291,7 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
         })
         .then(updateVendorStatusFlaggedOfferings)
         .catch(function(err){
-            console.log('error updating flagged offerings', err);
+            Logger.log('error updating flagged offerings', err);
         });
 
     function loadCycleForVendor(vendor){
@@ -300,11 +300,11 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
     }
 
     function catchNoVendor( err ){
-        console.log('error updating Flagged Offerings for vendor' + vendorId +' - No Vendor', err);
+        Logger.log('error updating Flagged Offerings for vendor' + vendorId +' - No Vendor', err);
     }
 
     function catchNoCycle( err ){
-        console.log('error updating Flagged Offerings for vendor' + vendorId +' - No Cycle', err);
+        Logger.log('error updating Flagged Offerings for vendor' + vendorId +' - No Cycle', err);
     }
 
     function updateVendorStatusFlaggedOfferings(){

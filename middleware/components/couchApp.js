@@ -28,7 +28,7 @@ function putDesignDoc(dbName, dbType) {
     //});
 
     //couchAppDomain.on('error', function(err) {
-    //    console.log("Error Putting Design Document:", err);
+    //    Logger.log("Error Putting Design Document:", err);
     //    putDocPromise.reject("Error Putting Design Document: " + err);
     //});
 

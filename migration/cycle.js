@@ -172,7 +172,7 @@ function createCycles(cycles) {
 }
 
 function createCycle(cycle){
-    console.log('  creating cycle: ' + cycle.name);
+    Logger.log('  creating cycle: ' + cycle.name);
 
     var couchIdPromise = Q.defer();
 
@@ -184,7 +184,7 @@ function createCycle(cycle){
             });
         })
         .catch(function(err) {
-            console.log('Error creating cycle:', err);
+            Logger.log('Error creating cycle:', err);
             couchIdPromise.reject();
         });
 

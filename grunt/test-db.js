@@ -25,11 +25,11 @@ module.exports = function (grunt) {
     grunt.registerTask('delete-test-dbs', function() {
         var done = this.async();
         var config = require('../config');
-        console.log(config.storeOptions);
+        Logger.log(config.storeOptions);
         testUtils.deleteTestReplicators()
             .then(testUtils.deleteTestDbs)
             .then(function(){
-                console.log('Done deleting test DBs');
+                Logger.log('Done deleting test DBs');
                 done();
             });
     });

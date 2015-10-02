@@ -63,41 +63,41 @@ function sendNotificationEmail( notificationId ){
 
             return includeAttachmentsIfNecessary( options, notification )
                 .then(function() {
-                    console.log('send email to '+notification.to);
+                    Logger.log('send email to '+notification.to);
                     return sendMail(options);
                 })
-                .catch(function(err){ console.log('EMAIL ERROR ', err); })
+                .catch(function(err){ Logger.log('EMAIL ERROR ', err); })
         });
 
     function includeAttachmentsIfNecessary( emailOptions, notification ){
         if ( notification.pdfLink ){
-            console.log('  generating PDF to attach');
+            Logger.log('  generating PDF to attach');
             return pdf.exportPdf(notification.id)
                 .then(function(exportResults){
-                    console.log('    attaching PDF '+exportResults.fileName);
+                    Logger.log('    attaching PDF '+exportResults.fileName);
                     emailOptions.attachments.push({
                         content: exportResults.pdf,
                         contentType: 'application/pdf',
                         filename: exportResults.fileName
                     });
                 })
-                .catch(function(err){ console.log('PDF ERROR ', err); })
+                .catch(function(err){ Logger.log('PDF ERROR ', err); })
         }
         else if ( notification.csvLink ) {
-            console.log('  generating CSV to attach');
+            Logger.log('  generating CSV to attach');
             return vendorReportCsv.exportCsvForVendorReport(notification.id)
                 .then(function(exportResults){
-                    console.log('    attaching CSV '+exportResults.fileName);
+                    Logger.log('    attaching CSV '+exportResults.fileName);
                     emailOptions.attachments.push({
                         content: exportResults.csv,
                         contentType: 'text/csv',
                         filename: exportResults.fileName
                     });
                 })
-                .catch(function(err){ console.log('CSV ERROR ', err); })
+                .catch(function(err){ Logger.log('CSV ERROR ', err); })
         }
         else {
-            console.log('  no attachments');
+            Logger.log('  no attachments');
             return Q(true);
         }
     }
@@ -155,7 +155,7 @@ function sendVendorDoneEnteringPricingMessage( vendorId ){
 }
 
 function sendAskCarliMessage( message ){
-    console.log('ask carli ', message);
+    Logger.log('ask carli ', message);
 
     var messageText = message.text;
     var messageContext = message.context || '';

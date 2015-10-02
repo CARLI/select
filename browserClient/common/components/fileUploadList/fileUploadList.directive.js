@@ -60,7 +60,7 @@ angular.module('common.fileUploadList')
                                 errorHandler('There was an error reading the file: '+err);
                             },
                             function progress( notification ){
-                                console.log('file read progress', notification);
+                                Logger.log('file read progress', notification);
                             }
                         );
                     });
