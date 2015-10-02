@@ -164,11 +164,13 @@ function offeringsExportHelper(offeringService) {
 
             function getPriceForUsers(suUsers) {
                 var price = '';
-                pricing.su.forEach(function (suPricing) {
-                    if (suPricing.users === suUsers) {
-                        price = suPricing.price;
-                    }
-                });
+                if (pricing.su) {
+                    pricing.su.forEach(function (suPricing) {
+                        if (suPricing.users === suUsers) {
+                            price = suPricing.price;
+                        }
+                    });
+                }
                 return price;
             }
         }
