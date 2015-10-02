@@ -28,7 +28,7 @@ function logoutOfCouch() {
 }
 
 function logError(error) {
-    console.log(error);
+    Logger.log(error);
 }
 
 function confirmOrExit(question) {

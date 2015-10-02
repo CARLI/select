@@ -46,7 +46,7 @@ function productController($location, $routeParams, $scope, $sce, cycleService, 
         var currentCycle = cycleService.getCurrentCycle();
 
         if ( currentCycle ){
-            //console.log('  route to current cycle '+currentCycle.name);
+            //Logger.log('  route to current cycle '+currentCycle.name);
             var cycleId = currentCycle.id;
             routeToCycle(cycleId);
         }
@@ -54,7 +54,7 @@ function productController($location, $routeParams, $scope, $sce, cycleService, 
             return cycleService.listActiveCycles()
                 .then(function (activeCycles) {
                     var cycleId = activeCycles[0].id;
-                    //console.log('  route to default cycle ' + cycleId);
+                    //Logger.log('  route to default cycle ' + cycleId);
                     routeToCycle(cycleId);
                 });
         }

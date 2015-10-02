@@ -36,7 +36,7 @@ angular.module('common.askCarliButton')
         });
 
         element.on('click', function(){
-            console.log('ask carli click');
+            Logger.log('ask carli click');
             scope.$apply(function(){
                 askCarliService.sendStartDraftMessage(context);
             });

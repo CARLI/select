@@ -15,7 +15,7 @@ function createAndSyncVendorDatabases(cycleId) {
             }
             else {
                 return vendorRepository.list().then(function (vendors) {
-                    console.log('Replicating ' + cycleId + ' for ' + vendors.length + ' vendors');
+                    Logger.log('Replicating ' + cycleId + ' for ' + vendors.length + ' vendors');
                     return Q.all( vendors.map(createDatabase) );
 
                     function createDatabase(vendor) {
@@ -45,7 +45,7 @@ function createVendorStatusesForAllCycles(){
         else {
             return vendorRepository.list()
                 .then(function(vendorList){
-                    console.log('Ensure vendor status entries for '+cycle.name+' - '+vendorList.length+' vendors');
+                    Logger.log('Ensure vendor status entries for '+cycle.name+' - '+vendorList.length+' vendors');
                     return Q.all( vendorList.map(makeVendorStatus) );
                 });
         }
@@ -61,7 +61,7 @@ function createVendorStatusesForAllCycles(){
 
             return vendorStatusRepository.create(newStatus, cycle)
                 .catch(function(err){
-                    console.log('  error making status for '+vendor.name,err);
+                    Logger.log('  error making status for '+vendor.name,err);
                     throw err;
                 });
         }

@@ -25,8 +25,8 @@ function migrateProducts(connection, cycle, vendorIdMapping, productLicenseMappi
         "ORDER BY vendor_name, product_name";
 
     connection.query(query, function(err, rows, fields) {
-        console.log('  Migrating products for ' + cycle.name + ': ' + rows.length + ' products');
-        if(err) { console.log(err); }
+        Logger.log('  Migrating products for ' + cycle.name + ': ' + rows.length + ' products');
+        if(err) { Logger.log(err); }
 
         extractProducts(rows, cycle, vendorIdMapping, productLicenseMapping).then(function(idMap){
             resultsPromise.resolve(idMap);
@@ -68,7 +68,7 @@ function createProduct( productRow, cycle, vendorIdMapping, productLicenseMappin
             };
         })
         .catch(function(err) {
-            console.log('Error creating product: ', err);
+            Logger.log('Error creating product: ', err);
         });
 }
 
@@ -119,7 +119,7 @@ function generateCouchIdsForAllIdalProducts(connection){
     function mapCouchIdsToLegacyProductIds(){
         var results = {};
 
-        console.log('Generating couch IDs for ' + productIds.length + ' x ' + vendorIds.length + '  vendors');
+        Logger.log('Generating couch IDs for ' + productIds.length + ' x ' + vendorIds.length + '  vendors');
 
         vendorIds.forEach(function(vendorId){
             productIds.forEach(function(productId){
@@ -140,7 +140,7 @@ function getIdalVendorIds(connection){
 
     connection.query(query, function(err, rows, fields) {
         if(err) {
-            console.log('error getting vendor ids from IDAL', err);
+            Logger.log('error getting vendor ids from IDAL', err);
         }
         vendorIdsPromise.resolve( rows.map(extractId) );
     });
@@ -155,7 +155,7 @@ function getIdalProductsIds(connection){
 
     connection.query(query, function(err, rows, fields) {
         if(err) {
-            console.log('error getting product ids from IDAL', err);
+            Logger.log('error getting product ids from IDAL', err);
         }
         productIdsPromise.resolve( rows.map(extractId) );
     });

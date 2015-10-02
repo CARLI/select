@@ -134,7 +134,7 @@ function reportsController( csvExportService, cycleService, errorHandler, report
                 csvExportService.browserDownloadCsv(csvContent, makeFilename());
             })
             .catch(function (err) {
-                console.log('CSV generation failed', err);
+                Logger.log('CSV generation failed', err);
             });
 
         return vm.reportRunningPromise;

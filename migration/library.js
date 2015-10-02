@@ -14,7 +14,7 @@ function migrateLibraries(connection, crmLibraryMapping) {
 
     var query = "select id, name from library";
     connection.query(query, function(err, rows, fields) {
-        if(err) { console.log(err); }
+        if(err) { Logger.log(err); }
 
         extractLibraries(rows).then(function(idMap){
             resultsPromise.resolve(idMap);
@@ -63,7 +63,7 @@ function migrateLibraries(connection, crmLibraryMapping) {
         if (crmLibraryMapping[idalLibraryName.toLowerCase()]) {
             return crmLibraryMapping[idalLibraryName.toLowerCase()].toString();
         }
-        console.log("Error: '" + idalLibraryName + "' not found");
+        Logger.log("Error: '" + idalLibraryName + "' not found");
     }
 }
 
@@ -73,7 +73,7 @@ function loadCrmLibraryMapping(crmConnection) {
     var query = "select institution_name, member_id from members";
     crmConnection.query(query, function (err, rows, fields) {
         if (err) {
-            console.log(err);
+            Logger.log(err);
         }
 
         var crmLibraryMapping = {};

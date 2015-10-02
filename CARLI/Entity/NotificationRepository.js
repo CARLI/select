@@ -181,7 +181,7 @@ function getRecipientEmailAddresses(recipientId, notificationType) {
             });
     }
     else {
-        console.log('getRecipientEmailAddresses for unknown type: '+notificationType);
+        Logger.log('getRecipientEmailAddresses for unknown type: '+notificationType);
         return Q('');
     }
 }

@@ -32,7 +32,7 @@ module.exports = function (storeOptions) {
                         data = JSON.parse(body);
                     }
                     catch ( parseError ){
-                        console.log('Error parsing response from '+requestOptions.url);
+                        Logger.log('Error parsing response from '+requestOptions.url);
                         data = { error: 'error parsing '+body };
                     }
                 }
@@ -56,7 +56,7 @@ module.exports = function (storeOptions) {
             try {
                 JSON.parse(text);
             } catch (e) {
-                console.log('error!', e);
+                Logger.log('error!', e);
                 return false;
             }
             return true;
@@ -259,7 +259,7 @@ module.exports = function (storeOptions) {
                     });
                 });
             } else {
-                console.log(body);
+                Logger.log(body);
                 deferred.reject("Could not create database " + dbName + " statusCode=" + response.statusCode);
             }
         });
@@ -309,7 +309,7 @@ module.exports = function (storeOptions) {
             couchRequest(requestOptions)
                 .then(function resolveReplication(data) {
                     if (data.ok) {
-                        console.log("OK: Replicated " + sourceDbName + " to " + targetDbName);
+                        Logger.log("OK: Replicated " + sourceDbName + " to " + targetDbName);
                         deferred.resolve();
                     } else {
                         deferred.reject('replication failed ['+sourceDbName+' -> '+targetDbName+']');

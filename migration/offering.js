@@ -30,12 +30,12 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping,
     connection.query(query, function(err, rows, fields) {
         //rows = rows.slice(0, 30000);
 
-        console.log('  Migrating offerings for cycle "' + cycle.name + '" - got ' + rows.length + ' offerings');
-        if(err) { console.log(err); }
+        Logger.log('  Migrating offerings for cycle "' + cycle.name + '" - got ' + rows.length + ' offerings');
+        if(err) { Logger.log(err); }
 
         var uniqueOfferings = extractUniqueProductLibraryOfferings(rows, cycle, libraryIdMapping, productIdMapping);
 
-        console.log('Extracted '+ Object.keys(uniqueOfferings).length +' unique Offerings');
+        Logger.log('Extracted '+ Object.keys(uniqueOfferings).length +' unique Offerings');
         var offeringsList = extractPricingForOfferings(uniqueOfferings, rows, cycle, libraryIdMapping, productIdMapping);
 
         //Convert legacy ID's to new couch ids, attach selections, and track offerings that were created
@@ -50,7 +50,7 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping,
                 resultsPromise.resolve(offeringsList.length + emptyOfferingsList.length);
             })
             .catch(function(err){
-                console.log('Error creating offerings', err);
+                Logger.log('Error creating offerings', err);
                 throw err;
             });
 
@@ -69,7 +69,7 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping,
                 if (currentBatch == numBatches) {
                     return results;
                 }
-                console.log('['+ cycle.name +'] Creating offerings '+ (currentBatch + 1) +'/' + numBatches);
+                Logger.log('['+ cycle.name +'] Creating offerings '+ (currentBatch + 1) +'/' + numBatches);
                 return createOfferings(offeringsPartitions[currentBatch], cycle)
                     .then(incrementBatch)
                     .then(createNextBatch);
@@ -82,7 +82,7 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping,
         }
 
         function createEmptyOfferings(libraryList) {
-            console.log('Generating empty offerings');
+            Logger.log('Generating empty offerings');
 
             Object.keys(productIdMapping).forEach(function (productLegacyId) {
                 var productCouchId = productIdMapping[productLegacyId];
@@ -96,13 +96,13 @@ function migrateOfferings(connection, cycle, libraryIdMapping, productIdMapping,
                     }
                 });
             });
-            console.log('Creating '+ emptyOfferingsList.length +' empty offerings');
+            Logger.log('Creating '+ emptyOfferingsList.length +' empty offerings');
 
             var numBatches = Math.floor(emptyOfferingsList.length / batchSize);
 
             return createOfferingsInBatches(emptyOfferingsList, numBatches)
                 .then(function(result) {
-                    console.log('Created '+ emptyOfferingsList.length +' empty offerings');
+                    Logger.log('Created '+ emptyOfferingsList.length +' empty offerings');
                     return result;
                 });
         }
@@ -202,8 +202,8 @@ function createOffering( offering, cycle ) {
             couchIdPromise.resolve();
         })
         .catch(function(err) {
-            console.log('Error creating offering: ', err);
-            console.log(offering);
+            Logger.log('Error creating offering: ', err);
+            Logger.log(offering);
             couchIdPromise.reject();
         });
 

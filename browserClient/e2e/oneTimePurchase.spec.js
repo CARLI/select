@@ -145,9 +145,9 @@ describe('The One-Time Purchases Select Product screen', function () {
 
                     // how to print debug:
                     /*
-                    console.log("colListLength=" + colList.length);
+                    Logger.log("colListLength=" + colList.length);
                     colList[0].getText().then( function( text ) {
-                        console.log("colList[0] text = " + text);
+                        Logger.log("colList[0] text = " + text);
                     });
                     */
 

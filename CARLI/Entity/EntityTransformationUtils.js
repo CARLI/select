@@ -100,7 +100,7 @@ function _fetchAndTransformObjectsFromReferences(entity, references) {
         _transformReferencesToObjects(entity, resolvedObjects);
     })
     .catch(function(err){
-        console.log('  Failed to load a reference, not expanding entity '+entity.id+' ('+entity.name+')', err);
+        Logger.log('  Failed to load a reference, not expanding entity '+entity.id+' ('+entity.name+')', err);
     });
 
     return fetchPromise;

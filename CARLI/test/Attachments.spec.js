@@ -210,7 +210,7 @@ function getAttachmentWithCategory(attachmentResult){
 }
 
 function deleteAttachment(attachmentResult){
-    console.log('delete test document ',attachmentResult);
+    Logger.log('delete test document ',attachmentResult);
     var docId = attachmentResult.id;
     return attachmentsModule.deleteAttachment(docId, testAttachmentName);
 }

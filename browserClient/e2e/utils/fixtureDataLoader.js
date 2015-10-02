@@ -7,7 +7,7 @@ var storeOptions = {
     couchDbUrl: CARLI.config.storeOptions.couchDbUrl,
     couchDbName: CARLI.config.getDbName()
 };
-console.log(storeOptions);
+Logger.log(storeOptions);
 var store = CARLI.Store( CARLI.CouchDbStore(storeOptions) );
 
 CARLI.Cycle.setStore( store );
@@ -18,25 +18,25 @@ CARLI.Vendor.setStore( store );
 module.exports = {
     createLibrary : function (data) {
         CARLI.Library.create(data).catch(function(err){
-            console.log("Creating Fixture Library failed ", err, data);
+            Logger.log("Creating Fixture Library failed ", err, data);
         });
     },
 
     createVendor : function (data) {
         CARLI.Vendor.create(data).catch(function(err){
-            console.log("Creating Fixture Vendor failed ", err, data);
+            Logger.log("Creating Fixture Vendor failed ", err, data);
         });
     },
 
     createProduct : function (data, cycle) {
         CARLI.Product.create(data, cycle).catch(function(err){
-            console.log("Creating Fixture Product failed ", err, data);
+            Logger.log("Creating Fixture Product failed ", err, data);
         });
     },
 
     createLicense : function (data) {
         CARLI.License.create(data).catch(function(err){
-            console.log("Creating Fixture License failed ", err, data);
+            Logger.log("Creating Fixture License failed ", err, data);
         });
     }
 };

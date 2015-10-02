@@ -121,7 +121,7 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
             .then(populateRecipients)
             .then(showEditDraftModal)
             .catch(function (err) {
-                console.log(err);
+                Logger.log(err);
             });
 
 

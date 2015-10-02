@@ -79,11 +79,11 @@ module.exports = {
             });
             Q.all(promises)
                 .then(function(){
-                    console.log(' Deleted ' + count + ' databases');
+                    Logger.log(' Deleted ' + count + ' databases');
                     deferred.resolve();
                 })
                 .catch(function(err){
-                    console.log(' error deleting test DBs',err);
+                    Logger.log(' error deleting test DBs',err);
                     deferred.resolve(); //report error but don't break the promise chain with a reject
                 });
         });
@@ -114,7 +114,7 @@ module.exports = {
                     promises.push( promiseDeletion(replication.doc._id, replication.doc._rev) );
                 }
             });
-            console.log('Deleted ' + count + ' replicator documents');
+            Logger.log('Deleted ' + count + ' replicator documents');
             Q.all(promises).then(deferred.resolve);
         });
 
@@ -125,8 +125,8 @@ module.exports = {
                 var parsedBody = JSON.parse(body);
                 var err = error || parsedBody.error;
                 if (err) {
-                    console.log('Failed to delete ' + id + ' rev: '+ rev +', ' + err + ': ' + parsedBody.reason);
-                    console.log('Run `grunt delete-test-dbs` to clean this up');
+                    Logger.log('Failed to delete ' + id + ' rev: '+ rev +', ' + err + ': ' + parsedBody.reason);
+                    Logger.log('Run `grunt delete-test-dbs` to clean this up');
                     deletion.reject(error);
                 } else {
                     deletion.resolve();
@@ -143,12 +143,12 @@ module.exports = {
             couchDbUrl = testStoreOptions.privilegedCouchDbUrl;
         }
 
-        console.log('Nuke couch at '+couchDbUrl);
+        Logger.log('Nuke couch at '+couchDbUrl);
 
         //return deleteAllReplicators()
         return deleteAllNonSystemDatabases()
             .catch(function(err){
-                console.log('Error nuking couch', err);
+                Logger.log('Error nuking couch', err);
             });
 
         function deleteAllReplicators() {
@@ -172,7 +172,7 @@ module.exports = {
                 });
                 Q.all(promises)
                     .then(function(){
-                        console.log('Deleted ' + count + ' replicator documents');
+                        Logger.log('Deleted ' + count + ' replicator documents');
                         deferred.resolve();
                     });
             });
@@ -185,7 +185,7 @@ module.exports = {
                 var parsedBody = JSON.parse(body);
                 var err = error || parsedBody.error;
                 if (err) {
-                    console.log('Failed to delete ' + id + ' rev: '+ rev +', ' + err + ': ' + parsedBody.reason);
+                    Logger.log('Failed to delete ' + id + ' rev: '+ rev +', ' + err + ': ' + parsedBody.reason);
                     deletion.reject(err);
                 } else {
                     deletion.resolve();
@@ -216,11 +216,11 @@ module.exports = {
                     );
                     Q.all(promises)
                         .then(function(){
-                            console.log('Deleted ' + count + ' databases');
+                            Logger.log('Deleted ' + count + ' databases');
                             deferred.resolve();
                         })
                         .catch(function(err){
-                            console.log('error deleting databases ',err);
+                            Logger.log('error deleting databases ',err);
                         });
                 }
             );

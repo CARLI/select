@@ -5,6 +5,7 @@ var secure = {};
 var secureConfigPath = null;
 
 var config = loadConfiguration();
+makeLoggerGlobal();
 
 var storeOptionsForCycles = null;
 
@@ -67,6 +68,16 @@ function loadConfiguration() {
                 config.storeOptions.privilegedCouchPassword + '@' +
                 config.storeOptions.privilegedCouchHostname;
         }
+    }
+}
+
+function makeLoggerGlobal() {
+    var Logger = require('../CARLI/Logger');
+
+    if (isBrowserEnvironment()) {
+        window.Logger = Logger;
+    } else {
+        global.Logger = Logger;
     }
 }
 

@@ -53,10 +53,10 @@ function carliCheckingPricesController( $q, authService, config, notificationSer
         if (!vm.doNotCreateNotification) {
             notificationService.create(vm.openSystemMessage)
                 .then(function(){
-                    console.log('Created open system notification');
+                    Logger.log('Created open system notification');
                 })
                 .catch(function(err){
-                    console.log('error creating open system not',err);
+                    Logger.log('error creating open system not',err);
                 });
         }
 

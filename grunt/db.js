@@ -56,7 +56,7 @@ module.exports = function (grunt) {
         var done = this.async();
         deployDb.deployLocalCycleDesignDocs().then(done)
             .catch(function(err){
-                console.log('error deploying Local Cycle Design Docs',err);
+                Logger.log('error deploying Local Cycle Design Docs',err);
             });
     });
     grunt.registerTask('fixture-data', function() {
