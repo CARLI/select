@@ -554,7 +554,7 @@ function runOneTimePurchaseProductTests(testCycle) {
                     return productRepository.listAvailableOneTimePurchaseProducts()
                 },
                 function catchCreate(err) {
-                    console.log('Create failed: ' + err);
+                    Logger.log('Create failed: ' + err);
                 })
                 .then(function (oneTimePurchaseProductList) {
 
@@ -574,7 +574,7 @@ function runOneTimePurchaseProductTests(testCycle) {
                     return expect(oneTimePurchaseProductList).to.satisfy(verifyNoMatchingOneTimePurchase);
                 },
                 function catchList(err) {
-                    console.log('listAvailableOneTimePurchaseProducts failed: ' + err);
+                    Logger.log('listAvailableOneTimePurchaseProducts failed: ' + err);
                 })
         });
     });

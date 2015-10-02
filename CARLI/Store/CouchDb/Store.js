@@ -34,8 +34,8 @@ module.exports = function (inputOptions) {
         request({ url: db_host + '/' + id },
             function (requestError, response, body) {
                 if (!body) {
-                    console.log("Got empty body for " + db_host + '/' + id);
-                    console.log(requestError);
+                    Logger.log("Got empty body for " + db_host + '/' + id);
+                    Logger.log(requestError);
                 }
                 var data = JSON.parse(body);
 

@@ -36,11 +36,11 @@ function putHistoricalPricingDesignDoc( cycleId ){
         })
         .then(function(designDocAlreadyExists){
             if ( designDocAlreadyExists ){
-                //console.log('      '+cycle.name+' already has migration design doc');
+                //Logger.log('      '+cycle.name+' already has migration design doc');
                 return Q();
             }
             else {
-                console.log('      Putting design doc for migration for '+cycle.name);
+                Logger.log('      Putting design doc for migration for '+cycle.name);
                 return putMigrationDesignDoc(dbName);
             }
         });
@@ -59,27 +59,27 @@ function populateHistoricalPricingForCycle( cycleId ){
         .then(listPastCyclesOfSameTypeAsCycle)
         .then(function(matchingCycles){
             if ( matchingCycles.length ){
-                console.log('  Populating history from '+matchingCycles.length+' previous cycle'+(matchingCycles.length == 1 ? 's':''));
+                Logger.log('  Populating history from '+matchingCycles.length+' previous cycle'+(matchingCycles.length == 1 ? 's':''));
             }
             else {
-                console.log('  No matching cycles to get history from');
+                Logger.log('  No matching cycles to get history from');
             }
             return Q.all(matchingCycles.map(populatePricingFromCycle));
         })
         .then(function(){
-            console.log('Update offerings for '+cycleToCopyPricesInto.name);
+            Logger.log('Update offerings for '+cycleToCopyPricesInto.name);
             return offeringRepository.bulkUpdateOfferings(offeringsToCopyPricesInto, cycleToCopyPricesInto);
         });
 
     function loadOfferingsForCycle( cycle ){
         cycleToCopyPricesInto = cycle;
-        console.log('\nPopulate historical pricing for '+cycle.name);
+        Logger.log('\nPopulate historical pricing for '+cycle.name);
         return offeringRepository.listOfferingsUnexpanded(cycleToCopyPricesInto);
     }
 
     function listPastCyclesOfSameTypeAsCycle( offeringsList ){
         offeringsToCopyPricesInto = offeringsList;
-        console.log('  Find historical pricing for '+offeringsList.length+' offerings');
+        Logger.log('  Find historical pricing for '+offeringsList.length+' offerings');
 
         var type = cycleToCopyPricesInto.cycleType;
         var year = cycleToCopyPricesInto.year;
@@ -104,7 +104,7 @@ function populateHistoricalPricingForCycle( cycleId ){
                 return couchUtils.couchRequest({ url: url })
                     .then(resolveWithRowValues)
                     .catch(function(error) {
-                        console.log('error getting historical pricing from ' + historicCycle.name, error);
+                        Logger.log('error getting historical pricing from ' + historicCycle.name, error);
                     });
             })
             .then(copyHistoricalPricingFromOfferings);
@@ -115,7 +115,7 @@ function populateHistoricalPricingForCycle( cycleId ){
 
             offeringsToCopyPricesInto.forEach(copyHistoricalPricingForOffering);
 
-            console.log('    found '+offeringsWithPricingCount+' offerings with pricing, and '+offeringsWithSelectionsCount+' had selections.');
+            Logger.log('    found '+offeringsWithPricingCount+' offerings with pricing, and '+offeringsWithSelectionsCount+' had selections.');
 
             function copyHistoricalPricingForOffering(offering){
                 var legacyKey = offering.library + ',' + offering.product;
@@ -173,7 +173,7 @@ function checkIfMigrationDesignDocExists(dbName){
                 }
             }
             catch ( parseError ){
-                console.log('Error parsing response from '+url);
+                Logger.log('Error parsing response from '+url);
             }
         }
 
@@ -196,7 +196,7 @@ function resolveWithRowValues(data) {
         });
     }
     else {
-        console.log('bad results from historic pricing view: ',data);
+        Logger.log('bad results from historic pricing view: ',data);
     }
 
     return resultObject;

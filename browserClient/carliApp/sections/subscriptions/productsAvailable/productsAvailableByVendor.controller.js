@@ -227,7 +227,7 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
 
         $timeout(function(){
             var stop = new Date();
-            console.log('digest ' + numberOfOfferings + ' vendor offerings took '+ (stop-startTime)/1000 + 's');
+            Logger.log('digest ' + numberOfOfferings + ' vendor offerings took '+ (stop-startTime)/1000 + 's');
         });
     }
 

@@ -66,11 +66,11 @@ function getMulticapabilities(options) {
     }
 
     if (options.enableChrome) {
-        console.log('enabling chrome');
+        Logger.log('enabling chrome');
         multiCapabilities.push(browserCapabilities('chrome', options));
     }
     if (options.enableFirefox) {
-        console.log('enabling firefox');
+        Logger.log('enabling firefox');
         multiCapabilities.push(browserCapabilities('firefox', options));
     }
     return multiCapabilities;

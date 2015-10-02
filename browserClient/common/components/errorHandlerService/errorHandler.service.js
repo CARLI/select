@@ -16,7 +16,7 @@ function returnErrorHandlerFunction($rootScope, $location, alertService, authSer
         }
         else if ( error.statusCode === 500 ){
             if ( errorLooksLikeMySql(error) ){
-                console.log('handled probable MySQL error', error);
+                Logger.log('handled probable MySQL error', error);
                 handleBackendUnavailable();
             }
             else {
@@ -30,7 +30,7 @@ function returnErrorHandlerFunction($rootScope, $location, alertService, authSer
             handleBackendTimeout();
         }
         else {
-            console.log('handled error ', error);
+            Logger.log('handled error ', error);
             showErrorToUser(error);
         }
     }
@@ -43,7 +43,7 @@ function returnErrorHandlerFunction($rootScope, $location, alertService, authSer
     function handleConflict(error){
         showErrorToUser('Your changes could not be saved because of a conflict. Please reload the page and try again.');
         //TODO: log conflict details for debugging
-        console.log('conflict: ',error);
+        Logger.log('conflict: ',error);
     }
 
     function handleFileTooLarge(error){

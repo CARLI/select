@@ -298,7 +298,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
 
         if ( !offering ){
             if ( newPrice !== null ){
-                //console.log('no offering, add new one with price ', newPrice);
+                //Logger.log('no offering, add new one with price ', newPrice);
                 var productId = offeringCell.data('productId');
                 var libraryId = offeringCell.data('libraryId');
                 offering = generateNewOffering(libraryId, productId, newPrice);
@@ -306,7 +306,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
             }
         }
         else if ( newPrice !== null && newPrice != offering.pricing.site ){
-            //console.log('set offering price to '+newPrice+' (was '+offering.pricing.site+')');
+            //Logger.log('set offering price to '+newPrice+' (was '+offering.pricing.site+')');
             offering.pricing.site = newPrice;
             offering.siteLicensePriceUpdated = new Date().toISOString();
             vm.changedOfferings.push(offering);
@@ -407,8 +407,8 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
                 var oldOfferingsUpdated = arrays[1].length;
                 var count = newOfferingsCreated + oldOfferingsUpdated;
 
-                console.log('created '+newOfferingsCreated+' new offerings');
-                console.log('updated '+oldOfferingsUpdated+' old offerings');
+                Logger.log('created '+newOfferingsCreated+' new offerings');
+                Logger.log('updated '+oldOfferingsUpdated+' old offerings');
 
                 vm.newOfferings = [];
                 vm.changedOfferings = [];
@@ -421,7 +421,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
                 }
             })
             .catch(function(err){
-                console.log('error saving offerings',err);
+                Logger.log('error saving offerings',err);
             })
             .then(updateVendorFlaggedOfferings)
             .then(updateVendorStatus)
@@ -441,7 +441,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
         }
 
         function syncDataError( err ){
-            console.log( 'error syncing data',err );
+            Logger.log( 'error syncing data',err );
         }
     }
 
@@ -495,7 +495,7 @@ function siteLicensePricesController($scope, $q, $filter, authService, csvExport
                 csvExportService.browserDownloadCsv(csvContent, makeFilename());
             })
             .catch(function (err) {
-                console.log('CSV generation failed', err);
+                Logger.log('CSV generation failed', err);
             });
 
         return vm.loadingPromise;

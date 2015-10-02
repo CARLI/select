@@ -128,7 +128,7 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
             if (currentBatch == numBatches) {
                 return results;
             }
-            // console.log('[Cycle Creation]: Transforming offerings ' + (currentBatch + 1) + '/' + numBatches);
+            // Logger.log('[Cycle Creation]: Transforming offerings ' + (currentBatch + 1) + '/' + numBatches);
             return transformOfferingsBatch(offeringsPartitions[currentBatch])
                 .then(incrementBatch)
                 .then(updateProgress)

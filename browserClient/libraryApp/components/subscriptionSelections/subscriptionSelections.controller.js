@@ -145,7 +145,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
                 .then(function(){
                     return loadOfferings(vm.cycle);
                 })
-                .catch(function(err){ console.log('error', err, vm.offerings); });
+                .catch(function(err){ Logger.log('error', err, vm.offerings); });
         }
 
         function selectLastYear( offering ){

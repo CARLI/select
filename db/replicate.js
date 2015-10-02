@@ -43,7 +43,7 @@ function replicator(sourceUrl) {
                 deferred.reject(error);
             } else {
                 if (body.ok) {
-                    console.log("OK: Replicated " + replicateWhat + " of " + requestInfo.json.source + " to " + requestInfo.json.target);
+                    Logger.log("OK: Replicated " + replicateWhat + " of " + requestInfo.json.source + " to " + requestInfo.json.target);
                     deferred.resolve();
                 } else if (body.error == 'db_not_found') {
                     createDb(requestInfo.json.target).then(function() {
@@ -133,7 +133,7 @@ function replicateDesignDocsFrom(source) {
 
 function generateCycleDbReplicator(source, target) {
     return function (cycleDbs) {
-        console.log("Replicating " + cycleDbs.length + " Cycle Databases from " + source + " to " + target);
+        Logger.log("Replicating " + cycleDbs.length + " Cycle Databases from " + source + " to " + target);
 
         var promises = [];
         cycleDbs.forEach(function (cycleDb) {
@@ -147,7 +147,7 @@ function generateCycleDbReplicator(source, target) {
 
 function generateCycleDbDesignDocReplicator(source, target) {
     return function (cycleDbs) {
-        console.log("Replicating Design Docs for " + cycleDbs.length + " Cycle Databases from " + source + " to " + target);
+        Logger.log("Replicating Design Docs for " + cycleDbs.length + " Cycle Databases from " + source + " to " + target);
 
         var promises = [];
         cycleDbs.forEach(function (cycleDb) {
@@ -164,7 +164,7 @@ function generateCycleDbLister(source) {
         var deferred = Q.defer();
         var listCycleDocsUrl = dbInfo[source].mainDbUrl + '/_design/CARLI/_view/listByType?key="Cycle"';
 
-        console.log(listCycleDocsUrl);
+        Logger.log(listCycleDocsUrl);
 
         request({
             url: listCycleDocsUrl,
@@ -207,10 +207,10 @@ function createDb(targetUrl) {
 function replicateQaToLocal() {
     replicateAllFrom('qa').to('local')
         .then(function() {
-            console.log("Finished");
+            Logger.log("Finished");
         })
         .catch(function (error) {
-            console.log(error);
+            Logger.log(error);
         })
         .done();
 }
@@ -218,20 +218,20 @@ function replicateQaToLocal() {
 function replicateLocalToQa() {
     replicateAllFrom('local').to('qa')
         .then(function() {
-            console.log("Finished");
+            Logger.log("Finished");
         })
         .catch(function (error) {
-            console.log(error);
+            Logger.log(error);
         })
         .done();
 }
 function replicateLocalDesignDocsToQa() {
     replicateDesignDocsFrom('local').to('qa')
         .then(function() {
-            console.log("Finished");
+            Logger.log("Finished");
         })
         .catch(function (error) {
-            console.log(error);
+            Logger.log(error);
         })
         .done();
 }
@@ -239,30 +239,30 @@ function replicateLocalDesignDocsToQa() {
 function replicateLocalToDev() {
     replicateAllFrom('local').to('dev')
         .then(function() {
-            console.log("Finished");
+            Logger.log("Finished");
         })
         .catch(function (error) {
-            console.log(error);
+            Logger.log(error);
         })
         .done();
 }
 function replicateLocalDesignDocsToDev() {
     replicateDesignDocsFrom('local').to('dev')
         .then(function() {
-            console.log("Finished");
+            Logger.log("Finished");
         })
         .catch(function (error) {
-            console.log(error);
+            Logger.log(error);
         })
         .done();
 }
 function replicateDevToLocal() {
     replicateAllFrom('dev').to('local')
         .then(function() {
-            console.log("Finished");
+            Logger.log("Finished");
         })
         .catch(function (error) {
-            console.log(error);
+            Logger.log(error);
         })
         .done();
 }
@@ -270,30 +270,30 @@ function replicateDevToLocal() {
 function replicateLocalToProd() {
     replicateAllFrom('local').to('prod')
         .then(function() {
-            console.log("Finished");
+            Logger.log("Finished");
         })
         .catch(function (error) {
-            console.log(error);
+            Logger.log(error);
         })
         .done();
 }
 function replicateLocalDesignDocsToProd() {
     replicateDesignDocsFrom('local').to('prod')
         .then(function() {
-            console.log("Finished");
+            Logger.log("Finished");
         })
         .catch(function (error) {
-            console.log(error);
+            Logger.log(error);
         })
         .done();
 }
 function replicateQaToProd() {
     replicateAllFrom('qa').to('prod')
         .then(function() {
-            console.log("Finished");
+            Logger.log("Finished");
         })
         .catch(function (error) {
-            console.log(error);
+            Logger.log(error);
         })
         .done();
 }

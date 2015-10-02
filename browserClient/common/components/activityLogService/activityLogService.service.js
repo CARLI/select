@@ -208,7 +208,7 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
             activityData.vendorName = entity.name;
         }
         else {
-            console.log('** warning: logging activity about unknown entity type '+entity.type, entity);
+            Logger.log('** warning: logging activity about unknown entity type '+entity.type, entity);
         }
         activityData.affectedEntityId = entity.id || '';
         activityData.revision = entity._rev || '';

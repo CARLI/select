@@ -374,7 +374,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                 .then(syncData)
                 .then(function(){
                     vm.changedProductIds = {};
-                    console.log('saved '+productIdsToUpdate.length+' products');
+                    Logger.log('saved '+productIdsToUpdate.length+' products');
                 })
                 .catch(function(err){
                     console.error(err);
@@ -576,7 +576,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                 csvExportService.browserDownloadCsv(csvContent, makeFilename());
             })
             .catch(function (err) {
-                console.log('CSV generation failed', err);
+                Logger.log('CSV generation failed', err);
             });
 
         return vm.loadingPromise;
