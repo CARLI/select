@@ -96,14 +96,10 @@
         <div class="contact-responsibility">{{ contact.responsibility }}</div>
 
         <a class="contact-email" href="mailto:{{ contact.email }}">{{ contact.email }}</a>
-        <a class="contact-phone" href="tel:{{ contact.phoneNumber }}" ng-if="contact.phoneNumber">{{ contact.phoneNumber }}</a>
 
-        <span ng-if="contact.phoneNumber2">
-            , <a class="contact-phone" href="tel:{{ contact.phoneNumber2 }}">{{ contact.phoneNumber2 }}</a>
-        </span>
-        <span ng-if="contact.phoneNumber3">
-            , <a class="contact-phone" href="tel:{{ contact.phoneNumber3 }}">{{ contact.phoneNumber3 }}</a>
-        </span>
+        <span class="contact-phone" ng-if="contact.phoneNumber">{{ contact.phoneNumber }}</span><!--
+     --><span ng-if="contact.phoneNumber2">, <span class="contact-phone">{{ contact.phoneNumber2 }}</span></span><!--
+     --><span ng-if="contact.phoneNumber3">, <span class="contact-phone">{{ contact.phoneNumber3 }}</span></span>
 
         <div class="contact-fax" ng-if="contact.fax">Fax: {{ contact.fax }}</div>
         <div class="library-phone" ng-if="contact.libraryPhone">Library Phone: {{ contact.libraryPhone }}</div>
