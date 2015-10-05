@@ -246,6 +246,12 @@ function listOfferingsForProductId( productId, cycle, offeringLimit ) {
     return expandOfferings( getOfferings, cycle ).then(initializeComputedValues);
 }
 
+function listOfferingsForVendorId( vendorId, cycle ) {
+    setCycle(cycle);
+    return expandOfferings( couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listOfferingsForVendorId', vendorId), cycle )
+        .then(initializeComputedValues);
+}
+
 function listOfferingsWithSelections( cycle ) {
     setCycle(cycle);
     return expandOfferings( couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listOfferingsWithSelections'), cycle )
@@ -830,6 +836,7 @@ module.exports = {
 
     listOfferingsForLibraryId: listOfferingsForLibraryId,
     listOfferingsForProductId: listOfferingsForProductId,
+    listOfferingsForVendorId: listOfferingsForVendorId,
     listOfferingsForProductIdUnexpanded: listOfferingsForProductIdUnexpanded,
     listOfferingsWithSelections: listOfferingsWithSelections,
     listOfferingsWithSelectionsUnexpanded: listOfferingsWithSelectionsUnexpanded,

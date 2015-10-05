@@ -134,12 +134,34 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
     }
 
     function exportOfferingList(vendor) {
-        return loadOfferingsForVendor().then(function() {
-            return offeringsByVendorExport(vendor, vm.cycle, vm.offeringColumns);
-        });
+        return offeringService.listOfferingsForVendorId(vendor.id)
+            .then(addOfferingsToProducts)
+            .then(doOfferingExport);
 
-        function loadOfferingsForVendor() {
-            return $q.all(vendor.products.map(loadOfferingsForProduct));
+        function addOfferingsToProducts(offerings) {
+            console.log('got ' + offerings.length + ' offerings');
+            offerings.forEach(addOfferingToProduct);
+
+            function addOfferingToProduct(offering) {
+                vendor.products.forEach(addOfferingIfProductMatches);
+
+                function addOfferingIfProductMatches(product) {
+                    if (offering.product.id == product.id) {
+                        initializeOfferingsArray();
+                        product.offerings.push(offering);
+                    }
+
+                    function initializeOfferingsArray() {
+                        if (!product.offerings) {
+                            product.offerings = [];
+                        }
+                    }
+                }
+            }
+        }
+
+        function doOfferingExport() {
+            return offeringsByVendorExport(vendor, vm.cycle, vm.offeringColumns);
         }
     }
 }
