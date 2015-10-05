@@ -24,11 +24,16 @@ function loginToCouch() {
 }
 
 function logoutOfCouch() {
-    auth.deleteSession();
+    return auth.deleteSession().then(function (r) {
+        Logger.log('Couch session closed');
+        Logger.log('You can quit with CTRL-C now');
+        return r;
+    });
 }
 
 function logError(error) {
     Logger.log(error);
+    return error;
 }
 
 function confirmOrExit(question) {

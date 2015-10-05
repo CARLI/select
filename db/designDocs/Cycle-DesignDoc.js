@@ -56,6 +56,13 @@ ddoc = {
                 }
             }
         },
+        listOfferingsForVendorId: {
+            map: function ( doc ) {
+                if ( doc.type === 'Offering' ) {
+                    emit( doc.vendorId, doc );
+                }
+            }
+        },
         listProductsByLicenseId: {
             map: function ( doc ) {
                 if ( doc.type === 'Product' ) {
