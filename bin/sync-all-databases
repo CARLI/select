@@ -4,6 +4,6 @@ var cli = require('../CARLI/CommandLine');
 var vendorDatabases = require('../middleware/components/vendorDatabases');
 
 cli.asCouchAdmin(function() {
-    vendorDatabases.syncEverything()
+    return vendorDatabases.syncEverything()
         .then(vendorDatabases.triggerIndexingForAllCycles);
 });
