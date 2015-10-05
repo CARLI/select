@@ -64,7 +64,7 @@ function getAnnualAccessFeeDraftForAllLibraries(template, notificationData) {
     }
     function getOfferingsForAnnualAccessFeeDraftForAllLibraries() {
         return cycleRepository.load(config.oneTimePurchaseProductsCycleDocId).then(function (cycle) {
-            return offeringRepository.listOfferingsUnexpanded(cycle);
+            return offeringRepository.list(cycle);
         });
     }
     function getNotificationsForAnnualAccessFeeDraftForAllLibraries( customizedTemplate, actualRecipientIds ){
