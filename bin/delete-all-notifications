@@ -22,7 +22,7 @@ function deleteAllNotifications() {
         .then(deleteNotifications);
 
     function logCountOfNotifications(notifications) {
-        console.log('Deleting ' + notifications.length + ' notifications');
+        Logger.log('Deleting ' + notifications.length + ' notifications');
         return notifications;
     }
 
