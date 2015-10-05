@@ -1,75 +1,113 @@
 <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="productLicenseTermsOverrideForm">
 
     <div class="page-header">
-        Note: Editing the license agreement terms here will only effect this product. This product's license agreement terms will need to be updated individually once the changes are saved.
+        Note: Editing the license agreement terms here will only affect this product. This product's license agreement terms will need to be updated individually once the changes are saved.
     </div>
 
     <section class="content">
         <fieldset>
-
             <ul class="terms-list">
+                <li class="column-headers">
+                    <header class="column term">Term</header>
+                    <header class="column product">Product</header>
+                    <header class="column license">License</header>
+                </li>
                 <li>
-                    <label for="downloadTermsModal">Download:</label>
-                    <view-edit-yes-no-other ng-model="vm.product.terms.downloadTerms" edit-mode="true" input-id="downloadTermsModal">
-                        {{ vm.product.terms.downloadTerms || vm.product.license.terms.downloadTerms }}
-                    </view-edit-yes-no-other>
+                    <span class="column term">
+                        <label for="downloadTermsModal">Download:</label>
+                    </span>
+                    <span class="column product">
+                        <view-edit-yes-no-other ng-model="vm.product.terms.downloadTerms" edit-mode="true" input-id="downloadTermsModal"></view-edit-yes-no-other>
+                    </span>
+                    <span class="column license">
+                        <div class="license-term">{{ vm.product.license.terms.downloadTerms }}</div>
+                    </span>
                 </li>
 
                 <li>
-                    <label for="interLibraryLoanTermsModal">ILL:</label>
-                    <view-edit-yes-no-other ng-model="vm.product.terms.interLibraryLoanTerms" edit-mode="true" input-id="interLibraryLoanTermsModal">
-                        {{ vm.product.terms.interLibraryLoanTerms || vm.product.license.terms.interLibraryLoanTerms }}
-                    </view-edit-yes-no-other>
-
+                    <span class="column term">
+                        <label for="interLibraryLoanTermsModal">ILL:</label>
+                    </span>
+                    <span class="column product">
+                        <view-edit-yes-no-other ng-model="vm.product.terms.interLibraryLoanTerms" edit-mode="true" input-id="interLibraryLoanTermsModal"></view-edit-yes-no-other>
+                    </span>
+                    <span class="column license">
+                        <div class="license-term">{{ vm.product.license.terms.interLibraryLoanTerms }}</div>
+                    </span>
                 </li>
 
                 <li>
-                    <label for="coursePacksTermsModal">Course Packs:</label>
-                    <view-edit-yes-no-other ng-model="vm.product.terms.coursePacksTerms" edit-mode="true" input-id="coursePacksTermsModal">
-                        {{ vm.product.terms.coursePacksTerms || vm.product.license.terms.coursePacksTerms }}
-                    </view-edit-yes-no-other>
-
+                    <span class="column term">
+                        <label for="coursePacksTermsModal">Course Packs:</label>
+                    </span>
+                    <span class="column product">
+                        <view-edit-yes-no-other ng-model="vm.product.terms.coursePacksTerms" edit-mode="true" input-id="coursePacksTermsModal"></view-edit-yes-no-other>
+                    </span>
+                    <span class="column license">
+                        <div class="license-term">{{ vm.product.license.terms.coursePacksTerms }}</div>
+                    </span>
                 </li>
 
                 <li>
-                    <label for="printTermsModal">Print:</label>
-                    <view-edit-yes-no-other ng-model="vm.product.terms.printTerms" edit-mode="true" input-id="printTermsModal">
-                        {{ vm.product.terms.printTerms || vm.product.license.terms.printTerms}}
-                    </view-edit-yes-no-other>
-
+                    <span class="column term">
+                        <label for="printTermsModal">Print:</label>
+                    </span>
+                    <span class="column product">
+                        <view-edit-yes-no-other ng-model="vm.product.terms.printTerms" edit-mode="true" input-id="printTermsModal"></view-edit-yes-no-other>
+                    </span>
+                    <span class="column license">
+                        <div class="license-term">{{ vm.product.license.terms.printTerms}}</div>
+                    </span>
                 </li>
 
                 <li>
-                    <label for="limitedScholarlySharingTermsModal">Limited Sharing for Scholarly Purposes:</label>
-                    <view-edit-yes-no-other ng-model="vm.product.terms.limitedScholarlySharingTerms" edit-mode="true" input-id="limitedScholarlySharingTermsModal">
-                        {{ vm.product.terms.limitedScholarlySharingTerms || vm.product.license.terms.limitedScholarlySharingTerms}}
-                    </view-edit-yes-no-other>
-
+                    <span class="column term">
+                        <label for="limitedScholarlySharingTermsModal">Limited Sharing for Scholarly Purposes:</label>
+                    </span>
+                    <span class="column product">
+                        <view-edit-yes-no-other ng-model="vm.product.terms.limitedScholarlySharingTerms" edit-mode="true" input-id="limitedScholarlySharingTermsModal"></view-edit-yes-no-other>
+                    </span>
+                    <span class="column license">
+                        <div class="license-term">{{ vm.product.license.terms.limitedScholarlySharingTerms}}</div>
+                    </span>
                 </li>
 
                 <li>
-                    <label for="walkinTermsModal">Use by Walk-ins:</label>
-                    <view-edit-yes-no-other ng-model="vm.product.terms.walkinTerms" edit-mode="true" input-id="walkinTermsModal">
-                        {{ vm.product.terms.walkinTerms || vm.product.license.terms.walkinTerms}}
-                    </view-edit-yes-no-other>
-
+                    <span class="column term">
+                        <label for="walkinTermsModal">Use by Walk-ins:</label>
+                    </span>
+                    <span class="column product">
+                        <view-edit-yes-no-other ng-model="vm.product.terms.walkinTerms" edit-mode="true" input-id="walkinTermsModal"></view-edit-yes-no-other>
+                    </span>
+                    <span class="column license">
+                        <div class="license-term">{{ vm.product.license.terms.walkinTerms}}</div>
+                    </span>
                 </li>
 
                 <li>
-                    <label for="eReservesTermsModal">E-Reserves:</label>
-                    <view-edit-yes-no-other ng-model="vm.product.terms.eReservesTerms" edit-mode="true" input-id="eReservesTermsModal">
-                        {{ vm.product.terms.eReservesTerms || vm.product.license.terms.eReservesTerms}}
-                    </view-edit-yes-no-other>
+                    <span class="column term">
+                        <label for="eReservesTermsModal">E-Reserves:</label>
+                    </span>
+                    <span class="column product">
+                        <view-edit-yes-no-other ng-model="vm.product.terms.eReservesTerms" edit-mode="true" input-id="eReservesTermsModal"></view-edit-yes-no-other>
+                    </span>
+                    <span class="column license">
+                        <div class="license-term">{{ vm.product.license.terms.eReservesTerms}}</div>
+                    </span>
                 </li>
 
                 <li>
-                    <label for="hasConfidentialityTermsModal">Confidentiality Language:</label>
-                    <view-edit-yes-no-other ng-model="vm.product.terms.hasConfidentialityTerms" edit-mode="true" input-id="hasConfidentialityTermsModal">
-                        {{ vm.product.terms.hasConfidentialityTerms || vm.product.license.terms.hasConfidentialityTerms}}
-                    </view-edit-yes-no-other>
+                    <span class="column term">
+                        <label for="hasConfidentialityTermsModal">Confidentiality Language:</label>
+                    </span>
+                    <span class="column product">
+                        <view-edit-yes-no-other ng-model="vm.product.terms.hasConfidentialityTerms" edit-mode="true" input-id="hasConfidentialityTermsModal"></view-edit-yes-no-other>
+                    </span>
+                    <span class="column license">
+                        <div class="license-term">{{ vm.product.license.terms.hasConfidentialityTerms}}</div>
+                    </span>
                 </li>
             </ul>
-
         </fieldset>
     </section>
     <div class="footer" ng-show="vm.editable">
