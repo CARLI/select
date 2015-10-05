@@ -24,5 +24,5 @@
   },
   "oneTimePurchaseProductsCycleDocId": "one-time-purchase-products-cycle",
   "storePath": "CouchDb/Store",
-  "defaultEntityCacheTimeToLive": -1
+  "defaultEntityCacheTimeToLive": 1000
 }

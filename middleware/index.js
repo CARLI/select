@@ -2,7 +2,7 @@ var cluster = require('cluster');
 
 process.chdir(__dirname);
 
-var expressWorkerCount = require('os').cpus().length;
+var expressWorkerCount = 1; // require('os').cpus().length;
 var expressWorkerSetup = { exec: './runExpress.js' };
 var cycleDatabaseWorkerSetup = { exec: './cycleDatabaseWorker.js' };
 var synchronizationWorkerSetup = { exec: './synchronizationWorker.js' };
