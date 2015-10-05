@@ -64,7 +64,7 @@ function getAnnualAccessFeeDraftForAllLibraries(template, notificationData) {
     }
     function getOfferingsForAnnualAccessFeeDraftForAllLibraries() {
         return cycleRepository.load(config.oneTimePurchaseProductsCycleDocId).then(function (cycle) {
-            return offeringRepository.list(cycle);
+            return offeringRepository.listOfferingsUnexpanded(cycle);
         });
     }
     function getNotificationsForAnnualAccessFeeDraftForAllLibraries( customizedTemplate, actualRecipientIds ){
@@ -654,7 +654,7 @@ function generateNotificationForLibrary(libraryId, offeringsForAll, customizedTe
 
 
     function onlyOfferingsForLibrary(offering){
-        return offering.library.id  == libraryId;
+        return typeof offering.library == 'string' ? offering.library == libraryId : offering.library.id  == libraryId;
     }
 
     function notificationShouldHavePdfLink(){
