@@ -212,6 +212,7 @@ function productsAvailableByLibraryController( $scope, $q, accordionControllerMi
     }
 
     function exportOfferingList(library) {
-        return offeringsByLibraryExport(library, vm.vendorMap, vm.offerings[library.id], vm.cycle, vm.offeringColumns);
+        var filteredOfferings = vm.offerings[library.id].filter(filterOfferingBySelection);
+        return offeringsByLibraryExport(library, vm.vendorMap, filteredOfferings, vm.cycle, vm.offeringColumns);
     }
 }
