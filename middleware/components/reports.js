@@ -53,7 +53,7 @@ function selectedProductsReport( reportParameters, userSelectedColumns ){
         var row = {
             cycle: offering.cycle.name,
             library: offering.library.name,
-            license: offering.product.license.name,
+            license: licenseName(offering),
             product: offering.product.name,
             selection: offering.selection.users,
             price: offering.selection.price
@@ -168,7 +168,7 @@ function selectionsByVendorReport( reportParameters, userSelectedColumns ){
     function transformOfferingToSelectionsByVendorResultRow( offering ){
         return {
             cycle: offering.cycle.name,
-            license: offering.product.license.name,
+            license: licenseName(offering),
             product: offering.product.name,
             library: offering.library.name,
             selection: offering.selection.users,
@@ -382,7 +382,6 @@ function getSelectedProductsForEachCycle( listOfCycles ){
         return offeringRepository.listOfferingsWithSelectionsUnexpanded(cycle)
             .then(fillInCycle(cycle))
             .then(fillInProducts(cycle))
-            .then(fillInOfferingProductLicenses)
             .then(fillInLibraries)
             .then(attachVendorToOfferings);
     }
@@ -487,18 +486,22 @@ function fillInProducts(cycle){
     }
 }
 
-function fillInOfferingProductLicenses(offerings){
-    return initLicenseMap()
-        .then(attachLicenseObjectsToProducts)
-        .thenResolve(offerings);
-
-    function attachLicenseObjectsToProducts(licensesById){
-        offerings.forEach(function(offering){
-            var licenseId = offering.product.license;
-            offering.product.license = licensesById[licenseId] ? licensesById[licenseId] : { name: ''};
-        });
-    }
-}
+//function fillInOfferingProductLicenses(offerings){
+//    return initLicenseMap()
+//        .then(attachLicenseObjectsToProducts)
+//        .thenResolve(offerings);
+//
+//    function attachLicenseObjectsToProducts(licensesById){
+//        offerings.forEach(function(offering){
+//            var licenseId = offering.product.license;
+//            var licenseObject = licensesById[licenseId];
+//            if ( !licenseObject ){
+//                //console.log('  no license found for ID '+licenseId, offering.product);
+//            }
+//            offering.product.license = licenseObject;
+//        });
+//    }
+//}
 
 function fillInVendors(products){
     return initVendorMap()
@@ -593,6 +596,11 @@ function initLicenseMap(){
             });
             return licenseMap;
         });
+}
+
+function licenseName(offering){
+    var product = offering.product || {};
+    return product.license ? product.license.name : ''
 }
 
 function stackTraceError(err){

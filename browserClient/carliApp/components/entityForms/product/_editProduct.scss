@@ -1,7 +1,8 @@
 #bulk-funding,
 #funding-list,
 #price-cap-list,
-#one-time-purchase-pricing {
+#one-time-purchase-pricing,
+#terms-modal .terms-list {
     @extend .zebra-table;
     align-items: center;
     margin-top: 1rem;
@@ -121,4 +122,15 @@
 
 .funding-list {
     list-style: none;
+}
+
+#terms-modal .terms-list {
+    .column {
+        &.term {
+        }
+
+        &.product {
+            color: black;
+        }
+    }
 }
