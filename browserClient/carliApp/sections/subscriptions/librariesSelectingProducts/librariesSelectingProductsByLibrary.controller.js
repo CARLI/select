@@ -99,6 +99,9 @@ function librariesSelectingProductsByLibraryController( $scope, $q, accordionCon
         if ( !offering || !offering.library ){
             return false;
         }
+        if ( vm.isEditing[offering.id] ) {
+            return true;
+        }
         var libraryId = typeof offering.library === 'string' ? offering.library : offering.library.id;
         var filterStatus = vm.offeringFilter[libraryId] || 'all';
 
@@ -168,6 +171,7 @@ function librariesSelectingProductsByLibraryController( $scope, $q, accordionCon
     }
 
     function exportOfferingList(library) {
-        return offeringsByLibraryExport(library, vm.vendorMap, vm.offerings[library.id], vm.cycle, vm.offeringColumns);
+        var filteredOfferings = vm.offerings[library.id].filter(filterOfferingBySelection);
+        return offeringsByLibraryExport(library, vm.vendorMap, filteredOfferings, vm.cycle, vm.offeringColumns);
     }
 }
