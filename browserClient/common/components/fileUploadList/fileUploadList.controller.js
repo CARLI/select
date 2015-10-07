@@ -31,8 +31,9 @@ function fileUploadListController( alertService, attachmentsService, errorHandle
     function attachFile(fileInfo, fileContentsAsArrayBuffer){
         vm.uploadInProgress = true;
         vm.uploadProgress = 0;
-        var fileName = fileInfo.name;
+        var fileName = encodeURIComponent(fileInfo.name);
         var fileType = fileInfo.type;
+
         attachmentsService.uploadFile(vm.documentId, fileName, fileType, fileContentsAsArrayBuffer, vm.attachmentCategory)
             .then(attachSuccess, attachFailed, attachProgress);
 
