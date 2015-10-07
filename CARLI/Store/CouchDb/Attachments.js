@@ -157,7 +157,13 @@ function Attachments(storeOptions) {
     }
 
     function getAttachmentUrl( documentId, attachmentName, optionalAttachmentCategory ){
-        return getDocumentUrl(documentId) + '/' + ( optionalAttachmentCategory ? optionalAttachmentCategory + '/' : '') + attachmentName;
+        return getDocumentUrl(documentId) + '/'
+            + getAttachmentCategory()
+            + encodeURIComponent(attachmentName);
+
+        function getAttachmentCategory() {
+            return ( optionalAttachmentCategory ? optionalAttachmentCategory + '/' : '');
+        }
     }
 }
 
