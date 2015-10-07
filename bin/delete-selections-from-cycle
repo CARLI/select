@@ -1,0 +1,44 @@
+#!/usr/bin/env node
+
+var Q = require('q');
+
+var cli = require('../CARLI/CommandLine');
+var config = require('../config');
+var couchUtils = require('../CARLI/Store/CouchDb/Utils')();
+var cycleRepository = require('../CARLI/Entity/CycleRepository');
+var offeringRepository = require('../CARLI/Entity/OfferingRepository');
+
+var cycleId = 'f838a9d0-fe08-43fe-91b0-80b04be660a7'; //Calendar Year 2016 on production
+
+cli.asCouchAdmin(function() {
+    return cycleRepository.load(cycleId)
+        .then(confirmDeletion)
+        .then(deleteSelectionsFromCycle);
+});
+
+function confirmDeletion(cycle) {
+    var question = 'Delete ALL selections from ' + cycle.name + ' ? ';
+    return cli.confirmOrExit(question)
+        .thenResolve(cycle);
+}
+
+function deleteSelectionsFromCycle(cycle) {
+        return offeringRepository.listOfferingsWithSelectionsUnexpanded(cycle)
+        .then(logCountOfOfferings)
+        .then(deleteOfferings);
+
+    function logCountOfOfferings(offerings) {
+        Logger.log('Found ' + offerings.length + ' offerings with selections');
+        return offerings;
+    }
+
+    function deleteOfferings(offerings) {
+        offerings.forEach(removeSelection);
+
+        return couchUtils.bulkUpdateDocuments(cycle.getDatabaseName(), offerings);
+
+        function removeSelection(offering) {
+            delete offering.selection;
+        }
+    }
+}
