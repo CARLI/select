@@ -99,6 +99,9 @@ function librariesSelectingProductsByLibraryController( $scope, $q, accordionCon
         if ( !offering || !offering.library ){
             return false;
         }
+        if ( vm.isEditing[offering.id] ) {
+            return true;
+        }
         var libraryId = typeof offering.library === 'string' ? offering.library : offering.library.id;
         var filterStatus = vm.offeringFilter[libraryId] || 'all';
 
