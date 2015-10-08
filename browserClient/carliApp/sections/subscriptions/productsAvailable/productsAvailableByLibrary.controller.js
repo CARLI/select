@@ -144,7 +144,7 @@ function productsAvailableByLibraryController( $scope, $q, accordionControllerMi
         var sum = 0;
 
         offerings.forEach(function(offering){
-            sum += offering.selection ? offering.selection.price : 0;
+            sum += offering.selection ? offeringService.getFundedSelectionPrice(offering) : 0;
         });
 
         return sum;

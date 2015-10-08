@@ -11,10 +11,11 @@ function libraryProductsListController( $q, controllerBaseService, csvExportServ
         vendorName: ['product.vendor.name','product.name'],
         license: ['product.license.name','product.name'],
         su: ['selection.users','product.name'],
-        cost: ['selection.price','product.name']
+        cost: [offeringService.getFundedSelectionPrice,'product.name']
     };
 
     vm.selectionTotal = selectionTotal;
+    vm.getFundedSelectionPrice = offeringService.getFundedSelectionPrice;
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.exportProductList = exportProductList;
 
@@ -65,7 +66,7 @@ function libraryProductsListController( $q, controllerBaseService, csvExportServ
                 offering.product.license.name,
                 offering.libraryComments,
                 offering.selection.users,
-                offering.selection.price
+                offeringService.getFundedSelectionPendingPrice(offering)
             ];
         }
     }

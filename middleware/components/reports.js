@@ -56,7 +56,7 @@ function selectedProductsReport( reportParameters, userSelectedColumns ){
             license: licenseName(offering),
             product: offering.product.name,
             selection: offering.selection.users,
-            price: offering.selection.price
+            price: offeringRepository.getFullSelectionPrice(offering)
         };
         
         if ( isEnabled('detailCode') ){
@@ -172,7 +172,7 @@ function selectionsByVendorReport( reportParameters, userSelectedColumns ){
             product: offering.product.name,
             library: offering.library.name,
             selection: offering.selection.users,
-            price: offering.selection.price
+            price: offeringRepository.getFullSelectionPrice(offering)
         };
     }
 }
@@ -213,7 +213,8 @@ function totalsReport( reportParameters, userSelectedColumns ){
             return result;
 
             function sumPricesAndFindMinimumPrice(offering) {
-                var price = offering.selection.price;
+                var price = offeringRepository.getFullSelectionPrice(offering);
+
 
                 result.totalPrice += price;
 

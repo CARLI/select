@@ -216,7 +216,7 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
         return offeringDisplayLabels[display];
     }
 
-    function formatSelection( users ) {
+    function formatSelectionUsers( users ) {
         return users === offeringService.siteLicenseSelectionUsers ? 'Site License' : users + usersLabel(users);
 
         function usersLabel(users) {
@@ -242,6 +242,10 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
         return currency( offeringService.getFundedSelectionPrice(offering) );
     }
 
+    function fullSelectionPrice(offering) {
+        return currency( offeringService.getFullSelectionPrice(offering) );
+    }
+
     function fundedSiteLicensePrice(offering) {
         return currency( offeringService.getFundedSiteLicensePrice(offering) );
     }
@@ -249,7 +253,8 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
     function registerHandlebarsHelpers() {
         Handlebars.registerHelper('currency', currency);
         Handlebars.registerHelper('displayLabel', displayLabel);
-        Handlebars.registerHelper('formatSelection', formatSelection);
+        Handlebars.registerHelper('formatSelectionUsers', formatSelectionUsers);
+        Handlebars.registerHelper('fullSelectionPrice', fullSelectionPrice);
         Handlebars.registerHelper('fundingIndicator', fundingIndicator);
         Handlebars.registerHelper('fundedSelectionPrice', fundedSelectionPrice);
         Handlebars.registerHelper('fundedSiteLicensePrice', fundedSiteLicensePrice);
