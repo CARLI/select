@@ -121,7 +121,7 @@ ddoc = {
         getCycleSelectionAndInvoiceTotals: {
             map: function(doc) {
                 if (doc.type == 'Offering') {
-                    var selectionPrice = doc.selection ? doc.selection.price : 0;
+                    var selectionPrice = getFullSelectionPrice(doc);
                     var vendorInvoicePrice = doc.invoice ? doc.invoice.price || 0 : 0;
 
                     if (doc.funding) {
@@ -140,6 +140,28 @@ ddoc = {
                         selectionPrice: selectionPrice,
                         invoicePrice: vendorInvoicePrice
                     });
+                }
+
+                function getFullSelectionPrice(offering) {
+                    if (!offering.selection || !offering.pricing) {
+                        return null;
+                    }
+                    return getFullPrice(offering.selection.users);
+
+                    function getFullPrice(users) {
+                        return (users === 'Site License') ? getSiteLicensePrice() : getPricingObjectForUsers().price;
+
+                        function getSiteLicensePrice() {
+                            return offering.pricing.site;
+                        }
+                        function getPricingObjectForUsers() {
+                            return offering.pricing.su.filter(matchPriceForUsers)[ 0 ];
+                        }
+
+                        function matchPriceForUsers(pricingObject) {
+                            return (pricingObject.users == users);
+                        }
+                    }
                 }
             },
             reduce: function(key, values, rereduce) {

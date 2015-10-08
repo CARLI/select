@@ -11,7 +11,7 @@ function libraryProductsListController( $q, controllerBaseService, csvExportServ
         vendorName: ['product.vendor.name','product.name'],
         license: ['product.license.name','product.name'],
         su: ['selection.users','product.name'],
-        cost: ['selection.price','product.name']
+        cost: [offeringService.getFundedSelectionPrice,'product.name']
     };
 
     vm.selectionTotal = selectionTotal;
