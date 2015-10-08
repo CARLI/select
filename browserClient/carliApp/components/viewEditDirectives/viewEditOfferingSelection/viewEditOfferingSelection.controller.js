@@ -8,9 +8,11 @@ function viewEditOfferingSelectionController($scope, offeringService){
 
     function activate() {
         vm.selectionOptions = makeSelectionOptions(vm.offering);
-        $scope.$watchCollection('vm.offering.pricing.su', function() {
+        $scope.$watchCollection('vm.offering.pricing', updateSelectionOptions);
+
+        function updateSelectionOptions() {
             vm.selectionOptions = makeSelectionOptions(vm.offering);
-        });
+        }
     }
 
     function makeSelectionOptions( offering ){
@@ -23,7 +25,7 @@ function viewEditOfferingSelectionController($scope, offeringService){
             price: offering.pricing.site
         };
 
-        var suPrices = offering.pricing.su || [];
+        var suPrices = angular.copy(offering.pricing.su) || [];
         return suPrices.concat(siteOption);
     }
 }
