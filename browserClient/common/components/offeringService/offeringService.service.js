@@ -42,6 +42,9 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
         isFunded: function( offering ) {
             return offeringModule.isFunded(offering);
         },
+        getFullSelectionPrice: function( offering ) {
+            return offeringModule.getFullSelectionPrice(offering);
+        },
         getFundedSelectionPrice: function( offering ) {
             return offeringModule.getFundedSelectionPrice(offering);
         },
