@@ -782,7 +782,7 @@ function getFundedSiteLicensePrice(offering) {
 
 function getAmountPaidByCarli(offering) {
     var amountPaidByLibrary = getFundedSelectionPrice(offering);
-    var totalAmount = offering.selection.price;
+    var totalAmount = getFullSelectionPrice(offering);
 
     return totalAmount - amountPaidByLibrary;
 }
