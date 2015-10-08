@@ -139,6 +139,7 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
             offeringsBatch.forEach(function (offering) {
                 copyOfferingHistoryForYear(offering, sourceCycle.year);
                 removeVendorModificationTracking(offering);
+                removeSelection(offering);
             });
             var updatePromises = [];
             return couchUtils.bulkUpdateDocuments(newCycle.getDatabaseName(), offeringsBatch);
@@ -190,6 +191,10 @@ function copyOfferingHistoryForYear(offering, year) {
 function removeVendorModificationTracking(offering){
     delete offering.siteLicensePriceUpdated;
     delete offering.suPricesUpdated;
+}
+
+function removeSelection(offering){
+    delete offering.selection;
 }
 
 function loadOffering( offeringId, cycle ){
