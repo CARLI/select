@@ -562,6 +562,36 @@ function runOfferingSpecificTests(testCycle) {
             it('lists libraries that do not already have offerings for a product and calls createOfferingsFor');
         });
 
+        it('should have an getFullSelectionPrice function', function(){
+            expect(offeringRepository.getFullSelectionPrice).to.be.a('function');
+        });
+
+        describe('getFullSelectionPrice',function() {
+            it ('should return null if no selection', function() {
+                var unselectedOffering = {};
+                var price = offeringRepository.getFullSelectionPrice(unselectedOffering);
+                return expect(price).to.be.null;
+            });
+            it ('should return the price from the pricing object for the selected users', function() {
+                var selectedSuOffering = {
+                    pricing: {
+                        su: [ { users: 5, price: 1000 } ]
+                    },
+                    selection: { users: 5 }
+                };
+                var price = offeringRepository.getFullSelectionPrice(selectedSuOffering);
+                return expect(price).to.equal(1000);
+            });
+            it ('should return the price from the pricing object for the selected site license', function() {
+                var selectedSiteOffering = {
+                    pricing: { site: 5000 },
+                    selection: { users: offeringRepository.siteLicenseSelectionUsers }
+                };
+                var price = offeringRepository.getFullSelectionPrice(selectedSiteOffering);
+                return expect(price).to.equal(5000);
+            });
+        });
+
         it('should have an getFundedSelectionPrice function', function(){
             expect(offeringRepository.getFundedSelectionPrice).to.be.a('function');
         });
