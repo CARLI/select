@@ -763,7 +763,7 @@ function getFundedSelectionPrice(offering) {
     if (!offering.selection) {
         return null;
     }
-    return getFundedPrice(offering.selection.price, offering.funding);
+    return getFundedPrice(getFullSelectionPrice(offering), offering.funding);
 }
 
 function getFundedSelectionPendingPrice(offering) {
