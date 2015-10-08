@@ -599,28 +599,32 @@ function runOfferingSpecificTests(testCycle) {
         describe('getFundedSelectionPrice',function() {
             it ('should return the discounted price by percent', function() {
                 var fundedPrice = offeringRepository.getFundedSelectionPrice({
-                    selection: { price: 100 },
+                    pricing: { site: 100 },
+                    selection: { users: offeringRepository.siteLicenseSelectionUsers },
                     funding: { fundedByPercentage: true, fundedPercent: 25 }
                 });
                 return expect(fundedPrice).to.equal(75);
             });
             it ('should return the discounted price by fixed amount', function() {
                 var fundedPrice = offeringRepository.getFundedSelectionPrice({
-                    selection: { price: 100 },
+                    pricing: { site: 100 },
+                    selection: { users: offeringRepository.siteLicenseSelectionUsers },
                     funding: { fundedByPercentage: false, fundedPrice: 83 }
                 });
                 return expect(fundedPrice).to.equal(83);
             });
             it ('should treat zero percent funding as full price', function() {
                 var fundedPrice = offeringRepository.getFundedSelectionPrice({
-                    selection: { price: 100 },
+                    pricing: { site: 100 },
+                    selection: { users: offeringRepository.siteLicenseSelectionUsers },
                     funding: { fundedByPercentage: true, fundedPercent: 0 }
                 });
                 return expect(fundedPrice).to.equal(100);
             });
             it ('should treat a zero fixed price as not funded', function() {
                 var fundedPrice = offeringRepository.getFundedSelectionPrice({
-                    selection: { price: 100 },
+                    pricing: { site: 100 },
+                    selection: { users: offeringRepository.siteLicenseSelectionUsers },
                     funding: { fundedByPercentage: false, fundedPrice: 0 }
                 });
                 return expect(fundedPrice).to.equal(100);
