@@ -242,7 +242,7 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
         return currency( offeringService.getFundedSelectionPrice(offering) );
     }
 
-    function fundedSelectionPrice(offering) {
+    function fullSelectionPrice(offering) {
         return currency( offeringService.getFullSelectionPrice(offering) );
     }
 
