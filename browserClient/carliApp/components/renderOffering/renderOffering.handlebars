@@ -195,8 +195,8 @@
     <label for="{{ offering.id }}_selection" class="sr-only">Library Selection</label>
     {{#if offering.selection }}
     <div class="selection-display">
-        <div class="users"><span class="label">Selection:</span> {{ formatSelection offering.selection.users }}</div>
-        <div class="price"><span class="label">Price:</span> {{ currency offering.selection.price }}</div>
+        <div class="users"><span class="label">Selection:</span> {{ formatSelectionUsers offering.selection.users }}</div>
+        <div class="price"><span class="label">Price:</span> {{ fundedSelectionPrice offering }}</div>
     </div>
     {{/if}}
 </div>

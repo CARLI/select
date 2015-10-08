@@ -327,16 +327,24 @@ describe('the getSummaryTotal method', function () {
                 id: uuid.v4(),
                 type: 'Offering',
                 library: '',
-                selection: {
+                pricing: {
+                    users: 4,
                     price: 100
+                },
+                selection: {
+                    users: 4
                 }
             },
             {
                 id: uuid.v4(),
                 type: 'Offering',
                 library: '',
-                selection: {
+                pricing: {
+                    users: 4,
                     price: 100
+                },
+                selection: {
+                    users: 4
                 }
             }
         ];

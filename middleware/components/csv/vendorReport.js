@@ -131,7 +131,7 @@ function transformOfferingToReportRow(offering){
         offering.library.name,
         offering.product.name,
         offering.selection.users,
-        formatCurrency(offering.selection.price),
+        formatCurrency( offeringRepository.getFullSelectionPrice(offering) ),
         isSoleSource(offering.product)
     ];
 }

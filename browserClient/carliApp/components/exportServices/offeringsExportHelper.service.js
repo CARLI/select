@@ -125,7 +125,7 @@ function offeringsExportHelper(offeringService) {
 
                 if (offering.selection) {
                     selection = formatSelection(offering.selection.users);
-                    price = offering.selection.price;
+                    price = offeringService.getFundedSelectionPrice(offering);
                 }
 
                 return [ selection, price ];

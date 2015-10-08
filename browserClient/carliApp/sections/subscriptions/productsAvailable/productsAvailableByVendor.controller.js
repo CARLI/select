@@ -146,7 +146,7 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
             var offerings = product.offerings || [];
 
             offerings.forEach(function(offering){
-                sum += offering.selection ? offering.selection.price : 0;
+                sum += offering.selection ? offeringService.getFullSelectionPrice(offering) : 0;
             });
         });
 

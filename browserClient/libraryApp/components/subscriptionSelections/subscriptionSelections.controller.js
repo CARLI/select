@@ -106,13 +106,6 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
             users: users
         };
 
-        if ( users === offeringService.siteLicenseSelectionUsers ){
-            offering.selection.price = offering.pricing.site;
-        }
-        else {
-            offering.selection.price = priceForUsers(users);
-        }
-
         return offering;
 
         function priceForUsers( numberOfUsers ){
