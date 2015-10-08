@@ -190,11 +190,7 @@ function getSummaryFundedTotal(notification, offerings) {
     return getSummaryTotalWithPriceGetter(notification, offerings, offeringRepository.getFundedSelectionPrice);
 }
 function getSummaryTotal(notification, offerings) {
-    return getSummaryTotalWithPriceGetter(notification, offerings, getFullPrice);
-
-    function getFullPrice(offering) {
-        return offering.selection.price;
-    }
+    return getSummaryTotalWithPriceGetter(notification, offerings, offeringRepository.getFullSelectionPrice);
 }
 function getSummaryTotalWithPriceGetter(notification, offerings, getPriceFromOffering) {
     if ( !offerings ){

@@ -327,16 +327,28 @@ describe('the getSummaryTotal method', function () {
                 id: uuid.v4(),
                 type: 'Offering',
                 library: '',
+                pricing: {
+                    su: [ {
+                        users: 4,
+                        price: 100
+                    } ]
+                },
                 selection: {
-                    price: 100
+                    users: 4
                 }
             },
             {
                 id: uuid.v4(),
                 type: 'Offering',
                 library: '',
+                pricing: {
+                su: [ {
+                        users: 4,
+                        price: 100
+                    } ]
+                },
                 selection: {
-                    price: 100
+                    users: 4
                 }
             }
         ];
@@ -384,9 +396,9 @@ describe('the getSummaryTotal method', function () {
         var notification = validNotificationData();
         var offerings = getTestOfferings();
 
-        offerings[0].selection.price = 10.33;
+        offerings[0].pricing.su[0].price = 10.33;
         offerings[0].funding = fiftyPercentFunded;
-        offerings[1].selection.price = 10.33;
+        offerings[1].pricing.su[0].price = 10.33;
         offerings[1].funding = fiftyPercentFunded;
 
         expect(notificationRepository.getSummaryFundedTotal(notification, offerings)).to.equal(10.34);

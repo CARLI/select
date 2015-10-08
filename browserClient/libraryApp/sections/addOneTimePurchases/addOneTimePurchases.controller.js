@@ -18,7 +18,7 @@ function addOneTimePurchasesController( $q, $location, config, activityLogServic
         vendorName: ['product.vendor.name', 'product.name'],
         funded: ['product.funded', 'product.name'],
         pricing: ['pricing.site', 'product.name'],
-        selectionPrice: ['selection.price', 'product.name']
+        selectionPrice: [offeringService.getFundedSelectionPrice,'product.name']
     };
 
     vm.completeSelections = completeSelections;

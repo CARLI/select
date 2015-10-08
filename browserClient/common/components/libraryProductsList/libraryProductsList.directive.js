@@ -18,7 +18,7 @@ angular.module('common.libraryProductsList')
             '        <div class="column license" data-license-id="{{ offering.product.license.id }}">{{ offering.product.license.name }}</div>',
             '        <div class="column comment">{{ offering.libraryComments || offering.product.comments }}</div>',
             '        <div class="column su">{{ offering.selection.users }}</div>',
-            '        <div class="column cost">{{ offering.selection.price | currency }}</div>',
+            '        <div class="column cost">{{ vm.getFundedSelectionPrice(offering) | currency }}</div>',
             '    </li>',
             '    <li class="summary-row">',
             '        <div class="column"><span class="total-label">Total</span></div>',

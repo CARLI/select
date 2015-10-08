@@ -14,6 +14,7 @@ var _ = require('lodash');
 var storeOptions = {};
 var OfferingRepository = Entity('Offering');
 
+var siteLicenseSelectionUsers = 'Site License';
 var propertiesToTransform = ['library', 'product'];
 
 function transformFunction( offering ){
@@ -736,11 +737,33 @@ function isFunded(offering) {
     }
 }
 
+function getFullSelectionPrice(offering) {
+    if (!offering.selection || !offering.pricing) {
+        return null;
+    }
+    return getFullPrice(offering.selection.users);
+
+    function getFullPrice(users) {
+        return (users === siteLicenseSelectionUsers) ? getSiteLicensePrice() : getPricingObjectForUsers().price;
+
+        function getSiteLicensePrice() {
+            return offering.pricing.site;
+        }
+        function getPricingObjectForUsers() {
+            return offering.pricing.su.filter(matchPriceForUsers)[ 0 ];
+        }
+
+        function matchPriceForUsers(pricingObject) {
+            return (pricingObject.users == users);
+        }
+    }
+}
+
 function getFundedSelectionPrice(offering) {
     if (!offering.selection) {
         return null;
     }
-    return getFundedPrice(offering.selection.price, offering.funding);
+    return getFundedPrice(getFullSelectionPrice(offering), offering.funding);
 }
 
 function getFundedSelectionPendingPrice(offering) {
@@ -759,7 +782,7 @@ function getFundedSiteLicensePrice(offering) {
 
 function getAmountPaidByCarli(offering) {
     var amountPaidByLibrary = getFundedSelectionPrice(offering);
-    var totalAmount = offering.selection.price;
+    var totalAmount = getFullSelectionPrice(offering);
 
     return totalAmount - amountPaidByLibrary;
 }
@@ -861,8 +884,9 @@ module.exports = {
     copyOfferingHistoryForYear: copyOfferingHistoryForYear,
 
     getFlaggedState: getFlaggedState,
-    siteLicenseSelectionUsers: 'Site License',
+    siteLicenseSelectionUsers: siteLicenseSelectionUsers,
     isFunded: isFunded,
+    getFullSelectionPrice: getFullSelectionPrice,
     getFundedSelectionPrice: getFundedSelectionPrice,
     getFundedSelectionPendingPrice: getFundedSelectionPendingPrice,
     getFundedSiteLicensePrice: getFundedSiteLicensePrice,

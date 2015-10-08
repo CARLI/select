@@ -13,7 +13,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
         productName: 'product.name',
         vendorName: ['product.vendor.name','product.name'],
         funded: ['product.funded','product.name'],
-        selectionPrice: ['selection.price', 'product.name']
+        selectionPrice: [offeringService.getFundedSelectionPrice,'product.name']
     };
 
     vm.libraryId = null;
@@ -80,6 +80,25 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
         return false;
     }
 
+    function getLastYearsSelectionPrice(offering) {
+        var lastYear = vm.cycle.year - 1;
+        var lastYearsSelectionPrice = '';
+
+        if ( offering.history && offering.history[lastYear] ){
+            if (offering.history[lastYear].selection.users == offeringService.siteLicenseSelectionUsers) {
+                lastYearsSelectionPrice = offering.history[lastYear].pricing.site;
+            } else {
+                offering.history[ lastYear ].pricing.forEach(function (pricingObject) {
+                    if (pricingObject.users == offering.history[lastYear].selection.users) {
+                        lastYearsSelectionPrice = pricingObject.price;
+                    }
+                });
+            }
+        }
+
+        return lastYearsSelectionPrice;
+    }
+
     function setSelectionScreenState(){
         var cycleIsOpen = vm.cycle.isOpenToLibraries();
         var cycleIsClosed = vm.cycle.isClosed();
@@ -105,13 +124,6 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
             datePurchased: new Date().toJSON().slice(0, 10),
             users: users
         };
-
-        if ( users === offeringService.siteLicenseSelectionUsers ){
-            offering.selection.price = offering.pricing.site;
-        }
-        else {
-            offering.selection.price = priceForUsers(users);
-        }
 
         return offering;
 
@@ -369,7 +381,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
             return [
                 vm.getProductDisplayName(offering.product),
                 lastYearsSelection ? lastYearsSelection.users : '',
-                lastYearsSelection ? lastYearsSelection.price : '',
+                lastYearsSelection ? getLastYearsSelectionPrice(offering) : '',
                 offering.product.vendor.name,
                 offeringService.isFunded(offering) ? 'true' : 'false',
                 getSelectionUsers(offering),
