@@ -52,6 +52,6 @@ function cycleService( CarliModules, config, $q, appState, authService, errorHan
     }
 
     function syncDataBackToCarli(){
-        return $q.when( VendorDatabaseModule.replicateDataFromVendorsForCycle( currentCycle.id ) );
+        return $q.when( VendorDatabaseModule.replicateDataFromOneVendorForCycle( currentUser.vendor.id, currentCycle.id ) );
     }
 }
