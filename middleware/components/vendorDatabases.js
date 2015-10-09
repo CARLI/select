@@ -76,6 +76,7 @@ function replicateDataFromVendorsForAllCycles() {
         return Q.all( cycles.map(replicateData) );
 
         function replicateData(cycle) {
+            console.log('3');
             return replicateDataFromVendorsForCycle(cycle.id);
         }
     });
@@ -89,6 +90,7 @@ function replicateDataFromVendorsForCycle(cycleId) {
             var repoForVendor = cycleRepositoryForVendor(vendor);
             return repoForVendor.load(cycleId)
                 .then(function (cycleForVendor) {
+                    Logger.debug('Replicating ' + cycle.name + ' for ' + vendor.name);
                     return cycleForVendor.replicateToSource();
                 });
         }
