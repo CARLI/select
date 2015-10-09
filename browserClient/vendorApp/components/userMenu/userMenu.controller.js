@@ -1,11 +1,11 @@
 angular.module('vendor.userMenu')
 .controller('userMenuController', userMenuController);
 
-function userMenuController(authService){
+function userMenuController($window, authService){
     var vm = this;
 
     vm.userName = '';
-    vm.logout = authService.deleteSession;
+    vm.logout = logout;
 
     activate();
 
@@ -17,5 +17,13 @@ function userMenuController(authService){
         authService.fetchCurrentUser().then(function (user) {
             vm.userName = user.fullName;
         });
+    }
+
+    function logout() {
+        authService.deleteSession().then(reload);
+
+        function reload() {
+            return $window.location.reload();
+        }
     }
 }
