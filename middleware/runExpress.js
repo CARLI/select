@@ -228,6 +228,11 @@ function runMiddlewareServer(){
                     .then(sendOk(res))
                     .catch(sendError(res));
             });
+            authorizedRoute('post', '/replicate-data-from-vendor/:vendorId/for-cycle/:cycleId',  carliAuth.requireSession, function (req, res) {
+                vendorDatabases.replicateDataFromOneVendorForCycle(req.params.vendorId, req.params.cycleId)
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
             authorizedRoute('get', '/sync', carliAuth.requireStaff, function (req, res) {
                 cluster.worker.send({
                     command: 'launchSynchronizationWorker'

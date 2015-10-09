@@ -95,6 +95,11 @@ function replicateDataFromVendorsForCycle(cycleId) {
     });
 }
 
+function replicateDataFromOneVendorForCycle(vendorId, cycleId) {
+    // TODO
+    return replicateDataFromVendorsForCycle(cycleId);
+}
+
 function syncEverything() {
     tap("Creating vendor databases (if needed)")();
     return createVendorDatabasesForActiveCycles()
@@ -325,6 +330,7 @@ module.exports = {
     replicateDataToOneVendorForCycle: replicateDataToOneVendorForCycle,
     replicateDataFromVendorsForAllCycles: replicateDataFromVendorsForAllCycles,
     replicateDataFromVendorsForCycle: replicateDataFromVendorsForCycle,
+    replicateDataFromOneVendorForCycle: replicateDataFromOneVendorForCycle,
     syncEverything: syncEverything,
     triggerIndexingForAllCycles: triggerIndexingForAllCycles,
     triggerIndexingForCycleId: triggerIndexingForCycleId,
