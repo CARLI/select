@@ -3,7 +3,7 @@
         <div class="name">
             <div class="form-group">
                 <label for="{{ inputId }}FirstName">First Name</label>
-                <input type="text" name="contactName" ng-model="contact.firstName" id="{{ inputId }}FirstName">
+                <input type="text" name="contactName" ng-model="contact.firstName" id="{{ inputId }}FirstName" ng-required="true">
             </div>
             <div class="form-group">
                 <label for="{{ inputId }}LastName">Last Name</label>
@@ -18,7 +18,7 @@
 
         <div class="form-group">
             <label for="{{ inputId }}Email">Email</label>
-            <input type="text" name="contactEmail" ng-model="contact.email" id="{{ inputId }}Email">
+            <input type="text" name="contactEmail" ng-model="contact.email" id="{{ inputId }}Email" ng-required="true">
         </div>
 
         <div class="phone-numbers">
