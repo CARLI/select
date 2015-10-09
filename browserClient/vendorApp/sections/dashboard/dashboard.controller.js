@@ -64,6 +64,7 @@ function dashboardController($scope, authService, cycleService, emailService, ve
     }
 
     function syncData(){
+        console.log('dashboard sync');
         return cycleService.syncDataBackToCarli();
     }
 

@@ -3,6 +3,7 @@ var couchUtils = require('../Store/CouchDb/Utils')();
 
 module.exports = function (vendor) {
 
+    console.log(vendor.id);
     function createDatabaseForVendor(cycleId) {
         return loadCycleForVendor(cycleId).then(function (cycle){
             var targetCycleDatabaseName = cycle.getDatabaseName();
@@ -32,6 +33,7 @@ module.exports = function (vendor) {
 
     function listActiveCyclesForVendor() {
         return baseRepository.listActiveCycles().then(function(cycleList){
+            console.log('listing vendor active cycles');
             return cycleList
                 .filter(findOpenToVendorCycles)
                 .filter(findCyclesWithProductsFromVendor)
@@ -48,6 +50,7 @@ module.exports = function (vendor) {
     }
 
     function overrideBaseMethods(cycle) {
+        console.log('overriding methods for vendor ' + vendor.name, vendor.id);
         Object.keys(functionsToAdd).forEach(function (methodName) {
             cycle[methodName] = functionsToAdd[methodName];
         });
