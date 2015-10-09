@@ -312,7 +312,7 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
             .then(function(vendorStatus){
                 vendorStatus.flaggedOfferingsCount = flaggedOfferingsCount;
                 vendorStatus.flaggedOfferingsReasons = flaggedOfferingsReason;
-                return vendorStatusRepository.update(vendorStatus, cycle);
+                return vendorStatusRepository.createOrUpdate(vendorStatus, cycle);
             });
     }
 }
