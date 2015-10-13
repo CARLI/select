@@ -19,7 +19,7 @@ function vendorDataService(cycleService, vendorStatusService) {
             });
 
         function cycleIsOpenToVendorsForPricing(){
-            var cycleIsOpen = (cycle.cycleStatus === cycleService.CYCLE_STATUS_VENDOR_PRICING);
+            var cycleIsOpen = (cycle.status == cycleService.CYCLE_STATUS_VENDOR_PRICING);
             console.log('  cycle is open to vendors for pricing: '+cycleIsOpen);
             return cycleIsOpen;
         }
