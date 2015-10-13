@@ -4,6 +4,7 @@ angular.module('common.libraryService')
 function libraryService( CarliModules, $q, errorHandler ) {
 
     var libraryModule = CarliModules.Library;
+    var validatorModule = CarliModules.Validator;
 
     return {
         list:   function() { return $q.when( libraryModule.list() ).catch(errorHandler); },
@@ -21,6 +22,8 @@ function libraryService( CarliModules, $q, errorHandler ) {
         getMembershipLevelOptions: libraryModule.getMembershipLevelOptions,
         getLibrariesById: function(ids) {
             return $q.when( libraryModule.getLibrariesById(ids) ).catch(errorHandler);
-        }
+        },
+        getRequiredFieldsForLibrary: function(){ return validatorModule.getRequiredPropertiesFor('Library'); },
+        getRequiredFieldsForLibraryContact: function(){ return validatorModule.getRequiredPropertiesFor('LibraryContact'); }
     };
 }

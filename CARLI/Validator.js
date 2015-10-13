@@ -1,6 +1,7 @@
 var tv4 = require('tv4');
 var formats = require('tv4-formats');
 var Q = require( 'q' );
+var _ = require('lodash');
 
 tv4.addFormat(formats);
 
@@ -121,10 +122,16 @@ function getNonIdPropertyMapFor( schemaType ){
     return result;
 }
 
+function getRequiredPropertiesFor( schemaType ){
+    var schema = schemas[schemaType];
+    return _.clone(schema.required);
+}
+
 module.exports = {
     list: listValidTypes,
     validate: validate,
     getEnumValuesFor: getEnumValuesFor,
     listNonIdPropertiesFor: listNonIdPropertiesFor,
-    getNonIdPropertyMapFor: getNonIdPropertyMapFor
+    getNonIdPropertyMapFor: getNonIdPropertyMapFor,
+    getRequiredPropertiesFor: getRequiredPropertiesFor
 };

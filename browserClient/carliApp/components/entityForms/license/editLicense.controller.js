@@ -47,7 +47,7 @@ function editLicenseController( $scope, $rootScope, $location, activityLogServic
         setLicenseFormPristine();
     }
     function initializeForExistingLicense() {
-        licenseService.load(vm.licenseId).then( function( license ) {
+        vm.loadingPromise = licenseService.load(vm.licenseId).then( function( license ) {
             vm.license = angular.copy(license);
             setLicenseFormPristine();
         } );
@@ -120,8 +120,11 @@ function editLicenseController( $scope, $rootScope, $location, activityLogServic
     }
 
     function saveLicense(){
+        var savePromise = null;
+
         if ( vm.licenseId !== undefined ){
-            licenseService.update( vm.license )
+            savePromise = updateLocalCopyWithLatestCouchProperties(vm.licenseId)
+                .then(licenseService.update)
                 .then(function(){
                     alertService.putAlert('License updated', {severity: 'success'});
                     resetLicenseForm();
@@ -132,7 +135,7 @@ function editLicenseController( $scope, $rootScope, $location, activityLogServic
                 .catch(errorHandler);
         }
         else {
-            licenseService.create( vm.license )
+            savePromise = licenseService.create( vm.license )
                 .then(function(newLicenseId){
                     alertService.putAlert('License added', {severity: 'success'});
                     vm.license.id = newLicenseId;
@@ -143,6 +146,9 @@ function editLicenseController( $scope, $rootScope, $location, activityLogServic
                 })
                 .catch(errorHandler);
         }
+
+        vm.loadingPromise = savePromise;
+        return savePromise;
     }
 
     function getProducts() {
@@ -171,6 +177,16 @@ function editLicenseController( $scope, $rootScope, $location, activityLogServic
 
     function logAddActivity(){
         return activityLogService.logEntityAdded(vm.license);
+    }
+
+    function updateLocalCopyWithLatestCouchProperties(licenseId){
+        //workaround Couch smell
+        return licenseService.load(licenseId)
+            .then(function(license){
+                vm.license._attachments = license._attachments;
+                vm.license._rev = license._rev;
+                return vm.license;
+            });
     }
 }
 
