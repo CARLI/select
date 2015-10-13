@@ -90,7 +90,7 @@ function replicateDataFromVendorsForCycle(cycleId) {
             var repoForVendor = cycleRepositoryForVendor(vendor);
             return repoForVendor.load(cycleId)
                 .then(function (cycleForVendor) {
-                    Logger.debug('Replicating ' + cycle.name + ' for ' + vendor.name);
+                    Logger.debug('Replicating ' + cycleForVendor.name + ' for ' + vendor.name);
                     return cycleForVendor.replicateToSource();
                 });
         }
