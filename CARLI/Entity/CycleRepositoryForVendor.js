@@ -50,7 +50,7 @@ module.exports = function (vendor) {
     }
 
     function overrideBaseMethods(cycle) {
-        console.log('overriding methods for vendor ' + vendor.name, vendor.id);
+        console.log('overriding methods for vendor ' + vendor.name + ' - ' + vendor.id);
         Object.keys(functionsToAdd).forEach(function (methodName) {
             cycle[methodName] = functionsToAdd[methodName];
         });
@@ -83,6 +83,7 @@ module.exports = function (vendor) {
         load: loadCycleForVendor,
         getStatusLabel: baseRepository.getStatusLabel,
         listActiveCycles: listActiveCyclesForVendor,
-        vendor: vendor
+        vendor: vendor,
+        CYCLE_STATUS_VENDOR_PRICING: baseRepository.CYCLE_STATUS_VENDOR_PRICING
     };
 };
