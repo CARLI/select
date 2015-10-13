@@ -250,4 +250,14 @@ describe( 'The Validator Module', function() {
             expect(Validator.getNonIdPropertyMapFor('LibraryStatus')).to.deep.equal(expectedMap);
         });
     });
+
+    describe.only('getRequiredPropertiesFor', function(){ //TODO: remove only
+        it('should be a function', function(){
+            expect(Validator.getRequiredPropertiesFor).to.be.a('function');
+        });
+
+        it('should return an array of required property names for the schema', function(){
+            expect(Validator.getRequiredPropertiesFor('Library')).to.deep.equal(['name']);
+        });
+    });
 });
