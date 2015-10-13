@@ -27,7 +27,7 @@ module.exports = function (vendor) {
     }
 
     function loadCycleForVendor(cycleId) {
-        return baseRepository.load(cycleId)
+        return baseRepository.loadNoCache(cycleId)
             .then(overrideBaseMethods);
     }
 
