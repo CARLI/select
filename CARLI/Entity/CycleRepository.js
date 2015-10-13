@@ -210,6 +210,7 @@ module.exports = {
     update: updateCycle,
     list: listCycles,
     load: loadCycle,
+    loadNoCache: CycleRepository.loadNoCache,
     getStatusLabel: getStatusLabel,
     listActiveCycles: listActiveCycles,
     getCyclesById: getCyclesById,
