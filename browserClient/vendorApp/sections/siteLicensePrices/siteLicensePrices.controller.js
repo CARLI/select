@@ -82,7 +82,6 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     function loadProducts() {
         return productService.listProductsWithOfferingsForVendorId( authService.getCurrentUser().vendor.id ).then(function (products) {
             vm.products = $filter('orderBy')(products, 'name');
-            Logger.debug('Loaded ' + vm.products.length + ' products');
             initializeSelectedProductIds();
         });
     }

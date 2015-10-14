@@ -37,7 +37,6 @@ function vendorDataService(cycleService, vendorStatusService) {
     }
 
     function updateAndSyncVendorStatus(vendorStatus, cycle) {
-        console.log('Update and sync status');
         return updateVendorStatus(vendorStatus, cycle)
             .then(cycleService.syncDataBackToCarli);
     }
