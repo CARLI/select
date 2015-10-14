@@ -31,6 +31,9 @@ function vendorDataService(cycleService, vendorStatusService) {
         }
 
         function userIsActive(){
+            //note: This works correctly when the user logs in, but won't work to prevent changes by a user that was
+            //      made inactive after they logged in. Unless this were to make a call back to the database to update
+            //      the user information.
             console.log('  user is active: '+user.isActive);
             return user.isActive;
         }
