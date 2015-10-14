@@ -65,7 +65,6 @@ function cycleChooserController($scope, alertService, authService, config, cycle
                 }
 
                 function updateStatus() {
-                    Logger.debug('Update Status');
                     return vendorStatusService.recordLastVendorLogin(vm.vendor.id, cycle)
                         .then(cycleService.syncDataBackToCarli);
                 }
