@@ -33,6 +33,10 @@ function updateVendorStatus( vendorStatus, cycle ){
     return VendorStatusRepository.update( vendorStatus, transformFunction );
 }
 
+function createOrUpdateVendorStatus( vendorStatus, cycle ) {
+    return vendorStatus.id ? updateVendorStatus(vendorStatus, cycle) : createVendorStatus(vendorStatus, cycle);
+}
+
 function listVendorStatuses(cycle){
     setCycle(cycle);
     return expandVendorStatuses( VendorStatusRepository.list(cycle.getDatabaseName()) );
@@ -146,6 +150,7 @@ module.exports = {
     setCycle: setCycle,
     create: createVendorStatus,
     update: updateVendorStatus,
+    createOrUpdate: createOrUpdateVendorStatus,
     list: listVendorStatuses,
     load: loadVendorStatus,
     getStatusForVendor: getStatusForVendor,

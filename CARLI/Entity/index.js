@@ -112,6 +112,13 @@ module.exports = function (type, timeout) {
             }
         },
 
+        loadNoCache: function( id ){
+            return dataStore.get(id)
+                .then(function (data) {
+                    return data;
+                });
+        },
+
         delete: function( id ){
             if ( !id ){
                 throw new Error('Id Required');
