@@ -95,6 +95,18 @@ function replicateDataFromVendorsForCycle(cycleId) {
     });
 }
 
+function replicateDataFromOneVendorForCycle(vendorId, cycleId) {
+    return vendorRepository.load(vendorId)
+        .then(replicateData);
+
+    function replicateData(vendor) {
+        var repoForVendor = cycleRepositoryForVendor(vendor);
+        return repoForVendor.load(cycleId)
+            .then(function (cycleForVendor) {
+                return cycleForVendor.replicateToSource();
+            });
+    }}
+
 function syncEverything() {
     tap("Creating vendor databases (if needed)")();
     return createVendorDatabasesForActiveCycles()
@@ -312,7 +324,7 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
             .then(function(vendorStatus){
                 vendorStatus.flaggedOfferingsCount = flaggedOfferingsCount;
                 vendorStatus.flaggedOfferingsReasons = flaggedOfferingsReason;
-                return vendorStatusRepository.update(vendorStatus, cycle);
+                return vendorStatusRepository.createOrUpdate(vendorStatus, cycle);
             });
     }
 }
@@ -325,6 +337,7 @@ module.exports = {
     replicateDataToOneVendorForCycle: replicateDataToOneVendorForCycle,
     replicateDataFromVendorsForAllCycles: replicateDataFromVendorsForAllCycles,
     replicateDataFromVendorsForCycle: replicateDataFromVendorsForCycle,
+    replicateDataFromOneVendorForCycle: replicateDataFromOneVendorForCycle,
     syncEverything: syncEverything,
     triggerIndexingForAllCycles: triggerIndexingForAllCycles,
     triggerIndexingForCycleId: triggerIndexingForCycleId,

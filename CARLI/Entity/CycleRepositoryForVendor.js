@@ -26,7 +26,7 @@ module.exports = function (vendor) {
     }
 
     function loadCycleForVendor(cycleId) {
-        return baseRepository.load(cycleId)
+        return baseRepository.loadNoCache(cycleId)
             .then(overrideBaseMethods);
     }
 
@@ -80,6 +80,7 @@ module.exports = function (vendor) {
         load: loadCycleForVendor,
         getStatusLabel: baseRepository.getStatusLabel,
         listActiveCycles: listActiveCyclesForVendor,
-        vendor: vendor
+        vendor: vendor,
+        CYCLE_STATUS_VENDOR_PRICING: baseRepository.CYCLE_STATUS_VENDOR_PRICING
     };
 };
