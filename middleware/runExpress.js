@@ -509,6 +509,7 @@ function sendError(res, errorCode) {
             errorToSend = err.message;
         }
         res.status(errorCode).send( { error: errorToSend } );
+        //res.status(errorCode).send( { error: errorToSend, stack: err.stack } ); //really useful for debugging
     }
 }
 

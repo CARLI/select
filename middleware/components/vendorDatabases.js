@@ -96,9 +96,16 @@ function replicateDataFromVendorsForCycle(cycleId) {
 }
 
 function replicateDataFromOneVendorForCycle(vendorId, cycleId) {
-    // TODO
-    return replicateDataFromVendorsForCycle(cycleId);
-}
+    return vendorRepository.load(vendorId)
+        .then(replicateData);
+
+    function replicateData(vendor) {
+        var repoForVendor = cycleRepositoryForVendor(vendor);
+        return repoForVendor.load(cycleId)
+            .then(function (cycleForVendor) {
+                return cycleForVendor.replicateToSource();
+            });
+    }}
 
 function syncEverything() {
     tap("Creating vendor databases (if needed)")();
