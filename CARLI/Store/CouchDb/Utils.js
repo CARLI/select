@@ -306,6 +306,8 @@ module.exports = function (storeOptions) {
             var deferred = Q.defer();
             var requestOptions = couchReplicationOptions();
 
+            Logger.log('Replicating from ' + sourceDbName + ' to ' + targetDbName);
+
             couchRequest(requestOptions)
                 .then(function resolveReplication(data) {
                     if (data.ok) {
@@ -343,6 +345,8 @@ module.exports = function (storeOptions) {
             function replicateTo(targetDbName) {
                 var deferred = Q.defer();
                 var requestOptions = couchReplicationOptions();
+
+                Logger.log('Replicating from ' + sourceDbName + ' to ' + targetDbName);
 
                 couchRequest(requestOptions)
                     .then(function resolveReplication(data) {
