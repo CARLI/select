@@ -223,3 +223,10 @@ section.content {
   overflow-y: scroll;
   max-height: 95%;
 }
+
+.browserupgrade {
+    @extend .alert;
+    @extend .alert-danger;
+    margin-bottom: 0;
+    text-align: center;
+}
