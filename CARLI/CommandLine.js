@@ -13,7 +13,8 @@ function asCouchAdmin(doSomething) {
     return loginToCouch()
         .then(doSomething)
         .catch(logError)
-        .finally(logoutOfCouch);
+        .finally(logoutOfCouch)
+        .finally(terminateProcess);
 }
 
 function loginToCouch() {
@@ -25,10 +26,12 @@ function loginToCouch() {
 
 function logoutOfCouch() {
     return auth.deleteSession().then(function (r) {
-        Logger.log('Couch session closed');
-        Logger.log('You can quit with CTRL-C now');
         return r;
     });
+}
+
+function terminateProcess() {
+    process.exit();
 }
 
 function logError(error) {
