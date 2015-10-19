@@ -1,0 +1,32 @@
+#!/usr/bin/env node
+
+var cli = require('../CARLI/CommandLine');
+var config = require('../config');
+var couchUtils = require('../CARLI/Store/CouchDb/Utils.js')();
+
+cli.asCouchAdmin(function() {
+    var requestOptions = {
+        url: config.storeOptions.couchDbUrl + '/_active_tasks'
+    };
+
+    return couchUtils.couchRequest(requestOptions).then(summarizeIndexingStatus);
+
+    function summarizeIndexingStatus(activeTasks) {
+        var changesDone = activeTasks.reduce(sumOfChangesDone, 0);
+        var totalChanges = activeTasks.reduce(sumOfTotalChanges, 0);
+
+        return logProgress();
+
+        function logProgress() {
+            console.log(changesDone + ' / ' + totalChanges);
+        }
+
+        function sumOfChangesDone(sumSoFar, task) {
+            return sumSoFar + (task.type == 'indexer' ? task.changes_done : 0);
+
+        }
+        function sumOfTotalChanges(sumSoFar, task) {
+            return sumSoFar + (task.type == 'indexer' ? task.total_changes : 0);
+        }
+    }
+});

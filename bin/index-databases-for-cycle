@@ -1,0 +1,33 @@
+#!/usr/bin/env node
+
+var path = require('path');
+
+var cli = require('../CARLI/CommandLine');
+var vendorDatabases = require('../middleware/components/vendorDatabases');
+
+var cycleId = null;
+
+verifyArgumentsOrExit();
+
+cli.asCouchAdmin(function() {
+    return vendorDatabases.triggerIndexingForCycleId(cycleId);
+});
+
+function verifyArgumentsOrExit() {
+    cycleId = getFirstArgument();
+
+    if (!cycleId)
+        showUsageAndExit();
+
+    function getFirstArgument() {
+        return process.argv[2];
+    }
+    function showUsageAndExit() {
+        console.log('Usage: ' + getProgramName() + ' <cycle-id>');
+        process.exit();
+
+        function getProgramName() {
+            return path.basename(process.argv[1]);
+        }
+    }
+}
