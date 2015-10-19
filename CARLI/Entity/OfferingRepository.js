@@ -181,7 +181,8 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
 function copyOfferingHistoryForYear(offering, year) {
     offering.history = offering.history || {};
     offering.history[year] = {
-        pricing: _.clone(offering.pricing)
+        pricing: _.clone(offering.pricing),
+        funding: _.clone(offering.funding)
     };
     if (offering.selection ) {
         offering.history[year].selection = _.clone(offering.selection);
