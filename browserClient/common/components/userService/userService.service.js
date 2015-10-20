@@ -18,6 +18,9 @@ function userService(CarliModules, $q, authService) {
         load: function (userId) {
             return $q.when( userMiddleware.load(userId) );
         },
+        delete: function(user) {
+            return $q.when( userMiddleware.delete(user) );
+        },
         requestPasswordReset: function (email) {
             return $q.when( userMiddleware.requestPasswordReset(email) );
         },

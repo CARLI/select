@@ -39,6 +39,12 @@ function update(user) {
     });
 }
 
+function deleteUser(user) {
+    return auth.requireStaff().then(function() {
+        return userRepository.delete(user);
+    });
+}
+
 function requestPasswordReset(email, resetLinkBaseUrl) {
     return userResetRequestRepository.create(email, resetLinkBaseUrl);
 }
@@ -61,6 +67,7 @@ module.exports = {
     load: load,
     create: create,
     update: update,
+    delete: deleteUser,
     requestPasswordReset: requestPasswordReset,
     isKeyValid: isKeyValid,
     consumeKey: consumeKey

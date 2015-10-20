@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.user')
     .controller('editUserController', editUserController);
 
-function editUserController( $filter, $scope, $rootScope, $q, $location, alertService, authService, entityBaseService, userService, libraryService, vendorService  ) {
+function editUserController( $filter, $scope, $rootScope, $q, $location, $window, alertService, authService, entityBaseService, errorHandler, userService, libraryService, vendorService  ) {
     var vm = this;
 
     var templates = {
@@ -10,16 +10,17 @@ function editUserController( $filter, $scope, $rootScope, $q, $location, alertSe
     vm.currentTemplate = templates.userFields;
 
     vm.userId = $scope.userId;
+    vm.userType = 'staff';
     vm.passwordConfirmation = '';
-    var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
+    var afterSubmitCallback = $scope.afterSubmitFn || function() {};
     vm.toggleEditable = toggleEditable;
     vm.cancelEdit = cancelEdit;
+    vm.deleteUser = deleteUser;
     vm.saveUser = saveUser;
     vm.submitAction = submitAction;
     vm.submitLabel = submitLabel;
     vm.statusOptions = entityBaseService.getStatusOptions();
-    vm.userType = 'staff';
 
     setupModalClosingUnsavedChangesWarning();
     activate();
@@ -243,6 +244,27 @@ function editUserController( $filter, $scope, $rootScope, $q, $location, alertSe
             .catch(function (error) {
                 alertService.putAlert(error, {severity: 'danger'});
             });
+    }
+
+    function deleteUser(){
+        if ( isStaff(vm.user) ){
+            console.log("Error - can't delete a staff user");
+            return false;
+        }
+        else {
+            if ( $window.confirm('Are you sure you want to delete user '+vm.user.name) ){
+                return userService.delete(vm.user)
+                    .then(function(){
+                        alertService.putAlert('User deleted', {severity: 'success'});
+                        $location.path('/user/' + vm.userType);
+                    })
+                    .catch(errorHandler);
+            }
+        }
+    }
+
+    function isStaff(user){
+        return user.roles.indexOf('staff') >= 0;
     }
 
     function confirmPasswordsMatch() {
