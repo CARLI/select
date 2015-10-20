@@ -31,13 +31,17 @@
     </head>
     <body>
         <header carli-header role="banner"></header>
-
+        <nav ng-if="isLoggedIn" nav-bar role="navigation" aria-label="main navigation"></nav>
+        <alerts></alerts>
         <main role="main">
-            <div role="application">
-                <h1>System update</h1>
-                <p>CARLI Select is currently offline for a system update.</p>
-            </div>
+            <div ng-view role="application"></div>
         </main>
+
+        <auth-timeout-alert ng-if="isLoggedIn"></auth-timeout-alert>
+
+        <% scripts.forEach( function ( file ) { %>
+            <script type="text/javascript" src="/<%= file %>"></script>
+        <% }); %>
 
         <script>
             if (window.location.hostname.indexOf('.carli.illinois.edu') >= 0) {
