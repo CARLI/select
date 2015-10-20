@@ -224,6 +224,11 @@ function loadOffering( offeringId, cycle ){
     return deferred.promise;
 }
 
+function loadOfferingUnexpanded( offeringId, cycle) {
+    setCycle(cycle);
+    return OfferingRepository.load( offeringId )
+}
+
 function deleteOffering( offeringId, cycle ){
     setCycle(cycle);
     return OfferingRepository.delete(offeringId);
@@ -861,6 +866,7 @@ module.exports = {
     list: listOfferings,
     listOfferingsUnexpanded: listOfferingsUnexpanded,
     load: loadOffering,
+    loadUnexpanded: loadOfferingUnexpanded,
     delete: deleteOffering,
 
     listOfferingsForLibraryId: listOfferingsForLibraryId,
