@@ -25,16 +25,20 @@ function transformFunction( user ){
     EntityTransform.transformObjectForPersistence(user, propertiesToTransform);
 }
 
+function userId(user) {
+    return 'org.couchdb.user:' + user.email;
+}
+
 function createUser( user ){
     if (user) {
-        user.id = 'org.couchdb.user:' + user.email;
+        user.id = userId(user);
         user.name = user.email;
     }
     return UserRepository.create( user, transformFunction );
 }
 
 function updateUser( user ){
-    user.id = 'org.couchdb.user:' + user.email;
+    user.id = userId(user);
     return UserRepository.update( user, transformFunction );
 }
 
@@ -74,6 +78,10 @@ function loadUser( userId ){
     }
 }
 
+function deleteUser( user ){
+    return UserRepository.delete(userId(user));
+}
+
 /* functions that get added as instance methods on loaded users */
 
 
@@ -90,5 +98,6 @@ module.exports = {
     create: createUser,
     update: updateUser,
     list: listUsers,
-    load: loadUser
+    load: loadUser,
+    delete: deleteUser
 };
