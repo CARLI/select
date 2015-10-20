@@ -238,6 +238,10 @@
                     &.dontAffix {
                         position: relative !important;
                     }
+
+                    &.expanded {
+                        z-index: 10;
+                    }
                 }
 
                 &.expanded {
