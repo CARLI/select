@@ -1,0 +1,95 @@
+#!/usr/bin/env node
+
+var _ = require('lodash');
+var path = require('path');
+var Q = require('q');
+
+var cli = require('../CARLI/CommandLine');
+var cycleRepository = require('../CARLI/Entity/CycleRepository');
+var offeringRepository = require('../CARLI/Entity/OfferingRepository');
+
+cli.withSingleArgument('cycle-id', updateHistoricalFundingForCycleAsAdmin);
+
+function updateHistoricalFundingForCycleAsAdmin(cycleId) {
+    return cli.asCouchAdmin(updateHistoricalFundingForCycle);
+
+    function updateHistoricalFundingForCycle() {
+        var currentCycle = null;
+        var previousCycle = null;
+
+        return loadCurrentCycle()
+            .then(loadPreviousCycle)
+            .then(loadOfferingsFromPreviousCycle)
+            .then(updateCurrentOfferings);
+
+        function loadCurrentCycle() {
+            return cycleRepository.load(cycleId).then(setCurrentCycle);
+
+            function setCurrentCycle(cycle) {
+                Logger.log('Loaded current cycle', cycle.name);
+                Logger.log(process.memoryUsage());
+                currentCycle = cycle;
+                return currentCycle;
+            }
+        }
+        function loadPreviousCycle(currentCycle) {
+            return cycleRepository.listPastFourCyclesMatchingCycle(currentCycle)
+                .then(getMostRecentCycle)
+                .then(setPreviousCycle);
+
+            function getMostRecentCycle(previousCycles) {
+                return previousCycles[0];
+            }
+            function setPreviousCycle(cycle) {
+                Logger.log('Loaded previous cycle', cycle.name);
+                Logger.log(process.memoryUsage());
+                previousCycle = cycle;
+                return previousCycle;
+            }
+        }
+        function loadOfferingsFromPreviousCycle(previousCycle) {
+            Logger.debug('Loading offerings for historical cycle');
+            Logger.log(process.memoryUsage());
+            return offeringRepository.listOfferingsUnexpanded(previousCycle);
+        }
+        function updateCurrentOfferings(historicalOfferings) {
+            Logger.log('Loaded ' + historicalOfferings.length + ' historical offerings');
+            Logger.log(process.memoryUsage());
+            return Q.all( historicalOfferings.map(tryUpdateCurrentOffering) );
+
+            function tryUpdateCurrentOffering(historicalOffering) {
+                return offeringRepository.loadUnexpanded(historicalOffering.id, currentCycle)
+                    .then(updateCurrentOffering)
+                    .catch(ignoreMissingOffering);
+
+                function updateCurrentOffering(currentOffering) {
+                    Logger.log(process.memoryUsage());
+
+                    ensureHistoryExists();
+                    copyHistoricalPricingAndFunding();
+                    copyHistoricalSelection();
+
+                    return currentOffering;
+
+                    function ensureHistoryExists() {
+                        currentOffering.history = currentOffering.history || {};
+                    }
+                    function copyHistoricalPricingAndFunding() {
+                        currentOffering.history[ year ] = {
+                            pricing: _.clone(historicalOffering.pricing),
+                            funding: _.clone(historicalOffering.funding)
+                        };
+                    }
+                    function copyHistoricalSelection() {
+                        if (historicalOffering.selection) {
+                            currentOffering.history[ year ].selection = _.clone(historicalOffering.selection);
+                        }
+                    }
+                }
+                function ignoreMissingOffering(e) {
+                    Logger.error(e);
+                }
+            }
+        }
+    }
+}
