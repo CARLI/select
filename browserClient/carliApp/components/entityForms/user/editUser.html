@@ -13,6 +13,10 @@
                 <input class="carli-button save-button" ng-disabled="!vm.editable" type="button" value="{{ vm.submitLabel() }}" busy-click="vm.submitAction()" >
             </div>
 
+            <button type="button" id="user-delete" class="carli-button remove-button" ng-hide="vm.editable || vm.userType === 'staff'" ng-click="vm.deleteUser()">
+                Delete<fa name="delete"></fa>
+            </button>
+
             <button type="button" id="user-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">
                 Edit<fa name="edit"></fa>
             </button>

@@ -32,6 +32,14 @@ function update(user) {
     });
 }
 
+function deleteUser(user){
+    return middlewareRequest({
+        path: '/user/' + user.email,
+        method: 'delete',
+        json: user
+    });
+}
+
 function requestPasswordReset(email) {
     return middlewareRequest({
         path: '/user/' + email + '/reset',
@@ -61,6 +69,7 @@ module.exports = {
     load: load,
     create: create,
     update: update,
+    delete: deleteUser,
     requestPasswordReset: requestPasswordReset,
     isKeyValid: isKeyValid,
     consumeKey: consumeKey

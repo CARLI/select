@@ -323,6 +323,11 @@ function runMiddlewareServer(){
                     .then(sendOk(res))
                     .catch(sendError(res));
             });
+            authorizedRoute('delete', '/user/:email', carliAuth.requireStaff, function (req, res) {
+                user.delete(req.body)
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
             carliMiddleware.get('/user/:email/reset', function (req, res) {
                 var baseUrl = req.protocol + '://' + req.hostname;
                 user.requestPasswordReset(req.params.email, baseUrl)
