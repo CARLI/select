@@ -1,0 +1,109 @@
+#!/usr/bin/env node
+
+var _ = require('lodash');
+var path = require('path');
+var Q = require('q');
+
+var cli = require('../CARLI/CommandLine');
+var cycleRepository = require('../CARLI/Entity/CycleRepository');
+var offeringRepository = require('../CARLI/Entity/OfferingRepository');
+
+cli.withSingleArgument('cycle-id', updateHistoricalFundingForCycleAsAdmin);
+
+function updateHistoricalFundingForCycleAsAdmin(cycleId) {
+    return cli.asCouchAdmin(updateHistoricalFundingForCycle);
+
+    function updateHistoricalFundingForCycle() {
+        var currentCycle = null;
+        var previousCycle = null;
+        var updatedCount = 0;
+        var missingCount = 0;
+
+        return loadCurrentCycle()
+            .then(loadPreviousCycle)
+            .then(loadOfferingsFromPreviousCycle)
+            .then(updateCurrentOfferings)
+            .then(function() {
+                Logger.log('Updated offerings: ' + updatedCount);
+                Logger.log('Missing offerings: ' + missingCount);
+            });
+
+        function loadCurrentCycle() {
+            return cycleRepository.load(cycleId).then(setCurrentCycle);
+
+            function setCurrentCycle(cycle) {
+                currentCycle = cycle;
+                return currentCycle;
+            }
+        }
+        function loadPreviousCycle(currentCycle) {
+            return cycleRepository.listPastFourCyclesMatchingCycle(currentCycle)
+                .then(getMostRecentCycle)
+                .then(setPreviousCycle);
+
+            function getMostRecentCycle(previousCycles) {
+                return previousCycles[0];
+            }
+            function setPreviousCycle(cycle) {
+                previousCycle = cycle;
+                return previousCycle;
+            }
+        }
+        function loadOfferingsFromPreviousCycle(previousCycle) {
+            Logger.debug('Loading offerings for historical cycle');
+            return offeringRepository.listOfferingsUnexpanded(previousCycle);
+        }
+        function updateCurrentOfferings(historicalOfferings) {
+            Logger.log('Loaded ' + historicalOfferings.length + ' historical offerings');
+            return transformOfferingsOneAtATime();
+
+            function transformOfferingsOneAtATime() {
+                if (historicalOfferings.length > 0) {
+                    return tryUpdateNextOffering().then(transformOfferingsOneAtATime);
+                }
+                function tryUpdateNextOffering() {
+                    var nextOffering = historicalOfferings.pop();
+                    return tryUpdateCurrentOffering(nextOffering);
+                }
+            }
+
+            function tryUpdateCurrentOffering(historicalOffering) {
+                return offeringRepository.loadUnexpanded(historicalOffering.id, currentCycle)
+                    .then(updateCurrentOffering)
+                    .then(saveCurrentOffering)
+                    .catch(ignoreMissingOffering);
+
+                function updateCurrentOffering(currentOffering) {
+                    ensureHistoryExists();
+                    copyHistoricalPricingAndFunding();
+                    copyHistoricalSelection();
+                    updatedCount++;
+
+                    return currentOffering;
+
+                    function ensureHistoryExists() {
+                        currentOffering.history = currentOffering.history || {};
+                    }
+                    function copyHistoricalPricingAndFunding() {
+                        currentOffering.history[ previousCycle.year ] = {
+                            pricing: _.clone(historicalOffering.pricing),
+                            funding: _.clone(historicalOffering.funding)
+                        };
+                    }
+                    function copyHistoricalSelection() {
+                        if (historicalOffering.selection) {
+                            currentOffering.history[ previousCycle.year ].selection = _.clone(historicalOffering.selection);
+                        }
+                    }
+                }
+                function saveCurrentOffering(currentOffering) {
+                    return offeringRepository.update(currentOffering, currentCycle);
+                }
+                function ignoreMissingOffering(e) {
+                    Logger.log(e.stack);
+                    missingCount++;
+                }
+            }
+        }
+    }
+}
