@@ -2,6 +2,8 @@ var cluster = require('cluster');
 
 process.chdir(__dirname);
 
+var Logger = require('../CARLI/Logger');
+
 var expressWorkerCount = 1; // require('os').cpus().length;
 var expressWorkerSetup = { exec: './runExpress.js' };
 var cycleDatabaseWorkerSetup = { exec: './cycleDatabaseWorker.js' };
