@@ -61,10 +61,11 @@
         <div class="site-pricing">
             <div class="column">
                 <div class="header">
-                    <strong>{{ lastYear }}</strong> Price
+                    <strong>{{ thisYear }}</strong> Price
+                    <span class='funding-indicator'>{{ historicalFundingIndicator offering }}</span>
                 </div>
                 <div class="row">
-                    {{ currency pricingLastYear.site }}
+                    {{ fundedLastYearsSiteLicensePrice offering }}
                 </div>
             </div>
             <div class="column">
