@@ -785,6 +785,23 @@ function getFundedSiteLicensePrice(offering) {
     }
     return getFundedPrice(offering.pricing.site, offering.funding);
 }
+function getHistoricalFundedSiteLicensePrice(offering, year) {
+    if (!offering.pricing) {
+        return null;
+    }
+
+    var lastYearsPrice = getLastYearsPrice();
+    var lastYearsFunding = offering.history[year].funding;
+
+    return getFundedPrice(lastYearsPrice, lastYearsFunding);
+
+    function getLastYearsPrice() {
+        if (offering.history && offering.history.hasOwnProperty(year)) {
+            return offering.history[ year ].pricing.site;
+        }
+        return 0;
+    }
+}
 
 function getAmountPaidByCarli(offering) {
     var amountPaidByLibrary = getFundedSelectionPrice(offering);
@@ -897,5 +914,6 @@ module.exports = {
     getFundedSelectionPrice: getFundedSelectionPrice,
     getFundedSelectionPendingPrice: getFundedSelectionPendingPrice,
     getFundedSiteLicensePrice: getFundedSiteLicensePrice,
+    getHistoricalFundedSiteLicensePrice: getHistoricalFundedSiteLicensePrice,
     getAmountPaidByCarli: getAmountPaidByCarli
 };
