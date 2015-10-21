@@ -1,4 +1,5 @@
 var Q = require('q');
+var path = require('path');
 var readline = require('readline');
 
 var auth = require('../CARLI/Auth');
@@ -58,10 +59,32 @@ function confirmOrExit(question) {
     }
 }
 
+function withSingleArgument(argumentName, doSomething) {
+    var argument = getFirstArgument();
+
+    if (!argument)
+        showUsageAndExit();
+
+    return doSomething(argument);
+
+    function getFirstArgument() {
+        return process.argv[2];
+    }
+    function showUsageAndExit() {
+        console.log('Usage: ' + getProgramName() + ' <'+ argumentName +'>');
+        process.exit();
+
+        function getProgramName() {
+            return path.basename(process.argv[1]);
+        }
+    }
+}
+
 module.exports = {
     asCouchAdmin: asCouchAdmin,
+    confirmOrExit: confirmOrExit,
     loginToCouch: loginToCouch,
     logoutOfCouch: logoutOfCouch,
     logError: logError,
-    confirmOrExit: confirmOrExit
+    withSingleArgument: withSingleArgument
 };

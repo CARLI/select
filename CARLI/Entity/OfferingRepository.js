@@ -181,7 +181,8 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
 function copyOfferingHistoryForYear(offering, year) {
     offering.history = offering.history || {};
     offering.history[year] = {
-        pricing: _.clone(offering.pricing)
+        pricing: _.clone(offering.pricing),
+        funding: _.clone(offering.funding)
     };
     if (offering.selection ) {
         offering.history[year].selection = _.clone(offering.selection);
@@ -221,6 +222,11 @@ function loadOffering( offeringId, cycle ){
         });
 
     return deferred.promise;
+}
+
+function loadOfferingUnexpanded( offeringId, cycle) {
+    setCycle(cycle);
+    return OfferingRepository.load( offeringId )
 }
 
 function deleteOffering( offeringId, cycle ){
@@ -779,6 +785,23 @@ function getFundedSiteLicensePrice(offering) {
     }
     return getFundedPrice(offering.pricing.site, offering.funding);
 }
+function getHistoricalFundedSiteLicensePrice(offering, year) {
+    if (!offering.pricing) {
+        return null;
+    }
+
+    var lastYearsPrice = getLastYearsPrice();
+    var lastYearsFunding = offering.history[year].funding;
+
+    return getFundedPrice(lastYearsPrice, lastYearsFunding);
+
+    function getLastYearsPrice() {
+        if (offering.history && offering.history.hasOwnProperty(year)) {
+            return offering.history[ year ].pricing.site;
+        }
+        return 0;
+    }
+}
 
 function getAmountPaidByCarli(offering) {
     var amountPaidByLibrary = getFundedSelectionPrice(offering);
@@ -860,6 +883,7 @@ module.exports = {
     list: listOfferings,
     listOfferingsUnexpanded: listOfferingsUnexpanded,
     load: loadOffering,
+    loadUnexpanded: loadOfferingUnexpanded,
     delete: deleteOffering,
 
     listOfferingsForLibraryId: listOfferingsForLibraryId,
@@ -890,5 +914,6 @@ module.exports = {
     getFundedSelectionPrice: getFundedSelectionPrice,
     getFundedSelectionPendingPrice: getFundedSelectionPendingPrice,
     getFundedSiteLicensePrice: getFundedSiteLicensePrice,
+    getHistoricalFundedSiteLicensePrice: getHistoricalFundedSiteLicensePrice,
     getAmountPaidByCarli: getAmountPaidByCarli
 };

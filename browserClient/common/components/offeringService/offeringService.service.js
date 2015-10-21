@@ -54,6 +54,9 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
         getFundedSiteLicensePrice: function( offering ) {
             return offeringModule.getFundedSiteLicensePrice(offering);
         },
+        getHistoricalFundedSiteLicensePrice: function( offering, year ) {
+            return offeringModule.getHistoricalFundedSiteLicensePrice(offering, year);
+        },
         getOneOfferingForProductId: function ( productId ) {
             return $q.when( offeringModule.listOfferingsForProductId( productId, cycleService.getCurrentCycle(), 1))
                 .then(function(offerings){

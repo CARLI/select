@@ -237,6 +237,22 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
         }
         return indicator;
     }
+    function historicalFundingIndicator(offering) {
+        var indicator = '';
+        var lastYear = offering.cycle.year - 1;
+
+        if (offering.history && offering.history[lastYear]) {
+            var funding = offering.history[lastYear].funding;
+
+            if (funding.fundedByPercentage && funding.fundedPercent > 0) {
+                return '('+ funding.fundedPercent +'% Funded)';
+            }
+            if (!funding.fundedByPercentage && funding.fundedPrice > 0) {
+                return '(Funded)';
+            }
+        }
+        return indicator;
+    }
 
     function fundedSelectionPrice(offering) {
         return currency( offeringService.getFundedSelectionPrice(offering) );
@@ -250,14 +266,21 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
         return currency( offeringService.getFundedSiteLicensePrice(offering) );
     }
 
+    function fundedLastYearsSiteLicensePrice(offering) {
+        var lastYear = offering.cycle.year - 1;
+        return currency( offeringService.getHistoricalFundedSiteLicensePrice(offering, lastYear) );
+    }
+
     function registerHandlebarsHelpers() {
         Handlebars.registerHelper('currency', currency);
         Handlebars.registerHelper('displayLabel', displayLabel);
         Handlebars.registerHelper('formatSelectionUsers', formatSelectionUsers);
         Handlebars.registerHelper('fullSelectionPrice', fullSelectionPrice);
         Handlebars.registerHelper('fundingIndicator', fundingIndicator);
+        Handlebars.registerHelper('historicalFundingIndicator', historicalFundingIndicator);
         Handlebars.registerHelper('fundedSelectionPrice', fundedSelectionPrice);
         Handlebars.registerHelper('fundedSiteLicensePrice', fundedSiteLicensePrice);
+        Handlebars.registerHelper('fundedLastYearsSiteLicensePrice', fundedLastYearsSiteLicensePrice);
     }
 
     function translateColumnArrayToObject( columns ){
