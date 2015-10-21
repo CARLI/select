@@ -32,8 +32,6 @@ function updateHistoricalFundingForCycleAsAdmin(cycleId) {
             return cycleRepository.load(cycleId).then(setCurrentCycle);
 
             function setCurrentCycle(cycle) {
-                Logger.log('Loaded current cycle', cycle.name);
-                Logger.log(process.memoryUsage());
                 currentCycle = cycle;
                 return currentCycle;
             }
@@ -47,30 +45,22 @@ function updateHistoricalFundingForCycleAsAdmin(cycleId) {
                 return previousCycles[0];
             }
             function setPreviousCycle(cycle) {
-                Logger.log('Loaded previous cycle', cycle.name);
-                Logger.log(process.memoryUsage());
                 previousCycle = cycle;
                 return previousCycle;
             }
         }
         function loadOfferingsFromPreviousCycle(previousCycle) {
             Logger.debug('Loading offerings for historical cycle');
-            Logger.log(process.memoryUsage());
             return offeringRepository.listOfferingsUnexpanded(previousCycle);
         }
         function updateCurrentOfferings(historicalOfferings) {
             Logger.log('Loaded ' + historicalOfferings.length + ' historical offerings');
-            Logger.log(process.memoryUsage());
+            return transformOfferingsOneAtATime();
 
-            return updateOfferingsOneAtATime();
-
-            function updateOfferingsOneAtATime() {
+            function transformOfferingsOneAtATime() {
                 if (historicalOfferings.length > 0) {
-                    return tryUpdateNextOffering().then(updateOfferingsOneAtATime);
-                } else {
-                    return Q.when(true);
+                    return tryUpdateNextOffering().then(transformOfferingsOneAtATime);
                 }
-
                 function tryUpdateNextOffering() {
                     var nextOffering = historicalOfferings.pop();
                     return tryUpdateCurrentOffering(nextOffering);
@@ -80,11 +70,10 @@ function updateHistoricalFundingForCycleAsAdmin(cycleId) {
             function tryUpdateCurrentOffering(historicalOffering) {
                 return offeringRepository.loadUnexpanded(historicalOffering.id, currentCycle)
                     .then(updateCurrentOffering)
+                    .then(saveCurrentOffering)
                     .catch(ignoreMissingOffering);
 
                 function updateCurrentOffering(currentOffering) {
-                    Logger.log(process.memoryUsage());
-
                     ensureHistoryExists();
                     copyHistoricalPricingAndFunding();
                     copyHistoricalSelection();
@@ -96,18 +85,22 @@ function updateHistoricalFundingForCycleAsAdmin(cycleId) {
                         currentOffering.history = currentOffering.history || {};
                     }
                     function copyHistoricalPricingAndFunding() {
-                        currentOffering.history[ year ] = {
+                        currentOffering.history[ previousCycle.year ] = {
                             pricing: _.clone(historicalOffering.pricing),
                             funding: _.clone(historicalOffering.funding)
                         };
                     }
                     function copyHistoricalSelection() {
                         if (historicalOffering.selection) {
-                            currentOffering.history[ year ].selection = _.clone(historicalOffering.selection);
+                            currentOffering.history[ previousCycle.year ].selection = _.clone(historicalOffering.selection);
                         }
                     }
                 }
+                function saveCurrentOffering(currentOffering) {
+                    return offeringRepository.update(currentOffering, currentCycle);
+                }
                 function ignoreMissingOffering(e) {
+                    Logger.log(e.stack);
                     missingCount++;
                 }
             }
