@@ -251,7 +251,7 @@ describe( 'The Validator Module', function() {
         });
     });
 
-    describe.only('getRequiredPropertiesFor', function(){ //TODO: remove only
+    describe('getRequiredPropertiesFor', function(){
         it('should be a function', function(){
             expect(Validator.getRequiredPropertiesFor).to.be.a('function');
         });
