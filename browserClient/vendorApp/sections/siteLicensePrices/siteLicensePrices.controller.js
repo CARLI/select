@@ -323,29 +323,39 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             return;
         }
 
-        if ( offering.siteLicensePriceUpdated || offering.suPricesUpdated ){
-            offeringCell.addClass('updated');
+        setOfferingUpdatedState();
+        setOfferingFlaggedState();
 
-            if (offeringService.getFlaggedState(offering, vm.cycle)) {
+        function setOfferingUpdatedState(){
+            if ( offering.siteLicensePriceUpdated ) {
+                offeringCell.addClass('updated');
+            }
+            else {
+                offeringCell.removeClass('updated');
+            }
+        }
+
+        function setOfferingFlaggedState(){
+            if ( vendorHasUpdatedTheOfferingsPricing() && offeringService.getFlaggedState(offering, vm.cycle) ){
                 addFlagDisplay();
             }
             else {
                 removeFlagDisplay();
             }
-        }
-        else {
-            offeringCell.removeClass('updated');
-            removeFlagDisplay();
-        }
 
-        function addFlagDisplay(){
-            offeringCell.addClass('flagged');
-            offeringCell.attr('title', offering.flaggedReason[0]);
-        }
+            function vendorHasUpdatedTheOfferingsPricing(){
+                return offering.siteLicensePriceUpdated || offering.suPricesUpdated;
+            }
 
-        function removeFlagDisplay(){
-            offeringCell.removeClass('flagged');
-            offeringCell.attr('title', '');
+            function addFlagDisplay(){
+                offeringCell.addClass('flagged');
+                offeringCell.attr('title', offering.flaggedReason[0]);
+            }
+
+            function removeFlagDisplay(){
+                offeringCell.removeClass('flagged');
+                offeringCell.attr('title', '');
+            }
         }
     }
 
