@@ -486,6 +486,8 @@ function getFlaggedState(offering, cycleArgument) {
         return c;
     }
 
+    delete offering.flaggedReason;
+
     if ( userFlaggedState() !== undefined ){
         return userFlaggedState();
     }
@@ -525,8 +527,12 @@ function getFlaggedState(offering, cycleArgument) {
             if (flagGreaterThan5PercentReduction) {
                 flagReasons.push('decreased by more than 5% compared to last year');
             }
-            offering.flaggedReason  = flagReasons;
-            return flagSiteLicensePrice || flagSuPrices || flagExceedsPriceCap || flagGreaterThan5PercentReduction;
+
+            var isFlagged = flagSiteLicensePrice || flagSuPrices || flagExceedsPriceCap || flagGreaterThan5PercentReduction;
+            if ( isFlagged ){
+                offering.flaggedReason = flagReasons;
+            }
+            return isFlagged;
         }
         return false;
     }

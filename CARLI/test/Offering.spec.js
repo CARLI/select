@@ -445,6 +445,63 @@ function runOfferingSpecificTests(testCycle) {
 
                 expect(offeringRepository.getFlaggedState(testOffering)).to.equal(false);
             });
+
+            describe(' side effect: offering.flaggedReason - an array describing why the offering was flagged', function(){
+                it('should contain "flagged by staff" if it was manually set', function() {
+                    var testOffering = validOfferingData();
+                    testOffering.flagged = true;
+                    offeringRepository.getFlaggedState(testOffering);
+
+                    expect(testOffering.flaggedReason).to.deep.equal(['flagged by CARLI staff']);
+                });
+
+                it('should be empty if the offering was manually un-flagged', function() {
+                    var testOffering = validOfferingData();
+                    testOffering.flagged = false;
+                    offeringRepository.getFlaggedState(testOffering);
+
+                    expect(testOffering.flaggedReason).to.be.an('undefined');
+                });
+
+                it('should be empty if the offering has valid pricing data', function() {
+                    var testOffering = validOfferingData();
+                    offeringRepository.getFlaggedState(testOffering);
+
+                    expect(testOffering.flaggedReason).to.be.an('undefined');
+                });
+
+                it('should contain "a site license price for less than a SU price" if the offering has an su price greater than the site license price', function() {
+                    var testOffering = validOfferingData();
+                    testOffering.suPricesUpdated = '2015-01-01';
+                    testOffering.pricing = {
+                        site: 1000,
+                        su: [{
+                            users: 2,
+                            price: 2000
+                        }]
+                    };
+                    offeringRepository.getFlaggedState(testOffering);
+                    expect(testOffering.flaggedReason).to.deep.equal(['a site license price for less than a SU price']);
+                });
+
+                it('should be empty if the offering had invalid pricing which was then fixed', function() {
+                    var testOffering = validOfferingData();
+                    testOffering.suPricesUpdated = '2015-01-01';
+                    testOffering.pricing = {
+                        site: 1000,
+                        su: [{
+                            users: 2,
+                            price: 2000
+                        }]
+                    };
+                    offeringRepository.getFlaggedState(testOffering);
+
+                    testOffering.pricing.site = 9999;
+                    offeringRepository.getFlaggedState(testOffering);
+
+                    expect(testOffering.flaggedReason).to.be.an('undefined');
+                });
+            });
         });
 
         describe('getOfferingsById', function(){
