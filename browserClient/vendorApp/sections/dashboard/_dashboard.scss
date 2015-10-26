@@ -43,4 +43,21 @@
             top: 50%;
         }
     }
+
+    button.expand {
+        color: $purple;
+        margin-left: 1rem;
+        padding-left: 0.5rem;
+
+        .fa {
+            color: $black;
+            font-weight: 700;
+        }
+
+        &.expanded {
+            .fa {
+                @include vendor-prefix(transform, 'rotate(90deg)');
+            }
+        }
+    }
 }
