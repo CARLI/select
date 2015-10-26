@@ -244,11 +244,13 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
         if (offering.history && offering.history[lastYear]) {
             var funding = offering.history[lastYear].funding;
 
-            if (funding.fundedByPercentage && funding.fundedPercent > 0) {
-                return '('+ funding.fundedPercent +'% Funded)';
-            }
-            if (!funding.fundedByPercentage && funding.fundedPrice > 0) {
-                return '(Funded)';
+            if (funding) {
+                if (funding.fundedByPercentage && funding.fundedPercent > 0) {
+                    return '('+ funding.fundedPercent +'% Funded)';
+                }
+                if (!funding.fundedByPercentage && funding.fundedPrice > 0) {
+                    return '(Funded)';
+                }
             }
         }
         return indicator;
