@@ -4,6 +4,7 @@ var couchUtils = require('../../CARLI/Store/CouchDb/Utils')();
 var cycleRepository = require('../../CARLI/Entity/CycleRepository');
 var cycleRepositoryForVendor = require('../../CARLI/Entity/CycleRepositoryForVendor');
 var offeringRepository = require('../../CARLI/Entity/OfferingRepository.js');
+var productRepository = require('../../CARLI/Entity/ProductRepository.js');
 var vendorRepository = require('../../CARLI/Entity/VendorRepository');
 var vendorStatusRepository = require('../../CARLI/Entity/VendorStatusRepository.js');
 
@@ -282,25 +283,14 @@ function getDatabaseStatusForVendor(vendor, cycleId) {
 
 function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
     var cycle = null;
-    var flaggedOfferingsCount = 0;
-    var flaggedOfferingsReason = {};
 
     return vendorRepository.load(vendorId)
         .then(loadCycleForVendor, catchNoVendor)
-        .then(function(vendorCycle){
-            cycle = vendorCycle;
-            return offeringRepository.listOfferingsUnexpanded(cycle);
-        }, catchNoCycle)
-        .then(function(offeringsList){
-            offeringsList.forEach(function(offering){
-                if ( offeringRepository.getFlaggedState(offering, cycle) ){
-                    flaggedOfferingsCount++;
-                    offering.flaggedReason.forEach(function(reason){
-                        flaggedOfferingsReason[reason] = (flaggedOfferingsReason[reason] || 0) + 1;
-                    });
-                }
-            });
-        })
+        .then(saveCycle, catchNoCycle)
+        .then(offeringRepository.listOfferingsUnexpanded)
+        .then(getFlaggedOfferings)
+        .then(populateProductsForFlaggedOfferings)
+        .then(computeFlaggedOfferingReasons)
         .then(updateVendorStatusFlaggedOfferings)
         .catch(function(err){
             Logger.log('error updating flagged offerings', err);
@@ -315,15 +305,94 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
         Logger.log('error updating Flagged Offerings for vendor' + vendorId +' - No Vendor', err);
     }
 
+    function saveCycle(vendorCycle){
+        cycle = vendorCycle;
+        return cycle;
+    }
+
     function catchNoCycle( err ){
         Logger.log('error updating Flagged Offerings for vendor' + vendorId +' - No Cycle', err);
     }
 
-    function updateVendorStatusFlaggedOfferings(){
+    function getFlaggedOfferings(listOfAllUnexpandedOfferings){
+        return listOfAllUnexpandedOfferings.filter(flagged);
+
+        function flagged(offering){
+            return offeringRepository.getFlaggedState(offering, cycle);
+        }
+    }
+
+    function populateProductsForFlaggedOfferings(flaggedOfferings){
+        return getProductIds(flaggedOfferings)
+            .then(loadProductsById)
+            .then(mapProductsById)
+            .then(replaceProductIdsWithProducts);
+
+        function getProductIds(listOfOfferings){
+            return Q( listOfOfferings.map(getProductIdFromUnexpandedOffering));
+        }
+
+        function loadProductsById(productIds){
+            return productRepository.getProductsById(productIds, cycle);
+        }
+
+        function mapProductsById(listOfProducts){
+            var results = {};
+
+            listOfProducts.forEach(function(product){
+                results[product.id] = product;
+            });
+
+            return results;
+        }
+
+        function replaceProductIdsWithProducts(productMap){
+            return flaggedOfferings.map(replaceOfferingProduct);
+
+            function replaceOfferingProduct(offering){
+                var productId = getProductIdFromUnexpandedOffering(offering);
+                offering.product = productMap[productId];
+                return offering;
+            }
+        }
+    }
+
+    function getProductIdFromUnexpandedOffering(offering){
+        return offering.product;
+    }
+
+    function computeFlaggedOfferingReasons(flaggedOfferings) {
+        var flaggedOfferingsCount = 0;
+        var flaggedOfferingsReasonSummary = {};
+        var flaggedOfferingsReasonProductDetails = {};
+
+        flaggedOfferings.forEach(function (offering) {
+            var productName = offering.product.name || '';
+            flaggedOfferingsCount++;
+            offering.flaggedReason.forEach(function (reason) {
+                flaggedOfferingsReasonSummary[reason] = flaggedOfferingsReasonSummary[reason] || 0;
+                flaggedOfferingsReasonSummary[reason]++;
+                
+                flaggedOfferingsReasonProductDetails[reason] = flaggedOfferingsReasonProductDetails[reason] || {};
+                flaggedOfferingsReasonProductDetails[reason][productName] = (flaggedOfferingsReasonProductDetails[reason][productName] || 0) + 1;
+            });
+        });
+
+        return {
+            flaggedOfferingsCount: flaggedOfferings.length,
+            flaggedOfferingsReasonSummary: flaggedOfferingsReasonSummary,
+            flaggedOfferingsReasonProductDetails: flaggedOfferingsReasonProductDetails
+        };
+    }
+
+    function updateVendorStatusFlaggedOfferings(flaggedReasons){
         return vendorStatusRepository.getStatusForVendor(vendorId, cycle)
             .then(function(vendorStatus){
-                vendorStatus.flaggedOfferingsCount = flaggedOfferingsCount;
-                vendorStatus.flaggedOfferingsReasons = flaggedOfferingsReason;
+                vendorStatus.flaggedOfferingsCount = flaggedReasons.flaggedOfferingsCount;
+                vendorStatus.flaggedOfferingsReasons = {
+                    summary: flaggedReasons.flaggedOfferingsReasonSummary,
+                    details: flaggedReasons.flaggedOfferingsReasonProductDetails
+                };
                 return vendorStatusRepository.createOrUpdate(vendorStatus, cycle);
             });
     }

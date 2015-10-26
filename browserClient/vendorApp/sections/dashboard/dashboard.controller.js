@@ -7,6 +7,7 @@ function dashboardController($scope, authService, cycleService, emailService, ve
     var cycle = cycleService.getCurrentCycle();
     var computeObjectEqualityDeeply = true;
 
+    vm.flaggedReasonDetailsExpanded = {};
     vm.vendorStatus = null;
     vm.vendorDoneEnteringPrices = false;
 

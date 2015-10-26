@@ -84,6 +84,13 @@
             "description": "If this is persisted it means the flag was cleared manually. If the property is absent the app computes the state.",
             "type": "boolean"
         },
+        "flaggedReason": {
+            "description": "Holds an array of reasons that the Offering was flagged",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
         "siteLicensePriceUpdated": {
             "description": "Starts empty when a new cycle is created, used to track whether the vendor has updated the pricing yet",
             "$ref": "./Date.json"
