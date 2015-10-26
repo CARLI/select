@@ -791,7 +791,7 @@ function getHistoricalFundedSiteLicensePrice(offering, year) {
     }
 
     var lastYearsPrice = getLastYearsPrice();
-    var lastYearsFunding = offering.history[year].funding;
+    var lastYearsFunding = getLastYearsFunding();
 
     return getFundedPrice(lastYearsPrice, lastYearsFunding);
 
@@ -800,6 +800,12 @@ function getHistoricalFundedSiteLicensePrice(offering, year) {
             return offering.history[ year ].pricing.site;
         }
         return 0;
+    }
+    function getLastYearsFunding() {
+        if (offering.history && offering.history.hasOwnProperty(year)) {
+            return offering.history[ year ].funding;
+        }
+        return {};
     }
 }
 
