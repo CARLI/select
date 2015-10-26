@@ -363,22 +363,25 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
 
     function computeFlaggedOfferingReasons(flaggedOfferings) {
         var flaggedOfferingsCount = 0;
-        var flaggedOfferingsReason = {};
+        var flaggedOfferingsReasonSummary = {};
+        var flaggedOfferingsReasonProductDetails = {};
 
         flaggedOfferings.forEach(function (offering) {
-            if (offeringRepository.getFlaggedState(offering, cycle)) {
-                var productName = offering.product.name || '';
-                flaggedOfferingsCount++;
-                offering.flaggedReason.forEach(function (reason) {
-                    flaggedOfferingsReason[reason] = flaggedOfferingsReason[reason] || {};
-                    flaggedOfferingsReason[reason][productName] = (flaggedOfferingsReason[reason][productName] || 0) + 1;
-                });
-            }
+            var productName = offering.product.name || '';
+            flaggedOfferingsCount++;
+            offering.flaggedReason.forEach(function (reason) {
+                flaggedOfferingsReasonSummary[reason] = flaggedOfferingsReasonSummary[reason] || 0;
+                flaggedOfferingsReasonSummary[reason]++;
+                
+                flaggedOfferingsReasonProductDetails[reason] = flaggedOfferingsReasonProductDetails[reason] || {};
+                flaggedOfferingsReasonProductDetails[reason][productName] = (flaggedOfferingsReasonProductDetails[reason][productName] || 0) + 1;
+            });
         });
 
         return {
-            flaggedOfferingsCount: flaggedOfferingsCount,
-            flaggedOfferingsReason: flaggedOfferingsReason
+            flaggedOfferingsCount: flaggedOfferings.length,
+            flaggedOfferingsReasonSummary: flaggedOfferingsReasonSummary,
+            flaggedOfferingsReasonProductDetails: flaggedOfferingsReasonProductDetails
         };
     }
 
@@ -386,7 +389,10 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
         return vendorStatusRepository.getStatusForVendor(vendorId, cycle)
             .then(function(vendorStatus){
                 vendorStatus.flaggedOfferingsCount = flaggedReasons.flaggedOfferingsCount;
-                vendorStatus.flaggedOfferingsReasons = flaggedReasons.flaggedOfferingsReason;
+                vendorStatus.flaggedOfferingsReasons = {
+                    summary: flaggedReasons.flaggedOfferingsReasonSummary,
+                    details: flaggedReasons.flaggedOfferingsReasonProductDetails
+                };
                 return vendorStatusRepository.createOrUpdate(vendorStatus, cycle);
             });
     }
