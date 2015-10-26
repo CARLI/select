@@ -173,7 +173,7 @@ function getDataForBannerExport(cycle, batchId) {
 
         function formatBatchCreateDate() {
             var d = new Date();
-            var mm = d.getMonth();
+            var mm = d.getMonth() + 1;
             var dd = d.getDate();
 
             if (mm < 10) {
