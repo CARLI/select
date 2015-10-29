@@ -30,8 +30,9 @@ function returnErrorHandlerFunction($rootScope, $location, alertService, authSer
             handleBackendTimeout();
         }
         else {
-            Logger.log('handled error ', error);
-            showErrorToUser(error);
+            Logger.log('unhandled error ', error);
+            showErrorToUser(error.message ? error.message : error);
+            throw error;
         }
     }
 
