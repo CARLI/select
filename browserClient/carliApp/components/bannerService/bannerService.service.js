@@ -22,7 +22,7 @@ function bannerService(CarliModules, $q, browserDownloadService) {
         function getBannerExportFilename() {
             var d = new Date();
             var month  = zeroPaddedString(d.getMonth());
-            var day    = zeroPaddedString(d.getDate());
+            var day    = zeroPaddedString(d.getDate()+1);
             var hour   = zeroPaddedString(d.getHours());
             var minute = zeroPaddedString(d.getMinutes());
             var second = zeroPaddedString(d.getSeconds());
