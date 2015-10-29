@@ -154,7 +154,7 @@ function getDataForBannerExport(cycle, batchId) {
         });
 
         lines.unshift(generateBannerHeader());
-        return lines.join("\n");
+        return lines.join("\r\n");
 
         function forEachRecordByLibraryAndDetailCode(callback) {
             Object.keys(bannerFeedDataByLibraryAndDetailCode).forEach(function(libraryId) {
