@@ -209,7 +209,8 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             return offeringService
                 .updateSuCommentForAllLibrariesForProduct(vm.vendorId, productId, numSu, newCommentText)
                 .then(updateMap)
-                .then(updateCommentMarker);
+                .then(updateCommentMarker)
+                .then(syncData);
 
             function updateMap(passthrough) {
                 vm.suCommentsByProduct[productId][numSu] = newCommentText;
@@ -448,13 +449,11 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         function updateVendorFlaggedOfferings(){
             return vendorStatusService.updateVendorStatusFlaggedOfferings( vm.vendorId, vm.cycle );
         }
-
-        function syncData(){
-            return cycleService.syncDataBackToCarli();
-        }
     }
 
-
+    function syncData(){
+        return cycleService.syncDataBackToCarli();
+    }
 
     function addSuPricingLevel( numberOfUsers ){
         var newLevel = makeSuLevel( numberOfUsers );
