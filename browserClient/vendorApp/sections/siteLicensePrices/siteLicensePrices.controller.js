@@ -191,7 +191,9 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             return offeringService.update(offering)
                 .then(offeringService.load)
                 .then(updateRevision)
-                .then(updateCommentMarker);
+                .then(updateCommentMarker)
+                .then(syncData)
+                .catch(syncDataError);
 
             function updateRevision(updatedOffering) {
                 offering._rev = updatedOffering._rev;
@@ -456,15 +458,16 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         function updateVendorFlaggedOfferings(){
             return vendorStatusService.updateVendorStatusFlaggedOfferings( vm.vendorId, vm.cycle );
         }
-
-        function syncData(){
-            return cycleService.syncDataBackToCarli();
-        }
-
-        function syncDataError( err ){
-            Logger.log( 'error syncing data',err );
-        }
     }
+
+    function syncData(){
+        return cycleService.syncDataBackToCarli();
+    }
+
+    function syncDataError( err ){
+        Logger.log( 'error syncing data',err );
+    }
+
 
     function quickPricingCallback(mode, quickPricingValue) {
         var selectedLibraryIds = Object.keys(vm.selectedLibraryIds).filter(function (libraryId) {

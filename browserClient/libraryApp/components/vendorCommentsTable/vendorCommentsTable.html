@@ -1,0 +1,14 @@
+<ul class="price-table" ng-if="vm.offering.vendorComments">
+    <li class="header">
+        <div class="column users">Users</div>
+        <div class="column comment">Comment</div>
+    </li>
+    <li ng-if="vm.offering.vendorComments.site">
+        <div class="column users">Site License</div>
+        <div class="column comment">{{ vm.offering.vendorComments.site }}</div>
+    </li>
+    <li ng-repeat="su in vm.offering.vendorComments.su | orderBy:users">
+        <div class="column users">{{ su.users }} S.U.</div>
+        <div class="column comment">{{ su.comment }}</div>
+    </li>
+</ul>
