@@ -1,0 +1,31 @@
+vendor-comments-table {
+    .price-table {
+        @extend .zebra-table;
+
+        li {
+            .column {
+                padding: 0.5rem;
+
+                &.users {
+                    color: $black;
+                    flex-basis: 25%;
+                    font-family: Verdana, sans-serif;
+                    font-size: 1rem;
+                    font-weight: normal;
+                }
+                
+                &.comment {
+                    flex-basis: 75%;
+                    font-size: 12px;
+                    font-weight: normal;
+                }
+            }
+
+            &.header {
+                .column {
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+}
