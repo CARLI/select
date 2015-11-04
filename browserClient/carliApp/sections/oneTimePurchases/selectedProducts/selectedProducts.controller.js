@@ -22,6 +22,7 @@
         vm.isFunded = isFunded;
         vm.getFundedSelectionPrice = getFundedSelectionPrice;
         vm.getFundedSiteLicensePrice = getFundedSiteLicensePrice;
+        vm.saveComments = saveComments;
 
         initFilterableByPurchased($scope, vm);
         activate();
@@ -34,6 +35,7 @@
 
         function setCycleToOneTimePurchase(){
             return cycleService.load(config.oneTimePurchaseProductsCycleDocId).then(function(oneTimePurchaseCycle){
+                vm.cycle = oneTimePurchaseCycle;
                 cycleService.setCurrentCycle(oneTimePurchaseCycle);
                 return oneTimePurchaseCycle;
             });
@@ -87,6 +89,7 @@
                 activityLogService.logOtpPurchase(offering);
                 refreshOfferingsForLibrary(vm.library);
             })
+            .then(syncDataToVendor(offering))
             .catch(function(error){
                 alertService.putAlert('Product purchase was not successful, please try again.', {severity: 'danger'});
                 errorHandler(error);
@@ -103,11 +106,39 @@
                 activityLogService.logOtpPurchaseCancelled(offering);
                 refreshOfferingsForLibrary(vm.library);
             })
+            .then(syncDataToVendor(offering))
             .catch(function(error){
                 alertService.putAlert('Product purchase was not cancelled, please try again.', {severity: 'danger'});
                 errorHandler(error);
                 refreshOfferingsForLibrary(vm.library);
             });
+        }
+
+        function saveComments(offering){
+            return saveOffering(offering)
+                .then(function(){
+                    alertService.putAlert(productService.getProductDisplayName(offering.product) + " comments saved", {severity: 'success'});
+                    refreshOfferingsForLibrary(vm.library);
+                })
+                .catch(function(error){
+                    alertService.putAlert('Product comments were not saved, please try again.', {severity: 'danger'});
+                    errorHandler(error);
+                    refreshOfferingsForLibrary(vm.library);
+                });
+        }
+
+        function saveOffering(offering){
+            return offeringService.update(offering)
+                .then(syncDataToVendor(offering))
+                .finally(function(){
+                    refreshOfferingsForLibrary(vm.library);
+                });
+        }
+
+        function syncDataToVendor(offering){
+            return function(){
+                return cycleService.syncDataToVendorDatabase(offering.vendorId, vm.cycle)
+            }
         }
 
         function computeTotalPurchasesAmount() {

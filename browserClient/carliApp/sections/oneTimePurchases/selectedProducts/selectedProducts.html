@@ -59,10 +59,19 @@
                             <div class="product-boolean-item">{{ ::vm.englishSummaryOfDisplayProperty(offering) }}</div>
                         </div>
                         <div class="column">
-                            <div class="content-item">
-                                <label>Comments for Library:</label>
-                                <p class="comments">{{ offering.libraryComments || offering.product.comments }}</p>
+                            <div class="content-item comment-item">
+                                <label>Internal Discussion:</label>
+                                <textarea class="comments" ng-model="offering.internalComments"></textarea>
                             </div>
+                            <div class="content-item comment-item">
+                                <label>Comments for Libraries:</label>
+                                <textarea class="comments" ng-model="offering.libraryComments"></textarea>
+                            </div>
+                            <div class="content-item comment-item">
+                                <label>Vendor Pricing Comments:</label>
+                                <textarea class="comments" ng-model="offering.vendorComments.site"></textarea>
+                            </div>
+                            <button class="carli-button" ng-click="vm.saveComments(offering)">Save Comments</button>
                         </div>
                         <div class="column">
                             <div ng-if="!offering.selection">
