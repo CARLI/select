@@ -1,7 +1,7 @@
 angular.module('vendor.vendorDataService')
     .service('vendorDataService', vendorDataService);
 
-function vendorDataService(cycleService, vendorStatusService) {
+function vendorDataService(config, cycleService, vendorStatusService) {
     return {
         isVendorAllowedToMakeChangesToCycle: isVendorAllowedToMakeChangesToCycle,
         updateAndSyncVendorStatus: updateAndSyncVendorStatus
@@ -21,6 +21,10 @@ function vendorDataService(cycleService, vendorStatusService) {
         function cycleIsOpenToVendorsForPricing(){
             var cycleIsOpen = (cycle.status == cycleService.CYCLE_STATUS_VENDOR_PRICING);
             console.log('  cycle is open to vendors for pricing: '+cycleIsOpen);
+            if ( cycle.id === config.oneTimePurchaseProductsCycleDocId ){
+                console.log('  *One-Time Purchase cycle is always open');
+                cycleIsOpen = true;
+            }
             return cycleIsOpen;
         }
 
