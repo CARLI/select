@@ -137,8 +137,8 @@
 
         function syncDataToVendor(offering){
             return function(){
-                return cycleService.syncDataToVendorDatabase(offering.vendorId, vm.cycle)
-            }
+                return cycleService.syncDataToVendorDatabase(offering.vendorId, vm.cycle);
+            };
         }
 
         function computeTotalPurchasesAmount() {
