@@ -55,7 +55,7 @@ function addOneTimePurchasesController( $q, $location, config, activityLogServic
     }
 
     function loadOfferings(cycle) {
-        return cycleService.listAllOfferingsForCycle(cycle)
+        return cycleService.listAllActiveOfferingsForCycle(cycle)
             .then(function(offeringList){
                 vm.availableForPurchase = offeringList.filter(availableForPurchase);
                 vm.purchased = offeringList.filter(purchased);
