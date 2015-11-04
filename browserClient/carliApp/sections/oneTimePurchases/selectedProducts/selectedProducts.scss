@@ -131,8 +131,12 @@
                     @include body-text;
                     background-color: $white;
                     border: $default-border;
-                    min-height: 4rem;
+                    height: 5rem;
                     padding: 0.5rem;
+                }
+
+                .comment-item + .comment-item{
+                    margin-top: 1rem;
                 }
 
                 .content-item-group {
