@@ -63,7 +63,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
     }
 
     function loadOfferings() {
-        vm.loadingPromise = cycleService.listAllOfferingsForCycle(vm.cycle)
+        vm.loadingPromise = cycleService.listAllActiveOfferingsForCycle(vm.cycle)
             .then(function(offeringsList){
                 vm.offerings = offeringsList;
             });
