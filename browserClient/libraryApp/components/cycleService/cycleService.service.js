@@ -121,11 +121,9 @@ function cycleService( CarliModules, $q, errorHandler, userService ) {
 
         function productIsActive(offering){
             var product = offering.product || {};
-
-            var productIsActive = !!(product.isActive);
-            var licenseIsActive = !!(product.license ? product.license.isActive : true);
-            var  vendorIsActive = !!(product.vendor  ? product.vendor.isActive  : true);
-            return productIsActive && licenseIsActive && vendorIsActive;
+            var licenseIsActive = product.license ? product.license.isActive : true;
+            var  vendorIsActive = product.vendor  ? product.vendor.isActive  : true;
+            return product.isActive && licenseIsActive && vendorIsActive;
         }
     }
 

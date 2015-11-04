@@ -36,7 +36,7 @@ function unselectedProductsController($scope, cycleService, offeringService, pro
     }
 
     function loadOfferingsFor(cycle){
-        return cycleService.listAllOfferingsForCycle(cycle)
+        return cycleService.listAllActiveOfferingsForCycle(cycle)
             .then(function(offeringsList){
                 vm.offerings = offeringsList.filter(unselected);
             });
