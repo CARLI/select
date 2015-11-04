@@ -24,6 +24,7 @@ function cycleService( CarliModules, $q, errorHandler, userService ) {
         },
         listSelectionsForCycle: listSelectionsForCycle,
         listAllOfferingsForCycle: listAllOfferingsForCycle,
+        listAllActiveOfferingsForCycle: listAllActiveOfferingsForCycle,
         listClosedAndArchivedCycles: listClosedAndArchivedCycles,
         getHistoricalSelectionDataForProductForCycle: getHistoricalSelectionDataForProductForCycle,
         load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ).catch(errorHandler); },
@@ -109,6 +110,23 @@ function cycleService( CarliModules, $q, errorHandler, userService ) {
     function listAllOfferingsForCycle( cycle ){
         return $q.when(middlewareModule.listOfferingsForLibraryWithExpandedProducts(currentUser.library.id, cycle.id))
             .catch(errorHandler);
+    }
+
+    function listAllActiveOfferingsForCycle( cycle ){
+        return listAllOfferingsForCycle(cycle)
+            .then(function(listOfOfferings){
+                return listOfOfferings.filter(productIsActive);
+            })
+            .catch(errorHandler);
+
+        function productIsActive(offering){
+            var product = offering.product || {};
+
+            var productIsActive = !!(product.isActive);
+            var licenseIsActive = !!(product.license ? product.license.isActive : true);
+            var  vendorIsActive = !!(product.vendor  ? product.vendor.isActive  : true);
+            return productIsActive && licenseIsActive && vendorIsActive;
+        }
     }
 
     function getHistoricalSelectionDataForProductForCycle( productId, cycle ) {
