@@ -263,20 +263,22 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
     function addCommentMarkerTo(cell) {
         var commentMarker = $('<div tabindex="0" class="comment-marker fa fa-comment-o" style="display: none;"></div>');
-        commentMarker.on('focus', editComment);
+        commentMarker.on('focus', editCommentMarker);
         cell.append(commentMarker);
 
         return commentMarker;
+    }
 
-        function editComment() {
-            var libraryId = cell.parent().data('libraryId');
-            var productId = cell.parent().data('productId');
-            var offering = vm.offeringsForLibraryByProduct[productId][libraryId];
+    function editCommentMarker(e) {
+        var $marker = $(this);
+        var $cell = $marker.parent();
+        var libraryId = $cell.parent().data('libraryId');
+        var productId = $cell.parent().data('productId');
+        var offering = vm.offeringsForLibraryByProduct[productId][libraryId];
 
-            $scope.$apply(function() {
-                showCommentModalFor(offering, cell);
-            });
-        }
+        $scope.$apply(function() {
+            showCommentModalFor(offering, $cell);
+        });
     }
 
     function setCommentMarkerVisibility(cell) {
