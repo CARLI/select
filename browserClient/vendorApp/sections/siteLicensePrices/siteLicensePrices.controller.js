@@ -74,17 +74,27 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
     function loadLibraries() {
         return libraryService.listActiveLibraries().then(function (libraries) {
-            vm.libraries = $filter('orderBy')(libraries, 'name');
+            vm.libraries = libraries.sort(byName);
             initializeSelectedLibraryIds();
         });
     }
 
     function loadProducts() {
         return productService.listProductsWithOfferingsForVendorId( authService.getCurrentUser().vendor.id ).then(function (products) {
-            vm.products = $filter('orderBy')(products, 'name');
+            vm.products = products.sort(byName);
             initializeSelectedProductIds();
         });
     }
+
+    function byName(entity1, entity2){
+        if ( entity1.name < entity2.name ){
+            return -1;
+        }
+        else {
+            return 1;
+        }
+    }
+
 
     function initializeSelectedLibraryIds() {
         vm.libraries.forEach(function(library) {
