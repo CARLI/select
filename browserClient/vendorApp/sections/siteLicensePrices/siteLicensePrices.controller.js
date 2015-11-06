@@ -74,17 +74,27 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
     function loadLibraries() {
         return libraryService.listActiveLibraries().then(function (libraries) {
-            vm.libraries = $filter('orderBy')(libraries, 'name');
+            vm.libraries = libraries.sort(byName);
             initializeSelectedLibraryIds();
         });
     }
 
     function loadProducts() {
         return productService.listProductsWithOfferingsForVendorId( authService.getCurrentUser().vendor.id ).then(function (products) {
-            vm.products = $filter('orderBy')(products, 'name');
+            vm.products = products.sort(byName);
             initializeSelectedProductIds();
         });
     }
+
+    function byName(entity1, entity2){
+        if ( entity1.name < entity2.name ){
+            return -1;
+        }
+        else {
+            return 1;
+        }
+    }
+
 
     function initializeSelectedLibraryIds() {
         vm.libraries.forEach(function(library) {
@@ -125,6 +135,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     }
 
     function buildPriceArray() {
+        console.time('buildPricingGrid');
         vm.changedOfferings = [];
         vm.offeringsForLibraryByProduct = {};
 
@@ -148,6 +159,10 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             });
             $('#site-pricing-grid').append(row);
         });
+
+        attachGridCellEvents();
+
+        console.timeEnd('buildPricingGrid');
 
         function generateLibraryRow(library) {
             var row = $('<div class="price-row offering-row">');
@@ -173,9 +188,18 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
             applyCssClassesToOfferingCell(offeringCell, offering);
 
-            setCommentMarkerVisibility(cellContents);
+            if (offering && offering.vendorComments && offering.vendorComments.site) {
+                cellContents.find('.comment-marker').show();
+            }
 
             return offeringCell;
+        }
+
+        function attachGridCellEvents(){
+            $('body')
+                .on('blur', '.price-editable', applyPricingChangesToCell)
+                .on('focus', '.comment-marker', editCommentMarker)
+                .on('focus', '.price', editCell);
         }
     }
 
@@ -214,55 +238,48 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             price = price.toFixed(2);
         }
         var cell = $('<div tabindex="0" class="price" role="gridcell"></div>').text(price);
-        cell.on('focus', onClick);
 
-        addCommentMarkerTo(cell);
-
-        return cell;
-
-        function onClick() {
-            var clickAction = vm.isCommentModeEnabled ? editComment : makeEditable;
-            clickAction(this);
-        }
-
-        function editComment() {
-            var libraryId = cell.parent().data('libraryId');
-            var productId = cell.parent().data('productId');
-            var offering = vm.offeringsForLibraryByProduct[productId][libraryId];
-
-            showCommentModalFor(offering, cell);
-            $scope.$apply(function() {
-                vm.isCommentModeEnabled = false;
-            });
-        }
-
-        function makeEditable(element) {
-            var $this = $(element);
-            var price = $this.text();
-            var input = createEditableOfferingCell(price);
-            $this.replaceWith(input);
-            input.focus().select();
-        }
-    }
-
-    function addCommentMarkerTo(cell) {
-        var commentMarker = $('<div tabindex="0" class="comment-marker fa fa-comment-o"></div>');
-        commentMarker.on('focus', editComment);
+        var commentMarker = $('<div tabindex="0" class="comment-marker fa fa-comment-o" style="display: none;"></div>');
         cell.append(commentMarker);
 
-        commentMarker.hide();
+        return cell;
+    }
 
-        return commentMarker;
+    function editCell(e) {
+        var clickAction = vm.isCommentModeEnabled ? editCellComment : editCellPrice;
+        clickAction(this);
+    }
 
-        function editComment() {
-            var libraryId = cell.parent().data('libraryId');
-            var productId = cell.parent().data('productId');
-            var offering = vm.offeringsForLibraryByProduct[productId][libraryId];
+    function editCellComment(element) {
+        var $el = $(element);
+        var libraryId = $el.parent().data('libraryId');
+        var productId = $el.parent().data('productId');
+        var offering = vm.offeringsForLibraryByProduct[productId][libraryId];
 
-            $scope.$apply(function() {
-                showCommentModalFor(offering, cell);
-            });
-        }
+        showCommentModalFor(offering, $el);
+        $scope.$apply(function() {
+            vm.isCommentModeEnabled = false;
+        });
+    }
+
+    function editCellPrice(element) {
+        var $this = $(element);
+        var price = $this.text();
+        var input = createEditableOfferingCell(price);
+        $this.replaceWith(input);
+        input.focus().select();
+    }
+
+    function editCommentMarker(e) {
+        var $marker = $(this);
+        var $cell = $marker.parent();
+        var libraryId = $cell.parent().data('libraryId');
+        var productId = $cell.parent().data('productId');
+        var offering = vm.offeringsForLibraryByProduct[productId][libraryId];
+
+        $scope.$apply(function() {
+            showCommentModalFor(offering, $cell);
+        });
     }
 
     function setCommentMarkerVisibility(cell) {
@@ -362,28 +379,26 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     }
 
     function createEditableOfferingCell(price) {
-        var cell = $('<input class="price-editable" role="textbox" type="text" step=".01" min="0">').val(price);
-        cell.on('blur', makeReadOnly);
-        return cell;
+        return $('<input class="price-editable" role="textbox" type="text" step=".01" min="0">').val(price);
+    }
 
-        function makeReadOnly() {
-            var $this = $(this);
-            var offeringCell = $this.parent();
-            var offering = getOfferingForCell(offeringCell);
+    function applyPricingChangesToCell(e) {
+        var $this = $(this);
+        var offeringCell = $this.parent();
+        var offering = getOfferingForCell(offeringCell);
 
-            applyNewCellPricingToOffering(offeringCell, offering, $this.val());
+        applyNewCellPricingToOffering(offeringCell, offering, $this.val());
 
-            applyCssClassesToOfferingCell(offeringCell, offering);
+        applyCssClassesToOfferingCell(offeringCell, offering);
 
-            var textForOfferingPrice = '';
-            if ( offering && offering.pricing ){
-                textForOfferingPrice = offering.pricing.site;
-            }
-
-            var newReadOnlyCellContents = createReadOnlyOfferingCell(textForOfferingPrice);
-            $this.replaceWith(newReadOnlyCellContents);
-            setCommentMarkerVisibility(newReadOnlyCellContents);
+        var textForOfferingPrice = '';
+        if ( offering && offering.pricing ){
+            textForOfferingPrice = offering.pricing.site;
         }
+
+        var newReadOnlyCellContents = createReadOnlyOfferingCell(textForOfferingPrice);
+        $this.replaceWith(newReadOnlyCellContents);
+        setCommentMarkerVisibility(newReadOnlyCellContents);
     }
 
     function generateNewOffering(libraryId, productId, newPrice) {
