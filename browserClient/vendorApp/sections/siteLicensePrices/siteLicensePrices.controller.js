@@ -239,7 +239,8 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         }
         var cell = $('<div tabindex="0" class="price" role="gridcell"></div>').text(price);
 
-        addCommentMarkerTo(cell);
+        var commentMarker = $('<div tabindex="0" class="comment-marker fa fa-comment-o" style="display: none;"></div>');
+        cell.append(commentMarker);
 
         return cell;
     }
@@ -267,12 +268,6 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         var input = createEditableOfferingCell(price);
         $this.replaceWith(input);
         input.focus().select();
-    }
-
-    function addCommentMarkerTo(cell) {
-        var commentMarker = $('<div tabindex="0" class="comment-marker fa fa-comment-o" style="display: none;"></div>');
-        cell.append(commentMarker);
-        return commentMarker;
     }
 
     function editCommentMarker(e) {
