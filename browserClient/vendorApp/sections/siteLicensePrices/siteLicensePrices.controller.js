@@ -160,6 +160,8 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             $('#site-pricing-grid').append(row);
         });
 
+        attachGridCellEvents();
+
         console.timeEnd('buildPricingGrid');
 
         function generateLibraryRow(library) {
@@ -191,6 +193,13 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             }
 
             return offeringCell;
+        }
+
+        function attachGridCellEvents(){
+            $('body')
+                .on('blur', '.price-editable', applyPricingChangesToCell)
+                .on('focus', '.comment-marker', editCommentMarker)
+                .on('focus', '.price', editCell);
         }
     }
 
@@ -229,7 +238,6 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             price = price.toFixed(2);
         }
         var cell = $('<div tabindex="0" class="price" role="gridcell"></div>').text(price);
-        cell.on('focus', editCell);
 
         addCommentMarkerTo(cell);
 
@@ -263,9 +271,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
     function addCommentMarkerTo(cell) {
         var commentMarker = $('<div tabindex="0" class="comment-marker fa fa-comment-o" style="display: none;"></div>');
-        commentMarker.on('focus', editCommentMarker);
         cell.append(commentMarker);
-
         return commentMarker;
     }
 
@@ -378,9 +384,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     }
 
     function createEditableOfferingCell(price) {
-        var cell = $('<input class="price-editable" role="textbox" type="text" step=".01" min="0">').val(price);
-        cell.on('blur', applyPricingChangesToCell);
-        return cell;
+        return $('<input class="price-editable" role="textbox" type="text" step=".01" min="0">').val(price);
     }
 
     function applyPricingChangesToCell(e) {
