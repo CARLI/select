@@ -46,7 +46,7 @@
                 <div class="column header years">Years</div>
                 <div class="column header lastYearsPrice">Last Year's Price</div>
             </div>
-            <div class="price-row {{ ::library.id }}" ng-repeat="library in vm.libraries | orderBy: 'name'">
+            <div class="price-row {{ ::library.id }}" ng-repeat="library in vm.libraries">
                 <div class="column library">{{ ::library.name }}</div>
                 <div class="column size">{{ ::library.fte }}</div>
                 <div class="column type">{{ ::library.institutionType }}</div>
@@ -58,10 +58,10 @@
         <div class="pricing-grid-container" id="site-pricing-grid-container">
             <div class="pricing-grid" id="site-pricing-grid">
                 <div class="price-cap price-row" ng-show="vm.viewOptions.priceCap">
-                    <div class="column header {{ ::product.id }}" ng-repeat="product in vm.products | orderBy:'name'">{{ ::product.priceCap }}%</div>
+                    <div class="column header {{ ::product.id }}" ng-repeat="product in vm.products">{{ ::product.priceCap }}%</div>
                 </div>
                 <div class="price-row product-name-row">
-                    <div class="column header {{ ::product.id }}" title="{{ ::product.name }}" ng-repeat="product in vm.products | orderBy:'name'">
+                    <div class="column header {{ ::product.id }}" title="{{ ::product.name }}" ng-repeat="product in vm.products">
                         <div class="product-name">{{ ::product.name }}</div>
                     </div>
                 </div>
