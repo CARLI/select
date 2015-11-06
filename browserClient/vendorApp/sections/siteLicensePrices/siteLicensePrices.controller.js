@@ -379,27 +379,27 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
     function createEditableOfferingCell(price) {
         var cell = $('<input class="price-editable" role="textbox" type="text" step=".01" min="0">').val(price);
-        cell.on('blur', makeReadOnly);
+        cell.on('blur', applyPricingChangesToCell);
         return cell;
+    }
 
-        function makeReadOnly() {
-            var $this = $(this);
-            var offeringCell = $this.parent();
-            var offering = getOfferingForCell(offeringCell);
+    function applyPricingChangesToCell(e) {
+        var $this = $(this);
+        var offeringCell = $this.parent();
+        var offering = getOfferingForCell(offeringCell);
 
-            applyNewCellPricingToOffering(offeringCell, offering, $this.val());
+        applyNewCellPricingToOffering(offeringCell, offering, $this.val());
 
-            applyCssClassesToOfferingCell(offeringCell, offering);
+        applyCssClassesToOfferingCell(offeringCell, offering);
 
-            var textForOfferingPrice = '';
-            if ( offering && offering.pricing ){
-                textForOfferingPrice = offering.pricing.site;
-            }
-
-            var newReadOnlyCellContents = createReadOnlyOfferingCell(textForOfferingPrice);
-            $this.replaceWith(newReadOnlyCellContents);
-            setCommentMarkerVisibility(newReadOnlyCellContents);
+        var textForOfferingPrice = '';
+        if ( offering && offering.pricing ){
+            textForOfferingPrice = offering.pricing.site;
         }
+
+        var newReadOnlyCellContents = createReadOnlyOfferingCell(textForOfferingPrice);
+        $this.replaceWith(newReadOnlyCellContents);
+        setCommentMarkerVisibility(newReadOnlyCellContents);
     }
 
     function generateNewOffering(libraryId, productId, newPrice) {
