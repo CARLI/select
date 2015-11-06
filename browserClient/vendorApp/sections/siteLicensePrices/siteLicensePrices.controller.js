@@ -236,28 +236,29 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         return cell;
 
         function onClick() {
-            var clickAction = vm.isCommentModeEnabled ? editComment : makeEditable;
+            var clickAction = vm.isCommentModeEnabled ? editCellComment : editCellPrice;
             clickAction(this);
         }
+    }
 
-        function editComment() {
-            var libraryId = cell.parent().data('libraryId');
-            var productId = cell.parent().data('productId');
-            var offering = vm.offeringsForLibraryByProduct[productId][libraryId];
+    function editCellComment(element) {
+        var $el = $(element);
+        var libraryId = $el.parent().data('libraryId');
+        var productId = $el.parent().data('productId');
+        var offering = vm.offeringsForLibraryByProduct[productId][libraryId];
 
-            showCommentModalFor(offering, cell);
-            $scope.$apply(function() {
-                vm.isCommentModeEnabled = false;
-            });
-        }
+        showCommentModalFor(offering, $el);
+        $scope.$apply(function() {
+            vm.isCommentModeEnabled = false;
+        });
+    }
 
-        function makeEditable(element) {
-            var $this = $(element);
-            var price = $this.text();
-            var input = createEditableOfferingCell(price);
-            $this.replaceWith(input);
-            input.focus().select();
-        }
+    function editCellPrice(element) {
+        var $this = $(element);
+        var price = $this.text();
+        var input = createEditableOfferingCell(price);
+        $this.replaceWith(input);
+        input.focus().select();
     }
 
     function addCommentMarkerTo(cell) {
