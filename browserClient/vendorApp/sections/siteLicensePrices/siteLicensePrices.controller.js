@@ -173,7 +173,9 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
             applyCssClassesToOfferingCell(offeringCell, offering);
 
-            setCommentMarkerVisibility(cellContents);
+            if (offering && offering.vendorComments && offering.vendorComments.site) {
+                cellContents.find('.comment-marker').show();
+            }
 
             return offeringCell;
         }
@@ -246,11 +248,9 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     }
 
     function addCommentMarkerTo(cell) {
-        var commentMarker = $('<div tabindex="0" class="comment-marker fa fa-comment-o"></div>');
+        var commentMarker = $('<div tabindex="0" class="comment-marker fa fa-comment-o" style="display: none;"></div>');
         commentMarker.on('focus', editComment);
         cell.append(commentMarker);
-
-        commentMarker.hide();
 
         return commentMarker;
 
