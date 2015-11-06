@@ -135,6 +135,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     }
 
     function buildPriceArray() {
+        console.time('buildPricingGrid');
         vm.changedOfferings = [];
         vm.offeringsForLibraryByProduct = {};
 
@@ -158,6 +159,8 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             });
             $('#site-pricing-grid').append(row);
         });
+
+        console.timeEnd('buildPricingGrid');
 
         function generateLibraryRow(library) {
             var row = $('<div class="price-row offering-row">');
