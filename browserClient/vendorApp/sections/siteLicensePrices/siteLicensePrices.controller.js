@@ -229,16 +229,16 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             price = price.toFixed(2);
         }
         var cell = $('<div tabindex="0" class="price" role="gridcell"></div>').text(price);
-        cell.on('focus', onClick);
+        cell.on('focus', editCell);
 
         addCommentMarkerTo(cell);
 
         return cell;
+    }
 
-        function onClick() {
-            var clickAction = vm.isCommentModeEnabled ? editCellComment : editCellPrice;
-            clickAction(this);
-        }
+    function editCell(e) {
+        var clickAction = vm.isCommentModeEnabled ? editCellComment : editCellPrice;
+        clickAction(this);
     }
 
     function editCellComment(element) {
