@@ -40,9 +40,11 @@ module.exports = function (inputOptions) {
                 var data = JSON.parse(body);
 
                 if (requestError) {
+                    Logger.log("REJECT 1");
                     deferred.reject(carliError(requestError, response.statusCode));
                 }
                 else if (data.error){
+                    Logger.log("REJECT 2");
                     deferred.reject(carliError(data, response.statusCode));
                 }
                 else {
