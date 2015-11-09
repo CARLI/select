@@ -157,6 +157,12 @@
                     </div>
                     <div class="row">
                         {{ fundedSiteLicensePrice offering }}
+                        {{#if offering.vendorComments.site }}
+                            <div tabindex="0"
+                                 data-offering-id="{{ offering.id }}"
+                                 data-comment-type="site"
+                                 class="comment-marker fa fa-comment-o"></div>
+                        {{/if}}
                     </div>
                 </div>
             </div>
@@ -179,6 +185,13 @@
                             {{#each offering.pricing.su }}
                                 <tr>
                                     <td>{{ currency price }}</td>
+                                    {{#if comment }}
+                                        <div tabindex="0"
+                                             data-offering-id="{{ @root.offering.id }}"
+                                             data-comment-type="su"
+                                             data-users="{{ users }}"
+                                             class="comment-marker fa fa-comment-o"></div>
+                                    {{/if}}
                                     <td>{{ users }}</td>
                                 </tr>
                             {{/each}}
