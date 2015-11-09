@@ -41,6 +41,7 @@ module.exports = function (storeOptions) {
                 }
 
                 if (data && data.error) {
+                    Logger.log("REJECT 3");
                     deferred.reject(carliError(data, statusCode));
                 }
                 else {

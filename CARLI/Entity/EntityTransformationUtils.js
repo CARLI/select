@@ -96,12 +96,13 @@ function _addFunctionsToEntityInstance(entity, functionsToAdd) {
 function _fetchAndTransformObjectsFromReferences(entity, references) {
     var fetchPromise = _fetchAllObjectsFromReferences(entity, references);
 
-    fetchPromise.then( function( resolvedObjects ){
-        _transformReferencesToObjects(entity, resolvedObjects);
-    })
-    .catch(function(err){
-        Logger.log('  Failed to load a reference, not expanding entity '+entity.id+' ('+entity.name+')', err);
-    });
+    fetchPromise
+        .then(function (resolvedObjects) {
+            _transformReferencesToObjects(entity, resolvedObjects);
+        })
+        .catch(function (err) {
+            Logger.log('  Failed to load a reference, not expanding entity ' + entity.id + ' (' + entity.name + ')', err);
+        });
 
     return fetchPromise;
 }
@@ -126,6 +127,10 @@ function _fetchAllObjectsFromReferences(entity, referencesArray) {
                 repo.setStore( getStoreForCycle(entity.cycle) );
                 p = repo.load(entity[property]);
             }
+            p.catch(function (error) {
+                Logger.debug('Failed to load reference to ' + property);
+                throw error;
+            });
             promises.push( p );
         }
     }
