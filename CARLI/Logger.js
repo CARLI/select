@@ -15,11 +15,17 @@ function Logger() {
         return new Date().toISOString();
     }
 
+    function printStackTrace() {
+        var e = new Error();
+        log(e.stack);
+    }
+
     return {
         debug: log,
         error: log,
         log: log,
-        warning: log
+        warning: log,
+        printStackTrace: printStackTrace
     };
 }
 
