@@ -414,7 +414,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     }
 
     function saveOfferings() {
-        vm.loadingPromise = vendorDataService.isVendorAllowedToMakeChangesToCycle(vm.user, cycle)
+        vm.loadingPromise = vendorDataService.isVendorAllowedToMakeChangesToCycle(vm.user, vm.cycle)
             .then(function(vendorIsAllowedToSavePrices) {
                 if (vendorIsAllowedToSavePrices) {
                     return saveAllOfferings(vm.newOfferings, vm.changedOfferings);
