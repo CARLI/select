@@ -15,8 +15,37 @@
 
 
 <button type="button" class="carli-button pull-left" busy-click="vm.undoCloseSystem()">Undo Close System</button>
-<!-- button type="button" class="carli-button" busy-click="vm.exportForBanner()">Export for Banner</button -->
+<button type="button" class="carli-button" busy-click="vm.showAvailableBannerExports()">Banner Exports</button>
 
 <div class="placeholder" style="width: 400px; margin-bottom: 1rem;">
     TODO: Archive Button
 </div>
+
+<modal-dialog modal-id="'banner-export-modal'" modal-title="'Available Banner Exports'">
+    <form name="modal-form">
+        <div class="modal-body">
+            <div ng-if="vm.bannerExportBatches.length > 0" class="banner-export-batches">
+                <ul class="entity-list">
+                    <li class="column-headers">
+                        <div class="column">Date Generated</div>
+                        <div class="column">Batch ID</div>
+                        <div class="column">Total Amount</div>
+                        <div class="column"></div>
+                    </li>
+                    <li ng-repeat="batch in vm.bannerExportBatches">
+                        <div class="column">{{ batch.dateCreated | date : 'MM/dd/yyyy' }}</div>
+                        <div class="column">{{ batch.batchId }}</div>
+                        <div class="column">{{ batch.summaryTotal | currency }}</div>
+                        <div class="column"><a href="#">Download</a></div>
+                    </li>
+                </ul>
+            </div>
+            <div ng-if="vm.bannerExportBatches.length == 0" class="banner-export-batches no-results">
+                No invoices have been generated for this cycle.
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="carli-button" data-dismiss="modal">Close</button>
+        </div>
+    </form>
+</modal-dialog>
