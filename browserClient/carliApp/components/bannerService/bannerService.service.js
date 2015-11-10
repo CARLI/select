@@ -6,11 +6,16 @@ function bannerService(CarliModules, $q, browserDownloadService) {
 
     return {
         getDataForBannerExport: getDataForBannerExport,
+        listBatchesForCycle: listBatchesForCycle,
         downloadBannerExportForInvoices: downloadBannerExportForInvoices
     };
 
     function getDataForBannerExport(cycle, batchId) {
         return $q.when( bannerModule.getDataForBannerExport(cycle, batchId) );
+    }
+
+    function listBatchesForCycle(cycle) {
+        return $q.when( bannerModule.listBatchesForCycle(cycle) );
     }
 
     function downloadBannerExportForInvoices(cycle, batchId) {

@@ -1,10 +1,10 @@
 angular.module('carli.sections.subscriptions.productsAvailable')
     .controller('productsAvailableController', productsAvailableController);
 
-function productsAvailableController( $q, alertService, cycleService ) {
+function productsAvailableController( $q, alertService, bannerService, cycleService ) {
     var vm = this;
     vm.undoCloseSystem = undoCloseSystem;
-    //vm.exportForBanner = exportForBanner;
+    vm.showAvailableBannerExports = showAvailableBannerExports;
 
     vm.updateSelectionAndInvoiceTotals = updateSelectionAndInvoiceTotals;
 
@@ -22,5 +22,13 @@ function productsAvailableController( $q, alertService, cycleService ) {
 
     function undoCloseSystem(){
         return vm.cycleRouter.previous();
+    }
+
+    function showAvailableBannerExports() {
+        return bannerService.listBatchesForCycle(vm.cycle)
+            .then(function (batches) {
+                vm.bannerExportBatches = batches;
+                $('#banner-export-modal').modal('show');
+            });
     }
 }
