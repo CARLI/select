@@ -5,7 +5,7 @@ function productsAvailableController( $q, alertService, bannerService, cycleServ
     var vm = this;
     vm.undoCloseSystem = undoCloseSystem;
     vm.showAvailableBannerExports = showAvailableBannerExports;
-
+    vm.downloadBannerExportForBatchId = downloadBannerExportForBatchId;
     vm.updateSelectionAndInvoiceTotals = updateSelectionAndInvoiceTotals;
 
     activate();
@@ -30,5 +30,14 @@ function productsAvailableController( $q, alertService, bannerService, cycleServ
                 vm.bannerExportBatches = batches;
                 $('#banner-export-modal').modal('show');
             });
+    }
+
+    function downloadBannerExportForBatchId(batchId) {
+        return bannerService.downloadBannerExportForInvoices(vm.cycle, batchId)
+            .catch(showError);
+
+        function showError(err) {
+            alertService.putAlert(err.message, { severity: 'danger' });
+        }
     }
 }

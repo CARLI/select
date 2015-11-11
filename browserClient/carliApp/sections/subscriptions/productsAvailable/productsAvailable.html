@@ -36,7 +36,7 @@
                         <div class="column">{{ batch.dateCreated | date : 'MM/dd/yyyy' }}</div>
                         <div class="column">{{ batch.batchId }}</div>
                         <div class="column">{{ batch.summaryTotal | currency }}</div>
-                        <div class="column"><a href="#">Download</a></div>
+                        <div class="column"><a ng-click="vm.downloadBannerExportForBatchId(batch.batchId)">Download</a></div>
                     </li>
                 </ul>
             </div>
