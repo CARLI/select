@@ -69,7 +69,6 @@ function getDataForBannerExport(cycle, batchId) {
                         throw carliError('Cannot generate Banner Feed, ' + offering.product.name + ' is missing detail code');
                     }
                     var detailCode = offering.product.detailCode.slice(0, 4);
-                    console.log(detailCode);
                     var bannerFeedData = {
                         batchId: notification.batchId,
                         date: notification.dateCreated,
@@ -249,6 +248,42 @@ function getDataForBannerExport(cycle, batchId) {
     }
 }
 
+function listBatchesForCycle(cycle) {
+    return NotificationRepository.listInvoiceNotificationsForCycleId(cycle.id)
+        .then(gatherBatchSummaries);
+
+    function gatherBatchSummaries(notifications) {
+        var batchSummariesById = {};
+
+        notifications.forEach(getBatchInfo);
+        return batchSummariesAsArray();
+
+        function getBatchInfo(notification) {
+            if (!batchSummariesById.hasOwnProperty(notification.batchId)) {
+                batchSummariesById[ notification.batchId ] = createBatchSummary(notification);
+            } else {
+                batchSummariesById[ notification.batchId ].numInvoices++;
+            }
+        }
+
+        function createBatchSummary(notification) {
+            return {
+                batchId: notification.batchId,
+                dateCreated: notification.dateCreated,
+                summaryTotal: notification.summaryTotal,
+                numInvoices: 1
+            };
+        }
+
+        function batchSummariesAsArray() {
+            return Object.keys(batchSummariesById).map(function (batchId) {
+                return batchSummariesById[ batchId ];
+            });
+        }
+    }
+}
+
 module.exports = {
-    getDataForBannerExport: getDataForBannerExport
+    getDataForBannerExport: getDataForBannerExport,
+    listBatchesForCycle: listBatchesForCycle
 };
