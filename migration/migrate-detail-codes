@@ -1,0 +1,132 @@
+#!/usr/bin/env node
+
+var mysql = require('mysql');
+var path = require('path');
+var Q = require('q');
+
+var cli = require('../CARLI/CommandLine');
+var migrationConfig = require('./config');
+var cycleRepository = require('../CARLI/Entity/CycleRepository');
+var productRepository = require('../CARLI/Entity/ProductRepository');
+
+return cli.asCouchAdmin(migrateDetailCodes);
+
+function migrateDetailCodes() {
+    return withCycleAndIdalConnection(migrateDetailCodesForCycle);
+}
+
+function migrateDetailCodesForCycle(cycle, connection) {
+    var productsMissingDetailCode = [];
+    var productsUpdated = [];
+
+    return productRepository.list(cycle)
+        .then(updateDetailCodeForProducts)
+        .then(function() {
+            console.log(productsMissingDetailCode.length + ' failures to look up the detail code');
+            console.log(productsUpdated.length + ' products updated');
+            console.log('----------------------------');
+            console.log(cycle.name + " Products missing Detail Codes");
+            productsMissingDetailCode.forEach(function (product) {
+                console.log(product.vendor.name +': '+ product.name);
+            })
+        });
+
+    function updateDetailCodeForProducts(products) {
+        var productsRequiringUpdate = products.filter(productHasNoDetailCode);
+        Logger.log('Updating ' + productsRequiringUpdate.length + ' out of ' + products.length + ' products');
+
+        return Q.all( productsRequiringUpdate.map(updateDetailCodeForProduct) );
+    }
+
+    function productHasNoDetailCode(product) {
+        return typeof product.detailCode == 'undefined';
+    }
+
+    function updateDetailCodeForProduct(product) {
+        var deferred = Q.defer();
+
+        var name = connection.escape(product.name);
+        connection.query("select id from db where name="+ name, verifyOnlyOneMatchingProductExists);
+
+        function verifyOnlyOneMatchingProductExists(countError, countRows) {
+            if (countError) {
+                Logger.error('ERROR 1', countError);
+                deferred.reject(countError);
+            } else if (countRows.length > 1) {
+                Logger.error("Too many matching products " + name);
+                deferred.reject();
+            } else if (countRows.length == 0) {
+                Logger.error("No matching product " + name);
+                deferred.reject();
+            } else {
+                var dbId = countRows[0].id;
+                connection.query("select db.name, dc.value, dc.description from detailcode dc "+
+                    "join detailcode_db dc_db on dc_db.detailcode_id = dc.id "+
+                    "join db on db.id = dc_db.db_id where db.id=" + dbId,
+                    function (detailCodeError, detailCodeRows) {
+                        if (detailCodeError) {
+                            Logger.error('ERROR 2', detailCodeError);
+                            deferred.reject(detailCodeError);
+                        } else if (detailCodeRows.length == 0) {
+                            productsMissingDetailCode.push(product);
+                            deferred.resolve();
+                        } else if (detailCodeRows.length != 1) {
+                            Logger.error("Failed to find exactly one product code for " + name +', found ' + detailCodeRows.length);
+                            deferred.reject();
+                        } else {
+                            product.detailCode = getFullDetailCode(detailCodeRows[0].value);
+                            deferred.resolve(productRepository.update(product, cycle));
+                        }
+                    });
+            }
+        }
+
+
+
+        return deferred.promise;
+    }
+}
+
+function getFullDetailCode(shortCode) {
+    var translationTable = {
+        USIA: "USIA - Membership",
+        USIB: "USIB - Database",
+        USIE: "USIE - Misc.",
+        USIF: "USIF - I-Share",
+        USIG: "USIG - Chronicle of Higher Education",
+        USIH: "USIH - OED",
+        USII: "USII - Fiscal Database",
+        USIJ: "USIJ - Calendar Database",
+        USIK: "USIK - SFX",
+        USIL: "USIL - Membership Pre-Pay",
+        USIM: "USIM - I-Share Pre-Pay",
+        USIN: "USIN - Database Pre-Pay"
+    };
+
+    return translationTable[shortCode];
+}
+
+function withCycleAndIdalConnection(callback) {
+    return cli.withSingleArgument('cycle-id', withCycleId);
+
+    function withCycleId(cycleId) {
+        return cycleRepository.load(cycleId).then(withCycle);
+
+        function withCycle(cycle) {
+            return withIdalDatabaseConnection(withConnection);
+
+            function withConnection(connection) {
+                return callback(cycle, connection);
+            }
+        }
+    }
+}
+
+function withIdalDatabaseConnection(callback) {
+    var connection = mysql.createConnection( migrationConfig.idalDsn );
+    connection.connect();
+    var result = callback(connection).then(function() {
+        connection.end();
+    });
+    return result;
+}
