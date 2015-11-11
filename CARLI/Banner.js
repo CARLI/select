@@ -69,7 +69,6 @@ function getDataForBannerExport(cycle, batchId) {
                         throw carliError('Cannot generate Banner Feed, ' + offering.product.name + ' is missing detail code');
                     }
                     var detailCode = offering.product.detailCode.slice(0, 4);
-                    console.log(detailCode);
                     var bannerFeedData = {
                         batchId: notification.batchId,
                         date: notification.dateCreated,
