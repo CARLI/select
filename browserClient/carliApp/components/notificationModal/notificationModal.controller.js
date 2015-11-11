@@ -281,16 +281,24 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
             function downloadBannerExportForInvoices(passthrough) {
                 if ( shouldGenerateBannerFile() ) {
                     return bannerService.downloadBannerExportForInvoices(cycle, batchId)
-                        .then(function () {
-                            return passthrough;
-                        });
+                        .then(passthroughReturnValue)
+                        .catch(handleBannerErrorSeparately);
                 } else {
-                    return passthrough;
+                    return passthroughReturnValue();
                 }
 
                 function shouldGenerateBannerFile(){
                     return vm.draft.notificationType === 'invoice' &&
                           !notificationService.templateIsForMembershipDues(vm.draft.templateId);
+                }
+
+                function passthroughReturnValue() {
+                    return passthrough;
+                }
+
+                function handleBannerErrorSeparately(err) {
+                    alertService.putAlert(err.message, { severity: 'danger' });
+                    return passthrough;
                 }
             }
         }
