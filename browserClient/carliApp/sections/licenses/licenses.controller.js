@@ -41,8 +41,8 @@ function licensesController( $filter, $sce, licenseService ){
                 var endDate = $filter('date')(license.currentTermEndDate, 'MM/dd/yyyy');
                 var flag = '';
 
-                if ( license.currentTermEndsSoon() ){
-                    flag = '<span class="fa fa-flag"></span>';
+                if ( license.contractTermEndsSoon() ){
+                    flag = '<span class="fa fa-clock-o"></span>';
                 }
 
                 return endDate + flag;

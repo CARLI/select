@@ -60,34 +60,34 @@ describe('Converting referenced entities', function() {
 });
 
 describe('instance methods added to License objects', function(){
-    it('should add a currentTermEndsSoon method', function(){
+    it('should add a contractTermEndsSoon method', function(){
         var testLicense = validLicenseData();
         return LicenseRepository.create(testLicense)
             .then(LicenseRepository.load)
             .then(function(expandedLicense){
-                return expect(expandedLicense.currentTermEndsSoon).to.be.a('function');
+                return expect(expandedLicense.contractTermEndsSoon).to.be.a('function');
             });
     });
 
-    it('should return true if the currentTermEnds date is less than nine months away', function(){
+    it('should return true if the totalTermEndDate date is less than nine months away', function(){
         var testLicense = validLicenseData();
-        testLicense.currentTermEndDate = moment().subtract(3, 'days').format();
+        testLicense.totalTermEndDate = moment().subtract(3, 'days').format();
 
         return LicenseRepository.create(testLicense)
             .then(LicenseRepository.load)
             .then(function(expandedLicense){
-                return expect(expandedLicense.currentTermEndsSoon()).to.be.true;
+                return expect(expandedLicense.contractTermEndsSoon()).to.be.true;
             });
     });
 
-    it('should return false if the currentTermEnds date is more than nine months away', function(){
+    it('should return false if the totalTermEndDate date is more than nine months away', function(){
         var testLicense = validLicenseData();
-        testLicense.currentTermEndDate = moment().add(10, 'months').format();
+        testLicense.totalTermEndDate = moment().add(10, 'months').format();
 
         return LicenseRepository.create(testLicense)
             .then(LicenseRepository.load)
             .then(function(expandedLicense){
-                return expect(expandedLicense.currentTermEndsSoon()).to.be.false;
+                return expect(expandedLicense.contractTermEndsSoon()).to.be.false;
             });
     });
 });
