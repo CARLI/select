@@ -23,15 +23,15 @@ function getIsActive() {
     return this.isActive;
 }
 
-function currentTermEndsSoon() {
-    var termEndDate = moment(new Date(this.currentTermEndDate));
+function contractTermEndsSoon() {
+    var termEndDate = moment(new Date(this.totalTermEndDate));
     var nineMonthsBeforeTermEnds = termEndDate.subtract(9, 'months');
     return moment().isAfter(nineMonthsBeforeTermEnds);
 }
 
 var functionsToAdd = {
     getIsActive: getIsActive,
-    currentTermEndsSoon: currentTermEndsSoon
+    contractTermEndsSoon: contractTermEndsSoon
 };
 
 var propertiesToTransform = ['vendor'];
