@@ -19,16 +19,19 @@ function migrateDetailCodesForCycle(cycle, connection) {
     var productsMissingDetailCode = [];
     var productsUpdated = [];
 
+    Logger.log('Migrating detail codes for ' + cycle.name);
+
     return productRepository.list(cycle)
         .then(updateDetailCodeForProducts)
         .then(function() {
             console.log(productsMissingDetailCode.length + ' failures to look up the detail code');
             console.log(productsUpdated.length + ' products updated');
             console.log('----------------------------');
-            console.log(cycle.name + " Products missing Detail Codes");
+            console.log("   " + cycle.name + " Products missing Detail Codes");
             productsMissingDetailCode.forEach(function (product) {
-                console.log(product.vendor.name +': '+ product.name);
+                console.log("   " + product.vendor.name +': '+ product.name);
             })
+            console.log('----------------------------');
         });
 
     function updateDetailCodeForProducts(products) {
@@ -45,19 +48,22 @@ function migrateDetailCodesForCycle(cycle, connection) {
     function updateDetailCodeForProduct(product) {
         var deferred = Q.defer();
 
-        var name = connection.escape(product.name);
-        connection.query("select id from db where name="+ name, verifyOnlyOneMatchingProductExists);
+        var nameLikeProductName = getProductWhereClause(product);
+
+        connection.query("select id from db where " + nameLikeProductName, verifyOnlyOneMatchingProductExists);
 
         function verifyOnlyOneMatchingProductExists(countError, countRows) {
             if (countError) {
-                Logger.error('ERROR 1', countError);
+                Logger.error('>>> ERROR 1', countError);
                 deferred.reject(countError);
             } else if (countRows.length > 1) {
-                Logger.error("Too many matching products " + name);
-                deferred.reject();
+                Logger.error(">>> Too many matching products " + product.name);
+                Logger.error('    WHERE ' + nameLikeProductName);
+                deferred.resolve();
             } else if (countRows.length == 0) {
-                Logger.error("No matching product " + name);
-                deferred.reject();
+                Logger.error(">>> No matching product " + product.name);
+                Logger.error('    WHERE ' + nameLikeProductName);
+                deferred.resolve();
             } else {
                 var dbId = countRows[0].id;
                 connection.query("select db.name, dc.value, dc.description from detailcode dc "+
@@ -65,25 +71,55 @@ function migrateDetailCodesForCycle(cycle, connection) {
                     "join db on db.id = dc_db.db_id where db.id=" + dbId,
                     function (detailCodeError, detailCodeRows) {
                         if (detailCodeError) {
-                            Logger.error('ERROR 2', detailCodeError);
+                            Logger.error('>>> ERROR 2', detailCodeError);
                             deferred.reject(detailCodeError);
                         } else if (detailCodeRows.length == 0) {
                             productsMissingDetailCode.push(product);
                             deferred.resolve();
                         } else if (detailCodeRows.length != 1) {
-                            Logger.error("Failed to find exactly one product code for " + name +', found ' + detailCodeRows.length);
-                            deferred.reject();
+                            Logger.error(">>> Failed to find exactly one product code for " + product.name +', found ' + detailCodeRows.length);
+                            deferred.resolve();
                         } else {
                             product.detailCode = getFullDetailCode(detailCodeRows[0].value);
-                            deferred.resolve(productRepository.update(product, cycle));
+                            var promiseToUpdateProduct = productRepository.update(product, cycle)
+                                .then(function (p) {
+                                    productsUpdated.push(p);
+                                    return p;
+                                });
+                            deferred.resolve(promiseToUpdateProduct);
                         }
                     });
             }
         }
 
-
-
         return deferred.promise;
+    }
+
+
+    function getProductWhereClause(product) {
+        var name = connection.escape(product.name);
+        var nameLikeProductName = 'name = ' + name;
+
+        var materialsBudgetIndex = product.name.indexOf('- Materials Budget ');
+        if (materialsBudgetIndex >= 0) {
+            var actualProductName = product.name.slice(0, materialsBudgetIndex);
+            var materialsBudgetQualifier = product.name.slice(materialsBudgetIndex);
+            nameLikeProductName = nameStartsWith(actualProductName)
+                + ' and ' + nameLike(materialsBudgetQualifier)
+                + ' and ' + nameNotLike('z' + actualProductName);
+        }
+
+        return nameLikeProductName;
+    }
+
+    function nameStartsWith(word) {
+        return 'name like ' + connection.escape(word + '%');
+    }
+    function nameLike(word) {
+        return 'name like ' + connection.escape('%' + word + '%');
+    }
+    function nameNotLike(word) {
+        return 'name not like ' + connection.escape('%' + word + '%');
     }
 }
 
