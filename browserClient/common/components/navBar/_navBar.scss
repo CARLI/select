@@ -51,6 +51,16 @@ nav[nav-bar] {
                 display: block;
                 @include flex(1 1 auto);
             }
+
+            position: relative;
+            .badge {
+                position: absolute;
+                top: -12px;
+                right: 8px;
+                min-width: unset;
+                background-color: $light-purple;
+                color: $very-dark-purple;
+            }
         }
         &.active {
             a {
