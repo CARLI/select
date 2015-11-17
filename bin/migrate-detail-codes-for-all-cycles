@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if [ ! -d '.git' ]; then
+    echo "Please run this script from the root of the project"
+    exit 1
+fi
+
+cycle_ids=`./bin/list-cycles | tail -n +2 | cut -f 1`
+
+for cycle_id in $cycle_ids; do
+    ./migration/migrate-detail-codes $cycle_id
+done
