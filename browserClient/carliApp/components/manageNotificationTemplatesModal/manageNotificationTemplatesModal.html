@@ -12,6 +12,7 @@
                 </div>
 
                 <button type="button" class="carli-button" ng-click="vm.addNewTemplate()">New Template <fa name="plus-circle"></fa></button>
+                <button type="button" class="carli-button remove-button" ng-if="vm.canDeleteCustomTemplate" ng-click="vm.deleteTemplate()">Delete Template <fa name="remove"></fa></button>
 
                 <form name="editTemplateForm" ng-if="vm.templateToEdit" warn-if-unsaved>
                     <div ng-if="vm.newTemplate">
