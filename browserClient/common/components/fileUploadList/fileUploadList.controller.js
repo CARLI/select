@@ -31,7 +31,8 @@ function fileUploadListController( alertService, attachmentsService, errorHandle
     function attachFile(fileInfo, fileContentsAsArrayBuffer){
         vm.uploadInProgress = true;
         vm.uploadProgress = 0;
-        var fileName = encodeURIComponent(fileInfo.name);
+        var fileNameUnescaped = fileInfo.name;
+        var fileName = encodeURIComponent(fileNameUnescaped);
         var fileType = fileInfo.type;
 
         attachmentsService.uploadFile(vm.documentId, fileName, fileType, fileContentsAsArrayBuffer, vm.attachmentCategory)
@@ -39,7 +40,7 @@ function fileUploadListController( alertService, attachmentsService, errorHandle
 
         function attachSuccess(){
             vm.uploadInProgress = false;
-            alertService.putAlert(fileName + ' successfully uploaded', {severity: 'success'});
+            alertService.putAlert(fileNameUnescaped + ' successfully uploaded', {severity: 'success'});
             return loadFileList();
         }
 
@@ -67,10 +68,12 @@ function fileUploadListController( alertService, attachmentsService, errorHandle
         var files = attachmentKeys.map(function(fileName){
             var properties = attachmentsObject[fileName];
             var fileUrl = attachmentsService.getAttachmentUrl(vm.documentId, fileName);
+            var fileNameUnescaped = decodeURIComponent(fileName);
 
             return {
                 link: fileUrl,
                 name: fileName,
+                nameUnescaped: fileNameUnescaped,
                 category: fileName.substring(0, fileName.indexOf('/')),
                 size: properties['length'], //bytes
                 order: properties['revpos']
@@ -91,12 +94,13 @@ function fileUploadListController( alertService, attachmentsService, errorHandle
     }
 
     function deleteFile(file){
-        var confirmDelete = confirm('Are you sure you want to delete '+file.name+'? This cannot be undone.');
+        var fileNameUnescaped = decodeURIComponent(file.name);
+        var confirmDelete = confirm('Are you sure you want to delete '+fileNameUnescaped+'? This cannot be undone.');
 
         if ( confirmDelete ){
             return attachmentsService.deleteFile(vm.documentId, file.name, file.category)
                 .then(function(){
-                    alertService.putAlert(file.name + ' successfully deleted', {severity: 'success'});
+                    alertService.putAlert(fileNameUnescaped + ' successfully deleted', {severity: 'success'});
                     return loadFileList();
                 })
                 .catch(errorHandler);

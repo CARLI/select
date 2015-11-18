@@ -5,7 +5,7 @@ angular.module('common.fileUploadList')
             template: [
                 '<ul cg-busy="vm.loadingPromise">',
                 '  <li ng-repeat="file in vm.files | orderBy:vm.orderBy">',
-                '    <a ng-href="{{ file.link }}" class="file" target="_blank">{{ file.name }}</a>',
+                '    <a ng-href="{{ file.link }}" class="file" target="_blank">{{ file.nameUnescaped }}</a>',
                 '    <button type="button" class="delete clear-button-styles" title="Delete {{ file.name }}" ng-click="vm.deleteFile(file)">',
                 '      <span class="sr-only">Delete {{ file.name }}</span><fa name="remove"></fa>',
                 '    </button>',
