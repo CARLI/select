@@ -17,6 +17,8 @@ function dashboardController($scope, authService, cycleService, emailService, ve
     vm.loadingPromise = activate();
 
     function activate(){
+        vm.cycle = cycle;
+
         return authService.fetchCurrentUser()
             .then(function (user) {
                 currentUser = user;
