@@ -33,3 +33,10 @@ $fa-font-path: "/vendorApp/fonts";
 @import "../sections/descriptions/descriptions";
 @import "../sections/siteLicensePrices/siteLicensePrices";
 @import "../sections/simultaneousUserPrices/simultaneousUserPrices";
+
+.headings {
+    h2 {
+        margin-bottom: 0;
+        margin-top: 0.5rem;
+    }
+}
