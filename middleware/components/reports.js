@@ -166,7 +166,7 @@ function selectionsByVendorReport( reportParameters, userSelectedColumns ){
         .catch(stackTraceError);
 
     function transformOfferingToSelectionsByVendorResultRow( offering ){
-        return {
+        var row = {
             cycle: offering.cycle.name,
             license: licenseName(offering),
             product: offering.product.name,
@@ -174,6 +174,16 @@ function selectionsByVendorReport( reportParameters, userSelectedColumns ){
             selection: offering.selection.users,
             price: offeringRepository.getFullSelectionPrice(offering)
         };
+
+        if ( isEnabled('detailCode') ){
+            row.detailCode = offering.product.detailCode || '';
+        }
+
+        return row;
+    }
+
+    function isEnabled(columnName){
+        return columns.indexOf(columnName) !== -1;
     }
 }
 
@@ -226,7 +236,7 @@ function totalsReport( reportParameters, userSelectedColumns ){
     }
 }
 
-function listProductsForVendorReport( reportParameters, userSelectedColumns ){
+function listProductsForVendorReport( reportParameters, userSelectedColumns ){ /* add optional detailCode */
     var defaultReportColumns = ['cycle', 'vendor', 'product'];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
     var cyclesToQuery = getCycleParameter(reportParameters);
@@ -238,11 +248,21 @@ function listProductsForVendorReport( reportParameters, userSelectedColumns ){
         .catch(stackTraceError);
 
     function transformProductToResultRow(product){
-        return {
+        var row = {
             cycle: product.cycle.name,
             vendor: product.vendor.name,
             product: product.name
         };
+
+        if ( isEnabled('detailCode') ){
+            row.detailCode = product.detailCode || '';
+        }
+
+        return row;
+    }
+
+    function isEnabled(columnName){
+        return columns.indexOf(columnName) !== -1;
     }
 }
 
