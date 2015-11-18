@@ -24,7 +24,7 @@ function invalidNotificationTemplateData() {
 
 test.run('NotificationTemplate', validNotificationTemplateData, invalidNotificationTemplateData);
 
-describe.only('NotificationTemplate additional methods', function(){
+describe('NotificationTemplate additional methods', function(){
     it('should have an isCustomTemplate method', function(){
         expect(notificationTemplateRepository.isCustomTemplate).to.be.a('function');
     });
