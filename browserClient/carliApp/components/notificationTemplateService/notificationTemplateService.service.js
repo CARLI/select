@@ -9,6 +9,7 @@ function notificationTemplateService( CarliModules, $q, errorHandler ) {
         list:   function() { return $q.when( notificationTemplateModule.list() ).catch(errorHandler); },
         create: function() { return $q.when( notificationTemplateModule.create.apply(this, arguments) ); },
         update: function() { return $q.when( notificationTemplateModule.update.apply(this, arguments) ); },
-        load:   function() { return $q.when( notificationTemplateModule.load.apply(this, arguments) ).catch(errorHandler); }
+        load:   function() { return $q.when( notificationTemplateModule.load.apply(this, arguments) ).catch(errorHandler); },
+        isCustomTemplate: notificationTemplateModule.isCustomTemplate
     };
 }
