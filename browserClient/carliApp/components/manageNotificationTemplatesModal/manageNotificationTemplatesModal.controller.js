@@ -21,7 +21,7 @@ function manageNotificationTemplatesModalController( $scope, $rootScope, alertSe
     }
 
     function reloadNotificationTemplates(){
-        notificationTemplateService.list().then(function(notificationTemplates){
+        return notificationTemplateService.list().then(function(notificationTemplates){
             vm.templates = notificationTemplates;
         });
     }
@@ -57,7 +57,8 @@ function manageNotificationTemplatesModalController( $scope, $rootScope, alertSe
         setTemplateFormPristine();
         vm.templateToEdit = null;
         vm.newTemplate = false;
-        reloadNotificationTemplates();
+        vm.canDeleteCustomTemplate = false;
+        return reloadNotificationTemplates();
     }
 
     function setTemplateFormPristine() {
@@ -109,7 +110,13 @@ function manageNotificationTemplatesModalController( $scope, $rootScope, alertSe
 
     function deleteTemplate(){
         if ( notificationTemplateService.isCustomTemplate(vm.templateToEdit) ){
-            console.log('delete '+vm.templateToEdit.name);
+            return notificationTemplateService.delete(vm.templateToEdit.id)
+                .then(alertSuccess)
+                .then(resetTemplateForm);
+        }
+
+        function alertSuccess(){
+            alertService.putAlert('Template "' + vm.templateToEdit.name + '" deleted', {severity: 'success'});
         }
     }
 
