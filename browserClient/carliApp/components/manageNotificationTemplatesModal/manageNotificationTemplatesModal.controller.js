@@ -3,12 +3,15 @@ angular.module('carli.manageNotificationTemplatesModal')
 
 function manageNotificationTemplatesModalController( $scope, $rootScope, alertService, errorHandler, notificationTemplateService ){
     var vm = this;
+
+    vm.canDeleteCustomTemplate = false;
     vm.templateToEdit = null;
     vm.newTemplate = false;
 
     vm.addNewTemplate = addNewTemplate;
-    vm.saveTemplate = save;
+    vm.deleteTemplate = deleteTemplate;
     vm.editingExistingTemplate = editingExistingTemplate;
+    vm.saveTemplate = save;
 
     activate();
 
@@ -104,8 +107,15 @@ function manageNotificationTemplatesModalController( $scope, $rootScope, alertSe
         };
     }
 
+    function deleteTemplate(){
+        if ( notificationTemplateService.isCustomTemplate(vm.templateToEdit) ){
+            console.log('delete '+vm.templateToEdit.name);
+        }
+    }
+
     function editingExistingTemplate(){
         vm.newTemplate = false;
+        vm.canDeleteCustomTemplate = notificationTemplateService.isCustomTemplate(vm.templateToEdit);
     }
 
 }
