@@ -3,12 +3,15 @@ angular.module('carli.manageNotificationTemplatesModal')
 
 function manageNotificationTemplatesModalController( $scope, $rootScope, alertService, errorHandler, notificationTemplateService ){
     var vm = this;
+
+    vm.canDeleteCustomTemplate = false;
     vm.templateToEdit = null;
     vm.newTemplate = false;
 
     vm.addNewTemplate = addNewTemplate;
-    vm.saveTemplate = save;
+    vm.deleteTemplate = deleteTemplate;
     vm.editingExistingTemplate = editingExistingTemplate;
+    vm.saveTemplate = save;
 
     activate();
 
@@ -18,7 +21,7 @@ function manageNotificationTemplatesModalController( $scope, $rootScope, alertSe
     }
 
     function reloadNotificationTemplates(){
-        notificationTemplateService.list().then(function(notificationTemplates){
+        return notificationTemplateService.list().then(function(notificationTemplates){
             vm.templates = notificationTemplates;
         });
     }
@@ -54,7 +57,8 @@ function manageNotificationTemplatesModalController( $scope, $rootScope, alertSe
         setTemplateFormPristine();
         vm.templateToEdit = null;
         vm.newTemplate = false;
-        reloadNotificationTemplates();
+        vm.canDeleteCustomTemplate = false;
+        return reloadNotificationTemplates();
     }
 
     function setTemplateFormPristine() {
@@ -104,8 +108,21 @@ function manageNotificationTemplatesModalController( $scope, $rootScope, alertSe
         };
     }
 
+    function deleteTemplate(){
+        if ( notificationTemplateService.isCustomTemplate(vm.templateToEdit) ){
+            return notificationTemplateService.delete(vm.templateToEdit.id)
+                .then(alertSuccess)
+                .then(resetTemplateForm);
+        }
+
+        function alertSuccess(){
+            alertService.putAlert('Template "' + vm.templateToEdit.name + '" deleted', {severity: 'success'});
+        }
+    }
+
     function editingExistingTemplate(){
         vm.newTemplate = false;
+        vm.canDeleteCustomTemplate = notificationTemplateService.isCustomTemplate(vm.templateToEdit);
     }
 
 }

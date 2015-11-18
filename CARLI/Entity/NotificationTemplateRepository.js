@@ -28,4 +28,9 @@ NotificationTemplateRepository.loadTemplateForMembershipDuesInvoices = function(
     return NotificationTemplateRepository.load('notification-template-membership-invoices');
 };
 
+NotificationTemplateRepository.isCustomTemplate = function( notificationTemplate ){
+    return notificationTemplate.notificationType === 'other' &&
+           notificationTemplate.id !== 'notification-template-open-system';
+};
+
 module.exports = NotificationTemplateRepository;

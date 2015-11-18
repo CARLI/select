@@ -14,6 +14,7 @@ function descriptionsController( $scope, $rootScope, $q, alertService, cycleServ
 
 
     function activate(){
+        vm.cycle = cycleService.getCurrentCycle();
         vm.user = userService.getUser();
         vm.vendorId = vm.user.vendor.id;
 

@@ -24,7 +24,7 @@ function reportsController( csvExportService, cycleService, errorHandler, report
                 cycle: 'all'
             },
             optionalColumns: [
-                //'detailCode'
+                'detailCode'
             ]
         },
         {
@@ -43,7 +43,9 @@ function reportsController( csvExportService, cycleService, errorHandler, report
             controls: {
                 cycle: 'all'
             },
-            optionalColumns: []
+            optionalColumns: [
+                'detailCode'
+            ]
         },
         {
             name: 'Totals',
@@ -57,7 +59,9 @@ function reportsController( csvExportService, cycleService, errorHandler, report
             controls: {
                 cycle: 'all'
             },
-            optionalColumns: []
+            optionalColumns: [
+                'detailCode'
+            ]
         },
         {
             name: 'Contracts',
