@@ -1,6 +1,7 @@
 {
     "$schema": "json-schema.org/draft-04/schema",
     "title": "LibraryStatus",
+    "description": "Used to track the activity of a library in the selection app for libraries while a cycle is open",
     "schemaType": "LibraryStatus",
     "type": "object",
     "properties": {
