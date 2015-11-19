@@ -1,7 +1,7 @@
 angular.module('vendor.cycleChooser')
     .controller('cycleChooserController', cycleChooserController);
 
-function cycleChooserController($scope, alertService, authService, config, cycleService, productService, userService, vendorDataService, vendorStatusService ) {
+function cycleChooserController($q, $scope, alertService, authService, config, cycleService, productService, userService, vendorDataService, vendorStatusService ) {
     var vm = this;
 
     vm.cycles = [];
@@ -23,7 +23,7 @@ function cycleChooserController($scope, alertService, authService, config, cycle
     }
 
     function loadCycles() {
-        return cycleService.listActiveCycles().then(function (cycles) {
+        return listCyclesVendorCanWorkWith().then(function (cycles) {
             if (cycles.length === 0){
                 vm.noActiveCycles = true;
             }
@@ -111,11 +111,32 @@ function cycleChooserController($scope, alertService, authService, config, cycle
         }
     }
 
+    function listCyclesVendorCanWorkWith(){
+        var allCycles = [];
+
+        return cycleService.listActiveCycles()
+            .then(function(activeCycles){
+                allCycles = activeCycles;
+                var productsInCycle = {};
+
+                activeCycles.forEach(function(cycle){
+                    productsInCycle[cycle.id] = doesVendorHaveProductsInCycle(cycle);
+                });
+
+                return $q.all(productsInCycle);
+            })
+            .then(function(vendorHasProductsInCycle){
+                return allCycles.filter(function(cycle){
+                    return vendorHasProductsInCycle[cycle.id];
+                });
+            });
+    }
+
     function doesVendorHaveProductsInCycle(cycle) {
         return productService.listProductsWithOfferingsForVendorId(vm.vendor.id, cycle)
             .then(function (products) {
                 var vendorHasProducts = !!products.length;
-                console.log('  vendor has products in cycle: '+vendorHasProducts+' ('+products.length+')');
+                console.log('  vendor has products in ' + cycle.name + ': '+vendorHasProducts+' ('+products.length+')');
                 return vendorHasProducts;
             });
     }

@@ -1,4 +1,9 @@
 #membership {
+
+    .controls {
+        margin-bottom: 1rem;
+    }
+
     .content,
     .list-page-header {
         @media (max-width: 1200px) {
