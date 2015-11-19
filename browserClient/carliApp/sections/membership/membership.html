@@ -18,6 +18,14 @@
     </div>
 
     <section class="content list-content">
+        <div class="controls">
+            <div class="type-filter-controls">
+                <radio name="'library-list-filter'" value="'All'" ng-model="vm.filter">Show <strong>All Members</strong></radio>
+                <radio name="'library-list-filter'" value="'Governing'" ng-model="vm.filter">Show <strong>Governing Members</strong></radio>
+                <radio name="'library-list-filter'" value="'Affiliate'" ng-model="vm.filter">Show <strong>Affiliate Members</strong></radio>
+            </div>
+        </div>
+
         <form name="membershipForm" warn-if-unsaved>
             <ul class="entity-list">
                 <li class="column-headers">
@@ -26,7 +34,7 @@
                     <div class="column membership">Membership</div>
                     <div class="column total">Total</div>
                 </li>
-                <li  ng-repeat="library in vm.libraries | orderBy:'name'">
+                <li  ng-repeat="library in vm.libraries | filter: vm.filterByMembership | orderBy:'name'">
                     <div class="column library">
                         {{ library.name }}
                     </div>

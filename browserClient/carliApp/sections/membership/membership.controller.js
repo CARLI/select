@@ -7,12 +7,14 @@ function membershipController( $location, $q, $routeParams, $scope, activityLogS
     vm.libraries = [];
     vm.loadingPromise = null;
     vm.displayYear = null;
+    vm.filter = 'All';
     vm.membershipData = null;
     vm.nextYear = null;
     vm.previousYear = null;
 
     vm.createMembershipInvoices = createMembershipInvoices;
     vm.ishareTotal = ishareTotal;
+    vm.filterByMembership = filterByMembership;
     vm.grandTotal = grandTotal;
     vm.membershipTotal = membershipTotal;
     vm.saveMembershipData = saveMembershipData;
@@ -44,7 +46,7 @@ function membershipController( $location, $q, $routeParams, $scope, activityLogS
     }
 
     function initializeMembershipData(){
-        vm.loadingPromise = libraryService.listActiveLibraries()
+        vm.loadingPromise = libraryService.list()
             .then(function(libraryList){
                 vm.libraries = libraryList;
                 return vm.libraries;
@@ -147,9 +149,11 @@ function membershipController( $location, $q, $routeParams, $scope, activityLogS
     }
 
     function membershipDataItems(){
-        return Object.keys(vm.membershipData.data).map(function(libraryId){
-            return vm.membershipData.data[libraryId];
-        });
+        return vm.libraries.filter(filterByMembership).map(membershipDataForLibrary);
+
+        function membershipDataForLibrary(library){
+            return vm.membershipData.data[library.id] || {};
+        }
     }
 
     function currentCalendarYear(){
@@ -184,5 +188,21 @@ function membershipController( $location, $q, $routeParams, $scope, activityLogS
         if ($scope.membershipForm) {
             $scope.membershipForm.$setPristine();
         }
+    }
+
+    function filterByMembership(library){
+        if ( vm.filter === 'All' && libraryIsMember(library) ){
+            return true;
+        }
+
+        if ( library ){
+            return library.membershipLevel === vm.filter;
+        }
+
+        return false;
+    }
+
+    function libraryIsMember( library ){
+        return library.membershipLevel === 'Governing' || library.membershipLevel === 'Affiliate';
     }
 }
