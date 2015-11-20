@@ -8,6 +8,7 @@ function editLibraryController( $scope, $rootScope, activityLogService, alertSer
     vm.libraryId = $scope.libraryId;
     var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
+    vm.masqueradeAs = masqueradeAs;
     vm.toggleEditable = toggleEditable;
     vm.cancelEdit = cancelEdit;
     vm.saveLibrary = saveLibrary;
@@ -119,5 +120,9 @@ function editLibraryController( $scope, $rootScope, activityLogService, alertSer
 
     function logAddActivity(){
         return activityLogService.logEntityAdded(vm.library);
+    }
+
+    function masqueradeAs(libraryId) {
+        // TODO: must go through middleware to edit user account
     }
 }
