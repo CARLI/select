@@ -96,7 +96,7 @@ function setMasqueradingIdForRole(roleId, userId, role) {
 
     function setRoles(user) {
         user.roles = getOtherRoles(user).concat(getNewRoles());
-        user[role+'Id'] = roleId;
+        user[role] = roleId;
         return user;
     }
 
