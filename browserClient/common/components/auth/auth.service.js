@@ -22,7 +22,9 @@ function authService($rootScope, $q, $location, appState, CarliModules) {
         requireSession: requireSession,
         requireStaff: requireStaff,
         requireActive: requireActive,
-        redirectToLogin: redirectToLogin
+        redirectToLogin: redirectToLogin,
+
+        masqueradeAsLibrary: masqueradeAsLibrary
     };
 
     function authenticateForStaffApp() {
@@ -99,6 +101,10 @@ function authService($rootScope, $q, $location, appState, CarliModules) {
             $rootScope.isLoggedIn = true;
             return passthrough;
         }
+    }
+
+    function masqueradeAsLibrary(libraryId) {
+        return $q.when( CarliModules.AuthMiddleware.masqueradeAsLibrary(libraryId) );
     }
 
     function requireSession() {

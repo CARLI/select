@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.library')
     .controller('editLibraryController', editLibraryController);
 
-function editLibraryController( $scope, $rootScope, activityLogService, alertService, cycleService, entityBaseService, errorHandler, libraryService ) {
+function editLibraryController( $scope, $rootScope, authService, activityLogService, alertService, cycleService, entityBaseService, errorHandler, libraryService ) {
     var vm = this;
 
     vm.crmContacts = [];
@@ -123,6 +123,6 @@ function editLibraryController( $scope, $rootScope, activityLogService, alertSer
     }
 
     function masqueradeAs(libraryId) {
-        // TODO: must go through middleware to edit user account
+        authService.masqueradeAsLibrary(libraryId);
     }
 }
