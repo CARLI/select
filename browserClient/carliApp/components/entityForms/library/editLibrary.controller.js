@@ -123,6 +123,8 @@ function editLibraryController( $scope, $rootScope, authService, activityLogServ
     }
 
     function masqueradeAs(libraryId) {
-        authService.masqueradeAsLibrary(libraryId);
+        authService
+            .masqueradeAsLibrary(libraryId)
+            .then(authService.openLibraryApp);
     }
 }

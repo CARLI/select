@@ -1,7 +1,7 @@
 angular.module('common.auth')
     .service('authService', authService);
 
-function authService($rootScope, $q, $location, appState, CarliModules) {
+function authService($rootScope, $q, $location, $window, appState, CarliModules) {
     var session = null;
     var user = null;
 
@@ -24,7 +24,8 @@ function authService($rootScope, $q, $location, appState, CarliModules) {
         requireActive: requireActive,
         redirectToLogin: redirectToLogin,
 
-        masqueradeAsLibrary: masqueradeAsLibrary
+        masqueradeAsLibrary: masqueradeAsLibrary,
+        openLibraryApp: openLibraryApp
     };
 
     function authenticateForStaffApp() {
@@ -105,6 +106,10 @@ function authService($rootScope, $q, $location, appState, CarliModules) {
 
     function masqueradeAsLibrary(libraryId) {
         return $q.when( CarliModules.AuthMiddleware.masqueradeAsLibrary(libraryId) );
+    }
+    function openLibraryApp(passthrough) {
+        $window.open('http://library.carli.local:8080/');
+        return passthrough;
     }
 
     function requireSession() {
