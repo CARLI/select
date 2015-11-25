@@ -22,9 +22,14 @@ function listSelectionsForLibraryFromCycle( libraryId, cycleId ){
             cycle = loadedCycle;
             return offeringRepository.listOfferingsWithSelectionsForLibrary(libraryId, cycle);
         })
+        .catch(function(err){
+            Logger.log('Error 1 listing selections for library '+libraryId+' from cycle '+cycle.name, err.stack);
+            Logger.log(err);
+        })
         .then(populateProductsForOfferings)
         .catch(function(err){
-            Logger.log('Error listing selections for library '+libraryId+' from cycle '+cycle.name, err.stack);
+            Logger.log('Error 2 listing selections for library '+libraryId+' from cycle '+cycle.name, err.stack);
+            Logger.log(err);
         });
 
     function populateProductsForOfferings( offeringsList ){

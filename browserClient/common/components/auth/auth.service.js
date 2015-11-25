@@ -1,7 +1,7 @@
 angular.module('common.auth')
     .service('authService', authService);
 
-function authService($rootScope, $q, $location, appState, CarliModules) {
+function authService($rootScope, $q, $location, $window, appState, CarliModules) {
     var session = null;
     var user = null;
 
@@ -22,7 +22,10 @@ function authService($rootScope, $q, $location, appState, CarliModules) {
         requireSession: requireSession,
         requireStaff: requireStaff,
         requireActive: requireActive,
-        redirectToLogin: redirectToLogin
+        redirectToLogin: redirectToLogin,
+
+        isMasqueradingRequested: isMasqueradingRequested,
+        initializeMasquerading: initializeMasquerading
     };
 
     function authenticateForStaffApp() {
@@ -99,6 +102,35 @@ function authService($rootScope, $q, $location, appState, CarliModules) {
             $rootScope.isLoggedIn = true;
             return passthrough;
         }
+    }
+
+    function isMasqueradingRequested() {
+        return isMasqueradingRequestedForLibrary() || isMasqueradingRequestedForVendor();
+    }
+    function isMasqueradingRequestedForLibrary() {
+        var queryParameters = $location.search();
+        return !!queryParameters[ 'masquerade-as-library' ];
+    }
+    function isMasqueradingRequestedForVendor() {
+        var queryParameters = $location.search();
+        return !!queryParameters[ 'masquerade-as-vendor' ];
+    }
+
+    function initializeMasquerading() {
+        var queryParameters = $location.search();
+        var masqueradeAsPromise = $q.when(true);
+
+        if (isMasqueradingRequestedForLibrary()) {
+            masqueradeAsPromise = masqueradeAsLibrary(queryParameters[ 'masquerade-as-library' ]);
+        }
+        if (isMasqueradingRequestedForVendor()) {
+            masqueradeAsPromise = masqueradeAsLibrary(queryParameters[ 'masquerade-as-vendor' ]);
+        }
+
+        return masqueradeAsPromise;
+    }
+    function masqueradeAsLibrary(libraryId) {
+        return $q.when( CarliModules.AuthMiddleware.masqueradeAsLibrary(libraryId) );
     }
 
     function requireSession() {

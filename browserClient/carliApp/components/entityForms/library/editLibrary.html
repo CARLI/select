@@ -11,7 +11,14 @@
                     <button type="button"  class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</button>
                     <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit" value="Save">
                 </div>
-                <button type="button"  id="library-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></button>
+                <div ng-hide="vm.editable">
+                    <a type="button"
+                            id="library-masquerade"
+                            class="carli-button"
+                            href="{{ vm.masqueradeAsLibraryUrl }}"
+                            target="carli-select-library-app">Masquerade<i class="fa fa-user"></i></a>
+                    <button type="button" id="library-edit" class="carli-button" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></button>
+                </div>
             </div>
         </div>
 

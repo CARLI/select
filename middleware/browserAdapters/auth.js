@@ -16,7 +16,15 @@ function deleteSession() {
     });
 }
 
+function masqueradeAsLibrary(libraryId) {
+    return middlewareRequest({
+        path: '/masquerade-library/' + libraryId,
+        method: 'post'
+    });
+}
+
 module.exports = {
     createSession: createSession,
-    deleteSession: deleteSession
+    deleteSession: deleteSession,
+    masqueradeAsLibrary: masqueradeAsLibrary
 };

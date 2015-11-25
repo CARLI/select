@@ -2,6 +2,7 @@
 var config = require('../config');
 var couchUtils = require('./Store/CouchDb/Utils')();
 var libraryRepository = require('./Entity/LibraryRepository');
+var userRepository = require('./Entity/UserRepository');
 var vendorRepository = require('./Entity/VendorRepository');
 
 function createSession(userLogin) {
@@ -46,6 +47,19 @@ function getUser(email) {
             user.library = library;
             return user;
         });
+    }
+}
+
+function masqueradeAsLibrary(libraryId) {
+    return getSession()
+        .then(setupUserForMasquerading)
+        .then(function() {
+            return {ok: true};
+        });
+
+    function setupUserForMasquerading(userCtx) {
+        var userId = 'org.couchdb.user:' + userCtx.name;
+        return userRepository.setMasqueradingLibraryIdForUserId(libraryId, userId);
     }
 }
 
@@ -98,6 +112,7 @@ module.exports = {
     deleteSession: deleteSession,
     getSession: getSession,
     getUser: getUser,
+    masqueradeAsLibrary: masqueradeAsLibrary,
     requireSession: requireSession,
     requireStaff: requireStaff,
     requireStaffOrLibrary: requireStaffOrLibrary,

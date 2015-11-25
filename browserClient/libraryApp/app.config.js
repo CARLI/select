@@ -35,8 +35,16 @@ angular.module('library.app', [
 .run(function($rootScope, authService, config) {
     $rootScope.appState = 'pendingUser';
 
-    if (authService.isRouteProtected()) {
-        authService.redirectToLogin();
+    if (authService.isMasqueradingRequested()) {
+        authService.initializeMasquerading().then(handleAuthentication);
+    } else {
+        handleAuthentication();
+    }
+
+    function handleAuthentication() {
+        if (authService.isRouteProtected()) {
+            authService.redirectToLogin();
+        }
     }
 })
 .value('cgBusyDefaults',{
