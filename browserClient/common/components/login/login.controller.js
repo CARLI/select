@@ -50,7 +50,7 @@ function loginController ($q, $rootScope, $location, alertService, authService, 
                 ; // .catch(redirectUserToTheCorrectApp);
 
             function ensureUserIsLoggingIntoTheAppropriateApp() {
-                if (userType !== appType) {
+                if (userType !== 'staff' && userType !== appType) {
                     throw new Error('User role mismatch');
                 }
                 return $q.when(true);
@@ -67,12 +67,12 @@ function loginController ($q, $rootScope, $location, alertService, authService, 
 
             function getUserType() {
                 //noinspection IfStatementWithTooManyBranchesJS
-                if (userContext.roles.indexOf('vendor') >= 0) {
+                if (userContext.roles.indexOf('staff') >= 0) {
+                    return 'staff';
+                } else if (userContext.roles.indexOf('vendor') >= 0) {
                     return 'vendor';
                 } else if (userContext.roles.indexOf('library') >= 0) {
                     return 'library';
-                } else if (userContext.roles.indexOf('staff') >= 0) {
-                    return 'staff';
                 } else {
                     throw new Error('Invalid user');
                 }
