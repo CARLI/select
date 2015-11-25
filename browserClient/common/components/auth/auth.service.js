@@ -24,8 +24,8 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules)
         requireActive: requireActive,
         redirectToLogin: redirectToLogin,
 
-        masqueradeAsLibrary: masqueradeAsLibrary,
-        openLibraryApp: openLibraryApp
+        isMasqueradingRequested: isMasqueradingRequested,
+        initializeMasquerading: initializeMasquerading
     };
 
     function authenticateForStaffApp() {
@@ -104,12 +104,33 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules)
         }
     }
 
+    function isMasqueradingRequested() {
+        return isMasqueradingRequestedForLibrary() || isMasqueradingRequestedForVendor();
+    }
+    function isMasqueradingRequestedForLibrary() {
+        var queryParameters = $location.search();
+        return !!queryParameters[ 'masquerade-as-library' ];
+    }
+    function isMasqueradingRequestedForVendor() {
+        var queryParameters = $location.search();
+        return !!queryParameters[ 'masquerade-as-vendor' ];
+    }
+
+    function initializeMasquerading() {
+        var queryParameters = $location.search();
+        var masqueradeAsPromise = $q.when(true);
+
+        if (isMasqueradingRequestedForLibrary()) {
+            masqueradeAsPromise = masqueradeAsLibrary(queryParameters[ 'masquerade-as-library' ]);
+        }
+        if (isMasqueradingRequestedForVendor()) {
+            masqueradeAsPromise = masqueradeAsLibrary(queryParameters[ 'masquerade-as-vendor' ]);
+        }
+
+        return masqueradeAsPromise;
+    }
     function masqueradeAsLibrary(libraryId) {
         return $q.when( CarliModules.AuthMiddleware.masqueradeAsLibrary(libraryId) );
-    }
-    function openLibraryApp(passthrough) {
-        $window.open('http://library.carli.local:8080/');
-        return passthrough;
     }
 
     function requireSession() {
