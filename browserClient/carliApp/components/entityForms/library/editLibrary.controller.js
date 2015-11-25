@@ -1,11 +1,12 @@
 angular.module('carli.entityForms.library')
     .controller('editLibraryController', editLibraryController);
 
-function editLibraryController( $scope, $rootScope, activityLogService, alertService, cycleService, entityBaseService, errorHandler, libraryService ) {
+function editLibraryController( $scope, $rootScope, activityLogService, alertService, config, cycleService, entityBaseService, errorHandler, libraryService ) {
     var vm = this;
 
     vm.crmContacts = [];
     vm.libraryId = $scope.libraryId;
+    vm.masqueradeAsLibraryUrl = null;
     var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
     vm.toggleEditable = toggleEditable;
@@ -37,6 +38,7 @@ function editLibraryController( $scope, $rootScope, activityLogService, alertSer
                 vm.library = angular.copy(library);
                 setLibraryFormPristine();
             })
+            .then(setMasqueradeAsLibraryUrl)
             .then(loadCrmContactsForLibrary)
             .then(loadCyclesForActiveProductsDisplay);
 
@@ -119,5 +121,13 @@ function editLibraryController( $scope, $rootScope, activityLogService, alertSer
 
     function logAddActivity(){
         return activityLogService.logEntityAdded(vm.library);
+    }
+
+    function setMasqueradeAsLibraryUrl() {
+        vm.masqueradeAsLibraryUrl = getMasqueradeAsLibraryUrl();
+    }
+    function getMasqueradeAsLibraryUrl() {
+        var queryString = '?masquerade-as-library=' + vm.library.id;
+        return config.libraryWebAppUrl + queryString;
     }
 }

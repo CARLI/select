@@ -6,7 +6,6 @@
         <button id="user-menu-label"
                 class="clear-button-styles"
                 type="button"
-
                 aria-haspopup="true"
                 aria-expanded="false">
             <span class="sr-only">Open user menu</span>
@@ -14,6 +13,7 @@
         </button>
         </a>
         <ul id="user-menu" class="dropdown-menu" role="menu" aria-labelledby="user-menu-label">
+            <li ng-if="vm.isStaffUser"><a href="/masquerade">Masquerade as…</a></li>
             <li><a ng-click="vm.logout()">Log out</a></li>
         </ul>
 

@@ -114,6 +114,11 @@ function runMiddlewareServer(){
                     return authResponse;
                 }
             });
+            authorizedRoute('post', '/masquerade-library/:libraryId', carliAuth.requireStaff, function (req, res) {
+                auth.masqueradeAsLibrary(req.params.libraryId)
+                    .then(sendResult(res))
+                    .catch(send500Error(res));
+            });
         }
         function defineRoutesForLibraries() {
             authorizedRoute('get', '/library', carliAuth.requireSession, function (req, res) {
