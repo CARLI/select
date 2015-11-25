@@ -4,7 +4,8 @@ angular.module('library.routes',[
         'library.sections.addOneTimePurchases',
         'library.sections.login',
         'library.sections.report',
-        'library.sections.resetRequest'
+        'library.sections.resetRequest',
+        'library.sections.masquerade'
 ])
     .config(function ($routeProvider) {
         $routeProvider
@@ -36,6 +37,11 @@ angular.module('library.routes',[
             .when('/report', {
                 templateUrl: '/libraryApp/sections/report/report.html',
                 controller:  'reportController',
+                controllerAs:'vm'
+            })
+            .when('/masquerade', {
+                templateUrl: '/libraryApp/sections/masquerade/masquerade.html',
+                controller:  'masqueradeController',
                 controllerAs:'vm'
             })
 /*            .when('/notifications', {
