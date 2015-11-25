@@ -6,6 +6,7 @@ function userMenuController(authService){
 
     vm.userName = '';
     vm.logout = authService.deleteSession;
+    vm.isStaffUser = false;
 
     activate();
 
@@ -16,6 +17,10 @@ function userMenuController(authService){
     function loadUserInfo() {
         authService.fetchCurrentUser().then(function (user) {
             vm.userName = user.fullName;
+
+            if (user.roles.indexOf('staff') >= 0) {
+                vm.isStaffUser = true;
+            }
         });
     }
 }
