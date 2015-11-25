@@ -15,8 +15,7 @@
                     <a type="button"
                             id="library-masquerade"
                             class="carli-button"
-                            ng-click="vm.masqueradeAs(vm.library.id)"
-                            href="http://library.carli.local:8080/"
+                            href="{{ vm.masqueradeAsLibraryUrl }}"
                             target="carli-select-library-app">Masquerade<i class="fa fa-user"></i></a>
                     <button type="button" id="library-edit" class="carli-button" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></button>
                 </div>

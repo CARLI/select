@@ -1,14 +1,14 @@
 angular.module('carli.entityForms.library')
     .controller('editLibraryController', editLibraryController);
 
-function editLibraryController( $scope, $rootScope, authService, activityLogService, alertService, cycleService, entityBaseService, errorHandler, libraryService ) {
+function editLibraryController( $scope, $rootScope, activityLogService, alertService, config, cycleService, entityBaseService, errorHandler, libraryService ) {
     var vm = this;
 
     vm.crmContacts = [];
     vm.libraryId = $scope.libraryId;
+    vm.masqueradeAsLibraryUrl = null;
     var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
-    vm.masqueradeAs = masqueradeAs;
     vm.toggleEditable = toggleEditable;
     vm.cancelEdit = cancelEdit;
     vm.saveLibrary = saveLibrary;
@@ -38,6 +38,7 @@ function editLibraryController( $scope, $rootScope, authService, activityLogServ
                 vm.library = angular.copy(library);
                 setLibraryFormPristine();
             })
+            .then(setMasqueradeAsLibraryUrl)
             .then(loadCrmContactsForLibrary)
             .then(loadCyclesForActiveProductsDisplay);
 
@@ -122,17 +123,11 @@ function editLibraryController( $scope, $rootScope, authService, activityLogServ
         return activityLogService.logEntityAdded(vm.library);
     }
 
-    function masqueradeAs(libraryId) {
-        //authService.openLibraryApp();
-        console.log('Setting up masquerading');
-        return authService.masqueradeAsLibrary(libraryId)
-            .then(function (result) {
-                console.log('Masquerading set for library id=' + libraryId);
-                return result;
-            });
-        
-        //return authService
-        //    .masqueradeAsLibrary(libraryId)
-        //    .then(authService.openLibraryApp);
+    function setMasqueradeAsLibraryUrl() {
+        vm.masqueradeAsLibraryUrl = getMasqueradeAsLibraryUrl();
+    }
+    function getMasqueradeAsLibraryUrl() {
+        var queryString = '?masquerade-as-library=' + vm.library.id;
+        return config.libraryWebAppUrl + queryString;
     }
 }
