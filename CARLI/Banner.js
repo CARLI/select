@@ -249,7 +249,9 @@ function getDataForBannerExportForSubscriptionCycle(cycle, batchId) {
 }
 
 function getDataForBannerExportForMembershipDues(year, batchId){
-
+    // Detail Codes:
+    // Membership - USIA
+    // I-Share - USIF
 }
 
 function listBatchesForCycle(cycle) {

@@ -183,9 +183,7 @@ var testOfferingData = [
     }
 ];
 
-describe.only('A Full Cycle Banner Export Integration Test', function () { /** TODO: REMOVE ONLY!!!!!!!!!!!!!!!!!!!! **/
-
-    //describe('The Banner Module', function(){
+describe('The Banner Module', function(){
     it('should be a module', function(){
         expect(bannerModule).to.be.an('object');
     });
@@ -201,9 +199,9 @@ describe.only('A Full Cycle Banner Export Integration Test', function () { /** T
     it('should have a listBatchesForCycle method', function(){
         expect(bannerModule.listBatchesForCycle).to.be.a('function');
     });
-    //});
+});
 
-
+describe('A Full Cycle Banner Export Integration Test', function () {
     it('exports a valid banner invoice', function () {
         return cycleRepository.create(testCycleData)
             .then(cycleRepository.load)
