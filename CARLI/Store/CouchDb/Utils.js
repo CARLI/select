@@ -218,7 +218,7 @@ module.exports = function (storeOptions) {
         var url = storeOptions.couchDbUrl + '/' + dbName + '/' + '_design/CARLI/_view/' + viewName;
 
         var queryParams = {};
-        if (key) {
+        if (key != null && typeof key !== 'undefined') {
             if (typeof key === 'number') {
                 queryParams.key = key;
             }
