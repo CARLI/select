@@ -69,7 +69,7 @@ describe('The LibraryRepository', function(){
         it('should list Libraries from the CARLI CRM and the local database', function(){
             var testNonCrmLibrary = {
                 type: 'LibraryNonCrm',
-                crmId: '3',
+                crmId: '4',
                 fte: 3333
             };
 
