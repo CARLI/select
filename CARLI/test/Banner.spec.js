@@ -184,6 +184,26 @@ var testOfferingData = [
 ];
 
 describe.only('A Full Cycle Banner Export Integration Test', function () { /** TODO: REMOVE ONLY!!!!!!!!!!!!!!!!!!!! **/
+
+    //describe('The Banner Module', function(){
+    it('should be a module', function(){
+        expect(bannerModule).to.be.an('object');
+    });
+
+    it('should have a getDataForBannerExportForSubscriptionCycle method', function(){
+        expect(bannerModule.getDataForBannerExportForSubscriptionCycle).to.be.a('function');
+    });
+
+    it('should have a getDataForBannerExportForMembershipDues method', function(){
+        expect(bannerModule.getDataForBannerExportForMembershipDues).to.be.a('function');
+    });
+
+    it('should have a listBatchesForCycle method', function(){
+        expect(bannerModule.listBatchesForCycle).to.be.a('function');
+    });
+    //});
+
+
     it('exports a valid banner invoice', function () {
         return cycleRepository.create(testCycleData)
             .then(cycleRepository.load)
@@ -270,7 +290,7 @@ describe.only('A Full Cycle Banner Export Integration Test', function () { /** T
         }
 
         function generateBannerFeed(batchId) {
-            return bannerModule.getDataForBannerExport(cycle, batchId);
+            return bannerModule.getDataForBannerExportForSubscriptionCycle(cycle, batchId);
         }
 
         function debugBannerFeed(bannerFeedData) {
@@ -306,6 +326,4 @@ describe.only('A Full Cycle Banner Export Integration Test', function () { /** T
             }
         }
     }
-
-
 });

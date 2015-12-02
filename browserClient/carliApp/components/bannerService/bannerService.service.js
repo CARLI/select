@@ -5,13 +5,13 @@ function bannerService(CarliModules, $q, browserDownloadService) {
     var bannerModule = CarliModules.Banner;
 
     return {
-        getDataForBannerExport: getDataForBannerExport,
+        getDataForBannerExportForSubscriptionCycle: getDataForBannerExportForSubscriptionCycle,
         listBatchesForCycle: listBatchesForCycle,
         downloadBannerExportForInvoices: downloadBannerExportForInvoices
     };
 
-    function getDataForBannerExport(cycle, batchId) {
-        return $q.when( bannerModule.getDataForBannerExport(cycle, batchId) );
+    function getDataForBannerExportForSubscriptionCycle(cycle, batchId) {
+        return $q.when( bannerModule.getDataForBannerExportForSubscriptionCycle(cycle, batchId) );
     }
 
     function listBatchesForCycle(cycle) {
@@ -19,7 +19,7 @@ function bannerService(CarliModules, $q, browserDownloadService) {
     }
 
     function downloadBannerExportForInvoices(cycle, batchId) {
-        return getDataForBannerExport(cycle, batchId)
+        return getDataForBannerExportForSubscriptionCycle(cycle, batchId)
             .then(function(exportData) {
                 browserDownloadService.browserDownload(getBannerExportFilename(), 'text/plain;charset=utf-8', exportData);
             });

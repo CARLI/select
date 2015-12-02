@@ -7,7 +7,7 @@ var LibraryRepository = require('./Entity/LibraryRepository');
 var NotificationRepository = require('./Entity/NotificationRepository');
 var OfferingRepository = require('./Entity/OfferingRepository');
 
-function getDataForBannerExport(cycle, batchId) {
+function getDataForBannerExportForSubscriptionCycle(cycle, batchId) {
     var librariesById = {};
 
     return LibraryRepository.listActiveLibraries()
@@ -30,6 +30,10 @@ function getDataForBannerExport(cycle, batchId) {
             librariesById[library.id] = library;
         });
         return true;
+    }
+
+    function loadInvoiceNotifications() {
+        return NotificationRepository.listInvoiceNotificationsForCycleId(cycle.id);
     }
 
     function getDataForBatchId(notifications) {
@@ -101,10 +105,6 @@ function getDataForBannerExport(cycle, batchId) {
                 seenInvoiceNumbers[notification.invoiceNumber] = true;
             }
         }
-    }
-
-    function loadInvoiceNotifications() {
-        return NotificationRepository.listInvoiceNotificationsForCycleId(cycle.id);
     }
 
     function loadOfferingsForNotification(notification) {
@@ -248,6 +248,10 @@ function getDataForBannerExport(cycle, batchId) {
     }
 }
 
+function getDataForBannerExportForMembershipDues(year, batchId){
+
+}
+
 function listBatchesForCycle(cycle) {
     return NotificationRepository.listInvoiceNotificationsForCycleId(cycle.id)
         .then(gatherBatchSummaries);
@@ -284,6 +288,7 @@ function listBatchesForCycle(cycle) {
 }
 
 module.exports = {
-    getDataForBannerExport: getDataForBannerExport,
+    getDataForBannerExportForSubscriptionCycle: getDataForBannerExportForSubscriptionCycle,
+    getDataForBannerExportForMembershipDues: getDataForBannerExportForMembershipDues,
     listBatchesForCycle: listBatchesForCycle
 };
