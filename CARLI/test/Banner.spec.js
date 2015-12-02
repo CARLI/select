@@ -4,6 +4,7 @@ var config = require('../../config');
 var cycleRepository = require('../Entity/CycleRepository');
 var Entity = require('../Entity');
 var expect = chai.expect;
+var fs = require('fs-extra');
 var libraryRepository = require('../Entity/LibraryRepository');
 var localLibraryRepository = Entity('LibraryNonCrm');
 var notificationDraftGenerator = require('../NotificationDraftGenerator');
@@ -18,6 +19,31 @@ var vendorRepository = require('../Entity/VendorRepository');
 
 localLibraryRepository.setStore(testUtils.getTestDbStore());
 testUtils.setupTestDb();
+
+var batchIdFileName = config.invoiceDataDir + '/batchId';
+var batchIdBackupFileName = config.invoiceDataDir + '/batchId.bak';
+var invoiceNumberFileName = config.invoiceDataDir + '/invoiceNumber';
+var invoiceNumberBackupFileName = config.invoiceDataDir + '/invoiceNumber.bak';
+
+function backupInvoiceAndBatchFiles(){
+    fs.copySync(batchIdFileName, batchIdBackupFileName);
+    fs.copySync(invoiceNumberFileName, invoiceNumberBackupFileName);
+    //console.log('batch and invoice files backed up');
+}
+
+function writeTestInvoiceAndBatchFiles(){
+    fs.writeFileSync(batchIdFileName, '0');
+    fs.writeFileSync(invoiceNumberFileName, '00AA');
+    //console.log('batch and invoice files written with test values');
+}
+
+function restoreInvoiceAndBatchFiles(){
+    fs.copySync(batchIdBackupFileName, batchIdFileName);
+    fs.copySync(invoiceNumberBackupFileName, invoiceNumberFileName);
+    fs.removeSync(batchIdBackupFileName);
+    fs.removeSync(invoiceNumberBackupFileName);
+    //console.log('batch and invoice files restored');
+}
 
 var testCycleId = testUtils.testDbMarker + ' Banner Test Fiscal Year ' + uuid.v4();
 
@@ -157,8 +183,7 @@ var testOfferingData = [
     }
 ];
 
-describe.only('A Full Cycle Banner Export Integration Test', function () {
-    /** TODO: REMOVE ONLY!!!!!!!!!!!!!!!!!!!! **/
+describe.only('A Full Cycle Banner Export Integration Test', function () { /** TODO: REMOVE ONLY!!!!!!!!!!!!!!!!!!!! **/
     it('exports a valid banner invoice', function () {
         return cycleRepository.create(testCycleData)
             .then(cycleRepository.load)
@@ -220,7 +245,10 @@ describe.only('A Full Cycle Banner Export Integration Test', function () {
                 cycleId: cycle.id
             };
 
-            batchId = null;
+            var batchId = null;
+
+            backupInvoiceAndBatchFiles();
+            writeTestInvoiceAndBatchFiles();
 
             var generator = notificationDraftGenerator.generateDraftNotification(notificationTemplate, notificationData);
 
@@ -236,6 +264,7 @@ describe.only('A Full Cycle Banner Export Integration Test', function () {
                     return Q.all(notifications.map(notificationRepository.create));
                 })
                 .then(function () {
+                    restoreInvoiceAndBatchFiles();
                     return batchId;
                 });
         }
@@ -245,27 +274,38 @@ describe.only('A Full Cycle Banner Export Integration Test', function () {
         }
 
         function debugBannerFeed(bannerFeedData) {
-            console.log('--------------------------------------------------------------------------------');
-            console.log('                                        BANNER FEED');
-            console.log('--------------------------------------------------------------------------------');
-
-            console.log(typeof bannerFeedData);
-
-            console.log(bannerFeedData);
-            console.log('--------------------------------------------------------------------------------');
-
+            fs.writeFileSync('banner.txt', bannerFeedData, 'utf8');
             return bannerFeedData;
         }
 
         function verifyBannerFeed(bannerFeedData) {
-            return expect(bannerFeedData).to.satisfy(validBannerFeed);
+            var bannerFeedLines = bannerFeedData.split('\n');
 
-            function validBannerFeed(data) {
-                return false;
+            //                     2USI00001@01460518         9CARLI                        USII000000900.00          USIN03AA
+            var bannerFileRegex = /2USI00001@[0-9]{8}         9CARLI                        USII0[0-9]{8}.00          USIN0\dAA\s{63}/;
+
+            return Q.all([
+                expect(bannerFeedLines.length).to.equal(10), //header plus 9 invoices
+                expect(bannerFeedLines[0]).to.equal('1USI00001' + batchCreationDate() + '00009000018700.009CARLI  \r'),
+                expect(bannerFeedLines[1]).to.match(bannerFileRegex)
+            ]);
+
+            function batchCreationDate() {
+                var d = new Date();
+                var mm = d.getMonth() + 1;
+                var dd = d.getDate();
+
+                if (mm < 10) {
+                    mm = '0' + mm;
+                }
+                if (dd < 10) {
+                    dd = '0' + dd;
+                }
+
+                return '' + mm + dd + d.getFullYear();
             }
         }
     }
 
 
 });
-
