@@ -716,3 +716,80 @@ describe('the listAllContacts method', function(){
             });
     });
 });
+
+describe('the listInvoiceNotificationsForMembershipYear method', function(){
+    it('should be a function', function(){
+        expect(notificationRepository.listInvoiceNotificationsForMembershipYear).to.be.a('function');
+    });
+
+    it('should return notifications for the membership year', function(){
+        return arrangeTestNotifications()
+            .then(doTestQuery)
+            .then(validateQueryResults);
+
+        function arrangeTestNotifications(){
+            return Q.all([
+                {
+                    type: 'Notification',
+                    subject: 'Test subject',
+                    emailBody: 'A generic "other" notification. Not included.',
+                    draftStatus: 'draft',
+                    notificationType: 'other'
+                },
+                {
+                    type: 'Notification',
+                    subject: 'Test subject',
+                    emailBody: 'A regular subscription cycle product invoice. Not included.',
+                    draftStatus: 'draft',
+                    notificationType: 'invoice',
+                    targetEntity: '1',
+                    cycle: 'a-bogus-cycle-id',
+                    batchId: '001'
+                },
+                {
+                    type: 'Notification',
+                    subject: 'Test subject',
+                    emailBody: 'An annual access fee invoice. Not included.',
+                    draftStatus: 'draft',
+                    notificationType: 'invoice',
+                    targetEntity: '1',
+                    isFeeInvoice: true,
+                    cycle: 'a-bogus-cycle-id',
+                    batchId: '002'
+                },
+                {
+                    type: 'Notification',
+                    subject: 'Test Subject',
+                    emailBody: 'A membership dues invoice for the wrong year. Not included.',
+                    draftStatus: 'draft',
+                    notificationType: 'invoice',
+                    targetEntity: '1',
+                    cycle: "",
+                    batchId: '003',
+                    isMembershipDuesInvoice: true,
+                    fiscalYear: 2015
+                },
+                {
+                    type: 'Notification',
+                    subject: 'Membership',
+                    emailBody: 'A membership dues invoice. Should be included.',
+                    draftStatus: 'draft',
+                    notificationType: 'invoice',
+                    targetEntity: '1',
+                    cycle: "",
+                    batchId: '004',
+                    isMembershipDuesInvoice: true,
+                    fiscalYear: 2016
+                }
+            ].map(notificationRepository.create));
+        }
+
+        function doTestQuery(){
+            return notificationRepository.listInvoiceNotificationsForMembershipYear(2016);
+        }
+
+        function validateQueryResults(queryResults){
+            return expect(queryResults).to.be.an('array').and.have.property('length',1);
+        }
+    });
+});

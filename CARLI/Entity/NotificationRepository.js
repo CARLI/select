@@ -137,6 +137,21 @@ function listInvoiceNotificationsForCycleId(cycleId){
     return couchUtils.getCouchViewResultValues(config.getDbName(), 'listInvoiceNotificationsByCycle', cycleId);
 }
 
+function listInvoiceNotificationsForMembershipYear(membershipYear){
+    return couchUtils.getCouchViewResultValues(config.getDbName(), 'listInvoiceNotificationsByCycle', "")
+        .then(function(listOfAllNotificationsWithNoCycle){
+            return listOfAllNotificationsWithNoCycle.filter(isMembershipInvoice).filter(forTheRightYear);
+        });
+
+    function forTheRightYear(notification){
+        return notification.fiscalYear === membershipYear;
+    }
+}
+
+function isMembershipInvoice(notification){
+    return notification.isMembershipDuesInvoice;
+}
+
 function listAllContacts(){
     return Q.all([ //TODO: use allSettled
             libraryRepository.listAllContacts(),
@@ -348,6 +363,7 @@ module.exports = {
     templateIsForMembershipDues: templateIsForMembershipDues,
     notificationTypeAllowsRecipientsToBeEdited: notificationTypeAllowsRecipientsToBeEdited,
     listInvoiceNotificationsForCycleId: listInvoiceNotificationsForCycleId,
+    listInvoiceNotificationsForMembershipYear: listInvoiceNotificationsForMembershipYear,
     getSummaryFundedTotal: getSummaryFundedTotal,
     getSummaryTotal: getSummaryTotal
 };
