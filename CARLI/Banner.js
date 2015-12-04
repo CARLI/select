@@ -252,6 +252,10 @@ function getDataForBannerExportForMembershipDues(year, batchId){
     // Detail Codes:
     // Membership - USIA
     // I-Share - USIF
+    return NotificationRepository.listInvoiceNotificationsForMembershipYear(year, batchId)
+        .then(function(notifications){
+
+        });
 }
 
 function listBatchesForCycle(cycle) {
