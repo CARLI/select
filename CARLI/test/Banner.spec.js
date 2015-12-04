@@ -7,6 +7,7 @@ var expect = chai.expect;
 var fs = require('fs-extra');
 var libraryRepository = require('../Entity/LibraryRepository');
 var localLibraryRepository = Entity('LibraryNonCrm');
+var membershipRepository = require('../Entity/MembershipRepository');
 var notificationDraftGenerator = require('../NotificationDraftGenerator');
 var notificationRepository = require('../Entity/NotificationRepository');
 var offeringRepository = require('../Entity/OfferingRepository');
@@ -25,19 +26,19 @@ var batchIdBackupFileName = config.invoiceDataDir + '/batchId.bak';
 var invoiceNumberFileName = config.invoiceDataDir + '/invoiceNumber';
 var invoiceNumberBackupFileName = config.invoiceDataDir + '/invoiceNumber.bak';
 
-function backupInvoiceAndBatchFiles(){
+function backupInvoiceAndBatchFiles() {
     fs.copySync(batchIdFileName, batchIdBackupFileName);
     fs.copySync(invoiceNumberFileName, invoiceNumberBackupFileName);
     //console.log('batch and invoice files backed up');
 }
 
-function writeTestInvoiceAndBatchFiles(){
+function writeTestInvoiceAndBatchFiles() {
     fs.writeFileSync(batchIdFileName, '0');
     fs.writeFileSync(invoiceNumberFileName, '00AA');
     //console.log('batch and invoice files written with test values');
 }
 
-function restoreInvoiceAndBatchFiles(){
+function restoreInvoiceAndBatchFiles() {
     fs.copySync(batchIdBackupFileName, batchIdFileName);
     fs.copySync(invoiceNumberBackupFileName, invoiceNumberFileName);
     fs.removeSync(batchIdBackupFileName);
@@ -183,34 +184,32 @@ var testOfferingData = [
     }
 ];
 
-describe('The Banner Module', function(){
-    it('should be a module', function(){
+describe('The Banner Module', function () {
+    it('should be a module', function () {
         expect(bannerModule).to.be.an('object');
     });
 
-    it('should have a getDataForBannerExportForSubscriptionCycle method', function(){
+    it('should have a getDataForBannerExportForSubscriptionCycle method', function () {
         expect(bannerModule.getDataForBannerExportForSubscriptionCycle).to.be.a('function');
     });
 
-    it('should have a getDataForBannerExportForMembershipDues method', function(){
+    it('should have a getDataForBannerExportForMembershipDues method', function () {
         expect(bannerModule.getDataForBannerExportForMembershipDues).to.be.a('function');
     });
 
-    it('should have a listBatchesForCycle method', function(){
+    it('should have a listBatchesForCycle method', function () {
         expect(bannerModule.listBatchesForCycle).to.be.a('function');
     });
 });
 
-describe('A Full Cycle Banner Export Integration Test', function () {
-    it('exports a valid banner invoice', function () {
+describe('A Full Subscription Cycle Banner Export Integration Test', function () {
+    it('exports a valid banner feed', function () {
         return cycleRepository.create(testCycleData)
             .then(cycleRepository.load)
-            .then(function (testCycle) {
-                return runBannerExportIntegrationTest(testCycle);
-            });
+            .then(runSubscriptionCycleBannerExportIntegrationTest);
     });
 
-    function runBannerExportIntegrationTest(cycle) {
+    function runSubscriptionCycleBannerExportIntegrationTest(cycle) {
         return setupTestVendors()
             .then(setupTestProducts)
             .then(setupTestLibraryData)
@@ -240,10 +239,10 @@ describe('A Full Cycle Banner Export Integration Test', function () {
         }
 
         function setupTestOfferings() {
-            return Q.all(Object.keys(testOfferingData).map(createOffering));
+            return Q.all(testOfferingData.map(createOffering));
 
-            function createOffering(testOfferingId) {
-                return offeringRepository.create(testOfferingData[testOfferingId], cycle);
+            function createOffering(testOffering) {
+                return offeringRepository.create(testOffering, cycle);
             }
         }
 
@@ -307,21 +306,106 @@ describe('A Full Cycle Banner Export Integration Test', function () {
                 expect(bannerFeedLines[0]).to.equal('1USI00001' + batchCreationDate() + '00009000018700.009CARLI  \r'),
                 expect(bannerFeedLines[1]).to.match(bannerFileRegex)
             ]);
-
-            function batchCreationDate() {
-                var d = new Date();
-                var mm = d.getMonth() + 1;
-                var dd = d.getDate();
-
-                if (mm < 10) {
-                    mm = '0' + mm;
-                }
-                if (dd < 10) {
-                    dd = '0' + dd;
-                }
-
-                return '' + mm + dd + d.getFullYear();
-            }
         }
     }
 });
+
+describe.only('A Membership Year Banner Export Integration Test', function () {
+    var testMembershipYear = 2020;
+
+    it('exports a valid banner feed', function () {
+        return arrangeTestData()
+            .then(generateInvoices)
+            .then(generateBannerFeed)
+            .then(verifyBannerFeed)
+    });
+
+    function arrangeTestData(){
+        var testMembershipData = {
+            type: 'Membership',
+            year: testMembershipYear,
+            data: {
+                "1": { ishare: 100, membership: 200 },
+                "3": { membership: 400 },
+                "58": { ishare: 600 }
+            }
+        };
+
+        return membershipRepository.create(testMembershipData);
+    }
+
+    function generateInvoices() {
+        var notificationTemplate = {
+            id: 'notification-template-membership-invoices',
+            name: 'Membership Invoices',
+            subject: 'Membership Invoices',
+            emailBody: '',
+            pdfBefore: 'This text appears before the invoice contents',
+            pdfAfter: 'This text appears after the invoice contents',
+            pdfContentIsEditable: true,
+            notificationType: 'invoice'
+        };
+
+        var notificationData = {};
+
+        var batchId = null;
+
+        backupInvoiceAndBatchFiles();
+        writeTestInvoiceAndBatchFiles();
+
+        var generator = notificationDraftGenerator.generateDraftNotification(notificationTemplate, notificationData);
+
+        return generator.getRecipients()
+            .then(function (recipients) {
+                var recipientIds = recipients.map(function (e) {
+                    return e.id
+                });
+                return generator.getNotifications(notificationTemplate, recipientIds);
+            })
+            .then(function (notifications) {
+                batchId = notifications[0].batchId;
+                return Q.all(notifications.map(notificationRepository.create));
+            })
+            .then(function () {
+                restoreInvoiceAndBatchFiles();
+                return batchId;
+            });
+    }
+
+    function generateBannerFeed(batchId) {
+        return bannerModule.getDataForBannerExportForMembershipDues(testMembershipYear, batchId);
+    }
+
+    function verifyBannerFeed(bannerFeedData){
+        console.log('');
+        console.log(' === BANNER FEED ===');
+        console.log('');
+        console.log(bannerFeedData);
+
+        var bannerFeedLines = bannerFeedData.split('\n');
+
+        //                     2USI00001@01460518         9CARLI                        USII000000900.00          USIN03AA
+        var bannerFileRegex = /2USI00001@[0-9]{8}         9CARLI                        USII0[0-9]{8}.00          USIN0\dAA\s{63}/;
+
+        return Q.all([
+            expect(bannerFeedLines.length).to.equal(10), //header plus 4 invoices
+            expect(bannerFeedLines[0]).to.equal('1USI00001' + batchCreationDate() + '00009000018700.009CARLI  \r'),
+            expect(bannerFeedLines[1]).to.match(bannerFileRegex)
+        ]);
+    }
+});
+
+function batchCreationDate() {
+    var d = new Date();
+    var mm = d.getMonth() + 1;
+    var dd = d.getDate();
+
+    if (mm < 10) {
+        mm = '0' + mm;
+    }
+    if (dd < 10) {
+        dd = '0' + dd;
+    }
+
+    return '' + mm + dd + d.getFullYear();
+}
