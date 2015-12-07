@@ -299,12 +299,20 @@ describe('A Full Subscription Cycle Banner Export Integration Test', function ()
             var bannerFeedLines = bannerFeedData.split('\n');
 
             //                     2USI00001@01460518         9CARLI                        USII000000900.00          USIN03AA
-            var bannerFileRegex = /2USI00001@[0-9]{8}         9CARLI                        USII0[0-9]{8}.00          USIN0\dAA\s{63}/;
+            var bannerFileRegex = /2USI00001@[0-9]{8}         9CARLI                        USII0[0-9]{8}.00          USIN0\dAA\s{62}/;
 
             return Q.all([
                 expect(bannerFeedLines.length).to.equal(10), //header plus 9 invoices
                 expect(bannerFeedLines[0]).to.equal('1USI00001' + batchCreationDate() + '00009000018700.009CARLI  \r'),
-                expect(bannerFeedLines[1]).to.match(bannerFileRegex)
+                expect(bannerFeedLines[1]).to.match(bannerFileRegex),
+                expect(bannerFeedLines[2]).to.match(bannerFileRegex),
+                expect(bannerFeedLines[3]).to.match(bannerFileRegex),
+                expect(bannerFeedLines[4]).to.match(bannerFileRegex),
+                expect(bannerFeedLines[5]).to.match(bannerFileRegex),
+                expect(bannerFeedLines[6]).to.match(bannerFileRegex),
+                expect(bannerFeedLines[7]).to.match(bannerFileRegex),
+                expect(bannerFeedLines[8]).to.match(bannerFileRegex),
+                expect(bannerFeedLines[9]).to.match(bannerFileRegex)
             ]);
         }
     }
