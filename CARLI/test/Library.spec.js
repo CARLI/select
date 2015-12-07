@@ -33,10 +33,11 @@ describe('The LibraryRepository', function(){
     describe('LibraryRepository.load', function() {
         it('should have a load method that combines data from the CARLI CRM and the local database', function(){
             this.timeout(5000);
+            var crmId = '2';
 
             var testNonCrmLibrary = {
                 type: 'LibraryNonCrm',
-                crmId: '1',
+                crmId: crmId,
                 fte: 1111,
                 contacts: [
                     { firstName: 'test1', email: 'test@test.com', contactType: 'Other' },
@@ -46,11 +47,11 @@ describe('The LibraryRepository', function(){
 
             return localLibraryRepository.create(testNonCrmLibrary)
                 .then(function(){
-                    return LibraryRepository.load('1');
+                    return LibraryRepository.load(crmId);
                 })
                 .then(function(loadedLibrary){
                     return Q.all([
-                        expect(loadedLibrary).to.be.an('object').and.have.property('id','1'),
+                        expect(loadedLibrary).to.be.an('object').and.have.property('id',crmId),
                         expect(loadedLibrary).to.have.property('fte',testNonCrmLibrary.fte),
                         expect(loadedLibrary.contacts).to.be.an('array').and.have.property('length',2)
                     ]);
@@ -68,7 +69,7 @@ describe('The LibraryRepository', function(){
         it('should list Libraries from the CARLI CRM and the local database', function(){
             var testNonCrmLibrary = {
                 type: 'LibraryNonCrm',
-                crmId: '3',
+                crmId: '4',
                 fte: 3333
             };
 

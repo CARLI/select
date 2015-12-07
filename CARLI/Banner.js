@@ -1,13 +1,13 @@
-
 var _ = require('lodash');
 var Q = require('q');
 
 var carliError = require('./Error');
 var LibraryRepository = require('./Entity/LibraryRepository');
+var membershipRepository = require('./Entity/MembershipRepository');
 var NotificationRepository = require('./Entity/NotificationRepository');
 var OfferingRepository = require('./Entity/OfferingRepository');
 
-function getDataForBannerExport(cycle, batchId) {
+function getDataForBannerExportForSubscriptionCycle(cycle, batchId) {
     var librariesById = {};
 
     return LibraryRepository.listActiveLibraries()
@@ -19,10 +19,6 @@ function getDataForBannerExport(cycle, batchId) {
 
     function filterLibraries(libraries) {
         return libraries.filter(shouldAppearInBannerFeed);
-
-        function shouldAppearInBannerFeed(library) {
-            return !library.excludeFromBannerFeed;
-        }
     }
 
     function groupLibrariesById(libraries) {
@@ -30,6 +26,10 @@ function getDataForBannerExport(cycle, batchId) {
             librariesById[library.id] = library;
         });
         return true;
+    }
+
+    function loadInvoiceNotifications() {
+        return NotificationRepository.listInvoiceNotificationsForCycleId(cycle.id);
     }
 
     function getDataForBatchId(notifications) {
@@ -40,7 +40,7 @@ function getDataForBannerExport(cycle, batchId) {
 
         notifications.forEach(gatherDataForBatch);
 
-        return Q.all(offeringPromises).then(function() {
+        return Q.all(offeringPromises).then(function () {
             return dataForBatch;
         });
 
@@ -52,7 +52,7 @@ function getDataForBannerExport(cycle, batchId) {
             throwIfDuplicateLibraries(notification);
             throwIfDuplicateInvoiceNumber(notification);
 
-            var library = librariesById[ notification.targetEntity ];
+            var library = librariesById[notification.targetEntity];
 
             if (library && notification.summaryTotal) {
                 offeringPromises.push(
@@ -78,7 +78,7 @@ function getDataForBannerExport(cycle, batchId) {
                         invoiceNumber: notification.invoiceNumber
                     };
 
-                    if (!dataForBatch[library.id ].hasOwnProperty(detailCode)) {
+                    if (!dataForBatch[library.id].hasOwnProperty(detailCode)) {
                         dataForBatch[library.id][detailCode] = [];
                     }
                     dataForBatch[library.id][detailCode].push(bannerFeedData);
@@ -103,15 +103,11 @@ function getDataForBannerExport(cycle, batchId) {
         }
     }
 
-    function loadInvoiceNotifications() {
-        return NotificationRepository.listInvoiceNotificationsForCycleId(cycle.id);
-    }
-
     function loadOfferingsForNotification(notification) {
         return loadOfferings(notification.targetEntity);
 
-        function loadOfferings(libraryId, offeringsToLoad){
-            if ( offeringsToLoad && offeringsToLoad.length ){
+        function loadOfferings(libraryId, offeringsToLoad) {
+            if (offeringsToLoad && offeringsToLoad.length) {
                 return OfferingRepository.getOfferingsById(offeringsToLoad, cycle);
             }
             else {
@@ -123,128 +119,224 @@ function getDataForBannerExport(cycle, batchId) {
     function formatBatchAsBannerFeed(bannerFeedData) {
         return formatBatch(batchId, bannerFeedData);
     }
+}
 
-    function formatBatch(batchId, bannerFeedDataByLibraryAndDetailCode) {
-        var lines = [];
-        var bannerHeaderIndicator = '1';
-        var bannerRecordIndicator = '2';
-        var carliDepartmentIdentifierForHeader = padRight('9CARLI', 8, ' ');
-        var carliDepartmentIdentifierForRecord = padRight('9CARLI', 30, ' ');
-        var dollarAmountFieldWidth = 12;
+function getDataForBannerExportForMembershipDues(year, batchId) {
+    var invoicesForBatchByLibraryId = {};
+    var membershipDuesByLibraryId = {};
 
-        var twoSpaces = padRight('', 2, ' ');
-        var sixSpaces = padRight('', 6, ' ');
-        var eightSpaces = padRight('', 8, ' ');
-        var nineSpaces = padRight('', 9, ' ');
+    return NotificationRepository.listInvoiceNotificationsForMembershipYear(year)
+        .then(saveInvoicesForBatch)
+        .then(getMembershipData)
+        .then(saveMembershipData)
+        .then(getLibrariesForExport)
+        .then(gatherBannerFeedData)
+        .then(exportMembershipBannerFeed);
 
-        var effectiveDate = eightSpaces;
-        var billDate = eightSpaces;
-        var dueDate = eightSpaces;
-        var tnumPaid = eightSpaces;
-        var entityCode = twoSpaces;
-        var notes = padRight('', 20, ' ');
-        var transDate = eightSpaces;
-
-        var totalDollars = 0;
-
-        forEachRecordByLibraryAndDetailCode(function (bannerData) {
-            totalDollars += bannerData.dollarAmount;
-            lines.push(generateBannerRow(bannerData));
+    function saveInvoicesForBatch(notifications) {
+        var invoicesForBatch = notifications.filter(function (notification) {
+            return notification.batchId === batchId;
         });
 
-        lines.unshift(generateBannerHeader());
-        return lines.join("\r\n");
+        invoicesForBatch.forEach(function (invoice) {
+            invoicesForBatchByLibraryId[invoice.targetEntity] = invoice;
+        });
 
-        function forEachRecordByLibraryAndDetailCode(callback) {
-            Object.keys(bannerFeedDataByLibraryAndDetailCode).forEach(function(libraryId) {
-                Object.keys(bannerFeedDataByLibraryAndDetailCode[libraryId]).forEach(function (detailCode) {
-                    bannerFeedDataByLibraryAndDetailCode[libraryId][detailCode ].forEach(callback);
-                })
+        return invoicesForBatchByLibraryId;
+    }
+
+    function getMembershipData() {
+        return membershipRepository.loadDataForYear(year);
+    }
+
+    function saveMembershipData(membershipData) {
+        membershipDuesByLibraryId = membershipData.data;
+        return membershipData;
+    }
+
+    function getLibrariesForExport(membershipData) {
+        return LibraryRepository.getLibrariesById(membershipRepository.listLibrariesWithDues(membershipData))
+            .then(function (libraryList) {
+                return libraryList.filter(shouldAppearInBannerFeed);
             });
-        }
+    }
 
-        function generateBannerRow(invoiceData) {
-            if (!invoiceData.library.gar) {
-                throw carliError('Cannot generate banner feed for a library with no GAR (' + invoiceData.library.name + ')');
-            }
-            return [
-                bannerRecordIndicator,
-                batchId,
-                invoiceData.library.gar,
-                nineSpaces,
-                carliDepartmentIdentifierForRecord,
-                invoiceData.detailCode,
-                formatDollarAmountWithLeftPadding(invoiceData.dollarAmount),
-                sixSpaces,
-                twoSpaces,
-                twoSpaces,
-                invoiceData.invoiceNumber,
-                effectiveDate,
-                billDate,
-                dueDate,
-                tnumPaid,
-                entityCode,
-                notes,
-                transDate
-            ].join('');
-        }
+    function gatherBannerFeedData(librariesForBannerExport) {
+        var dataForBatch = {};
 
-        function generateBannerHeader() {
-            return [
-                bannerHeaderIndicator,
-                batchId,
-                formatBatchCreateDate(),
-                padLeft(countTotalRecords(), 5, '0'),
-                formatDollarAmountWithLeftPadding(totalDollars),
-                carliDepartmentIdentifierForHeader
-            ].join('');
-        }
+        librariesForBannerExport.forEach(combineDataForBannerExport);
 
-        function countTotalRecords() {
-            var sum = 0;
-            forEachRecordByLibraryAndDetailCode(function (record) {
-                sum++;
-            });
-            return sum;
-        }
+        return dataForBatch;
 
-        function padRight(str, width, char) {
-            for (var i = str.length; i < width; i++) {
-                str += char;
-            }
-            return str;
-        }
+        function combineDataForBannerExport(library) {
+            var membershipDetailCode = 'USIA';
+            var ishareDetailCode = 'USIF';
 
-        function padLeft(str, width, char) {
-            str = str.toString();
-            for (var i = str.length; i < width; i++) {
-                str = char + str;
-            }
-            return str;
-        }
+            var notification = invoicesForBatchByLibraryId[library.id];
+            var dues = membershipDuesByLibraryId[library.id];
 
-        function formatBatchCreateDate() {
-            var d = new Date();
-            var mm = d.getMonth() + 1;
-            var dd = d.getDate();
+            dataForBatch[library.id] = {
+                USIA: [],
+                USIF: []
+            };
 
-            if (mm < 10) {
-                mm = '0' + mm;
-            }
-            if (dd < 10) {
-                dd = '0' + dd;
+            if ( dues.membership ){
+                addMembershipLine(dues.membership);
             }
 
-            return '' + mm + dd + d.getFullYear();
+            if ( dues.ishare ){
+                addIshareLine(dues.ishare);
+            }
+
+            function addMembershipLine(dollarAmount) {
+                dataForBatch[library.id][membershipDetailCode].push({
+                    library: library,
+                    invoiceNumber: notification.invoiceNumber,
+                    detailCode: membershipDetailCode,
+                    dollarAmount: dollarAmount
+                });
+            }
+
+            function addIshareLine(dollarAmount) {
+                dataForBatch[library.id][ishareDetailCode].push({
+                    library: library,
+                    invoiceNumber: notification.invoiceNumber,
+                    detailCode: ishareDetailCode,
+                    dollarAmount: dollarAmount
+                });
+            }
+        }
+    }
+
+    function exportMembershipBannerFeed(bannerFeedData) {
+        return formatBatch(batchId, bannerFeedData);
+    }
+}
+
+function shouldAppearInBannerFeed(library) {
+    return !library.excludeFromBannerFeed;
+}
+
+function formatBatch(batchId, bannerFeedDataByLibraryAndDetailCode) {
+    var lines = [];
+    var bannerHeaderIndicator = '1';
+    var bannerRecordIndicator = '2';
+    var carliDepartmentIdentifierForHeader = padRight('9CARLI', 8, ' ');
+    var carliDepartmentIdentifierForRecord = padRight('9CARLI', 30, ' ');
+    var dollarAmountFieldWidth = 12;
+
+    var twoSpaces = padRight('', 2, ' ');
+    var sixSpaces = padRight('', 6, ' ');
+    var eightSpaces = padRight('', 8, ' ');
+    var nineSpaces = padRight('', 9, ' ');
+
+    var effectiveDate = eightSpaces;
+    var billDate = eightSpaces;
+    var dueDate = eightSpaces;
+    var tnumPaid = eightSpaces;
+    var entityCode = twoSpaces;
+    var notes = padRight('', 20, ' ');
+    var transDate = eightSpaces;
+
+    var totalDollars = 0;
+
+    forEachRecordByLibraryAndDetailCode(function (bannerData) {
+        totalDollars += bannerData.dollarAmount;
+        lines.push(generateBannerRow(bannerData));
+    });
+
+    lines.unshift(generateBannerHeader());
+    return lines.join("\r\n");
+
+    function forEachRecordByLibraryAndDetailCode(callback) {
+        Object.keys(bannerFeedDataByLibraryAndDetailCode).forEach(function (libraryId) {
+            Object.keys(bannerFeedDataByLibraryAndDetailCode[libraryId]).forEach(function (detailCode) {
+                bannerFeedDataByLibraryAndDetailCode[libraryId][detailCode].forEach(callback);
+            })
+        });
+    }
+
+    function generateBannerRow(invoiceData) {
+        if (!invoiceData.library.gar) {
+            throw carliError('Cannot generate banner feed for a library with no GAR (' + invoiceData.library.name + ')');
+        }
+        return [
+            bannerRecordIndicator,
+            batchId,
+            invoiceData.library.gar,
+            nineSpaces,
+            carliDepartmentIdentifierForRecord,
+            invoiceData.detailCode,
+            formatDollarAmountWithLeftPadding(invoiceData.dollarAmount),
+            sixSpaces,
+            twoSpaces,
+            twoSpaces,
+            invoiceData.invoiceNumber,
+            effectiveDate,
+            billDate,
+            dueDate,
+            tnumPaid,
+            entityCode,
+            notes,
+            transDate
+        ].join('');
+    }
+
+    function generateBannerHeader() {
+        return [
+            bannerHeaderIndicator,
+            batchId,
+            formatBatchCreateDate(),
+            padLeft(countTotalRecords(), 5, '0'),
+            formatDollarAmountWithLeftPadding(totalDollars),
+            carliDepartmentIdentifierForHeader
+        ].join('');
+    }
+
+    function countTotalRecords() {
+        var sum = 0;
+        forEachRecordByLibraryAndDetailCode(function (record) {
+            sum++;
+        });
+        return sum;
+    }
+
+    function padRight(str, width, char) {
+        for (var i = str.length; i < width; i++) {
+            str += char;
+        }
+        return str;
+    }
+
+    function padLeft(str, width, char) {
+        str = str.toString();
+        for (var i = str.length; i < width; i++) {
+            str = char + str;
+        }
+        return str;
+    }
+
+    function formatBatchCreateDate() {
+        var d = new Date();
+        var mm = d.getMonth() + 1;
+        var dd = d.getDate();
+
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        if (dd < 10) {
+            dd = '0' + dd;
         }
 
-        function formatDollarAmountWithLeftPadding(amount) {
-            var formatted = '' + amount.toFixed(2);
-            while (formatted.length < dollarAmountFieldWidth) {
-                formatted = '0' + formatted;
-            }
-            return formatted;
+        return '' + mm + dd + d.getFullYear();
+    }
+
+    function formatDollarAmountWithLeftPadding(amount) {
+        var formatted = '' + amount.toFixed(2);
+        while (formatted.length < dollarAmountFieldWidth) {
+            formatted = '0' + formatted;
         }
+        return formatted;
     }
 }
 
@@ -260,9 +352,9 @@ function listBatchesForCycle(cycle) {
 
         function getBatchInfo(notification) {
             if (!batchSummariesById.hasOwnProperty(notification.batchId)) {
-                batchSummariesById[ notification.batchId ] = createBatchSummary(notification);
+                batchSummariesById[notification.batchId] = createBatchSummary(notification);
             } else {
-                batchSummariesById[ notification.batchId ].numInvoices++;
+                batchSummariesById[notification.batchId].numInvoices++;
             }
         }
 
@@ -277,13 +369,14 @@ function listBatchesForCycle(cycle) {
 
         function batchSummariesAsArray() {
             return Object.keys(batchSummariesById).map(function (batchId) {
-                return batchSummariesById[ batchId ];
+                return batchSummariesById[batchId];
             });
         }
     }
 }
 
 module.exports = {
-    getDataForBannerExport: getDataForBannerExport,
+    getDataForBannerExportForSubscriptionCycle: getDataForBannerExportForSubscriptionCycle,
+    getDataForBannerExportForMembershipDues: getDataForBannerExportForMembershipDues,
     listBatchesForCycle: listBatchesForCycle
 };

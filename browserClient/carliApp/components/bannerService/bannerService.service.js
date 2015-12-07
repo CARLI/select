@@ -5,13 +5,19 @@ function bannerService(CarliModules, $q, browserDownloadService) {
     var bannerModule = CarliModules.Banner;
 
     return {
-        getDataForBannerExport: getDataForBannerExport,
+        getDataForBannerExportForSubscriptionCycle: getDataForBannerExportForSubscriptionCycle,
+        getDataForBannerExportForMembershipDues: getDataForBannerExportForMembershipDues,
         listBatchesForCycle: listBatchesForCycle,
-        downloadBannerExportForInvoices: downloadBannerExportForInvoices
+        downloadBannerExportForInvoices: downloadBannerExportForInvoices,
+        downloadBannerExportForMembershipDues: downloadBannerExportForMembershipDues
     };
 
-    function getDataForBannerExport(cycle, batchId) {
-        return $q.when( bannerModule.getDataForBannerExport(cycle, batchId) );
+    function getDataForBannerExportForSubscriptionCycle(cycle, batchId) {
+        return $q.when( bannerModule.getDataForBannerExportForSubscriptionCycle(cycle, batchId) );
+    }
+
+    function getDataForBannerExportForMembershipDues(year, batchId) {
+        return $q.when( bannerModule.getDataForBannerExportForMembershipDues(year, batchId) );
     }
 
     function listBatchesForCycle(cycle) {
@@ -19,26 +25,33 @@ function bannerService(CarliModules, $q, browserDownloadService) {
     }
 
     function downloadBannerExportForInvoices(cycle, batchId) {
-        return getDataForBannerExport(cycle, batchId)
+        return getDataForBannerExportForSubscriptionCycle(cycle, batchId)
             .then(function(exportData) {
                 browserDownloadService.browserDownload(getBannerExportFilename(), 'text/plain;charset=utf-8', exportData);
             });
+    }
 
-        function getBannerExportFilename() {
-            var d = new Date();
-            var month  = zeroPaddedString(d.getMonth());
-            var day    = zeroPaddedString(d.getDate()+1);
-            var hour   = zeroPaddedString(d.getHours());
-            var minute = zeroPaddedString(d.getMinutes());
-            var second = zeroPaddedString(d.getSeconds());
+    function downloadBannerExportForMembershipDues(year, batchId) {
+        return getDataForBannerExportForMembershipDues(year, batchId)
+            .then(function(exportData) {
+                browserDownloadService.browserDownload(getBannerExportFilename(), 'text/plain;charset=utf-8', exportData);
+            });
+    }
 
-            var timestamp = '' + d.getFullYear() + month + day + hour + minute + second;
+    function getBannerExportFilename() {
+        var d = new Date();
+        var month  = zeroPaddedString(d.getMonth());
+        var day    = zeroPaddedString(d.getDate()+1);
+        var hour   = zeroPaddedString(d.getHours());
+        var minute = zeroPaddedString(d.getMinutes());
+        var second = zeroPaddedString(d.getSeconds());
 
-            return 'fi_ar_general_feeder.9carli.' + timestamp + '.txt';
+        var timestamp = '' + d.getFullYear() + month + day + hour + minute + second;
 
-            function zeroPaddedString(n) {
-                return (n < 10) ? '0' + n : '' + n;
-            }
+        return 'fi_ar_general_feeder.9carli.' + timestamp + '.txt';
+
+        function zeroPaddedString(n) {
+            return (n < 10) ? '0' + n : '' + n;
         }
     }
 }
