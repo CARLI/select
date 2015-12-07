@@ -310,7 +310,7 @@ describe('A Full Subscription Cycle Banner Export Integration Test', function ()
     }
 });
 
-describe.only('A Membership Year Banner Export Integration Test', function () {
+describe('A Membership Year Banner Export Integration Test', function () {
     var testMembershipYear = 2020;
 
     it('exports a valid banner feed', function () {
@@ -337,6 +337,7 @@ describe.only('A Membership Year Banner Export Integration Test', function () {
     function generateInvoices() {
         var notificationTemplate = {
             id: 'notification-template-membership-invoices',
+            templateId: 'notification-template-membership-invoices',
             name: 'Membership Invoices',
             subject: 'Membership Invoices',
             emailBody: '',
@@ -346,7 +347,9 @@ describe.only('A Membership Year Banner Export Integration Test', function () {
             notificationType: 'invoice'
         };
 
-        var notificationData = {};
+        var notificationData = {
+            fiscalYear: testMembershipYear
+        };
 
         var batchId = null;
 
@@ -382,14 +385,16 @@ describe.only('A Membership Year Banner Export Integration Test', function () {
         console.log('');
         console.log(bannerFeedData);
 
+        var count = 3; // 3 membership invoice rows
+        var totalRows = count + 1; // add one for header
+
         var bannerFeedLines = bannerFeedData.split('\n');
 
-        //                     2USI00001@01460518         9CARLI                        USII000000900.00          USIN03AA
-        var bannerFileRegex = /2USI00001@[0-9]{8}         9CARLI                        USII0[0-9]{8}.00          USIN0\dAA\s{63}/;
+        var bannerFileRegex = /2USI00001@[0-9]{8}         9CARLI                        USI.0[0-9]{8}.00          USIN0\dAA\s{63}/;
 
         return Q.all([
-            expect(bannerFeedLines.length).to.equal(10), //header plus 4 invoices
-            expect(bannerFeedLines[0]).to.equal('1USI00001' + batchCreationDate() + '00009000018700.009CARLI  \r'),
+            expect(bannerFeedLines.length).to.equal(totalRows),
+            expect(bannerFeedLines[0]).to.equal('1USI00001'+batchCreationDate() + '0000'+count+'000001300.009CARLI  \r'),
             expect(bannerFeedLines[1]).to.match(bannerFileRegex)
         ]);
     }
