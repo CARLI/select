@@ -1,4 +1,3 @@
-
 var _ = require('lodash');
 var Q = require('q');
 
@@ -44,7 +43,7 @@ function getDataForBannerExportForSubscriptionCycle(cycle, batchId) {
 
         notifications.forEach(gatherDataForBatch);
 
-        return Q.all(offeringPromises).then(function() {
+        return Q.all(offeringPromises).then(function () {
             return dataForBatch;
         });
 
@@ -56,7 +55,7 @@ function getDataForBannerExportForSubscriptionCycle(cycle, batchId) {
             throwIfDuplicateLibraries(notification);
             throwIfDuplicateInvoiceNumber(notification);
 
-            var library = librariesById[ notification.targetEntity ];
+            var library = librariesById[notification.targetEntity];
 
             if (library && notification.summaryTotal) {
                 offeringPromises.push(
@@ -82,7 +81,7 @@ function getDataForBannerExportForSubscriptionCycle(cycle, batchId) {
                         invoiceNumber: notification.invoiceNumber
                     };
 
-                    if (!dataForBatch[library.id ].hasOwnProperty(detailCode)) {
+                    if (!dataForBatch[library.id].hasOwnProperty(detailCode)) {
                         dataForBatch[library.id][detailCode] = [];
                     }
                     dataForBatch[library.id][detailCode].push(bannerFeedData);
@@ -110,8 +109,8 @@ function getDataForBannerExportForSubscriptionCycle(cycle, batchId) {
     function loadOfferingsForNotification(notification) {
         return loadOfferings(notification.targetEntity);
 
-        function loadOfferings(libraryId, offeringsToLoad){
-            if ( offeringsToLoad && offeringsToLoad.length ){
+        function loadOfferings(libraryId, offeringsToLoad) {
+            if (offeringsToLoad && offeringsToLoad.length) {
                 return OfferingRepository.getOfferingsById(offeringsToLoad, cycle);
             }
             else {
@@ -270,9 +269,9 @@ function listBatchesForCycle(cycle) {
 
         function getBatchInfo(notification) {
             if (!batchSummariesById.hasOwnProperty(notification.batchId)) {
-                batchSummariesById[ notification.batchId ] = createBatchSummary(notification);
+                batchSummariesById[notification.batchId] = createBatchSummary(notification);
             } else {
-                batchSummariesById[ notification.batchId ].numInvoices++;
+                batchSummariesById[notification.batchId].numInvoices++;
             }
         }
 
@@ -287,7 +286,7 @@ function listBatchesForCycle(cycle) {
 
         function batchSummariesAsArray() {
             return Object.keys(batchSummariesById).map(function (batchId) {
-                return batchSummariesById[ batchId ];
+                return batchSummariesById[batchId];
             });
         }
     }
