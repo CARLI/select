@@ -259,12 +259,14 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
             var recipientIds = getRecipientIds(vm.recipients);
             var batchId = null;
             var cycle = null;
+            var year = null;
 
             return getNotifications(vm.draft, recipientIds)
                 .then(function (notifications) {
                     if (vm.draft.notificationType === 'invoice') {
                         batchId = notifications[0].batchId;
-                        cycle = notifications[0 ].cycle;
+                        cycle = notifications[0].cycle;
+                        year = notifications[0].fiscalYear;
                     }
                     notifications.forEach(addNotificationCreationInformation);
                     var promises = notifications.map(notificationService.create);
@@ -280,16 +282,22 @@ function notificationModalController($q, $filter, $rootScope, $scope, alertServi
 
             function downloadBannerExportForInvoices(passthrough) {
                 if ( shouldGenerateBannerFile() ) {
-                    return bannerService.downloadBannerExportForInvoices(cycle, batchId)
-                        .then(passthroughReturnValue)
-                        .catch(handleBannerErrorSeparately);
+                    if ( notificationService.templateIsForMembershipDues(vm.draft.templateId) ){
+                        return bannerService.downloadBannerExportForMembershipDues(year, batchId)
+                            .then(passthroughReturnValue)
+                            .catch(handleBannerErrorSeparately);
+                    }
+                    else {
+                        return bannerService.downloadBannerExportForInvoices(cycle, batchId)
+                            .then(passthroughReturnValue)
+                            .catch(handleBannerErrorSeparately);
+                    }
                 } else {
                     return passthroughReturnValue();
                 }
 
                 function shouldGenerateBannerFile(){
-                    return vm.draft.notificationType === 'invoice' &&
-                          !notificationService.templateIsForMembershipDues(vm.draft.templateId);
+                    return vm.draft.notificationType === 'invoice';
                 }
 
                 function passthroughReturnValue() {
