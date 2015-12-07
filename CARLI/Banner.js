@@ -169,39 +169,42 @@ function getDataForBannerExportForMembershipDues(year, batchId) {
         return dataForBatch;
 
         function combineDataForBannerExport(library) {
+            var membershipDetailCode = 'USIA';
+            var ishareDetailCode = 'USIF';
+
             var notification = invoicesForBatchByLibraryId[library.id];
             var dues = membershipDuesByLibraryId[library.id];
-            var detailCode = detailCodeForMembership(dues);
 
-            var dataForLibrary = {
-                library: library,
-                detailCode: detailCode,
-                invoiceNumber: notification.invoiceNumber,
-                dollarAmount: total(dues)
+            dataForBatch[library.id] = {
+                USIA: [],
+                USIF: []
             };
 
-            dataForBatch[library.id] = dataForBatch[library.id] || {};
-            dataForBatch[library.id][detailCode] = [dataForLibrary];
-        }
-
-        function detailCodeForMembership(duesData) {
-            // Detail Codes:
-            // Membership - USIA
-            // I-Share - USIF
-
-            if (duesData.membership && !duesData.ishare) {
-                return 'USIA';
+            if ( dues.membership ){
+                addMembershipLine(dues.membership);
             }
-            else if (!duesData.membership && duesData.ishare) {
-                return 'USIF';
-            }
-            else {
-                return 'USIA';  // need guidance from Cindy if we are to handle separate detail codes for dues and i-share since they share the same invoice
-            }
-        }
 
-        function total(duesData) {
-            return (duesData.membership || 0) + (duesData.ishare || 0 );
+            if ( dues.ishare ){
+                addIshareLine(dues.ishare);
+            }
+
+            function addMembershipLine(dollarAmount) {
+                dataForBatch[library.id][membershipDetailCode].push({
+                    library: library,
+                    invoiceNumber: notification.invoiceNumber,
+                    detailCode: membershipDetailCode,
+                    dollarAmount: dollarAmount
+                });
+            }
+
+            function addIshareLine(dollarAmount) {
+                dataForBatch[library.id][ishareDetailCode].push({
+                    library: library,
+                    invoiceNumber: notification.invoiceNumber,
+                    detailCode: ishareDetailCode,
+                    dollarAmount: dollarAmount
+                });
+            }
         }
     }
 
