@@ -380,22 +380,20 @@ describe('A Membership Year Banner Export Integration Test', function () {
     }
 
     function verifyBannerFeed(bannerFeedData){
-        console.log('');
-        console.log(' === BANNER FEED ===');
-        console.log('');
-        console.log(bannerFeedData);
-
-        var count = 3; // 3 membership invoice rows
+        var count = 4; // 2 membership invoice rows and 2 ishare invoice rows
         var totalRows = count + 1; // add one for header
 
         var bannerFeedLines = bannerFeedData.split('\n');
 
-        var bannerFileRegex = /2USI00001@[0-9]{8}         9CARLI                        USI.0[0-9]{8}.00          USIN0\dAA\s{63}/;
+        var bannerFileRegex = /2USI00001@[0-9]{8}         9CARLI                        USI.0[0-9]{8}.00          USIN0\dAA\s{62}/;
 
         return Q.all([
             expect(bannerFeedLines.length).to.equal(totalRows),
             expect(bannerFeedLines[0]).to.equal('1USI00001'+batchCreationDate() + '0000'+count+'000001300.009CARLI  \r'),
-            expect(bannerFeedLines[1]).to.match(bannerFileRegex)
+            expect(bannerFeedLines[1]).to.match(bannerFileRegex),
+            expect(bannerFeedLines[2]).to.match(bannerFileRegex),
+            expect(bannerFeedLines[3]).to.match(bannerFileRegex),
+            expect(bannerFeedLines[4]).to.match(bannerFileRegex)
         ]);
     }
 });
