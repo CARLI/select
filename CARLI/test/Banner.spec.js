@@ -47,7 +47,7 @@ function restoreInvoiceAndBatchFiles() {
 
     function tryCopySync(source, target) {
         try {
-            fs.copySync(source, target);
+            fs.copySync(source, target, { clobber: false });
         } catch (e) {
             console.log('copySync failed');
             console.log(e);
