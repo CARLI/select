@@ -39,11 +39,29 @@ function writeTestInvoiceAndBatchFiles() {
 }
 
 function restoreInvoiceAndBatchFiles() {
-    fs.copySync(batchIdBackupFileName, batchIdFileName);
-    fs.copySync(invoiceNumberBackupFileName, invoiceNumberFileName);
-    fs.removeSync(batchIdBackupFileName);
-    fs.removeSync(invoiceNumberBackupFileName);
+    tryCopySync(batchIdBackupFileName, batchIdFileName);
+    tryCopySync(invoiceNumberBackupFileName, invoiceNumberFileName);
+    tryRemoveSync(batchIdBackupFileName);
+    tryRemoveSync(invoiceNumberBackupFileName);
     //console.log('batch and invoice files restored');
+
+    function tryCopySync(source, target) {
+        try {
+            fs.copySync(source, target);
+        } catch (e) {
+            console.log('copySync failed');
+            console.log(e);
+        }
+    }
+
+    function tryRemoveSync(file) {
+        try {
+            fs.removeSync(file);
+        } catch (e) {
+            console.log('removeSync failed');
+            console.log(e);
+        }
+    }
 }
 
 var testCycleId = testUtils.testDbMarker + ' Banner Test Fiscal Year ' + uuid.v4();
