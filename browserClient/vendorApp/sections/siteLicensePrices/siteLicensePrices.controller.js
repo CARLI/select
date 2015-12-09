@@ -18,6 +18,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     vm.downloadCsv = downloadCsv;
     vm.checkViewOption = checkViewOption;
     vm.isCommentModeEnabled = false;
+    vm.showHistoricalPricing = showHistoricalPricing;
     vm.toggleCommentMode = function () {
         vm.isCommentModeEnabled = !vm.isCommentModeEnabled;
     };
@@ -564,5 +565,10 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
     function checkViewOption(option) {
         vm.viewOptions[option] = !vm.viewOptions[option];
+    }
+
+    function showHistoricalPricing(){
+        $('#historic-pricing-modal').modal();
+        vm.historicPopupShowing = true;
     }
 }
