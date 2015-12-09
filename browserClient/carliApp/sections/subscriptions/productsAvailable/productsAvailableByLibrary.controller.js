@@ -86,7 +86,7 @@ function productsAvailableByLibraryController( $scope, $q, accordionControllerMi
             return true;
         }
         var libraryId = typeof offering.library === 'string' ? offering.library : offering.library.id;
-        var filterStatus = vm.offeringFilter[libraryId] || 'all';
+        var filterStatus = vm.offeringFilter[libraryId] || 'selected';
 
         if ( filterStatus === 'all' ){
             return true;
