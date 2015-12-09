@@ -29,10 +29,10 @@
         <form name="membershipForm" warn-if-unsaved>
             <ul class="entity-list">
                 <li class="column-headers">
-                    <div class="column library">Institution</div>
-                    <div class="column ishare">I-Share Assessment</div>
-                    <div class="column membership">Membership</div>
-                    <div class="column total">Total</div>
+                    <div class="column library"><div class="header-padding">Institution</div></div>
+                    <div class="column ishare"><div class="header-padding">I-Share Assessment</div></div>
+                    <div class="column membership"><div class="header-padding">Membership</div></div>
+                    <div class="column total"><div class="header-padding">Total</div></div>
                 </li>
                 <li  ng-repeat="library in vm.libraries | filter: vm.filterByMembership | orderBy:'name'">
                     <div class="column library">
