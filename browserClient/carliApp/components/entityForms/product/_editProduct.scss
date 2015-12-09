@@ -9,7 +9,7 @@
 
     .column,
     .column:first-child {
-        padding: 0.5rem;
+        padding: 0.5rem 1rem !important;
     }
 
     .column.year,
@@ -20,16 +20,11 @@
     .column.price,
     .column.access-fee {
         flex: 1 0 150px;
-        padding: 7px;
 
         input {
             background: transparent;
         }
-
-        .price-display {
-            padding: 0.5rem;
-        }
-    }
+   }
 
     .column.hide-from-library {
         flex: 1 0 50px;
@@ -38,7 +33,6 @@
 
     .column.purchased {
         flex: 0 0 90px;
-        padding: 4px;
         text-align: center;
     }
 

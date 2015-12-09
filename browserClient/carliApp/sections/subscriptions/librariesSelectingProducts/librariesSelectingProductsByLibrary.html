@@ -11,9 +11,9 @@
             </div>
             <div class="content" ng-if="vm.openAccordion === library.id">
                 <div class="filter-controls">
-                    <span ng-class="{ 'active-offering-filter': vm.offeringFilter[library.id] === 'selected' }"
+                    <span ng-class="{ 'active-offering-filter': vm.offeringFilter[library.id] === 'selected' || !vm.offeringFilter[library.id]  }"
                           ng-click="vm.offeringFilter[library.id] = 'selected'">all selected products</span> |
-                    <span ng-class="{ 'active-offering-filter': vm.offeringFilter[library.id] === 'all' || !vm.offeringFilter[library.id] }"
+                    <span ng-class="{ 'active-offering-filter': vm.offeringFilter[library.id] === 'all'}"
                           ng-click="vm.offeringFilter[library.id] = 'all'">all available products</span> |
                     <span ng-class="{ 'active-offering-filter': vm.offeringFilter[library.id] === 'unselected' }"
                           ng-click="vm.offeringFilter[library.id] = 'unselected'">all non-selected products</span>
