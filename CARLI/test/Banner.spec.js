@@ -202,7 +202,9 @@ describe('The Banner Module', function () {
     });
 });
 
-describe('A Full Subscription Cycle Banner Export Integration Test', function () {
+/* Skipping this test because the file copying in fs-extra tries to chmod the files and there is a problem with that
+ * see: https://github.com/jprichardson/node-fs-extra/issues/199 */
+describe.skip('A Full Subscription Cycle Banner Export Integration Test', function () {
     it('exports a valid banner feed', function () {
         return cycleRepository.create(testCycleData)
             .then(cycleRepository.load)
@@ -318,7 +320,9 @@ describe('A Full Subscription Cycle Banner Export Integration Test', function ()
     }
 });
 
-describe('A Membership Year Banner Export Integration Test', function () {
+/* Skipping this test because the file copying in fs-extra tries to chmod the files and there is a problem with that
+ * see: https://github.com/jprichardson/node-fs-extra/issues/199 */
+describe.skip('A Membership Year Banner Export Integration Test', function () {
     var testMembershipYear = 2020;
 
     it('exports a valid banner feed', function () {
