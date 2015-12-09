@@ -163,7 +163,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     }
 
     function makeSuPricingRow(level) {
-        var row = $('<div class="price-row">');
+        var row = $('<div class="price-row" role="row">');
         row.addClass('su-'+level.users);
         row.data('su', level.users);
 
@@ -179,6 +179,11 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             var priceForProduct = vm.suPricingByProduct[product.id][suLevel.users];
             var offeringWrapper = $('<div class="column offering input">');
             var offeringCellContent = createOfferingCellContent(priceForProduct);
+
+            if ( offeringCellContent.hasClass('no-pricing')){
+                offeringCellContent.attr('aria-label', 'Enter pricing for ' + suLevel.users + ' simultaneous users for ' + product.name);
+            }
+
             var offeringCell = offeringWrapper.append(offeringCellContent);
 
             offeringWrapper.on('click', function() {
