@@ -568,7 +568,14 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     }
 
     function showHistoricalPricing(){
-        $('#historic-pricing-modal').modal();
+        $('#historic-pricing-modal').modal().one('hide.bs.modal', killModalContentWhenModalHides);
         vm.historicPopupShowing = true;
+
+        //not strictly necessary since the main concern is not building the historic grid at page load
+        function killModalContentWhenModalHides(event){
+            $scope.$apply(function(){
+                vm.historicPopupShowing = false;
+            });
+        }
     }
 }
