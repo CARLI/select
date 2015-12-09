@@ -79,6 +79,22 @@
 </section>
 
 <vendor-comments-modal comment-text="vm.modalCommentText" on-modal-ok="vm.saveModalComment"></vendor-comments-modal>
-<historic-pricing-modal showing="vm.historicPopupShowing" current-year="vm.cycle.year" offerings=""></historic-pricing-modal>
+
+<div class="modal fade" id="historic-pricing-modal" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><fa aria-hidden="true" name="remove"></fa><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="modal-label">Compare Pricing from {{ vm.cycle.year-1 }} with {{ vm.cycle.year }}</h4>
+            </div>
+            <div class="modal-body">
+                <historic-pricing-modal-content ng-if="vm.historicPopupShowing" current-year="vm.cycle.year" offerings=""></historic-pricing-modal-content>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="carli-button primary-button" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <offering-color-key></offering-color-key>
