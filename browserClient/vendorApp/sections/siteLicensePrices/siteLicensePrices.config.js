@@ -5,6 +5,7 @@ angular.module('vendor.sections.siteLicensePrices',[
     'common.csvExport',
     'common.libraryService',
     'common.productService',
+    'vendor.historicPricingModal',
     'vendor.horizontalScrollSlider',
     'vendor.offeringColorKey',
     'vendor.quickPricing',
