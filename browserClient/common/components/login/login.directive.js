@@ -9,8 +9,10 @@ angular.module('common.login')
                 '      Please enter your email address, and then check your email for further instructions.' +
                 '    </div>' +
 
-                '    <label for="email">Email</label><input type="text" ng-model="vm.userLogin.email">' +
-                '    <label ng-show="!vm.forgotMode" for="password">Password</label><input ng-show="!vm.forgotMode" type="password" ng-model="vm.userLogin.password">' +
+                '    <label for="email">Email</label>' +
+                '    <input  id="email" type="text" ng-model="vm.userLogin.email">' +
+                '    <label for="password" ng-show="!vm.forgotMode">Password</label>' +
+                '    <input  id="password" ng-show="!vm.forgotMode" type="password" ng-model="vm.userLogin.password">' +
                 '    <input type="submit" class="carli-button login-button" ng-value="vm.submitLabel" busy-click="vm.submitLoginForm()">' +
 
                 '    <div class="toggle-forgot">' +
