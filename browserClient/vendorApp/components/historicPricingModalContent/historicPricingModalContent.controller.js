@@ -7,7 +7,6 @@ function historicPricingModalContentController(){
     activate();
 
     function activate(){
-        console.log('activate historicPricingModalContent');
-        vm.lastYear = vm.currentYear - 1;
+        vm.lastYear = vm.thisYear - 1;
     }
 }
