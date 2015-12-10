@@ -5,7 +5,7 @@ angular.module('vendor.historicPricingModalContent')
             templateUrl: '/vendorApp/components/historicPricingModalContent/historicPricingModalContent.html',
             scope: {
                 showing: '=',
-                thisYear: '=',
+                cycle: '=',
                 libraries: '=',
                 products: '=',
                 offerings: '=',

@@ -14,6 +14,13 @@ historic-pricing-modal-content {
                     border-top: 2px solid black;
                     font-weight: 700;
                     margin: 0;
+
+                    &.product {
+                        .year {
+                            background: $light-gray;
+                            color: black;
+                        }
+                    }
                 }
             }
 
@@ -55,6 +62,19 @@ historic-pricing-modal-content {
                         @include flex(1 1 50%);
                         padding: $cell-padding;
                         text-align: center;
+
+                        background-color: $background-pricing-old;
+                        color: $purple;
+
+                        &.updated {
+                            background-color: $white;
+                            color: $black;
+                        }
+
+                        &.flagged {
+                            background-color: rgba(255,18,0,.1);
+                            color: $red;
+                        }
                     }
 
                     > .year + .year {
