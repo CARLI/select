@@ -39,20 +39,12 @@ function quickPricingLibrarySelectorController($scope) {
         if (!vm.libraries) {
             return;
         }
-        console.time('applyFilters');
-
         var skipFteFilter = !shouldFilterByFte();
         var skipYearFilter = !shouldFilterByYear();
         var skipTypeFilter = !shouldFilterByType();
 
-        Logger.log('applying filters');
-        Logger.log('  -- by FTE: ', !skipFteFilter);
-        Logger.log('  -- by Year: ', !skipYearFilter);
-        Logger.log('  -- by Type: ', !skipTypeFilter);
-
         if (skipFteFilter && skipYearFilter && skipTypeFilter) {
             selectAllLibraries();
-            console.timeEnd('applyFilters');
             return;
         }
 
@@ -63,8 +55,6 @@ function quickPricingLibrarySelectorController($scope) {
                 (skipYearFilter || filterByYear(library)) &&
                 (skipTypeFilter || filterByType(library));
         });
-
-        console.timeEnd('applyFilters');
     }
 
     function selectAllLibraries() {
