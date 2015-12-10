@@ -88,7 +88,13 @@
                 <h4 class="modal-title" id="modal-label">Compare Pricing from {{ vm.cycle.year-1 }} with {{ vm.cycle.year }}</h4>
             </div>
             <div class="modal-body">
-                <historic-pricing-modal-content ng-if="vm.historicPopupShowing" current-year="vm.cycle.year" offerings=""></historic-pricing-modal-content>
+                <historic-pricing-modal-content ng-if="vm.historicPopupShowing"
+                                                current-year="vm.cycle.year"
+                                                offerings="vm.offeringsForLibraryByProduct"
+                                                libraries="vm.libraries"
+                                                products="vm.products"
+                                                selected-library-ids="vm.selectedLibraryIds"
+                                                selected-product-ids="vm.selectedProductIds"></historic-pricing-modal-content>
             </div>
             <div class="modal-footer">
                 <button type="button" class="carli-button primary-button" data-dismiss="modal">Close</button>
