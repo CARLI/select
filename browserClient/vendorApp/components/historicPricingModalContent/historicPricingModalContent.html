@@ -1,23 +1,22 @@
 <div class="historic-pricing-container">
     <div class="price-row header-row">
         <div class="column library"></div>
-        <div class="column product" ng-repeat="product in vm.products" ng-if="vm.selectedProductIds[product.id]">
-            <div class="product-name">{{ product.name }}</div>
+        <div class="column product" ng-repeat="product in vm.products" ng-if="::vm.selectedProductIds[product.id]">
+            <div class="product-name">{{ ::product.name }}</div>
         </div>
     </div>
     <div class="price-row header-row">
         <div class="column library">Library</div>
-        <div class="column product" ng-repeat="product in vm.products" ng-if="vm.selectedProductIds[product.id]">
-            <div class="year">{{ vm.lastYear }}</div>
-            <div class="year">{{ vm.thisYear }}</div>
+        <div class="column product" ng-repeat="product in vm.products" ng-if="::vm.selectedProductIds[product.id]">
+            <div class="year">{{ ::vm.lastYear }}</div>
+            <div class="year">{{ ::vm.thisYear }}</div>
         </div>
     </div>
-    <div class="price-row offering-row" ng-repeat="library in vm.libraries" ng-if="vm.selectedLibraryIds[library.id]">
-        <div class="column library">{{ library.name }}</div>
-        <div class="column product" ng-repeat="product in vm.products" ng-if="vm.selectedProductIds[product.id]">
-            <div class="year">{{ vm.lastYear }}</div>
-            <div class="year">{{ vm.thisYear }}</div>
+    <div class="price-row offering-row" ng-repeat="library in vm.libraries" ng-if="::vm.selectedLibraryIds[library.id]">
+        <div class="column library">{{ ::library.name }}</div>
+        <div class="column product" ng-repeat="product in vm.products" ng-if="::vm.selectedProductIds[product.id]">
+            <div class="year last-year">{{ ::vm.priceForCell(product.id, library.id, vm.lastYear) | currency }}</div>
+            <div class="year" ng-class="::vm.classForCell(product.id, library.id)">{{ ::vm.priceForCell(product.id, library.id, vm.thisYear) | currency }}</div>
         </div>
     </div>
-
 </div>
