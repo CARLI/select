@@ -1,0 +1,87 @@
+historic-pricing-modal-content {
+    $cell-padding: 0.25rem 0.5rem;
+
+    display: block;
+    overflow-x: scroll;
+
+    .historic-pricing-container {
+        .price-row {
+            @include flexbox();
+
+            &.header-row {
+                .column {
+                    background: $light-gray;
+                    border-top: 2px solid black;
+                    font-weight: 700;
+                    margin: 0;
+
+                    &.product {
+                        .year {
+                            background: $light-gray;
+                            color: black;
+                        }
+                    }
+                }
+            }
+
+            &.offering-row {
+
+            }
+
+            .column {
+                @include flex(1 1 auto);
+                border-bottom: $default-border;
+                border-right: 1px solid $black;
+                padding: $cell-padding;
+
+                &:first-child{
+                    border-left: $default-border;
+                }
+
+                &:last-child {
+                    border-right: $default-border;
+                }
+
+                &.library {
+                    flex: 0 0 24rem;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+
+                &.product {
+                    @include flexbox();
+                    @include flex(0 0 15rem);
+                    padding: 0;
+
+                    .product-name {
+                        padding: $cell-padding;
+                    }
+
+                    > .year {
+                        @include flex(1 1 50%);
+                        padding: $cell-padding;
+                        text-align: center;
+
+                        background-color: $background-pricing-old;
+                        color: $purple;
+
+                        &.updated {
+                            background-color: $white;
+                            color: $black;
+                        }
+
+                        &.flagged {
+                            background-color: rgba(255,18,0,.1);
+                            color: $red;
+                        }
+                    }
+
+                    > .year + .year {
+                        border-left: $default-border;
+                    }
+                }
+            }
+        }
+    }
+}

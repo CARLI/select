@@ -18,6 +18,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     vm.downloadCsv = downloadCsv;
     vm.checkViewOption = checkViewOption;
     vm.isCommentModeEnabled = false;
+    vm.showHistoricalPricing = showHistoricalPricing;
     vm.toggleCommentMode = function () {
         vm.isCommentModeEnabled = !vm.isCommentModeEnabled;
     };
@@ -564,5 +565,17 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
     function checkViewOption(option) {
         vm.viewOptions[option] = !vm.viewOptions[option];
+    }
+
+    function showHistoricalPricing(){
+        $('#historic-pricing-modal').modal().one('hide.bs.modal', killModalContentWhenModalHides);
+        vm.historicPopupShowing = true;
+
+        //not strictly necessary since the main concern is not building the historic grid at page load
+        function killModalContentWhenModalHides(event){
+            $scope.$apply(function(){
+                vm.historicPopupShowing = false;
+            });
+        }
     }
 }

@@ -5,6 +5,7 @@
     </div>
 
     <div class="controls">
+        <button type="button" id="show-history" class="carli-button" busy-click="vm.showHistoricalPricing()">Compare to Last Year</button>
         <button type="button" id="toggle-comment-mode" class="toggle-button" ng-class="{ active: vm.isCommentModeEnabled }" busy-click="vm.toggleCommentMode()">Add Pricing Comments<i class="fa fa-comment-o"></i></button>
         <button busy-click="vm.downloadCsv()" class="carli-button">Export to CSV</button>
         <button type="button" id="save-site-license-prices" class="carli-button" busy-click="vm.saveOfferings()">Save Changes<i class="fa fa-floppy-o"></i></button>
@@ -78,5 +79,28 @@
 </section>
 
 <vendor-comments-modal comment-text="vm.modalCommentText" on-modal-ok="vm.saveModalComment"></vendor-comments-modal>
+
+<div class="modal fade" id="historic-pricing-modal" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><fa aria-hidden="true" name="remove"></fa><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="modal-label">Compare Pricing from {{ vm.cycle.year-1 }} with {{ vm.cycle.year }}</h4>
+            </div>
+            <div class="modal-body">
+                <historic-pricing-modal-content ng-if="vm.historicPopupShowing"
+                                                cycle="::vm.cycle"
+                                                offerings="::vm.offeringsForLibraryByProduct"
+                                                libraries="::vm.libraries"
+                                                products="::vm.products"
+                                                selected-library-ids="vm.selectedLibraryIds"
+                                                selected-product-ids="vm.selectedProductIds"></historic-pricing-modal-content>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="carli-button primary-button" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <offering-color-key></offering-color-key>
