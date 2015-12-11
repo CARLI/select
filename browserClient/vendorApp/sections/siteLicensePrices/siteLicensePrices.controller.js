@@ -485,7 +485,8 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     }
 
 
-    function quickPricingCallback(mode, quickPricingValue) {
+    function quickPricingCallback(mode, quickPricingValue, allQuickPricingArguments) {
+        console.log('siteLicenesPrices controller quick pricing callback', allQuickPricingArguments);
         var selectedLibraryIds = Object.keys(vm.selectedLibraryIds).filter(function (libraryId) {
             return vm.selectedLibraryIds[libraryId];
         });
