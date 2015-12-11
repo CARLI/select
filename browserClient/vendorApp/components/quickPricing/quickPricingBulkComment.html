@@ -1,0 +1,8 @@
+<div class="no-comment" ng-if="!vm.addComment">
+    <button type="button" class="clear-button-styles" ng-click="vm.toggleComment()">Include Bulk Comment <fa name="plus"></fa></button>
+</div>
+<div class="add-comment" ng-if="vm.addComment">
+    <label for="bulkComment">Bulk Comment for Libraries:</label>
+    <textarea id="bulkComment" ng-model="vm.quickPricingArguments.bulkComment"></textarea>
+    <button type="button" class="clear-button-styles" ng-click="vm.toggleComment()">Cancel</button>
+</div>
