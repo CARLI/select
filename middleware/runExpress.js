@@ -119,6 +119,11 @@ function runMiddlewareServer(){
                     .then(sendResult(res))
                     .catch(send500Error(res));
             });
+            authorizedRoute('post', '/masquerade-vendor/:vendorId', carliAuth.requireStaff, function (req, res) {
+                auth.masqueradeAsVendor(req.params.vendorId)
+                    .then(sendResult(res))
+                    .catch(send500Error(res));
+            });
         }
         function defineRoutesForLibraries() {
             authorizedRoute('get', '/library', carliAuth.requireSession, function (req, res) {

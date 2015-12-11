@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.vendor')
     .controller('editVendorController', editVendorController);
 
-function editVendorController( $scope, $rootScope, activityLogService, entityBaseService, alertService, cycleService, errorHandler, licenseService, productService, vendorService ) {
+function editVendorController( $scope, $rootScope, activityLogService, config, entityBaseService, alertService, cycleService, errorHandler, licenseService, productService, vendorService ) {
     var vm = this;
 
     vm.vendorId = $scope.vendorId;
@@ -13,6 +13,7 @@ function editVendorController( $scope, $rootScope, activityLogService, entityBas
     vm.addContact = addContact;
     vm.deleteContact = deleteContact;
     vm.getProductDisplayName = productService.getProductDisplayName;
+    vm.masqueradeAsVendorUrl = null;
 
     vm.statusOptions = entityBaseService.getStatusOptions();
     vm.otpAccessOptions = [
@@ -54,10 +55,12 @@ function editVendorController( $scope, $rootScope, activityLogService, entityBas
         setVendorFormPristine();
     }
     function initializeForExistingVendor() {
-        vendorService.load(vm.vendorId).then( function( vendor ) {
-            vm.vendor = angular.copy(vendor);
-            setVendorFormPristine();
-        } );
+        vendorService
+            .load(vm.vendorId).then( function( vendor ) {
+                vm.vendor = angular.copy(vendor);
+                setVendorFormPristine();
+            })
+            .then(setMasqueradeAsVendorUrl);
         watchCurrentCycle();
         vm.editable = false;
         vm.newVendor = false;
@@ -207,4 +210,14 @@ function editVendorController( $scope, $rootScope, activityLogService, entityBas
     function logAddActivity(){
         return activityLogService.logEntityAdded(vm.vendor);
     }
+
+    function setMasqueradeAsVendorUrl() {
+        vm.masqueradeAsVendorUrl = getMasqueradeAsVendorUrl();
+        console.log(vm.masqueradeAsVendorUrl);
+    }
+    function getMasqueradeAsVendorUrl() {
+        var queryString = '?masquerade-as-vendor=' + vm.vendor.id;
+        return config.vendorWebAppUrl + queryString;
+    }
+
 }

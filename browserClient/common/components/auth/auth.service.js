@@ -124,7 +124,7 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules)
             masqueradeAsPromise = masqueradeAsLibrary(queryParameters[ 'masquerade-as-library' ]);
         }
         if (isMasqueradingRequestedForVendor()) {
-            masqueradeAsPromise = masqueradeAsLibrary(queryParameters[ 'masquerade-as-vendor' ]);
+            masqueradeAsPromise = masqueradeAsVendor(queryParameters[ 'masquerade-as-vendor' ]);
         }
 
         return masqueradeAsPromise;
@@ -132,6 +132,10 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules)
     function masqueradeAsLibrary(libraryId) {
         return $q.when( CarliModules.AuthMiddleware.masqueradeAsLibrary(libraryId) );
     }
+    function masqueradeAsVendor(vendorId) {
+        return $q.when( CarliModules.AuthMiddleware.masqueradeAsVendor(vendorId) );
+    }
+
 
     function requireSession() {
         return $q.when ( CarliModules.Auth.getSession() )

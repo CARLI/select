@@ -90,6 +90,7 @@ function setMasqueradingVendorIdForUserId(roleId, userId) {
 }
 
 function setMasqueradingIdForRole(roleId, userId, role) {
+    console.log('Masquerading ' + userId + ' as ' + role + ' ' + roleId);
     return loadUser(userId)
         .then(setRoles)
         .then(updateUser);

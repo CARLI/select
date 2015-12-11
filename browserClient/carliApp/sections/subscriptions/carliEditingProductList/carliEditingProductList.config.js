@@ -5,5 +5,5 @@ angular.module('carli.sections.subscriptions.carliEditingProductList', [
     'carli.cycleService',
     'carli.exportServices',
     'carli.productSelectionHistoryIcon',
-    'carli.vendorService'
+    'common.vendorService'
 ]);
