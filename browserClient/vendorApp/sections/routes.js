@@ -4,7 +4,8 @@ angular.module('vendor.routes',[
         'vendor.sections.simultaneousUserPrices',
         'vendor.sections.descriptions',
         'vendor.sections.login',
-        'vendor.sections.resetRequest'
+        'vendor.sections.resetRequest',
+        'vendor.sections.masquerade'
 ])
     .config(function ($routeProvider) {
         $routeProvider
@@ -36,6 +37,11 @@ angular.module('vendor.routes',[
             .when('/descriptions', {
                 templateUrl: '/vendorApp/sections/descriptions/descriptions.html',
                 controller:  'descriptionsController',
+                controllerAs:'vm'
+            })
+            .when('/masquerade', {
+                templateUrl: '/vendorApp/sections/masquerade/masquerade.html',
+                controller:  'masqueradeController',
                 controllerAs:'vm'
             })
             .otherwise({

@@ -5,6 +5,7 @@ function cycleService( CarliModules, config, $q, appState, authService, errorHan
 
     var currentUser = authService.getCurrentUser();
     if (!currentUser || !currentUser.vendor) {
+        console.log(currentUser);
         throw new Error('Cycle Service was initialized without a valid user');
     }
     var cycleModule = CarliModules.Cycle(currentUser.vendor);

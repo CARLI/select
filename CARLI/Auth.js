@@ -62,6 +62,18 @@ function masqueradeAsLibrary(libraryId) {
         return userRepository.setMasqueradingLibraryIdForUserId(libraryId, userId);
     }
 }
+function masqueradeAsVendor(vendorId) {
+    return getSession()
+        .then(setupUserForMasquerading)
+        .then(function() {
+            return {ok: true};
+        });
+
+    function setupUserForMasquerading(userCtx) {
+        var userId = 'org.couchdb.user:' + userCtx.name;
+        return userRepository.setMasqueradingVendorIdForUserId(vendorId, userId);
+    }
+}
 
 function requireSession() {
     return getSession()
@@ -113,6 +125,7 @@ module.exports = {
     getSession: getSession,
     getUser: getUser,
     masqueradeAsLibrary: masqueradeAsLibrary,
+    masqueradeAsVendor: masqueradeAsVendor,
     requireSession: requireSession,
     requireStaff: requireStaff,
     requireStaffOrLibrary: requireStaffOrLibrary,

@@ -30,9 +30,19 @@ angular.module('vendor.app', [
 .run(function($rootScope, authService, config) {
     $rootScope.appState = 'pendingUser';
 
-    if (authService.isRouteProtected()) {
-        authService.redirectToLogin();
+    if (authService.isMasqueradingRequested()) {
+        console.log('Masquerading requested');
+        authService.initializeMasquerading().then(handleAuthentication);
+    } else {
+        handleAuthentication();
     }
+
+    function handleAuthentication() {
+        if (authService.isRouteProtected()) {
+            authService.redirectToLogin();
+        }
+    }
+
 })
 .value('cgBusyDefaults',{
     //message:'Loading Stuff',
