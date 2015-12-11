@@ -5,5 +5,6 @@ module.exports = {
     createSession: auth.createSession,
     deleteSession: auth.deleteSession,
     getSession: auth.getSession,
-    masqueradeAsLibrary: auth.masqueradeAsLibrary
+    masqueradeAsLibrary: auth.masqueradeAsLibrary,
+    masqueradeAsVendor: auth.masqueradeAsVendor
 };

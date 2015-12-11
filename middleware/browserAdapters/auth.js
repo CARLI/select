@@ -23,8 +23,16 @@ function masqueradeAsLibrary(libraryId) {
     });
 }
 
+function masqueradeAsVendor(vendorId) {
+    return middlewareRequest({
+        path: '/masquerade-vendor/' + vendorId,
+        method: 'post'
+    });
+}
+
 module.exports = {
     createSession: createSession,
     deleteSession: deleteSession,
-    masqueradeAsLibrary: masqueradeAsLibrary
+    masqueradeAsLibrary: masqueradeAsLibrary,
+    masqueradeAsVendor: masqueradeAsVendor
 };

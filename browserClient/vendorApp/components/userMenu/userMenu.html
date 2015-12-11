@@ -15,6 +15,7 @@
         </button>
         </a>
         <ul id="user-menu" class="dropdown-menu" role="menu" aria-labelledby="user-menu-label">
+            <li ng-if="vm.isStaffUser"><a href="/masquerade">Masquerade as…</a></li>
             <li><a ng-click="vm.logout()">Log out</a></li>
         </ul>
 
