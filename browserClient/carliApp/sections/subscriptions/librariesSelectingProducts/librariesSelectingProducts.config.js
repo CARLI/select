@@ -4,7 +4,7 @@ angular.module('carli.sections.subscriptions.librariesSelectingProducts', [
     'carli.cycleService',
     'common.offeringService',
     'common.productService',
-    'carli.vendorService',
+    'common.vendorService',
     'carli.viewEditDirectives',
     'carli.notificationService',
     'carli.subscriptionScreenComponents'

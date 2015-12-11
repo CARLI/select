@@ -1,4 +1,4 @@
-angular.module('carli.vendorService')
+angular.module('common.vendorService')
     .service('vendorService', vendorService);
 
 function vendorService( CarliModules, $q, errorHandler ) {
