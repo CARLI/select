@@ -322,9 +322,10 @@ function listSelectedProductsFromActiveCyclesForLibrary(library) {
     }
 }
 
-function setSuPricingForAllLibrariesForProduct( productId, newSuPricing, cycle ){
+function setSuPricingForAllLibrariesForProduct( productId, newSuPricing, vendorComments, cycle ){
     return listOfferingsForProductIdUnexpanded(productId, cycle)
-        .then(applyNewSuPricingToAllOfferings);
+        .then(applyNewSuPricingToAllOfferings)
+        .then(applyNewSuPricingComments);
 
     function applyNewSuPricingToAllOfferings( listOfOfferings ){
         return listOfOfferings.map( applyNewSuPricingToOffering );
@@ -336,10 +337,19 @@ function setSuPricingForAllLibrariesForProduct( productId, newSuPricing, cycle )
             return offering;
         }
     }
+
+    function applyNewSuPricingComments( listOfOfferings ){
+        return listOfOfferings.map( applyNewSuPricingCommentsToOffering );
+
+        function applyNewSuPricingCommentsToOffering( offering ){
+            offering.vendorComments = offering.vendorComments || {};
+            offering.vendorComments['su'] = vendorComments;
+        }
+    }
 }
 
-function updateSuPricingForAllLibrariesForProduct( vendorId, productId, newSuPricing, cycle ){
-    return setSuPricingForAllLibrariesForProduct( productId, newSuPricing, cycle )
+function updateSuPricingForAllLibrariesForProduct( vendorId, productId, newSuPricing, vendorComments, cycle ){
+    return setSuPricingForAllLibrariesForProduct( productId, newSuPricing, vendorComments, cycle )
         .then(function( offerings ){
             return couchUtils.bulkUpdateDocuments(cycle.getDatabaseName(), offerings);
         })
