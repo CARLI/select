@@ -15,6 +15,7 @@ cd $WORKSPACE
 
 fetchAndResetToMaster || fail "Failed to sync production with master branch"
 linkSecureConfiguration || fail "Failed to link secure configuration"
+linkLocalConfiguration || fail "Failed to link local configuration"
 
 publishBrowserClients || fail "Failed to publish browser clients"
 publishMiddleware || fail "Failed to publish middleware"
