@@ -68,6 +68,8 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     function initializePricingGrid(){
         vm.products = [];
 
+        resetSelectedLibrariesAndProducts();
+
         return loadProducts()
             .then(buildPriceArray)
             .then(buildPricingGrid);
@@ -87,6 +89,11 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         });
     }
 
+    function resetSelectedLibrariesAndProducts(){
+        selectAllLibraries();
+        selectAllProducts();
+    }
+
     function byName(entity1, entity2){
         if ( entity1.name < entity2.name ){
             return -1;
@@ -96,19 +103,26 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         }
     }
 
-
-    function initializeSelectedLibraryIds() {
+    function selectAllLibraries(){
         vm.libraries.forEach(function(library) {
             vm.selectedLibraryIds[library.id] = true;
         });
+    }
+
+    function initializeSelectedLibraryIds() {
+        selectAllLibraries();
         $scope.$watchCollection(getSelectedLibraryIds, updateVisibilityOfRowsForSelectedLibraries);
         function getSelectedLibraryIds() { return vm.selectedLibraryIds; }
     }
 
-    function initializeSelectedProductIds() {
+    function selectAllProducts(){
         vm.products.forEach(function(product) {
             vm.selectedProductIds[product.id] = true;
         });
+    }
+
+    function initializeSelectedProductIds() {
+        selectAllProducts();
         $scope.$watchCollection(getSelectedProductIds, updateVisibilityOfCellsForSelectedProducts);
         function getSelectedProductIds() { return vm.selectedProductIds; }
     }
@@ -485,13 +499,15 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     }
 
 
-    function quickPricingCallback(mode, quickPricingValue) {
+    function quickPricingCallback(mode, quickPricingValue, allQuickPricingArguments) {
         var selectedLibraryIds = Object.keys(vm.selectedLibraryIds).filter(function (libraryId) {
             return vm.selectedLibraryIds[libraryId];
         });
         var selectedProductIds = Object.keys(vm.selectedProductIds).filter(function (productId) {
             return vm.selectedProductIds[productId];
         });
+
+        var shouldApplyBulkPricingComment = allQuickPricingArguments.addComment;
 
         $('#site-pricing-grid .offering').each(function(i, cell) {
             var newValue = null;
@@ -517,14 +533,30 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
                     newValue = quickPricingValue * fte;
                 }
 
-                applyNewCellPricingToOffering($offeringCell, offering, newValue);
-                $offeringCell.find('.price').text(offering.pricing.site.toFixed(2));
-                applyCssClassesToOfferingCell($offeringCell, offering);
+                updateCellContents($offeringCell, offering, newValue);
             }
         });
 
         function cellShouldBeUpdated(libraryId, productId){
             return selectedLibraryIds.indexOf(libraryId) != -1 && selectedProductIds.indexOf(productId) != -1;
+        }
+
+        function applyBulkPricingComment(offering){
+            if ( shouldApplyBulkPricingComment ){
+                offering.vendorComments = offering.vendorComments || {};
+                offering.vendorComments.site = allQuickPricingArguments.bulkComment;
+            }
+        }
+
+        function updateCellContents(offeringCell, offering, value ){
+            applyBulkPricingComment(offering);
+            applyNewCellPricingToOffering(offeringCell, offering, value);
+            applyCssClassesToOfferingCell(offeringCell, offering);
+
+            var textForOfferingPrice = offering.pricing.site.toFixed(2) || '';
+            var newReadOnlyCellContents = createReadOnlyOfferingCell(textForOfferingPrice);
+            offeringCell.find('.price').replaceWith(newReadOnlyCellContents)
+            setCommentMarkerVisibility(newReadOnlyCellContents);
         }
     }
 

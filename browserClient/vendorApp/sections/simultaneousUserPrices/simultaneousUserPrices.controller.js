@@ -8,6 +8,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     vm.productsSaved = 0;
     vm.productsSavedProgress = 0;
 
+    vm.bulkPricingHoldingCell = {};
     vm.selectedProductIds = {};
     vm.selectedSuLevelIds = {};
     vm.suPricingByProduct = {};
@@ -42,8 +43,6 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             .then(initializeSelectedSuLevelIds)
             .then(buildPricingGrid);
     }
-
-
 
     function loadProducts() {
         return productService.listActiveProductsForVendorId( vm.vendorId ).then(function (products) {
@@ -378,10 +377,11 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                 else {
                     return updateChangedProductsSeriallyWithProgressBar();
                 }
-            });
+            })
+            .then(saveProductsSuccess)
+            .catch(saveProductsError);
 
         return vm.loadingPromise;
-
 
         function updateChangedProductsConcurrently(){
             return $q.all( productIdsToUpdate.map(updateOfferingsForAllLibrariesForProduct) )
@@ -424,6 +424,10 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                         vm.productsSaved++;
                         vm.productsSavedProgress = Math.floor((vm.productsSaved / vm.totalProducts) * 100);
                         saveNextProduct();
+                    })
+                    .catch(function(err){
+                        hideSaveDialog();
+                        saveAllProductsPromise.reject(err);
                     });
             }
 
@@ -435,16 +439,20 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                     .then(updateVendorStatus)
                     .then(syncData) //Enhancement: get couch replication job progress, show it in the 2nd progress bar
                     .finally(function(){
-                        $('#progress-modal').modal('hide');
-                        $scope.warningForm.$setPristine();
+                        hideSaveDialog();
                         saveAllProductsPromise.resolve();
                     });
+            }
+
+            function hideSaveDialog() {
+                $('#progress-modal').modal('hide');
+                $scope.warningForm.$setPristine();
             }
         }
 
         function updateOfferingsForAllLibrariesForProduct( productId ){
             var newSuPricing = newSuPricingByProduct[productId];
-            return offeringService.updateSuPricingForAllLibrariesForProduct(vm.vendorId, productId, newSuPricing );
+            return offeringService.updateSuPricingForAllLibrariesForProduct(vm.vendorId, productId, newSuPricing, vm.bulkPricingHoldingCell[productId] );
         }
 
         function updateVendorStatus(){
@@ -453,6 +461,14 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
 
         function updateVendorFlaggedOfferings(){
             return vendorStatusService.updateVendorStatusFlaggedOfferings( vm.vendorId, vm.cycle );
+        }
+
+        function saveProductsSuccess(){
+            alertService.putAlert('Pricing saved.', {severity: 'success'});
+        }
+
+        function saveProductsError(err){
+            alertService.putAlert('There was a problem saving your changes. Please contact CARLI staff for more information.', {severity: 'danger'});
         }
     }
 
@@ -480,7 +496,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         }
     }
 
-    function quickPricingCallback(mode, pricingBySuLevel) {
+    function quickPricingCallback(mode, pricingBySuLevel, allQuickPricingArguments) {
         var selectedSuLevels = vm.suLevels.filter(function (suLevel) {
             return vm.selectedSuLevelIds[suLevel.id];
         });
@@ -493,7 +509,6 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                 };
             });
 
-
             suLevelPricesToInsert.forEach(applySuPricingToSelectedProducts);
         }
         else {
@@ -505,6 +520,30 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             });
 
             suLevelPercentagesToApply.forEach(applySuPercentageIncreaseToSelectedProducts);
+        }
+
+        if ( allQuickPricingArguments.addComment ){
+            saveBulkCommentsForLater();
+        }
+
+        function saveBulkCommentsForLater(){
+            vm.bulkPricingHoldingCell = vm.bulkPricingHoldingCell || {};
+
+            var commentsBySuLevel = getCommentsBySuLevel();
+
+            selectedProductIds().forEach(function saveCommentForSelectedProduct(productId){
+                vm.bulkPricingHoldingCell[productId] = commentsBySuLevel;
+            });
+
+            function getCommentsBySuLevel(){
+                var result = {};
+
+                selectedSuLevels.forEach(function(suLevel){
+                    result[suLevel.users] = allQuickPricingArguments.bulkComment;
+                });
+
+                return result;
+            }
         }
 
         function applySuPricingToSelectedProducts( pricingItem ){
@@ -545,13 +584,17 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             });
         }
 
-        function productIsSelected(productId){
-            return vm.selectedProductIds[productId];
-        }
-
         function markProductChanged( productId ){
             vm.changedProductIds[productId] = true;
         }
+    }
+
+    function productIsSelected(productId){
+        return vm.selectedProductIds[productId];
+    }
+
+    function selectedProductIds(){
+        return Object.keys(vm.selectedProductIds).filter(productIsSelected);
     }
 
     function nextSuLevel(){
