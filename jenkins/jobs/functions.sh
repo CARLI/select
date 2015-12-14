@@ -18,8 +18,17 @@ linkSecureConfiguration() {
     cd - > /dev/null
 }
 
+linkLocalConfiguration() {
+    cd config
+    [ -e /home/jenkins/.carli-local.json ] || fail "Server is missing the local configuration file for CARLI"
+    rm -f local.json
+    ln -s /home/jenkins/.carli-local.json local.json
+    cd - > /dev/null
+}
+
 initialize() {
     linkSecureConfiguration || fail "Failed to link secure configuration"
+    linkLocalConfiguration || fail "Failed to link local configuration"
 
     mkdir -p ./artifacts
     ./install-dependencies.sh || fail "Failed to install dependencies"
