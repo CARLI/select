@@ -39,6 +39,7 @@ describe('The LibraryRepository', function(){
                 type: 'LibraryNonCrm',
                 crmId: crmId,
                 fte: 1111,
+                fteInfo: 'some extra information about the fte',
                 contacts: [
                     { firstName: 'test1', email: 'test@test.com', contactType: 'Other' },
                     { firstName: 'test2', email: 'test@test.com', contactType: 'Other' }
