@@ -30,6 +30,11 @@
                         <span class="value">{{ vm.library.fte || '-' }}</span>
                     </view-edit-integer>
 
+                    <label for="libraryFteInfo">Additional FTE Information:</label>
+                    <view-edit-text-field ng-model="vm.library.fteInfo" edit-mode="vm.editable" input-id="libraryFteInfo">
+                        <span class="value">{{ vm.library.fteInfo || '-' }}</span>
+                    </view-edit-text-field>
+
                     <label for="libraryInstitutionYears">Institution Type (2 year/4 year):</label>
                     <view-edit-select ng-model="vm.library.institutionYears" items="vm.institutionYearsOptions" edit-mode="false" input-id="libraryInstitutionYears">
                         <span class="value">{{ vm.library.institutionYears || '-' }}</span>
