@@ -344,6 +344,7 @@ function setSuPricingForAllLibrariesForProduct( productId, newSuPricing, vendorC
         function applyNewSuPricingCommentsToOffering( offering ){
             offering.vendorComments = offering.vendorComments || {};
             offering.vendorComments['su'] = vendorComments;
+            return offering;
         }
     }
 }
