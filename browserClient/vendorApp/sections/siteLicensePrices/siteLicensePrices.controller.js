@@ -486,13 +486,14 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
 
     function quickPricingCallback(mode, quickPricingValue, allQuickPricingArguments) {
-        console.log('siteLicenesPrices controller quick pricing callback', allQuickPricingArguments);
         var selectedLibraryIds = Object.keys(vm.selectedLibraryIds).filter(function (libraryId) {
             return vm.selectedLibraryIds[libraryId];
         });
         var selectedProductIds = Object.keys(vm.selectedProductIds).filter(function (productId) {
             return vm.selectedProductIds[productId];
         });
+
+        var shouldApplyBulkPricingComment = allQuickPricingArguments.addComment;
 
         $('#site-pricing-grid .offering').each(function(i, cell) {
             var newValue = null;
@@ -519,6 +520,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
                 }
 
                 applyNewCellPricingToOffering($offeringCell, offering, newValue);
+                applyBulkPricingComment(offering);
                 $offeringCell.find('.price').text(offering.pricing.site.toFixed(2));
                 applyCssClassesToOfferingCell($offeringCell, offering);
             }
@@ -526,6 +528,13 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
         function cellShouldBeUpdated(libraryId, productId){
             return selectedLibraryIds.indexOf(libraryId) != -1 && selectedProductIds.indexOf(productId) != -1;
+        }
+
+        function applyBulkPricingComment(offering){
+            if ( shouldApplyBulkPricingComment ){
+                offering.vendorComments = offering.vendorComments || {};
+                offering.vendorComments.site = allQuickPricingArguments.bulkComment;
+            }
         }
     }
 
