@@ -24,8 +24,5 @@
   },
   "oneTimePurchaseProductsCycleDocId": "one-time-purchase-products-cycle",
   "storePath": "CouchDb/Store",
-  "defaultEntityCacheTimeToLive": 1000,
-  "staffWebAppUrl": "http://staff.carli.local:8080",
-  "libraryWebAppUrl": "http://library.carli.local:8080",
-  "vendorWebAppUrl": "http://vendor.carli.local:8080"
+  "defaultEntityCacheTimeToLive": 1000
 }
