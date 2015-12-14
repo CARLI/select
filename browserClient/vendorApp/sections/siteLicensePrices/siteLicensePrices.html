@@ -50,7 +50,7 @@
             </div>
             <div class="price-row {{ ::library.id }}" ng-repeat="library in vm.libraries">
                 <div class="column library">{{ ::library.name }}</div>
-                <div class="column size">{{ ::library.fte }}</div>
+                <div class="column size">{{ ::library.fte }} ({{ ::library.fteInfo }})</div>
                 <div class="column type">{{ ::library.institutionType }}</div>
                 <div class="column years">{{ ::library.institutionYears }}</div>
                 <div class="column lastYearsPrice">{{ ::library.lastYearsPrice }}</div>
