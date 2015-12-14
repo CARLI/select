@@ -19,6 +19,7 @@ function loadConfiguration() {
     setMiddlewareUrl();
     setCouchDbUrl();
     setPrivilegedCouchDbUrl();
+    setWebAppUrls();
 
     return config;
 
@@ -67,6 +68,21 @@ function loadConfiguration() {
                 config.storeOptions.privilegedCouchUsername + ':' +
                 config.storeOptions.privilegedCouchPassword + '@' +
                 config.storeOptions.privilegedCouchHostname;
+        }
+    }
+
+    function setWebAppUrls() {
+        if (isBrowserEnvironment()) {
+            if (window.location.hostname === 'carli-staff.qa.pixotech.com') {
+                config.staffWebAppUrl = "http://carli-staff.qa.pixotech.com";
+                config.libraryWebAppUrl = "http://carli-library.qa.pixotech.com";
+                config.vendorWebAppUrl = "http://carli-vendor.qa.pixotech.com";
+            }
+            if (window.location.hostname === 'select-staff.carli.illinois.edu') {
+                config.staffWebAppUrl = "http://select-staff.carli.illinois.edu";
+                config.libraryWebAppUrl = "http://select-library.carli.illinois.edu";
+                config.vendorWebAppUrl = "http://select-vendor.carli.illinois.edu";
+            }
         }
     }
 }
