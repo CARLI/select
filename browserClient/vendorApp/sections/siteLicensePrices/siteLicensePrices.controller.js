@@ -68,6 +68,8 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     function initializePricingGrid(){
         vm.products = [];
 
+        resetSelectedLibrariesAndProducts();
+
         return loadProducts()
             .then(buildPriceArray)
             .then(buildPricingGrid);
@@ -87,6 +89,11 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         });
     }
 
+    function resetSelectedLibrariesAndProducts(){
+        selectAllLibraries();
+        selectAllProducts();
+    }
+
     function byName(entity1, entity2){
         if ( entity1.name < entity2.name ){
             return -1;
@@ -96,19 +103,26 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         }
     }
 
-
-    function initializeSelectedLibraryIds() {
+    function selectAllLibraries(){
         vm.libraries.forEach(function(library) {
             vm.selectedLibraryIds[library.id] = true;
         });
+    }
+
+    function initializeSelectedLibraryIds() {
+        selectAllLibraries();
         $scope.$watchCollection(getSelectedLibraryIds, updateVisibilityOfRowsForSelectedLibraries);
         function getSelectedLibraryIds() { return vm.selectedLibraryIds; }
     }
 
-    function initializeSelectedProductIds() {
+    function selectAllProducts(){
         vm.products.forEach(function(product) {
             vm.selectedProductIds[product.id] = true;
         });
+    }
+
+    function initializeSelectedProductIds() {
+        selectAllProducts();
         $scope.$watchCollection(getSelectedProductIds, updateVisibilityOfCellsForSelectedProducts);
         function getSelectedProductIds() { return vm.selectedProductIds; }
     }
