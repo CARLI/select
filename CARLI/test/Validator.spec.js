@@ -217,6 +217,7 @@ describe( 'The Validator Module', function() {
             var expectedValues = [
                 'crmId',
                 'fte',
+                'fteInfo',
                 'gar',
                 'excludeFromBannerFeed',
                 'ipAddresses',
@@ -231,6 +232,7 @@ describe( 'The Validator Module', function() {
             var expectedMap = {
                 crmId: 'string',
                 fte: 'integer',
+                fteInfo: 'string',
                 gar: 'string',
                 excludeFromBannerFeed: "boolean",
                 ipAddresses: 'string',
