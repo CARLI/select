@@ -8,6 +8,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     vm.productsSaved = 0;
     vm.productsSavedProgress = 0;
 
+    vm.bulkPricingHoldingCell = {};
     vm.selectedProductIds = {};
     vm.selectedSuLevelIds = {};
     vm.suPricingByProduct = {};
@@ -42,8 +43,6 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             .then(initializeSelectedSuLevelIds)
             .then(buildPricingGrid);
     }
-
-
 
     function loadProducts() {
         return productService.listActiveProductsForVendorId( vm.vendorId ).then(function (products) {
@@ -495,7 +494,6 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                 };
             });
 
-
             suLevelPricesToInsert.forEach(applySuPricingToSelectedProducts);
         }
         else {
@@ -507,6 +505,30 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             });
 
             suLevelPercentagesToApply.forEach(applySuPercentageIncreaseToSelectedProducts);
+        }
+
+        if ( allQuickPricingArguments.addComment ){
+            saveBulkCommentsForLater();
+        }
+
+        function saveBulkCommentsForLater(){
+            vm.bulkPricingHoldingCell = vm.bulkPricingHoldingCell || {};
+
+            var commentsBySuLevel = getCommentsBySuLevel();
+
+            selectedProductIds().forEach(function saveCommentForSelectedProduct(productId){
+                vm.bulkPricingHoldingCell[productId] = commentsBySuLevel;
+            });
+
+            function getCommentsBySuLevel(){
+                var result = {};
+
+                selectedSuLevels.forEach(function(suLevel){
+                    result[suLevel.users] = allQuickPricingArguments.bulkComment;
+                });
+
+                return result;
+            }
         }
 
         function applySuPricingToSelectedProducts( pricingItem ){
@@ -547,13 +569,17 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             });
         }
 
-        function productIsSelected(productId){
-            return vm.selectedProductIds[productId];
-        }
-
         function markProductChanged( productId ){
             vm.changedProductIds[productId] = true;
         }
+    }
+
+    function productIsSelected(productId){
+        return vm.selectedProductIds[productId];
+    }
+
+    function selectedProductIds(){
+        return Object.keys(vm.selectedProductIds).filter(productIsSelected);
     }
 
     function nextSuLevel(){
