@@ -293,7 +293,7 @@ function runMiddlewareServer(){
                     res.status(400).send('missing pricing data');
                     return;
                 }
-                vendorSpecificProductQueries.updateSuPricingForProduct(req.params.vendorId, req.params.productId, req.body.newSuPricing, req.params.cycleId)
+                vendorSpecificProductQueries.updateSuPricingForProduct(req.params.vendorId, req.params.productId, req.body.newSuPricing, req.body.vendorComments, req.params.cycleId)
                     .then(sendResult(res))
                     .catch(sendError(res));
             });

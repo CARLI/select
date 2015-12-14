@@ -377,10 +377,11 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                 else {
                     return updateChangedProductsSeriallyWithProgressBar();
                 }
-            });
+            })
+            .then(saveProductsSuccess)
+            .catch(saveProductsError);
 
         return vm.loadingPromise;
-
 
         function updateChangedProductsConcurrently(){
             return $q.all( productIdsToUpdate.map(updateOfferingsForAllLibrariesForProduct) )
@@ -423,6 +424,10 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                         vm.productsSaved++;
                         vm.productsSavedProgress = Math.floor((vm.productsSaved / vm.totalProducts) * 100);
                         saveNextProduct();
+                    })
+                    .catch(function(err){
+                        hideSaveDialog();
+                        saveAllProductsPromise.reject(err);
                     });
             }
 
@@ -434,16 +439,20 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                     .then(updateVendorStatus)
                     .then(syncData) //Enhancement: get couch replication job progress, show it in the 2nd progress bar
                     .finally(function(){
-                        $('#progress-modal').modal('hide');
-                        $scope.warningForm.$setPristine();
+                        hideSaveDialog();
                         saveAllProductsPromise.resolve();
                     });
+            }
+
+            function hideSaveDialog() {
+                $('#progress-modal').modal('hide');
+                $scope.warningForm.$setPristine();
             }
         }
 
         function updateOfferingsForAllLibrariesForProduct( productId ){
             var newSuPricing = newSuPricingByProduct[productId];
-            return offeringService.updateSuPricingForAllLibrariesForProduct(vm.vendorId, productId, newSuPricing );
+            return offeringService.updateSuPricingForAllLibrariesForProduct(vm.vendorId, productId, newSuPricing, vm.bulkPricingHoldingCell[productId] );
         }
 
         function updateVendorStatus(){
@@ -452,6 +461,14 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
 
         function updateVendorFlaggedOfferings(){
             return vendorStatusService.updateVendorStatusFlaggedOfferings( vm.vendorId, vm.cycle );
+        }
+
+        function saveProductsSuccess(){
+            alertService.putAlert('Pricing saved.', {severity: 'success'});
+        }
+
+        function saveProductsError(err){
+            alertService.putAlert('There was a problem saving your changes. Please contact CARLI staff for more information.', {severity: 'danger'});
         }
     }
 
