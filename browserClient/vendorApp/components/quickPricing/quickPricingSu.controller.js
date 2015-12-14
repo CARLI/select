@@ -32,10 +32,10 @@ function quickPricingSuController( $rootScope ){
         $('#quick-pricing-header button').focus();
         
         if (vm.quickPricingArguments.mode == 'dollarAmount') {
-            vm.quickPricingCallback('dollarAmount', vm.quickPricingArguments.dollarValues);
+            vm.quickPricingCallback('dollarAmount', vm.quickPricingArguments.dollarValues, vm.quickPricingArguments);
         }
         if (vm.quickPricingArguments.mode == 'percentageIncrease') {
-            vm.quickPricingCallback('percentageIncrease', vm.quickPricingArguments.percentValues);
+            vm.quickPricingCallback('percentageIncrease', vm.quickPricingArguments.percentValues, vm.quickPricingArguments);
         }
     }
 

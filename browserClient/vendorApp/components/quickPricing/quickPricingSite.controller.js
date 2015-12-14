@@ -34,13 +34,13 @@ function quickPricingSiteController($rootScope){
         $('#quick-pricing-header button').focus();
 
         if (vm.quickPricingArguments.mode == 'dollarAmount') {
-            vm.quickPricingCallback('dollarAmount', vm.quickPricingArguments.dollarValue);
+            vm.quickPricingCallback('dollarAmount', vm.quickPricingArguments.dollarValue, vm.quickPricingArguments);
         }
         if (vm.quickPricingArguments.mode == 'percentageIncrease') {
-            vm.quickPricingCallback('percentageIncrease', vm.quickPricingArguments.percentValue);
+            vm.quickPricingCallback('percentageIncrease', vm.quickPricingArguments.percentValue, vm.quickPricingArguments);
         }
         if (vm.quickPricingArguments.mode == 'byFte' ){
-            vm.quickPricingCallback('byFte', vm.quickPricingArguments.byFteValue);
+            vm.quickPricingCallback('byFte', vm.quickPricingArguments.byFteValue, vm.quickPricingArguments);
         }
     }
 

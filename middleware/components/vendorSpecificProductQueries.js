@@ -1,3 +1,4 @@
+var carliError = require('../../CARLI/Error');
 var cycleRepositoryForVendor = require('../../CARLI/Entity/CycleRepositoryForVendor.js');
 var offeringRepository = require('../../CARLI/Entity/OfferingRepository.js');
 var productRepository = require('../../CARLI/Entity/ProductRepository.js');
@@ -31,7 +32,10 @@ function listProductsWithOfferingsForVendorId(vendorId, cycleId) {
 
 }
 
-function updateSuPricingForProduct( vendorId, productId, newSuPricing, cycleId ){
+function updateSuPricingForProduct( vendorId, productId, newSuPricing, vendorComments, cycleId ){
+
+    console.log('updateSuPricingForProduct(', vendorId, productId, newSuPricing, vendorComments, cycleId );
+
     var cycle = null;
 
     return vendorRepository.load(vendorId)
@@ -44,21 +48,29 @@ function updateSuPricingForProduct( vendorId, productId, newSuPricing, cycleId )
             return offeringRepository.ensureProductHasOfferingsForAllLibraries(productId, vendorId, cycle);
         }, catchNoCycle)
         .then(function(){
-            return offeringRepository.updateSuPricingForAllLibrariesForProduct(vendorId, productId, newSuPricing, cycle);
+            return offeringRepository.updateSuPricingForAllLibrariesForProduct(vendorId, productId, newSuPricing, vendorComments, cycle);
         },catchEnsureError)
         .catch(updateSuPricingError);
 
     function catchNoVendor( err ){
         Logger.log('error updating Su Pricing For Product '+ productId +' - No Vendor', err);
+        throwUpdateError();
     }
     function catchNoCycle( err ){
         Logger.log('error updating Su Pricing For Product '+ productId +' - No Cycle', err);
+        throwUpdateError();
     }
     function catchEnsureError( err ){
         Logger.log('error updating Su Pricing For Product '+ productId +' - Ensure Error', err);
+        throwUpdateError();
     }
     function updateSuPricingError( err ){
         Logger.log('error updating Su Pricing For Product '+ productId +' - Updating Pricing ', err);
+        throwUpdateError();
+    }
+
+    function throwUpdateError(){
+        throw new Error('Error updating SU pricing');
     }
 }
 
@@ -81,15 +93,23 @@ function updateSuCommentForProduct(vendorId, productId, numSu, newCommentText, c
 
     function catchNoVendor( err ){
         Logger.log('error updating comments for product '+ productId +' - No Vendor', err);
+        throwUpdateError();
     }
     function catchNoCycle( err ){
         Logger.log('error updating comments for product '+ productId +' - No Cycle', err);
+        throwUpdateError();
     }
     function catchEnsureError( err ){
         Logger.log('error updating comments for product '+ productId +' - Ensure Error', err);
+        throwUpdateError();
     }
     function updateSuPricingError( err ){
         Logger.log('error updating comments for product '+ productId +' - Updating Pricing ', err);
+        throwUpdateError();
+    }
+
+    function throwUpdateError(){
+        throw new Error('Error updating SU comments');
     }
 }
 
