@@ -555,7 +555,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
             var textForOfferingPrice = offering.pricing.site.toFixed(2) || '';
             var newReadOnlyCellContents = createReadOnlyOfferingCell(textForOfferingPrice);
-            offeringCell.find('.price').replaceWith(newReadOnlyCellContents)
+            offeringCell.find('.price').replaceWith(newReadOnlyCellContents);
             setCommentMarkerVisibility(newReadOnlyCellContents);
         }
     }

@@ -554,7 +554,7 @@ function runOfferingSpecificTests(testCycle) {
 
                 return setupTestData()
                     .then(function(){
-                        return offeringRepository.setSuPricingForAllLibrariesForProduct(testProductId, testNewSuPricing, testCycle);
+                        return offeringRepository.setSuPricingForAllLibrariesForProduct(testProductId, testNewSuPricing, {}, testCycle);
                     })
                     .then(verifyAllOfferingsGotNewPricing);
 
