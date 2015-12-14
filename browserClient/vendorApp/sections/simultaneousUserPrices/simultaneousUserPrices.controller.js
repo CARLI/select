@@ -497,8 +497,6 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     }
 
     function quickPricingCallback(mode, pricingBySuLevel, allQuickPricingArguments) {
-        console.log('simultaneousUserPrices controller quick pricing callback', allQuickPricingArguments);
-
         var selectedSuLevels = vm.suLevels.filter(function (suLevel) {
             return vm.selectedSuLevelIds[suLevel.id];
         });
