@@ -519,10 +519,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
                     newValue = quickPricingValue * fte;
                 }
 
-                applyNewCellPricingToOffering($offeringCell, offering, newValue);
-                applyBulkPricingComment(offering);
-                $offeringCell.find('.price').text(offering.pricing.site.toFixed(2));
-                applyCssClassesToOfferingCell($offeringCell, offering);
+                updateCellContents($offeringCell, offering, newValue);
             }
         });
 
@@ -535,6 +532,17 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
                 offering.vendorComments = offering.vendorComments || {};
                 offering.vendorComments.site = allQuickPricingArguments.bulkComment;
             }
+        }
+
+        function updateCellContents(offeringCell, offering, value ){
+            applyBulkPricingComment(offering);
+            applyNewCellPricingToOffering(offeringCell, offering, value);
+            applyCssClassesToOfferingCell(offeringCell, offering);
+
+            var textForOfferingPrice = offering.pricing.site.toFixed(2) || '';
+            var newReadOnlyCellContents = createReadOnlyOfferingCell(textForOfferingPrice);
+            offeringCell.find('.price').replaceWith(newReadOnlyCellContents)
+            setCommentMarkerVisibility(newReadOnlyCellContents);
         }
     }
 
