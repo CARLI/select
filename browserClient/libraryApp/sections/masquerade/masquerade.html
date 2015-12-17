@@ -4,8 +4,8 @@
     <h2>Choose a library account to masquerade as</h2>
 
     <ul>
-        <li ng-repeat="library in vm.libraries">
-            <a href="{{ library.masqueradingUrl }}" target="carli-select-library-app">{{ library.name }}</a>
+        <li ng-repeat="library in vm.libraries | orderBy: 'name'">
+            <a href="{{ library.masqueradingUrl }}" target="{{ vm.libraryAppBrowsingContextId }}">{{ library.name }}</a>
         </li>
     </ul>
 </section>

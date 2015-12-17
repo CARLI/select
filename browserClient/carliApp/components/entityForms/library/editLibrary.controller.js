@@ -7,6 +7,7 @@ function editLibraryController( $scope, $rootScope, activityLogService, alertSer
     vm.crmContacts = [];
     vm.libraryId = $scope.libraryId;
     vm.masqueradeAsLibraryUrl = null;
+    vm.libraryAppBrowsingContextId = config.libraryAppBrowsingContextId;
     var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
     vm.toggleEditable = toggleEditable;
