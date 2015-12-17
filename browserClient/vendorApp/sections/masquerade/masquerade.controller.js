@@ -5,6 +5,7 @@ function masqueradeController(config, vendorService) {
     var vm = this;
 
     vm.vendors = [];
+    vm.vendorAppBrowsingContextId = config.vendorAppBrowsingContextId;
 
     activate();
 

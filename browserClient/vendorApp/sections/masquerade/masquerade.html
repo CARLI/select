@@ -4,8 +4,8 @@
     <h2>Choose a vendor account to masquerade as</h2>
 
     <ul>
-        <li ng-repeat="vendor in vm.vendors">
-            <a href="{{ vendor.masqueradingUrl }}" target="carli-select-vendor-app">{{ vendor.name }}</a>
+        <li ng-repeat="vendor in vm.vendors | orderBy: 'name'">
+            <a href="{{ vendor.masqueradingUrl }}" target="{{ vm.vendorAppBrowsingContextId }}">{{ vendor.name }}</a>
         </li>
     </ul>
 </section>

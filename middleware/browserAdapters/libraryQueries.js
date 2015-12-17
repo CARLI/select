@@ -1,6 +1,9 @@
 var middlewareRequest = require('./middlewareRequest');
 
 function listSelectionsForLibraryFromCycle( libraryId, cycleId ){
+    if (!libraryId) {
+        throw new Error('listSelectionsForLibraryFromCycle received invalid libraryId');
+    }
     return middlewareRequest({
         path: '/list-selections-for-library/' + libraryId + '/from-cycle/' + cycleId,
         method: 'get',

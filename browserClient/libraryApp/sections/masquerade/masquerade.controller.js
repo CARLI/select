@@ -5,6 +5,7 @@ function masqueradeController(config, libraryService) {
     var vm = this;
 
     vm.libraries = [];
+    vm.libraryAppBrowsingContextId = config.libraryAppBrowsingContextId;
 
     activate();
 

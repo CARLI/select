@@ -28,12 +28,12 @@ function getUser(email) {
 
     function expandReferences(user) {
         if (user.hasOwnProperty('vendor')) {
-            return expandVendor(user);
-        } else if (user.hasOwnProperty('library')) {
-            return expandLibrary(user);
-        } else {
-            return user;
+            user = expandVendor(user);
         }
+        if (user.hasOwnProperty('library')) {
+            user = expandLibrary(user);
+        }
+        return user;
     }
 
     function expandVendor(user) {

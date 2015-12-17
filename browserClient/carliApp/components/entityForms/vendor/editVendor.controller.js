@@ -5,6 +5,7 @@ function editVendorController( $scope, $rootScope, activityLogService, config, e
     var vm = this;
 
     vm.vendorId = $scope.vendorId;
+    vm.vendorAppBrowsingContextId = config.vendorAppBrowsingContextId;
     var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
     vm.toggleEditable = toggleEditable;
