@@ -25,11 +25,13 @@ function listSelectionsForLibraryFromCycle( libraryId, cycleId ){
         .catch(function(err){
             Logger.log('Error 1 listing selections for library '+libraryId+' from cycle '+cycle.name, err.stack);
             Logger.log(err);
+            throw new Error('Error listing selections from ' + cycle.name);
         })
         .then(populateProductsForOfferings)
         .catch(function(err){
             Logger.log('Error 2 listing selections for library '+libraryId+' from cycle '+cycle.name, err.stack);
             Logger.log(err);
+            throw new Error('Error listing selections from ' + cycle.name);
         });
 
     function populateProductsForOfferings( offeringsList ){
@@ -148,6 +150,7 @@ function listOfferingsForLibraryWithExpandedProducts( libraryId, cycleId ){
         .then(populateProductsForOfferings)
         .catch(function(err){
             Logger.log('  ** Error populating products', err);
+            throw new Error('Error loading data for ' + cycle.name);
         });
 
     function populateProductsForOfferings( offeringsList ){
@@ -183,7 +186,8 @@ function getHistoricalSelectionDataForLibraryForProduct( libraryId, productId, c
         .then(getSelectionDataForCycles)
         .thenResolve(selectionsByYear)
         .catch(function(err){
-            Logger.log('Error getting historical selections for library '+libraryId+' from cycle '+cycle.name, err);
+            Logger.log('Error getting historical selections for library '+libraryId+' from cycle '+cycleId, err);
+            throw err;
         });
 
     function getSelectionDataForCycles( cycles ){
@@ -194,6 +198,7 @@ function getHistoricalSelectionDataForLibraryForProduct( libraryId, productId, c
                 .then(returnWhetherLibrarySelectedProductInCycle)
                 .catch(function(err){
                     Logger.log('Error getting selection data for '+cycle.name, err);
+                    throw new Error('Error loading data for ' + cycle.name);
                 });
 
             function returnWhetherLibrarySelectedProductInCycle(offeringsForProductFromCycle){
