@@ -16,7 +16,7 @@ function navBarController(cycleService) {
     }
 
     function showOpenBadgeIfCycleOpen(cycle) {
-        if ( cycle.status == cycle.CYCLE_STATUS_OPEN_TO_LIBRARIES ) {
+        if ( cycle.status == cycleService.CYCLE_STATUS_OPEN_TO_LIBRARIES ) {
             vm.showOpenBadge = true;
         }
     }
