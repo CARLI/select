@@ -162,7 +162,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     }
 
     function makeSuPricingRow(level) {
-        var row = $('<div class="price-row" role="row">');
+        var row = $('<div class="price-row">');
         row.addClass('su-'+level.users);
         row.data('su', level.users);
 
@@ -258,9 +258,14 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         return cell;
     }
 
-    function createEditableOfferingCell(price) {
-        var cell = $('<input class="price-editable" role="textbox" type="text" step=".01" min="0">').val(price);
-        cell.on('blur', makeReadOnly);
+    function createEditableOfferingCell(price, numSu, productId) {
+        var product = getProductById(productId);
+        var labelText = 'price for ' + numSu + ' users for product ' + product.name;
+
+        var cell = $('<input class="price-editable" role="textbox" type="text" step=".01" min="0">')
+            .attr('aria-label', labelText)
+            .val(price)
+            .on('blur', makeReadOnly);
         return cell;
     }
 
@@ -272,7 +277,12 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     function makeEditable(cell) {
         var $cell = $(cell);
         var price = $cell.text();
-        var input = createEditableOfferingCell(price);
+
+        var offeringCell = $cell.parent();
+        var productId = offeringCell.data('productId');
+        var numSu = offeringCell.data('numSu');
+
+        var input = createEditableOfferingCell(price, numSu, productId);
         $cell.replaceWith(input);
         input.focus().select();
     }
@@ -666,5 +676,11 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             var cycleName = cycleService.getCurrentCycle().name;
             return vendorName + ' ' + cycleName + ' SU Prices.csv';
         }
+    }
+
+    function getProductById(productId){
+        return vm.products.filter(function(product){
+            return product.id === productId;
+        })[0];
     }
 }
