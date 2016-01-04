@@ -141,9 +141,10 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
                 copyOfferingHistoryForYear(offering, sourceCycle.year);
                 removeVendorModificationTracking(offering);
                 removeSelection(offering);
+                clearVendorComments(offering);
             });
-            var updatePromises = [];
             return couchUtils.bulkUpdateDocuments(newCycle.getDatabaseName(), offeringsBatch);
+            //var updatePromises = [];
             //offeringsBatch.forEach(function (offering) {
             //    updatePromises.push(updateUnexpandedOffering(offering, newCycle));
             //});
@@ -197,6 +198,14 @@ function removeVendorModificationTracking(offering){
 
 function removeSelection(offering){
     delete offering.selection;
+}
+
+function clearVendorComments(offering) {
+    offering.libraryComments = '';
+    offering.vendorComments = {
+        site: '',
+        su: []
+    };
 }
 
 function loadOffering( offeringId, cycle ){
