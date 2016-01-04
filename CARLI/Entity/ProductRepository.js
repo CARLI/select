@@ -238,10 +238,11 @@ function getProductSelectionStatisticsForCycle( productId, cycle ){
     }
 }
 
-function copyPriceCapsForNewCycle(cycle) {
+function transformProductsForNewCycle(cycle) {
     setCycle(cycle);
     return listProducts(cycle)
         .then(copyPriceCaps)
+        .then(clearComments)
         .then(saveProducts)
         .then(function() {
             return { ok: true };
@@ -255,6 +256,15 @@ function copyPriceCapsForNewCycle(cycle) {
                 product.priceCap = product.futurePriceCaps[cycle.year];
                 delete product.futurePriceCaps[cycle.year];
             }
+            return product;
+        }
+    }
+
+    function removeVendorComments(products) {
+        return products.map(removeVendorCommentsFromProduct);
+
+        function removeVendorCommentsFromProduct(product) {
+            product.comments = '';
             return product;
         }
     }
@@ -386,5 +396,5 @@ module.exports = {
     getProductDetailCodeOptions: getProductDetailCodeOptions,
     isProductActive: isProductActive,
     getProductSelectionStatisticsForCycle: getProductSelectionStatisticsForCycle,
-    copyPriceCapsForNewCycle: copyPriceCapsForNewCycle
+    transformProductsForNewCycle: transformProductsForNewCycle
 };

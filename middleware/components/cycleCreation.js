@@ -45,7 +45,7 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
         .then(indexViews)
         .then(waitForIndexingToFinish)
         .then(resetVendorStatuses)
-        .then(copyProductPriceCaps)
+        .then(transformProducts)
         .then(transformOfferings)
         .then(indexViews)
         .then(waitForIndexingToFinish)
@@ -89,9 +89,9 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
                 });
         }
     }
-    function copyProductPriceCaps() {
-        cycleRepository.createCycleLog('Copying price caps for ' + newCycle.databaseName);
-        return productRepository.copyPriceCapsForNewCycle(newCycle);
+    function transformProducts() {
+        cycleRepository.createCycleLog('Transforming products for new cycle');
+        return productRepository.transformProductsForNewCycle(newCycle);
     }
     function transformOfferings() {
         cycleRepository.createCycleLog('Transforming offerings for new cycle');
