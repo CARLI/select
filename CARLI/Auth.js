@@ -58,6 +58,9 @@ function masqueradeAsLibrary(libraryId) {
         });
 
     function setupUserForMasquerading(userCtx) {
+        if (userCtx.roles.indexOf('staff') < 0) {
+            throw new Error(userCtx.name + ' is not authorized to masquerade as a library');
+        }
         var userId = 'org.couchdb.user:' + userCtx.name;
         return userRepository.setMasqueradingLibraryIdForUserId(libraryId, userId);
     }
@@ -70,6 +73,9 @@ function masqueradeAsVendor(vendorId) {
         });
 
     function setupUserForMasquerading(userCtx) {
+        if (userCtx.roles.indexOf('staff') < 0) {
+            throw new Error(userCtx.name + ' is not authorized to masquerade as a vendor');
+        }
         var userId = 'org.couchdb.user:' + userCtx.name;
         return userRepository.setMasqueradingVendorIdForUserId(vendorId, userId);
     }

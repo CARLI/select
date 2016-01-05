@@ -31,8 +31,9 @@ angular.module('vendor.app', [
     $rootScope.appState = 'pendingUser';
 
     if (authService.isMasqueradingRequested()) {
-        console.log('Masquerading requested');
-        authService.initializeMasquerading().then(handleAuthentication);
+        authService.initializeMasquerading()
+            .then(handleAuthentication)
+            .catch(handleUnauthorizedMasqueradeAttempt);
     } else {
         handleAuthentication();
     }
@@ -43,6 +44,9 @@ angular.module('vendor.app', [
         }
     }
 
+    function handleUnauthorizedMasqueradeAttempt() {
+        authService.deleteSession().then(authService.redirectToLogin);
+    }
 })
 .value('cgBusyDefaults',{
     //message:'Loading Stuff',
