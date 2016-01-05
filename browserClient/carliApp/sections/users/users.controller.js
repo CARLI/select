@@ -15,13 +15,25 @@ function userController( $sce, $location, userService ){
         var userType = $location.path().substring($location.path().lastIndexOf('/') + 1);
         setUserTypeLabel(userType);
 
-        vm.loadingPromise = userService.list().then( function(userList){
-            vm.userList = userList.filter(filterByRole).map(useFullNameForNameSearch);
+        vm.loadingPromise = userService.list().then(filterUsersByType);
+
+        function filterUsersByType(userList){
+            vm.userList = userList
+                .filter(filterByRole)
+                .filter(filterMasqueradingStaffFromNonStaffLists)
+                .map(useFullNameForNameSearch);
 
             function filterByRole(user) {
                 return user.roles.indexOf(userType) >= 0;
             }
-        });
+            function filterMasqueradingStaffFromNonStaffLists(user) {
+                if (userType === 'staff') {
+                    return true;
+                }
+                var isAlsoStaff = user.roles.indexOf('staff') >= 0;
+                return !isAlsoStaff;
+            }
+        }
     }
 
     function setUserTypeLabel(userType) {
