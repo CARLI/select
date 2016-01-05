@@ -37,7 +37,9 @@ angular.module('library.app', [
     $rootScope.appState = 'pendingUser';
 
     if (authService.isMasqueradingRequested()) {
-        authService.initializeMasquerading().then(handleAuthentication);
+        authService.initializeMasquerading()
+            .then(handleAuthentication)
+            .catch(handleUnauthorizedMasqueradeAttempt);
     } else {
         handleAuthentication();
     }
@@ -46,6 +48,10 @@ angular.module('library.app', [
         if (authService.isRouteProtected()) {
             authService.redirectToLogin();
         }
+    }
+
+    function handleUnauthorizedMasqueradeAttempt() {
+        authService.deleteSession().then(authService.redirectToLogin);
     }
 })
 .value('cgBusyDefaults',{
