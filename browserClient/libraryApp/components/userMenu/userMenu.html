@@ -3,6 +3,7 @@
         <a data-toggle="dropdown"
            data-target="#user-menu"
            href="">Hi, {{ vm.userName }}!
+        <span style="display: none" ng-if="vm.isStaffUser"> ({{ vm.libraryName }})</span>
         <button id="user-menu-label"
                 class="clear-button-styles"
                 type="button"
