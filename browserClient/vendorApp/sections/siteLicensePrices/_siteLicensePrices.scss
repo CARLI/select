@@ -93,4 +93,25 @@
             }
         }
     }
+
+    .fte-info {
+        color: $purple;
+        position: relative;
+        font-size: 1rem;
+
+        .hover {
+            background: $white;
+            display: none;
+            position: absolute;
+            top: -0.5rem;
+            left: 1rem;
+            padding: 0.5rem;
+            border: $default-border;
+            white-space: nowrap;
+        }
+
+        &:hover .hover {
+            display: block;
+        }
+    }
 }

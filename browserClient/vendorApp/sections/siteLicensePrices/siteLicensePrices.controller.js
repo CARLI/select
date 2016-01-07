@@ -280,7 +280,10 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     function editCellPrice(element) {
         var $this = $(element);
         var price = $this.text();
-        var input = createEditableOfferingCell(price);
+        var $offeringCell = $this.parent();
+        var libraryId = $offeringCell.data('libraryId');
+        var productId = $offeringCell.data('productId');
+        var input = createEditableOfferingCell(price, libraryId, productId);
         $this.replaceWith(input);
         input.focus().select();
     }
@@ -393,8 +396,13 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         }
     }
 
-    function createEditableOfferingCell(price) {
-        return $('<input class="price-editable" role="textbox" type="text" step=".01" min="0">').val(price);
+    function createEditableOfferingCell(price, libraryId, productId) {
+        var library = getLibraryById(libraryId);
+        var product = getProductById(productId);
+        var labelText = 'site license price for library ' + library.name + ' for product ' + product.name;
+        return $('<input class="price-editable" role="textbox" type="text" step=".01" min="0">')
+            .attr('aria-label', labelText)
+            .val(price);
     }
 
     function applyPricingChangesToCell(e) {
@@ -609,5 +617,17 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
                 vm.historicPopupShowing = false;
             });
         }
+    }
+
+    function getLibraryById(libraryId){
+        return vm.libraries.filter(function(library){
+            return library.id === libraryId;
+        })[0];
+    }
+
+    function getProductById(productId){
+        return vm.products.filter(function(product){
+            return product.id === productId;
+        })[0];
     }
 }
