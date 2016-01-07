@@ -12,7 +12,8 @@
                     <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit" value="Save">
                 </div>
                 <div ng-hide="vm.editable">
-                    <a type="button"
+                    <a ng-if="vm.enableMasquerading"
+                            type="button"
                             id="library-masquerade"
                             class="carli-button"
                             href="{{ vm.masqueradeAsLibraryUrl }}"

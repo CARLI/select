@@ -15,7 +15,8 @@
                 </div>
 
                 <div ng-hide="vm.editable">
-                    <a type="button"
+                    <a ng-if="vm.enableMasquerading"
+                       type="button"
                        id="vendor-masquerade"
                        class="carli-button"
                        href="{{ vm.masqueradeAsVendorUrl }}"
