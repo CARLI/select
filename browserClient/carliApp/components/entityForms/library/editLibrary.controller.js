@@ -4,6 +4,7 @@ angular.module('carli.entityForms.library')
 function editLibraryController( $scope, $rootScope, activityLogService, alertService, config, cycleService, entityBaseService, errorHandler, libraryService ) {
     var vm = this;
 
+    vm.enableMasquerading = false;
     vm.crmContacts = [];
     vm.libraryId = $scope.libraryId;
     vm.masqueradeAsLibraryUrl = null;
