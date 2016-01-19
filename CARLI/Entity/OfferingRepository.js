@@ -141,6 +141,7 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
                 copyOfferingHistoryForYear(offering, sourceCycle.year);
                 removeVendorModificationTracking(offering);
                 removeSelection(offering);
+                resetFlaggedState(offering);
                 clearVendorComments(offering);
             });
             return couchUtils.bulkUpdateDocuments(newCycle.getDatabaseName(), offeringsBatch);
@@ -198,6 +199,11 @@ function removeVendorModificationTracking(offering){
 
 function removeSelection(offering){
     delete offering.selection;
+}
+
+function resetFlaggedState(offering) {
+    delete offering.flagged;
+    delete offering.flaggedReason;
 }
 
 function clearVendorComments(offering) {
