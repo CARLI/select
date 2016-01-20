@@ -1,6 +1,6 @@
 {
   "name": "carli-select",
-  "version": "1.4-dev",
+  "version": "1.4",
   "private": true,
   "description": "",
   "main": "index.js",
