@@ -347,6 +347,9 @@ function setSuPricingForAllLibrariesForProduct( productId, newSuPricing, vendorC
 
         function applyNewSuPricingToOffering( offering ){
             offering.pricing = offering.pricing || {};
+            if (!_.isEqual(offering.pricing.su, newSuPricing)) {
+                delete offering.flagged;
+            }
             offering.pricing.su = newSuPricing.slice(0);
             offering.suPricesUpdated = new Date().toISOString();
             return offering;
