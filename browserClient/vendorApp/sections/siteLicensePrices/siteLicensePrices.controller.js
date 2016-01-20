@@ -455,7 +455,13 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     }
 
     function saveAllChangedOfferings( changedOfferings ){
+        changedOfferings = changedOfferings.map(clearManualFlagOverrides);
         return $q.all(changedOfferings.map(offeringService.update));
+
+        function clearManualFlagOverrides(offering) {
+            delete offering.flagged;
+            return offering;
+        }
     }
 
     function saveAllOfferings( newOfferings, changedOfferings ){
