@@ -128,6 +128,11 @@ module.exports = function (storeOptions) {
             return results.rows.map(function(row){
                 return row.doc;
             });
+        }).catch(function(err){
+            Logger.log('getCouchDocuments failed. Requested ' + url);
+            Logger.log(' with IDs ', ids);
+            Logger.log(' error:', err);
+            throw err;
         });
     }
 
