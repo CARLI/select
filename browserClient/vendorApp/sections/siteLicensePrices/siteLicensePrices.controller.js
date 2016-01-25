@@ -42,6 +42,8 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
         vm.loadingPromise = loadLibraries()
             .then(initializePricingGrid);
+
+        $scope.$on("$destroy", onControllerDestroy);
     }
 
     function affixControlsToTopOfPage() {
@@ -209,13 +211,17 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
             return offeringCell;
         }
+    }
 
-        function attachGridCellEvents(){
-            $('body')
-                .on('blur', '.price-editable', applyPricingChangesToCell)
-                .on('focus', '.comment-marker', editCommentMarker)
-                .on('focus', '.price', editCell);
-        }
+    function attachGridCellEvents(){
+        $('body')
+            .on('blur', '.price-editable', applyPricingChangesToCell)
+            .on('focus', '.comment-marker', editCommentMarker)
+            .on('focus', '.price', editCell);
+    }
+
+    function removeGridCellEvents() {
+        $('body').off();
     }
 
     function showCommentModalFor(offering, cell) {
@@ -635,5 +641,9 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         return vm.products.filter(function(product){
             return product.id === productId;
         })[0];
+    }
+
+    function onControllerDestroy( e ){
+        removeGridCellEvents();
     }
 }
