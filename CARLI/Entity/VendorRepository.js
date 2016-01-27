@@ -133,7 +133,7 @@ function setStore(store) {
 
 module.exports = {
     CONTACT_CATEGORY_REPORT: CONTACT_CATEGORY_REPORT,
-    setStore: VendorRepository.setStore,
+    setStore: setStore,
     create: createVendor,
     update: updateVendor,
     list: listVendors,

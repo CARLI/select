@@ -501,7 +501,7 @@ function setCycle(cycle) {
 
 
 function getFlaggedState(offering, cycleArgument) {
-    cycle = getCycleFromArguments();
+    var cycle = getCycleFromArguments();
     var thisYear = cycle.year || 1;
     var lastYear = thisYear - 1;
 
@@ -532,7 +532,7 @@ function getFlaggedState(offering, cycleArgument) {
     }
 
     function systemFlaggedState(){
-        if ( offering.pricing && offering.pricing.su && vendorHasTouchedPricing(offering) ){
+        if ( offeringHasPricing() && vendorHasTouchedPricing(offering) ){
             var flagSiteLicensePrice = isThereAnSuOfferingForMoreThanTheSiteLicensePrice();
             var flagSuPrices = isThereAnSuOfferingForMoreUsersWithASmallerPrice();
             var flagExceedsPriceCap = doesIncreaseFromLastYearExceedPriceCap();
@@ -564,6 +564,10 @@ function getFlaggedState(offering, cycleArgument) {
             return isFlagged;
         }
         return false;
+
+        function offeringHasPricing() {
+            return offering.pricing && (offering.pricing.site || hasSuPricing(offering));
+        }
     }
 
     function isThereAnSuOfferingForMoreThanTheSiteLicensePrice(){
@@ -584,14 +588,17 @@ function getFlaggedState(offering, cycleArgument) {
 
     function isThereAnSuOfferingForMoreUsersWithASmallerPrice(){
         sortOfferingSuPricing(offering);
-        var max = offering.pricing.su.length;
 
-        for ( var i = 0 ; i < max ; i++ ){
-            var priceToCheck = offering.pricing.su[i].price;
+        if (hasSuPricing(offering)) {
+            var max = offering.pricing.su.length;
 
-            for ( var j = i + 1 ; j < max ; j++ ){
-                if ( offering.pricing.su[j].price >= priceToCheck ){
-                    return true;
+            for (var i = 0; i < max; i++) {
+                var priceToCheck = offering.pricing.su[i].price;
+
+                for (var j = i + 1; j < max; j++) {
+                    if (offering.pricing.su[j].price >= priceToCheck) {
+                        return true;
+                    }
                 }
             }
         }
@@ -605,7 +612,9 @@ function getFlaggedState(offering, cycleArgument) {
 
         if (canEnforcePriceCap()) {
             checkSitePriceIncrease();
-            offering.pricing.su.forEach(checkSuPriceIncrease);
+            if (hasSuPricing(offering)) {
+                offering.pricing.su.forEach(checkSuPriceIncrease);
+            }
         }
         return exceedsPriceCap;
 
@@ -638,7 +647,9 @@ function getFlaggedState(offering, cycleArgument) {
 
         if (canEnforceDecrease()) {
             checkSitePriceDecrease();
-            offering.pricing.su.forEach(checkSuPriceDecrease);
+            if (hasSuPricing(offering)) {
+                offering.pricing.su.forEach(checkSuPriceDecrease);
+            }
         }
 
         return exceedsDecreaseLimit;
@@ -666,7 +677,7 @@ function getFlaggedState(offering, cycleArgument) {
 
     function lookupLastYearsPriceForSu(offering, suToFind) {
         var lastYearsPrice = null;
-        if (offering.history) {
+        if (offering.history && hasSuPricing(offering)) {
             offering.pricing.su.forEach(findLastYearsPricingForSu);
         }
         return lastYearsPrice;
@@ -681,6 +692,10 @@ function getFlaggedState(offering, cycleArgument) {
             }
         }
     }
+}
+
+function hasSuPricing(offering) {
+    return !!offering.pricing.su;
 }
 
 function vendorHasTouchedPricing(offering){
