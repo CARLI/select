@@ -546,13 +546,12 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             });
 
             function getCommentsBySuLevel(){
-                var result = {};
-
-                selectedSuLevels.forEach(function(suLevel){
-                    result[suLevel.users] = allQuickPricingArguments.bulkComment;
+                return selectedSuLevels.map(function(suLevel){
+                    return {
+                        users: suLevel.users,
+                        comment: allQuickPricingArguments.bulkComment
+                    };
                 });
-
-                return result;
             }
         }
 
