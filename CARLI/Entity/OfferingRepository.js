@@ -360,8 +360,10 @@ function setSuPricingForAllLibrariesForProduct( productId, newSuPricing, vendorC
         return listOfOfferings.map( applyNewSuPricingCommentsToOffering );
 
         function applyNewSuPricingCommentsToOffering( offering ){
-            offering.vendorComments = offering.vendorComments || {};
-            offering.vendorComments['su'] = vendorComments;
+            if (vendorComments) {
+                offering.vendorComments = offering.vendorComments || {};
+                offering.vendorComments['su'] = vendorComments;
+            }
             return offering;
         }
     }

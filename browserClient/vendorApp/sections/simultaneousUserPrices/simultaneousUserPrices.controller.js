@@ -8,7 +8,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     vm.productsSaved = 0;
     vm.productsSavedProgress = 0;
 
-    vm.bulkPricingHoldingCell = {};
+    vm.bulkCommentsTemporaryStorage = {};
     vm.selectedProductIds = {};
     vm.selectedSuLevelIds = {};
     vm.suPricingByProduct = {};
@@ -388,6 +388,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                     return updateChangedProductsSeriallyWithProgressBar();
                 }
             })
+            .then(clearTemporaryBulkCommentsStorage)
             .then(saveProductsSuccess)
             .catch(saveProductsError);
 
@@ -462,7 +463,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
 
         function updateOfferingsForAllLibrariesForProduct( productId ){
             var newSuPricing = newSuPricingByProduct[productId];
-            return offeringService.updateSuPricingForAllLibrariesForProduct(vm.vendorId, productId, newSuPricing, vm.bulkPricingHoldingCell[productId] );
+            return offeringService.updateSuPricingForAllLibrariesForProduct(vm.vendorId, productId, newSuPricing, vm.bulkCommentsTemporaryStorage[productId] );
         }
 
         function updateVendorStatus(){
@@ -471,6 +472,10 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
 
         function updateVendorFlaggedOfferings(){
             return vendorStatusService.updateVendorStatusFlaggedOfferings( vm.vendorId, vm.cycle );
+        }
+
+        function clearTemporaryBulkCommentsStorage(){
+            vm.bulkCommentsTemporaryStorage = {};
         }
 
         function saveProductsSuccess(){
@@ -533,16 +538,16 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         }
 
         if ( allQuickPricingArguments.addComment ){
-            saveBulkCommentsForLater();
+            storeBulkCommentsUntilUserSaves();
         }
 
-        function saveBulkCommentsForLater(){
-            vm.bulkPricingHoldingCell = vm.bulkPricingHoldingCell || {};
+        function storeBulkCommentsUntilUserSaves(){
+            vm.bulkCommentsTemporaryStorage = vm.bulkCommentsTemporaryStorage || {};
 
             var commentsBySuLevel = getCommentsBySuLevel();
 
             selectedProductIds().forEach(function saveCommentForSelectedProduct(productId){
-                vm.bulkPricingHoldingCell[productId] = commentsBySuLevel;
+                vm.bulkCommentsTemporaryStorage[productId] = commentsBySuLevel;
             });
 
             function getCommentsBySuLevel(){
