@@ -122,11 +122,11 @@ describe('Repository getFlaggedState', function () {
         expect(offeringRepository.getFlaggedState(testOffering)).to.equal(true);
     });
 
-    it('should compute true if increase from last years price exceeds the price cap', function () {
+    it('should compute true if increase from any of last years SU prices exceed the price cap', function () {
         var testOffering = validOfferingData();
         testOffering.suPricesUpdated = '2015-01-01';
         testOffering.cycle = {
-            id: 'price-cap-increase-test-cycle',
+            id: 'price-cap-su-increase-test-cycle',
             year: 2014
         };
         testOffering.product.priceCap = 10;
@@ -154,26 +154,26 @@ describe('Repository getFlaggedState', function () {
         expect(offeringRepository.getFlaggedState(testOffering)).to.equal(true);
     });
 
-    it('should do price cap math correctly', function () {
+    it('should compute true if increase of the site license price exceeds the price cap', function () {
         var testOffering = validOfferingData();
         testOffering.siteLicensePriceUpdated = '2015-01-01';
         testOffering.cycle = {
-            id: 'price-cap-math-test-cycle',
+            id: 'price-cap-site-license-increase-test-cycle',
             year: 2014
         };
-        testOffering.product.priceCap = 3;
+        testOffering.product.priceCap = 10;
         testOffering.pricing = {
-            site: 212.00 /* 3% increase = 111.755 */
+            site: 500
         };
         testOffering.history = {
             2013: {
                 pricing: {
-                    site: 108.5
+                    site: 100
                 }
             }
         };
 
-        expect(offeringRepository.getFlaggedState(testOffering)).to.equal(false);
+        expect(offeringRepository.getFlaggedState(testOffering)).to.equal(true);
     });
 
     it('should compute true if decrease from last years price exceeds 5%', function () {
