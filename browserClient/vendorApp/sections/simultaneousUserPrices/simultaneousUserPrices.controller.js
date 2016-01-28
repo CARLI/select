@@ -334,6 +334,10 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         var suComments = vm.suCommentsByProduct[productId] || {};
         var commentText = suComments[numSu] || '';
 
+        if ( commentText && !commentMarker.length ){
+            commentMarker = addCommentMarkerTo($cell);
+        }
+
         if (commentText) {
             commentMarker.show();
         } else {
