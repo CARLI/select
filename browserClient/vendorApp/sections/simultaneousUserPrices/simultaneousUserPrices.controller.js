@@ -326,9 +326,10 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     }
 
     function setCommentMarkerVisibility(cell) {
-        var productId = $(cell).data('productId') || $(cell).parent().data('productId');
-        var numSu = $(cell).data('numSu') || $(cell).parent().data('numSu');
-        var commentMarker = cell.find('.comment-marker');
+        $cell = $(cell);
+        var productId = $cell.data('productId') || $cell.parent().data('productId');
+        var numSu = $cell.data('numSu') || $cell.parent().data('numSu');
+        var commentMarker = $cell.find('.comment-marker');
 
         var suComments = vm.suCommentsByProduct[productId] || {};
         var commentText = suComments[numSu] || '';
