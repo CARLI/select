@@ -8,7 +8,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     vm.productsSaved = 0;
     vm.productsSavedProgress = 0;
 
-    vm.bulkPricingHoldingCell = {};
+    vm.bulkCommentsTemporaryStorage = {};
     vm.selectedProductIds = {};
     vm.selectedSuLevelIds = {};
     vm.suPricingByProduct = {};
@@ -326,12 +326,17 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     }
 
     function setCommentMarkerVisibility(cell) {
-        var productId = $(cell).data('productId') || $(cell).parent().data('productId');
-        var numSu = $(cell).data('numSu') || $(cell).parent().data('numSu');
-        var commentMarker = cell.find('.comment-marker');
+        $cell = $(cell);
+        var productId = $cell.data('productId') || $cell.parent().data('productId');
+        var numSu = $cell.data('numSu') || $cell.parent().data('numSu');
+        var commentMarker = $cell.find('.comment-marker');
 
         var suComments = vm.suCommentsByProduct[productId] || {};
         var commentText = suComments[numSu] || '';
+
+        if ( commentText && !commentMarker.length ){
+            commentMarker = addCommentMarkerTo($cell);
+        }
 
         if (commentText) {
             commentMarker.show();
@@ -388,6 +393,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                     return updateChangedProductsSeriallyWithProgressBar();
                 }
             })
+            .then(clearTemporaryBulkCommentsStorage)
             .then(saveProductsSuccess)
             .catch(saveProductsError);
 
@@ -462,7 +468,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
 
         function updateOfferingsForAllLibrariesForProduct( productId ){
             var newSuPricing = newSuPricingByProduct[productId];
-            return offeringService.updateSuPricingForAllLibrariesForProduct(vm.vendorId, productId, newSuPricing, vm.bulkPricingHoldingCell[productId] );
+            return offeringService.updateSuPricingForAllLibrariesForProduct(vm.vendorId, productId, newSuPricing, vm.bulkCommentsTemporaryStorage[productId] );
         }
 
         function updateVendorStatus(){
@@ -471,6 +477,10 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
 
         function updateVendorFlaggedOfferings(){
             return vendorStatusService.updateVendorStatusFlaggedOfferings( vm.vendorId, vm.cycle );
+        }
+
+        function clearTemporaryBulkCommentsStorage(){
+            vm.bulkCommentsTemporaryStorage = {};
         }
 
         function saveProductsSuccess(){
@@ -533,27 +543,48 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         }
 
         if ( allQuickPricingArguments.addComment ){
-            saveBulkCommentsForLater();
+            storeBulkCommentsUntilUserSaves();
         }
 
-        function saveBulkCommentsForLater(){
-            vm.bulkPricingHoldingCell = vm.bulkPricingHoldingCell || {};
+        function storeBulkCommentsUntilUserSaves() {
+            vm.bulkCommentsTemporaryStorage = vm.bulkCommentsTemporaryStorage || {};
 
-            var commentsBySuLevel = getCommentsBySuLevel();
+            var commentsArray = commentsBySuLevelArray();
+            var commentsMap = commentsBySuLevelMap();
 
-            selectedProductIds().forEach(function saveCommentForSelectedProduct(productId){
-                vm.bulkPricingHoldingCell[productId] = commentsBySuLevel;
-            });
+            selectedProductIds().forEach(saveCommentForSelectedProduct);
+            updateCommentMarkers();
 
-            function getCommentsBySuLevel(){
+            function saveCommentForSelectedProduct(productId) {
+                vm.bulkCommentsTemporaryStorage[productId] = commentsArray;
+                vm.suCommentsByProduct[productId] = commentsMap;
+                markProductChanged(productId);
+            }
+
+            function commentsBySuLevelArray(){
+                return selectedSuLevels.map(function(suLevel){
+                    return {
+                        users: suLevel.users,
+                        comment: allQuickPricingArguments.bulkComment
+                    };
+                });
+            }
+
+            function commentsBySuLevelMap() {
                 var result = {};
 
-                selectedSuLevels.forEach(function(suLevel){
+                selectedSuLevels.forEach(function (suLevel) {
                     result[suLevel.users] = allQuickPricingArguments.bulkComment;
                 });
 
                 return result;
             }
+        }
+
+        function updateCommentMarkers(){
+            $('.offering .price').each(function(index){
+                setCommentMarkerVisibility(this);
+            });
         }
 
         function applySuPricingToSelectedProducts( pricingItem ){
