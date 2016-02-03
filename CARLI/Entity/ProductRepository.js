@@ -242,7 +242,7 @@ function transformProductsForNewCycle(cycle) {
     setCycle(cycle);
     return listProducts(cycle)
         .then(copyPriceCaps)
-        .then(clearComments)
+        .then(removeVendorComments)
         .then(saveProducts)
         .then(function() {
             return { ok: true };
