@@ -573,8 +573,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             applyNewCellPricingToOffering(offeringCell, offering, value);
             applyCssClassesToOfferingCell(offeringCell, offering);
 
-            var textForOfferingPrice = offering.pricing.site.toFixed(2) || '';
-            var newReadOnlyCellContents = createReadOnlyOfferingCell(textForOfferingPrice);
+            var newReadOnlyCellContents = createReadOnlyOfferingCell(offering.pricing.site);
             offeringCell.find('.price').replaceWith(newReadOnlyCellContents);
             setCommentMarkerVisibility(newReadOnlyCellContents);
         }
