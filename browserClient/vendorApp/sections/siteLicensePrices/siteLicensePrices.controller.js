@@ -29,6 +29,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         affixControlsToTopOfPage();
 
         vm.cycle = cycleService.getCurrentCycle();
+        vm.isOneTimePurchase = (vm.cycle.cycleType === 'One-Time Purchase');
         vm.user = authService.getCurrentUser();
         vm.vendor = vm.user.vendor;
         vm.vendorId = vm.vendor.id;
@@ -573,8 +574,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             applyNewCellPricingToOffering(offeringCell, offering, value);
             applyCssClassesToOfferingCell(offeringCell, offering);
 
-            var textForOfferingPrice = offering.pricing.site.toFixed(2) || '';
-            var newReadOnlyCellContents = createReadOnlyOfferingCell(textForOfferingPrice);
+            var newReadOnlyCellContents = createReadOnlyOfferingCell(offering.pricing.site);
             offeringCell.find('.price').replaceWith(newReadOnlyCellContents);
             setCommentMarkerVisibility(newReadOnlyCellContents);
         }

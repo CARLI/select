@@ -115,3 +115,24 @@
         }
     }
 }
+
+#historic-pricing-modal {
+    .modal-dialog {
+        overflow: visible;
+        max-height: 95vh;
+
+        .modal-body {
+            overflow: scroll;
+            max-height: 80vh;
+            padding: 0;
+        }
+    }
+
+    .offering-key {
+        bottom: 2px;
+        left: 2px;
+        position: absolute;
+        line-height: 1.5rem;
+        background: white;
+    }
+}
