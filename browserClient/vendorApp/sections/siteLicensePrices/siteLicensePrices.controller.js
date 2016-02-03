@@ -29,6 +29,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         affixControlsToTopOfPage();
 
         vm.cycle = cycleService.getCurrentCycle();
+        vm.isOneTimePurchase = (vm.cycle.cycleType === 'One-Time Purchase');
         vm.user = authService.getCurrentUser();
         vm.vendor = vm.user.vendor;
         vm.vendorId = vm.vendor.id;
