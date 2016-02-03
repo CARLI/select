@@ -17,7 +17,7 @@ function oneTimePurchasesController( $sce, notificationModalService, libraryServ
         {
             label: "FTE",
             orderByProperty: 'fte',
-            contentFunction: function(library) { return library.fte; }
+            contentFunction: function(library) { return getFte(library); }
         },
         {
             label: "Type",
@@ -45,5 +45,14 @@ function oneTimePurchasesController( $sce, notificationModalService, libraryServ
         notificationModalService.sendStartDraftMessage({
             templateId: 'notification-template-annual-access-fee-invoices'
         });
+    }
+
+    function getFte( library ){
+        var result = library.fte;
+
+        if ( library.fteInfo ){
+            result += ' (' + library.fteInfo + ')';
+        }
+        return result;
     }
 }
