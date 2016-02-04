@@ -406,6 +406,11 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     function createEditableOfferingCell(price, libraryId, productId) {
         var library = getLibraryById(libraryId);
         var product = getProductById(productId);
+        if (!library || !product) {
+            console.log('problem in createEditableOfferingCell for library ' + libraryId+' product ' + productId);
+            console.log('  library:', library);
+            console.log('  product:', product);
+        }
         var labelText = 'site license price for library ' + library.name + ' for product ' + product.name;
         return $('<input class="price-editable" role="textbox" type="text" step=".01" min="0">')
             .attr('aria-label', labelText)
