@@ -8,6 +8,7 @@ function descriptionsController( $scope, $rootScope, $q, alertService, cycleServ
     vm.productChanged = productChanged;
     vm.noProductsHaveChanged = noProductsHaveChanged;
     vm.formIsInvalid = formIsInvalid;
+    vm.remainingCharacters = remainingCharacters;
     vm.saveProducts = saveProducts;
     vm.user = {};
 
@@ -57,6 +58,14 @@ function descriptionsController( $scope, $rootScope, $q, alertService, cycleServ
         return vm.products.filter(function(product){
             return vm.changedProducts[product.id];
         });
+    }
+
+    function remainingCharacters(product, property) {
+        if (typeof product === 'undefined' || typeof product[property] === 'undefined' ){
+            return 'limit exceeded';
+        }
+
+        return vm.maxLength - product[property].length;
     }
 
     function saveProducts(){
