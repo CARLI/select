@@ -580,6 +580,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             if ( shouldApplyBulkPricingComment ){
                 offering.vendorComments = offering.vendorComments || {};
                 offering.vendorComments.site = allQuickPricingArguments.bulkComment;
+                vm.changedOfferings.push(offering);
             }
         }
 
