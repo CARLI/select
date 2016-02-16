@@ -44,22 +44,15 @@ angular.module('library.routes',[
                 controller:  'masqueradeController',
                 controllerAs:'vm'
             })
-/*            .when('/notifications', {
-                templateUrl: '/libraryApp/sections/',
-                controller:  'Controller',
-                controllerAs:'vm'
+            .when('/notifications', {
+                templateUrl: '/libraryApp/sections/comingSoon/comingSoon.html'
             })
             .when('/ipAddresses', {
-                templateUrl: '/libraryApp/sections/',
-                controller:  'Controller',
-                controllerAs:'vm'
+                templateUrl: '/libraryApp/sections/comingSoon/comingSoon.html'
             })
             .when('/management', {
-                templateUrl: '/libraryApp/sections/',
-                controller:  'Controller',
-                controllerAs:'vm'
+                templateUrl: '/libraryApp/sections/comingSoon/comingSoon.html'
             })
-            */
             .otherwise({
                 redirectTo: '/login'
             })

@@ -347,6 +347,15 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
                 //Logger.log('no offering, add new one with price ', newPrice);
                 var productId = offeringCell.data('productId');
                 var libraryId = offeringCell.data('libraryId');
+
+                if (!libraryId || !productId) {
+                    console.log('problem in applyNewCellPricingToOffering for library ' + libraryId + ' product ' + productId);
+                    console.log('  library:', libraryId);
+                    console.log('  product:', productId);
+                    console.log('  offering:', offering);
+                    console.log('  cell:', offeringCell);
+                }
+
                 offering = generateNewOffering(libraryId, productId, newPrice);
                 vm.newOfferings.push(offering);
             }
@@ -571,6 +580,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             if ( shouldApplyBulkPricingComment ){
                 offering.vendorComments = offering.vendorComments || {};
                 offering.vendorComments.site = allQuickPricingArguments.bulkComment;
+                vm.changedOfferings.push(offering);
             }
         }
 
