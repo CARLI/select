@@ -16,7 +16,7 @@ function userController( $sce, $location, userService ){
         setUserTypeLabel(userType);
 
         vm.loadingPromise = userService.list().then( function(userList){
-            vm.userList = userList.filter(filterByRole);
+            vm.userList = userList.filter(filterByRole).map(useFullNameForNameSearch);
 
             function filterByRole(user) {
                 return user.roles.indexOf(userType) >= 0;
@@ -36,6 +36,11 @@ function userController( $sce, $location, userService ){
                 vm.userTypeLabel = 'Library';
                 break;
         }
+    }
+
+    function useFullNameForNameSearch(user) {
+        user.name = user.fullName;
+        return user;
     }
 
     vm.userListColumns = [

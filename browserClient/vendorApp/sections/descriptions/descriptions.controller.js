@@ -4,9 +4,11 @@ angular.module('vendor.sections.descriptions')
 function descriptionsController( $scope, $rootScope, $q, alertService, cycleService, productService, userService, vendorDataService, vendorStatusService ){
     var vm = this;
 
+    vm.maxLength = 500;
     vm.productChanged = productChanged;
     vm.noProductsHaveChanged = noProductsHaveChanged;
-    vm.productsNotAllValid = checkIfProductsNotAllValid;
+    vm.formIsInvalid = formIsInvalid;
+    vm.remainingCharacters = remainingCharacters;
     vm.saveProducts = saveProducts;
     vm.user = {};
 
@@ -42,26 +44,28 @@ function descriptionsController( $scope, $rootScope, $q, alertService, cycleServ
 
     function productChanged( productId ){
         vm.changedProducts[productId] = true;
-        checkIfProductsNotAllValid();
     }
 
     function noProductsHaveChanged(){
         return Object.keys(vm.changedProducts).length === 0;
     }
 
-    function checkIfProductsNotAllValid(){
-        if ($scope.productForm.$invalid || ($rootScope.forms && $rootScope.forms.productForm.$invalid)) {
-            vm.productsNotAllValid = true;
-        }
-        else {
-            vm.productsNotAllValid = false;
-        }
+    function formIsInvalid(){
+        return $scope.productForm.$invalid || ($rootScope.forms && $rootScope.forms.productForm.$invalid);
     }
 
     function listChangedProducts(){
         return vm.products.filter(function(product){
             return vm.changedProducts[product.id];
         });
+    }
+
+    function remainingCharacters(product, property) {
+        if (typeof product === 'undefined' || typeof product[property] === 'undefined' ){
+            return 'limit exceeded';
+        }
+
+        return vm.maxLength - product[property].length;
     }
 
     function saveProducts(){

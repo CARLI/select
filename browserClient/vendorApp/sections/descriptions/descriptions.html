@@ -5,7 +5,7 @@
     </div>
 
     <div class="controls">
-        <button type="button" id="save-products" class="carli-button" busy-click="vm.saveProducts()" ng-disabled="vm.noProductsHaveChanged() || vm.productsNotAllValid">Save Changes<i class="fa fa-floppy-o"></i></button>
+        <button type="button" id="save-products" class="carli-button" busy-click="vm.saveProducts()" ng-disabled="vm.noProductsHaveChanged() || vm.formIsInvalid()">Save Changes<i class="fa fa-floppy-o"></i></button>
     </div>
 </div>
 
@@ -22,11 +22,13 @@
                 </div>
                 <div class="column description">
                     <div class="label">Product Description</div>
-                    <textarea ng-model="product.description" ng-change="vm.productChanged(product.id)" ng-maxlength="500"></textarea>
+                    <textarea ng-model="product.description" ng-change="vm.productChanged(product.id)" ng-maxlength="vm.maxLength"></textarea>
+                    <div class="character-count">Remaining characters: {{ vm.remainingCharacters(product, 'description') }}</div>
                 </div>
                 <div class="column comments">
                     <div class="label">Comments for Libraries</div>
-                    <textarea ng-model="product.comments" ng-change="vm.productChanged(product.id)" ng-maxlength="500"></textarea>
+                    <textarea ng-model="product.comments" ng-change="vm.productChanged(product.id)" ng-maxlength="vm.maxLength"></textarea>
+                    <div class="character-count">Remaining characters: {{ vm.remainingCharacters(product, 'comments') }}</div>
                 </div>
             </li>
         </ul>
