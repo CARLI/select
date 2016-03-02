@@ -36,7 +36,7 @@
             "type": "boolean"
         },
         "flaggedOfferingsCount": {
-            "description": "Is this vendor allowed to offer products in the One-Time Purchase cycle?",
+            "description": "Number of offerings that were flagged last time the check was run",
             "type": "integer"
         },
         "flaggedOfferingsReasons": {
