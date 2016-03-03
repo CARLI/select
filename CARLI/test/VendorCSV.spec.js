@@ -93,4 +93,69 @@ describe('The VendorCSV Module', function () {
         expect(testResults[1]).to.deep.equal(expectedResultsRowOne);
         expect(testResults[2]).to.deep.equal(expectedResultsRowTwo);
     });
+
+    it('should have a function called generateSiteLicensePriceCsvIncludingLastYear', function () {
+        expect(vendorCSVModule.generateSiteLicensePriceCsvIncludingLastYear).to.be.a('function');
+    });
+
+    it('should export an object suitable for exporting to CSV including the last year', function () {
+        var testViewOptions = {};
+
+        var testProducts = [
+            {
+                id: 'p1',
+                name: 'Product1'
+            },
+            {
+                id: 'p2',
+                name: 'Product2'
+            }
+        ];
+
+        var testLibraries = [
+            {
+                id: 'l1',
+                name: 'Library1'
+            },
+            {
+                id: 'l2',
+                name: 'Library2'
+            }
+        ];
+
+        var testOfferings = {
+            p1: {
+                l1: {pricing: {site: 100}, history: {2015: {pricing: {site: 99}}}},
+                l2: {pricing: {site: 200}, history: {2015: {pricing: {site: 199}}}}
+            },
+            p2: {
+                l1: {pricing: {site: 300}, history: {2015: {pricing: {site: 299}}}},
+                l2: {pricing: {site: 400}, history: {2015: {pricing: {site: 399}}}}
+            }
+        };
+
+        var testYear = 2016;
+
+        var testResults = vendorCSVModule.generateSiteLicensePriceCsvIncludingLastYear(testViewOptions, testProducts, testLibraries, testOfferings, testYear);
+
+        var expectedResultsRowZero = {
+            Library: 'Library1',
+            'Product1 2015': 99,
+            'Product1 2016': 100,
+            'Product2 2015': 299,
+            'Product2 2016': 300
+        };
+
+        var expectedResultsRowOne = {
+            Library: 'Library2',
+            'Product1 2015': 199,
+            'Product1 2016': 200,
+            'Product2 2015': 399,
+            'Product2 2016': 400
+        };
+
+        expect(testResults).to.be.an('array').and.have.length(2);
+        expect(testResults[0]).to.deep.equal(expectedResultsRowZero);
+        expect(testResults[1]).to.deep.equal(expectedResultsRowOne);
+    });
 });
