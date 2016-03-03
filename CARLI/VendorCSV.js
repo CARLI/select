@@ -118,7 +118,8 @@ function generateCsvIncludingLastYear(viewOptions, productsToInclude, librariesT
         }
 
         function addPriceColumnForLastYear(offering) {
-            var offeringHistoryForLastYear = offering.history[lastYear] || {};
+            var offeringHistory = offering.history || {};
+            var offeringHistoryForLastYear = offeringHistory[lastYear] || {};
             var lastYearsPricing = offeringHistoryForLastYear.pricing || {};
 
             row[offering.product.name + ' ' + lastYear] = lastYearsPricing.site;
