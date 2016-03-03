@@ -634,7 +634,6 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     function downloadCsvDataForComparisonPricing() {
         vm.loadingPromise = generateCsvData()
             .then(function(results){
-                console.log('CSV stuff', results);
                 return csvExportService.exportToCsv(results);
             })
             .then(function(csvContent){

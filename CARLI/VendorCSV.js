@@ -97,8 +97,10 @@ function generateCsvIncludingLastYear(viewOptions, productsToInclude, librariesT
         var offerings = productsToInclude.map(getOffering);
         var row = {Library: library.name};
 
-        offerings.forEach(addPriceColumnForLastYear);
-        offerings.forEach(addPriceColumnForCurrentYear);
+        offerings.forEach(function(offering){
+            addPriceColumnForLastYear(offering);
+            addPriceColumnForCurrentYear(offering);
+        });
         csvData.push(row);
 
         function getOffering(product) {
