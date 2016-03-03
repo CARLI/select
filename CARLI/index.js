@@ -19,5 +19,6 @@ module.exports = {
     MemoryStore: require('./Store/MemoryStore'),
     FileStore: require('./Store/FileStore'),
     CouchDbStore: require('./Store/CouchDb/Store'),
-    Validator: require('./Validator')
+    Validator: require('./Validator'),
+    VendorCSV: require('./VendorCSV')
 };
