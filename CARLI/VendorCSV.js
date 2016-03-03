@@ -2,12 +2,6 @@ function generateCsv(viewOptions, productsToInclude, librariesToInclude, offerin
     var csvData = [];
     var viewOptionColumns = getCsvColumnsFromViewOptions(viewOptions);
 
-    var columns = ['Library'];
-    columns = columns.concat(viewOptionColumns);
-    columns = columns.concat(productsToInclude.map(getName));
-
-    //csvData.push(generateHeaderRow());
-
     if (viewOptions.priceCap) {
         csvData.push(generateCsvPriceCapRow(viewOptionColumns, productsToInclude));
     }
@@ -15,19 +9,6 @@ function generateCsv(viewOptions, productsToInclude, librariesToInclude, offerin
     librariesToInclude.forEach(generateRowForLibrary);
 
     return csvData;
-
-
-    function getName(entity) {
-        return entity.name;
-    }
-
-    function generateHeaderRow() {
-        var row = {};
-        columns.forEach(function (column) {
-            row[column] = column;
-        });
-        return row;
-    }
 
     function generateRowForLibrary(library) {
         var offerings = productsToInclude.map(getOffering);
@@ -116,12 +97,6 @@ function generateCsv(viewOptions, productsToInclude, librariesToInclude, offerin
 function generateCsvIncludingLastYear(viewOptions, productsToInclude, librariesToInclude, offeringsForLibraryByProduct, currentYear) {
     var lastYear = currentYear - 1;
     var csvData = [];
-    var productColumns = [];
-    productsToInclude.forEach(function (product) {
-        productColumns.push(product.name + ' ' + lastYear);
-        productColumns.push(product.name + ' ' + currentYear);
-    });
-    var columns = ['Library'].concat(productColumns);
 
     librariesToInclude.forEach(generateRowForLibrary);
 
