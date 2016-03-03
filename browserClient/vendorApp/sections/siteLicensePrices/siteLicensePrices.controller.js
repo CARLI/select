@@ -15,7 +15,8 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.quickPricingCallback = quickPricingCallback;
     vm.saveOfferings = saveOfferings;
-    vm.downloadCsv = downloadCsv;
+    vm.downloadCsv = downloadCsvDataForExistingPricing;
+    vm.downloadComparisonCsv = downloadCsvDataForComparisonPricing;
     vm.checkViewOption = checkViewOption;
     vm.isCommentModeEnabled = false;
     vm.showHistoricalPricing = showHistoricalPricing;
@@ -595,7 +596,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         }
     }
 
-    function downloadCsv() {
+    function downloadCsvDataForExistingPricing() {
         vm.loadingPromise = generateCsvData()
             .then(csvExportService.exportToCsv)
             .then(function(csvContent){
@@ -608,7 +609,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         return vm.loadingPromise;
 
         function generateCsvData() {
-            return siteLicensePricesCsvData(vm.viewOptions, getCsvProductList(), getCsvLibraryList(), vm.offeringsForLibraryByProduct);
+            return siteLicensePricesCsvData.generateSiteLicensePriceCsv(vm.viewOptions, getCsvProductList(), getCsvLibraryList(), vm.offeringsForLibraryByProduct);
 
             function getCsvProductList() {
                 return vm.products.filter(function (product) {
@@ -627,6 +628,43 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             var vendorName = authService.getCurrentUser().vendor.name;
             var cycleName = cycleService.getCurrentCycle().name;
             return vendorName + ' ' + cycleName + ' Site License Prices.csv';
+        }
+    }
+
+    function downloadCsvDataForComparisonPricing() {
+        vm.loadingPromise = generateCsvData()
+            .then(function(results){
+                return csvExportService.exportToCsv(results);
+            })
+            .then(function(csvContent){
+                csvExportService.browserDownloadCsv(csvContent, makeFilename());
+            })
+            .catch(function (err) {
+                Logger.log('CSV generation failed', err);
+            });
+
+        return vm.loadingPromise;
+
+        function generateCsvData() {
+            return siteLicensePricesCsvData.generateSiteLicensePriceCsvIncludingLastYear(vm.viewOptions, getCsvProductList(), getCsvLibraryList(), vm.offeringsForLibraryByProduct, vm.cycle.year);
+
+            function getCsvProductList() {
+                return vm.products.filter(function (product) {
+                    return vm.selectedProductIds[product.id];
+                });
+            }
+
+            function getCsvLibraryList() {
+                return vm.libraries.filter(function (library) {
+                    return vm.selectedLibraryIds[library.id];
+                });
+            }
+        }
+
+        function makeFilename() {
+            var vendorName = authService.getCurrentUser().vendor.name;
+            var cycleName = cycleService.getCurrentCycle().name;
+            return vendorName + ' ' + cycleName + ' Site License Prices Comparison with Last Year.csv';
         }
     }
 

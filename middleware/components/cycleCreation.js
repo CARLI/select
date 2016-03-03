@@ -5,6 +5,7 @@ var _ = require('lodash');
 var config = require( '../../config' );
 var CouchUtils = require('../../CARLI/Store/CouchDb/Utils');
 var cycleRepository = require('../../CARLI/Entity/CycleRepository');
+var libraryRepository = require('../../CARLI/Entity/LibraryRepository');
 var licenseRepository = require('../../CARLI/Entity/LicenseRepository');
 var offeringRepository = require('../../CARLI/Entity/OfferingRepository');
 var productRepository = require('../../CARLI/Entity/ProductRepository');
@@ -26,6 +27,7 @@ function useAdminCouchCredentials() {
     //config.setStoreOptionsForCycles(adminStoreOptions);
     couchUtils = CouchUtils(adminStoreOptions);
     cycleRepository.setStore(Store(StoreModule(adminStoreOptions)));
+    libraryRepository.setStore(Store(StoreModule(adminStoreOptions)));
     licenseRepository.setStore(Store(StoreModule(adminStoreOptions)));
     offeringRepository.setStore(Store(StoreModule(adminStoreOptions)));
     productRepository.setStore(Store(StoreModule(adminStoreOptions)));

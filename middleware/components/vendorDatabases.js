@@ -3,6 +3,7 @@ var Q = require('q');
 var couchUtils = require('../../CARLI/Store/CouchDb/Utils')();
 var cycleRepository = require('../../CARLI/Entity/CycleRepository');
 var cycleRepositoryForVendor = require('../../CARLI/Entity/CycleRepositoryForVendor');
+var libraryRepository = require('../../CARLI/Entity/LibraryRepository');
 var offeringRepository = require('../../CARLI/Entity/OfferingRepository.js');
 var productRepository = require('../../CARLI/Entity/ProductRepository.js');
 var vendorRepository = require('../../CARLI/Entity/VendorRepository');
@@ -290,6 +291,8 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
         .then(offeringRepository.listOfferingsUnexpanded)
         .then(getFlaggedOfferings)
         .then(populateProductsForFlaggedOfferings)
+        .then(populateLibrariesForFlaggedOfferings)
+        .then(filterOfferingsForActiveLibraries)
         .then(computeFlaggedOfferingReasons)
         .then(updateVendorStatusFlaggedOfferings)
         .catch(function(err){
@@ -357,8 +360,55 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
         }
     }
 
+    function populateLibrariesForFlaggedOfferings(flaggedOfferings) {
+        return getLibraryIds(flaggedOfferings)
+            .then(loadLibrariesById)
+            .then(mapLibrariesById)
+            .then(replaceLibraryIdsWithLibraryObject);
+
+        function getLibraryIds(listOfOfferings) {
+            return Q(listOfOfferings.map(getLibraryIdFromUnexpandedOffering));
+        }
+
+        function loadLibrariesById(libraryIds) {
+            return libraryRepository.getLibrariesById(libraryIds);
+        }
+
+        function mapLibrariesById(listOfLibraries) {
+            var results = {};
+
+            listOfLibraries.forEach(function (library) {
+                results[library.id] = library;
+            });
+
+            return results;
+        }
+
+        function replaceLibraryIdsWithLibraryObject(libraryMap) {
+            return flaggedOfferings.map(replaceOfferingLibrary);
+
+            function replaceOfferingLibrary(offering) {
+                var libraryId = getLibraryIdFromUnexpandedOffering(offering);
+                offering.library = libraryMap[libraryId];
+                return offering;
+            }
+        }
+    }
+
     function getProductIdFromUnexpandedOffering(offering){
         return offering.product;
+    }
+
+    function getLibraryIdFromUnexpandedOffering(offering) {
+        return offering.library;
+    }
+
+    function filterOfferingsForActiveLibraries(flaggedOfferings) {
+        return flaggedOfferings.filter(offeringIsForActiveLibrary);
+
+        function offeringIsForActiveLibrary(offering) {
+            return offering.library && offering.library.isActive;
+        }
     }
 
     function computeFlaggedOfferingReasons(flaggedOfferings) {
