@@ -608,7 +608,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         return vm.loadingPromise;
 
         function generateCsvData() {
-            return siteLicensePricesCsvData(vm.viewOptions, getCsvProductList(), getCsvLibraryList(), vm.offeringsForLibraryByProduct);
+            return siteLicensePricesCsvData.generateSiteLicensePriceCsv(vm.viewOptions, getCsvProductList(), getCsvLibraryList(), vm.offeringsForLibraryByProduct);
 
             function getCsvProductList() {
                 return vm.products.filter(function (product) {
