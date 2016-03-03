@@ -20,7 +20,7 @@ function generateCsv(viewOptions, productsToInclude, librariesToInclude, offerin
 
         function getOffering(product) {
             var offering = offeringsForLibraryByProduct[product.id][library.id] || makeNullOffering(product);
-            var result = {
+            return {
                 product: copyOfferingProduct(),
                 pricing: offering.pricing
             };
@@ -31,8 +31,6 @@ function generateCsv(viewOptions, productsToInclude, librariesToInclude, offerin
                     name: product.name
                 };
             }
-
-            return result;
         }
 
         function addViewOptionColumn(column) {
@@ -42,13 +40,6 @@ function generateCsv(viewOptions, productsToInclude, librariesToInclude, offerin
         function addPriceColumn(offering) {
             row[offering.product.name] = offering.pricing.site;
         }
-    }
-
-    function makeNullOffering(product) {
-        return {
-            product: product,
-            pricing: {site: 0}
-        };
     }
 
     function getCsvColumnsFromViewOptions(viewOptions) {
@@ -112,7 +103,7 @@ function generateCsvIncludingLastYear(viewOptions, productsToInclude, librariesT
 
         function getOffering(product) {
             var offering = offeringsForLibraryByProduct[product.id][library.id] || makeNullOffering(product);
-            var result = {
+            return {
                 product: copyOfferingProduct(),
                 pricing: offering.pricing,
                 history: offering.history
@@ -124,18 +115,27 @@ function generateCsvIncludingLastYear(viewOptions, productsToInclude, librariesT
                     name: product.name
                 };
             }
-
-            return result;
         }
 
         function addPriceColumnForLastYear(offering) {
-            row[offering.product.name + ' ' + lastYear] = offering.history[lastYear].pricing.site;
+            var offeringHistoryForLastYear = offering.history[lastYear] || {};
+            var lastYearsPricing = offeringHistoryForLastYear.pricing || {};
+
+            row[offering.product.name + ' ' + lastYear] = lastYearsPricing.site;
         }
 
         function addPriceColumnForCurrentYear(offering) {
             row[offering.product.name + ' ' + currentYear] = offering.pricing.site;
         }
     }
+}
+
+function makeNullOffering(product) {
+    return {
+        product: product,
+        pricing: {site: 0},
+        history: {}
+    };
 }
 
 
