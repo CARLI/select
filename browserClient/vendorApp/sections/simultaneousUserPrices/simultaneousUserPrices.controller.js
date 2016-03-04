@@ -155,6 +155,11 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         }
     }
 
+    function updateCellVisibility() {
+        updateVisibilityOfRowsForSelectedSuLevels(vm.selectedSuLevelIds);
+        updateVisibilityOfCellsForSelectedProducts(vm.selectedProductIds);
+    }
+
     function buildPricingGrid() {
         vm.suLevels.forEach(function (level) {
             makeSuPricingRow(level);
@@ -191,6 +196,8 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             $('#su-pricing-grid').append($row);
         }
 
+        updateCellVisibility();
+        
         return $row;
 
         function generateOfferingCell(suLevel, product) {
