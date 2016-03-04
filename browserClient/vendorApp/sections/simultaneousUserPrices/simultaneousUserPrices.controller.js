@@ -197,7 +197,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         }
 
         updateCellVisibility();
-        
+
         return $row;
 
         function generateOfferingCell(suLevel, product) {
@@ -615,15 +615,20 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
 
         function applySuPricingToSelectedProducts( pricingItem ){
             var users = pricingItem.users;
-            var price = pricingItem.price;
-            price = price.toFixed(2);
+            var pricingValue = parseFloat(pricingItem.price);
+
+            if (isNaN(pricingValue)) {
+                return;
+            }
+
+            var newPrice = pricingValue.toFixed(2);
 
             $('.price-row.su-'+users+' .offering').each(function(i, cell){
                 var $cell = $(cell);
                 var productId = $cell.data('productId');
 
                 if ( productIsSelected(productId) ){
-                    $('.price', $cell).text(price).removeClass('no-pricing');
+                    $('.price', $cell).text(newPrice).removeClass('no-pricing');
                     markProductChanged(productId);
                 }
             });
