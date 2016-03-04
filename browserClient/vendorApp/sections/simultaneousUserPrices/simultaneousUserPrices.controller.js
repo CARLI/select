@@ -155,6 +155,11 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         }
     }
 
+    function updateCellVisibility() {
+        updateVisibilityOfRowsForSelectedSuLevels(vm.selectedSuLevelIds);
+        updateVisibilityOfCellsForSelectedProducts(vm.selectedProductIds);
+    }
+
     function buildPricingGrid() {
         vm.suLevels.forEach(function (level) {
             makeSuPricingRow(level);
@@ -162,17 +167,38 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     }
 
     function makeSuPricingRow(level) {
-        var row = $('<div class="price-row">');
-        row.addClass('su-'+level.users);
-        row.data('su', level.users);
+        var newRowUsers = level.users;
+        var $row = $('<div class="price-row">')
+            .addClass('su-' + newRowUsers)
+            .data('su', newRowUsers);
 
         vm.products.forEach(function (product) {
-            row.append(generateOfferingCell(level, product));
+            $row.append(generateOfferingCell(level, product));
         });
 
-        $('#su-pricing-grid').append(row);
+        var stillNeedToInsertRow = true;
 
-        return row;
+        $('#su-pricing-grid > .price-row').each(function (index) {
+            var $currentRow = $(this);
+            var currentRowUsers = $currentRow.data('su') || 0;
+            if (shouldInsertNewRowBeforeCurrentRow()) {
+                $currentRow.before($row);
+                stillNeedToInsertRow = false;
+                return false;
+            }
+
+            function shouldInsertNewRowBeforeCurrentRow() {
+                return currentRowUsers > newRowUsers;
+            }
+        });
+
+        if (stillNeedToInsertRow) {
+            $('#su-pricing-grid').append($row);
+        }
+
+        updateCellVisibility();
+
+        return $row;
 
         function generateOfferingCell(suLevel, product) {
             var priceForProduct = vm.suPricingByProduct[product.id][suLevel.users];
@@ -589,15 +615,20 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
 
         function applySuPricingToSelectedProducts( pricingItem ){
             var users = pricingItem.users;
-            var price = pricingItem.price;
-            price = price.toFixed(2);
+            var pricingValue = parseFloat(pricingItem.price);
+
+            if (isNaN(pricingValue)) {
+                return;
+            }
+
+            var newPrice = pricingValue.toFixed(2);
 
             $('.price-row.su-'+users+' .offering').each(function(i, cell){
                 var $cell = $(cell);
                 var productId = $cell.data('productId');
 
                 if ( productIsSelected(productId) ){
-                    $('.price', $cell).text(price).removeClass('no-pricing');
+                    $('.price', $cell).text(newPrice).removeClass('no-pricing');
                     markProductChanged(productId);
                 }
             });
