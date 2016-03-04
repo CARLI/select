@@ -162,17 +162,36 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     }
 
     function makeSuPricingRow(level) {
-        var row = $('<div class="price-row">');
-        row.addClass('su-'+level.users);
-        row.data('su', level.users);
+        var newRowUsers = level.users;
+        var $row = $('<div class="price-row">')
+            .addClass('su-' + newRowUsers)
+            .data('su', newRowUsers);
 
         vm.products.forEach(function (product) {
-            row.append(generateOfferingCell(level, product));
+            $row.append(generateOfferingCell(level, product));
         });
 
-        $('#su-pricing-grid').append(row);
+        var stillNeedToInsertRow = true;
 
-        return row;
+        $('#su-pricing-grid > .price-row').each(function (index) {
+            var $currentRow = $(this);
+            var currentRowUsers = $currentRow.data('su') || 0;
+            if (shouldInsertNewRowBeforeCurrentRow()) {
+                $currentRow.before($row);
+                stillNeedToInsertRow = false;
+                return false;
+            }
+
+            function shouldInsertNewRowBeforeCurrentRow() {
+                return currentRowUsers > newRowUsers;
+            }
+        });
+
+        if (stillNeedToInsertRow) {
+            $('#su-pricing-grid').append($row);
+        }
+
+        return $row;
 
         function generateOfferingCell(suLevel, product) {
             var priceForProduct = vm.suPricingByProduct[product.id][suLevel.users];
