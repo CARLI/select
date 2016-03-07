@@ -38,6 +38,15 @@ var columnName = {
     zip: 'Zip'
 };
 
+function allPricingReport( reportParameters, userSelectedColumns ){
+    var defaultReportColumns = ['cycle', 'library', 'license', 'product', 'selection', 'price'];
+    var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
+    var cyclesToQuery = getCycleParameter(reportParameters);
+
+    //
+    return Q(cyclesToQuery);
+}
+
 function selectedProductsReport( reportParameters, userSelectedColumns ){
     var defaultReportColumns = ['cycle', 'library', 'license', 'product', 'selection', 'price'];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
@@ -629,6 +638,7 @@ function stackTraceError(err){
 }
 
 module.exports = {
+    allPricingReport: allPricingReport,
     selectedProductsReport: selectedProductsReport,
     contactsReport: contactsReport,
     statisticsReport: statisticsReport,
