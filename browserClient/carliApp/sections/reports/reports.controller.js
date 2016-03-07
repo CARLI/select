@@ -19,6 +19,16 @@ function reportsController( csvExportService, cycleService, errorHandler, report
      */
     vm.availableReports = [
         {
+            name: 'All Pricing',
+            controls: {
+                cycle: 'all',
+                vendor: 'all',
+                product: 'all',
+                library: 'all'
+            },
+            optionalColumns: []
+        },
+        {
             name: 'Selected Products',
             controls: {
                 cycle: 'all'
