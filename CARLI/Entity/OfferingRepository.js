@@ -679,7 +679,7 @@ function getFlaggedState(offering, cycleArgument) {
 
     function lookupLastYearsPriceForSu(offering, suToFind) {
         var lastYearsPrice = null;
-        if (offering.history && hasSuPricing(offering)) {
+        if (offering.history && hasSuPricing(offering) && hasSuPricingForLastYear(offering, lastYear)) {
             offering.pricing.su.forEach(findLastYearsPricingForSu);
         }
         return lastYearsPrice;
@@ -698,6 +698,10 @@ function getFlaggedState(offering, cycleArgument) {
 
 function hasSuPricing(offering) {
     return !!offering.pricing.su;
+}
+
+function hasSuPricingForLastYear(offering, lastYear) {
+    return !!offering.history[lastYear].pricing && !!offering.history[lastYear].pricing.su;
 }
 
 function vendorHasTouchedPricing(offering){

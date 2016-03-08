@@ -240,6 +240,60 @@ describe('Repository getFlaggedState', function () {
         expect(offeringRepository.getFlaggedState(testOffering)).to.equal(false);
     });
 
+    it('should not break if the offering is missing su pricing history', function () {
+        var testOffering = validOfferingData();
+        testOffering.siteLicensePriceUpdated = '2015-01-01';
+        testOffering.cycle = {
+            id: 'no-history-su-test-cycle',
+            year: 2014
+        };
+        testOffering.product.priceCap = 10;
+        testOffering.pricing = {
+            site: 480,
+            su: [
+                {users: 1, price: 96},
+                {users: 2, price: 218},
+                {users: 3, price: 327}
+            ]
+        };
+        testOffering.history = {
+            2013: {
+                pricing: {
+                    site: 100
+                }
+            }
+        };
+
+        expect(offeringRepository.getFlaggedState(testOffering)).to.be.ok;
+    });
+
+    it('should not break if the offering is missing site license pricing history', function () {
+        var testOffering = validOfferingData();
+        testOffering.siteLicensePriceUpdated = '2015-01-01';
+        testOffering.cycle = {
+            id: 'no-history-su-test-cycle',
+            year: 2014
+        };
+        testOffering.product.priceCap = 10;
+        testOffering.pricing = {
+            site: 480,
+            su: [
+                {users: 1, price: 900}
+            ]
+        };
+        testOffering.history = {
+            2013: {
+                pricing: {
+                    su: [
+                        {users: 1, price: 9}
+                    ]
+                }
+            }
+        };
+
+        expect(offeringRepository.getFlaggedState(testOffering)).to.be.ok;
+    });
+
     describe(' side effect: offering.flaggedReason - an array describing why the offering was flagged', function () {
         it('should contain "flagged by staff" if it was manually set', function () {
             var testOffering = validOfferingData();
