@@ -42,8 +42,11 @@ function allPricingReport( reportParameters, userSelectedColumns ){
     var defaultReportColumns = ['cycle', 'library', 'license', 'product', 'selection', 'price'];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
     var cyclesToQuery = getCycleParameter(reportParameters);
+    var productsToInclude = getProductParameter(reportParameters);
+    var librariesToInclude = getLibraryParameter(reportParameters);
 
-    //
+    console.log('allPricingReport for '+cyclesToQuery.length+' cycles, '+productsToInclude.length+' products, and '+librariesToInclude.length+' libraries');
+
     return Q(cyclesToQuery);
 }
 
@@ -391,6 +394,16 @@ function enabledUserColumns(userSelectedColumns){
 function getCycleParameter(userSelectedColumnsStr){
     var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
     return userSelectedColumns.cycle;
+}
+
+function getProductParameter(userSelectedColumnsStr){
+    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
+    return userSelectedColumns.product;
+}
+
+function getLibraryParameter(userSelectedColumnsStr){
+    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
+    return userSelectedColumns.library;
 }
 
 function columnNames( columnList ){
