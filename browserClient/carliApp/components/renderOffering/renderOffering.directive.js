@@ -67,7 +67,7 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
                 function pricingLastYear(){
                     if ( offering.history && offering.history[lastYear] ){
                         console.log(offering.history[lastYear]);
-                        offering.history[lastYear].pricing.su = $filter('orderBy')(offering.history[lastYear].pricing.su, 'users')
+                        offering.history[lastYear].pricing.su = $filter('orderBy')(offering.history[lastYear].pricing.su, 'users');
                         return offering.history[lastYear].pricing;
                     }
                     return {};
