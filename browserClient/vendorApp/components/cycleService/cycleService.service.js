@@ -1,7 +1,7 @@
 angular.module('vendor.cycleService')
     .service('cycleService', cycleService);
 
-function cycleService( CarliModules, config, $q, appState, authService, errorHandler ) {
+function cycleService( CarliModules, config, $q, appState, authService, errorHandler, persistentState ) {
 
     var currentUser = authService.getCurrentUser();
     if (!currentUser || !currentUser.vendor) {
@@ -49,6 +49,7 @@ function cycleService( CarliModules, config, $q, appState, authService, errorHan
 
     function setCurrentCycle(cycleObject) {
         appState.setCycle(cycleObject);
+        persistentState.setCurrentCycle(cycleObject);
         currentCycle = cycleObject;
     }
 

@@ -1,7 +1,7 @@
 angular.module('library.cycleService')
     .service('cycleService', cycleService);
 
-function cycleService( CarliModules, $q, errorHandler, userService ) {
+function cycleService( CarliModules, $q, errorHandler, userService, persistentState ) {
 
     var currentUser = userService.getUser();
     if (!currentUser.library) {
@@ -138,5 +138,6 @@ function cycleService( CarliModules, $q, errorHandler, userService ) {
 
     function setCurrentCycle(cycleObject) {
         currentCycle = cycleObject;
+        persistentState.setCurrentCycle(cycleObject);
     }
 }

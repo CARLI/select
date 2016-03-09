@@ -1,7 +1,7 @@
 angular.module('vendor.cycleChooser')
     .controller('cycleChooserController', cycleChooserController);
 
-function cycleChooserController($q, $scope, alertService, authService, config, cycleService, productService, userService, vendorDataService, vendorStatusService ) {
+function cycleChooserController($q, $scope, alertService, authService, config, cycleService, productService, userService, vendorDataService, vendorStatusService, persistentState ) {
     var vm = this;
 
     vm.cycles = [];
@@ -23,16 +23,54 @@ function cycleChooserController($q, $scope, alertService, authService, config, c
     }
 
     function loadCycles() {
-        return listCyclesVendorCanWorkWith().then(function (cycles) {
+        var persistedCycle = persistentState.getCurrentCycle();
+
+        return listCyclesVendorCanWorkWith().then(tryToPickOneAutomatically);
+
+        function tryToPickOneAutomatically(cycles) {
+
+            if (canRestorePersistedCycle()) {
+                var hydratedCycle = getRestoredPersistedCycle();
+                return readyCycleIfVendorIsStillAllowedIn(hydratedCycle);
+            }
+
             if (cycles.length === 0){
                 vm.noActiveCycles = true;
+                return $q.when(false);
             }
-            else if (cycles.length === 1) {
+
+            if (cycles.length === 1) {
                 return readyCycleIfVendorIsStillAllowedIn(cycles[0]);
-            } else {
-                vm.cycles = cycles;
             }
-        });
+
+            persistentState.clearCurrentCycle();
+            vm.cycles = cycles;
+
+            function canRestorePersistedCycle() {
+                return !!getRestoredPersistedCycle();
+            }
+
+            function getRestoredPersistedCycle() {
+                if (!persistedCycle) {
+                    return false;
+                }
+
+                var persistedCycleReducer = makeReducerToFindCycleWithId(persistedCycle.id);
+                return cycles.reduce(persistedCycleReducer);
+            }
+        }
+    }
+
+    function makeReducerToFindCycleWithId(idToCheckFor) {
+        return function (alreadyFound, nextOneToCheck) {
+            if (alreadyFound) {
+                return alreadyFound;
+            }
+            if (nextOneToCheck.id === idToCheckFor) {
+                return nextOneToCheck;
+            }
+            return null;
+        };
     }
 
     function readyCycleIfVendorIsStillAllowedIn( cycle ){
