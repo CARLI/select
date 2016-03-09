@@ -25,34 +25,39 @@ function cycleChooserController($q, $scope, alertService, authService, config, c
     function loadCycles() {
         var persistedCycle = persistentState.getCurrentCycle();
 
-        return listCyclesVendorCanWorkWith().then(function (cycles) {
+        return listCyclesVendorCanWorkWith().then(tryToPickOneAutomatically);
+
+        function tryToPickOneAutomatically(cycles) {
+
+            if (canRestorePersistedCycle()) {
+                var hydratedCycle = getRestoredPersistedCycle();
+                return readyCycleIfVendorIsStillAllowedIn(hydratedCycle);
+            }
+
             if (cycles.length === 0){
                 vm.noActiveCycles = true;
+                return $q.when(false);
             }
-            else if (canRestorePersistedCycle()) {
-                var persistedCycleReducer = makeReducerToFindCycleWithId(persistedCycle.id);
-                var hydratedCycle = cycles.reduce(persistedCycleReducer);
 
-                if (hydratedCycle) {
-                    return readyCycleIfVendorIsStillAllowedIn(hydratedCycle);
-                }
-            }
-            else if (cycles.length === 1) {
+            if (cycles.length === 1) {
                 return readyCycleIfVendorIsStillAllowedIn(cycles[0]);
-            } else {
-                vm.cycles = cycles;
-            }
-        });
-
-        function getRestoredPersistedCycle() {
-            if (!persistedCycle) {
-                return false;
             }
 
-            var persistedCycleReducer = makeReducerToFindCycleWithId(persistedCycle.id);
-            var hydratedCycle = cycles.reduce(persistedCycleReducer);
+            persistentState.clearCurrentCycle();
+            vm.cycles = cycles;
 
-            return hydratedCycle;
+            function canRestorePersistedCycle() {
+                return !!getRestoredPersistedCycle();
+            }
+
+            function getRestoredPersistedCycle() {
+                if (!persistedCycle) {
+                    return false;
+                }
+
+                var persistedCycleReducer = makeReducerToFindCycleWithId(persistedCycle.id);
+                return cycles.reduce(persistedCycleReducer);
+            }
         }
     }
 
@@ -171,18 +176,6 @@ function cycleChooserController($q, $scope, alertService, authService, config, c
                 var vendorHasProducts = !!products.length;
                 console.log('  vendor has products in ' + cycle.name + ': '+vendorHasProducts+' ('+products.length+')');
                 return vendorHasProducts;
-            });
-    }
-
-    function isVendorAllowedToMakeChangesToCycleAndDoTheyHaveProducts(cycle) {
-        return vendorDataService.isVendorAllowedToMakeChangesToCycle(cycle)
-            .then(function(isAllowedIn){
-                if ( isAllowedIn ){
-                    return doesVendorHaveProductsInCycle(cycle);
-                }
-                else {
-                    return false;
-                }
             });
     }
 
