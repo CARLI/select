@@ -1,7 +1,7 @@
 angular.module('common.auth')
     .service('authService', authService);
 
-function authService($rootScope, $q, $location, $window, appState, CarliModules) {
+function authService($rootScope, $q, $location, $window, appState, CarliModules, persistentState) {
     var session = null;
     var user = null;
 
@@ -66,6 +66,7 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules)
         session = null;
         user = null;
         $rootScope.isLoggedIn = false;
+        persistentState.clearCurrentCycle();
         return $q.when(CarliModules.AuthMiddleware.deleteSession()).then(redirectToLogin);
     }
 
