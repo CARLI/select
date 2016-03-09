@@ -4,6 +4,7 @@ var carliError = require('../../Error');
 var Q = require('q');
 var request = require('../../../config/environmentDependentModules/request');
 var queryString = require('query-string');
+var _ = require('lodash');
 
 module.exports = function (storeOptions) {
 
@@ -223,14 +224,16 @@ module.exports = function (storeOptions) {
         var url = storeOptions.couchDbUrl + '/' + dbName + '/' + '_design/CARLI/_view/' + viewName;
 
         var queryParams = {};
+
         if (key != null && typeof key !== 'undefined') {
-            if (typeof key === 'number') {
-                queryParams.key = key;
+            if (_.isArray(key)){
+                queryParams.keys = makeArrayOfKeys(key);
             }
             else {
-                queryParams.key = '"' + key + '"';
+                queryParams.key = quoteKey(key);
             }
         }
+
         if (group) {
             queryParams.group = true;
         }
@@ -241,6 +244,20 @@ module.exports = function (storeOptions) {
         }
 
         return url;
+
+        function quoteKey(key) {
+            if (typeof key === 'number') {
+                return key;
+            }
+            else {
+                return '"' + key + '"';
+            }
+        }
+
+        function makeArrayOfKeys(keys) {
+            var quotedKeys = keys.map(quoteKey);
+            return '[' + quotedKeys.join(',') + ']';
+        }
     }
 
     function makeValidCouchDbName(name) {
