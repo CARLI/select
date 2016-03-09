@@ -1,7 +1,7 @@
 angular.module('carli.cycleService')
     .service('cycleService', cycleService);
 
-function cycleService( CarliModules, $q, errorHandler ) {
+function cycleService( CarliModules, $q, errorHandler, persistentState ) {
 
     var cycleModule = CarliModules.Cycle;
     var cycleMiddleware = CarliModules.CycleMiddleware;
@@ -138,6 +138,7 @@ function cycleService( CarliModules, $q, errorHandler ) {
 
     function setCurrentCycle(cycleObject) {
         currentCycle = cycleObject;
+        persistentState.setCurrentCycle(cycleObject);
     }
 
     function syncDataToVendorDatabase(vendorId, cycle){
