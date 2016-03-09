@@ -122,6 +122,11 @@ describe('Couch utilities', function () {
             expect(couchUtilsPlain.couchViewUrl(testDbName, testViewName, testKey, true)).to.equal(urlWithKeyAndGroup);
         });
 
+        it('should return the base url with a "keys" parameter and a quoted array if given an array of keys', function() {
+            var testKey = ['testKey1', 'testKey2'];
+            var urlWithArrayOfKeys = testUrl + '?keys=%5B%22testKey1%22%2C%22testKey2%22%5D';
 
+            expect(couchUtilsPlain.couchViewUrl(testDbName, testViewName, testKey)).to.equal(urlWithArrayOfKeys);
+        });
     });
 });
