@@ -31,6 +31,7 @@ var columnName = {
     product: 'Product',
     selected: 'Number Selected',
     selection: 'Selection',
+    sitePrice: 'Site License',
     state: 'State',
     totalPrice: 'Total Price',
     type: 'Type',
@@ -41,13 +42,80 @@ var columnName = {
 function allPricingReport( reportParameters, userSelectedColumns ){
     var defaultReportColumns = ['cycle', 'library', 'license', 'product', 'selection', 'price'];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
-    var cyclesToQuery = getCycleParameter(reportParameters);
-    var productsToInclude = getProductParameter(reportParameters);
-    var librariesToInclude = getLibraryParameter(reportParameters);
+    var cyclesToQuery = getCycleParameter(reportParameters) || [];
+    var productsToInclude = getProductParameter(reportParameters) || [];
+    var librariesToInclude = getLibraryParameter(reportParameters) || [];
 
-    console.log('allPricingReport for '+cyclesToQuery.length+' cycles, '+productsToInclude.length+' products, and '+librariesToInclude.length+' libraries');
+    var filterIncludedProducts = productsToInclude.length;
 
-    return Q(cyclesToQuery);
+    console.log('allPricingReport for ' + cyclesToQuery.length + ' cycles, ' + productsToInclude.length + ' products, and ' + librariesToInclude.length + ' libraries');
+
+    return cycleRepository.getCyclesById(cyclesToQuery)
+        .then(getOfferingsForAllCycles)
+        .then(filterResultsForProductsToInclude)
+        .then(combineCycleResultsForReport(transformOfferingToPricingResultRow))
+        .then(returnReportResults(columns))
+        .catch(stackTraceError);
+
+    function getOfferingsForAllCycles(listOfCycles) {
+
+        if (librariesToInclude && librariesToInclude.length) {
+            console.log('Fetching pricing for ' + librariesToInclude.length + ' libraries [' + librariesToInclude.join(',') + ']');
+            return Q.all(listOfCycles.map(getOfferingsForCycleForLibraries)).then(logData);
+        }
+        else {
+            console.log('Fetching pricing for all libraries');
+            return Q.all(listOfCycles.map(getOfferingsForCycle)).then(logData);
+        }
+
+        function logData(data){
+            console.log('  sending data ~'+(data[0].length*.00013).toFixed(2)+'mb');
+            return data;
+        }
+
+        function getOfferingsForCycleForLibraries(cycle) {
+            console.log('  fetching offerings for libraries for '+cycle.name);
+            return offeringRepository.listOfferingsForLibraryIdUnexpanded(librariesToInclude, cycle)
+                .then(fillInCycle(cycle))
+                .then(fillInProducts(cycle))
+                .then(fillInLibraries)
+                .then(attachVendorToOfferings);
+        }
+
+        function getOfferingsForCycle(cycle) {
+            console.log('  fetching all offerings for '+cycle.name);
+            return offeringRepository.listOfferingsUnexpanded(cycle)
+                .then(fillInCycle(cycle))
+                .then(fillInProducts(cycle))
+                .then(fillInLibraries)
+                .then(attachVendorToOfferings);
+        }
+    }
+
+    function filterResultsForProductsToInclude(listOfListOfOfferingsPerCycle) {
+        if ( filterIncludedProducts ) {
+            return listOfListOfOfferingsPerCycle.map(filterOfferingsForIncludedProducts);
+        }
+        else {
+            return listOfListOfOfferingsPerCycle;
+        }
+
+        function filterOfferingsForIncludedProducts(listOfOfferings) {
+            return listOfOfferings.filter(function (offering) {
+                return productsToInclude.indexOf(offering.product) >= 0;
+            });
+        }
+    }
+
+    function transformOfferingToPricingResultRow(offering) {
+        return {
+            cycle: offering.cycle.name,
+            library: offering.library.name,
+            product: offering.product.name,
+            sitePrice: offeringRepository.getFundedSiteLicensePrice(offering) || ' '
+            //add su pricing
+        };
+    }
 }
 
 function selectedProductsReport( reportParameters, userSelectedColumns ){
