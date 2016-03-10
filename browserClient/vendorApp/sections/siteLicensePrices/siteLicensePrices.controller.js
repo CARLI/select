@@ -99,11 +99,14 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     }
 
     function byName(entity1, entity2){
-        if ( entity1.name < entity2.name ){
+        var a = entity1.name.toLowerCase();
+        var b = entity2.name.toLowerCase();
+        if ( a < b ){
             return -1;
-        }
-        else {
+        } else if ( a > b ) {
             return 1;
+        } else {
+            return 0;
         }
     }
 
