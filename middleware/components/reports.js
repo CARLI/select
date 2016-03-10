@@ -80,7 +80,7 @@ function allPricingReport( reportParameters, userSelectedColumns ){
                 .thenResolve(cycles);
 
             function getProductsForVendorsForCycle(cycle) {
-                return productRepository.listProductIdsForVendorIds(vendorsParameter, cycle);
+                return productRepository.listActiveProductIdsForVendorIds(vendorsParameter, cycle);
             }
 
             function reduceToListOfUniqueProducts(arrayOfProductIdsPerCycle){
