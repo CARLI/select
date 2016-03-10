@@ -30,7 +30,7 @@
                     <label for="reportVendor">Select Vendor(s)</label>
                     <select id="reportVendor" multiple="multiple"
                             cg-busy="vm.loadVendorsPromise()"
-                            ng-model="vm.selectedVendors"
+                            ng-model="vm.reportOptions.parameters.vendor"
                             ng-options="vendor.id as vendor.name for vendor in vm.vendors | orderBy:'name'"
                             ng-change="vm.loadProductsForVendors()"></select>
                 </div>

@@ -40,42 +40,69 @@ var columnName = {
 };
 
 function allPricingReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['cycle', 'library', 'license', 'product', 'selection', 'price'];
+    var defaultReportColumns = ['cycle', 'vendor', 'product', 'library', 'sitePrice'];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
     var cyclesToQuery = getCycleParameter(reportParameters) || [];
-    var productsToInclude = getProductParameter(reportParameters) || [];
-    var librariesToInclude = getLibraryParameter(reportParameters) || [];
+    var vendorsParameter = getVendorParameter(reportParameters) || [];
+    var productsParameter = getProductParameter(reportParameters) || [];
+    var librariesParameter = getLibraryParameter(reportParameters) || [];
 
-    var filterIncludedProducts = productsToInclude.length;
+    var productsToInclude = [];
+    var shouldFilterIncludedProducts = false;
+    var shouldFilterIncludedLibraries = librariesParameter.length;
 
-    console.log('allPricingReport for ' + cyclesToQuery.length + ' cycles, ' + productsToInclude.length + ' products, and ' + librariesToInclude.length + ' libraries');
+    console.log('allPricingReport for ' + cyclesToQuery.length + ' cycles, ' + productsToInclude.length + ' products, and ' + librariesParameter.length + ' libraries');
 
     return cycleRepository.getCyclesById(cyclesToQuery)
+        .then(decideWhichProductsToInclude)
         .then(getOfferingsForAllCycles)
         .then(filterResultsForProductsToInclude)
         .then(combineCycleResultsForReport(transformOfferingToPricingResultRow))
+        .then(logData)
         .then(returnReportResults(columns))
         .catch(stackTraceError);
 
+    function decideWhichProductsToInclude(cycles) {
+        if (productsParameter.length) {
+            return Q(productsParameter)
+                .then(saveProductsToInclude)
+                .thenResolve(cycles);
+        }
+        else {
+            return Q.all(cycles.map(getProductsForVendorsForCycle))
+                .then(reduceToListOfUniqueProducts)
+                .then(saveProductsToInclude)
+                .thenResolve(cycles);
+
+            function getProductsForVendorsForCycle(cycle) {
+                return productRepository.listProductIdsForVendorIds(vendorsParameter, cycle);
+            }
+
+            function reduceToListOfUniqueProducts(arrayOfProductIdsPerCycle){
+                return _.uniq(_.flattenDeep(arrayOfProductIdsPerCycle));
+            }
+        }
+
+        function saveProductsToInclude(listOfProductIds) {
+            productsToInclude = listOfProductIds;
+            shouldFilterIncludedProducts = productsToInclude.length;
+        }
+    }
+
     function getOfferingsForAllCycles(listOfCycles) {
 
-        if (librariesToInclude && librariesToInclude.length) {
-            console.log('Fetching pricing for ' + librariesToInclude.length + ' libraries [' + librariesToInclude.join(',') + ']');
-            return Q.all(listOfCycles.map(getOfferingsForCycleForLibraries)).then(logData);
+        if (shouldFilterIncludedLibraries) {
+            console.log('Fetching pricing for ' + librariesParameter.length + ' libraries [' + librariesParameter.join(',') + ']');
+            return Q.all(listOfCycles.map(getOfferingsForCycleForLibraries));
         }
         else {
             console.log('Fetching pricing for all libraries');
-            return Q.all(listOfCycles.map(getOfferingsForCycle)).then(logData);
-        }
-
-        function logData(data){
-            console.log('  sending data ~'+(data[0].length*.00013).toFixed(2)+'mb');
-            return data;
+            return Q.all(listOfCycles.map(getOfferingsForCycle));
         }
 
         function getOfferingsForCycleForLibraries(cycle) {
             console.log('  fetching offerings for libraries for '+cycle.name);
-            return offeringRepository.listOfferingsForLibraryIdUnexpanded(librariesToInclude, cycle)
+            return offeringRepository.listOfferingsForLibraryIdUnexpanded(librariesParameter, cycle)
                 .then(fillInCycle(cycle))
                 .then(fillInProducts(cycle))
                 .then(fillInLibraries)
@@ -93,7 +120,7 @@ function allPricingReport( reportParameters, userSelectedColumns ){
     }
 
     function filterResultsForProductsToInclude(listOfListOfOfferingsPerCycle) {
-        if ( filterIncludedProducts ) {
+        if ( shouldFilterIncludedProducts ) {
             return listOfListOfOfferingsPerCycle.map(filterOfferingsForIncludedProducts);
         }
         else {
@@ -102,7 +129,8 @@ function allPricingReport( reportParameters, userSelectedColumns ){
 
         function filterOfferingsForIncludedProducts(listOfOfferings) {
             return listOfOfferings.filter(function (offering) {
-                return productsToInclude.indexOf(offering.product) >= 0;
+                var productId = offering.product.id || offering.product;
+                return productsToInclude.indexOf(productId) >= 0;
             });
         }
     }
@@ -110,11 +138,17 @@ function allPricingReport( reportParameters, userSelectedColumns ){
     function transformOfferingToPricingResultRow(offering) {
         return {
             cycle: offering.cycle.name,
-            library: offering.library.name,
+            vendor: offering.vendor.name,
             product: offering.product.name,
+            library: offering.library.name,
             sitePrice: offeringRepository.getFundedSiteLicensePrice(offering) || ' '
             //add su pricing
         };
+    }
+
+    function logData(data){
+        console.log('  sending data ~'+(data.length*.00013).toFixed(2)+'mb');
+        return data;
     }
 }
 
@@ -462,6 +496,11 @@ function enabledUserColumns(userSelectedColumns){
 function getCycleParameter(userSelectedColumnsStr){
     var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
     return userSelectedColumns.cycle;
+}
+
+function getVendorParameter(userSelectedColumnsStr){
+    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
+    return userSelectedColumns.vendor;
 }
 
 function getProductParameter(userSelectedColumnsStr){

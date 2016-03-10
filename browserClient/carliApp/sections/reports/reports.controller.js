@@ -8,7 +8,6 @@ function reportsController( $q, csvExportService, cycleService, libraryService, 
     vm.reportRunningPromise = null;
     vm.cycleControlIsMissingValue = cycleControlIsMissingValue;
     vm.selectedReport = null;
-    vm.selectedVendors = [];
 
     vm.loadVendorsPromise = loadVendorsPromise;
     vm.loadLibrariesPromise = loadLibrariesPromise;
@@ -184,7 +183,7 @@ function reportsController( $q, csvExportService, cycleService, libraryService, 
     }
 
     function vendorsAreSelected() {
-        return vm.selectedVendors.length;
+        return vm.reportOptions.parameters.vendor && vm.reportOptions.parameters.vendor.length;
     }
 
     function loadVendorsPromise() {
@@ -213,7 +212,7 @@ function reportsController( $q, csvExportService, cycleService, libraryService, 
 
         function loadProductsForSelectedVendorsForSelectedCycles() {
             var selectedCycles = getSelectedCycles();
-            var selectedVendors = vm.selectedVendors;
+            var selectedVendors = vm.reportOptions.parameters.vendor || [];
             var promisesForProductsByVendor = selectedVendors.map(loadProductsForVendorForSelectedCycles);
 
             var allProducts = flattenArraysOfArraysOfPromises(promisesForProductsByVendor);
