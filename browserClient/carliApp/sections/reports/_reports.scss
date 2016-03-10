@@ -1,4 +1,17 @@
 #reports {
+    select {
+        width: 400px;
+        height: 100px;
+    }
+
+    .vendor,
+    .product,
+    .library {
+        select {
+            height: 200px;
+        }
+    }
+
     .report-columns {
         ul {
             display: flex;
