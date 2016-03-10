@@ -51,6 +51,8 @@ function allPricingReport( reportParameters, userSelectedColumns ){
     var shouldFilterIncludedProducts = false;
     var shouldFilterIncludedLibraries = librariesParameter.length;
 
+    var suPricingColumns = {};
+
     console.log('allPricingReport for ' + cyclesToQuery.length + ' cycles, ' + productsToInclude.length + ' products, and ' + librariesParameter.length + ' libraries');
 
     return cycleRepository.getCyclesById(cyclesToQuery)
@@ -59,7 +61,10 @@ function allPricingReport( reportParameters, userSelectedColumns ){
         .then(filterResultsForProductsToInclude)
         .then(combineCycleResultsForReport(transformOfferingToPricingResultRow))
         .then(logData)
-        .then(returnReportResults(columns))
+        .then(function(data){
+            var allColumns = columns.concat(Object.keys(suPricingColumns));
+            return returnReportResults(allColumns)(data);
+        })
         .catch(stackTraceError);
 
     function decideWhichProductsToInclude(cycles) {
@@ -92,16 +97,13 @@ function allPricingReport( reportParameters, userSelectedColumns ){
     function getOfferingsForAllCycles(listOfCycles) {
 
         if (shouldFilterIncludedLibraries) {
-            console.log('Fetching pricing for ' + librariesParameter.length + ' libraries [' + librariesParameter.join(',') + ']');
             return Q.all(listOfCycles.map(getOfferingsForCycleForLibraries));
         }
         else {
-            console.log('Fetching pricing for all libraries');
             return Q.all(listOfCycles.map(getOfferingsForCycle));
         }
 
         function getOfferingsForCycleForLibraries(cycle) {
-            console.log('  fetching offerings for libraries for '+cycle.name);
             return offeringRepository.listOfferingsForLibraryIdUnexpanded(librariesParameter, cycle)
                 .then(fillInCycle(cycle))
                 .then(fillInProducts(cycle))
@@ -110,7 +112,6 @@ function allPricingReport( reportParameters, userSelectedColumns ){
         }
 
         function getOfferingsForCycle(cycle) {
-            console.log('  fetching all offerings for '+cycle.name);
             return offeringRepository.listOfferingsUnexpanded(cycle)
                 .then(fillInCycle(cycle))
                 .then(fillInProducts(cycle))
@@ -136,19 +137,35 @@ function allPricingReport( reportParameters, userSelectedColumns ){
     }
 
     function transformOfferingToPricingResultRow(offering) {
-        return {
+        var row = {
             cycle: offering.cycle.name,
             vendor: offering.vendor.name,
             product: offering.product.name,
             library: offering.library.name,
             sitePrice: offeringRepository.getFundedSiteLicensePrice(offering) || ' '
-            //add su pricing
         };
-    }
 
-    function logData(data){
-        console.log('  sending data ~'+(data.length*.00013).toFixed(2)+'mb');
-        return data;
+        var suPricing = offering.pricing.su;
+        if (suPricing && suPricing.length) {
+            suPricing.forEach(function(suPrice) {
+                addSuPriceToRow(suPrice);
+                addSuPriceToColumns(suPrice);
+            });
+        }
+
+        return row;
+
+        function addSuPriceToRow(suPrice) {
+            row[suPriceColumnKey(suPrice)] = suPrice.price;
+        }
+
+        function addSuPriceToColumns(suPrice) {
+            suPricingColumns[suPriceColumnKey(suPrice)] = suPriceColumnKey(suPrice);
+        }
+
+        function suPriceColumnKey(suPrice) {
+            return suPrice.users + ' Users'
+        }
     }
 }
 
@@ -513,18 +530,6 @@ function getLibraryParameter(userSelectedColumnsStr){
     return userSelectedColumns.library;
 }
 
-function columnNames( columnList ){
-    var results = {};
-
-    columnList.forEach(function(columnKey){
-        if ( columnName[columnKey] ) {
-            results[columnKey] = columnName[columnKey];
-        }
-    });
-
-    return results;
-}
-
 function getSelectedProductsForEachCycle( listOfCycles ){
     return Q.all( listOfCycles.map(getSelectedProductsForCycle) );
 
@@ -700,6 +705,21 @@ function returnReportResults(resultColumns, columnSortOrderOverride){
     }
 }
 
+function columnNames( columnList ){
+    var results = {};
+
+    columnList.forEach(function(columnKey){
+        if ( columnName[columnKey] ) {
+            results[columnKey] = columnName[columnKey];
+        }
+        else {
+            results[columnKey] = columnKey;
+        }
+    });
+
+    return results;
+}
+
 function initLibraryMap(){
     var libraryMap = {};
 
@@ -755,6 +775,11 @@ function licenseName(offering){
 
 function stackTraceError(err){
     Logger.log('ERROR',err.stack);
+}
+
+function logData(data){
+    console.log('  sending data ~'+(data.length*.00013).toFixed(2)+'mb');
+    return data;
 }
 
 module.exports = {
