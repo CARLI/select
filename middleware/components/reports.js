@@ -108,7 +108,8 @@ function allPricingReport( reportParameters, userSelectedColumns ){
                 .then(fillInCycle(cycle))
                 .then(fillInProducts(cycle))
                 .then(fillInLibraries)
-                .then(attachVendorToOfferings);
+                .then(attachVendorToOfferings)
+                .then(filterOfferingsForActiveEntities);
         }
 
         function getOfferingsForCycle(cycle) {
@@ -116,7 +117,16 @@ function allPricingReport( reportParameters, userSelectedColumns ){
                 .then(fillInCycle(cycle))
                 .then(fillInProducts(cycle))
                 .then(fillInLibraries)
-                .then(attachVendorToOfferings);
+                .then(attachVendorToOfferings)
+                .then(filterOfferingsForActiveEntities);
+        }
+
+        function filterOfferingsForActiveEntities(offerings) {
+            return offerings.filter(function(offering) {
+                return offering.product.isActive &&
+                       offering.library.isActive &&
+                       offering.vendor.isActive;
+            });
         }
     }
 
