@@ -188,7 +188,7 @@ function reportsController( $q, csvExportService, cycleService, libraryService, 
 
     function loadVendorsPromise() {
         if ( !vm.loadingVendorPromise ) {
-            vm.loadingVendorPromise = vendorService.list()
+            vm.loadingVendorPromise = vendorService.listActive()
                 .then(function(allVendors){
                     vm.vendors = allVendors;
                 });
@@ -229,7 +229,7 @@ function reportsController( $q, csvExportService, cycleService, libraryService, 
 
             function loadProductsForVendorForSelectedCycles( vendorId ) {
                 return selectedCycles.map(function(cycle) {
-                    return productService.listProductsForVendorId(vendorId, cycle);
+                    return productService.listActiveProductsForVendorId(vendorId, cycle);
                 });
             }
 
@@ -263,7 +263,7 @@ function reportsController( $q, csvExportService, cycleService, libraryService, 
 
     function loadLibrariesPromise() {
         if ( !vm.loadingLibrariesPromise ) {
-            vm.loadingLibrariesPromise = libraryService.list()
+            vm.loadingLibrariesPromise = libraryService.listActiveLibraries()
                 .then(function(allLibraries){
                     vm.libraries = allLibraries;
                 });

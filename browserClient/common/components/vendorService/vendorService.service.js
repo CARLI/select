@@ -7,6 +7,7 @@ function vendorService( CarliModules, $q, errorHandler ) {
 
     return {
         list:   function() { return $q.when( vendorModule.list()).catch(errorHandler); },
+        listActive:   function() { return $q.when( vendorModule.listActive()).catch(errorHandler); },
         create: function() { return $q.when( vendorModule.create.apply(this, arguments) ); },
         update: function() { return $q.when( vendorModule.update.apply(this, arguments) ); },
         load:   function() { return $q.when( vendorModule.load.apply(this, arguments) ).catch(errorHandler); },
