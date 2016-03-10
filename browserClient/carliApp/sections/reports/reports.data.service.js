@@ -6,6 +6,7 @@ function reportDataService( $q, CarliModules ){
     var reportsDataMiddleware = CarliModules.ReportsData;
 
     var dataFunctionForReportName = {
+        'All Pricing': reportsDataMiddleware.allPricingReport,
         'Selected Products': reportsDataMiddleware.selectedProductsReport,
         'Library Contacts': reportsDataMiddleware.contactsReport,
         'Statistics': reportsDataMiddleware.statisticsReport,

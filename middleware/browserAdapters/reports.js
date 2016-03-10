@@ -1,5 +1,12 @@
 var middlewareRequest = require('./middlewareRequest');
 
+function allPricingReport(reportParameters, reportColumns) {
+    return middlewareRequest({
+        path: '/reports/all-pricing/' + reportQuery(reportParameters, reportColumns),
+        method: 'get'
+    });
+}
+
 function selectedProductsReport(reportParameters, reportColumns) {
     return middlewareRequest({
         path: '/reports/selected-products/' + reportQuery(reportParameters, reportColumns),
@@ -64,6 +71,7 @@ function listLibrariesReport(reportParameters, reportColumns) {
 }
 
 module.exports = {
+    allPricingReport: allPricingReport,
     selectedProductsReport: selectedProductsReport,
     contactsReport: contactsReport,
     statisticsReport: statisticsReport,

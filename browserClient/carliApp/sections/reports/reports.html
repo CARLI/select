@@ -22,7 +22,33 @@
                     <label for="reportCycle">Select Cycle(s)</label>
                     <select id="reportCycle" multiple="multiple"
                             ng-model="vm.reportOptions.parameters.cycle"
-                            ng-options="cycle.id as cycle.name for cycle in vm.cycles | orderBy:'name':true"></select>
+                            ng-options="cycle.id as cycle.name for cycle in vm.cycles | orderBy:'name':true"
+                            ng-change="vm.loadProductsForVendors()"></select>
+                </div>
+
+                <div class="vendor" ng-if="vm.reportWantsProductsAndCyclesAreSelected()">
+                    <label for="reportVendor">Select Vendor(s)</label>
+                    <select id="reportVendor" multiple="multiple"
+                            cg-busy="vm.loadVendorsPromise()"
+                            ng-model="vm.reportOptions.parameters.vendor"
+                            ng-options="vendor.id as vendor.name for vendor in vm.vendors | orderBy:'name'"
+                            ng-change="vm.loadProductsForVendors()"></select>
+                </div>
+
+                <div class="product" ng-if="vm.reportWantsProductsAndVendorsAreSelected()">
+                    <label for="reportProduct">Select Product(s)</label>
+                    <select id="reportProduct" multiple="multiple"
+                            cg-busy="vm.loadingProductsPromise"
+                            ng-model="vm.reportOptions.parameters.product"
+                            ng-options="product.id as product.name for product in vm.products | orderBy:'name'"></select>
+                </div>
+
+                <div class="library" ng-if="vm.reportWantsLibrariesAndCyclesAreSelected()">
+                    <label for="reportLibrary">Select one or more Libraries</label>
+                    <select id="reportLibrary" multiple="multiple"
+                            cg-busy="vm.loadLibrariesPromise()"
+                            ng-model="vm.reportOptions.parameters.library"
+                            ng-options="library.id as library.name for library in vm.libraries | orderBy:'name'"></select>
                 </div>
             </div>
 

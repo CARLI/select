@@ -435,6 +435,11 @@ function runMiddlewareServer(){
             });
         }
         function defineRoutesForReports() {
+            authorizedRoute('get', '/reports/all-pricing/:parameters/:columns', carliAuth.requireStaff, function (req, res) {
+                reports.allPricingReport(req.params.parameters, req.params.columns)
+                    .then(sendJsonResult(res))
+                    .catch(sendError(res));
+            });
             authorizedRoute('get', '/reports/selected-products/:parameters/:columns', carliAuth.requireStaff, function (req, res) {
                 reports.selectedProductsReport(req.params.parameters, req.params.columns)
                     .then(sendJsonResult(res))

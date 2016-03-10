@@ -31,12 +31,143 @@ var columnName = {
     product: 'Product',
     selected: 'Number Selected',
     selection: 'Selection',
+    sitePrice: 'Site License',
     state: 'State',
     totalPrice: 'Total Price',
     type: 'Type',
     vendor: 'Vendor',
     zip: 'Zip'
 };
+
+function allPricingReport( reportParameters, userSelectedColumns ){
+    var defaultReportColumns = ['cycle', 'vendor', 'product', 'library', 'sitePrice'];
+    var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
+    var cyclesToQuery = getCycleParameter(reportParameters) || [];
+    var vendorsParameter = getVendorParameter(reportParameters) || [];
+    var productsParameter = getProductParameter(reportParameters) || [];
+    var librariesParameter = getLibraryParameter(reportParameters) || [];
+
+    var productsToInclude = productsParameter || [];
+    var shouldFilterIncludedProducts = false;
+    var shouldFilterIncludedLibraries = librariesParameter.length;
+
+    var suPricingColumns = {};
+
+    console.log('allPricingReport for ' + cyclesToQuery.length + ' cycles, ' + productsToInclude.length + ' products, and ' + librariesParameter.length + ' libraries');
+
+    return cycleRepository.getCyclesById(cyclesToQuery)
+        .then(decideWhichProductsToInclude)
+        .then(getOfferingsForAllCycles)
+        .then(filterResultsForProductsToInclude)
+        .then(combineCycleResultsForReport(transformOfferingToPricingResultRow))
+        .then(logData)
+        .then(function(data){
+            var allColumns = columns.concat(Object.keys(suPricingColumns));
+            return returnReportResults(allColumns)(data);
+        })
+        .catch(stackTraceError);
+
+    function decideWhichProductsToInclude(cycles) {
+        if (productsParameter.length) {
+            return Q(productsParameter)
+                .then(saveProductsToInclude)
+                .thenResolve(cycles);
+        }
+        else {
+            return Q.all(cycles.map(getProductsForVendorsForCycle))
+                .then(reduceToListOfUniqueProducts)
+                .then(saveProductsToInclude)
+                .thenResolve(cycles);
+
+            function getProductsForVendorsForCycle(cycle) {
+                return productRepository.listProductIdsForVendorIds(vendorsParameter, cycle);
+            }
+
+            function reduceToListOfUniqueProducts(arrayOfProductIdsPerCycle){
+                return _.uniq(_.flattenDeep(arrayOfProductIdsPerCycle));
+            }
+        }
+
+        function saveProductsToInclude(listOfProductIds) {
+            productsToInclude = listOfProductIds;
+            shouldFilterIncludedProducts = productsToInclude.length;
+        }
+    }
+
+    function getOfferingsForAllCycles(listOfCycles) {
+
+        if (shouldFilterIncludedLibraries) {
+            return Q.all(listOfCycles.map(getOfferingsForCycleForLibraries));
+        }
+        else {
+            return Q.all(listOfCycles.map(getOfferingsForCycle));
+        }
+
+        function getOfferingsForCycleForLibraries(cycle) {
+            return offeringRepository.listOfferingsForLibraryIdUnexpanded(librariesParameter, cycle)
+                .then(fillInCycle(cycle))
+                .then(fillInProducts(cycle))
+                .then(fillInLibraries)
+                .then(attachVendorToOfferings);
+        }
+
+        function getOfferingsForCycle(cycle) {
+            return offeringRepository.listOfferingsUnexpanded(cycle)
+                .then(fillInCycle(cycle))
+                .then(fillInProducts(cycle))
+                .then(fillInLibraries)
+                .then(attachVendorToOfferings);
+        }
+    }
+
+    function filterResultsForProductsToInclude(listOfListOfOfferingsPerCycle) {
+        if ( shouldFilterIncludedProducts ) {
+            return listOfListOfOfferingsPerCycle.map(filterOfferingsForIncludedProducts);
+        }
+        else {
+            return listOfListOfOfferingsPerCycle;
+        }
+
+        function filterOfferingsForIncludedProducts(listOfOfferings) {
+            return listOfOfferings.filter(function (offering) {
+                var productId = offering.product.id || offering.product;
+                return productsToInclude.indexOf(productId) >= 0;
+            });
+        }
+    }
+
+    function transformOfferingToPricingResultRow(offering) {
+        var row = {
+            cycle: offering.cycle.name,
+            vendor: offering.vendor.name,
+            product: offering.product.name,
+            library: offering.library.name,
+            sitePrice: offeringRepository.getFundedSiteLicensePrice(offering) || ' '
+        };
+
+        var suPricing = offering.pricing.su;
+        if (suPricing && suPricing.length) {
+            suPricing.forEach(function(suPrice) {
+                addSuPriceToRow(suPrice);
+                addSuPriceToColumns(suPrice);
+            });
+        }
+
+        return row;
+
+        function addSuPriceToRow(suPrice) {
+            row[suPriceColumnKey(suPrice)] = suPrice.price;
+        }
+
+        function addSuPriceToColumns(suPrice) {
+            suPricingColumns[suPriceColumnKey(suPrice)] = suPriceColumnKey(suPrice);
+        }
+
+        function suPriceColumnKey(suPrice) {
+            return suPrice.users + ' Users'
+        }
+    }
+}
 
 function selectedProductsReport( reportParameters, userSelectedColumns ){
     var defaultReportColumns = ['cycle', 'library', 'license', 'product', 'selection', 'price'];
@@ -384,16 +515,19 @@ function getCycleParameter(userSelectedColumnsStr){
     return userSelectedColumns.cycle;
 }
 
-function columnNames( columnList ){
-    var results = {};
+function getVendorParameter(userSelectedColumnsStr){
+    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
+    return userSelectedColumns.vendor;
+}
 
-    columnList.forEach(function(columnKey){
-        if ( columnName[columnKey] ) {
-            results[columnKey] = columnName[columnKey];
-        }
-    });
+function getProductParameter(userSelectedColumnsStr){
+    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
+    return userSelectedColumns.product;
+}
 
-    return results;
+function getLibraryParameter(userSelectedColumnsStr){
+    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
+    return userSelectedColumns.library;
 }
 
 function getSelectedProductsForEachCycle( listOfCycles ){
@@ -465,8 +599,14 @@ function ensureResultListsAreInReverseChronologicalCycleOrder( listOfListsOfOffe
     listOfListsOfOfferings.sort(reverseChronologicalSortListOfOfferings);
 
     function reverseChronologicalSortListOfOfferings(listA, listB){
-        var yearA = listA[0].cycle.year;
-        var yearB = listB[0].cycle.year;
+        var sampleOfferingA = listA[0] || {};
+        var sampleOfferingB = listB[0] || {};
+
+        var cycleA = sampleOfferingA.cycle || {};
+        var cycleB = sampleOfferingB.cycle || {};
+
+        var yearA = cycleA.year || Infinity;
+        var yearB = cycleB.year || Infinity;
 
         return yearB - yearA;
     }
@@ -506,23 +646,6 @@ function fillInProducts(cycle){
         }
     }
 }
-
-//function fillInOfferingProductLicenses(offerings){
-//    return initLicenseMap()
-//        .then(attachLicenseObjectsToProducts)
-//        .thenResolve(offerings);
-//
-//    function attachLicenseObjectsToProducts(licensesById){
-//        offerings.forEach(function(offering){
-//            var licenseId = offering.product.license;
-//            var licenseObject = licensesById[licenseId];
-//            if ( !licenseObject ){
-//                //console.log('  no license found for ID '+licenseId, offering.product);
-//            }
-//            offering.product.license = licenseObject;
-//        });
-//    }
-//}
 
 function fillInVendors(products){
     return initVendorMap()
@@ -569,6 +692,21 @@ function returnReportResults(resultColumns, columnSortOrderOverride){
             data: _.sortByOrder(reportResults, resultColumns, columnSortOrder)
         };
     }
+}
+
+function columnNames( columnList ){
+    var results = {};
+
+    columnList.forEach(function(columnKey){
+        if ( columnName[columnKey] ) {
+            results[columnKey] = columnName[columnKey];
+        }
+        else {
+            results[columnKey] = columnKey;
+        }
+    });
+
+    return results;
 }
 
 function initLibraryMap(){
@@ -628,7 +766,13 @@ function stackTraceError(err){
     Logger.log('ERROR',err.stack);
 }
 
+function logData(data){
+    console.log('  sending data ~'+(data.length*.00013).toFixed(2)+'mb');
+    return data;
+}
+
 module.exports = {
+    allPricingReport: allPricingReport,
     selectedProductsReport: selectedProductsReport,
     contactsReport: contactsReport,
     statisticsReport: statisticsReport,

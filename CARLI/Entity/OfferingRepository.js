@@ -251,9 +251,15 @@ function deleteOffering( offeringId, cycle ){
 
 function listOfferingsForLibraryId( libraryId, cycle ) {
     setCycle(cycle);
-    return expandOfferings( couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listOfferingsForLibraryId', libraryId.toString()), cycle )
+    return expandOfferings( couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listOfferingsForLibraryId', libraryId), cycle )
         .then(initializeComputedValues);
 }
+
+function listOfferingsForLibraryIdUnexpanded( libraryId, cycle ) {
+    setCycle(cycle);
+    return couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listOfferingsForLibraryId', libraryId);
+}
+
 
 function listOfferingsForProductIdUnexpanded(productId, cycle, offeringLimit) {
     var getOfferings = Q([]);
@@ -949,9 +955,10 @@ module.exports = {
     delete: deleteOffering,
 
     listOfferingsForLibraryId: listOfferingsForLibraryId,
+    listOfferingsForLibraryIdUnexpanded: listOfferingsForLibraryIdUnexpanded,
     listOfferingsForProductId: listOfferingsForProductId,
-    listOfferingsForVendorId: listOfferingsForVendorId,
     listOfferingsForProductIdUnexpanded: listOfferingsForProductIdUnexpanded,
+    listOfferingsForVendorId: listOfferingsForVendorId,
     listOfferingsWithSelections: listOfferingsWithSelections,
     listOfferingsWithSelectionsUnexpanded: listOfferingsWithSelectionsUnexpanded,
     listOfferingsWithSelectionsForLibrary: listOfferingsWithSelectionsForLibrary,
