@@ -109,17 +109,25 @@ function listProductsForVendorId( vendorId, cycle ) {
     return expandProducts(couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listProductsForVendorId', vendorId), cycle);
 }
 
-function listProductIdsForVendorIds( listOfVendorIds, cycle ) {
+function listActiveProductIdsForVendorIds( listOfVendorIds, cycle ) {
     setCycle(cycle);
-    return Q.all( listOfVendorIds.map(getListOfProducIdsForVendor) );
+    return Q.all( listOfVendorIds.map(getActiveProductIdsForVendor) );
 
-    function getListOfProducIdsForVendor(vendorId) {
+    function getActiveProductIdsForVendor(vendorId) {
         return couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listProductsForVendorId', vendorId)
-            .then(function(listOfProducts){
-                return listOfProducts.map(function(product){
-                    return product.id;
-                });
-            });
+            .then(returnActiveProductIds);
+    }
+
+    function returnActiveProductIds(listOfProducts){
+        return listOfProducts.filter(isActive).map(getId);
+    }
+
+    function isActive(product) {
+        return product.isActive;
+    }
+
+    function getId(product) {
+        return product.id;
     }
 }
 
@@ -403,7 +411,7 @@ module.exports = {
     listAvailableOneTimePurchaseProducts: listAvailableOneTimePurchaseProducts,
     listProductsForLicenseId: listProductsForLicenseId,
     listProductsForVendorId: listProductsForVendorId,
-    listProductIdsForVendorIds: listProductIdsForVendorIds,
+    listActiveProductIdsForVendorIds: listActiveProductIdsForVendorIds,
     listActiveProductsForVendorId: listActiveProductsForVendorId,
     listProductCountsByVendorId: listProductCountsByVendorId,
     listActiveProductsFromActiveCycles: listActiveProductsFromActiveCycles,
