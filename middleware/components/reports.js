@@ -47,7 +47,7 @@ function allPricingReport( reportParameters, userSelectedColumns ){
     var productsParameter = getProductParameter(reportParameters) || [];
     var librariesParameter = getLibraryParameter(reportParameters) || [];
 
-    var productsToInclude = [];
+    var productsToInclude = productsParameter || [];
     var shouldFilterIncludedProducts = false;
     var shouldFilterIncludedLibraries = librariesParameter.length;
 
@@ -599,8 +599,14 @@ function ensureResultListsAreInReverseChronologicalCycleOrder( listOfListsOfOffe
     listOfListsOfOfferings.sort(reverseChronologicalSortListOfOfferings);
 
     function reverseChronologicalSortListOfOfferings(listA, listB){
-        var yearA = listA[0].cycle.year;
-        var yearB = listB[0].cycle.year;
+        var sampleOfferingA = listA[0] || {};
+        var sampleOfferingB = listB[0] || {};
+
+        var cycleA = sampleOfferingA.cycle || {};
+        var cycleB = sampleOfferingB.cycle || {};
+
+        var yearA = cycleA.year || Infinity;
+        var yearB = cycleB.year || Infinity;
 
         return yearB - yearA;
     }
@@ -640,23 +646,6 @@ function fillInProducts(cycle){
         }
     }
 }
-
-//function fillInOfferingProductLicenses(offerings){
-//    return initLicenseMap()
-//        .then(attachLicenseObjectsToProducts)
-//        .thenResolve(offerings);
-//
-//    function attachLicenseObjectsToProducts(licensesById){
-//        offerings.forEach(function(offering){
-//            var licenseId = offering.product.license;
-//            var licenseObject = licensesById[licenseId];
-//            if ( !licenseObject ){
-//                //console.log('  no license found for ID '+licenseId, offering.product);
-//            }
-//            offering.product.license = licenseObject;
-//        });
-//    }
-//}
 
 function fillInVendors(products){
     return initVendorMap()

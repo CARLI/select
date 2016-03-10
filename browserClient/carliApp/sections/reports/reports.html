@@ -43,7 +43,7 @@
                             ng-options="product.id as product.name for product in vm.products | orderBy:'name'"></select>
                 </div>
 
-                <div class="vendor" ng-if="vm.reportWantsLibrariesAndCyclesAreSelected()">
+                <div class="library" ng-if="vm.reportWantsLibrariesAndCyclesAreSelected()">
                     <label for="reportLibrary">Select one or more Libraries</label>
                     <select id="reportLibrary" multiple="multiple"
                             cg-busy="vm.loadLibrariesPromise()"
