@@ -566,6 +566,8 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
                         return;
                     }
                     newValue = (100 + quickPricingValue)/100 * originalValue;
+                    var newValueRoundedDown = Math.floor(newValue*100) / 100;
+                    newValue = newValueRoundedDown;
                 }
                 else if (mode == 'byFte'){
                     var fte = $offeringCell.data('fte');
