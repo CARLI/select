@@ -57,6 +57,9 @@ module.exports = function ( grunt ) {
         },
 
         clean: {
+            options: {
+                force: true
+            },
             build: [user_config.build_dir, user_config.compile_dir ],
             compileCleanup: [
                 user_config.processed_sass_file('carli'),
