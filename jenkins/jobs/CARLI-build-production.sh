@@ -11,6 +11,6 @@ updateMasterIfRequested "$CARLI_PUBLISH_COMMITISH"
 
 initialize
 
-buildBrowserClients || fail "Failed to build browser clients"
+buildCompiledBrowserClients || fail "Failed to build browser clients"
 archiveBrowserClients || fail "Failed to create browser clients archive"
 archiveMiddleware || fail "Failed to create middleware archive"
