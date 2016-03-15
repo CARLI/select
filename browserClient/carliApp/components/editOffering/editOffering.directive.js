@@ -56,8 +56,6 @@ angular.module('carli.editOffering')
 
                 return offeringService.update(vm.offering)
                     .then(offeringService.load)
-                    // CARLI-1468: This is setting flagged = false, even if the user did not explicitly unflag it
-                    // .then(updateOfferingFlaggedStatus)
                     .then(function(updatedOffering){
                         workaroundCouchStoreRevisionSmell(updatedOffering);
                         alertService.putAlert('Offering updated', {severity: 'success'});
@@ -72,11 +70,6 @@ angular.module('carli.editOffering')
                     if (tempLibraryComments === vm.offering.product.comments) {
                         vm.offering.libraryComments = tempLibraryComments;
                     }
-                }
-
-                function updateOfferingFlaggedStatus( offering ){
-                    offering.flagged = offeringService.getFlaggedState(offering, vm.cycle);
-                    return offering;
                 }
 
                 function syncData(){

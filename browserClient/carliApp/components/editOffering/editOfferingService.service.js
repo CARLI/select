@@ -8,8 +8,7 @@ function editOfferingService( offeringService ) {
     return {
         receiveOfferingEditableMessage: receiveOfferingEditableMessage,
         acknowledgeOfferingMadeEditable: acknowledgeOfferingMadeEditable,
-        sendOfferingEditableMessage: sendOfferingEditableMessage,
-        toggleOfferingUserFlaggedState: toggleOfferingUserFlaggedState
+        sendOfferingEditableMessage: sendOfferingEditableMessage
     };
 
 
@@ -28,17 +27,6 @@ function editOfferingService( offeringService ) {
             });
         } else {
             currentOffering = offering;
-        }
-    }
-
-    function toggleOfferingUserFlaggedState(offeringId){
-        return offeringService.load(offeringId)
-            .then(toggleOfferingFlaggedState)
-            .then(offeringService.update);
-
-        function toggleOfferingFlaggedState( offering ){
-            offering.flagged = !offeringService.getFlaggedState(offering);
-            return offering;
         }
     }
 }

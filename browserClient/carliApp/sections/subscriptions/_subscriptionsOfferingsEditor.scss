@@ -157,7 +157,6 @@
 
                         .fa {
                             @include font-size(22);
-                            cursor: pointer;
 
                             &.fa-flag-o {
                                 color: $gray;
