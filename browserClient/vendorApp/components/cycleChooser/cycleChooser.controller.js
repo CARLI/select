@@ -140,7 +140,7 @@ function cycleChooserController($q, $scope, alertService, authService, config, c
                 function displayWarning() {
                     userService.load(status.lastLoginUserId).then(function (lastUser) {
                         Logger.log(lastUser);
-                        alertService.putAlert(lastUser.fullName + 'may be logged in right now. ' +
+                        alertService.putAlert(lastUser.fullName + ' may be logged in right now. ' +
                           'Confirm that they have logged out before you proceed. ' +
                           'Otherwise, you may overwrite each other\'s entries.');
                     });
