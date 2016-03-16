@@ -107,12 +107,18 @@
                         margin-top: 0;
                     }
 
-                    button.save,
-                    button.edit {
+                    .controls {
                         bottom: .2rem;
                         left: 1rem;
+                        min-width: 165px;
                         position: absolute;
-                        min-width: 65px;
+
+                        .carli-button {
+                            display: block;
+                            margin-left: 0;
+                            margin-top: 0.5rem;
+                            text-align: left;
+                        }
                     }
 
                     &.product,

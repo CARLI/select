@@ -3,6 +3,7 @@ angular.module('carli.editOffering')
 
 function editOfferingController(activityLogService, alertService, cycleService, errorHandler, offeringService, productService) {
     var vm = this;
+    vm.cancel = cancel;
     vm.saveOffering = saveOffering;
     vm.shouldShowColumn = shouldShowColumn;
     vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
@@ -17,6 +18,12 @@ function editOfferingController(activityLogService, alertService, cycleService, 
     function activate() {
         offeringService.load(vm.offering.id)
             .then(workaroundCouchStoreRevisionSmell);
+    }
+
+    function cancel() {
+        //Sadly, this isn't quite good enough, since the editOffering form directly edits the offering object that is
+        //linked directly to the actual list. We'd need to remember the initial state on activate and then restore it.
+        vm.notifyParentOfSave(vm.offering);
     }
 
     function saveOffering() {
