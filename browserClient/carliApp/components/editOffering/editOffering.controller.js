@@ -3,21 +3,31 @@ angular.module('carli.editOffering')
 
 function editOfferingController(activityLogService, alertService, cycleService, errorHandler, offeringService, productService) {
     var vm = this;
+
     vm.cancel = cancel;
+    vm.userTouchedFlag = false;
+
+    vm.clearManualFlag = clearManualFlag;
+    vm.flagIsManuallySet = flagIsManuallySet;
     vm.saveOffering = saveOffering;
     vm.shouldShowColumn = shouldShowColumn;
     vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
     vm.userClickedFlag = userClickedFlag;
     vm.getProductDisplayName = productService.getProductDisplayName;
 
-    var userTouchedFlag = false;
-
     activate();
 
 
     function activate() {
+        vm.userTouchedFlag = false;
+
         offeringService.load(vm.offering.id)
-            .then(workaroundCouchStoreRevisionSmell);
+            .then(setupEditorWithLoadedOffering);
+
+        function setupEditorWithLoadedOffering(offering) {
+            workaroundCouchStoreRevisionSmell(offering);
+            initializeManualFlagStateToDefaultFlagState();
+        }
     }
 
     function cancel() {
@@ -32,10 +42,10 @@ function editOfferingController(activityLogService, alertService, cycleService, 
             tempLibraryComments = vm.offering.product.comments;
             delete vm.offering.libraryComments;
         }
-        if (!userTouchedFlag) {
-            delete vm.offering.flagged;
+        if (vm.userTouchedFlag) {
+            vm.offering.flagged = vm.manualFlag;
+            vm.userTouchedFlag = false;
         }
-        userTouchedFlag = false;
 
         if ('selection' in vm.offering && typeof vm.offering.selection === 'undefined') {
             delete vm.offering.selection;
@@ -88,7 +98,25 @@ function editOfferingController(activityLogService, alertService, cycleService, 
     }
 
     function userClickedFlag() {
-        userTouchedFlag = true;
+        vm.userTouchedFlag = true;
+    }
+
+    function clearManualFlag() {
+        delete vm.offering.flagged;
+        delete vm.manualFlag;
+        vm.userTouchedFlag = false;
+    }
+
+    function flagIsManuallySet() {
+        return typeof vm.offering.flagged !== 'undefined';
+    }
+
+    function offeringFlaggedState() {
+        return offeringService.getFlaggedState(vm.offering, vm.cycle);
+    }
+
+    function initializeManualFlagStateToDefaultFlagState() {
+        vm.manualFlag = offeringFlaggedState();
     }
 
     function logUpdateActivity() {

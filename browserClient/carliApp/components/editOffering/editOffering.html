@@ -8,7 +8,14 @@
             <button type="button" class="carli-button cancel" busy-click="vm.cancel()" ng-if="false">Cancel
                 <fa name="ban"></fa>
             </button>
+            <button type="button" class="carli-button cancel" busy-click="vm.clearManualFlag()" ng-if="vm.flagIsManuallySet()">Clear Manual Flag
+                <fa name="remove"></fa>
+            </button>
         </div>
+
+<br><span>manual flag: {{ vm.manualFlag }}</span>
+<br><span>user touched: {{ vm.userTouchedFlag }}</span>
+
     </div>
 
     <div role="gridcell" aria-describedby="product-column-header" class="column product" ng-if="vm.shouldShowColumn('product')">
@@ -53,6 +60,6 @@
     </div>
 
     <div role="gridcell" aria-describedby="flag-column-header" class="column flag" ng-if="vm.shouldShowColumn('flag')">
-        <checkbox ng-click="vm.userClickedFlag()" ng-model="vm.offering.flagged" class="flag"></checkbox>
+        <checkbox ng-click="vm.userClickedFlag()" ng-model="vm.manualFlag" class="flag"></checkbox>
     </div>
 </form>
