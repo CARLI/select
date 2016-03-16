@@ -108,7 +108,7 @@ function editOfferingController(activityLogService, alertService, cycleService, 
     }
 
     function flagIsManuallySet() {
-        return typeof vm.offering.flagged !== 'undefined';
+        return typeof vm.offering.flagged !== 'undefined' || vm.userTouchedFlag;
     }
 
     function offeringFlaggedState() {

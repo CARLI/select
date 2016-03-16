@@ -192,6 +192,15 @@
                                 }
                             }
 
+                            &.carli-flag {
+                                input[type="checkbox"] {
+                                    & + label,
+                                    &:checked + label {
+                                        color: $purple;
+                                    }
+                                }
+                            }
+                            
                             &.focused {
                                 background: transparent;
                                 .checkbox-display {
