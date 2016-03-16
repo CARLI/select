@@ -45,6 +45,10 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
                         selectedLastYear: selectedLastYear(),
                         pricingLastYear: pricingLastYear(),
                         offering: offering,
+                        offeringIsFlagged: offeringService.getFlaggedState(offering, scope.cycle),
+                        offeringWasFlaggedByCarli: (offering.flagged === true),
+                        offeringWasUnFlaggedByCarli: (offering.flagged === false),
+                        offeringFlagTitle: offeringFlagTitle(),
                         columns: translateColumnArrayToObject(scope.columns)
                     };
                     element.html( template(values) );
@@ -77,6 +81,15 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
                             }
                         });
                     });
+                }
+
+                function offeringFlagTitle() {
+                    if (offering.flaggedReason) {
+                        return offering.flaggedReason[0];
+                    }
+                    if (offering.flagged === false) {
+                        return 'Flag manually cleared by CARLI staff';
+                    }
                 }
             }
 

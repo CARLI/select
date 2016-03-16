@@ -224,11 +224,19 @@
 {{/if}}
 
 {{#if columns.flag}}
-<div role="gridcell" aria-describedby="flag-column-header" class="column flag" data-offering-id="{{ offering.id }}">
-    {{#if offering.flagged }}
-        <span class="fa fa-flag title="{{ offering.flaggedReason }}"></span>
+<div role="gridcell" aria-describedby="flag-column-header" class="column flag" title="{{ offeringFlagTitle }}">
+    {{#if offeringIsFlagged }}
+        {{#if offeringWasFlaggedByCarli }}
+            <span class="fa fa-flag carli-flag"></span>
+        {{else}}
+            <span class="fa fa-flag"></span>
+        {{/if}}
     {{else}}
-        <span class="fa fa-flag-o "></span>
+        {{#if offeringWasUnFlaggedByCarli }}
+            <span class="fa fa-flag-o carli-flag"></span>
+        {{else}}
+            <span class="fa fa-flag-o"></span>
+        {{/if}}
     {{/if}}
 </div>
 {{/if}}
