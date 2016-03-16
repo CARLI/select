@@ -1,9 +1,21 @@
 <form name="edit-offering-{{ vm.offering.id }}">
     <div role="gridcell" aria-describedby="library-column-header" class="column library" ng-if="vm.shouldShowColumn('library')">
         <library-info library="vm.offering.library"></library-info>
-        <button type="button" class="carli-button save" busy-click="vm.saveOffering()">Save
-            <fa name="floppy-o"></fa>
-        </button>
+        <div class="controls">
+            <button type="button" class="carli-button save" busy-click="vm.saveOffering()">Save
+                <fa name="floppy-o"></fa>
+            </button>
+            <button type="button" class="carli-button cancel" busy-click="vm.cancel()" ng-if="false">Cancel
+                <fa name="ban"></fa>
+            </button>
+            <button type="button" class="carli-button cancel" busy-click="vm.clearManualFlag()" ng-if="vm.flagIsManuallySet()">Clear Manual Flag
+                <fa name="remove"></fa>
+            </button>
+        </div>
+
+<br><span>manual flag: {{ vm.manualFlag }}</span>
+<br><span>user touched: {{ vm.userTouchedFlag }}</span>
+
     </div>
 
     <div role="gridcell" aria-describedby="product-column-header" class="column product" ng-if="vm.shouldShowColumn('product')">
@@ -48,6 +60,6 @@
     </div>
 
     <div role="gridcell" aria-describedby="flag-column-header" class="column flag" ng-if="vm.shouldShowColumn('flag')">
-        <checkbox ng-click="vm.userClickedFlag()" ng-model="vm.offering.flagged" class="flag"></checkbox>
+        <checkbox ng-click="vm.userClickedFlag()" ng-model="vm.manualFlag" class="flag" ng-class="{'carli-flag': vm.flagIsManuallySet()}"></checkbox>
     </div>
 </form>
