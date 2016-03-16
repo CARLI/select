@@ -107,12 +107,18 @@
                         margin-top: 0;
                     }
 
-                    button.save,
-                    button.edit {
+                    .controls {
                         bottom: .2rem;
                         left: 1rem;
+                        min-width: 165px;
                         position: absolute;
-                        min-width: 65px;
+
+                        .carli-button {
+                            display: block;
+                            margin-left: 0;
+                            margin-top: 0.5rem;
+                            text-align: left;
+                        }
                     }
 
                     &.product,
@@ -157,7 +163,6 @@
 
                         .fa {
                             @include font-size(22);
-                            cursor: pointer;
 
                             &.fa-flag-o {
                                 color: $gray;
@@ -165,6 +170,10 @@
 
                             &.fa-flag {
                                 color: $orange;
+                            }
+
+                            &.carli-flag {
+                                color: $purple;
                             }
                         }
 
@@ -183,6 +192,15 @@
                                 }
                             }
 
+                            &.carli-flag {
+                                input[type="checkbox"] {
+                                    & + label,
+                                    &:checked + label {
+                                        color: $purple;
+                                    }
+                                }
+                            }
+                            
                             &.focused {
                                 background: transparent;
                                 .checkbox-display {

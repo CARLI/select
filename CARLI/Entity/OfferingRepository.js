@@ -489,8 +489,6 @@ function initializeComputedValues(offerings) {
     offerings.forEach(function(offering){
         offering.display = offering.display || "with-price";
 
-        offering.flagged = getFlaggedState(offering);
-
         if (!offering.libraryComments) {
             offering.libraryComments = offering.product.comments;
         }

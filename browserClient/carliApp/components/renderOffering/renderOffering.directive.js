@@ -3,14 +3,11 @@ angular.module('carli.renderOffering')
 
 var offeringTemplatePromise;
 var editOfferingHandlerAttached;
-var flagOfferingHandlerAttached;
 var commentHandlerAttached;
 var offeringsById = {};
 
 function renderOfferingDirective($http, $q, $filter, alertService, editOfferingService, errorHandler, offeringService, productService){
     registerHandlebarsHelpers();
-
-    var flagActionInProgress = {};
 
     return {
         restrict: 'E',
@@ -22,7 +19,6 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
         template: '<div id="rendered-offering-{{ offeringId }}"></div>',
         link: function postLink(scope, element, attrs) {
             attachEditButtonHandlers();
-            attachFlagButtonHandlers();
             attachCommentHandlers();
 
             scope.$watch('offering',renderOfferingWhenReady, true);
@@ -43,18 +39,19 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
                 copyVendorCommentsToPricing(offering);
 
                 getOfferingTemplate().then(function (template) {
-                    offering.flagged = offeringService.getFlaggedState(offering, scope.cycle);
-
                     var values = {
                         thisYear: scope.cycle.year,
                         lastYear: lastYear,
                         selectedLastYear: selectedLastYear(),
                         pricingLastYear: pricingLastYear(),
                         offering: offering,
+                        offeringIsFlagged: offeringService.getFlaggedState(offering, scope.cycle),
+                        offeringWasFlaggedByCarli: (offering.flagged === true),
+                        offeringWasUnFlaggedByCarli: (offering.flagged === false),
+                        offeringFlagTitle: offeringFlagTitle(),
                         columns: translateColumnArrayToObject(scope.columns)
                     };
                     element.html( template(values) );
-
                 });
 
                 function selectedLastYear(){
@@ -85,6 +82,15 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
                         });
                     });
                 }
+
+                function offeringFlagTitle() {
+                    if (offering.flaggedReason) {
+                        return offering.flaggedReason[0];
+                    }
+                    if (offering.flagged === false) {
+                        return 'Flag manually cleared by CARLI staff';
+                    }
+                }
             }
 
             function getOfferingTemplate() {
@@ -114,52 +120,6 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
                     scope.$apply(function() {
                         editOfferingService.sendOfferingEditableMessage(offeringId);
                     });
-                }
-            }
-
-            function attachFlagButtonHandlers() {
-                if (flagOfferingHandlerAttached){
-                    return;
-                }
-
-                flagOfferingHandlerAttached = true;
-                $('body').on('click', 'render-offering .column.flag', flagOffering);
-
-                function flagOffering() {
-                    var offeringId = $(this).data('offering-id');
-
-                    if ( flagActionInProgress[offeringId] ){
-                        return;
-                    }
-
-                    disableFlagAction(offeringId);
-
-                    editOfferingService.toggleOfferingUserFlaggedState(offeringId)
-                        .then(alertSuccess, errorHandler)
-                        .then(offeringService.load)
-                        .then(updateFlagCssClass);
-
-                    function alertSuccess(offeringId) {
-                        alertService.putAlert('Offering updated', {severity: 'success'});
-                        return offeringId;
-                    }
-
-                    function updateFlagCssClass( updatedOffering ){
-                        //Do not use scope.offering here - it is always the offering of the first instance of this directive!
-                        var flag = $('.flag[data-offering-id='+updatedOffering.id+'] > .fa');
-                        var offeringShouldBeFlagged = offeringService.getFlaggedState(updatedOffering);
-
-                        if ( offeringShouldBeFlagged ){
-                            flag.removeClass('fa-flag-o').addClass('fa-flag');
-                        }
-                        else {
-                            flag.removeClass('fa-flag').addClass('fa-flag-o');
-                        }
-
-                        enableFlagAction(updatedOffering.id);
-
-                        return updatedOffering;
-                    }
                 }
             }
 
@@ -199,15 +159,6 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
             }
         }
     };
-
-
-    function disableFlagAction( offeringId ){
-        flagActionInProgress[offeringId] = true;
-    }
-
-    function enableFlagAction( offeringId ){
-        flagActionInProgress[offeringId] = false;
-    }
 
     function currency( number ) {
         return $filter('currency')(number);
