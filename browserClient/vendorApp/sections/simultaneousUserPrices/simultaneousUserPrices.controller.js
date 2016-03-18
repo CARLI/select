@@ -686,7 +686,8 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             pricing: {
                 site: Infinity,
                 su: suPricing
-            }
+            },
+            suPricesUpdated: true
         };
         if ( offeringService.getFlaggedState(testOffering, {}) ){
             $('.'+productId).addClass('flagged');
