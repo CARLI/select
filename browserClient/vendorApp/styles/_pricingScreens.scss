@@ -70,6 +70,11 @@ $background-flagged-flagged: rgba(255,18,0,.1);
                     .product-name {
                         position: absolute;
                     }
+
+					textarea.product-selectable {
+                        height: 100%;
+                        background-color: #DDD;
+                    }	
                 }
 
                 &.offering {
