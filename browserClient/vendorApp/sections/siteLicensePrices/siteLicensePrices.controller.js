@@ -449,7 +449,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
     function createReadOnlyProductCell(product) {
         var labelText = 'readonly field for product ' + product;
-        return $('<textarea class="product-selectable" role="text" cols="8" rows="4" readonly>')
+        return $('<textarea class="product-selectable" role="text" cols="13" rows="5" readonly style="height: 100%; background-color: #DDD;">')
             .attr('aria-label', labelText)
             .val(product);
     }
