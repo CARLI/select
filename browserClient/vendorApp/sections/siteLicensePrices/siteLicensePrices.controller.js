@@ -222,9 +222,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         $('body')
             .on('blur', '.price-editable', applyPricingChangesToCell)
             .on('focus', '.comment-marker', editCommentMarker)
-            .on('focus', '.price', editCell)
-			.on('focus', '.product-name', selectProduct)
-			.on('blur', '.product-selectable', blurProduct);
+            .on('focus', '.price', editCell);
     }
 
     function removeGridCellEvents() {
@@ -278,11 +276,6 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         clickAction(this);
     }
 
-	function selectProduct(e) {
-		var clickAction = selectCellProduct;
-		clickAction(this);
-	}
-
     function editCellComment(element) {
         var $el = $(element);
         var libraryId = $el.parent().data('libraryId');
@@ -317,15 +310,6 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             showCommentModalFor(offering, $cell);
         });
     }
-
-	function selectCellProduct(element) {
-		var $this = $(element);
-		var product = $this.text();
-		var $productCell = $this.parent();
-		var input = createReadOnlyProductCell(product);
-		$this.replaceWith(input);
-		input.focus().select();
-	}
 
     function setCommentMarkerVisibility(cell) {
         var offering = getOfferingForCellContents(cell);
@@ -445,28 +429,6 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             .attr('aria-label', labelText)
             .val(price);
     }
-
-
-    function createReadOnlyProductCell(product) {
-        var labelText = 'readonly field for product ' + product;
-        return $('<textarea class="product-selectable" role="text" cols="13" rows="5" readonly>')
-            .attr('aria-label', labelText)
-            .val(product);
-    }
-
-	function createUnselectedProductCell(product) {
-		var cell = $('<div tabindex="0" class="product-name" role="gridcell"></div>').text(product);
-
-        return cell;
-	}
-
-	function blurProduct(e) {
-		var $this = $(this);
-		var product = $this.val();
-
-		var newUnselectedCellContents = createUnselectedProductCell(product);
-		$this.replaceWith(newUnselectedCellContents);
-	}
 
     function applyPricingChangesToCell(e) {
         var $this = $(this);
