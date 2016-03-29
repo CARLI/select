@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.vendor')
     .controller('editVendorController', editVendorController);
 
-function editVendorController( $scope, $rootScope, activityLogService, config, entityBaseService, alertService, cycleService, errorHandler, licenseService, productService, vendorService ) {
+function editVendorController( $scope, $rootScope, $q, activityLogService, config, entityBaseService, alertService, cycleService, errorHandler, licenseService, productService, vendorService ) {
     var vm = this;
 
     vm.vendorId = $scope.vendorId;
@@ -135,28 +135,69 @@ function editVendorController( $scope, $rootScope, activityLogService, config, e
     function saveVendor() {
         removeEmptyContacts();
 
-        if (vm.vendorId !== undefined) {
-            vendorService.update(vm.vendor)
-                .then(function () {
-                    alertService.putAlert('Vendor updated', {severity: 'success'});
-                    resetVendorForm();
-                    hideModal();
-                    afterSubmitCallback();
-                    return logUpdateActivity();
-                })
-                .catch(errorHandler);
+        if (isNewVendor()) {
+            createVendor();
+        } else {
+            updateVendor();
         }
-        else {
-            vendorService.create(vm.vendor)
-                .then(function(newVendorId) {
-                    alertService.putAlert('Vendor added', {severity: 'success'});
-                    vm.vendor.id = newVendorId;
-                    logAddActivity();
-                    resetVendorForm();
-                    hideModal();
-                    afterSubmitCallback();
-                })
-                .catch(errorHandler);
+    }
+
+    function isNewVendor() {
+        return vm.vendorId === undefined;
+    }
+
+    function addVendorIdToModel(newVendorId) {
+        vm.vendor.id = newVendorId;
+    }
+
+    function createVendor() {
+        vendorService.create(vm.vendor)
+            .then(addVendorIdToModel)
+            .then(addVendorToActiveCycles)
+            .then(notifyUser)
+            .then(logAddActivity)
+            .then(resetVendorForm)
+            .then(hideModal)
+            .then(afterSubmitCallback)
+            .catch(errorHandler);
+
+        function notifyUser() {
+            alertService.putAlert('Vendor added', {severity: 'success'});
+        }
+    }
+
+    function updateVendor() {
+        vendorService.update(vm.vendor)
+            .then(notifyUser)
+            .then(resetVendorForm)
+            .then(hideModal)
+            .then(afterSubmitCallback)
+            .then(logAddActivity)
+            .catch(errorHandler);
+
+        function notifyUser() {
+            alertService.putAlert('Vendor updated', {severity: 'success'});
+        }
+    }
+
+    function addVendorToActiveCycles() {
+        Logger.log('createVendorDatabasesForActiveCycles');
+
+        return vendorService.createVendorDatabasesForActiveCycles()
+            .then(replicateToVendorForActiveCycles)
+            .then(function (result) {
+                console.log('Returned from replication', result);
+            });
+
+        function replicateToVendorForActiveCycles() {
+            Logger.log('replicateToVendorForActiveCycles');
+            cycleService.listActiveCycles().then(function (cycles) {
+                return $q.all( cycles.map(replicateToVendorForCycle) );
+            });
+        }
+
+        function replicateToVendorForCycle(cycle) {
+            return vendorService.replicateDataToOneVendorForCycle(vm.vendor.id, cycle.id);
         }
     }
 
