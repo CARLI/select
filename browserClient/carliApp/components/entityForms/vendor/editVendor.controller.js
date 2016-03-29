@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.vendor')
     .controller('editVendorController', editVendorController);
 
-function editVendorController( $scope, $rootScope, activityLogService, config, entityBaseService, alertService, cycleService, errorHandler, licenseService, productService, vendorService ) {
+function editVendorController( $scope, $rootScope, $q, activityLogService, config, entityBaseService, alertService, cycleService, errorHandler, licenseService, productService, vendorService ) {
     var vm = this;
 
     vm.vendorId = $scope.vendorId;
@@ -181,7 +181,24 @@ function editVendorController( $scope, $rootScope, activityLogService, config, e
     }
 
     function addVendorToActiveCycles() {
-        // TODO
+        Logger.log('createVendorDatabasesForActiveCycles');
+
+        return vendorService.createVendorDatabasesForActiveCycles()
+            .then(replicateToVendorForActiveCycles)
+            .then(function (result) {
+                console.log('Returned from replication', result);
+            });
+
+        function replicateToVendorForActiveCycles() {
+            Logger.log('replicateToVendorForActiveCycles');
+            cycleService.listActiveCycles().then(function (cycles) {
+                return $q.all( cycles.map(replicateToVendorForCycle) );
+            });
+        }
+
+        function replicateToVendorForCycle(cycle) {
+            return vendorService.replicateDataToOneVendorForCycle(vm.vendor.id, cycle.id);
+        }
     }
 
     function getActiveProducts() {
