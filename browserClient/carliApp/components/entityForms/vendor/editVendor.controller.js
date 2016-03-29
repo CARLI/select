@@ -135,29 +135,53 @@ function editVendorController( $scope, $rootScope, activityLogService, config, e
     function saveVendor() {
         removeEmptyContacts();
 
-        if (vm.vendorId !== undefined) {
-            vendorService.update(vm.vendor)
-                .then(function () {
-                    alertService.putAlert('Vendor updated', {severity: 'success'});
-                    resetVendorForm();
-                    hideModal();
-                    afterSubmitCallback();
-                    return logUpdateActivity();
-                })
-                .catch(errorHandler);
+        if (isNewVendor()) {
+            createVendor();
+        } else {
+            updateVendor();
         }
-        else {
-            vendorService.create(vm.vendor)
-                .then(function(newVendorId) {
-                    alertService.putAlert('Vendor added', {severity: 'success'});
-                    vm.vendor.id = newVendorId;
-                    logAddActivity();
-                    resetVendorForm();
-                    hideModal();
-                    afterSubmitCallback();
-                })
-                .catch(errorHandler);
+    }
+
+    function isNewVendor() {
+        return vm.vendorId === undefined;
+    }
+
+    function addVendorIdToModel(newVendorId) {
+        vm.vendor.id = newVendorId;
+    }
+
+    function createVendor() {
+        vendorService.create(vm.vendor)
+            .then(addVendorIdToModel)
+            .then(addVendorToActiveCycles)
+            .then(notifyUser)
+            .then(logAddActivity)
+            .then(resetVendorForm)
+            .then(hideModal)
+            .then(afterSubmitCallback)
+            .catch(errorHandler);
+
+        function notifyUser() {
+            alertService.putAlert('Vendor added', {severity: 'success'});
         }
+    }
+
+    function updateVendor() {
+        vendorService.update(vm.vendor)
+            .then(notifyUser)
+            .then(resetVendorForm)
+            .then(hideModal)
+            .then(afterSubmitCallback)
+            .then(logAddActivity)
+            .catch(errorHandler);
+
+        function notifyUser() {
+            alertService.putAlert('Vendor updated', {severity: 'success'});
+        }
+    }
+
+    function addVendorToActiveCycles() {
+        // TODO
     }
 
     function getActiveProducts() {
