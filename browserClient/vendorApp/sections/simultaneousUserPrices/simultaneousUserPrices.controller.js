@@ -164,6 +164,10 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         vm.suLevels.forEach(function (level) {
             makeSuPricingRow(level);
         });
+
+        vm.products.forEach(function (product) {
+            updateFlaggedStatusForProduct(product.id);
+        });
     }
 
     function makeSuPricingRow(level) {
