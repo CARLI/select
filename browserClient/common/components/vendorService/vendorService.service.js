@@ -4,6 +4,7 @@ angular.module('common.vendorService')
 function vendorService( CarliModules, $q, errorHandler ) {
 
     var vendorModule = CarliModules.Vendor;
+    var VendorDatabaseModule = CarliModules.VendorDatabaseMiddleware;
 
     return {
         list:   function() { return $q.when( vendorModule.list()).catch(errorHandler); },
@@ -14,6 +15,8 @@ function vendorService( CarliModules, $q, errorHandler ) {
         getVendorsById: function(ids) {
             return $q.when( vendorModule.getVendorsById(ids))
                 .catch(errorHandler);
-        }
+        },
+        createVendorDatabasesForActiveCycles: VendorDatabaseModule.createVendorDatabasesForActiveCycles,
+        replicateDataToOneVendorForCycle: VendorDatabaseModule.replicateDataToOneVendorForCycle
     };
 }

@@ -203,7 +203,7 @@ function runMiddlewareServer(){
                         .catch(sendError(res));
                 }
             });
-            authorizedRoute('get', '/create-all-vendor-databases', carliAuth.requireStaff, function (req, res) {
+            authorizedRoute('post', '/create-all-vendor-databases', carliAuth.requireStaff, function (req, res) {
                 vendorDatabases.createVendorDatabasesForActiveCycles()
                     .then(sendOk(res))
                     .catch(sendError(res));
