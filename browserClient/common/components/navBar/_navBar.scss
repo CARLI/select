@@ -8,6 +8,7 @@ $height: 54px;
 $border: 1px solid $border-color;
 $border-top-width: 3px;
 $nav-button-width: 138px;
+$nav-min-width: 998px;
 
 nav[nav-bar] {
     background: $bg-color;
@@ -18,12 +19,17 @@ nav[nav-bar] {
     @include font-size(15);
     line-height: 18px;
     text-transform: uppercase;
+    min-width: $nav-min-width;
 
     ul {
         @include flexbox;
         list-style: outside none none;
         margin: 0 $page-gutter;
         padding: 0;
+	
+	@media (max-width: $nav-min-width) {
+	    margin: 0;
+	}
     }
 
     li:first-child {
