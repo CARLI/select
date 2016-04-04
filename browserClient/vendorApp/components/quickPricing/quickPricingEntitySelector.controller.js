@@ -9,6 +9,7 @@ function quickPricingEntitySelectorController() {
     vm.selectAll = selectAll;
     vm.selectNone = selectNone;
     vm.setAlphaFilter = setAlphaFilter;
+    vm.checkEntity = checkEntity;
 
     var filterFunctions = null;
 
@@ -53,5 +54,9 @@ function quickPricingEntitySelectorController() {
             var firstLetter = entity.name[0].toLowerCase();
             return firstLetter >= lower && firstLetter <= upper;
         };
+    }
+
+    function checkEntity(entityId) {
+	vm.selectedEntityIds[entityId] = !vm.selectedEntityIds[entityId];
     }
 }
