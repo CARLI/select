@@ -3,6 +3,7 @@ $bg-color: $purple;
 $fg-color: $white;
 
 $height: 110px;
+$carli-header-min-width: 998px;
 
 header.carli-header {
     color: $fg-color;
@@ -11,6 +12,10 @@ header.carli-header {
     background-repeat: no-repeat;
     height: 110px;
     position: relative;
+
+    @media (max-width: $carli-header-min-width) {
+	min-width: $carli-header-min-width;
+    }
 
     .app-name {
         font-family: 'Dosis';
