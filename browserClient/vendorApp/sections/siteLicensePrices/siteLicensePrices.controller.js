@@ -367,9 +367,13 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         else if ( newPrice !== null && newPrice != offering.pricing.site ){
             //Logger.log('set offering price to '+newPrice+' (was '+offering.pricing.site+')');
             offering.pricing.site = newPrice;
-            offering.siteLicensePriceUpdated = new Date().toISOString();
-            vm.changedOfferings.push(offering);
+            markOfferingUpdated(offering);
         }
+    }
+
+    function markOfferingUpdated(offering) {
+        offering.siteLicensePriceUpdated = new Date().toISOString();
+        vm.changedOfferings.push(offering);
     }
 
     function applyCssClassesToOfferingCell( offeringCell, offering ){
@@ -586,13 +590,14 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             if ( shouldApplyBulkPricingComment ){
                 offering.vendorComments = offering.vendorComments || {};
                 offering.vendorComments.site = allQuickPricingArguments.bulkComment;
-                vm.changedOfferings.push(offering);
             }
         }
 
         function updateCellContents(offeringCell, offering, value ){
             applyBulkPricingComment(offering);
             applyNewCellPricingToOffering(offeringCell, offering, value);
+            markOfferingUpdated(offering);
+            
             applyCssClassesToOfferingCell(offeringCell, offering);
 
             var newReadOnlyCellContents = createReadOnlyOfferingCell(offering.pricing.site);
