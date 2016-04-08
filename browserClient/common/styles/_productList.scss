@@ -128,7 +128,13 @@ ul.product-list.subscriptions {
             border-top: $default-border;
 
             .column.product-info {
+                @include body-text;
                 flex-basis: 33%;
+
+                .h3 {
+                    margin: 0;
+                }
+
             }
 
             .column.license-info {
