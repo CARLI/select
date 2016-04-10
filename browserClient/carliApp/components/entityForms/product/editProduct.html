@@ -30,22 +30,22 @@
             <div class="column">
                 <label for="vendor">Vendor</label>
                 <view-edit-typeahead ng-model="vm.product.vendor" options="vm.vendorList" edit-mode="vm.newProduct" input-id="vendor">
-                    <span class="value"><a ng-href="/vendor/{{ vm.product.vendor.id }}">{{ vm.product.vendor.name || '-' }}</a></span>
+                    <span class="value"><a ng-href="/vendor/{{ vm.product.vendor.id }}">{{ vm.product.vendor.name || 'N/A' }}</a></span>
                 </view-edit-typeahead>
 
                 <label for="productUrl">Product URL <aside role="note">(Vendor can provide)</aside></label>
                 <view-edit-text-field ng-model="vm.product.productUrl" edit-mode="vm.editable" input-id="productUrl">
-                    <span class="value">{{ vm.product.productUrl || '-' }}</span>
+                    <span class="value">{{ vm.product.productUrl || 'N/A' }}</span>
                 </view-edit-text-field>
 
                 <label for="description">Product Description <aside role="note">(Vendor can provide)</aside></label>
                 <view-edit-text-area ng-model="vm.product.description" edit-mode="vm.editable" input-id="description">
-                    <span class="value">{{ vm.product.description || '-' }}</span>
+                    <span class="value">{{ vm.product.description || 'N/A' }}</span>
                 </view-edit-text-area>
 
                 <label for="comments">Comments for Libraries</label>
                 <view-edit-text-area ng-model="vm.product.comments" edit-mode="vm.editable" input-id="comments">
-                    <span class="value">{{ vm.product.comments || '-' }}</span>
+                    <span class="value">{{ vm.product.comments || 'N/A' }}</span>
                 </view-edit-text-area>
 
                 <div class="column">
@@ -110,12 +110,12 @@
                         <div class="warning" ng-show="!vm.productLicenseIsValid()">Invalid License</div>
                         <label for="contractNumber">Contract Number</label>
                         <div>
-                            <span class="value">{{ vm.product.license.contractNumber || '-' }}</span>
+                            <span class="value">{{ vm.product.license.contractNumber || 'N/A' }}</span>
                         </div>
 
                         <label for="detailCode">Detail Codes</label>
                         <view-edit-select ng-model="vm.product.detailCode" items="vm.productDetailCodeOptions" edit-mode="vm.editable" input-id="detailCode">
-                            <span class="value">{{ vm.product.detailCode || '-' }}</span>
+                            <span class="value">{{ vm.product.detailCode || 'N/A' }}</span>
                         </view-edit-select>
                     </div>
                 </div>
