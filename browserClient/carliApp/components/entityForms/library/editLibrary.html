@@ -27,32 +27,32 @@
                 <div class="column">
                     <label for="libraryFte">Full Time Enrollment</label>
                     <view-edit-integer ng-model="vm.library.fte" edit-mode="vm.editable" input-id="libraryFte">
-                        <span class="value">{{ vm.library.fte || '-' }}</span>
+                        <span class="value">{{ vm.library.fte || 'N/A' }}</span>
                     </view-edit-integer>
 
                     <label for="libraryFteInfo">Additional FTE Information:</label>
                     <view-edit-text-field ng-model="vm.library.fteInfo" edit-mode="vm.editable" input-id="libraryFteInfo">
-                        <span class="value">{{ vm.library.fteInfo || '-' }}</span>
+                        <span class="value">{{ vm.library.fteInfo || 'N/A' }}</span>
                     </view-edit-text-field>
 
                     <label for="libraryInstitutionYears">Institution Type (2 year/4 year):</label>
                     <view-edit-select ng-model="vm.library.institutionYears" items="vm.institutionYearsOptions" edit-mode="false" input-id="libraryInstitutionYears">
-                        <span class="value">{{ vm.library.institutionYears || '-' }}</span>
+                        <span class="value">{{ vm.library.institutionYears || 'N/A' }}</span>
                     </view-edit-select>
 
                     <label for="libraryInstitutionType">Institution Type (Private/Public):</label>
                     <view-edit-select ng-model="vm.library.institutionType" items="vm.institutionTypeOptions" edit-mode="false" input-id="libraryInstitutionType">
-                        <span class="value">{{ vm.library.institutionType || '-' }}</span>
+                        <span class="value">{{ vm.library.institutionType || 'N/A' }}</span>
                     </view-edit-select>
 
                     <label for="libraryIpAddresses">IP Addresses</label>
                     <view-edit-text-area ng-model="vm.library.ipAddresses" edit-mode="vm.editable" input-id="libraryIpAddresses">
-                        <span class="value">{{ vm.library.ipAddresses || '-' }}</span>
+                        <span class="value">{{ vm.library.ipAddresses || 'N/A' }}</span>
                     </view-edit-text-area>
 
                     <label for="libraryMembershipLevel">Membership Level</label>
                     <view-edit-select ng-model="vm.library.membershipLevel" items="vm.membershipLevelOptions" edit-mode="false" input-id="libraryMembershipLevel">
-                        <span class="value">{{ vm.library.membershipLevel || '-' }}</span>
+                        <span class="value">{{ vm.library.membershipLevel || 'N/A' }}</span>
                     </view-edit-select>
 
                     <label for="libraryIshareMember">I-Share Member</label>
@@ -62,7 +62,7 @@
 
                     <label for="libraryGar">General Account Receivable</label>
                     <view-edit-text-field ng-model="vm.library.gar" edit-mode="vm.editable" input-id="libraryGar">
-                        <span class="value">{{ vm.library.gar || '-'}}</span>
+                        <span class="value">{{ vm.library.gar || 'N/A'}}</span>
                     </view-edit-text-field>
 
                     <label for="excludeFromBannerFeed">Exclude from Banner export</label>

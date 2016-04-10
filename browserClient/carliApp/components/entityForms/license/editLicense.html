@@ -22,12 +22,12 @@
                 <div class="column">
                     <label for="vendor">Vendor</label>
                     <view-edit-typeahead ng-model="vm.license.vendor" options="vm.vendorList" edit-mode="vm.newLicense" input-id="vendor">
-                        <span class="value">{{ vm.license.vendor.name || '-' }}</span>
+                        <span class="value">{{ vm.license.vendor.name || 'N/A' }}</span>
                     </view-edit-typeahead>
 
                     <label for="contractNumber">Contract Number</label>
                     <view-edit-text-field ng-model="vm.license.contractNumber"  edit-mode="vm.editable" input-id="contractNumber">
-                        <span class="value">{{ vm.license.contractNumber || '-' }}</span>
+                        <span class="value">{{ vm.license.contractNumber || 'N/A' }}</span>
                     </view-edit-text-field>
 
                     <div class="label">Redacted License</div>
@@ -42,12 +42,12 @@
 
                     <label for="eResourceComments">Internal E-Resource Comments</label>
                     <view-edit-text-area class="e-resource-comments" ng-model="vm.license.eResourceComments" edit-mode="vm.editable" input-id="eResourceComments">
-                        <span class="value">{{ vm.license.eResourceComments || '-' }}</span>
+                        <span class="value">{{ vm.license.eResourceComments || 'N/A' }}</span>
                     </view-edit-text-area>
 
                     <label for="businessComments">Internal Business Services Comments</label>
                     <view-edit-text-area class="business-comments" ng-model="vm.license.businessComments" edit-mode="vm.editable" input-id="businessComments">
-                        <span class="value">{{ vm.license.businessComments || '-' }}</span>
+                        <span class="value">{{ vm.license.businessComments || 'N/A' }}</span>
                     </view-edit-text-area>
 
                     <div class="unlabeled-element">
@@ -63,7 +63,7 @@
                 <div class="column">
                     <label for="effectiveDate">Date Effective</label>
                     <view-edit-date ng-model="vm.license.effectiveDate" edit-mode="vm.editable" input-id="effectiveDate">
-                        <span class="value">{{ (vm.license.effectiveDate | date:'MM/dd/yyyy') || '-' }}</span>
+                        <span class="value">{{ (vm.license.effectiveDate | date:'MM/dd/yyyy') || 'N/A' }}</span>
                     </view-edit-date>
 
                     <label for="totalTermStartDate">Total Contract Term</label>
@@ -71,13 +71,13 @@
                         <div class="date-group">
                             <label for="totalTermStartDate">Start Date</label>
                             <view-edit-date class="start-date" ng-model="vm.license.totalTermStartDate" edit-mode="vm.editable" input-id="totalTermStartDate">
-                                <span class="value">{{ (vm.license.totalTermStartDate | date:'MM/dd/yyyy') || '-' }}</span>
+                                <span class="value">{{ (vm.license.totalTermStartDate | date:'MM/dd/yyyy') || 'N/A' }}</span>
                             </view-edit-date>
                         </div>
                         <div class="date-group">
                             <label for="totalTermEndDate">End Date</label>
                             <view-edit-date class="end-date" ng-model="vm.license.totalTermEndDate" edit-mode="vm.editable" input-id="totalTermEndDate">
-                                <span class="value">{{ (vm.license.totalTermEndDate | date:'MM/dd/yyyy') || '-' }}</span>
+                                <span class="value">{{ (vm.license.totalTermEndDate | date:'MM/dd/yyyy') || 'N/A' }}</span>
                             </view-edit-date>
                         </div>
                     </div>
@@ -87,20 +87,20 @@
                         <div class="date-group">
                             <label for="currentTermStartDate">Start Date</label>
                             <view-edit-date class="start-date" ng-model="vm.license.currentTermStartDate" edit-mode="vm.editable" input-id="currentTermStartDate">
-                                <span class="value">{{ (vm.license.currentTermStartDate | date:'MM/dd/yyyy') || '-' }}</span>
+                                <span class="value">{{ (vm.license.currentTermStartDate | date:'MM/dd/yyyy') || 'N/A' }}</span>
                             </view-edit-date>
                         </div>
                         <div class="date-group">
                             <label for="currentTermEndDate">End Date</label>
                             <view-edit-date class="end-date" ng-model="vm.license.currentTermEndDate" edit-mode="vm.editable" input-id="currentTermEndDate">
-                                <span class="value">{{ (vm.license.currentTermEndDate | date:'MM/dd/yyyy') || '-' }}</span>
+                                <span class="value">{{ (vm.license.currentTermEndDate | date:'MM/dd/yyyy') || 'N/A' }}</span>
                             </view-edit-date>
                         </div>
                     </div>
 
                     <label for="remainingRenewals">Remaining Renewals</label>
                     <view-edit-integer ng-model="vm.license.remainingRenewals" edit-mode="vm.editable" input-id="remainingRenewals">
-                        <span class="value">{{ vm.license.remainingRenewals || '-' }}</span>
+                        <span class="value">{{ vm.license.remainingRenewals || 'N/A' }}</span>
                     </view-edit-integer>
 
                     <aside>Note: these fields are manually edited.</aside>
@@ -110,52 +110,52 @@
                         <div class="term">
                             <label for="downloadTerms">Download</label>
                             <view-edit-yes-no-other ng-model="vm.license.terms.downloadTerms" edit-mode="vm.editable" input-id="downloadTerms">
-                                <span class="value">{{ vm.license.terms.downloadTerms || '-' }}</span>
+                                <span class="value">{{ vm.license.terms.downloadTerms || 'N/A' }}</span>
                             </view-edit-yes-no-other>
                         </div>
                         <div class="term">
                             <label for="coursePacksTerms">Course Packs</label>
                             <view-edit-yes-no-other ng-model="vm.license.terms.coursePacksTerms" edit-mode="vm.editable" input-id="coursePacksTerms">
-                                <span class="value">{{ vm.license.terms.coursePacksTerms || '-' }}</span>
+                                <span class="value">{{ vm.license.terms.coursePacksTerms || 'N/A' }}</span>
                             </view-edit-yes-no-other>
                         </div>
 
                         <div class="term">
                             <label for="interLibraryLoanTerms">ILL</label>
                             <view-edit-yes-no-other ng-model="vm.license.terms.interLibraryLoanTerms" edit-mode="vm.editable" input-id="interLibraryLoanTerms">
-                                <span class="value">{{ vm.license.terms.interLibraryLoanTerms || '-' }}</span>
+                                <span class="value">{{ vm.license.terms.interLibraryLoanTerms || 'N/A' }}</span>
                             </view-edit-yes-no-other>
                         </div>
                         <div class="term">
                             <label for="printTerms">Print (in accordance with the Copyright Act)</label>
                             <view-edit-yes-no-other ng-model="vm.license.terms.printTerms" edit-mode="vm.editable" input-id="printTerms">
-                                <span class="value">{{ vm.license.terms.printTerms || '-' }}</span>
+                                <span class="value">{{ vm.license.terms.printTerms || 'N/A' }}</span>
                             </view-edit-yes-no-other>
                         </div>
 
                         <div class="term">
                             <label for="limitedScholarlySharingTerms">Limited Sharing for Scholarly Purposes</label>
                             <view-edit-yes-no-other ng-model="vm.license.terms.limitedScholarlySharingTerms" edit-mode="vm.editable" input-id="limitedScholarlySharingTerms">
-                                <span class="value">{{ vm.license.terms.limitedScholarlySharingTerms || '-' }}</span>
+                                <span class="value">{{ vm.license.terms.limitedScholarlySharingTerms || 'N/A' }}</span>
                             </view-edit-yes-no-other>
                         </div>
                         <div class="term">
                             <label for="walkinTerms">Use by Walk-ins</label>
                             <view-edit-yes-no-other ng-model="vm.license.terms.walkinTerms" edit-mode="vm.editable" input-id="walkinTerms">
-                                <span class="value">{{ vm.license.terms.walkinTerms || '-' }}</span>
+                                <span class="value">{{ vm.license.terms.walkinTerms || 'N/A' }}</span>
                             </view-edit-yes-no-other>
                         </div>
 
                         <div class="term">
                             <label for="eReservesTerms">E-Reserves</label>
                             <view-edit-yes-no-other ng-model="vm.license.terms.eReservesTerms" edit-mode="vm.editable" input-id="eReservesTerms">
-                                <span class="value">{{ vm.license.terms.eReservesTerms || '-' }}</span>
+                                <span class="value">{{ vm.license.terms.eReservesTerms || 'N/A' }}</span>
                             </view-edit-yes-no-other>
                         </div>
                         <div class="term">
                             <label for="hasConfidentialityTerms">Confidentiality Terms</label>
                             <view-edit-yes-no-other ng-model="vm.license.terms.hasConfidentialityTerms" edit-mode="vm.editable" input-id="hasConfidentialityTerms">
-                                <span class="value">{{ vm.license.terms.hasConfidentialityTerms || '-' }}</span>
+                                <span class="value">{{ vm.license.terms.hasConfidentialityTerms || 'N/A' }}</span>
                             </view-edit-yes-no-other>
                         </div>
                     </div>
