@@ -30,7 +30,7 @@
             </div>
             <div class="content" ng-if="vm.openProduct[offering.product.id]">
                 <div class="column product-info">
-                    <div class="label">Vendor Website</div>
+                    <div class="label" ng-if="(offering.product.productUrl || offering.product.vendor.websiteUrl)">Product Website</div>
                     <div class="h3" ng-bind-html="(offering.product.productUrl || offering.product.vendor.websiteUrl) | linky:'_blank'"></div>
 
                     <div class="label">Product Description</div>
