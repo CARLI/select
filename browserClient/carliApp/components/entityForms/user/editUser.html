@@ -27,7 +27,7 @@
         <fieldset>
             <label for="email">Email</label>
             <view-edit-text-field ng-model="vm.user.email" edit-mode="vm.newUser" input-id="email">
-                <span class="value">{{ vm.user.email || '-' }}</span>
+                <span class="value">{{ vm.user.email || 'N/A' }}</span>
             </view-edit-text-field>
 
             <label ng-show="vm.editable && vm.isCurrentUser" for="password">Password</label>
@@ -45,12 +45,12 @@
 
             <label ng-show="vm.userType === 'vendor'" for="selectedVendor">Vendor</label>
             <view-edit-select-object ng-show="vm.userType === 'vendor'" ng-model="vm.selectedVendor" input-id="selectedVendor" objects="vm.vendors" label-property="name" track-by="id" edit-mode="vm.editable">
-                <span class="value">{{ vm.selectedVendor.name || '-' }}</span>
+                <span class="value">{{ vm.selectedVendor.name || 'N/A' }}</span>
             </view-edit-select-object>
 
             <label ng-show="vm.userType === 'library'" for="selectedLibrary">Library</label>
             <view-edit-select-object ng-show="vm.userType === 'library'" ng-model="vm.selectedLibrary" input-id="selectedLibrary" objects="vm.libraries" label-property="name" track-by="id" edit-mode="vm.editable">
-                <span class="value">{{ vm.selectedLibrary.name || '-' }}</span>
+                <span class="value">{{ vm.selectedLibrary.name || 'N/A' }}</span>
             </view-edit-select-object>
         </fieldset>
     </section>

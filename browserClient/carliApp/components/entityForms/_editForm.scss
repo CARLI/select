@@ -14,6 +14,10 @@
         cursor: pointer;
     }
 
+    label, .label {
+        margin-top: $label-margin-top + 5;
+    }
+
     .label {
         margin-bottom: $label-margin-bottom + 3;
 
