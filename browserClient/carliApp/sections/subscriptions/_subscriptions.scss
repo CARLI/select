@@ -41,6 +41,7 @@
             border-left: $default-border;
             border-right: $default-border;
             border-top: $default-border;
+            min-height: 53px;
             padding: 0.5rem 1rem;
             line-height: 2.6rem;
 
@@ -111,6 +112,30 @@
 
             checkbox {
                 float: right;
+            }
+        }
+
+        #open-system-modal {
+            form {
+                label:first-of-type {
+                    margin-top: 0;
+                }
+
+                checkbox {
+                    padding: 1rem;
+                }
+            }
+        }
+    }
+
+    #open-system-modal {
+        form {
+            label:first-of-type {
+                margin-top: 0;
+            }
+
+            checkbox {
+                margin-top: 1rem;
             }
         }
     }
