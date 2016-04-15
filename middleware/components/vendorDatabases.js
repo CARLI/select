@@ -300,6 +300,8 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
         });
 
     function loadCycleForVendor(vendor){
+        Logger.log('Updating flagged offerings for ' + vendor.name + ' for cycle ' + cycleId);
+
         var cycleRepository = cycleRepositoryForVendor(vendor);
         return cycleRepository.load(cycleId);
     }
@@ -318,6 +320,7 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
     }
 
     function getFlaggedOfferings(listOfAllUnexpandedOfferings){
+        Logger.log('  loaded ' + listOfAllUnexpandedOfferings.length + ' total offerings');
         return listOfAllUnexpandedOfferings.filter(flagged);
 
         function flagged(offering){
@@ -404,6 +407,8 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
     }
 
     function filterOfferingsForActiveLibraries(flaggedOfferings) {
+        Logger.log('  keeping ' + flaggedOfferings.length + ' flagged offerings');
+
         return flaggedOfferings.filter(offeringIsForActiveLibrary);
 
         function offeringIsForActiveLibrary(offering) {
@@ -412,6 +417,8 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
     }
 
     function computeFlaggedOfferingReasons(flaggedOfferings) {
+        Logger.log('  keeping ' + flaggedOfferings.length + ' flagged offerings for active libraries');
+
         var flaggedOfferingsCount = 0;
         var flaggedOfferingsReasonSummary = {};
         var flaggedOfferingsReasonProductDetails = {};
@@ -426,6 +433,8 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
                 flaggedOfferingsReasonProductDetails[reason] = flaggedOfferingsReasonProductDetails[reason] || {};
                 flaggedOfferingsReasonProductDetails[reason][productName] = (flaggedOfferingsReasonProductDetails[reason][productName] || 0) + 1;
             });
+
+            Logger.log('    flagged ' + productName + ' - ' + offering.library.name + ': ', offering.flaggedReason);
         });
 
         return {
