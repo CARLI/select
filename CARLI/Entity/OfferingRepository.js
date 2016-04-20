@@ -541,7 +541,8 @@ function getFlaggedState(offering, cycleArgument) {
         if ( offeringHasPricing() && vendorHasTouchedPricing(offering) ){
             var flagSiteLicensePrice = isThereAnSuOfferingForMoreThanTheSiteLicensePrice();
             var flagSuPrices = isThereAnSuOfferingForMoreUsersWithASmallerPrice();
-            var flagExceedsPriceCap = doesIncreaseFromLastYearExceedPriceCap();
+            var flagSiteExceedsPriceCap = doesSiteIncreaseFromLastYearExceedPriceCap();
+            var flagSuExceedsPriceCap = doesSuIncreaseFromLastYearExceedPriceCap();
             var flagGreaterThan5PercentReduction = doesDecreaseFromLastYearExceed5Percent();
 
             /**
@@ -556,14 +557,17 @@ function getFlaggedState(offering, cycleArgument) {
             if (flagSuPrices) {
                 flagReasons.push('for a SU level with a higher price than the price for a greater number of users');
             }
-            if (flagExceedsPriceCap) {
-                flagReasons.push('increased by more than the price cap');
+            if (flagSiteExceedsPriceCap) {
+                flagReasons.push('The site license price increased by more than the price cap');
+            }
+            if (flagSuExceedsPriceCap) {
+                flagReasons.push('One or more SU price increased by more than the price cap');
             }
             if (flagGreaterThan5PercentReduction) {
                 flagReasons.push('decreased by more than 5% compared to last year');
             }
 
-            var isFlagged = flagSiteLicensePrice || flagSuPrices || flagExceedsPriceCap || flagGreaterThan5PercentReduction;
+            var isFlagged = flagSiteLicensePrice || flagSuPrices || flagSiteExceedsPriceCap || flagSuExceedsPriceCap || flagGreaterThan5PercentReduction;
             if ( isFlagged ){
                 offering.flaggedReason = flagReasons;
             }
@@ -611,35 +615,39 @@ function getFlaggedState(offering, cycleArgument) {
         return false;
     }
 
-    function doesIncreaseFromLastYearExceedPriceCap() {
+    function doesSiteIncreaseFromLastYearExceedPriceCap() {
         var exceedsPriceCap = false;
-
         var priceCapMultiplier = 1 + (offering.product.priceCap / 100);
 
         if (canEnforcePriceCap()) {
             checkSitePriceIncrease();
-            if (hasSuPricing(offering)) {
-                offering.pricing.su.forEach(checkSuPriceIncrease);
-            }
         }
         else {
             Logger.warning('cannot enforce price cap for product', offering.product);
         }
         return exceedsPriceCap;
 
-        function canEnforcePriceCap() {
-            var knowLastYear = (lastYear > 0);
-            return knowLastYear &&
-                   offering.product.priceCap &&
-                   offering.history &&
-                   offering.history[lastYear] &&
-                   offering.history[lastYear].pricing;
-        }
         function checkSitePriceIncrease() {
             if (offering.pricing.site > priceCapMultiplier * offering.history[lastYear].pricing.site) {
                 exceedsPriceCap = true;
             }
         }
+    }
+
+    function doesSuIncreaseFromLastYearExceedPriceCap(){
+        var exceedsPriceCap = false;
+        var priceCapMultiplier = 1 + (offering.product.priceCap / 100);
+
+        if (canEnforcePriceCap()) {
+            if (hasSuPricing(offering)) {
+                offering.pricing.su.forEach(checkSuPriceIncrease);
+            }
+        }
+        else {
+            Logger.warning('cannot enforce price cap for product', (typeof offering.product === 'string' ? offering.product : offering.product.name));
+        }
+        return exceedsPriceCap;
+
         function checkSuPriceIncrease(suPricing) {
             var priceToCheck = suPricing.price;
             var lastYearsPrice = lookupLastYearsPriceForSu(offering, suPricing.users);
@@ -647,6 +655,15 @@ function getFlaggedState(offering, cycleArgument) {
                 exceedsPriceCap = true;
             }
         }
+    }
+
+    function canEnforcePriceCap() {
+        var knowLastYear = (lastYear > 0);
+        return knowLastYear &&
+            offering.product.priceCap &&
+            offering.history &&
+            offering.history[lastYear] &&
+            offering.history[lastYear].pricing;
     }
 
     function doesDecreaseFromLastYearExceed5Percent() {
