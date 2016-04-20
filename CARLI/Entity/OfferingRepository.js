@@ -622,6 +622,9 @@ function getFlaggedState(offering, cycleArgument) {
                 offering.pricing.su.forEach(checkSuPriceIncrease);
             }
         }
+        else {
+            Logger.warning('cannot enforce price cap for product', offering.product);
+        }
         return exceedsPriceCap;
 
         function canEnforcePriceCap() {
