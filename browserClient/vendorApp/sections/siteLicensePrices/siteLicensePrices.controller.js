@@ -398,7 +398,14 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         }
 
         function setOfferingFlaggedState(){
-            if ( vendorHasUpdatedTheOfferingsPricing() && offeringService.getFlaggedState(offering, vm.cycle) ){
+            var offeringIsFlagged = offeringService.getFlaggedState(offering, vm.cycle);
+            
+            var offeringReasonsApplicableToSiteLicensePricing = [];
+            if ( offering.flaggedReason ){
+                offeringReasonsApplicableToSiteLicensePricing = offering.flaggedReason.filter(applicableFlagReason);
+            }
+
+            if ( vendorHasUpdatedTheOfferingsPricing() && offeringIsFlagged && flagsAreNotExclusivelyAboutSuPrices() ){
                 if ( window.debug ){
                     console.log('flag offering', offering, vm.cycle);
                 }
@@ -412,14 +419,22 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
                 return offering.siteLicensePriceUpdated;
             }
 
+            function flagsAreNotExclusivelyAboutSuPrices(){
+                return offeringReasonsApplicableToSiteLicensePricing.length > 0;
+            }
+
             function addFlagDisplay(){
                 offeringCell.addClass('flagged');
-                offeringCell.attr('title', offering.flaggedReason[0]);
+                offeringCell.attr('title', offeringReasonsApplicableToSiteLicensePricing[0]);
             }
 
             function removeFlagDisplay(){
                 offeringCell.removeClass('flagged');
                 offeringCell.attr('title', '');
+            }
+
+            function applicableFlagReason(reason){
+                return reason.indexOf('One or more SU prices') < 0 && reason.indexOf('SU prices must') < 0;
             }
         }
     }
