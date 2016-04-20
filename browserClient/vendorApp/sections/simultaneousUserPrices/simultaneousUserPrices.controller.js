@@ -1,7 +1,7 @@
 angular.module('vendor.sections.simultaneousUserPrices')
     .controller('simultaneousUserPricesController', simultaneousUserPricesController);
 
-function simultaneousUserPricesController($scope, $q, $filter, alertService, authService, csvExportService, cycleService, offeringService, productService, simultaneousUserPricesCsvData, vendorDataService, vendorStatusService){
+function simultaneousUserPricesController($scope, $q, $filter, alertService, authService, csvExportService, cycleService, offeringService, productService, simultaneousUserPricesCsvData, vendorDataService, vendorStatusService) {
     var vm = this;
     vm.changedProductIds = {};
     vm.loadingPromise = null;
@@ -45,17 +45,17 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     }
 
     function loadProducts() {
-        return productService.listActiveProductsForVendorId( vm.vendorId ).then(function (products) {
+        return productService.listActiveProductsForVendorId(vm.vendorId).then(function (products) {
             vm.products = $filter('orderBy')(products, 'name');
             return products;
         });
     }
 
-    function getSuPricingForAllProducts( productList ){
-        return $q.all( productList.map(loadSuLevelsForProduct) );
+    function getSuPricingForAllProducts(productList) {
+        return $q.all(productList.map(loadSuLevelsForProduct));
 
-        function loadSuLevelsForProduct( product ){
-            return offeringService.getOneOfferingForProductId(product.id).then(function(offering){
+        function loadSuLevelsForProduct(product) {
+            return offeringService.getOneOfferingForProductId(product.id).then(function (offering) {
                 var representativeOffering = offering || {};
                 var pricingForProduct = representativeOffering.pricing || {};
                 var suPricingForProduct = pricingForProduct.su || [];
@@ -69,9 +69,9 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                 return vm.suPricingByProduct[product.id];
             });
 
-            function convertArrayOfPricingObjectsToMappingObject( suPricing ){
+            function convertArrayOfPricingObjectsToMappingObject(suPricing) {
                 var suPricingMap = {};
-                suPricing.forEach(function( suPricingObject ){
+                suPricing.forEach(function (suPricingObject) {
                     suPricingMap[suPricingObject.users] = suPricingObject.price;
                 });
                 return suPricingMap;
@@ -87,54 +87,58 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         }
     }
 
-    function initializeSuLevelsFromPricing(){
+    function initializeSuLevelsFromPricing() {
         var combinedSuLevels = {};
 
-        vm.products.forEach(function(product){
+        vm.products.forEach(function (product) {
             var pricingObject = vm.suPricingByProduct[product.id];
-            Object.keys(pricingObject).forEach(function(suLevel){
+            Object.keys(pricingObject).forEach(function (suLevel) {
                 combinedSuLevels[suLevel] = true;
             });
         });
 
         vm.suLevels = Object.keys(combinedSuLevels).map(makeSuLevel);
 
-        if ( vm.suLevels.length === 0 ){
-            vm.suLevels = [1,2,3].map(makeSuLevel);
+        if (vm.suLevels.length === 0) {
+            vm.suLevels = [1, 2, 3].map(makeSuLevel);
         }
     }
 
-    function makeSuLevel(level){
+    function makeSuLevel(level) {
         return {
-            id: 'su-'+level,
+            id: 'su-' + level,
             name: suLevelName(level),
             shortName: suLevelShortName(level),
             users: level - 0
         };
 
-        function suLevelName(level){
+        function suLevelName(level) {
             return level + ' Simultaneous User' + (level > 1 ? 's' : '');
         }
 
-        function suLevelShortName(level){
+        function suLevelShortName(level) {
             return level + ' S.U.';
         }
     }
 
     function initializeSelectedProductIds() {
-        vm.products.forEach(function(product) {
+        vm.products.forEach(function (product) {
             vm.selectedProductIds[product.id] = true;
         });
         $scope.$watchCollection(getSelectedProductIds, updateVisibilityOfCellsForSelectedProducts);
-        function getSelectedProductIds() { return vm.selectedProductIds; }
+        function getSelectedProductIds() {
+            return vm.selectedProductIds;
+        }
     }
 
     function initializeSelectedSuLevelIds() {
-        vm.suLevels.forEach(function(su) {
+        vm.suLevels.forEach(function (su) {
             vm.selectedSuLevelIds[su.id] = true;
         });
         $scope.$watchCollection(getSelectedSuLevelIds, updateVisibilityOfRowsForSelectedSuLevels);
-        function getSelectedSuLevelIds() { return vm.selectedSuLevelIds; }
+        function getSelectedSuLevelIds() {
+            return vm.selectedSuLevelIds;
+        }
     }
 
     function updateVisibilityOfRowsForSelectedSuLevels(selectedEntities) {
@@ -209,13 +213,13 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             var offeringWrapper = $('<div class="column offering input">');
             var offeringCellContent = createOfferingCellContent(priceForProduct);
 
-            if ( offeringCellContent.hasClass('no-pricing')){
+            if (offeringCellContent.hasClass('no-pricing')) {
                 offeringCellContent.attr('aria-label', 'Enter pricing for ' + suLevel.users + ' simultaneous users for ' + product.name);
             }
 
             var offeringCell = offeringWrapper.append(offeringCellContent);
 
-            offeringWrapper.on('click', function() {
+            offeringWrapper.on('click', function () {
                 $(this).children().first().focus();
             });
 
@@ -223,7 +227,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             offeringCell.data('productId', product.id);
             offeringCell.addClass(product.id);
 
-            if ( vm.updatesByProductId[product.id] ){
+            if (vm.updatesByProductId[product.id]) {
                 offeringCell.addClass('updated');
             }
 
@@ -239,7 +243,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
 
         vm.modalCommentText = vm.suCommentsByProduct[productId][numSu] || '';
 
-        vm.saveModalComment = function(newCommentText) {
+        vm.saveModalComment = function (newCommentText) {
             return offeringService
                 .updateSuCommentForAllLibrariesForProduct(vm.vendorId, productId, numSu, newCommentText)
                 .then(updateMap)
@@ -260,8 +264,8 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         $('#vendor-comment-modal').modal();
     }
 
-    function createOfferingCellContent(price){
-        if ( price > 0 || price === 0 ){
+    function createOfferingCellContent(price) {
+        if (price > 0 || price === 0) {
             return createReadOnlyOfferingCell(price);
         }
         else {
@@ -270,7 +274,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     }
 
     function createReadOnlyOfferingCell(price) {
-        if ( typeof price !== 'undefined' && price !== null && typeof price.toFixed === 'function' ){
+        if (typeof price !== 'undefined' && price !== null && typeof price.toFixed === 'function') {
             price = price.toFixed(2);
         }
         var cell = $('<div tabindex="0" class="price" role="gridcell"></div>').text(price);
@@ -280,7 +284,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         return cell;
     }
 
-    function createEmptyOfferingCell(){
+    function createEmptyOfferingCell() {
         var cell = $('<div tabindex="0" class="price no-pricing" role="gridcell">&nbsp;</div>');
         cell.on('focus', onReadOnlyClick);
         addCommentMarkerTo(cell);
@@ -324,7 +328,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
 
         markProductChangedForCell(offeringCell);
 
-        var price = parseFloat( $cell.val() );
+        var price = parseFloat($cell.val());
         var div = createOfferingCellContent(price);
 
         $cell.replaceWith(div);
@@ -334,7 +338,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
 
     function editComment(cell) {
         showCommentModalFor(cell);
-        $scope.$apply(function() {
+        $scope.$apply(function () {
             vm.isCommentModeEnabled = false;
         });
     }
@@ -349,7 +353,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         return commentMarker;
 
         function editExistingComment() {
-            $scope.$apply(function() {
+            $scope.$apply(function () {
                 showCommentModalFor(cell);
             });
         }
@@ -364,7 +368,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         var suComments = vm.suCommentsByProduct[productId] || {};
         var commentText = suComments[numSu] || '';
 
-        if ( commentText && !commentMarker.length ){
+        if (commentText && !commentMarker.length) {
             commentMarker = addCommentMarkerTo($cell);
         }
 
@@ -375,20 +379,20 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         }
     }
 
-    function markProductChangedForCell( jqueryCell ){
+    function markProductChangedForCell(jqueryCell) {
         var productId = jqueryCell.data('productId');
         vm.changedProductIds[productId] = true;
     }
 
-    function getSuPricingFromFormForProduct(productId){
+    function getSuPricingFromFormForProduct(productId) {
         var result = [];
 
-        vm.suLevels.forEach(function(suLevel){
+        vm.suLevels.forEach(function (suLevel) {
             var users = suLevel.users;
-            var $productCellForSu = $('.price-row.su-'+users+' .'+productId);
-            var newPrice = parseFloat( $productCellForSu.text() );
+            var $productCellForSu = $('.price-row.su-' + users + ' .' + productId);
+            var newPrice = parseFloat($productCellForSu.text());
 
-            if ( !isNaN(newPrice) ){
+            if (!isNaN(newPrice)) {
                 result.push({
                     users: users,
                     price: newPrice
@@ -399,24 +403,24 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         return result;
     }
 
-    function saveOfferings(){
+    function saveOfferings() {
         var newSuPricingByProduct = {};
 
-        vm.products.forEach(function(product){
+        vm.products.forEach(function (product) {
             newSuPricingByProduct[product.id] = getSuPricingFromFormForProduct(product.id);
         });
 
-        var productIdsToUpdate = Object.keys(vm.changedProductIds).filter(function(id){
+        var productIdsToUpdate = Object.keys(vm.changedProductIds).filter(function (id) {
             return vm.changedProductIds[id];
         });
 
         vm.loadingPromise = vendorDataService.isVendorAllowedToMakeChangesToCycle(vm.user, vm.cycle)
-            .then(function(vendorIsAllowedToSavePrices){
-                if ( !vendorIsAllowedToSavePrices ){
+            .then(function (vendorIsAllowedToSavePrices) {
+                if (!vendorIsAllowedToSavePrices) {
                     alertService.putAlert('Pricing for the current cycle has been closed. Please contact CARLI staff for more information.', {severity: 'danger'});
                     return false;
                 }
-                else if ( productIdsToUpdate.length < 4 ){
+                else if (productIdsToUpdate.length < 4) {
                     return updateChangedProductsConcurrently();
                 }
                 else {
@@ -429,21 +433,21 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
 
         return vm.loadingPromise;
 
-        function updateChangedProductsConcurrently(){
-            return $q.all( productIdsToUpdate.map(updateOfferingsForAllLibrariesForProduct) )
+        function updateChangedProductsConcurrently() {
+            return $q.all(productIdsToUpdate.map(updateOfferingsForAllLibrariesForProduct))
                 .then(updateVendorFlaggedOfferings)
                 .then(updateVendorStatus)
                 .then(syncData)
-                .then(function(){
+                .then(function () {
                     vm.changedProductIds = {};
-                    Logger.log('saved '+productIdsToUpdate.length+' products');
+                    Logger.log('saved ' + productIdsToUpdate.length + ' products');
                 })
-                .catch(function(err){
+                .catch(function (err) {
                     console.error(err);
                 });
         }
 
-        function updateChangedProductsSeriallyWithProgressBar(){
+        function updateChangedProductsSeriallyWithProgressBar() {
             var saveAllProductsPromise = $q.defer();
 
             vm.productsSaved = 0;
@@ -459,19 +463,19 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
 
             saveNextProduct();
 
-            function saveNextProduct(){
-                if ( vm.productsSaved === vm.totalProducts ){
+            function saveNextProduct() {
+                if (vm.productsSaved === vm.totalProducts) {
                     serialSaveFinished();
                     return;
                 }
 
-                return updateOfferingsForAllLibrariesForProduct( productIdsToUpdate[vm.productsSaved] )
-                    .then(function(){
+                return updateOfferingsForAllLibrariesForProduct(productIdsToUpdate[vm.productsSaved])
+                    .then(function () {
                         vm.productsSaved++;
                         vm.productsSavedProgress = Math.floor((vm.productsSaved / vm.totalProducts) * 100);
                         saveNextProduct();
                     })
-                    .catch(function(err){
+                    .catch(function (err) {
                         hideSaveDialog();
                         saveAllProductsPromise.reject(err);
                     });
@@ -480,11 +484,11 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             return saveAllProductsPromise.promise;
 
 
-            function serialSaveFinished(){
+            function serialSaveFinished() {
                 return updateVendorFlaggedOfferings()
                     .then(updateVendorStatus)
                     .then(syncData) //Enhancement: get couch replication job progress, show it in the 2nd progress bar
-                    .finally(function(){
+                    .finally(function () {
                         hideSaveDialog();
                         saveAllProductsPromise.resolve();
                     });
@@ -496,40 +500,40 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             }
         }
 
-        function updateOfferingsForAllLibrariesForProduct( productId ){
+        function updateOfferingsForAllLibrariesForProduct(productId) {
             var newSuPricing = newSuPricingByProduct[productId];
-            return offeringService.updateSuPricingForAllLibrariesForProduct(vm.vendorId, productId, newSuPricing, vm.bulkCommentsTemporaryStorage[productId] );
+            return offeringService.updateSuPricingForAllLibrariesForProduct(vm.vendorId, productId, newSuPricing, vm.bulkCommentsTemporaryStorage[productId]);
         }
 
-        function updateVendorStatus(){
-            return vendorStatusService.updateVendorStatusActivity( 'Simultaneous User Prices Updated', vm.vendorId, vm.cycle );
+        function updateVendorStatus() {
+            return vendorStatusService.updateVendorStatusActivity('Simultaneous User Prices Updated', vm.vendorId, vm.cycle);
         }
 
-        function updateVendorFlaggedOfferings(){
-            return vendorStatusService.updateVendorStatusFlaggedOfferings( vm.vendorId, vm.cycle );
+        function updateVendorFlaggedOfferings() {
+            return vendorStatusService.updateVendorStatusFlaggedOfferings(vm.vendorId, vm.cycle);
         }
 
-        function clearTemporaryBulkCommentsStorage(){
+        function clearTemporaryBulkCommentsStorage() {
             vm.bulkCommentsTemporaryStorage = {};
         }
 
-        function saveProductsSuccess(){
+        function saveProductsSuccess() {
             alertService.putAlert('Pricing saved.', {severity: 'success'});
         }
 
-        function saveProductsError(err){
+        function saveProductsError(err) {
             alertService.putAlert('There was a problem saving your changes. Please contact CARLI staff for more information.', {severity: 'danger'});
         }
     }
 
-    function syncData(){
+    function syncData() {
         return cycleService.syncDataBackToCarli();
     }
 
-    function addSuPricingLevel( numberOfUsers ){
-        var newLevel = makeSuLevel( numberOfUsers );
+    function addSuPricingLevel(numberOfUsers) {
+        var newLevel = makeSuLevel(numberOfUsers);
 
-        if ( suLevelExists() ){
+        if (suLevelExists()) {
             return;
         }
 
@@ -539,8 +543,8 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         makeSuPricingRow(newLevel);
 
 
-        function suLevelExists(){
-            return vm.suLevels.filter(function(suLevel){
+        function suLevelExists() {
+            return vm.suLevels.filter(function (suLevel) {
                 return suLevel.users === numberOfUsers;
             }).length;
         }
@@ -551,8 +555,8 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             return vm.selectedSuLevelIds[suLevel.id];
         });
 
-        if ( mode === 'dollarAmount' ){
-            var suLevelPricesToInsert = selectedSuLevels.map(function(suLevel){
+        if (mode === 'dollarAmount') {
+            var suLevelPricesToInsert = selectedSuLevels.map(function (suLevel) {
                 return {
                     users: suLevel.users,
                     price: pricingBySuLevel[suLevel.users]
@@ -562,7 +566,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             suLevelPricesToInsert.forEach(applySuPricingToSelectedProducts);
         }
         else {
-            var suLevelPercentagesToApply = selectedSuLevels.map(function(suLevel){
+            var suLevelPercentagesToApply = selectedSuLevels.map(function (suLevel) {
                 return {
                     users: suLevel.users,
                     percent: pricingBySuLevel[suLevel.users]
@@ -572,7 +576,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             suLevelPercentagesToApply.forEach(applySuPercentageIncreaseToSelectedProducts);
         }
 
-        if ( allQuickPricingArguments.addComment ){
+        if (allQuickPricingArguments.addComment) {
             storeBulkCommentsUntilUserSaves();
         }
 
@@ -591,8 +595,8 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                 markProductChanged(productId);
             }
 
-            function commentsBySuLevelArray(){
-                return selectedSuLevels.map(function(suLevel){
+            function commentsBySuLevelArray() {
+                return selectedSuLevels.map(function (suLevel) {
                     return {
                         users: suLevel.users,
                         comment: allQuickPricingArguments.bulkComment
@@ -611,13 +615,13 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             }
         }
 
-        function updateCommentMarkers(){
-            $('.offering .price').each(function(index){
+        function updateCommentMarkers() {
+            $('.offering .price').each(function (index) {
                 setCommentMarkerVisibility(this);
             });
         }
 
-        function applySuPricingToSelectedProducts( pricingItem ){
+        function applySuPricingToSelectedProducts(pricingItem) {
             var users = pricingItem.users;
             var pricingValue = parseFloat(pricingItem.price);
 
@@ -627,56 +631,56 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
 
             var newPrice = pricingValue.toFixed(2);
 
-            $('.price-row.su-'+users+' .offering').each(function(i, cell){
+            $('.price-row.su-' + users + ' .offering').each(function (i, cell) {
                 var $cell = $(cell);
                 var productId = $cell.data('productId');
 
-                if ( productIsSelected(productId) ){
+                if (productIsSelected(productId)) {
                     $('.price', $cell).text(newPrice).removeClass('no-pricing');
                     markProductChanged(productId);
                 }
             });
         }
 
-        function applySuPercentageIncreaseToSelectedProducts( pricingItem ){
+        function applySuPercentageIncreaseToSelectedProducts(pricingItem) {
             var users = pricingItem.users;
             var percentIncrease = pricingItem.percent;
 
-            $('.price-row.su-'+users+' .offering').each(function(i, cell){
+            $('.price-row.su-' + users + ' .offering').each(function (i, cell) {
                 var $cell = $(cell);
                 var productId = $cell.data('productId');
 
-                if ( productIsSelected(productId) ){
+                if (productIsSelected(productId)) {
                     applyPercentageIncreaseToCell();
                 }
 
-                function applyPercentageIncreaseToCell(){
+                function applyPercentageIncreaseToCell() {
                     var originalValue = parseFloat($cell.text());
-                    var newValue = (100 + percentIncrease)/100 * originalValue;
+                    var newValue = (100 + percentIncrease) / 100 * originalValue;
                     newValue = newValue.toFixed(2);
-                    $('.price', $cell).text( newValue ).removeClass('no-pricing');
+                    $('.price', $cell).text(newValue).removeClass('no-pricing');
                     markProductChanged(productId);
                 }
             });
         }
 
-        function markProductChanged( productId ){
+        function markProductChanged(productId) {
             vm.changedProductIds[productId] = true;
         }
     }
 
-    function productIsSelected(productId){
+    function productIsSelected(productId) {
         return vm.selectedProductIds[productId];
     }
 
-    function selectedProductIds(){
+    function selectedProductIds() {
         return Object.keys(vm.selectedProductIds).filter(productIsSelected);
     }
 
-    function nextSuLevel(){
+    function nextSuLevel() {
         var max = 0;
-        vm.suLevels.forEach(function(su){
-            if ( su.users > max ){
+        vm.suLevels.forEach(function (su) {
+            if (su.users > max) {
                 max = su.users;
             }
         });
@@ -694,8 +698,8 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             suPricesUpdated: true
         };
         
-        $productCells = $('.'+productId);
-        if ( offeringService.getFlaggedState(testOffering, {}) ){
+        $productCells = $('.' + productId);
+        if (offeringService.getFlaggedState(testOffering, {})) {
             $productCells.addClass('flagged');
             $productCells.attr('title', testOffering.flaggedReason[0]);
         }
@@ -710,7 +714,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
 
         vm.loadingPromise = simultaneousUserPricesCsvData(vm.products, vm.suLevels, pricingData)
             .then(csvExportService.exportToCsv)
-            .then(function(csvContent){
+            .then(function (csvContent) {
                 csvExportService.browserDownloadCsv(csvContent, makeFilename());
             })
             .catch(function (err) {
@@ -719,21 +723,21 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
 
         return vm.loadingPromise;
 
-        function gatherPricingDataForCsvExport(){
+        function gatherPricingDataForCsvExport() {
             var suPricesByProduct = {};
 
-            vm.suLevels.forEach(function(suLevel){
+            vm.suLevels.forEach(function (suLevel) {
                 var users = suLevel.users;
                 suPricesByProduct[users] = {};
 
-                var $productRow = $('.pricing-grid .price-row.su-'+users);
+                var $productRow = $('.pricing-grid .price-row.su-' + users);
 
-                $('.offering', $productRow).each(function(){
+                $('.offering', $productRow).each(function () {
                     var $cell = $(this);
                     var productId = $cell.data('productId');
-                    var price = parseFloat( $cell.text() );
+                    var price = parseFloat($cell.text());
 
-                    if ( !isNaN(price) ){
+                    if (!isNaN(price)) {
                         suPricesByProduct[users][productId] = price;
                     }
                 });
@@ -749,8 +753,8 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         }
     }
 
-    function getProductById(productId){
-        return vm.products.filter(function(product){
+    function getProductById(productId) {
+        return vm.products.filter(function (product) {
             return product.id === productId;
         })[0];
     }
