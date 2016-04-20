@@ -19,7 +19,7 @@ function validOfferingData() {
     };
 }
 
-describe('Repository getFlaggedState', function () {
+describe.only('Repository getFlaggedState', function () {
     it('should return true if the offering has property set to true', function () {
         var testOffering = validOfferingData();
         testOffering.flagged = true;
@@ -329,7 +329,7 @@ describe('Repository getFlaggedState', function () {
                 }]
             };
             offeringRepository.getFlaggedState(testOffering);
-            expect(testOffering.flaggedReason).to.deep.equal(['a site license price for less than a SU price']);
+            expect(testOffering.flaggedReason).to.deep.equal(['The site license price must be greater than any SU price']);
         });
 
         it('should be empty if the offering had invalid pricing which was then fixed', function () {
