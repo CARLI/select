@@ -372,6 +372,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         else if (newPrice !== null && newPrice != offering.pricing.site) {
             //Logger.log('set offering price to '+newPrice+' (was '+offering.pricing.site+')');
             offering.pricing.site = newPrice;
+            offering.display = 'with-price';
             markOfferingUpdated(offering);
         }
     }
@@ -564,7 +565,6 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         Logger.log('error syncing data', err);
     }
 
-
     function quickPricingCallback(mode, quickPricingValue, allQuickPricingArguments) {
         var selectedLibraryIds = Object.keys(vm.selectedLibraryIds).filter(function (libraryId) {
             return vm.selectedLibraryIds[libraryId];
@@ -600,7 +600,19 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
                     var fte = $offeringCell.data('fte');
                     newValue = quickPricingValue * fte;
                 }
+                else if (mode == 'deletePricing') {
+                    newValue = null;
+                    delete offering.pricing.site;
+                    delete offering.vendorComments.site;
 
+                    if (allQuickPricingArguments.deleteSuPricingToo) {
+                        offering.pricing.su = [];
+                        offering.vendorComments.su = [];
+                    }
+                    if (allQuickPricingArguments.hideProduct) {
+                        offering.display = 'none';
+                    }
+                }
                 updateCellContents($offeringCell, offering, newValue);
             }
         });
