@@ -693,11 +693,15 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             },
             suPricesUpdated: true
         };
+        
+        $productCells = $('.'+productId);
         if ( offeringService.getFlaggedState(testOffering, {}) ){
-            $('.'+productId).addClass('flagged');
+            $productCells.addClass('flagged');
+            $productCells.attr('title', testOffering.flaggedReason[0]);
         }
         else {
-            $('.'+productId).removeClass('flagged');
+            $productCells.removeClass('flagged');
+            $productCells.attr('title', '');
         }
     }
 
