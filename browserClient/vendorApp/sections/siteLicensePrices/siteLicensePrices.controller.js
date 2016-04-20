@@ -1,7 +1,7 @@
 angular.module('vendor.sections.siteLicensePrices')
     .controller('siteLicensePricesController', siteLicensePricesController);
 
-function siteLicensePricesController($scope, $q, $filter, alertService, authService, csvExportService, cycleService, libraryService, offeringService, productService, siteLicensePricesCsvData, vendorDataService, vendorStatusService){
+function siteLicensePricesController($scope, $q, $filter, alertService, authService, csvExportService, cycleService, libraryService, offeringService, productService, siteLicensePricesCsvData, vendorDataService, vendorStatusService) {
     var vm = this;
 
     vm.changedOfferings = [];
@@ -55,7 +55,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         var heightOfSiteHeader = 165;
         var heightOfPageHeader = 105;
 
-        $('.page-header').affix({ offset: { top: heightOfSiteHeader } });
+        $('.page-header').affix({offset: {top: heightOfSiteHeader}});
 
         $(document).on(headerPinnedEvent, headerPinned);
         $(document).on(headerUnpinnedEvent, headerUnpinned);
@@ -69,7 +69,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         }
     }
 
-    function initializePricingGrid(){
+    function initializePricingGrid() {
         vm.products = [];
 
         resetSelectedLibrariesAndProducts();
@@ -87,31 +87,31 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     }
 
     function loadProducts() {
-        return productService.listProductsWithOfferingsForVendorId( authService.getCurrentUser().vendor.id ).then(function (products) {
+        return productService.listProductsWithOfferingsForVendorId(authService.getCurrentUser().vendor.id).then(function (products) {
             vm.products = products.sort(byName);
             initializeSelectedProductIds();
         });
     }
 
-    function resetSelectedLibrariesAndProducts(){
+    function resetSelectedLibrariesAndProducts() {
         selectAllLibraries();
         selectAllProducts();
     }
 
-    function byName(entity1, entity2){
+    function byName(entity1, entity2) {
         var a = entity1.name.toLowerCase();
         var b = entity2.name.toLowerCase();
-        if ( a < b ){
+        if (a < b) {
             return -1;
-        } else if ( a > b ) {
+        } else if (a > b) {
             return 1;
         } else {
             return 0;
         }
     }
 
-    function selectAllLibraries(){
-        vm.libraries.forEach(function(library) {
+    function selectAllLibraries() {
+        vm.libraries.forEach(function (library) {
             vm.selectedLibraryIds[library.id] = true;
         });
     }
@@ -119,11 +119,13 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     function initializeSelectedLibraryIds() {
         selectAllLibraries();
         $scope.$watchCollection(getSelectedLibraryIds, updateVisibilityOfRowsForSelectedLibraries);
-        function getSelectedLibraryIds() { return vm.selectedLibraryIds; }
+        function getSelectedLibraryIds() {
+            return vm.selectedLibraryIds;
+        }
     }
 
-    function selectAllProducts(){
-        vm.products.forEach(function(product) {
+    function selectAllProducts() {
+        vm.products.forEach(function (product) {
             vm.selectedProductIds[product.id] = true;
         });
     }
@@ -131,7 +133,9 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     function initializeSelectedProductIds() {
         selectAllProducts();
         $scope.$watchCollection(getSelectedProductIds, updateVisibilityOfCellsForSelectedProducts);
-        function getSelectedProductIds() { return vm.selectedProductIds; }
+        function getSelectedProductIds() {
+            return vm.selectedProductIds;
+        }
     }
 
     function updateVisibilityOfRowsForSelectedLibraries(selectedEntities) {
@@ -195,7 +199,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         function generateOfferingCell(library, product) {
             var offering = offeringForProductAndLibrary(product.id, library.id);
             var textForPrice = '';
-            if ( offering && offering.pricing ){
+            if (offering && offering.pricing) {
                 textForPrice = offering.pricing.site;
             }
 
@@ -218,7 +222,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         }
     }
 
-    function attachGridCellEvents(){
+    function attachGridCellEvents() {
         removeGridCellEvents();
         $('body')
             .on('blur', '.price-editable', applyPricingChangesToCell)
@@ -236,7 +240,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
         vm.modalCommentText = offering.vendorComments.site;
 
-        vm.saveModalComment = function() {
+        vm.saveModalComment = function () {
             offering.vendorComments.site = vm.modalCommentText;
 
             return offeringService.update(offering)
@@ -261,7 +265,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     }
 
     function createReadOnlyOfferingCell(price) {
-        if ( typeof price !== 'undefined' && price !== null && typeof price.toFixed === 'function' ){
+        if (typeof price !== 'undefined' && price !== null && typeof price.toFixed === 'function') {
             price = price.toFixed(2);
         }
         var cell = $('<div tabindex="0" class="price" role="gridcell"></div>').text(price);
@@ -284,7 +288,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         var offering = vm.offeringsForLibraryByProduct[productId][libraryId];
 
         showCommentModalFor(offering, $el);
-        $scope.$apply(function() {
+        $scope.$apply(function () {
             vm.isCommentModeEnabled = false;
         });
     }
@@ -307,7 +311,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         var productId = $cell.parent().data('productId');
         var offering = vm.offeringsForLibraryByProduct[productId][libraryId];
 
-        $scope.$apply(function() {
+        $scope.$apply(function () {
             showCommentModalFor(offering, $cell);
         });
     }
@@ -323,15 +327,15 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         }
     }
 
-    function offeringForProductAndLibrary( productId, libraryId ){
+    function offeringForProductAndLibrary(productId, libraryId) {
         if (vm.offeringsForLibraryByProduct[productId] && vm.offeringsForLibraryByProduct[productId][libraryId]) {
             return vm.offeringsForLibraryByProduct[productId][libraryId];
         }
         return null;
     }
 
-    function getOfferingForCellContents(cellContents){
-        return getOfferingForCell( cellContents.parent() );
+    function getOfferingForCellContents(cellContents) {
+        return getOfferingForCell(cellContents.parent());
     }
 
     function getOfferingForCell(offeringCell) {
@@ -340,15 +344,15 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         return offeringForProductAndLibrary(productId, libraryId);
     }
 
-    function applyNewCellPricingToOffering(offeringCell, offering, newPriceValue ){
-        var newPrice = parseFloat( newPriceValue );
+    function applyNewCellPricingToOffering(offeringCell, offering, newPriceValue) {
+        var newPrice = parseFloat(newPriceValue);
 
-        if ( isNaN(newPrice) ){
+        if (isNaN(newPrice)) {
             return;
         }
 
-        if ( !offering ){
-            if ( newPrice !== null ){
+        if (!offering) {
+            if (newPrice !== null) {
                 //Logger.log('no offering, add new one with price ', newPrice);
                 var productId = offeringCell.data('productId');
                 var libraryId = offeringCell.data('libraryId');
@@ -365,7 +369,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
                 vm.newOfferings.push(offering);
             }
         }
-        else if ( newPrice !== null && newPrice != offering.pricing.site ){
+        else if (newPrice !== null && newPrice != offering.pricing.site) {
             //Logger.log('set offering price to '+newPrice+' (was '+offering.pricing.site+')');
             offering.pricing.site = newPrice;
             markOfferingUpdated(offering);
@@ -377,8 +381,8 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         vm.changedOfferings.push(offering);
     }
 
-    function applyCssClassesToOfferingCell( offeringCell, offering ){
-        if ( offering ){
+    function applyCssClassesToOfferingCell(offeringCell, offering) {
+        if (offering) {
             delete offering.flaggedReason;
         }
         else {
@@ -388,8 +392,8 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         setOfferingUpdatedState();
         setOfferingFlaggedState();
 
-        function setOfferingUpdatedState(){
-            if ( offering.siteLicensePriceUpdated ) {
+        function setOfferingUpdatedState() {
+            if (offering.siteLicensePriceUpdated) {
                 offeringCell.addClass('updated');
             }
             else {
@@ -397,16 +401,16 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             }
         }
 
-        function setOfferingFlaggedState(){
+        function setOfferingFlaggedState() {
             var offeringIsFlagged = offeringService.getFlaggedState(offering, vm.cycle);
-            
+
             var offeringReasonsApplicableToSiteLicensePricing = [];
-            if ( offering.flaggedReason ){
+            if (offering.flaggedReason) {
                 offeringReasonsApplicableToSiteLicensePricing = offering.flaggedReason.filter(applicableFlagReason);
             }
 
-            if ( vendorHasUpdatedTheOfferingsPricing() && offeringIsFlagged && flagsAreNotExclusivelyAboutSuPrices() ){
-                if ( window.debug ){
+            if (vendorHasUpdatedTheOfferingsPricing() && offeringIsFlagged && flagsAreNotExclusivelyAboutSuPrices()) {
+                if (window.debug) {
                     console.log('flag offering', offering, vm.cycle);
                 }
                 addFlagDisplay();
@@ -415,25 +419,25 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
                 removeFlagDisplay();
             }
 
-            function vendorHasUpdatedTheOfferingsPricing(){
+            function vendorHasUpdatedTheOfferingsPricing() {
                 return offering.siteLicensePriceUpdated;
             }
 
-            function flagsAreNotExclusivelyAboutSuPrices(){
+            function flagsAreNotExclusivelyAboutSuPrices() {
                 return offeringReasonsApplicableToSiteLicensePricing.length > 0;
             }
 
-            function addFlagDisplay(){
+            function addFlagDisplay() {
                 offeringCell.addClass('flagged');
                 offeringCell.attr('title', offeringReasonsApplicableToSiteLicensePricing[0]);
             }
 
-            function removeFlagDisplay(){
+            function removeFlagDisplay() {
                 offeringCell.removeClass('flagged');
                 offeringCell.attr('title', '');
             }
 
-            function applicableFlagReason(reason){
+            function applicableFlagReason(reason) {
                 return reason.indexOf('One or more SU prices') < 0 && reason.indexOf('SU prices must') < 0;
             }
         }
@@ -443,7 +447,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         var library = getLibraryById(libraryId);
         var product = getProductById(productId);
         if (!library || !product) {
-            console.log('problem in createEditableOfferingCell for library ' + libraryId+' product ' + productId);
+            console.log('problem in createEditableOfferingCell for library ' + libraryId + ' product ' + productId);
             console.log('  library:', library);
             console.log('  product:', product);
         }
@@ -463,7 +467,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         applyCssClassesToOfferingCell(offeringCell, offering);
 
         var textForOfferingPrice = '';
-        if ( offering && offering.pricing ){
+        if (offering && offering.pricing) {
             textForOfferingPrice = offering.pricing.site;
         }
 
@@ -486,7 +490,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
     function saveOfferings() {
         vm.loadingPromise = vendorDataService.isVendorAllowedToMakeChangesToCycle(vm.user, vm.cycle)
-            .then(function(vendorIsAllowedToSavePrices) {
+            .then(function (vendorIsAllowedToSavePrices) {
                 if (vendorIsAllowedToSavePrices) {
                     return saveAllOfferings(vm.newOfferings, vm.changedOfferings);
                 }
@@ -498,11 +502,11 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         return vm.loadingPromise;
     }
 
-    function saveAllNewOfferings( newOfferings ){
+    function saveAllNewOfferings(newOfferings) {
         return $q.all(newOfferings.map(offeringService.create));
     }
 
-    function saveAllChangedOfferings( changedOfferings ){
+    function saveAllChangedOfferings(changedOfferings) {
         changedOfferings = changedOfferings.map(clearManualFlagOverrides);
         return $q.all(changedOfferings.map(offeringService.update));
 
@@ -512,52 +516,52 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         }
     }
 
-    function saveAllOfferings( newOfferings, changedOfferings ){
+    function saveAllOfferings(newOfferings, changedOfferings) {
         return $q.all([
-                saveAllNewOfferings(newOfferings),
-                saveAllChangedOfferings(changedOfferings)
-            ])
-            .then(function(arrays){
+            saveAllNewOfferings(newOfferings),
+            saveAllChangedOfferings(changedOfferings)
+        ])
+            .then(function (arrays) {
                 var newOfferingsCreated = arrays[0].length;
                 var oldOfferingsUpdated = arrays[1].length;
                 var count = newOfferingsCreated + oldOfferingsUpdated;
 
-                Logger.log('created '+newOfferingsCreated+' new offerings');
-                Logger.log('updated '+oldOfferingsUpdated+' old offerings');
+                Logger.log('created ' + newOfferingsCreated + ' new offerings');
+                Logger.log('updated ' + oldOfferingsUpdated + ' old offerings');
 
                 vm.newOfferings = [];
                 vm.changedOfferings = [];
 
-                if ( count ){
+                if (count) {
                     return initializePricingGrid();
                 }
                 else {
                     return $q.when();
                 }
             })
-            .catch(function(err){
-                Logger.log('error saving offerings',err);
+            .catch(function (err) {
+                Logger.log('error saving offerings', err);
             })
             .then(updateVendorFlaggedOfferings)
             .then(updateVendorStatus)
             .then(syncData)
             .catch(syncDataError);
 
-        function updateVendorStatus(){
-            return vendorStatusService.updateVendorStatusActivity( 'Site License Prices Updated', vm.vendorId, vm.cycle );
+        function updateVendorStatus() {
+            return vendorStatusService.updateVendorStatusActivity('Site License Prices Updated', vm.vendorId, vm.cycle);
         }
 
-        function updateVendorFlaggedOfferings(){
-            return vendorStatusService.updateVendorStatusFlaggedOfferings( vm.vendorId, vm.cycle );
+        function updateVendorFlaggedOfferings() {
+            return vendorStatusService.updateVendorStatusFlaggedOfferings(vm.vendorId, vm.cycle);
         }
     }
 
-    function syncData(){
+    function syncData() {
         return cycleService.syncDataBackToCarli();
     }
 
-    function syncDataError( err ){
-        Logger.log( 'error syncing data',err );
+    function syncDataError(err) {
+        Logger.log('error syncing data', err);
     }
 
 
@@ -571,7 +575,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
         var shouldApplyBulkPricingComment = allQuickPricingArguments.addComment;
 
-        $('#site-pricing-grid .offering').each(function(i, cell) {
+        $('#site-pricing-grid .offering').each(function (i, cell) {
             var newValue = null;
             var $offeringCell = $(cell);
 
@@ -579,7 +583,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             var productId = $offeringCell.data('productId');
             var offering = offeringForProductAndLibrary(productId, libraryId);
 
-            if ( cellShouldBeUpdated(libraryId, productId) ) {
+            if (cellShouldBeUpdated(libraryId, productId)) {
                 if (mode == 'dollarAmount') {
                     newValue = quickPricingValue;
                 }
@@ -588,11 +592,11 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
                     if (isNaN(originalValue)) {
                         return;
                     }
-                    newValue = (100 + quickPricingValue)/100 * originalValue;
-                    var newValueRoundedDown = Math.floor(newValue*100) / 100;
+                    newValue = (100 + quickPricingValue) / 100 * originalValue;
+                    var newValueRoundedDown = Math.floor(newValue * 100) / 100;
                     newValue = newValueRoundedDown;
                 }
-                else if (mode == 'byFte'){
+                else if (mode == 'byFte') {
                     var fte = $offeringCell.data('fte');
                     newValue = quickPricingValue * fte;
                 }
@@ -601,22 +605,22 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             }
         });
 
-        function cellShouldBeUpdated(libraryId, productId){
+        function cellShouldBeUpdated(libraryId, productId) {
             return selectedLibraryIds.indexOf(libraryId) != -1 && selectedProductIds.indexOf(productId) != -1;
         }
 
-        function applyBulkPricingComment(offering){
-            if ( shouldApplyBulkPricingComment ){
+        function applyBulkPricingComment(offering) {
+            if (shouldApplyBulkPricingComment) {
                 offering.vendorComments = offering.vendorComments || {};
                 offering.vendorComments.site = allQuickPricingArguments.bulkComment;
             }
         }
 
-        function updateCellContents(offeringCell, offering, value ){
+        function updateCellContents(offeringCell, offering, value) {
             applyBulkPricingComment(offering);
             applyNewCellPricingToOffering(offeringCell, offering, value);
             markOfferingUpdated(offering);
-            
+
             applyCssClassesToOfferingCell(offeringCell, offering);
 
             var newReadOnlyCellContents = createReadOnlyOfferingCell(offering.pricing.site);
@@ -628,7 +632,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     function downloadCsvDataForExistingPricing() {
         vm.loadingPromise = generateCsvData()
             .then(csvExportService.exportToCsv)
-            .then(function(csvContent){
+            .then(function (csvContent) {
                 csvExportService.browserDownloadCsv(csvContent, makeFilename());
             })
             .catch(function (err) {
@@ -662,10 +666,10 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
     function downloadCsvDataForComparisonPricing() {
         vm.loadingPromise = generateCsvData()
-            .then(function(results){
+            .then(function (results) {
                 return csvExportService.exportToCsv(results);
             })
-            .then(function(csvContent){
+            .then(function (csvContent) {
                 csvExportService.browserDownloadCsv(csvContent, makeFilename());
             })
             .catch(function (err) {
@@ -701,31 +705,31 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         vm.viewOptions[option] = !vm.viewOptions[option];
     }
 
-    function showHistoricalPricing(){
+    function showHistoricalPricing() {
         $('#historic-pricing-modal').modal().one('hide.bs.modal', killModalContentWhenModalHides);
         vm.historicPopupShowing = true;
 
         //not strictly necessary since the main concern is not building the historic grid at page load
-        function killModalContentWhenModalHides(event){
-            $scope.$apply(function(){
+        function killModalContentWhenModalHides(event) {
+            $scope.$apply(function () {
                 vm.historicPopupShowing = false;
             });
         }
     }
 
-    function getLibraryById(libraryId){
-        return vm.libraries.filter(function(library){
+    function getLibraryById(libraryId) {
+        return vm.libraries.filter(function (library) {
             return library.id === libraryId;
         })[0];
     }
 
-    function getProductById(productId){
-        return vm.products.filter(function(product){
+    function getProductById(productId) {
+        return vm.products.filter(function (product) {
             return product.id === productId;
         })[0];
     }
 
-    function onControllerDestroy( e ){
+    function onControllerDestroy(e) {
         removeGridCellEvents();
     }
 }
