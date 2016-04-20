@@ -358,6 +358,7 @@ function setSuPricingForAllLibrariesForProduct( productId, newSuPricing, vendorC
             }
             offering.pricing.su = newSuPricing.slice(0);
             offering.suPricesUpdated = new Date().toISOString();
+            offering.display = 'with-price';
             return offering;
         }
     }
