@@ -18,8 +18,7 @@ function validOfferingData() {
         }
     };
 }
-
-describe.only('Repository getFlaggedState', function () {
+describe('Repository getFlaggedState', function () {
     it('should return true if the offering has property set to true', function () {
         var testOffering = validOfferingData();
         testOffering.flagged = true;
@@ -176,7 +175,7 @@ describe.only('Repository getFlaggedState', function () {
         expect(offeringRepository.getFlaggedState(testOffering)).to.equal(true);
     });
 
-    it('should compute true if decrease from last years price exceeds 5%', function () {
+    it('should compute true if decrease from last years Site License price exceeds 5%', function () {
         var testOffering = validOfferingData();
         testOffering.siteLicensePriceUpdated = '2015-01-01';
         testOffering.cycle = {
@@ -185,7 +184,28 @@ describe.only('Repository getFlaggedState', function () {
         };
         testOffering.product.priceCap = 10;
         testOffering.pricing = {
-            site: 500,
+            site: 500
+        };
+        testOffering.history = {
+            2013: {
+                pricing: {
+                    site: 1000
+                }
+            }
+        };
+
+        expect(offeringRepository.getFlaggedState(testOffering)).to.equal(true);
+    });
+
+    it('should compute true if any decrease from last years SU price exceeds 5%', function () {
+        var testOffering = validOfferingData();
+        testOffering.siteLicensePriceUpdated = '2015-01-01';
+        testOffering.cycle = {
+            id: 'price-decrease-test-cycle',
+            year: 2014
+        };
+        testOffering.product.priceCap = 10;
+        testOffering.pricing = {
             su: [
                 {users: 1, price: 100},
                 {users: 2, price: 200},
@@ -195,11 +215,10 @@ describe.only('Repository getFlaggedState', function () {
         testOffering.history = {
             2013: {
                 pricing: {
-                    site: 1000,
                     su: [
-                        {users: 1, price: 200},
-                        {users: 2, price: 300},
-                        {users: 3, price: 400}
+                        {users: 1, price: 2000},
+                        {users: 2, price: 3000},
+                        {users: 3, price: 4000}
                     ]
                 }
             }
