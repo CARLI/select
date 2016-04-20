@@ -253,6 +253,11 @@ quick-pricing-su {
                     flex: 0 1 25%;
                     @include body-text;
 
+                    label {
+                        font-weight: normal;
+                        padding-left: 1rem;
+                    }
+
                     radio label {
                         padding-left: 2em;
                     }

@@ -36,11 +36,14 @@ function quickPricingSiteController($rootScope){
         if (vm.quickPricingArguments.mode == 'dollarAmount') {
             vm.quickPricingCallback('dollarAmount', vm.quickPricingArguments.dollarValue, vm.quickPricingArguments);
         }
-        if (vm.quickPricingArguments.mode == 'percentageIncrease') {
+        else if (vm.quickPricingArguments.mode == 'percentageIncrease') {
             vm.quickPricingCallback('percentageIncrease', vm.quickPricingArguments.percentValue, vm.quickPricingArguments);
         }
-        if (vm.quickPricingArguments.mode == 'byFte' ){
+        else if (vm.quickPricingArguments.mode == 'byFte' ){
             vm.quickPricingCallback('byFte', vm.quickPricingArguments.byFteValue, vm.quickPricingArguments);
+        }
+        else {
+            vm.quickPricingCallback(vm.quickPricingArguments.mode, null, vm.quickPricingArguments);
         }
     }
 
