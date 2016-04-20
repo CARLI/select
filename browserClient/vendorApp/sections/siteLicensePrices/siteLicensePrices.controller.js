@@ -219,6 +219,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     }
 
     function attachGridCellEvents(){
+        removeGridCellEvents();
         $('body')
             .on('blur', '.price-editable', applyPricingChangesToCell)
             .on('focus', '.comment-marker', editCommentMarker)
@@ -398,6 +399,9 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
         function setOfferingFlaggedState(){
             if ( vendorHasUpdatedTheOfferingsPricing() && offeringService.getFlaggedState(offering, vm.cycle) ){
+                if ( window.debug ){
+                    console.log('flag offering', offering, vm.cycle);
+                }
                 addFlagDisplay();
             }
             else {
@@ -405,7 +409,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             }
 
             function vendorHasUpdatedTheOfferingsPricing(){
-                return offering.siteLicensePriceUpdated || offering.suPricesUpdated;
+                return offering.siteLicensePriceUpdated;
             }
 
             function addFlagDisplay(){
