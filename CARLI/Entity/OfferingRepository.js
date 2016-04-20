@@ -539,13 +539,6 @@ function getFlaggedState(offering, cycleArgument) {
 
     function systemFlaggedState(){
         if ( offeringHasPricing() && vendorHasTouchedPricing(offering) ){
-            if (!canEnforcePriceCap()) {
-                Logger.warning('cannot enforce price cap for product', (typeof offering.product === 'string' ? offering.product : offering.product.name));
-            }
-            if (!canEnforceDecrease()) {
-                Logger.warning('cannot enforce price decrease for product', (typeof offering.product === 'string' ? offering.product : offering.product.name));
-            }
-
             var flagSiteLicensePrice = isThereAnSuOfferingForMoreThanTheSiteLicensePrice();
             var flagSuPrices = isThereAnSuOfferingForMoreUsersWithASmallerPrice();
             var flagSiteExceedsPriceCap = doesSiteIncreaseFromLastYearExceedPriceCap();
@@ -554,20 +547,20 @@ function getFlaggedState(offering, cycleArgument) {
             var flagGreaterThan5PercentSuReduction = doesSuDecreaseFromLastYearExceed5Percent();
 
             var flagReasons = [];
+            if (flagSiteExceedsPriceCap) {
+                flagReasons.push('The site license price increased by more than the price cap');
+            }
+            if (flagGreaterThan5PercentSiteReduction) {
+                flagReasons.push('The site license price decreased by more than 5% compared to last year');
+            }
             if (flagSiteLicensePrice) {
                 flagReasons.push('The site license price must be greater than any SU price');
             }
             if (flagSuPrices) {
                 flagReasons.push('SU prices must increase corresponding to the number of users');
             }
-            if (flagSiteExceedsPriceCap) {
-                flagReasons.push('The site license price increased by more than the price cap');
-            }
             if (flagSuExceedsPriceCap) {
-                flagReasons.push('One or more SU price increased by more than the price cap');
-            }
-            if (flagGreaterThan5PercentSiteReduction) {
-                flagReasons.push('The site license price decreased by more than 5% compared to last year');
+                flagReasons.push('One or more SU prices increased by more than the price cap');
             }
             if (flagGreaterThan5PercentSuReduction) {
                 flagReasons.push('One or more SU prices decreased by more than 5% compared to last year');
