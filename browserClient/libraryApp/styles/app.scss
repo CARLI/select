@@ -13,6 +13,7 @@ $fa-font-path: "/libraryApp/fonts";
 @import "../../common/styles/modalDialog";
 @import "../../common/styles/productList";
 @import "../../common/styles/carli";
+@import "../../common/styles/logoHeader";
 
 @import "../../common/components/alerts/alerts";
 @import "../../common/components/auth/auth";
@@ -32,7 +33,6 @@ $fa-font-path: "/libraryApp/fonts";
 }
 
 @import "../components/licenseList/licenseList";
-@import "../components/libraryHeader/libraryHeader";
 @import "../components/subscriptionButton/subscriptionButton";
 @import "../components/subscriptionProgress/subscriptionProgress";
 @import "../components/subscriptionSelections/subscriptionSelections";
