@@ -1,1 +1,10 @@
-<div class="label">Vendor Sales Contact</div>
+<div class="sales-contact" ng-if="vm.contact">
+    <div class="label">Vendor Sales Contact</div>
+    <div class="name">{{ vm.contact.name }}</div>
+
+    <span class="sales-contact__label">Email:</span>
+    <span class="sales-contact__email">{{ vm.contact.email }}</span>
+    <br>
+    <span class="sales-contact__label">Phone:</span>
+    <span class="sales-contact__phone">{{ vm.contact.phoneNumber }}</span>
+</div>
