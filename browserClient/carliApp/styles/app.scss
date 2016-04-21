@@ -13,6 +13,7 @@ $fa-font-path: "/carliApp/fonts";
 @import "../../common/styles/modalDialog";
 @import "../../common/styles/productList";
 @import "../../common/styles/carli";
+@import "../../common/styles/logoHeader";
 
 @import "tagsInput";
 @import "viewEditContact";
@@ -34,7 +35,6 @@ $fa-font-path: "/carliApp/fonts";
 @import "../components/editOffering/_editOffering";
 @import "../components/entityForms/editForm";
 @import "../components/goodSelect/goodSelect";
-@import "../components/carliHeader/carliHeader";
 @import "../components/entityForms/library/editLibrary";
 @import "../components/entityForms/license/editLicense";
 @import "../components/entityForms/product/editProduct";
