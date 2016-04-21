@@ -27,7 +27,8 @@ angular.module('library.app', [
     'library.userLookup',
     'library.userMenu',
     'library.fakeLibraryMenu',
-    'library.vendorCommentsTable'
+    'library.vendorCommentsTable',
+    'library.vendorSalesContact'
 ])
 .config(function($locationProvider){
     $locationProvider.html5Mode(true);
