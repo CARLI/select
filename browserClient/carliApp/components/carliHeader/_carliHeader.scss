@@ -1,39 +1,50 @@
-
-$bg-color: $purple;
 $fg-color: $white;
-
 $height: 110px;
 $carli-header-min-width: 998px;
 
 header.carli-header {
     color: $fg-color;
-    background-color: $bg-color;
-    background-image: url('/carliApp/components/carliHeader/images/header-background.png');
-    background-repeat: no-repeat;
+    background-color: $purple;
     height: 110px;
     position: relative;
 
     @media (max-width: $carli-header-min-width) {
-	min-width: $carli-header-min-width;
+	    min-width: $carli-header-min-width;
     }
 
-    .app-name {
-        font-family: 'Dosis';
-        font-weight: 400;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        @include font-size(30);
-        color: $fg-color;
-        padding-top: 50px;
+    .logo-group {
+        align-items: center;
+        @include flexbox();
+        padding-top: 25px;
         padding-left: $page-gutter;
-    }
 
-    .demo-mode {
-        display: none;
-        position: absolute;
-        top: 23px;
-        left: 263px;
-        font-size: 1.1rem;
-        color: #f57300;
+        img {
+            @include flex(0 0 auto);
+            height: 62px;
+            margin-right: 36px;
+            width: 198px;
+        }
+
+        .app-name {
+            color: $light-purple;
+            display: inline-block;
+            @include flex(0 0 auto);
+            font-family: 'Merriweather', serif;
+            @include font-size(22);
+            font-weight: 100;
+            margin: 0;
+            padding: 0;
+            position: relative;
+
+            &:before {
+                border-left: 1px solid $light-purple;
+                content: "";
+                display: inline-block;
+                height: 30px;
+                left: -18px;
+                position: absolute;
+                width: 1px;
+            }
+        }
     }
 }
