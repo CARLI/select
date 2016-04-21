@@ -358,6 +358,7 @@ function setSuPricingForAllLibrariesForProduct( productId, newSuPricing, vendorC
             }
             offering.pricing.su = newSuPricing.slice(0);
             offering.suPricesUpdated = new Date().toISOString();
+            offering.display = 'with-price';
             return offering;
         }
     }
@@ -541,29 +542,32 @@ function getFlaggedState(offering, cycleArgument) {
         if ( offeringHasPricing() && vendorHasTouchedPricing(offering) ){
             var flagSiteLicensePrice = isThereAnSuOfferingForMoreThanTheSiteLicensePrice();
             var flagSuPrices = isThereAnSuOfferingForMoreUsersWithASmallerPrice();
-            var flagExceedsPriceCap = doesIncreaseFromLastYearExceedPriceCap();
-            var flagGreaterThan5PercentReduction = doesDecreaseFromLastYearExceed5Percent();
+            var flagSiteExceedsPriceCap = doesSiteIncreaseFromLastYearExceedPriceCap();
+            var flagSuExceedsPriceCap = doesSuIncreaseFromLastYearExceedPriceCap();
+            var flagGreaterThan5PercentSiteReduction = doesSiteDecreaseFromLastYearExceed5Percent();
+            var flagGreaterThan5PercentSuReduction = doesSuDecreaseFromLastYearExceed5Percent();
 
-            /**
-             * Reasons should read well in either form:
-             * 1 price was flagged because it was REASON
-             * 7 prices were flagged because they were REASON
-             */
             var flagReasons = [];
+            if (flagSiteExceedsPriceCap) {
+                flagReasons.push('The site license price increased by more than the price cap');
+            }
+            if (flagGreaterThan5PercentSiteReduction) {
+                flagReasons.push('The site license price decreased by more than 5% compared to last year');
+            }
             if (flagSiteLicensePrice) {
-                flagReasons.push('a site license price for less than a SU price');
+                flagReasons.push('The site license price must be greater than any SU price');
             }
             if (flagSuPrices) {
-                flagReasons.push('for a SU level with a higher price than the price for a greater number of users');
+                flagReasons.push('SU prices must increase corresponding to the number of users');
             }
-            if (flagExceedsPriceCap) {
-                flagReasons.push('increased by more than the price cap');
+            if (flagSuExceedsPriceCap) {
+                flagReasons.push('One or more SU prices increased by more than the price cap');
             }
-            if (flagGreaterThan5PercentReduction) {
-                flagReasons.push('decreased by more than 5% compared to last year');
+            if (flagGreaterThan5PercentSuReduction) {
+                flagReasons.push('One or more SU prices decreased by more than 5% compared to last year');
             }
 
-            var isFlagged = flagSiteLicensePrice || flagSuPrices || flagExceedsPriceCap || flagGreaterThan5PercentReduction;
+            var isFlagged = flagSiteLicensePrice || flagSuPrices || flagSiteExceedsPriceCap || flagSuExceedsPriceCap || flagGreaterThan5PercentSiteReduction || flagGreaterThan5PercentSuReduction;
             if ( isFlagged ){
                 offering.flaggedReason = flagReasons;
             }
@@ -611,32 +615,33 @@ function getFlaggedState(offering, cycleArgument) {
         return false;
     }
 
-    function doesIncreaseFromLastYearExceedPriceCap() {
+    function doesSiteIncreaseFromLastYearExceedPriceCap() {
         var exceedsPriceCap = false;
-
         var priceCapMultiplier = 1 + (offering.product.priceCap / 100);
 
         if (canEnforcePriceCap()) {
             checkSitePriceIncrease();
+        }
+        return exceedsPriceCap;
+
+        function checkSitePriceIncrease() {
+            if (offering.pricing.site > priceCapMultiplier * offering.history[lastYear].pricing.site) {
+                exceedsPriceCap = true;
+            }
+        }
+    }
+
+    function doesSuIncreaseFromLastYearExceedPriceCap(){
+        var exceedsPriceCap = false;
+        var priceCapMultiplier = 1 + (offering.product.priceCap / 100);
+
+        if (canEnforcePriceCap()) {
             if (hasSuPricing(offering)) {
                 offering.pricing.su.forEach(checkSuPriceIncrease);
             }
         }
         return exceedsPriceCap;
 
-        function canEnforcePriceCap() {
-            var knowLastYear = (lastYear > 0);
-            return knowLastYear &&
-                   offering.product.priceCap &&
-                   offering.history &&
-                   offering.history[lastYear] &&
-                   offering.history[lastYear].pricing;
-        }
-        function checkSitePriceIncrease() {
-            if (offering.pricing.site > priceCapMultiplier * offering.history[lastYear].pricing.site) {
-                exceedsPriceCap = true;
-            }
-        }
         function checkSuPriceIncrease(suPricing) {
             var priceToCheck = suPricing.price;
             var lastYearsPrice = lookupLastYearsPriceForSu(offering, suPricing.users);
@@ -646,39 +651,47 @@ function getFlaggedState(offering, cycleArgument) {
         }
     }
 
-    function doesDecreaseFromLastYearExceed5Percent() {
+    function canEnforcePriceCap() {
+        var knowLastYear = (lastYear > 0);
+        return knowLastYear &&
+            offering.product.priceCap &&
+            offering.history &&
+            offering.history[lastYear] &&
+            offering.history[lastYear].pricing;
+    }
+
+    function doesSiteDecreaseFromLastYearExceed5Percent() {
+        return canEnforceDecrease() && checkSitePriceDecrease();
+
+        function checkSitePriceDecrease() {
+            return (offering.pricing.site < 0.95 * offering.history[lastYear].pricing.site);
+        }
+    }
+
+    function doesSuDecreaseFromLastYearExceed5Percent() {
         var exceedsDecreaseLimit = false;
 
-        var multiplier = 0.95;
-
-        if (canEnforceDecrease()) {
-            checkSitePriceDecrease();
-            if (hasSuPricing(offering)) {
-                offering.pricing.su.forEach(checkSuPriceDecrease);
-            }
+        if (canEnforceDecrease() && hasSuPricing(offering)) {
+            offering.pricing.su.forEach(checkSuPriceDecrease);
         }
 
         return exceedsDecreaseLimit;
 
-        function canEnforceDecrease() {
-            var knowLastYear = (lastYear > 0);
-            return knowLastYear &&
-                   offering.history &&
-                   offering.history[lastYear] &&
-                   offering.history[lastYear].pricing;
-        }
-        function checkSitePriceDecrease() {
-            if (offering.pricing.site < multiplier * offering.history[lastYear].pricing.site) {
-                exceedsDecreaseLimit = true;
-            }
-        }
         function checkSuPriceDecrease(suPricing) {
             var priceToCheck = suPricing.price;
             var lastYearsPrice = lookupLastYearsPriceForSu(offering, suPricing.users);
-            if ( lastYearsPrice && priceToCheck < multiplier * lastYearsPrice ){
+            if ( lastYearsPrice && priceToCheck < 0.95 * lastYearsPrice ){
                 exceedsDecreaseLimit = true;
             }
         }
+    }
+
+    function canEnforceDecrease() {
+        var knowLastYear = (lastYear > 0);
+        return knowLastYear &&
+            offering.history &&
+            offering.history[lastYear] &&
+            offering.history[lastYear].pricing;
     }
 
     function lookupLastYearsPriceForSu(offering, suToFind) {

@@ -289,8 +289,8 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
         .then(loadCycleForVendor, catchNoVendor)
         .then(saveCycle, catchNoCycle)
         .then(offeringRepository.listOfferingsUnexpanded)
+        .then(populateProductsForOfferings)
         .then(getFlaggedOfferings)
-        .then(populateProductsForFlaggedOfferings)
         .then(populateLibrariesForFlaggedOfferings)
         .then(filterOfferingsForActiveLibraries)
         .then(computeFlaggedOfferingReasons)
@@ -328,8 +328,8 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
         }
     }
 
-    function populateProductsForFlaggedOfferings(flaggedOfferings){
-        return getProductIds(flaggedOfferings)
+    function populateProductsForOfferings(offerings){
+        return getProductIds(offerings)
             .then(loadProductsById)
             .then(mapProductsById)
             .then(replaceProductIdsWithProducts);
@@ -353,7 +353,7 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
         }
 
         function replaceProductIdsWithProducts(productMap){
-            return flaggedOfferings.map(replaceOfferingProduct);
+            return offerings.map(replaceOfferingProduct);
 
             function replaceOfferingProduct(offering){
                 var productId = getProductIdFromUnexpandedOffering(offering);
@@ -434,7 +434,7 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
                 flaggedOfferingsReasonProductDetails[reason][productName] = (flaggedOfferingsReasonProductDetails[reason][productName] || 0) + 1;
             });
 
-            Logger.log('    flagged ' + productName + ' - ' + offering.library.name + ': ', offering.flaggedReason);
+            //Logger.log('    flagged ' + productName + ' - ' + offering.library.name + ': ', offering.flaggedReason);
         });
 
         return {

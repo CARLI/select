@@ -35,4 +35,17 @@
                    ng-keypress="vm.setQuickPricingMode('byFte')">
         </div>
     </li>
+    <li class="action">
+        <radio name="'priceEntryMode'" value="'deletePricing'" ng-model="vm.quickPricingArguments.mode">
+            Delete Site License Price
+        </radio>
+        <div>
+            <input  id="deleteSuPricingToo" type="checkbox" ng-model="vm.quickPricingArguments.deleteSuPricingToo" ng-disabled="vm.quickPricingArguments.mode != 'deletePricing'">
+            <label for="deleteSuPricingToo">Also Delete SU Pricing</label>
+        </div>
+        <div>
+            <input  id="hideProduct" type="checkbox" ng-model="vm.quickPricingArguments.hideProduct" ng-disabled="vm.quickPricingArguments.mode != 'deletePricing'">
+            <label for="hideProduct">Hide Product Completely</label>
+        </div>
+    </li>
 </ul>

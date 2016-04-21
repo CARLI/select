@@ -11,7 +11,7 @@
         <p>You have <strong>{{ vm.vendorStatus.flaggedOfferingsCount }}</strong> pricing issues.</p>
         <ul>
             <li ng-repeat="(reason, count) in vm.vendorStatus.flaggedOfferingsReasons.summary">
-                {{ count }} price{{ count > 1 ? 's were':' was' }} flagged because {{count > 1 ? 'they were':'it was' }} {{ reason }}.
+                {{ reason }} ({{ count }})
                 <button class="clear-button-styles expand" ng-class="{ expanded: vm.flaggedReasonDetailsExpanded[reason] }"
                         ng-click="vm.flaggedReasonDetailsExpanded[reason] = !vm.flaggedReasonDetailsExpanded[reason]">
                     <fa name="caret-right"></fa>
@@ -19,7 +19,7 @@
                 </button>
                 <ul class="flagged-reason-details" ng-if="vm.flaggedReasonDetailsExpanded[reason]">
                     <li class="product" ng-repeat="(product, count) in vm.vendorStatus.flaggedOfferingsReasons.details[reason]">
-                        {{ count }} price{{ count > 1 ? 's were':' was' }} flagged for {{ product }}
+                        {{ count }} price{{ count > 1 ? 's were':' was' }} flagged for <strong>{{ product }}</strong>
                     </li>
                 </ul>
             </li>
