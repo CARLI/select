@@ -168,11 +168,43 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
         }
     }
 
+    function updateFlaggedStatusForVendor(vendorId) {
+        var vendorStatus = vm.vendorStatus[vendorId];
+        if ( vendorStatus && vendorStatus.flaggedOfferingsCount && !vendorStatus.wasPreviouslyComputedByThisMethod ) {
+            /* Since we don't load all the products at once we can't be sure
+             * that the total flags calculated below will be accurate, so
+             * if we already have flags from the vendor status then keep that.
+             * Note: this means the flag indicator could be incorrect if, for example,
+             * the user manually clears the only flag.
+             * In order to make this correct the system would need to trigger an
+             * update of the vendor status, which happens in the vendor app. So
+             * it would be tricky to do that from here. Theoretically, while the
+             * system is open to vendors the activity should be updating often enough
+             * to keep the vendor status counts accurate. */
+            return;
+        }
+
+        var vendor = vm.vendors.filter(function(v){return v.id === vendorId;})[0];
+        var flagCount = vendor.products.reduce(countFlagsForProduct, 0);
+        vm.vendorStatus[vendorId] = { flaggedOfferingsCount: flagCount, wasPreviouslyComputedByThisMethod: true };
+
+
+        function countFlagsForProduct(currentFlagCount, product) {
+            var numberOfFlaggedOfferingsForProduct = product.offerings.filter(isFlagged).length;
+            return currentFlagCount + numberOfFlaggedOfferingsForProduct;
+        }
+
+        function isFlagged(offering) {
+            return offeringService.getFlaggedState(offering, vm.cycle);
+        }
+    }
+
     function setOfferingEditable( offering ){
         vm.isEditing[offering.id] = true;
     }
     function stopEditing(offering) {
         vm.isEditing[offering.id] = false;
+        updateFlaggedStatusForVendor(offering.vendorId);
     }
 
     function exportOfferingList(vendor) {

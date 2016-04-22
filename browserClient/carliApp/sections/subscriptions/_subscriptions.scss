@@ -9,7 +9,6 @@
 }
 
 #subscriptions {
-
     .zebra-table {
         margin-bottom: 30px;
     }
@@ -138,4 +137,8 @@
             }
         }
     }
+}
+
+.subscription + #subscriptions {
+    padding-top: 1rem;
 }
