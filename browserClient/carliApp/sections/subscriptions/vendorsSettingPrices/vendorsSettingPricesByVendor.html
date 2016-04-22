@@ -7,7 +7,7 @@
                     <fa name="angle-down"></fa><span class="sr-only">Open offerings for {{ ::vendor.name }}</span>
                 </button>
                 {{ ::vendor.name }}
-                <span class="vendor-flag"><span class="fa {{ vm.vendorStatus[vendor.id].flaggedOfferingsCount ? 'fa-flag' : 'fa-flag-o' }}" ></span></span>
+                <span class="vendor-flag" title="For detailed flag information see vendor app dashboard"><span class="fa {{ vm.vendorStatus[vendor.id].flaggedOfferingsCount ? 'fa-flag' : 'fa-flag-o' }}" ></span></span>
                 <span class="vendor-status">{{ vm.getVendorPricingStatus(vendor) }}</span>
             </div>
             <div class="content" ng-if="vm.openAccordion === vendor.id">
