@@ -602,16 +602,9 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
                 }
                 else if (mode == 'deletePricing') {
                     newValue = null;
+                    offering.display = 'none';
                     delete offering.pricing.site;
                     delete offering.vendorComments.site;
-
-                    if (allQuickPricingArguments.deleteSuPricingToo) {
-                        offering.pricing.su = [];
-                        offering.vendorComments.su = [];
-                    }
-                    if (allQuickPricingArguments.hideProduct) {
-                        offering.display = 'none';
-                    }
                 }
                 updateCellContents($offeringCell, offering, newValue);
             }
