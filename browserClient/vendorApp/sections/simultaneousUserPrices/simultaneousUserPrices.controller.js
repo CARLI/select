@@ -625,6 +625,10 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             var users = pricingItem.users;
             var pricingValue = parseFloat(pricingItem.price);
 
+            if ( typeof pricingItem.price === 'undefined' || pricingItem.price === null || pricingItem.price === 0 ) {
+                markCellsChanged(users);
+            }
+
             if (isNaN(pricingValue)) {
                 return;
             }
@@ -666,6 +670,18 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
 
         function markProductChanged(productId) {
             vm.changedProductIds[productId] = true;
+        }
+
+        function markCellsChanged(users) {
+            $('.price-row.su-' + users + ' .offering').each(function (i, cell) {
+                var $cell = $(cell);
+                var productId = $cell.data('productId');
+
+                if (productIsSelected(productId)) {
+                    $(cell).addClass('updated');
+                    markProductChanged(productId);
+                }
+            });
         }
     }
 
