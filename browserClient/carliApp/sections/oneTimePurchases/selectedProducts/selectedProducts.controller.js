@@ -51,9 +51,9 @@
         function loadOfferingsForLibrary( library ) {
             return offeringService.listOfferingsForLibraryId(library.id)
                 .then(populateVendorsForOfferings)
-                .then(function (offeringList) {
-                    vm.offeringList = offeringList;
-                    return offeringList;
+                .then(returnOfferingsForActiveProducts)
+                .then(function (activeOfferings) {
+                    vm.offeringList = activeOfferings;
                 });
 
             function populateVendorsForOfferings( offeringsList ){
@@ -71,6 +71,14 @@
                     }
                 }
             }
+
+            function returnOfferingsForActiveProducts(offeringList) {
+                return offeringList.filter(active);
+            }
+        }
+
+        function active(offering) {
+            return offering.product && offering.product.isActive;
         }
 
         function refreshOfferingsForLibrary(library){
