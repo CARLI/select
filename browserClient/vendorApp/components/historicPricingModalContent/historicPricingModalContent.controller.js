@@ -23,7 +23,7 @@ function historicPricingModalContentController(offeringService){
                 result += ' updated';
             }
 
-            if (vendorHasUpdatedTheOfferingsPricing() && offeringService.getFlaggedState(offering, vm.cycle)) {
+            if (vendorHasUpdatedTheOfferingsPricing() && offeringIsFlaggedForSiteLicense()) {
                 result += ' flagged';
             }
         }
@@ -31,7 +31,22 @@ function historicPricingModalContentController(offeringService){
         return result.trim();
 
         function vendorHasUpdatedTheOfferingsPricing(){
-            return offering.siteLicensePriceUpdated || offering.suPricesUpdated;
+            return offering.siteLicensePriceUpdated;
+        }
+
+        function offeringIsFlaggedForSiteLicense() {
+            var offeringReasonsApplicableToSiteLicensePricing = [];
+
+            offeringService.getFlaggedState(offering, vm.cycle);
+            if (offering.flaggedReason) {
+                offeringReasonsApplicableToSiteLicensePricing = offering.flaggedReason.filter(applicableFlagReason);
+
+            }
+            return offeringReasonsApplicableToSiteLicensePricing.length > 0;
+        }
+
+        function applicableFlagReason(reason) {
+            return reason.indexOf('One or more SU prices') < 0 && reason.indexOf('SU prices must') < 0;
         }
     }
 
