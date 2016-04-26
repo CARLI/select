@@ -24,9 +24,9 @@
 
             <ul class="entity-list" cg-busy="vm.loadingPromise">
                 <li class="column-headers">
-                    <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'product.name', reversedSort: vm.reverse }" ng-click="vm.sort('product.name')">Product</div>
-                    <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'product.vendor.name', reversedSort: vm.reverse }" ng-click="vm.sort(['product.vendor.name','product.name'])">Vendor</div>
-                    <div class="sortable column" ng-class="{ activeSort: vm.orderBy === 'pricing.site', reversedSort: vm.reverse }" ng-click="vm.sort(['pricing.site','product.name'])">Cost</div>
+                    <div class="sortable column" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.productName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.productName)">Product</div>
+                    <div class="sortable column" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.vendorName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.vendorName)">Vendor</div>
+                    <div class="sortable column" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.cost, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.cost)">Cost</div>
                 </li>
                 <li collapsible class="collapsed" ng-repeat="offering in vm.offeringList | filter: vm.filter | orderBy: vm.orderBy:vm.reverse track by offering.id ">
                     <checkbox ng-show="offering.selection" ng-model="vm.selectedOfferings[offering.id]"></checkbox>
