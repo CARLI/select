@@ -381,7 +381,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
 
     function markProductChangedForCell(jqueryCell) {
         var productId = jqueryCell.data('productId');
-        vm.changedProductIds[productId] = true;
+        markProductChanged(productId);
     }
 
     function getSuPricingFromFormForProduct(productId) {
@@ -440,6 +440,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                 .then(syncData)
                 .then(function () {
                     vm.changedProductIds = {};
+                    disableUnsavedChangesWarning();
                     Logger.log('saved ' + productIdsToUpdate.length + ' products');
                 })
                 .catch(function (err) {
@@ -459,7 +460,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                 keyboard: false
             });
 
-            $scope.warningForm.$setDirty();
+            enableUnsavedChangesWarning();
 
             saveNextProduct();
 
@@ -496,7 +497,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
 
             function hideSaveDialog() {
                 $('#progress-modal').modal('hide');
-                $scope.warningForm.$setPristine();
+                disableUnsavedChangesWarning();
             }
         }
 
@@ -668,10 +669,6 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
             });
         }
 
-        function markProductChanged(productId) {
-            vm.changedProductIds[productId] = true;
-        }
-
         function markCellsChanged(users) {
             $('.price-row.su-' + users + ' .offering').each(function (i, cell) {
                 var $cell = $(cell);
@@ -683,6 +680,11 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
                 }
             });
         }
+    }
+
+    function markProductChanged(productId) {
+        vm.changedProductIds[productId] = true;
+        enableUnsavedChangesWarning();
     }
 
     function productIsSelected(productId) {
@@ -773,5 +775,13 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         return vm.products.filter(function (product) {
             return product.id === productId;
         })[0];
+    }
+
+    function enableUnsavedChangesWarning() {
+        $scope.warningForm.$setDirty();
+    }
+
+    function disableUnsavedChangesWarning() {
+        $scope.warningForm.$setPristine();
     }
 }
