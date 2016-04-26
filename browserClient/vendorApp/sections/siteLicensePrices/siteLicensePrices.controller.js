@@ -162,6 +162,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
     function buildPriceArray() {
         //console.time('buildPricingGrid');
+        disableUnsavedChangesWarning();
         vm.changedOfferings = [];
         vm.offeringsForLibraryByProduct = {};
 
@@ -380,6 +381,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     function markOfferingUpdated(offering) {
         offering.siteLicensePriceUpdated = new Date().toISOString();
         vm.changedOfferings.push(offering);
+        enableUnsavedChangesWarning();
     }
 
     function applyCssClassesToOfferingCell(offeringCell, offering) {
@@ -532,6 +534,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
                 vm.newOfferings = [];
                 vm.changedOfferings = [];
+                disableUnsavedChangesWarning();
 
                 if (count) {
                     return initializePricingGrid();
@@ -736,5 +739,13 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
     function onControllerDestroy(e) {
         removeGridCellEvents();
+    }
+
+    function enableUnsavedChangesWarning() {
+        $scope.warningForm.$setDirty();
+    }
+
+    function disableUnsavedChangesWarning() {
+        $scope.warningForm.$setPristine();
     }
 }
