@@ -24,6 +24,12 @@
         vm.getFundedSiteLicensePrice = getFundedSiteLicensePrice;
         vm.saveComments = saveComments;
 
+        vm.sortOptions = {
+            productName: 'product.name',
+            vendorName: ['product.vendor.name','product.name'],
+            cost: [offeringService.getFundedSelectionPrice,'product.name']
+        };
+
         initFilterableByPurchased($scope, vm);
         activate();
 
