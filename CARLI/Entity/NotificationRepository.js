@@ -331,6 +331,10 @@ function templateIsForMembershipDues(templateId) {
     return templateId === 'notification-template-membership-invoices' || templateId === 'notification-template-membership-estimates';
 }
 
+function templateIsForMembershipInvoices(templateId) {
+    return templateId === 'notification-template-membership-invoices';
+}
+
 function notificationTypeAllowsRecipientsToBeEdited(notificationType){
     return notificationType === 'other';
 }
@@ -361,6 +365,7 @@ module.exports = {
     notificationTypeIsForReminder: notificationTypeIsForReminder,
     templateIsForAnnualAccessFeeInvoice: templateIsForAnnualAccessFeeInvoice,
     templateIsForMembershipDues: templateIsForMembershipDues,
+    templateIsForMembershipInvoices: templateIsForMembershipInvoices,
     notificationTypeAllowsRecipientsToBeEdited: notificationTypeAllowsRecipientsToBeEdited,
     listInvoiceNotificationsForCycleId: listInvoiceNotificationsForCycleId,
     listInvoiceNotificationsForMembershipYear: listInvoiceNotificationsForMembershipYear,

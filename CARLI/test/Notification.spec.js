@@ -676,16 +676,39 @@ describe('the templateIsForMembershipDues method', function () {
         expect(notificationRepository.templateIsForMembershipDues('notification-template-annual-access-fee-invoices')).to.equal(false);
     });
 
-    it('should return the correct value for a matching id', function () {
+    it('should return the correct value for membership invoices', function () {
         expect(notificationRepository.templateIsForMembershipDues('notification-template-membership-invoices')).to.equal(true);
     });
 
-    it('should return the correct value for a matching id', function () {
+    it('should return the correct value for membership estimates', function () {
         expect(notificationRepository.templateIsForMembershipDues('notification-template-membership-estimates')).to.equal(true);
     });
 
     it('should return the correct value for a bogus id', function () {
         expect(notificationRepository.templateIsForMembershipDues('subscription')).to.equal(false);
+    });
+});
+
+
+describe('the templateIsForMembershipInvoices method', function () {
+    it('should be a function', function(){
+        expect(notificationRepository.templateIsForMembershipInvoices).to.be.a('function');
+    });
+
+    it('should return the correct value for a non-matching template id', function () {
+        expect(notificationRepository.templateIsForMembershipInvoices('notification-template-annual-access-fee-invoices')).to.equal(false);
+    });
+
+    it('should return true membership invoices', function () {
+        expect(notificationRepository.templateIsForMembershipInvoices('notification-template-membership-invoices')).to.equal(true);
+    });
+
+    it('should return false for membership estimates', function () {
+        expect(notificationRepository.templateIsForMembershipInvoices('notification-template-membership-estimates')).to.equal(false);
+    });
+
+    it('should return false for a bogus id', function () {
+        expect(notificationRepository.templateIsForMembershipInvoices('subscription')).to.equal(false);
     });
 });
 
