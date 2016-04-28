@@ -98,8 +98,9 @@
                                              busy-click="vm.selectAndUpdateProduct(offering, 'Site License')">
                         </subscription-button>
                         <div class="su-buttons" ng-if="offering.pricing.su && offering.pricing.su.length">
-                            <subscription-button ng-repeat="su in ::offering.pricing.su | orderBy:users track by su.users"
-                                                 title="{{ ::su.users }} Simultaneous Users" price="{{ ::su.price }}"
+                            <subscription-button ng-repeat="su in offering.pricing.su | orderBy:users"
+                                                 ng-if="su.price < offering.pricing.site || !offering.pricing.site"
+                                                 title="{{ su.users }} Simultaneous Users" price="{{ su.price }}"
                                                  selected="vm.isSelected(offering, su.users)"
                                                  busy-click="vm.selectAndUpdateProduct(offering, su.users)">
                             </subscription-button>
