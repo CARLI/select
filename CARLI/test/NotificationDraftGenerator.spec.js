@@ -629,7 +629,7 @@ describe('The notification draft generator', function() {
         });
     });
 
-    describe('specification for generateDraftNotification "All Libraries, Membership Dues"', function() {
+    describe('specification for generateDraftNotification "All Libraries, Membership Dues Invoices"', function() {
         var template = {
             id: 'notification-template-membership-invoices',
             notificationType: 'invoice'
@@ -682,8 +682,71 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].targetEntity).to.equal('library1'),
                     expect(notifications[0].summaryTotal).to.be.a('number'),
                     expect(notifications[0].summaryTotal).to.equal(101),
-                    expect(notifications[0].pdfLink).to.satisfy(pdfLinkForAnnualAccessFeeInvoice),
+                    expect(notifications[0].pdfLink).to.satisfy(pdfLinkForInvoice),
                     expect(notifications[0].isFeeInvoice).to.equal(false),
+                    expect(notifications[0].isMembershipDuesInvoice).to.equal(true),
+                    expect(notifications[0].offeringIds).to.be.an('undefined')
+                ]);
+            });
+        });
+    });
+
+    describe('specification for generateDraftNotification "All Libraries, Membership Dues Estimates"', function() {
+        var template = {
+            id: 'notification-template-membership-estimates',
+            notificationType: 'estimate'
+        };
+        var notificationData = {};
+        function getMockEntitiesForMembershipDues() {
+            return Q([{id: 'library1', name: 'Test Library'}]);
+        }
+        function getMockOfferingsForMembershipDues(){
+            return Q([
+                { library: { id: 'library1' }, pricing: { ishare: 100, membership: 1 } },
+                { library: { id: 'library2' }, pricing: { ishare: 200, membership: 2 } },
+                { library: { id: 'library3' }, pricing: { ishare: 300, membership: 3 } }
+            ]);
+        }
+
+        it('should return a draft notification', function() {
+            var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
+            expect(draft).to.satisfy(implementsDraftNotificationInterface);
+            expect(draft.getAudienceAndSubject()).to.equal('All Libraries, Membership Dues');
+        });
+
+        it('should generate a recipients list', function() {
+            var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
+            draft.getEntities = getMockEntitiesForMembershipDues;
+
+            return draft.getRecipients().then(function(recipients) {
+                return Q.all([
+                    expect(recipients).to.be.an('array'),
+                    expect(recipients.length).to.equal(1),
+                    expect(recipients[0].id).to.equal('library1'),
+                    expect(recipients[0].label).to.equal('Test Library Subscription Contacts')
+                ]);
+            });
+        });
+        it('should generate a list of notification objects', function(){
+            var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
+            draft.getEntities = getMockEntitiesForMembershipDues;
+            draft.getOfferings = getMockOfferingsForMembershipDues;
+
+            var customizedTemplate = template;
+            customizedTemplate.templateId = template.id;
+            var customizedRecipients = [ 'library1' ];
+
+            return draft.getNotifications(template, customizedRecipients).then(function(notifications){
+                return Q.all([
+                    expect(notifications).to.be.an('array'),
+                    expect(notifications.length).to.equal(1),
+                    expect(notifications[0].type).to.equal('Notification'),
+                    expect(notifications[0].targetEntity).to.equal('library1'),
+                    expect(notifications[0].summaryTotal).to.be.a('number'),
+                    expect(notifications[0].summaryTotal).to.equal(101),
+                    expect(notifications[0].pdfLink).to.satisfy(pdfLinkForEstimate),
+                    expect(notifications[0].isFeeInvoice).to.equal(false),
+                    expect(notifications[0].isMembershipDuesInvoice).to.equal(false),
                     expect(notifications[0].offeringIds).to.be.an('undefined')
                 ]);
             });
