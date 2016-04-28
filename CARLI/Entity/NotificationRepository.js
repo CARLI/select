@@ -328,7 +328,7 @@ function templateIsForAnnualAccessFeeInvoice(templateId) {
 }
 
 function templateIsForMembershipDues(templateId) {
-    return templateId === 'notification-template-membership-invoices';
+    return templateId === 'notification-template-membership-invoices' || templateId === 'notification-template-membership-estimates';
 }
 
 function notificationTypeAllowsRecipientsToBeEdited(notificationType){
