@@ -732,11 +732,13 @@ describe('The notification draft generator', function() {
             draft.getEntities = getMockEntitiesForMembershipDues;
             draft.getOfferings = getMockOfferingsForMembershipDues;
 
-            var customizedTemplate = template;
-            customizedTemplate.templateId = template.id;
+            var customizedTemplate = {
+                templateId: template.id,
+                notificationType: template.notificationType
+            };
             var customizedRecipients = [ 'library1' ];
 
-            return draft.getNotifications(template, customizedRecipients).then(function(notifications){
+            return draft.getNotifications(customizedTemplate, customizedRecipients).then(function(notifications){
                 return Q.all([
                     expect(notifications).to.be.an('array'),
                     expect(notifications.length).to.equal(1),

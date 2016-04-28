@@ -663,11 +663,6 @@ function isMembershipDuesInvoice(templateId){
     return notificationRepository.templateIsForMembershipInvoices(templateId);
 }
 
-function isMembershipDuesEstimate(template){
-    return notificationRepository.templateIsForMembershipDues(template.id) &&
-           notificationRepository.notificationTypeIsForEstimate(template.notificationType);
-}
-
 function convertEntityToRecipient(entity, template) {
     return {
         id: entity.id,
@@ -784,8 +779,13 @@ function generateNotificationForEntity(entityId, customizedTemplate){
         notificationType: customizedTemplate.notificationType,
         isFeeInvoice: isAnnualAccessFeeInvoice(customizedTemplate.templateId),
         isMembershipDuesInvoice: isMembershipDuesInvoice(customizedTemplate.templateId),
-        isMembershipDuesEstimate: isMembershipDuesEstimate(customizedTemplate)
+        isMembershipDuesEstimate: isMembershipDuesEstimate()
     };
+
+    function isMembershipDuesEstimate(){
+        return notificationRepository.templateIsForMembershipDues(customizedTemplate.templateId) &&
+            notificationRepository.notificationTypeIsForEstimate(customizedTemplate.notificationType);
+    }
 }
 
 function extractArrayOfIdsFromObject( mapObject ){
