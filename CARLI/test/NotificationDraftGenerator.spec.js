@@ -649,7 +649,7 @@ describe('The notification draft generator', function() {
         it('should return a draft notification', function() {
             var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
             expect(draft).to.satisfy(implementsDraftNotificationInterface);
-            expect(draft.getAudienceAndSubject()).to.equal('All Libraries, Membership Dues');
+            expect(draft.getAudienceAndSubject()).to.equal('All Libraries, Membership Dues Invoices');
         });
 
         it('should generate a recipients list', function() {
@@ -711,7 +711,7 @@ describe('The notification draft generator', function() {
         it('should return a draft notification', function() {
             var draft = notificationDraftGenerator.generateDraftNotification(template, notificationData);
             expect(draft).to.satisfy(implementsDraftNotificationInterface);
-            expect(draft.getAudienceAndSubject()).to.equal('All Libraries, Membership Dues');
+            expect(draft.getAudienceAndSubject()).to.equal('All Libraries, Membership Dues Estimates');
         });
 
         it('should generate a recipients list', function() {
@@ -747,6 +747,7 @@ describe('The notification draft generator', function() {
                     expect(notifications[0].pdfLink).to.satisfy(pdfLinkForEstimate),
                     expect(notifications[0].isFeeInvoice).to.equal(false),
                     expect(notifications[0].isMembershipDuesInvoice).to.equal(false),
+                    expect(notifications[0].isMembershipDuesEstimate).to.equal(true),
                     expect(notifications[0].offeringIds).to.be.an('undefined')
                 ]);
             });

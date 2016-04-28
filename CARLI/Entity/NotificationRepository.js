@@ -219,7 +219,7 @@ function getSummaryTotalWithPriceGetter(notification, offerings, getPriceFromOff
     if ( notification.isFeeInvoice ){
         return getSummaryOfAccessFees();
     }
-    else if ( notification.isMembershipDuesInvoice ){
+    else if ( notification.isMembershipDuesInvoice || notification.isMembershipDuesEstimate ){
         return getMembershipDuesSummary();
     }
     else {
