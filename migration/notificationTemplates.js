@@ -80,6 +80,16 @@ var notificationTemplates = [
         pdfAfter: 'This text appears after the membership invoice contents',
         pdfContentIsEditable: true,
         notificationType: 'invoice'
+    },
+    {
+        id: 'notification-template-membership-estimates',
+        name: 'Membership Estimates',
+        subject: 'CARLI Membership Estimates',
+        emailBody: '',
+        pdfBefore: 'This text appears before the membership estimate contents',
+        pdfAfter: 'This text appears after the membership estimate contents',
+        pdfContentIsEditable: true,
+        notificationType: 'estimate'
     }
 ];
 
