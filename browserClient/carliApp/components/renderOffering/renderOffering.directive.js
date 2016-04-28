@@ -34,7 +34,6 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
 
             function render(offering){
                 var lastYear = scope.cycle.year - 1;
-                offering.pricing.su = $filter('orderBy')(offering.pricing.su, 'users');
                 offering.product.displayName = productService.getProductDisplayName(offering.product);
                 copyVendorCommentsToPricing(offering);
 
@@ -42,6 +41,7 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
                     var values = {
                         thisYear: scope.cycle.year,
                         lastYear: lastYear,
+                        suPricingThisYear: pricingThisYear(),
                         selectedLastYear: selectedLastYear(),
                         pricingLastYear: pricingLastYear(),
                         offering: offering,
@@ -54,6 +54,10 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
                     element.html( template(values) );
                 });
 
+                function pricingThisYear(){
+                    return $filter('orderBy')(offering.pricing.su, 'users');
+                }
+
                 function selectedLastYear(){
                     if ( offering.history && offering.history[lastYear] ){
                         return offering.history[lastYear].selection;
@@ -63,7 +67,6 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
 
                 function pricingLastYear(){
                     if ( offering.history && offering.history[lastYear] ){
-                        console.log(offering.history[lastYear]);
                         offering.history[lastYear].pricing.su = $filter('orderBy')(offering.history[lastYear].pricing.su, 'users');
                         return offering.history[lastYear].pricing;
                     }

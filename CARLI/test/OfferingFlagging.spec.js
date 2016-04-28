@@ -50,7 +50,7 @@ describe('Repository getFlaggedState', function () {
         expect(offeringRepository.getFlaggedState(testOffering)).to.equal(false);
     });
 
-    it('should compute true if the offering has an su price greater than the site license price', function () {
+    it('should not compute true if the offering has an su price greater than the site license price', function () {
         var testOffering = validOfferingData();
         testOffering.suPricesUpdated = '2015-01-01';
         testOffering.pricing = {
@@ -61,10 +61,10 @@ describe('Repository getFlaggedState', function () {
             }]
         };
 
-        expect(offeringRepository.getFlaggedState(testOffering)).to.equal(true);
+        expect(offeringRepository.getFlaggedState(testOffering)).to.equal(false);
     });
 
-    it('should compute true if the offering has an su price greater than a site license price of zero', function () {
+    it('should not compute true if the offering has an su price greater than a site license price of zero', function () {
         var testOffering = validOfferingData();
         testOffering.suPricesUpdated = '2015-01-01';
         testOffering.pricing = {
@@ -75,10 +75,10 @@ describe('Repository getFlaggedState', function () {
             }]
         };
 
-        expect(offeringRepository.getFlaggedState(testOffering)).to.equal(true);
+        expect(offeringRepository.getFlaggedState(testOffering)).to.equal(false);
     });
 
-    it('should compute false if the offering has su pricing but no site license price', function () {
+    it('should compute false if the offering has valid su pricing but no site license price', function () {
         var testOffering = validOfferingData();
         testOffering.suPricesUpdated = '2015-01-01';
         testOffering.pricing = {
@@ -337,18 +337,26 @@ describe('Repository getFlaggedState', function () {
             expect(testOffering.flaggedReason).to.be.an('undefined');
         });
 
-        it('should contain "a site license price for less than a SU price" if the offering has an su price greater than the site license price', function () {
+        it('should contain "The site license price increased by more than the price cap" if the site license price increased by more than the price cap', function () {
             var testOffering = validOfferingData();
-            testOffering.suPricesUpdated = '2015-01-01';
+            testOffering.siteLicensePriceUpdated = '2015-01-01';
+            testOffering.cycle = {
+                id: 'price-cap-site-license-increase-test-cycle',
+                year: 2014
+            };
+            testOffering.product.priceCap = 10;
             testOffering.pricing = {
-                site: 1000,
-                su: [{
-                    users: 2,
-                    price: 2000
-                }]
+                site: 500
+            };
+            testOffering.history = {
+                2013: {
+                    pricing: {
+                        site: 100
+                    }
+                }
             };
             offeringRepository.getFlaggedState(testOffering);
-            expect(testOffering.flaggedReason).to.deep.equal(['The site license price must be greater than any SU price']);
+            expect(testOffering.flaggedReason).to.deep.equal(['The site license price increased by more than the price cap']);
         });
 
         it('should be empty if the offering had invalid pricing which was then fixed', function () {
