@@ -680,6 +680,10 @@ describe('the templateIsForMembershipDues method', function () {
         expect(notificationRepository.templateIsForMembershipDues('notification-template-membership-invoices')).to.equal(true);
     });
 
+    it('should return the correct value for a matching id', function () {
+        expect(notificationRepository.templateIsForMembershipDues('notification-template-membership-estimates')).to.equal(true);
+    });
+
     it('should return the correct value for a bogus id', function () {
         expect(notificationRepository.templateIsForMembershipDues('subscription')).to.equal(false);
     });
