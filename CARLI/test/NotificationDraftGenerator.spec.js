@@ -12,6 +12,14 @@ function implementsDraftNotificationInterface(draftNotification) {
            typeof draftNotification.getNotifications == 'function';
 }
 
+//This replicates the transformation that happens in the NotificationModal controller
+function customizeTemplate(template) {
+    return {
+        templateId: template.id,
+        notificationType: template.notificationType
+    };
+}
+
 describe('The notification draft generator', function() {
     it('should have a generateDraftNotification function', function() {
         expect(notificationDraftGenerator.generateDraftNotification).to.be.a('function');
@@ -63,8 +71,7 @@ describe('The notification draft generator', function() {
             draft.getEntities = getMockEntitiesForAnnualAccessFee;
             draft.getOfferings = getMockOfferingsForAnnualAccessFee;
 
-            var customizedTemplate = template;
-            customizedTemplate.templateId = template.id;
+            var customizedTemplate = customizeTemplate(template);
             var customizedRecipients = [ 'library' ];
 
             return draft.getNotifications(customizedTemplate, customizedRecipients).then(function(notifications){
@@ -123,11 +130,10 @@ describe('The notification draft generator', function() {
             draft.getEntities = getMockEntitiesForAnnualAccessFee;
             draft.getOfferings = getMockOfferingsForAnnualAccessFee;
 
-            var customizedTemplate = template;
-            customizedTemplate.templateId = template.id;
+            var customizedTemplate = customizeTemplate(template);
             var customizedRecipients = [ 'library' ];
 
-            return draft.getNotifications(template, customizedRecipients).then(function(notifications){
+            return draft.getNotifications(customizedTemplate, customizedRecipients).then(function(notifications){
                 return Q.all([
                     expect(notifications).to.be.an('array'),
                     expect(notifications.length).to.equal(1),
@@ -186,9 +192,10 @@ describe('The notification draft generator', function() {
             draft.getLibrariesWithSelections = getMockLibrariesWithSelectionsForReminder;
             draft.getAllLibraries = getMockAllLibrariesForReminder;
 
+            var customizedTemplate = customizeTemplate(template);
             var customizedRecipients = [ 'library' ];
 
-            return draft.getNotifications(template, customizedRecipients).then(function(notifications){
+            return draft.getNotifications(customizedTemplate, customizedRecipients).then(function(notifications){
                 return Q.all([
                     expect(notifications).to.be.an('array'),
                     expect(notifications.length).to.equal(1),
@@ -251,9 +258,10 @@ describe('The notification draft generator', function() {
             draft.getEntities = getMockEntitiesForAllVendorsAllProducts;
             draft.getOfferings = getMockOfferingsForAllVendorsAllProducts;
 
+            var customizedTemplate = customizeTemplate(template);
             var customizedRecipients = [ 'vendor1', 'vendor2' ];
 
-            return draft.getNotifications(template, customizedRecipients).then(function(notifications){
+            return draft.getNotifications(customizedTemplate, customizedRecipients).then(function(notifications){
                 return Q.all([
                     expect(notifications).to.be.an('array'),
                     expect(notifications.length).to.equal(2),
@@ -314,9 +322,10 @@ describe('The notification draft generator', function() {
             draft.getEntities = getMockEntitiesForSomeVendorsSomeProducts;
             draft.getOfferings = getMockOfferingsForSomeVendorsSomeProducts;
 
+            var customizedTemplate = customizeTemplate(template);
             var customizedRecipients = [ 'vendor1', 'vendor2' ];
 
-            return draft.getNotifications(template, customizedRecipients).then(function(notifications){
+            return draft.getNotifications(customizedTemplate, customizedRecipients).then(function(notifications){
                 return Q.all([
                     expect(notifications).to.be.an('array'),
                     expect(notifications.length).to.equal(2),
@@ -376,9 +385,10 @@ describe('The notification draft generator', function() {
             draft.getEntities = getMockEntitiesFromNotificationData;
             draft.getOfferings = getMockOfferingsForOneVendorAllProducts;
 
+            var customizedTemplate = customizeTemplate(template);
             var customizedRecipients = [ 'vendor1' ];
 
-            return draft.getNotifications(template, customizedRecipients).then(function(notifications){
+            return draft.getNotifications(customizedTemplate, customizedRecipients).then(function(notifications){
                 return Q.all([
                     expect(notifications).to.be.an('array'),
                     expect(notifications.length).to.equal(1),
@@ -433,9 +443,10 @@ describe('The notification draft generator', function() {
             draft.getEntities = getMockEntitiesForAllLibrariesAllProducts;
             draft.getOfferings = getMockOfferingsForAllLibrariesAllProducts;
 
+            var customizedTemplate = customizeTemplate(template);
             var customizedRecipients = [ 'library', 'library2' ];
 
-            return draft.getNotifications(template, customizedRecipients).then(function(notifications){
+            return draft.getNotifications(customizedTemplate, customizedRecipients).then(function(notifications){
                 return Q.all([
                     expect(notifications).to.be.an('array'),
                     expect(notifications.length).to.equal(2),
@@ -494,9 +505,10 @@ describe('The notification draft generator', function() {
             draft.getEntities = getMockEntitiesForSomeLibrariesSomeProducts;
             draft.getOfferings = getMockOfferingsForSomeLibrariesSomeProducts;
 
+            var customizedTemplate = customizeTemplate(template);
             var customizedRecipients = [ 'library' ];
 
-            return draft.getNotifications(template, customizedRecipients).then(function(notifications){
+            return draft.getNotifications(customizedTemplate, customizedRecipients).then(function(notifications){
                 return Q.all([
                     expect(notifications).to.be.an('array'),
                     expect(notifications.length).to.equal(1),
@@ -555,9 +567,10 @@ describe('The notification draft generator', function() {
             draft.getEntities = getMockEntitiesForOneLibrariesAllProducts;
             draft.getOfferings = getMockOfferingsForOneLibrariesAllProducts;
 
+            var customizedTemplate = customizeTemplate(template);
             var customizedRecipients = [ 'library' ];
 
-            return draft.getNotifications(template, customizedRecipients).then(function(notifications){
+            return draft.getNotifications(customizedTemplate, customizedRecipients).then(function(notifications){
                 return Q.all([
                     expect(notifications).to.be.an('array'),
                     expect(notifications.length).to.equal(1),
@@ -612,9 +625,10 @@ describe('The notification draft generator', function() {
             draft.getEntities = getMockEntitiesForAllLibrariesAllProducts;
             draft.getOfferings = getMockOfferingsForAllLibrariesAllProducts;
 
+            var customizedTemplate = customizeTemplate(template);
             var customizedRecipients = [ 'library', 'library2' ];
 
-            return draft.getNotifications(template, customizedRecipients).then(function(notifications){
+            return draft.getNotifications(customizedTemplate, customizedRecipients).then(function(notifications){
                 return Q.all([
                     expect(notifications).to.be.an('array'),
                     expect(notifications.length).to.equal(2),
@@ -670,11 +684,10 @@ describe('The notification draft generator', function() {
             draft.getEntities = getMockEntitiesForMembershipDues;
             draft.getOfferings = getMockOfferingsForMembershipDues;
 
-            var customizedTemplate = template;
-            customizedTemplate.templateId = template.id;
+            var customizedTemplate = customizeTemplate(template);
             var customizedRecipients = [ 'library1' ];
 
-            return draft.getNotifications(template, customizedRecipients).then(function(notifications){
+            return draft.getNotifications(customizedTemplate, customizedRecipients).then(function(notifications){
                 return Q.all([
                     expect(notifications).to.be.an('array'),
                     expect(notifications.length).to.equal(1),
@@ -732,10 +745,7 @@ describe('The notification draft generator', function() {
             draft.getEntities = getMockEntitiesForMembershipDues;
             draft.getOfferings = getMockOfferingsForMembershipDues;
 
-            var customizedTemplate = {
-                templateId: template.id,
-                notificationType: template.notificationType
-            };
+            var customizedTemplate = customizeTemplate(template);
             var customizedRecipients = [ 'library1' ];
 
             return draft.getNotifications(customizedTemplate, customizedRecipients).then(function(notifications){
