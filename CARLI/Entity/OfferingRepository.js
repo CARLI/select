@@ -555,7 +555,7 @@ function getFlaggedState(offering, cycleArgument) {
                 flagReasons.push('The site license price decreased by more than 5% compared to last year');
             }
             if (flagSiteLicensePrice) {
-                flagReasons.push('The site license price must be greater than any SU price');
+                //flagReasons.push('The site license price must be greater than any SU price');
             }
             if (flagSuPrices) {
                 flagReasons.push('SU prices must increase corresponding to the number of users');
@@ -567,7 +567,7 @@ function getFlaggedState(offering, cycleArgument) {
                 flagReasons.push('One or more SU prices decreased by more than 5% compared to last year');
             }
 
-            var isFlagged = flagSiteLicensePrice || flagSuPrices || flagSiteExceedsPriceCap || flagSuExceedsPriceCap || flagGreaterThan5PercentSiteReduction || flagGreaterThan5PercentSuReduction;
+            var isFlagged = flagSuPrices || flagSiteExceedsPriceCap || flagSuExceedsPriceCap || flagGreaterThan5PercentSiteReduction || flagGreaterThan5PercentSuReduction;
             if ( isFlagged ){
                 offering.flaggedReason = flagReasons;
             }
