@@ -69,7 +69,7 @@ function contentForPdf(notificationId){
 }
 
 function dataForPdfFromNotification(notification){
-    if ( notification.isMembershipDuesInvoice ) {
+    if ( notification.isMembershipDuesInvoice || notification.isMembershipDuesEstimate ) {
         return dataForMembershipDuesInvoicePdf(notification);
     }
     else {
@@ -85,8 +85,7 @@ function dataForMembershipDuesInvoicePdf(notification){
         .then(function(membershipData){
             var membership = membershipData.membership || 0;
             var ishare = membershipData.ishare || 0;
-
-            return {
+            var dataForPdf =  {
                 batchId: notification.batchId,
                 cycle: {},
                 library: library,
@@ -97,6 +96,7 @@ function dataForMembershipDuesInvoicePdf(notification){
                 notification: notification,
                 year: year
             };
+            return dataForPdf;
         });
 }
 
@@ -239,7 +239,7 @@ function htmlForPdf(dataForPdf){
         });
 
     function createInvoiceContent(){
-        if ( typeIsForMembershipDuesInvoice(type) ){
+        if ( typeIsForMembershipInvoiceOrEstimate(type) ){
             return membershipInvoiceContentTemplate(dataForPdf);
         }
         else {
@@ -268,6 +268,9 @@ function fetchTemplateForContent(type, cycle){
     else if ( typeIsForMembershipDuesInvoice(type) ){
         return notificationTemplateRepository.loadTemplateForMembershipDuesInvoices();
     }
+    else if ( typeIsForMembershipDuesEstimate(type) ) {
+        return notificationTemplateRepository.loadTemplateForMembershipDuesEstimates();
+    }
     else {
         return notificationTemplateRepository.loadTemplateForSubscriptionInvoices();
     }
@@ -294,6 +297,9 @@ function pdfTypeFromNotification(notification){
     else if ( notification.isMembershipDuesInvoice ) {
         return 'membership-dues-invoice';
     }
+    else if ( notification.isMembershipDuesEstimate  ) {
+        return 'membership-dues-estimate';
+    }
     else {
         return notification.notificationType;
     }
@@ -313,6 +319,14 @@ function typeIsForAccessFeeInvoice(type){
 
 function typeIsForMembershipDuesInvoice(type){
     return type.toLowerCase() === 'membership-dues-invoice';
+}
+
+function typeIsForMembershipDuesEstimate(type){
+    return type.toLowerCase() === 'membership-dues-estimate';
+}
+
+function typeIsForMembershipInvoiceOrEstimate(type){
+    return typeIsForMembershipDuesInvoice(type) || typeIsForMembershipDuesEstimate(type);
 }
 
 function typeIsForLibrarySelections(type){
