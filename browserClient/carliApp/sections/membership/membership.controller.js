@@ -13,6 +13,7 @@ function membershipController( $location, $q, $routeParams, $scope, activityLogS
     vm.previousYear = null;
 
     vm.createMembershipInvoices = createMembershipInvoices;
+    vm.createMembershipEstimates = createMembershipEstimates;
     vm.ishareTotal = ishareTotal;
     vm.filterByMembership = filterByMembership;
     vm.grandTotal = grandTotal;
@@ -180,6 +181,13 @@ function membershipController( $location, $q, $routeParams, $scope, activityLogS
     function createMembershipInvoices(){
         notificationModalService.sendStartDraftMessage({
             templateId: 'notification-template-membership-invoices',
+            fiscalYear: vm.displayYear
+        });
+    }
+
+    function createMembershipEstimates(){
+        notificationModalService.sendStartDraftMessage({
+            templateId: 'notification-template-membership-estimates',
             fiscalYear: vm.displayYear
         });
     }

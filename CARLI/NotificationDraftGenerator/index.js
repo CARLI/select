@@ -459,7 +459,7 @@ function getLibraryEstimatesForAll(template, notificationData) {
     return allLibrariesDraft;
 }
 
-function getMembershipDuesDraftForAllLibraries(template, notificationData){
+function getMembershipDuesInvoiceDraftForAllLibraries(template, notificationData){
     function getEntitiesForMembershipDuesDraftForAllLibraries(){
         return membershipRepository.loadDataForYear(notificationData.fiscalYear)
             .then(membershipRepository.listLibrariesWithDues)
@@ -467,7 +467,7 @@ function getMembershipDuesDraftForAllLibraries(template, notificationData){
     }
 
     function getRecipientsForMembershipDuesDraftForAllLibraries(){
-        return membershipDuesAllLibrariesDraft.getEntities()
+        return membershipDuesAllLibrariesInvoicesDraft.getEntities()
             .then(function( libraries ) {
                 return libraries.map(function(library) {
                     return convertEntityToRecipient(library, template);
@@ -481,7 +481,7 @@ function getMembershipDuesDraftForAllLibraries(template, notificationData){
     }
 
     function getNotificationsForMembershipDuesDraftForAllLibraries( customizedTemplate, actualRecipientIds ){
-        return membershipDuesAllLibrariesDraft.getOfferings()
+        return membershipDuesAllLibrariesInvoicesDraft.getOfferings()
             .then(generateNotifications);
 
         function generateNotifications(offerings){
@@ -502,14 +502,63 @@ function getMembershipDuesDraftForAllLibraries(template, notificationData){
         }
     }
 
-    var membershipDuesAllLibrariesDraft = {
-        getAudienceAndSubject: function() { return 'All Libraries, Membership Dues'; },
+    var membershipDuesAllLibrariesInvoicesDraft = {
+        getAudienceAndSubject: function() { return 'All Libraries, Membership Dues Invoices'; },
         getEntities: getEntitiesForMembershipDuesDraftForAllLibraries,
         getRecipients: getRecipientsForMembershipDuesDraftForAllLibraries,
         getOfferings: getOfferingsForMembershipDuesDraftForAllLibraries,
         getNotifications: getNotificationsForMembershipDuesDraftForAllLibraries
     };
-    return membershipDuesAllLibrariesDraft;
+    return membershipDuesAllLibrariesInvoicesDraft;
+}
+function getMembershipDuesEstimateDraftForAllLibraries(template, notificationData){
+    function getEntitiesForMembershipDuesDraftForAllLibraries(){
+        return membershipRepository.loadDataForYear(notificationData.fiscalYear)
+            .then(membershipRepository.listLibrariesWithDues)
+            .then(libraryRepository.getLibrariesById);
+    }
+
+    function getRecipientsForMembershipDuesDraftForAllLibraries(){
+        return membershipDuesAllLibrariesEstimatesDraft.getEntities()
+            .then(function( libraries ) {
+                return libraries.map(function(library) {
+                    return convertEntityToRecipient(library, template);
+                });
+            });
+    }
+
+    function getOfferingsForMembershipDuesDraftForAllLibraries(){
+        return membershipRepository.loadDataForYear(notificationData.fiscalYear)
+            .then(membershipRepository.getMembershipDuesAsOfferings);
+    }
+
+    function getNotificationsForMembershipDuesDraftForAllLibraries( customizedTemplate, actualRecipientIds ){
+        return membershipDuesAllLibrariesEstimatesDraft.getOfferings()
+            .then(generateNotifications);
+
+        function generateNotifications(offerings){
+                return Q.all(actualRecipientIds.map(function(id){
+                    return generateNotificationForLibrary(id, offerings, customizedTemplate)
+                }))
+                .then(function(arrayOfNotifications){
+                    return arrayOfNotifications.map(addFiscalYearProperty);
+                });
+        }
+
+        function addFiscalYearProperty(notification){
+            notification.fiscalYear = notificationData.fiscalYear;
+            return notification;
+        }
+    }
+
+    var membershipDuesAllLibrariesEstimatesDraft = {
+        getAudienceAndSubject: function() { return 'All Libraries, Membership Dues Estimates'; },
+        getEntities: getEntitiesForMembershipDuesDraftForAllLibraries,
+        getRecipients: getRecipientsForMembershipDuesDraftForAllLibraries,
+        getOfferings: getOfferingsForMembershipDuesDraftForAllLibraries,
+        getNotifications: getNotificationsForMembershipDuesDraftForAllLibraries
+    };
+    return membershipDuesAllLibrariesEstimatesDraft;
 }
 
 function generateDraftNotification(template, notificationData) {
@@ -528,8 +577,13 @@ function generateDraftNotification(template, notificationData) {
                 return getAnnualAccessFeeDraftForAllLibraries(template, notificationData);
             }
         }
-        else if (notificationIsForMembershipDues()) {
-            return getMembershipDuesDraftForAllLibraries(template, notificationData);
+        else if (notificationIsForMembershipInGeneral(template.id)) {
+            if (notificationIsEstimate()) {
+                return getMembershipDuesEstimateDraftForAllLibraries(template, notificationData);
+            }
+            else {
+                return getMembershipDuesInvoiceDraftForAllLibraries(template, notificationData);
+            }
         }
         else if (notificationIsReminder()) {
             return getReminder(template, notificationData);
@@ -592,9 +646,6 @@ function generateDraftNotification(template, notificationData) {
     function notificationIsForVendorReport() {
         return notificationRepository.notificationTypeIsForVendor(template.notificationType);
     }
-    function notificationIsForMembershipDues() {
-        return isMembershipDuesInvoice(template.id);
-    }
     function throwErrorForBadData(){
         throw new Error('Bad data for generating notification drafts');
     }
@@ -604,8 +655,12 @@ function isAnnualAccessFeeInvoice(templateId) {
     return notificationRepository.templateIsForAnnualAccessFeeInvoice(templateId);
 }
 
-function isMembershipDuesInvoice(templateId){
+function notificationIsForMembershipInGeneral(templateId) {
     return notificationRepository.templateIsForMembershipDues(templateId);
+}
+
+function isMembershipDuesInvoice(templateId){
+    return notificationRepository.templateIsForMembershipInvoices(templateId);
 }
 
 function convertEntityToRecipient(entity, template) {
@@ -723,8 +778,14 @@ function generateNotificationForEntity(entityId, customizedTemplate){
         draftStatus: 'draft',
         notificationType: customizedTemplate.notificationType,
         isFeeInvoice: isAnnualAccessFeeInvoice(customizedTemplate.templateId),
-        isMembershipDuesInvoice: isMembershipDuesInvoice(customizedTemplate.templateId)
+        isMembershipDuesInvoice: isMembershipDuesInvoice(customizedTemplate.templateId),
+        isMembershipDuesEstimate: isMembershipDuesEstimate()
     };
+
+    function isMembershipDuesEstimate(){
+        return notificationRepository.templateIsForMembershipDues(customizedTemplate.templateId) &&
+            notificationRepository.notificationTypeIsForEstimate(customizedTemplate.notificationType);
+    }
 }
 
 function extractArrayOfIdsFromObject( mapObject ){

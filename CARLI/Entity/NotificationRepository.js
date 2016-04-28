@@ -219,7 +219,7 @@ function getSummaryTotalWithPriceGetter(notification, offerings, getPriceFromOff
     if ( notification.isFeeInvoice ){
         return getSummaryOfAccessFees();
     }
-    else if ( notification.isMembershipDuesInvoice ){
+    else if ( notification.isMembershipDuesInvoice || notification.isMembershipDuesEstimate ){
         return getMembershipDuesSummary();
     }
     else {
@@ -328,6 +328,10 @@ function templateIsForAnnualAccessFeeInvoice(templateId) {
 }
 
 function templateIsForMembershipDues(templateId) {
+    return templateId === 'notification-template-membership-invoices' || templateId === 'notification-template-membership-estimates';
+}
+
+function templateIsForMembershipInvoices(templateId) {
     return templateId === 'notification-template-membership-invoices';
 }
 
@@ -361,6 +365,7 @@ module.exports = {
     notificationTypeIsForReminder: notificationTypeIsForReminder,
     templateIsForAnnualAccessFeeInvoice: templateIsForAnnualAccessFeeInvoice,
     templateIsForMembershipDues: templateIsForMembershipDues,
+    templateIsForMembershipInvoices: templateIsForMembershipInvoices,
     notificationTypeAllowsRecipientsToBeEdited: notificationTypeAllowsRecipientsToBeEdited,
     listInvoiceNotificationsForCycleId: listInvoiceNotificationsForCycleId,
     listInvoiceNotificationsForMembershipYear: listInvoiceNotificationsForMembershipYear,
