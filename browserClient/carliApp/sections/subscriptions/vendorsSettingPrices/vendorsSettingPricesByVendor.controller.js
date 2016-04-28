@@ -190,7 +190,10 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
 
 
         function countFlagsForProduct(currentFlagCount, product) {
-            var numberOfFlaggedOfferingsForProduct = product.offerings.filter(isFlagged).length;
+            var numberOfFlaggedOfferingsForProduct = 0;
+            if ( product.offerings ) {
+                numberOfFlaggedOfferingsForProduct = product.offerings.filter(isFlagged).length;
+            }
             return currentFlagCount + numberOfFlaggedOfferingsForProduct;
         }
 
