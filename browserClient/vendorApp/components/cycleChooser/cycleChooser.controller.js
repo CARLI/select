@@ -29,14 +29,14 @@ function cycleChooserController($q, $scope, alertService, authService, config, c
 
         function tryToPickOneAutomatically(cycles) {
 
-            if (canRestorePersistedCycle()) {
-                var hydratedCycle = getRestoredPersistedCycle();
-                return readyCycleIfVendorIsStillAllowedIn(hydratedCycle);
-            }
-
             if (cycles.length === 0){
                 vm.noActiveCycles = true;
                 return $q.when(false);
+            }
+
+            if (canRestorePersistedCycle()) {
+                var hydratedCycle = getRestoredPersistedCycle();
+                return readyCycleIfVendorIsStillAllowedIn(hydratedCycle);
             }
 
             if (cycles.length === 1) {
