@@ -17,6 +17,7 @@ var pdf = require('./components/pdf');
 var reports = require('./components/reports');
 var user = require('./components/user');
 var vendorDatabases = require('./components/vendorDatabases');
+var vendorPricingCsv = require('./components/csv/vendorPricingCsv');
 var vendorReportCsv = require('./components/csv/vendorReport');
 var vendorSpecificProductQueries = require('./components/vendorSpecificProductQueries');
 var publicApi = require('./components/public');
@@ -386,6 +387,14 @@ function runMiddlewareServer(){
                         res.send(exportResults.csv);
                     })
                     .catch(sendError(res));
+            });
+            authorizedRoute('get', '/csv/export/pricing-template/:cycleId/:vendorId', carliAuth.requireStaff, function (req, res) {
+                vendorPricingCsv.exportTemplateForVendorPricingCsv(req.params.cycleId, req.params.vendorId)
+                    .then(function (exportResults) {
+                            res.setHeader('Content-Disposition', 'attachment; filename="' + exportResults.fileName + '"');
+                        res.type('csv');
+                        res.send(exportResults.csv);
+                    });
             });
         }
         function defineRoutesForInvoices() {
