@@ -5,6 +5,7 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
 
     var offeringModule = CarliModules.Offering;
     var productMiddleware = CarliModules.ProductMiddleware;
+    var vendorPricingCsv = CarliModules.vendorPricingCsv;
 
     var offeringDisplayLabels = {
         'with-price': 'Display with price',
@@ -104,6 +105,9 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
         },
         removeSitePricing: function (offering) {
             return offeringModule.removeSitePricing(offering);
+        },
+        uploadSitePricing: function(fileContents) {
+            return $q.when( vendorPricingCsv.uploadSitePricing(fileContents) );
         },
         siteLicenseSelectionUsers: offeringModule.siteLicenseSelectionUsers
     };
