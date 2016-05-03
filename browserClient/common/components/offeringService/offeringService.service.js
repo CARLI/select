@@ -102,6 +102,9 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
         getFlaggedState: function (offering, optionalCycle) {
             return offeringModule.getFlaggedState(offering, optionalCycle);
         },
+        removeSitePricing: function (offering) {
+            return offeringModule.removeSitePricing(offering);
+        },
         siteLicenseSelectionUsers: offeringModule.siteLicenseSelectionUsers
     };
 }

@@ -214,6 +214,13 @@ function clearVendorComments(offering) {
     };
 }
 
+function removeSitePricing(offering) {
+    offering.display = 'none';
+    delete offering.pricing.site;
+    delete offering.vendorComments.site;
+    return offering;
+}
+
 function loadOffering( offeringId, cycle ){
     var deferred = Q.defer();
 
@@ -995,5 +1002,7 @@ module.exports = {
     getFundedSelectionPendingPrice: getFundedSelectionPendingPrice,
     getFundedSiteLicensePrice: getFundedSiteLicensePrice,
     getHistoricalFundedSiteLicensePrice: getHistoricalFundedSiteLicensePrice,
-    getAmountPaidByCarli: getAmountPaidByCarli
+    getAmountPaidByCarli: getAmountPaidByCarli,
+    resetFlaggedState: resetFlaggedState,
+    removeSitePricing: removeSitePricing
 };

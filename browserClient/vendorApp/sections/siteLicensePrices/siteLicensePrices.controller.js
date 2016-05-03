@@ -605,9 +605,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
                 }
                 else if (mode == 'deletePricing') {
                     newValue = null;
-                    offering.display = 'none';
-                    delete offering.pricing.site;
-                    delete offering.vendorComments.site;
+                    offering = offeringService.removeSitePricing(offering);
                 }
                 updateCellContents($offeringCell, offering, newValue);
             }
