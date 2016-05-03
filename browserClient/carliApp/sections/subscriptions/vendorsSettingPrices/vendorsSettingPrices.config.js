@@ -1,5 +1,6 @@
 angular.module('carli.sections.subscriptions.vendorsSettingPrices', [
     'common.accordion',
+    'common.fileUploadButton',
     'common.offeringService',
     'common.productService',
     'carli.cycleService',

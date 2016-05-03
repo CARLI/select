@@ -227,9 +227,9 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
         return baseUrl + '/csv/export/pricing-template/' + vm.cycle.id + '/' + vendor.id;
     }
     
-    function uploadSitePricing(fileContentsAsArrayBuffer) {
-        console.log('POSTing file', fileContentsAsArrayBuffer);
-        return offeringService.uploadSitePricing(fileContentsAsArrayBuffer)
+    function uploadSitePricing(fileContentsAsText) {
+        console.log('POSTing file', fileContentsAsText);
+        return offeringService.uploadSitePricing(fileContentsAsText)
             .then(console.log/*success alert*/)
             .catch(console.error/*nice error handling*/);
     }
