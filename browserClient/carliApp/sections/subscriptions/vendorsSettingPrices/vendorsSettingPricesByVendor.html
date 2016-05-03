@@ -40,6 +40,9 @@
                 <div class="vendor footer">
                     <button class="carli-button" busy-click="vm.exportOfferingList(vendor)">Export</button>
 
+                    <a class="carli-button" ng-href="{{ vm.downloadSitePricingUrl(vendor) }}" target="_self">Download Site Pricing Template</a>
+                    <file-upload-button upload-button-label="Upload Site Pricing CSV" file-read-success-callback="vm.uploadSitePricing"></file-upload-button>
+
                     <button class="carli-button" busy-click="vm.openVendorPricing(vendor)" ng-if="vm.vendorStatus[vendor.id].isClosed">Re-Open {{ vendor.name }} Pricing</button>
                     <button class="carli-button" busy-click="vm.closeVendorPricing(vendor)" ng-if="!vm.vendorStatus[vendor.id].isClosed">Close {{ vendor.name }} Pricing</button>
 
