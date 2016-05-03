@@ -13,12 +13,16 @@ function exportTemplateForVendorPricingCsv(cycleId, vendorId) {
         comment: 'Comment'
     };
 
+    var cycleName = cycleId;
+
     return cycleRepository.load(cycleId)
         .then(loadAllOfferingsForVendorFromCycle)
         .then(transformIntoCsvData)
-        .then(returnExportResults);
+        .then(exportToCsv)
+        .then(fillInFileName);
 
     function loadAllOfferingsForVendorFromCycle(cycle) {
+        cycleName = cycle.name;
         return offeringRepository.listOfferingsForVendorId(vendorId, cycle);
     }
 
@@ -63,7 +67,7 @@ function exportTemplateForVendorPricingCsv(cycleId, vendorId) {
         }
     }
 
-    function returnExportResults(csvRows) {
+    function exportToCsv(csvRows) {
         var csvPromise = Q.defer();
         var csvExportOptions = {
             columns: columns
@@ -73,14 +77,21 @@ function exportTemplateForVendorPricingCsv(cycleId, vendorId) {
             if (err) {
                 csvPromise.reject(err);
             } else {
-                csvPromise.resolve({
-                    csv: output,
-                    fileName: 'Some Vendor Pricing.csv'
-                });
+                csvPromise.resolve(output);
             }
         });
 
         return csvPromise.promise;
+    }
+
+    function fillInFileName(exportedCsv) {
+        return vendorRepository.load(vendorId)
+            .then(function (vendor) {
+                return {
+                    csv: exportedCsv,
+                    fileName: vendor.name + ' pricing template for ' + cycleName + '.csv'
+                };
+            });
     }
 }
 
