@@ -19,20 +19,13 @@ function exportTemplateForVendorPricingCsv(cycleId, vendorId) {
         return arrayOfExpandedOfferings.map(transformIntoCsvRow);
 
         function transformIntoCsvRow(offering) {
-            //return {
-            //    id: offering.id,
-            //    product: offering.product.name,
-            //    library: offering.library.name,
-            //    sitePrice: sitePrice(),
-            //    comment: siteComment()
-            //};
-            return [
-                offering.id,
-                offering.product.name,
-                offering.library.name,
-                sitePrice(),
-                siteComment()
-            ];
+            return {
+                id: offering.id,
+                product: offering.product.name,
+                library: offering.library.name,
+                sitePrice: sitePrice(),
+                comment: siteComment()
+            };
 
             function sitePrice() {
                 return offering.pricing ? offering.pricing.site || '' : '';
@@ -47,7 +40,13 @@ function exportTemplateForVendorPricingCsv(cycleId, vendorId) {
     function returnExportResults(csvRows){
         var csvPromise = Q.defer();
         var csvExportOptions = {
-            columns: [ 'ID', 'Product', 'Library', 'Site Price', 'Comment' ],
+            columns: {
+                id: 'ID',
+                product: 'Product',
+                library: 'Library',
+                sitePrice: 'Site Price',
+                comment: 'Comment'
+            },
             header: true
         };
 
