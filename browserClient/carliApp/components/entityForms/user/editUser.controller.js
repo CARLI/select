@@ -198,6 +198,7 @@ function editUserController( $filter, $scope, $rootScope, $q, $location, $window
             return $q.reject('Passwords do not match');
         }
 
+        vm.user.email = vm.user.email.replace(/[^\x00-\x7F]/g, "");
         vm.user.roles = [ vm.userType ];
 
         if (vm.userType == 'vendor') {
