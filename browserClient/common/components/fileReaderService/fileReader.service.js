@@ -4,11 +4,24 @@ angular.module('common.fileReader')
 
         return {
             maxFileSize: MAX_FILE_SIZE,
-            read: readFile
+            read: function (file) {
+                console.warn('Deprecation warning: common.fileReader.read() has been replaced with readFileAsArrayBuffer or readFileAsText');
+                return readFileAsArrayBuffer(file);
+            },
+            readFile: readFile,
+            readFileAsArrayBuffer: readFileAsArrayBuffer,
+            readFileAsText: readFileAsText
         };
 
+        function readFileAsArrayBuffer(file) {
+            return readFile(file, 'readAsArrayBuffer');
+        }
+        function readFileAsText(file) {
+            return readFile(file, 'readAsText');
+        }
 
-        function readFile( file ){
+        function readFile( file, readMethod ){
+
             var deferred = $q.defer();
 
             if ( !file ){
@@ -33,7 +46,7 @@ angular.module('common.fileReader')
                 deferred.notify( 100 * (e.loaded/e.total).toFixed() );
             };
 
-            reader.readAsArrayBuffer(file);
+            reader[readMethod](file);
 
             return deferred.promise;
         }
