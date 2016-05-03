@@ -5,6 +5,13 @@ var Q = require('q');
 var csvExport = require('csv-stringify');
 
 function exportTemplateForVendorPricingCsv(cycleId, vendorId) {
+    var columns = {
+        id: 'ID',
+        product: 'Product',
+        library: 'Library',
+        sitePrice: 'Site Price',
+        comment: 'Comment'
+    };
 
     return cycleRepository.load(cycleId)
         .then(loadAllOfferingsForVendorFromCycle)
@@ -16,7 +23,26 @@ function exportTemplateForVendorPricingCsv(cycleId, vendorId) {
     }
 
     function transformIntoCsvData(arrayOfExpandedOfferings) {
-        return arrayOfExpandedOfferings.map(transformIntoCsvRow);
+
+        var offeringRows = arrayOfExpandedOfferings.map(transformIntoCsvRow);
+        return dataRows().concat(headerRow()).concat(offeringRows);
+
+        function dataRows() {
+            return [
+                {
+                    id: 'CycleId',
+                    product: cycleId
+                },
+                {
+                    id: 'VendorId',
+                    product: vendorId
+                }
+            ]
+        }
+
+        function headerRow() {
+            return [columns]
+        }
 
         function transformIntoCsvRow(offering) {
             return {
@@ -37,20 +63,13 @@ function exportTemplateForVendorPricingCsv(cycleId, vendorId) {
         }
     }
 
-    function returnExportResults(csvRows){
+    function returnExportResults(csvRows) {
         var csvPromise = Q.defer();
         var csvExportOptions = {
-            columns: {
-                id: 'ID',
-                product: 'Product',
-                library: 'Library',
-                sitePrice: 'Site Price',
-                comment: 'Comment'
-            },
-            header: true
+            columns: columns
         };
 
-        csvExport(csvRows, csvExportOptions, function(err, output){
+        csvExport(csvRows, csvExportOptions, function (err, output) {
             if (err) {
                 csvPromise.reject(err);
             } else {
