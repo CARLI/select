@@ -1,8 +1,9 @@
+var csvExport = require('csv-stringify');
 var cycleRepository = require('../../../CARLI/Entity/CycleRepository');
 var offeringRepository = require('../../../CARLI/Entity/OfferingRepository');
-var vendorRepository = require('../../../CARLI/Entity/VendorRepository');
 var Q = require('q');
-var csvExport = require('csv-stringify');
+var vendorRepository = require('../../../CARLI/Entity/VendorRepository');
+var _ = require('lodash');
 
 function exportTemplateForVendorPricingCsv(cycleId, vendorId) {
     var columns = {
@@ -12,6 +13,7 @@ function exportTemplateForVendorPricingCsv(cycleId, vendorId) {
         sitePrice: 'Site Price',
         comment: 'Comment'
     };
+    var columnOrders = ['product','library'];
 
     var cycleName = cycleId;
 
@@ -19,7 +21,10 @@ function exportTemplateForVendorPricingCsv(cycleId, vendorId) {
         .then(loadAllOfferingsForVendorFromCycle)
         .then(transformIntoCsvData)
         .then(exportToCsv)
-        .then(fillInFileName);
+        .then(fillInFileName)
+        .catch(function(err){
+            console.log('CSV ERROR', err);
+        });
 
     function loadAllOfferingsForVendorFromCycle(cycle) {
         cycleName = cycle.name;
@@ -29,7 +34,9 @@ function exportTemplateForVendorPricingCsv(cycleId, vendorId) {
     function transformIntoCsvData(arrayOfExpandedOfferings) {
 
         var offeringRows = arrayOfExpandedOfferings.map(transformIntoCsvRow);
-        return dataRows().concat(headerRow()).concat(offeringRows);
+        var sortedOfferingRows = _.orderBy(offeringRows, columnOrders);
+
+        return dataRows().concat(headerRow()).concat(sortedOfferingRows);
 
         function dataRows() {
             return [
