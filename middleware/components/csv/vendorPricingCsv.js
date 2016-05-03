@@ -1,9 +1,12 @@
+
 var csvExport = require('csv-stringify');
+var Q = require('q');
+var _ = require('lodash');
+
+var carliError = require('../../../CARLI/Error');
 var cycleRepository = require('../../../CARLI/Entity/CycleRepository');
 var offeringRepository = require('../../../CARLI/Entity/OfferingRepository');
-var Q = require('q');
 var vendorRepository = require('../../../CARLI/Entity/VendorRepository');
-var _ = require('lodash');
 
 function exportTemplateForVendorPricingCsv(cycleId, vendorId) {
     var columns = {
@@ -102,6 +105,93 @@ function exportTemplateForVendorPricingCsv(cycleId, vendorId) {
     }
 }
 
+function importFromCsv(cycleId, vendorId, csvRows) {
+    var invalidRows = csvRows.filter(isSitePriceInvalid);
+    if (invalidRows.length > 0) {
+        throw importError('Invalid price', invalidRows);
+    }
+
+    var cycle = null;
+    var updateTime = new Date().toISOString();
+
+    cycleRepository.load(cycleId)
+        .then(saveCycleReference)
+        .then(loadOfferingsForVendor)
+        .then(mapOfferingsById)
+        .then(updateOfferings)
+        .then(saveOfferings);
+
+    function saveCycleReference(c) {
+        cycle = c;
+    }
+
+    function loadOfferingsForVendor() {
+        return offeringRepository.listOfferingsForVendorId(vendorId, cycle);
+    }
+
+    function mapOfferingsById(offerings) {
+        var offeringMap = {};
+        offerings.forEach(function (o) {
+            offeringMap[o.id] = o;
+        });
+        return offeringMap;
+    }
+
+    function updateOfferings(offeringsById) {
+        return csvRows.map(updateOffering);
+
+        function updateOffering(row) {
+            var offering = offeringsById[row.id];
+            if (!offering)
+                throw importError('Offering not found', [ row ]);
+
+            if ( sitePriceIsEmpty(row)) {
+                offeringRepository.removeSitePricing(offering);
+            }
+            else {
+                offering.price.site = parseFloat(row.sitePrice).toFixed(2);
+            }
+
+            offering.siteLicensePricingUpdate = updateTime;
+            offeringRepository.resetFlaggedState(offering);
+
+            if ( row.comment ) {
+                offering.vendorComments = offering.vendorComments || {};
+                offering.vendorComments.site = row.comment;
+            }
+
+            return offering;
+        }
+    }
+
+    function saveOfferings(offerings) {
+        return offeringRepository.bulkUpdateOfferings(offerings, cycle);
+    }
+}
+
+function importError(message, invalidRows) {
+    return carliError({ message: 'Invalid import data: ' + message, invalidRows: invalidRows }, 500);
+}
+
+function isSitePriceInvalid(row) {
+    return !isSitePriceValid(row);
+}
+
+function isSitePriceValid(row) {
+    if (sitePriceIsEmpty(row)) {
+        return true;
+    }
+    
+    var sitePrice = row.sitePrice.replace(/\$/g, '');
+    var sitePriceNumber = parseFloat(sitePrice);
+    return !isNaN(sitePriceNumber);
+}
+
+function sitePriceIsEmpty(row) {
+    return typeof row.sitePrice == 'undefined' || row.sitePrice == null || row.sitePrice == '';
+}
+
 module.exports = {
-    exportTemplateForVendorPricingCsv: exportTemplateForVendorPricingCsv
+    exportTemplateForVendorPricingCsv: exportTemplateForVendorPricingCsv,
+    importFromCsv: importFromCsv
 };

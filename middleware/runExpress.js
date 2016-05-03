@@ -396,6 +396,12 @@ function runMiddlewareServer(){
                         res.send(exportResults.csv);
                     });
             });
+            authorizedRoute('post', '/csv/import/pricing', carliAuth.requireStaff, function (req, res) {
+                console.log('import');
+                console.log(req.body);
+                sendOk(res);
+                // vendorPricingCsv.importFromCsv()
+            });
         }
         function defineRoutesForInvoices() {
             authorizedRoute('get', '/next-batch-id', carliAuth.requireStaff, function (req, res) {
