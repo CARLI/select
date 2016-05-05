@@ -121,6 +121,53 @@ function exportTemplateForVendorPricingCsv(cycleId, vendorId) {
     }
 }
 
+function parseCsvInput(requestBody) {
+    var rawContent = throwAwayTheHeaderLine(requestBody);
+
+    var importMetadata = getImportMetadata(rawContent);
+
+    if (importMetadata.importVersion != 1) {
+        console.log('Invalid import version', importMetadata);
+        throw carliError('Invalid import version');
+    }
+
+    var parsedContent = [];
+    rawContent.forEach(function (rawRow) {
+        parsedContent.push({
+            id: rawRow[0],
+            product: rawRow[1],
+            library: rawRow[2],
+            sitePrice: rawRow[3],
+            comment: rawRow[4]
+        });
+    });
+    return parsedContent;
+
+    function throwAwayTheHeaderLine(body) {
+        var headers = body.shift();
+        if (headers[0] != columns.id) {
+            throw carliError('Invalid import file');
+        }
+        return body;
+    }
+    function getImportMetadata(rows) {
+        var importMetadata = {
+            importVersion: null,
+            cycleId: null,
+            vendorId: null
+        };
+        rows.forEach(function (row) {
+            if (row[1] == 'importVersion')
+                importMetadata.importVersion = row[0];
+            else if (row[1] == 'cycleId')
+                importMetadata.cycleId = row[0];
+            else if (row[1] == 'vendorId')
+                importMetadata.cycleId = row[0];
+        });
+        return importMetadata;
+    }
+}
+
 function importFromCsv(cycleId, vendorId, csvRows) {
     var invalidRows = csvRows.filter(isSitePriceInvalid);
     if (invalidRows.length > 0) {
@@ -209,5 +256,6 @@ function sitePriceIsEmpty(row) {
 
 module.exports = {
     exportTemplateForVendorPricingCsv: exportTemplateForVendorPricingCsv,
+    parseCsvInput: parseCsvInput,
     importFromCsv: importFromCsv
 };
