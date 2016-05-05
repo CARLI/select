@@ -4,6 +4,8 @@ angular.module('carli.sections.oneTimePurchases')
 function oneTimePurchasesController( $sce, notificationModalService, libraryService ){
     var vm = this;
 
+    vm.groupBy = 'library';
+
     vm.invoiceAnnualAccessFees = invoiceAnnualAccessFees;
 
     vm.libraryListColumns = [
