@@ -2,6 +2,7 @@ var cluster = require('cluster');
 var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
+var expressCsv = require('express-csv-middleware');
 var _ = require('lodash');
 
 var config = require('../config');
@@ -31,6 +32,7 @@ function runMiddlewareServer(){
 
     function configureMiddleware() {
         carliMiddleware.use(corsHeaders);
+        carliMiddleware.use(interceptPricingUploads);
         carliMiddleware.use(bodyParser.json());
         carliMiddleware.use(cookieParser());
         carliMiddleware.use(setAuthForRequest);
@@ -397,10 +399,51 @@ function runMiddlewareServer(){
                     });
             });
             authorizedRoute('post', '/csv/import/pricing', carliAuth.requireStaff, function (req, res) {
-                console.log('import');
-                console.log(req.body);
-                sendOk(res);
-                // vendorPricingCsv.importFromCsv()
+                console.log('parsing uploaded csv');
+                var headers = req.body.shift();
+                var rawContent = req.body;
+
+                var importMetadata = getImportMetadata(rawContent);
+                if (importMetadata.importVersion != 1) {
+                    console.log('Invalid import version', importMetadata);
+                    sendError(res, 500);
+                }
+
+                var parsedContent = [];
+                rawContent.forEach(function (rawRow) {
+                    parsedContent.push({
+                        id: rawRow[0],
+                        product: rawRow[1],
+                        library: rawRow[2],
+                        sitePrice: rawRow[3],
+                        comment: rawRow[4]
+                    });
+                });
+
+                vendorPricingCsv.importFromCsv(importMetadata.cycleId, importMetadata.vendorId, parsedContent)
+                    .then(function (result) {
+                        sendOk(res);
+                    })
+                    .catch (function (error) {
+                        sendError(res, 500);
+                    });
+
+                function getImportMetadata(rows) {
+                    var importMetadata = {
+                        importVersion: null,
+                        cycleId: null,
+                        vendorId: null
+                    };
+                    rows.forEach(function (row) {
+                        if (row[1] == 'importVersion')
+                            importMetadata.importVersion = row[0];
+                        else if (row[1] == 'cycleId')
+                            importMetadata.cycleId = row[0];
+                        else if (row[1] == 'vendorId')
+                            importMetadata.cycleId = row[0];
+                    });
+                    return importMetadata;
+                }
             });
         }
         function defineRoutesForInvoices() {
@@ -567,6 +610,12 @@ function corsHeaders(req, res, next) {
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, X-AuthToken");
     next();
+}
+
+function interceptPricingUploads() {
+    var csvOptions = {};
+    var csvBodyParserOptions = {limit: '50mb'};
+    return expressCsv(csvBodyParserOptions, csvOptions);
 }
 
 function setAuthForRequest(req, res, next) {
