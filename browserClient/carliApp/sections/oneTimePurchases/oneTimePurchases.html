@@ -3,14 +3,19 @@
         <h1>One-Time Purchases</h1>
     </div>
 
-    <section class="content list-content">
-        <entity-list values="vm.libraryList" columns="vm.libraryListColumns" entity-label="libraries" loading-promise="vm.libraryLoadingPromise"></entity-list>
-        <div class="notifications">
-            <header>Notifications</header>
-            <button type="button" ng-click="vm.invoiceAnnualAccessFees()" class="carli-button"> Invoice: Annual Access Fees</button>
-        </div>
-    </section>
+    <div class="controls group-by-toggle">
+        <button type="button"
+            class="toggle-button"
+            ng-class="{ 'active': vm.groupBy === 'vendor' }"
+            ng-click="vm.groupBy = 'vendor'">Vendor</button
+        ><button type="button"
+            class="toggle-button"
+            ng-class="{ 'active': vm.groupBy === 'library' }"
+            type="button" ng-click="vm.groupBy = 'library'">Library</button>
+    </div>
 
+    <one-time-purchases-by-vendor ng-if="vm.groupBy === 'vendor'"></one-time-purchases-by-vendor>
+    <one-time-purchases-by-library ng-if="vm.groupBy === 'library'"></one-time-purchases-by-library>
 </section>
 
 <notification-modal></notification-modal>
