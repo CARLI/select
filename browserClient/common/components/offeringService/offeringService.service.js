@@ -107,6 +107,7 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
             return offeringModule.removeSitePricing(offering);
         },
         uploadSitePricing: function(fileContents) {
+            //csv → json
             return $q.when( vendorPricingCsv.uploadSitePricing(fileContents) );
         },
         siteLicenseSelectionUsers: offeringModule.siteLicenseSelectionUsers
