@@ -8,6 +8,8 @@ var cycleRepository = require('../../../CARLI/Entity/CycleRepository');
 var offeringRepository = require('../../../CARLI/Entity/OfferingRepository');
 var vendorRepository = require('../../../CARLI/Entity/VendorRepository');
 
+var PRICING_IMPORT_VERSION = 1;
+
 function exportTemplateForVendorPricingCsv(cycleId, vendorId) {
     var columns = {
         id: 'ID',
@@ -39,17 +41,31 @@ function exportTemplateForVendorPricingCsv(cycleId, vendorId) {
         var offeringRows = arrayOfExpandedOfferings.map(transformIntoCsvRow);
         var sortedOfferingRows = _.orderBy(offeringRows, columnOrders);
 
-        return dataRows().concat(headerRow()).concat(sortedOfferingRows);
+        // return metadataRows().concat(headerRow()).concat(sortedOfferingRows);
+        return headerRow().concat(metadataRows()).concat(sortedOfferingRows);
 
-        function dataRows() {
+        function metadataRows() {
             return [
                 {
-                    id: 'CycleId',
-                    product: cycleId
+                    id: PRICING_IMPORT_VERSION,
+                    product: 'importVersion',
+                    library: 'INTERNAL USE',
+                    sitePrice: '',
+                    comment: ''
                 },
                 {
-                    id: 'VendorId',
-                    product: vendorId
+                    id: cycleId,
+                    product: 'cycleId',
+                    library: 'INTERNAL USE',
+                    sitePrice: '',
+                    comment: ''
+                },
+                {
+                    id: vendorId,
+                    product: 'vendorId',
+                    library: 'INTERNAL USE',
+                    sitePrice: '',
+                    comment: ''
                 }
             ]
         }
