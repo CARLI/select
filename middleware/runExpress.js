@@ -399,51 +399,16 @@ function runMiddlewareServer(){
                     });
             });
             authorizedRoute('post', '/csv/import/pricing', carliAuth.requireStaff, function (req, res) {
-                console.log('parsing uploaded csv');
-                var headers = req.body.shift();
-                var rawContent = req.body;
-
-                var importMetadata = getImportMetadata(rawContent);
-                if (importMetadata.importVersion != 1) {
-                    console.log('Invalid import version', importMetadata);
-                    sendError(res, 500);
-                }
-
-                var parsedContent = [];
-                rawContent.forEach(function (rawRow) {
-                    parsedContent.push({
-                        id: rawRow[0],
-                        product: rawRow[1],
-                        library: rawRow[2],
-                        sitePrice: rawRow[3],
-                        comment: rawRow[4]
+                vendorPricingCsv.parseCsvInput(req.body)
+                    .then(function (parsed) {
+                        vendorPricingCsv.importFromCsv(parsed.metadata.cycleId, parsed.metadata.vendorId, parsed.content)
+                            .then(function (result) {
+                                sendOk(res);
+                            })
+                            .catch (function (error) {
+                                sendError(res, 500);
+                            });
                     });
-                });
-
-                vendorPricingCsv.importFromCsv(importMetadata.cycleId, importMetadata.vendorId, parsedContent)
-                    .then(function (result) {
-                        sendOk(res);
-                    })
-                    .catch (function (error) {
-                        sendError(res, 500);
-                    });
-
-                function getImportMetadata(rows) {
-                    var importMetadata = {
-                        importVersion: null,
-                        cycleId: null,
-                        vendorId: null
-                    };
-                    rows.forEach(function (row) {
-                        if (row[1] == 'importVersion')
-                            importMetadata.importVersion = row[0];
-                        else if (row[1] == 'cycleId')
-                            importMetadata.cycleId = row[0];
-                        else if (row[1] == 'vendorId')
-                            importMetadata.cycleId = row[0];
-                    });
-                    return importMetadata;
-                }
             });
         }
         function defineRoutesForInvoices() {
