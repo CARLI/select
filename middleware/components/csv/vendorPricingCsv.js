@@ -10,14 +10,15 @@ var vendorRepository = require('../../../CARLI/Entity/VendorRepository');
 
 var PRICING_IMPORT_VERSION = 1;
 
+var columns = {
+    id: 'ID',
+    product: 'Product',
+    library: 'Library',
+    sitePrice: 'Site Price',
+    comment: 'Comment'
+};
+
 function exportTemplateForVendorPricingCsv(cycleId, vendorId) {
-    var columns = {
-        id: 'ID',
-        product: 'Product',
-        library: 'Library',
-        sitePrice: 'Site Price',
-        comment: 'Comment'
-    };
     var columnOrders = ['product','library'];
 
     var cycleName = cycleId;
