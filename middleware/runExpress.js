@@ -32,7 +32,7 @@ function runMiddlewareServer(){
 
     function configureMiddleware() {
         carliMiddleware.use(corsHeaders);
-        carliMiddleware.use(interceptPricingUploads);
+        carliMiddleware.use(handleCsvUploads());
         carliMiddleware.use(bodyParser.json());
         carliMiddleware.use(cookieParser());
         carliMiddleware.use(setAuthForRequest);
@@ -577,10 +577,17 @@ function corsHeaders(req, res, next) {
     next();
 }
 
-function interceptPricingUploads() {
+function handleCsvUploads() {
     var csvOptions = {};
     var csvBodyParserOptions = {limit: '50mb'};
-    return expressCsv(csvBodyParserOptions, csvOptions);
+    var csvMiddleware = expressCsv(csvBodyParserOptions, csvOptions);
+
+    return function (req, res, next) {
+        if (req.headers['content-type'] == 'text/csv') {
+            return csvMiddleware(req, res, next);
+        }
+        next();
+    }
 }
 
 function setAuthForRequest(req, res, next) {
