@@ -399,15 +399,13 @@ function runMiddlewareServer(){
                     });
             });
             authorizedRoute('post', '/csv/import/pricing', carliAuth.requireStaff, function (req, res) {
-                vendorPricingCsv.parseCsvInput(req.body)
-                    .then(function (parsed) {
-                        vendorPricingCsv.importFromCsv(parsed.metadata.cycleId, parsed.metadata.vendorId, parsed.content)
-                            .then(function (result) {
-                                sendOk(res);
-                            })
-                            .catch (function (error) {
-                                sendError(res, 500);
-                            });
+                var parsed = vendorPricingCsv.parseCsvInput(req.body)
+                vendorPricingCsv.importFromCsv(parsed.metadata.cycleId, parsed.metadata.vendorId, parsed.content)
+                    .then(function (result) {
+                        sendOk(res);
+                    })
+                    .catch (function (error) {
+                        sendError(res, 500);
                     });
             });
         }
