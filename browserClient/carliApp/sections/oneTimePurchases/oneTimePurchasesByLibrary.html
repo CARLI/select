@@ -1,3 +1,53 @@
-One Time Purchases by Library
+<div cg-busy="vm.libraryListLoadingPromise"></div>
+<div class="offerings-editor">
+    <ul class="library-accordion">
+        <li ng-repeat="library in vm.libraryList | orderBy:'name'" ng-class="{collapsed: vm.openAccordion !== library.id}">
+            <div class="accordion-header" ng-click="vm.toggleAccordion(library)" cg-busy="vm.loadingPromise[library.id]">
+                <button type="button" class="angle-icon-container">
+                    <fa name="angle-down"></fa><span class="sr-only">Open offerings for {{ library.name }}</span>
+                </button>
+                <library-info library="library" class="inline"></library-info>
+            </div>
+            <div class="content" ng-if="vm.openAccordion === library.id">
+                <div class="filter-controls">
+                    <span ng-class="{ 'active-offering-filter': vm.offeringFilter[library.id] === 'selected' || !vm.offeringFilter[library.id] }"
+                          ng-click="vm.offeringFilter[library.id] = 'selected'">all selected products</span> |
+                    <span ng-class="{ 'active-offering-filter': vm.offeringFilter[library.id] === 'all' }"
+                          ng-click="vm.offeringFilter[library.id] = 'all'">all available products</span> |
+                    <span ng-class="{ 'active-offering-filter': vm.offeringFilter[library.id] === 'unselected' }"
+                          ng-click="vm.offeringFilter[library.id] = 'unselected'">all non-selected products</span>
+                </div>
+                <ul class="offerings-list" role="grid">
+                    <li class="column-headers" role="row">
+                        <div role="columnheader" id="product-column-header" class="sortable column product" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.product, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.product)">Product</div>
+                        <div role="columnheader" id="vendor-column-header" class="sortable column vendor" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.vendor, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.vendor)">Vendor</div>
+                        <div role="columnheader" id="library-view-column-header" class="column library-view">Library View</div>
+                        <div role="columnheader" id="selected-last-year-column-header" class="sortable column selected-last-year" ng-class="{ activeSort: vm.sortOptions.selectedLastYear, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.selectedLastYear)">Last Year</div>
+                        <div role="columnheader" id="site-license-price-column-header" class="sortable column site-license-price current-year-only" ng-class="{activeSort: vm.orderBy === vm.sortOptions.pricing, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.pricing)">Prices</div>
+                        <div role="columnheader" id="selection-column-header" class="column selection">Selection</div>
+                    </li>
+                    <li role="row" class="offering" ng-class="{ 'edit-mode': vm.isEditing[offering.id] }" ng-repeat="offering in vm.offerings[library.id] | filter:vm.filterOfferingBySelection | orderBy:vm.orderBy:vm.reverse track by offering.id">
+                        <edit-offering ng-if="vm.isEditing[offering.id]" cycle="::vm.cycle" offering="offering" columns="::vm.offeringColumns" on-offering-saved="::vm.stopEditing"></edit-offering>
+                        <render-offering ng-if="!vm.isEditing[offering.id]" offering="offering" cycle="::vm.cycle" columns="::vm.offeringColumns"></render-offering>
+                        <checkbox ng-model="vm.selectedOfferings[library.id][offering.id]"></checkbox>
+                    </li>
+                </ul>
+                <div class="footer clearfix">
+                    <button class="carli-button" busy-click="vm.exportOfferingList(library)">Export</button>
+
+                    <div class="total">
+                        <span class="label">Total:</span>
+                        <span>{{ vm.computeSelectionTotalForLibrary(library) | currency }}</span>
+                    </div>
+
+                    <button type="button" class="carli-button" ng-click="vm.invoiceCheckedProductsForLibrary(library)">Invoice Checked Products</button>
+                    <button type="button" class="carli-button" ng-click="vm.invoiceAllProductsForLibrary(library)">Invoice All Products</button>
+
+                    <div class="placeholder pull-left" style="margin-right: 1rem; width: 400px;">TODO: Library View Button</div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
 
 <button type="button" ng-click="vm.invoiceAnnualAccessFees()" class="carli-button"> Invoice: Annual Access Fees</button>
