@@ -142,7 +142,10 @@ function parseCsvInput(requestBody) {
             comment: rawRow[4]
         });
     });
-    return parsedContent;
+    return {
+        metadata: importMetadata,
+        content: parsedContent
+    };
 
     function throwAwayTheHeaderLine(body) {
         var headers = body.shift();
@@ -163,23 +166,22 @@ function parseCsvInput(requestBody) {
             else if (row[1] == 'cycleId')
                 importMetadata.cycleId = row[0];
             else if (row[1] == 'vendorId')
-                importMetadata.cycleId = row[0];
+                importMetadata.vendorId = row[0];
         });
+        if (importMetadata.importVersion == null || importMetadata.cycleId == null || importMetadata.vendorId == null) {
+            throw new carliError('Import metadata not found');
+        }
         return importMetadata;
     }
 }
 
 function importFromCsv(cycleId, vendorId, csvRows) {
-    var invalidRows = csvRows.filter(isSitePriceInvalid);
-    if (invalidRows.length > 0) {
-        throw importError('Invalid price', invalidRows);
-    }
-
     var cycle = null;
     var updateTime = new Date().toISOString();
 
-    cycleRepository.load(cycleId)
+    return cycleRepository.load(cycleId)
         .then(saveCycleReference)
+        .then(checkForInvalidPrices)
         .then(loadOfferingsForVendor)
         .then(mapOfferingsById)
         .then(updateOfferings)
@@ -187,9 +189,20 @@ function importFromCsv(cycleId, vendorId, csvRows) {
 
     function saveCycleReference(c) {
         cycle = c;
+        return cycle;
+    }
+
+    function checkForInvalidPrices() {
+        var invalidRows = csvRows.filter(isSitePriceInvalid);
+        if (invalidRows.length > 0) {
+            console.log('Rejected pricing upload due to invalid rows', invalidRows);
+            throw importError('Invalid price', invalidRows);
+        }
+        return true;
     }
 
     function loadOfferingsForVendor() {
+        console.log('Loading offerings for pricing import');
         return offeringRepository.listOfferingsForVendorId(vendorId, cycle);
     }
 
@@ -202,6 +215,8 @@ function importFromCsv(cycleId, vendorId, csvRows) {
     }
 
     function updateOfferings(offeringsById) {
+        console.log('Updating prices with uploaded data for loaded offerings');
+        console.log('There are ' + csvRows.length + ' uploaded rows');
         return csvRows.map(updateOffering);
 
         function updateOffering(row) {
@@ -229,6 +244,7 @@ function importFromCsv(cycleId, vendorId, csvRows) {
     }
 
     function saveOfferings(offerings) {
+        console.log('Saving back updated offerings');
         return offeringRepository.bulkUpdateOfferings(offerings, cycle);
     }
 }

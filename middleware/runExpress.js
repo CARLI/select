@@ -399,7 +399,10 @@ function runMiddlewareServer(){
                     });
             });
             authorizedRoute('post', '/csv/import/pricing', carliAuth.requireStaff, function (req, res) {
-                var parsed = vendorPricingCsv.parseCsvInput(req.body)
+                var parsed = vendorPricingCsv.parseCsvInput(req.body);
+                // console.log('Importing pricing for:');
+                // console.log('   Vendor = ' + parsed.metadata.vendorId);
+                // console.log('   Cycle  = ' + parsed.metadata.cycleId);
                 vendorPricingCsv.importFromCsv(parsed.metadata.cycleId, parsed.metadata.vendorId, parsed.content)
                     .then(function (result) {
                         sendOk(res);
