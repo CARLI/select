@@ -17,8 +17,10 @@
         </div>
     </div>
 
-    <one-time-purchases-by-vendor ng-if="vm.groupBy === 'vendor'"></one-time-purchases-by-vendor>
-    <one-time-purchases-by-library ng-if="vm.groupBy === 'library'"></one-time-purchases-by-library>
+    <section id="subscriptions" class="content">
+        <one-time-purchases-by-vendor ng-if="vm.groupBy === 'vendor'"></one-time-purchases-by-vendor>
+        <one-time-purchases-by-library ng-if="vm.groupBy === 'library'"></one-time-purchases-by-library>
+    </section>
 </section>
 
 <notification-modal></notification-modal>
