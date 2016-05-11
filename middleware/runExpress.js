@@ -1,8 +1,10 @@
 var cluster = require('cluster');
 var express = require('express');
+var fs = require('fs');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var expressCsv = require('express-csv-middleware');
+var tmp = require('tmp');
 var _ = require('lodash');
 
 var config = require('../config');
@@ -250,7 +252,7 @@ function runMiddlewareServer(){
                 cluster.worker.send({
                     command: 'launchSynchronizationWorker'
                 });
-                sendOk(res);
+                sendOk(res)();
             });
             authorizedRoute('get', '/index-all-cycles', carliAuth.requireStaff, function (req, res) {
                 vendorDatabases.triggerIndexingForAllCycles()
@@ -399,17 +401,16 @@ function runMiddlewareServer(){
                     });
             });
             authorizedRoute('post', '/csv/import/pricing', carliAuth.requireStaff, function (req, res) {
-                var parsed = vendorPricingCsv.parseCsvInput(req.body);
-                // console.log('Importing pricing for:');
-                // console.log('   Vendor = ' + parsed.metadata.vendorId);
-                // console.log('   Cycle  = ' + parsed.metadata.cycleId);
-                vendorPricingCsv.importFromCsv(parsed.metadata.cycleId, parsed.metadata.vendorId, parsed.content)
-                    .then(function (result) {
-                        sendOk(res);
-                    })
-                    .catch (function (error) {
-                        sendError(res, 500);
-                    });
+                // var pathToTempFile = fs.write(req.body);
+                Logger.log('writing temp file for import worker');
+                var pathToTempFile = tmp.tmpNameSync();
+                fs.writeFileSync(pathToTempFile, req.body.join("\n"), 'utf-8');
+
+                cluster.worker.send({
+                    command: 'launchPricingImportWorker',
+                    pathToTempFile: pathToTempFile
+                });
+                sendOk(res)();
             });
         }
         function defineRoutesForInvoices() {

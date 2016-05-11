@@ -8,6 +8,7 @@ var expressWorkerCount = 1; // require('os').cpus().length;
 var expressWorkerSetup = { exec: './runExpress.js' };
 var cycleDatabaseWorkerSetup = { exec: './cycleDatabaseWorker.js' };
 var synchronizationWorkerSetup = { exec: './synchronizationWorker.js' };
+var pricingImportWorkerSetup = { exec: 'pricingImportWorker.js' };
 
 if (cluster.isMaster) {
     launchWebWorkers();
@@ -47,6 +48,9 @@ function listenForMessages() {
         } else if (message.command == 'launchSynchronizationWorker') {
             Logger.log('Master is launching synchronization worker');
             launchSynchronizationWorker();
+        } else if (message.command == 'launchPricingImportWorker') {
+            Logger.log('Master is launching a pricing import worker');
+            launchPricingImportWorker(message.pathToTempFile);
         } else {
             Logger.log('Unrecognized message: ' + JSON.stringify(message));
         }
@@ -61,4 +65,9 @@ function launchCycleDatabaseWorker(sourceCycleId, newCycleId) {
 function launchSynchronizationWorker() {
     cluster.setupMaster(synchronizationWorkerSetup);
     cluster.fork();
+}
+
+function launchPricingImportWorker(pathToTempFile) {
+    cluster.setupMaster(pricingImportWorkerSetup);
+    cluster.fork({ pathToTempFile: pathToTempFile });
 }
