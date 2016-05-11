@@ -1,5 +1,6 @@
 
 var csvExport = require('csv-stringify');
+var csvParse = require('csv-parse');
 var Q = require('q');
 var _ = require('lodash');
 
@@ -122,38 +123,53 @@ function exportTemplateForVendorPricingCsv(cycleId, vendorId) {
     }
 }
 
-function parseCsvInput(requestBody) {
-    var rawContent = throwAwayTheHeaderLine(requestBody);
+function csvParsePromise(data, options, callback) {
+    var deferred = Q.defer();
 
-    var importMetadata = getImportMetadata(rawContent);
-
-    if (importMetadata.importVersion != 1) {
-        console.log('Invalid import version', importMetadata);
-        throw carliError('Invalid import version');
-    }
-
-    var parsedContent = [];
-    rawContent.forEach(function (rawRow) {
-        parsedContent.push({
-            id: rawRow[0],
-            product: rawRow[1],
-            library: rawRow[2],
-            sitePrice: rawRow[3],
-            comment: rawRow[4]
-        });
+    csvParse(data, options, function (error, parsedContent) {
+        if (error)
+            deferred.reject(error);
+        else
+            deferred.resolve(parsedContent);
     });
-    return {
-        metadata: importMetadata,
-        content: parsedContent
-    };
 
-    function throwAwayTheHeaderLine(body) {
-        var headers = body.shift();
-        if (headers[0] != columns.id) {
-            throw carliError('Invalid import file');
-        }
-        return body;
+    return deferred.promise;
+}
+
+function parseCsvInput(requestBody) {
+    return csvParsePromise(requestBody, { columns: true })
+        .then(transformLabelsToProperties)
+        .then(function (parsedContent) {
+            var importMetadata = getImportMetadata(parsedContent);
+
+            if (importMetadata.importVersion != 1) {
+                console.log('Invalid import version', importMetadata);
+                throw carliError('Invalid import version');
+            }
+
+            return {
+                metadata: importMetadata,
+                content: parsedContent.filter(removeMetaDataRows)
+            };
+
+            function removeMetaDataRows(row) {
+                return row.library != 'INTERNAL USE';
+            }
+        });
+
+    // The CSV object uses labels as the property names, change them back to the original property names.
+    function transformLabelsToProperties(objectsWithLabels) {
+        var columnKeys = Object.keys(columns);
+        return objectsWithLabels.map(function (oldObject) {
+            var newObject = {};
+            columnKeys.forEach(function (key) {
+                var label = columns[key];
+                newObject[key] = oldObject[label];
+            });
+            return newObject;
+        });
     }
+
     function getImportMetadata(rows) {
         var importMetadata = {
             importVersion: null,
@@ -161,12 +177,12 @@ function parseCsvInput(requestBody) {
             vendorId: null
         };
         rows.forEach(function (row) {
-            if (row[1] == 'importVersion')
-                importMetadata.importVersion = row[0];
-            else if (row[1] == 'cycleId')
-                importMetadata.cycleId = row[0];
-            else if (row[1] == 'vendorId')
-                importMetadata.vendorId = row[0];
+            if (row.product == 'importVersion')
+                importMetadata.importVersion = row.id;
+            else if (row.product == 'cycleId')
+                importMetadata.cycleId = row.id;
+            else if (row.product == 'vendorId')
+                importMetadata.vendorId = row.id;
         });
         if (importMetadata.importVersion == null || importMetadata.cycleId == null || importMetadata.vendorId == null) {
             throw new carliError('Import metadata not found');
@@ -195,14 +211,14 @@ function importFromCsv(cycleId, vendorId, csvRows) {
     function checkForInvalidPrices() {
         var invalidRows = csvRows.filter(isSitePriceInvalid);
         if (invalidRows.length > 0) {
-            console.log('Rejected pricing upload due to invalid rows', invalidRows);
+            Logger.log('Rejected pricing upload due to invalid rows', invalidRows);
             throw importError('Invalid price', invalidRows);
         }
         return true;
     }
 
     function loadOfferingsForVendor() {
-        console.log('Loading offerings for pricing import');
+        Logger.log('Loading offerings for pricing import');
         return offeringRepository.listOfferingsForVendorId(vendorId, cycle);
     }
 
@@ -215,20 +231,23 @@ function importFromCsv(cycleId, vendorId, csvRows) {
     }
 
     function updateOfferings(offeringsById) {
-        console.log('Updating prices with uploaded data for loaded offerings');
-        console.log('There are ' + csvRows.length + ' uploaded rows');
+        Logger.log('Updating prices with uploaded data for loaded offerings');
+        Logger.log('There are ' + csvRows.length + ' uploaded rows');
         return csvRows.map(updateOffering);
 
         function updateOffering(row) {
             var offering = offeringsById[row.id];
-            if (!offering)
+            if (!offering) {
+                Logger.log('Rejected pricing upload due to missing row', row);
                 throw importError('Offering not found', [ row ]);
+            }
 
             if ( sitePriceIsEmpty(row)) {
                 offeringRepository.removeSitePricing(offering);
             }
             else {
-                offering.price.site = parseFloat(row.sitePrice).toFixed(2);
+                // parseFloat().toFixed() -> string
+                offering.pricing.site = parseFloat(parseFloat(row.sitePrice).toFixed(2));
             }
 
             offering.siteLicensePricingUpdate = updateTime;
@@ -244,7 +263,7 @@ function importFromCsv(cycleId, vendorId, csvRows) {
     }
 
     function saveOfferings(offerings) {
-        console.log('Saving back updated offerings');
+        Logger.log('Saving back updated offerings');
         return offeringRepository.bulkUpdateOfferings(offerings, cycle);
     }
 }
