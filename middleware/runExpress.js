@@ -1,7 +1,10 @@
 var cluster = require('cluster');
 var express = require('express');
+var fs = require('fs');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
+var expressCsv = require('express-csv-middleware');
+var tmp = require('tmp');
 var _ = require('lodash');
 
 var config = require('../config');
@@ -17,6 +20,7 @@ var pdf = require('./components/pdf');
 var reports = require('./components/reports');
 var user = require('./components/user');
 var vendorDatabases = require('./components/vendorDatabases');
+var vendorPricingCsv = require('./components/csv/vendorPricingCsv');
 var vendorReportCsv = require('./components/csv/vendorReport');
 var vendorSpecificProductQueries = require('./components/vendorSpecificProductQueries');
 var publicApi = require('./components/public');
@@ -30,6 +34,7 @@ function runMiddlewareServer(){
 
     function configureMiddleware() {
         carliMiddleware.use(corsHeaders);
+        carliMiddleware.use(handleCsvUploads());
         carliMiddleware.use(bodyParser.json());
         carliMiddleware.use(cookieParser());
         carliMiddleware.use(setAuthForRequest);
@@ -247,7 +252,7 @@ function runMiddlewareServer(){
                 cluster.worker.send({
                     command: 'launchSynchronizationWorker'
                 });
-                sendOk(res);
+                sendOk(res)();
             });
             authorizedRoute('get', '/index-all-cycles', carliAuth.requireStaff, function (req, res) {
                 vendorDatabases.triggerIndexingForAllCycles()
@@ -386,6 +391,26 @@ function runMiddlewareServer(){
                         res.send(exportResults.csv);
                     })
                     .catch(sendError(res));
+            });
+            authorizedRoute('get', '/csv/export/pricing-template/:cycleId/:vendorId', carliAuth.requireStaff, function (req, res) {
+                vendorPricingCsv.exportTemplateForVendorPricingCsv(req.params.cycleId, req.params.vendorId)
+                    .then(function (exportResults) {
+                            res.setHeader('Content-Disposition', 'attachment; filename="' + exportResults.fileName + '"');
+                        res.type('csv');
+                        res.send(exportResults.csv);
+                    });
+            });
+            authorizedRoute('post', '/csv/import/pricing', carliAuth.requireStaff, function (req, res) {
+                // var pathToTempFile = fs.write(req.body);
+                Logger.log('writing temp file for import worker');
+                var pathToTempFile = tmp.tmpNameSync();
+                fs.writeFileSync(pathToTempFile, req.body.join("\n"), 'utf-8');
+
+                cluster.worker.send({
+                    command: 'launchPricingImportWorker',
+                    pathToTempFile: pathToTempFile
+                });
+                sendOk(res)();
             });
         }
         function defineRoutesForInvoices() {
@@ -552,6 +577,19 @@ function corsHeaders(req, res, next) {
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, X-AuthToken");
     next();
+}
+
+function handleCsvUploads() {
+    var csvOptions = {};
+    var csvBodyParserOptions = {limit: '50mb'};
+    var csvMiddleware = expressCsv(csvBodyParserOptions, csvOptions);
+
+    return function (req, res, next) {
+        if (req.headers['content-type'] == 'text/csv') {
+            return csvMiddleware(req, res, next);
+        }
+        next();
+    }
 }
 
 function setAuthForRequest(req, res, next) {

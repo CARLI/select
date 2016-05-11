@@ -1,0 +1,14 @@
+file-upload-button {
+    display: inline-block;
+    margin: 1rem;
+    @extend .clearfix;
+
+    input[type=file]{
+        display: none;
+    }
+
+    button.upload {
+        margin-top: 0.5rem;
+        padding: 0.5rem;
+    }
+}

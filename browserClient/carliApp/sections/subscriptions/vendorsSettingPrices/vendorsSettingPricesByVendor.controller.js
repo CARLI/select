@@ -1,18 +1,20 @@
 angular.module('carli.sections.subscriptions.vendorsSettingPrices')
     .controller('vendorsSettingPricesByVendorController', vendorsSettingPricesByVendorController);
 
-function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionControllerMixin, controllerBaseService, cycleService, offeringService, editOfferingService, offeringsByVendorExport, productService, vendorService, vendorStatusService ) {
+function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionControllerMixin, config, controllerBaseService, cycleService, offeringService, editOfferingService, offeringsByVendorExport, productService, vendorService, vendorStatusService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadProductsForVendor);
 
     vm.closeVendorPricing = closeVendorPricing;
+    vm.downloadSitePricingUrl = downloadSitePricingUrl;
     vm.exportOfferingList = exportOfferingList;
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.getVendorPricingStatus = getVendorPricingStatus;
     vm.openVendorPricing = openVendorPricing;
     vm.stopEditing = stopEditing;
     vm.toggleProductSection = toggleProductSection;
+    vm.uploadSitePricing = uploadSitePricing;
 
     vm.cycle = {};
     vm.expandedProducts = {};
@@ -218,5 +220,17 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
         function loadOfferingsForVendor() {
             return $q.all(vendor.products.map(loadOfferingsForProduct));
         }
+    }
+    
+    function downloadSitePricingUrl(vendor) {
+        var baseUrl = config.getMiddlewareUrl();
+        return baseUrl + '/csv/export/pricing-template/' + vm.cycle.id + '/' + vendor.id;
+    }
+    
+    function uploadSitePricing(fileContentsAsText) {
+        console.log('POSTing file', fileContentsAsText);
+        return offeringService.uploadSitePricing(fileContentsAsText)
+            .then(console.log/*success alert*/)
+            .catch(console.error/*nice error handling*/);
     }
 }
