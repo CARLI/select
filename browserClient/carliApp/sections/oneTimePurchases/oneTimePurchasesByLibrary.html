@@ -22,8 +22,7 @@
                         <div role="columnheader" id="product-column-header" class="sortable column product" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.product, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.product)">Product</div>
                         <div role="columnheader" id="vendor-column-header" class="sortable column vendor" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.vendor, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.vendor)">Vendor</div>
                         <div role="columnheader" id="library-view-column-header" class="column library-view">Library View</div>
-                        <div role="columnheader" id="selected-last-year-column-header" class="sortable column selected-last-year" ng-class="{ activeSort: vm.sortOptions.selectedLastYear, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.selectedLastYear)">Last Year</div>
-                        <div role="columnheader" id="site-license-price-column-header" class="sortable column site-license-price current-year-only" ng-class="{activeSort: vm.orderBy === vm.sortOptions.pricing, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.pricing)">Prices</div>
+                        <div role="columnheader" id="site-license-price-column-header" class="sortable column site-license-price current-year-only" ng-class="{activeSort: vm.orderBy === vm.sortOptions.pricing, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.pricing)">Price</div>
                         <div role="columnheader" id="selection-column-header" class="column selection">Selection</div>
                     </li>
                     <li role="row" class="offering" ng-class="{ 'edit-mode': vm.isEditing[offering.id] }" ng-repeat="offering in vm.offerings[library.id] | filter:vm.filterOfferingBySelection | orderBy:vm.orderBy:vm.reverse track by offering.id">

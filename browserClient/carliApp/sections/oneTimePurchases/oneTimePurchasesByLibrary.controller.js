@@ -12,6 +12,13 @@ function oneTimePurchasesByLibraryController(config, controllerBaseService, cycl
     vm.offeringFilter = {};
     vm.vendorMap = {};
 
+    vm.offeringColumns = [
+        'product',
+        'vendor',
+        'library-view',
+        'site_license_price_only_as_price',
+        'selection'
+    ];
     activate();
 
     function activate() {

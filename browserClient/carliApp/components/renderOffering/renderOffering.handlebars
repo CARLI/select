@@ -208,6 +208,30 @@
     </div>
 {{/if}}
 
+{{#if columns.site_license_price_only_as_price }}
+    <div role="gridcell" aria-describedby="site-license-price-column-header" class="column site-license-price">
+        <div class="offering-pricing">
+            <div class="site-pricing single-column">
+                <div class="column">
+                    <div class="header">
+                        <strong>Price</strong>
+                        <span class='funding-indicator'>{{ fundingIndicator offering }}</span>
+                    </div>
+                    <div class="row">
+                        {{ fundedSiteLicensePrice offering }}
+                        {{#if offering.vendorComments.site }}
+                            <div tabindex="0"
+                                 data-offering-id="{{ offering.id }}"
+                                 data-comment-type="site"
+                                 class="comment-marker fa fa-comment-o"></div>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{{/if}}
+
 {{#if columns.selection}}
 <div role="gridcell" aria-describedby="selection-column-header" class="column selection">
     <label for="{{ offering.id }}_selection" class="sr-only">Library Selection</label>
