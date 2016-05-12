@@ -14,10 +14,14 @@ function oneTimePurchasesByLibraryController($scope, accordionControllerMixin, c
     vm.loadingPromise = {};
     vm.offerings = {};
     vm.offeringFilter = {};
+    vm.selectedOfferings = {};
     vm.vendorMap = {};
 
+    vm.computeSelectionTotalForLibrary = computeSelectionTotalForLibrary;
     vm.filterOfferingBySelection = filterOfferingBySelection;
+    vm.invoiceAllProductsForLibrary = invoiceAllProductsForLibrary;
     vm.invoiceAnnualAccessFees = invoiceAnnualAccessFees;
+    vm.invoiceCheckedProductsForLibrary = invoiceCheckedProductsForLibrary;
     vm.stopEditing = stopEditing;
 
     vm.offeringColumns = [
@@ -41,6 +45,21 @@ function oneTimePurchasesByLibraryController($scope, accordionControllerMixin, c
         vm.libraryListLoadingPromise = initControllerData();
 
         return vm.libraryListLoadingPromise;
+    }
+
+    function computeSelectionTotalForLibrary( library ){
+        if ( !vm.offerings[library.id] ){
+            return 0;
+        }
+
+        var offerings = vm.offerings[library.id];
+        var sum = 0;
+
+        offerings.forEach(function(offering){
+            sum += offering.selection ? offeringService.getFundedSelectionPrice(offering) : 0;
+        });
+
+        return sum;
     }
 
     function connectEditButtons() {
@@ -110,6 +129,30 @@ function oneTimePurchasesByLibraryController($scope, accordionControllerMixin, c
     function invoiceAnnualAccessFees() {
         notificationModalService.sendStartDraftMessage({
             templateId: 'notification-template-annual-access-fee-invoices'
+        });
+    }
+
+    function invoiceCheckedProductsForLibrary(library) {
+        if ( !library || !vm.selectedOfferings[library.id] ){
+            return;
+        }
+
+        var offeringsToReport = Object.keys(vm.selectedOfferings[library.id]).filter(function(key){
+            return vm.selectedOfferings[library.id][key];
+        });
+
+        notificationModalService.sendStartDraftMessage({
+            templateId: 'notification-template-library-invoices',
+            cycleId: vm.cycle.id,
+            offeringIds: offeringsToReport
+        });
+    }
+
+    function invoiceAllProductsForLibrary( library ){
+        notificationModalService.sendStartDraftMessage({
+            templateId: 'notification-template-library-invoices',
+            cycleId: vm.cycle.id,
+            recipientId: library.id
         });
     }
 

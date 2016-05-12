@@ -43,4 +43,14 @@
             margin-right: .5rem;
         }
     }
+
+    .offerings-list + .footer {
+        position: relative;
+
+        .old-view-link {
+            position: absolute;
+            right: 1rem;
+        }
+    }
+
 }
