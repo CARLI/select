@@ -32,17 +32,15 @@
                     </li>
                 </ul>
                 <div class="footer clearfix">
-                    <button class="carli-button" busy-click="vm.exportOfferingList(library)">Export</button>
-
                     <div class="total">
-                        <span class="label">Total:</span>
+                        <span class="label">Selection Total:</span>
                         <span>{{ vm.computeSelectionTotalForLibrary(library) | currency }}</span>
                     </div>
 
                     <button type="button" class="carli-button" ng-click="vm.invoiceCheckedProductsForLibrary(library)">Invoice Checked Products</button>
                     <button type="button" class="carli-button" ng-click="vm.invoiceAllProductsForLibrary(library)">Invoice All Products</button>
 
-                    <div class="placeholder pull-left" style="margin-right: 1rem; width: 400px;">TODO: Library View Button</div>
+                    <a class="old-view-link" ng-href="/oneTimePurchases/{{ library.id }}">Old View</a>
                 </div>
             </div>
         </li>
