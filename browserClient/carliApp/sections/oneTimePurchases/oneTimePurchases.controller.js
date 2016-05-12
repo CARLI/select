@@ -6,8 +6,14 @@ function oneTimePurchasesController(){
 
     vm.groupBy = 'library';
 
+    vm.offeringUpdated = offeringUpdated;
+
     activate();
 
     function activate() {
+    }
+
+    function offeringUpdated() {
+        console.log('a child offering was updated');
     }
 }

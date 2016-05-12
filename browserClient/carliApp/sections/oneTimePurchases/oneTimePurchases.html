@@ -18,8 +18,8 @@
     </div>
 
     <section id="subscriptions" class="content">
-        <one-time-purchases-by-vendor ng-if="vm.groupBy === 'vendor'"></one-time-purchases-by-vendor>
-        <one-time-purchases-by-library ng-if="vm.groupBy === 'library'"></one-time-purchases-by-library>
+        <one-time-purchases-by-vendor ng-if="vm.groupBy === 'vendor'" on-offering-saved="vm.offeringUpdated"></one-time-purchases-by-vendor>
+        <one-time-purchases-by-library ng-if="vm.groupBy === 'library'" on-offering-saved="vm.offeringUpdated"></one-time-purchases-by-library>
     </section>
 </section>
 
