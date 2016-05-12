@@ -3,7 +3,9 @@ angular.module('carli.sections.oneTimePurchases')
         return {
             restrict: 'E',
             templateUrl: '/carliApp/sections/oneTimePurchases/oneTimePurchasesByVendor.html',
-            scope: {},
+            scope: {
+                notifyParentOfSave: '=onOfferingSaved'
+            },
             controller: 'oneTimePurchasesByVendorController',
             controllerAs: 'vm',
             bindToController: true,
