@@ -10,6 +10,7 @@ function editOfferingController(activityLogService, alertService, cycleService, 
     vm.clearManualFlag = clearManualFlag;
     vm.flagIsManuallySet = flagIsManuallySet;
     vm.saveOffering = saveOffering;
+    vm.setOneTimePurchaseInvoicedDate = setOneTimePurchaseInvoicedDate;
     vm.shouldShowColumn = shouldShowColumn;
     vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
     vm.userClickedFlag = userClickedFlag;
@@ -121,5 +122,9 @@ function editOfferingController(activityLogService, alertService, cycleService, 
 
     function logUpdateActivity() {
         return activityLogService.logOfferingModified(vm.offering, vm.cycle);
+    }
+
+    function setOneTimePurchaseInvoicedDate() {
+        vm.offering.oneTimePurchaseInvoicedDate = new Date().toISOString();
     }
 }

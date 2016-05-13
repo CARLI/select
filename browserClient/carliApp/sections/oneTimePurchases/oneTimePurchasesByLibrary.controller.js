@@ -29,7 +29,7 @@ function oneTimePurchasesByLibraryController($scope, accordionControllerMixin, c
         'vendor',
         'library-view',
         'site_license_price_only_as_price',
-        'selection'
+        'oneTimePurchaseSelection'
     ];
     vm.sortOptions = {
         product: 'product.name',

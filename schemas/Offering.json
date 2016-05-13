@@ -103,6 +103,10 @@
             "description": "If the product is a one-time purchase product, this is its annual access fee for the library",
             "type": "number"
         },
+        "oneTimePurchaseInvoicedDate": {
+            "description": "Tracks when (and whether) the library has been invoiced for this selection (one-time purchase products only)",
+            "$ref": "./Date.json"
+        },
         "funding": {
             "description": "If the product is funded by CARLI, contains the details of how",
             "type": "object",

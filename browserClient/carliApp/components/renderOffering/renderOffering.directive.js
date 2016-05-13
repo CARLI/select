@@ -37,6 +37,8 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
                 offering.product.displayName = productService.getProductDisplayName(offering.product);
                 copyVendorCommentsToPricing(offering);
 
+                var columns = translateColumnArrayToObject(scope.columns);
+
                 getOfferingTemplate().then(function (template) {
                     var values = {
                         thisYear: scope.cycle.year,
@@ -49,7 +51,8 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
                         offeringWasFlaggedByCarli: (offering.flagged === true),
                         offeringWasUnFlaggedByCarli: (offering.flagged === false),
                         offeringFlagTitle: offeringFlagTitle(),
-                        columns: translateColumnArrayToObject(scope.columns)
+                        columns: columns,
+                        selectionColumn: (columns.selection || columns.oneTimePurchaseSelection)
                     };
                     element.html( template(values) );
                 });
@@ -229,6 +232,10 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
         return currency( offeringService.getHistoricalFundedSiteLicensePrice(offering, lastYear) );
     }
 
+    function mediumDate(dateString) {
+        return $filter('date')(dateString, 'mediumDate');
+    }
+
     function registerHandlebarsHelpers() {
         Handlebars.registerHelper('currency', currency);
         Handlebars.registerHelper('displayLabel', displayLabel);
@@ -239,6 +246,7 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
         Handlebars.registerHelper('fundedSelectionPrice', fundedSelectionPrice);
         Handlebars.registerHelper('fundedSiteLicensePrice', fundedSiteLicensePrice);
         Handlebars.registerHelper('fundedLastYearsSiteLicensePrice', fundedLastYearsSiteLicensePrice);
+        Handlebars.registerHelper('mediumDate', mediumDate);
     }
 
     function translateColumnArrayToObject( columns ){
