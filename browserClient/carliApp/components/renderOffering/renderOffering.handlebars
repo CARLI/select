@@ -238,7 +238,7 @@
     </div>
 {{/if}}
 
-{{#if columns.selection}}
+{{#if selectionColumn }}
 <div role="gridcell" aria-describedby="selection-column-header" class="column selection">
     <label for="{{ offering.id }}_selection" class="sr-only">Library Selection</label>
     {{#if offering.selection }}
@@ -246,6 +246,11 @@
         <div class="users"><span class="label">Selection:</span> {{ formatSelectionUsers offering.selection.users }}</div>
         <div class="price"><span class="label">Price:</span> {{ fundedSelectionPrice offering }}</div>
     </div>
+    {{/if}}
+    {{#if columns.oneTimePurchaseSelection }}
+        {{#if offering.oneTimePurchaseInvoicedDate }}
+            <span class="one-time-purchase-invoice-date">Invoiced on: {{ mediumDate offering.oneTimePurchaseInvoicedDate }}<span>
+        {{/if}}
     {{/if}}
 </div>
 {{/if}}
