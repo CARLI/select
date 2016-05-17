@@ -699,7 +699,7 @@ function returnReportResults(resultColumns, columnSortOrderOverride){
     return function( reportResults ){
         return {
             columns: columnNames(resultColumns),
-            data: _.sortByOrder(reportResults, resultColumns, columnSortOrder)
+            data: _.orderBy(reportResults, resultColumns, columnSortOrder)
         };
     }
 }
