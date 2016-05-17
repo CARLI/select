@@ -66,7 +66,7 @@ function libraryProductsListController( $q, controllerBaseService, csvExportServ
                 offering.product.license.name,
                 offering.libraryComments,
                 offering.selection.users,
-                offeringService.getFundedSelectionPendingPrice(offering)
+                offeringService.getFundedSelectionPrice(offering)
             ];
         }
     }
