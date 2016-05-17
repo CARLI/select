@@ -1,4 +1,13 @@
 #oneTimePurchases {
+
+    .list-page-header {
+        border-bottom: $default-border;
+    }
+    
+    section.content {
+        padding-top: 1rem;
+    }
+
     filter-by-active-toggle {
         display: none;
     }
@@ -34,4 +43,14 @@
             margin-right: .5rem;
         }
     }
+
+    .offerings-list + .footer {
+        position: relative;
+
+        .old-view-link {
+            position: absolute;
+            right: 1rem;
+        }
+    }
+
 }

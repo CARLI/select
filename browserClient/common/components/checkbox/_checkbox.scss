@@ -54,4 +54,10 @@ checkbox {
     &.focused {
         background: $gray;
     }
+
+    &[disabled] {
+        .fa {
+            color: $gray;
+        }
+    }
 }

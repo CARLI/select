@@ -45,9 +45,18 @@
         <offering-pricing year="vm.cycle.year" offering="vm.offering" edit-mode="true" hide-previous-year="true"></offering-pricing>
     </div>
 
-    <div role="gridcell" aria-describedby="selection-column-header" class="column selection" ng-if="vm.shouldShowColumn('selection')">
+    <div role="gridcell" aria-describedby="site-license-price-column-header" class="column site-license-price current-year-only one-time-purchase-pricing" ng-if="vm.shouldShowColumn('site_license_price_only_as_price')">
+        <div class="label">Price:</div>
+        <view-edit-price ng-model="vm.offering.pricing.site" edit-mode="true"></view-edit-price>
+
+        <div class="label">Annual Access Fee</div>
+        <view-edit-price ng-model="vm.offering.oneTimePurchaseAnnualAccessFee" edit-mode="true"></view-edit-price>
+    </div>
+
+    <div role="gridcell" aria-describedby="selection-column-header" class="column selection" ng-if="vm.shouldShowColumn('selection') || vm.shouldShowColumn('oneTimePurchaseSelection')">
         <label for="{{ vm.offering.id }}_selection" class="sr-only">Library Selection</label>
         <view-edit-offering-selection ng-model="vm.offering" edit-mode="true"></view-edit-offering-selection>
+        <button class="carli-button update-invoice-date" type="button" ng-if="vm.shouldShowColumn('oneTimePurchaseSelection')" ng-click="vm.setOneTimePurchaseInvoicedDate()">Mark Invoiced</button>
     </div>
 
     <div role="gridcell" aria-describedby="vendor-invoice-column-header" class="column vendor-invoice" ng-if="vm.shouldShowColumn('vendor-invoice')">
