@@ -379,9 +379,11 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     }
 
     function markOfferingUpdated(offering) {
-        offering.siteLicensePriceUpdated = new Date().toISOString();
-        vm.changedOfferings.push(offering);
-        enableUnsavedChangesWarning();
+        if ( offering ) {
+            offering.siteLicensePriceUpdated = new Date().toISOString();
+            vm.changedOfferings.push(offering);
+            enableUnsavedChangesWarning();
+        }
     }
 
     function applyCssClassesToOfferingCell(offeringCell, offering) {
@@ -616,7 +618,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         }
 
         function applyBulkPricingComment(offering) {
-            if (shouldApplyBulkPricingComment) {
+            if (offering && shouldApplyBulkPricingComment) {
                 offering.vendorComments = offering.vendorComments || {};
                 offering.vendorComments.site = allQuickPricingArguments.bulkComment;
             }
@@ -629,9 +631,16 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
             applyCssClassesToOfferingCell(offeringCell, offering);
 
-            var newReadOnlyCellContents = createReadOnlyOfferingCell(offering.pricing.site);
+            var newReadOnlyCellContents = createReadOnlyOfferingCell( findSitePrice(offering) );
             offeringCell.find('.price').replaceWith(newReadOnlyCellContents);
             setCommentMarkerVisibility(newReadOnlyCellContents);
+
+            function findSitePrice(offering) {
+                if ( offering ) {
+                    return offering.pricing ? offering.pricing.site : '';
+                }
+                return '';
+            }
         }
     }
 
