@@ -347,12 +347,13 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
     function applyNewCellPricingToOffering(offeringCell, offering, newPriceValue) {
         var newPrice = parseFloat(newPriceValue);
+        var oldPrice = findSitePrice(offering);
 
         if (isNaN(newPrice)) {
             return;
         }
 
-        if (newPrice !== null && newPrice != offering.pricing.site) {
+        if (newPrice !== null && newPrice != oldPrice) {
             offering.pricing.site = newPrice;
             offering.display = 'with-price';
             markOfferingUpdated(offering);
@@ -385,8 +386,12 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         setOfferingUpdatedState();
         setOfferingFlaggedState();
 
+        function vendorHasUpdatedTheOfferingsPricing() {
+            return offering.siteLicensePriceUpdated;
+        }
+        
         function setOfferingUpdatedState() {
-            if (offering.siteLicensePriceUpdated) {
+            if (vendorHasUpdatedTheOfferingsPricing()) {
                 offeringCell.addClass('updated');
             }
             else {
@@ -410,10 +415,6 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             }
             else {
                 removeFlagDisplay();
-            }
-
-            function vendorHasUpdatedTheOfferingsPricing() {
-                return offering.siteLicensePriceUpdated;
             }
 
             function flagsAreNotExclusivelyAboutSuPrices() {
@@ -457,7 +458,6 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         var newPrice = $this.val();
 
         if (!offering) {
-            Logger.log('no offering, add new one with price ', newPrice);
             var productId = offeringCell.data('productId');
             var libraryId = offeringCell.data('libraryId');
             offering = generateNewOffering(libraryId, productId);
@@ -472,12 +472,16 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     }
 
     function generateNewOffering(libraryId, productId, newPrice) {
-        return {
+        var newOffering = {
             cycle: vm.cycle,
             library: libraryId.toString(),
             product: productId,
             pricing: {}
         };
+
+        vm.offeringsForLibraryByProduct[productId][libraryId] = newOffering;
+
+        return newOffering;
     }
 
     function saveOfferings() {
@@ -575,6 +579,10 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             var productId = $offeringCell.data('productId');
             var offering = offeringForProductAndLibrary(productId, libraryId);
 
+            if ( !offering ) {
+                offering = generateNewOffering(libraryId, productId);
+            }
+
             if (cellShouldBeUpdated(libraryId, productId)) {
                 if (mode == 'dollarAmount') {
                     newValue = quickPricingValue;
@@ -596,6 +604,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
                     newValue = null;
                     offering = offeringService.removeSitePricing(offering);
                 }
+
                 updateCellContents($offeringCell, offering, newValue);
             }
         });
