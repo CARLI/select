@@ -352,26 +352,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             return;
         }
 
-        if (!offering) {
-            if (newPrice !== null) {
-                //Logger.log('no offering, add new one with price ', newPrice);
-                var productId = offeringCell.data('productId');
-                var libraryId = offeringCell.data('libraryId');
-
-                if (!libraryId || !productId) {
-                    console.log('problem in applyNewCellPricingToOffering for library ' + libraryId + ' product ' + productId);
-                    console.log('  library:', libraryId);
-                    console.log('  product:', productId);
-                    console.log('  offering:', offering);
-                    console.log('  cell:', offeringCell);
-                }
-
-                offering = generateNewOffering(libraryId, productId, newPrice);
-                vm.newOfferings.push(offering);
-            }
-        }
-        else if (newPrice !== null && newPrice != offering.pricing.site) {
-            //Logger.log('set offering price to '+newPrice+' (was '+offering.pricing.site+')');
+        if (newPrice !== null && newPrice != offering.pricing.site) {
             offering.pricing.site = newPrice;
             offering.display = 'with-price';
             markOfferingUpdated(offering);
@@ -381,7 +362,14 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     function markOfferingUpdated(offering) {
         if ( offering ) {
             offering.siteLicensePriceUpdated = new Date().toISOString();
-            vm.changedOfferings.push(offering);
+
+            if ( offering.id ) {
+                vm.changedOfferings.push(offering);
+            }
+            else {
+                vm.newOfferings.push(offering);
+            }
+
             enableUnsavedChangesWarning();
         }
     }
@@ -466,17 +454,19 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         var $this = $(this);
         var offeringCell = $this.parent();
         var offering = getOfferingForCell(offeringCell);
+        var newPrice = $this.val();
 
-        applyNewCellPricingToOffering(offeringCell, offering, $this.val());
-
-        applyCssClassesToOfferingCell(offeringCell, offering);
-
-        var textForOfferingPrice = '';
-        if (offering && offering.pricing) {
-            textForOfferingPrice = offering.pricing.site;
+        if (!offering) {
+            Logger.log('no offering, add new one with price ', newPrice);
+            var productId = offeringCell.data('productId');
+            var libraryId = offeringCell.data('libraryId');
+            offering = generateNewOffering(libraryId, productId);
         }
 
-        var newReadOnlyCellContents = createReadOnlyOfferingCell(textForOfferingPrice);
+        applyNewCellPricingToOffering(offeringCell, offering, newPrice);
+        applyCssClassesToOfferingCell(offeringCell, offering);
+
+        var newReadOnlyCellContents = createReadOnlyOfferingCell( findSitePrice(offering) );
         $this.replaceWith(newReadOnlyCellContents);
         setCommentMarkerVisibility(newReadOnlyCellContents);
     }
@@ -486,10 +476,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             cycle: vm.cycle,
             library: libraryId.toString(),
             product: productId,
-            pricing: {
-                site: newPrice
-            },
-            siteLicensePriceUpdated: new Date().toISOString()
+            pricing: {}
         };
     }
 
@@ -634,14 +621,14 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             var newReadOnlyCellContents = createReadOnlyOfferingCell( findSitePrice(offering) );
             offeringCell.find('.price').replaceWith(newReadOnlyCellContents);
             setCommentMarkerVisibility(newReadOnlyCellContents);
-
-            function findSitePrice(offering) {
-                if ( offering ) {
-                    return offering.pricing ? offering.pricing.site : '';
-                }
-                return '';
-            }
         }
+    }
+
+    function findSitePrice(offering) {
+        if ( offering ) {
+            return offering.pricing ? offering.pricing.site : '';
+        }
+        return '';
     }
 
     function downloadCsvDataForExistingPricing() {
