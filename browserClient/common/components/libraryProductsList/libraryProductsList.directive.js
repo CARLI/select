@@ -25,7 +25,7 @@ angular.module('common.libraryProductsList')
             '        <div class="column cost">{{ vm.selectionTotal() | currency }}</div>',
             '    </li>',
             '</ul>',
-            '<button class="carli-button" busy-click="vm.exportProductList()">Export</button>'
+            '<button class="carli-button" type="button" busy-click="vm.exportProductList()">Export</button>'
         ].join(''),
         scope: {
             cycle: '=',
