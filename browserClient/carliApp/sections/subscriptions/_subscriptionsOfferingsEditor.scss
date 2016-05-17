@@ -89,6 +89,7 @@
                     &.product,
                     &.vendor,
                     &.library,
+                    &.one-time-purchase-pricing,
                     &.selection,
                     &.vendor-invoice {
                         padding: 1rem;
@@ -216,6 +217,11 @@
                                 color: $purple;
                                 font-weight: 700;
                             }
+                        }
+                        
+                        .one-time-purchase-invoice-date {
+                            color: $orange;
+                            font-weight: 700;
                         }
                     }
 

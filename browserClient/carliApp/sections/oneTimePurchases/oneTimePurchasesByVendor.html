@@ -1,0 +1,50 @@
+<div cg-busy="vm.vendorLoadingPromise"></div>
+<div class="offerings-editor">
+    <ul class="vendor-accordion">
+        <li ng-repeat="vendor in vm.vendors | orderBy:'name'" ng-class="{collapsed: vm.openAccordion !== vendor.id}">
+            <div class="accordion-header" ng-click="vm.toggleAccordion(vendor)" cg-busy="vm.loadingPromise[vendor.id]">
+                <button type="button" class="angle-icon-container">
+                    <fa name="angle-down"></fa><span class="sr-only">Open offerings for {{ ::vendor.name }}</span>
+                </button>
+                {{ ::vendor.name }}
+            </div>
+            <div class="content" ng-if="vm.openAccordion === vendor.id">
+                <ul class="vendor-product-list">
+                    <li ng-repeat="product in ::vendor.products | orderBy: 'name' track by product.id">
+                        <div affix class="product-header" ng-class="{ dontAffix: !vm.expandedProducts[product.id], expanded: vm.expandedProducts[product.id] }"
+                             ng-click="vm.toggleProductSection(product)" cg-busy="vm.loadingPromise[product.id]">
+                            {{ ::vm.getProductDisplayName(product) }}
+                            <span class="price-cap">Price Cap: <strong>{{ ::product.priceCap }}%</strong></span>
+                        </div>
+                        <div class="product-content" ng-class="{ expanded: vm.expandedProducts[product.id] }">
+                            <ul class="offerings-list" role="grid">
+                                <li class="column-headers" role="row">
+                                    <div role="columnheader" id="library-column-header" class="sortable column library" ng-class="{ activeSort: vm.orderBy === 'library.name', reversedSort: vm.reverse }" ng-click="vm.sort('library.name')">Library</div>
+                                    <div role="columnheader" id="library-view-column-header" class="column library-view">Library View</div>
+                                    <div role="columnheader" id="site-license-price-column-header" class="sortable column site-license-price" ng-class="{ activeSort: vm.orderBy === 'pricing.site', reversedSort: vm.reverse }" ng-click="vm.sort('pricing.site')">Prices</div>
+                                    <div role="columnheader" id="selection-column-header" class="column selection">Selection</div>
+                                </li>
+                                <li role="row" class="offering" ng-class="{ 'edit-mode': vm.isEditing[offering.id] }" ng-repeat="offering in product.offerings | orderBy:vm.orderBy:vm.reverse track by offering.id">
+                                    <edit-offering ng-if="vm.isEditing[offering.id]" cycle="::vm.cycle" offering="offering" columns="::vm.offeringColumns" on-offering-saved="::vm.stopEditing"></edit-offering>
+                                    <render-offering ng-if="!vm.isEditing[offering.id]" offering="offering" cycle="::vm.cycle" columns="::vm.offeringColumns"></render-offering>
+                                    <checkbox ng-model="vm.selectedOfferings[vendor.id][offering.id]"></checkbox>
+                                </li>
+                            </ul>
+                            <div class="product footer"></div>
+                        </div>
+                    </li>
+                </ul>
+                <div class="vendor footer">
+                    <div class="total">
+                        <span class="label">Selection Total:</span>
+                        <span>{{ vm.selectionTotal[vendor.id] | currency }}</span>
+                    </div>
+                    <button type="button" class="carli-button" ng-click="vm.reportCheckedProductsForVendor(vendor)">Report Checked Products</button>
+                    <button type="button" class="carli-button" ng-click="vm.reportAllProductsForVendor(vendor)">Report All Products</button>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<button class="carli-button" ng-click="vm.reportAllVendors()">Report All Vendors</button>
