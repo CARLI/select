@@ -31,7 +31,7 @@ var columnName = {
     product: 'Product',
     selected: 'Number Selected',
     selection: 'Selection',
-    sitePrice: 'Site License',
+    sitePrice: 'Site License Price',
     state: 'State',
     totalPrice: 'Total Price',
     type: 'Type',
@@ -40,7 +40,7 @@ var columnName = {
 };
 
 function allPricingReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['cycle', 'vendor', 'product', 'library', 'sitePrice'];
+    var defaultReportColumns = ['cycle', 'vendor', 'product', 'library', 'license', 'sitePrice'];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
     var cyclesToQuery = getCycleParameter(reportParameters) || [];
     var vendorsParameter = getVendorParameter(reportParameters) || [];
@@ -152,6 +152,7 @@ function allPricingReport( reportParameters, userSelectedColumns ){
             vendor: offering.vendor.name,
             product: offering.product.name,
             library: offering.library.name,
+            license: licenseName(offering),
             sitePrice: offeringRepository.getFundedSiteLicensePrice(offering) || ' '
         };
 
@@ -699,7 +700,7 @@ function returnReportResults(resultColumns, columnSortOrderOverride){
     return function( reportResults ){
         return {
             columns: columnNames(resultColumns),
-            data: _.sortByOrder(reportResults, resultColumns, columnSortOrder)
+            data: _.orderBy(reportResults, resultColumns, columnSortOrder)
         };
     }
 }
