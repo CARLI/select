@@ -379,7 +379,7 @@ function runOfferingSpecificTests(testCycle) {
             it ('should return null if no selection', function() {
                 var unselectedOffering = {};
                 var price = offeringRepository.getFullSelectionPrice(unselectedOffering);
-                return expect(price).to.be.null;
+                return expect(price).to.equal(0);
             });
             it ('should return the price from the pricing object for the selected users', function() {
                 var selectedSuOffering = {
@@ -398,6 +398,14 @@ function runOfferingSpecificTests(testCycle) {
                 };
                 var price = offeringRepository.getFullSelectionPrice(selectedSiteOffering);
                 return expect(price).to.equal(5000);
+            });
+            it ('should not break on bogus data', function() {
+                var bogusOffering = {
+                    pricing: { su: [] },
+                    selection: { users: 1 }
+                };
+                var price = offeringRepository.getFullSelectionPrice(bogusOffering);
+                return expect(price).to.equal(0);
             });
         });
 
