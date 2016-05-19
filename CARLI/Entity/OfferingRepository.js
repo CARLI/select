@@ -825,18 +825,19 @@ function isFunded(offering) {
 
 function getFullSelectionPrice(offering) {
     if (!offering.selection || !offering.pricing) {
-        return null;
+        return 0;
     }
     return getFullPrice(offering.selection.users);
 
     function getFullPrice(users) {
-        return (users === siteLicenseSelectionUsers) ? getSiteLicensePrice() : getPricingObjectForUsers().price;
+        return (users === siteLicenseSelectionUsers) ? getSiteLicensePrice() : getPricingObjectForUsers();
 
         function getSiteLicensePrice() {
-            return offering.pricing.site;
+            return offering.pricing.site || 0;
         }
         function getPricingObjectForUsers() {
-            return offering.pricing.su.filter(matchPriceForUsers)[ 0 ];
+            var priceObj = offering.pricing.su.filter(matchPriceForUsers)[0] || {};
+            return priceObj.price || 0;
         }
 
         function matchPriceForUsers(pricingObject) {
