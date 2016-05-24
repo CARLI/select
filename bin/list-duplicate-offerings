@@ -57,7 +57,8 @@ function listDuplicateOfferingsForCycle(cycleId) {
                 var trackObject = {
                     productId: productId,
                     libraryId: libraryId,
-                    offeringId: offering.id
+                    offeringId: offering.id,
+                    pricing: offering.pricing
                 };
 
                 offeringsByProductPlusLibrary[trackId] = offeringsByProductPlusLibrary[trackId] || [];
@@ -120,21 +121,23 @@ function listDuplicateOfferingsForCycle(cycleId) {
                 listOfListsOfDuplicateIdsByProductAndLibrary.forEach(function (arrayOfTrackingObjects) {
                     var productId = arrayOfTrackingObjects[0].productId;
                     var libraryId = arrayOfTrackingObjects[0].libraryId;
-                    var offeringIds = getOfferingIds(arrayOfTrackingObjects);
+                    var offeringData = getOfferingDataById(arrayOfTrackingObjects);
 
                     duplicateOfferingReportData.push({
                         product: productsById[productId].name,
                         library: librariesById[libraryId].name,
-                        offeringIds: offeringIds
+                        offeringPricingById: offeringData
                     });
                 });
 
                 return duplicateOfferingReportData;
 
-                function getOfferingIds(arrayOfTrackingObjects) {
-                    return arrayOfTrackingObjects.map(function (obj) {
-                        return obj.offeringId
+                function getOfferingDataById(arrayOfTrackingObjects) {
+                    var result = {};
+                    arrayOfTrackingObjects.forEach(function (obj) {
+                        result[obj.offeringId] = obj.pricing;
                     });
+                    return result;
                 }
             }
         }
@@ -145,10 +148,21 @@ function listDuplicateOfferingsForCycle(cycleId) {
             duplicateOfferingInformation.forEach(logDuplicate);
 
             function logDuplicate(data) {
-                console.log('* ' + data.library + ' - ' + data.product);
-                data.offeringIds.forEach(function(offeringId) {
-                    console.log('    ' + offeringId);
+                console.log(data.library + ' - ' + data.product);
+                Object.keys(data.offeringPricingById).forEach(function(offeringId) {
+                    var pricing = data.offeringPricingById[offeringId];
+                    console.log(offeringId + '\t' + offeringPricing(pricing));
                 });
+            }
+
+            function offeringPricing(pricingData) {
+                if ( pricingData && pricingData.site ){
+                    return pricingData.site;
+                }
+                else if ( pricingData && pricingData.su && pricingData.su.length ) {
+                    return pricingData.su.join(',');
+                }
+                return '';
             }
         }
     }
