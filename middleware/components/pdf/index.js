@@ -27,7 +27,7 @@ function exportPdf(notificationId){
 
     var options = {
         header: {
-            height: '15mm'
+            height: '21mm'
         },
         footer: {
             height: '5mm',
