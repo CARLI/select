@@ -166,7 +166,6 @@ function getContactEmailAddressesForContactTypes(listOfContacts, arrayOfContactT
     if ( !listOfContacts ){
         return [];
     }
-
     return listOfContacts.filter(matchingTypes).map(extractEmail);
 
     function matchingTypes(contact){
@@ -190,7 +189,7 @@ function listAllContactsForLibrary(libraryId){
     function getCustomContactsForLibrary(libraryId){
         return loadNonCrmLibraryForCrmId(libraryId)
             .then(function(library){
-                return library.contacts;
+                return library.contacts || [];
             });
     }
 }
