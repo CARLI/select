@@ -704,7 +704,8 @@ module.exports = function ( grunt ) {
                     data: {
                         scripts: jsFiles,
                         styles: cssFiles,
-                        appCss: options.base + '/app.css'
+                        appCss: options.base + '/app.css',
+                        prdModeStrictDi: ''
                     }
                 });
             }
@@ -747,7 +748,8 @@ module.exports = function ( grunt ) {
                     data: {
                         scripts: [compiled_js],
                         styles: [],
-                        appCss: complied_css
+                        appCss: complied_css,
+                        prdModeStrictDi: 'ng-strict-di'
                     }
                 });
             }
