@@ -38,6 +38,10 @@ function expandNotificationFromPersistence(notification) {
 }
 
 function expandTargetEntities( notification ) {
+    if ( notification.targetEntity && typeof notification.targetEntity === 'object' ) {
+        return Q(notification);
+    }
+
     if (notificationTypeIsForLibrary(notification.notificationType)) {
         return libraryRepository.load(notification.targetEntity).then(function(library) {
             notification.targetEntity = library;
@@ -49,7 +53,7 @@ function expandTargetEntities( notification ) {
             return notification;
         });
     } else {
-        return notification;
+        return Q(notification);
     }
 }
 
