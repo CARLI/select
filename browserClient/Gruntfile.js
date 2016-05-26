@@ -749,7 +749,8 @@ module.exports = function ( grunt ) {
                         scripts: [compiled_js],
                         styles: [],
                         appCss: complied_css,
-                        prdModeStrictDi: 'ng-strict-di'
+                        prdModeStrictDi: ''
+                        //prdModeStrictDi: 'ng-strict-di'
                     }
                 });
             }
