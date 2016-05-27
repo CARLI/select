@@ -1,7 +1,7 @@
 var fs = require('fs');
 var _ = require('lodash');
 var dbInfo = require('../db/databaseInfo');
-var localConfigFile = __dirname + '/../config/local.js';
+var localConfigFile = __dirname + '/../config/local.json';
 
 
 module.exports = function (grunt) {

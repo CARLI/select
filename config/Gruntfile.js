@@ -2,7 +2,7 @@ var fs = require('fs');
 
 module.exports = function (grunt) {
 
-    var localConfigFile = __dirname + '/../config/local.js';
+    var localConfigFile = __dirname + '/../config/local.json';
     var environmentDependentModulesDirectory = __dirname + '/environmentDependentModules';
     var environmentDependentModules = [
         'couchApp',
