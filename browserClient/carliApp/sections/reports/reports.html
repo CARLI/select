@@ -50,6 +50,23 @@
                             ng-model="vm.reportOptions.parameters.library"
                             ng-options="library.id as library.name for library in vm.libraries | orderBy:'name'"></select>
                 </div>
+
+                <div class="vendor" ng-if="vm.reportWantsLicensesAndCyclesAreSelected()">
+                    <label for="reportVendor2">Select Vendor(s)</label>
+                    <select id="reportVendor2" multiple="multiple"
+                            cg-busy="vm.loadVendorsPromise()"
+                            ng-model="vm.reportOptions.parameters.vendor"
+                            ng-options="vendor.id as vendor.name for vendor in vm.vendors | orderBy:'name'"
+                            ng-change="vm.loadLicensesForVendors()"></select>
+                </div>
+
+                <div class="license" ng-if="vm.reportWantsLicensesAndVendorsAreSelected()">
+                    <label for="reportLicense">Select License(s)</label>
+                    <select id="reportLicense" multiple="multiple"
+                            cg-busy="vm.loadingLicensesPromise"
+                            ng-model="vm.reportOptions.parameters.license"
+                            ng-options="license.id as license.name for license in vm.licenses | orderBy:'name'"></select>
+                </div>
             </div>
 
             <div class="report-columns" ng-if="vm.selectedReport.optionalColumns.length">
