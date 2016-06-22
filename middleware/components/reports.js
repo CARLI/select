@@ -221,15 +221,11 @@ function selectedProductsReport( reportParameters, userSelectedColumns ){
 
         function getSelectedProductsForCycle( cycle ) {
             return offeringRepository.listOfferingsWithSelectionsUnexpanded(cycle)
-                .then(countOfferings('starting total'))
                 .then(filterVendorsByParameter)
-                .then(countOfferings('after vendors filter'))
                 .then(filterLibrariesByParameter)
-                .then(countOfferings('after libraries filter'))
                 .then(fillInCycle(cycle))
                 .then(fillInProducts(cycle))
                 .then(filterLicensesByParameter)
-                .then(countOfferings('after licenses filter'))
                 .then(fillInLibraries)
                 .then(attachVendorToOfferings);
         }
@@ -260,13 +256,6 @@ function selectedProductsReport( reportParameters, userSelectedColumns ){
                 return licensesParameter.indexOf(offering.product.license.id) >= 0;
             console.log('no license!');
             return false;
-        }
-    }
-
-    function countOfferings(message) {
-        return function(offerings) {
-            console.log(offerings.length + ' offerings: ' + message);
-            return offerings;
         }
     }
 }
