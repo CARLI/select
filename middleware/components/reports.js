@@ -441,12 +441,16 @@ function totalsReport( reportParameters, userSelectedColumns ){
 }
 
 function listProductsForVendorReport( reportParameters, userSelectedColumns ){ /* add optional detailCode */
-    var defaultReportColumns = ['cycle', 'vendor', 'product'];
+    var defaultReportColumns = ['cycle', 'license', 'vendor', 'product'];
+    var vendorsParameter = getVendorParameter(reportParameters) || [];
+    var licensesParameter = getLicenseParameter(reportParameters) || [];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
     var cyclesToQuery = getCycleParameter(reportParameters);
 
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getOfferedProductsForEachCycle)
+        .then(filterVendorsByParameter)
+        .then(filterLicensesByParameter)
         .then(combineCycleProductsForReport(transformProductToResultRow))
         .then(returnReportResults(columns))
         .catch(stackTraceError);
@@ -455,7 +459,8 @@ function listProductsForVendorReport( reportParameters, userSelectedColumns ){ /
         var row = {
             cycle: product.cycle.name,
             vendor: product.vendor.name,
-            product: product.name
+            product: product.name,
+            license: product.license.name
         };
 
         if ( isEnabled('detailCode') ){
@@ -467,6 +472,32 @@ function listProductsForVendorReport( reportParameters, userSelectedColumns ){ /
 
     function isEnabled(columnName){
         return columns.indexOf(columnName) !== -1;
+    }
+
+    function filterVendorsByParameter(productsByCycle) {
+        return productsByCycle.map(filterProducts);
+
+        function filterProducts(products) {
+            return products.filter(filterVendors);
+        }
+
+        function filterVendors(product) {
+            return vendorsParameter.indexOf(product.vendor.id) >= 0;
+        }
+    }
+
+    function filterLicensesByParameter(productsByCycle) {
+        return productsByCycle.map(filterProducts);
+
+        function filterProducts(products) {
+            return products.filter(filterLicenses);
+        }
+
+        function filterLicenses(product) {
+            if (product.hasOwnProperty('license') && product.license)
+                return licensesParameter.indexOf(product.license.id) >= 0;
+            return false;
+        }
     }
 }
 

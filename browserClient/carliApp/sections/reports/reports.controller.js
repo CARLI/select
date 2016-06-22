@@ -84,7 +84,9 @@ function reportsController( $q, csvExportService, cycleService, libraryService, 
         {
             name: 'List all Products for Vendor',
             controls: {
-                cycle: 'all'
+                cycle: 'all',
+                vendor: 'all',
+                license: 'all'
             },
             optionalColumns: [
                 'detailCode'
@@ -197,6 +199,9 @@ function reportsController( $q, csvExportService, cycleService, libraryService, 
     }
 
     function reportWantsVendorsAndCyclesAreSelected() {
+        if (vm.reportWantsProductsAndCyclesAreSelected() || vm.reportWantsLicensesAndCyclesAreSelected()) {
+            return false;
+        }
         return vm.selectedReport.controls.vendor && cyclesAreSelected();
     }
 
