@@ -181,12 +181,15 @@ function allPricingReport( reportParameters, userSelectedColumns ){
 }
 
 function selectedProductsReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['cycle', 'library', 'license', 'product', 'selection', 'price'];
+    var defaultReportColumns = ['cycle', 'library', 'license', 'vendor', 'product', 'selection', 'price'];
+    var vendorsParameter = getVendorParameter(reportParameters) || [];
+    var licensesParameter = getLicenseParameter(reportParameters) || [];
+    var librariesParameter = getLibraryParameter(reportParameters) || [];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
     var cyclesToQuery = getCycleParameter(reportParameters);
 
     return cycleRepository.getCyclesById(cyclesToQuery)
-        .then(getSelectedProductsForEachCycle)
+        .then(getSelectedProductsForEachCycleWithParameterFilters)
         .then(combineCycleResultsForReport(transformOfferingToSelectedProductsResultRow))
         .then(returnReportResults(columns))
         .catch(stackTraceError);
@@ -196,6 +199,7 @@ function selectedProductsReport( reportParameters, userSelectedColumns ){
             cycle: offering.cycle.name,
             library: offering.library.name,
             license: licenseName(offering),
+            vendor: offering.vendor.name,
             product: offering.product.name,
             selection: offering.selection.users,
             price: offeringRepository.getFullSelectionPrice(offering)
@@ -210,6 +214,60 @@ function selectedProductsReport( reportParameters, userSelectedColumns ){
 
     function isEnabled(columnName){
         return columns.indexOf(columnName) !== -1;
+    }
+
+    function getSelectedProductsForEachCycleWithParameterFilters( listOfCycles ){
+        return Q.all( listOfCycles.map(getSelectedProductsForCycle) );
+
+        function getSelectedProductsForCycle( cycle ) {
+            return offeringRepository.listOfferingsWithSelectionsUnexpanded(cycle)
+                .then(countOfferings('starting total'))
+                .then(filterVendorsByParameter)
+                .then(countOfferings('after vendors filter'))
+                .then(filterLibrariesByParameter)
+                .then(countOfferings('after libraries filter'))
+                .then(fillInCycle(cycle))
+                .then(fillInProducts(cycle))
+                .then(filterLicensesByParameter)
+                .then(countOfferings('after licenses filter'))
+                .then(fillInLibraries)
+                .then(attachVendorToOfferings);
+        }
+    }
+
+    function filterVendorsByParameter(offerings) {
+        return offerings.filter(filterVendors);
+
+        function filterVendors(offering) {
+            return vendorsParameter.indexOf(offering.vendorId) >= 0;
+        }
+    }
+
+
+    function filterLibrariesByParameter(offerings) {
+        return offerings.filter(filterLibraries);
+
+        function filterLibraries(offering) {
+            return librariesParameter.indexOf(offering.library) >= 0;
+        }
+    }
+
+    function filterLicensesByParameter(offerings) {
+        return offerings.filter(filterLicenses);
+
+        function filterLicenses(offering) {
+            if (offering.product.hasOwnProperty('license') && offering.product.license)
+                return licensesParameter.indexOf(offering.product.license.id) >= 0;
+            console.log('no license!');
+            return false;
+        }
+    }
+
+    function countOfferings(message) {
+        return function(offerings) {
+            console.log(offerings.length + ' offerings: ' + message);
+            return offerings;
+        }
     }
 }
 
@@ -539,6 +597,11 @@ function getProductParameter(userSelectedColumnsStr){
 function getLibraryParameter(userSelectedColumnsStr){
     var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
     return userSelectedColumns.library;
+}
+
+function getLicenseParameter(userSelectedColumnsStr){
+    var userSelectedColumns = JSON.parse(userSelectedColumnsStr);
+    return userSelectedColumns.license;
 }
 
 function getSelectedProductsForEachCycle( listOfCycles ){
