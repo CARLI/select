@@ -26,9 +26,17 @@
                             ng-change="vm.loadProductsForVendors()"></select>
                 </div>
 
-                <div class="vendor" ng-if="vm.reportWantsProductsAndCyclesAreSelected()">
+                <div class="vendor" ng-if="vm.reportWantsVendorsAndCyclesAreSelected()">
                     <label for="reportVendor">Select Vendor(s)</label>
                     <select id="reportVendor" multiple="multiple"
+                            cg-busy="vm.loadVendorsPromise()"
+                            ng-model="vm.reportOptions.parameters.vendor"
+                            ng-options="vendor.id as vendor.name for vendor in vm.vendors | orderBy:'name'"></select>
+                </div>
+
+                <div class="vendor" ng-if="vm.reportWantsProductsAndCyclesAreSelected()">
+                    <label for="reportVendor2">Select Vendor(s)</label>
+                    <select id="reportVendor2" multiple="multiple"
                             cg-busy="vm.loadVendorsPromise()"
                             ng-model="vm.reportOptions.parameters.vendor"
                             ng-options="vendor.id as vendor.name for vendor in vm.vendors | orderBy:'name'"
@@ -52,8 +60,8 @@
                 </div>
 
                 <div class="vendor" ng-if="vm.reportWantsLicensesAndCyclesAreSelected()">
-                    <label for="reportVendor2">Select Vendor(s)</label>
-                    <select id="reportVendor2" multiple="multiple"
+                    <label for="reportVendor3">Select Vendor(s)</label>
+                    <select id="reportVendor3" multiple="multiple"
                             cg-busy="vm.loadVendorsPromise()"
                             ng-model="vm.reportOptions.parameters.vendor"
                             ng-options="vendor.id as vendor.name for vendor in vm.vendors | orderBy:'name'"

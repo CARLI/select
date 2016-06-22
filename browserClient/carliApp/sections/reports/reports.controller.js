@@ -20,6 +20,7 @@ function reportsController( $q, csvExportService, cycleService, libraryService, 
     vm.reportWantsLibrariesAndCyclesAreSelected = reportWantsLibrariesAndCyclesAreSelected;
     vm.reportWantsLicensesAndCyclesAreSelected = reportWantsLicensesAndCyclesAreSelected;
     vm.reportWantsLicensesAndVendorsAreSelected = reportWantsLicensesAndVendorsAreSelected;
+    vm.reportWantsVendorsAndCyclesAreSelected = reportWantsVendorsAndCyclesAreSelected;
 
     /**
      * Reports
@@ -66,7 +67,8 @@ function reportsController( $q, csvExportService, cycleService, libraryService, 
         {
             name: 'Selections by Vendor',
             controls: {
-                cycle: 'all'
+                cycle: 'all',
+                vendor: 'all'
             },
             optionalColumns: [
                 'detailCode'
@@ -192,6 +194,10 @@ function reportsController( $q, csvExportService, cycleService, libraryService, 
 
     function reportWantsLicensesAndVendorsAreSelected() {
         return vm.selectedReport.controls.license && vendorsAreSelected();
+    }
+
+    function reportWantsVendorsAndCyclesAreSelected() {
+        return vm.selectedReport.controls.vendor && cyclesAreSelected();
     }
 
     function cyclesAreSelected() {

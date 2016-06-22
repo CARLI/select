@@ -344,12 +344,14 @@ function statisticsReport( reportParameters, userSelectedColumns ){
 }
 
 function selectionsByVendorReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['cycle', 'license', 'product', 'library', 'selection', 'price'];
+    var defaultReportColumns = ['cycle', 'vendor', 'license', 'product', 'library', 'selection', 'price'];
+    var vendorsParameter = getVendorParameter(reportParameters) || [];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
     var cyclesToQuery = getCycleParameter(reportParameters);
 
     return cycleRepository.getCyclesById(cyclesToQuery)
         .then(getSelectedProductsForEachCycle)
+        .then(filterVendorsByParameter)
         .then(combineCycleResultsForReport(transformOfferingToSelectionsByVendorResultRow))
         .then(returnReportResults(columns))
         .catch(stackTraceError);
@@ -358,6 +360,7 @@ function selectionsByVendorReport( reportParameters, userSelectedColumns ){
         var row = {
             cycle: offering.cycle.name,
             license: licenseName(offering),
+            vendor: offering.vendor.name,
             product: offering.product.name,
             library: offering.library.name,
             selection: offering.selection.users,
@@ -373,6 +376,18 @@ function selectionsByVendorReport( reportParameters, userSelectedColumns ){
 
     function isEnabled(columnName){
         return columns.indexOf(columnName) !== -1;
+    }
+
+    function filterVendorsByParameter(offeringsByCycle) {
+        return offeringsByCycle.map(filterOfferings);
+
+        function filterOfferings(offerings) {
+            return offerings.filter(filterVendors);
+        }
+
+        function filterVendors(offering) {
+            return vendorsParameter.indexOf(offering.vendorId) >= 0;
+        }
     }
 }
 
