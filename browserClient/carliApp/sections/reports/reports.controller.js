@@ -1,7 +1,7 @@
 angular.module('carli.sections.reports')
 .controller('reportsController', reportsController);
 
-function reportsController( $q, csvExportService, cycleService, libraryService, productService, reportDataService, vendorService ){
+function reportsController( $q, csvExportService, cycleService, libraryService, productService, reportDataService, vendorService, licenseService ){
     var vm = this;
 
     vm.reportOptions = {};
@@ -11,10 +11,16 @@ function reportsController( $q, csvExportService, cycleService, libraryService, 
 
     vm.loadVendorsPromise = loadVendorsPromise;
     vm.loadLibrariesPromise = loadLibrariesPromise;
+    vm.loadingProductsPromise = null;
     vm.loadProductsForVendors = loadProductsForVendors;
+    vm.loadingLicensesPromise = null;
+    vm.loadLicensesForVendors = loadLicensesForVendors;
     vm.reportWantsProductsAndCyclesAreSelected = reportWantsProductsAndCyclesAreSelected;
     vm.reportWantsProductsAndVendorsAreSelected = reportWantsProductsAndVendorsAreSelected;
     vm.reportWantsLibrariesAndCyclesAreSelected = reportWantsLibrariesAndCyclesAreSelected;
+    vm.reportWantsLicensesAndCyclesAreSelected = reportWantsLicensesAndCyclesAreSelected;
+    vm.reportWantsLicensesAndVendorsAreSelected = reportWantsLicensesAndVendorsAreSelected;
+    vm.reportWantsVendorsAndCyclesAreSelected = reportWantsVendorsAndCyclesAreSelected;
 
     /**
      * Reports
@@ -38,7 +44,10 @@ function reportsController( $q, csvExportService, cycleService, libraryService, 
         {
             name: 'Selected Products',
             controls: {
-                cycle: 'all'
+                cycle: 'all',
+                library: 'all',
+                vendor: 'all',
+                license: 'all'
             },
             optionalColumns: [
                 'detailCode'
@@ -58,7 +67,8 @@ function reportsController( $q, csvExportService, cycleService, libraryService, 
         {
             name: 'Selections by Vendor',
             controls: {
-                cycle: 'all'
+                cycle: 'all',
+                vendor: 'all'
             },
             optionalColumns: [
                 'detailCode'
@@ -74,7 +84,9 @@ function reportsController( $q, csvExportService, cycleService, libraryService, 
         {
             name: 'List all Products for Vendor',
             controls: {
-                cycle: 'all'
+                cycle: 'all',
+                vendor: 'all',
+                license: 'all'
             },
             optionalColumns: [
                 'detailCode'
@@ -178,12 +190,31 @@ function reportsController( $q, csvExportService, cycleService, libraryService, 
         return vm.selectedReport.controls.library && cyclesAreSelected();
     }
 
+    function reportWantsLicensesAndCyclesAreSelected() {
+        return vm.selectedReport.controls.license && cyclesAreSelected();
+    }
+
+    function reportWantsLicensesAndVendorsAreSelected() {
+        return vm.selectedReport.controls.license && vendorsAreSelected();
+    }
+
+    function reportWantsVendorsAndCyclesAreSelected() {
+        if (vm.reportWantsProductsAndCyclesAreSelected() || vm.reportWantsLicensesAndCyclesAreSelected()) {
+            return false;
+        }
+        return vm.selectedReport.controls.vendor && cyclesAreSelected();
+    }
+
     function cyclesAreSelected() {
         return vm.reportOptions.parameters.cycle && vm.reportOptions.parameters.cycle.length;
     }
 
     function vendorsAreSelected() {
         return vm.reportOptions.parameters.vendor && vm.reportOptions.parameters.vendor.length;
+    }
+    
+    function productsAreSelected() {
+        return vm.reportOptions.parameters.product && vm.reportOptions.parameters.product.length;
     }
 
     function loadVendorsPromise() {
@@ -258,6 +289,71 @@ function reportsController( $q, csvExportService, cycleService, libraryService, 
             });
 
             return uniqueProducts;
+        }
+    }
+
+    function loadLicensesForVendors() {
+        vm.licenses = [];
+
+        if ( !reportWantsLicensesAndCyclesAreSelected() || !vendorsAreSelected() ){
+            return;
+        }
+
+        vm.loadingLicensesPromise = loadLicensesForSelectedVendorsForSelectedCycles()
+            .then(reduceToListOfUniqueLicenses)
+            .then(function(licenses) {
+                vm.licenses = licenses;
+            });
+
+
+        function loadLicensesForSelectedVendorsForSelectedCycles() {
+            var selectedCycles = getSelectedCycles();
+            var selectedVendors = vm.reportOptions.parameters.vendor || [];
+            var promisesForLicensesByVendor = selectedVendors.map(loadLicensesForVendorForSelectedCycles);
+
+            var allLicenses = flattenArraysOfArraysOfPromises(promisesForLicensesByVendor);
+            return $q.all( allLicenses );
+
+
+            function getSelectedCycles() {
+                return vm.cycles.filter(cycleIsSelected);
+
+                function cycleIsSelected(cycle) {
+                    return vm.reportOptions.parameters.cycle.indexOf(cycle.id) >= 0;
+                }
+            }
+
+            function loadLicensesForVendorForSelectedCycles( vendorId ) {
+                return selectedCycles.map(function(cycle) {
+                    return licenseService.listLicensesForVendorId(vendorId, cycle);
+                });
+            }
+
+            function flattenArraysOfArraysOfPromises(arrayOfArrays){
+                var flattenedArray = [];
+                arrayOfArrays.forEach(function(subArray){
+                    subArray.forEach(function(item) {
+                        flattenedArray.push(item);
+                    });
+                });
+                return flattenedArray;
+            }
+        }
+
+        function reduceToListOfUniqueLicenses(arrayOfLicensesPerCycle){
+            console.log('loaded ' + arrayOfLicensesPerCycle.length + ' cycles of vendor licenses', arrayOfLicensesPerCycle);
+            var uniqueLicensesById = {};
+            arrayOfLicensesPerCycle.forEach(function(arrayOfLicenses) {
+                arrayOfLicenses.forEach(function(license) {
+                    uniqueLicensesById[license.id] = license;
+                });
+            });
+
+            var uniqueLicenses = Object.keys(uniqueLicensesById).map(function(licenseId){
+                return uniqueLicensesById[licenseId];
+            });
+
+            return uniqueLicenses;
         }
     }
 
