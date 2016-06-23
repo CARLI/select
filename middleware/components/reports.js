@@ -9,7 +9,7 @@ var _ = require('lodash');
 
 var columnName = {
     address: 'Address',
-    averagePriceFull: 'Average Price',
+    averagePriceFunded: 'Average Price',
     city: 'City',
     contactType: 'Contact Type',
     cycle: 'Cycle',
@@ -23,7 +23,7 @@ var columnName = {
     library: 'Library',
     license: 'License',
     membershipLevel: 'Membership Level',
-    minPriceFull: 'Minimum Price',
+    minPriceFunded: 'Minimum Price',
     name: 'Name',
     numberSelected: 'Number Selected',
     phoneNumber: 'Phone Number',
@@ -34,7 +34,7 @@ var columnName = {
     selection: 'Selection',
     sitePriceFunded: 'Site License Price',
     state: 'State',
-    totalPriceFull: 'Total Price',
+    totalPriceFunded: 'Total Price',
     type: 'Type',
     vendor: 'Vendor',
     zip: 'Zip'
@@ -393,7 +393,7 @@ function selectionsByVendorReport( reportParameters, userSelectedColumns ){
 }
 
 function totalsReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['cycle', 'numberSelected', 'minPriceFull', 'totalPriceFull', 'averagePriceFull'];
+    var defaultReportColumns = ['cycle', 'numberSelected', 'minPriceFunded', 'totalPriceFunded', 'averagePriceFunded'];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
     var cyclesToQuery = getCycleParameter(reportParameters);
 
@@ -414,27 +414,27 @@ function totalsReport( reportParameters, userSelectedColumns ){
             var result = {
                 cycle: cycle.name,
                 numberSelected: listOfOfferingsForCycle.length,
-                minPriceFull: Infinity,
-                totalPriceFull: 0,
-                averagePriceFull: 0
+                minPriceFunded: Infinity,
+                totalPriceFunded: 0,
+                averagePriceFunded: 0
             };
 
             listOfOfferingsForCycle.forEach(sumPricesAndFindMinimumPrice);
 
-            result.minPriceFull = result.minPriceFull.toFixed(2);
-            result.totalPriceFull = result.totalPriceFull.toFixed(2);
-            result.averagePriceFull = (result.totalPriceFull / result.numberSelected).toFixed(2);
+            result.minPriceFunded = result.minPriceFunded.toFixed(2);
+            result.totalPriceFunded = result.totalPriceFunded.toFixed(2);
+            result.averagePriceFunded = (result.totalPriceFunded / result.numberSelected).toFixed(2);
 
             return result;
 
             function sumPricesAndFindMinimumPrice(offering) {
-                var priceFull = offeringRepository.getFullSelectionPrice(offering);
+                var priceFunded = offeringRepository.getFundedSelectionPrice(offering);
 
 
-                result.totalPriceFull += priceFull;
+                result.totalPriceFunded += priceFunded;
 
-                if ( priceFull < result.minPriceFull ){
-                    result.minPriceFull = priceFull;
+                if ( priceFunded < result.minPriceFunded ){
+                    result.minPriceFunded = priceFunded;
                 }
             }
         }
