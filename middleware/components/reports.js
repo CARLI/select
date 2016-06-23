@@ -9,7 +9,7 @@ var _ = require('lodash');
 
 var columnName = {
     address: 'Address',
-    averagePrice: 'Average Price',
+    averagePriceFunded: 'Average Price',
     city: 'City',
     contactType: 'Contact Type',
     cycle: 'Cycle',
@@ -23,24 +23,25 @@ var columnName = {
     library: 'Library',
     license: 'License',
     membershipLevel: 'Membership Level',
-    minPrice: 'Minimum Price',
+    minPriceFunded: 'Minimum Price',
     name: 'Name',
     numberSelected: 'Number Selected',
     phoneNumber: 'Phone Number',
-    price: 'Price',
+    priceFull: 'Price',
+    priceFunded: 'Price',
     product: 'Product',
     selected: 'Number Selected',
     selection: 'Selection',
-    sitePrice: 'Site License Price',
+    sitePriceFunded: 'Site License Price',
     state: 'State',
-    totalPrice: 'Total Price',
+    totalPriceFunded: 'Total Price',
     type: 'Type',
     vendor: 'Vendor',
     zip: 'Zip'
 };
 
 function allPricingReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['cycle', 'vendor', 'product', 'library', 'license', 'sitePrice'];
+    var defaultReportColumns = ['cycle', 'vendor', 'product', 'library', 'license', 'sitePriceFunded'];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
     var cyclesToQuery = getCycleParameter(reportParameters) || [];
     var vendorsParameter = getVendorParameter(reportParameters) || [];
@@ -153,7 +154,7 @@ function allPricingReport( reportParameters, userSelectedColumns ){
             product: offering.product.name,
             library: offering.library.name,
             license: licenseName(offering),
-            sitePrice: offeringRepository.getFundedSiteLicensePrice(offering) || ' '
+            sitePriceFunded: offeringRepository.getFundedSiteLicensePrice(offering) || ' '
         };
 
         var suPricing = offering.pricing.su;
@@ -181,7 +182,7 @@ function allPricingReport( reportParameters, userSelectedColumns ){
 }
 
 function selectedProductsReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['cycle', 'library', 'license', 'vendor', 'product', 'selection', 'price'];
+    var defaultReportColumns = ['cycle', 'library', 'license', 'vendor', 'product', 'selection', 'priceFunded'];
     var vendorsParameter = getVendorParameter(reportParameters) || [];
     var licensesParameter = getLicenseParameter(reportParameters) || [];
     var librariesParameter = getLibraryParameter(reportParameters) || [];
@@ -202,7 +203,7 @@ function selectedProductsReport( reportParameters, userSelectedColumns ){
             vendor: offering.vendor.name,
             product: offering.product.name,
             selection: offering.selection.users,
-            price: offeringRepository.getFullSelectionPrice(offering)
+            priceFunded: offeringRepository.getFundedSelectionPrice(offering)
         };
         
         if ( isEnabled('detailCode') ){
@@ -344,7 +345,7 @@ function statisticsReport( reportParameters, userSelectedColumns ){
 }
 
 function selectionsByVendorReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['cycle', 'vendor', 'license', 'product', 'library', 'selection', 'price'];
+    var defaultReportColumns = ['cycle', 'vendor', 'license', 'product', 'library', 'selection', 'priceFull'];
     var vendorsParameter = getVendorParameter(reportParameters) || [];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
     var cyclesToQuery = getCycleParameter(reportParameters);
@@ -364,7 +365,7 @@ function selectionsByVendorReport( reportParameters, userSelectedColumns ){
             product: offering.product.name,
             library: offering.library.name,
             selection: offering.selection.users,
-            price: offeringRepository.getFullSelectionPrice(offering)
+            priceFull: offeringRepository.getFullSelectionPrice(offering)
         };
 
         if ( isEnabled('detailCode') ){
@@ -392,7 +393,7 @@ function selectionsByVendorReport( reportParameters, userSelectedColumns ){
 }
 
 function totalsReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['cycle', 'numberSelected', 'minPrice', 'totalPrice', 'averagePrice'];
+    var defaultReportColumns = ['cycle', 'numberSelected', 'minPriceFunded', 'totalPriceFunded', 'averagePriceFunded'];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
     var cyclesToQuery = getCycleParameter(reportParameters);
 
@@ -413,27 +414,27 @@ function totalsReport( reportParameters, userSelectedColumns ){
             var result = {
                 cycle: cycle.name,
                 numberSelected: listOfOfferingsForCycle.length,
-                minPrice: Infinity,
-                totalPrice: 0,
-                averagePrice: 0
+                minPriceFunded: Infinity,
+                totalPriceFunded: 0,
+                averagePriceFunded: 0
             };
 
             listOfOfferingsForCycle.forEach(sumPricesAndFindMinimumPrice);
 
-            result.minPrice = result.minPrice.toFixed(2);
-            result.totalPrice = result.totalPrice.toFixed(2);
-            result.averagePrice = (result.totalPrice / result.numberSelected).toFixed(2);
+            result.minPriceFunded = result.minPriceFunded.toFixed(2);
+            result.totalPriceFunded = result.totalPriceFunded.toFixed(2);
+            result.averagePriceFunded = (result.totalPriceFunded / result.numberSelected).toFixed(2);
 
             return result;
 
             function sumPricesAndFindMinimumPrice(offering) {
-                var price = offeringRepository.getFullSelectionPrice(offering);
+                var priceFunded = offeringRepository.getFundedSelectionPrice(offering);
 
 
-                result.totalPrice += price;
+                result.totalPriceFunded += priceFunded;
 
-                if ( price < result.minPrice ){
-                    result.minPrice = price;
+                if ( priceFunded < result.minPriceFunded ){
+                    result.minPriceFunded = priceFunded;
                 }
             }
         }
