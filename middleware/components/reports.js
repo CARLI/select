@@ -9,7 +9,7 @@ var _ = require('lodash');
 
 var columnName = {
     address: 'Address',
-    averagePrice: 'Average Price',
+    averagePriceFull: 'Average Price',
     city: 'City',
     contactType: 'Contact Type',
     cycle: 'Cycle',
@@ -23,24 +23,24 @@ var columnName = {
     library: 'Library',
     license: 'License',
     membershipLevel: 'Membership Level',
-    minPrice: 'Minimum Price',
+    minPriceFull: 'Minimum Price',
     name: 'Name',
     numberSelected: 'Number Selected',
     phoneNumber: 'Phone Number',
-    price: 'Price',
+    priceFull: 'Price',
     product: 'Product',
     selected: 'Number Selected',
     selection: 'Selection',
-    sitePrice: 'Site License Price',
+    sitePriceFunded: 'Site License Price',
     state: 'State',
-    totalPrice: 'Total Price',
+    totalPriceFull: 'Total Price',
     type: 'Type',
     vendor: 'Vendor',
     zip: 'Zip'
 };
 
 function allPricingReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['cycle', 'vendor', 'product', 'library', 'license', 'sitePrice'];
+    var defaultReportColumns = ['cycle', 'vendor', 'product', 'library', 'license', 'sitePriceFunded'];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
     var cyclesToQuery = getCycleParameter(reportParameters) || [];
     var vendorsParameter = getVendorParameter(reportParameters) || [];
@@ -153,7 +153,7 @@ function allPricingReport( reportParameters, userSelectedColumns ){
             product: offering.product.name,
             library: offering.library.name,
             license: licenseName(offering),
-            sitePrice: offeringRepository.getFundedSiteLicensePrice(offering) || ' '
+            sitePriceFunded: offeringRepository.getFundedSiteLicensePrice(offering) || ' '
         };
 
         var suPricing = offering.pricing.su;
@@ -181,7 +181,7 @@ function allPricingReport( reportParameters, userSelectedColumns ){
 }
 
 function selectedProductsReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['cycle', 'library', 'license', 'vendor', 'product', 'selection', 'price'];
+    var defaultReportColumns = ['cycle', 'library', 'license', 'vendor', 'product', 'selection', 'priceFull'];
     var vendorsParameter = getVendorParameter(reportParameters) || [];
     var licensesParameter = getLicenseParameter(reportParameters) || [];
     var librariesParameter = getLibraryParameter(reportParameters) || [];
@@ -202,7 +202,7 @@ function selectedProductsReport( reportParameters, userSelectedColumns ){
             vendor: offering.vendor.name,
             product: offering.product.name,
             selection: offering.selection.users,
-            price: offeringRepository.getFullSelectionPrice(offering)
+            priceFull: offeringRepository.getFullSelectionPrice(offering)
         };
         
         if ( isEnabled('detailCode') ){
@@ -344,7 +344,7 @@ function statisticsReport( reportParameters, userSelectedColumns ){
 }
 
 function selectionsByVendorReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['cycle', 'vendor', 'license', 'product', 'library', 'selection', 'price'];
+    var defaultReportColumns = ['cycle', 'vendor', 'license', 'product', 'library', 'selection', 'priceFull'];
     var vendorsParameter = getVendorParameter(reportParameters) || [];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
     var cyclesToQuery = getCycleParameter(reportParameters);
@@ -364,7 +364,7 @@ function selectionsByVendorReport( reportParameters, userSelectedColumns ){
             product: offering.product.name,
             library: offering.library.name,
             selection: offering.selection.users,
-            price: offeringRepository.getFullSelectionPrice(offering)
+            priceFull: offeringRepository.getFullSelectionPrice(offering)
         };
 
         if ( isEnabled('detailCode') ){
@@ -392,7 +392,7 @@ function selectionsByVendorReport( reportParameters, userSelectedColumns ){
 }
 
 function totalsReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['cycle', 'numberSelected', 'minPrice', 'totalPrice', 'averagePrice'];
+    var defaultReportColumns = ['cycle', 'numberSelected', 'minPriceFull', 'totalPriceFull', 'averagePriceFull'];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
     var cyclesToQuery = getCycleParameter(reportParameters);
 
@@ -413,27 +413,27 @@ function totalsReport( reportParameters, userSelectedColumns ){
             var result = {
                 cycle: cycle.name,
                 numberSelected: listOfOfferingsForCycle.length,
-                minPrice: Infinity,
-                totalPrice: 0,
-                averagePrice: 0
+                minPriceFull: Infinity,
+                totalPriceFull: 0,
+                averagePriceFull: 0
             };
 
             listOfOfferingsForCycle.forEach(sumPricesAndFindMinimumPrice);
 
-            result.minPrice = result.minPrice.toFixed(2);
-            result.totalPrice = result.totalPrice.toFixed(2);
-            result.averagePrice = (result.totalPrice / result.numberSelected).toFixed(2);
+            result.minPriceFull = result.minPriceFull.toFixed(2);
+            result.totalPriceFull = result.totalPriceFull.toFixed(2);
+            result.averagePriceFull = (result.totalPriceFull / result.numberSelected).toFixed(2);
 
             return result;
 
             function sumPricesAndFindMinimumPrice(offering) {
-                var price = offeringRepository.getFullSelectionPrice(offering);
+                var priceFull = offeringRepository.getFullSelectionPrice(offering);
 
 
-                result.totalPrice += price;
+                result.totalPriceFull += priceFull;
 
-                if ( price < result.minPrice ){
-                    result.minPrice = price;
+                if ( priceFull < result.minPriceFull ){
+                    result.minPriceFull = priceFull;
                 }
             }
         }
