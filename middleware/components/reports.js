@@ -28,6 +28,7 @@ var columnName = {
     numberSelected: 'Number Selected',
     phoneNumber: 'Phone Number',
     priceFull: 'Price',
+    priceFunded: 'Price',
     product: 'Product',
     selected: 'Number Selected',
     selection: 'Selection',
@@ -181,7 +182,7 @@ function allPricingReport( reportParameters, userSelectedColumns ){
 }
 
 function selectedProductsReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['cycle', 'library', 'license', 'vendor', 'product', 'selection', 'priceFull'];
+    var defaultReportColumns = ['cycle', 'library', 'license', 'vendor', 'product', 'selection', 'priceFunded'];
     var vendorsParameter = getVendorParameter(reportParameters) || [];
     var licensesParameter = getLicenseParameter(reportParameters) || [];
     var librariesParameter = getLibraryParameter(reportParameters) || [];
@@ -202,7 +203,7 @@ function selectedProductsReport( reportParameters, userSelectedColumns ){
             vendor: offering.vendor.name,
             product: offering.product.name,
             selection: offering.selection.users,
-            priceFull: offeringRepository.getFullSelectionPrice(offering)
+            priceFunded: offeringRepository.getFundedSelectionPrice(offering)
         };
         
         if ( isEnabled('detailCode') ){
