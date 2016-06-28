@@ -14,7 +14,7 @@ function loginController ($q, $rootScope, $location, alertService, authService, 
         vm.resetRequestSent = false;
         vm.maintenanceMode = false;
         vm.maintenanceModeMessage = "";
-        vm.isMasqueradingRequested = authService.isMasqueradingRequested();
+        vm.isMasqueradingRequested = authService.isMasqueradingPending();
         vm.submitLabel = "Log in";
         vm.userLogin = {
             email: '',
