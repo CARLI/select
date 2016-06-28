@@ -5,7 +5,7 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
     var session = null;
     var user = null;
 
-    var masqueradeRequest = {
+    var pendingMasqueradeRequest = {
         targetRole: null,
         targetId: null
     };
@@ -33,6 +33,7 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
         redirectToLogin: redirectToLogin,
 
         isMasqueradingRequested: isMasqueradingRequested,
+        isMasqueradingPending: isMasqueradingPending,
         initializeMasquerading: initializeMasquerading
     };
 
@@ -47,16 +48,28 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
         $rootScope.$on('$locationChangeSuccess',
             function (angularEvent, newUrlString) {
                 var newUrl = new URL(newUrlString);
-                var targetRole = parseMasqueradeTargetTypeFromUrl(newUrl);
 
-                if (targetRole !== null) {
-                    console.log('Set pending masquerade request');
-                    masqueradeRequest.targetRole = targetRole;
-                    masqueradeRequest.targetId = getUrlSearchFor(masqueradeRequest.targetRole, newUrl);
-                    clearUrlSearchFor(masqueradeRequest.targetRole);
-                }
+                interceptMasqueradeRequest(newUrl);
+                allowMasqueradeChooserToBypassCycleChooser(newUrl);
             }
         );
+    }
+
+    function interceptMasqueradeRequest(newUrl) {
+        var targetRole = parseMasqueradeTargetTypeFromUrl(newUrl);
+
+        if (targetRole !== null) {
+            pendingMasqueradeRequest.targetRole = targetRole;
+            pendingMasqueradeRequest.targetId = getUrlSearchFor(pendingMasqueradeRequest.targetRole, newUrl);
+            clearUrlSearchFor(pendingMasqueradeRequest.targetRole);
+        }
+    }
+
+    function allowMasqueradeChooserToBypassCycleChooser(newUrl) {
+        if (newUrl.pathname == '/masquerade') {
+            $rootScope.appState = 'pendingUser';
+        }
+
     }
 
     function getUrlSearchFor(targetRole, url) {
@@ -167,14 +180,13 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
     function isMasqueradingRequestedForVendor() {
         return urlContainsSearchFor('vendor', new URL($location.absUrl()));
     }
+    function isMasqueradingPending() {
+        return pendingMasqueradeRequest.targetRole != null;
+    }
 
     function initializeMasquerading() {
         var queryParameters = $location.search();
         var masqueradeAsPromise = $q.when(true);
-
-        console.log('Upon initialization');
-        console.log('url contains key', isMasqueradingRequestedForVendor());
-        console.log('pending request target', masqueradeRequest.targetRole);
 
         if (isMasqueradingRequestedForLibrary()) {
             masqueradeAsPromise = masqueradeAsLibrary(queryParameters[ searchKeyFor('library') ]);

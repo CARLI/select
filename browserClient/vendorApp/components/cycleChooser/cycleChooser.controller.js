@@ -8,6 +8,7 @@ function cycleChooserController($q, $scope, alertService, authService, config, c
     vm.loadingPromise = null;
     vm.user = {};
     vm.vendor = {};
+    vm.noActiveCycles = false;
 
     activate();
 
@@ -33,6 +34,7 @@ function cycleChooserController($q, $scope, alertService, authService, config, c
                 vm.noActiveCycles = true;
                 return $q.when(false);
             }
+            vm.noActiveCycles = false;
 
             if (canRestorePersistedCycle()) {
                 var hydratedCycle = getRestoredPersistedCycle();
