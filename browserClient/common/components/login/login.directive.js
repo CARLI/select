@@ -10,6 +10,10 @@ angular.module('common.login')
                 '      Please enter your email address, and then check your email for further instructions.' +
                 '    </div>' +
 
+                '    <div class="masquerade-instructions" ng-show="vm.isMasqueradingRequested">' +
+                '      To begin masquerading, please log in with your CARLI Select <em>staff account</em> now.' +
+                '    </div>' +
+
                 '    <label for="email">Email</label>' +
                 '    <input  id="email" type="text" ng-model="vm.userLogin.email">' +
                 '    <label for="password" ng-show="!vm.forgotMode">Password</label>' +
