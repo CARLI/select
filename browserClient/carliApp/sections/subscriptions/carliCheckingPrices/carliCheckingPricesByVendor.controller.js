@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.carliCheckingPrices')
     .controller('carliCheckingPricesByVendorController', carliCheckingPricesByVendorController);
 
-function carliCheckingPricesByVendorController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, offeringService, editOfferingService, offeringsByVendorExport, productService, vendorService, vendorStatusService ) {
+function carliCheckingPricesByVendorController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, offeringService, editOfferingService, libraryService, offeringsByVendorExport, productService, vendorService, vendorStatusService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadProductsForVendor);
@@ -24,6 +24,8 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
     ];
     vm.vendors = [];
     vm.vendorStatus = {};
+    
+    var librariesByCrmId = {};
 
     activate();
 
@@ -33,7 +35,7 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
         vm.cycle = cycleService.getCurrentCycle();
         vm.lastYear = vm.cycle.year - 1;
 
-        loadVendors();
+        loadDataForScreen();
         connectEditButtons();
     }
 
@@ -48,8 +50,9 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
         }
     }
 
-    function loadVendors() {
-        vm.vendorLoadingPromise = productService.listProductCountsByVendorId()
+    function loadDataForScreen() {
+        vm.dataLoadingPromise = listAndSaveActiveLibraries()
+            .then(productService.listProductCountsByVendorId)
             .then(function( productsByVendorId ){
                 return Object.keys(productsByVendorId);
             })
@@ -59,6 +62,14 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
                 vm.vendors = vendors;
             })
             .then(loadVendorStatuses);
+    }
+
+    function listAndSaveActiveLibraries() {
+        return libraryService.listActiveLibraries().then(function (libraries) {
+            libraries.forEach(function (l) {
+                librariesByCrmId[l.crmId] = l;
+            });
+        })
     }
 
     function filterActiveVendors(vendorList){
@@ -102,6 +113,7 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
 
         return offeringService.listOfferingsForProductId(product.id)
             .then(filterActiveLibraries)
+            .then(fillInNonCrmFields)
             .then(function(offerings){
                 product.offerings = offerings;
                 return offerings;
@@ -111,6 +123,13 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
     function filterActiveLibraries(offeringsList){
         return offeringsList.filter(function(offering){
             return offering.library.isActive;
+        });
+    }
+
+    function fillInNonCrmFields(offeringsList) {
+        return offeringsList.map(function (offering) {
+            offering.library = librariesByCrmId[offering.library.id];
+            return offering;
         });
     }
 
