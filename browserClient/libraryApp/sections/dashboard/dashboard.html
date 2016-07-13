@@ -21,7 +21,7 @@
             <button class="carli-button" ng-if="cycle.id !== 'one-time-purchase-products-cycle'" ng-click="vm.viewUnselectedProductsFor(cycle)">
                 View Upgrades and Unselected {{ cycle.name }} Subscription Products
             </button>
-            <a class="carli-button" href="/addOneTimePurchases" ng-if="cycle.id === 'one-time-purchase-products-cycle'">Add One-Time Purchases</a>
+            <a class="carli-button" ng-hide="vm.userIsReadOnly()" href="/addOneTimePurchases" ng-if="cycle.id === 'one-time-purchase-products-cycle'">Add One-Time Purchases</a>
         </li>
     </ol>
 </section>

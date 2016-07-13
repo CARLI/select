@@ -1,4 +1,4 @@
-    <button ng-show="!vm.userIsReadOnly" class="carli-button select-last-year" busy-click="vm.selectLastYearsSelections()">Select Last Year's Subscriptions <fa name="check-circle"></fa></button>
+    <button ng-hide="vm.userIsReadOnly()" class="carli-button select-last-year" busy-click="vm.selectLastYearsSelections()">Select Last Year's Subscriptions <fa name="check-circle"></fa></button>
     <ul class="subscriptions product-list" cg-busy="vm.loadingPromise">
         <li class="column-headers">
             <div class="sortable column" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.productName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.productName)">Product</div>
@@ -93,12 +93,14 @@
 
                     <div class="subscription-buttons" ng-if="offering.display === 'with-price'">
                         <subscription-button ng-if="offering.pricing.site"
+                                             ng-hide="vm.userIsReadOnly()"
                                              title="Site License" price="{{ ::vm.getFundedSiteLicensePrice(offering) }}"
                                              selected="vm.isSelected(offering, 'Site License')"
                                              busy-click="vm.selectAndUpdateProduct(offering, 'Site License')">
                         </subscription-button>
                         <div class="su-buttons" ng-if="offering.pricing.su && offering.pricing.su.length">
                             <subscription-button ng-repeat="su in offering.pricing.su | orderBy:users"
+                                                 ng-hide="vm.userIsReadOnly()"
                                                  ng-if="su.price < offering.pricing.site || !offering.pricing.site"
                                                  title="{{ su.users }} Simultaneous Users" price="{{ su.price }}"
                                                  selected="vm.isSelected(offering, su.users)"
@@ -111,7 +113,7 @@
 
                     <div class="no-price-display" ng-if="offering.display === 'without-price'">Ask CARLI to find out the price of this product for your institution.</div>
 
-                    <div class="bottom-buttons">
+                    <div class="bottom-buttons" ng-hide="vm.userIsReadOnly()">
                         <button type="button" class="carli-button remove-button"
                                 busy-click="vm.unSelectAndUpdateProduct(offering)"
                                 ng-if="offering.selection">
@@ -131,7 +133,7 @@
         </li>
         <li class="footer">
             <button class="carli-button export" ng-click="vm.exportProductList()">EXPORT</button>
-            <button type="button" ng-click="vm.reviewSelections()" class="carli-button primary-button arrow-right">Review</button>
+            <button type="button" ng-click="vm.reviewSelections()" ng-hide="vm.userIsReadOnly()" class="carli-button primary-button arrow-right">Review</button>
         </li>
     </ul>
 </section>

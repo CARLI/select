@@ -20,7 +20,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
     vm.openProduct = {};
     vm.selectionProblems = [];
     vm.showProgress = false;
-    vm.userIsReadOnly = userService.userIsReadOnly();
+    vm.userIsReadOnly = userService.userIsReadOnly;
 
     vm.completeSelections = completeSelections;
     vm.computeTotalPurchasesAmount = computeTotalPurchasesAmount;

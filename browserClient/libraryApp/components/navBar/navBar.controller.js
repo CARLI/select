@@ -1,10 +1,11 @@
 angular.module('library.navBar')
     .controller('navBarController', navBarController);
 
-function navBarController(cycleService) {
+function navBarController(cycleService, userService) {
     var vm = this;
 
     vm.showOpenBadge = false;
+    vm.userIsReadOnly = userService.userIsReadOnly;
 
     activate();
 
