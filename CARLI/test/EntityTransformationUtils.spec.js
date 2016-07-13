@@ -202,18 +202,6 @@ describe('The expandObjectFromPersistence function', function () {
 
         expect(entity.testFunction).to.be.a('Function');
     });
-
-    it('should expand libraries, including non-crm data', function () {
-        var nonCrmLibraryData = {};
-
-        return libraryRe
-
-        //load lib
-        //add non-crm data
-        //save lib
-        //call expand on something with a library reference
-        //expect non-crm data to be legit
-    });
 });
 
 describe('The expandListOfObjectsFromPersistence', function () {
