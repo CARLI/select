@@ -15,7 +15,7 @@
 
     <section class="content list-content no-cycles" ng-if="vm.noCycles">
         <p>Sorry, there are no active subscription cycles at this time.
-           Please <a ask-carli="Add Subscriptions - no cycles found">contact CARLI</a>.
+           <span ng-hide="vm.userIsReadOnly()">Please <a ask-carli="Add Subscriptions - no cycles found">contact CARLI</a>.</span>
         </p>
     </section>
 </section>

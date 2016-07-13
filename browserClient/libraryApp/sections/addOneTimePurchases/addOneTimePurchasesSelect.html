@@ -81,13 +81,14 @@
                 <div class="column select">
                     <div class="subscription-buttons">
                         <subscription-button title="Site License" price="{{ vm.getFundedSiteLicensePrice(offering) }}"
+                                             ng-hide="vm.userIsReadOnly()"
                                              selected="offering.selectionPendingReview"
                                              busy-click="vm.selectProduct(offering)"
                                              ng-if="offering.pricing.site">
                         </subscription-button>
                         <div class="no-price" ng-if="!offering.pricing.site">A price has not been provided for this product. Ask CARLI for more information.</div>
                     </div>
-                    <div class="bottom-buttons">
+                    <div class="bottom-buttons" ng-hide="vm.userIsReadOnly()">
                         <button type="button" class="carli-button remove-button"
                                 busy-click="vm.unSelectProduct(offering)"
                                 ng-if="offering.selectionPendingReview">
@@ -107,14 +108,14 @@
         </li>
         <li class="footer">
             <button class="carli-button export" ng-click="vm.exportProductList(vm.availableForPurchase)">EXPORT</button>
-            <button type="button" ng-click="vm.reviewSelections()" class="carli-button primary-button arrow-right">Review</button>
+            <button type="button" ng-click="vm.reviewSelections()" ng-hide="vm.userIsReadOnly()" class="carli-button primary-button arrow-right">Review</button>
         </li>
     </ul>
 
     <h2>Previously Purchased Items</h2>
     <p class="purchased-message">
         The following products are items that your library currently has access to through CARLI. If your library is not
-        able to access any one of these items, <a>please contact CARLI</a>.
+        able to access any one of these items, <a ask-carli="Previously Purchased One-Time Purchase list">please contact CARLI</a>.
     </p>
     <ul class="subscriptions product-list" cg-busy="vm.loadingPromise">
         <li collapsible class="offering collapsed" ng-repeat="offering in vm.purchased | orderBy: vm.orderByPurchased:vm.reversePurchased track by offering.id ">

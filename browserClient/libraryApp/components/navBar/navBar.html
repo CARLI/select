@@ -17,10 +17,10 @@
     <li>
         <a active-tab href="/notifications"><span>Notifications</span></a>
     </li>
-    <li>
+    <li ng-hide="vm.userIsReadOnly()">
         <a active-tab href="/ipAddresses"><span>IP Addresses</span></a>
     </li>
-    <li>
+    <li ng-hide="vm.userIsReadOnly()">
         <a active-tab href="/management"><span>Management</span></a>
     </li>
 

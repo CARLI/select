@@ -9,6 +9,7 @@ function dashboardController( cycleService, userService ){
     vm.loadingPromise = null;
     vm.cycleForUnselectedProducts = null;
     vm.selectedLicenseId = null;
+    vm.userIsReadOnly = userService.userIsReadOnly;
 
     vm.showLicenseAgreements = showLicenseAgreements;
     vm.viewUnselectedProductsFor = viewUnselectedProductsFor;
