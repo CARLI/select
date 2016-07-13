@@ -65,6 +65,13 @@
             margin-right: 3px;
         }
     }
+
+    .user-readonly-checkbox {
+        margin-top: $label-margin-top + 5;
+        label {
+            margin-top: 0;
+        }
+    }
 }
 
 .modal .edit-form .footer, .modal .edit-form .header {

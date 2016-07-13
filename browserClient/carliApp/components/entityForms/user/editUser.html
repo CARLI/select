@@ -48,6 +48,14 @@
                 <span class="value">{{ vm.selectedVendor.name || 'N/A' }}</span>
             </view-edit-select-object>
 
+            <div class="user-readonly-checkbox" ng-show="vm.userType === 'library'" >
+                <div ng-show="vm.editable">
+                    <checkbox ng-model="vm.userIsReadOnly">User has read only access</checkbox>
+                </div>
+                <div ng-show="!vm.editible && vm.userIsReadOnly">User has read only access</div>
+                <div ng-show="!vm.editible && !vm.userIsReadOnly">User has read/write access</div>
+            </div>
+
             <label ng-show="vm.userType === 'library'" for="selectedLibrary">Library</label>
             <view-edit-select-object ng-show="vm.userType === 'library'" ng-model="vm.selectedLibrary" input-id="selectedLibrary" objects="vm.libraries" label-property="name" track-by="id" edit-mode="vm.editable">
                 <span class="value">{{ vm.selectedLibrary.name || 'N/A' }}</span>

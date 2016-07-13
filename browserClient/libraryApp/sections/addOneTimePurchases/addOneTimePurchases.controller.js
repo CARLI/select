@@ -39,6 +39,7 @@ function addOneTimePurchasesController( $q, $location, config, activityLogServic
     vm.todo = todo;
     vm.unSelectProduct = unselectProduct;
     vm.wasFullyFunded = wasFullyFunded;
+    vm.userIsReadOnly = userService.userIsReadOnly;
 
     activate();
 

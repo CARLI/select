@@ -32,6 +32,9 @@ function userService(CarliModules, $q, authService) {
         },
         getUser: function () {
             return authService.getCurrentUser();
+        },
+        userIsReadOnly: function () {
+            return authService.userIsReadOnly();
         }
     };
 }
