@@ -1,4 +1,4 @@
-<div cg-busy="vm.vendorLoadingPromise"></div>
+<div cg-busy="vm.dataLoadingPromise"></div>
 <div class="offerings-editor">
     <ul class="vendor-accordion">
         <li ng-repeat="vendor in vm.vendors | orderBy:'name'" ng-class="{collapsed: vm.openAccordion !== vendor.id}">
