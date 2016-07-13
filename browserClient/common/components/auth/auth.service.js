@@ -17,6 +17,7 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
 
         getCurrentUser: getCurrentUser,
         fetchCurrentUser: fetchCurrentUser,
+        userIsReadOnly: userIsReadOnly,
 
         refreshSession: requireSession, // not a typo
         requireSession: requireSession,
@@ -75,6 +76,10 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
             throw new Error('No user');
         }
         return user;
+    }
+
+    function userIsReadOnly() {
+        return getCurrentUser().roles.indexOf('readonly') >= 0;
     }
 
     function fetchCurrentUser() {

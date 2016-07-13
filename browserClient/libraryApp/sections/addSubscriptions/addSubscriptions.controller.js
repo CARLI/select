@@ -9,6 +9,7 @@ function addSubscriptionsController( cycleService, authService, libraryStatusSer
     vm.cycles = [];
     vm.noCycles = false;
     vm.loadingPromise = null;
+    vm.userIsReadOnly = authService.userIsReadOnly;
 
     vm.resetCycleChoice = multipleCycles;
     vm.setCycle = oneCycle;

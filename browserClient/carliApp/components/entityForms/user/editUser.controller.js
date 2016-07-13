@@ -21,6 +21,7 @@ function editUserController( $filter, $scope, $rootScope, $q, $location, $window
     vm.submitAction = submitAction;
     vm.submitLabel = submitLabel;
     vm.statusOptions = entityBaseService.getStatusOptions();
+    vm.userIsReadOnly = false;
 
     setupModalClosingUnsavedChangesWarning();
     activate();
@@ -86,14 +87,20 @@ function editUserController( $filter, $scope, $rootScope, $q, $location, $window
 
         return userService.load($scope.userId)
             .then(setUserOnVm)
+            .then(initializeReadonlyCheckbox)
+            .then(function(x) { setUserFormPristine(); return x; })
             .then(loadLinkedRole)
             .then(determineIfUserIsCurrentUser);
 
         function setUserOnVm( user ) {
             vm.user = angular.copy(user);
             vm.userType = vm.user.roles[0];
-            setUserFormPristine();
             return user;
+        }
+
+        function initializeReadonlyCheckbox(x) {
+            vm.userIsReadOnly = vm.user.roles.indexOf('readonly') != -1;
+            return x;
         }
 
         function loadLinkedRole(user) {
@@ -199,6 +206,17 @@ function editUserController( $filter, $scope, $rootScope, $q, $location, $window
         }
 
         vm.user.email = vm.user.email.replace(/[^\x00-\x7F]/g, "");
+
+        setUserRoles();
+
+        if (vm.userId === undefined) {
+            return saveNewUser();
+        } else {
+            return saveExistingUser();
+        }
+    }
+
+    function setUserRoles() {
         vm.user.roles = [ vm.userType ];
 
         if (vm.userType == 'vendor') {
@@ -210,10 +228,8 @@ function editUserController( $filter, $scope, $rootScope, $q, $location, $window
             vm.user.library = vm.selectedLibrary.id;
         }
 
-        if (vm.userId === undefined) {
-            return saveNewUser();
-        } else {
-            return saveExistingUser();
+        if (vm.userIsReadOnly) {
+            vm.user.roles.push('readonly');
         }
     }
 
