@@ -1,0 +1,74 @@
+#!/usr/bin/env node
+
+var _ = require('lodash');
+var path = require('path');
+var Q = require('q');
+
+var cli = require('../CARLI/CommandLine');
+var cycleRepository = require('../CARLI/Entity/CycleRepository');
+var vendorStatusRepository = require('../CARLI/Entity/VendorStatusRepository');
+
+
+cli.withSingleArgument('cycle-id', listDuplicateVendorStatusesByCycle);
+
+function listDuplicateVendorStatusesByCycle(cycleId) {
+    return cli.asCouchAdmin(listDuplicateVendorStatuses);
+
+    function listDuplicateVendorStatuses() {
+
+        return loadCurrentCycle()
+            .then(loadVendorStatusesForCycle)
+            .then(groupByVendorId)
+            .then(removeSingletons)
+            .then(printReport)
+            .catch(function (error) {
+                console.log('ERROR', error);
+            });
+
+        function loadCurrentCycle() {
+            return cycleRepository.load(cycleId);
+        }
+
+        function loadVendorStatusesForCycle(cycle) {
+            return vendorStatusRepository.list(cycle);
+        }
+
+        function groupByVendorId(vendorStatuses) {
+            var statusByVendorId = {};
+            vendorStatuses.forEach(function (status) {
+                var vendorId = status.vendor;
+                if (!statusByVendorId.hasOwnProperty(vendorId)) {
+                    statusByVendorId[vendorId] = [];
+                }
+                statusByVendorId[vendorId].push(status);
+
+            });
+            return statusByVendorId;
+        }
+
+        function removeSingletons(vendorStatusesByVendorId) {
+            var vendorIds = Object.keys(vendorStatusesByVendorId);
+            vendorIds.forEach(function (vendorId) {
+                if (vendorStatusesByVendorId[vendorId].length === 1) {
+                    delete vendorStatusesByVendorId[vendorId];
+                }
+            });
+            return vendorStatusesByVendorId;
+        }
+
+        function printReport(vendorStatusesByVendorId) {
+            console.log(vendorStatusesByVendorId);
+            // var vendorIds = Object.keys(vendorStatusesByVendorId);
+            //
+            // vendorIds.forEach(function (vendorId) {
+            //     console.log("Vendor: " + vendorId);
+            //     vendorStatusesByVendorId[vendorId].forEach(function (status) {
+            //         console.log("\t" + status.lastActivity + ': ' + status.description);
+            //         if (status.cycle !== cycleId) {
+            //             console.log("\tCYCLE MISMATCH");
+            //         }
+            //     });
+            // });
+        }
+    }
+}
