@@ -79,7 +79,7 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
     }
 
     function userIsReadOnly() {
-        return getCurrentUser().roles.indexOf('readonly') != 0;
+        return getCurrentUser().roles.indexOf('readonly') >= 0;
     }
 
     function fetchCurrentUser() {
