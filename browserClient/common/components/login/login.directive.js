@@ -3,7 +3,8 @@ angular.module('common.login')
         return {
             restrict: 'E',
             template: [
-                '<section class="content" id="login">' +
+
+                '<section ng-show="!vm.maintenanceMode.enabled" class="content" id="login">' +
                 '  <form ng-show="!vm.resetRequestSent">' +
                 '    <div class="forgot-instructions" ng-show="vm.forgotMode">' +
                 '      Please enter your email address, and then check your email for further instructions.' +
@@ -25,6 +26,13 @@ angular.module('common.login')
                 '  <div ng-show="vm.resetRequestSent">' +
                 '    <p>Your request has been sent.  Please check your email for further instructions.</p>' +
                 '    <a ng-click="vm.resetLoginForm()">Return to login</a>' +
+                '  </div>' +
+                '</section>' +
+
+                '<section ng-show="vm.maintenanceMode.enabled" class="content" id="login">' +
+                '  <div>' +
+                '    <h2>{{ vm.maintenanceMode.heading }}</h2>' +
+                '    <p>{{ vm.maintenanceMode.detail }}</p>' +
                 '  </div>' +
                 '</section>'
             ].join(''),

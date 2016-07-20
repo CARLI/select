@@ -69,7 +69,7 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
             libraries.forEach(function (l) {
                 librariesByCrmId[l.crmId] = l;
             });
-        })
+        });
     }
 
     function filterActiveVendors(vendorList){

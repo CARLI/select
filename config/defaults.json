@@ -22,6 +22,11 @@
     "host": "localhost",
     "database": "carli_crm"
   },
+  "maintenanceMode": {
+    "enabled": false,
+    "heading": "System Maintenance",
+    "detail": "CARLI Select is currently offline for maintenance."
+  },
   "oneTimePurchaseProductsCycleDocId": "one-time-purchase-products-cycle",
   "storePath": "CouchDb/Store",
   "defaultEntityCacheTimeToLive": 1000,
