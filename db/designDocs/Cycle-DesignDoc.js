@@ -130,7 +130,7 @@ ddoc = {
                     if (doc.funding) {
                         if (doc.funding.fundedByPercentage) {
                             if (doc.funding.fundedPercent > 0) {
-                                selectionPrice = selectionPrice - (doc.funding.fundedPercent * selectionPrice);
+                                selectionPrice = selectionPrice - ((doc.funding.fundedPercent/100) * selectionPrice);
                             }
                         } else {
                             if (doc.funding.fundedPrice > 0) {

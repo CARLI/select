@@ -897,6 +897,8 @@ function getAmountPaidByCarli(offering) {
     return totalAmount - amountPaidByLibrary;
 }
 
+/* ATTENTION: This logic is duplicated in /db/Cycle-DesignDoc.js
+ * It's important to keep them in sync so the cycle screen totals match the totals report */
 function getFundedPrice(price, funding) {
     var fundedPrice = price;
 
