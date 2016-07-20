@@ -21,7 +21,7 @@
                     <div role="columnheader" id="remove-column-header" class="column remove">Remove</div>
                 </li>
                 <li role="row" class="" ng-repeat="product in vendor.products | filter:{isActive:true} | orderBy:vm.orderBy:vm.reverse track by product.id">
-                    <div role="gridcell" aria-describedby="product-name-column-header" class="column product-name">{{ vm.getProductDisplayName(product) }} <em ng-if="product.isThirdPartyProduct">(3<sup>rd</sup> Party Product)</em></div>
+                    <div role="gridcell" aria-describedby="product-name-column-header" class="column product-name">{{ vm.getProductDisplayName(product) }}</div>
                     <div role="gridcell" aria-describedby="selection-history-column-header" class="column selection-history" ng-repeat="history in product.historicalPricing | orderBy:'year'">
                         <product-selection-history-icon selected="{{ history.description }}"></product-selection-history-icon>
                     </div>

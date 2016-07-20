@@ -4,9 +4,6 @@
     "schemaType": "ProductLicenseType",
     "type": "object",
     "properties": {
-        "isThirdPartyProduct": {
-            "type": "boolean"
-        },
         "isSoleSource": {
             "type": "boolean"
         },
