@@ -1,7 +1,7 @@
 angular.module('common.login')
     .controller('loginController', loginController);
 
-function loginController ($q, $rootScope, $location, alertService, authService, userService) {
+function loginController ($q, $rootScope, $location, alertService, authService, config, userService) {
     var vm = this;
 
     vm.userLogin = {};
@@ -12,11 +12,15 @@ function loginController ($q, $rootScope, $location, alertService, authService, 
     function activate() {
         vm.forgotMode = false;
         vm.resetRequestSent = false;
+        vm.maintenanceMode = false;
+        vm.maintenanceModeMessage = "";
         vm.submitLabel = "Log in";
         vm.userLogin = {
             email: '',
             password: ''
         };
+
+        checkForMaintenanceMode();
     }
 
     vm.resetLoginForm = activate;
@@ -143,5 +147,9 @@ function loginController ($q, $rootScope, $location, alertService, authService, 
                     throw err;
                 }
             });
+    }
+
+    function checkForMaintenanceMode() {
+        vm.maintenanceMode = config.maintenanceMode;
     }
 }
