@@ -6,9 +6,9 @@
 
     <section class="content list-content">
         <div class="dashboard-content">
-            <div class="dashboard-content__section">
+            <div class="dashboard-content__section dashboard-content__section--subscriptions">
                 <h2>Subscription Cycles</h2>
-                <ul class="zebra-table" cg-busy="vm.cyclesLoading">
+                <ul cg-busy="vm.cyclesLoading">
                     <li ng-repeat="cycle in vm.cycles">
                         <div class="column">
                             <a ng-href="/subscription/{{ cycle.id }}">{{ cycle.name }}</a>
@@ -24,16 +24,33 @@
             </div>
             <div class="dashboard-content__section">
                 <h2>Subscription: Recent Activity</h2>
-
+                <ul class="" cg-busy="vm.activityLoading">
+                    <li ng-repeat="log in vm.logs | filter: vm.subscriptionActivity">
+                        <span class="user-email">{{ log.userEmail }}</span>
+                        <span class="activity">{{ ::vm.subscriptionSummary(log) }}</span>
+                    </li>
+                </ul>
             </div>
             <div class="dashboard-content__section">
                 <h2>One-Time Purchases: Recent Activity</h2>
-
+                <ul class="" cg-busy="vm.activityLoading">
+                    <li ng-repeat="log in vm.logs | filter: vm.oneTimePurchaseActivity">
+                        {{ log.actionDescription }} {{ log.libraryName }}
+                    </li>
+                </ul>
             </div>
             <div class="dashboard-content__section">
                 <h2>Library Changes</h2>
-
+                <ul class="" cg-busy="vm.activityLoading">
+                    <li ng-repeat="log in vm.logs | filter: vm.libraryActivity">
+                        {{ log.actionDescription }} {{ log.libraryName }}
+                    </li>
+                </ul>
             </div>
         </div>
     </section>
 </section>
+
+<pre>
+    {{ vm.logs | json }}
+</pre>
