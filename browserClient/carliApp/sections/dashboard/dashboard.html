@@ -5,11 +5,52 @@
     </div>
 
     <section class="content list-content">
-        <p>Welcome to the CARLI Selection Editor! This is where you can train and test on the new system before it is
-            launched. This is your dashboard. Currently, we are using it for general notifications, but this area will be
-            populated with real content as we continue development.</p>
-
-        <p>If you encounter an issue that you would like to report, please click on the Report a Bug tab in the bottom right
-            corner of the screen. Be sure to include as much information about the issue as possible.</p>
+        <div class="dashboard-content">
+            <div class="dashboard-content__section dashboard-content__section--subscriptions">
+                <h2>Subscription Cycles</h2>
+                <ul cg-busy="vm.cyclesLoading">
+                    <li ng-repeat="cycle in vm.cycles">
+                        <div class="column">
+                            <a ng-href="/subscription/{{ cycle.id }}">{{ cycle.name }}</a>
+                        </div>
+                        <div class="column">
+                            {{ cycle.getStatusLabel() }}
+                        </div>
+                        <div class="column">
+                           Total: {{ vm.totalsByCycle[cycle.id].invoicePrice - vm.totalsByCycle[cycle.id].selectionPrice | currency}}
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="dashboard-content__section">
+                <h2>Subscription: Recent Activity</h2>
+                <ul class="" cg-busy="vm.activityLoading">
+                    <li ng-repeat="log in vm.logs | filter: vm.subscriptionActivity">
+                        <span class="user-email">{{ log.userEmail }}</span>
+                        <span class="activity">{{ ::vm.subscriptionSummary(log) }}</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="dashboard-content__section">
+                <h2>One-Time Purchases: Recent Activity</h2>
+                <ul class="" cg-busy="vm.activityLoading">
+                    <li ng-repeat="log in vm.logs | filter: vm.oneTimePurchaseActivity">
+                        {{ log.actionDescription }} {{ log.libraryName }}
+                    </li>
+                </ul>
+            </div>
+            <div class="dashboard-content__section">
+                <h2>Library Changes</h2>
+                <ul class="" cg-busy="vm.activityLoading">
+                    <li ng-repeat="log in vm.logs | filter: vm.libraryActivity">
+                        {{ log.actionDescription }} {{ log.libraryName }}
+                    </li>
+                </ul>
+            </div>
+        </div>
     </section>
 </section>
+
+<pre>
+    {{ vm.logs | json }}
+</pre>

@@ -1,0 +1,36 @@
+.dashboard-content {
+    display: flex;
+    flex-wrap: wrap;
+
+    &__section {
+        flex: 1 0 25%;
+        min-width: 600px;
+        padding: 16px;
+
+        h2 {
+            margin-top: 0;
+        }
+
+        ul {
+            @extend .zebra-table;
+            border: 1px solid $black;
+
+            li {
+                padding: 4px;
+
+                .user-email {
+                    color: $purple;
+                    padding-right: 8px;
+                }
+            }
+        }
+
+        &--subscriptions {
+            ul {
+                li {
+                    padding: 0;
+                }
+            }
+        }
+    }
+}
