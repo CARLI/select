@@ -48,7 +48,9 @@ angular.module('library.routes',[
                 templateUrl: '/libraryApp/sections/comingSoon/comingSoon.html'
             })
             .when('/ipAddresses', {
-                templateUrl: '/libraryApp/sections/comingSoon/comingSoon.html'
+                templateUrl: '/libraryApp/sections/ipAddresses/ipAddresses.html',
+                controller:  'ipAddressesController',
+                controllerAs:'vm'
             })
             .when('/management', {
                 templateUrl: '/libraryApp/sections/comingSoon/comingSoon.html'
