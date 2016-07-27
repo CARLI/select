@@ -1,0 +1,18 @@
+#ipAddresses {
+
+    .edit-ip-form {
+        &.ng-pristine {
+            .cancel-button {
+                display: none;
+            }
+        }
+
+        &__ip-textarea {
+            margin-bottom: 1rem;
+        }
+
+        &__form-controls {
+            float: right;
+        }
+    }
+}

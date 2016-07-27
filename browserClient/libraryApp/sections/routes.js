@@ -2,6 +2,7 @@ angular.module('library.routes',[
         'library.sections.dashboard',
         'library.sections.addSubscriptions',
         'library.sections.addOneTimePurchases',
+        'library.sections.ipAddresses',
         'library.sections.login',
         'library.sections.report',
         'library.sections.resetRequest',
@@ -48,7 +49,9 @@ angular.module('library.routes',[
                 templateUrl: '/libraryApp/sections/comingSoon/comingSoon.html'
             })
             .when('/ipAddresses', {
-                templateUrl: '/libraryApp/sections/comingSoon/comingSoon.html'
+                templateUrl: '/libraryApp/sections/ipAddresses/ipAddresses.html',
+                controller:  'ipAddressesController',
+                controllerAs:'vm'
             })
             .when('/management', {
                 templateUrl: '/libraryApp/sections/comingSoon/comingSoon.html'
