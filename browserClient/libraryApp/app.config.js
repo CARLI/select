@@ -46,7 +46,7 @@ angular.module('library.app', [
 
     function handleAuthentication() {
         if (authService.isRouteProtected()) {
-            authService.redirectToLogin();
+            return authService.redirectToLogin();
         }
     }
 

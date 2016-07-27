@@ -24,6 +24,7 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
 
         getCurrentUser: getCurrentUser,
         fetchCurrentUser: fetchCurrentUser,
+        forceRefetchCurrentUser: forceRefetchCurrentUser,
         userIsReadOnly: userIsReadOnly,
 
         refreshSession: requireSession, // not a typo
@@ -34,7 +35,8 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
 
         isMasqueradingRequested: isMasqueradingRequested,
         isMasqueradingPending: isMasqueradingPending,
-        initializeMasquerading: initializeMasquerading
+        initializeMasquerading: initializeMasquerading,
+        initializePendingMasquerading: initializePendingMasquerading
     };
 
     function searchKeyFor(role) {
@@ -143,6 +145,11 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
         return getCurrentUser().roles.indexOf('readonly') >= 0;
     }
 
+    function forceRefetchCurrentUser() {
+        user = null;
+        return fetchCurrentUser();
+    }
+
     function fetchCurrentUser() {
         if (user) {
             return $q.when(user);
@@ -189,10 +196,12 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
         var masqueradeAsPromise = $q.when(true);
 
         if (isMasqueradingRequestedForLibrary()) {
-            masqueradeAsPromise = masqueradeAsLibrary(queryParameters[ searchKeyFor('library') ]);
+            interceptMasqueradeRequest(new URL($location.absUrl()));
+            masqueradeAsPromise = masqueradeAsLibrary(pendingMasqueradeRequest.targetId);
         }
         if (isMasqueradingRequestedForVendor()) {
-            masqueradeAsPromise = masqueradeAsVendor(queryParameters[ searchKeyFor('vendor') ]);
+            interceptMasqueradeRequest(new URL($location.absUrl()));
+            masqueradeAsPromise = masqueradeAsVendor(pendingMasqueradeRequest.targetId);
         }
 
         return masqueradeAsPromise;
@@ -202,6 +211,21 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
     }
     function masqueradeAsVendor(vendorId) {
         return $q.when( CarliModules.AuthMiddleware.masqueradeAsVendor(vendorId) );
+    }
+
+    function initializePendingMasquerading() {
+        var masqueradeAsPromise = $q.when(true);
+
+        if (isMasqueradingPending()) {
+            if (pendingMasqueradeRequest.targetRole == 'library') {
+                masqueradeAsPromise = masqueradeAsLibrary(pendingMasqueradeRequest.targetId);
+            }
+            if (pendingMasqueradeRequest.targetRole == 'vendor') {
+                masqueradeAsPromise = masqueradeAsVendor(pendingMasqueradeRequest.targetId);
+            }
+        }
+
+        return masqueradeAsPromise;
     }
 
 

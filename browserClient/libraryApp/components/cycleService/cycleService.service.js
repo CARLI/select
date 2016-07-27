@@ -1,12 +1,18 @@
 angular.module('library.cycleService')
     .service('cycleService', cycleService);
 
-function cycleService( CarliModules, $q, errorHandler, userService, persistentState ) {
+function cycleService( CarliModules, $window, $q, errorHandler, authService, userService, persistentState ) {
 
     var currentUser = userService.getUser();
+
     if (!currentUser.library) {
-        throw new Error('Cycle Service was initialized without a valid user');
+        if (authService.isMasqueradingPending()) {
+            tryHandleMasqueradingUser();
+        } else {
+            throw new Error('Cycle Service was initialized without a valid user');
+        }
     }
+
     var cycleModule = CarliModules.Cycle;
     var middlewareModule = CarliModules.LibraryMiddleware;
 
@@ -38,6 +44,20 @@ function cycleService( CarliModules, $q, errorHandler, userService, persistentSt
         CYCLE_STATUS_CLOSED: cycleModule.CYCLE_STATUS_CLOSED,
         CYCLE_STATUS_ARCHIVED: cycleModule.CYCLE_STATUS_ARCHIVED
     };
+
+    function tryHandleMasqueradingUser() {
+        authService.initializePendingMasquerading()
+            .then(function () {
+                $window.location.reload();
+            })
+            .then(authService.forceRefetchCurrentUser)
+            .then(function () {
+                currentUser = authService.getCurrentUser();
+                if (!currentUser || !currentUser.vendor) {
+                    throw new Error('Cycle Service was initialized without a valid user');
+                }
+            });
+    }
 
     function listActiveCycles(){
         return $q.when( cycleModule.listActiveCycles() )
