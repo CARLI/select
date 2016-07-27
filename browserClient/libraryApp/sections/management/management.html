@@ -1,0 +1,43 @@
+<section class="content" id="management" cg-busy="vm.loadingPromise">
+    <h1>Management</h1>
+
+    <h2>Membership {{ vm.currentFiscalYear }}</h2>
+
+    <label for="membershipLevel">Membership Level</label>
+    <div id="membershipLevel">Governing/Affiliate</div>
+    <label for="membershipFees">Fees</label>
+    <div id="membershipFees">$7,564</div>
+
+    <label for="ishareMember">I-Share Member</label>
+    <div id="ishareMember">Yes</div>
+    <label for="ishareFees">Fees</label>
+    <div id="ishareFees">$1,591</div>
+
+    <p><a ask-carli="Library: Management: Membership Level">Contact CARLI</a> if you would like to make changes to your institution's membership</p>
+
+
+    <h2>Administrative Users</h2>
+
+    <p>CARLI Staff manage these users. <a ask-carli="Library: Management: Manage Users">Contact CARLI</a> if you need to make a change.</p>
+
+    <section class="content list-content">
+        <entity-list values="vm.userList" columns="vm.userListColumns" entity-label="users" loading-promise="vm.userLoadingPromise"></entity-list>
+    </section>
+
+
+    <h2>Invite Colleagues to the Selection System</h2>
+
+    <p>Inviting a colleague to the selection system will only allow them to view the system.
+        They will be unable to make selections. <a ask-carli="Library: Management: Manage Users">Contact CARLI</a>
+        if you would like to add additional colleagues with selection privileges to the system.</p>
+
+    <section class="content list-content">
+        <entity-list values="vm.readOnlyUserList" columns="vm.userListColumns" entity-label="users" loading-promise="vm.readOnlyUserLoadingPromise"></entity-list>
+    </section>
+
+    <div class="button-container">
+        <button type="button" id="new-user" class="carli-button" data-toggle="modal" data-target="#new-user-modal">Invite a Colleague <i class="fa fa-plus-circle"></i></button>
+    </div>
+
+    <!--<edit-user-modal after-submit-fn="vm.afterUserSubmit"></edit-user-modal>-->
+</section>

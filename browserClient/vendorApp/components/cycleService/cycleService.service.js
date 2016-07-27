@@ -24,6 +24,7 @@ function cycleService( CarliModules, config, $q, $window, appState, authService,
         getCurrentCycle: getCurrentCycle,
         setCurrentCycle: setCurrentCycle,
         syncDataBackToCarli: syncDataBackToCarli,
+        fiscalYearHasStartedForDate: cycleModule.fiscalYearHasStartedForDate,
         CYCLE_STATUS_VENDOR_PRICING: cycleModule.CYCLE_STATUS_VENDOR_PRICING
     };
 
