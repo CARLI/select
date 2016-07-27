@@ -17,6 +17,7 @@ function userMenuController(authService){
     function loadUserInfo() {
         authService.fetchCurrentUser().then(function (user) {
             vm.userName = user.fullName;
+            vm.libraryName = user.library.name;
 
             if (user.roles.indexOf('staff') >= 0) {
                 vm.isStaffUser = true;

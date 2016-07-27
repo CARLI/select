@@ -5,6 +5,13 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
     var session = null;
     var user = null;
 
+    var pendingMasqueradeRequest = {
+        targetRole: null,
+        targetId: null
+    };
+
+    listenForIncomingMasqueradeRequests();
+
     return {
         authenticateForStaffApp: authenticateForStaffApp,
         authenticateForVendorApp: authenticateForVendorApp,
@@ -17,6 +24,7 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
 
         getCurrentUser: getCurrentUser,
         fetchCurrentUser: fetchCurrentUser,
+        forceRefetchCurrentUser: forceRefetchCurrentUser,
         userIsReadOnly: userIsReadOnly,
 
         refreshSession: requireSession, // not a typo
@@ -26,8 +34,63 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
         redirectToLogin: redirectToLogin,
 
         isMasqueradingRequested: isMasqueradingRequested,
-        initializeMasquerading: initializeMasquerading
+        isMasqueradingPending: isMasqueradingPending,
+        initializeMasquerading: initializeMasquerading,
+        initializePendingMasquerading: initializePendingMasquerading
     };
+
+    function searchKeyFor(role) {
+        return 'masquerade-as-' + role;
+    }
+    function clearUrlSearchFor(role) {
+        $location.search(searchKeyFor(role), null);
+    }
+
+    function listenForIncomingMasqueradeRequests() {
+        $rootScope.$on('$locationChangeSuccess',
+            function (angularEvent, newUrlString) {
+                var newUrl = new URL(newUrlString);
+
+                interceptMasqueradeRequest(newUrl);
+                allowMasqueradeChooserToBypassCycleChooser(newUrl);
+            }
+        );
+    }
+
+    function interceptMasqueradeRequest(newUrl) {
+        var targetRole = parseMasqueradeTargetTypeFromUrl(newUrl);
+
+        if (targetRole !== null) {
+            pendingMasqueradeRequest.targetRole = targetRole;
+            pendingMasqueradeRequest.targetId = getUrlSearchFor(pendingMasqueradeRequest.targetRole, newUrl);
+            clearUrlSearchFor(pendingMasqueradeRequest.targetRole);
+        }
+    }
+
+    function allowMasqueradeChooserToBypassCycleChooser(newUrl) {
+        if (newUrl.pathname == '/masquerade') {
+            $rootScope.appState = 'pendingUser';
+        }
+
+    }
+
+    function getUrlSearchFor(targetRole, url) {
+        return url.searchParams.get(searchKeyFor(targetRole));
+    }
+
+    function parseMasqueradeTargetTypeFromUrl(url) {
+        if (urlContainsSearchFor('vendor', url)) {
+            return 'vendor';
+        }
+        if (urlContainsSearchFor('library', url)) {
+            return 'library';
+        }
+        return null;
+    }
+
+    function urlContainsSearchFor(role, url) {
+        return url.searchParams.get(searchKeyFor(role)) !== null;
+    }
 
     function authenticateForStaffApp() {
         return requireSession()
@@ -82,6 +145,11 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
         return getCurrentUser().roles.indexOf('readonly') >= 0;
     }
 
+    function forceRefetchCurrentUser() {
+        user = null;
+        return fetchCurrentUser();
+    }
+
     function fetchCurrentUser() {
         if (user) {
             return $q.when(user);
@@ -114,12 +182,13 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
         return isMasqueradingRequestedForLibrary() || isMasqueradingRequestedForVendor();
     }
     function isMasqueradingRequestedForLibrary() {
-        var queryParameters = $location.search();
-        return !!queryParameters[ 'masquerade-as-library' ];
+        return urlContainsSearchFor('library', new URL($location.absUrl()));
     }
     function isMasqueradingRequestedForVendor() {
-        var queryParameters = $location.search();
-        return !!queryParameters[ 'masquerade-as-vendor' ];
+        return urlContainsSearchFor('vendor', new URL($location.absUrl()));
+    }
+    function isMasqueradingPending() {
+        return pendingMasqueradeRequest.targetRole != null;
     }
 
     function initializeMasquerading() {
@@ -127,10 +196,12 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
         var masqueradeAsPromise = $q.when(true);
 
         if (isMasqueradingRequestedForLibrary()) {
-            masqueradeAsPromise = masqueradeAsLibrary(queryParameters[ 'masquerade-as-library' ]);
+            interceptMasqueradeRequest(new URL($location.absUrl()));
+            masqueradeAsPromise = masqueradeAsLibrary(pendingMasqueradeRequest.targetId);
         }
         if (isMasqueradingRequestedForVendor()) {
-            masqueradeAsPromise = masqueradeAsVendor(queryParameters[ 'masquerade-as-vendor' ]);
+            interceptMasqueradeRequest(new URL($location.absUrl()));
+            masqueradeAsPromise = masqueradeAsVendor(pendingMasqueradeRequest.targetId);
         }
 
         return masqueradeAsPromise;
@@ -140,6 +211,21 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
     }
     function masqueradeAsVendor(vendorId) {
         return $q.when( CarliModules.AuthMiddleware.masqueradeAsVendor(vendorId) );
+    }
+
+    function initializePendingMasquerading() {
+        var masqueradeAsPromise = $q.when(true);
+
+        if (isMasqueradingPending()) {
+            if (pendingMasqueradeRequest.targetRole == 'library') {
+                masqueradeAsPromise = masqueradeAsLibrary(pendingMasqueradeRequest.targetId);
+            }
+            if (pendingMasqueradeRequest.targetRole == 'vendor') {
+                masqueradeAsPromise = masqueradeAsVendor(pendingMasqueradeRequest.targetId);
+            }
+        }
+
+        return masqueradeAsPromise;
     }
 
 
