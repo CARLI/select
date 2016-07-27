@@ -24,7 +24,7 @@ ddoc = {
         if ( userHasRole('readonly') ) {
             throw({ forbidden: 'Unauthorized' });
         }
-        if ( ! (userHasRole('staff') || userHasRole('_admin') || userHasMatchingVendorRole()) ) {
+        if ( ! (userHasRole('staff') || userHasRole('_admin') || userHasRole('library') || userHasMatchingVendorRole()) ) {
             throw({ forbidden: 'Unauthorized' });
         }
 
