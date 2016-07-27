@@ -1,14 +1,13 @@
 angular.module('library.sections.notifications')
     .controller('notificationsController', notificationsController);
 
-function notificationsController(notificationService, userService) {
+function notificationsController($q, CarliModules) {
     var vm = this;
 
-    var currentUser = userService.getUser();
-    var currentLibrary = currentUser.library;
+    var libraryMiddleware = CarliModules.LibraryMiddleware;
 
-    vm.library = null;
     vm.loadingPromise = null;
+    vm.notifications = [];
 
     activate();
 
@@ -17,15 +16,14 @@ function notificationsController(notificationService, userService) {
     }
 
     function initVmLibrary() {
-        vm.loadingPromise = libraryService.load(currentLibrary.id)
-            .then(function (library) {
-                vm.library = library;
-            })
-            .then(loadNotificationsForLibrary);
+        vm.loadingPromise = loadNotificationsForLibrary()
+            .then(function(notifications){
+                vm.notifications = notifications;
+            });
         return vm.loadingPromise;
     }
 
     function loadNotificationsForLibrary() {
-        notificationService
+        return $q.when(libraryMiddleware.listNotificationsForLibrary());
     }
 }
