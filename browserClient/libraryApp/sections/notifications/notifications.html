@@ -1,5 +1,27 @@
 <section class="content" id="notifications" cg-busy="vm.loadingPromise">
     <h1>Notifications</h1>
-
-
+    <ask-carli-button context="list of notifications for library"></ask-carli-button>
+    <ul class="notifications-list">
+        <li class="notifications-list__item" ng-repeat="notification in vm.notifications | orderBy:'dateSent':true">
+            <div class="notifications-list__item--sent">
+                <span class="notifications-list__item--label">Sent:</span> {{ notification.dateSent | date:medium }}</div>
+            <div class="notifications-list__item--subject">
+                <span class="notifications-list__item--label">Subject:</span> {{ notification.subject }}
+            </div>
+            <div class="notifications-list__item__addresses">
+                <span class="notifications-list__item__addresses--from">
+                    <span class="notifications-list__item--label">From:</span> {{ notification.ownerEmail }}
+                </span>
+                <span class="notifications-list__item__addresses--recipients">
+                    <span class="notifications-list__item--label">Recipients:</span> {{ notification.to }}
+                </span>
+            </div>
+            <div class="notifications-list__item--message">
+                <span class="notifications-list__item--label">Message:</span> {{ notification.emailBody }}
+            </div>
+            <div class="notifications-list__item--pdflink" ng-if="notification.pdfLink">
+                <a ng-href="api{{ notification.pdfLink }}" target="_blank">View attachment content</a>
+            </div>
+        </li>
+    </ul>
 </section>
