@@ -1,6 +1,8 @@
+var carliAuth = require('../../CARLI/Auth');
 var cycleRepository = require('../../CARLI/Entity/CycleRepository');
 var offeringRepository = require('../../CARLI/Entity/OfferingRepository.js');
 var licenseRepository = require('../../CARLI/Entity/LicenseRepository');
+var notificationRepository = require('../../CARLI/Entity/NotificationRepository');
 var productRepository = require('../../CARLI/Entity/ProductRepository.js');
 var vendorRepository = require('../../CARLI/Entity/VendorRepository');
 
@@ -216,6 +218,41 @@ function getHistoricalSelectionDataForLibraryForProduct( libraryId, productId, c
     }
 }
 
+function listNotificationsForLibrary() {
+    console.log('GET list-notifications-for-library');
+    var username = null;
+    var library = null;
+
+    return carliAuth.getSession()
+        .then(function(ctx){
+            username = ctx.name;
+            return carliAuth.getUser(username);
+        })
+        .then(function(user){
+            library = user.library;
+            return library.id;
+        })
+        .then(loadNotificationsForLibrary)
+        .catch(returnEmptyListIfAnythingGoesWrong);
+
+    function loadNotificationsForLibrary(libraryId) {
+        return notificationRepository.listSent()
+            .then(filterNotificationsForLibrary);
+
+        function filterNotificationsForLibrary(sentNotifications) {
+            return sentNotifications.filter(function(notification){
+                return notification.targetEntity.id === library.id;
+            });
+        }
+    }
+
+    function returnEmptyListIfAnythingGoesWrong(err) {
+        var libraryName = library ? library.name : '???';
+        Logger.log('error getting notifications for library ' + libraryName + ' as ' + username);
+        return [];
+    }
+}
+
 function getProductId(offering){
     return typeof offering.product === 'string' ? offering.product : offering.product.id;
 }
@@ -223,5 +260,6 @@ function getProductId(offering){
 module.exports = {
     listSelectionsForLibraryFromCycle: listSelectionsForLibraryFromCycle,
     listOfferingsForLibraryWithExpandedProducts: listOfferingsForLibraryWithExpandedProducts,
+    listNotificationsForLibrary: listNotificationsForLibrary,
     getHistoricalSelectionDataForLibraryForProduct: getHistoricalSelectionDataForLibraryForProduct
 };
