@@ -7,7 +7,8 @@ angular.module('library.routes',[
         'library.sections.login',
         'library.sections.report',
         'library.sections.resetRequest',
-        'library.sections.masquerade'
+        'library.sections.masquerade',
+        'library.sections.management'
 ])
     .config(function ($routeProvider) {
         $routeProvider
@@ -57,7 +58,9 @@ angular.module('library.routes',[
                 controllerAs:'vm'
             })
             .when('/management', {
-                templateUrl: '/libraryApp/sections/comingSoon/comingSoon.html'
+                templateUrl: '/libraryApp/sections/management/management.html',
+                controller:  'managementController',
+                controllerAs:'vm'
             })
             .otherwise({
                 redirectTo: '/login'
