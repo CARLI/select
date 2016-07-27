@@ -3,6 +3,7 @@ angular.module('library.routes',[
         'library.sections.addSubscriptions',
         'library.sections.addOneTimePurchases',
         'library.sections.ipAddresses',
+        'library.sections.notifications',
         'library.sections.login',
         'library.sections.report',
         'library.sections.resetRequest',
@@ -46,7 +47,9 @@ angular.module('library.routes',[
                 controllerAs:'vm'
             })
             .when('/notifications', {
-                templateUrl: '/libraryApp/sections/comingSoon/comingSoon.html'
+                templateUrl: '/libraryApp/sections/notifications/notifications.html',
+                controller: 'notificationsController',
+                controllerAs: 'vm'
             })
             .when('/ipAddresses', {
                 templateUrl: '/libraryApp/sections/ipAddresses/ipAddresses.html',
