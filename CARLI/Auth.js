@@ -1,4 +1,6 @@
 
+var Q = require('q');
+
 var config = require('../config');
 var couchUtils = require('./Store/CouchDb/Utils')();
 var libraryRepository = require('./Entity/LibraryRepository');
@@ -27,13 +29,18 @@ function getUser(email) {
         .then(expandReferences);
 
     function expandReferences(user) {
+        var promises = [];
+
         if (user.hasOwnProperty('vendor')) {
-            user = expandVendor(user);
+            promises.push(expandVendor(user));
         }
         if (user.hasOwnProperty('library')) {
-            user = expandLibrary(user);
+            promises.push(expandLibrary(user));
         }
-        return user;
+
+        return Q.all(promises).then(function() {
+            return user;
+        });
     }
 
     function expandVendor(user) {
