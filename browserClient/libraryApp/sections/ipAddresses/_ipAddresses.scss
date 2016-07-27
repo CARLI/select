@@ -1,20 +1,18 @@
 #ipAddresses {
-    .currentIPAddresses {
-        li {
-            list-style-type: none;
-        }
-    }
 
-    .addIPAddresses {
-        .addIPInput {
-            float: left;
-            margin-top: 5px;
-            margin-right: 22px;
-            width: 250px;
+    .edit-ip-form {
+        &.ng-pristine {
+            .cancel-button {
+                display: none;
+            }
         }
 
-        .addIPInstructions {
-            font-style: italic;
+        &__ip-textarea {
+            margin-bottom: 1rem;
+        }
+
+        &__form-controls {
+            float: right;
         }
     }
 }

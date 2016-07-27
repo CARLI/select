@@ -1,3 +1,1 @@
-angular.module('library.sections.report', [
-    'common.csvExport'
-]);
+angular.module('library.sections.ipAddresses', []);

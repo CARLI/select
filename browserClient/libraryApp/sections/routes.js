@@ -2,6 +2,7 @@ angular.module('library.routes',[
         'library.sections.dashboard',
         'library.sections.addSubscriptions',
         'library.sections.addOneTimePurchases',
+        'library.sections.ipAddresses',
         'library.sections.login',
         'library.sections.report',
         'library.sections.resetRequest',
