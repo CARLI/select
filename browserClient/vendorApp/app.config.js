@@ -40,7 +40,7 @@ angular.module('vendor.app', [
 
     function handleAuthentication() {
         if (authService.isRouteProtected()) {
-            authService.redirectToLogin();
+            return authService.redirectToLogin();
         }
     }
 
