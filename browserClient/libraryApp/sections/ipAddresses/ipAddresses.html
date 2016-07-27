@@ -1,0 +1,13 @@
+<section class="content" id="ipAddresses" cg-busy="vm.loadingPromise">
+    <h1>IP Addresses</h1>
+
+    <form name="ipEditForm" class="edit-ip-form" warn-if-unsaved>
+        <label for="libraryIpAddresses">IP Addresses</label>
+        <textarea ng-model="vm.library.ipAddresses" id="libraryIpAddresses" class="edit-ip-form__ip-textarea"></textarea>
+
+        <div class="edit-ip-form__form-controls">
+            <button type="button" class="carli-button cancel-button" ng-click="vm.cancelEdit()" ng-disabled="ipEditForm.$pristine">Cancel</button>
+            <button type="button" class="carli-button" ng-click="vm.save()" ng-disabled="ipEditForm.$pristine">Save</button>
+        </div>
+    </form>
+</section>
