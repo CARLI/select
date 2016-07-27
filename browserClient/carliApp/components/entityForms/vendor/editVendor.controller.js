@@ -4,7 +4,7 @@ angular.module('carli.entityForms.vendor')
 function editVendorController( $scope, $rootScope, $q, activityLogService, config, entityBaseService, alertService, cycleService, errorHandler, licenseService, productService, vendorService ) {
     var vm = this;
 
-    vm.enableMasquerading = false;
+    vm.enableMasquerading = true;
     vm.vendorId = $scope.vendorId;
     vm.vendorAppBrowsingContextId = config.vendorAppBrowsingContextId;
     var afterSubmitCallback = $scope.afterSubmitFn || function() {};

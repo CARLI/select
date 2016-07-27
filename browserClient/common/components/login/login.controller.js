@@ -14,6 +14,7 @@ function loginController ($q, $rootScope, $location, alertService, authService, 
         vm.resetRequestSent = false;
         vm.maintenanceMode = false;
         vm.maintenanceModeMessage = "";
+        vm.isMasqueradingRequested = authService.isMasqueradingPending();
         vm.submitLabel = "Log in";
         vm.userLogin = {
             email: '',
@@ -67,6 +68,7 @@ function loginController ($q, $rootScope, $location, alertService, authService, 
             function redirectUserToTheCorrectApp() {
                 // TODO: need to have the 3 app URL's in the config to do this.
                 // For now, this will just be treated like an invalid username/password.
+                // PS: we have the 3 app urls in the config now.
             }
 
             function getUserType() {

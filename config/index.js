@@ -77,12 +77,16 @@ function loadConfiguration() {
                 config.staffWebAppUrl = "http://carli-staff.qa.pixotech.com";
                 config.libraryWebAppUrl = "http://carli-library.qa.pixotech.com";
                 config.vendorWebAppUrl = "http://carli-vendor.qa.pixotech.com";
-            }
-            if (window.location.hostname === 'select-staff.carli.illinois.edu') {
+            } else if (window.location.hostname === 'select-staff.carli.illinois.edu') {
                 config.staffWebAppUrl = "http://select-staff.carli.illinois.edu";
                 config.libraryWebAppUrl = "http://select-library.carli.illinois.edu";
                 config.vendorWebAppUrl = "http://select-vendor.carli.illinois.edu";
+            } else {
+                config.staffWebAppUrl = "http://staff.carli.local:8080/";
+                config.libraryWebAppUrl = "http://library.carli.local:8080/";
+                config.vendorWebAppUrl = "http://vendor.carli.local:8080/";
             }
+
         }
     }
 }

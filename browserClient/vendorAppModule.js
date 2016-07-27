@@ -16,6 +16,7 @@ module.exports = {
     User: require('../CARLI/Entity/UserRepository'),
     UserMiddleware: require('../middleware/browserAdapters/user'),
     Validator: require('../CARLI/Validator'),
+    Vendor: require('../CARLI/Entity/VendorRepository'),
     VendorDatabaseMiddleware: require('../middleware/browserAdapters/vendorDatabases.js'),
     VendorCSV: require('../CARLI/VendorCSV'),
     VendorStatus: require('../CARLI/Entity/VendorStatusRepository')
