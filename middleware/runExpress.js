@@ -177,6 +177,11 @@ function runMiddlewareServer(){
                     .then(sendResult(res))
                     .catch(sendError(res));
             });
+            authorizedRoute('get', '/list-notifications-for-library', carliAuth.requireStaffOrLibrary, function (req, res) {
+                libraryQueries.listNotificationsForLibrary()
+                    .then(sendResult(res))
+                    .catch(send500Error(res));
+            });
         }
         function defineRoutesForCycleDatabases() {
             authorizedRoute('put', '/cycle-from', carliAuth.requireStaff, function (req, res) {
