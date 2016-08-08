@@ -1,4 +1,4 @@
-angular.module('carli.membershipService')
+angular.module('common.membershipService')
     .service('membershipService', membershipService);
 
 function membershipService( CarliModules, $q, errorHandler ) {
@@ -12,6 +12,9 @@ function membershipService( CarliModules, $q, errorHandler ) {
         load:   function() { return $q.when( membershipModule.load.apply(this, arguments) ); },
         loadDataForYear: function( year ){
             return $q.when( membershipModule.loadDataForYear(year) );
+        },
+        getMembershipFeesForLibrary: function(libraryId, year) {
+            return membershipModule.getMembershipFeesForLibrary(libraryId, year);
         }
     };
 }

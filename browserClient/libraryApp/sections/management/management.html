@@ -1,17 +1,36 @@
 <section class="content" id="management" cg-busy="vm.loadingPromise">
     <h1>Management</h1>
 
-    <h2>Membership {{ vm.currentFiscalYear }}</h2>
-
-    <label for="membershipLevel">Membership Level</label>
-    <div id="membershipLevel">Governing/Affiliate</div>
-    <label for="membershipFees">Fees</label>
-    <div id="membershipFees">$7,564</div>
-
-    <label for="ishareMember">I-Share Member</label>
-    <div id="ishareMember">Yes</div>
-    <label for="ishareFees">Fees</label>
-    <div id="ishareFees">$1,591</div>
+    <ul class="library-fees-table zebra-table">
+        <li class="zebra-table-header">
+            <div class="column">Membership {{ vm.currentFiscalYear }}</div>
+            <div class="column">Fees</div>
+        </li>
+        <li class="">
+            <div class="column">
+                <dl>
+                    <dt>Membership Level</dt>
+                    <dd>{{ vm.library.membershipLevel }}</dd>
+                </dl>
+            </div>
+            <div class="column">{{ vm.membershipFees.membership | currency }}</div>
+        </li>
+        <li class="">
+            <div class="column">
+                <dl>
+                    <dt>Is I-Share Member?</dt>
+                    <dd>
+                        <span ng-if="vm.library.isIshareMember">Yes</span>
+                        <span ng-if="!vm.library.isIshareMember">No</span>
+                    </dd>
+                </dl>
+            </div>
+            <div class="column">
+                <span ng-if="vm.library.isIshareMember">{{ vm.membershipFees.ishare | currency }}</span>
+                <span ng-if="!vm.library.isIshareMember">-</span>
+            </div>
+        </li>
+    </ul>
 
     <p><a ask-carli="Library: Management: Membership Level">Contact CARLI</a> if you would like to make changes to your institution's membership</p>
 

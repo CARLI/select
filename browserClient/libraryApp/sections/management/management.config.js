@@ -1,1 +1,3 @@
-angular.module('library.sections.management', []);
+angular.module('library.sections.management', [
+    'common.membershipService'
+]);
