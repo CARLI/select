@@ -13,6 +13,7 @@ module.exports = {
     Library: require('../CARLI/Entity/LibraryRepository'),
     LibraryMiddleware: require('../middleware/browserAdapters/libraryQueries'),
     LibraryStatus: require('../CARLI/Entity/LibraryStatusRepository'),
+    Membership: require('../CARLI/Entity/MembershipRepository'),
     Offering: require('../CARLI/Entity/OfferingRepository'),
     Product: require('../CARLI/Entity/ProductRepository'),
     ReportsData: require('../middleware/browserAdapters/reports'),

@@ -1,7 +1,7 @@
 angular.module('library.sections.management')
     .controller('managementController', managementController);
 
-function managementController(cycleService, libraryService, userService) {
+function managementController(cycleService, libraryService, userService, membershipService) {
     var vm = this;
 
     var currentUser = userService.getUser();
@@ -10,6 +10,7 @@ function managementController(cycleService, libraryService, userService) {
     vm.library = null;
     vm.loadingPromise = null;
     vm.currentFiscalYear = null;
+    vm.membershipFees = null;
 
     vm.userList = null;
     vm.userLoadingPromise = null;
@@ -40,17 +41,10 @@ function managementController(cycleService, libraryService, userService) {
     activate();
 
     function activate() {
-        initVmLibrary();
         initCurrentYear();
-        initUserLists();
-    }
-
-    function initVmLibrary() {
-        vm.loadingPromise = libraryService.load(currentLibrary.id)
-            .then(function (library) {
-                vm.library = library;
-            });
-        return vm.loadingPromise;
+        initVmLibrary()
+            .then(initMembershipFees)
+            .then(initUserLists);
     }
 
     function initCurrentYear() {
@@ -69,8 +63,23 @@ function managementController(cycleService, libraryService, userService) {
         return parseInt( new Date().getFullYear() );
     }
 
+    function initVmLibrary() {
+        vm.loadingPromise = libraryService.load(currentLibrary.id)
+            .then(function (library) {
+                vm.library = library;
+            });
+        return vm.loadingPromise;
+    }
+
+    function initMembershipFees() {
+        return membershipService.getMembershipFeesForLibrary(vm.library.id, vm.currentFiscalYear).then(function (r) {
+            vm.membershipFees = r;
+            return r;
+        });
+    }
+
     function initUserLists() {
-        userService.list()
+        return userService.list()
             .then(filterUserList)
             .then(setVmUserLists);
 
@@ -92,12 +101,14 @@ function managementController(cycleService, libraryService, userService) {
             vm.userList = users.filter(adminUsersForThisLibrary);
             vm.readOnlyUserList = users.filter(readOnlyUsersForThisLibrary);
 
+            console.log(vm.userList.length + ' admin users');
+            console.log(vm.readOnlyUserList.length + ' readonly users');
             function adminUsersForThisLibrary(u) {
                 return u.roles.indexOf('readonly') == -1;
             }
 
             function readOnlyUsersForThisLibrary(u) {
-                return u.roles.indexOf('readonly') != -1;
+                return u.roles.indexOf('readonly') >= 0;
             }
         }
     }

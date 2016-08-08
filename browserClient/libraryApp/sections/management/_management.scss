@@ -1,0 +1,13 @@
+
+.library-fees-table.zebra-table {
+  & > li {
+    background-color: white;
+  }
+  dt {
+    font-weight: bold;
+  }
+  dd {
+    font-weight: normal;
+    margin-left: 2em;
+  }
+}
