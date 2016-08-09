@@ -1,17 +1,24 @@
 
-.library-fees-lists.zebra-table {
-  & > li {
-    background-color: white;
+#management {
+  .library-fees-list {
+    & > li {
+      background-color: white;
+    }
+    & > li.column-headers {
+      background-color: #f8f8f8;
+    }
+    dl {
+      margin-bottom: 0;
+    }
+    dt {
+      font-weight: bold;
+    }
+    dd {
+      font-weight: normal;
+      margin-left: 2em;
+    }
   }
-  & > li.zebra-table-header {
-    background-color: #f8f8f8;
-    font-family: 'Merriweather', serif;
-  }
-  dt {
-    font-weight: bold;
-  }
-  dd {
-    font-weight: normal;
-    margin-left: 2em;
+  .button-container {
+    margin-top: 2em;
   }
 }

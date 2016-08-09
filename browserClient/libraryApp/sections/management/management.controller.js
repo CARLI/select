@@ -1,7 +1,7 @@
 angular.module('library.sections.management')
     .controller('managementController', managementController);
 
-function managementController(cycleService, libraryService, userService, membershipService) {
+function managementController($sce, cycleService, libraryService, userService, membershipService) {
     var vm = this;
 
     var currentUser = userService.getUser();
@@ -14,17 +14,12 @@ function managementController(cycleService, libraryService, userService, members
 
     vm.userList = null;
     vm.userLoadingPromise = null;
-    vm.userListColumns = null;
-
-    vm.readOnlyUserList = null;
-    vm.readOnlyUserLoadingPromise = null;
-    vm.readOnlyUserListColumns = null;
-
     vm.userListColumns = [
         {
             label: "User",
             orderByProperty: 'fullName',
             contentFunction: function(user) {
+                console.log('this happened');
                 // return $sce.trustAsHtml('<a href="user/' + user.email + '">' + user.fullName + '</a>');
                 return user.fullName;
             }
@@ -37,6 +32,16 @@ function managementController(cycleService, libraryService, userService, members
             }
         }
     ];
+    vm.userListSort = {};
+    vm.userListSort.orderBy = 'fullName';
+    vm.userListSort.reverse = false;
+
+    vm.readOnlyUserList = null;
+    vm.readOnlyUserLoadingPromise = null;
+    vm.readOnlyUserListColumns = vm.userListColumns;
+    vm.readOnlyUserListSort = {};
+    vm.readOnlyUserListSort.orderBy = 'fullName';
+    vm.readOnlyUserListSort.reverse = false;
 
     activate();
 

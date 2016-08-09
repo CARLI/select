@@ -1,3 +1,3 @@
 angular.module('carli.sections.membership',[
-    'carli.membershipService'
+    'common.membershipService'
 ]);
