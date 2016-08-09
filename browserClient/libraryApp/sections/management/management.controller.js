@@ -43,8 +43,10 @@ function managementController(cycleService, libraryService, userService, members
     function activate() {
         initCurrentYear();
         initVmLibrary()
-            .then(initMembershipFees)
-            .then(initUserLists);
+            .then(function () {
+                initMembershipFees();
+                vm.userLoadingPromise = initUserLists();
+            });
     }
 
     function initCurrentYear() {
@@ -101,8 +103,6 @@ function managementController(cycleService, libraryService, userService, members
             vm.userList = users.filter(adminUsersForThisLibrary);
             vm.readOnlyUserList = users.filter(readOnlyUsersForThisLibrary);
 
-            console.log(vm.userList.length + ' admin users');
-            console.log(vm.readOnlyUserList.length + ' readonly users');
             function adminUsersForThisLibrary(u) {
                 return u.roles.indexOf('readonly') == -1;
             }
