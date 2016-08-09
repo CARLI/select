@@ -1,7 +1,11 @@
 
-.library-fees-table.zebra-table {
+.library-fees-lists.zebra-table {
   & > li {
     background-color: white;
+  }
+  & > li.zebra-table-header {
+    background-color: #f8f8f8;
+    font-family: 'Merriweather', serif;
   }
   dt {
     font-weight: bold;

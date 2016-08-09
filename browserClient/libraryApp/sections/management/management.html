@@ -1,7 +1,7 @@
 <section class="content" id="management" cg-busy="vm.loadingPromise">
     <h1>Management</h1>
 
-    <ul class="library-fees-table zebra-table">
+    <ul class="library-fees-list zebra-table">
         <li class="zebra-table-header">
             <div class="column">Membership {{ vm.currentFiscalYear }}</div>
             <div class="column">Fees</div>
@@ -39,6 +39,7 @@
 
     <p>CARLI Staff manage these users. <a ask-carli="Library: Management: Manage Users">Contact CARLI</a> if you need to make a change.</p>
 
+    {{ vm.userList | json }}
     <section class="content list-content">
         <entity-list values="vm.userList" columns="vm.userListColumns" entity-label="users" loading-promise="vm.userLoadingPromise"></entity-list>
     </section>
@@ -50,6 +51,7 @@
         They will be unable to make selections. <a ask-carli="Library: Management: Manage Users">Contact CARLI</a>
         if you would like to add additional colleagues with selection privileges to the system.</p>
 
+    {{ vm.readOnlyUserList | json }}
     <section class="content list-content">
         <entity-list values="vm.readOnlyUserList" columns="vm.userListColumns" entity-label="users" loading-promise="vm.readOnlyUserLoadingPromise"></entity-list>
     </section>
