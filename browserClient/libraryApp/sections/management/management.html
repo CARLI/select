@@ -45,12 +45,9 @@
     <section class="list-content">
         <ul class="zebra-table" cg-busy="vm.userLoadingPromise">
             <li class="column-headers">
-                <div class="column"
-                     ng-repeat="column in vm.userListColumns" ng-click="vm.sort(column.orderByProperty)"
-                     ng-class="{ sortable: column.orderByProperty, activeSort: vm.userListSort.orderBy === column.orderByProperty, reversedSort: vm.userListSort.reverse }"
-                >{{ column.label }}</div>
+                <div class="column" ng-repeat="column in vm.userListColumns">{{ column.label }}</div>
             </li>
-            <li ng-repeat="entity in vm.userList | orderBy:vm.userListSort.orderBy:vm.userListSort.reverse">
+            <li ng-repeat="entity in vm.userList">
                 <div class="column" ng-repeat="column in vm.userListColumns" ng-bind-html="column.contentFunction(entity)"></div>
             </li>
         </ul>
@@ -65,12 +62,9 @@
     <section class="list-content" ng-show="vm.readOnlyUserList.length > 0">
         <ul class="zebra-table" cg-busy="vm.readOnlyUserLoadingPromise">
             <li class="column-headers">
-                <div class="column"
-                     ng-repeat="column in vm.readOnlyUserListColumns" ng-click="vm.sort(column.orderByProperty)"
-                     ng-class="{ sortable: column.orderByProperty, activeSort: vm.readOnlyUserListSort.orderBy === column.orderByProperty, reversedSort: vm.readOnlyUserListSort.reverse }"
-                >{{ column.label }}</div>
+                <div class="column" ng-repeat="column in vm.readOnlyUserListColumns">{{ column.label }}</div>
             </li>
-            <li ng-repeat="entity in vm.readOnlyUserList | orderBy:vm.readOnlyUserListSort.orderBy:vm.readOnlyUserListSort.reverse">
+            <li ng-repeat="entity in vm.readOnlyUserList">
                 <div class="column" ng-repeat="column in vm.readOnlyUserListColumns" ng-bind-html="column.contentFunction(entity)"></div>
             </li>
         </ul>
