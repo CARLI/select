@@ -1,36 +1,39 @@
 <section class="content" id="management" cg-busy="vm.loadingPromise">
     <h1>Management</h1>
 
-    <ul class="library-fees-list zebra-table">
-        <li class="zebra-table-header">
-            <div class="column">Membership {{ vm.currentFiscalYear }}</div>
-            <div class="column">Fees</div>
-        </li>
-        <li class="">
-            <div class="column">
-                <dl>
-                    <dt>Membership Level</dt>
-                    <dd>{{ vm.library.membershipLevel }}</dd>
-                </dl>
-            </div>
-            <div class="column">{{ vm.membershipFees.membership | currency }}</div>
-        </li>
-        <li class="">
-            <div class="column">
-                <dl>
-                    <dt>Is I-Share Member?</dt>
-                    <dd>
-                        <span ng-if="vm.library.isIshareMember">Yes</span>
-                        <span ng-if="!vm.library.isIshareMember">No</span>
-                    </dd>
-                </dl>
-            </div>
-            <div class="column">
-                <span ng-if="vm.library.isIshareMember">{{ vm.membershipFees.ishare | currency }}</span>
-                <span ng-if="!vm.library.isIshareMember">-</span>
-            </div>
-        </li>
-    </ul>
+    <section class="list-content">
+        <h2>Membership {{ vm.currentFiscalYear }}</h2>
+        <ul class="library-fees-list zebra-table">
+            <li class="column-headers">
+                <div class="column"></div>
+                <div class="column">Fees</div>
+            </li>
+            <li>
+                <div class="column">
+                    <dl>
+                        <dt>Membership Level</dt>
+                        <dd>{{ vm.library.membershipLevel }}</dd>
+                    </dl>
+                </div>
+                <div class="column">{{ vm.membershipFees.membership | currency }}</div>
+            </li>
+            <li class="">
+                <div class="column">
+                    <dl>
+                        <dt>Is I-Share Member?</dt>
+                        <dd>
+                            <span ng-if="vm.library.isIshareMember">Yes</span>
+                            <span ng-if="!vm.library.isIshareMember">No</span>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="column">
+                    <span ng-if="vm.library.isIshareMember">{{ vm.membershipFees.ishare | currency }}</span>
+                    <span ng-if="!vm.library.isIshareMember">-</span>
+                </div>
+            </li>
+        </ul>
+    </section>
 
     <p><a ask-carli="Library: Management: Membership Level">Contact CARLI</a> if you would like to make changes to your institution's membership</p>
 
@@ -39,11 +42,19 @@
 
     <p>CARLI Staff manage these users. <a ask-carli="Library: Management: Manage Users">Contact CARLI</a> if you need to make a change.</p>
 
-    {{ vm.userList | json }}
-    <section class="content list-content">
-        <entity-list values="vm.userList" columns="vm.userListColumns" entity-label="users" loading-promise="vm.userLoadingPromise"></entity-list>
+    <section class="list-content">
+        <ul class="zebra-table" cg-busy="vm.userLoadingPromise">
+            <li class="column-headers">
+                <div class="column"
+                     ng-repeat="column in vm.userListColumns" ng-click="vm.sort(column.orderByProperty)"
+                     ng-class="{ sortable: column.orderByProperty, activeSort: vm.userListSort.orderBy === column.orderByProperty, reversedSort: vm.userListSort.reverse }"
+                >{{ column.label }}</div>
+            </li>
+            <li ng-repeat="entity in vm.userList | orderBy:vm.userListSort.orderBy:vm.userListSort.reverse">
+                <div class="column" ng-repeat="column in vm.userListColumns" ng-bind-html="column.contentFunction(entity)"></div>
+            </li>
+        </ul>
     </section>
-
 
     <h2>Invite Colleagues to the Selection System</h2>
 
@@ -51,10 +62,20 @@
         They will be unable to make selections. <a ask-carli="Library: Management: Manage Users">Contact CARLI</a>
         if you would like to add additional colleagues with selection privileges to the system.</p>
 
-    {{ vm.readOnlyUserList | json }}
-    <section class="content list-content">
-        <entity-list values="vm.readOnlyUserList" columns="vm.userListColumns" entity-label="users" loading-promise="vm.readOnlyUserLoadingPromise"></entity-list>
+    <section class="list-content" ng-show="vm.readOnlyUserList.length > 0">
+        <ul class="zebra-table" cg-busy="vm.readOnlyUserLoadingPromise">
+            <li class="column-headers">
+                <div class="column"
+                     ng-repeat="column in vm.readOnlyUserListColumns" ng-click="vm.sort(column.orderByProperty)"
+                     ng-class="{ sortable: column.orderByProperty, activeSort: vm.readOnlyUserListSort.orderBy === column.orderByProperty, reversedSort: vm.readOnlyUserListSort.reverse }"
+                >{{ column.label }}</div>
+            </li>
+            <li ng-repeat="entity in vm.readOnlyUserList | orderBy:vm.readOnlyUserListSort.orderBy:vm.readOnlyUserListSort.reverse">
+                <div class="column" ng-repeat="column in vm.readOnlyUserListColumns" ng-bind-html="column.contentFunction(entity)"></div>
+            </li>
+        </ul>
     </section>
+
 
     <div class="button-container">
         <button type="button" id="new-user" class="carli-button" data-toggle="modal" data-target="#new-user-modal">Invite a Colleague <i class="fa fa-plus-circle"></i></button>
