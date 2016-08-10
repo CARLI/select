@@ -19,7 +19,6 @@ function managementController($sce, cycleService, libraryService, userService, m
             label: "User",
             orderByProperty: 'fullName',
             contentFunction: function(user) {
-                console.log('this happened');
                 // return $sce.trustAsHtml('<a href="user/' + user.email + '">' + user.fullName + '</a>');
                 return user.fullName;
             }

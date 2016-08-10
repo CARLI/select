@@ -10,5 +10,5 @@ angular.module('carli.sections.subscriptions.vendorsSettingPrices', [
     'carli.renderOffering',
     'carli.subscriptionScreenComponents',
     'common.vendorService',
-    'carli.viewEditDirectives'
+    'common.viewEditDirectives'
 ]);

@@ -1,1 +1,0 @@
-angular.module('carli.goodSelect', []);

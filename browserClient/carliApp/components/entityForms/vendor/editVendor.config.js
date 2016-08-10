@@ -3,5 +3,5 @@ angular.module('carli.entityForms.vendor',[
     'carli.selectCycle',
     'carli.entityBaseService',
     'common.vendorService',
-    'carli.viewEditDirectives'
+    'common.viewEditDirectives'
 ]);
