@@ -3,5 +3,5 @@ angular.module('carli.entityForms.library',[
     'common.libraryProductsList',
     'common.libraryService',
     'carli.entityBaseService',
-    'carli.viewEditDirectives'
+    'common.viewEditDirectives'
 ]);
