@@ -1,4 +1,4 @@
 angular.module('carli.selectCycle', [
-    'carli.goodSelect',
+    'common.goodSelect',
     'carli.cycleService'
 ]);

@@ -36,6 +36,7 @@ function cycleService( CarliModules, $window, $q, errorHandler, authService, use
         load:   function() { return $q.when( cycleModule.load.apply( this, arguments) ).catch(errorHandler); },
         getCurrentCycle: getCurrentCycle,
         setCurrentCycle: setCurrentCycle,
+        fiscalYearHasStartedForDate: cycleModule.fiscalYearHasStartedForDate,
         CYCLE_STATUS_DATA_PROCESSING: cycleModule.CYCLE_STATUS_DATA_PROCESSING,
         CYCLE_STATUS_EDITING_PRODUCT_LIST: cycleModule.CYCLE_STATUS_EDITING_PRODUCT_LIST,
         CYCLE_STATUS_VENDOR_PRICING: cycleModule.CYCLE_STATUS_VENDOR_PRICING,

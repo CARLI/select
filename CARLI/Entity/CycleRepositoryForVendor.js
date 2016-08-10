@@ -80,6 +80,7 @@ module.exports = function (vendor) {
         load: loadCycleForVendor,
         getStatusLabel: baseRepository.getStatusLabel,
         listActiveCycles: listActiveCyclesForVendor,
+        fiscalYearHasStartedForDate: baseRepository.fiscalYearHasStartedForDate,
         vendor: vendor,
         CYCLE_STATUS_VENDOR_PRICING: baseRepository.CYCLE_STATUS_VENDOR_PRICING
     };

@@ -1,5 +1,5 @@
 angular.module('carli.licenseService', [
     'common.carliModules',
-    'carli.entityBaseService',
+    'common.entityBaseService',
     'common.vendorService'
 ]);
