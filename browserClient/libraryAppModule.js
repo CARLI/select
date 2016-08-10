@@ -20,5 +20,6 @@ module.exports = {
     Store: require('../CARLI/Store'),
     User: require('../CARLI/Entity/UserRepository'),
     UserMiddleware: require('../middleware/browserAdapters/user'),
-    Validator: require('../CARLI/Validator')
+    Validator: require('../CARLI/Validator'),
+    VendorDatabaseMiddleware: require('../middleware/browserAdapters/vendorDatabases.js')
 };

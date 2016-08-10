@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.vendor',[
     'common.alerts',
     'carli.selectCycle',
-    'carli.entityBaseService',
+    'common.entityBaseService',
     'common.vendorService',
     'common.viewEditDirectives'
 ]);

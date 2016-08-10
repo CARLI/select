@@ -9,17 +9,18 @@ function managementController($sce, cycleService, libraryService, userService, m
 
     vm.library = null;
     vm.loadingPromise = null;
+    vm.userLoadingPromise = null;
     vm.currentFiscalYear = null;
     vm.membershipFees = null;
 
+    vm.afterUserSubmit = populateUserLists;
+
     vm.userList = null;
-    vm.userLoadingPromise = null;
     vm.userListColumns = [
         {
             label: "User",
             orderByProperty: 'fullName',
             contentFunction: function(user) {
-                // return $sce.trustAsHtml('<a href="user/' + user.email + '">' + user.fullName + '</a>');
                 return user.fullName;
             }
         },
@@ -31,16 +32,29 @@ function managementController($sce, cycleService, libraryService, userService, m
             }
         }
     ];
-    vm.userListSort = {};
-    vm.userListSort.orderBy = 'fullName';
-    vm.userListSort.reverse = false;
 
     vm.readOnlyUserList = null;
     vm.readOnlyUserLoadingPromise = null;
-    vm.readOnlyUserListColumns = vm.userListColumns;
-    vm.readOnlyUserListSort = {};
-    vm.readOnlyUserListSort.orderBy = 'fullName';
-    vm.readOnlyUserListSort.reverse = false;
+    vm.readOnlyUserListColumns = [
+        {
+            label: "User",
+            orderByProperty: 'fullName',
+            contentFunction: function(user) {
+                return $sce.trustAsHtml('<a href="user/' + user.email + '">' + user.fullName + '</a>');
+            }
+        },
+        {
+            label: "Email",
+            orderByProperty: ['email'],
+            contentFunction: function(user) {
+                return $sce.trustAsHtml('<a href="mailto:' + user.email + '">' + user.email + '</a>');
+            }
+        }
+    ];
+
+    vm.inactiveUserList = null;
+    vm.inactiveUserLoadingPromise = null;
+    vm.inactiveUserListColumns = vm.readOnlyUserListColumns;
 
     activate();
 
@@ -49,7 +63,7 @@ function managementController($sce, cycleService, libraryService, userService, m
         initVmLibrary()
             .then(function () {
                 initMembershipFees();
-                vm.userLoadingPromise = initUserLists();
+                vm.userLoadingPromise = populateUserLists();
             });
     }
 
@@ -84,14 +98,14 @@ function managementController($sce, cycleService, libraryService, userService, m
         });
     }
 
-    function initUserLists() {
+    function populateUserLists() {
         return userService.list()
             .then(filterUserList)
             .then(setVmUserLists);
 
         function filterUserList(users) {
             return users.filter(function (u) {
-                return u.isActive && userBelongsToThisLibrary(u) && userIsNotStaff(u);
+                return userBelongsToThisLibrary(u) && userIsNotStaff(u);
             });
         }
 
@@ -106,13 +120,17 @@ function managementController($sce, cycleService, libraryService, userService, m
         function setVmUserLists(users) {
             vm.userList = users.filter(adminUsersForThisLibrary);
             vm.readOnlyUserList = users.filter(readOnlyUsersForThisLibrary);
+            vm.inactiveUserList = users.filter(inactiveUsersForThisLibrary);
 
             function adminUsersForThisLibrary(u) {
-                return u.roles.indexOf('readonly') == -1;
+                return u.isActive && u.roles.indexOf('readonly') == -1;
             }
 
             function readOnlyUsersForThisLibrary(u) {
-                return u.roles.indexOf('readonly') >= 0;
+                return u.isActive && u.roles.indexOf('readonly') >= 0;
+            }
+            function inactiveUsersForThisLibrary(u) {
+                return !u.isActive && u.roles.indexOf('readonly') >= 0;
             }
         }
     }

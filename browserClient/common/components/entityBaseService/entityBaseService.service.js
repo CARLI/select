@@ -1,4 +1,4 @@
-angular.module('carli.entityBaseService')
+angular.module('common.entityBaseService')
     .service('entityBaseService', entityBaseService);
 
 

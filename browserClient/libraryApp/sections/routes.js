@@ -8,7 +8,8 @@ angular.module('library.routes',[
         'library.sections.report',
         'library.sections.resetRequest',
         'library.sections.masquerade',
-        'library.sections.management'
+        'library.sections.management',
+        'library.sections.users.edit'
 ])
     .config(function ($routeProvider) {
         $routeProvider
@@ -60,6 +61,11 @@ angular.module('library.routes',[
             .when('/management', {
                 templateUrl: '/libraryApp/sections/management/management.html',
                 controller:  'managementController',
+                controllerAs:'vm'
+            })
+            .when('/user/:id', {
+                templateUrl: '/libraryApp/sections/users/editUser/editUser.html',
+                controller:  'editUserPageController',
                 controllerAs:'vm'
             })
             .otherwise({

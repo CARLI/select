@@ -70,10 +70,24 @@
         </ul>
     </section>
 
-
     <div class="button-container">
         <button type="button" id="new-user" class="carli-button" data-toggle="modal" data-target="#new-user-modal">Invite a Colleague <i class="fa fa-plus-circle"></i></button>
     </div>
 
-    <!--<edit-user-modal after-submit-fn="vm.afterUserSubmit"></edit-user-modal>-->
+    <div ng-show="vm.inactiveUserList.length > 0">
+        <h2>Inactive Users</h2>
+        <p>These accounts cannot currently access the system.  To permanently delete a user, please <a ask-carli="Library: Management: Delete a user">contact CARLI</a>.</p>
+        <section class="list-content" ng-show="vm.inactiveUserList.length > 0">
+            <ul class="zebra-table" cg-busy="vm.inactiveUserLoadingPromise">
+                <li class="column-headers">
+                    <div class="column" ng-repeat="column in vm.inactiveUserListColumns">{{ column.label }}</div>
+                </li>
+                <li ng-repeat="entity in vm.inactiveUserList">
+                    <div class="column" ng-repeat="column in vm.inactiveUserListColumns" ng-bind-html="column.contentFunction(entity)"></div>
+                </li>
+            </ul>
+        </section>
+    </div>
+
+    <edit-user-modal after-submit-fn="vm.afterUserSubmit"></edit-user-modal>
 </section>
