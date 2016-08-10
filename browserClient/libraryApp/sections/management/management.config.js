@@ -1,3 +1,4 @@
 angular.module('library.sections.management', [
-    'common.membershipService'
+    'common.membershipService',
+    'library.entityForms.user'
 ]);

@@ -1,0 +1,45 @@
+    <form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="userForm" warn-if-unsaved>
+
+    <div class="page-header">
+        <div class="headings">
+            <label for="name">User Full Name</label>
+            <view-edit-text-field ng-model="vm.user.fullName" edit-mode="vm.editable" input-id="name">
+                <h1>{{ vm.user.fullName }}</h1>
+            </view-edit-text-field>
+        </div>
+        <div ng-show="!vm.newUser" class="controls">
+            <div ng-show="vm.editable">
+                <button type="button" class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</button>
+                <input class="carli-button save-button" ng-disabled="!vm.editable" type="button" value="{{ vm.submitLabel() }}" busy-click="vm.submitAction()" >
+            </div>
+
+            <button type="button" id="user-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">
+                Edit<fa name="edit"></fa>
+            </button>
+        </div>
+    </div>
+
+    <section class="content">
+        <fieldset>
+            <label for="user-edit-form-email">Email</label>
+            <view-edit-text-field ng-model="vm.user.email" edit-mode="vm.newUser" input-id="user-edit-form-email">
+                <span class="value">{{ vm.user.email }}</span>
+            </view-edit-text-field>
+
+            <label for="isActive">User Status</label>
+            <view-edit-radios radio-group-name="isActive" radio-group-legend="User Status" items="vm.statusOptions" ng-model="vm.user.isActive" edit-mode="vm.editable" input-id="isActive">
+                <span class="value">{{ vm.user.isActive ? 'Active User' : 'Inactive User' }}</span>
+            </view-edit-radios>
+            <p ng-if="vm.editable" style="margin-top: 0.075em">To revoke this users access change their status to "Inactive".  To permanently delete a user, please <a ask-carli="Library: Management: Delete a user">contact CARLI</a>.</p>
+
+        </fieldset>
+    </section>
+
+    <div class="footer" ng-show="vm.editable && vm.isModal">
+        <fieldset>
+            <button type="button" class="carli-button cancel-button" data-dismiss="modal" ng-click="vm.cancelEdit()">Cancel</button>
+            <input type="button" id="user-submit" class="carli-button save-button" value="{{ vm.submitLabel() }}" busy-click="vm.submitAction()">
+        </fieldset>
+    </div>
+
+</form>
