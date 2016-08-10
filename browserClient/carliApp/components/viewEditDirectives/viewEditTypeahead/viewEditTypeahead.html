@@ -1,4 +1,0 @@
-<div ng-show="editMode">
-    <input type="text" ng-model="ngModel" typeahead="option as option.name for option in options | filter:{ name: $viewValue }" id="{{ inputId }}" autocomplete="off">
-</div>
-<div ng-show="!editMode" ng-transclude></div>
