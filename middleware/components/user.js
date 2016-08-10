@@ -29,14 +29,10 @@ function load(email) {
     return userRepository.load(email);
 }
 function create(user) {
-    return auth.requireStaff().then(function() {
-        return userRepository.create(user);
-    });
+    return userRepository.create(user);
 }
 function update(user) {
-    return auth.requireStaff().then(function() {
-        return userRepository.update(user);
-    });
+    return userRepository.update(user);
 }
 
 function deleteUser(user) {
