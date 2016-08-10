@@ -6,6 +6,7 @@ var config = require( '../../config' );
 var LibraryRepository = require('../../CARLI/Entity/LibraryRepository');
 var ProductRepository = require('../../CARLI/Entity/ProductRepository');
 var OfferingRepository = require('../../CARLI/Entity/OfferingRepository');
+var moment = require('moment');
 
 function loginToCouch() {
     return auth.createSession({
@@ -37,13 +38,19 @@ function listProductsWithTermsForPublicWebsite() {
             return {
                 productName: product.name,
                 vendorName: product.vendor.name,
-                currentTermStartDate: license.currentTermStartDate,
-                currentTermEndDate: license.currentTermEndDate,
-                totalTermEndDate: license.totalTermEndDate,
+                currentTermStartDate: formatDate(license.currentTermStartDate),
+                currentTermEndDate: formatDate(license.currentTermEndDate),
+                totalTermEndDate: formatDate(license.totalTermEndDate),
                 terms: license.terms
             }
         }
     }
+}
+
+/** Ed from CARLI specifically requested this format */
+function formatDate(s) {
+    var d = (typeof s) == 'string' ? new Date(s) : s;
+    return moment(d).format('MM/DD/YYYY');
 }
 
 function listSubscriptionsForLibrary(libraryId) {
