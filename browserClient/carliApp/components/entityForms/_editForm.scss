@@ -17,6 +17,11 @@
     label, .label {
         margin-top: $label-margin-top + 5;
     }
+    radio {
+        label {
+            margin-top: 0;
+        }
+    }
 
     .label {
         margin-bottom: $label-margin-bottom + 3;
