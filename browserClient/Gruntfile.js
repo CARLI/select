@@ -398,7 +398,7 @@ module.exports = function ( grunt ) {
                 'Gruntfile.js'
             ],
             options: {
-                curly: true,
+                curly: false,
                 immed: true,
                 newcap: true,
                 noarg: true,
