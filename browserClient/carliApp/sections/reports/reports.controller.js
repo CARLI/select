@@ -4,6 +4,9 @@ angular.module('carli.sections.reports')
 function reportsController( $q, csvExportService, cycleService, libraryService, productService, reportDataService, vendorService, licenseService ){
     var vm = this;
 
+    vm.selectAllLabel = "Select All";
+    vm.clearSelectionLabel = "Clear Selection";
+
     vm.reportOptions = {};
     vm.reportRunningPromise = null;
     vm.cycleControlIsMissingValue = cycleControlIsMissingValue;
@@ -21,6 +24,8 @@ function reportsController( $q, csvExportService, cycleService, libraryService, 
     vm.reportWantsLicensesAndCyclesAreSelected = reportWantsLicensesAndCyclesAreSelected;
     vm.reportWantsLicensesAndVendorsAreSelected = reportWantsLicensesAndVendorsAreSelected;
     vm.reportWantsVendorsAndCyclesAreSelected = reportWantsVendorsAndCyclesAreSelected;
+
+    vm.mapSelection = mapSelection;
 
     /**
      * Reports
@@ -365,5 +370,17 @@ function reportsController( $q, csvExportService, cycleService, libraryService, 
                 });
         }
         return vm.loadingLibrariesPromise;
+    }
+
+    function selectAllCycles() {
+        vm.reportOptions.parameters.cycle = vm.cycles.map(function (cycle) { return cycle.id; });
+    }
+    function selectNoCycles() {
+        vm.reportOptions.parameters.cycle = [];
+    }
+
+    function mapSelection(parameterName, selection) {
+        vm.reportOptions.parameters[parameterName] = selection.map(function (x) { return x.id });
+        return $q.when(true);
     }
 }
