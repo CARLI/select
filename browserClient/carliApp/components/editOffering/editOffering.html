@@ -56,7 +56,7 @@
     <div role="gridcell" aria-describedby="selection-column-header" class="column selection" ng-if="vm.shouldShowColumn('selection') || vm.shouldShowColumn('oneTimePurchaseSelection')">
         <label for="{{ vm.offering.id }}_selection" class="sr-only">Library Selection</label>
         <view-edit-offering-selection ng-model="vm.offering" edit-mode="true"></view-edit-offering-selection>
-        <button class="carli-button update-invoice-date" type="button" ng-if="vm.shouldShowColumn('oneTimePurchaseSelection')" ng-click="vm.setOneTimePurchaseInvoicedDate()">Mark Invoiced</button>
+        <button class="carli-button update-invoice-date" type="button" ng-if="vm.shouldShowMarkInvoiced(vm.offering)" ng-click="vm.setOneTimePurchaseInvoicedDate()">Mark Invoiced</button>
         <span class="one-time-purchase-invoice-date" ng-if="vm.offering.oneTimePurchaseInvoicedDate">Invoiced on:  {{ vm.offering.oneTimePurchaseInvoicedDate | date:mediumDate }}<span>
     </div>
 
