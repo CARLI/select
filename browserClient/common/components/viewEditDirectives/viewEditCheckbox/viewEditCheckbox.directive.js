@@ -1,10 +1,12 @@
 angular.module('common.viewEditDirectives.viewEditCheckbox')
-    .directive('viewEditCheckbox', function() {
+    .directive('viewEditCheckbox', function () {
         return {
             restrict: 'E',
-            templateUrl: '/carliApp/components/viewEditDirectives/viewEditCheckbox/viewEditCheckbox.html',
             template: [
-                ''
+                '<div ng-show="editMode">',
+                '    <checkbox ng-model="ngModel" id="inputId">{{ label }}</checkbox>',
+                '</div>',
+                '<div ng-show="!editMode" ng-transclude></div>'
             ].join(''),
             scope: {
                 ngModel: '=',
