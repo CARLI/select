@@ -9,6 +9,7 @@ var _ = require('lodash');
 
 var columnName = {
     address: 'Address',
+    annualAccessFee: 'Annual Access Fee',
     averagePriceFunded: 'Average Price',
     city: 'City',
     contactType: 'Contact Type',
@@ -182,7 +183,7 @@ function allPricingReport( reportParameters, userSelectedColumns ){
 }
 
 function selectedProductsReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['cycle', 'library', 'license', 'vendor', 'product', 'selection', 'priceFunded'];
+    var defaultReportColumns = ['cycle', 'library', 'license', 'vendor', 'product', 'selection', 'priceFunded', 'annualAccessFee' ];
     var vendorsParameter = getVendorParameter(reportParameters) || [];
     var licensesParameter = getLicenseParameter(reportParameters) || [];
     var librariesParameter = getLibraryParameter(reportParameters) || [];
@@ -203,7 +204,8 @@ function selectedProductsReport( reportParameters, userSelectedColumns ){
             vendor: offering.vendor.name,
             product: offering.product.name,
             selection: offering.selection.users,
-            priceFunded: offeringRepository.getFundedSelectionPrice(offering)
+            priceFunded: offeringRepository.getFundedSelectionPrice(offering),
+            annualAccessFee: offering.oneTimePurchaseAnnualAccessFee
         };
         
         if ( isEnabled('detailCode') ){
@@ -345,7 +347,7 @@ function statisticsReport( reportParameters, userSelectedColumns ){
 }
 
 function selectionsByVendorReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['cycle', 'vendor', 'license', 'product', 'library', 'selection', 'priceFull'];
+    var defaultReportColumns = ['cycle', 'vendor', 'license', 'product', 'library', 'selection', 'priceFull', 'annualAccessFee'];
     var vendorsParameter = getVendorParameter(reportParameters) || [];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
     var cyclesToQuery = getCycleParameter(reportParameters);
@@ -365,7 +367,8 @@ function selectionsByVendorReport( reportParameters, userSelectedColumns ){
             product: offering.product.name,
             library: offering.library.name,
             selection: offering.selection.users,
-            priceFull: offeringRepository.getFullSelectionPrice(offering)
+            priceFull: offeringRepository.getFullSelectionPrice(offering),
+            annualAccessFee: offering.oneTimePurchaseAnnualAccessFee
         };
 
         if ( isEnabled('detailCode') ){
