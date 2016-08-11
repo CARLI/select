@@ -1,6 +1,0 @@
-<div class="view-edit-select carli-select" ng-show="vm.editMode">
-    <select ng-model="vm.offering.selection" ng-options="option.users for option in vm.selectionOptions track by option.users" id="{{ vm.offering.id }}_selection">
-        <option></option>
-    </select>
-</div>
-<div ng-show="!vm.editMode" ng-transclude></div>

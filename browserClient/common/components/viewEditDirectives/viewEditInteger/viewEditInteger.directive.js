@@ -2,7 +2,12 @@ angular.module('common.viewEditDirectives.viewEditInteger')
     .directive('viewEditInteger', function() {
         return {
             restrict: 'E',
-            templateUrl: '/carliApp/components/viewEditDirectives/viewEditInteger/viewEditInteger.html',
+            template: [
+            '<div ng-show="editMode">',
+            '    <input type="number" step="1" min="0" ng-model="ngModel" id="{{ inputId }}">',
+            '</div>',
+            '<div ng-show="!editMode" ng-transclude></div>'
+            ].join(''),
             scope: {
                 ngModel: '=',
                 editMode: '=',

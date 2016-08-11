@@ -1,7 +1,7 @@
 angular.module('carli.sections.oneTimePurchases')
     .controller('oneTimePurchasesByLibraryController', oneTimePurchasesByLibraryController);
 
-function oneTimePurchasesByLibraryController($scope, accordionControllerMixin, config, controllerBaseService, cycleService, editOfferingService, libraryService, notificationModalService, offeringService, productService, vendorService) {
+function oneTimePurchasesByLibraryController($scope, $q, accordionControllerMixin, config, controllerBaseService, cycleService, editOfferingService, libraryService, notificationModalService, offeringService, productService, vendorService) {
     var vm = this;
 
     accordionControllerMixin(vm, loadOfferingsForLibrary);

@@ -12,6 +12,7 @@ function editOfferingController(activityLogService, alertService, cycleService, 
     vm.saveOffering = saveOffering;
     vm.setOneTimePurchaseInvoicedDate = setOneTimePurchaseInvoicedDate;
     vm.shouldShowColumn = shouldShowColumn;
+    vm.shouldShowMarkInvoiced = shouldShowMarkInvoiced;
     vm.offeringDisplayOptions = offeringService.getOfferingDisplayOptions();
     vm.userClickedFlag = userClickedFlag;
     vm.getProductDisplayName = productService.getProductDisplayName;
@@ -96,6 +97,17 @@ function editOfferingController(activityLogService, alertService, cycleService, 
 
     function shouldShowColumn(columnName) {
         return vm.columns.indexOf(columnName) !== -1;
+    }
+
+    function shouldShowMarkInvoiced(offering) {
+        return shouldShowColumn('oneTimePurchaseSelection') && offerIsSelected(offering);
+    }
+
+    function offerIsSelected(offering) {
+        if (offering.hasOwnProperty('selection')) {
+            return true;
+        }
+        return false;
     }
 
     function userClickedFlag() {
