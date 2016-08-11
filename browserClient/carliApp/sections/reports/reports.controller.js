@@ -380,7 +380,7 @@ function reportsController( $q, csvExportService, cycleService, libraryService, 
     }
 
     function mapSelection(parameterName, selection) {
-        vm.reportOptions.parameters[parameterName] = selection.map(function (x) { return x.id });
+        vm.reportOptions.parameters[parameterName] = selection.map(function (x) { return x.id; });
         return $q.when(true);
     }
 }
