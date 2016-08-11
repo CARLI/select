@@ -20,6 +20,8 @@
             <div class="report-parameters">
                 <div class="cycle" ng-if="vm.selectedReport.controls.cycle">
                     <label for="reportCycle">Select Cycle(s)</label>
+                    <a ng-click="vm.mapSelection('cycle', vm.cycles).then(vm.loadProductsForVendors)">{{ vm.selectAllLabel }}</a>
+                    | <a ng-click="vm.mapSelection('cycle', []).then(vm.loadProductsForVendors)">{{ vm.clearSelectionLabel }}</a>
                     <select id="reportCycle" multiple="multiple"
                             ng-model="vm.reportOptions.parameters.cycle"
                             ng-options="cycle.id as cycle.name for cycle in vm.cycles | orderBy:'name':true"
@@ -28,6 +30,8 @@
 
                 <div class="vendor" ng-if="vm.reportWantsVendorsAndCyclesAreSelected()">
                     <label for="reportVendor">Select Vendor(s)</label>
+                    <a ng-click="vm.mapSelection('vendor', vm.vendors)">{{ vm.selectAllLabel }}</a>
+                    | <a ng-click="vm.mapSelection('vendor', [])">{{ vm.clearSelectionLabel }}</a>
                     <select id="reportVendor" multiple="multiple"
                             cg-busy="vm.loadVendorsPromise()"
                             ng-model="vm.reportOptions.parameters.vendor"
@@ -36,6 +40,8 @@
 
                 <div class="vendor" ng-if="vm.reportWantsProductsAndCyclesAreSelected()">
                     <label for="reportVendor2">Select Vendor(s)</label>
+                    <a ng-click="vm.mapSelection('vendor', vm.vendors).then(vm.loadProductsForVendors)">{{ vm.selectAllLabel }}</a>
+                    | <a ng-click="vm.mapSelection('vendor', []).then(vm.loadProductsForVendors)">{{ vm.clearSelectionLabel }}</a>
                     <select id="reportVendor2" multiple="multiple"
                             cg-busy="vm.loadVendorsPromise()"
                             ng-model="vm.reportOptions.parameters.vendor"
@@ -45,6 +51,8 @@
 
                 <div class="product" ng-if="vm.reportWantsProductsAndVendorsAreSelected()">
                     <label for="reportProduct">Select Product(s)</label>
+                    <a ng-click="vm.mapSelection('product', vm.products)">{{ vm.selectAllLabel }}</a>
+                    | <a ng-click="vm.mapSelection('product', [])">{{ vm.clearSelectionLabel }}</a>
                     <select id="reportProduct" multiple="multiple"
                             cg-busy="vm.loadingProductsPromise"
                             ng-model="vm.reportOptions.parameters.product"
@@ -53,6 +61,8 @@
 
                 <div class="library" ng-if="vm.reportWantsLibrariesAndCyclesAreSelected()">
                     <label for="reportLibrary">Select one or more Libraries</label>
+                    <a ng-click="vm.mapSelection('library', vm.libraries)">{{ vm.selectAllLabel }}</a>
+                    | <a ng-click="vm.mapSelection('library', [])">{{ vm.clearSelectionLabel }}</a>
                     <select id="reportLibrary" multiple="multiple"
                             cg-busy="vm.loadLibrariesPromise()"
                             ng-model="vm.reportOptions.parameters.library"
@@ -61,6 +71,8 @@
 
                 <div class="vendor" ng-if="vm.reportWantsLicensesAndCyclesAreSelected()">
                     <label for="reportVendor3">Select Vendor(s)</label>
+                    <a ng-click="vm.mapSelection('vendor', vm.vendors).then(vm.loadLicensesForVendors)">{{ vm.selectAllLabel }}</a>
+                    | <a ng-click="vm.mapSelection('vendor', []).then(vm.loadLicensesForVendors)">{{ vm.clearSelectionLabel }}</a>
                     <select id="reportVendor3" multiple="multiple"
                             cg-busy="vm.loadVendorsPromise()"
                             ng-model="vm.reportOptions.parameters.vendor"
@@ -70,6 +82,8 @@
 
                 <div class="license" ng-if="vm.reportWantsLicensesAndVendorsAreSelected()">
                     <label for="reportLicense">Select License(s)</label>
+                    <a ng-click="vm.mapSelection('license', vm.licenses)">{{ vm.selectAllLabel }}</a>
+                    | <a ng-click="vm.mapSelection('license', [])">{{ vm.clearSelectionLabel }}</a>
                     <select id="reportLicense" multiple="multiple"
                             cg-busy="vm.loadingLicensesPromise"
                             ng-model="vm.reportOptions.parameters.license"
