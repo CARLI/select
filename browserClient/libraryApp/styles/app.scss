@@ -40,6 +40,7 @@ $fa-font-path: "/libraryApp/fonts";
     margin-bottom: 30px;
 }
 
+@import "../components/entityForms/editForm";
 @import "../components/licenseList/licenseList";
 @import "../components/subscriptionButton/subscriptionButton";
 @import "../components/subscriptionProgress/subscriptionProgress";
