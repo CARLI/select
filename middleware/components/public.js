@@ -6,6 +6,7 @@ var config = require( '../../config' );
 var LibraryRepository = require('../../CARLI/Entity/LibraryRepository');
 var ProductRepository = require('../../CARLI/Entity/ProductRepository');
 var OfferingRepository = require('../../CARLI/Entity/OfferingRepository');
+var VendorRepository = require('../../CARLI/Entity/VendorRepository');
 var moment = require('moment');
 
 function loginToCouch() {
@@ -54,11 +55,23 @@ function formatDate(s) {
 }
 
 function listSubscriptionsForLibrary(libraryId) {
+    var vendorsById = {};
+
     return loginToCouch()
+        .then(loadVendors)
         .then(loadLibrary)
         .then(listSelectedProductsFromActiveCyclesForLibrary)
         .then(restrictToDataForPublicWebsite)
         .then(logoutOfCouch);
+
+    function loadVendors() {
+        return VendorRepository.list().then(function (vendors) {
+            return vendors.map(function (v) {
+                vendorsById[v.id] = v;
+                return v;
+            })
+        });
+    }
 
     function loadLibrary() {
         return LibraryRepository.load(libraryId);
@@ -73,7 +86,7 @@ function listSubscriptionsForLibrary(libraryId) {
         function restrictOfferingToPublicData(offering) {
             return {
                 productName: offering.product.name,
-                vendorName: offering.vendor,
+                vendorName: vendorsById[offering.vendorId].name,
                 funding: offering.funding,
                 cycleName: offering.cycle.name,
                 cycleYear: offering.cycle.year

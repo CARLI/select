@@ -27,7 +27,6 @@ function editUserController( $filter, $scope, $rootScope, $q, $location, $window
     activate();
 
     function activate() {
-        vm.isModal = vm.newUser;
 
         currentLibraryId = authService.getCurrentUser().library.id;
 
@@ -37,6 +36,8 @@ function editUserController( $filter, $scope, $rootScope, $q, $location, $window
         else {
             initializeForExistingUser();
         }
+
+        vm.isModal = vm.newUser;
 
         setUserFormPristine();
     }
