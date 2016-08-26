@@ -1,0 +1,84 @@
+.edit-form {
+    .page-header {
+        h1 {
+            color: $purple;
+        }
+
+        label {
+            margin-top: 0;
+        }
+    }
+
+    a {
+        color: $orange;
+        cursor: pointer;
+    }
+
+    label, .label {
+        margin-top: $label-margin-top + 5;
+    }
+    checkbox, radio {
+        label {
+            margin-top: 0;
+        }
+    }
+
+    .label {
+        margin-bottom: $label-margin-bottom + 3;
+
+        em {
+            color: $purple;
+        }
+    }
+
+    .value {
+        color: $purple;
+
+        a {
+            color: $purple;
+        }
+    }
+
+    .unlabeled-element {
+        margin-top: $label-margin-top;
+    }
+
+    aside {
+        font-style: italic;
+        font-weight: normal;
+        display: inline-block;
+    }
+
+    fieldset {
+        @include grid-row();
+
+        input[type=text],
+        textarea {
+            width: 100%;
+        }
+    }
+
+    .footer, .header {
+        @extend .container-fluid;
+        padding-top: 7px;
+        padding-bottom: 8px;
+        background-color: $light-gray;
+        border: $default-border;
+        position: relative;
+        text-align: right;
+        .cancel-button {
+            margin-right: 3px;
+        }
+    }
+
+    .user-readonly-checkbox {
+        margin-top: $label-margin-top + 5;
+        label {
+            margin-top: 0;
+        }
+    }
+}
+
+.modal .edit-form .footer, .modal .edit-form .header {
+    padding-right: 8px;
+}
