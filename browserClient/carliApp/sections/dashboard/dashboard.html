@@ -9,7 +9,7 @@
             <div class="dashboard-content__section dashboard-content__section--subscriptions">
                 <h2>Subscription Cycles</h2>
                 <ul cg-busy="vm.cyclesLoading">
-                    <li ng-repeat="cycle in vm.cycles">
+                    <li ng-repeat="cycle in vm.cycles | orderBy:['-year','name']">
                         <div class="column">
                             <a ng-href="/subscription/{{ cycle.id }}">{{ cycle.name }}</a>
                         </div>
@@ -25,7 +25,7 @@
             <div class="dashboard-content__section">
                 <h2>Subscription: Recent Activity</h2>
                 <ul class="" cg-busy="vm.activityLoading">
-                    <li ng-repeat="log in vm.logs | filter: vm.subscriptionActivity">
+                    <li ng-repeat="log in vm.logs | orderBy:'-date' | filter: vm.subscriptionActivity">
                         <span class="user-email">{{ log.userEmail }}</span>
                         <span class="activity">{{ ::vm.subscriptionSummary(log) }}</span>
                     </li>
@@ -34,7 +34,7 @@
             <div class="dashboard-content__section">
                 <h2>One-Time Purchases: Recent Activity</h2>
                 <ul class="" cg-busy="vm.activityLoading">
-                    <li ng-repeat="log in vm.logs | filter: vm.oneTimePurchaseActivity">
+                    <li ng-repeat="log in vm.logs | orderBy:'-date' | filter: vm.oneTimePurchaseActivity">
                         {{ log.actionDescription }} {{ log.libraryName }}
                     </li>
                 </ul>
@@ -42,7 +42,7 @@
             <div class="dashboard-content__section">
                 <h2>Library Changes</h2>
                 <ul class="" cg-busy="vm.activityLoading">
-                    <li ng-repeat="log in vm.logs | filter: vm.libraryActivity">
+                    <li ng-repeat="log in vm.logs | orderBy:'-date' | filter: vm.libraryActivity">
                         {{ log.actionDescription }} {{ log.libraryName }}
                     </li>
                 </ul>
