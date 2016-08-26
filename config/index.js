@@ -73,11 +73,11 @@ function loadConfiguration() {
 
     function setWebAppUrls() {
         if (isBrowserEnvironment()) {
-            if (window.location.hostname === 'carli-staff.qa.pixotech.com') {
+            if (locationHostnameEndsWith('.qa.pixotech.com')) {
                 config.staffWebAppUrl = "http://carli-staff.qa.pixotech.com";
                 config.libraryWebAppUrl = "http://carli-library.qa.pixotech.com";
                 config.vendorWebAppUrl = "http://carli-vendor.qa.pixotech.com";
-            } else if (window.location.hostname === 'select-staff.carli.illinois.edu') {
+            } else if (locationHostnameEndsWith('.carli.illinois.edu')) {
                 config.staffWebAppUrl = "http://select-staff.carli.illinois.edu";
                 config.libraryWebAppUrl = "http://select-library.carli.illinois.edu";
                 config.vendorWebAppUrl = "http://select-vendor.carli.illinois.edu";
@@ -86,9 +86,12 @@ function loadConfiguration() {
                 config.libraryWebAppUrl = "http://library.carli.local:8080/";
                 config.vendorWebAppUrl = "http://vendor.carli.local:8080/";
             }
-
         }
     }
+}
+
+function locationHostnameEndsWith(domain) {
+    return window.location.hostname.slice(-1 * domain.length) === domain;
 }
 
 function makeLoggerGlobal() {

@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.vendorsSettingPrices')
     .controller('vendorsSettingPricesByVendorController', vendorsSettingPricesByVendorController);
 
-function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionControllerMixin, config, controllerBaseService, cycleService, offeringService, editOfferingService, offeringsByVendorExport, productService, vendorService, vendorStatusService ) {
+function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionControllerMixin, config, controllerBaseService, cycleService, offeringService, editOfferingService, libraryService, offeringsByVendorExport, productService, vendorService, vendorStatusService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadProductsForVendor);
@@ -106,17 +106,22 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
         }
 
         return offeringService.listOfferingsForProductId(product.id)
-            .then(filterActiveLibraries)
+            .then(filterOfferingsWithInactiveLibraries)
+            .then(fillInNonCrmFields)
             .then(function(offerings){
                 product.offerings = offerings;
                 return offerings;
             });
     }
 
-    function filterActiveLibraries(offeringsList){
+    function filterOfferingsWithInactiveLibraries(offeringsList){
         return offeringsList.filter(function(offering){
             return offering.library.isActive;
         });
+    }
+
+    function fillInNonCrmFields(offerings) {
+        return offeringService.populateNonCrmLibraryData(offerings, libraryService.listActiveLibraries());
     }
 
     function toggleProductSection(product){

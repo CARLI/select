@@ -110,6 +110,32 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
             //csv → json
             return $q.when( vendorPricingCsv.uploadSitePricing(fileContents) );
         },
+        populateNonCrmLibraryData: populateNonCrmLibraryData,
         siteLicenseSelectionUsers: offeringModule.siteLicenseSelectionUsers
     };
+
+    function populateNonCrmLibraryData(offerings, libraryLoadingPromise) {
+        var librariesByCrmId = {};
+
+        return groupLibrariesByCrmId()
+            .then(copyLibrariesToOfferings);
+
+        function groupLibrariesByCrmId() {
+            return libraryLoadingPromise.then(function (libraries) {
+                libraries.forEach(function (l) {
+                    librariesByCrmId[l.crmId] = l;
+                });
+                return true;
+            });
+        }
+
+        function copyLibrariesToOfferings() {
+            return offerings.map(function (offering) {
+                offering.library = librariesByCrmId[offering.library.id];
+                return offering;
+            });
+        }
+    }
+
+
 }

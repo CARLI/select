@@ -24,8 +24,6 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
     ];
     vm.vendors = [];
     vm.vendorStatus = {};
-    
-    var librariesByCrmId = {};
 
     activate();
 
@@ -51,8 +49,7 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
     }
 
     function loadDataForScreen() {
-        vm.dataLoadingPromise = listAndSaveActiveLibraries()
-            .then(productService.listProductCountsByVendorId)
+        vm.dataLoadingPromise = productService.listProductCountsByVendorId()
             .then(function( productsByVendorId ){
                 return Object.keys(productsByVendorId);
             })
@@ -62,14 +59,6 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
                 vm.vendors = vendors;
             })
             .then(loadVendorStatuses);
-    }
-
-    function listAndSaveActiveLibraries() {
-        return libraryService.listActiveLibraries().then(function (libraries) {
-            libraries.forEach(function (l) {
-                librariesByCrmId[l.crmId] = l;
-            });
-        });
     }
 
     function filterActiveVendors(vendorList){
@@ -112,7 +101,7 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
         }
 
         return offeringService.listOfferingsForProductId(product.id)
-            .then(filterActiveLibraries)
+            .then(filterOfferingsWithInactiveLibraries)
             .then(fillInNonCrmFields)
             .then(function(offerings){
                 product.offerings = offerings;
@@ -120,17 +109,14 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
             });
     }
 
-    function filterActiveLibraries(offeringsList){
+    function filterOfferingsWithInactiveLibraries(offeringsList){
         return offeringsList.filter(function(offering){
             return offering.library.isActive;
         });
     }
 
-    function fillInNonCrmFields(offeringsList) {
-        return offeringsList.map(function (offering) {
-            offering.library = librariesByCrmId[offering.library.id];
-            return offering;
-        });
+    function fillInNonCrmFields(offerings) {
+        return offeringService.populateNonCrmLibraryData(offerings, libraryService.listActiveLibraries());
     }
 
     function toggleProductSection(product){
