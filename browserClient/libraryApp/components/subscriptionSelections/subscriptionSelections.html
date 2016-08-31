@@ -1,4 +1,4 @@
-<subscription-progress step="vm.selectionStep" ng-if="vm.showProgress && !vm.userIsReadOnly()"></subscription-progress>
+<subscription-progress step="vm.selectionStep" cycle="vm.cycle" ng-if="vm.showProgress && !vm.userIsReadOnly()"></subscription-progress>
 
 <div ng-if="vm.selectionStep === 'loading'" cg-busy="vm.loadingPromise"></div>
 <div ng-if="vm.selectionStep === 'select'" ng-include="'libraryApp/components/subscriptionSelections/subscriptionSelectionsSelect.html'" class="selection-container"></div>
