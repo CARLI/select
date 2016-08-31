@@ -58,6 +58,10 @@ function consumeKey(key, user) {
         });
 }
 
+function notifyCarliOfNewLibraryUser(user, library) {
+    return userResetRequestRepository.notifyCarliOfNewLibraryUser(user, library);
+}
+
 module.exports = {
     list: list,
     load: load,
@@ -66,5 +70,6 @@ module.exports = {
     delete: deleteUser,
     requestPasswordReset: requestPasswordReset,
     isKeyValid: isKeyValid,
-    consumeKey: consumeKey
+    consumeKey: consumeKey,
+    notifyCarliOfNewLibraryUser: notifyCarliOfNewLibraryUser
 };

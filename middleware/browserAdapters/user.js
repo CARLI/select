@@ -64,6 +64,14 @@ function consumeKey(key, user) {
     })
 }
 
+function notifyCarliOfNewLibraryUser(user, library) {
+    return middlewareRequest({
+        path: '/notify-user-creation',
+        method: 'put',
+        json: { user: user, library: library }
+    });
+}
+
 module.exports = {
     list: list,
     load: load,
@@ -72,5 +80,6 @@ module.exports = {
     delete: deleteUser,
     requestPasswordReset: requestPasswordReset,
     isKeyValid: isKeyValid,
-    consumeKey: consumeKey
+    consumeKey: consumeKey,
+    notifyCarliOfNewLibraryUser: notifyCarliOfNewLibraryUser
 };

@@ -5,7 +5,7 @@
     </div>
 
     <section class="content list-content">
-        <subscription-progress step="vm.selectionStep" ng-hide="vm.userIsReadOnly()"></subscription-progress>
+        <subscription-progress step="vm.selectionStep" cycle="vm.cycle" ng-hide="vm.userIsReadOnly()"></subscription-progress>
 
         <div ng-if="vm.selectionStep === 'select'" ng-include="'libraryApp/sections/addOneTimePurchases/addOneTimePurchasesSelect.html'"></div>
         <div ng-if="vm.selectionStep === 'review'" ng-include="'libraryApp/sections/addOneTimePurchases/addOneTimePurchasesReview.html'"></div>

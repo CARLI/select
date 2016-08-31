@@ -145,9 +145,31 @@ function setStore(store) {
     couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
 }
 
+function notifyCarliOfNewLibraryUser(user, library) {
+    return getNewUserNotificationTemplate()
+        .then(sendEmail);
+
+    function sendEmail(template) {
+        var variables = {
+            user: user,
+            library: library
+        };
+        return email.notifyCarliOfNewLibraryUser(template, variables);
+    }
+}
+
+function getNewUserNotificationTemplate() {
+    var template = "A new user has been created for {{ library.name }}\n\n" +
+        "Name: {{ user.fullName }},\n" +
+        "Username: {{ user.email }}\n" +
+        "";
+    return Q(template);
+}
+
 module.exports = {
     setStore: setStore,
     create: createRequest,
     isKeyValid: isKeyValid,
-    consumeKey: consumeKey
+    consumeKey: consumeKey,
+    notifyCarliOfNewLibraryUser: notifyCarliOfNewLibraryUser
 };
