@@ -182,6 +182,10 @@ function editUserController( $filter, $scope, $rootScope, $q, $location, $window
 
     function saveNewUser() {
         return userService.create(vm.user)
+            .then(function() {
+                userService.notifyCarliOfUserCreation(vm.user);
+                userService.requestPasswordReset(vm.user.email);
+            })
             .then(function () {
                 alertService.putAlert('User added', {severity: 'success'});
                 return resetUserForm();
