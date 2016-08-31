@@ -1,0 +1,80 @@
+#!/usr/bin/env node
+
+var _ = require('lodash');
+var path = require('path');
+var Q = require('q');
+
+var cli = require('../CARLI/CommandLine');
+var cycleRepository = require('../CARLI/Entity/CycleRepository');
+var productRepository = require('../CARLI/Entity/ProductRepository');
+var vendorRepository = require('../CARLI/Entity/VendorRepository');
+
+
+cli.withSingleArgument('cycle-id',
+
+    function (cycleId) {
+        cli.asCouchAdmin(listProductCountsByVendorForCycleId);
+
+        function listProductCountsByVendorForCycleId() {
+            var cycle = null;
+            var vendorsById = null;
+
+            return loadCycle()
+                .then(loadVendors)
+                .then(listProductsByVendor)
+                .then(printCounts)
+                .catch(function (e) {
+                    console.log(e);
+                    console.log(e.stack);
+                });
+
+            function printCounts(productsByVendor) {
+                Object.keys(productsByVendor).forEach(function (vendorId) {
+                    var vendorName = vendorsById[vendorId].name;
+                    var count = productsByVendor[vendorId].length;
+
+                    console.log(count + '\t' + vendorName);
+                });
+            }
+
+            function listProductsByVendor() {
+                return productRepository.list(cycle)
+                    .then(groupProductsByVendorId);
+            }
+
+            function loadCycle() {
+                return cycleRepository.load(cycleId).then(function (c) {
+                    cycle = c;
+                });
+            }
+
+            function loadVendors() {
+                return vendorRepository.list().then(function (vendors) {
+                    vendorsById = entitiesById(vendors);
+                });
+            }
+
+            function groupProductsByVendorId(products) {
+                var productsByVendorId = {};
+
+                products.forEach(function (product) {
+                    if (!productsByVendorId.hasOwnProperty(product.vendor.id))
+                        productsByVendorId[product.vendor.id] = [];
+
+                    productsByVendorId[product.vendor.id].push(product);
+                });
+
+                return productsByVendorId;
+            }
+
+            function entitiesById(arrayOfEntities) {
+                var entitiesById = {};
+
+                arrayOfEntities.forEach(function (entity) {
+                    entitiesById[entity.id] = entity;
+                });
+
+                return entitiesById;
+            }
+        }
+    });
