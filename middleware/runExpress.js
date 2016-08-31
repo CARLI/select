@@ -364,6 +364,11 @@ function runMiddlewareServer(){
                     .then(sendOk(res))
                     .catch(sendError(res));
             });
+            carliMiddleware.put('/notify-user-creation', function (req, res) {
+                user.notifyCarliOfNewLibraryUser(req.body.user, req.body.library)
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
         }
         function defineRoutesForExports() {
             authorizedRoute('get', '/pdf/content/:notificationId', carliAuth.requireStaffOrLibrary, function (req, res) {

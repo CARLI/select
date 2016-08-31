@@ -49,6 +49,12 @@ function sendPasswordResetMessage(to, template, variables) {
     return sendTemplatedMessage(to, resetSubject, template, variables);
 }
 
+function notifyCarliOfNewLibraryUser(template, variables) {
+    var notifySubject = "New Select User for " + variables.library.name;
+    var to = config.notifications.overrideTo ? config.notifications.overrideTo : config.notifications.carliSupport;
+    return sendTemplatedMessage(to, notifySubject, template, variables);
+}
+
 function sendNotificationEmail( notificationId ){
     return notificationRepository.load(notificationId)
         .then(function(notification){
@@ -218,5 +224,6 @@ module.exports = {
     sendNotificationEmail: sendNotificationEmail,
     sendOneTimePurchaseMessage: sendOneTimePurchaseMessage,
     sendVendorDoneEnteringPricingMessage: sendVendorDoneEnteringPricingMessage,
-    sendAskCarliMessage: sendAskCarliMessage
+    sendAskCarliMessage: sendAskCarliMessage,
+    notifyCarliOfNewLibraryUser: notifyCarliOfNewLibraryUser
 };

@@ -1,7 +1,7 @@
 angular.module('common.userService')
     .service('userService', userService);
 
-function userService(CarliModules, $q, authService) {
+function userService(CarliModules, $q, authService, libraryService) {
 
     var userMiddleware = CarliModules.UserMiddleware;
 
@@ -35,6 +35,13 @@ function userService(CarliModules, $q, authService) {
         },
         userIsReadOnly: function () {
             return authService.userIsReadOnly();
-        }
+        },
+        notifyCarliOfUserCreation: notifyCarliOfUserCreation
     };
+
+    function notifyCarliOfUserCreation(user) {
+        return libraryService.load(user.library).then(function (library) {
+            return userMiddleware.notifyCarliOfNewLibraryUser(user, library);
+        });
+    }
 }
