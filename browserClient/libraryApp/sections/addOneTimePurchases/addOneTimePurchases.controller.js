@@ -51,6 +51,7 @@ function addOneTimePurchasesController( $q, $location, config, activityLogServic
     function setCycleToOneTimePurchase(){
         return cycleService.load(config.oneTimePurchaseProductsCycleDocId).then(function(oneTimePurchaseCycle){
             cycleService.setCurrentCycle(oneTimePurchaseCycle);
+            vm.cycle = oneTimePurchaseCycle;
             return oneTimePurchaseCycle;
         });
     }
