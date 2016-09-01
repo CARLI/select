@@ -146,8 +146,13 @@ function updateLastActivity(libraryId, cycle) {
             return createOrUpdateLibraryStatus(libraryStatus, cycle);
         })
         .catch(function (error) {
-            throw carliError(error);
+            if (!isForbiddenError(error))
+                throw carliError(error);
         });
+
+    function isForbiddenError(e) {
+        return e.message == 'forbidden';
+    }
 }
 
 function setStore(store) {
