@@ -7,7 +7,7 @@ var membershipRepository = require('./Entity/MembershipRepository');
 var NotificationRepository = require('./Entity/NotificationRepository');
 var OfferingRepository = require('./Entity/OfferingRepository');
 
-function getDataForBannerExportForSubscriptionCycle(cycle, batchId) {
+function getDataForBannerExportForSubscriptionCycle(cycle, batchId, formatter) {
     var librariesById = {};
 
     return LibraryRepository.listActiveLibraries()
@@ -75,6 +75,7 @@ function getDataForBannerExportForSubscriptionCycle(cycle, batchId) {
                         library: library,
                         dollarAmount: OfferingRepository.getFundedSelectionPrice(offering),
                         detailCode: detailCode,
+                        detailCodeFull: offering.product.detailCode,
                         invoiceNumber: notification.invoiceNumber
                     };
 
@@ -117,11 +118,15 @@ function getDataForBannerExportForSubscriptionCycle(cycle, batchId) {
     }
 
     function formatBatchAsBannerFeed(bannerFeedData) {
-        return formatBatch(batchId, bannerFeedData);
+        return formatter(batchId, bannerFeedData);
     }
 }
 
-function getDataForBannerExportForMembershipDues(year, batchId) {
+function getDataForBannerExportForMembershipDues(year, batchId, formatter) {
+    if (typeof formatter == 'undefined') {
+        formatter = formatAsCsv;
+    }
+
     var invoicesForBatchByLibraryId = {};
     var membershipDuesByLibraryId = {};
 
@@ -209,7 +214,7 @@ function getDataForBannerExportForMembershipDues(year, batchId) {
     }
 
     function exportMembershipBannerFeed(bannerFeedData) {
-        return formatBatch(batchId, bannerFeedData);
+        return formatter(batchId, bannerFeedData);
     }
 }
 
@@ -217,7 +222,8 @@ function shouldAppearInBannerFeed(library) {
     return !library.excludeFromBannerFeed;
 }
 
-function formatBatch(batchId, bannerFeedDataByLibraryAndDetailCode) {
+function formatAsPackedText(batchId, bannerFeedDataByLibraryAndDetailCode) {
+    var data = bannerFeedDataByLibraryAndDetailCode;
     var lines = [];
     var bannerHeaderIndicator = '1';
     var bannerRecordIndicator = '2';
@@ -249,9 +255,9 @@ function formatBatch(batchId, bannerFeedDataByLibraryAndDetailCode) {
     return lines.join("\r\n");
 
     function forEachRecordByLibraryAndDetailCode(callback) {
-        Object.keys(bannerFeedDataByLibraryAndDetailCode).forEach(function (libraryId) {
-            Object.keys(bannerFeedDataByLibraryAndDetailCode[libraryId]).forEach(function (detailCode) {
-                bannerFeedDataByLibraryAndDetailCode[libraryId][detailCode].forEach(callback);
+        Object.keys(data).forEach(function (libraryId) {
+            Object.keys(data[libraryId]).forEach(function (detailCode) {
+                data[libraryId][detailCode].forEach(callback);
             })
         });
     }
@@ -340,6 +346,53 @@ function formatBatch(batchId, bannerFeedDataByLibraryAndDetailCode) {
     }
 }
 
+function formatAsCsv(batchId, bannerFeedDataByLibraryAndDetailCode) {
+    var data = bannerFeedDataByLibraryAndDetailCode;
+    var lines = [];
+    var totalDollars = 0;
+
+    forEachRecordByLibraryAndDetailCode(function (bannerData) {
+        totalDollars += bannerData.dollarAmount;
+        lines.push(generateBannerRow(bannerData));
+    });
+
+    lines.unshift(generateBannerHeader());
+    return lines.join("\r\n");
+
+    function forEachRecordByLibraryAndDetailCode(callback) {
+        Object.keys(data).forEach(function (libraryId) {
+            Object.keys(data[libraryId]).forEach(function (detailCode) {
+                data[libraryId][detailCode].forEach(callback);
+            })
+        });
+    }
+
+    function generateBannerRow(invoiceData) {
+        if (!invoiceData.library.gar) {
+            throw carliError('Cannot generate banner feed for a library with no GAR (' + invoiceData.library.name + ')');
+        }
+        return [
+            invoiceData.library.gar,
+            invoiceData.detailCode,
+            invoiceData.detailCodeFull ? invoiceData.detailCodeFull : '',
+            invoiceData.invoiceNumber,
+            '',
+            invoiceData.dollarAmount.toFixed(2)
+        ].join(',');
+    }
+
+    function generateBannerHeader() {
+        return [
+            'UIN',
+            'Detail_Code',
+            'Notes/Description',
+            'Invoice_Number',
+            'Term',
+            'Amount'
+        ].join(',');
+    }
+}
+
 function listBatchesForCycle(cycle) {
     return NotificationRepository.listInvoiceNotificationsForCycleId(cycle.id)
         .then(gatherBatchSummaries);
@@ -376,7 +429,17 @@ function listBatchesForCycle(cycle) {
 }
 
 module.exports = {
-    getDataForBannerExportForSubscriptionCycle: getDataForBannerExportForSubscriptionCycle,
-    getDataForBannerExportForMembershipDues: getDataForBannerExportForMembershipDues,
+    getDataForBannerExportForSubscriptionCycleAsPackedText: function (cycle, batchId) {
+        return getDataForBannerExportForSubscriptionCycle(cycle, batchId, formatAsPackedText);
+    },
+    getDataForBannerExportForMembershipDuesAsPackedText: function (year, batchId) {
+        getDataForBannerExportForMembershipDues(year, batchId, formatAsPackedText);
+    },
+    getDataForBannerExportForSubscriptionCycleAsCsv: function (cycle, batchId) {
+        return getDataForBannerExportForSubscriptionCycle(cycle, batchId, formatAsCsv);
+    },
+    getDataForBannerExportForMembershipDuesAsCsv: function (year, batchId) {
+        getDataForBannerExportForMembershipDues(year, batchId, formatAsCsv);
+    },
     listBatchesForCycle: listBatchesForCycle
 };

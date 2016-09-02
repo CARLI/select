@@ -189,12 +189,12 @@ describe('The Banner Module', function () {
         expect(bannerModule).to.be.an('object');
     });
 
-    it('should have a getDataForBannerExportForSubscriptionCycle method', function () {
-        expect(bannerModule.getDataForBannerExportForSubscriptionCycle).to.be.a('function');
+    it('should have a getDataForBannerExportForSubscriptionCycleAsCsv method', function () {
+        expect(bannerModule.getDataForBannerExportForSubscriptionCycleAsCsv).to.be.a('function');
     });
 
-    it('should have a getDataForBannerExportForMembershipDues method', function () {
-        expect(bannerModule.getDataForBannerExportForMembershipDues).to.be.a('function');
+    it('should have a getDataForBannerExportForMembershipDuesAsCsv method', function () {
+        expect(bannerModule.getDataForBannerExportForMembershipDuesAsCsv).to.be.a('function');
     });
 
     it('should have a listBatchesForCycle method', function () {
