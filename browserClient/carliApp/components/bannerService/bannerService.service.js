@@ -5,19 +5,19 @@ function bannerService(CarliModules, $q, browserDownloadService) {
     var bannerModule = CarliModules.Banner;
 
     return {
-        getDataForBannerExportForSubscriptionCycle: getDataForBannerExportForSubscriptionCycle,
-        getDataForBannerExportForMembershipDues: getDataForBannerExportForMembershipDues,
+        getDataForBannerExportForSubscriptionCycle: getDataForBannerExportForSubscriptionCycleAsCsv,
+        getDataForBannerExportForMembershipDues: getDataForBannerExportForMembershipDuesAsCsv,
         listBatchesForCycle: listBatchesForCycle,
         downloadBannerExportForInvoices: downloadBannerExportForInvoices,
         downloadBannerExportForMembershipDues: downloadBannerExportForMembershipDues
     };
 
-    function getDataForBannerExportForSubscriptionCycle(cycle, batchId) {
-        return $q.when( bannerModule.getDataForBannerExportForSubscriptionCycle(cycle, batchId) );
+    function getDataForBannerExportForSubscriptionCycleAsCsv(cycle, batchId) {
+        return $q.when( bannerModule.getDataForBannerExportForSubscriptionCycleAsCsv(cycle, batchId) );
     }
 
-    function getDataForBannerExportForMembershipDues(year, batchId) {
-        return $q.when( bannerModule.getDataForBannerExportForMembershipDues(year, batchId) );
+    function getDataForBannerExportForMembershipDuesAsCsv(year, batchId) {
+        return $q.when( bannerModule.getDataForBannerExportForMembershipDuesAsCsv(year, batchId) );
     }
 
     function listBatchesForCycle(cycle) {
@@ -25,14 +25,14 @@ function bannerService(CarliModules, $q, browserDownloadService) {
     }
 
     function downloadBannerExportForInvoices(cycle, batchId) {
-        return getDataForBannerExportForSubscriptionCycle(cycle, batchId)
+        return getDataForBannerExportForSubscriptionCycleAsCsv(cycle, batchId)
             .then(function(exportData) {
                 browserDownloadService.browserDownload(getBannerExportFilename(), 'text/plain;charset=utf-8', exportData);
             });
     }
 
     function downloadBannerExportForMembershipDues(year, batchId) {
-        return getDataForBannerExportForMembershipDues(year, batchId)
+        return getDataForBannerExportForMembershipDuesAsCsv(year, batchId)
             .then(function(exportData) {
                 browserDownloadService.browserDownload(getBannerExportFilename(), 'text/plain;charset=utf-8', exportData);
             });
@@ -48,7 +48,7 @@ function bannerService(CarliModules, $q, browserDownloadService) {
 
         var timestamp = '' + d.getFullYear() + month + day + hour + minute + second;
 
-        return 'fi_ar_general_feeder.9carli.' + timestamp + '.txt';
+        return 'fi_ar_general_feeder.9carli.' + timestamp + '.csv';
 
         function zeroPaddedString(n) {
             return (n < 10) ? '0' + n : '' + n;
