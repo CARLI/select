@@ -1,7 +1,7 @@
 angular.module('library.sections.ipAddresses')
     .controller('ipAddressesController', ipAddressesController);
 
-function ipAddressesController($q, $scope, libraryService, userService, activityLogService) {
+function ipAddressesController($q, $scope, libraryService, userService, activityLogService, emailService) {
     var vm = this;
 
     var currentUser = userService.getUser();
@@ -35,6 +35,7 @@ function ipAddressesController($q, $scope, libraryService, userService, activity
     function save() {
         vm.loadingPromise = libraryService.update(vm.library)
             .then(logIpAddressesModified)
+            .then(notifyIpAddressesModified)
             .then(initVmLibrary)
             .then(setFormPristine);
         return vm.loadingPromise;
@@ -60,5 +61,9 @@ function ipAddressesController($q, $scope, libraryService, userService, activity
         };
 
         return activityLogService.logActivity(activity);
+    }
+
+    function notifyIpAddressesModified() {
+        emailService.sendIpAddressChangeNotification(vm.library.id);
     }
 }
