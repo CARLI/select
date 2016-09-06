@@ -1,1 +1,3 @@
-angular.module('library.sections.ipAddresses', []);
+angular.module('library.sections.ipAddresses', [
+    'common.emailService'
+]);
