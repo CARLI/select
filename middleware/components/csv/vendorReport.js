@@ -2,6 +2,7 @@ var cycleRepository = require('../../../CARLI/Entity/CycleRepository');
 var notificationRepository = require('../../../CARLI/Entity/NotificationRepository');
 var numeral = require('numeral');
 var offeringRepository = require('../../../CARLI/Entity/OfferingRepository');
+var licenseRepository = require('../../../CARLI/Entity/LicenseRepository');
 var Q = require('q');
 var csvExport = require('csv-stringify');
 
@@ -77,11 +78,39 @@ function typeIsNotForVendorReport( type ){
 function dataForVendorReport(cycle, vendor, specificOfferingIds){
     Logger.log('dataForVendorReport('+cycle.name+', '+vendor.name+(specificOfferingIds?'['+specificOfferingIds.length+']':'')+')');
 
-    return loadOfferings(cycle, vendor.id, specificOfferingIds)
+    var licensesById = {};
+
+    return loadLicenses()
+        .then(groupLicensesById)
+        .then(function() {
+            return loadOfferings(cycle, vendor.id, specificOfferingIds)
+        })
+        .then(copyLicensesToOfferingProducts)
         .then(groupOfferingsForVendorReport)
         .catch(function(err){
             Logger.log('  ERROR getting offerings for vendor report', err);
         });
+
+    function loadLicenses() {
+        return licenseRepository.listLicensesUnexpanded();
+    }
+
+    function groupLicensesById(licenses) {
+        licenses.forEach(function (license) {
+            licensesById[license.id] = license;
+        });
+        return true;
+    }
+
+    function copyLicensesToOfferingProducts(offeringsForVendor) {
+        return offeringsForVendor.map(function (offering) {
+            if (typeof offering.product.license == 'string') {
+                offering.product.license = licensesById[offering.product.license];
+            }
+
+            return offering;
+        });
+    }
 
     function loadOfferings(cycle, vendorId, offeringsToLoad){
         if ( offeringsToLoad && offeringsToLoad.length ){
@@ -122,17 +151,19 @@ function csvColumns(){
         'Database',
         'S.U.',
         'Price',
-        'Sole Source'
+        'License Agreement'
     ];
 }
 
 function transformOfferingToReportRow(offering){
+    var licenseName = (offering.product.license == null) ? 'Invalid License' : offering.product.license.name;
+
     return [
         offering.library.name,
         offering.product.name,
         offering.selection.users,
         formatCurrency( offeringRepository.getFullSelectionPrice(offering) ),
-        isSoleSource(offering.product)
+        licenseName
     ];
 }
 
