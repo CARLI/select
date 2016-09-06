@@ -11,6 +11,7 @@ var offeringRepository = require('../../CARLI/Entity/OfferingRepository.js');
 var pdf = require('./pdf');
 var vendorReportCsv = require('./csv/vendorReport');
 var vendorRepository = require('../../CARLI/Entity/VendorRepository.js');
+var libraryRepository = require('../../CARLI/Entity/LibraryRepository.js');
 
 var mailTransport = mailer.createTransport(null);
 
@@ -139,6 +140,26 @@ function sendOneTimePurchaseMessage( offeringId ){
     }
 }
 
+function sendIpAddressChangeNotification(libraryId) {
+    return libraryRepository.load(libraryId).then(function (library) {
+        var realTo = config.notifications.overrideTo ? config.notifications.overrideTo : config.notifications.carliListServe;
+
+        var options = {
+            to: realTo,
+            from: config.notifications.from,
+            subject: 'IP Addresses Updated for ' + library.name,
+            text: messageText(library)
+        };
+
+        return sendMail(options);
+    });
+
+    function messageText(library) {
+        return library.name + ' has updated their IP address information.  The updated IP Address(es) are:'
+            + "\n\n" + library.ipAddresses;
+    }
+}
+
 function sendVendorDoneEnteringPricingMessage( vendorId ){
     return vendorRepository.load(vendorId)
         .then(function(vendor){
@@ -223,6 +244,7 @@ module.exports = {
     sendPasswordResetMessage: sendPasswordResetMessage,
     sendNotificationEmail: sendNotificationEmail,
     sendOneTimePurchaseMessage: sendOneTimePurchaseMessage,
+    sendIpAddressChangeNotification: sendIpAddressChangeNotification,
     sendVendorDoneEnteringPricingMessage: sendVendorDoneEnteringPricingMessage,
     sendAskCarliMessage: sendAskCarliMessage,
     notifyCarliOfNewLibraryUser: notifyCarliOfNewLibraryUser
