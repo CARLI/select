@@ -452,6 +452,14 @@ function runMiddlewareServer(){
                     .then(sendOk(res))
                     .catch(sendError(res));
             });
+            authorizedRoute('post', '/notify-carli-of-ip-address-change/:libraryId', carliAuth.requireSession, function (req, res) {
+                carliAuth.requireSession()
+                    .then(function () {
+                        return email.sendIpAddressChangeNotification(req.params.libraryId);
+                    })
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
             authorizedRoute('post', '/notify-carli-of-vendor-done-entering-pricing/:vendorId', carliAuth.requireSession, function (req, res) {
                 carliAuth.requireSession()
                     .then(function () {

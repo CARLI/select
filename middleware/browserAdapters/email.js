@@ -14,6 +14,13 @@ function sendOneTimePurchaseMessage(offeringId){
     });
 }
 
+function sendIpAddressChangeNotification(libraryId) {
+    return middlewareRequest({
+        path: '/notify-carli-of-ip-address-change/' + libraryId,
+        method: 'post'
+    });
+}
+
 function sendVendorDoneEnteringPricingMessage(vendorId){
     return middlewareRequest({
         path: '/notify-carli-of-vendor-done-entering-pricing/' + vendorId,
@@ -34,6 +41,7 @@ module.exports = {
     tellPixobot: function () {},
     sendNotificationEmail: sendNotificationEmail,
     sendOneTimePurchaseMessage: sendOneTimePurchaseMessage,
+    sendIpAddressChangeNotification: sendIpAddressChangeNotification,
     sendVendorDoneEnteringPricingMessage: sendVendorDoneEnteringPricingMessage,
     sendAskCarliMessage: sendAskCarliMessage
 };
