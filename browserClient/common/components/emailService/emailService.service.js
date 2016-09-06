@@ -6,12 +6,17 @@ function emailService($q, CarliModules){
 
     return {
         sendOneTimePurchaseMessage: sendOneTimePurchaseMessage,
+        sendIpAddressChangeNotification: sendIpAddressChangeNotification,
         sendVendorDoneEnteringPricingMessage: sendVendorDoneEnteringPricingMessage,
         sendAskCarliMessage: sendAskCarliMessage
     };
 
     function sendOneTimePurchaseMessage(offeringId){
         return $q.when(emailMiddleware.sendOneTimePurchaseMessage(offeringId));
+    }
+
+    function sendIpAddressChangeNotification(libraryId) {
+        return $q.when(emailMiddleware.sendIpAddressChangeNotification(libraryId));
     }
 
     function sendVendorDoneEnteringPricingMessage(vendorId){
