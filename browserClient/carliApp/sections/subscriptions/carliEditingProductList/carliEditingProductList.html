@@ -1,6 +1,6 @@
 <ul class="vendor-accordion">
     <li carli-accordion ng-repeat="vendor in vm.vendors | orderBy: 'name'">
-        <div class="accordion-header" ng-click="vm.loadProductsForVendor(vendor)" cg-busy="vm.loadingPromise[vendor.id]">
+        <div class="accordion-header" id="scroll-to-{{vendor.id}}" ng-click="vm.loadProductsForVendor(vendor)" cg-busy="vm.loadingPromise[vendor.id]">
             <button type="button" class="angle-icon-container">
                 <fa name="angle-down"></fa><span class="sr-only">Open offering for {{vendor.name}}</span>
             </button>

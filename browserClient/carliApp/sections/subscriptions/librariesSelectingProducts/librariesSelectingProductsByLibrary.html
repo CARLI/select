@@ -2,7 +2,7 @@
 <div class="offerings-editor">
     <ul class="library-accordion">
         <li ng-repeat="library in vm.libraryList | orderBy:'name'" ng-class="{collapsed: vm.openAccordion !== library.id}">
-            <div class="accordion-header" ng-click="vm.toggleAccordion(library)" cg-busy="vm.loadingPromise[library.id]">
+            <div class="accordion-header" id="scroll-to-{{library.id}}" ng-click="vm.toggleAccordion(library)" cg-busy="vm.loadingPromise[library.id]">
                 <button type="button" class="angle-icon-container">
                     <fa name="angle-down"></fa><span class="sr-only">Open offerings for {{ library.name }}</span>
                 </button>
