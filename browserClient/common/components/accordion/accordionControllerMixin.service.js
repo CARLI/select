@@ -52,6 +52,10 @@ function accordionControllerMixin() {
                     .then(function (passthrough) {
                         controller.openAccordion = entity.id;
                         return passthrough;
+                    }).then(function () {
+                        setTimeout(function() {
+                            scrollToEntity(entity);
+                        }, 100);
                     });
             }
         }
@@ -68,6 +72,14 @@ function accordionControllerMixin() {
                     event.preventDefault();
                 }
             }
+        }
+
+        function scrollToEntity(entity) {
+            var topOfAccordion = $('#scroll-to-' + entity.id).position().top;
+            //$('body').scrollTop(topOfAccordion);
+            $('html, body').animate({
+                scrollTop: topOfAccordion + 'px'
+            }, 'fast');
         }
     };
 }
