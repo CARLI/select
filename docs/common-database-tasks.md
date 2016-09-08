@@ -5,14 +5,18 @@ useful to resolve minor data issues or to correct actions that don't have interf
 On production, futon is at: http://select-prod.carli.illinois.edu/db/_utils/index.html
 When running couch locally it is found at: http://localhost:5984/_utils/index.html
 
-The credentials for logging in to the Futon interface can be found in the secure config file.
+The credentials for logging in to the Futon interface can be found in the secure config file,
+/home/jenkins/.carli-secure.json
 
 ## Common tasks
 
 ### Forcibly reset a users password.
 
 Log in to Futon and select the `_users` database.  Select the user from the list, they are listed by the email
-used to log into the application.  
+used to log into the application.  Select the user whose password you would like to reset.  Select "Add Field" option, 
+and name the field `password`.  Enter the value for the new password.  When you save the changes, the password field you
+just added will not actually be saved -- instead CouchDb has updated the "derived_key" field (the securely hashed
+version of the password provided).
 
 ### Get replication and indexing job status
 
