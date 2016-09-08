@@ -5,7 +5,14 @@ useful to resolve minor data issues or to correct actions that don't have interf
 On production, futon is at: http://select-prod.carli.illinois.edu/db/_utils/index.html
 When running couch locally it is found at: http://localhost:5984/_utils/index.html
 
+The credentials for logging in to the Futon interface can be found in the secure config file.
+
 ## Common tasks
+
+### Forcibly reset a users password.
+
+Log in to Futon and select the `_users` database.  Select the user from the list, they are listed by the email
+used to log into the application.  
 
 ### Get replication and indexing job status
 
