@@ -33,7 +33,7 @@ function dashboardController($q, activityLogService, config, cycleService) {
                 });
         }
 
-        var startDate = moment().subtract(2, 'week').format();
+        var startDate = moment().subtract(1, 'week').format();
         var endDate = moment().endOf('day').format();
 
         vm.activityLoading = activityLogService.listActivityBetween(startDate, endDate).then(function (logs) {
