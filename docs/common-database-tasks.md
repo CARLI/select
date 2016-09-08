@@ -2,8 +2,8 @@
 Couchdb includes a decent utility called 'futon' that allows for some manual viewing and editing of data. This can be
 useful to resolve minor data issues or to correct actions that don't have interfaces in the applications.
 
-On production, futon is at: http://select-prod.carli.illinois.edu/db/_utils/
-When running couch locally it is found at: http://localhost:5984/_utils/
+On production, futon is at: http://select-prod.carli.illinois.edu/db/_utils/index.html
+When running couch locally it is found at: http://localhost:5984/_utils/index.html
 
 ## Common tasks
 

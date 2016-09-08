@@ -142,7 +142,7 @@ function sendOneTimePurchaseMessage( offeringId ){
 
 function sendIpAddressChangeNotification(libraryId) {
     return libraryRepository.load(libraryId).then(function (library) {
-        var realTo = config.notifications.overrideTo ? config.notifications.overrideTo : config.notifications.carliListServe;
+        var realTo = config.notifications.overrideTo ? config.notifications.overrideTo : config.notifications.carliSupport;
 
         var options = {
             to: realTo,
