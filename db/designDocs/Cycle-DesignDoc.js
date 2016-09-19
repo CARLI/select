@@ -130,7 +130,8 @@ ddoc = {
                     if (doc.funding) {
                         if (doc.funding.fundedByPercentage) {
                             if (doc.funding.fundedPercent > 0) {
-                                selectionPrice = selectionPrice - ((doc.funding.fundedPercent/100) * selectionPrice);
+                                var percent = (doc.funding.fundedPercent/100);
+                                selectionPrice = roundToNearestCent(selectionPrice - (percent * selectionPrice));
                             }
                         } else {
                             if (doc.funding.fundedPrice > 0) {
@@ -165,6 +166,10 @@ ddoc = {
                             return (pricingObject.users == users);
                         }
                     }
+                }
+
+                function roundToNearestCent(amount) {
+                    return Math.round(100 * amount) / 100;
                 }
             },
             reduce: function(key, values, rereduce) {
