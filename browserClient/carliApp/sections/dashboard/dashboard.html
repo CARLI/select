@@ -17,7 +17,7 @@
                             {{ cycle.getStatusLabel() }}
                         </div>
                         <div class="column">
-                           Total: {{ vm.totalsByCycle[cycle.id].invoicePrice - vm.totalsByCycle[cycle.id].selectionPrice | currency}}
+                           Total: {{ vm.totalsByCycle[cycle.id].selectionPrice | currency}}
                         </div>
                     </li>
                 </ul>
