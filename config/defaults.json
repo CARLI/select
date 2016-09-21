@@ -23,7 +23,7 @@
     "database": "carli_crm"
   },
   "maintenanceMode": {
-    "enabled": false,
+    "enabled": true,
     "heading": "System Maintenance",
     "detail": "CARLI Select is currently offline for maintenance."
   },
