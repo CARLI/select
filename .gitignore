@@ -14,7 +14,9 @@
 # for the environment (node vs browser).
 # Run `grunt jsenv:node` or `grunt jsenv:browser` to manually
 # set the desired environment. Ignore that file too since it is generated.
+/config/index.js
 /config/local.json
+/config/secure.json
 /config/environmentDependentModules/*.js
 
 #Vagrant
