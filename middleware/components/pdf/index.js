@@ -248,7 +248,13 @@ function htmlForPdf(dataForPdf){
     }
 
     function createFinalPdfContent(){
-        dataForRenderingPdfContent.invoiceDate = new Date();
+        //dataForRenderingPdfContent.invoiceDate = new Date();
+        if (dataForPdf.notification.draftStatus == "sent") {
+            dataForRenderingPdfContent.invoiceDate = dataForPdf.notification.dateSent;
+        } else {
+            dataForRenderingPdfContent.invoiceDate = dataForPdf.notification.dateCreated;
+        }
+        console.log("creating final PDF content, with date " + dataForRenderingPdfContent.invoiceDate);
         return invoicePdfTemplate(dataForRenderingPdfContent);
     }
 }
