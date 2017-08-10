@@ -1,0 +1,36 @@
+{
+  "alertTimeout": 10000,
+  "authMillisecondsUntilWarningAppears": 3000000,
+  "authWarningDurationInMilliseconds": 600000,
+  "invoiceDataDir": "/var/local/NNNN",
+  "middleware": {
+    "url": "http://127.0.0.1:3000",
+    "port": 3000
+  },
+  "notifications": {
+    "overrideTo": "notifications@email.com",
+    "from": "select@email.com",
+    "carliListServe": "email_list@email.edu",
+    "carliSupport": "support@email.edu"
+  },
+  "storeOptions": {
+    "couchDbName": "db_name",
+    "couchDbUrl": "http://127.0.0.1:5984"
+  },
+  "memberDb": {
+    "connectionLimit": 10,
+    "host": "localhost",
+    "database": "member_db_name"
+  },
+  "maintenanceMode": {
+    "enabled": false,
+    "heading": "System Maintenance",
+    "detail": "Select is currently offline for maintenance."
+  },
+  "oneTimePurchaseProductsCycleDocId": "one-time-purchase-products-cycle",
+  "storePath": "CouchDb/Store",
+  "defaultEntityCacheTimeToLive": 1000,
+  "staffAppBrowsingContextId": "staff-app",
+  "libraryAppBrowsingContextId": "library-app",
+  "vendorAppBrowsingContextId": "vendor-app"
+}
