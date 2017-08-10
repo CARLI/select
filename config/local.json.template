@@ -1,0 +1,15 @@
+{
+  "staffWebAppUrl": "http://staff.domain.edu",
+  "libraryWebAppUrl": "http://library.domain.edu/",
+  "vendorWebAppUrl": "http://vendor.domain.edu/",
+  "notifications": {
+    "overrideTo": "admin@email.edu",
+    "carliListServe": "email_list@email.edu",
+    "carliSupport": "support@email.edu"
+  },
+  "maintenanceMode": {
+    "enabled": false,
+    "heading": "System Maintenance",
+    "detail": "Select is currently offline for a system update."
+  }
+}
