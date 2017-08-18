@@ -70,6 +70,10 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
         return vendorList.filter(vendorIsActive);
 
         function vendorIsActive(vendor){
+            // Added a guard to allow list of vendors to still display
+            // even if faulty data somehow entered the database
+            if (typeof vendor === 'undefined')
+                return false;
             return vendor.isActive;
         }
     }
