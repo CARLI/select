@@ -62,7 +62,12 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
     }
 
     function filterActiveVendors(vendorList){
-        return vendorList.filter(vendorIsActive);
+        return vendorList.filter(isValidVendor).filter(vendorIsActive);
+
+        // Another guard to protect against illegitimate data inadvertently being in couch
+        function isValidVendor(vendor) {
+            return !!vendor;
+        }
 
         function vendorIsActive(vendor){
             return vendor.isActive;
