@@ -127,6 +127,8 @@ function getDataForBannerExportForMembershipDues(year, batchId, formatter) {
         formatter = formatAsCsv;
     }
 
+    console.log("Year: " + year + ", batchId: " + batchId);
+
     var invoicesForBatchByLibraryId = {};
     var membershipDuesByLibraryId = {};
 
@@ -139,6 +141,7 @@ function getDataForBannerExportForMembershipDues(year, batchId, formatter) {
         .then(exportMembershipBannerFeed);
 
     function saveInvoicesForBatch(notifications) {
+
         var invoicesForBatch = notifications.filter(function (notification) {
             return notification.batchId === batchId;
         });
@@ -146,6 +149,8 @@ function getDataForBannerExportForMembershipDues(year, batchId, formatter) {
         invoicesForBatch.forEach(function (invoice) {
             invoicesForBatchByLibraryId[invoice.targetEntity] = invoice;
         });
+
+        console.log("invoicesForBatchByLibId: ", invoicesForBatchByLibraryId);
 
         return invoicesForBatchByLibraryId;
     }
@@ -160,6 +165,7 @@ function getDataForBannerExportForMembershipDues(year, batchId, formatter) {
     }
 
     function getLibrariesForExport(membershipData) {
+        console.log("membershipData in getLibForExp: " , membershipData);
         return LibraryRepository.getLibrariesById(membershipRepository.listLibrariesWithDues(membershipData))
             .then(function (libraryList) {
                 return libraryList.filter(shouldAppearInBannerFeed);
@@ -170,6 +176,9 @@ function getDataForBannerExportForMembershipDues(year, batchId, formatter) {
         var dataForBatch = {};
 
         librariesForBannerExport.forEach(combineDataForBannerExport);
+
+        console.log("gatherBannerFeedData(): libForBannerExp: " , librariesForBannerExport);
+        console.log("--dataForBatch: ", dataForBatch);
 
         return dataForBatch;
 
@@ -433,13 +442,13 @@ module.exports = {
         return getDataForBannerExportForSubscriptionCycle(cycle, batchId, formatAsPackedText);
     },
     getDataForBannerExportForMembershipDuesAsPackedText: function (year, batchId) {
-        getDataForBannerExportForMembershipDues(year, batchId, formatAsPackedText);
+        return getDataForBannerExportForMembershipDues(year, batchId, formatAsPackedText);
     },
     getDataForBannerExportForSubscriptionCycleAsCsv: function (cycle, batchId) {
         return getDataForBannerExportForSubscriptionCycle(cycle, batchId, formatAsCsv);
     },
     getDataForBannerExportForMembershipDuesAsCsv: function (year, batchId) {
-        getDataForBannerExportForMembershipDues(year, batchId, formatAsCsv);
+        return getDataForBannerExportForMembershipDues(year, batchId, formatAsCsv);
     },
     listBatchesForCycle: listBatchesForCycle
 };
