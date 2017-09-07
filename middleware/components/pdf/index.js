@@ -81,7 +81,12 @@ function dataForMembershipDuesInvoicePdf(notification){
     var library = notification.targetEntity;
     var year = notification.fiscalYear;
 
-    return membershipRepository.getMembershipFeesForLibrary(library.id, year)
+    if ( notification.dataForPdf ) {
+        Logger.log('dataForMembershipInvoicePdf - skipping generation!');
+        return notification.dataForPdf;
+    }
+    else {
+        return membershipRepository.getMembershipFeesForLibrary(library.id, year)
         .then(function(membershipData){
             var membership = membershipData.membership || 0;
             var ishare = membershipData.ishare || 0;
@@ -93,11 +98,33 @@ function dataForMembershipDuesInvoicePdf(notification){
                 invoiceTotal: ishare + membership,
                 ishare: ishare,
                 membership: membership,
-                notification: notification,
+                notificationTypeForPdf: pdfTypeFromNotification(notification),
+                notificationDraftStatus: notification.draftStatus,
+                notificationDateSent: notification.dateSent,
+                notificationDateCreated: notification.dateCreated,
                 year: year
             };
             return dataForPdf;
+        })
+        .then(function(pdfData) {
+            Logger.log('got pdf data, update notification');                   
+            notification.dataForPdf = pdfData;
+            process.nextTick(function(){
+                notificationRepository.update(notification)
+                .then(function(){
+                    Logger.log('Update finished - pdf content saved');
+                })
+                .catch(function(err){
+                    Logger.log('Updated failed', err);
+                });
+            });
+
+            return pdfData;
+        })
+        .catch(function(err){
+            Logger.log('ERROR getting data for membership invoice pdf', err);
         });
+    }
 }
 
 function dataForSubscriptionInvoicePdf(notification){
@@ -110,30 +137,54 @@ function dataForSubscriptionInvoicePdf(notification){
 
     var useFeeForPriceInsteadOfSelectionPrice = typeIsForAccessFeeInvoice(pdfType);
 
-    return cycleRepository.load(cycleId)
-        .then(function(loadedcycle){
-            cycle = loadedcycle;
-            Logger.log('dataForSubscriptionInvoicePdf('+pdfType+', '+cycle.name+', '+library.name+(specificOfferingIds?'['+specificOfferingIds.length+']':'')+')');
-            return loadOfferings(cycle, library.id, specificOfferingIds);
-        })
-        .then(groupOfferingsForLibraryInvoice)
-        .then(function(groupedOfferings){
-            return transformOfferingsToPriceRows(groupedOfferings, useFeeForPriceInsteadOfSelectionPrice);
-        })
-        .then(function(invoiceData){
-            return {
-                batchId: notification.batchId,
-                cycle: cycle,
-                library: library,
-                invoiceData: invoiceData,
-                invoiceNumber: notification.invoiceNumber,
-                invoiceTotal: computeInvoiceTotal(invoiceData),
-                notification: notification
-            };
-        })
-        .catch(function(err){
-            Logger.log('ERROR getting data for library selections', err);
-        });
+    if ( notification.dataForPdf ) {
+        Logger.log('dataForSubscriptionInvoicePdf - skipping generation!');
+        return notification.dataForPdf;
+    }
+    else {
+        return cycleRepository.load(cycleId)
+            .then(function(loadedcycle){
+                cycle = loadedcycle;
+                Logger.log('dataForSubscriptionInvoicePdf('+pdfType+', '+cycle.name+', '+library.name+(specificOfferingIds?'['+specificOfferingIds.length+']':'')+')');
+                return loadOfferings(cycle, library.id, specificOfferingIds);
+            })
+            .then(groupOfferingsForLibraryInvoice)
+            .then(function(groupedOfferings){
+                return transformOfferingsToPriceRows(groupedOfferings, useFeeForPriceInsteadOfSelectionPrice);
+            })
+            .then(function(invoiceData){
+                return {
+                    batchId: notification.batchId,
+                    cycle: cycle,
+                    library: library,
+                    invoiceData: invoiceData,
+                    invoiceNumber: notification.invoiceNumber,
+                    invoiceTotal: computeInvoiceTotal(invoiceData),
+                    notificationTypeForPdf: pdfTypeFromNotification(notification),
+                    notificationDraftStatus: notification.draftStatus,
+                    notificationDateSent: notification.dateSent,
+                    notificationDateCreated: notification.dateCreated
+                };
+            })
+            .then(function(pdfData) {
+                Logger.log('got pdf data, update notification');                   
+                notification.dataForPdf = pdfData;
+                process.nextTick(function(){
+                    notificationRepository.update(notification)
+                    .then(function(){
+                        Logger.log('Update finished - pdf content saved');
+                    })
+                    .catch(function(err){
+                        Logger.log('Updated failed', err);
+                    });
+                });
+
+                return pdfData;
+            })
+            .catch(function(err){
+                Logger.log('ERROR getting data for library selections', err);
+            });
+    }
 }
 
 function loadOfferings(cycle, libraryId, offeringsToLoad){
@@ -221,7 +272,7 @@ function computeInvoiceTotal(invoiceRows){
 
 function htmlForPdf(dataForPdf){
 
-    var type = pdfTypeFromNotification(dataForPdf.notification);
+    var type = dataForPdf.notificationTypeForPdf;
     var invoiceContent = createInvoiceContent();
     var dataForRenderingPdfContent = dataForPdf;
     
@@ -249,10 +300,10 @@ function htmlForPdf(dataForPdf){
 
     function createFinalPdfContent(){
         //dataForRenderingPdfContent.invoiceDate = new Date();
-        if (dataForPdf.notification.draftStatus == "sent") {
-            dataForRenderingPdfContent.invoiceDate = dataForPdf.notification.dateSent;
+        if (dataForPdf.notificationDraftStatus == "sent") {
+            dataForRenderingPdfContent.invoiceDate = dataForPdf.notificationDateSent;
         } else {
-            dataForRenderingPdfContent.invoiceDate = dataForPdf.notification.dateCreated;
+            dataForRenderingPdfContent.invoiceDate = dataForPdf.notificationDateCreated;
         }
         console.log("creating final PDF content, with date " + dataForRenderingPdfContent.invoiceDate);
         return invoicePdfTemplate(dataForRenderingPdfContent);
