@@ -330,9 +330,10 @@ function listSelectedProductsFromActiveCyclesForLibrary(library) {
             offeringPromises.push(listOfferingsPromise);
 
             function addToList(offerings) {
-                offerings.forEach(function (product) {
+                offerings.forEach(function (offering) {
+                    var product = offering.product;
                     if (!consolidatedOfferingsById.hasOwnProperty(product.id)) {
-                        consolidatedOfferingsById[product.id] = product;
+                        consolidatedOfferingsById[product.id] = offering;
                     }
                 });
                 return offerings;
