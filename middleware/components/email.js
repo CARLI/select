@@ -13,7 +13,14 @@ var vendorReportCsv = require('./csv/vendorReport');
 var vendorRepository = require('../../CARLI/Entity/VendorRepository.js');
 var libraryRepository = require('../../CARLI/Entity/LibraryRepository.js');
 
-var mailTransport = mailer.createTransport(null);
+var smtpConfig = {
+    host: config.smtp.host,
+    port: config.smtp.port,
+    secure: config.smtp.secure,
+    ignoreTLS: config.smtp.ignoreTLS
+};
+
+var mailTransport = mailer.createTransport(smtpConfig);
 
 function tellPixobot(envelope) {
     if (typeof envelope === 'string') {

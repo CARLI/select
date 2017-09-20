@@ -7,6 +7,12 @@
     "carliListServe": "email_list@email.edu",
     "carliSupport": "support@email.edu"
   },
+  "smtp": {
+    "host": "mail.server.edu",
+    "port": 25,
+    "secure": false,
+    "ignoreTLS": true
+  },
   "maintenanceMode": {
     "enabled": false,
     "heading": "System Maintenance",
