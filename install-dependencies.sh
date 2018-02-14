@@ -8,9 +8,8 @@ fi
 bower_options="--allow-root --config.interactive=false"
 
 npm install
-cd ./browserClient && npm install && bower $bower_options install && cd -
-cd ./CARLI && npm install && cd -
-cd ./config && npm install && cd -
-cd ./db && npm install && cd -
+cd ./browserClient && npm install && node_modules/.bin/bower $bower_options install && cd - &&
+cd ./CARLI && npm install && cd - &&
+cd ./config && npm install && cd - &&
+cd ./db && npm install && cd - &&
 cd ./middleware && npm install && cd -
-cd ./migration && npm install && cd -

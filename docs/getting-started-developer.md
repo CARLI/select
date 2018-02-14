@@ -27,11 +27,11 @@ In the browserClient/ directory, run:
 * On a Mac, the best way to install these is with [Homebrew](http://brew.sh/).  Install Homebrew following the
 instructions on their website, then:
 * `brew install couchdb`
-    * During the install, instructions will be printed for how to start and stop couch.  The recommended way is to 
-use OSX's launchctl facility.  To do so, copy the `homebrew.mxcl.couchdb.plist` file into your `~/Library/LaunchAgents/`
-folder as instructed during the `brew install` process.  If you prefer, you can also start and stop CouchDB manually.
 
-* mention futon
+#### Notes
+
+* During the install, instructions will be printed for how to start and stop couch.
+* Couch includes a nice interactive utility called futon. It is available at http://localhost:5984/_utils/
 * initial setup for database (grunt tasks - deploy cycles, deploy design docs, deploy admin user)
 * Import users (grunt task - imported from users.json)
 
@@ -51,23 +51,10 @@ edit your hosts file, on `sudo vim /etc/hosts` and add the following lines:
     * After changing the hosts file, run `sudo dscacheutil -flushcache; sudo killall mDNSResponder` to make sure the
 changes are seen by OSX.
 
-#### launchctl aliases ####
-
-If you choose to use launchctl to manage couch and/or nginx, the following aliases may be useful:
-
-```
-alias couchdb_start='launchctl load ~/Library/LaunchAgents/homebrew.mxcl.couchdb.plist'
-alias couchdb_stop='launchctl unload ~/Library/LaunchAgents/homebrew.mxcl.couchdb.plist'
-alias nginx_start='launchctl load ~/Library/LaunchAgents/homebrew.mxcl.nginx.plist'
-alias nginx_stop='launchctl unload ~/Library/LaunchAgents/homebrew.mxcl.nginx.plist'
-```
 
 ## Start Local Dev Server ##
-To build the project and start a local development server:
-* `grunt serve`
-
-This should open in a new browser window / tab.  
- 
+To build the project and start a local development server, run `grunt serve` in the top-level of the project. This starts the middleware node server and the 
+development web server for the angular app. This should open in a new browser window / tab.
 
 ## Live Reloading ##
 The development server will auto-refresh when pertinent project files are changed.
@@ -130,12 +117,6 @@ Test files for all of the above live alongside the code they test, and end with 
     * There are subdirectories for subsections.
 * __carliApp/components/__ contains a directory for each UI component (re-usable and otherwise).
     * There is a directory for each component, which contain controllers, directives, services, and filters. Each in its own file.
-
-
-### Notes for Linux Users ###
-* PhantomJS requires a freetype shared library to run.
-Install if you get an error like "Can't start PhantomJS":
-`sudo apt-get install libfreetype6 libfontconfig`
 
 
 ### Note for Debian and Ubuntu users installing Node via apt-get ###
