@@ -32,7 +32,6 @@ module.exports = function(grunt) {
 
     grunt.registerTask('test', function(arg) {
         grunt.task.run(['subdir-grunt:CARLI:test:' + arg]);
-        grunt.task.run(['subdir-grunt:browserClient:test:' + arg]);
     });
 
 };
