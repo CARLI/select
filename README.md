@@ -1,10 +1,7 @@
 # CARLI Select #
 
-[JIRA] | [Basecamp] | [Git] | [Jenkins]
-
-Instances:
-* [QA]
-* [Development]
+A suite of web apps enabling the staff of [CARLI](https://www.carli.illinois.edu/) to manage and facilitate periodic product selection cycles. This source code contains three separate web apps, which share some common components, written
+in Angular 1.x as well as a Node middleware and some infrastructure for using a Couch database. 
 
 ## Front-End Setup ##
 See [Getting Started] for instructions to setup the project and start working on the browser client.
@@ -20,15 +17,9 @@ Grunt is used as a task runner at the top level of the project.  The following t
 
 View the [Full Documentation].
 
-[JIRA]: https://jira.pixotech.com/browse/CARLI
-[Basecamp]: https://pixotech.basecamphq.com/projects/11139052-carli-web-application-phase-iii
-[Git]: https://bitbucket.org/pixotech/carli-select
-[Jenkins]: https://jenkins.pixotech.com/job/view/CARLI
-[Development]: http://carli.dev.pixotech.com
-[QA]: http://carli.qa.pixotech.com
-[Getting Started]: carli-select/src/develop/docs/getting-started-browser-client.md
-[Directory Layout]: carli-select/src/develop/docs/directory-layout.md
-[Full Documentation]: carli-select/src/develop/docs/index.md
+[Getting Started]: blob/master/docs/getting-started-browser-client.md 
+[Directory Layout]: blob/master/docs/directory-layout.md
+[Full Documentation]: blob/master/docs/index.md
 
 
 
