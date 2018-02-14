@@ -1,11 +1,14 @@
 # Getting Started #
 
-These instructions will get you started working on the browser client (Front End).
-All of the instructions in this document, and all front-end work in general is done in
-the browserClient/ directory. (It is called browser client because it is the part of the
-app that runs in the browser. And it is a client of the API).
+These instructions will get you started working on the CARLI selection system project.
 
-At present the project does not use a VM, so all development is done directly in your main OS.
+The project does not use a VM, so all development is done directly in your main OS. You will need
+to install several pieces of software to run the entire system locally:
+
+* Node
+* CouchDb
+* Nginx
+* MySQL (may be optional, see notes below)
 
 
 ## Install Node ##
@@ -13,50 +16,63 @@ The development environment depends heavily on Node and npm.
 Visit the [Node Web Site](http://nodejs.org/) for installation instructions.
 
 
-## Install Dependencies ##
-In the browserClient/ directory, run:
+## Install Project Dependencies ##
+In the root of the project run the bash script `install-dependencies.sh`. This descends into sub-directories and installs npm dependencies. 
 
-* `npm install`
-* `npm install -g grunt-cli`
-* `npm install -g bower`
-* `bower install`
-* `gem install sass`
+You will need to install the sass library via Ruby: `gem install sass`
 
-### CouchDB Setup ###
 
-* On a Mac, the best way to install these is with [Homebrew](http://brew.sh/).  Install Homebrew following the
-instructions on their website, then:
-* `brew install couchdb`
-
-#### Notes
+## Install CouchDB ##
+On a Mac, the best way to install couch is with [Homebrew](http://brew.sh/).  Install Homebrew following the instructions on their website, then `brew install couchdb`
 
 * During the install, instructions will be printed for how to start and stop couch.
 * Couch includes a nice interactive utility called futon. It is available at http://localhost:5984/_utils/
+* The default user and password for couch are admin / relax.
 * initial setup for database (grunt tasks - deploy cycles, deploy design docs, deploy admin user)
 * Import users (grunt task - imported from users.json)
 
-### Nginx Setup ###
+
+## Install and Configure Nginx ##
+Nginx is used as a proxy server so that the middleware, couchdb, and the three applications can all appear under one cohesive domain. Again, Homebrew is the best option for installing on a Mac.
 
 * `brew install nginx`
-    * Again, you can choose to use the launchctl facility, or start and stop nginx manually.
-    * Copy the nginx config file from `./docs/nginx.conf` over top of `/usr/local/etc/nginx/nginx.conf`.
+    * A samply nginx config file for local development in included in the docs directory. Copy from `./docs/nginx.conf` to `/usr/local/etc/nginx/nginx.conf`, overwriting the original.
     * Restart nginx, if it is running.
-    * For authentication to work during local development, we have to add fake hostnames to our local system. To do so, 
-edit your hosts file, on `sudo vim /etc/hosts` and add the following lines:
+    * For authentication to work during local development, we have to add fake hostnames to our local system. To do so, edit your hosts file, (`sudo vim /etc/hosts`) and add the following lines:
 ```
     127.0.0.1 staff.carli.local
     127.0.0.1 vendor.carli.local
     127.0.0.1 library.carli.local
 ```
-    * After changing the hosts file, run `sudo dscacheutil -flushcache; sudo killall mDNSResponder` to make sure the
-changes are seen by OSX.
+    * After changing the hosts file, run `sudo dscacheutil -flushcache; sudo killall mDNSResponder` to make sure the changes are seen by OSX.
+
+
+## Install MySQL ##
+The CARLI applications talk to a separate MySQL database to get the list of CARLI customers (libraries). When developing locally you can use a local MySQL instance if you don't have access to the CARLI organization's internal development instance.
+
+Install MySQL locally using Homebrew and start it. The username and password will go in `config/secure.json`. See the section on Application Configuration below for more information.
+
+* _If you're lucky, someone can give you a mysql dump of the carli_crm database_ 
+
+## Configuring the Application ##
+There is a top-level directory called config which stores all run-time configuration for the applications. Included in the project are .template files which you can use to easily create the required config files, which are git-ignored. 
+To do so, copy each of the .template file to a .json file by removing .template from the end of the copy. 
+
+Recommended changes are the "notifications" section in local.json if you want to get alerts from the system at an email address.
+
+Credentials for the Couch and MySQL databases are in secure.json. If you are using a local MySQL instance, add the username and password here.
+
+### Node vs Browser Environment ###
+Because parts of the app run in the browser (the Angular apps) and some run in Node (the middleware) some of the code needs to be aware of which environment it is running in. This is because the code in the CARLI directory is common to the front-end and the back-end. In order to avoid things like checking for specific environment clues, the main modules in CARLI require environment-dependent modules from the config folder. These are actually re-written on disk to point to the browser or the Node version, depending which one is needed. This also lets Browserify find them.
+
+When setting up a project from scratch these files will be missing initially. To fix this, go into the config directory and run `grunt jsenv:node`. This is the default mode when not building the web app or running the development web server. You do not need to worry which mode it is in ordinarily because the grunt tasks make sure to set it. If a grunt tasks should fail with an error, then it may leave the modules in the wron environment. So the safest thing is to always run `grunt jsenv:node` after any grunt task failure.
 
 
 ## Start Local Dev Server ##
-To build the project and start a local development server, run `grunt serve` in the top-level of the project. This starts the middleware node server and the 
-development web server for the angular app. This should open in a new browser window / tab.
+To build the project and start a local development server, run `grunt serve` in the top-level of the project. This starts the middleware node server and the development web server for the angular app. This should open in a new browser window / tab.
 
-## Live Reloading ##
+
+### Live Reloading ###
 The development server will auto-refresh when pertinent project files are changed.
 Keep an eye on the terminal window to see what happens. Different tasks are run depending on which type of file changed:
 
@@ -67,7 +83,7 @@ Keep an eye on the terminal window to see what happens. Different tasks are run 
 * If any .spec.js (test files) change, they are linted and then karma will re-run the tests.
 
 
-## Other Grunt Tasks ##
+### Other Grunt Tasks ###
 The following shortcut tasks are defined. See the [Gruntfile](../Gruntfile.js) for more details.
 
 * `grunt build` - generates a clean build of the project for the dev server. Files are copied to the __build/__ directory.

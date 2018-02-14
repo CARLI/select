@@ -1,7 +1,7 @@
 {
-  "staffWebAppUrl": "http://staff.domain.edu",
-  "libraryWebAppUrl": "http://library.domain.edu/",
-  "vendorWebAppUrl": "http://vendor.domain.edu/",
+  "staffWebAppUrl": "http://staff.carli.local/",
+  "libraryWebAppUrl": "http://library.carli.local/",
+  "vendorWebAppUrl": "http://vendor.carli.local/",
   "notifications": {
     "overrideTo": "admin@email.edu",
     "carliListServe": "email_list@email.edu",
