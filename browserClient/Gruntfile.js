@@ -713,28 +713,6 @@ module.exports = function ( grunt ) {
         'jsenv:node'
     ]);
 
-
-    /**
-     * Use `grunt test` to run unit tests once
-     */
-    grunt.registerTask( 'test', [
-        'test:unit'
-    ]);
-
-    /**
-     * This does not require the dev server to be running
-     */
-    grunt.registerTask( 'test:unit', [
-        'build',
-        'karma:carli',
-        'karma:library',
-        'karma:vendor'
-    ]);
-
-    grunt.registerTask( 'test:jenkins', [
-        'test:unit'
-    ]);
-
     /*
      * The `serve` task is used during development to preview the app and live reload 
      */
