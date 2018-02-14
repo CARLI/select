@@ -22,11 +22,6 @@ In the browserClient/ directory, run:
 * `bower install`
 * `gem install sass`
 
-The protractor tests are no longer maintained, nor run by default, so these can be skipped.
-
-* ~~`npm install -g protractor`~~
-* ~~`webdriver-manager update --standalone`~~
-
 ### CouchDB Setup ###
 
 * On a Mac, the best way to install these is with [Homebrew](http://brew.sh/).  Install Homebrew following the

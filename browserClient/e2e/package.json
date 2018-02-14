@@ -1,9 +1,0 @@
-{
-  "name": "CARLI_e2e",
-  "version": "1.0.0",
-  "description": "",
-  "author": "",
-  "devDependencies": {
-    "node-uuid": "^1.4.1"
-  }
-}
