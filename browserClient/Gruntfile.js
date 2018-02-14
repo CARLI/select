@@ -383,34 +383,6 @@ module.exports = function ( grunt ) {
             }
         },
 
-        jshint: {
-            src: [
-                user_config.carli_app.all_js,
-                user_config.library_app.all_js,
-                user_config.vendor_app.all_js
-            ],
-            test: [
-                user_config.carli_app.test_js,
-                user_config.library_app.test_js,
-                user_config.vendor_app.test_js
-            ],
-            gruntfile: [
-                'Gruntfile.js'
-            ],
-            options: {
-                curly: false,
-                immed: true,
-                newcap: true,
-                noarg: true,
-                sub: true,
-                boss: true,
-                eqnull: true,
-                globals: {
-                    'angular': false
-                }
-            }
-        },
-
         karma: {
             options: {
                 basePath: '.',
@@ -767,7 +739,6 @@ module.exports = function ( grunt ) {
     grunt.registerTask( 'build:carli', [
         'jsenv:browser',
         'ensure-local-config',
-        'jshint',
         'browserify:carli',
         'copy:carli_app_common_components',
         'copy:carli_app_all_files',
@@ -780,7 +751,6 @@ module.exports = function ( grunt ) {
     grunt.registerTask('build:library', [
         'jsenv:browser',
         'ensure-local-config',
-        'jshint',
         'browserify:library',
         'copy:library_app_common_components',
         'copy:library_app_all_files',
@@ -793,7 +763,6 @@ module.exports = function ( grunt ) {
     grunt.registerTask('build:vendor', [
         'jsenv:browser',
         'ensure-local-config',
-        'jshint',
         'browserify:vendor',
         'copy:vendor_app_common_components',
         'copy:vendor_app_all_files',
