@@ -383,65 +383,6 @@ module.exports = function ( grunt ) {
             }
         },
 
-        karma: {
-            options: {
-                basePath: '.',
-                port: 9876,
-                singleRun: true,
-                browsers: [ 'PhantomJS' ],
-                frameworks: [ 'mocha', 'chai' ],
-                reporters: [ 'mocha', 'junit' ]
-            },
-            carli: {
-                files: {
-                    src: [
-                        'build/carliApp/bower_modules/jquery/dist/jquery.js',
-                        'build/carliApp/bower_modules/angular/angular.js',
-                        'bower_modules/angular-mocks/angular-mocks.js',
-                        'testModules/*.js',
-                        'build/carliApp/*.js',
-                        'build/carliApp/**/*.js',
-                        'carliApp/**/*.spec.js'
-                    ]
-                },
-                junitReporter: {
-                    outputFile: '../artifacts/test-results/browserClient-unit.xml'
-                }
-            },
-            library: {
-                files: {
-                    src: [
-                        'build/libraryApp/bower_modules/jquery/dist/jquery.js',
-                        'build/libraryApp/bower_modules/angular/angular.js',
-                        'bower_modules/angular-mocks/angular-mocks.js',
-                        'testModules/*.js',
-                        'build/libraryApp/*.js',
-                        'build/libraryApp/**/*.js',
-                        'libraryApp/**/*.spec.js'
-                    ]
-                },
-                junitReporter: {
-                    outputFile: '../artifacts/test-results/libraryApp-unit.xml'
-                }
-            },
-            vendor: {
-                files: {
-                    src: [
-                        'build/vendorApp/bower_modules/jquery/dist/jquery.js',
-                        'build/vendorApp/bower_modules/angular/angular.js',
-                        'bower_modules/angular-mocks/angular-mocks.js',
-                        'testModules/*.js',
-                        'build/vendorApp/*.js',
-                        'build/vendorApp/**/*.js',
-                        'vendorApp/**/*.spec.js'
-                    ]
-                },
-                junitReporter: {
-                    outputFile: '../artifacts/test-results/vendorApp-unit.xml'
-                }
-            }
-        },
-
         ngAnnotate: {
             common: {
                 src: user_config.common_components.all_js,
