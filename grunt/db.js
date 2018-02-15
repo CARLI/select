@@ -24,11 +24,13 @@ module.exports = function (grunt) {
     });
     grunt.registerTask('deploy-db', [
         'deploy-app-db',
-        'deploy-otp-cycle'
+        'deploy-otp-cycle',
+        'deploy-activity-log-db'
     ]);
     grunt.registerTask('deploy-design-docs', [
         'deploy-app-design-doc',
-        'deploy-cycle-design-docs'
+        'deploy-cycle-design-docs',
+        'deploy-activity-log-design-doc'
     ]);
     grunt.registerTask('deploy-app-db', function() {
         var done = this.async();

@@ -54,6 +54,12 @@ Install MySQL locally using Homebrew and start it. The username and password wil
 
 * _If you're lucky, someone can give you a mysql dump of the carli_crm database_ 
 
+## Bootstrap Couch Database ##
+Make sure you have an admin user for couch and have put the username and password in secure.json (defaults are okay locally)
+
+Run `grunt deploy-db` ad `grunt deploy-design-docs` 
+This will create the basic couch databases needed by the app. You will still need data.
+
 ## Configuring the Application ##
 There is a top-level directory called config which stores all run-time configuration for the applications. Included in the project are .template files which you can use to easily create the required config files, which are git-ignored. 
 To do so, copy each of the .template file to a .json file by removing .template from the end of the copy. 
