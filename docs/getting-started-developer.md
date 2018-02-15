@@ -22,14 +22,24 @@ In the root of the project run the bash script `install-dependencies.sh`. This d
 You will need to install the sass library via Ruby: `gem install sass`
 
 
-## Install CouchDB ##
+## Set Up Config Files for the Application ##
+There is a top-level directory called config which stores all run-time configuration for the applications. Included in the project are .template files which you can use to easily create the required config files, which are git-ignored. 
+To do so, copy each of the .template file to a .json file by removing .template from the end of the copy. 
+
+Recommended changes are the "notifications" section in local.json if you want to get alerts from the system at an email address.
+
+Credentials for the Couch and MySQL databases are in secure.json. As you configure mysql and couch, you will add usernames and passwords for them here.
+
+Run `grunt jsenv:node` this make sure the initial code for app configuration is generated.
+
+
+## Install and Configure CouchDB ##
 On a Mac, the best way to install couch is with [Homebrew](http://brew.sh/).  Install Homebrew following the instructions on their website, then `brew install couchdb`
 
 * During the install, instructions will be printed for how to start and stop couch.
 * Couch includes a nice interactive utility called futon. It is available at http://localhost:5984/_utils/
-* The default user and password for couch are admin / relax.
-* initial setup for database (grunt tasks - deploy cycles, deploy design docs, deploy admin user)
-* Import users (grunt task - imported from users.json)
+* Couch is initially in "admin party" mode, you should make an admin user. Click the "fix this" link at the bottom right of the Futon screen. Enter an admin user and password. (Common defaults are admin / relax).
+* Run `grunt deploy-db` ad `grunt deploy-design-docs` This will create the basic couch databases needed by the app. You will still need data.
 
 
 ## Install and Configure Nginx ##
@@ -54,29 +64,24 @@ Install MySQL locally using Homebrew and start it. The username and password wil
 
 * _If you're lucky, someone can give you a mysql dump of the carli_crm database_ 
 
-## Bootstrap Couch Database ##
-Make sure you have an admin user for couch and have put the username and password in secure.json (defaults are okay locally)
 
-Run `grunt deploy-db` ad `grunt deploy-design-docs` 
-This will create the basic couch databases needed by the app. You will still need data.
+## Start Local Dev Server ##
+To build the project and start a local development server, run `grunt serve` in the top-level of the project. This starts the middleware node server and the development web server for the angular app. This should open in a new browser window / tab.
 
-## Configuring the Application ##
-There is a top-level directory called config which stores all run-time configuration for the applications. Included in the project are .template files which you can use to easily create the required config files, which are git-ignored. 
-To do so, copy each of the .template file to a .json file by removing .template from the end of the copy. 
+*YOU SHOULD NOW HAVE A FUNCTIONING APPLICATION*
 
-Recommended changes are the "notifications" section in local.json if you want to get alerts from the system at an email address.
 
-Credentials for the Couch and MySQL databases are in secure.json. If you are using a local MySQL instance, add the username and password here.
+### Troubleshooting Initial App Setup ###
+
+* Try going to the "One-Time Purchase" section. You should see a list of libraries. If you don't and/or you get an error message this means your mysql connection to the crm database is not working.
+
+
+## Other Notes About the Applications ##
 
 ### Node vs Browser Environment ###
 Because parts of the app run in the browser (the Angular apps) and some run in Node (the middleware) some of the code needs to be aware of which environment it is running in. This is because the code in the CARLI directory is common to the front-end and the back-end. In order to avoid things like checking for specific environment clues, the main modules in CARLI require environment-dependent modules from the config folder. These are actually re-written on disk to point to the browser or the Node version, depending which one is needed. This also lets Browserify find them.
 
 When setting up a project from scratch these files will be missing initially. To fix this, go into the config directory and run `grunt jsenv:node`. This is the default mode when not building the web app or running the development web server. You do not need to worry which mode it is in ordinarily because the grunt tasks make sure to set it. If a grunt tasks should fail with an error, then it may leave the modules in the wron environment. So the safest thing is to always run `grunt jsenv:node` after any grunt task failure.
-
-
-## Start Local Dev Server ##
-To build the project and start a local development server, run `grunt serve` in the top-level of the project. This starts the middleware node server and the development web server for the angular app. This should open in a new browser window / tab.
-
 
 ### Live Reloading ###
 The development server will auto-refresh when pertinent project files are changed.
@@ -99,7 +104,7 @@ The following shortcut tasks are defined. See the [Gruntfile](../Gruntfile.js) f
 * `grunt ngdoc` - build Angular JS documentaion for the application.
 
 
-## Technology Used ##
+### Technology Used ###
 The following applications and projects are used to build the front-end, and to aid in development.
 
 * Node - the JavaScript runtime that powers many of the rest of the tools and provides a local development server.
@@ -115,7 +120,7 @@ The following applications and projects are used to build the front-end, and to 
 _See [package.json](package.json) and [bower.json](bower.json) for detailed dependency information_
 
 
-## How to Add a New Front-End Third Party Dependency (Bower Module) ##
+### How to Add a New Front-End Third Party Dependency (Bower Module) ###
 Since Bower is used to handle front end dependencies, it must be used when adding new ones. Follow these steps to do so:
 
 * `bower install <package name>` - this will download the package and put it in bower_modules/
