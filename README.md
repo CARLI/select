@@ -17,9 +17,9 @@ Grunt is used as a task runner at the top level of the project.  The following t
 
 View the [Full Documentation].
 
-[Getting Started]: blob/master/docs/getting-started-browser-client.md 
-[Directory Layout]: blob/master/docs/directory-layout.md
-[Full Documentation]: blob/master/docs/index.md
+[Getting Started]: docs/getting-started-browser-client.md 
+[Directory Layout]: docs/directory-layout.md
+[Full Documentation]: docs/index.md
 
 
 
