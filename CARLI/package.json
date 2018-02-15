@@ -3,11 +3,13 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "test": "mkdir -p ../artifacts/test-results && JUNIT_REPORT_PATH=../artifacts/test-results/CARLI.xml JUNIT_REPORT_STACK=1 mocha --reporter mocha-jenkins-reporter"
+    "test": "mkdir -p ../artifacts/test-results && JUNIT_REPORT_PATH=../artifacts/test-results/CARLI.xml JUNIT_REPORT_STACK=1 mocha --reporter mocha-jenkins-reporter",
+    "plainMocha": "mocha"
   },
   "author": "",
   "dependencies": {
     "csv-stringify": "0.0.6",
+    "fs-extra": "^5.0.0",
     "lodash": "^2.4.1",
     "node-uuid": "^1.4.1",
     "q": "^1.0.1",
@@ -19,7 +21,6 @@
   "devDependencies": {
     "chai": "2",
     "chai-as-promised": "5",
-    "fs-extra": "^0.26.2",
     "mocha": "^1.21.5",
     "mocha-jenkins-reporter": "^0.1.2",
     "moment": "^2.8.4",

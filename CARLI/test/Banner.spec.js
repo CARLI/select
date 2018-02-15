@@ -204,7 +204,7 @@ describe('The Banner Module', function () {
 
 /* Skipping this test because the file copying in fs-extra tries to chmod the files and there is a problem with that
  * see: https://github.com/jprichardson/node-fs-extra/issues/199 */
-describe.skip('A Full Subscription Cycle Banner Export Integration Test', function () {
+describe('A Full Subscription Cycle Banner Export Integration Test', function () {
     it('exports a valid banner feed', function () {
         return cycleRepository.create(testCycleData)
             .then(cycleRepository.load)
@@ -289,7 +289,7 @@ describe.skip('A Full Subscription Cycle Banner Export Integration Test', functi
         }
 
         function generateBannerFeed(batchId) {
-            return bannerModule.getDataForBannerExportForSubscriptionCycle(cycle, batchId);
+            return bannerModule.getDataForBannerExportForSubscriptionCycleAsPackedText(cycle, batchId);
         }
 
         function debugBannerFeed(bannerFeedData) {
@@ -322,7 +322,7 @@ describe.skip('A Full Subscription Cycle Banner Export Integration Test', functi
 
 /* Skipping this test because the file copying in fs-extra tries to chmod the files and there is a problem with that
  * see: https://github.com/jprichardson/node-fs-extra/issues/199 */
-describe.skip('A Membership Year Banner Export Integration Test', function () {
+describe('A Membership Year Banner Export Integration Test', function () {
     var testMembershipYear = 2020;
 
     it('exports a valid banner feed', function () {
@@ -388,7 +388,7 @@ describe.skip('A Membership Year Banner Export Integration Test', function () {
     }
 
     function generateBannerFeed(batchId) {
-        return bannerModule.getDataForBannerExportForMembershipDues(testMembershipYear, batchId);
+        return bannerModule.getDataForBannerExportForMembershipDuesAsPackedText(testMembershipYear, batchId);
     }
 
     function verifyBannerFeed(bannerFeedData){
