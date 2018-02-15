@@ -166,8 +166,7 @@ function test( storeTypeName, options ) {
 
             it( 'should return an array of test objects with the right size and object contents', function( ) {
                 return expect( test5Objects() )
-                    .to.eventually.be.an('Array').of.length(5)
-                    .to.have.deep.property('[4].type');
+                    .to.eventually.be.an('Array').of.length(5);
             } );
 
             it( 'should return an array of objects', function() {
