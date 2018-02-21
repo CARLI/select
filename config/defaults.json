@@ -14,7 +14,7 @@
     "carliSupport": "support@email.edu"
   },
   "storeOptions": {
-    "couchDbName": "db_name",
+    "couchDbName": "carli",
     "couchDbUrl": "http://127.0.0.1:5984"
   },
   "memberDb": {
