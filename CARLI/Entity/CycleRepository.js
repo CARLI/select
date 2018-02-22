@@ -208,6 +208,7 @@ module.exports = {
     create: createCycle,
     createCycleLog: createCycleLog,
     update: updateCycle,
+    delete: CycleRepository.delete,
     list: listCycles,
     load: loadCycle,
     loadNoCache: CycleRepository.loadNoCache,
