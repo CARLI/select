@@ -139,7 +139,7 @@ function runMiddlewareServer(){
             authorizedRoute('get', '/library/:id', carliAuth.requireSession, function (req, res) {
                 crmQueries.loadLibrary(req.params.id)
                     .then(function(library){
-                        if ( typeof library !== 'undefined' ) {
+                        if ( isValidLibrary(library) ) {
                             res.send(library);
                         }
                         else {
@@ -147,6 +147,10 @@ function runMiddlewareServer(){
                         }
                     })
                     .catch(send500Error(res));
+
+                function isValidLibrary(library) {
+                    return library && Object.keys(library).indexOf('name') > -1;
+                }
             });
             authorizedRoute('get', '/library/contacts/:id', carliAuth.requireSession, function (req, res) {
                 crmQueries.listCrmContactsForLibrary(req.params.id)
