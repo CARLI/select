@@ -10,6 +10,7 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
         listActivityBetween: listActivityBetween,
         listActivitySince: listActivitySince,
         logCycleUpdate: logCycleUpdate,
+        logCycleDateUpdate: logCycleDateUpdate,
         logEntityAdded: logEntityAdded,
         logEntityModified: logEntityModified,
         logOfferingModified: logOfferingModified,
@@ -46,6 +47,16 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
             cycleId: cycle.id,
             cycleName: cycle.name,
             actionDescription: 'Transitioned the cycle to '+cycleService.getLabelForCycleStatus(cycle.status),
+            app: 'staff',
+            category: 'cycleStatus'
+        });
+    }
+
+    function logCycleDateUpdate(cycle){
+        return logActivity({
+            cycleId: cycle.id,
+            cycleName: cycle.name,
+            actionDescription: 'Modified cycle dates',
             app: 'staff',
             category: 'cycleStatus'
         });

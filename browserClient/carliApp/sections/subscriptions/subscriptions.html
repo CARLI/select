@@ -5,12 +5,24 @@
 
     <section class="content list-content">
         <ul class="zebra-table">
-            <li ng-repeat="cycle in vm.cycles">
+            <li ng-repeat="cycle in vm.cycles track by cycle.id">
                 <div class="column">
                     <a ng-href="/subscription/{{ cycle.id }}">{{ cycle.name }}</a>
                 </div>
                 <div class="column">
                     {{ cycle.getStatusLabel() }}
+                </div>
+                <div class="column">
+                    <div>
+                        <button type="button"
+                                class="carli-button"
+                                data-toggle="modal"
+                                data-target="#edit-cycle-dates-modal"
+                                id="edit-cycle-dates"
+                                ng-click="vm.editCycle(cycle)">
+                            Edit Cycle Dates
+                        </button>
+                    </div>
                 </div>
             </li>
         </ul>
@@ -20,3 +32,24 @@
 </section>
 
 <new-cycle-form></new-cycle-form>
+
+<modal-dialog modal-id="'edit-cycle-dates-modal'" modal-title="'Edit Cycle Dates'">
+    <div class="modal-body comment-text">
+        <label for="xxx">Selections Available</label>
+        <p>
+            <em>Libraries will see this date range <strong>estimate</strong> indicating when they can make selections.</em>
+        </p>
+        <view-edit-date ng-model="vm.cycleBeingEdited.startDateForSelections" edit-mode="true"></view-edit-date>
+        to
+        <view-edit-date ng-model="vm.cycleBeingEdited.endDateForSelections" edit-mode="true"></view-edit-date>
+
+        <label for="productsAvailableDate">Products Available to Patrons</label>
+        <view-edit-date input-id="productsAvailableDate" ng-model="vm.cycleBeingEdited.productsAvailableDate"
+                        edit-mode="true"></view-edit-date>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</button>
+        <button type="button" class="carli-button save-button" busy-click="vm.saveCycleDates()">Save</button>
+    </div>
+</modal-dialog>
