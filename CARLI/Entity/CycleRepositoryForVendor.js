@@ -1,5 +1,6 @@
 var baseRepository = require('./CycleRepository');
 var couchUtils = require('../Store/CouchDb/Utils')();
+var vendorDatabaseName = require('./vendorDatabaseName');
 
 module.exports = function (vendor) {
 
@@ -56,7 +57,7 @@ module.exports = function (vendor) {
 
     var functionsToAdd = {
         getDatabaseName: function() {
-            return this.databaseName + '-' + vendor.id;
+            return vendorDatabaseName(this.databaseName, vendor.id);
         },
         getSourceDatabaseName: function() {
             return this.databaseName;
