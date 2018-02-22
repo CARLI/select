@@ -1,0 +1,19 @@
+<div class="list-page-header">
+    <h1>Delete Subscription Cycle</h1>
+</div>
+
+<section class="content">
+    <ul class="zebra-table">
+        <li ng-repeat="cycle in vm.cycles">
+            <div class="column">
+                {{ cycle.name }}
+            </div>
+            <div class="column">
+                {{ cycle.getStatusLabel() }}
+            </div>
+            <div class="column">
+                <button class="carli-button remove-button" ng-click="vm.deleteCycle(cycle)" type="button">DELETE</button>
+            </div>
+        </li>
+    </ul>
+</section>

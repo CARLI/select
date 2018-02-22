@@ -10,6 +10,7 @@ angular.module('carli.routes',[
     'carli.sections.membership',
     'carli.sections.reports',
     'carli.sections.revisionHistory',
+    'carli.sections.deleteCycles',
     'carli.sections.styleGuide',
     'carli.sections.login',
     'carli.sections.resetRequest',
@@ -150,6 +151,11 @@ angular.module('carli.routes',[
         controller:  'revisionHistoryController',
         controllerAs:'vm'
     })
+    .when('/deleteCycles', {
+        templateUrl: '/carliApp/sections/deleteCycles/deleteCycles.html',
+        controller: 'deleteCyclesController',
+        controllerAs:'vm'
+    })
     .when('/styleGuide', {
         templateUrl: '/carliApp/sections/styleGuide/styleGuide.html',
         controller:  'styleGuideController',
@@ -157,6 +163,5 @@ angular.module('carli.routes',[
     })
     .otherwise({
         redirectTo: '/login'
-    })
-    ;
+    });
 });
