@@ -138,7 +138,14 @@ function runMiddlewareServer(){
             });
             authorizedRoute('get', '/library/:id', carliAuth.requireSession, function (req, res) {
                 crmQueries.loadLibrary(req.params.id)
-                    .then(sendResult(res))
+                    .then(function(library){
+                        if ( typeof library !== 'undefined' ) {
+                            res.send(library);
+                        }
+                        else {
+                            res.status(404).send( { error: 'Library ' + req.params.id + ' not found in CRM DB' } );
+                        }
+                    })
                     .catch(send500Error(res));
             });
             authorizedRoute('get', '/library/contacts/:id', carliAuth.requireSession, function (req, res) {
