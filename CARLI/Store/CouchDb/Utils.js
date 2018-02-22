@@ -289,6 +289,23 @@ module.exports = function (storeOptions) {
         return deferred.promise;
     }
 
+    function deleteDatabase(dbName) {
+        var deferred = Q.defer();
+
+        request.delete(storeOptions.privilegedCouchDbUrl + '/' + dbName, function(error, response, body) {
+            if (error) {
+                deferred.reject(error);
+            } else if (response.statusCode >= 200 && response.statusCode <= 299) {
+                deferred.resolve(dbName + ' deleted');
+            } else {
+                Logger.log(body);
+                deferred.reject("Could not delete database " + dbName + " statusCode=" + response.statusCode);
+            }
+        });
+
+        return deferred.promise;
+    }
+
     function createSecurityDocumentForType(dbName, databaseType, entity) {
         var roles = [ '_admin', 'staff' ];
 
@@ -514,6 +531,7 @@ module.exports = function (storeOptions) {
 
         couchViewUrl: couchViewUrl,
         createDatabase: createDatabase,
+        deleteDatabase: deleteDatabase,
         couchRequest: couchRequest,
         couchRequestSession: couchRequestSession,
         getCouchDocuments: getCouchDocuments,
