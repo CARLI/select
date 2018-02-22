@@ -224,8 +224,24 @@ function resolveToProgress( jobs ){
     return jobs.length ? jobs[0].progress : 100;
 }
 
+function deleteCycle(cycleId) {
+    return cycleRepository.load(cycleId)
+        .then(function(cycle){
+            var listOfDatabasesToDelete = cycleRepository.listAllDatabaseNamesForCycle(cycle);
+
+            Logger.log('Deleting databases', listOfDatabasesToDelete);
+
+            return Q.allSettled(listOfDatabasesToDelete.map(couchUtils.deleteDatabase));
+        })
+        .then(function(){
+            Logger.log('Deleting cycle doc', cycleId);
+            cycleRepository.delete(cycleId);
+        })
+}
+
 module.exports = {
     create: create,
     copyCycleDataFrom: copyCycleDataFrom,
-    getCycleCreationStatus: getCycleCreationStatus
+    getCycleCreationStatus: getCycleCreationStatus,
+    deleteCycle: deleteCycle
 };

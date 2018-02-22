@@ -220,6 +220,14 @@ function runMiddlewareServer(){
                         .catch(sendError(res));
                 }
             });
+            authorizedRoute('delete', '/delete-cycle/:id', carliAuth.requireStaff, function (req, res) {
+                return carliAuth.requireStaff().then(deleteCycle);
+                function deleteCycle() {
+                    return cycleCreation.deleteCycle(req.params.id)
+                        .then(sendResult(res))
+                        .catch(sendError(res));
+                }
+            });
             authorizedRoute('post', '/create-all-vendor-databases', carliAuth.requireStaff, function (req, res) {
                 vendorDatabases.createVendorDatabasesForActiveCycles()
                     .then(sendOk(res))
