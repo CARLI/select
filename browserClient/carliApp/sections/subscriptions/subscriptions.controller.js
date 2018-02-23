@@ -9,6 +9,7 @@ function subscriptionsController($scope, activityLogService, alertService, cycle
     vm.saveCycleDates = saveCycleDates;
 
     vm.cycleBeingEdited = null;
+    vm.minimumCycleStatus = cycleService.CYCLE_STATUS_CLOSED;
 
     var startDateForSelections = null;
     var endDateForSelections = null;

@@ -19,7 +19,8 @@
                                 data-toggle="modal"
                                 data-target="#edit-cycle-dates-modal"
                                 id="edit-cycle-dates"
-                                ng-click="vm.editCycle(cycle)">
+                                ng-click="vm.editCycle(cycle)"
+                                ng-if="cycle.status < vm.minimumCycleStatus">
                             Edit Cycle Dates
                         </button>
                     </div>
