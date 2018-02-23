@@ -113,9 +113,22 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
 
         function checkIndexStatus() {
             getViewIndexingStatus(newCycle).then(function (progress) {
-                if (progress < 100) {
+                /**
+                 * We don't initially trust a value of 100 because that could mean the indexing job has not started yet or it could mean
+                 * that it already finished. So we wait until we see some progress (e.g. 25%) before we believe the number.
+                 * This appears to be a problem with alternative cycles because they are small enough that the indexing finishes before
+                 * any intermediate progress can be reported. So we never trust the value, we never clear the interval or resolve the promise,
+                 * and we never leave this step.
+                 */
+                var oneHundredPercentIndexingIsAmbiguous = (newCycle.cycleType == 'Alternative Cycle');
+                var ignoreCycleIndexTime = (progress === 100 && oneHundredPercentIndexingIsAmbiguous);
+
+                var weKnowIndexingHasStarted = (progress < 100);
+
+                if (weKnowIndexingHasStarted || ignoreCycleIndexTime) {
                     trustViewIndex = true;
                 }
+
                 if (trustViewIndex && progress == 100) {
                     clearInterval(intervalId);
                     waitForIndex.resolve();

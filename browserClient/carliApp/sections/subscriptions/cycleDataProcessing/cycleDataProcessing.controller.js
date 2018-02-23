@@ -74,10 +74,20 @@ function cycleDataProcessingController( $q, $routeParams, $scope, $interval, cyc
             if (vm.progress.offeringTransformation > 0) {
                 trustFirstViewIndex = true;
             }
+
             if (!trustFirstViewIndex && status.viewIndexing < 100) {
                 trustFirstViewIndex = true;
             }
+
             if (trustFirstViewIndex && vm.progress.firstViewIndexing == 100 && status.viewIndexing < 100) {
+                trustSecondViewIndex = true;
+            }
+
+            //Alternative cycles do not contain enough data to make indexing them take a noticable amount of time
+            var ignoreCycleIndexTime = (vm.cycle.cycleType === 'Alternative Cycle');
+
+            if (ignoreCycleIndexTime) {
+                trustFirstViewIndex = true;
                 trustSecondViewIndex = true;
             }
         }
