@@ -225,18 +225,24 @@ function resolveToProgress( jobs ){
 }
 
 function deleteCycle(cycleId) {
+    var cycle = null;
+
     return cycleRepository.load(cycleId)
-        .then(function(cycle){
-            var listOfDatabasesToDelete = cycleRepository.listAllDatabaseNamesForCycle(cycle);
+        .then(function(loadedCycle) {
+            cycle = loadedCycle;
+            return vendorRepository.list();
+        })
+        .then(function(vendorList) {
+            var listOfDatabasesToDelete = cycleRepository.listAllDatabaseNamesForCycle(cycle, vendorList);
 
             Logger.log('Deleting databases', listOfDatabasesToDelete);
 
-            return Q.allSettled(listOfDatabasesToDelete.map(couchUtils.deleteDatabase));
+            return Q.all(listOfDatabasesToDelete.map(couchUtils.deleteDatabase));
         })
         .then(function(){
             Logger.log('Deleting cycle doc', cycleId);
-            cycleRepository.delete(cycleId);
-        })
+            return cycleRepository.delete(cycleId);
+        });
 }
 
 module.exports = {

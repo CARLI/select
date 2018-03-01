@@ -228,7 +228,7 @@ function runMiddlewareServer(){
                 return carliAuth.requireStaff().then(deleteCycle);
                 function deleteCycle() {
                     return cycleCreation.deleteCycle(req.params.id)
-                        .then(sendResult(res))
+                        .then(sendResult(res)({success: true}))
                         .catch(sendError(res));
                 }
             });

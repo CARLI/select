@@ -298,7 +298,7 @@ module.exports = function (storeOptions) {
             } else if (response.statusCode >= 200 && response.statusCode <= 299) {
                 deferred.resolve(dbName + ' deleted');
             } else {
-                Logger.log(body);
+                Logger.log('failed to delete database', body);
                 deferred.reject("Could not delete database " + dbName + " statusCode=" + response.statusCode);
             }
         });

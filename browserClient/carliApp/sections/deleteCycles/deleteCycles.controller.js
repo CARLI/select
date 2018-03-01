@@ -1,7 +1,7 @@
 angular.module('carli.sections.deleteCycles')
     .controller('deleteCyclesController', deleteCyclesController);
 
-function deleteCyclesController(cycleService) {
+function deleteCyclesController(alertService, cycleService) {
     var vm = this;
     vm.deleteCycle = deleteCycle;
 
@@ -20,10 +20,11 @@ function deleteCyclesController(cycleService) {
     }
 
     function deleteCycle(cycle) {
-        if ( window.confirm('If you strike me down, I will never come back.') ) {
-            cycleService.deleteCycle(cycle)
+        if ( window.confirm('Are you sure you want to delete ' + cycle.name) ) {
+            return cycleService.deleteCycle(cycle)
                 .then(function(msg) {
-                    console.debug(msg);
+                    alertService.putAlert('Cycle deleted', {severity: 'success'});
+                    activate();
                 });
         }
     }
