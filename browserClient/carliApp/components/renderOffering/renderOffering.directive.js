@@ -227,6 +227,10 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
         return currency( offeringService.getFundedSiteLicensePrice(offering) );
     }
 
+    function getUpdatedPricingClass(offering) {
+        return offering.siteLicensePriceUpdated ? 'updated' : 'not-updated';
+    }
+
     function fundedLastYearsSiteLicensePrice(offering) {
         var lastYear = offering.cycle.year - 1;
         return currency( offeringService.getHistoricalFundedSiteLicensePrice(offering, lastYear) );
@@ -247,6 +251,7 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
         Handlebars.registerHelper('fundedSiteLicensePrice', fundedSiteLicensePrice);
         Handlebars.registerHelper('fundedLastYearsSiteLicensePrice', fundedLastYearsSiteLicensePrice);
         Handlebars.registerHelper('mediumDate', mediumDate);
+        Handlebars.registerHelper('getUpdatedPricingClass', getUpdatedPricingClass);
     }
 
     function translateColumnArrayToObject( columns ){
