@@ -1,6 +1,3 @@
-$background-pricing-old: rgba(224,180,237,.25);
-$background-flagged-flagged: rgba(255,18,0,.1);
-
 .pricing-container {
     @include flexbox();
     min-width: 600px;
@@ -95,7 +92,7 @@ $background-flagged-flagged: rgba(255,18,0,.1);
                 }
 
                 &.flagged {
-                    background-color: rgba(255,18,0,.1);
+                    background-color: $background-flagged-flagged;
                     color: $red;
                 }
 
