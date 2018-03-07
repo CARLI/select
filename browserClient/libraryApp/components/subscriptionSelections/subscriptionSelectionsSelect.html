@@ -92,7 +92,7 @@
                 <div class="column select">
 
                     <div class="subscription-buttons" ng-if="offering.display === 'with-price'">
-                        <subscription-button ng-if="offering.pricing.site"
+                        <subscription-button ng-if="offering.pricing.site && offering.siteLicensePriceUpdated"
                                              ng-hide="vm.userIsReadOnly()"
                                              title="Site License" price="{{ ::vm.getFundedSiteLicensePrice(offering) }}"
                                              selected="vm.isSelected(offering, 'Site License')"
@@ -111,7 +111,7 @@
                         <div class="no-price" ng-if="!offering.pricing.site && !offering.pricing.su.length">A price has not been provided for this product. Ask CARLI for more information.</div>
                     </div>
 
-                    <div class="no-price-display" ng-if="offering.display === 'without-price'">Ask CARLI to find out the price of this product for your institution.</div>
+                    <div class="no-price-display" ng-if="offering.display === 'without-price' || !offering.siteLicensePriceUpdated">Ask CARLI to find out the price of this product for your institution.</div>
 
                     <div class="bottom-buttons" ng-hide="vm.userIsReadOnly()">
                         <button type="button" class="carli-button remove-button"
