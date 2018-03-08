@@ -91,14 +91,14 @@
                 </div>
                 <div class="column select">
 
-                    <div class="subscription-buttons" ng-if="offering.display === 'with-price'">
-                        <subscription-button ng-if="offering.pricing.site && offering.siteLicensePriceUpdated"
+                    <div class="subscription-buttons" ng-if="vm.isPriceShowing(offering)">
+                        <subscription-button ng-if="vm.doesHaveSiteLicensePrice(offering)"
                                              ng-hide="vm.userIsReadOnly()"
                                              title="Site License" price="{{ ::vm.getFundedSiteLicensePrice(offering) }}"
                                              selected="vm.isSelected(offering, 'Site License')"
                                              busy-click="vm.selectAndUpdateProduct(offering, 'Site License')">
                         </subscription-button>
-                        <div class="su-buttons" ng-if="offering.pricing.su && offering.pricing.su.length">
+                        <div class="su-buttons" ng-if="vm.doesHaveSUPrices(offering)">
                             <subscription-button ng-repeat="su in offering.pricing.su | orderBy:users"
                                                  ng-hide="vm.userIsReadOnly()"
                                                  ng-if="su.price < offering.pricing.site || !offering.pricing.site"
@@ -108,10 +108,10 @@
                             </subscription-button>
                         </div>
 
-                        <div class="no-price" ng-if="!offering.pricing.site && !offering.pricing.su.length">A price has not been provided for this product. Ask CARLI for more information.</div>
+                        <div class="no-price" ng-if="vm.noPrice(offering)">A price has not been provided for this product. Ask CARLI for more information.</div>
                     </div>
 
-                    <div class="no-price-display" ng-if="offering.display === 'without-price' || !offering.siteLicensePriceUpdated">Ask CARLI to find out the price of this product for your institution.</div>
+                    <div class="no-price-display" ng-if="vm.isPriceHidden(offering)">Ask CARLI to find out the price of this product for your institution.</div>
 
                     <div class="bottom-buttons" ng-hide="vm.userIsReadOnly()">
                         <button type="button" class="carli-button remove-button"
