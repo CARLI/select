@@ -40,8 +40,10 @@ activity-log-list {
 
         li {
             .column {
-                @include flex(1 1 10%);
+                @include flex(0 1 12%);
+                hyphens: auto;
                 padding: .5rem 1rem;
+                word-wrap: break-word;
 
                 &.Date,
                 &.User,
@@ -52,7 +54,7 @@ activity-log-list {
                 &.Action { }
 
                 &.Action {
-                    flex-grow: 4;
+                    flex-grow: 2;
                 }
             }
         }
