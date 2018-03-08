@@ -8,7 +8,7 @@
         <button type="button" id="show-history" class="carli-button" busy-click="vm.showHistoricalPricing()" ng-hide="vm.isOneTimePurchase">Compare to Last Year</button>
         <button type="button" id="toggle-comment-mode" class="toggle-button" ng-class="{ active: vm.isCommentModeEnabled }" busy-click="vm.toggleCommentMode()">Add Pricing Comments<i class="fa fa-comment-o"></i></button>
         <button busy-click="vm.downloadCsv()" class="carli-button" ng-disabled="vm.csvExportIsDisabled()">Export to CSV</button>
-        <button type="button" id="save-site-license-prices" class="carli-button" busy-click="vm.saveOfferings()">Save Changes<i class="fa fa-floppy-o"></i></button>
+        <button type="button" id="save-site-license-prices" class="carli-button" busy-click="vm.saveOfferings()" ng-disabled="!vm.thereAreUnsavedChanges()">Save Changes<i class="fa fa-floppy-o"></i></button>
         <div class="export-message">
             <span ng-if="vm.csvExportIsDisabled()">Exporting to CSV is disabled until changes are saved.</span>
         </div>

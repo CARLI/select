@@ -18,6 +18,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     vm.downloadCsv = downloadCsvDataForExistingPricing;
     vm.downloadComparisonCsv = downloadCsvDataForComparisonPricing;
     vm.csvExportIsDisabled = csvExportIsDisabled;
+    vm.thereAreUnsavedChanges = thereAreUnsavedChanges;
     vm.checkViewOption = checkViewOption;
     vm.isCommentModeEnabled = false;
     vm.showHistoricalPricing = showHistoricalPricing;
@@ -744,11 +745,11 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     }
 
     function csvExportIsDisabled() {
-        return areThereUnsavedChanges();
+        return thereAreUnsavedChanges();
+    }
 
-        function areThereUnsavedChanges() {
-            return vm.changedOfferings.length > 0 || vm.newOfferings.length > 0;
-        }
+    function thereAreUnsavedChanges() {
+        return vm.changedOfferings.length > 0 || vm.newOfferings.length > 0;
     }
 
     function onControllerDestroy(e) {
