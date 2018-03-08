@@ -363,17 +363,15 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     }
 
     function markOfferingUpdated(offering) {
-        if ( offering ) {
-            $scope.$apply(function() {
-                offering.siteLicensePriceUpdated = new Date().toISOString();
+        if (offering) {
+            offering.siteLicensePriceUpdated = new Date().toISOString();
 
-                if ( offering.id ) {
-                    vm.changedOfferings.push(offering);
-                }
-                else {
-                    vm.newOfferings.push(offering);
-                }
-            });
+            if (offering.id) {
+                vm.changedOfferings.push(offering);
+            }
+            else {
+                vm.newOfferings.push(offering);
+            }
 
             enableUnsavedChangesWarning();
         }
@@ -393,7 +391,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         function vendorHasUpdatedTheOfferingsPricing() {
             return offering.siteLicensePriceUpdated;
         }
-        
+
         function setOfferingUpdatedState() {
             if (vendorHasUpdatedTheOfferingsPricing()) {
                 offeringCell.addClass('updated');
@@ -467,7 +465,9 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             offering = generateNewOffering(libraryId, productId);
         }
 
-        applyNewCellPricingToOffering(offeringCell, offering, newPrice);
+        $scope.$apply(function() {
+            applyNewCellPricingToOffering(offeringCell, offering, newPrice);
+        });
         applyCssClassesToOfferingCell(offeringCell, offering);
 
         var newReadOnlyCellContents = createReadOnlyOfferingCell( findSitePrice(offering) );

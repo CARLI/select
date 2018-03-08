@@ -27,6 +27,8 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
     vm.toggleCommentMode = function () {
         vm.isCommentModeEnabled = !vm.isCommentModeEnabled;
     };
+    vm.csvExportIsDisabled = csvExportIsDisabled;
+    vm.thereAreUnsavedChanges = thereAreUnsavedChanges;
 
     activate();
 
@@ -299,6 +301,7 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         var cell = $('<input class="price-editable" role="textbox" type="text" step=".01" min="0">')
             .attr('aria-label', labelText)
             .val(price)
+            .data('oldPrice', price)
             .on('blur', makeReadOnly);
         return cell;
     }
@@ -326,10 +329,17 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         var offeringCell = $cell.parent();
         var productId = offeringCell.data('productId');
 
-        markProductChangedForCell(offeringCell);
+        var oldPrice = $cell.data('oldPrice');
+        var newPrice = $cell.val();
+        var priceAsNumber = parseFloat($cell.val());
 
-        var price = parseFloat($cell.val());
-        var div = createOfferingCellContent(price);
+        if ( oldPrice !== newPrice ) {
+            $scope.$apply(function() {
+                markProductChangedForCell(offeringCell);
+            });
+        }
+
+        var div = createOfferingCellContent(priceAsNumber);
 
         $cell.replaceWith(div);
         setCommentMarkerVisibility(div);
@@ -775,6 +785,14 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
         return vm.products.filter(function (product) {
             return product.id === productId;
         })[0];
+    }
+
+    function csvExportIsDisabled() {
+        return thereAreUnsavedChanges();
+    }
+
+    function thereAreUnsavedChanges() {
+        return Object.keys(vm.changedProductIds).length > 0;
     }
 
     function enableUnsavedChangesWarning() {
