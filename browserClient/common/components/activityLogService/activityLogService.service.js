@@ -18,7 +18,8 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
         logOtpPurchase: logOtpPurchase,
         logOtpPurchaseCancelled: logOtpPurchaseCancelled,
         logLibrarySelectedProduct: logLibrarySelectedProduct,
-        logLibraryRemovedProduct: logLibraryRemovedProduct
+        logLibraryRemovedProduct: logLibraryRemovedProduct,
+        logLibrarySelectedLastYearsSelections: logLibrarySelectedLastYearsSelections
     };
 
     function logActivity( activityLog ){
@@ -183,6 +184,21 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
 
         activity.cycleId = cycle.id;
         activity.cycleName = cycle.name;
+
+        return logActivity(activity);
+    }
+
+    function logLibrarySelectedLastYearsSelections(cycle, library){
+        var activity = {
+            actionDescription: 'Selected last years selections',
+            app: 'library',
+            category: 'selectionAdded'
+        };
+
+        activity.cycleId = cycle.id;
+        activity.cycleName = cycle.name;
+
+        addEntityProperties(activity, library);
 
         return logActivity(activity);
     }

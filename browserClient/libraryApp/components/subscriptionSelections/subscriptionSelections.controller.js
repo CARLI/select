@@ -167,6 +167,8 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
         if ( $window.confirm('This will reset all of your selections to last year') ){
             vm.offerings.forEach(selectLastYear);
 
+            activityLogService.logLibrarySelectedLastYearsSelections(vm.cycle, vm.library);
+
             showSelectionProblemsPopup(selectionProblems);
 
             return offeringService.bulkUpdateOfferings(changedOfferings, vm.cycle)
