@@ -77,7 +77,7 @@
                     <strong>{{ thisYear }}</strong> Price
                     <span class='funding-indicator'>{{ fundingIndicator offering }}</span>
                 </div>
-                <div class="row">
+                <div class="row {{ getUpdatedPricingClass offering }}">
                     {{ fundedSiteLicensePrice offering }}
                     {{#if offering.vendorComments.site }}
                         <div tabindex="0"

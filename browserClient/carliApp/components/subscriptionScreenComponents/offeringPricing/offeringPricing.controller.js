@@ -11,7 +11,17 @@ function offeringPricingController($scope, offeringService){
     }
 
     function watchOfferingPrice() {
-        $scope.$watch('vm.offering.pricing.site', copyFundedPriceToViewModel);
+        $scope.$watch('vm.offering.pricing.site', siteLicensePricingWasUpdated);
+    }
+
+    function siteLicensePricingWasUpdated(oldPrice, newPrice) {
+        if (oldPrice !== newPrice)
+            updateSiteLicensePricingTimestamp();
+        copyFundedPriceToViewModel();
+    }
+
+    function updateSiteLicensePricingTimestamp() {
+        vm.offering.siteLicensePriceUpdated = new Date().toISOString();
     }
 
     function copyFundedPriceToViewModel() {

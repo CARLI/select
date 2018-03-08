@@ -28,6 +28,7 @@ Berksfile.lock
 #Couch
 couchdb.stderr
 couchdb.stdout
+erl_crash.dump
 
 #Node
 npm-debug.log

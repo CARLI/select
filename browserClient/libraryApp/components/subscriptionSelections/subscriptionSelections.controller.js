@@ -45,6 +45,11 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
     vm.unselected = unselected;
     vm.unSelectProduct = unSelectProduct;
 
+    vm.noPrice = noPrice;
+    vm.shouldShowPrice = shouldShowPrice;
+    vm.doesHaveSiteLicensePrice = doesHaveSiteLicensePrice;
+    vm.doesHaveSUPrices = doesHaveSUPrices;
+
     activate();
 
     function activate(){
@@ -412,10 +417,28 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
     function isFunded(offering) {
         return offeringService.isFunded(offering);
     }
+
     function getFundedSelectionPrice(offering) {
         return offeringService.getFundedSelectionPrice(offering);
     }
+
     function getFundedSiteLicensePrice(offering) {
         return offeringService.getFundedSiteLicensePrice(offering);
+    }
+
+    function noPrice(offering) {
+        return !offering.pricing.site && !offering.pricing.su.length;
+    }
+
+    function shouldShowPrice(offering) {
+        return offering.display === 'with-price' && offering.siteLicensePriceUpdated;
+    }
+
+    function doesHaveSiteLicensePrice(offering) {
+        return offering.pricing.site && offering.siteLicensePriceUpdated;
+    }
+
+    function doesHaveSUPrices(offering) {
+        return offering.pricing.su && offering.pricing.su.length;
     }
 }

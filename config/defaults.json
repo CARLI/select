@@ -20,7 +20,7 @@
   "memberDb": {
     "connectionLimit": 10,
     "host": "localhost",
-    "database": "member_db_name"
+    "database": "carli_crm"
   },
   "maintenanceMode": {
     "enabled": false,
