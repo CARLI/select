@@ -46,8 +46,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
     vm.unSelectProduct = unSelectProduct;
 
     vm.noPrice = noPrice;
-    vm.isPriceHidden = isPriceHidden;
-    vm.isPriceShowing = isPriceShowing;
+    vm.shouldShowPrice = shouldShowPrice;
     vm.doesHaveSiteLicensePrice = doesHaveSiteLicensePrice;
     vm.doesHaveSUPrices = doesHaveSUPrices;
 
@@ -431,11 +430,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
         return !offering.pricing.site && !offering.pricing.su.length;
     }
 
-    function isPriceHidden(offering) {
-        return offering.display === 'without-price' || !offering.siteLicensePriceUpdated;
-    }
-
-    function isPriceShowing(offering) {
+    function shouldShowPrice(offering) {
         return offering.display === 'with-price' && offering.siteLicensePriceUpdated;
     }
 
