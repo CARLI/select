@@ -17,6 +17,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     vm.saveOfferings = saveOfferings;
     vm.downloadCsv = downloadCsvDataForExistingPricing;
     vm.downloadComparisonCsv = downloadCsvDataForComparisonPricing;
+    vm.csvExportIsDisabled = csvExportIsDisabled;
     vm.checkViewOption = checkViewOption;
     vm.isCommentModeEnabled = false;
     vm.showHistoricalPricing = showHistoricalPricing;
@@ -362,14 +363,16 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
     function markOfferingUpdated(offering) {
         if ( offering ) {
-            offering.siteLicensePriceUpdated = new Date().toISOString();
+            $scope.$apply(function() {
+                offering.siteLicensePriceUpdated = new Date().toISOString();
 
-            if ( offering.id ) {
-                vm.changedOfferings.push(offering);
-            }
-            else {
-                vm.newOfferings.push(offering);
-            }
+                if ( offering.id ) {
+                    vm.changedOfferings.push(offering);
+                }
+                else {
+                    vm.newOfferings.push(offering);
+                }
+            });
 
             enableUnsavedChangesWarning();
         }
@@ -738,6 +741,14 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         return vm.products.filter(function (product) {
             return product.id === productId;
         })[0];
+    }
+
+    function csvExportIsDisabled() {
+        return areThereUnsavedChanges();
+
+        function areThereUnsavedChanges() {
+            return vm.changedOfferings.length > 0 || vm.newOfferings.length > 0;
+        }
     }
 
     function onControllerDestroy(e) {
