@@ -46,19 +46,31 @@ nav[nav-bar] {
         width: $nav-button-width;
         a {
             @include vendor-prefix('align-items', 'center');
-            border-top: $border-top-width solid transparent;
             color: $inactive-fg-color;
             @include flexbox;
             height: $height;
             padding: 0 1em;
+            position: relative;
             text-decoration: none;
+            transition: color 250ms 50ms;
+
+            &:after {
+                background-color: $active-fg-color;
+                content: "";
+                left: 0;
+                height: 3px;
+                position: absolute;;
+                right: 0;
+                top: 0;
+                transform: scaleX(0);
+                transition: transform 250ms;
+            }
 
             span {
                 display: block;
                 @include flex(1 1 auto);
             }
 
-            position: relative;
             .badge {
                 position: absolute;
                 top: -12px;
@@ -70,8 +82,11 @@ nav[nav-bar] {
         }
         &.active {
             a {
-                border-top-color: $active-fg-color;
                 color: $active-fg-color;
+
+                &:after {
+                    transform: scaleX(1);
+                }
             }
         }
     }
