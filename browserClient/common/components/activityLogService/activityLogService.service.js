@@ -19,7 +19,8 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
         logOtpPurchaseCancelled: logOtpPurchaseCancelled,
         logLibrarySelectedProduct: logLibrarySelectedProduct,
         logLibraryRemovedProduct: logLibraryRemovedProduct,
-        logLibrarySelectedLastYearsSelections: logLibrarySelectedLastYearsSelections
+        logLibrarySelectedLastYearsSelections: logLibrarySelectedLastYearsSelections,
+        logVendorChangeDescription: logVendorChangeDescription
     };
 
     function logActivity( activityLog ){
@@ -199,6 +200,22 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
         activity.cycleName = cycle.name;
 
         addEntityProperties(activity, library);
+
+        return logActivity(activity);
+    }
+
+    function logVendorChangeDescription(cycle, vendor, product){
+        var activity = {
+            actionDescription: vendor.name + ' changed description for ' + product.name,
+            app: 'vendor',
+            category: 'vendorModified'
+        };
+
+        activity.cycleId = cycle.id;
+        activity.cycleName = cycle.name;
+
+        addEntityProperties(activity, vendor);
+        addEntityProperties(activity, product);
 
         return logActivity(activity);
     }
