@@ -1,6 +1,7 @@
 /* This file exists to tell Browserify what to package into the carliModules for the vendor app. */
 
 module.exports = {
+    ActivityLog: require('../CARLI/Entity/ActivityLogRepository'),
     Auth: require('../CARLI/Auth'),
     AuthMiddleware: require('../middleware/browserAdapters/auth'),
     CouchDbStore: require('../CARLI/Store/CouchDb/Store'),
