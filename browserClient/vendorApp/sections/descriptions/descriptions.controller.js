@@ -1,7 +1,7 @@
 angular.module('vendor.sections.descriptions')
 .controller('descriptionsController', descriptionsController);
 
-function descriptionsController( $scope, $rootScope, $q, alertService, cycleService, productService, userService, vendorDataService, vendorStatusService ){
+function descriptionsController( $scope, $rootScope, $q, activityLogService, alertService, cycleService, productService, userService, vendorDataService, vendorStatusService ){
     var vm = this;
 
     vm.maxLength = 500;
@@ -13,7 +13,6 @@ function descriptionsController( $scope, $rootScope, $q, alertService, cycleServ
     vm.user = {};
 
     activate();
-
 
     function activate(){
         vm.cycle = cycleService.getCurrentCycle();
@@ -93,7 +92,10 @@ function descriptionsController( $scope, $rootScope, $q, alertService, cycleServ
 
             function saveProduct( product ){
                 product.cycle = cycle;
-                return productService.update(product);
+                return productService.update(product)
+                    .then(function(id) {
+                        return logDescriptionChangedForProduct(product);
+                    });
             }
         }
 
@@ -108,6 +110,12 @@ function descriptionsController( $scope, $rootScope, $q, alertService, cycleServ
 
         function updateVendorStatus(){
             return vendorStatusService.updateVendorStatusActivity( 'Product Descriptions Updated', vm.vendorId, cycleService.getCurrentCycle() );
+        }
+
+        function logDescriptionChangedForProduct(product) {
+            var cycle = vm.cycle;
+            var vendor = vm.user.vendor;
+            return activityLogService.logVendorChangeDescription(cycle, vendor, product);
         }
 
         function syncData(){

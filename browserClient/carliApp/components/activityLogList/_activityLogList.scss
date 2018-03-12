@@ -12,23 +12,29 @@ activity-log-list {
     }
 
     .controls {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
         margin-bottom: 1rem;
 
         .app-filter-controls {
-            float: left;
-            position: relative;
-            top: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            padding-top: 1rem;
 
             radio {
-                margin-right: 1rem;
+                margin: 0 1rem 1rem 0;
             }
         }
 
         .date-filter-controls {
-            float: right;
+            align-items: center;
+            display: flex;
+            flex: 0 0 auto;
 
             view-edit-date {
                 display: inline-block;
+                margin-right: 1ex;
                 width: 100px;
             }
         }
