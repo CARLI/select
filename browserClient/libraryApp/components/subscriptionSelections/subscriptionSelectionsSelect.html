@@ -30,64 +30,10 @@
             </div>
             <div class="content" ng-if="vm.openProduct[offering.product.id]">
                 <div class="column product-info">
-                    <div class="label" ng-if="(offering.product.productUrl || offering.product.vendor.websiteUrl)">Product Website</div>
-                    <div class="h3" ng-bind-html="(offering.product.productUrl || offering.product.vendor.websiteUrl) | linky:'_blank'"></div>
-
-                    <div class="label">Product Description</div>
-                    <p>{{ ::offering.product.description }}</p>
-
-                    <div class="label">Vendor Pricing Comments</div>
-                    <vendor-comments-table offering="offering"></vendor-comments-table>
-
-                    <vendor-sales-contact vendor="offering.product.vendor"></vendor-sales-contact>
+                    <product-info offering="offering"></product-info>
                 </div>
                 <div class="column license-info">
-                    <div class="label">Comments:</div>
-                    <p>{{ offering.libraryComments || offering.product.comments}}</p>
-
-                    <div class="termsAndHistory">
-                        <div class="terms">
-                            <div class="label">Specific Terms</div>
-                            <ul class="terms-list">
-                                <li>
-                                    <span class="label">Download:</span>
-                                    <span class="term">{{ offering.product.terms.downloadTerms || offering.product.license.terms.downloadTerms }}</span>
-                                </li>
-                                <li>
-                                    <span class="label">ILL:</span>
-                                    <span class="term">{{ offering.product.terms.interLibraryLoanTerms || offering.product.license.terms.interLibraryLoanTerms }}</span>
-                                </li>
-
-                                <li>
-                                    <span class="label">Course Packs:</span>
-                                    <span class="term">{{ offering.product.terms.coursePacksTerms || offering.product.license.terms.coursePacksTerms }}</span>
-                                </li>
-
-                                <li>
-                                    <span class="label">Print:</span>
-                                    <span class="term">{{ offering.product.terms.printTerms || offering.product.license.terms.printTerms}}</span>
-                                </li>
-
-                                <li>
-                                    <span class="label">Limited Sharing for Scholarly Purposes:</span>
-                                    <span class="term">{{ offering.product.terms.limitedScholarlySharingTerms || offering.product.license.terms.limitedScholarlySharingTerms}}</span>
-                                </li>
-
-                                <li>
-                                    <span class="label">Use by Walk-ins:</span>
-                                    <span class="term">{{ offering.product.terms.walkinTerms || offering.product.license.terms.walkinTerms}}</span>
-                                </li>
-
-                                <li>
-                                    <span class="label">E-Reserves:</span>
-                                    <span class="term">{{ offering.product.terms.eReservesTerms || offering.product.license.terms.eReservesTerms}}</span>
-                                </li>
-                            </ul>
-                        </div>
-                        <subscription-history-table cycle="vm.cycle" product="::offering.product" library="vm.library"></subscription-history-table>
-                    </div>
-
-                    <license-list license-id="offering.product.license.id"></license-list>
+                    <license-info offering="offering" cycle="vm.cycle"></license-info>
                 </div>
                 <div class="column select">
 
