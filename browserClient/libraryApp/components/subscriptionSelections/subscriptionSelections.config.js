@@ -5,5 +5,7 @@ angular.module('library.subscriptionSelections',[
     'common.subscriptionHistoryTable',
     'library.licenseList',
     'library.subscriptionProgress',
-    'library.subscriptionButton'
+    'library.subscriptionButton',
+    'library.productInfo',
+    'library.licenseInfo'
 ]);

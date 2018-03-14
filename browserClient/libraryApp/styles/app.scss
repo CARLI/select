@@ -41,6 +41,7 @@ $fa-font-path: "/libraryApp/fonts";
 }
 
 @import "../components/entityForms/editForm";
+@import "../components/libraryProductsListExpandable/libraryProductsListExpandable";
 @import "../components/licenseList/licenseList";
 @import "../components/subscriptionButton/subscriptionButton";
 @import "../components/subscriptionProgress/subscriptionProgress";

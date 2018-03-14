@@ -1,0 +1,46 @@
+<div class="label">Comments:</div>
+<p>{{ vm.offering.libraryComments || vm.offering.product.comments}}</p>
+
+<div class="termsAndHistory">
+    <div class="terms">
+        <div class="label">Specific Terms</div>
+        <ul class="terms-list">
+            <li>
+                <span class="label">Download:</span>
+                <span class="term">{{ vm.offering.product.terms.downloadTerms || vm.offering.product.license.terms.downloadTerms }}</span>
+            </li>
+            <li>
+                <span class="label">ILL:</span>
+                <span class="term">{{ vm.offering.product.terms.interLibraryLoanTerms || vm.offering.product.license.terms.interLibraryLoanTerms }}</span>
+            </li>
+
+            <li>
+                <span class="label">Course Packs:</span>
+                <span class="term">{{ vm.offering.product.terms.coursePacksTerms || vm.offering.product.license.terms.coursePacksTerms }}</span>
+            </li>
+
+            <li>
+                <span class="label">Print:</span>
+                <span class="term">{{ vm.offering.product.terms.printTerms || vm.offering.product.license.terms.printTerms}}</span>
+            </li>
+
+            <li>
+                <span class="label">Limited Sharing for Scholarly Purposes:</span>
+                <span class="term">{{ vm.offering.product.terms.limitedScholarlySharingTerms || vm.offering.product.license.terms.limitedScholarlySharingTerms}}</span>
+            </li>
+
+            <li>
+                <span class="label">Use by Walk-ins:</span>
+                <span class="term">{{ vm.offering.product.terms.walkinTerms || vm.offering.product.license.terms.walkinTerms}}</span>
+            </li>
+
+            <li>
+                <span class="label">E-Reserves:</span>
+                <span class="term">{{ vm.offering.product.terms.eReservesTerms || vm.offering.product.license.terms.eReservesTerms}}</span>
+            </li>
+        </ul>
+    </div>
+    <subscription-history-table cycle="vm.cycle" product="::vm.offering.product" library="vm.library"></subscription-history-table>
+</div>
+
+<license-list license-id="vm.offering.product.license.id"></license-list>
