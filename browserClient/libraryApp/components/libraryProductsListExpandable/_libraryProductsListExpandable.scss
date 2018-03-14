@@ -1,0 +1,20 @@
+.with-expandable-info {
+    flex-wrap: wrap;
+}
+
+.info-container {
+    @include flexbox();
+    border-top: $default-border;
+    padding: 1rem;
+    width: 100%;
+
+    .product-info-container {
+        flex: 1 1 0;
+        margin-right: .5rem;
+    }
+
+    .license-info-container {
+        flex: 1 1 0;
+        margin-left: .5rem;
+    }
+}

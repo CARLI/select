@@ -19,6 +19,9 @@ function libraryProductsListExpandableController( $q, controllerBaseService, csv
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.exportProductList = exportProductList;
 
+    vm.openOfferings = {};
+    vm.toggleOffering = toggleOffering;
+
     controllerBaseService.addSortable(vm, vm.sortOptions.productName);
     activate();
 
@@ -69,5 +72,9 @@ function libraryProductsListExpandableController( $q, controllerBaseService, csv
                 offeringService.getFundedSelectionPrice(offering)
             ];
         }
+    }
+
+    function toggleOffering(offering) {
+        vm.openOfferings[offering.id] = !vm.openOfferings[offering.id];
     }
 }

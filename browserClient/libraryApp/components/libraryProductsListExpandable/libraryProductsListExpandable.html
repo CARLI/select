@@ -7,13 +7,26 @@
         <div class="sortable column su" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.su, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.su)">S.U.</div>
         <div class="sortable column cost" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.cost, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.cost)">Cost</div>
     </li>
-    <li class="product" ng-repeat="offering in vm.selectedOfferings | orderBy: vm.orderBy:vm.reverse track by offering.id">
-        <div class="column product">{{ vm.getProductDisplayName(offering.product) }}</div>
+    <li class="product with-expandable-info" ng-repeat="offering in vm.selectedOfferings | orderBy: vm.orderBy:vm.reverse track by offering.id" ng-class="{ collapsed: !vm.openOfferings[offering.id] }">
+        <div class="column product collapsible-header" ng-click="vm.toggleOffering(offering)">
+            <button type="button" class="angle-icon-container">
+                <fa name="angle-down"></fa>
+            </button>
+            {{ vm.getProductDisplayName(offering.product) }}
+        </div>
         <div class="column vendor">{{ offering.product.vendor.name }}</div>
         <div class="column license" data-license-id="{{ offering.product.license.id }}">{{ offering.product.license.name }}</div>
         <div class="column comment">{{ offering.libraryComments || offering.product.comments }}</div>
         <div class="column su">{{ offering.selection.users }}</div>
         <div class="column cost">{{ vm.getFundedSelectionPrice(offering) | currency }}</div>
+        <div class="info-container" ng-if="vm.openOfferings[offering.id]">
+            <div class="product-info-container">
+                <product-info offering="offering"></product-info>
+            </div>
+            <div class="license-info-container">
+                <license-info offering="offering" cycle="vm.cycle"></license-info>
+            </div>
+        </div>
     </li>
     <li class="summary-row">
         <div class="column"><span class="total-label">Total</span></div>
