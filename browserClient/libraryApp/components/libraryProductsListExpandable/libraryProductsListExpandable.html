@@ -12,7 +12,9 @@
             <button type="button" class="angle-icon-container">
                 <fa name="angle-down"></fa>
             </button>
-            {{ vm.getProductDisplayName(offering.product) }}
+            <div class="product-name">
+                {{ vm.getProductDisplayName(offering.product) }}
+            </div>
         </div>
         <div class="column vendor">{{ offering.product.vendor.name }}</div>
         <div class="column license" data-license-id="{{ offering.product.license.id }}">{{ offering.product.license.name }}</div>
