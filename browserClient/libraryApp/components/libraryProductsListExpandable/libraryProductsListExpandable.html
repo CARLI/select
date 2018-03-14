@@ -7,7 +7,7 @@
         <div class="sortable column su" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.su, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.su)">S.U.</div>
         <div class="sortable column cost" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.cost, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.cost)">Cost</div>
     </li>
-    <li class="product with-expandable-info" ng-repeat="offering in vm.selectedOfferings | orderBy: vm.orderBy:vm.reverse track by offering.id" ng-class="{ collapsed: !vm.openOfferings[offering.id] }">
+    <li class="product with-expandable-info" collapsible ng-repeat="offering in vm.selectedOfferings | orderBy: vm.orderBy:vm.reverse track by offering.id">
         <div class="column product collapsible-header" ng-click="vm.toggleOffering(offering)">
             <button type="button" class="angle-icon-container">
                 <fa name="angle-down"></fa>
