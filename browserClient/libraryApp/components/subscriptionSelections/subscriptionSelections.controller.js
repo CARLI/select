@@ -46,9 +46,10 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
     vm.unSelectProduct = unSelectProduct;
 
     vm.noPrice = noPrice;
-    vm.shouldShowPrice = shouldShowPrice;
-    vm.doesHaveSiteLicensePrice = doesHaveSiteLicensePrice;
-    vm.doesHaveSUPrices = doesHaveSUPrices;
+    vm.shouldDisplayPricing = shouldDisplayPricing;
+    vm.shouldShowSiteLicensePrice = shouldShowSiteLicensePrice;
+    vm.shouldShowSUPrices = shouldShowSUPrices;
+    vm.shouldShowSpecificSuPrice = shouldShowSpecificSuPrice;
 
     activate();
 
@@ -428,19 +429,39 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
         return offeringService.getFundedSiteLicensePrice(offering);
     }
 
+    function showPrice(offering) {
+        return offering.display === 'with-price'
+    }
+
+    function hasUpdatedSiteLicensePrice(offering) {
+        return offering.pricing.site && offering.siteLicensePriceUpdated;
+    }
+
+    function hasUpdatedSuPricing(offering) {
+        return offering.pricing.su && offering.pricing.su.length && offering.suPricesUpdated;
+    }
+
     function noPrice(offering) {
         return !offering.pricing.site && !offering.pricing.su.length;
     }
 
-    function shouldShowPrice(offering) {
-        return offering.display === 'with-price' && offering.siteLicensePriceUpdated;
+    function shouldDisplayPricing(offering) {
+        return showPrice(offering) && (hasUpdatedSiteLicensePrice(offering) || hasUpdatedSuPricing(offering));
     }
 
-    function doesHaveSiteLicensePrice(offering) {
-        return offering.pricing.site && offering.siteLicensePriceUpdated;
+    function shouldShowSiteLicensePrice(offering) {
+        return showPrice(offering) && hasUpdatedSiteLicensePrice(offering);
     }
 
-    function doesHaveSUPrices(offering) {
-        return offering.pricing.su && offering.pricing.su.length;
+    function shouldShowSUPrices(offering) {
+        return showPrice(offering) && hasUpdatedSuPricing(offering);
     }
+
+    function shouldShowSpecificSuPrice(offering, su) {
+        if (offering.pricing.site) {
+            return su.price < offering.pricing.site;
+        }
+        return true;
+    }
+
 }

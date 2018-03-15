@@ -9,7 +9,7 @@
         </li>
         <li class="offering display-{{ ::offering.display }}" ng-class="{ collapsed: !vm.openProduct[offering.product.id] }"
             ng-repeat="offering in vm.offerings | orderBy: vm.orderBy:vm.reverse track by offering.id"
-            ng-if="::offering.display !== 'none'">
+            ng-if="::offering.display !== 'none'" data-offering="{{ ::offering.id }}">
             <div class="collapsible-header" ng-click="vm.toggleProduct(offering.product)">
                 <div class="column">
                     <button type="button" class="angle-icon-container">
@@ -37,17 +37,17 @@
                 </div>
                 <div class="column select">
 
-                    <div class="subscription-buttons" ng-if="vm.shouldShowPrice(offering)">
-                        <subscription-button ng-if="vm.doesHaveSiteLicensePrice(offering)"
+                    <div class="subscription-buttons" ng-if="vm.shouldDisplayPricing(offering)">
+                        <subscription-button ng-if="vm.shouldShowSiteLicensePrice(offering)"
                                              ng-hide="vm.userIsReadOnly()"
                                              title="Site License" price="{{ ::vm.getFundedSiteLicensePrice(offering) }}"
                                              selected="vm.isSelected(offering, 'Site License')"
                                              busy-click="vm.selectAndUpdateProduct(offering, 'Site License')">
                         </subscription-button>
-                        <div class="su-buttons" ng-if="vm.doesHaveSUPrices(offering)">
+                        <div class="su-buttons" ng-if="vm.shouldShowSUPrices(offering)">
                             <subscription-button ng-repeat="su in offering.pricing.su | orderBy:users"
                                                  ng-hide="vm.userIsReadOnly()"
-                                                 ng-if="su.price < offering.pricing.site || !offering.pricing.site"
+                                                 ng-if="vm.shouldShowSpecificSuPrice(offering, su)"
                                                  title="{{ su.users }} Simultaneous Users" price="{{ su.price }}"
                                                  selected="vm.isSelected(offering, su.users)"
                                                  busy-click="vm.selectAndUpdateProduct(offering, su.users)">
@@ -57,7 +57,7 @@
                         <div class="no-price" ng-if="vm.noPrice(offering)">A price has not been provided for this product. Ask CARLI for more information.</div>
                     </div>
 
-                    <div class="no-price-display" ng-if="!vm.shouldShowPrice(offering)">Ask CARLI to find out the price of this product for your institution.</div>
+                    <div class="no-price-display" ng-if="!vm.shouldDisplayPricing(offering)">Ask CARLI to find out the price of this product for your institution.</div>
 
                     <div class="bottom-buttons" ng-hide="vm.userIsReadOnly()">
                         <button type="button" class="carli-button remove-button"
