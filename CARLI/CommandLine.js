@@ -15,7 +15,7 @@ function asCouchAdmin(doSomething) {
         .then(doSomething)
         .catch(logError)
         .finally(logoutOfCouch)
-        .finally(terminateProcess);
+        ;//.finally(terminateProcess);
 }
 
 function loginToCouch() {

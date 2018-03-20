@@ -293,12 +293,19 @@ module.exports = function (storeOptions) {
         var deferred = Q.defer();
 
         request.delete(storeOptions.privilegedCouchDbUrl + '/' + dbName, function(error, response, body) {
-            if (error) {
-                deferred.reject(error);
+            var parsedBody = {};
+            if ( body ){
+                parsedBody = JSON.parse(body);
+            }
+
+            var err = error || parsedBody.error;
+
+            if (err) {
+                deferred.reject('Error deleting ' + dbName);
+                Logger.log('Error deleting database ' + dbName, err);
             } else if (response.statusCode >= 200 && response.statusCode <= 299) {
                 deferred.resolve(dbName + ' deleted');
             } else {
-                Logger.log('failed to delete database', body);
                 deferred.reject("Could not delete database " + dbName + " statusCode=" + response.statusCode);
             }
         });
