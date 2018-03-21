@@ -42,7 +42,7 @@ module.exports = function (storeOptions) {
                 }
 
                 if (data && data.error) {
-                    Logger.log("REJECT 3");
+                    Logger.log("CouchReqest Error in Response from " + requestOptions.url, data);
                     deferred.reject(carliError(data, statusCode));
                 }
                 else {

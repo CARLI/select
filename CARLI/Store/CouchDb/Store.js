@@ -30,21 +30,22 @@ module.exports = function (inputOptions) {
 
     function getDataFor(id) {
         var deferred = Q.defer();
+        var requestUrl = db_host + '/' + id;
 
-        request({ url: db_host + '/' + id },
+        request({ url: requestUrl },
             function (requestError, response, body) {
                 if (!body) {
-                    Logger.log("Got empty body for " + db_host + '/' + id);
+                    Logger.log("Got empty body for " + requestUrl);
                     Logger.log(requestError);
                 }
                 var data = JSON.parse(body);
 
                 if (requestError) {
-                    Logger.log("REJECT 1");
+                    Logger.log("Couch Get Data Request Error for " + requestUrl, requestError);
                     deferred.reject(carliError(requestError, response.statusCode));
                 }
                 else if (data.error){
-                    Logger.log("REJECT 2");
+                    Logger.log("Couch Get Data Error in Response for " + requestUrl, data);
                     deferred.reject(carliError(data, response.statusCode));
                 }
                 else {
