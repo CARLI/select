@@ -24,8 +24,14 @@ function deleteCyclesController(alertService, cycleService) {
             return cycleService.deleteCycle(cycle)
                 .then(function(msg) {
                     alertService.putAlert('Cycle deleted', {severity: 'success'});
-                    activate();
+                    removeDeletedCycleFromList(cycle);
                 });
         }
+    }
+
+    function removeDeletedCycleFromList(cycle) {
+        vm.cycles = vm.cycles.filter(function(c) {
+            return c !== cycle;
+        });
     }
 }

@@ -271,9 +271,9 @@ function deleteCycle(cycleId) {
 
             Logger.log('Deleting databases', listOfDatabasesToDelete);
 
-            return Q.all(listOfDatabasesToDelete.map(couchUtils.deleteDatabase));
+            return Q.allSettled(listOfDatabasesToDelete.map(couchUtils.deleteDatabase));
         })
-        .then(function(){
+        .finally(function(){
             Logger.log('Deleting cycle doc', cycleId);
             return cycleRepository.delete(cycleId);
         });
