@@ -1,7 +1,7 @@
 angular.module('vendor.sections.simultaneousUserPrices')
     .controller('simultaneousUserPricesController', simultaneousUserPricesController);
 
-function simultaneousUserPricesController($scope, $q, $filter, alertService, authService, csvExportService, cycleService, offeringService, productService, simultaneousUserPricesCsvData, vendorDataService, vendorStatusService) {
+function simultaneousUserPricesController($scope, $q, $filter, activityLogService, alertService, authService, csvExportService, cycleService, offeringService, productService, simultaneousUserPricesCsvData, vendorDataService, vendorStatusService) {
     var vm = this;
     vm.changedProductIds = {};
     vm.loadingPromise = null;
@@ -513,7 +513,16 @@ function simultaneousUserPricesController($scope, $q, $filter, alertService, aut
 
         function updateOfferingsForAllLibrariesForProduct(productId) {
             var newSuPricing = newSuPricingByProduct[productId];
-            return offeringService.updateSuPricingForAllLibrariesForProduct(vm.vendorId, productId, newSuPricing, vm.bulkCommentsTemporaryStorage[productId]);
+            return offeringService
+                .updateSuPricingForAllLibrariesForProduct(vm.vendorId, productId, newSuPricing, vm.bulkCommentsTemporaryStorage[productId])
+                .then(logSuPriceUpdate);
+        }
+
+        function logSuPriceUpdate(savedIds) {
+            return savedIds.map(function(savedId) {
+                Logger.log('logSuPriceUpdate: ', savedId, vm.products);
+                //activityLogService.logVendorChangeSUPrice(vm.cycle, vm.vendor);
+            });
         }
 
         function updateVendorStatus() {

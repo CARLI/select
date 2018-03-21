@@ -1,7 +1,7 @@
 angular.module('vendor.sections.siteLicensePrices')
     .controller('siteLicensePricesController', siteLicensePricesController);
 
-function siteLicensePricesController($scope, $q, $filter, alertService, authService, csvExportService, cycleService, libraryService, offeringService, productService, siteLicensePricesCsvData, vendorDataService, vendorStatusService) {
+function siteLicensePricesController($scope, $q, $filter, activityLogService, alertService, authService, csvExportService, cycleService, libraryService, offeringService, productService, siteLicensePricesCsvData, vendorDataService, vendorStatusService) {
     var vm = this;
 
     vm.changedOfferings = [];
@@ -508,11 +508,24 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
     function saveAllChangedOfferings(changedOfferings) {
         changedOfferings = changedOfferings.map(clearManualFlagOverrides);
-        return offeringService.bulkUpdateOfferings(changedOfferings, vm.cycle);
+        return offeringService
+            .bulkUpdateOfferings(changedOfferings, vm.cycle)
+            .then(logOfferingChanges);
 
         function clearManualFlagOverrides(offering) {
             delete offering.flagged;
             return offering;
+        }
+
+        function logOfferingChanges(changedIds) {
+            var successfullyChangedOfferings = changedOfferings.filter(function(o) {
+                return changedIds.indexOf(o.id) > -1;
+            });
+            return $q.all(successfullyChangedOfferings.map(function(offering) {
+                activityLogService.logSiteLicenseChangePrice(vm.cycle, offering);
+            })).then(function() {
+                return changedIds;
+            });
         }
     }
 

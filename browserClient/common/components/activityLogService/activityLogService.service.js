@@ -20,7 +20,9 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
         logLibrarySelectedProduct: logLibrarySelectedProduct,
         logLibraryRemovedProduct: logLibraryRemovedProduct,
         logLibrarySelectedLastYearsSelections: logLibrarySelectedLastYearsSelections,
-        logVendorChangeDescription: logVendorChangeDescription
+        logVendorChangeDescription: logVendorChangeDescription,
+        logVendorChangeSUPrice: logVendorChangeSUPrice,
+        logSiteLicenseChangePrice: logSiteLicenseChangePrice
     };
 
     function logActivity( activityLog ){
@@ -216,6 +218,37 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
 
         addEntityProperties(activity, vendor);
         addEntityProperties(activity, product);
+
+        return logActivity(activity);
+    }
+
+    function logVendorChangeSUPrice(cycle, vendor, product){
+        var activity = {
+            actionDescription: vendor.name + ' changed SU price for ' + product.name,
+            app: 'vendor',
+            category: 'vendorModified'
+        };
+
+        activity.cycleId = cycle.id;
+        activity.cycleName = cycle.name;
+
+        addEntityProperties(activity, vendor);
+        addEntityProperties(activity, product);
+
+        return logActivity(activity);
+    }
+
+    function logSiteLicenseChangePrice(cycle, offering){
+        var activity = {
+            actionDescription: offering.product.vendor.name + ' changed Site License price for ' + offering.product.name,
+            app: 'vendor',
+            category: 'vendorModified'
+        };
+
+        activity.cycleId = cycle.id;
+        activity.cycleName = cycle.name;
+
+        addEntityProperties(activity, offering);
 
         return logActivity(activity);
     }
