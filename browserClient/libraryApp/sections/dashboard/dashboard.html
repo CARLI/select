@@ -1,4 +1,3 @@
-
 <section class="content" id="dashboard" cg-busy="vm.loadingPromise">
     <h1>{{ vm.library.name }}'s Products</h1>
 
@@ -15,7 +14,7 @@
     <ol class="cycle-list">
         <li class="cycle" ng-repeat="cycle in vm.cycles | orderBy:'-year' track by cycle.id" id="{{ cycle.id }}">
             <h2>{{ cycle.name }}</h2>
-            <library-products-list cycle="cycle" library-id="{{ vm.library.id }}" license-on-click="vm.showLicenseAgreements"></library-products-list>
+            <library-products-list-expandable cycle="cycle" library-id="{{ vm.library.id }}" license-on-click="vm.showLicenseAgreements"></library-products-list-expandable>
 
             <ask-carli-button context="Dashboard - {{ cycle.name }} products list"></ask-carli-button>
             <button class="carli-button" ng-if="cycle.id !== 'one-time-purchase-products-cycle'" ng-click="vm.viewUnselectedProductsFor(cycle)">

@@ -8,7 +8,9 @@ function newCycleFormController( $scope, $rootScope, $location, alertService, cy
     vm.sourceCycle = {};
     vm.matchingCyclesOfType = [];
     vm.cycleTypeOptions = ['Calendar Year','Fiscal Year','Alternative Cycle'];
+    vm.cycleNamePreview = '';
     vm.updateCopyFromOptions = updateCopyFromOptions;
+    vm.updateCycleNamePreview = updateCycleNamePreview;
     vm.populateFormForSourceCycle = populateFormForSourceCycle;
     vm.resetSourceCycle = resetSourceCycle;
     vm.saveCycle = saveCycle;
@@ -30,7 +32,7 @@ function newCycleFormController( $scope, $rootScope, $location, alertService, cy
 
     function saveCycle() {
         var creationPromise;
-        if (vm.sourceCycle && vm.sourceCycle.getDatabaseName()) {
+        if (vm.sourceCycle && vm.sourceCycle.getDatabaseName) {
             creationPromise = cycleService.createCycleFrom(vm.sourceCycle, vm.cycle);
         } else {
             vm.cycle.status = cycleService.CYCLE_STATUS_EDITING_PRODUCT_LIST;
@@ -65,6 +67,10 @@ function newCycleFormController( $scope, $rootScope, $location, alertService, cy
                 }
             });
 
+    }
+
+    function updateCycleNamePreview() {
+        vm.cycleNamePreview = vm.cycle.year ? cycleService.generateCycleName(vm.cycle) : '';
     }
 
     function resetSourceCycle() {

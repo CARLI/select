@@ -98,6 +98,14 @@ function ensureDefaultsForStatus( libraryStatus, cycle ){
     return _.extend(defaults, libraryStatus);
 }
 
+function ensureLibraryStatus(libraryId, cycle) {
+    setCycle(cycle);
+    return getStatusForLibrary(libraryId, cycle)
+        .then(function(libraryStatus) {
+            return libraryStatus.id ? libraryStatus.id : createLibraryStatus(libraryStatus, cycle);
+        });
+}
+
 function setCycle(cycle) {
     if (cycle === undefined) {
         throw Error("Cycle is required");
@@ -155,6 +163,14 @@ function updateLastActivity(libraryId, cycle) {
     }
 }
 
+function reset(statusObject) {
+    statusObject.lastActivity = null;
+    statusObject.description = '';
+    statusObject.isComplete = false;
+
+    return statusObject;
+}
+
 function setStore(store) {
     storeOptions = store.getOptions();
     LibraryStatusRepository.setStore(store);
@@ -170,9 +186,11 @@ module.exports = {
     update: updateLibraryStatus,
     list: listLibraryStatuses,
     load: loadLibraryStatus,
+    ensureLibraryStatus: ensureLibraryStatus,
     getStatusForLibrary: getStatusForLibrary,
     markLibrarySelectionsComplete: markLibrarySelectionsComplete,
     markLibrarySelectionsIncomplete: markLibrarySelectionsIncomplete,
     getStatusesForAllLibraries: getStatusesForAllLibraries,
-    updateLastActivity: updateLastActivity
+    updateLastActivity: updateLastActivity,
+    reset: reset
 };

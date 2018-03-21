@@ -29,7 +29,12 @@
                     </div>
 
                     <label for="cycleYear">Year</label>
-                    <view-edit-integer input-id="cycleYear" ng-model="vm.cycle.year" edit-mode="true"></view-edit-integer>
+                    <view-edit-integer input-id="cycleYear" ng-model="vm.cycle.year" ng-change="vm.updateCycleNamePreview()" edit-mode="true"></view-edit-integer>
+
+                    <div ng-if="vm.cycle.cycleType">
+                        <div class="label">The cycle's name will be</div>
+                        <div>{{ vm.cycleNamePreview }}</div>
+                    </div>
 
                     <label for="xxx">Selections Available</label>
                     <p>

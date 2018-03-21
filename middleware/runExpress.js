@@ -138,8 +138,19 @@ function runMiddlewareServer(){
             });
             authorizedRoute('get', '/library/:id', carliAuth.requireSession, function (req, res) {
                 crmQueries.loadLibrary(req.params.id)
-                    .then(sendResult(res))
+                    .then(function(library){
+                        if ( isValidLibrary(library) ) {
+                            res.send(library);
+                        }
+                        else {
+                            res.status(404).send( { error: 'Library ' + req.params.id + ' not found in CRM DB' } );
+                        }
+                    })
                     .catch(send500Error(res));
+
+                function isValidLibrary(library) {
+                    return library && Object.keys(library).indexOf('name') > -1;
+                }
             });
             authorizedRoute('get', '/library/contacts/:id', carliAuth.requireSession, function (req, res) {
                 crmQueries.listCrmContactsForLibrary(req.params.id)
@@ -210,6 +221,14 @@ function runMiddlewareServer(){
                 function getCycleCreationStatus() {
                     return cycleCreation.getCycleCreationStatus(req.params.id)
                         .then(sendResult(res))
+                        .catch(sendError(res));
+                }
+            });
+            authorizedRoute('delete', '/delete-cycle/:id', carliAuth.requireStaff, function (req, res) {
+                return carliAuth.requireStaff().then(deleteCycle);
+                function deleteCycle() {
+                    return cycleCreation.deleteCycle(req.params.id)
+                        .then(sendResult(res)({success: true}))
                         .catch(sendError(res));
                 }
             });

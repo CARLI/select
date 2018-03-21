@@ -45,6 +45,12 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
     vm.unselected = unselected;
     vm.unSelectProduct = unSelectProduct;
 
+    vm.noPrice = noPrice;
+    vm.shouldDisplayPricing = shouldDisplayPricing;
+    vm.shouldShowSiteLicensePrice = shouldShowSiteLicensePrice;
+    vm.shouldShowSUPrices = shouldShowSUPrices;
+    vm.shouldShowSpecificSuPrice = shouldShowSpecificSuPrice;
+
     activate();
 
     function activate(){
@@ -161,6 +167,8 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
 
         if ( $window.confirm('This will reset all of your selections to last year') ){
             vm.offerings.forEach(selectLastYear);
+
+            activityLogService.logLibrarySelectedLastYearsSelections(vm.cycle, vm.library);
 
             showSelectionProblemsPopup(selectionProblems);
 
@@ -412,10 +420,48 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
     function isFunded(offering) {
         return offeringService.isFunded(offering);
     }
+
     function getFundedSelectionPrice(offering) {
         return offeringService.getFundedSelectionPrice(offering);
     }
+
     function getFundedSiteLicensePrice(offering) {
         return offeringService.getFundedSiteLicensePrice(offering);
     }
+
+    function showPrice(offering) {
+        return offering.display === 'with-price'
+    }
+
+    function hasUpdatedSiteLicensePrice(offering) {
+        return offering.pricing.site && offering.siteLicensePriceUpdated;
+    }
+
+    function hasUpdatedSuPricing(offering) {
+        return offering.pricing.su && offering.pricing.su.length && offering.suPricesUpdated;
+    }
+
+    function noPrice(offering) {
+        return !offering.pricing.site && !offering.pricing.su.length;
+    }
+
+    function shouldDisplayPricing(offering) {
+        return showPrice(offering) && (hasUpdatedSiteLicensePrice(offering) || hasUpdatedSuPricing(offering));
+    }
+
+    function shouldShowSiteLicensePrice(offering) {
+        return showPrice(offering) && hasUpdatedSiteLicensePrice(offering);
+    }
+
+    function shouldShowSUPrices(offering) {
+        return showPrice(offering) && hasUpdatedSuPricing(offering);
+    }
+
+    function shouldShowSpecificSuPrice(offering, su) {
+        if (offering.pricing.site) {
+            return su.price < offering.pricing.site;
+        }
+        return true;
+    }
+
 }

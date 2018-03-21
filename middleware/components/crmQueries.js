@@ -52,7 +52,12 @@ function loadLibrary(id) {
                 }
                 else {
                     var libraries = extractRowsFromResponse(err, rows, convertCrmLibrary);
-                    deferred.resolve(libraries[0]);
+                    if ( libraries && libraries.length ){
+                        deferred.resolve(libraries[0]);
+                    }
+                    else {
+                        deferred.resolve({});
+                    }
                 }
             }
         );

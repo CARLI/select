@@ -79,6 +79,11 @@ function loadNotification( notificationId  ){
         });
 }
 
+function loadWithoutCycle(notificationId) {
+    return NotificationRepository.load(notificationId)
+        .then(expandNotificationFromPersistence);
+}
+
 function sendNotification( notification ){
     if ( notification.draftStatus === 'sent' ){
         return Q.reject('Notification has already been sent. Please reload the page for the updated list.');
@@ -354,6 +359,7 @@ module.exports = {
     update: updateNotification,
     list: listNotifications,
     load: loadNotification,
+    loadWithoutCycle: loadWithoutCycle,
     delete: NotificationRepository.delete,
     sendNotification: sendNotification,
     listDrafts: listDrafts,

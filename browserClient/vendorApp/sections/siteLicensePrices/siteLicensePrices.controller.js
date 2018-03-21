@@ -17,6 +17,8 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     vm.saveOfferings = saveOfferings;
     vm.downloadCsv = downloadCsvDataForExistingPricing;
     vm.downloadComparisonCsv = downloadCsvDataForComparisonPricing;
+    vm.csvExportIsDisabled = csvExportIsDisabled;
+    vm.thereAreUnsavedChanges = thereAreUnsavedChanges;
     vm.checkViewOption = checkViewOption;
     vm.isCommentModeEnabled = false;
     vm.showHistoricalPricing = showHistoricalPricing;
@@ -361,10 +363,10 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
     }
 
     function markOfferingUpdated(offering) {
-        if ( offering ) {
+        if (offering) {
             offering.siteLicensePriceUpdated = new Date().toISOString();
 
-            if ( offering.id ) {
+            if (offering.id) {
                 vm.changedOfferings.push(offering);
             }
             else {
@@ -389,7 +391,7 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         function vendorHasUpdatedTheOfferingsPricing() {
             return offering.siteLicensePriceUpdated;
         }
-        
+
         function setOfferingUpdatedState() {
             if (vendorHasUpdatedTheOfferingsPricing()) {
                 offeringCell.addClass('updated');
@@ -463,7 +465,9 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
             offering = generateNewOffering(libraryId, productId);
         }
 
-        applyNewCellPricingToOffering(offeringCell, offering, newPrice);
+        $scope.$apply(function() {
+            applyNewCellPricingToOffering(offeringCell, offering, newPrice);
+        });
         applyCssClassesToOfferingCell(offeringCell, offering);
 
         var newReadOnlyCellContents = createReadOnlyOfferingCell( findSitePrice(offering) );
@@ -738,6 +742,14 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
         return vm.products.filter(function (product) {
             return product.id === productId;
         })[0];
+    }
+
+    function csvExportIsDisabled() {
+        return thereAreUnsavedChanges();
+    }
+
+    function thereAreUnsavedChanges() {
+        return vm.changedOfferings.length > 0 || vm.newOfferings.length > 0;
     }
 
     function onControllerDestroy(e) {

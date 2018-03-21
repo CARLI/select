@@ -6,8 +6,9 @@ var config = require( '../../config' );
 var CouchUtils = require('../../CARLI/Store/CouchDb/Utils');
 var cycleRepository = require('../../CARLI/Entity/CycleRepository');
 var libraryRepository = require('../../CARLI/Entity/LibraryRepository');
-var licenseRepository = require('../../CARLI/Entity/LicenseRepository');
+var libraryStatusRepository = require('../../CARLI/Entity/LibraryStatusRepository');
 var offeringRepository = require('../../CARLI/Entity/OfferingRepository');
+var licenseRepository = require('../../CARLI/Entity/LicenseRepository');
 var productRepository = require('../../CARLI/Entity/ProductRepository');
 var Store = require( '../../CARLI/Store' );
 var StoreModule = require( '../../CARLI/Store/CouchDb/Store');
@@ -28,6 +29,7 @@ function useAdminCouchCredentials() {
     couchUtils = CouchUtils(adminStoreOptions);
     cycleRepository.setStore(Store(StoreModule(adminStoreOptions)));
     libraryRepository.setStore(Store(StoreModule(adminStoreOptions)));
+    libraryStatusRepository.setStore(Store(StoreModule(adminStoreOptions)));
     licenseRepository.setStore(Store(StoreModule(adminStoreOptions)));
     offeringRepository.setStore(Store(StoreModule(adminStoreOptions)));
     productRepository.setStore(Store(StoreModule(adminStoreOptions)));
@@ -49,6 +51,7 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
         .then(indexViews)
         .then(waitForIndexingToFinish)
         .then(resetVendorStatuses)
+        .then(resetLibraryStatuses)
         .then(transformProducts)
         .then(transformOfferings)
         .then(indexViews)
@@ -93,6 +96,37 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
                 });
         }
     }
+
+    function resetLibraryStatuses() {
+        cycleRepository.createCycleLog('Ensuring all libraries have statuses for ' + newCycle.databaseName);
+
+        return ensureLibraryStatuses()
+            .then(function () {
+                return libraryStatusRepository.list(newCycle)
+                    .then(function (libraryStatusList) {
+                        cycleRepository.createCycleLog('Resetting all library statuses for ' + newCycle.databaseName);
+                        return Q.all(libraryStatusList.map(resetLibraryStatus));
+                    });
+            });
+
+        function ensureLibraryStatuses() {
+            return libraryRepository.list()
+                .then(function(libraries) {
+                    return Q.all( libraries.map(ensureStatusExistsForLibrary) );
+                });
+
+            function ensureStatusExistsForLibrary(library) {
+                return libraryStatusRepository.ensureLibraryStatus(library.id, newCycle);
+            }
+        }
+
+        function resetLibraryStatus(status) {
+            var resetStatus = libraryStatusRepository.reset(status);
+            resetStatus.cycle = newCycle.id;
+            return libraryStatusRepository.update(resetStatus, newCycle);
+        }
+    }
+
     function transformProducts() {
         cycleRepository.createCycleLog('Transforming products for new cycle');
         return productRepository.transformProductsForNewCycle(newCycle);
@@ -224,8 +258,30 @@ function resolveToProgress( jobs ){
     return jobs.length ? jobs[0].progress : 100;
 }
 
+function deleteCycle(cycleId) {
+    var cycle = null;
+
+    return cycleRepository.load(cycleId)
+        .then(function(loadedCycle) {
+            cycle = loadedCycle;
+            return vendorRepository.list();
+        })
+        .then(function(vendorList) {
+            var listOfDatabasesToDelete = cycleRepository.listAllDatabaseNamesForCycle(cycle, vendorList);
+
+            Logger.log('Deleting databases', listOfDatabasesToDelete);
+
+            return Q.allSettled(listOfDatabasesToDelete.map(couchUtils.deleteDatabase));
+        })
+        .finally(function(){
+            Logger.log('Deleting cycle doc', cycleId);
+            return cycleRepository.delete(cycleId);
+        });
+}
+
 module.exports = {
     create: create,
     copyCycleDataFrom: copyCycleDataFrom,
-    getCycleCreationStatus: getCycleCreationStatus
+    getCycleCreationStatus: getCycleCreationStatus,
+    deleteCycle: deleteCycle
 };

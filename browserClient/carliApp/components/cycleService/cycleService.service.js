@@ -55,6 +55,8 @@ function cycleService( CarliModules, $q, errorHandler, persistentState ) {
         listPastFourCyclesMatchingCycle: function( cycle ){
             return $q.when( cycleModule.listPastFourCyclesMatchingCycle(cycle || currentCycle) );
         },
+        deleteCycle: deleteCycle,
+        generateCycleName: generateCycleName,
         getLabelForCycleStatus: cycleModule.getStatusLabel,
         fiscalYearHasStartedForDate: cycleModule.fiscalYearHasStartedForDate,
         CYCLE_STATUS_DATA_PROCESSING: cycleModule.CYCLE_STATUS_DATA_PROCESSING,
@@ -153,5 +155,9 @@ function cycleService( CarliModules, $q, errorHandler, persistentState ) {
     function syncDataToAllVendorDatabasesForCycle(cycle){
         var cycleId = cycle ? cycle.id : currentCycle.id;
         return $q.when( VendorDatabaseModule.replicateDataToVendorsForCycle(cycleId) );
+    }
+
+    function deleteCycle(cycleObject) {
+        return $q.when(cycleMiddleware.deleteCycle(cycleObject.id));
     }
 }

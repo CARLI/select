@@ -97,6 +97,7 @@ ul.product-list.subscriptions {
             }
 
             .column.select {
+                overflow: hidden;
                 padding: 0;
 
                 .price {
@@ -110,6 +111,24 @@ ul.product-list.subscriptions {
                     position: absolute;
                     top: 0;
                     width: 100%;
+
+                    &.ng-enter {
+                        transform: translateX(100%);
+                        transition: transform 250ms;
+                    }
+
+                    &.ng-enter-active {
+                        transform: translateX(0);
+                    }
+
+                    &.ng-leave {
+                        transform: translateX(0);
+                        transition: transform 250ms;
+                    }
+
+                    &.ng-leave-active {
+                        transform: translateX(100%);
+                    }
                 }
             }
 

@@ -116,6 +116,20 @@
     }
 }
 
+.pricing-screen-header {
+    .controls {
+        flex-wrap: wrap;
+
+        .export-message {
+            align-items: center;
+            display: flex;
+            height: 2em;
+            justify-content: flex-end;
+            width: 100%;
+        }
+    }
+}
+
 #historic-pricing-modal {
     .modal-dialog {
         overflow: visible;

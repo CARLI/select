@@ -8,6 +8,16 @@ offering-pricing {
         &.single-column {
             display: block;
         }
+
+        .row.updated {
+            background-color: white;
+            color: black;
+        }
+
+        .row.not-updated {
+            background-color: $background-pricing-old;
+            color: $purple;
+        }
     }
 
     .su-pricing {

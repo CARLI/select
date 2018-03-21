@@ -2,11 +2,11 @@ var config = require('../../config');
 var couchUtils = require('../Store/CouchDb/Utils')();
 var Entity = require('../Entity');
 var EntityTransform = require('./EntityTransformationUtils');
-var LibraryRepository = require('./LibraryRepository');
 var moment = require('moment');
 var StoreOptions = config.storeOptions;
 var Store = require('../Store');
 var StoreModule = require('../Store/CouchDb/Store');
+var vendorDatabaseName = require('./vendorDatabaseName');
 var Q = require('q');
 var _ = require('lodash');
 
@@ -194,6 +194,14 @@ function productsAreAvailable( cycle ){
     return moment().isAfter(cycle.productsAvailableDate);
 }
 
+function listAllDatabaseNamesForCycle(cycle, vendors) {
+    vendors = vendors || [];
+    var databases = [cycle.databaseName];
+    return databases.concat(vendors.map(function(vendor) {
+        return vendorDatabaseName(cycle.databaseName, vendor.id);
+    }));
+}
+
 function fiscalYearHasStartedForDate( dateToCheck ){
     var momentToCheck = moment(dateToCheck);
 
@@ -208,6 +216,7 @@ module.exports = {
     create: createCycle,
     createCycleLog: createCycleLog,
     update: updateCycle,
+    delete: CycleRepository.delete,
     list: listCycles,
     load: loadCycle,
     loadNoCache: CycleRepository.loadNoCache,
@@ -218,6 +227,7 @@ module.exports = {
     isClosed: isClosed,
     productsAreAvailable: productsAreAvailable,
     listPastFourCyclesMatchingCycle: listPastFourCyclesMatchingCycle,
+    listAllDatabaseNamesForCycle: listAllDatabaseNamesForCycle,
     fiscalYearHasStartedForDate: fiscalYearHasStartedForDate,
     CYCLE_STATUS_DATA_PROCESSING: CYCLE_STATUS_DATA_PROCESSING,
     CYCLE_STATUS_EDITING_PRODUCT_LIST: CYCLE_STATUS_EDITING_PRODUCT_LIST,

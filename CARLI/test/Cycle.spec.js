@@ -405,3 +405,59 @@ describe('the fiscalYearHasStartedForDate method', function(){
         expect(cycleRepository.fiscalYearHasStartedForDate(testDate)).to.equal(true);
     });
 });
+
+describe('listAllDatabaseNamesForCycle', function () {
+    it('should be a function', function () {
+        expect(cycleRepository.listAllDatabaseNamesForCycle).to.be.a('function');
+    });
+
+    it('should return an array containing the database name for a cycle object', function () {
+        var cycle = {
+            id: 'test-cycle-id',
+            databaseName: 'my-database-name',
+            cycleType: 'Alternative Cycle',
+            year: 2049,
+            status: 1,
+            isArchived: false
+        };
+
+        var expectedResults = ['my-database-name'];
+
+        expect(cycleRepository.listAllDatabaseNamesForCycle(cycle)).to.deep.equal(expectedResults);
+    });
+
+    it('should return an array containing the database names for a cycle and vendor shards, given a list of vendors', function () {
+        var cycle = {
+            id: 'test-cycle-id',
+            databaseName: 'my-database-name',
+            cycleType: 'Alternative Cycle',
+            year: 2049,
+            status: 1,
+            isArchived: false
+        };
+
+        var listOfVendors = [
+            {
+                id: '0001',
+                name: 'vendor1'
+            },
+            {
+                id: '0002',
+                name: 'vendor2'
+            },
+            {
+                id: '0003',
+                name: 'vendor3'
+            }
+        ];
+
+        var expectedResults = [
+            'my-database-name',
+            'my-database-name-0001',
+            'my-database-name-0002',
+            'my-database-name-0003'
+        ];
+
+        expect(cycleRepository.listAllDatabaseNamesForCycle(cycle, listOfVendors)).to.deep.equal(expectedResults);
+    });
+});

@@ -59,7 +59,7 @@ function contentForPdf(notificationId){
         return Q.reject(error);
     }
 
-    return notificationRepository.load(notificationId)
+    return notificationRepository.loadWithoutCycle(notificationId)
         .then(dataForPdfFromNotification)
         .then(htmlForPdf)
         .catch(function(err){
@@ -131,7 +131,7 @@ function dataForSubscriptionInvoicePdf(notification){
     var cycle = null;
 
     var pdfType = pdfTypeFromNotification(notification);
-    var cycleId = notification.cycle.id;
+    var cycleId = notification.cycle;
     var library = notification.targetEntity;
     var specificOfferingIds = notification.offeringIds;
 
@@ -271,6 +271,10 @@ function computeInvoiceTotal(invoiceRows){
 }
 
 function htmlForPdf(dataForPdf){
+
+    if (!dataForPdf) {
+        return Q.reject('no data for pdf');
+    }
 
     var type = dataForPdf.notificationTypeForPdf;
     var invoiceContent = createInvoiceContent();

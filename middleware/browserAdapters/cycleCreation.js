@@ -40,8 +40,18 @@ function getCycleCreationStatus( cycleId ){
     return middlewareRequest(request);
 }
 
+function deleteCycle(cycleId) {
+    var request = {
+        path: '/delete-cycle/' + cycleId,
+        method: 'delete'
+    };
+
+    return middlewareRequest(request);
+}
+
 module.exports = {
     create: create,
     createCycleFrom: createCycleFrom,
-    getCycleCreationStatus: getCycleCreationStatus
+    getCycleCreationStatus: getCycleCreationStatus,
+    deleteCycle: deleteCycle
 };

@@ -1,0 +1,10 @@
+<div class="label" ng-if="(vm.offering.product.productUrl || vm.offering.product.vendor.websiteUrl)">Product Website</div>
+<div class="h3" ng-bind-html="(vm.offering.product.productUrl || vm.offering.product.vendor.websiteUrl) | linky:'_blank'"></div>
+
+<div class="label">Product Description</div>
+<p>{{ ::vm.offering.product.description }}</p>
+
+<div class="label">Vendor Pricing Comments</div>
+<vendor-comments-table offering="vm.offering"></vendor-comments-table>
+
+<vendor-sales-contact vendor="vm.offering.product.vendor"></vendor-sales-contact>

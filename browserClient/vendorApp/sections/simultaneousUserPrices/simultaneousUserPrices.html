@@ -1,4 +1,4 @@
-<div class="page-header">
+<div class="page-header pricing-screen-header">
     <div class="headings">
         <h1>Simultaneous User Prices</h1>
         <h2>{{ vm.cycle.name }}</h2>
@@ -6,7 +6,11 @@
 
     <div class="controls">
         <button type="button" id="toggle-comment-mode" class="toggle-button" ng-class="{ active: vm.isCommentModeEnabled }" busy-click="vm.toggleCommentMode()">Add Pricing Comments<i class="fa fa-comment-o"></i></button>
-        <button type="button" id="save-su-prices" class="carli-button" busy-click="vm.saveOfferings()">Save Changes<i class="fa fa-floppy-o"></i></button>
+        <button ng-click="vm.downloadCsv()" class="carli-button" ng-disabled="vm.csvExportIsDisabled()">Export to CSV</button>
+        <button type="button" id="save-su-prices" class="carli-button" busy-click="vm.saveOfferings()" ng-disabled="!vm.thereAreUnsavedChanges()">Save Changes<i class="fa fa-floppy-o"></i></button>
+        <div class="export-message">
+            <span ng-if="vm.csvExportIsDisabled()">Exporting to CSV is disabled until changes are saved.</span>
+        </div>
     </div>
 </div>
 
@@ -48,13 +52,6 @@
 
     <add-su-level-button add-su-pricing-level="vm.addSuPricingLevel" next-su-level="vm.nextSuLevel"></add-su-level-button>
 </section>
-
-<section class="content">
-    <div class="pull-right">
-        <button ng-click="vm.downloadCsv()" class="carli-button">Export to CSV</button>
-    </div>
-</section>
-
 
 <modal-dialog modal-id="'progress-modal'" modal-title="'Saving Pricing'">
     <div class="modal-body">
