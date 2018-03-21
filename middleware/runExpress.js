@@ -559,6 +559,11 @@ function runMiddlewareServer(){
                     .then(sendJsonResult(res))
                     .then(sendError(res));
             });
+            carliMiddleware.get('/public/list-subscriptions-for-library/:libraryId/for-cycle-name/:cycleName', function (req, res) {
+                publicApi.listSubscriptionsForLibraryForCycleName(req.params.libraryId, req.params.cycleName)
+                    .then(sendJsonResult(res))
+                    .then(sendError(res));
+            });
         }
     }
 }
