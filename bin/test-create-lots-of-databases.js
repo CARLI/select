@@ -8,10 +8,6 @@ var cycleCreationModule = require('../middleware/components/cycleCreation');
 var cycleRepository = require('../CARLI/Entity/CycleRepository');
 var Q = require('q');
 
-
-cli.asCouchAdmin(deleteTestCycles);
-
-/*
 cli.asCouchAdmin(makeTestCycles)
     .then(function(){
         return cli.asCouchAdmin(deleteTestCycles);
@@ -19,9 +15,8 @@ cli.asCouchAdmin(makeTestCycles)
     .then(function(){
         process.exit();
     });
-*/
 
-const maxCyclesToCreate = 40;
+const maxCyclesToCreate = 100;
 
 function createCycle(cycleProperties) {
     var cycleData = {
