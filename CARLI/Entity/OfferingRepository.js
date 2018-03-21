@@ -215,9 +215,13 @@ function clearVendorComments(offering) {
 }
 
 function removeSitePricing(offering) {
-    offering.display = 'none';
-    delete offering.pricing.site;
-    delete offering.vendorComments.site;
+    if (offering) {
+        offering.display = 'none';
+        if (offering.pricing)
+            delete offering.pricing.site;
+        if (offering.vendorComments)
+            delete offering.vendorComments.site;
+    }
     return offering;
 }
 

@@ -519,6 +519,22 @@ function runOfferingSpecificTests(testCycle) {
         });
     });
 
+    describe('removeSitePricing', function() {
+        it('should gracefully handle an empty object', function () {
+            var fn = function() {
+                offeringRepository.removeSitePricing({});
+            };
+            expect(fn).to.not.throw();
+        });
+
+        it('should gracefully handle no argument', function () {
+            var fn = function() {
+                offeringRepository.removeSitePricing();
+            };
+            expect(fn).to.not.throw();
+        });
+    });
+
     function clearAllTestOfferings(){
         return offeringRepository.list(testCycle)
             .then(function(offeringsList){
