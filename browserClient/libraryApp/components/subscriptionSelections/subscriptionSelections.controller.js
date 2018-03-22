@@ -39,7 +39,6 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
     vm.selectProduct = selectProduct;
     vm.sort = sort;
     vm.startSelections = startSelections;
-    vm.todo = todo;
     vm.toggleProduct = toggleProduct;
     vm.unSelectAndUpdateProduct = unSelectAndUpdateProduct;
     vm.unselected = unselected;
@@ -180,6 +179,9 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
         }
 
         function selectLastYear( offering ){
+            if (!shouldDisplayPricing(offering))
+                return;
+
             var allHistory = offering.history || {};
             var history = allHistory[lastYear] || {};
             var wasSelectedLastYear = !!history.selection;
@@ -348,10 +350,6 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
 
     function returnToBeginning(){
         $window.location.reload();
-    }
-
-    function todo(){
-        alert("TODO");
     }
 
     function showSelectionProblemsPopup( listOfProblems ){
