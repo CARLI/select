@@ -238,17 +238,21 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
         return logActivity(activity);
     }
 
-    function logSiteLicenseChangePrice(cycle, offering){
+    function logSiteLicenseChangePrice(cycle, vendor, offering, product, library){
         var activity = {
-            actionDescription: offering.product.vendor.name + ' changed Site License price for ' + offering.product.name,
+            actionDescription: 'Changed Site License price to $' + offering.pricing.site,
             app: 'vendor',
             category: 'vendorModified'
         };
 
         activity.cycleId = cycle.id;
         activity.cycleName = cycle.name;
-
-        addEntityProperties(activity, offering);
+        activity.productId = product.id;
+        activity.productName = product.name;
+        activity.vendorId = vendor.id;
+        activity.vendorName = vendor.name;
+        activity.libraryId = library.id;
+        activity.libraryName = library.name;
 
         return logActivity(activity);
     }

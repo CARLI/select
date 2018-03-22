@@ -509,23 +509,11 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
     function saveAllChangedOfferings(changedOfferings) {
         changedOfferings = changedOfferings.map(clearManualFlagOverrides);
         return offeringService
-            .bulkUpdateOfferings(changedOfferings, vm.cycle)
-            .then(logOfferingChanges);
+            .bulkUpdateOfferings(changedOfferings, vm.cycle);
 
         function clearManualFlagOverrides(offering) {
             delete offering.flagged;
             return offering;
-        }
-
-        function logOfferingChanges(changedIds) {
-            var successfullyChangedOfferings = changedOfferings.filter(function(o) {
-                return changedIds.indexOf(o.id) > -1;
-            });
-            return $q.all(successfullyChangedOfferings.map(function(offering) {
-                activityLogService.logSiteLicenseChangePrice(vm.cycle, offering);
-            })).then(function() {
-                return changedIds;
-            });
         }
     }
 
@@ -541,6 +529,8 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
 
                 Logger.log('created ' + newOfferingsCreated + ' new offerings');
                 Logger.log('updated ' + oldOfferingsUpdated + ' old offerings');
+
+                logOfferingChanges(vm.newOfferings.concat(vm.changedOfferings));
 
                 vm.newOfferings = [];
                 vm.changedOfferings = [];
@@ -567,6 +557,17 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
 
         function updateVendorFlaggedOfferings() {
             return vendorStatusService.updateVendorStatusFlaggedOfferings(vm.vendorId, vm.cycle);
+        }
+
+        function logOfferingChanges(offerings) {
+            return $q.all(offerings.map(function(offering) {
+                var product = getProductById(offering.product);
+                var library = getLibraryById(offering.library);
+                return activityLogService.logSiteLicenseChangePrice(vm.cycle, vm.vendor, offering, product, library);
+            }))
+                .catch(function(error) {
+                    console.error('Error while logging site license change: ' + error);
+                });
         }
     }
 
