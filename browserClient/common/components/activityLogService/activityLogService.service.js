@@ -208,7 +208,7 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
 
     function logVendorChangeDescription(cycle, vendor, product){
         var activity = {
-            actionDescription: vendor.name + ' changed description for ' + product.name,
+            actionDescription: 'Changed description to "' + product.description + '"',
             app: 'vendor',
             category: 'vendorModified'
         };
