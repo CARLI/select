@@ -420,9 +420,7 @@ function simultaneousUserPricesController($scope, $q, $filter, activityLogServic
             newSuPricingByProduct[product.id] = getSuPricingFromFormForProduct(product.id);
         });
 
-        var productIdsToUpdate = Object.keys(vm.changedProductIds).filter(function (id) {
-            return vm.changedProductIds[id];
-        });
+        var productIdsToUpdate = getProductIdsToUpdate();
 
         vm.loadingPromise = vendorDataService.isVendorAllowedToMakeChangesToCycle(vm.user, vm.cycle)
             .then(function (vendorIsAllowedToSavePrices) {
@@ -438,6 +436,7 @@ function simultaneousUserPricesController($scope, $q, $filter, activityLogServic
                 }
             })
             .then(clearTemporaryBulkCommentsStorage)
+            .then(logSuPriceUpdate)
             .then(saveProductsSuccess)
             .catch(saveProductsError);
 
@@ -448,11 +447,6 @@ function simultaneousUserPricesController($scope, $q, $filter, activityLogServic
                 .then(updateVendorFlaggedOfferings)
                 .then(updateVendorStatus)
                 .then(syncData)
-                .then(function () {
-                    vm.changedProductIds = {};
-                    disableUnsavedChangesWarning();
-                    Logger.log('saved ' + productIdsToUpdate.length + ' products');
-                })
                 .catch(function (err) {
                     console.error(err);
                 });
@@ -514,15 +508,7 @@ function simultaneousUserPricesController($scope, $q, $filter, activityLogServic
         function updateOfferingsForAllLibrariesForProduct(productId) {
             var newSuPricing = newSuPricingByProduct[productId];
             return offeringService
-                .updateSuPricingForAllLibrariesForProduct(vm.vendorId, productId, newSuPricing, vm.bulkCommentsTemporaryStorage[productId])
-                .then(logSuPriceUpdate);
-        }
-
-        function logSuPriceUpdate(savedIds) {
-            return savedIds.map(function(savedId) {
-                Logger.log('logSuPriceUpdate: ', savedId, vm.products);
-                //activityLogService.logVendorChangeSUPrice(vm.cycle, vm.vendor);
-            });
+                .updateSuPricingForAllLibrariesForProduct(vm.vendorId, productId, newSuPricing, vm.bulkCommentsTemporaryStorage[productId]);
         }
 
         function updateVendorStatus() {
@@ -537,7 +523,25 @@ function simultaneousUserPricesController($scope, $q, $filter, activityLogServic
             vm.bulkCommentsTemporaryStorage = {};
         }
 
+        function logSuPriceUpdate(savedIds) {
+            var productIdsToUpdate = getProductIdsToUpdate();
+            var logPromises = vm.products
+                .filter(function(product) {
+                    return productIdsToUpdate.indexOf(product.id) > -1;
+                })
+                .map(function(product) {
+                    var newSuPricing = newSuPricingByProduct[product.id];
+                    return activityLogService.logVendorChangeSUPrice(vm.cycle, vm.vendor, product, newSuPricing);
+                });
+            return $q.all(logPromises).then(function() {
+                return savedIds;
+            });
+        }
+
         function saveProductsSuccess() {
+            Logger.log('saved ' + Object.keys(vm.changedProductIds).length + ' products');
+            vm.changedProductIds = {};
+            disableUnsavedChangesWarning();
             alertService.putAlert('Pricing saved.', {severity: 'success'});
         }
 
@@ -794,6 +798,12 @@ function simultaneousUserPricesController($scope, $q, $filter, activityLogServic
         return vm.products.filter(function (product) {
             return product.id === productId;
         })[0];
+    }
+
+    function getProductIdsToUpdate() {
+        return Object.keys(vm.changedProductIds).filter(function (id) {
+            return vm.changedProductIds[id];
+        });
     }
 
     function csvExportIsDisabled() {

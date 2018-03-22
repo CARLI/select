@@ -222,9 +222,9 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
         return logActivity(activity);
     }
 
-    function logVendorChangeSUPrice(cycle, vendor, product){
+    function logVendorChangeSUPrice(cycle, vendor, product, newSuPricing){
         var activity = {
-            actionDescription: vendor.name + ' changed SU price for ' + product.name,
+            actionDescription: "Changed SU pricing to " + stringifySuPricing(newSuPricing),
             app: 'vendor',
             category: 'vendorModified'
         };
@@ -236,6 +236,14 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
         addEntityProperties(activity, product);
 
         return logActivity(activity);
+    }
+
+    function stringifySuPricing(suPricing) {
+        return suPricing
+            .map(function(suPrice) {
+                return suPrice.users + ': $' + suPrice.price
+            })
+            .join(', ');
     }
 
     function logSiteLicenseChangePrice(cycle, vendor, offering, product, library){
