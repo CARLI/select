@@ -64,6 +64,9 @@
                         TODO: Archive Capital Fee Amount
                     </div>
 
+                    <view-edit-checkbox label="Do Not Invoice" ng-model="vm.product.doNotInvoice" edit-mode="vm.editable" input-id="doNotInvoice">
+                        <span class="label">{{ vm.product.doNotInvoice ? 'Externally invoiced' : '' }}</span>
+                    </view-edit-checkbox>
 
                     <div ng-show="vm.editable" class="placeholder" style="white-space: nowrap">
                         TODO:<br>

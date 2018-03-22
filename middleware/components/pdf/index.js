@@ -192,7 +192,9 @@ function loadOfferings(cycle, libraryId, offeringsToLoad){
         return offeringRepository.getOfferingsById(offeringsToLoad, cycle);
     }
     else {
-        return offeringRepository.listOfferingsWithSelectionsForLibrary(libraryId, cycle);
+        return offeringRepository
+            .listOfferingsWithSelectionsForLibrary(libraryId, cycle)
+            .then(filterOutExternallyInvoicedProducts);
     }
 }
 
@@ -413,6 +415,14 @@ function loadCycle(cycleId){
             return Q.reject('No cycle found with id '+cycleId);
         }
     }
+}
+
+function filterOutExternallyInvoicedProducts(offerings) {
+    return offerings.filter(onlyInternallyInvoicedProducts);
+}
+
+function onlyInternallyInvoicedProducts(offering) {
+    return !offering.product.doNotInvoice;
 }
 
 function formatCurrency( number ){
