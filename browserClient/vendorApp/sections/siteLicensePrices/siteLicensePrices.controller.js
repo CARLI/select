@@ -1,7 +1,7 @@
 angular.module('vendor.sections.siteLicensePrices')
     .controller('siteLicensePricesController', siteLicensePricesController);
 
-function siteLicensePricesController($scope, $q, $filter, alertService, authService, csvExportService, cycleService, libraryService, offeringService, productService, siteLicensePricesCsvData, vendorDataService, vendorStatusService) {
+function siteLicensePricesController($scope, $q, $filter, activityLogService, alertService, authService, csvExportService, cycleService, libraryService, offeringService, productService, siteLicensePricesCsvData, vendorDataService, vendorStatusService) {
     var vm = this;
 
     vm.changedOfferings = [];
@@ -508,7 +508,8 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
     function saveAllChangedOfferings(changedOfferings) {
         changedOfferings = changedOfferings.map(clearManualFlagOverrides);
-        return offeringService.bulkUpdateOfferings(changedOfferings, vm.cycle);
+        return offeringService
+            .bulkUpdateOfferings(changedOfferings, vm.cycle);
 
         function clearManualFlagOverrides(offering) {
             delete offering.flagged;
@@ -528,6 +529,8 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
                 Logger.log('created ' + newOfferingsCreated + ' new offerings');
                 Logger.log('updated ' + oldOfferingsUpdated + ' old offerings');
+
+                logOfferingChanges(vm.newOfferings.concat(vm.changedOfferings));
 
                 vm.newOfferings = [];
                 vm.changedOfferings = [];
@@ -554,6 +557,17 @@ function siteLicensePricesController($scope, $q, $filter, alertService, authServ
 
         function updateVendorFlaggedOfferings() {
             return vendorStatusService.updateVendorStatusFlaggedOfferings(vm.vendorId, vm.cycle);
+        }
+
+        function logOfferingChanges(offerings) {
+            return $q.all(offerings.map(function(offering) {
+                var product = getProductById(offering.product);
+                var library = getLibraryById(offering.library);
+                return activityLogService.logSiteLicenseChangePrice(vm.cycle, vm.vendor, offering, product, library);
+            }))
+                .catch(function(error) {
+                    console.error('Error while logging site license change: ' + error);
+                });
         }
     }
 

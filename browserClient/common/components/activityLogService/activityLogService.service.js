@@ -20,7 +20,9 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
         logLibrarySelectedProduct: logLibrarySelectedProduct,
         logLibraryRemovedProduct: logLibraryRemovedProduct,
         logLibrarySelectedLastYearsSelections: logLibrarySelectedLastYearsSelections,
-        logVendorChangeDescription: logVendorChangeDescription
+        logVendorChangeDescription: logVendorChangeDescription,
+        logVendorChangeSUPrice: logVendorChangeSUPrice,
+        logSiteLicenseChangePrice: logSiteLicenseChangePrice
     };
 
     function logActivity( activityLog ){
@@ -206,7 +208,7 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
 
     function logVendorChangeDescription(cycle, vendor, product){
         var activity = {
-            actionDescription: vendor.name + ' changed description for ' + product.name,
+            actionDescription: 'Changed description to "' + product.description + '"',
             app: 'vendor',
             category: 'vendorModified'
         };
@@ -216,6 +218,49 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
 
         addEntityProperties(activity, vendor);
         addEntityProperties(activity, product);
+
+        return logActivity(activity);
+    }
+
+    function logVendorChangeSUPrice(cycle, vendor, product, newSuPricing){
+        var activity = {
+            actionDescription: "Changed SU pricing to " + stringifySuPricing(newSuPricing),
+            app: 'vendor',
+            category: 'vendorModified'
+        };
+
+        activity.cycleId = cycle.id;
+        activity.cycleName = cycle.name;
+
+        addEntityProperties(activity, vendor);
+        addEntityProperties(activity, product);
+
+        return logActivity(activity);
+    }
+
+    function stringifySuPricing(suPricing) {
+        return suPricing
+            .map(function(suPrice) {
+                return suPrice.users + ': $' + suPrice.price
+            })
+            .join(', ');
+    }
+
+    function logSiteLicenseChangePrice(cycle, vendor, offering, product, library){
+        var activity = {
+            actionDescription: 'Changed Site License price to $' + offering.pricing.site,
+            app: 'vendor',
+            category: 'vendorModified'
+        };
+
+        activity.cycleId = cycle.id;
+        activity.cycleName = cycle.name;
+        activity.productId = product.id;
+        activity.productName = product.name;
+        activity.vendorId = vendor.id;
+        activity.vendorName = vendor.name;
+        activity.libraryId = library.id;
+        activity.libraryName = library.name;
 
         return logActivity(activity);
     }
