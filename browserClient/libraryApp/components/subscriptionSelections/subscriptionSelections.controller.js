@@ -1,7 +1,7 @@
 angular.module('library.subscriptionSelections')
 .controller('subscriptionSelectionsController', subscriptionSelectionsController);
 
-function subscriptionSelectionsController( $q, $window, activityLogService, csvExportService, cycleService, libraryStatusService, offeringService, productService, userService ){
+function subscriptionSelectionsController( $q, $window, activityLogService, authService, csvExportService, cycleService, libraryStatusService, offeringService, productService, userService ){
     var vm = this;
 
     vm.selectionStep = '';
@@ -313,9 +313,16 @@ function subscriptionSelectionsController( $q, $window, activityLogService, csvE
         }
     }
 
+    function updateLibraryActivity() {
+        if (!authService.userIsReadOnly())
+            return libraryStatusService.markLibrarySelectionsIncomplete(vm.libraryId, vm.cycle);
+        else
+            return $q.when();
+    }
+
     function startSelections() {
-        return libraryStatusService.markLibrarySelectionsIncomplete(vm.libraryId, vm.cycle)
-            .then(selectionsStarted);
+        return updateLibraryActivity()
+            .finally(selectionsStarted);
     }
 
     function selectionsStarted(){

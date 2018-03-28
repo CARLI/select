@@ -44,6 +44,10 @@
                                              selected="vm.isSelected(offering, 'Site License')"
                                              busy-click="vm.selectAndUpdateProduct(offering, 'Site License')">
                         </subscription-button>
+                        <div class="read-only-price-display" ng-if="vm.shouldShowSiteLicensePrice(offering) && vm.userIsReadOnly()">
+                            Site License: {{ ::vm.getFundedSiteLicensePrice(offering) | currency}}
+                        </div>
+
                         <div class="su-buttons" ng-if="vm.shouldShowSUPrices(offering)">
                             <subscription-button ng-repeat="su in offering.pricing.su | orderBy:users"
                                                  ng-hide="vm.userIsReadOnly()"
@@ -52,6 +56,10 @@
                                                  selected="vm.isSelected(offering, su.users)"
                                                  busy-click="vm.selectAndUpdateProduct(offering, su.users)">
                             </subscription-button>
+                            <div class="read-only-su-price-display" ng-repeat="su in offering.pricing.su | orderBy:users"
+                                 ng-if="vm.shouldShowSpecificSuPrice(offering, su) && vm.userIsReadOnly()">
+                                {{ su.users }} user{{ su.users > 1 ? 's':'' }}: {{ su.price | currency }}
+                            </div>
                         </div>
 
                         <div class="no-price" ng-if="vm.noPrice(offering)">A price has not been provided for this product. Ask CARLI for more information.</div>

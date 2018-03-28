@@ -54,8 +54,10 @@ function addSubscriptionsController( cycleService, authService, libraryStatusSer
     }
 
     function updateLastActivityForCurrentLibrary(cycle) {
-        var u = authService.getCurrentUser();
-        libraryStatusService.updateLastActivity(u.library.id, cycle);
+        if (!authService.userIsReadOnly()) {
+            var u = authService.getCurrentUser();
+            libraryStatusService.updateLastActivity(u.library.id, cycle);
+        }
     }
 
     function multipleCycles(){
