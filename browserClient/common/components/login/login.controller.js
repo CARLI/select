@@ -101,7 +101,13 @@ function loginController ($q, $rootScope, $location, alertService, authService, 
         }
 
         function loginFailure(err) {
-            alertService.putAlert("Email or password is incorrect", { severity: 'danger' });
+            console.log( err.statusCode);
+            if ( err.statusCode === 502 ) {
+                alertService.putAlert("Could not authenticate you with the system", { severity: 'danger' });
+            }
+            else {
+                alertService.putAlert("Email or password is incorrect", {severity: 'danger'});
+            }
         }
     }
 
