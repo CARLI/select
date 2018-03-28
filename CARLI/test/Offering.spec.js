@@ -535,6 +535,56 @@ function runOfferingSpecificTests(testCycle) {
         });
     });
 
+    describe('filtering out non-invoiced products', function () {
+        it('should should return a new array of offerings, with products marked "do not invoice" removed', function () {
+            var exampleOfferings = [
+                {
+                    id: 'id1',
+                    type: 'Offering',
+                    product: {
+                        name: 'test product 1'
+                    }
+                },
+                {
+                    id: 'id2',
+                    type: 'Offering',
+                    product: {
+                        name: 'test product 1'
+                    }
+                },
+                {
+                    id: 'id3',
+                    type: 'Offering',
+                    product: {
+                        name: 'test product 1',
+                        doNotInvoice: true
+                    }
+                }
+            ];
+
+            var expectedOutput = [
+                {
+                    id: 'id1',
+                    type: 'Offering',
+                    product: {
+                        name: 'test product 1'
+                    }
+                },
+                {
+                    id: 'id2',
+                    type: 'Offering',
+                    product: {
+                        name: 'test product 1'
+                    }
+                }
+            ];
+
+            var actualOutput = offeringRepository.filterOutExternallyInvoicedProducts(exampleOfferings);
+
+            expect(actualOutput).to.deep.equal(expectedOutput);
+        });
+    });
+
     function clearAllTestOfferings(){
         return offeringRepository.list(testCycle)
             .then(function(offeringsList){

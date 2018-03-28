@@ -111,12 +111,12 @@ function getDataForBannerExportForSubscriptionCycle(cycle, batchId, formatter) {
             if (offeringsToLoad && offeringsToLoad.length) {
                 return OfferingRepository
                     .getOfferingsById(offeringsToLoad, cycle)
-                    .then(filterOutExternallyInvoicedProducts);
+                    .then(OfferingRepository.filterOutExternallyInvoicedProducts);
             }
             else {
                 return OfferingRepository
                     .listOfferingsWithSelectionsForLibrary(libraryId, cycle)
-                    .then(filterOutExternallyInvoicedProducts);
+                    .then(OfferingRepository.filterOutExternallyInvoicedProducts);
             }
         }
     }
@@ -439,14 +439,6 @@ function listBatchesForCycle(cycle) {
             });
         }
     }
-}
-
-function filterOutExternallyInvoicedProducts(offerings) {
-    return offerings.filter(onlyInternallyInvoicedProducts);
-}
-
-function onlyInternallyInvoicedProducts(offering) {
-    return !offering.product.doNotInvoice;
 }
 
 module.exports = {

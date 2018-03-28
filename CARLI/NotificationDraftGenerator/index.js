@@ -299,7 +299,7 @@ function getLibraryInvoicesForAll(template, notificationData) {
     function getOfferingsForLibraryInvoicesForAll(){
         return cycleRepository.load(notificationData.cycleId)
             .then(offeringRepository.listOfferingsWithSelections)
-            .then(filterOutExternallyInvoicedProducts);
+            .then(offeringRepository.filterOutExternallyInvoicedProducts);
     }
     function getNotificationsForLibraryInvoicesForAll(customizedTemplate, actualRecipientIds){
         return allLibrariesDraft.getOfferings()
@@ -352,7 +352,7 @@ function getLibraryInvoicesForSome(template, notificationData) {
             .then(function (cycle) {
                 return offeringRepository.getOfferingsById(notificationData.offeringIds, cycle);
             })
-            .then(filterOutExternallyInvoicedProducts);
+            .then(offeringRepository.filterOutExternallyInvoicedProducts);
     }
 
     function getNotificationsForLibraryInvoicesForSome(customizedTemplate, actualRecipientIds){
@@ -402,7 +402,7 @@ function getLibraryInvoicesForOne(template, notificationData, batchId) {
                 return offeringRepository.listOfferingsForLibraryId(notificationData.recipientId, cycle);
             })
             .then(filterOnlyPurchasedOfferings)
-            .then(filterOutExternallyInvoicedProducts);
+            .then(offeringRepository.filterOutExternallyInvoicedProducts);
     }
     function getNotificationsForLibraryInvoicesForOne(customizedTemplate, actualRecipientIds){
         return oneLibraryDraft.getOfferings()
@@ -443,7 +443,7 @@ function getLibraryEstimatesForAll(template, notificationData) {
     function getOfferingsForLibraryEstimatesForAll(){
         return cycleRepository.load(notificationData.cycleId)
             .then(offeringRepository.listOfferingsWithSelections)
-            .then(filterOutExternallyInvoicedProducts);
+            .then(offeringRepository.filterOutExternallyInvoicedProducts);
     }
     function getNotificationsForLibraryEstimatesForAll(customizedTemplate, actualRecipientIds){
         return allLibrariesDraft.getOfferings()
@@ -814,12 +814,6 @@ function filterOnlyPurchasedOfferingsWithFees(offerings) {
 }
 function onlyOfferingsWithFees(offering) {
     return !!offering.oneTimePurchaseAnnualAccessFee;
-}
-function filterOutExternallyInvoicedProducts(offerings) {
-    return offerings.filter(onlyInternallyInvoicedProducts);
-}
-function onlyInternallyInvoicedProducts(offering) {
-    return !offering.product.doNotInvoice;
 }
 
 function loadLibrariesWithSelectionsInCycle( cycleId ){

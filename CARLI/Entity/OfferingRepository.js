@@ -969,6 +969,14 @@ function sortArrayOfObjectsByKeyDescending(arr, key) {
     });
 }
 
+function filterOutExternallyInvoicedProducts(offerings) {
+    return offerings.filter(onlyInternallyInvoicedProducts);
+}
+
+function onlyInternallyInvoicedProducts(offering) {
+    return !offering.product.doNotInvoice;
+}
+
 module.exports = {
     setStore: setStore,
     setCycle: setCycle,
@@ -1012,5 +1020,6 @@ module.exports = {
     getHistoricalFundedSiteLicensePrice: getHistoricalFundedSiteLicensePrice,
     getAmountPaidByCarli: getAmountPaidByCarli,
     resetFlaggedState: resetFlaggedState,
-    removeSitePricing: removeSitePricing
+    removeSitePricing: removeSitePricing,
+    filterOutExternallyInvoicedProducts: filterOutExternallyInvoicedProducts
 };
