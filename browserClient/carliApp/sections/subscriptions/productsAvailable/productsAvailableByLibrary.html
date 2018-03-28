@@ -30,7 +30,7 @@
                     <li role="row" class="offering" ng-class="{ 'edit-mode': vm.isEditing[offering.id] }" ng-repeat="offering in vm.offerings[library.id] | filter:vm.filterOfferingBySelection | orderBy:vm.orderBy:vm.reverse track by offering.id">
                         <edit-offering ng-if="vm.isEditing[offering.id]" cycle="::vm.cycle" offering="offering" columns="::vm.offeringColumns" on-offering-saved="::vm.stopEditing"></edit-offering>
                         <render-offering ng-if="!vm.isEditing[offering.id]" offering="offering" cycle="::vm.cycle" columns="::vm.offeringColumns"></render-offering>
-                        <checkbox ng-model="vm.selectedOfferings[library.id][offering.id]"></checkbox>
+                        <checkbox ng-if="!offering.product.doNotInvoice && offering.selection" ng-model="vm.selectedOfferings[library.id][offering.id]"></checkbox>
                     </li>
                 </ul>
                 <div class="footer clearfix">

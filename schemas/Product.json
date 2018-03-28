@@ -77,6 +77,10 @@
     "oneTimePurchaseAvailableForPurchaseThrough": {
         "description": "If the product is a one-time purchase product, this is the date it is available for purchase through",
         "$ref": "./Date.json"
+    },
+    "doNotInvoice": {
+      "description": "If truthy, this product should never be invoiced by CARLI staff.",
+      "type": "boolean"
     }
   },
   "required": [
