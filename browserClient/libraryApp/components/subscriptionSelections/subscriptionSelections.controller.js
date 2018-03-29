@@ -9,6 +9,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
     vm.reverse = false;
 
     vm.offerings = [];
+    vm.offeringsFromLastYear = [];
     vm.sortOptions = {
         productName: 'product.name',
         vendorName: ['product.vendor.name','product.name'],
@@ -54,9 +55,12 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
 
     function activate(){
         vm.selectionStep = 'loading';
-        return loadLibraryStatus()
-            .then(loadOfferings)
+        vm.loadingPromise = loadLibraryStatus()
+            .then(loadOfferingsForThisYear)
+            .then(loadOfferingsForLastYear)
             .then(setSelectionScreenState);
+
+        return vm.loadingPromise;
     }
 
     function loadLibraryStatus(){
@@ -68,13 +72,34 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
             });
     }
 
-    function loadOfferings() {
-        vm.loadingPromise = cycleService.listAllActiveOfferingsForCycle(vm.cycle)
-            .then(function(offeringsList){
+    function loadOfferingsForCycle(cycle) {
+        if ( cycle )
+            return cycleService.listAllActiveOfferingsForCycle(cycle);
+        return [];
+    }
+
+    function loadOfferingsForThisYear() {
+        return loadOfferingsForCycle(vm.cycle)
+            .then(function (offeringsList) {
                 vm.offerings = offeringsList;
+                return offeringsList;
+            });
+    }
+
+    function loadOfferingsForLastYear() {
+        return loadCycleForLastYear()
+            .then(loadOfferingsForCycle)
+            .then(function(offeringsList){
+                vm.offeringsFromLastYear = offeringsList;
+                return offeringsList;
             });
 
-        return vm.loadingPromise;
+        function loadCycleForLastYear() {
+            return cycleService.listPastFourCyclesMatchingCycle(vm.cycle)
+                .then(function (lastFourCycles) {
+                    return lastFourCycles[0];
+                });
+        }
     }
 
     function selectedLastYear(offering){
@@ -116,6 +141,9 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
     }
 
     function setSelectionScreenState(){
+        //console.log('offerings', vm.offerings);
+        //console.log('offerings for last year', vm.offeringsFromLastYear);
+
         var cycleIsOpen = vm.cycle.isOpenToLibraries();
         var cycleIsClosed = vm.cycle.isClosed();
         var libraryIsComplete = (vm.libraryStatus && vm.libraryStatus.isComplete);
@@ -173,7 +201,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
 
             return offeringService.bulkUpdateOfferings(changedOfferings, vm.cycle)
                 .then(function(){
-                    return loadOfferings(vm.cycle);
+                    return loadOfferingsForCycle(vm.cycle);
                 })
                 .catch(function(err){ Logger.log('error', err, vm.offerings); });
         }
