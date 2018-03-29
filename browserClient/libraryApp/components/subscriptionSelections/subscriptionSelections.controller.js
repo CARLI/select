@@ -35,7 +35,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
     vm.returnToBeginning = returnToBeginning;
     vm.reviewSelections = reviewSelections;
     vm.selectAndUpdateProduct = selectAndUpdateProduct;
-    vm.selectedLastYear = selectedLastYear;
+    vm.selectedLastYear = getLastYearsSelection;
     vm.selectLastYearsSelections = selectLastYearsSelections;
     vm.selectProduct = selectProduct;
     vm.sort = sort;
@@ -112,13 +112,11 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
         }
     }
 
-    function selectedLastYear(offering) {
+    function getLastYearsSelection(offering) {
         var lastYearsOffering = offeringForLastYear(offering);
 
-        console.log('check selection for last year', lastYearsOffering);
-
         if (lastYearsOffering)
-            return !!lastYearsOffering.selection;
+            return lastYearsOffering.selection;
         else
             return getSelectionFromOfferingHistory();
 
@@ -128,20 +126,23 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
             if (offering.history && offering.history[lastYear]) {
                 return offering.history[lastYear].selection;
             }
-            return false;
+            return {};
         }
     }
 
     function getLastYearsSelectionPrice(offering) {
         var lastYear = vm.cycle.year - 1;
+        var lastYearsOffering = offeringForLastYear(offering);
 
-        if (!offering.history || !offering.history[lastYear]) {
-            return '';
-        }
-
-        var lastYearsPricing = offering.history[lastYear].pricing;
-        var lastYearsSelection = selectedLastYear(offering);
+        var lastYearsPricing = {};
+        var lastYearsSelection = getLastYearsSelection(offering);
         var lastYearsSelectionPrice = '';
+
+        if (lastYearsOffering)
+            lastYearsPricing = lastYearsOffering.pricing || {};
+        else if (offering.history && offering.history[lastYear])
+            lastYearsPricing = offering.history[lastYear].pricing;
+
 
         if (lastYearsPricing && lastYearsSelection) {
             var siteLicenseWasSelected = (lastYearsSelection.users == offeringService.siteLicenseSelectionUsers);
@@ -151,7 +152,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
             }
             else {
                 lastYearsPricing.forEach(function (pricingObject) {
-                    if (pricingObject.users == offering.history[lastYear].selection.users) {
+                    if (pricingObject.users == lastYearsSelection.users) {
                         lastYearsSelectionPrice = pricingObject.price;
                     }
                 });
@@ -447,7 +448,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
             });
 
         function exportOffering(offering) {
-            var lastYearsSelection = selectedLastYear(offering);
+            var lastYearsSelection = getLastYearsSelection(offering);
             return [
                 vm.getProductDisplayName(offering.product),
                 lastYearsSelection ? lastYearsSelection.users : '',
