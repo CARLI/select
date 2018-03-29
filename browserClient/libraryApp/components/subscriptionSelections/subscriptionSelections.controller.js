@@ -102,13 +102,34 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
         }
     }
 
-    function selectedLastYear(offering){
-        var lastYear = vm.cycle.year - 1;
+    function offeringForLastYear(offering) {
+        var offeringId = offering.id;
 
-        if ( offering.history && offering.history[lastYear] ){
-            return offering.history[lastYear].selection;
+        return vm.offeringsFromLastYear.filter(matchingOffering)[0];
+
+        function matchingOffering(o) {
+            return o.id === offeringId;
         }
-        return false;
+    }
+
+    function selectedLastYear(offering) {
+        var lastYearsOffering = offeringForLastYear(offering);
+
+        console.log('check selection for last year', lastYearsOffering);
+
+        if (lastYearsOffering)
+            return !!lastYearsOffering.selection;
+        else
+            return getSelectionFromOfferingHistory();
+
+        function getSelectionFromOfferingHistory() {
+            var lastYear = vm.cycle.year - 1;
+
+            if (offering.history && offering.history[lastYear]) {
+                return offering.history[lastYear].selection;
+            }
+            return false;
+        }
     }
 
     function getLastYearsSelectionPrice(offering) {
@@ -141,9 +162,6 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
     }
 
     function setSelectionScreenState(){
-        //console.log('offerings', vm.offerings);
-        //console.log('offerings for last year', vm.offeringsFromLastYear);
-
         var cycleIsOpen = vm.cycle.isOpenToLibraries();
         var cycleIsClosed = vm.cycle.isClosed();
         var libraryIsComplete = (vm.libraryStatus && vm.libraryStatus.isComplete);
