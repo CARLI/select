@@ -585,6 +585,220 @@ function runOfferingSpecificTests(testCycle) {
         });
     });
 
+    describe('the updateHistory repository method', function() {
+        var expectedOffering = {
+            id: 'uuid',
+            type: 'Offering',
+            funding: 'test-value',
+            pricing: {
+                site: 800,
+                su: []
+            },
+            history: {
+                "1980": {
+                    funding: 'test-value',
+                    pricing: {
+                        site: 800,
+                        su: []
+                    },
+                    selection: {
+                        users: "Site License",
+                        price: 800
+                    }
+                }
+            }
+        };
+
+        it('should update the history on the new offering based on the selection of the old (last year) offering', function() {
+            var oldOfferingFromCycle1980 = {
+                id: 'uuid',
+                type: 'Offering',
+                funding: 'test-value',
+                pricing: {
+                    site: 800,
+                    su: []
+                },
+                selection: {
+                    users: "Site License",
+                    price: 800
+                }
+            };
+
+            var newOfferingMissingSelectionHistory = {
+                id: 'uuid',
+                type: 'Offering',
+                funding: 'test-value',
+                pricing: {
+                    site: 800,
+                    su: []
+                },
+                history: {
+                    "1980": {
+                        funding: 'test-value',
+                        pricing: {
+                            site: 800,
+                            su: []
+                        }
+                    }
+                }
+            };
+
+            var actualOffering = offeringRepository.updateHistory(oldOfferingFromCycle1980, newOfferingMissingSelectionHistory, 1980);
+
+            expect(actualOffering).to.deep.equal(expectedOffering);
+        });
+
+        it('does not fail if there is no history, should create the history property', function() {
+            var oldOfferingFromCycle1980 = {
+                id: 'uuid',
+                type: 'Offering',
+                funding: 'test-value',
+                pricing: {
+                    site: 800,
+                    su: []
+                },
+                selection: {
+                    users: "Site License",
+                    price: 800
+                }
+            };
+
+            var newOfferingMissingHistory = {
+                id: 'uuid',
+                type: 'Offering',
+                funding: 'test-value',
+                pricing: {
+                    site: 800,
+                    su: []
+                }
+            };
+
+            var actualOffering = offeringRepository.updateHistory(oldOfferingFromCycle1980, newOfferingMissingHistory, 1980);
+
+            expect(actualOffering).to.deep.equal(expectedOffering);
+        });
+
+        it('does not fail if there is no history for the specified year, should create the history property', function() {
+            var oldOfferingFromCycle1980 = {
+                id: 'uuid',
+                type: 'Offering',
+                funding: 'test-value',
+                pricing: {
+                    site: 800,
+                    su: []
+                },
+                selection: {
+                    users: "Site License",
+                    price: 800
+                }
+            };
+
+            var newOfferingMissingHistoryFor1980 = {
+                id: 'uuid',
+                type: 'Offering',
+                funding: 'test-value',
+                pricing: {
+                    site: 800,
+                    su: []
+                },
+                history: {}
+            };
+
+            var actualOffering = offeringRepository.updateHistory(oldOfferingFromCycle1980, newOfferingMissingHistoryFor1980, 1980);
+
+            expect(actualOffering).to.deep.equal(expectedOffering);
+        });
+
+        it('does not save a direct reference to the old offering', function() {
+            var oldOfferingFromCycle1980 = {
+                id: 'uuid',
+                type: 'Offering',
+                funding: {
+                    'test': 'value'
+                },
+                pricing: {
+                    site: 800,
+                    su: []
+                },
+                selection: {
+                    users: "Site License",
+                    price: 800
+                }
+            };
+
+            var newOfferingMissingSelectionHistory = {
+                id: 'uuid',
+                type: 'Offering',
+                funding: 'test-value',
+                pricing: {
+                    site: 800,
+                    su: []
+                },
+                history: {
+                    "1980": {
+                        funding: 'test-value',
+                        pricing: {
+                            site: 800,
+                            su: []
+                        }
+                    }
+                }
+            };
+
+            var actualOffering = offeringRepository.updateHistory(oldOfferingFromCycle1980, newOfferingMissingSelectionHistory, 1980);
+
+            expect(actualOffering.history['1980'].funding).to.not.equal(oldOfferingFromCycle1980.funding);
+            expect(actualOffering.history['1980'].pricing).to.not.equal(oldOfferingFromCycle1980.pricing);
+            expect(actualOffering.history['1980'].selection).to.not.equal(oldOfferingFromCycle1980.selection);
+        });
+
+        it('does not add a selection to the history if the historical offering did not have one', function() {
+            var oldOfferingFromCycle1980WithNoSelection = {
+                id: 'uuid',
+                type: 'Offering',
+                funding: 'test-value',
+                pricing: {
+                    site: 800,
+                    su: []
+                }
+            };
+
+            var newOfferingMissingSelectionHistory = {
+                id: 'uuid',
+                type: 'Offering',
+                funding: 'test-value',
+                pricing: {
+                    site: 800,
+                    su: []
+                },
+                history: {}
+            };
+
+            var expectedOffering = {
+                id: 'uuid',
+                type: 'Offering',
+                funding: 'test-value',
+                pricing: {
+                    site: 800,
+                    su: []
+                },
+                history: {
+                    "1980": {
+                        funding: 'test-value',
+                        pricing: {
+                            site: 800,
+                            su: []
+                        }
+                    }
+                }
+            };
+
+            var actualOffering = offeringRepository.updateHistory(oldOfferingFromCycle1980WithNoSelection, newOfferingMissingSelectionHistory, 1980);
+
+            expect(actualOffering).to.deep.equal(expectedOffering);
+        });
+    });
+
     function clearAllTestOfferings(){
         return offeringRepository.list(testCycle)
             .then(function(offeringsList){

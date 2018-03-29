@@ -225,6 +225,26 @@ function removeSitePricing(offering) {
     return offering;
 }
 
+function updateHistory(historicalOffering, offering, year) {
+    makeSureHistoryExistsForYear(offering, year);
+
+    if (historicalOffering.selection)
+        offering.history[year].selection = _.clone(historicalOffering.selection);
+
+    offering.history[year].pricing = _.clone(historicalOffering.pricing);
+    offering.history[year].funding = _.clone(historicalOffering.funding);
+
+    return offering;
+}
+
+function makeSureHistoryExistsForYear(offering, year) {
+    if (!offering.history)
+        offering.history = {};
+
+    if (!offering.history[year])
+        offering.history[year] = {};
+}
+
 function loadOffering( offeringId, cycle ){
     var deferred = Q.defer();
 
@@ -1021,5 +1041,6 @@ module.exports = {
     getAmountPaidByCarli: getAmountPaidByCarli,
     resetFlaggedState: resetFlaggedState,
     removeSitePricing: removeSitePricing,
+    updateHistory: updateHistory,
     filterOutExternallyInvoicedProducts: filterOutExternallyInvoicedProducts
 };
