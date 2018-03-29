@@ -144,7 +144,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
             lastYearsPricing = offering.history[lastYear].pricing;
 
 
-        if (lastYearsPricing && lastYearsSelection) {
+        if (lastYearsPricing && lastYearsSelection.users) {
             var siteLicenseWasSelected = (lastYearsSelection.users == offeringService.siteLicenseSelectionUsers);
 
             if (siteLicenseWasSelected) {
@@ -163,6 +163,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
     }
 
     function setSelectionScreenState(){
+console.log('offerings', vm.offerings);
         var cycleIsOpen = vm.cycle.isOpenToLibraries();
         var cycleIsClosed = vm.cycle.isClosed();
         var libraryIsComplete = (vm.libraryStatus && vm.libraryStatus.isComplete);
@@ -207,21 +208,20 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
     }
 
     function selectLastYearsSelections(){
-        var lastYear = vm.cycle.year - 1;
         var changedOfferings = [];
         var selectionProblems = [];
 
         if ( $window.confirm('This will reset all of your selections to last year') ){
             vm.offerings.forEach(selectLastYear);
 
+            console.log('selected last year', vm.offerings, changedOfferings);
+
             activityLogService.logLibrarySelectedLastYearsSelections(vm.cycle, vm.library);
 
             showSelectionProblemsPopup(selectionProblems);
 
             return offeringService.bulkUpdateOfferings(changedOfferings, vm.cycle)
-                .then(function(){
-                    return loadOfferingsForCycle(vm.cycle);
-                })
+                .then(loadOfferingsForThisYear)
                 .catch(function(err){ Logger.log('error', err, vm.offerings); });
         }
 
@@ -229,12 +229,11 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
             if (!shouldDisplayPricing(offering))
                 return;
 
-            var allHistory = offering.history || {};
-            var history = allHistory[lastYear] || {};
-            var wasSelectedLastYear = !!history.selection;
+            var lastYearsSelection = getLastYearsSelection(offering);
+            var wasSelectedLastYear = !!lastYearsSelection.users;
 
             if ( wasSelectedLastYear ){
-                var users = history.selection.users;
+                var users = lastYearsSelection.users;
                 var selectionValidity = lastYearsSelectionIsStillValid(offering, users);
 
                 if ( selectionValidity.isValid ){
