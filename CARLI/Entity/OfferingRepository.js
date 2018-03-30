@@ -225,6 +225,31 @@ function removeSitePricing(offering) {
     return offering;
 }
 
+/**
+ * This is meant to repair missing history, in the case when a product was selected for a cycle
+ * after the next year's cycle had already been created. In case it's not obvious, historicalYearToUpdate
+ * is the previous year, and historicalOffering needs to be loaded from the cycle for that year.
+ */
+function updateHistory(historicalOffering, offering, historicalYearToUpdate) {
+    makeSureHistoryExistsForYear(offering, historicalYearToUpdate);
+
+    if (historicalOffering.selection)
+        offering.history[historicalYearToUpdate].selection = _.clone(historicalOffering.selection);
+
+    offering.history[historicalYearToUpdate].pricing = _.clone(historicalOffering.pricing);
+    offering.history[historicalYearToUpdate].funding = _.clone(historicalOffering.funding);
+
+    return offering;
+}
+
+function makeSureHistoryExistsForYear(offering, year) {
+    if (!offering.history)
+        offering.history = {};
+
+    if (!offering.history[year])
+        offering.history[year] = {};
+}
+
 function loadOffering( offeringId, cycle ){
     var deferred = Q.defer();
 
@@ -1021,5 +1046,6 @@ module.exports = {
     getAmountPaidByCarli: getAmountPaidByCarli,
     resetFlaggedState: resetFlaggedState,
     removeSitePricing: removeSitePricing,
+    updateHistory: updateHistory,
     filterOutExternallyInvoicedProducts: filterOutExternallyInvoicedProducts
 };

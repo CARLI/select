@@ -9,6 +9,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
     vm.reverse = false;
 
     vm.offerings = [];
+    vm.offeringsFromLastYear = [];
     vm.sortOptions = {
         productName: 'product.name',
         vendorName: ['product.vendor.name','product.name'],
@@ -34,7 +35,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
     vm.returnToBeginning = returnToBeginning;
     vm.reviewSelections = reviewSelections;
     vm.selectAndUpdateProduct = selectAndUpdateProduct;
-    vm.selectedLastYear = selectedLastYear;
+    vm.selectedLastYear = getLastYearsSelection;
     vm.selectLastYearsSelections = selectLastYearsSelections;
     vm.selectProduct = selectProduct;
     vm.sort = sort;
@@ -54,9 +55,12 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
 
     function activate(){
         vm.selectionStep = 'loading';
-        return loadLibraryStatus()
-            .then(loadOfferings)
+        vm.loadingPromise = loadLibraryStatus()
+            .then(loadOfferingsForThisYear)
+            .then(loadOfferingsForLastYear)
             .then(setSelectionScreenState);
+
+        return vm.loadingPromise;
     }
 
     function loadLibraryStatus(){
@@ -68,36 +72,79 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
             });
     }
 
-    function loadOfferings() {
-        vm.loadingPromise = cycleService.listAllActiveOfferingsForCycle(vm.cycle)
-            .then(function(offeringsList){
-                vm.offerings = offeringsList;
-            });
-
-        return vm.loadingPromise;
+    function loadOfferingsForCycle(cycle) {
+        if ( cycle )
+            return cycleService.listAllActiveOfferingsForCycle(cycle);
+        return [];
     }
 
-    function selectedLastYear(offering){
-        var lastYear = vm.cycle.year - 1;
+    function loadOfferingsForThisYear() {
+        return loadOfferingsForCycle(vm.cycle)
+            .then(function (offeringsList) {
+                vm.offerings = offeringsList;
+                return offeringsList;
+            });
+    }
 
-        if ( offering.history && offering.history[lastYear] ){
-            return offering.history[lastYear].selection;
+    function loadOfferingsForLastYear() {
+        return loadCycleForLastYear()
+            .then(loadOfferingsForCycle)
+            .then(function(offeringsList){
+                vm.offeringsFromLastYear = offeringsList;
+                return offeringsList;
+            });
+
+        function loadCycleForLastYear() {
+            return cycleService.listPastFourCyclesMatchingCycle(vm.cycle)
+                .then(function (lastFourCycles) {
+                    return lastFourCycles[0];
+                });
         }
-        return false;
+    }
+
+    function offeringForLastYear(offering) {
+        var offeringId = offering.id;
+
+        return vm.offeringsFromLastYear.filter(matchingOffering)[0];
+
+        function matchingOffering(o) {
+            return o.id === offeringId;
+        }
+    }
+
+    function getLastYearsSelection(offering) {
+        var lastYearsOffering = offeringForLastYear(offering);
+
+        if (lastYearsOffering)
+            return lastYearsOffering.selection;
+        else
+            return getSelectionFromOfferingHistory();
+
+        function getSelectionFromOfferingHistory() {
+            var lastYear = vm.cycle.year - 1;
+
+            if (offering.history && offering.history[lastYear]) {
+                return offering.history[lastYear].selection;
+            }
+            return {};
+        }
     }
 
     function getLastYearsSelectionPrice(offering) {
         var lastYear = vm.cycle.year - 1;
+        var lastYearsOffering = offeringForLastYear(offering);
 
-        if (!offering.history || !offering.history[lastYear]) {
-            return '';
-        }
-
-        var lastYearsPricing = offering.history[lastYear].pricing;
-        var lastYearsSelection = selectedLastYear(offering);
+        var lastYearsPricing = {};
+        var lastYearsSelection = getLastYearsSelection(offering);
         var lastYearsSelectionPrice = '';
 
-        if (lastYearsPricing && lastYearsSelection) {
+        if (lastYearsOffering)
+            lastYearsPricing = lastYearsOffering.pricing || {};
+        else if (offering.history && offering.history[lastYear])
+            lastYearsPricing = offering.history[lastYear].pricing;
+
+
+        if (lastYearsPricing && lastYearsSelection.users) {
             var siteLicenseWasSelected = (lastYearsSelection.users == offeringService.siteLicenseSelectionUsers);
 
             if (siteLicenseWasSelected) {
@@ -105,7 +152,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
             }
             else {
                 lastYearsPricing.forEach(function (pricingObject) {
-                    if (pricingObject.users == offering.history[lastYear].selection.users) {
+                    if (pricingObject.users == lastYearsSelection.users) {
                         lastYearsSelectionPrice = pricingObject.price;
                     }
                 });
@@ -142,14 +189,21 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
         };
 
         return offering;
+    }
 
-        function priceForUsers( numberOfUsers ){
-            var pricingObj = offering.pricing.su.filter(matchingUsers)[0];
-            return pricingObj.price;
+    function fixOfferingHistory(offering) {
+        console.log('checking for a fix to offering history', offering.id);
 
-            function matchingUsers(priceObject){
-                return priceObject.users === numberOfUsers;
-            }
+        var lastYear = vm.cycle.year - 1;
+        var oldOffering = offeringForLastYear(offering);
+
+        var currentOfferingIsMissingHistory = (!offering.history || !offering.history[lastYear] || !offering.history[lastYear].selection);
+        var lastYearsSelection = getLastYearsSelection(offering);
+        var wasSelectedLastYear = lastYearsSelection.users;
+
+        if ( currentOfferingIsMissingHistory && wasSelectedLastYear) {
+            offeringService.updateHistory(oldOffering, offering, lastYear);
+            console.log('fixed missing history for ', offering);
         }
     }
 
@@ -160,7 +214,6 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
     }
 
     function selectLastYearsSelections(){
-        var lastYear = vm.cycle.year - 1;
         var changedOfferings = [];
         var selectionProblems = [];
 
@@ -172,9 +225,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
             showSelectionProblemsPopup(selectionProblems);
 
             return offeringService.bulkUpdateOfferings(changedOfferings, vm.cycle)
-                .then(function(){
-                    return loadOfferings(vm.cycle);
-                })
+                .then(loadOfferingsForThisYear)
                 .catch(function(err){ Logger.log('error', err, vm.offerings); });
         }
 
@@ -182,16 +233,16 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
             if (!shouldDisplayPricing(offering))
                 return;
 
-            var allHistory = offering.history || {};
-            var history = allHistory[lastYear] || {};
-            var wasSelectedLastYear = !!history.selection;
+            var lastYearsSelection = getLastYearsSelection(offering);
+            var wasSelectedLastYear = !!lastYearsSelection.users;
 
             if ( wasSelectedLastYear ){
-                var users = history.selection.users;
+                var users = lastYearsSelection.users;
                 var selectionValidity = lastYearsSelectionIsStillValid(offering, users);
 
                 if ( selectionValidity.isValid ){
                     selectProduct(offering, users);
+                    fixOfferingHistory(offering);
                     changedOfferings.push(offering);
                 }
                 else {
@@ -401,7 +452,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
             });
 
         function exportOffering(offering) {
-            var lastYearsSelection = selectedLastYear(offering);
+            var lastYearsSelection = getLastYearsSelection(offering);
             return [
                 vm.getProductDisplayName(offering.product),
                 lastYearsSelection ? lastYearsSelection.users : '',
