@@ -225,14 +225,19 @@ function removeSitePricing(offering) {
     return offering;
 }
 
-function updateHistory(historicalOffering, offering, year) {
-    makeSureHistoryExistsForYear(offering, year);
+/**
+ * This is meant to repair missing history, in the case when a product was selected for a cycle
+ * after the next year's cycle had already been created. In case it's not obvious, historicalYearToUpdate
+ * is the previous year, and historicalOffering needs to be loaded from the cycle for that year.
+ */
+function updateHistory(historicalOffering, offering, historicalYearToUpdate) {
+    makeSureHistoryExistsForYear(offering, historicalYearToUpdate);
 
     if (historicalOffering.selection)
-        offering.history[year].selection = _.clone(historicalOffering.selection);
+        offering.history[historicalYearToUpdate].selection = _.clone(historicalOffering.selection);
 
-    offering.history[year].pricing = _.clone(historicalOffering.pricing);
-    offering.history[year].funding = _.clone(historicalOffering.funding);
+    offering.history[historicalYearToUpdate].pricing = _.clone(historicalOffering.pricing);
+    offering.history[historicalYearToUpdate].funding = _.clone(historicalOffering.funding);
 
     return offering;
 }

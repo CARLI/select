@@ -163,7 +163,6 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
     }
 
     function setSelectionScreenState(){
-console.log('offerings', vm.offerings);
         var cycleIsOpen = vm.cycle.isOpenToLibraries();
         var cycleIsClosed = vm.cycle.isClosed();
         var libraryIsComplete = (vm.libraryStatus && vm.libraryStatus.isComplete);
@@ -190,14 +189,21 @@ console.log('offerings', vm.offerings);
         };
 
         return offering;
+    }
 
-        function priceForUsers( numberOfUsers ){
-            var pricingObj = offering.pricing.su.filter(matchingUsers)[0];
-            return pricingObj.price;
+    function fixOfferingHistory(offering) {
+        console.log('checking for a fix to offering history', offering.id);
 
-            function matchingUsers(priceObject){
-                return priceObject.users === numberOfUsers;
-            }
+        var lastYear = vm.cycle.year - 1;
+        var oldOffering = offeringForLastYear(offering);
+
+        var currentOfferingIsMissingHistory = (!offering.history || !offering.history[lastYear] || !offering.history[lastYear].selection);
+        var lastYearsSelection = getLastYearsSelection(offering);
+        var wasSelectedLastYear = lastYearsSelection.users;
+
+        if ( currentOfferingIsMissingHistory && wasSelectedLastYear) {
+            offeringService.updateHistory(oldOffering, offering, lastYear);
+            console.log('fixed missing history for ', offering);
         }
     }
 
@@ -213,8 +219,6 @@ console.log('offerings', vm.offerings);
 
         if ( $window.confirm('This will reset all of your selections to last year') ){
             vm.offerings.forEach(selectLastYear);
-
-            console.log('selected last year', vm.offerings, changedOfferings);
 
             activityLogService.logLibrarySelectedLastYearsSelections(vm.cycle, vm.library);
 
@@ -238,6 +242,7 @@ console.log('offerings', vm.offerings);
 
                 if ( selectionValidity.isValid ){
                     selectProduct(offering, users);
+                    fixOfferingHistory(offering);
                     changedOfferings.push(offering);
                 }
                 else {
