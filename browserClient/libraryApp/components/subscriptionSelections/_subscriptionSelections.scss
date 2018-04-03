@@ -9,6 +9,11 @@ subscription-selections {
         }
     }
 
+    .column.product-info {
+        max-width: 50%;
+        overflow: hidden;
+    }
+
     ul.review.subscriptions,
     ul.complete.subscriptions {
         .column-headers {
