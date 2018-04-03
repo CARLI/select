@@ -35,7 +35,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
     vm.returnToBeginning = returnToBeginning;
     vm.reviewSelections = reviewSelections;
     vm.selectAndUpdateProduct = selectAndUpdateProduct;
-    vm.selectedLastYear = getLastYearsSelection;
+    vm.selectedLastYear = selectedLastYear;
     vm.selectLastYearsSelections = selectLastYearsSelections;
     vm.selectProduct = selectProduct;
     vm.sort = sort;
@@ -126,7 +126,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
             if (offering.history && offering.history[lastYear]) {
                 return offering.history[lastYear].selection;
             }
-            return {};
+            return null;
         }
     }
 
@@ -135,7 +135,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
         var lastYearsOffering = offeringForLastYear(offering);
 
         var lastYearsPricing = {};
-        var lastYearsSelection = getLastYearsSelection(offering);
+        var lastYearsSelection = getLastYearsSelection(offering) || {};
         var lastYearsSelectionPrice = '';
 
         if (lastYearsOffering)
@@ -160,6 +160,10 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
         }
 
         return lastYearsSelectionPrice;
+    }
+
+    function selectedLastYear(offering) {
+        return !!getLastYearsSelection(offering);
     }
 
     function setSelectionScreenState(){
@@ -198,7 +202,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
         var oldOffering = offeringForLastYear(offering);
 
         var currentOfferingIsMissingHistory = (!offering.history || !offering.history[lastYear] || !offering.history[lastYear].selection);
-        var lastYearsSelection = getLastYearsSelection(offering);
+        var lastYearsSelection = getLastYearsSelection(offering) || {};
         var wasSelectedLastYear = lastYearsSelection.users;
 
         if ( currentOfferingIsMissingHistory && wasSelectedLastYear) {
@@ -233,7 +237,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
             if (!shouldDisplayPricing(offering))
                 return;
 
-            var lastYearsSelection = getLastYearsSelection(offering);
+            var lastYearsSelection = getLastYearsSelection(offering) || {};
             var wasSelectedLastYear = !!lastYearsSelection.users;
 
             if ( wasSelectedLastYear ){
