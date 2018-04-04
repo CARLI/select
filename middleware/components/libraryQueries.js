@@ -8,35 +8,13 @@ var vendorRepository = require('../../CARLI/Entity/VendorRepository');
 
 var Q = require('q');
 
-/* This function exists to facilitate listing the selections for a library on their dashboard.
- * Since there are multiple cycles shown, there were issues with making all the requests from the browser.
- * The offering repository was getting mixed up and trying to load products from the wrong cycle.
- *
- * Do all the requests here, and also load all the Vendors and Licenses for the Products that are in the Offerings.
- * (i.e. load the entities two-layers deep for the Offerings)
+
+/**
+ * This function is a utility to expand products on a list of offerings. It also expands the vendor and license information.
  */
-function listSelectionsForLibraryFromCycle( libraryId, cycleId ){
-    Logger.log('listSelectionsForLibraryFromCycle('+libraryId+', '+cycleId+')');
-    var cycle = null;
-
-    return cycleRepository.load(cycleId)
-        .then(function(loadedCycle){
-            cycle = loadedCycle;
-            return offeringRepository.listOfferingsWithSelectionsForLibrary(libraryId, cycle);
-        })
-        .catch(function(err){
-            Logger.log('Error 1 listing selections for library '+libraryId+' from cycle '+cycle.name, err.stack);
-            Logger.log(err);
-            throw new Error('Error listing selections from ' + cycle.name);
-        })
-        .then(populateProductsForOfferings)
-        .catch(function(err){
-            Logger.log('Error 2 listing selections for library '+libraryId+' from cycle '+cycle.name, err.stack);
-            Logger.log(err);
-            throw new Error('Error listing selections from ' + cycle.name);
-        });
-
-    function populateProductsForOfferings( offeringsList ){
+function populateProductsForOfferings(cycle) {
+    return function(offeringsList) {
+        console.log('expand ' + offeringsList.length + ' offerings for ' + cycle.name);
         return getProductIds(offeringsList)
             .then(loadProductsById)
             .then(mapProductsById)
@@ -72,7 +50,7 @@ function listSelectionsForLibraryFromCycle( libraryId, cycleId ){
         function replaceProductIdsWithProducts(productMap){
             return offeringsList.map(replaceOfferingProduct);
 
-            function replaceOfferingProduct(offering){
+            function replaceOfferingProduct(offering) {
                 var productId = getProductId(offering);
                 offering.product = productMap[productId];
                 return offering;
@@ -129,7 +107,7 @@ function listSelectionsForLibraryFromCycle( libraryId, cycleId ){
         function replaceLicenseIdsWithLicenseObjects(licenseMap){
             return offeringsList.map(replaceOfferingProductLicense);
 
-            function replaceOfferingProductLicense(offering){
+            function replaceOfferingProductLicense(offering) {
                 offering.product.license = licenseMap[offering.product.license];
                 return offering;
             }
@@ -137,42 +115,87 @@ function listSelectionsForLibraryFromCycle( libraryId, cycleId ){
     }
 }
 
-/* Used by the selection screens in the library app. They need all of their offerings plus vendor and license info from
- * the Products for each offering.
- * Load all of that in the middleware to prevent the browser from doing too many requests.
+/* This function exists to facilitate listing the selections for a library on their dashboard.
+ * Since there are multiple cycles shown, there were issues with making all the requests from the browser.
+ * The offering repository was getting mixed up and trying to load products from the wrong cycle.
+ *
+ * Do all the requests here, and also load all the Vendors and Licenses for the Products that are in the Offerings.
+ * (i.e. load the entities two-layers deep for the Offerings)
  */
-function listOfferingsForLibraryWithExpandedProducts( libraryId, cycleId ){
+function listSelectionsForLibraryFromCycle( libraryId, cycleId ){
+    Logger.log('listSelectionsForLibraryFromCycle('+libraryId+', '+cycleId+')');
     var cycle = null;
 
     return cycleRepository.load(cycleId)
         .then(function(loadedCycle){
             cycle = loadedCycle;
-            return offeringRepository.listOfferingsForLibraryId(libraryId, cycle);
+            return offeringRepository.listOfferingsWithSelectionsForLibraryUnexpanded(libraryId, cycle)
+                .then(populateProductsForOfferings(loadedCycle))
+                .catch(function(err){
+                    Logger.log('Error 2 listing selections for library '+libraryId+' from cycle '+cycle.name, err.stack);
+                    Logger.log(err);
+                    throw new Error('Error listing selections from ' + cycle.name);
+                })
         })
-        .then(populateProductsForOfferings)
         .catch(function(err){
-            Logger.log('  ** Error populating products', err);
+            Logger.log('Error 1 listing selections for library '+libraryId+' from cycle '+cycle.name, err.stack);
+            Logger.log(err);
+            throw new Error('Error listing selections from ' + cycle.name);
+        });
+}
+
+/* Used by the selection screens in the library app. They need all of their offerings plus vendor and license info from
+ * the Products for each offering.
+ * Load all of that in the middleware to prevent the browser from doing too many requests.
+ */
+function listOfferingsForLibraryWithExpandedProducts( libraryId, cycleId ){
+    Logger.log('listOfferingsForLibraryWithExpandedProducts('+libraryId+', '+cycleId+')');
+
+    var cycle = null;
+
+    return cycleRepository.load(cycleId)
+        .then(function(loadedCycle){
+            cycle = loadedCycle;
+            return offeringRepository.listOfferingsForLibraryIdUnexpanded(libraryId, cycle)
+                .then(populateProductsForOfferings(loadedCycle));
+        })
+        .then(filterToOnlyActiveOfferings)
+        .then(optimizeOfferingsToReduceData)
+        .catch(function(err){
+            Logger.log('  ** Error listing offerings for library from ' + cycle.name, err);
+            console.log(err.stacktrace);
             throw new Error('Error loading data for ' + cycle.name);
         });
 
-    function populateProductsForOfferings( offeringsList ){
-        return Q.all(offeringsList.map(loadProduct));
+    function filterToOnlyActiveOfferings(offeringsList) {
+        console.log('filtering ' + offeringsList.length + ' To only active');
+        return offeringsList.filter(productIsActive).filter(offeringShouldBeDisplayed);
 
-        function loadProduct(offering){
-            return productRepository.load(productId(), cycle)
-                .then(function(product){
-                    offering.product = product;
-                    return offering;
-                })
-                .catch(function(err){
-                    Logger.log('    error expanding product '+err.message);
-                });
+        function productIsActive(offering){
+            var product = offering.product || {};
+            var licenseIsActive = product.license ? product.license.isActive : true;
+            var  vendorIsActive = product.vendor  ? product.vendor.isActive  : true;
+            return product.isActive && licenseIsActive && vendorIsActive;
+        }
 
-            function productId(){
-                return typeof offering.product === 'string' ? offering.product : offering.product.id;
-            }
+        function offeringShouldBeDisplayed(offering) {
+            return offering.display !== 'none';
         }
     }
+
+    function optimizeOfferingsToReduceData(offeringsList) {
+        console.log('optimizing ' + offeringsList.length + ' offerings');
+        return offeringsList.map(reduceData);
+
+        function reduceData(offering){
+            offering.cycle = cycleId;
+            offering.library = libraryId;
+
+            return offering;
+        }
+    }
+
+
 }
 
 function getHistoricalSelectionDataForLibraryForProduct( libraryId, productId, cycleId ){
