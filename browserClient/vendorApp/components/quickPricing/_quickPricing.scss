@@ -173,6 +173,10 @@ quick-pricing-su {
                     content: "\f046"; //check-o
                 }
             }
+
+            .quick-pricing-entity-list-checkbox:focus ~ .quick-pricing-entity-list-label {
+                outline: 1px solid $light-purple;
+            }
         }
 
         quick-pricing-library-selector {
