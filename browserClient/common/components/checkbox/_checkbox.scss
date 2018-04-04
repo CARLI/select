@@ -8,6 +8,7 @@ checkbox {
     input[type="checkbox"]  {
         margin: 0;
         opacity: 0;
+        pointer-events: none;
         position: absolute;
 
         & + label .checkbox-display:before {
@@ -37,11 +38,11 @@ checkbox {
         font-weight: normal;
         margin: 0;
         padding-left: 1.5em;
+    }
 
-        &:focus {
-            outline: solid green 5px;
-            outline-offset: -2px;
-        }
+    input[type="checkbox"]:focus ~ label {
+        outline: solid $light-purple 2px;
+        outline-offset: -2px;
     }
 
     .fa {
@@ -49,10 +50,6 @@ checkbox {
         left: 0;
         position: absolute;
         top: 0;
-    }
-
-    &.focused {
-        background: $gray;
     }
 
     &[disabled] {
