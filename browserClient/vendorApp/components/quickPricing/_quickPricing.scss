@@ -138,35 +138,45 @@ quick-pricing-su {
                 @include vendor-prefix('column-count', 4);
 
                 li.entity {
-                    background-color: $white;
-                    border: $default-border;
-                    display: flex;
-                    @include body-text;
-                    margin: 0 0 1rem 0;
-                    padding: 1rem;
-
                     @include avoid-column-break;
-
-                    checkbox {
-                        flex: 0 0 22px;
-
-                        label {
-                            ng-transclude span {
-                                font-size: 0;
-                            }
-                        }
-                    }
-                    .name {
-                        flex: 1 1 90%;
-                    }
-
-                    &.selected {
-                        border-color: $purple;
-                        color: $purple;
-                    }
                 }
             }
 
+            .quick-pricing-entity-list-checkbox {
+                left: -9999px;
+                position: absolute;
+            }
+
+            .quick-pricing-entity-list-label {
+                background-color: $white;
+                border: $default-border;
+                display: flex;
+                @include body-text;
+                margin: 0 0 1rem 0;
+                padding: 1rem;
+                transition: border-color 200ms ease-in-out, color 200ms ease-in-out;
+
+                &:before {
+                    color: $black;
+                    content: "\f096"; //square-o
+                    @include flex(0 0 20px);
+                    font-family: "FontAwesome";
+                    font-size: 17px;
+                }
+            }
+
+            .quick-pricing-entity-list-checkbox:checked ~ .quick-pricing-entity-list-label {
+                border-color: $purple;
+                color: $purple;
+
+                &:before {
+                    content: "\f046"; //check-o
+                }
+            }
+
+            .quick-pricing-entity-list-checkbox:focus ~ .quick-pricing-entity-list-label {
+                outline: 1px solid $light-purple;
+            }
         }
 
         quick-pricing-library-selector {

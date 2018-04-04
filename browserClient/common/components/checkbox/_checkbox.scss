@@ -42,7 +42,7 @@ checkbox {
 
     input[type="checkbox"]:focus ~ label {
         outline: solid $light-purple 2px;
-        outline-offset: -2px;
+        outline-offset: 2px;
     }
 
     .fa {
