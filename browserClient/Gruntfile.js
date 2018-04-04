@@ -60,7 +60,8 @@ module.exports = function ( grunt ) {
             options: {
                 force: true
             },
-            build: [user_config.build_dir, user_config.compile_dir ],
+            build: [user_config.build_dir],
+            compile: [user_config.compile_dir],
             compileCleanup: [
                 user_config.processed_sass_file('carli'),
                 user_config.processed_sass_file('library'),
@@ -740,7 +741,7 @@ module.exports = function ( grunt ) {
      * minifying your code.
      */
     grunt.registerTask( 'compile', [
-        'clean:build',
+        'clean:compile',
         'copy:compile',
         'sass:compile',
         'cssmin:compile',
