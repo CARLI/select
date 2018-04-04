@@ -33,7 +33,9 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
         activityLog.userEmail = user.email;
 
         return $q.when(activityLogModule.create(activityLog))
-            .catch(errorHandler);
+            .catch(function(err){
+                console.log('error logging activity', activityLog);
+            });
     }
 
     function listActivityBetween(startDate, endDate){
@@ -161,7 +163,7 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
         return logActivity(activity);
     }
 
-    function logLibrarySelectedProduct(offering, cycle){
+    function logLibrarySelectedProduct(offering, cycle, optionalLibraryName){
         var activity = {
             actionDescription: offering.product.name + ' selected by library',
             app: 'library',
@@ -170,13 +172,16 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
 
         addEntityProperties(activity, offering);
 
+        if ( optionalLibraryName )
+            activity.libraryName = optionalLibraryName;
+
         activity.cycleId = cycle.id;
         activity.cycleName = cycle.name;
 
         return logActivity(activity);
     }
 
-    function logLibraryRemovedProduct(offering, cycle){
+    function logLibraryRemovedProduct(offering, cycle, optionalLibraryName){
         var activity = {
             actionDescription: offering.product.name + ' removed by library',
             app: 'library',
@@ -184,6 +189,9 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
         };
 
         addEntityProperties(activity, offering);
+
+        if ( optionalLibraryName )
+            activity.libraryName = optionalLibraryName;
 
         activity.cycleId = cycle.id;
         activity.cycleName = cycle.name;
@@ -283,8 +291,13 @@ function activityLogService( CarliModules, $q, cycleService, errorHandler, userS
             activityData.vendorName = entity.vendor.name;
         }
         else if ( entity.type === 'Offering' ){
-            activityData.libraryId = entity.library.id;
-            activityData.libraryName = entity.library.name;
+            if ( typeof(entity.library) === 'object' ) {
+                activityData.libraryId = entity.library.id;
+                activityData.libraryName = entity.library.name;
+            }
+            else {
+                activityData.libraryId = entity.library;
+            }
             activityData.productId = entity.product.id;
             activityData.productName = entity.product.name;
             activityData.vendorId = entity.vendorId;

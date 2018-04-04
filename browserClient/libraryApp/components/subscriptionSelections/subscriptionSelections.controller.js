@@ -429,11 +429,11 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
     }
 
     function logProductSelected(offering){
-        return activityLogService.logLibrarySelectedProduct(offering, vm.cycle);
+        return activityLogService.logLibrarySelectedProduct(offering, vm.cycle, vm.library.name);
     }
 
     function logProductRemoved(offering){
-        return activityLogService.logLibraryRemovedProduct(offering, vm.cycle);
+        return activityLogService.logLibraryRemovedProduct(offering, vm.cycle, vm.library.name);
     }
 
     function exportProductList() {
