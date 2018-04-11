@@ -392,6 +392,7 @@ describe('A Full Subscription Cycle Banner Export Integration Test', function ()
     }
 });
 
+// WARNING: this test relies on the one above it to set up the test cycle and membership data. If you .only() this one it will fail for strange reasons.
 describe('A Membership Year Banner Export Integration Test', function () {
     var testMembershipYear = 2020;
 
