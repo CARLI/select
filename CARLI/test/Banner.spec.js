@@ -392,7 +392,7 @@ describe('A Full Subscription Cycle Banner Export Integration Test', function ()
     }
 });
 
-describe.only('A Membership Year Banner Export Integration Test', function () {
+describe('A Membership Year Banner Export Integration Test', function () {
     var testMembershipYear = 2020;
 
     it('exports a valid banner feed', function () {

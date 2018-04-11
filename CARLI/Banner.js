@@ -15,6 +15,7 @@ function getDataForBannerExportForSubscriptionCycle(cycle, batchId, formatter) {
         .then(groupLibrariesById)
         .then(loadInvoiceNotifications)
         .then(getDataForBatchId)
+        .then(collapseDataByDetailCode)
         .then(formatBatchAsBannerFeed);
 
     function filterLibraries(libraries) {
@@ -121,6 +122,10 @@ function getDataForBannerExportForSubscriptionCycle(cycle, batchId, formatter) {
         }
     }
 
+    function collapseDataByDetailCode(data) {
+        return collapseBannerRowsByDetailCode(data);
+    }
+
     function formatBatchAsBannerFeed(bannerFeedData) {
         return formatter(batchId, bannerFeedData);
     }
@@ -179,8 +184,6 @@ function getDataForBannerExportForMembershipDues(year, batchId, formatter) {
         return dataForBatch;
 
         function combineDataForBannerExport(library) {
-            console.log('combine data for banner export', library);
-
             var membershipDetailCode = 'USIA';
             var ishareDetailCode = 'USIF';
 
@@ -230,27 +233,7 @@ function shouldAppearInBannerFeed(library) {
 }
 
 function formatAsPackedText(batchId, bannerFeedDataByLibraryAndDetailCode) {
-    console.log('--------------------------- Format Banner Feed TEXT -------------------------------');
-    console.log(bannerFeedDataByLibraryAndDetailCode);
-    console.log('\n');
-    console.log('1', bannerFeedDataByLibraryAndDetailCode['1']);
-    console.log('\n');
-    console.log('3', bannerFeedDataByLibraryAndDetailCode['3']);
-    console.log('\n');
-    console.log('58', bannerFeedDataByLibraryAndDetailCode['58']);
-    console.log('-----------------------------------------------------------------------------------');
-
-    var data = collapseBannerRowsByDetailCode(bannerFeedDataByLibraryAndDetailCode);
-
-    console.log('--------------------------- COLLAPSED DATA -------------------------------');
-    console.log(data);
-    console.log('\n');
-    console.log('1', data['1']);
-    console.log('\n');
-    console.log('3', data['3']);
-    console.log('\n');
-    console.log('58', data['58']);
-    console.log('-----------------------------------------------------------------------------------');
+    var data = bannerFeedDataByLibraryAndDetailCode;
 
     var lines = [];
     var bannerHeaderIndicator = '1';
@@ -291,11 +274,6 @@ function formatAsPackedText(batchId, bannerFeedDataByLibraryAndDetailCode) {
     }
 
     function generateBannerRow(invoiceData) {
-
-        console.log('=========================================================================');
-        console.log('generateBannerRow', invoiceData);
-        console.log('=========================================================================');
-
         if (!invoiceData.library.gar) {
             throw carliError('Cannot generate banner feed for a library with no GAR (' + invoiceData.library.name + ')');
         }
@@ -380,17 +358,6 @@ function formatAsPackedText(batchId, bannerFeedDataByLibraryAndDetailCode) {
 }
 
 function formatAsCsv(batchId, bannerFeedDataByLibraryAndDetailCode) {
-    console.log('--------------------------- Format Banner Feed CSV---------------------------------');
-    console.log(bannerFeedDataByLibraryAndDetailCode);
-    console.log('\n');
-    console.log('1', bannerFeedDataByLibraryAndDetailCode['1']);
-    console.log('\n');
-    console.log('3', bannerFeedDataByLibraryAndDetailCode['3']);
-    console.log('\n');
-    console.log('58', bannerFeedDataByLibraryAndDetailCode['58']);
-    console.log('-----------------------------------------------------------------------------------');
-
-    //todo: collapse
     var data = bannerFeedDataByLibraryAndDetailCode;
     var lines = [];
     var totalDollars = 0;
