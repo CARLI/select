@@ -131,8 +131,6 @@ function getDataForBannerExportForMembershipDues(year, batchId, formatter) {
         formatter = formatAsCsv;
     }
 
-    console.log("Year: " + year + ", batchId: " + batchId);
-
     var invoicesForBatchByLibraryId = {};
     var membershipDuesByLibraryId = {};
 
@@ -154,8 +152,6 @@ function getDataForBannerExportForMembershipDues(year, batchId, formatter) {
             invoicesForBatchByLibraryId[invoice.targetEntity] = invoice;
         });
 
-        console.log("invoicesForBatchByLibId: ", invoicesForBatchByLibraryId);
-
         return invoicesForBatchByLibraryId;
     }
 
@@ -169,7 +165,6 @@ function getDataForBannerExportForMembershipDues(year, batchId, formatter) {
     }
 
     function getLibrariesForExport(membershipData) {
-        console.log("membershipData in getLibForExp: " , membershipData);
         return LibraryRepository.getLibrariesById(membershipRepository.listLibrariesWithDues(membershipData))
             .then(function (libraryList) {
                 return libraryList.filter(shouldAppearInBannerFeed);
@@ -181,12 +176,11 @@ function getDataForBannerExportForMembershipDues(year, batchId, formatter) {
 
         librariesForBannerExport.forEach(combineDataForBannerExport);
 
-        console.log("gatherBannerFeedData(): libForBannerExp: " , librariesForBannerExport);
-        console.log("--dataForBatch: ", dataForBatch);
-
         return dataForBatch;
 
         function combineDataForBannerExport(library) {
+            console.log('combine data for banner export', library);
+
             var membershipDetailCode = 'USIA';
             var ishareDetailCode = 'USIF';
 
@@ -236,7 +230,28 @@ function shouldAppearInBannerFeed(library) {
 }
 
 function formatAsPackedText(batchId, bannerFeedDataByLibraryAndDetailCode) {
-    var data = bannerFeedDataByLibraryAndDetailCode;
+    console.log('--------------------------- Format Banner Feed TEXT -------------------------------');
+    console.log(bannerFeedDataByLibraryAndDetailCode);
+    console.log('\n');
+    console.log('1', bannerFeedDataByLibraryAndDetailCode['1']);
+    console.log('\n');
+    console.log('3', bannerFeedDataByLibraryAndDetailCode['3']);
+    console.log('\n');
+    console.log('58', bannerFeedDataByLibraryAndDetailCode['58']);
+    console.log('-----------------------------------------------------------------------------------');
+
+    var data = collapseBannerRowsByDetailCode(bannerFeedDataByLibraryAndDetailCode);
+
+    console.log('--------------------------- COLLAPSED DATA -------------------------------');
+    console.log(data);
+    console.log('\n');
+    console.log('1', data['1']);
+    console.log('\n');
+    console.log('3', data['3']);
+    console.log('\n');
+    console.log('58', data['58']);
+    console.log('-----------------------------------------------------------------------------------');
+
     var lines = [];
     var bannerHeaderIndicator = '1';
     var bannerRecordIndicator = '2';
@@ -276,6 +291,11 @@ function formatAsPackedText(batchId, bannerFeedDataByLibraryAndDetailCode) {
     }
 
     function generateBannerRow(invoiceData) {
+
+        console.log('=========================================================================');
+        console.log('generateBannerRow', invoiceData);
+        console.log('=========================================================================');
+
         if (!invoiceData.library.gar) {
             throw carliError('Cannot generate banner feed for a library with no GAR (' + invoiceData.library.name + ')');
         }
@@ -360,6 +380,17 @@ function formatAsPackedText(batchId, bannerFeedDataByLibraryAndDetailCode) {
 }
 
 function formatAsCsv(batchId, bannerFeedDataByLibraryAndDetailCode) {
+    console.log('--------------------------- Format Banner Feed CSV---------------------------------');
+    console.log(bannerFeedDataByLibraryAndDetailCode);
+    console.log('\n');
+    console.log('1', bannerFeedDataByLibraryAndDetailCode['1']);
+    console.log('\n');
+    console.log('3', bannerFeedDataByLibraryAndDetailCode['3']);
+    console.log('\n');
+    console.log('58', bannerFeedDataByLibraryAndDetailCode['58']);
+    console.log('-----------------------------------------------------------------------------------');
+
+    //todo: collapse
     var data = bannerFeedDataByLibraryAndDetailCode;
     var lines = [];
     var totalDollars = 0;
@@ -441,6 +472,80 @@ function listBatchesForCycle(cycle) {
     }
 }
 
+/**
+ * This is used to combine the rows for a single library that are all for the same detail code into one row (Github #48)
+ * The function expects the data passed into formatAsPackedText() or formatAsCsv()
+ *
+ * The data structure in bannerFeedDataByLibraryAndDetailCode looks like
+ *
+ * 'libraryId': {
+ *   DetailCode: [
+ *     { data for banner row }
+ *   ]
+ * }
+ *
+ *
+ * Example:
+ *
+ * {
+ *    '1': {
+ *      USII: [
+ *        {
+ *          batchId: 'USI00001',
+ *          date: '',
+ *          library: [Object],
+ *          dollarAmount: 900,
+ *          detailCode: 'USII',
+ *          detailCodeFull: 'USII - Fiscal Database',
+ *          invoiceNumber: 'USIN03AA'
+ *        },
+ *        ...
+ *      ],
+ *      USIB: [ ... ]
+ *    },
+ *    ...
+ * }
+ *
+ */
+function collapseBannerRowsByDetailCode(bannerFeedDataByLibraryAndDetailCode) {
+    var dataByLibraryAndCollapsedDetailCode = {};
+
+    Object.keys(bannerFeedDataByLibraryAndDetailCode).forEach(function(libraryId){
+        var dataForLibrary = bannerFeedDataByLibraryAndDetailCode[libraryId];
+        var collapsedDataByDetailCodeForLibrary = {};
+
+        Object.keys(dataForLibrary).forEach(function(detailCode) {
+            var arrayOfRowsForDetailCode = dataForLibrary[detailCode];
+
+            collapsedDataByDetailCodeForLibrary[detailCode] = [];
+
+            if ( arrayOfRowsForDetailCode.length ) {
+                var firstRow = arrayOfRowsForDetailCode[0];
+
+                var combinedRow = {
+                    batchId: firstRow['batchId'],
+                    date: firstRow['date'],
+                    library: firstRow['library'],
+                    dollarAmount: 0,
+                    detailCode: firstRow['detailCode'],
+                    detailCodeFull: firstRow['detailCodeFull'],
+                    invoiceNumber: firstRow['invoiceNumber']
+                };
+
+                arrayOfRowsForDetailCode.forEach(function (row) {
+                    combinedRow.dollarAmount += row.dollarAmount;
+                });
+
+                collapsedDataByDetailCodeForLibrary[detailCode].push(combinedRow);
+            }
+        });
+
+        dataByLibraryAndCollapsedDetailCode[libraryId] = collapsedDataByDetailCodeForLibrary;
+    });
+
+    return dataByLibraryAndCollapsedDetailCode;
+}
+
 module.exports = {
     getDataForBannerExportForSubscriptionCycleAsPackedText: function (cycle, batchId) {
         return getDataForBannerExportForSubscriptionCycle(cycle, batchId, formatAsPackedText);
@@ -454,5 +559,6 @@ module.exports = {
     getDataForBannerExportForMembershipDuesAsCsv: function (year, batchId) {
         return getDataForBannerExportForMembershipDues(year, batchId, formatAsCsv);
     },
-    listBatchesForCycle: listBatchesForCycle
+    listBatchesForCycle: listBatchesForCycle,
+    collapseBannerRowsByDetailCode: collapseBannerRowsByDetailCode
 };
