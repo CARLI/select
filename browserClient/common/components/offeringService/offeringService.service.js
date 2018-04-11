@@ -5,7 +5,6 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
 
     var offeringModule = CarliModules.Offering;
     var productMiddleware = CarliModules.ProductMiddleware;
-    var vendorPricingCsv = CarliModules.vendorPricingCsv;
 
     var offeringDisplayLabels = {
         'with-price': 'Display with price',
@@ -108,10 +107,6 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
         },
         updateHistory: function (oldOffering, offering, year) {
             return offeringModule.updateHistory(oldOffering, offering, year);
-        },
-        uploadSitePricing: function(fileContents) {
-            //csv → json
-            return $q.when( vendorPricingCsv.uploadSitePricing(fileContents) );
         },
         populateNonCrmLibraryData: populateNonCrmLibraryData,
         siteLicenseSelectionUsers: offeringModule.siteLicenseSelectionUsers

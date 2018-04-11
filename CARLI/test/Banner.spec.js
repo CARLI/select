@@ -202,8 +202,86 @@ describe('The Banner Module', function () {
     });
 });
 
-/* Skipping this test because the file copying in fs-extra tries to chmod the files and there is a problem with that
- * see: https://github.com/jprichardson/node-fs-extra/issues/199 */
+describe('Combining line items by detail code', function() {
+    it('should be a function', function() {
+            expect(bannerModule.collapseBannerRowsByDetailCode).to.be.a('function');
+    });
+
+    it('should combine the rows for the same detail code into one', function () {
+        var bannerFeedDataByLibraryAndDetailCode = {
+            '1': {
+                USII: [
+                    {
+                        batchId: 'USI00001',
+                        date: '',
+                        library: testLibraryData[0],
+                        dollarAmount: 100,
+                        detailCode: 'USII',
+                        detailCodeFull: 'USII - Fiscal Database',
+                        invoiceNumber: 'USIN03AA'
+                    },
+                    {
+                        batchId: 'USI00001',
+                        date: '',
+                        library: testLibraryData[0],
+                        dollarAmount: 100,
+                        detailCode: 'USII',
+                        detailCodeFull: 'USII - Fiscal Database',
+                        invoiceNumber: 'USIN03AA'
+                    },
+                    {
+                        batchId: 'USI00001',
+                        date: '',
+                        library: testLibraryData[0],
+                        dollarAmount: 100,
+                        detailCode: 'USII',
+                        detailCodeFull: 'USII - Fiscal Database',
+                        invoiceNumber: 'USIN03AA'
+                    }
+                ]
+            }
+        };
+
+        var expectedOutput = {
+            '1': {
+                USII: [
+                    {
+                        batchId: 'USI00001',
+                        date: '',
+                        library: testLibraryData[0],
+                        dollarAmount: 300,
+                        detailCode: 'USII',
+                        detailCodeFull: 'USII - Fiscal Database',
+                        invoiceNumber: 'USIN03AA'
+                    }
+                ]
+            }
+        };
+
+        var actualOutput = bannerModule.collapseBannerRowsByDetailCode(bannerFeedDataByLibraryAndDetailCode);
+
+        expect(actualOutput).to.deep.equal(expectedOutput);
+    });
+
+    it('ignores empty arrays for detail codes', function () {
+        var bannerFeedDataByLibraryAndDetailCode = {
+            '1': {
+                USII: []
+            }
+        };
+
+        var expectedOutput = {
+            '1': {
+                USII: []
+            }
+        };
+
+        var actualOutput = bannerModule.collapseBannerRowsByDetailCode(bannerFeedDataByLibraryAndDetailCode);
+
+        expect(actualOutput).to.deep.equal(expectedOutput);
+    });
+});
+
 describe('A Full Subscription Cycle Banner Export Integration Test', function () {
     it('exports a valid banner feed', function () {
         return cycleRepository.create(testCycleData)
@@ -304,24 +382,16 @@ describe('A Full Subscription Cycle Banner Export Integration Test', function ()
             var bannerFileRegex = /2USI00001@[0-9]{8}         9CARLI                        USII0[0-9]{8}.00          USIN0\dAA\s{62}/;
 
             return Q.all([
-                expect(bannerFeedLines.length).to.equal(10), //header plus 9 invoices
-                expect(bannerFeedLines[0]).to.equal('1USI00001' + batchCreationDate() + '00009000018700.009CARLI  \r'),
+                expect(bannerFeedLines.length).to.equal(4), //header plus 3 library + detail code lines
+                expect(bannerFeedLines[0]).to.equal('1USI00001' + batchCreationDate() + '00003000018700.009CARLI  \r'),
                 expect(bannerFeedLines[1]).to.match(bannerFileRegex),
                 expect(bannerFeedLines[2]).to.match(bannerFileRegex),
-                expect(bannerFeedLines[3]).to.match(bannerFileRegex),
-                expect(bannerFeedLines[4]).to.match(bannerFileRegex),
-                expect(bannerFeedLines[5]).to.match(bannerFileRegex),
-                expect(bannerFeedLines[6]).to.match(bannerFileRegex),
-                expect(bannerFeedLines[7]).to.match(bannerFileRegex),
-                expect(bannerFeedLines[8]).to.match(bannerFileRegex),
-                expect(bannerFeedLines[9]).to.match(bannerFileRegex)
+                expect(bannerFeedLines[3]).to.match(bannerFileRegex)
             ]);
         }
     }
 });
 
-/* Skipping this test because the file copying in fs-extra tries to chmod the files and there is a problem with that
- * see: https://github.com/jprichardson/node-fs-extra/issues/199 */
 describe('A Membership Year Banner Export Integration Test', function () {
     var testMembershipYear = 2020;
 
