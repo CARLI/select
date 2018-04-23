@@ -28,6 +28,7 @@ var columnName = {
     name: 'Name',
     numberSelected: 'Number Selected',
     phoneNumber: 'Phone Number',
+    priceCap: 'Price Cap',
     priceFull: 'Price',
     priceFunded: 'Price',
     product: 'Product',
@@ -445,7 +446,7 @@ function totalsReport( reportParameters, userSelectedColumns ){
 }
 
 function listProductsForVendorReport( reportParameters, userSelectedColumns ){ /* add optional detailCode */
-    var defaultReportColumns = ['cycle', 'license', 'vendor', 'product'];
+    var defaultReportColumns = ['cycle', 'license', 'vendor', 'product', 'priceCap'];
     var vendorsParameter = getVendorParameter(reportParameters) || [];
     var licensesParameter = getLicenseParameter(reportParameters) || [];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
@@ -464,7 +465,8 @@ function listProductsForVendorReport( reportParameters, userSelectedColumns ){ /
             cycle: product.cycle.name,
             vendor: product.vendor.name,
             product: product.name,
-            license: product.license.name
+            license: product.license.name,
+            priceCap: priceCapValue(product)
         };
 
         if ( isEnabled('detailCode') ){
@@ -502,6 +504,13 @@ function listProductsForVendorReport( reportParameters, userSelectedColumns ){ /
                 return licensesParameter.indexOf(product.license.id) >= 0;
             return false;
         }
+    }
+
+    function priceCapValue(product) {
+        if ( typeof product.priceCap === 'undefined' )
+            return '';
+        else
+            return (product.priceCap || 0) + '%';
     }
 }
 
