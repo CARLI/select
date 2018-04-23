@@ -10,4 +10,20 @@
     .no-cycles {
         @include font-size(16);
     }
+
+    .cycle-button {
+        @extend .carli-button;
+
+        &--open {
+            background-color: $super-light-purple;
+            border-color: $purple;
+            color: $purple;
+
+            &:hover {
+                background-color: $very-light-purple;
+                border-color: $dark-purple;
+                color: $purple;
+            }
+        }
+    }
 }

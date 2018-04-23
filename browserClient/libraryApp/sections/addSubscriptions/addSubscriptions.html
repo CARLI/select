@@ -6,7 +6,7 @@
 
     <section class="content list-content choose-cycle" ng-if="vm.chooseCycle">
         <h2>Please select a subscription cycle:</h2>
-        <button class="carli-button" ng-repeat="cycle in vm.cycles | orderBy:'name' track by cycle.id" ng-click="vm.setCycle(cycle)">{{ cycle.name }}</button>
+        <button class="cycle-button" ng-class="cycle.isOpenToLibraries() ? 'cycle-button--open' : ''" ng-repeat="cycle in vm.cycles | orderBy:'name' track by cycle.id" ng-click="vm.setCycle(cycle)">{{ cycle.name }}</button>
     </section>
 
     <section class="content list-content" ng-if="vm.activeCycle">
