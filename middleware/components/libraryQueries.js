@@ -68,8 +68,9 @@ function populateProductsForOfferings(cycle) {
         function mapVendorsById(listOfVendors){
             var results = {};
 
-            listOfVendors.forEach(function(vendor){
-                results[vendor.id] = vendor;
+            listOfVendors.forEach(function (vendor) {
+                if (vendor && vendor.id)
+                    results[vendor.id] = vendor;
             });
 
             return results;

@@ -136,7 +136,8 @@ function cycleService( CarliModules, $window, $q, errorHandler, authService, use
     function listAllActiveOfferingsForCycle( cycle ){
         return listAllOfferingsForCycle(cycle)
             .then(function(listOfOfferings){
-                return listOfOfferings.filter(productIsActive);
+                var offeringsToFilter = listOfOfferings || [];
+                return offeringsToFilter.filter(productIsActive);
             })
             .catch(errorHandler);
 

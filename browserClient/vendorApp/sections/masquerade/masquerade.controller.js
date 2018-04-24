@@ -10,8 +10,7 @@ function masqueradeController(config, vendorService) {
     activate();
 
     function activate() {
-        console.log('Here i am!');
-        vendorService.list().then(function (vendors) {
+        vendorService.listActive().then(function (vendors) {
             vm.vendors = vendors.map(vendorWithMasqueradingUrl);
         });
 

@@ -10,7 +10,7 @@ function masqueradeController(config, libraryService) {
     activate();
 
     function activate() {
-        libraryService.list().then(function (libraries) {
+        libraryService.listActiveLibraries().then(function (libraries) {
             vm.libraries = libraries.map(libraryWithMasqueradingUrl);
         });
 
