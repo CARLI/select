@@ -4,6 +4,7 @@ angular.module('carli.sections.subscriptions')
 function subscriptionsController($scope, activityLogService, alertService, cycleService, errorHandler) {
     var vm = this;
 
+    vm.archiveCycle = archiveCycle;
     vm.editCycle = editCycle;
     vm.cancelEdit = cancelEdit;
     vm.saveCycleDates = saveCycleDates;
@@ -17,7 +18,7 @@ function subscriptionsController($scope, activityLogService, alertService, cycle
 
     activate();
     function activate() {
-        cycleService.listActiveSubscriptionCycles().then(function (activeCycles) {
+        return cycleService.listActiveSubscriptionCycles().then(function (activeCycles) {
             vm.cycles = activeCycles.sort(sortActiveCycles);
         });
     }
@@ -34,6 +35,16 @@ function subscriptionsController($scope, activityLogService, alertService, cycle
         endDateForSelections = cycle.endDateForSelections;
         productsAvailableDate = cycle.productsAvailableDate;
         console.log("Editing", cycle);
+    }
+
+    function archiveCycle(cycle) {
+        if (window.confirm('Are you sure you want to archive ' + cycle.name)) {
+            return cycleService.archiveCycle(cycle)
+                .then(activate)
+                .then(function () {
+                    alertService.putAlert('Cycle archived', {severity: 'success'});
+                });
+        }
     }
 
     function cancelEdit() {
