@@ -151,7 +151,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
                 lastYearsSelectionPrice = lastYearsPricing.site;
             }
             else {
-                lastYearsPricing.forEach(function (pricingObject) {
+                lastYearsPricing.su.forEach(function (pricingObject) {
                     if (pricingObject.users == lastYearsSelection.users) {
                         lastYearsSelectionPrice = pricingObject.price;
                     }
