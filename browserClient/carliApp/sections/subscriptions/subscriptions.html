@@ -20,8 +20,14 @@
                                 data-target="#edit-cycle-dates-modal"
                                 id="edit-cycle-dates"
                                 ng-click="vm.editCycle(cycle)"
-                                ng-if="cycle.status < vm.minimumCycleStatus">
+                                ng-if="cycle.status < vm.cycleClosed">
                             Edit Cycle Dates
+                        </button>
+                        <button type="button"
+                                class="carli-button cancel-button"
+                                ng-click="vm.archiveCycle(cycle)"
+                                ng-if="cycle.status == vm.cycleClosed">
+                            Archive Cycle
                         </button>
                     </div>
                 </div>
