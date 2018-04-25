@@ -58,7 +58,7 @@ function subscriptionsController($scope, activityLogService, alertService, cycle
     }
 
     function archiveCycle(cycle) {
-        if (window.confirm('Are you sure you want to archive ' + cycle.name)) {
+        if (window.confirm('Are you sure you want to archive ' + cycle.name + '?')) {
             return cycleService.archiveCycle(cycle)
                 .then(activate)
                 .then(function () {
@@ -68,7 +68,13 @@ function subscriptionsController($scope, activityLogService, alertService, cycle
     }
 
     function unarchiveCycle(cycle) {
-        console.log('unarchive', cycle);
+        if (window.confirm('Are you sure you want to un-archive ' + cycle.name + '?')) {
+            return cycleService.unarchiveCycle(cycle)
+                .then(activate)
+                .then(function () {
+                    alertService.putAlert('Cycle un-archived', {severity: 'success'});
+                });
+        }
     }
 
     function cancelEdit() {
