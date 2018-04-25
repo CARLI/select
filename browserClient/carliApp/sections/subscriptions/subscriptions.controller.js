@@ -8,9 +8,14 @@ function subscriptionsController($scope, activityLogService, alertService, cycle
     vm.editCycle = editCycle;
     vm.cancelEdit = cancelEdit;
     vm.saveCycleDates = saveCycleDates;
+    vm.toggleArchivedCycleList = toggleArchivedCycleList;
+    vm.unarchiveCycle = unarchiveCycle;
 
+    vm.activeCycles = [];
+    vm.archivedCycles = [];
     vm.cycleBeingEdited = null;
     vm.cycleClosed = cycleService.CYCLE_STATUS_CLOSED;
+    vm.hideArchivedCycleList = true; //save in cookie or local storage
 
     var startDateForSelections = null;
     var endDateForSelections = null;
@@ -18,12 +23,27 @@ function subscriptionsController($scope, activityLogService, alertService, cycle
 
     activate();
     function activate() {
-        return cycleService.listActiveSubscriptionCycles().then(function (activeCycles) {
-            vm.cycles = activeCycles.sort(sortActiveCycles);
-        });
+        return cycleService.list()
+            .then(function (allCycles) {
+                var active = [];
+                var archived = [];
+                var ignored = [];
+
+                allCycles.forEach(function (cycle) {
+                    if ( cycle.cycleType === 'One-Time Purchase' )
+                        ignored.push(cycle);
+                    else if ( cycle.isArchived )
+                        archived.push(cycle);
+                    else
+                        active.push(cycle);
+                });
+
+                vm.activeCycles = active.sort(cyclesByYearAndName);
+                vm.archivedCycles = archived.sort(cyclesByYearAndName);
+            });
     }
 
-    function sortActiveCycles(c1, c2) {
+    function cyclesByYearAndName(c1, c2) {
         if (c1.year == c2.year)
             return c1.name > c2.name;
         return c1.year < c2.year;
@@ -45,6 +65,10 @@ function subscriptionsController($scope, activityLogService, alertService, cycle
                     alertService.putAlert('Cycle archived', {severity: 'success'});
                 });
         }
+    }
+
+    function unarchiveCycle(cycle) {
+        console.log('unarchive', cycle);
     }
 
     function cancelEdit() {
@@ -74,5 +98,9 @@ function subscriptionsController($scope, activityLogService, alertService, cycle
                 return activityLogService.logCycleDateUpdate(vm.cycleBeingEdited);
             })
             .catch(errorHandler);
+    }
+
+    function toggleArchivedCycleList() {
+        vm.hideArchivedCycleList = !vm.hideArchivedCycleList;
     }
 }
