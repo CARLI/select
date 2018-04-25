@@ -440,15 +440,14 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
         var fileName = vm.cycle.name + ' Product List.csv';
         var exportHeaders = [
             'Product',
-            'Last Year\'s Selected License',
-            'Last Year\'s Selected Price',
+            'Last Year\'s Selection',
             'Vendor',
             'CARLI Funded',
-            'Selected License',
-            'Selected Price'
+            'Selection',
+            'Price'
         ];
 
-        var exportData = vm.offerings.map(exportOffering);
+        var exportData = offerings.filter(selected).sort(byName).map(exportOffering);
 
         return csvExportService.exportToCsv(exportData, exportHeaders)
             .then(function (csvString) {
@@ -460,9 +459,8 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
             return [
                 vm.getProductDisplayName(offering.product),
                 lastYearsSelection ? lastYearsSelection.users : '',
-                lastYearsSelection ? getLastYearsSelectionPrice(offering) : '',
                 offering.product.vendor.name,
-                offeringService.isFunded(offering) ? 'true' : 'false',
+                offeringService.isFunded(offering) ? 'yes' : 'no',
                 getSelectionUsers(offering),
                 offeringService.getFundedSelectionPrice(offering)
             ];
@@ -474,6 +472,10 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
                 price = offering.selection.users;
             }
             return price;
+        }
+
+        function selected(offering) {
+            return !!offering.selection;
         }
     }
 
@@ -522,5 +524,9 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
             return su.price < offering.pricing.site;
         }
         return true;
+    }
+
+    function byName(offeringA, offeringB) {
+        return offeringA.name > offeringB.name;
     }
 }
