@@ -1,8 +1,10 @@
 angular.module('carli.sections.subscriptions')
     .controller('subscriptionsController', subscriptionsController);
 
-function subscriptionsController($scope, activityLogService, alertService, cycleService, errorHandler) {
+function subscriptionsController($scope, activityLogService, alertService, cycleService, errorHandler, persistentState) {
     var vm = this;
+
+    var toggleArchivedListKey = 'hideArchivedCyclesOnSubscriptionsListPage';
 
     vm.archiveCycle = archiveCycle;
     vm.editCycle = editCycle;
@@ -15,7 +17,7 @@ function subscriptionsController($scope, activityLogService, alertService, cycle
     vm.archivedCycles = [];
     vm.cycleBeingEdited = null;
     vm.cycleClosed = cycleService.CYCLE_STATUS_CLOSED;
-    vm.hideArchivedCycleList = true; //save in cookie or local storage
+    vm.hideArchivedCycleList = persistentState.getState(toggleArchivedListKey, true);
 
     var startDateForSelections = null;
     var endDateForSelections = null;
@@ -108,5 +110,6 @@ function subscriptionsController($scope, activityLogService, alertService, cycle
 
     function toggleArchivedCycleList() {
         vm.hideArchivedCycleList = !vm.hideArchivedCycleList;
+        persistentState.setState(toggleArchivedListKey, vm.hideArchivedCycleList);
     }
 }
