@@ -31,8 +31,8 @@
         <span class="past-cycles__toggle" ng-click="vm.toggleArchivedCycleList()">{{ vm.hideArchivedCycleList ? '(Show)' : '(Hide)' }}</span>
     </div>
 
-    <div class="cycle-link-header">Jump to:</div>
-    <ol class="cycle-link-list">
+    <div class="cycle-link-header" ng-hide="vm.hideArchivedCycleList">Jump to:</div>
+    <ol class="cycle-link-list" ng-hide="vm.hideArchivedCycleList">
         <li class="cycle-link" ng-repeat="cycle in vm.archivedCycles | orderBy:'-year' track by cycle.id">
             <button class="clear-button-styles" scroll-to="{{ cycle.id }}">{{ cycle.name }}</button>
         </li>
