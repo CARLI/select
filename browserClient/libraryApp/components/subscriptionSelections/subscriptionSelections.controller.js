@@ -447,7 +447,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
             'Price'
         ];
 
-        var exportData = offerings.filter(selected).sort(byName).map(exportOffering);
+        var exportData = vm.offerings.slice().filter(selected).sort(byName).map(exportOffering);
 
         return csvExportService.exportToCsv(exportData, exportHeaders)
             .then(function (csvString) {
