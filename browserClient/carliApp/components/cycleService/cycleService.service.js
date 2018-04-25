@@ -56,6 +56,7 @@ function cycleService( CarliModules, $q, errorHandler, persistentState ) {
             return $q.when( cycleModule.listPastFourCyclesMatchingCycle(cycle || currentCycle) );
         },
         archiveCycle: archiveCycle,
+        unarchiveCycle: unarchiveCycle,
         deleteCycle: deleteCycle,
         generateCycleName: generateCycleName,
         getLabelForCycleStatus: cycleModule.getStatusLabel,
@@ -160,6 +161,10 @@ function cycleService( CarliModules, $q, errorHandler, persistentState ) {
 
     function archiveCycle(cycle) {
         return $q.when(cycleModule.archive(cycle));
+    }
+
+    function unarchiveCycle(cycle) {
+        return $q.when(cycleModule.unarchive(cycle));
     }
 
     function deleteCycle(cycleObject) {
