@@ -6,6 +6,7 @@ function subscriptionsController($scope, activityLogService, alertService, cycle
 
     var toggleArchivedListKey = 'hideArchivedCyclesOnSubscriptionsListPage';
 
+    vm.cyclesLoading = null;
     vm.archiveCycle = archiveCycle;
     vm.editCycle = editCycle;
     vm.cancelEdit = cancelEdit;
@@ -25,7 +26,7 @@ function subscriptionsController($scope, activityLogService, alertService, cycle
 
     activate();
     function activate() {
-        return cycleService.list()
+        vm.cyclesLoading = cycleService.list()
             .then(function (allCycles) {
                 var active = [];
                 var archived = [];
@@ -43,6 +44,8 @@ function subscriptionsController($scope, activityLogService, alertService, cycle
                 vm.activeCycles = active.sort(cyclesByYearAndName);
                 vm.archivedCycles = archived.sort(cyclesByYearAndName);
             });
+
+        return vm.cyclesLoading;
     }
 
     function cyclesByYearAndName(c1, c2) {
