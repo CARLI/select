@@ -30,6 +30,14 @@
         <h2 class="past-cycles__header">Past Subscriptions</h2>
         <span class="past-cycles__toggle" ng-click="vm.toggleArchivedCycleList()">{{ vm.hideArchivedCycleList ? '(Show)' : '(Hide)' }}</span>
     </div>
+
+    <div class="cycle-link-header" ng-hide="vm.hideArchivedCycleList">Jump to:</div>
+    <ol class="cycle-link-list" ng-hide="vm.hideArchivedCycleList">
+        <li class="cycle-link" ng-repeat="cycle in vm.archivedCycles | orderBy:'-year' track by cycle.id">
+            <button class="clear-button-styles" scroll-to="{{ cycle.id }}">{{ cycle.name }}</button>
+        </li>
+    </ol>
+
     <ol class="archived-cycle-list" id="past-cycles" ng-hide="vm.hideArchivedCycleList">
         <li class="cycle" ng-repeat="cycle in vm.archivedCycles | orderBy:'-year' track by cycle.id" id="{{ cycle.id }}">
             <h2 class="cycle-list__header">{{ cycle.name }}</h2>
