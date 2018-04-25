@@ -1,9 +1,10 @@
 .cycle-link-header {
-
+    font-weight: 700;
 }
 
 .cycle-link-list {
     list-style: none;
+    margin-left: 8px;
 
     .cycle-link {
         button {
@@ -13,13 +14,45 @@
 }
 
 
-.cycle-list {
+.cycle-list,
+.archived-cycle-list {
     list-style: none;
 
+    .cycle-list__header {
+        font-size: 18px;
+    }
+
     .cycle {
+        margin-bottom: 60px;
+
         ask-carli-button {
             float: right;
         }
+    }
+
+    .add-one-time-purchase-button {
+        margin-left: 4px;
+    }
+
+    .product-list {
+        margin-bottom: 8px;
+    }
+}
+
+.past-cycles {
+    display: flex;
+    margin-top: 140px;
+
+    &__header {
+        font-size: 24px;
+        margin: 0;
+    }
+
+    &__toggle {
+        color: $purple;
+        cursor: pointer;
+        margin-left: 8px;
+        margin-top: 2px;
     }
 }
 

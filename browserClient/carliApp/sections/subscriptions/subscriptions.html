@@ -5,7 +5,7 @@
 
     <section class="content list-content">
         <ul class="zebra-table">
-            <li ng-repeat="cycle in vm.cycles track by cycle.id">
+            <li ng-repeat="cycle in vm.activeCycles track by cycle.id">
                 <div class="column">
                     <a ng-href="/subscription/{{ cycle.id }}">{{ cycle.name }}</a>
                 </div>
@@ -20,8 +20,14 @@
                                 data-target="#edit-cycle-dates-modal"
                                 id="edit-cycle-dates"
                                 ng-click="vm.editCycle(cycle)"
-                                ng-if="cycle.status < vm.minimumCycleStatus">
+                                ng-if="cycle.status < vm.cycleClosed">
                             Edit Cycle Dates
+                        </button>
+                        <button type="button"
+                                class="carli-button cancel-button"
+                                ng-click="vm.archiveCycle(cycle)"
+                                ng-if="cycle.status == vm.cycleClosed">
+                            Archive Cycle
                         </button>
                     </div>
                 </div>
@@ -30,6 +36,35 @@
 
         <button type="button" class="carli-button" data-toggle="modal" data-target="#new-cycle-modal">Create New Cycle</button>
     </section>
+
+    <div class="list-page-header">
+        <h2>Archived</h2>
+        <span class="archived-cycle-list__toggle" ng-click="vm.toggleArchivedCycleList()">{{ vm.hideArchivedCycleList ? '(Show)' : '(Hide)' }}</span>
+    </div>
+
+    <section class="content list-content" ng-hide="vm.hideArchivedCycleList">
+        <ul class="zebra-table">
+            <li ng-repeat="cycle in vm.archivedCycles track by cycle.id">
+                <div class="column">
+                    <a ng-href="/subscription/{{ cycle.id }}">{{ cycle.name }}</a>
+                </div>
+                <div class="column">
+                    {{ cycle.getStatusLabel() }}
+                </div>
+                <div class="column">
+                    <div>
+                        <button type="button"
+                                class="carli-button cancel-button"
+                                ng-click="vm.unarchiveCycle(cycle)"
+                                ng-if="cycle.isArchived">
+                            Un-Archive Cycle
+                        </button>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+
 </section>
 
 <new-cycle-form></new-cycle-form>

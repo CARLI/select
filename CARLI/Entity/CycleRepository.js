@@ -77,6 +77,20 @@ function updateCycle( cycle ){
     return CycleRepository.update( cycle, transformFunction );
 }
 
+function archiveCycle(cycle) {
+    cycle.isArchived = true;
+    cycle.status = CYCLE_STATUS_ARCHIVED;
+
+    return CycleRepository.update( cycle, transformFunction );
+}
+
+function unarchiveCycle(cycle) {
+    cycle.isArchived = false;
+    cycle.status = CYCLE_STATUS_CLOSED;
+
+    return CycleRepository.update( cycle, transformFunction );
+}
+
 function listCycles(){
     return expandCycles( CycleRepository.list() );
 }
@@ -216,6 +230,8 @@ module.exports = {
     create: createCycle,
     createCycleLog: createCycleLog,
     update: updateCycle,
+    archive: archiveCycle,
+    unarchive: unarchiveCycle,
     delete: CycleRepository.delete,
     list: listCycles,
     load: loadCycle,

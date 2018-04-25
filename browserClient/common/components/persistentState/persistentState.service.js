@@ -48,9 +48,23 @@ function persistentState($window) {
         }
     }
 
+    function setState(propertyName, value) {
+        if ( propertyName )
+            state[propertyName] = value;
+        saveStateToStorage();
+    }
+
+    function getState(propertyName, defaultValue) {
+        if ( typeof state[propertyName] === 'undefined' && typeof defaultValue !== 'undefined' )
+            return defaultValue;
+        return state[propertyName];
+    }
+
     return {
         getCurrentCycle: getCurrentCycle,
         setCurrentCycle: setCurrentCycle,
-        clearCurrentCycle: clearCurrentCycle
+        clearCurrentCycle: clearCurrentCycle,
+        setState: setState,
+        getState: getState
     };
 }

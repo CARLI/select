@@ -1,3 +1,4 @@
+<!--suppress XmlDuplicatedId -->
 <section class="content" id="dashboard" cg-busy="vm.loadingPromise">
     <h1>{{ vm.library.name }}'s Products</h1>
 
@@ -7,20 +8,34 @@
     <div class="cycle-link-header">Jump to:</div>
     <ol class="cycle-link-list">
         <li class="cycle-link" ng-repeat="cycle in vm.cycles | orderBy:'-year' track by cycle.id">
-            <button class="clear-button-styles" scroll-to="{{ cycle.id }}">Link to {{ cycle.name }}</button>
+            <button class="clear-button-styles" scroll-to="{{ cycle.id }}">{{ cycle.name }}</button>
         </li>
+        <button class="clear-button-styles" scroll-to="past-cycles">Past Subscriptions</button>
     </ol>
 
     <ol class="cycle-list">
         <li class="cycle" ng-repeat="cycle in vm.cycles | orderBy:'-year' track by cycle.id" id="{{ cycle.id }}">
-            <h2>{{ cycle.name }}</h2>
+            <h2 class="cycle-list__header">{{ cycle.name }}</h2>
             <library-products-list-expandable cycle="cycle" library-id="{{ vm.library.id }}" license-on-click="vm.showLicenseAgreements"></library-products-list-expandable>
 
             <ask-carli-button context="Dashboard - {{ cycle.name }} products list"></ask-carli-button>
             <button class="carli-button" ng-if="cycle.id !== 'one-time-purchase-products-cycle'" ng-click="vm.viewUnselectedProductsFor(cycle)">
                 View Upgrades and Unselected {{ cycle.name }} Subscription Products
             </button>
-            <a class="carli-button" ng-hide="vm.userIsReadOnly()" href="/addOneTimePurchases" ng-if="cycle.id === 'one-time-purchase-products-cycle'">Add One-Time Purchases</a>
+            <a class="carli-button add-one-time-purchase-button" ng-hide="vm.userIsReadOnly()" href="/addOneTimePurchases" ng-if="cycle.id === 'one-time-purchase-products-cycle'">Add One-Time Purchases</a>
+        </li>
+    </ol>
+
+    <div id="past-cycles" class="past-cycles">
+        <h2 class="past-cycles__header">Past Subscriptions</h2>
+        <span class="past-cycles__toggle" ng-click="vm.toggleArchivedCycleList()">{{ vm.hideArchivedCycleList ? '(Show)' : '(Hide)' }}</span>
+    </div>
+    <ol class="archived-cycle-list" id="past-cycles" ng-hide="vm.hideArchivedCycleList">
+        <li class="cycle" ng-repeat="cycle in vm.archivedCycles | orderBy:'-year' track by cycle.id" id="{{ cycle.id }}">
+            <h2 class="cycle-list__header">{{ cycle.name }}</h2>
+            <library-products-list-expandable cycle="cycle" library-id="{{ vm.library.id }}" license-on-click="vm.showLicenseAgreements"></library-products-list-expandable>
+
+            <ask-carli-button context="Dashboard - {{ cycle.name }} products list"></ask-carli-button>
         </li>
     </ol>
 </section>
