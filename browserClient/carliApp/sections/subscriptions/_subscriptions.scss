@@ -142,3 +142,10 @@
 .subscription + #subscriptions {
     padding-top: 1rem;
 }
+
+.archived-cycle-list__toggle {
+    color: $purple;
+    cursor: pointer;
+    margin-top: 7px;
+    margin-left: 6px;
+}

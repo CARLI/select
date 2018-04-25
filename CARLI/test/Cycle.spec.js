@@ -171,6 +171,65 @@ describe('Additional Repository Functions', function() {
             expect(cycleRepository.getStatusLabel(cycleRepository.CYCLE_STATUS_ARCHIVED)).to.equal('Archived');
         });
     });
+
+    describe('archiving cycles', function() {
+        it('should be a repository method', function () {
+            expect(cycleRepository.archive).to.be.a('function');
+        });
+
+        it('should set the appropriate states on the cycle object and update it', function () {
+            var testCycle = validCycleData();
+
+            return cycleRepository.create(testCycle)
+                .then(cycleRepository.load)
+                .then(cycleRepository.archive)
+                .then(cycleRepository.load)
+                .then(function (cycle) {
+                    return Q.all([
+                        expect(cycle.isArchived).to.equal(true),
+                        expect(cycle.status).to.equal(cycleRepository.CYCLE_STATUS_ARCHIVED)
+                    ]);
+                });
+        });
+    });
+
+    describe('un-archiving cycles', function() {
+        it('should be a repository method', function () {
+            expect(cycleRepository.unarchive).to.be.a('function');
+        });
+
+        it('should not affect a cycle that is not archived', function () {
+            var testCycle = validCycleData();
+
+            return cycleRepository.create(testCycle)
+                .then(cycleRepository.load)
+                .then(cycleRepository.unarchive)
+                .then(cycleRepository.load)
+                .then(function (cycle) {
+                    return Q.all([
+                        expect(testCycle.isArchived).to.equal(false),
+                        expect(testCycle.status).to.equal(0)
+                    ]);
+                });
+        });
+        
+        it('should set the cycle to closed and not archived and update it', function () {
+            var testCycle = validCycleData();
+
+            return cycleRepository.create(testCycle)
+                .then(cycleRepository.load)
+                .then(cycleRepository.archive)
+                .then(cycleRepository.load)
+                .then(cycleRepository.unarchive)
+                .then(cycleRepository.load)
+                .then(function (cycle) {
+                    return Q.all([
+                        expect(cycle.isArchived).to.equal(false),
+                        expect(cycle.status).to.equal(cycleRepository.CYCLE_STATUS_CLOSED)
+                    ]);
+                });
+        });
+    });
 });
 
 describe('Adding functions to Cycle instances', function() {

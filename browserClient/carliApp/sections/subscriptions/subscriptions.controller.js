@@ -1,15 +1,23 @@
 angular.module('carli.sections.subscriptions')
     .controller('subscriptionsController', subscriptionsController);
 
-function subscriptionsController($scope, activityLogService, alertService, cycleService, errorHandler) {
+function subscriptionsController($scope, activityLogService, alertService, cycleService, errorHandler, persistentState) {
     var vm = this;
 
+    var toggleArchivedListKey = 'hideArchivedCyclesOnSubscriptionsListPage';
+
+    vm.archiveCycle = archiveCycle;
     vm.editCycle = editCycle;
     vm.cancelEdit = cancelEdit;
     vm.saveCycleDates = saveCycleDates;
+    vm.toggleArchivedCycleList = toggleArchivedCycleList;
+    vm.unarchiveCycle = unarchiveCycle;
 
+    vm.activeCycles = [];
+    vm.archivedCycles = [];
     vm.cycleBeingEdited = null;
-    vm.minimumCycleStatus = cycleService.CYCLE_STATUS_CLOSED;
+    vm.cycleClosed = cycleService.CYCLE_STATUS_CLOSED;
+    vm.hideArchivedCycleList = persistentState.getState(toggleArchivedListKey, true);
 
     var startDateForSelections = null;
     var endDateForSelections = null;
@@ -17,12 +25,27 @@ function subscriptionsController($scope, activityLogService, alertService, cycle
 
     activate();
     function activate() {
-        cycleService.listActiveSubscriptionCycles().then(function (activeCycles) {
-            vm.cycles = activeCycles.sort(sortActiveCycles);
-        });
+        return cycleService.list()
+            .then(function (allCycles) {
+                var active = [];
+                var archived = [];
+                var ignored = [];
+
+                allCycles.forEach(function (cycle) {
+                    if ( cycle.cycleType === 'One-Time Purchase' )
+                        ignored.push(cycle);
+                    else if ( cycle.isArchived )
+                        archived.push(cycle);
+                    else
+                        active.push(cycle);
+                });
+
+                vm.activeCycles = active.sort(cyclesByYearAndName);
+                vm.archivedCycles = archived.sort(cyclesByYearAndName);
+            });
     }
 
-    function sortActiveCycles(c1, c2) {
+    function cyclesByYearAndName(c1, c2) {
         if (c1.year == c2.year)
             return c1.name > c2.name;
         return c1.year < c2.year;
@@ -34,6 +57,26 @@ function subscriptionsController($scope, activityLogService, alertService, cycle
         endDateForSelections = cycle.endDateForSelections;
         productsAvailableDate = cycle.productsAvailableDate;
         console.log("Editing", cycle);
+    }
+
+    function archiveCycle(cycle) {
+        if (window.confirm('Are you sure you want to archive ' + cycle.name + '?')) {
+            return cycleService.archiveCycle(cycle)
+                .then(activate)
+                .then(function () {
+                    alertService.putAlert('Cycle archived', {severity: 'success'});
+                });
+        }
+    }
+
+    function unarchiveCycle(cycle) {
+        if (window.confirm('Are you sure you want to un-archive ' + cycle.name + '?')) {
+            return cycleService.unarchiveCycle(cycle)
+                .then(activate)
+                .then(function () {
+                    alertService.putAlert('Cycle un-archived', {severity: 'success'});
+                });
+        }
     }
 
     function cancelEdit() {
@@ -63,5 +106,10 @@ function subscriptionsController($scope, activityLogService, alertService, cycle
                 return activityLogService.logCycleDateUpdate(vm.cycleBeingEdited);
             })
             .catch(errorHandler);
+    }
+
+    function toggleArchivedCycleList() {
+        vm.hideArchivedCycleList = !vm.hideArchivedCycleList;
+        persistentState.setState(toggleArchivedListKey, vm.hideArchivedCycleList);
     }
 }
