@@ -212,7 +212,14 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
     }
 
     function selectAndUpdateProduct(offering, users){
+        var offeringAlreadyHasDesiredSelection = offering.selection && offering.selection.users == users;
+
+        if ( offeringAlreadyHasDesiredSelection ) {
+            return;
+        }
+
         selectProduct(offering, users);
+
         return updateOffering(offering)
             .then(logProductSelected);
     }
