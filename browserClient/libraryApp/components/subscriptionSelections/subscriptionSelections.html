@@ -1,8 +1,8 @@
 <subscription-progress step="vm.selectionStep" cycle="vm.cycle" ng-if="vm.showProgress && !vm.userIsReadOnly()"></subscription-progress>
 
-<div ng-if="vm.selectionStep === 'loading'" cg-busy="vm.loadingPromise"></div>
-<div ng-if="vm.selectionStep === 'select'" ng-include="'libraryApp/components/subscriptionSelections/subscriptionSelectionsSelect.html'" class="selection-container"></div>
-<div ng-if="vm.selectionStep === 'review'" ng-include="'libraryApp/components/subscriptionSelections/subscriptionSelectionsReview.html'"></div>
-<div ng-if="vm.selectionStep === 'complete'" ng-include="'libraryApp/components/subscriptionSelections/subscriptionSelectionsComplete.html'"></div>
-<div ng-if="vm.selectionStep === 'recentlyClosed'" ng-include="'libraryApp/components/subscriptionSelections/subscriptionSelectionsRecentlyClosed.html'"></div>
-<div ng-if="vm.selectionStep === 'closed'" ng-include="'libraryApp/components/subscriptionSelections/subscriptionSelectionsClosed.html'"></div>
+<div ng-if="vm.selectionStep === vm.STEP_LOADING" cg-busy="vm.loadingPromise"></div>
+<div ng-if="vm.selectionStep === vm.STEP_SELECTING" ng-include="'libraryApp/components/subscriptionSelections/subscriptionSelectionsSelect.html'" class="selection-container"></div>
+<div ng-if="vm.selectionStep === vm.STEP_REVIEWING" ng-include="'libraryApp/components/subscriptionSelections/subscriptionSelectionsReview.html'"></div>
+<div ng-if="vm.selectionStep === vm.STEP_COMPLETE" ng-include="'libraryApp/components/subscriptionSelections/subscriptionSelectionsComplete.html'"></div>
+<div ng-if="vm.selectionStep === vm.STEP_RECENTLYCLOSED" ng-include="'libraryApp/components/subscriptionSelections/subscriptionSelectionsRecentlyClosed.html'"></div>
+<div ng-if="vm.selectionStep === vm.STEP_CLOSED" ng-include="'libraryApp/components/subscriptionSelections/subscriptionSelectionsClosed.html'"></div>

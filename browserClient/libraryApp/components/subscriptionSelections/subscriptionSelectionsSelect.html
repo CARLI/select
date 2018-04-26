@@ -86,7 +86,7 @@
             <div class="column total">{{ vm.computeTotalPurchasesAmount() | currency}}</div>
         </li>
         <li class="footer">
-            <button class="carli-button export" ng-click="vm.exportProductList()">EXPORT</button>
+            <button class="carli-button export" ng-click="vm.exportAllProductsToCsv()">EXPORT</button>
             <button type="button" ng-click="vm.reviewSelections()" ng-hide="vm.userIsReadOnly()" class="carli-button primary-button arrow-right">Review</button>
         </li>
     </ul>

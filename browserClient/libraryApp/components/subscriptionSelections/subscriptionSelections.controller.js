@@ -4,6 +4,13 @@ angular.module('library.subscriptionSelections')
 function subscriptionSelectionsController( $q, $window, activityLogService, authService, csvExportService, cycleService, libraryStatusService, offeringService, productService, userService ){
     var vm = this;
 
+    vm.STEP_LOADING = 'loading';
+    vm.STEP_SELECTING = 'select';
+    vm.STEP_REVIEWING = 'review';
+    vm.STEP_COMPLETE = 'complete';
+    vm.STEP_RECENTLYCLOSED = 'recentlyClosed';
+    vm.STEP_CLOSED = 'closed';
+
     vm.selectionStep = '';
     vm.orderBy = 'product.name';
     vm.reverse = false;
@@ -25,7 +32,8 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
 
     vm.completeSelections = completeSelections;
     vm.computeTotalPurchasesAmount = computeTotalPurchasesAmount;
-    vm.exportProductList = exportProductList;
+    vm.exportAllProductsToCsv = exportAllProductsToCsv;
+    vm.exportSelectedProductsToCsv = exportSelectedProductsToCsv;
     vm.getFundedSelectionPrice = getFundedSelectionPrice;
     vm.getFundedSiteLicensePrice = getFundedSiteLicensePrice;
     vm.getProductDisplayName = productService.getProductDisplayName;
@@ -54,7 +62,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
     activate();
 
     function activate(){
-        vm.selectionStep = 'loading';
+        vm.selectionStep = vm.STEP_LOADING;
         vm.loadingPromise = loadLibraryStatus()
             .then(loadOfferingsForThisYear)
             .then(loadOfferingsForLastYear)
@@ -388,12 +396,12 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
     }
 
     function selectionsStarted(){
-        vm.selectionStep = 'select';
+        vm.selectionStep = vm.STEP_SELECTING;
         vm.showProgress = true;
     }
 
     function reviewSelections(){
-        vm.selectionStep = 'review';
+        vm.selectionStep = vm.STEP_REVIEWING;
         vm.showProgress = true;
     }
 
@@ -403,17 +411,17 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
     }
 
     function selectionsComplete(){
-        vm.selectionStep = 'complete';
+        vm.selectionStep = vm.STEP_COMPLETE;
         vm.showProgress = true;
     }
 
     function cycleRecentlyClosed(){
-        vm.selectionStep = 'recentlyClosed';
+        vm.selectionStep = vm.STEP_RECENTLYCLOSED;
         vm.showProgress = false;
     }
 
     function cycleClosed(){
-        vm.selectionStep = 'closed';
+        vm.selectionStep = vm.STEP_CLOSED;
         vm.showProgress = false;
     }
 
@@ -443,7 +451,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
         return activityLogService.logLibraryRemovedProduct(offering, vm.cycle, vm.library.name);
     }
 
-    function exportProductList() {
+    function exportAllProductsToCsv() {
         var fileName = vm.cycle.name + ' Product List.csv';
         var exportHeaders = [
             'Product',
@@ -454,7 +462,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
             'Price'
         ];
 
-        var exportData = vm.offerings.slice().filter(selected).sort(byName).map(exportOffering);
+        var exportData = vm.offerings.slice().sort(byName).map(exportOffering);
 
         return csvExportService.exportToCsv(exportData, exportHeaders)
             .then(function (csvString) {
@@ -472,18 +480,46 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
                 offeringService.getFundedSelectionPrice(offering)
             ];
         }
+    }
 
-        function getSelectionUsers(offering) {
-            var price = '';
-            if (offering.selection) {
-                price = offering.selection.users;
-            }
-            return price;
-        }
+    function exportSelectedProductsToCsv() {
+        var fileName = vm.cycle.name + ' Selected Products.csv';
+        var exportHeaders = [
+            'Product',
+            'Vendor',
+            'CARLI Funded',
+            'Selection',
+            'Price'
+        ];
 
-        function selected(offering) {
-            return !!offering.selection;
+        var exportData = vm.offerings.slice().filter(selected).sort(byName).map(exportOffering);
+
+        return csvExportService.exportToCsv(exportData, exportHeaders)
+            .then(function (csvString) {
+                return csvExportService.browserDownloadCsv(csvString, fileName);
+            });
+
+        function exportOffering(offering) {
+            return [
+                vm.getProductDisplayName(offering.product),
+                offering.product.vendor.name,
+                offeringService.isFunded(offering) ? 'yes' : 'no',
+                getSelectionUsers(offering),
+                offeringService.getFundedSelectionPrice(offering)
+            ];
         }
+    }
+
+    function getSelectionUsers(offering) {
+        var price = '';
+        if (offering.selection) {
+            price = offering.selection.users;
+        }
+        return price;
+    }
+
+    function selected(offering) {
+        return !!offering.selection;
     }
 
     function isFunded(offering) {
@@ -534,6 +570,13 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
     }
 
     function byName(offeringA, offeringB) {
-        return offeringA.name > offeringB.name;
+        var nameA = vm.getProductDisplayName(offeringA.product).toLowerCase();
+        var nameB = vm.getProductDisplayName(offeringB.product).toLowerCase();
+
+        if (nameA < nameB)
+            return -1;
+        if (nameA > nameB)
+            return 1;
+        return 0;
     }
 }
