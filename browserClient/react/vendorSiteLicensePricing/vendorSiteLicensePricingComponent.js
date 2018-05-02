@@ -5,10 +5,11 @@ class VendorSiteLicensePricingComponent extends React.Component {
     constructor(props) {
         super();
         this.state = {
-            cycle: props.cycle,
-            user: props.user
+            cycle: props.angularController.cycle,
+            user: props.angularController.user
         };
         this.modules = props.modules;
+        this.angularController = props.angularController;
 
         this.activate();
     }
@@ -25,6 +26,8 @@ class VendorSiteLicensePricingComponent extends React.Component {
                     libraries: listOfLibraries,
                     products: products
                 });
+
+                this.angularController.callback('I loaded my data');
             });
     }
 
@@ -37,9 +40,8 @@ class VendorSiteLicensePricingComponent extends React.Component {
 
 function renderComponent(element, angularControllerObject) {
     const modules = window.CARLI;
-    const user = angularControllerObject.user;
-    const cycle = angularControllerObject.cycle;
-    ReactDom.render(React.createElement(VendorSiteLicensePricingComponent, {modules, user, cycle}), element);
+    const angularController = angularControllerObject;
+    ReactDom.render(React.createElement(VendorSiteLicensePricingComponent, {modules, angularController}), element);
 }
 
 module.exports = {
