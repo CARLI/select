@@ -1,0 +1,50 @@
+.pricing-info-container {
+  margin-top: 20px;
+
+  &__header {
+    @extend .label;
+  }
+}
+
+.pricing-info {
+  $grid-padding: 8px;
+
+
+  &__site-license-header {
+
+  }
+
+  &__site-license-price {
+
+  }
+
+  &__header-row {
+    display: flex;
+    border-bottom: 1px solid $border-color;
+  }
+
+  &__row {
+    display: flex;
+    border-bottom: 1px solid $border-color;
+    border-left: 1px solid $border-color;
+    border-right: 1px solid $border-color;
+  }
+
+  &__row-users-header,
+  &__row-price-header {
+    font-weight: bold;
+    flex: 1 1 50%;
+    padding: $grid-padding;
+  }
+
+  &__row-users {
+    flex: 1 1 50%;
+    padding: $grid-padding;
+  }
+
+  &__row-price {
+    border-left: 1px solid $border-color;
+    flex: 1 1 50%;
+    padding: $grid-padding;
+  }
+}

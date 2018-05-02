@@ -6,6 +6,7 @@ angular.module('library.subscriptionSelections',[
     'library.licenseList',
     'library.subscriptionProgress',
     'library.subscriptionButton',
+    'library.pricingInfo',
     'library.productInfo',
     'library.licenseInfo'
 ]);

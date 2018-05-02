@@ -1,0 +1,18 @@
+<div class="pricing-info-container" ng-if="vm.pricing.site || vm.pricing.su.length">
+    <div class="pricing-info-container__header">Last Year's Pricing</div>
+
+    <div class="pricing-info">
+        <div class="pricing-info__header-row">
+            <div class="pricing-info__row-users-header">Users</div>
+            <div class="pricing-info__row-price-header">Price</div>
+        </div>
+        <div class="pricing-info__row">
+            <div class="pricing-info__row-users">Site License</div>
+            <div class="pricing-info__row-price">{{ vm.pricing.site | currency }}</div> <!-- NEEDS TO BE THE FUNDED PRICE -->
+        </div>
+        <div class="pricing-info__row" ng-repeat="price in vm.pricing.su">
+            <div class="pricing-info__row-users">{{ price.users }}</div>
+            <div class="pricing-info__row-price">{{ price.price | currency }}</div> <!-- NEEDS TO BE THE FUNDED PRICE -->
+        </div>
+    </div>
+</div>
