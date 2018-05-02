@@ -4,7 +4,8 @@ angular.module('library.pricingInfo')
             restrict: 'E',
             templateUrl: '/libraryApp/components/pricingInfo/pricingInfo.html',
             scope: {
-                pricing: '='
+                pricing: '=',
+                title: '@'
             },
             controller: 'pricingInfoController',
             controllerAs: 'vm',
