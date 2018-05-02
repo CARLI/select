@@ -1,4 +1,4 @@
-angular.module('vendor.sections.siteLicensePrices')
+angular.module('vendor.sections.siteLicensePricesReact')
     .controller('siteLicensePricesReactController', siteLicensePricesReactController);
 
 function siteLicensePricesReactController() {

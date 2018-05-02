@@ -1,6 +1,7 @@
 angular.module('vendor.routes',[
         'vendor.sections.dashboard',
         'vendor.sections.siteLicensePrices',
+        'vendor.sections.siteLicensePricesReact',
         'vendor.sections.simultaneousUserPrices',
         'vendor.sections.descriptions',
         'vendor.sections.login',

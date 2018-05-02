@@ -1,0 +1,1 @@
+angular.module('vendor.siteLicenseReactWrapper', []);
