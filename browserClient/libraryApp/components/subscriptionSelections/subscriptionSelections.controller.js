@@ -36,6 +36,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
     vm.exportSelectedProductsToCsv = exportSelectedProductsToCsv;
     vm.getFundedSelectionPrice = getFundedSelectionPrice;
     vm.getFundedSiteLicensePrice = getFundedSiteLicensePrice;
+    vm.getLastYearsPricing = getLastYearsPricing;
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.hasSelection = hasSelection;
     vm.isFunded = isFunded;
@@ -138,36 +139,16 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
         }
     }
 
-    function getLastYearsSelectionPrice(offering) {
+    function getLastYearsPricing(offering) {
         var lastYear = vm.cycle.year - 1;
         var lastYearsOffering = offeringForLastYear(offering);
 
         var lastYearsPricing = {};
-        var lastYearsSelection = getLastYearsSelection(offering) || {};
-        var lastYearsSelectionPrice = '';
 
         if (lastYearsOffering)
-            lastYearsPricing = lastYearsOffering.pricing || {};
+            return lastYearsOffering.pricing || {};
         else if (offering.history && offering.history[lastYear])
-            lastYearsPricing = offering.history[lastYear].pricing;
-
-
-        if (lastYearsPricing && lastYearsSelection.users) {
-            var siteLicenseWasSelected = (lastYearsSelection.users == offeringService.siteLicenseSelectionUsers);
-
-            if (siteLicenseWasSelected) {
-                lastYearsSelectionPrice = lastYearsPricing.site;
-            }
-            else {
-                lastYearsPricing.su.forEach(function (pricingObject) {
-                    if (pricingObject.users == lastYearsSelection.users) {
-                        lastYearsSelectionPrice = pricingObject.price;
-                    }
-                });
-            }
-        }
-
-        return lastYearsSelectionPrice;
+            return offering.history[lastYear].pricing;
     }
 
     function selectedLastYear(offering) {

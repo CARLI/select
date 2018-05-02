@@ -31,6 +31,7 @@
             <div class="content" ng-if="vm.openProduct[offering.product.id]">
                 <div class="column product-info">
                     <product-info offering="offering"></product-info>
+                    <pricing-info pricing="vm.getLastYearsPricing(offering)" title="Last Year's Pricing"></pricing-info>
                 </div>
                 <div class="column license-info">
                     <license-info offering="offering" cycle="vm.cycle"></license-info>
