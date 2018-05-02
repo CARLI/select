@@ -29,6 +29,11 @@ angular.module('vendor.routes',[
                 controller:  'siteLicensePricesController',
                 controllerAs:'vm'
             })
+            .when('/react', { //intended to replace /siteLicensePrices
+                templateUrl: '/vendorApp/sections/siteLicensePricesReact/siteLicensePricesReact.html',
+                controller:  'siteLicensePricesReactController',
+                controllerAs:'vm'
+            })
             .when('/simultaneousUserPrices', {
                 templateUrl: '/vendorApp/sections/simultaneousUserPrices/simultaneousUserPrices.html',
                 controller:  'simultaneousUserPricesController',
