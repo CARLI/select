@@ -598,6 +598,10 @@ module.exports = function ( grunt ) {
             sassCommon: {
                 files: user_config.common_components.sass_all,
                 tasks: ['sass:carli','sass:library','sass:vendor']
+            },
+            react: {
+                files: 'react/**/*.js',
+                tasks: ['browserify:react']
             }
         }
     };
@@ -717,6 +721,7 @@ module.exports = function ( grunt ) {
         'jsenv:browser',
         'ensure-local-config',
         'browserify:vendor',
+        'browserify:react',
         'copy:vendor_app_common_components',
         'copy:vendor_app_all_files',
         'copy:vendor_app_bower_files',
