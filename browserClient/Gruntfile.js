@@ -53,6 +53,17 @@ module.exports = function ( grunt ) {
                         dest: user_config.browserify_file('vendor')
                     }
                 ]
+            },
+            react: {
+                options: {
+                    transform: [['babelify', {presets: ["react", "env"]}]],
+                    browserifyOptions: {
+                        debug: true,
+                        standalone: 'vendorSiteLicensePricingComponent'
+                    }
+                },
+                src: ['react/vendorSiteLicensePricing/vendorSiteLicensePricingComponent.js'],
+                dest: user_config.vendor_app.build_dir + 'react.js'
             }
         },
 
