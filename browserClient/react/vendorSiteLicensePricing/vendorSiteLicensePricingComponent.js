@@ -20,27 +20,27 @@ class VendorSiteLicensePricingComponent extends React.Component {
         Promise.all([
             this.modules.Library.listActiveLibraries(),
             this.modules.ProductMiddleware.listProductsWithOfferingsForVendorId(this.state.user.vendor.id, this.state.cycle)
-        ])
-            .then(([listOfLibraries, products]) => {
-                this.setState({
-                    libraries: listOfLibraries,
-                    products: products
-                });
-
-                this.angularController.callback('I loaded my data');
+        ]).then(([listOfLibraries, products]) => {
+            this.setState({
+                libraries: listOfLibraries,
+                products: products
             });
+
+            this.angularController.callback('I loaded my data');
+        });
     }
 
     render() {
-        return <div className="vendor-site-license-pricing-component">
-            { JSON.stringify(this.state) }
-        </div>;
+        return (
+            <div className="vendor-site-license-pricing-component">
+                { JSON.stringify(this.state) }
+            </div>
+        );
     }
 }
 
-function renderComponent(element, angularControllerObject) {
+function renderComponent(element, angularController) {
     const modules = window.CARLI;
-    const angularController = angularControllerObject;
     ReactDom.render(React.createElement(VendorSiteLicensePricingComponent, {modules, angularController}), element);
 }
 
