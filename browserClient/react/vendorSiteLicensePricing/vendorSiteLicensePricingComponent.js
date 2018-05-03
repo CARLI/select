@@ -15,8 +15,6 @@ class VendorSiteLicensePricingComponent extends React.Component {
     }
 
     activate() {
-        console.log('activate vendor pricing component', this.modules);
-
         Promise.all([
             this.modules.Library.listActiveLibraries(),
             this.modules.ProductMiddleware.listProductsWithOfferingsForVendorId(this.state.user.vendor.id, this.state.cycle)
