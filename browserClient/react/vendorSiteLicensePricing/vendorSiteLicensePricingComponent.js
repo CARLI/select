@@ -31,8 +31,15 @@ class VendorSiteLicensePricingComponent extends React.Component {
 
     render() {
         return (
-            <div className="vendor-site-license-pricing-component">
-                { JSON.stringify(store.getState()) }
+            <div>
+                <h2>Libraries</h2>
+                <div className="vendor-site-license-pricing-component">
+                    { JSON.stringify(this.state.libraries) }
+                </div>
+                <h2>Products</h2>
+                <div>
+                    { JSON.stringify(this.state.products) }
+                </div>
             </div>
         );
     }
