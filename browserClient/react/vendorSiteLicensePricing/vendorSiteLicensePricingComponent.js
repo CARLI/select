@@ -1,5 +1,6 @@
 const React = require('react');
 const ReactDom = require('react-dom');
+import { store } from '../store';
 
 class VendorSiteLicensePricingComponent extends React.Component {
     constructor(props) {
@@ -31,7 +32,7 @@ class VendorSiteLicensePricingComponent extends React.Component {
     render() {
         return (
             <div className="vendor-site-license-pricing-component">
-                { JSON.stringify(this.state) }
+                { JSON.stringify(store.getState()) }
             </div>
         );
     }
