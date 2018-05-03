@@ -3,6 +3,7 @@ var cycleRepositoryForVendor = require('../../CARLI/Entity/CycleRepositoryForVen
 var offeringRepository = require('../../CARLI/Entity/OfferingRepository.js');
 var productRepository = require('../../CARLI/Entity/ProductRepository.js');
 var vendorRepository = require('../../CARLI/Entity/VendorRepository.js');
+var vendorSiteLicensePrice = require('../../CARLI/vendorSiteLicensePrice.js');
 var Q = require('q');
 
 function listProductsWithOfferingsForVendorId(vendorId, cycleId) {
@@ -113,8 +114,28 @@ function updateSuCommentForProduct(vendorId, productId, numSu, newCommentText, c
     }
 }
 
+
+function updateSiteLicensePricingForProducts(vendorId, cycleId, arrayOfVendorSiteLicensePricingObjects) {
+    var validPricingObjects = arrayOfVendorSiteLicensePricingObjects.filter(vendorSiteLicensePrice.validate);
+
+    return vendorRepository.load(vendorId)
+        .then(function(vendor) {
+            var cycleRepository = cycleRepositoryForVendor(vendor);
+            return cycleRepository.load(cycleId);
+        })
+        .then(function(cycle) {
+            console.log('Updating ' + validPricingObjects.length + ' prices for cycle ' + cycle.name);
+        });
+        //.then(groupByProductId)
+        //for each product id, load all offerings for that product
+        //  for each library id, update pricing on the offering (save offering in changed list)
+        //bulk update changed offerings
+
+}
+
 module.exports = {
     listProductsWithOfferingsForVendorId: listProductsWithOfferingsForVendorId,
     updateSuPricingForProduct: updateSuPricingForProduct,
-    updateSuCommentForProduct: updateSuCommentForProduct
+    updateSuCommentForProduct: updateSuCommentForProduct,
+    updateSiteLicensePricingForProducts: updateSiteLicensePricingForProducts
 };
