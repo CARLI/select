@@ -67,4 +67,71 @@ describe('The VendorSiteLicensePrice Module', function () {
         expect(vendorSiteLicensePriceModule.validateList(list)).to.deep.equal(expectedResults);
     });
 
+    it('should have a groupByProduct method', function () {
+        expect(vendorSiteLicensePriceModule.groupByProduct).to.be.a('function');
+    });
+
+    it('should return an object with keys that are product ids, with the pricing objects in arrays', function () {
+        var list = [
+            {
+                product: 'valid-product-id',
+                library: 1,
+                price: '400.99'
+            },
+            {
+                product: 'valid-product-id',
+                library: 2,
+                price: '300.99'
+            },
+            {
+                product: 'valid-product-id',
+                library: 3,
+                price: '200.99'
+            },
+            {
+                product: 'second-product-id',
+                library: 1,
+                price: '100.00'
+            },
+            {
+                product: 'second-product-id',
+                library: 2,
+                price: '200.00'
+            }
+        ];
+
+        const expectedResult = {
+            'valid-product-id': [
+                {
+                    product: 'valid-product-id',
+                    library: 1,
+                    price: '400.99'
+                },
+                {
+                    product: 'valid-product-id',
+                    library: 2,
+                    price: '300.99'
+                },
+                {
+                    product: 'valid-product-id',
+                    library: 3,
+                    price: '200.99'
+                }
+            ],
+            'second-product-id': [
+                {
+                    product: 'second-product-id',
+                    library: 1,
+                    price: '100.00'
+                },
+                {
+                    product: 'second-product-id',
+                    library: 2,
+                    price: '200.00'
+                }
+            ]
+        };
+
+        expect(vendorSiteLicensePriceModule.groupByProduct(list)).to.deep.equal(expectedResult);
+    });
 });

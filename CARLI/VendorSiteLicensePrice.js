@@ -24,7 +24,18 @@ function validateList(listOfVendorPricingObjects) {
     }
 }
 
+function groupByProduct(listOfVendorPricingObjects) {
+    return listOfVendorPricingObjects.reduce(mapByProductId, {});
+
+    function mapByProductId(byProductId, nextPriceObject) {
+        byProductId[nextPriceObject.product] = byProductId[nextPriceObject.product] || [];
+        byProductId[nextPriceObject.product].push(nextPriceObject);
+        return byProductId;
+    }
+}
+
 module.exports = {
     validate: validate,
-    validateList: validateList
+    validateList: validateList,
+    groupByProduct: groupByProduct
 };
