@@ -6,7 +6,7 @@ const INITIAL_STATE = {
 
 export const ActionTypes = {
     SetCycle: 'setCycle',
-    SetLibraries: 'setLibraries',
+    SetLibrariesAndProducts: 'setLibrariesAndProducts',
     SetProducts: 'setProducts'
 };
 
@@ -17,11 +17,8 @@ export function reducer(state = INITIAL_STATE, action = null) {
     if (action.type === ActionTypes.SetCycle)
         return setCycle(state, action.args);
 
-    if (action.type === ActionTypes.SetLibraries)
-        return setLibraries(state, action.args);
-
-    if (action.type === ActionTypes.SetProducts)
-        return setProducts(state, action.args);
+    if (action.type === ActionTypes.SetLibrariesAndProducts)
+        return setLibrariesAndProducts(state, action.args);
 
     return state;
 }
@@ -30,10 +27,9 @@ function setCycle(state, args) {
     return Object.assign({}, state, { cycle: args.cycle });
 }
 
-function setLibraries(state, args) {
-    return Object.assign({}, state, { libraries: args.libraries });
-}
-
-function setProducts(state, args) {
-    return Object.assign({}, state, { products: args.products });
+function setLibrariesAndProducts(state, args) {
+    return Object.assign({}, state, {
+        libraries: args.libraries,
+        products: args.products
+    });
 }

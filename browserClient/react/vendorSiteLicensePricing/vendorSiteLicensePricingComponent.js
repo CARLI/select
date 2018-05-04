@@ -1,8 +1,10 @@
 import {ActionTypes} from "../reducers/siteLicenseReducer";
+import { store } from '../store';
+import { Provider } from 'react-redux';
+import { SiteLicenseGrid } from './siteLicenseGridComponent/siteLicenseGridComponent';
 
 const React = require('react');
 const ReactDom = require('react-dom');
-import { store } from '../store';
 
 class VendorSiteLicensePricingComponent extends React.Component {
     constructor(props) {
@@ -26,25 +28,34 @@ class VendorSiteLicensePricingComponent extends React.Component {
             this.modules.ProductMiddleware.listProductsWithOfferingsForVendorId(this.user.vendor.id, store.getState().cycle)
         ]).then(([libraries, products]) => {
             store.dispatch({
-                type: ActionTypes.SetLibraries,
-                args: { libraries }
+                type: ActionTypes.SetLibrariesAndProducts,
+                args: { libraries, products }
             });
 
-            store.dispatch({
-                type: ActionTypes.SetProducts,
-                args: { products }
+            const slicedProducts = products.slice(0, 2);
+            slicedProducts.forEach(p => {
+                console.debug(p.id);
+                const offerings = p.offerings
+                    .filter(o => {
+                        return o.library === '3' || o.library === '4' || o.library === '11'
+                    })
+                    .map(o => {
+                        return {
+                            library: o.library,
+                            pricing: o.pricing,
+                            type: o.type
+                        };
+                    });
+                console.debug(JSON.stringify(offerings));
             });
-
-            console.debug('libraries', libraries);
-            console.debug('products', products);
         });
     }
 
     render() {
         return (
-            <div>
-
-            </div>
+            <Provider store={store}>
+                <SiteLicenseGrid/>
+            </Provider>
         );
     }
 }
