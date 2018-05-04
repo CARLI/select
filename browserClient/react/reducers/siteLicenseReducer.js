@@ -15,11 +15,25 @@ export function reducer(state = INITIAL_STATE, action = null) {
         return state;
 
     if (action.type === ActionTypes.SetCycle)
-        setCycle(state, action.args);
+        return setCycle(state, action.args);
+
+    if (action.type === ActionTypes.SetLibraries)
+        return setLibraries(state, action.args);
+
+    if (action.type === ActionTypes.SetProducts)
+        return setProducts(state, action.args);
 
     return state;
 }
 
 function setCycle(state, args) {
     return Object.assign({}, state, { cycle: args.cycle });
+}
+
+function setLibraries(state, args) {
+    return Object.assign({}, state, { libraries: args.libraries });
+}
+
+function setProducts(state, args) {
+    return Object.assign({}, state, { products: args.products });
 }

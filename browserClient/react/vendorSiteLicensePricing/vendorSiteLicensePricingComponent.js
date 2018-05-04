@@ -1,3 +1,5 @@
+import {ActionTypes} from "../reducers/siteLicenseReducer";
+
 const React = require('react');
 const ReactDom = require('react-dom');
 import { store } from '../store';
@@ -5,10 +7,13 @@ import { store } from '../store';
 class VendorSiteLicensePricingComponent extends React.Component {
     constructor(props) {
         super();
-        this.state = {
-            cycle: props.angularController.cycle,
-            user: props.angularController.user
-        };
+
+        store.dispatch({
+            type: ActionTypes.SetCycle,
+            args: { cycle: props.angularController.cycle }
+        });
+
+        this.user = props.angularController.user;
         this.modules = props.modules;
         this.angularController = props.angularController;
 
@@ -18,28 +23,27 @@ class VendorSiteLicensePricingComponent extends React.Component {
     activate() {
         Promise.all([
             this.modules.Library.listActiveLibraries(),
-            this.modules.ProductMiddleware.listProductsWithOfferingsForVendorId(this.state.user.vendor.id, this.state.cycle)
-        ]).then(([listOfLibraries, products]) => {
-            this.setState({
-                libraries: listOfLibraries,
-                products: products
+            this.modules.ProductMiddleware.listProductsWithOfferingsForVendorId(this.user.vendor.id, store.getState().cycle)
+        ]).then(([libraries, products]) => {
+            store.dispatch({
+                type: ActionTypes.SetLibraries,
+                args: { libraries }
             });
 
-            this.angularController.callback('I loaded my data');
+            store.dispatch({
+                type: ActionTypes.SetProducts,
+                args: { products }
+            });
+
+            console.debug('libraries', libraries);
+            console.debug('products', products);
         });
     }
 
     render() {
         return (
             <div>
-                <h2>Libraries</h2>
-                <div className="vendor-site-license-pricing-component">
-                    { JSON.stringify(this.state.libraries) }
-                </div>
-                <h2>Products</h2>
-                <div>
-                    { JSON.stringify(this.state.products) }
-                </div>
+
             </div>
         );
     }
