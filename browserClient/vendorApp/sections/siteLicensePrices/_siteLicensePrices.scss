@@ -154,3 +154,49 @@
 /**
  REACT COMPONENT STYLES
  */
+$cellHeight: 2rem;
+$cellPadding: 0.5rem 1rem;
+$headerHeight: 70px;
+
+.site-license-grid {
+    display: flex;
+
+    &__library-column {
+        flex: 0 0 auto;
+        width: 350px;
+    }
+
+    &__library-column-header,
+    &__product-header {
+        background-color: $light-gray;
+        border: 1px solid $gray;
+        font-weight: bold;
+        height: $headerHeight;
+        overflow: hidden;
+        padding: 1rem;
+        text-overflow: ellipsis;
+    }
+
+    &__library-label {
+        border: 1px solid $gray;
+        height: $cellHeight;
+        padding: $cellPadding;
+    }
+
+    &__product-area {
+        display: grid;
+        grid-template-rows: $headerHeight;
+        grid-auto-rows: $cellHeight;
+        flex: 1 1 0;
+        overflow: auto;
+    }
+}
+
+.grid-cell {
+    border: 1px solid $gray;
+    font-family: monospace;
+    text-align: right;
+    overflow: hidden;
+    padding: $cellPadding;
+    text-overflow: ellipsis;
+}
