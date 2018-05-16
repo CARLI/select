@@ -1,6 +1,6 @@
 import React from 'react';
 
-const GridCell = ({cell, editMode}) => {
+const GridCell = ({cell}) => {
     const editInputRef = React.createRef();
 
     function showInput(event) {

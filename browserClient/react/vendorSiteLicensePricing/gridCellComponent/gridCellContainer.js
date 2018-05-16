@@ -9,8 +9,7 @@ const mapStateToProps = (state, ownProps) => {
     console.debug('gridCell mapStateToProps');
 
     return {
-        cell: state.offeringHash[key],
-        editMode: false
+        cell: state.offeringHash[key]
     };
 };
 
