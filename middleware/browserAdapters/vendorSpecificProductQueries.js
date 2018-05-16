@@ -32,8 +32,18 @@ function updateSuCommentForProduct(vendorId, productId, numSu, newCommentText, c
     });
 }
 
+function updateSiteLicensePricingForProducts(vendorId, cycle, listOfVendorSiteLicensePrices) {
+    return middlewareRequest({
+        path: '/update-site-license-prices/' + vendorId + '/' + cycle.id,
+        method: 'post',
+        json: true,
+        body: listOfVendorSiteLicensePrices
+    });
+}
+
 module.exports = {
     listProductsWithOfferingsForVendorId: listProductsWithOfferingsForVendorId,
     updateSuPricingForProduct: updateSuPricingForProduct,
-    updateSuCommentForProduct: updateSuCommentForProduct
+    updateSuCommentForProduct: updateSuCommentForProduct,
+    updateSiteLicensePricingForProducts: updateSiteLicensePricingForProducts
 };

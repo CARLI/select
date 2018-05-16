@@ -80,6 +80,9 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
         updateSuCommentForAllLibrariesForProduct: function updateSuCommentForAllLibrariesForProduct(vendorId, productId, numSu, newCommentText) {
             return $q.when( productMiddleware.updateSuCommentForProduct(vendorId, productId, numSu, newCommentText, cycleService.getCurrentCycle()) );
         },
+        updateSiteLicensePricingForVendorProducts: function updateSiteLicensePricingForVendorProducts(vendorId, cycle, listOfVendorSiteLicensePrices) {
+            return $q.when(productMiddleware.updateSiteLicensePricingForProducts(vendorId, cycle, listOfVendorSiteLicensePrices));
+        },
         getOfferingDisplayOptions: function() {
             var values = offeringModule.getOfferingDisplayOptions();
             var options = [];

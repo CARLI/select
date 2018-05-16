@@ -3,6 +3,7 @@ var cycleRepositoryForVendor = require('../../CARLI/Entity/CycleRepositoryForVen
 var offeringRepository = require('../../CARLI/Entity/OfferingRepository.js');
 var productRepository = require('../../CARLI/Entity/ProductRepository.js');
 var vendorRepository = require('../../CARLI/Entity/VendorRepository.js');
+var vendorSiteLicensePrice = require('../../CARLI/vendorSiteLicensePrice.js');
 var Q = require('q');
 
 function listProductsWithOfferingsForVendorId(vendorId, cycleId) {
@@ -113,8 +114,55 @@ function updateSuCommentForProduct(vendorId, productId, numSu, newCommentText, c
     }
 }
 
+
+function updateSiteLicensePricingForProducts(vendorId, cycleId, arrayOfVendorSiteLicensePricingObjects) {
+    var validPricingObjects = arrayOfVendorSiteLicensePricingObjects.filter(vendorSiteLicensePrice.validate);
+    var pricingObjectsByProductId = vendorSiteLicensePrice.groupByProduct(validPricingObjects);
+
+    return vendorRepository.load(vendorId)
+        .then(function(vendor) {
+            var cycleRepository = cycleRepositoryForVendor(vendor);
+            return cycleRepository.load(cycleId);
+        })
+        .then(function(cycle) {
+            console.log('Updating ' + validPricingObjects.length + ' prices for ' +
+                Object.keys(pricingObjectsByProductId).length + ' products for ' + cycle.name);
+
+            return Q.all(Object.keys(pricingObjectsByProductId).map(updateOfferingsForProduct))
+                .then(function(results){
+                   console.log('Done updating prices');
+                })
+                .catch(function(err) {
+                    console.log('Error updating prices', err);
+                });
+
+            function updateOfferingsForProduct(productId) {
+                var pricesByLibrary = vendorSiteLicensePrice.groupByLibrary(pricingObjectsByProductId[productId]);
+
+                return offeringRepository.listOfferingsForProductIdUnexpanded(productId, cycle)
+                    .then(function(offerings) {
+                        var updatedOfferings = offerings.reduce(updateOffering, []);
+                        return offeringRepository.bulkUpdateOfferings(updatedOfferings, cycle);
+                    });
+
+                function updateOffering(listOfChangedOfferings, offering) {
+                    if ( pricesByLibrary[offering.library] ) {
+                        priceForLibrary = pricesByLibrary[offering.library][0].price;
+
+                        offering.pricing = offering.pricing || {};
+                        offering.pricing.site = priceForLibrary;
+
+                        listOfChangedOfferings.push(offering);
+                    }
+                    return listOfChangedOfferings;
+                }
+            }
+        });
+}
+
 module.exports = {
     listProductsWithOfferingsForVendorId: listProductsWithOfferingsForVendorId,
     updateSuPricingForProduct: updateSuPricingForProduct,
-    updateSuCommentForProduct: updateSuCommentForProduct
+    updateSuCommentForProduct: updateSuCommentForProduct,
+    updateSiteLicensePricingForProducts: updateSiteLicensePricingForProducts
 };

@@ -1,0 +1,25 @@
+{
+  "$schema": "json-schema.org/draft-04/schema",
+  "title": "VendorSiteLicensePrice",
+  "schemaType": "VendorSiteLicensePrice",
+  "type": "object",
+  "properties": {
+    "product": {
+      "description": "uuid of the product",
+      "type": "string"
+    },
+    "library": {
+      "description": "numeric id of the library",
+      "type": "integer"
+    },
+    "price": {
+      "description": "new valid for the site license price. Could be a float or empty",
+      "type": "number"
+    }
+  },
+  "required": [
+    "product",
+    "library",
+    "price"
+  ]
+}

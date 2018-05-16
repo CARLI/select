@@ -339,6 +339,15 @@ function runMiddlewareServer(){
                     .then(sendOk(res))
                     .catch(sendError(res));
             });
+            authorizedRouteWithVendorIdParam('post', '/update-site-license-prices/:vendorId/:cycleId', carliAuth.requireStaffOrSpecificVendor, function (req, res) {
+                if (!req.body) {
+                    res.status(400).send('missing pricing data');
+                    return;
+                }
+                vendorSpecificProductQueries.updateSiteLicensePricingForProducts(req.params.vendorId, req.params.cycleId, req.body)
+                    .then(sendResult(res))
+                    .catch(sendError(res));
+            });
         }
         function defineRoutesForUserManagement() {
             authorizedRoute('get', '/user', carliAuth.requireSession, function (req, res) {
