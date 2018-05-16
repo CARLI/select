@@ -198,9 +198,10 @@ $totalCellHeightWithBorder: unquote("calc(" + $cellHeight + " + " + ($borderWidt
 
 .grid-cell {
     border: $borderWidth solid $gray;
+    position: relative;
 
     &__display-mode,
-    &__edit-input{
+    &__edit-input {
         font-family: monospace;
         line-height: 1rem;
     }
@@ -213,28 +214,25 @@ $totalCellHeightWithBorder: unquote("calc(" + $cellHeight + " + " + ($borderWidt
         text-align: right;
     }
 
-    &__edit-button {
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
+    input.grid-cell__edit-input[type=text] {
+        border: 0;
         bottom: 0;
         left: 0;
         opacity: 0;
+        padding: $cellPadding;
+        pointer-events: none;
         position: absolute;
         right: 0;
         top: 0;
         width: 100%;
-    }
-
-    input.grid-cell__edit-input[type=text] {
-        border: 0;
-        padding: $cellPadding;
-        position: relative;
+        will-change: opacity;
         z-index: 1;
 
         &:focus {
-            outline: 2px solid $purple;
+            opacity: 1;
+            outline: 1px solid $purple;
             outline-offset: 0;
+            pointer-events: auto;
         }
     }
 }

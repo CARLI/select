@@ -6,8 +6,11 @@ import GridCell from "./gridCell";
 const mapStateToProps = (state, ownProps) => {
     const key = getKeyForLibraryAndProduct(ownProps.library, ownProps.product);
 
+    console.debug('gridCell mapStateToProps');
+
     return {
-        cell: state.offeringHash[key]
+        cell: state.offeringHash[key],
+        editMode: false
     };
 };
 

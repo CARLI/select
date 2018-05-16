@@ -178,4 +178,20 @@ describe('siteLicenseReducer', function () {
             expect(offeringHash['library-11-product-1279f5ee-4469-49af-b10a-f6b89ccb65c6'].siteLicensePrice).to.equal(2068);
         });
     });
+
+    describe('SetCellEditMode action', function () {
+        it('should set the given library and product as being edited', function () {
+            const store = freshStoreWithLibrariesAndProducts();
+
+            const library = store.getState().libraries.find(l => l.crmId === '4');
+            const product = store.getState().products.find(p => p.id === "003083ed-4b09-47b8-a9f5-d6195b13c001");
+
+            store.dispatch({
+                type: ActionTypes.SetCellEditMode,
+                args: { library, product }
+            });
+
+            expect(store.getState().cellInEditMode).to.deep.equal({ library, product });
+        });
+    });
 });

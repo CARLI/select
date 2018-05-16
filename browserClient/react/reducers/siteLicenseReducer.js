@@ -1,13 +1,18 @@
 const INITIAL_STATE = {
     offeringHash: {},
     libraries: [],
-    products: []
+    products: [],
+    cellInEditMode: {
+        library: null,
+        product: null
+    }
 };
 
 export const ActionTypes = {
     SetCycle: 'setCycle',
     SetLibrariesAndProducts: 'setLibrariesAndProducts',
-    SetProducts: 'setProducts'
+    SetProducts: 'setProducts',
+    SetCellEditMode: 'setCellEditMode'
 };
 
 export function reducer(state = INITIAL_STATE, action = null) {
@@ -19,6 +24,9 @@ export function reducer(state = INITIAL_STATE, action = null) {
 
     if (action.type === ActionTypes.SetLibrariesAndProducts)
         return setLibrariesAndProducts(state, action.args);
+
+    if (action.type === ActionTypes.SetCellEditMode)
+        return setCellEditMode(state, action.args);
 
     return state;
 }
@@ -57,4 +65,13 @@ function getSiteLicensePriceForLibraryAndProduct(library, product) {
     return product.offerings.reduce((current, next) => {
         return next.library === library.crmId ? next.pricing.site : current;
     }, 0);
+}
+
+function setCellEditMode(state, args) {
+    return Object.assign({}, state, {
+        cellInEditMode: {
+            library: args.library,
+            product: args.product
+        }
+    });
 }
