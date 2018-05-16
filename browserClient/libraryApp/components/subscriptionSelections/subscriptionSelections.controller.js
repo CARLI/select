@@ -438,6 +438,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
             'Product',
             'Last Year\'s Selection',
             'Vendor',
+            'Site License Price',
             'CARLI Funded',
             'Selection',
             'Price'
@@ -456,6 +457,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
                 vm.getProductDisplayName(offering.product),
                 lastYearsSelection ? lastYearsSelection.users : '',
                 offering.product.vendor.name,
+                offeringService.getFundedSiteLicensePrice(offering),
                 offeringService.isFunded(offering) ? 'yes' : 'no',
                 getSelectionUsers(offering),
                 offeringService.getFundedSelectionPrice(offering)
@@ -468,6 +470,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
         var exportHeaders = [
             'Product',
             'Vendor',
+            'Site License Price',
             'CARLI Funded',
             'Selection',
             'Price'
@@ -484,6 +487,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
             return [
                 vm.getProductDisplayName(offering.product),
                 offering.product.vendor.name,
+                offeringService.getFundedSiteLicensePrice(offering),
                 offeringService.isFunded(offering) ? 'yes' : 'no',
                 getSelectionUsers(offering),
                 offeringService.getFundedSelectionPrice(offering)
