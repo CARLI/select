@@ -1,7 +1,7 @@
 import {ActionTypes} from "../reducers/siteLicenseReducer";
 import { store } from '../store';
 import { Provider } from 'react-redux';
-import { SiteLicenseGrid } from './siteLicenseGridComponent/siteLicenseGridComponent';
+import SiteLicenseGridContainer from './siteLicenseGridComponent/siteLicenseGridContainer';
 
 const React = require('react');
 const ReactDom = require('react-dom');
@@ -32,29 +32,29 @@ class VendorSiteLicensePricingComponent extends React.Component {
                 args: { libraries, products }
             });
 
-            const slicedProducts = products.slice(0, 2);
-            slicedProducts.forEach(p => {
-                console.debug(p.id);
-                const offerings = p.offerings
-                    .filter(o => {
-                        return o.library === '3' || o.library === '4' || o.library === '11'
-                    })
-                    .map(o => {
-                        return {
-                            library: o.library,
-                            pricing: o.pricing,
-                            type: o.type
-                        };
-                    });
-                console.debug(JSON.stringify(offerings));
-            });
+            // const slicedProducts = products.slice(0, 2);
+            // slicedProducts.forEach(p => {
+            //     console.debug(p.id);
+            //     const offerings = p.offerings
+            //         .filter(o => {
+            //             return o.library === '3' || o.library === '4' || o.library === '11'
+            //         })
+            //         .map(o => {
+            //             return {
+            //                 library: o.library,
+            //                 pricing: o.pricing,
+            //                 type: o.type
+            //             };
+            //         });
+            //     console.debug(JSON.stringify(offerings));
+            // });
         });
     }
 
     render() {
         return (
             <Provider store={store}>
-                <SiteLicenseGrid/>
+                <SiteLicenseGridContainer />
             </Provider>
         );
     }

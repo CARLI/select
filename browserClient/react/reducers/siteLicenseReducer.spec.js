@@ -7,6 +7,22 @@ function freshStore() {
     return createStore(reducer);
 }
 
+function freshStoreWithLibrariesAndProducts() {
+    const store = freshStore();
+    const state = store.getState();
+    deepFreeze(state);
+
+    const libraries = getTestLibraries();
+    const products = getTestProducts();
+
+    store.dispatch({
+        type: ActionTypes.SetLibrariesAndProducts,
+        args: {libraries, products}
+    });
+
+    return store;
+}
+
 function getTestLibraries() {
     return [
         {
@@ -128,24 +144,38 @@ describe('siteLicenseReducer', function () {
 
     describe('SetLibrariesAndProducts action', function () {
         it('should set the libraries and products', function () {
-            const store = freshStore();
-            const state = store.getState();
-            deepFreeze(state);
+            const store = freshStoreWithLibrariesAndProducts();
 
             const libraries = getTestLibraries();
             const products = getTestProducts();
-
-            store.dispatch({
-                type: ActionTypes.SetLibrariesAndProducts,
-                args: {libraries, products}
-            });
 
             expect(store.getState().libraries).to.deep.equal(libraries);
             expect(store.getState().products).to.deep.equal(products);
         });
 
-        it('should create the initial state of the grid hash', function () {
+        it('should create the offering hash with keys ', function () {
+            const store = freshStoreWithLibrariesAndProducts();
 
+            const keys = Object.keys(store.getState().offeringHash);
+            const expectedKeys = [
+                'library-3-product-003083ed-4b09-47b8-a9f5-d6195b13c001',
+                'library-3-product-1279f5ee-4469-49af-b10a-f6b89ccb65c6',
+                'library-4-product-003083ed-4b09-47b8-a9f5-d6195b13c001',
+                'library-4-product-1279f5ee-4469-49af-b10a-f6b89ccb65c6',
+                'library-11-product-003083ed-4b09-47b8-a9f5-d6195b13c001',
+                'library-11-product-1279f5ee-4469-49af-b10a-f6b89ccb65c6'
+            ];
+
+            expect(keys.sort()).to.deep.equal(expectedKeys.sort());
+        });
+
+        it('should create the offering hash with the site license price', function () {
+            const store = freshStoreWithLibrariesAndProducts();
+
+            const offeringHash = store.getState().offeringHash;
+
+            expect(offeringHash['library-3-product-003083ed-4b09-47b8-a9f5-d6195b13c001'].siteLicensePrice).to.equal(2258);
+            expect(offeringHash['library-11-product-1279f5ee-4469-49af-b10a-f6b89ccb65c6'].siteLicensePrice).to.equal(2068);
         });
     });
 });
