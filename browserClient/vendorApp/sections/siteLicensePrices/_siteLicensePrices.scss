@@ -154,9 +154,12 @@
 /**
  REACT COMPONENT STYLES
  */
+$borderWidth: 1px;
 $cellHeight: 2rem;
 $cellPadding: 0.5rem 1rem;
 $headerHeight: 70px;
+
+$totalCellHeightWithBorder: unquote("calc(" + $cellHeight + " + " + ($borderWidth * 2) + ")");
 
 .site-license-grid {
     display: flex;
@@ -169,7 +172,7 @@ $headerHeight: 70px;
     &__library-column-header,
     &__product-header {
         background-color: $light-gray;
-        border: 1px solid $gray;
+        border: $borderWidth solid $gray;
         font-weight: bold;
         height: $headerHeight;
         overflow: hidden;
@@ -178,25 +181,60 @@ $headerHeight: 70px;
     }
 
     &__library-label {
-        border: 1px solid $gray;
-        height: $cellHeight;
+        border: $borderWidth solid $gray;
+        height: $totalCellHeightWithBorder;
+        line-height: 1rem;
         padding: $cellPadding;
     }
 
     &__product-area {
         display: grid;
         grid-template-rows: $headerHeight;
-        grid-auto-rows: $cellHeight;
+        grid-auto-rows: $totalCellHeightWithBorder;
         flex: 1 1 0;
         overflow: auto;
     }
 }
 
 .grid-cell {
-    border: 1px solid $gray;
-    font-family: monospace;
-    text-align: right;
-    overflow: hidden;
-    padding: $cellPadding;
-    text-overflow: ellipsis;
+    border: $borderWidth solid $gray;
+
+    &__display-mode,
+    &__edit-input{
+        font-family: monospace;
+        line-height: 1rem;
+    }
+
+    &__display-mode {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: $cellPadding;
+        position: relative;
+        text-align: right;
+    }
+
+    &__edit-button {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        bottom: 0;
+        left: 0;
+        opacity: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    input.grid-cell__edit-input[type=text] {
+        border: 0;
+        padding: $cellPadding;
+        position: relative;
+        z-index: 1;
+
+        &:focus {
+            outline: 2px solid $purple;
+            outline-offset: 0;
+        }
+    }
 }
