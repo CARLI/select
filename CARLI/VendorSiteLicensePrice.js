@@ -34,8 +34,19 @@ function groupByProduct(listOfVendorPricingObjects) {
     }
 }
 
+function groupByLibrary(listOfVendorPricingObjects) {
+    return listOfVendorPricingObjects.reduce(mapByLibraryId, {});
+
+    function mapByLibraryId(byLibraryId, nextPriceObject) {
+        byLibraryId[nextPriceObject.library] = byLibraryId[nextPriceObject.library] || [];
+        byLibraryId[nextPriceObject.library].push(nextPriceObject);
+        return byLibraryId;
+    }
+}
+
 module.exports = {
     validate: validate,
     validateList: validateList,
-    groupByProduct: groupByProduct
+    groupByProduct: groupByProduct,
+    groupByLibrary: groupByLibrary
 };

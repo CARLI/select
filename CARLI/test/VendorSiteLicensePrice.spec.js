@@ -134,4 +134,75 @@ describe('The VendorSiteLicensePrice Module', function () {
 
         expect(vendorSiteLicensePriceModule.groupByProduct(list)).to.deep.equal(expectedResult);
     });
+
+    it('should have a groupByLibrary method', function () {
+        expect(vendorSiteLicensePriceModule.groupByLibrary).to.be.a('function');
+    });
+
+    it('should return an object with keys that are library ids, with the pricing objects in arrays', function () {
+        var list = [
+            {
+                product: 'valid-product-id',
+                library: 1,
+                price: '400.99'
+            },
+            {
+                product: 'valid-product-id',
+                library: 2,
+                price: '300.99'
+            },
+            {
+                product: 'valid-product-id',
+                library: 3,
+                price: '200.99'
+            },
+            {
+                product: 'second-product-id',
+                library: 1,
+                price: '100.00'
+            },
+            {
+                product: 'second-product-id',
+                library: 2,
+                price: '200.00'
+            }
+        ];
+
+        const expectedResult = {
+            '1': [
+                {
+                    product: 'valid-product-id',
+                    library: 1,
+                    price: '400.99'
+                },
+                {
+                    product: 'second-product-id',
+                    library: 1,
+                    price: '100.00'
+                }
+            ],
+            '2': [
+
+                {
+                    product: 'valid-product-id',
+                    library: 2,
+                    price: '300.99'
+                },
+                {
+                    product: 'second-product-id',
+                    library: 2,
+                    price: '200.00'
+                }
+            ],
+            '3': [
+                {
+                    product: 'valid-product-id',
+                    library: 3,
+                    price: '200.99'
+                }
+            ]
+        };
+
+        expect(vendorSiteLicensePriceModule.groupByLibrary(list)).to.deep.equal(expectedResult);
+    });
 });
