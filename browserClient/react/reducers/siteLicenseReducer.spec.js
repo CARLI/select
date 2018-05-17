@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {reducer, ActionTypes} from './siteLicenseReducer';
+import {reducer, ActionTypes, getKeyForLibraryAndProduct} from './siteLicenseReducer';
 import {createStore} from 'redux';
 import deepFreeze from 'deep-freeze';
 
@@ -179,19 +179,38 @@ describe('siteLicenseReducer', function () {
         });
     });
 
-    describe('SetCellEditMode action', function () {
-        it('should set the given library and product as being edited', function () {
+    describe('SetSiteLicensePrice action', function () {
+        it('should set the value for the given library and product', function () {
             const store = freshStoreWithLibrariesAndProducts();
 
             const library = store.getState().libraries.find(l => l.crmId === '4');
             const product = store.getState().products.find(p => p.id === "003083ed-4b09-47b8-a9f5-d6195b13c001");
 
             store.dispatch({
-                type: ActionTypes.SetCellEditMode,
-                args: { library, product }
+                type: ActionTypes.SetSiteLicensePrice,
+                args: { library, product, siteLicensePrice: 666 }
             });
 
-            expect(store.getState().cellInEditMode).to.deep.equal({ library, product });
+            expect(store.getState().offeringHash[getKeyForLibraryAndProduct(library, product)].siteLicensePrice)
+                .to.equal(666);
+        });
+
+        it('should do nothing if the price is the same', function () {
+            const store = freshStoreWithLibrariesAndProducts();
+
+            const library = store.getState().libraries.find(l => l.crmId === '4');
+            const product = store.getState().products.find(p => p.id === "003083ed-4b09-47b8-a9f5-d6195b13c001");
+
+            const before = store.getState().offeringHash[getKeyForLibraryAndProduct(library, product)];
+
+            store.dispatch({
+                type: ActionTypes.SetSiteLicensePrice,
+                args: { library, product, siteLicensePrice: 2258 }
+            });
+
+            const after = store.getState().offeringHash[getKeyForLibraryAndProduct(library, product)];
+
+            expect(before).to.equal(after);
         });
     });
 });

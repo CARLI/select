@@ -12,7 +12,7 @@ export const ActionTypes = {
     SetCycle: 'setCycle',
     SetLibrariesAndProducts: 'setLibrariesAndProducts',
     SetProducts: 'setProducts',
-    SetCellEditMode: 'setCellEditMode'
+    SetSiteLicensePrice: 'setSiteLicensePrice'
 };
 
 export function reducer(state = INITIAL_STATE, action = null) {
@@ -25,8 +25,8 @@ export function reducer(state = INITIAL_STATE, action = null) {
     if (action.type === ActionTypes.SetLibrariesAndProducts)
         return setLibrariesAndProducts(state, action.args);
 
-    if (action.type === ActionTypes.SetCellEditMode)
-        return setCellEditMode(state, action.args);
+    if (action.type === ActionTypes.SetSiteLicensePrice)
+        return setSiteLicensePrice(state, action.args);
 
     return state;
 }
@@ -67,11 +67,19 @@ function getSiteLicensePriceForLibraryAndProduct(library, product) {
     }, 0);
 }
 
-function setCellEditMode(state, args) {
+function setSiteLicensePrice(state, args) {
+    const key = getKeyForLibraryAndProduct(args.library, args.product);
+    const offering = state.offeringHash[key];
+
+    const currentPrice = offering.siteLicensePrice;
+    if (args.siteLicensePrice === currentPrice)
+        return state;
+
+    const newOfferingHash = Object.assign({}, state.offeringHash, {
+        [key]: Object.assign({}, offering, { siteLicensePrice: args.siteLicensePrice})
+    });
+
     return Object.assign({}, state, {
-        cellInEditMode: {
-            library: args.library,
-            product: args.product
-        }
+        offeringHash: newOfferingHash
     });
 }

@@ -1,11 +1,16 @@
 import React from 'react';
 
-const GridCell = ({cell}) => {
+const GridCell = ({cell, setSiteLicensePrice}) => {
     const editInputRef = React.createRef();
 
     function showInput(event) {
         event.stopPropagation();
         editInputRef.current.focus();
+    }
+
+    function onBlurHandler(event) {
+        const newPrice = parseFloat(event.target.value);
+        setSiteLicensePrice(newPrice);
     }
 
     return (
@@ -17,6 +22,7 @@ const GridCell = ({cell}) => {
                 ref={editInputRef}
                 className="grid-cell__edit-input"
                 type="text"
+                onBlur={onBlurHandler}
                 defaultValue={cell.siteLicensePrice}/>
         </div>
     );
