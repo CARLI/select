@@ -1,8 +1,8 @@
 import React from 'react';
-import GridCellContainer from '../gridCellComponent/gridCellContainer';
 import {getKeyForLibraryAndProduct} from "../../reducers/siteLicenseReducer";
+import GridCell from "../gridCellComponent/gridCell";
 
-const SiteLicenseGrid = ({ libraries, products }) => {
+const SiteLicenseGrid = ({ libraries, products, offeringHash, setSiteLicensePrice }) => {
     const productGridColumns = products
         .map(p => '150px')
         .join(' ');
@@ -10,6 +10,33 @@ const SiteLicenseGrid = ({ libraries, products }) => {
     const productAreaStyle = {
         gridTemplateColumns: productGridColumns
     };
+
+    function gridCells() {
+        const gridCells = [];
+
+        libraries.forEach(l => {
+            products.forEach(p => {
+                gridCells.push(makeGridCell(l, p));
+            });
+        });
+
+        return gridCells;
+    }
+
+    function makeGridCell(library, product) {
+        function onPriceChange(price) {
+            setSiteLicensePrice(price, library, product);
+        }
+
+        console.log('makeGridCell');
+
+        return (
+            <GridCell
+                cell={offeringHash[getKeyForLibraryAndProduct(library, product)]}
+                onPriceChange={onPriceChange}
+                key={getKeyForLibraryAndProduct(library, product)}/>
+        );
+    }
 
     return (
         <div className="site-license-grid">
@@ -29,31 +56,10 @@ const SiteLicenseGrid = ({ libraries, products }) => {
                         <div className="site-license-grid__product-header" key={p.id}>{p.name}</div>
                     );
                 })}
-                { gridCells(libraries, products) }
+                { gridCells() }
             </div>
         </div>
     );
 };
-
-function gridCells(libraries, products) {
-    const gridCells = [];
-
-    libraries.forEach(l => {
-        products.forEach(p => {
-            gridCells.push(makeGridCell(l, p));
-        });
-    });
-
-    return gridCells;
-}
-
-function makeGridCell(library, product) {
-    return (
-        <GridCellContainer
-            library={library}
-            product={product}
-            key={getKeyForLibraryAndProduct(library, product)}/>
-    );
-}
 
 export default SiteLicenseGrid;

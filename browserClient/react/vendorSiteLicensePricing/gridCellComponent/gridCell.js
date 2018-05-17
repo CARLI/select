@@ -1,6 +1,6 @@
 import React from 'react';
 
-const GridCell = ({cell, setSiteLicensePrice}) => {
+const GridCell = ({cell, onPriceChange}) => {
     const editInputRef = React.createRef();
 
     function showInput(event) {
@@ -10,7 +10,7 @@ const GridCell = ({cell, setSiteLicensePrice}) => {
 
     function onBlurHandler(event) {
         const newPrice = parseFloat(event.target.value);
-        setSiteLicensePrice(newPrice);
+        onPriceChange(newPrice);
     }
 
     return (
