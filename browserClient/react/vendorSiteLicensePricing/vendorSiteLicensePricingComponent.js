@@ -1,7 +1,5 @@
-import {ActionTypes} from "../reducers/siteLicenseReducer";
-import { store } from '../store';
-import { Provider } from 'react-redux';
-import SiteLicenseGridContainer from './siteLicenseGridComponent/siteLicenseGridContainer';
+import * as grid from '../grid';
+import SiteLicenseGrid from "./siteLicenseGridComponent/siteLicenseGrid";
 
 const React = require('react');
 const ReactDom = require('react-dom');
@@ -9,12 +7,11 @@ const ReactDom = require('react-dom');
 class VendorSiteLicensePricingComponent extends React.Component {
     constructor(props) {
         super();
-
-        store.dispatch({
-            type: ActionTypes.SetCycle,
-            args: { cycle: props.angularController.cycle }
-        });
-
+        this.state = {
+            cycle: props.angularController.cycle,
+            libraries: [],
+            products: []
+        };
         this.user = props.angularController.user;
         this.modules = props.modules;
         this.angularController = props.angularController;
@@ -25,12 +22,10 @@ class VendorSiteLicensePricingComponent extends React.Component {
     activate() {
         Promise.all([
             this.modules.Library.listActiveLibraries(),
-            this.modules.ProductMiddleware.listProductsWithOfferingsForVendorId(this.user.vendor.id, store.getState().cycle)
+            this.modules.ProductMiddleware.listProductsWithOfferingsForVendorId(this.user.vendor.id, this.state.cycle)
         ]).then(([libraries, products]) => {
-            store.dispatch({
-                type: ActionTypes.SetLibrariesAndProducts,
-                args: { libraries, products }
-            });
+            grid.setLibrariesAndProducts(libraries, products);
+            this.setState({ libraries, products });
 
             // const slicedProducts = products.slice(0, 2);
             // slicedProducts.forEach(p => {
@@ -53,9 +48,7 @@ class VendorSiteLicensePricingComponent extends React.Component {
 
     render() {
         return (
-            <Provider store={store}>
-                <SiteLicenseGridContainer />
-            </Provider>
+            <SiteLicenseGrid libraries={this.state.libraries} products={this.state.products} />
         );
     }
 }

@@ -1,8 +1,8 @@
 import React from 'react';
-import {getKeyForLibraryAndProduct} from "../../reducers/siteLicenseReducer";
+import { getKeyForLibraryAndProduct } from "../../grid";
 import GridCell from "../gridCellComponent/gridCell";
 
-const SiteLicenseGrid = ({ libraries, products, offeringHash, setSiteLicensePrice }) => {
+const SiteLicenseGrid = ({ libraries, products }) => {
     const productGridColumns = products
         .map(p => '150px')
         .join(' ');
@@ -26,7 +26,8 @@ const SiteLicenseGrid = ({ libraries, products, offeringHash, setSiteLicensePric
     function makeGridCell(library, product) {
         return (
             <GridCell
-                cell={offeringHash[getKeyForLibraryAndProduct(library, product)]}
+                library={library}
+                product={product}
                 key={getKeyForLibraryAndProduct(library, product)}/>
         );
     }

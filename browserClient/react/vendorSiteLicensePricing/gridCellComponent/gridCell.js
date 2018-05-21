@@ -1,12 +1,14 @@
 import React from 'react';
+import * as grid from '../../grid';
 
 const ENTER_KEY_CODE = 13;
 
 class GridCell extends React.Component {
     constructor(props) {
         super(props);
+        const offering = grid.getOffering(props.library, props.product);
         this.state = {
-            price: props.cell.siteLicensePrice
+            price: offering.originalPrice
         };
         this.editInputRef = React.createRef();
     }
@@ -55,6 +57,7 @@ class GridCell extends React.Component {
         this.setState({
             price
         });
+        grid.updateSiteLicensePrice(this.props.library, this.props.product, price);
     }
 }
 
