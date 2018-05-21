@@ -151,6 +151,7 @@
     }
 }
 
+
 /**
  REACT COMPONENT STYLES
  */
@@ -162,7 +163,9 @@ $headerHeight: 70px;
 $totalCellHeightWithBorder: unquote("calc(" + $cellHeight + " + " + ($borderWidth * 2) + ")");
 
 .site-license-grid {
+    border: $borderWidth solid $gray;
     display: flex;
+    margin: 1rem;
 
     &__library-column {
         flex: 0 0 auto;
@@ -172,12 +175,18 @@ $totalCellHeightWithBorder: unquote("calc(" + $cellHeight + " + " + ($borderWidt
     &__library-column-header,
     &__product-header {
         background-color: $light-gray;
-        border: $borderWidth solid $gray;
+        border-top: 1px solid $gray;
+        border-right: 1px solid $gray;
+        border-bottom: 2px solid $gray;
+        border-left: 1px solid $gray;
         font-weight: bold;
         height: $headerHeight;
         overflow: hidden;
         padding: 1rem;
+        position: sticky;
         text-overflow: ellipsis;
+        top: 0;
+        z-index: 1;
     }
 
     &__library-label {
@@ -192,7 +201,6 @@ $totalCellHeightWithBorder: unquote("calc(" + $cellHeight + " + " + ($borderWidt
         grid-template-rows: $headerHeight;
         grid-auto-rows: $totalCellHeightWithBorder;
         flex: 1 1 0;
-        overflow: auto;
     }
 }
 
