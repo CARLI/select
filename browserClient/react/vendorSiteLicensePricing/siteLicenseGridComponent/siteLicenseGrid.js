@@ -7,7 +7,7 @@ const SiteLicenseGrid = ({ libraries, products }) => {
         .map(p => '150px')
         .join(' ');
 
-    const productAreaStyle = {
+    const productColumnTemplate = {
         gridTemplateColumns: productGridColumns
     };
 
@@ -44,13 +44,17 @@ const SiteLicenseGrid = ({ libraries, products }) => {
                     );
                 })}
             </div>
-            <div className="site-license-grid__product-area" style={productAreaStyle}>
-                { products.map(p => {
-                    return (
-                        <div className="site-license-grid__product-header" key={p.id}>{p.name}</div>
-                    );
-                })}
-                { gridCells() }
+            <div className="site-license-grid__product-area">
+                <div className="site-license-grid__product-headers" style={productColumnTemplate}>
+                    { products.map(p => {
+                        return (
+                            <div className="site-license-grid__product-header" key={p.id}>{p.name}</div>
+                        );
+                    })}
+                </div>
+                <div className="site-license-grid__grid-cells" style={productColumnTemplate}>
+                    { gridCells() }
+                </div>
             </div>
         </div>
     );

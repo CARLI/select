@@ -183,10 +183,13 @@ $totalCellHeightWithBorder: unquote("calc(" + $cellHeight + " + " + ($borderWidt
         height: $headerHeight;
         overflow: hidden;
         padding: 1rem;
-        position: sticky;
         text-overflow: ellipsis;
-        top: 0;
         z-index: 1;
+    }
+
+    &__library-column-header {
+        position: sticky;
+        top: 0;
     }
 
     &__library-label {
@@ -197,10 +200,23 @@ $totalCellHeightWithBorder: unquote("calc(" + $cellHeight + " + " + ($borderWidt
     }
 
     &__product-area {
+        flex: 1 1 0;
+        max-width: calc(100% - 350px);
+    }
+
+    &__product-headers {
         display: grid;
         grid-template-rows: $headerHeight;
+        overflow-x: hidden;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+    &__grid-cells {
+        display: grid;
         grid-auto-rows: $totalCellHeightWithBorder;
-        flex: 1 1 0;
+        overflow: auto;
     }
 }
 
