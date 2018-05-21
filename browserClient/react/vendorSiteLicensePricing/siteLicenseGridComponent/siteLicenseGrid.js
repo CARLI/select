@@ -24,16 +24,9 @@ const SiteLicenseGrid = ({ libraries, products, offeringHash, setSiteLicensePric
     }
 
     function makeGridCell(library, product) {
-        function onPriceChange(price) {
-            setSiteLicensePrice(price, library, product);
-        }
-
-        console.log('makeGridCell');
-
         return (
             <GridCell
                 cell={offeringHash[getKeyForLibraryAndProduct(library, product)]}
-                onPriceChange={onPriceChange}
                 key={getKeyForLibraryAndProduct(library, product)}/>
         );
     }
