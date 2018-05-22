@@ -46,10 +46,16 @@ function expandTargetEntities( notification ) {
         return libraryRepository.load(notification.targetEntity).then(function(library) {
             notification.targetEntity = library;
             return notification;
+        })
+        .catch(function(err){
+            return notification;
         });
     } else if (notificationTypeIsForVendor(notification.notificationType)) {
         return vendorRepository.load(notification.targetEntity).then(function(vendor) {
             notification.targetEntity = vendor;
+            return notification;
+        })
+        .catch(function(err){
             return notification;
         });
     } else {
