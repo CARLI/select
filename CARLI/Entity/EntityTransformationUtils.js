@@ -128,7 +128,7 @@ function _fetchAllObjectsFromReferences(entity, referencesArray) {
                 p = repo.load(entity[property]);
             }
             p.catch(function (error) {
-                Logger.debug('Failed to load reference to ' + property);
+                Logger.debug('Failed to load reference to ' + property, entity[property]);
                 throw error;
             });
             promises.push( p );
