@@ -77,7 +77,7 @@ function sendNotificationEmail( notificationId ){
 
             return includeAttachmentsIfNecessary( options, notification )
                 .then(function() {
-                    Logger.log('send email to '+notification.to);
+                    Logger.log('send email to '+options.to);
                     return sendMail(options);
                 })
                 .catch(function(err){ Logger.log('EMAIL ERROR ', err); })
