@@ -318,7 +318,7 @@ function htmlForPdf(dataForPdf){
 
 function fetchTemplateForContent(type, cycle){
     if ( typeIsForSubscriptionInvoiceEstimate(type) ){
-        if ( cycle.isOpenToLibraries() ){
+        if ( cycleRepository.isOpenToLibraries(cycle) ){
             return notificationTemplateRepository.loadTemplateForOpenCycleEstimates();
         }
         else {
