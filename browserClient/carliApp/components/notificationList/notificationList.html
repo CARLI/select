@@ -26,7 +26,7 @@
 </div>
 
 <ul cg-busy="vm.loadingPromise">
-    <li class="notification-row" ng-repeat="notification in vm.notifications | filter: vm.filterByType | filter: vm.filterByOwner | orderBy:vm.orderBy as filteredResults track by notification.id">
+    <li class="notification-row" ng-repeat="notification in vm.notifications | filter: vm.filterByType | filter: vm.filterByOwner | orderBy:vm.orderBy as filteredResults track by notification.id" data-notification-id="{{ ::notification.id }}">
         <div class="column subject">
             <span class="subject">
                 <span class="recipient" ng-show="notification.targetEntity.name || notification.targetEntityName">{{ notification.targetEntity.name || notification.targetEntityName }}:</span>
