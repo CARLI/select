@@ -437,7 +437,7 @@ function loadAndCompileHandlebarsTemplate(fileName){
 
 function findCycleId(cycleValue) {
     if ( typeof cycleValue === 'object' ) {
-        return cycle.id;
+        return cycleValue.id;
     }
     else {
         return cycleValue;
