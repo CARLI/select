@@ -131,7 +131,7 @@ function dataForSubscriptionInvoicePdf(notification){
     var cycle = null;
 
     var pdfType = pdfTypeFromNotification(notification);
-    var cycleId = notification.cycle;
+    var cycleId = findCycleId(notification.cycle);
     var library = notification.targetEntity;
     var specificOfferingIds = notification.offeringIds;
 
@@ -435,6 +435,14 @@ function loadAndCompileHandlebarsTemplate(fileName){
     return handlebars.compile(templateHtml);
 }
 
+function findCycleId(cycleValue) {
+    if ( typeof cycleValue === 'object' ) {
+        return cycle.id;
+    }
+    else {
+        return cycleValue;
+    }
+}
 
 module.exports = {
     exportPdf: exportPdf,
