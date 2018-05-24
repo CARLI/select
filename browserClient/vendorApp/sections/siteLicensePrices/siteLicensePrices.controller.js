@@ -29,8 +29,6 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
     activate();
 
     function activate() {
-        affixControlsToTopOfPage();
-
         vm.cycle = cycleService.getCurrentCycle();
         vm.isOneTimePurchase = (vm.cycle.cycleType === 'One-Time Purchase');
         vm.user = authService.getCurrentUser();
@@ -48,27 +46,6 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
             .then(initializePricingGrid);
 
         $scope.$on("$destroy", onControllerDestroy);
-    }
-
-    function affixControlsToTopOfPage() {
-        var headerPinnedEvent = 'affixed.bs.affix';
-        var headerUnpinnedEvent = 'affixed-top.bs.affix';
-
-        var heightOfSiteHeader = 165;
-        var heightOfPageHeader = 105;
-
-        $('.page-header').affix({offset: {top: heightOfSiteHeader}});
-
-        $(document).on(headerPinnedEvent, headerPinned);
-        $(document).on(headerUnpinnedEvent, headerUnpinned);
-
-        function headerPinned(e) {
-            $('main > div[role="application"]').css('padding-top', heightOfPageHeader + 'px');
-        }
-
-        function headerUnpinned(e) {
-            $('main > div[role="application"]').css('padding-top', '0');
-        }
     }
 
     function initializePricingGrid() {
