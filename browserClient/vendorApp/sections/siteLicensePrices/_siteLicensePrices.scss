@@ -43,6 +43,12 @@
                 height: 2.5rem;
             }
         }
+
+        &.price-row-sticky-header {
+            position: sticky;
+            top: 125px;
+            z-index: 1;
+        }
     }
 
     .pricing-container {
