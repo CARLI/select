@@ -46,16 +46,15 @@
     }
 
     .pricing-grid {
-        display: table;
         position: absolute;
         top: 0;
         left: 0;
 
         .price-row {
-            display: table-row;
+            display: flex;
 
             .column {
-                display: table-cell;
+                flex: 1 1 auto;
                 padding: 0;
                 width: 150px;
 
