@@ -208,10 +208,23 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
             .on('blur', '.price-editable', applyPricingChangesToCell)
             .on('focus', '.comment-marker', editCommentMarker)
             .on('focus', '.price', editCell);
+        window.addEventListener('scroll', positionGridHeaders);
+    }
+
+    function positionGridHeaders(event) {
+        var gridContainer = document.getElementById('site-pricing-grid-container');
+        if (!gridContainer)
+            return;
+
+        var headerOffset = 125;
+        var gridTop = gridContainer.getBoundingClientRect().top;
+        var productNameRow = document.getElementById('product-name-row');
+        productNameRow.style.top = gridTop < headerOffset ? Math.abs(gridTop - headerOffset) + 'px' : '';
     }
 
     function removeGridCellEvents() {
         $('body').off();
+        window.removeEventListener('scroll', positionGridHeaders);
     }
 
     function showCommentModalFor(offering, cell) {
