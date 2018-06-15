@@ -38,6 +38,9 @@
     .price-row {
 
         &.price-cap {
+            position: sticky;
+            top: 125px;
+
             .header {
                 min-height: 2.5rem;
                 height: 2.5rem;
@@ -46,7 +49,7 @@
 
         &.price-row-sticky-header {
             position: sticky;
-            top: 125px;
+            top: 160px;
             z-index: 1;
         }
     }
