@@ -217,9 +217,14 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
             return;
 
         var headerOffset = 125;
+        var borderOffset = 3;
+        var totalOffset = headerOffset - borderOffset;
         var gridTop = gridContainer.getBoundingClientRect().top;
+        var priceCapRow = document.getElementById('price-cap');
         var productNameRow = document.getElementById('product-name-row');
-        productNameRow.style.top = gridTop < headerOffset ? Math.abs(gridTop - headerOffset) + 'px' : '';
+        var newTop = gridTop < headerOffset ? Math.abs(gridTop - totalOffset) + 'px' : '';
+        priceCapRow.style.top = newTop;
+        productNameRow.style.top = newTop;
     }
 
     function removeGridCellEvents() {
