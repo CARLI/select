@@ -26,6 +26,12 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
         vm.isCommentModeEnabled = !vm.isCommentModeEnabled;
     };
 
+    var headerOffset = 125;
+    var borderOffset = 3;
+    var gridContainer;
+    var priceCapRow;
+    var productNameRow;
+
     activate();
 
     function activate() {
@@ -212,16 +218,17 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
     }
 
     function positionGridHeaders(event) {
-        var gridContainer = document.getElementById('site-pricing-grid-container');
         if (!gridContainer)
-            return;
+            gridContainer = document.getElementById('site-pricing-grid-container');
 
-        var headerOffset = 125;
-        var borderOffset = 3;
+        if (!priceCapRow)
+            priceCapRow = document.getElementById('price-cap');
+
+        if (!productNameRow)
+            productNameRow = document.getElementById('product-name-row');
+
         var totalOffset = headerOffset - borderOffset;
         var gridTop = gridContainer.getBoundingClientRect().top;
-        var priceCapRow = document.getElementById('price-cap');
-        var productNameRow = document.getElementById('product-name-row');
         var newTop = gridTop < headerOffset ? Math.abs(gridTop - totalOffset) + 'px' : '';
         priceCapRow.style.top = newTop;
         productNameRow.style.top = newTop;
