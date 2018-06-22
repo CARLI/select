@@ -97,7 +97,7 @@ module.exports = function ( grunt ) {
                         var modRewrite = require('connect-modrewrite');
 
                         return [modRewrite(['!(\\..+)$ /carliApp/index.html [L]'])].concat(
-                            optBase.map(function(path){ return connect.static(path); }));
+                            optBase.map(function(path){ return require('serve-static')(path); }));
                     }
                 }
             },
@@ -111,7 +111,7 @@ module.exports = function ( grunt ) {
                         var modRewrite = require('connect-modrewrite');
 
                         return [modRewrite(['!(\\..+)$ /libraryApp/index.html [L]'])].concat(
-                            optBase.map(function(path){ return connect.static(path); }));
+                            optBase.map(function(path){ return require('serve-static')(path); }));
                     }
                 }
             },
@@ -125,7 +125,7 @@ module.exports = function ( grunt ) {
                         var modRewrite = require('connect-modrewrite');
 
                         return [modRewrite(['!(\\..+)$ /vendorApp/index.html [L]'])].concat(
-                            optBase.map(function(path){ return connect.static(path); }));
+                            optBase.map(function(path){ return require('serve-static')(path); }));
                     }
                 }
             },
@@ -142,7 +142,7 @@ module.exports = function ( grunt ) {
                         var modRewrite = require('connect-modrewrite');
 
                         return [modRewrite(['!(\\..+)$ /carliApp/index.html [L]'])].concat(
-                            optBase.map(function(path){ return connect.static(path); }));
+                            optBase.map(function(path){ return require('serve-static')(path); }));
                     }
                 }
             }
@@ -422,7 +422,7 @@ module.exports = function ( grunt ) {
 
         sass: {
             options: {
-                loadPath: '.'
+                sourceMap: true
             },
 
             carli: {
@@ -457,8 +457,7 @@ module.exports = function ( grunt ) {
 
             compile: {
                 options: {
-                    sourcemap: 'none',
-                    style: 'compressed'
+                    sourceMap: false
                 },
                 files: [
                     {
