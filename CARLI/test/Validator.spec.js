@@ -94,7 +94,7 @@ describe( 'The Validator Module', function() {
                     phoneNumber: '123-4567'
                 }]
             };
-            return expect( Validator.validate(validVendor) ).to.be.fullfilled
+            return expect( Validator.validate(validVendor) ).to.be.fulfilled;
         });
 
         it.skip( 'should throw a validation error for a Vendor object with an invalid websiteUrl', function() {
@@ -108,7 +108,7 @@ describe( 'The Validator Module', function() {
 
         it( 'should return true for a Vendor object with a valid websiteUrl', function() {
             return expect( Validator.validate({ type: 'Vendor', name: 'Example Vendor', websiteUrl: 'http://www.examplevendor.com' }) )
-              .to.be.fullfilled
+              .to.be.fulfilled;
         });
 
         it( 'should throw a validation error for a Product without a Vendor reference', function() {

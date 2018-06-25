@@ -65,20 +65,18 @@ function unavailableOneTimePurchaseProduct() {
 }
 
 describe('Run the product tests', function () {
-    it ('runs product tests', function (done) {
+    it ('runs product tests', function () {
         return cycleRepository.create(testCycleData())
             .then(cycleRepository.load)
             .then(function (testCycle) {
                 test.run('Product', validProductData, invalidProductData, testCycle);
                 runProductSpecificTests(testCycle);
-                done();
             });
     });
-    it ('also runs one time purchase product tests', function (done) {
+    it ('also runs one time purchase product tests', function () {
          return cycleRepository.load(config.oneTimePurchaseProductsCycleDocId)
             .then(function (testCycle) {
                 runOneTimePurchaseProductTests(testCycle);
-                done();
             });
     });
 });

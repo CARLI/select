@@ -44,13 +44,12 @@ function testCycleData() {
 
 
 describe('Run the VendorStatus tests', function () {
-    it ('runs VendorStatus tests', function (done) {
+    it ('runs VendorStatus tests', function () {
         return CycleRepository.create(testCycleData())
             .then(CycleRepository.load)
             .then(function (testCycle) {
                 test.run('VendorStatus', validVendorStatusData, invalidVendorStatus, testCycle);
                 runVendorStatusSpecificTests(testCycle);
-                done();
             });
     });
 });

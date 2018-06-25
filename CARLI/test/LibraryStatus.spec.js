@@ -43,13 +43,12 @@ function testCycleData() {
 }
 
 describe('Run the LibraryStatus tests', function () {
-    it ('runs LibraryStatus tests', function (done) {
+    it ('runs LibraryStatus tests', function () {
         return CycleRepository.create(testCycleData())
             .then(CycleRepository.load)
             .then(function (testCycle) {
                 test.run('LibraryStatus', validLibraryStatusData, invalidLibraryStatus, testCycle);
                 runLibraryStatusSpecificTests(testCycle);
-                done();
             });
     });
 });
