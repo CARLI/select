@@ -4,7 +4,6 @@ var carliError = require('../../Error');
 var Q = require('q');
 var request = require('../../../config/environmentDependentModules/request');
 var queryString = require('query-string');
-var _ = require('lodash');
 
 module.exports = function (storeOptions) {
 
@@ -226,7 +225,7 @@ module.exports = function (storeOptions) {
         var queryParams = {};
 
         if (key != null && typeof key !== 'undefined') {
-            if (_.isArray(key)){
+            if (Array.isArray(key)){
                 queryParams.keys = makeArrayOfKeys(key);
             }
             else {
