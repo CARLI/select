@@ -17,7 +17,7 @@
     "csv-stringify": "0.0.8",
     "express": "^4.11.1",
     "express-csv-middleware": "^0.1.0",
-    "handlebars": "^3.0.3",
+    "handlebars": "^4.0.11",
     "html-pdf": "^1.2.1",
     "lodash": "^4",
     "moment": "^2.10.3",
