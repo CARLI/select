@@ -109,26 +109,16 @@ The following applications and projects are used to build the front-end, and to 
 
 * Node - the JavaScript runtime that powers many of the rest of the tools and provides a local development server.
 * Grunt - the task runner that automates building the project.
-* Bower - a package manager for front-end libraries (Angular, Bootstrap, etc.)
-* Karma - a unit test runner for JavaScript.
 * Mocha and Chai - libraries for writing tests.
-* Protractor - an end-to-end test runner for JavaScript.
-* PhantomJS - a headless WebKit browser environment in which to run tests.
 * Angular - Superheroic JavaScript MVW Framework.
+* PhantomJS - a headless WebKit browser environment in which to run tests.
 * Browserify - packages code using Node-style `requires` for the browser.
 
-_See [package.json](package.json) and [bower.json](bower.json) for detailed dependency information_
+_See [package.json](package.json) and for detailed dependency information_
 
 
-### How to Add a New Front-End Third Party Dependency (Bower Module) ###
-Since Bower is used to handle front end dependencies, it must be used when adding new ones. Follow these steps to do so:
-
-* `bower install <package name>` - this will download the package and put it in bower_modules/
-* If you are sure you will be using the package, use `bower install --save <package name>` instead. That will save it in bower.json
-* Add the path to the file that should be included in the project to the 'vendor_files' section of build.config.js, inside the 'js' array.
-
-If you want to update an existing dependency to a newer version, edit bower.json and increase the number next to the package name.
-
+### How to Add a New Front-End Third Party Dependency ###
+See docs/bower.md for notes about legacy bower modules. Use npm to install all JavaScript code.
 
 ### Code Style ###
 * The Angular application should follow the [Angular Style Guide] as closely as possible.
