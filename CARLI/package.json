@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "",
   "scripts": {
-    "test": "mkdir -p ../artifacts/test-results && JUNIT_REPORT_PATH=../artifacts/test-results/CARLI.xml JUNIT_REPORT_STACK=1 mocha --reporter mocha-jenkins-reporter --exit",
+    "test": "mocha --exit",
     "plainMocha": "mocha --exit"
   },
   "author": "",
