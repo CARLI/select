@@ -46,8 +46,6 @@ artifacts
 build
 compile
 .sass-cache
-# Except docker/build, that's not a build dir, that's an image named "build"
-!docker/build
 
 # Windows junk
 Thumbs.db

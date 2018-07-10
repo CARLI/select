@@ -1,0 +1,100 @@
+worker_processes  1;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    #keepalive_timeout  0;
+    keepalive_timeout  65;
+
+    charset utf-8;
+    client_max_body_size 25M;
+
+    gzip  on;
+
+    server {
+        listen       80;
+        server_name  staff.carli.docker.local;
+
+        location / {
+            root /usr/share/nginx/html;
+            try_files $uri /carliApp/index.html =404;
+        }
+        location /api/ {
+            rewrite ^/api/(.*)$ /$1 break;
+            proxy_pass http://middleware:3000;
+            proxy_cookie_domain ~.* docker.local;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+        location /db/ {
+            rewrite ^/db/(.*)$ /$1 break;
+            proxy_cookie_domain ~.* docker.local;
+            proxy_pass http://db:5984;
+            proxy_redirect off;
+            proxy_buffering off;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+    }
+
+    server {
+        listen       80;
+        server_name  vendor.carli.docker.local;
+
+        location / {
+            root /usr/share/nginx/html;
+            try_files $uri /vendorApp/index.html =404;
+        }
+        location /api/ {
+            rewrite ^/api/(.*)$ /$1 break;
+            proxy_pass http://middleware:3000;
+            proxy_cookie_domain ~.* docker.local;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+        location /db/ {
+            rewrite ^/db/(.*)$ /$1 break;
+            proxy_cookie_domain ~.* docker.local;
+            proxy_pass http://db:5984;
+            proxy_redirect off;
+            proxy_buffering off;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+    }
+
+    server {
+        listen       80;
+        server_name  library.carli.docker.local;
+
+        location / {
+            root /usr/share/nginx/html;
+            try_files $uri /libraryApp/index.html =404;
+        }
+        location /api/ {
+            rewrite ^/api/(.*)$ /$1 break;
+            proxy_pass http://middleware:3000;
+            proxy_cookie_domain ~.* docker.local;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+        location /db/ {
+            rewrite ^/db/(.*)$ /$1 break;
+            proxy_cookie_domain ~.* docker.local;
+            proxy_pass http://db:5984;
+            proxy_redirect off;
+            proxy_buffering off;
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+    }
+
+}

@@ -1,0 +1,30 @@
+version: '3'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile-web
+    env_file:
+      - .env
+    ports:
+      - ${WEB_PORT}:80
+    networks:
+      - select
+
+  db:
+    image: couchdb:1.6.1
+    networks:
+      - select
+    volumes:
+      - /carli/db/data:/opt/couchdb/data
+      - /carli/db/etc:/opt/couchdb/etc
+
+  middleware:
+    build:
+      context: .
+      dockerfile: Dockerfile-middleware
+    networks:
+      - select
+
+networks:
+  select:
