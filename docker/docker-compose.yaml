@@ -1,9 +1,7 @@
 version: '3'
 services:
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile-web
+    image: docker.pixodev.net:5000/web:1.8.12 #this is the generated image name for now, but will eventually point to the actual repository
     env_file:
       - .env
     ports:
@@ -20,11 +18,9 @@ services:
       - /carli/db/etc:/opt/couchdb/etc
 
   middleware:
-    build:
-      context: .
-      dockerfile: Dockerfile-middleware
+   image: docker.pixodev.net:5000/middleware:1.0.0 #this is the generated image name for now, but will eventually point to the actual repository
     networks:
       - select
 
 networks:
-  select:
+  select: {}
