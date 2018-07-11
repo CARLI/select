@@ -1,6 +1,10 @@
 var registryName = 'docker.pixodev.net:5000';
+
 var webVersion = require('./browserClient/package.json').version;
 var middlewareVersion = require('./middleware/package.json').version;
+
+var webDockerImageName = `${registryName}/web:${webVersion}`;
+var middlewareDockerImageName = `${registryName}/middleware:${middlewareVersion}`;
 
 module.exports = function (grunt) {
     require('./grunt/subdir')(grunt);
@@ -45,8 +49,24 @@ module.exports = function (grunt) {
             }
         },
         exec: {
+            dockerSaveImageWeb: {
+                command: `docker save ${webDockerImageName} -o ../artifacts/carliDockerImageWeb${webVersion}.tar`,
+                stdout: true,
+                stderr: true,
+                options: {
+                    cwd: 'docker'
+                }
+            },
+            dockerSaveImageMiddleware: {
+                command: `docker save ${middlewareDockerImageName} -o ../artifacts/carliDockerImageMiddleware${middlewareVersion}.tar`,
+                stdout: true,
+                stderr: true,
+                options: {
+                    cwd: 'docker'
+                }
+            },
             webDocker: {
-                command: `docker build -f Dockerfile-web -t ${registryName}/web:${webVersion} .`,
+                command: `docker build -f Dockerfile-web -t ${webDockerImageName} .`,
                 stdout: true,
                 stderr: true,
                 options: {
@@ -54,7 +74,7 @@ module.exports = function (grunt) {
                 }
             },
             middlewareDocker: {
-                command: `docker build -f Dockerfile-middleware -t ${registryName}/middleware:${middlewareVersion} .`,
+                command: `docker build -f Dockerfile-middleware -t ${middlewareDockerImageName} .`,
                 stdout: true,
                 stderr: true,
                 options: {
@@ -88,5 +108,10 @@ module.exports = function (grunt) {
         'docker-build:middleware'
     ]);
 
-    //TODO: push to repository (or intermediate, `docker save` to tarball, and rsync)
+    grunt.registerTask('docker-save-images', [
+        'exec:dockerSaveImageWeb',
+        'exec:dockerSaveImageMiddleware'
+    ]);
+
+    //TODO: push to repository
 };
