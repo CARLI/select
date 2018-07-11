@@ -18,7 +18,7 @@ module.exports = function (grunt) {
             docker: ['docker/build/web', 'docker/build/middleware']
         },
         copy: {
-            webDocker: {
+            filesForDockerWebImage: {
                 files: [{
                     src: 'compile/**',
                     dest: 'docker/build/web',
@@ -26,7 +26,7 @@ module.exports = function (grunt) {
                     cwd: 'browserClient'
                 }]
             },
-            middlewareDocker: {
+            filesForDockerMiddlewareImage: {
                 files: [{
                     src: ['CARLI/**', 'config/**', 'db/**', 'middleware/**', 'schemas/**'],
                     dest: 'docker/build/middleware',
@@ -49,6 +49,22 @@ module.exports = function (grunt) {
             }
         },
         exec: {
+            dockerBuildWebImage: {
+                command: `docker build -f Dockerfile-web -t ${webDockerImageName} .`,
+                stdout: true,
+                stderr: true,
+                options: {
+                    cwd: 'docker'
+                }
+            },
+            dockerBuildMiddlewareImage: {
+                command: `docker build -f Dockerfile-middleware -t ${middlewareDockerImageName} .`,
+                stdout: true,
+                stderr: true,
+                options: {
+                    cwd: 'docker'
+                }
+            },
             dockerSaveImageWeb: {
                 command: `docker save ${webDockerImageName} -o ../artifacts/carliDockerImageWeb${webVersion}.tar`,
                 stdout: true,
@@ -59,22 +75,6 @@ module.exports = function (grunt) {
             },
             dockerSaveImageMiddleware: {
                 command: `docker save ${middlewareDockerImageName} -o ../artifacts/carliDockerImageMiddleware${middlewareVersion}.tar`,
-                stdout: true,
-                stderr: true,
-                options: {
-                    cwd: 'docker'
-                }
-            },
-            webDocker: {
-                command: `docker build -f Dockerfile-web -t ${webDockerImageName} .`,
-                stdout: true,
-                stderr: true,
-                options: {
-                    cwd: 'docker'
-                }
-            },
-            middlewareDocker: {
-                command: `docker build -f Dockerfile-middleware -t ${middlewareDockerImageName} .`,
                 stdout: true,
                 stderr: true,
                 options: {
@@ -95,13 +95,13 @@ module.exports = function (grunt) {
     grunt.registerTask('docker-build:web', [
         'clean:docker',
         'subdir-grunt:browserClient:compile',
-        'copy:webDocker',
-        'exec:webDocker'
+        'copy:filesForDockerWebImage',
+        'exec:dockerBuildWebImage'
     ]);
     grunt.registerTask('docker-build:middleware', [
         'clean:docker',
-        'copy:middlewareDocker',
-        'exec:middlewareDocker'
+        'copy:filesForDockerMiddlewareImage',
+        'exec:dockerBuildMiddlewareImage'
     ]);
     grunt.registerTask('docker-build', [
         'docker-build:web',
