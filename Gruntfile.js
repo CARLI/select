@@ -64,24 +64,24 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('serve', ["concurrent:serve"]);
-    grunt.registerTask('serve:headless', ["concurrent:serve:headless"]);
-    grunt.registerTask('serve:compiled', ["concurrent:serveCompiled"]);
+    grunt.registerTask('serve', ['concurrent:serve']);
+    grunt.registerTask('serve:headless', ['concurrent:serve:headless']);
+    grunt.registerTask('serve:compiled', ['concurrent:serveCompiled']);
 
     grunt.registerTask('test', function (arg) {
         grunt.task.run(['subdir-grunt:CARLI:test:' + arg]);
     });
 
     grunt.registerTask('docker-build:web', [
-        "clean:docker",
-        "subdir-grunt:browserClient:compile",
-        "copy:webDocker",
-        "exec:webDocker"
+        'clean:docker',
+        'subdir-grunt:browserClient:compile',
+        'copy:webDocker',
+        'exec:webDocker'
     ]);
     grunt.registerTask('docker-build:middleware', [
-        "clean:docker",
-        "copy:middlewareDocker",
-        "exec:middlewareDocker"
+        'clean:docker',
+        'copy:middlewareDocker',
+        'exec:middlewareDocker'
     ]);
     grunt.registerTask('docker-build', [
         'docker-build:web',
