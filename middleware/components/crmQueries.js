@@ -1,8 +1,15 @@
-var config = require('../../config');
 var mysql = require('mysql');
 var Q = require('q');
 
-var pool = mysql.createPool(config.memberDb);
+var mysqlConfig = {
+    connectionLimit: 10,
+    database: "carli_crm",
+    host: process.env['CRM_MYSQL_HOST'],
+    user: process.env['CRM_MYSQL_USER'],
+    password: process.env['CRM_MYSQL_PASSWORD']
+};
+
+var pool = mysql.createPool(mysqlConfig);
 
 var selectLibrary = 'SELECT m.institution_name, m.member_id, m.library_type, m.membership_lvl, m.current, p.product_id as is_ishare ' +
                     'FROM members AS m LEFT JOIN subscribed_products p ON (m.member_id = p.member_id AND p.product_id = 1) ';

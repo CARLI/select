@@ -17,11 +17,6 @@
     "couchDbName": "carli",
     "couchDbUrl": "http://127.0.0.1:5984"
   },
-  "memberDb": {
-    "connectionLimit": 10,
-    "host": "localhost",
-    "database": "carli_crm"
-  },
   "maintenanceMode": {
     "enabled": false,
     "heading": "System Maintenance",

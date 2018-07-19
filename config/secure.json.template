@@ -6,12 +6,5 @@
     "privilegedCouchUsername": "admin",
     "privilegedCouchPassword": "relax",
     "privilegedCouchHostname": "localhost:5984"
-  },
-  "memberDb": {
-    "connectionLimit": 10,
-    "host": "localhost",
-    "user": "root",
-    "password": "",
-    "database": "carli_crm"
   }
 }
