@@ -66,7 +66,7 @@ module.exports = function (grunt) {
                 }
             },
             dockerSaveImageWeb: {
-                command: `docker save ${webDockerImageName} -o ../artifacts/carliDockerImageWeb${webVersion}.tar`,
+                command: `docker save -o ../artifacts/carliDockerImageWeb${webVersion}.tar ${webDockerImageName}`,
                 stdout: true,
                 stderr: true,
                 options: {
@@ -74,7 +74,7 @@ module.exports = function (grunt) {
                 }
             },
             dockerSaveImageMiddleware: {
-                command: `docker save ${middlewareDockerImageName} -o ../artifacts/carliDockerImageMiddleware${middlewareVersion}.tar`,
+                command: `docker save -o ../artifacts/carliDockerImageMiddleware${middlewareVersion}.tar ${middlewareDockerImageName}`,
                 stdout: true,
                 stderr: true,
                 options: {
@@ -84,31 +84,31 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('serve', ['concurrent:serve']);
-    grunt.registerTask('serve:headless', ['concurrent:serve:headless']);
-    grunt.registerTask('serve:compiled', ['concurrent:serveCompiled']);
+    grunt.registerTask('serve', 'Run both the middleware and dev server', ['concurrent:serve']);
+    grunt.registerTask('serve:headless', 'Run both the middleware and a headless dev server', ['concurrent:serve:headless']);
+    grunt.registerTask('serve:compiled', 'Run both the middleware and the dev server with compiled app code', ['concurrent:serveCompiled']);
 
-    grunt.registerTask('test', function (arg) {
+    grunt.registerTask('test', 'Run the unit tests for the CARLI modules', function (arg) {
         grunt.task.run(['subdir-grunt:CARLI:test:' + arg]);
     });
 
-    grunt.registerTask('docker-build:web', [
+    grunt.registerTask('docker-build:web', 'Build the Nginx web server image', [
         'clean:docker',
         'subdir-grunt:browserClient:compile',
         'copy:filesForDockerWebImage',
         'exec:dockerBuildWebImage'
     ]);
-    grunt.registerTask('docker-build:middleware', [
+    grunt.registerTask('docker-build:middleware', 'Build the Node middleware image', [
         'clean:docker',
         'copy:filesForDockerMiddlewareImage',
         'exec:dockerBuildMiddlewareImage'
     ]);
-    grunt.registerTask('docker-build', [
+    grunt.registerTask('docker-build', 'Build all Docker images', [
         'docker-build:web',
         'docker-build:middleware'
     ]);
 
-    grunt.registerTask('docker-save-images', [
+    grunt.registerTask('docker-save-images', 'Save built Docker images to tarballs', [
         'exec:dockerSaveImageWeb',
         'exec:dockerSaveImageMiddleware'
     ]);
