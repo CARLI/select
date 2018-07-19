@@ -14,10 +14,10 @@ var vendorRepository = require('../../CARLI/Entity/VendorRepository.js');
 var libraryRepository = require('../../CARLI/Entity/LibraryRepository.js');
 
 var smtpConfig = {
-    host: config.smtp.host,
-    port: config.smtp.port,
-    secure: config.smtp.secure,
-    ignoreTLS: config.smtp.ignoreTLS
+    host: process.env['SMTP_HOST'],
+    port: process.env['SMTP_PORT'],
+    secure: process.env['SMTP_SECURE'],
+    ignoreTLS: process.env['SMTP_IGNORE_TLS']
 };
 
 var mailTransport = mailer.createTransport(smtpConfig);
