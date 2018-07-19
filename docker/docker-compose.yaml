@@ -1,7 +1,8 @@
 version: '3'
 services:
   web:
-    image: docker.pixodev.net:5000/web:1.8.12 #this is the generated image name for now, but will eventually point to the actual repository
+    image: 'docker.pixodev.net:5000/web:1.8.12'
+    restart: always
     env_file:
       - .env
     ports:
@@ -10,15 +11,17 @@ services:
       - select
 
   db:
-    image: couchdb:1.6.1
+    image: 'couchdb:1.6.1'
+    restart: always
     networks:
       - select
     volumes:
-      - /carli/db/data:/opt/couchdb/data
-      - /carli/db/etc:/opt/couchdb/etc
+      - /carli/db/data:/usr/local/var/lib/couchdb
+      - /carli/db/etc:/usr/local/var/lib/couchdb
 
   middleware:
-   image: docker.pixodev.net:5000/middleware:1.0.0 #this is the generated image name for now, but will eventually point to the actual repository
+    image: 'docker.pixodev.net:5000/middleware:1.0.0'
+    restart: always
     networks:
       - select
 
