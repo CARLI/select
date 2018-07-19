@@ -24,7 +24,7 @@ http {
         server_name  staff.carli.docker.local;
 
         location / {
-            root /usr/share/nginx/html;
+            root /usr/share/nginx/html/compile;
             try_files $uri /carliApp/index.html =404;
         }
         location /api/ {
