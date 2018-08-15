@@ -96,22 +96,17 @@ module.exports = function (grunt) {
         'clean:docker',
         'subdir-grunt:browserClient:compile',
         'copy:filesForDockerWebImage',
-        'exec:dockerBuildWebImage'
+        'exec:dockerBuildWebImage',
+        'exec:dockerSaveImageWeb'
     ]);
     grunt.registerTask('docker-build:middleware', 'Build the Node middleware image', [
         'clean:docker',
         'copy:filesForDockerMiddlewareImage',
-        'exec:dockerBuildMiddlewareImage'
+        'exec:dockerBuildMiddlewareImage',
+        'exec:dockerSaveImageMiddleware'
     ]);
     grunt.registerTask('docker-build', 'Build all Docker images', [
         'docker-build:web',
         'docker-build:middleware'
     ]);
-
-    grunt.registerTask('docker-save-images', 'Save built Docker images to tarballs', [
-        'exec:dockerSaveImageWeb',
-        'exec:dockerSaveImageMiddleware'
-    ]);
-
-    //TODO: push to repository
 };
