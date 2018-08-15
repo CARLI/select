@@ -21,7 +21,7 @@ http {
 
     server {
         listen       80;
-        server_name  staff.carli.docker.local;
+        server_name  staff.carli-dev.pixodev.net;
 
         location / {
             root /usr/share/nginx/html/compile;
@@ -30,13 +30,13 @@ http {
         location /api/ {
             rewrite ^/api/(.*)$ /$1 break;
             proxy_pass http://middleware:3000;
-            proxy_cookie_domain ~.* docker.local;
+            proxy_cookie_domain ~.* pixodev.net;
             proxy_set_header Host $host;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }
         location /db/ {
             rewrite ^/db/(.*)$ /$1 break;
-            proxy_cookie_domain ~.* docker.local;
+            proxy_cookie_domain ~.* pixodev.net;
             proxy_pass http://db:5984;
             proxy_redirect off;
             proxy_buffering off;
@@ -47,22 +47,22 @@ http {
 
     server {
         listen       80;
-        server_name  vendor.carli.docker.local;
+        server_name  vendor.carli-dev.pixodev.net;
 
         location / {
-            root /usr/share/nginx/html;
+            root /usr/share/nginx/html/compile;
             try_files $uri /vendorApp/index.html =404;
         }
         location /api/ {
             rewrite ^/api/(.*)$ /$1 break;
             proxy_pass http://middleware:3000;
-            proxy_cookie_domain ~.* docker.local;
+            proxy_cookie_domain ~.* pixodev.net;
             proxy_set_header Host $host;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }
         location /db/ {
             rewrite ^/db/(.*)$ /$1 break;
-            proxy_cookie_domain ~.* docker.local;
+            proxy_cookie_domain ~.* pixodev.net;
             proxy_pass http://db:5984;
             proxy_redirect off;
             proxy_buffering off;
@@ -73,22 +73,22 @@ http {
 
     server {
         listen       80;
-        server_name  library.carli.docker.local;
+        server_name  library.carli-dev.pixodev.net;
 
         location / {
-            root /usr/share/nginx/html;
+            root /usr/share/nginx/html/compile;
             try_files $uri /libraryApp/index.html =404;
         }
         location /api/ {
             rewrite ^/api/(.*)$ /$1 break;
             proxy_pass http://middleware:3000;
-            proxy_cookie_domain ~.* docker.local;
+            proxy_cookie_domain ~.* pixodev.net;
             proxy_set_header Host $host;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }
         location /db/ {
             rewrite ^/db/(.*)$ /$1 break;
-            proxy_cookie_domain ~.* docker.local;
+            proxy_cookie_domain ~.* pixodev.net;
             proxy_pass http://db:5984;
             proxy_redirect off;
             proxy_buffering off;
