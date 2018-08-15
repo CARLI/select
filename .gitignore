@@ -1,5 +1,7 @@
 /resources
 
+.env
+
 # Ignore Schema Browser build products
 /schemas/browser/*.json
 !/schemas/browser/package.json
@@ -15,8 +17,6 @@
 # Run `grunt jsenv:node` or `grunt jsenv:browser` to manually
 # set the desired environment. Ignore that file too since it is generated.
 /config/local.json
-/config/secure.json
-/config/index.js
 /config/environmentDependentModules/*.js
 
 #Vagrant

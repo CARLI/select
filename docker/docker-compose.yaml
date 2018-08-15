@@ -1,7 +1,7 @@
 version: '3'
 services:
   web:
-    image: 'docker.pixodev.net:5000/web:1.8.12'
+    image: 'docker.pixodev.net:5000/web:1.8.14'
     restart: always
     env_file:
       - .env
@@ -20,8 +20,10 @@ services:
       - /carli/db/etc:/usr/local/var/lib/couchdb
 
   middleware:
-    image: 'docker.pixodev.net:5000/middleware:1.0.0'
+    image: 'docker.pixodev.net:5000/middleware:1.0.2'
     restart: always
+    env_file:
+      - .env
     networks:
       - select
 

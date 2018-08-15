@@ -1,7 +1,9 @@
-require('dotenv').config();
 var _ = require('lodash');
 var defaults = require('./defaults');
 var local = require('./local');
+
+//don't let this get browserified because it uses ES6 which breaks uglify
+var environmentVariableNodePackageName = 'dotenv';
 
 var config = loadConfiguration();
 makeLoggerGlobal();
@@ -22,14 +24,19 @@ function loadConfiguration() {
     return config;
 
     function getSecureConfigFromEnvironment() {
-        return {
-            storeOptions: {
-                privilegedCouchUrlScheme: process.env['COUCH_DB_URL_SCHEME'],
-                privilegedCouchUsername: process.env['COUCH_DB_USER'],
-                privilegedCouchPassword: process.env['COUCH_DB_PASSWORD'],
-                privilegedCouchHostname: process.env['COUCH_DB_HOST']
-            }
-        };
+        if (!isBrowserEnvironment()) {
+            var parsedEnv = require(environmentVariableNodePackageName).config();
+
+            return {
+                storeOptions: {
+                    privilegedCouchUrlScheme: process.env['COUCH_DB_URL_SCHEME'],
+                    privilegedCouchUsername: process.env['COUCH_DB_USER'],
+                    privilegedCouchPassword: process.env['COUCH_DB_PASSWORD'],
+                    privilegedCouchHostname: process.env['COUCH_DB_HOST']
+                }
+            };
+        }
+        return {storeOptions: {}};
     }
 
     function setMiddlewareUrl() {
