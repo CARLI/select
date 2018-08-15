@@ -1,8 +1,7 @@
+require('dotenv').config();
 var _ = require('lodash');
 var defaults = require('./defaults');
 var local = require('./local');
-var secure = {};
-var secureConfigPath = null;
 
 var config = loadConfiguration();
 makeLoggerGlobal();
@@ -11,10 +10,9 @@ var storeOptionsForCycles = null;
 
 function loadConfiguration() {
     var config = {};
+    var secureEnv = getSecureConfigFromEnvironment();
 
-    concealSecureConfigFromBrowserify();
-
-    config = _.merge(defaults, secure, local);
+    config = _.merge(defaults, secureEnv, local);
 
     setMiddlewareUrl();
     setCouchDbUrl();
@@ -23,14 +21,15 @@ function loadConfiguration() {
 
     return config;
 
-    function concealSecureConfigFromBrowserify() {
-        if (isSecureEnvironment()) {
-            secureConfigPath = './secure';
-        }
-
-        if (secureConfigPath) {
-            secure = require(secureConfigPath);
-        }
+    function getSecureConfigFromEnvironment() {
+        return {
+            storeOptions: {
+                privilegedCouchUrlScheme: process.env['COUCH_DB_URL_SCHEME'],
+                privilegedCouchUsername: process.env['COUCH_DB_USER'],
+                privilegedCouchPassword: process.env['COUCH_DB_PASSWORD'],
+                privilegedCouchHostname: process.env['COUCH_DB_HOST']
+            }
+        };
     }
 
     function setMiddlewareUrl() {

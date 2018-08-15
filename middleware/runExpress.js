@@ -44,6 +44,8 @@ function runMiddlewareServer(){
             var host = server.address().address;
             var port = server.address().port;
             Logger.log('CARLI Middleware worker ' + cluster.worker.id + ' listening at http://'+host+':'+port);
+            Logger.log('NOTIFICATION config\n', config.notifications);
+            Logger.log('STORE config\n', config.storeOptions);
         });
     }
 

@@ -20,6 +20,8 @@ var smtpConfig = {
     ignoreTLS: process.env['SMTP_IGNORE_TLS']
 };
 
+Logger.log('EMAIL module config\n', smtpConfig);
+
 var mailTransport = mailer.createTransport(smtpConfig);
 
 function tellPixobot(envelope) {
