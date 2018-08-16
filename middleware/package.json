@@ -15,7 +15,6 @@
     "couchapp": "^0.11.0",
     "csv-parse": "^1.1.0",
     "csv-stringify": "0.0.8",
-    "dotenv": "^6.0.0",
     "express": "^4.11.1",
     "express-csv-middleware": "^0.1.0",
     "handlebars": "^3.0.3",
