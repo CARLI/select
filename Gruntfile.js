@@ -50,7 +50,7 @@ module.exports = function (grunt) {
         },
         exec: {
             dockerBuildWebImage: {
-                command: `docker build -f Dockerfile-web -t ${webDockerImageName} .`,
+                command: `docker build --no-cache -f Dockerfile-web -t ${webDockerImageName} .`,
                 stdout: true,
                 stderr: true,
                 options: {
@@ -58,7 +58,7 @@ module.exports = function (grunt) {
                 }
             },
             dockerBuildMiddlewareImage: {
-                command: `docker build -f Dockerfile-middleware -t ${middlewareDockerImageName} .`,
+                command: `docker build --no-cache -f Dockerfile-middleware -t ${middlewareDockerImageName} .`,
                 stdout: true,
                 stderr: true,
                 options: {
