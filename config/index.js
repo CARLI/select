@@ -29,6 +29,7 @@ function loadConfiguration() {
 
             return {
                 storeOptions: {
+                    couchDbUrl: process.env['COUCH_DB_URL_SCHEME'] + process.env['COUCH_DB_HOST'],
                     privilegedCouchUrlScheme: process.env['COUCH_DB_URL_SCHEME'],
                     privilegedCouchUsername: process.env['COUCH_DB_USER'],
                     privilegedCouchPassword: process.env['COUCH_DB_PASSWORD'],
@@ -49,22 +50,11 @@ function loadConfiguration() {
     function setCouchDbUrl() {
         if (isBrowserEnvironment()) {
             setCouchDbUrlForBrowser();
-        } else {
-            setCouchDbUrlForMiddleware();
         }
 
         function setCouchDbUrlForBrowser() {
             var l = window.location;
             config.storeOptions.couchDbUrl = l.protocol + '//' + l.host + '/db';
-        }
-
-        function setCouchDbUrlForMiddleware() {
-            if (process.env.hasOwnProperty('CARLI_COUCHDB_PORT_5984_TCP_ADDR')) {
-                var host = process.env.CARLI_COUCHDB_PORT_5984_TCP_ADDR;
-                var port = process.env.CARLI_COUCHDB_PORT_5984_TCP_PORT;
-                config.storeOptions.couchDbUrl = 'http://' + host + ':' + port;
-                config.storeOptions.privilegedCouchHostname = host + ':' + port;
-            }
         }
     }
 
