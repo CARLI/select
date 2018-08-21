@@ -32,6 +32,15 @@ Credentials for the Couch and MySQL databases are in secure.json. As you configu
 
 Run `grunt jsenv:node` this make sure the initial code for app configuration is generated.
 
+### Setting up .env file for the middleware
+
+The config/ directory contains some files that have fundamental values for most of the system. But the important details
+for connecting to databases needs to be passed into the middleware using environment variables. The easiest way to do this
+is with a .env file in the middleware/ directory. There is a sample file called sample.env in middleware/ which can be 
+copied to .env and filled in with the appropriate variables.
+
+When the middleware server starts up it dumps most of its configuration to the terminal, which helps to make sure your
+environment variables are correct.
 
 ## Install and Configure CouchDB ##
 On a Mac, the best way to install couch is with [Homebrew](http://brew.sh/).  Install Homebrew following the instructions on their website, then `brew install couchdb`
