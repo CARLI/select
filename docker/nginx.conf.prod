@@ -20,8 +20,12 @@ http {
     gzip  on;
 
     server {
-        listen       80;
-        server_name  staff.carli-dev.pixodev.net;
+        listen       80 default_server;
+        server_name  select-staff-devel.carli.illinois.edu
+                     select-staff-test.carli.illinois.edu
+                     select-staff-stage.carli.illinois.edu
+                     select-staff.carli.illinois.edu
+        ;
 
         location / {
             root /usr/share/nginx/html/compile;
@@ -30,13 +34,13 @@ http {
         location /api/ {
             rewrite ^/api/(.*)$ /$1 break;
             proxy_pass http://middleware:3000;
-            proxy_cookie_domain ~.* pixodev.net;
+            proxy_cookie_domain ~.* carli.illinois.edu;
             proxy_set_header Host $host;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }
         location /db/ {
             rewrite ^/db/(.*)$ /$1 break;
-            proxy_cookie_domain ~.* pixodev.net;
+            proxy_cookie_domain ~.* carli.illinois.edu;
             proxy_pass http://db:5984;
             proxy_redirect off;
             proxy_buffering off;
@@ -47,7 +51,11 @@ http {
 
     server {
         listen       80;
-        server_name  vendor.carli-dev.pixodev.net;
+        server_name  select-vendor-devel.carli.illinois.edu
+                     select-vendor-test.carli.illinois.edu
+                     select-vendor-stage.carli.illinois.edu
+                     select-vendor.carli.illinois.edu
+        ;
 
         location / {
             root /usr/share/nginx/html/compile;
@@ -56,13 +64,13 @@ http {
         location /api/ {
             rewrite ^/api/(.*)$ /$1 break;
             proxy_pass http://middleware:3000;
-            proxy_cookie_domain ~.* pixodev.net;
+            proxy_cookie_domain ~.* carli.illinois.edu;
             proxy_set_header Host $host;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }
         location /db/ {
             rewrite ^/db/(.*)$ /$1 break;
-            proxy_cookie_domain ~.* pixodev.net;
+            proxy_cookie_domain ~.* carli.illinois.edu;
             proxy_pass http://db:5984;
             proxy_redirect off;
             proxy_buffering off;
@@ -73,7 +81,11 @@ http {
 
     server {
         listen       80;
-        server_name  library.carli-dev.pixodev.net;
+        server_name  select-library-devel.carli.illinois.edu
+                     select-library-test.carli.illinois.edu
+                     select-library-stage.carli.illinois.edu
+                     select-library.carli.illinois.edu
+        ;
 
         location / {
             root /usr/share/nginx/html/compile;
@@ -82,13 +94,13 @@ http {
         location /api/ {
             rewrite ^/api/(.*)$ /$1 break;
             proxy_pass http://middleware:3000;
-            proxy_cookie_domain ~.* pixodev.net;
+            proxy_cookie_domain ~.* carli.illinois.edu;
             proxy_set_header Host $host;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }
         location /db/ {
             rewrite ^/db/(.*)$ /$1 break;
-            proxy_cookie_domain ~.* pixodev.net;
+            proxy_cookie_domain ~.* carli.illinois.edu;
             proxy_pass http://db:5984;
             proxy_redirect off;
             proxy_buffering off;
@@ -96,5 +108,4 @@ http {
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }
     }
-
 }
