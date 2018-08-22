@@ -15,7 +15,7 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         clean: {
-            docker: ['docker/build/web', 'docker/build/middleware']
+            docker: ['docker/build']
         },
         copy: {
             filesForDockerWebImage: {
@@ -28,7 +28,7 @@ module.exports = function (grunt) {
             },
             filesForDockerMiddlewareImage: {
                 files: [{
-                    src: ['CARLI/**', 'config/**', 'db/**', 'middleware/**', 'schemas/**'],
+                    src: ['bin/**', 'CARLI/**', 'config/**', 'db/**', 'grunt/**', 'middleware/**', 'schemas/**'],
                     dest: 'docker/build/middleware',
                     expand: true
                 }]

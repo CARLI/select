@@ -22,27 +22,27 @@ module.exports = function (grunt) {
                 });
         }
     });
-    grunt.registerTask('deploy-db', [
+    grunt.registerTask('deploy-db', 'Create couch databases for CARLI, One-Time Purchases, and Activity log and deploy design docs to each', [
         'deploy-app-db',
         'deploy-otp-cycle',
         'deploy-activity-log-db'
     ]);
-    grunt.registerTask('deploy-design-docs', [
+    grunt.registerTask('deploy-design-docs', 'Deploy design docs for CARLI, One-Time Purchases, and Activity Log databases', [
         'deploy-app-design-doc',
         'deploy-cycle-design-docs',
         'deploy-activity-log-design-doc'
     ]);
-    grunt.registerTask('deploy-app-db', function() {
+    grunt.registerTask('deploy-app-db', 'Create the CARLI database and deploy design and security docs to it', function() {
         var done = this.async();
         deployDb.deployDb().then(done);
         //grunt.task.run(['subdir-exec:'+projectRoot+'/db:./deploy.sh ' + testUtils.testDbName ]);
     });
-    grunt.registerTask('deploy-otp-cycle', function() {
+    grunt.registerTask('deploy-otp-cycle', 'Create the One-Time Purchase database and deploy its design docs', function() {
         var done = this.async();
         deployDb.createOneTimePurchaseCycle().then(done);
         //grunt.task.run(['subdir-exec:'+projectRoot+'/db:./deploy.sh ' + testUtils.testDbName ]);
     });
-    grunt.registerTask('deploy-activity-log-db', function() {
+    grunt.registerTask('deploy-activity-log-db', 'Create the Activity Log database and deploy its design docs', function() {
         var done = this.async();
         deployDb.deployActivityLogDb().then(done);
     });
@@ -60,8 +60,5 @@ module.exports = function (grunt) {
             .catch(function(err){
                 Logger.log('error deploying Local Cycle Design Docs',err);
             });
-    });
-    grunt.registerTask('fixture-data', function() {
-        grunt.task.run(['subdir-exec:'+projectRoot+'/db:./fixtures.js']);
     });
 };
