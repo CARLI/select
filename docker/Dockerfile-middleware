@@ -1,4 +1,4 @@
-FROM node:8-slim
+FROM node:8-alpine
 
 # assumes middleware/ contains a copy of CARLI, config, db, middleware, and schemas from the main project
 COPY build/middleware /carli/
