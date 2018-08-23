@@ -9,8 +9,6 @@ var mysqlConfig = {
     password: process.env['CRM_MYSQL_PASSWORD']
 };
 
-Logger.log('MYSQL module config\n', mysqlConfig);
-
 var pool = mysql.createPool(mysqlConfig);
 
 var selectLibrary = 'SELECT m.institution_name, m.member_id, m.library_type, m.membership_lvl, m.current, p.product_id as is_ishare ' +
@@ -292,5 +290,6 @@ module.exports = {
     listLibraries: listLibraries,
     loadLibrary: loadLibrary,
     listCrmContactsForLibrary: listCrmContactsForLibrary,
-    listCrmContactsForLibraryIds: listCrmContactsForLibraryIds
+    listCrmContactsForLibraryIds: listCrmContactsForLibraryIds,
+    mysqlConfig: mysqlConfig
 };
