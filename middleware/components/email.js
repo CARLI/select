@@ -20,23 +20,24 @@ var smtpConfig = {
     ignoreTLS: process.env['SMTP_IGNORE_TLS']
 };
 
-Logger.log('EMAIL module config\n', smtpConfig);
+var messageConfig = {
+    notificationsOverrideTo: process.env['NOTIFICATIONS_OVERRIDE_TO'], //causes ALL emails to go to this address if set
+    carliSupport: process.env['CARLI_SUPPORT_EMAIL'],
+    carliListServe: process.env['CARLI_LISTSERVE_EMAIL']
+};
+
+Logger.log('EMAIL module config\n', smtpConfig, '\n', messageConfig);
 
 var mailTransport = mailer.createTransport(smtpConfig);
 
-function tellPixobot(envelope) {
-    if (typeof envelope === 'string') {
-        envelope = { message: envelope };
-    }
-    request({
-        url: 'http://pixobot.herokuapp.com/hubot/message-room/37097_carli@conf.hipchat.com',
-        method: 'post',
-        json: envelope
-    });
+function getEmailAddress(originalAddress) {
+    if ( messageConfig.notificationsOverrideTo )
+        return messageConfig.notificationsOverrideTo;
+    return originalAddress;
 }
 
 function sendTemplatedMessage(to, subject, template, variables ){
-    var realTo = config.notifications.overrideTo ? config.notifications.overrideTo : to;
+    var realTo = getEmailAddress(to);
     var emailBodyText = fillTemplate(template, variables);
 
     var options = {
@@ -61,7 +62,7 @@ function sendPasswordResetMessage(to, template, variables) {
 
 function notifyCarliOfNewLibraryUser(template, variables) {
     var notifySubject = "New Select User for " + variables.library.name;
-    var to = config.notifications.overrideTo ? config.notifications.overrideTo : config.notifications.carliSupport;
+    var to = getEmailAddress(messageConfig.carliSupport);
     return sendTemplatedMessage(to, notifySubject, template, variables);
 }
 
@@ -69,7 +70,7 @@ function sendNotificationEmail( notificationId ){
     return notificationRepository.load(notificationId)
         .then(function(notification){
             var options = {
-                to: config.notifications.overrideTo ? config.notifications.overrideTo : notification.to,
+                to: getEmailAddress(notification.to),
                 bcc: notification.ownerEmail,
                 from: notification.ownerEmail,
                 subject: notification.subject,
@@ -123,7 +124,7 @@ function sendOneTimePurchaseMessage( offeringId ){
         return loadOneTimePurchaseCycle()
         .then(loadOffering)
         .then(function(offering){
-            var realTo = config.notifications.overrideTo ? config.notifications.overrideTo : config.notifications.carliListServe;
+            var realTo = getEmailAddress(messageConfig.carliListServe);
 
             var options = {
                 to: realTo,
@@ -151,7 +152,7 @@ function sendOneTimePurchaseMessage( offeringId ){
 
 function sendIpAddressChangeNotification(libraryId) {
     return libraryRepository.load(libraryId).then(function (library) {
-        var realTo = config.notifications.overrideTo ? config.notifications.overrideTo : config.notifications.carliSupport;
+        var realTo = getEmailAddress(messageConfig.carliSupport);
 
         var options = {
             to: realTo,
@@ -172,7 +173,7 @@ function sendIpAddressChangeNotification(libraryId) {
 function sendVendorDoneEnteringPricingMessage( vendorId ){
     return vendorRepository.load(vendorId)
         .then(function(vendor){
-            var realTo = config.notifications.overrideTo ? config.notifications.overrideTo : config.notifications.carliListServe;
+            var realTo = getEmailAddress(messageConfig.carliListServe);
 
             var options = {
                 to: realTo,
@@ -206,7 +207,7 @@ function sendAskCarliMessage( message ){
         fromName = ' from ' + fromName;
     }
 
-    var realTo = config.notifications.overrideTo ? config.notifications.overrideTo : config.notifications.carliSupport;
+    var realTo = getEmailAddress(messageConfig.carliSupport);
 
     var options = {
         to: realTo,
@@ -248,7 +249,6 @@ function formatCurrency( number ){
 }
 
 module.exports = {
-    tellPixobot: tellPixobot,
     sendTemplatedMessage: sendTemplatedMessage,
     sendPasswordResetMessage: sendPasswordResetMessage,
     sendNotificationEmail: sendNotificationEmail,

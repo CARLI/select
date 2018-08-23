@@ -2,11 +2,6 @@
   "staffWebAppUrl": "http://staff.carli.local/",
   "libraryWebAppUrl": "http://library.carli.local/",
   "vendorWebAppUrl": "http://vendor.carli.local/",
-  "notifications": {
-    "overrideTo": "admin@email.edu",
-    "carliListServe": "email_list@email.edu",
-    "carliSupport": "support@email.edu"
-  },
   "maintenanceMode": {
     "enabled": false,
     "heading": "System Maintenance",
