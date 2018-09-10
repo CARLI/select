@@ -18,7 +18,6 @@ function loadConfiguration() {
 
     setMiddlewareUrl();
     setCouchDbUrl();
-    setPrivilegedCouchDbUrl();
     setWebAppUrls();
 
     return config;
@@ -27,13 +26,19 @@ function loadConfiguration() {
         if (!isBrowserEnvironment()) {
             var parsedEnv = require(environmentVariableNodePackageName).config();
 
+            var scheme = process.env['COUCH_DB_URL_SCHEME'];
+            var user = process.env['COUCH_DB_USER'];
+            var password = process.env['COUCH_DB_PASSWORD'];
+            var host = process.env['COUCH_DB_HOST'];
+
             return {
                 storeOptions: {
-                    couchDbUrl: process.env['COUCH_DB_URL_SCHEME'] + process.env['COUCH_DB_HOST'],
-                    privilegedCouchUrlScheme: process.env['COUCH_DB_URL_SCHEME'],
-                    privilegedCouchUsername: process.env['COUCH_DB_USER'],
-                    privilegedCouchPassword: process.env['COUCH_DB_PASSWORD'],
-                    privilegedCouchHostname: process.env['COUCH_DB_HOST']
+                    couchDbUrl: scheme + host,
+                    privilegedCouchUrlScheme: scheme,
+                    privilegedCouchUsername: user,
+                    privilegedCouchPassword: password,
+                    privilegedCouchHostname: host,
+                    privilegedCouchDbUrl: scheme+user+':'+password+'@'+host
                 }
             };
         }
@@ -55,15 +60,6 @@ function loadConfiguration() {
         function setCouchDbUrlForBrowser() {
             var l = window.location;
             config.storeOptions.couchDbUrl = l.protocol + '//' + l.host + '/db';
-        }
-    }
-
-    function setPrivilegedCouchDbUrl() {
-        if (isSecureEnvironment() && !config.storeOptions.privilegedCouchDbUrl) {
-            config.storeOptions.privilegedCouchDbUrl = config.storeOptions.privilegedCouchUrlScheme +
-                config.storeOptions.privilegedCouchUsername + ':' +
-                config.storeOptions.privilegedCouchPassword + '@' +
-                config.storeOptions.privilegedCouchHostname;
         }
     }
 
