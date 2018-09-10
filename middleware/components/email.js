@@ -26,9 +26,16 @@ var messageConfig = {
     carliListServe: process.env['CARLI_LISTSERVE_EMAIL']
 };
 
-Logger.log('EMAIL module config\n', smtpConfig, '\n', messageConfig);
+var mailTransport;
 
-var mailTransport = mailer.createTransport(smtpConfig);
+if ( smtpConfig.host ) {
+    Logger.log('EMAIL module config\n', smtpConfig, '\n', messageConfig);
+    mailTransport = mailer.createTransport(smtpConfig);
+}
+else {
+    Logger.log('EMAIL module: no smtp host defined, using default (local)');
+    mailTransport = mailer.createTransport();
+}
 
 function getEmailAddress(originalAddress) {
     if ( messageConfig.notificationsOverrideTo )
