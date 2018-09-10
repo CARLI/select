@@ -272,8 +272,8 @@ module.exports = function (storeOptions) {
 
         var dbType = (dbName == storeOptions.couchDbName) ? 'CARLI' : 'Cycle';
 
-        //Clearing the auth cookie seems to prevent the cookie from overriding the admin@relax in the URL. Shrug.
-        request.clearAuth();
+        request.giveUpCookieAuthToAllowPrivilegedUrlAuthWorkaround();
+
         request.put(storeOptions.privilegedCouchDbUrl + '/' + dbName,  function(error, response, body) {
             if (error) {
                 deferred.reject(error);
@@ -385,6 +385,8 @@ module.exports = function (storeOptions) {
             return { to: replicateTo };
 
             function replicateTo(targetDbName) {
+                request.giveUpCookieAuthToAllowPrivilegedUrlAuthWorkaround();
+
                 var deferred = Q.defer();
                 var requestOptions = couchReplicationOptions();
 
@@ -424,6 +426,8 @@ module.exports = function (storeOptions) {
         var sourceToVendorOptions = getReplicationRequestOptions(sourceCycleDbName, vendorCycleDbName);
         var vendorToSourceOptions = getReplicationRequestOptions(vendorCycleDbName, sourceCycleDbName);
 
+        request.giveUpCookieAuthToAllowPrivilegedUrlAuthWorkaround();
+
         return couchRequest(sourceToVendorOptions).then(function() {
             return couchRequest(vendorToSourceOptions)
         });
@@ -443,6 +447,7 @@ module.exports = function (storeOptions) {
         }
     }
 
+    //potential admin failure to test - db replication status
     function getVendorDatabaseReplicationStatus(databaseName, since, vendorId) {
         var requestOptions = {
             url: storeOptions.privilegedCouchDbUrl + '/' + databaseName + '/_changes' +
@@ -456,6 +461,8 @@ module.exports = function (storeOptions) {
 
     function getRunningCouchJobs(){
         var url = storeOptions.couchDbUrl + '/_active_tasks/';
+
+        request.giveUpCookieAuthToAllowPrivilegedUrlAuthWorkaround();
 
         return couchRequest({ url: url });
     }

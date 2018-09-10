@@ -7,9 +7,10 @@ var CouchUtils = require('../../CARLI/Store/CouchDb/Utils');
 var cycleRepository = require('../../CARLI/Entity/CycleRepository');
 var libraryRepository = require('../../CARLI/Entity/LibraryRepository');
 var libraryStatusRepository = require('../../CARLI/Entity/LibraryStatusRepository');
-var offeringRepository = require('../../CARLI/Entity/OfferingRepository');
 var licenseRepository = require('../../CARLI/Entity/LicenseRepository');
+var offeringRepository = require('../../CARLI/Entity/OfferingRepository');
 var productRepository = require('../../CARLI/Entity/ProductRepository');
+var request = require('../../config/environmentDependentModules/request');
 var Store = require( '../../CARLI/Store' );
 var StoreModule = require( '../../CARLI/Store/CouchDb/Store');
 var vendorDatabases = require('./vendorDatabases');
@@ -45,6 +46,8 @@ function create( newCycleData ) {
 function copyCycleDataFrom( sourceCycleId, newCycleId ){
     var sourceCycle = null;
     var newCycle = null;
+
+    request.giveUpCookieAuthToAllowPrivilegedUrlAuthWorkaround();
 
     return loadCycles()
         .then(replicate)

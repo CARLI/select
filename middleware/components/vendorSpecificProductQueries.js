@@ -2,10 +2,13 @@ var carliError = require('../../CARLI/Error');
 var cycleRepositoryForVendor = require('../../CARLI/Entity/CycleRepositoryForVendor.js');
 var offeringRepository = require('../../CARLI/Entity/OfferingRepository.js');
 var productRepository = require('../../CARLI/Entity/ProductRepository.js');
+var request = require('../../config/environmentDependentModules/request');
 var vendorRepository = require('../../CARLI/Entity/VendorRepository.js');
 var Q = require('q');
 
 function listProductsWithOfferingsForVendorId(vendorId, cycleId) {
+    request.giveUpCookieAuthToAllowPrivilegedUrlAuthWorkaround();
+
     return vendorRepository.load(vendorId).then(function(vendor) {
         var cycleRepository = cycleRepositoryForVendor(vendor);
         return cycleRepository.load(cycleId)

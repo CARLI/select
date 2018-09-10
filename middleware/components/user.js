@@ -1,6 +1,7 @@
 
 var auth = require('../../CARLI/Auth');
 var config = require( '../../config' );
+var request = require('../../config/environmentDependentModules/request');
 var StoreOptions = config.storeOptions;
 var Store = require( '../../CARLI/Store' );
 var StoreModule = require( '../../CARLI/Store/CouchDb/Store');
@@ -23,33 +24,41 @@ function useAdminCouchCredentials() {
 }
 
 function list() {
+    request.giveUpCookieAuthToAllowPrivilegedUrlAuthWorkaround();
     return userRepository.list();
 }
 function load(email) {
+    request.giveUpCookieAuthToAllowPrivilegedUrlAuthWorkaround();
     return userRepository.load(email);
 }
 function create(user) {
+    request.giveUpCookieAuthToAllowPrivilegedUrlAuthWorkaround();
     return userRepository.create(user);
 }
 function update(user) {
+    request.giveUpCookieAuthToAllowPrivilegedUrlAuthWorkaround();
     return userRepository.update(user);
 }
 
 function deleteUser(user) {
     return auth.requireStaff().then(function() {
+        request.giveUpCookieAuthToAllowPrivilegedUrlAuthWorkaround();
         return userRepository.delete(user);
     });
 }
 
 function requestPasswordReset(email, resetLinkBaseUrl) {
+    //potential admin fail
     return userResetRequestRepository.create(email, resetLinkBaseUrl);
 }
 
 function isKeyValid(key) {
+    //potential admin fail
     return userResetRequestRepository.isKeyValid(key);
 }
 
 function consumeKey(key, user) {
+    //potential admin fail
     return userResetRequestRepository.isKeyValid(key)
         .then(function() {
             return userRepository.update(user).then(function () {
