@@ -272,6 +272,8 @@ module.exports = function (storeOptions) {
 
         var dbType = (dbName == storeOptions.couchDbName) ? 'CARLI' : 'Cycle';
 
+        //Clearing the auth cookie seems to prevent the cookie from overriding the admin@relax in the URL. Shrug.
+        request.clearAuth();
         request.put(storeOptions.privilegedCouchDbUrl + '/' + dbName,  function(error, response, body) {
             if (error) {
                 deferred.reject(error);
@@ -282,7 +284,7 @@ module.exports = function (storeOptions) {
                     });
                 });
             } else {
-                Logger.log(body);
+                Logger.log("Could not create database " + dbName + " statusCode=" + response.statusCode, body);
                 deferred.reject("Could not create database " + dbName + " statusCode=" + response.statusCode);
             }
         });
