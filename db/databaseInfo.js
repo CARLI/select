@@ -8,16 +8,16 @@ module.exports = {
         mainDbUrl: config.storeOptions.privilegedCouchDbUrl + '/' + config.storeOptions.couchDbName
     },
     dev: {
-        baseUrl: 'http://admin:relax@vmhost.i.pixotech.com:9091',
-        publicBaseUrl: 'http://carli.dev.pixotech.com/db',
+        baseUrl: 'http://admin:password@select-devel.carli.illinois.edu/db',
+        publicBaseUrl: 'http://select-devel.carli.illinois.edu/db/',
         mainDbName: 'carli',
-        mainDbUrl: 'http://admin:relax@vmhost.i.pixotech.com:9091/carli'
+        mainDbUrl: 'http://admin:password@select-devel.carli.illinois.edu/db/carli'
     },
-    qa: {
-        baseUrl: 'http://admin:relax@docker1.i.pixotech.com:9081',
-        publicBaseUrl: 'http://carli.qa.pixotech.com/db',
+    test: {
+        baseUrl: 'http://admin:password@select-test.carli.illinois.edu/db',
+        publicBaseUrl: 'http://select-test.carli.illinois.edu/db/',
         mainDbName: 'carli',
-        mainDbUrl: 'http://admin:relax@docker1.i.pixotech.com:9081/carli'
+        mainDbUrl: 'http://admin:password@select-test.carli.illinois.edu/db/carli'
     },
     prod: {
         baseUrl: 'http://select-prod.carli.illinois.edu/db',
