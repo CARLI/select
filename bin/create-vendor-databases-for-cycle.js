@@ -7,9 +7,9 @@ var cli = require('../CARLI/CommandLine');
 var vendorDatabases = require('../middleware/components/vendorDatabases');
 
 
-cli.withSingleArgument('cycle-id', resetLibraryStatusesForCycle);
+cli.withSingleArgument('cycle-id', createVendorDatabases);
 
-function resetLibraryStatusesForCycle(cycleId) {
+function createVendorDatabases(cycleId) {
     return cli.asCouchAdmin(createVendorDatabaseForCycleArg);
 
     function createVendorDatabaseForCycleArg() {

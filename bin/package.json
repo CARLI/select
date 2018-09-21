@@ -1,0 +1,16 @@
+{
+  "name": "carli-command-line-utils",
+  "version": "1.0.0",
+  "description": "This is just for installing npm dependencies in the Docker containers",
+  "main": "create-vendor-databases-for-cycle.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.11",
+    "q": "^1.5.1",
+    "request": "^2.88.0"
+  }
+}
