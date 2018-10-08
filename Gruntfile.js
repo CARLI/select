@@ -1,10 +1,9 @@
-var registryName = 'docker.pixodev.net:5000';
 
 var webVersion = require('./browserClient/package.json').version;
 var middlewareVersion = require('./middleware/package.json').version;
 
-var webDockerImageName = `${registryName}/web:${webVersion}`;
-var middlewareDockerImageName = `${registryName}/middleware:${middlewareVersion}`;
+var webDockerImageName = `carli/select-web:${webVersion}`;
+var middlewareDockerImageName = `carli/select-middleware:${middlewareVersion}`;
 
 module.exports = function (grunt) {
     require('./grunt/subdir')(grunt);
