@@ -69,6 +69,10 @@ function loadConfiguration() {
                 config.staffWebAppUrl = "http://carli-staff.qa.pixotech.com";
                 config.libraryWebAppUrl = "http://carli-library.qa.pixotech.com";
                 config.vendorWebAppUrl = "http://carli-vendor.qa.pixotech.com";
+            } else if (locationHostnameEndsWith('-stage.carli.illinois.edu')) {
+                config.staffWebAppUrl = "http://select-staff-stage.carli.illinois.edu";
+                config.libraryWebAppUrl = "http://select-library-stage.carli.illinois.edu";
+                config.vendorWebAppUrl = "http://select-vendor-stage.carli.illinois.edu";
             } else if (locationHostnameEndsWith('-devel.carli.illinois.edu')) {
                 config.staffWebAppUrl = "http://select-staff-devel.carli.illinois.edu";
                 config.libraryWebAppUrl = "http://select-library-devel.carli.illinois.edu";
