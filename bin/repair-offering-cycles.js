@@ -12,9 +12,9 @@ var Entity = require('../CARLI/Entity');
 var getStoreForCycle = require('../CARLI/Entity/getStoreForCycle');
 var offeringEntityRepo = Entity('Offering');
 
-cli.withSingleArgument('cycle-id', listDuplicateOfferingsForCycle);
+cli.withSingleArgument('cycle-id', repairOfferingsInCycle);
 
-function listDuplicateOfferingsForCycle(cycleId) {
+function repairOfferingsInCycle(cycleId) {
     return cli.asCouchAdmin(repairOfferingCycleProperties);
 
     function repairOfferingCycleProperties() {
