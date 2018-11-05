@@ -1,0 +1,20 @@
+# Invoke this Dockerfile from the root of the repository.
+# e.g. docker build -f ./docker/Dockerfile-build ...
+
+FROM node:8-alpine
+
+WORKDIR /carli
+
+COPY middleware/package.json middleware/
+
+#bin/
+#CARLI/
+#config/
+#db/
+#grunt/
+#middleware/
+#schemas/
+
+RUN find /carli -type f
+
+CMD ["node", "middleware/index.js"]

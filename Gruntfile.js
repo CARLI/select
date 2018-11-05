@@ -1,9 +1,15 @@
 
+var dockerRegistry = 'carli-select-integration.pixodev.net:5000';
+
+var webDockerRepository = 'carli/select-web';
+var middlewareDockerRepository = 'carli/select-middleware';
+
 var webVersion = require('./browserClient/package.json').version;
 var middlewareVersion = require('./middleware/package.json').version;
 
-var webDockerImageName = `carli/select-web:${webVersion}`;
-var middlewareDockerImageName = `carli/select-middleware:${middlewareVersion}`;
+var webDockerImage = `${dockerRegistry}/${webDockerRepository}:${webVersion}`;
+var middlewareDockerImage = `${dockerRegistry}/${middlewareDockerRepository}:${middlewareVersion}`;
+
 
 module.exports = function (grunt) {
     require('./grunt/subdir')(grunt);
@@ -49,7 +55,7 @@ module.exports = function (grunt) {
         },
         exec: {
             dockerBuildWebImage: {
-                command: `docker build --no-cache -f Dockerfile-web -t ${webDockerImageName} .`,
+                command: `docker build --no-cache -f Dockerfile-web -t ${webDockerImage} .`,
                 stdout: true,
                 stderr: true,
                 options: {
@@ -57,7 +63,7 @@ module.exports = function (grunt) {
                 }
             },
             dockerBuildMiddlewareImage: {
-                command: `docker build --no-cache -f Dockerfile-middleware -t ${middlewareDockerImageName} .`,
+                command: `docker build --no-cache -f Dockerfile-middleware -t ${middlewareDockerImage} .`,
                 stdout: true,
                 stderr: true,
                 options: {
@@ -65,7 +71,7 @@ module.exports = function (grunt) {
                 }
             },
             dockerSaveImageWeb: {
-                command: `docker save -o ../artifacts/carliDockerImageWeb${webVersion}.tar ${webDockerImageName}`,
+                command: `docker save -o ../artifacts/carliDockerImageWeb${webVersion}.tar ${webDockerImage}`,
                 stdout: true,
                 stderr: true,
                 options: {
@@ -73,7 +79,7 @@ module.exports = function (grunt) {
                 }
             },
             dockerSaveImageMiddleware: {
-                command: `docker save -o ../artifacts/carliDockerImageMiddleware${middlewareVersion}.tar ${middlewareDockerImageName}`,
+                command: `docker save -o ../artifacts/carliDockerImageMiddleware${middlewareVersion}.tar ${middlewareDockerImage}`,
                 stdout: true,
                 stderr: true,
                 options: {

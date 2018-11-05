@@ -1,4 +1,19 @@
+# Ignore everything...
+*
+# ...except the stuff specifically needed to build
+!/bin
+!/CARLI
+!/config
+!/db
+!/docker
+!/grunt
+!/middleware
+!/schemas
+
+# Standard .dockerignore
+
+*.swp
+*~
 .env
-.git
-/artifacts
 vendor
+node_modules
