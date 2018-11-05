@@ -8,6 +8,7 @@ var Entity = require('../Entity')
     , Q = require('q')
     , uuid = require('node-uuid')
     , crypto = require('crypto')
+    , request = require('../../config/environmentDependentModules/request')
     , shasum = crypto.createHash('sha1');
     ;
 
@@ -82,38 +83,6 @@ function deleteUser( user ){
     return UserRepository.delete(userId(user));
 }
 
-function setMasqueradingLibraryIdForUserId(roleId, userId) {
-    return setMasqueradingIdForRole(roleId, userId, 'library');
-}
-function setMasqueradingVendorIdForUserId(roleId, userId) {
-    return setMasqueradingIdForRole(roleId, userId, 'vendor');
-}
-
-function setMasqueradingIdForRole(roleId, userId, role) {
-    console.log('Masquerading ' + userId + ' as ' + role + ' ' + roleId);
-    return loadUser(userId)
-        .then(setRoles)
-        .then(updateUser);
-
-    function setRoles(user) {
-        user.roles = getOtherRoles(user).concat(getNewRoles());
-        user[role] = roleId;
-        return user;
-    }
-
-    function getNewRoles() {
-        return [ role, role + '-' + roleId ];
-    }
-
-    function getOtherRoles(user) {
-        return user.roles.filter(nonMatchingRoles);
-
-        function nonMatchingRoles(r) {
-            return r.indexOf(role) !== 0;
-        }
-    }
-}
-
 /* functions that get added as instance methods on loaded users */
 
 
@@ -129,8 +98,6 @@ module.exports = {
     setStore: setStore,
     create: createUser,
     update: updateUser,
-    setMasqueradingLibraryIdForUserId: setMasqueradingLibraryIdForUserId,
-    setMasqueradingVendorIdForUserId: setMasqueradingVendorIdForUserId,
     list: listUsers,
     load: loadUser,
     delete: deleteUser

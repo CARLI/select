@@ -72,6 +72,13 @@ function notifyCarliOfNewLibraryUser(user, library) {
     });
 }
 
+function configureForMasquerading(role, id) {
+    return middlewareRequest({
+        path: '/masquerade/' + role + '/' + id,
+        method: 'post'
+    });
+}
+
 module.exports = {
     list: list,
     load: load,
@@ -81,5 +88,6 @@ module.exports = {
     requestPasswordReset: requestPasswordReset,
     isKeyValid: isKeyValid,
     consumeKey: consumeKey,
+    configureForMasquerading: configureForMasquerading,
     notifyCarliOfNewLibraryUser: notifyCarliOfNewLibraryUser
 };

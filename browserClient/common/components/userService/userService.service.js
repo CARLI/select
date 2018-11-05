@@ -30,6 +30,9 @@ function userService(CarliModules, $q, authService, libraryService) {
         consumeKey: function (key, user) {
             return $q.when( userMiddleware.consumeKey(key, user) );
         },
+        configureForMasquerading: function (role, id) {
+            return $q.when( userMiddleware.configureForMasquerading(role, id) );
+        },
         getUser: function () {
             return authService.getCurrentUser();
         },

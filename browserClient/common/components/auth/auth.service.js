@@ -36,7 +36,8 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
         isMasqueradingRequested: isMasqueradingRequested,
         isMasqueradingPending: isMasqueradingPending,
         initializeMasquerading: initializeMasquerading,
-        initializePendingMasquerading: initializePendingMasquerading
+        initializePendingMasquerading: initializePendingMasquerading,
+        getPendingMasqueradingTargetId: getPendingMasqueradingTargetId
     };
 
     function searchKeyFor(role) {
@@ -217,6 +218,7 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
         var masqueradeAsPromise = $q.when(true);
 
         if (isMasqueradingPending()) {
+            // We check the pending request because at this point we already cleared the search query.
             if (pendingMasqueradeRequest.targetRole == 'library') {
                 masqueradeAsPromise = masqueradeAsLibrary(pendingMasqueradeRequest.targetId);
             }

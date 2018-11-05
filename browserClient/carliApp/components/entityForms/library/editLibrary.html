@@ -12,12 +12,17 @@
                     <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit" value="Save">
                 </div>
                 <div ng-hide="vm.editable">
-                    <a ng-if="vm.enableMasquerading"
+                    <button
+                            type="button"
+                            id="library-masquerade"
+                            class="carli-button"
+                            ng-click="vm.masquerade()">Masquerade<i class="fa fa-user"></i></button>
+<!--                    <a ng-if="vm.enableMasquerading"
                             type="button"
                             id="library-masquerade"
                             class="carli-button"
                             href="{{ vm.masqueradeAsLibraryUrl }}"
-                            target="{{ vm.libraryAppBrowsingContextId }}">Masquerade<i class="fa fa-user"></i></a>
+                            target="{{ vm.libraryAppBrowsingContextId }}">Masquerade<i class="fa fa-user"></i></a>-->
                     <button type="button" id="library-edit" class="carli-button" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></button>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.library')
     .controller('editLibraryController', editLibraryController);
 
-function editLibraryController( $scope, $rootScope, activityLogService, alertService, config, cycleService, entityBaseService, errorHandler, libraryService ) {
+function editLibraryController( $scope, $rootScope, $window, activityLogService, alertService, config, cycleService, entityBaseService, errorHandler, libraryService, userService ) {
     var vm = this;
 
     vm.enableMasquerading = true;
@@ -11,6 +11,7 @@ function editLibraryController( $scope, $rootScope, activityLogService, alertSer
     vm.libraryAppBrowsingContextId = config.libraryAppBrowsingContextId;
     var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
+    vm.masquerade = masquerade;
     vm.toggleEditable = toggleEditable;
     vm.cancelEdit = cancelEdit;
     vm.saveLibrary = saveLibrary;
@@ -132,4 +133,15 @@ function editLibraryController( $scope, $rootScope, activityLogService, alertSer
         var queryString = '?masquerade-as-library=' + vm.library.id;
         return config.libraryWebAppUrl + queryString;
     }
+
+    function masquerade() {
+        userService.configureForMasquerading("library", vm.library.id)
+            .then(openTheLibraryApp)
+            .catch(errorHandler);
+
+        function openTheLibraryApp() {
+            $window.open(vm.masqueradeAsLibraryUrl, vm.libraryAppBrowsingContextId);
+        }
+    }
+
 }

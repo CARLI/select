@@ -57,34 +57,32 @@ function getUser(email) {
     }
 }
 
+// This no longer does what it says it does and should be renamed
 function masqueradeAsLibrary(libraryId) {
     return getSession()
-        .then(setupUserForMasquerading)
+        .then(makeSureUserIsAllowedToDoThis)
         .then(function() {
             return {ok: true};
         });
 
-    function setupUserForMasquerading(userCtx) {
+    function makeSureUserIsAllowedToDoThis(userCtx) {
         if (userCtx.roles.indexOf('staff') < 0) {
             throw new Error(userCtx.name + ' is not authorized to masquerade as a library');
         }
-        var userId = 'org.couchdb.user:' + userCtx.name;
-        return userRepository.setMasqueradingLibraryIdForUserId(libraryId, userId);
     }
 }
+// This no longer does what it says it does and should be renamed
 function masqueradeAsVendor(vendorId) {
     return getSession()
-        .then(setupUserForMasquerading)
+        .then(makeSureUserIsAllowedToDoThis)
         .then(function() {
             return {ok: true};
         });
 
-    function setupUserForMasquerading(userCtx) {
+    function makeSureUserIsAllowedToDoThis(userCtx) {
         if (userCtx.roles.indexOf('staff') < 0) {
             throw new Error(userCtx.name + ' is not authorized to masquerade as a vendor');
         }
-        var userId = 'org.couchdb.user:' + userCtx.name;
-        return userRepository.setMasqueradingVendorIdForUserId(vendorId, userId);
     }
 }
 

@@ -15,12 +15,19 @@
                 </div>
 
                 <div ng-hide="vm.editable">
-                    <a ng-if="vm.enableMasquerading"
+                    <button
+                            type="button"
+                            id="vendor-masquerade"
+                            class="carli-button"
+                            ng-click="vm.masquerade()">Masquerade<i class="fa fa-user"></i></button>
+
+<!--                    <a ng-if="vm.enableMasquerading"
                        type="button"
                        id="vendor-masquerade"
                        class="carli-button"
                        href="{{ vm.masqueradeAsVendorUrl }}"
-                       target="{{ vm.vendorAppBrowsingContextId }}">Masquerade<i class="fa fa-user"></i></a>
+                       target="{{ vm.vendorAppBrowsingContextId }}">Masquerade<i class="fa fa-user"></i></a>-->
+
                     <button type="button" id="vendor-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></button>
                 </div>
 

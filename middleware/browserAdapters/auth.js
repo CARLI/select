@@ -18,14 +18,14 @@ function deleteSession() {
 
 function masqueradeAsLibrary(libraryId) {
     return middlewareRequest({
-        path: '/masquerade-library/' + libraryId,
+        path: '/masquerade/library/' + libraryId,
         method: 'post'
     });
 }
 
 function masqueradeAsVendor(vendorId) {
     return middlewareRequest({
-        path: '/masquerade-vendor/' + vendorId,
+        path: '/masquerade/vendor/' + vendorId,
         method: 'post'
     });
 }

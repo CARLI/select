@@ -7,6 +7,8 @@ var expressCsv = require('express-csv-middleware');
 var tmp = require('tmp');
 var _ = require('lodash');
 
+var carliMiddlewareVersion = require('./package').version;
+
 var config = require('../config');
 var request = require('../config/environmentDependentModules/request');
 var auth = require('./components/auth');
@@ -43,6 +45,7 @@ function runMiddlewareServer(){
         var server = carliMiddleware.listen(config.middleware.port, function () {
             var host = server.address().address;
             var port = server.address().port;
+            Logger.log('CARLI Middleware Version:' + carliMiddlewareVersion);
             Logger.log('CARLI Middleware worker ' + cluster.worker.id + ' listening at http://'+host+':'+port);
             Logger.log('CRM MYSQL config\n', crmQueries.mysqlConfig);
             Logger.log('NOTIFICATION config\n', config.notifications);
@@ -128,6 +131,15 @@ function runMiddlewareServer(){
             });
             authorizedRoute('post', '/masquerade-vendor/:vendorId', carliAuth.requireStaff, function (req, res) {
                 auth.masqueradeAsVendor(req.params.vendorId)
+                    .then(sendResult(res))
+                    .catch(send500Error(res));
+            });
+            authorizedRoute('post', '/masquerade/:role/:id', carliAuth.requireStaff, function (req, res) {
+                // After the transition to docker, the routes for '/masquerade-library/:id' and '/masquerade-vendor/:id'
+                // both inexplicably have permissions errors trying to update the users roles for masquerading.
+                // After too many hours trying to diagnose and fix why, we just added a brand new route to do it.
+                const masquerading = require("./components/masquerading");
+                masquerading.updateSelfForMasquerading(req.params.role, req.params.id)
                     .then(sendResult(res))
                     .catch(send500Error(res));
             });

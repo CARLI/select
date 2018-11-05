@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.vendor')
     .controller('editVendorController', editVendorController);
 
-function editVendorController( $scope, $rootScope, $q, activityLogService, config, entityBaseService, alertService, cycleService, errorHandler, licenseService, productService, vendorService ) {
+function editVendorController( $scope, $rootScope, $q, $window, activityLogService, config, entityBaseService, alertService, cycleService, errorHandler, licenseService, productService, vendorService, userService ) {
     var vm = this;
 
     vm.enableMasquerading = true;
@@ -9,6 +9,7 @@ function editVendorController( $scope, $rootScope, $q, activityLogService, confi
     vm.vendorAppBrowsingContextId = config.vendorAppBrowsingContextId;
     var afterSubmitCallback = $scope.afterSubmitFn || function() {};
 
+    vm.masquerade = masquerade;
     vm.toggleEditable = toggleEditable;
     vm.cancelEdit = cancelEdit;
     vm.saveVendor = saveVendor;
@@ -256,11 +257,20 @@ function editVendorController( $scope, $rootScope, $q, activityLogService, confi
 
     function setMasqueradeAsVendorUrl() {
         vm.masqueradeAsVendorUrl = getMasqueradeAsVendorUrl();
-        console.log(vm.masqueradeAsVendorUrl);
     }
     function getMasqueradeAsVendorUrl() {
         var queryString = '?masquerade-as-vendor=' + vm.vendor.id;
         return config.vendorWebAppUrl + queryString;
+    }
+
+    function masquerade() {
+        userService.configureForMasquerading("vendor", vm.vendor.id)
+            .then(openTheVendorApp)
+            .catch(errorHandler);
+
+        function openTheVendorApp() {
+            $window.open(vm.masqueradeAsVendorUrl, vm.vendorAppBrowsingContextId);
+        }
     }
 
 }

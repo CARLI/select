@@ -5,12 +5,17 @@ function cycleService( CarliModules, $window, $q, errorHandler, authService, use
 
     var currentUser = userService.getUser();
 
-    if (!currentUser.library) {
-        if (authService.isMasqueradingPending()) {
-            tryHandleMasqueradingUser();
-        } else {
-            throw new Error('Cycle Service was initialized without a valid user');
+    if (authService.isMasqueradingPending()) {
+        var targetLibraryId = authService.getPendingMasqueradingTargetId();
+        if (currentUser.hasOwnProperty("library")) {
+            if (currentUser.library.id !== targetLibraryId) {
+                tryHandleMasqueradingUser();
+            }
         }
+    }
+
+    if (!currentUser.library)  {
+        throw new Error('Cycle Service was initialized without a valid user');
     }
 
     var cycleModule = CarliModules.Cycle;
@@ -54,7 +59,7 @@ function cycleService( CarliModules, $window, $q, errorHandler, authService, use
             .then(authService.forceRefetchCurrentUser)
             .then(function () {
                 currentUser = authService.getCurrentUser();
-                if (!currentUser || !currentUser.vendor) {
+                if (!currentUser || !currentUser.library) {
                     throw new Error('Cycle Service was initialized without a valid user');
                 }
             });

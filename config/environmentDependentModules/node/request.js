@@ -3,8 +3,10 @@ var request = require('request');
 
 var jar = request.jar();
 request = request.defaults({jar: jar});
+var lastAuthSession = null;
 
 request.setAuth = function (authSession) {
+    lastAuthSession = authSession;
     jar.setCookie('AuthSession='+authSession, config.storeOptions.couchDbUrl);
 };
 request.clearAuth = function () {
@@ -28,6 +30,18 @@ request.clearAuth = function () {
  */
 request.giveUpCookieAuthToAllowPrivilegedUrlAuthWorkaround = function () {
     request.clearAuth();
+};
+
+request.withoutAuthCookieWorkaround = function(doSomething) {
+    if (lastAuthSession != null)
+        request.clearAuth();
+
+    var result = doSomething();
+
+    if (lastAuthSession != null)
+        request.setAuth(lastAuthSession);
+
+    return result;
 };
 
 module.exports = request;
