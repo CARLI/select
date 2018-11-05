@@ -37,7 +37,6 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
         isMasqueradingPending: isMasqueradingPending,
         initializeMasquerading: initializeMasquerading,
         initializePendingMasquerading: initializePendingMasquerading,
-        getPendingMasqueradingTargetId: getPendingMasqueradingTargetId
     };
 
     function searchKeyFor(role) {
