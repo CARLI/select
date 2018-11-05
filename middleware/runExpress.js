@@ -501,6 +501,13 @@ function runMiddlewareServer(){
                     .then(sendJsonResult(res))
                     .catch(sendError(res));
             });
+            authorizedRoute('post', '/reports/selected-products', carliAuth.requireStaff, function (req, res) {
+                var parameters = req.body.parameters || {};
+                var extraColumns = req.body.extraColumns || [];
+                reports.selectedProductsReport(JSON.stringify(parameters), JSON.stringify(extraColumns))
+                    .then(sendJsonResult(res))
+                    .catch(sendError(res));
+            });
             authorizedRoute('get', '/reports/contacts/:parameters/:columns', carliAuth.requireStaff, function (req, res) {
                 reports.contactsReport(req.params.parameters, req.params.columns)
                     .then(sendJsonResult(res))
