@@ -1,15 +1,17 @@
 
 var dockerRegistry = 'carli-select-integration.pixodev.net:5000';
 
-var webDockerRepository = 'carli/select-web';
-var middlewareDockerRepository = 'carli/select-middleware';
+var buildDockerRepository = 'carli-select/build';
+var browserClientsDockerRepository = 'carli-select/browser-clients';
+var middlewareDockerRepository = 'carli-select/middleware';
 
-var webVersion = require('./browserClient/package.json').version;
+var buildImageVersion = 'latest';
+var browserClientsVersion = require('./browserClient/package.json').version;
 var middlewareVersion = require('./middleware/package.json').version;
 
-var webDockerImage = `${dockerRegistry}/${webDockerRepository}:${webVersion}`;
+var buildDockerImage = `${dockerRegistry}/${buildDockerRepository}:${buildImageVersion}`;
+var browserClientsDockerImage = `${dockerRegistry}/${browserClientsDockerRepository}:${browserClientsVersion}`;
 var middlewareDockerImage = `${dockerRegistry}/${middlewareDockerRepository}:${middlewareVersion}`;
-
 
 module.exports = function (grunt) {
     require('./grunt/subdir')(grunt);
@@ -19,26 +21,6 @@ module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
 
     grunt.initConfig({
-        clean: {
-            docker: ['docker/build']
-        },
-        copy: {
-            filesForDockerWebImage: {
-                files: [{
-                    src: 'compile/**',
-                    dest: 'docker/build/web',
-                    expand: true,
-                    cwd: 'browserClient'
-                }]
-            },
-            filesForDockerMiddlewareImage: {
-                files: [{
-                    src: ['bin/**', 'CARLI/**', 'config/**', 'db/**', 'grunt/**', 'middleware/**', 'schemas/**'],
-                    dest: 'docker/build/middleware',
-                    expand: true
-                }]
-            }
-        },
         concurrent: {
             options: {
                 logConcurrentOutput: true
@@ -54,37 +36,35 @@ module.exports = function (grunt) {
             }
         },
         exec: {
-            dockerBuildWebImage: {
-                command: `docker build --no-cache -f Dockerfile-web -t ${webDockerImage} .`,
+            dockerBuildBuildImage: {
+                command: `docker build --target build --tag ${buildDockerImage} .`,
                 stdout: true,
                 stderr: true,
-                options: {
-                    cwd: 'docker'
-                }
+                options: { cwd: '.' }
+            },
+            dockerBuildBrowserClientsImage: {
+                command: `docker build --target browser-clients --tag ${browserClientsDockerImage} .`,
+                stdout: true,
+                stderr: true,
+                options: { cwd: '.' }
             },
             dockerBuildMiddlewareImage: {
-                command: `docker build --no-cache -f Dockerfile-middleware -t ${middlewareDockerImage} .`,
+                command: `docker build --target middleware --tag ${middlewareDockerImage} .`,
                 stdout: true,
                 stderr: true,
-                options: {
-                    cwd: 'docker'
-                }
+                options: { cwd: '.' }
             },
-            dockerSaveImageWeb: {
-                command: `docker save -o ../artifacts/carliDockerImageWeb${webVersion}.tar ${webDockerImage}`,
+            dockerPushBrowserClientsImage: {
+                command: `docker push ${browserClientsDockerImage}`,
                 stdout: true,
                 stderr: true,
-                options: {
-                    cwd: 'docker'
-                }
+                options: { cwd: '.' }
             },
-            dockerSaveImageMiddleware: {
-                command: `docker save -o ../artifacts/carliDockerImageMiddleware${middlewareVersion}.tar ${middlewareDockerImage}`,
+            dockerPushMiddlewareImage: {
+                command: `docker push ${middlewareDockerImage}`,
                 stdout: true,
                 stderr: true,
-                options: {
-                    cwd: 'docker'
-                }
+                options: { cwd: '.' }
             }
         }
     });
@@ -97,21 +77,54 @@ module.exports = function (grunt) {
         grunt.task.run(['subdir-grunt:CARLI:test:' + arg]);
     });
 
-    grunt.registerTask('docker-build:web', 'Build the Nginx web server image', [
-        'clean:docker',
-        'subdir-grunt:browserClient:compile',
-        'copy:filesForDockerWebImage',
-        'exec:dockerBuildWebImage',
-        'exec:dockerSaveImageWeb'
+    grunt.registerTask('docker:build:build', 'Build the docker image that is used to build the other images', [
+        'exec:dockerBuildBuildImage'
     ]);
-    grunt.registerTask('docker-build:middleware', 'Build the Node middleware image', [
-        'clean:docker',
-        'copy:filesForDockerMiddlewareImage',
-        'exec:dockerBuildMiddlewareImage',
-        'exec:dockerSaveImageMiddleware'
+    grunt.registerTask('docker:build:middleware', 'Build the middleware docker image', [
+        'exec:dockerBuildMiddlewareImage'
     ]);
-    grunt.registerTask('docker-build', 'Build all Docker images', [
-        'docker-build:web',
-        'docker-build:middleware'
+    grunt.registerTask('docker:build:browserClients', 'Build the browser clients docker image', [
+        'exec:dockerBuildBrowserClientsImage'
+        // 'subdir-grunt:browserClient:compile', // this now happens in the Dockerfile
     ]);
+    grunt.registerTask('docker:build', 'Build all docker images', [
+        'docker:build:middleware',
+        'docker:build:browserClients'
+    ]);
+
+    grunt.registerTask('docker:push:middleware', 'Push the middleware image', [ 'exec:dockerPushMiddlewareImage' ]);
+    grunt.registerTask('docker:push:browserClients', 'Push the browser clients image', [ 'exec:dockerPushBrowserClientsImage' ]);
+    grunt.registerTask('docker:push', 'Push all runtime images', [
+        'docker:push:middleware',
+        'docker:push:browserClients'
+    ]);
+
+    grunt.registerTask('docker:publish:middleware', 'Build and push the middleware image', [
+        'docker:build:middleware',
+        'docker:push:browserClients'
+    ]);
+    grunt.registerTask('docker:publish:browserClients', 'Build and push the browser clients image', [
+        'docker:build:middleware',
+        'docker:push:browserClients'
+    ]);
+    grunt.registerTask('docker:publish', 'Build and push all runtime images', [
+        'docker:build:build',
+        'docker:publish:middleware',
+        'docker:publish:browserClients'
+    ]);
+
+
+    // grunt.registerTask('docker-build:browserClients', 'Build the Nginx web server image', [
+    //     'subdir-grunt:browserClient:compile',
+    //     'exec:dockerBuildBrowserClientsImage',
+    //     'exec:dockerPublishBrowserClientsImage'
+    // ]);
+    // grunt.registerTask('docker-build:middleware', 'Build the Node middleware image', [
+    //     'exec:dockerBuildMiddlewareImage',
+    //     'exec:dockerPublishMiddlewareImage'
+    // ]);
+    // grunt.registerTask('docker-build', 'Build all Docker images', [
+    //     'docker-build:browserClients',
+    //     'docker-build:middleware'
+    // ]);
 };

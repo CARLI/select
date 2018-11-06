@@ -457,7 +457,6 @@ module.exports = function ( grunt ) {
 
             compile: {
                 options: {
-                    sourcemap: 'none',
                     style: 'compressed'
                 },
                 files: [

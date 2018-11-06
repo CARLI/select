@@ -1,7 +1,9 @@
 # Ignore everything...
 *
-# ...except the stuff specifically needed to build
+
+# ...except the folders specifically needed to build
 !/bin
+!/browserClient
 !/CARLI
 !/config
 !/db
@@ -10,10 +12,16 @@
 !/middleware
 !/schemas
 
-# Standard .dockerignore
+# ...and a handful of files from the root directory
+!/package.json
+!/install-dependencies.sh
+!/Gruntfile.js
+
+# Then standard .dockerignore stuff
 
 *.swp
 *~
 .env
 vendor
 node_modules
+bower_modules

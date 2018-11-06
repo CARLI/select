@@ -42,7 +42,7 @@ bower_modules
 bower_components
 
 #Builds
-artifacts
+/artifacts
 build
 compile
 .sass-cache
@@ -66,3 +66,4 @@ Desktop.ini
 .idea
 *.tmproj
 /config/secure.json
+

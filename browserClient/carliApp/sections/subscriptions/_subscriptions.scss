@@ -31,7 +31,9 @@
             @extend [carli-accordion];
 
             &.collapsed {
-                @extend [carli-accordion].collapsed;
+                // Forced by sass upgrade to change this, but not sure if change is correct
+                // Original was @extend [carli-accordion].collapsed;
+                @extend [carli-accordion], .collapsed;
             }
         }
 

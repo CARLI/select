@@ -1,4 +1,0 @@
-FROM nginx:1.15.2-alpine
-COPY ./nginx.conf.prod /etc/nginx/nginx.conf
-# assumes web/ contains a copy of the output from grunt:build (which ends up in browserClient/build)
-COPY build/web /usr/share/nginx/html
