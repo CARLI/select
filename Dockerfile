@@ -68,7 +68,11 @@ COPY --from=build-browser-clients /carli/browserClient/build /usr/share/nginx/ht
 FROM node:8-alpine AS middleware
 
 WORKDIR /carli
-COPY --from=build /carli/CARLI /carli/config /carli/db /carli/middleware /carli/schemas ./
+COPY --from=build /carli/CARLI /carli/CARLI
+COPY --from=build /carli/config /carli/config
+COPY --from=build /carli/db /carli/db
+COPY --from=build /carli/middleware /carli/middleware
+COPY --from=build /carli/schemas /carli/schemas
 
 EXPOSE 3000
 
