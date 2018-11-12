@@ -101,10 +101,10 @@ module.exports = function (grunt) {
 
     grunt.registerTask('docker:publish:middleware', 'Build and push the middleware image', [
         'docker:build:middleware',
-        'docker:push:browserClients'
+        'docker:push:middleware'
     ]);
     grunt.registerTask('docker:publish:browserClients', 'Build and push the browser clients image', [
-        'docker:build:middleware',
+        'docker:build:browserClients',
         'docker:push:browserClients'
     ]);
     grunt.registerTask('docker:publish', 'Build and push all runtime images', [

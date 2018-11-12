@@ -28,7 +28,7 @@ http {
         ;
 
         location / {
-            root /usr/share/nginx/html/compile;
+            root /usr/share/nginx/html;
             try_files $uri /carliApp/index.html =404;
         }
         location /api/ {
@@ -58,7 +58,7 @@ http {
         ;
 
         location / {
-            root /usr/share/nginx/html/compile;
+            root /usr/share/nginx/html;
             try_files $uri /vendorApp/index.html =404;
         }
         location /api/ {
@@ -88,7 +88,7 @@ http {
         ;
 
         location / {
-            root /usr/share/nginx/html/compile;
+            root /usr/share/nginx/html;
             try_files $uri /libraryApp/index.html =404;
         }
         location /api/ {
