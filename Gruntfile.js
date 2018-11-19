@@ -9,6 +9,10 @@ var buildImageVersion = 'latest';
 var browserClientsVersion = require('./browserClient/package.json').version;
 var middlewareVersion = require('./middleware/package.json').version;
 
+/*
+For automated job in Jenkins these values are in the environment, e.g. $buildDockerImage, because Grunt is not used
+as it is a docker only environment.  The values are defined in the configuration of the Jenkins job.
+*/
 var buildDockerImage = `${dockerRegistry}/${buildDockerRepository}:${buildImageVersion}`;
 var browserClientsDockerImage = `${dockerRegistry}/${browserClientsDockerRepository}:${browserClientsVersion}`;
 var middlewareDockerImage = `${dockerRegistry}/${middlewareDockerRepository}:${middlewareVersion}`;
