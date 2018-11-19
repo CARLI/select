@@ -52,7 +52,8 @@ COPY ./browserClient/package.json ./browserClient/bower.json ./browserClient/Gru
 RUN ./install-dependencies.sh
 
 COPY ./browserClient ./browserClient
-RUN grunt ensure-local-config \
+RUN echo "{}" > config/local.json \
+    && grunt ensure-local-config \
     && grunt jsenv:node \
     && grunt subdir-grunt:browserClient:compile
 
