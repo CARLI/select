@@ -42,7 +42,6 @@ COPY ./grunt ./grunt
 COPY ./middleware ./middleware
 COPY ./schemas ./schemas
 
-
 #------------------------------------------------------------------------
 # Browser Clients Build
 FROM build AS build-browser-clients
@@ -53,7 +52,9 @@ COPY ./browserClient/package.json ./browserClient/bower.json ./browserClient/Gru
 RUN ./install-dependencies.sh
 
 COPY ./browserClient ./browserClient
-RUN grunt subdir-grunt:browserClient:compile
+RUN grunt ensure-local-config \
+    && grunt jsenv:node \
+    && grunt subdir-grunt:browserClient:compile
 
 #------------------------------------------------------------------------
 # Browser Clients Runtime
