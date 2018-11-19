@@ -53,7 +53,6 @@ RUN ./install-dependencies.sh
 
 COPY ./browserClient ./browserClient
 RUN echo "{}" > config/local.json \
-    && grunt ensure-local-config \
     && grunt jsenv:node \
     && grunt subdir-grunt:browserClient:compile
 
