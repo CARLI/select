@@ -48,13 +48,17 @@ FROM build AS build-browser-clients
 
 WORKDIR /carli
 
-COPY ./browserClient/package.json ./browserClient/bower.json ./browserClient/Gruntfile.js ./browserClient/
-RUN ./install-dependencies.sh
+## We *should* copy this stuff first, then install-dependencies, and lastly compile the browser clients.
+## But that doesn't work, so we do it in one step.
+# COPY ./browserClient/package.json ./browserClient/bower.json ./browserClient/Gruntfile.js ./browserClient/
+# RUN ./install-dependencies.sh
 
 COPY ./browserClient ./browserClient
+RUN ./install-dependencies.sh
 RUN echo "{}" > config/local.json \
     && grunt jsenv:node \
-    && grunt subdir-grunt:browserClient:compile
+    && grunt subdir-grunt:browserClient:build \
+    && if [ -e /carli/browserClient/build ]; then echo "IT EXISTS"; else echo "WHERE IS IT?"; fi
 
 #------------------------------------------------------------------------
 # Browser Clients Runtime
