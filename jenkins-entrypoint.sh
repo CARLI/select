@@ -16,13 +16,27 @@ if [ -z "${BUILD_NUMBER}" ]; then
     exit 1
 fi
 
-force_rm=""
-# force_rm="--force-rm"
+force_rm="--force-rm"
+if [ ! -z "${CARLI_DISABLE_FORCE_RM}" ]; then
+    force_rm=""
+fi
 
 buildDockerImage="${CARLI_DOCKER_REGISTRY}/carli-select/build:${BUILD_NUMBER}"
 buildBrowserClientsDockerImage="${CARLI_DOCKER_REGISTRY}/carli-select/build-browser-clients:${BUILD_NUMBER}"
 browserClientsDockerImage="${CARLI_DOCKER_REGISTRY}/carli-select/browser-clients:${BUILD_NUMBER}"
 middlewareDockerImage="${CARLI_DOCKER_REGISTRY}/carli-select/middleware:${BUILD_NUMBER}"
+
+bump_browser_clients_patch_version() {
+    cd browserClients && npm version patch && cd ..
+}
+
+bump_middleware_patch_version() {
+    cd middleware && npm version patch && cd ..
+}
+
+bump_both_patch_versions() {
+    bump_browser_clients_patch_version && bump_middleware_patch_version
+}
 
 build_build_image() {
     docker build ${force_rm} --target build --tag ${buildDockerImage} .
