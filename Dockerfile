@@ -57,8 +57,7 @@ COPY ./browserClient ./browserClient
 RUN ./install-dependencies.sh
 RUN echo "{}" > config/local.json \
     && grunt jsenv:node \
-    && grunt subdir-grunt:browserClient:build \
-    && if [ -e /carli/browserClient/build ]; then echo "IT EXISTS"; else echo "WHERE IS IT?"; fi
+    && grunt subdir-grunt:browserClient:build
 
 #------------------------------------------------------------------------
 # Browser Clients Runtime
