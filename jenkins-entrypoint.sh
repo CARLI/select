@@ -26,18 +26,6 @@ buildBrowserClientsDockerImage="${CARLI_DOCKER_REGISTRY}/carli-select/build-brow
 browserClientsDockerImage="${CARLI_DOCKER_REGISTRY}/carli-select/browser-clients:${BUILD_NUMBER}"
 middlewareDockerImage="${CARLI_DOCKER_REGISTRY}/carli-select/middleware:${BUILD_NUMBER}"
 
-bump_browser_clients_patch_version() {
-    cd browserClients && npm version patch && cd ..
-}
-
-bump_middleware_patch_version() {
-    cd middleware && npm version patch && cd ..
-}
-
-bump_both_patch_versions() {
-    bump_browser_clients_patch_version && bump_middleware_patch_version
-}
-
 build_build_image() {
     docker build ${force_rm} --target build --tag ${buildDockerImage} .
 }
