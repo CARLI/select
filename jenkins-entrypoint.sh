@@ -20,6 +20,7 @@ force_rm=""
 # force_rm="--force-rm"
 
 buildDockerImage="${CARLI_DOCKER_REGISTRY}/carli-select/build:${BUILD_NUMBER}"
+buildBrowserClientsDockerImage="${CARLI_DOCKER_REGISTRY}/carli-select/build-browser-clients:${BUILD_NUMBER}"
 browserClientsDockerImage="${CARLI_DOCKER_REGISTRY}/carli-select/browser-clients:${BUILD_NUMBER}"
 middlewareDockerImage="${CARLI_DOCKER_REGISTRY}/carli-select/middleware:${BUILD_NUMBER}"
 
@@ -28,6 +29,10 @@ build_build_image() {
 }
 
 build_browser_clients_image() {
+    # Explicitly running this first build is technically unnecessary, because the second one would implicitly
+    # (re)build it anyway.  But explicitly calling it allows us to provide a --tag and prevent an anonymous
+    # image from lingering around on integration.
+    docker build ${force_rm} --target build-browser-clients --tag ${buildBrowserClientsDockerImage} .
     docker build ${force_rm} --target browser-clients --tag ${browserClientsDockerImage} .
 }
 
