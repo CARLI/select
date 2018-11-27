@@ -251,12 +251,38 @@ function sendMail(options) {
     //});
 }
 
+function sendTestEmail(sendTo) {
+    if (!sendTo)
+        sendTo = messageConfig.notificationsOverrideTo;
+    if (!sendTo) {
+        console.log("Unable to send test email because I don't know who to send it to.");
+        console.log("If the NOTIFICATIONS_OVERRIDE_TO environment variable was set, I would have used that.");
+        return;
+    }
+
+    var options = {
+        to: sendTo,
+        from: config.notifications.from,
+        subject: 'CARLI Select Email Test',
+        text: messageBody()
+    };
+
+    return sendMail(options);
+
+    function messageBody(){
+        return 'Hello World.\n\n' +
+            'Sincerely,\n' +
+            'The CARLI Select Software';
+    }
+}
+
 function formatCurrency( number ){
     return numeral(number).format('0,0.00');
 }
 
 module.exports = {
     sendTemplatedMessage: sendTemplatedMessage,
+    sendTestEmail: sendTestEmail,
     sendPasswordResetMessage: sendPasswordResetMessage,
     sendNotificationEmail: sendNotificationEmail,
     sendOneTimePurchaseMessage: sendOneTimePurchaseMessage,
