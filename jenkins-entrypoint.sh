@@ -72,14 +72,5 @@ push_both_runtime_images() {
     push_browser_clients_image && push_middleware_image
 }
 
-push_versions_back_to_git() {
-#    git add middleware/package*.json
-#    git commit -m "Middleware ${middlewareVersion}"
-#    git add browserClient/package*.json
-#    git commit -m "Browser Client ${browserClientVersion}"
-#
-#    git push
-}
-
-build_build_image && build_both_runtime_images && push_both_runtime_images && push_versions_back_to_git
+build_build_image && build_both_runtime_images && push_both_runtime_images
 

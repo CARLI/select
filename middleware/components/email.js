@@ -235,7 +235,7 @@ function sendAskCarliMessage( message ){
 function sendMail(options) {
     var deferred = Q.defer();
     mailTransport.sendMail(options, sendMailCallback);
-    return deferred;
+    return deferred.promise;
 
     function sendMailCallback(err, info) {
         if (err)
