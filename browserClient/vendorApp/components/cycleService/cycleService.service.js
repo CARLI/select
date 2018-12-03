@@ -5,14 +5,14 @@ function cycleService( CarliModules, config, $q, $window, appState, authService,
 
     var currentUser = authService.getCurrentUser();
 
-    if (authService.isMasqueradingPending()) {
-        var targetVendorId = authService.getPendingMasqueradingTargetId();
-        if (currentUser.hasOwnProperty("vendor")) {
-            if (currentUser.vendor.id !== targetVendorId) {
-                tryHandleMasqueradingUser();
-            }
-        }
-    }
+    // if (authService.isMasqueradingPending()) {
+    //     var targetVendorId = authService.getPendingMasqueradingTargetId();
+    //     if (currentUser.hasOwnProperty("vendor")) {
+    //         if (currentUser.vendor.id !== targetVendorId) {
+    //             tryHandleMasqueradingUser();
+    //         }
+    //     }
+    // }
 
     if (!currentUser.vendor)  {
         throw new Error('Cycle Service was initialized without a valid user');
