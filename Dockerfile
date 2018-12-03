@@ -32,8 +32,12 @@ COPY ./grunt/Gruntfile.js ./grunt/
 COPY ./middleware/package.json ./middleware/Gruntfile.js ./middleware/
 COPY ./schemas/browser/package.json ./schemas/browser/bower.json ./schemas/browser/
 
-RUN ./install-dependencies.sh
+COPY ./browserClient/package.json ./browserClient/bower.json ./browserClient/.bowerrc ./browserClient/Gruntfile.js ./browserClient/
 
+RUN echo "{}" > config/local.json \
+    && ./install-dependencies.sh
+
+COPY ./browserClient ./browserClient
 COPY ./bin ./bin
 COPY ./CARLI ./CARLI
 COPY ./config ./config
@@ -42,29 +46,15 @@ COPY ./grunt ./grunt
 COPY ./middleware ./middleware
 COPY ./schemas ./schemas
 
-#------------------------------------------------------------------------
-# Browser Clients Build
-FROM build AS build-browser-clients
+RUN grunt jsenv:node && grunt subdir-grunt:browserClient:build
 
-WORKDIR /carli
-
-## We *should* copy this stuff first, then install-dependencies, and lastly compile the browser clients.
-## But that doesn't work, so we do it in one step.
-# COPY ./browserClient/package.json ./browserClient/bower.json ./browserClient/Gruntfile.js ./browserClient/
-# RUN ./install-dependencies.sh
-
-COPY ./browserClient ./browserClient
-RUN ./install-dependencies.sh
-RUN echo "{}" > config/local.json \
-    && grunt jsenv:node \
-    && grunt subdir-grunt:browserClient:build
 
 #------------------------------------------------------------------------
 # Browser Clients Runtime
 FROM nginx:1.15.2-alpine AS browser-clients
 
 COPY ./docker/nginx.conf.prod /etc/nginx/nginx.conf
-COPY --from=build-browser-clients /carli/browserClient/build /usr/share/nginx/html/
+COPY --from=build /carli/browserClient/build /usr/share/nginx/html/
 
 
 #------------------------------------------------------------------------

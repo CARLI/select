@@ -1,10 +1,5 @@
 #!/bin/sh
 
-# Change to root directory of the project
-if [ -d .git ]; then
-    cd `git rev-parse --show-toplevel`
-fi
-
 bower_options="--allow-root --config.interactive=false"
 
 npm install || exit 1
