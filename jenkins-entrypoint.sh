@@ -21,20 +21,34 @@ if [ ! -z "${CARLI_DISABLE_FORCE_RM}" ]; then
     force_rm=""
 fi
 
+bump_patch_version() {
+    npm version patch | cut -c 2-
+}
+
+bump_patch_version_in_directory() {
+    cd $1 && next_version=`bump_patch_version` && cd .. && echo ${next_version}
+}
+
+bump_middleware_version() {
+    bump_patch_version_in_directory middleware
+}
+
+bump_browserClient_version() {
+    bump_patch_version_in_directory browserClient
+}
+
+browserClientVersion=`bump_browserClient_version`
+middlewareVersion=`bump_middleware_version`
+
 buildDockerImage="${CARLI_DOCKER_REGISTRY}/carli-select/build:${BUILD_NUMBER}"
-buildBrowserClientsDockerImage="${CARLI_DOCKER_REGISTRY}/carli-select/build-browser-clients:${BUILD_NUMBER}"
-browserClientsDockerImage="${CARLI_DOCKER_REGISTRY}/carli-select/browser-clients:${BUILD_NUMBER}"
-middlewareDockerImage="${CARLI_DOCKER_REGISTRY}/carli-select/middleware:${BUILD_NUMBER}"
+browserClientsDockerImage="${CARLI_DOCKER_REGISTRY}/carli-select/browser-clients:${browserClientVersion}"
+middlewareDockerImage="${CARLI_DOCKER_REGISTRY}/carli-select/middleware:${middlewareVersion}"
 
 build_build_image() {
     docker build ${force_rm} --target build --tag ${buildDockerImage} .
 }
 
 build_browser_clients_image() {
-    # Explicitly running this first build is technically unnecessary, because the second one would implicitly
-    # (re)build it anyway.  But explicitly calling it allows us to provide a --tag and prevent an anonymous
-    # image from lingering around on integration.
-    docker build ${force_rm} --target build-browser-clients --tag ${buildBrowserClientsDockerImage} .
     docker build ${force_rm} --target browser-clients --tag ${browserClientsDockerImage} .
 }
 
@@ -58,5 +72,14 @@ push_both_runtime_images() {
     push_browser_clients_image && push_middleware_image
 }
 
-build_build_image && build_both_runtime_images && push_both_runtime_images
+push_versions_back_to_git() {
+    git add middleware/package*.json
+    git commit -m "Middleware ${middlewareVersion}"
+    git add browserClient/package*.json
+    git commit -m "Browser Client ${browserClientVersion}"
+
+    git push
+}
+
+build_build_image && build_both_runtime_images && push_both_runtime_images && push_versions_back_to_git
 
