@@ -17,7 +17,9 @@ var smtpConfig = {
     host: process.env['SMTP_HOST'],
     port: process.env['SMTP_PORT'],
     secure: process.env['SMTP_SECURE'],
-    ignoreTLS: process.env['SMTP_IGNORE_TLS']
+    ignoreTLS: process.env['SMTP_IGNORE_TLS'],
+    logger: true,
+    debug: true,
 };
 
 var messageConfig = {
