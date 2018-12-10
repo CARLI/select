@@ -98,6 +98,44 @@ function requireSession() {
         });
 }
 
+function requireBasicAuthForRestrictedApiV1(request) {
+
+    if (!isConfigured)
+        throwNotConfiguredError();
+    return requireBasicAuth(request, config.restrictedApiV1.username, config.restrictedApiV1.password);
+
+    function isConfigured() {
+        return config.hasOwnProperty("restrictedApiV1") &&
+            typeof cmUsername !== 'undefined' && typeof cmPassword !== 'undefined' &&
+            cmUsername !== "" && cmPassword !== "";
+    }
+
+    function throwNotConfiguredError() {
+        console.log("ERROR: config.restrictedApiV1 is missing or invalid");
+        throw new Error('Unauthorized');
+    }
+}
+
+function requireBasicAuth(req, expectedUsername, expectedPassword) {
+
+    var auth = req.headers['authorization'];
+    if (!auth)
+        throw new Error('Unauthorized');
+
+    var splitUsernamePassword = getDecodedBasicAuth(auth).split(':');
+    var username = splitUsernamePassword[0];
+    var password = splitUsernamePassword[1];
+
+    if (username !== expectedUsername || password !== expectedPassword) {
+        throw new Error('Unauthorized');
+    }
+    return Q.when(true);
+
+    function getDecodedBasicAuth(authHeader) {
+        var splitAuthHeader = authHeader.split(' ');
+        return new Buffer(splitAuthHeader[1], 'base64').toString();
+    }
+}
 
 function requireStaff() {
     return getSession().then(function (userContext) {
@@ -141,6 +179,7 @@ module.exports = {
     masqueradeAsVendor: masqueradeAsVendor,
     requireSession: requireSession,
     requireStaff: requireStaff,
+    requireBasicAuthForRestrictedApiV1: requireBasicAuthForRestrictedApiV1,
     requireStaffOrLibrary: requireStaffOrLibrary,
     requireStaffOrSpecificVendor: requireStaffOrSpecificVendor,
     requireStaffOrLibraryOrSpecificVendor: requireStaffOrLibraryOrSpecificVendor
