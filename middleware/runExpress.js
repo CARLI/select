@@ -59,7 +59,7 @@ function runMiddlewareServer(){
 
         function authorizedRoute(method, route, promiseToAuthorize, dispatchRequest) {
             carliMiddleware[method](route, function (req, res) {
-                promiseToAuthorize()
+                promiseToAuthorize(req)
                     .then(function() {
                         dispatchRequest(req, res);
                     })
@@ -570,32 +570,32 @@ function runMiddlewareServer(){
             });
         }
         function defineRoutesForConsortiaManager() {
-            authorizedRoute('get', '/cm', carliAuth.requireConsortiaManager, function (req, res) {
+            authorizedRoute('get', '/restricted/v1', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
                 var docs = {
-                    "/cm/list-libraries": "result is an array of libraries",
-                    "/cm/list-library-users": "result is an array of users associated with a library",
-                    "/cm/list-cycles": "result is an array of cycles",
-                    "/cm/subscription-data/:cycle-identifier": "result is array of selected offerings",
+                    "/restricted/v1/list-libraries": "result is an array of libraries",
+                    "/restricted/v1/list-library-users": "result is an array of users associated with a library",
+                    "/restricted/v1/list-cycles": "result is an array of cycles",
+                    "/restricted/v1/subscription-data/<cycle-id>": "result is array of selected offerings",
                 };
                 return Q.when(docs).then(sendJsonResult(res));
 
             });
-            authorizedRoute('get', '/cm/list-libraries', carliAuth.requireConsortiaManager, function (req, res) {
+            authorizedRoute('get', '/restricted/v1/list-libraries', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
                 return consortiaManagerApi.listLibraries()
                     .then(sendJsonResult(res))
                     .catch(sendError(res));
             });
-            authorizedRoute('get', '/cm/list-library-users', carliAuth.requireConsortiaManager, function (req, res) {
+            authorizedRoute('get', '/restricted/v1/list-library-users', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
                 return consortiaManagerApi.listLibraryUsers()
                     .then(sendJsonResult(res))
                     .catch(sendError(res));
             });
-            authorizedRoute('get', '/cm/list-cycles', carliAuth.requireConsortiaManager, function (req, res) {
+            authorizedRoute('get', '/restricted/v1/list-cycles', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
                 return consortiaManagerApi.listCycles()
                     .then(sendJsonResult(res))
                     .catch(sendError(res));
             });
-            authorizedRoute('get', '/cm/subscription-data/:cycle', carliAuth.requireConsortiaManager, function (req, res) {
+            authorizedRoute('get', '/restricted/v1/subscription-data/:cycle', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
                 return consortiaManagerApi.getSubscriptionData(req.params.cycle)
                     .then(sendJsonResult(res))
                     .catch(sendError(res));
