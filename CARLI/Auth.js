@@ -102,7 +102,7 @@ function requireBasicAuthForRestrictedApiV1(request) {
 
     if (!isConfigured)
         throwNotConfiguredError();
-    return requireBasicAuth(request, config.restrictedApiV1.username, config.restrictedApiV1.password);
+    return Q.when(requireBasicAuth(request, config.restrictedApiV1.username, config.restrictedApiV1.password));
 
     function isConfigured() {
         return config.hasOwnProperty("restrictedApiV1") &&

@@ -70,6 +70,28 @@ function runMiddlewareServer(){
                     .catch(sendError(res));
             });
         }
+        function authorizedRouteExpectingBasicAuth(method, route, promiseToAuthorize, dispatchRequest) {
+            carliMiddleware[method](route, function (req, res) {
+                try {
+                    Q.when(promiseToAuthorize(req))
+                        .then(function() {
+                            dispatchRequest(req, res);
+                        })
+                        .catch(sendError(res));
+                } catch (e) {
+                    sendBasicAuthRequired(res);
+                }
+            });
+        }
+
+        function fixThrowingPromiseWrapper(promise) {
+            var returnValue;
+            try {
+                returnValue = promise();
+            } catch (e) {
+                return Q.when(e)
+            }
+        }
 
         carliMiddleware.get('/version', function (req, res) {
             res.send({ version: require('./package.json').version });
@@ -569,7 +591,7 @@ function runMiddlewareServer(){
             });
         }
         function defineRoutesForConsortiaManager() {
-            authorizedRoute('get', '/restricted/v1', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
+            authorizedRouteExpectingBasicAuth('get', '/restricted/v1', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
                 var docs = {
                     "/restricted/v1/list-libraries": "result is an array of libraries",
                     "/restricted/v1/list-library-users": "result is an array of users associated with a library",
@@ -579,22 +601,22 @@ function runMiddlewareServer(){
                 return Q.when(docs).then(sendJsonResult(res));
 
             });
-            authorizedRoute('get', '/restricted/v1/list-libraries', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
+            authorizedRouteExpectingBasicAuth('get', '/restricted/v1/list-libraries', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
                 return consortiaManagerApi.listLibraries()
                     .then(sendJsonResult(res))
                     .catch(sendError(res));
             });
-            authorizedRoute('get', '/restricted/v1/list-library-users', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
+            authorizedRouteExpectingBasicAuth('get', '/restricted/v1/list-library-users', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
                 return consortiaManagerApi.listLibraryUsers()
                     .then(sendJsonResult(res))
                     .catch(sendError(res));
             });
-            authorizedRoute('get', '/restricted/v1/list-cycles', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
+            authorizedRouteExpectingBasicAuth('get', '/restricted/v1/list-cycles', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
                 return consortiaManagerApi.listCycles()
                     .then(sendJsonResult(res))
                     .catch(sendError(res));
             });
-            authorizedRoute('get', '/restricted/v1/subscription-data/:cycle', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
+            authorizedRouteExpectingBasicAuth('get', '/restricted/v1/subscription-data/:cycle', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
                 return consortiaManagerApi.getSubscriptionData(req.params.cycle)
                     .then(sendJsonResult(res))
                     .catch(sendError(res));
@@ -633,6 +655,11 @@ function sendError(res, errorCode) {
         res.status(errorCode).send( { error: errorToSend } );
         //res.status(errorCode).send( { error: errorToSend, stack: err.stack } ); //really useful for debugging
     }
+}
+
+function sendBasicAuthRequired(res) {
+    res.header("WWW-Authenticate", "Basic");
+    res.status(401).send( { error: "Unauthorized" } );
 }
 
 function send500Error(res) {
