@@ -96,6 +96,13 @@ function requireSession() {
         });
 }
 
+function requireConsortiaManager() {
+    return Q.when(true);
+    // if (userContext.roles.indexOf('consortia-manager') >= 0) {
+    //     return true;
+    // }
+    // throw new Error('Unauthorized');
+}
 
 function requireStaff() {
     return getSession().then(function (userContext) {
@@ -139,6 +146,7 @@ module.exports = {
     masqueradeAsVendor: masqueradeAsVendor,
     requireSession: requireSession,
     requireStaff: requireStaff,
+    requireConsortiaManager: requireConsortiaManager,
     requireStaffOrLibrary: requireStaffOrLibrary,
     requireStaffOrSpecificVendor: requireStaffOrSpecificVendor,
     requireStaffOrLibraryOrSpecificVendor: requireStaffOrLibraryOrSpecificVendor

@@ -101,6 +101,7 @@ function runMiddlewareServer(){
         defineRoutesForNotifications();
         defineRoutesForReports();
         defineRoutesForTheDrupalSite();
+        defineRoutesForConsortiaManager();
 
         function defineRoutesForAuthentication() {
             carliMiddleware.post('/login', function (req, res) {
@@ -564,6 +565,15 @@ function runMiddlewareServer(){
                 publicApi.listSubscriptionsForLibraryForCycleName(req.params.libraryId, req.params.cycleName)
                     .then(sendJsonResult(res))
                     .then(sendError(res));
+            });
+        }
+        function defineRoutesForConsortiaManager() {
+            authorizedRoute('get', '/cm/list-libraries', carliAuth.requireConsortiaManager, function (req, res) {
+                const reportParameters = '{}';
+                const columns = '{"fte": true, "institutionType": true, "institutionYears": true, "membershipLevel": true, "isIshareMember": true, "isActive": true}';
+                reports.listLibrariesReport(reportParameters, columns)
+                    .then(sendJsonResult(res))
+                    .catch(sendError(res));
             });
         }
     }
