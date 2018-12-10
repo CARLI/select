@@ -24,6 +24,7 @@ var vendorPricingCsv = require('./components/csv/vendorPricingCsv');
 var vendorReportCsv = require('./components/csv/vendorReport');
 var vendorSpecificProductQueries = require('./components/vendorSpecificProductQueries');
 var publicApi = require('./components/public');
+var consortiaManagerApi = require('./components/consortia-manager');
 
 function runMiddlewareServer(){
     var carliMiddleware = express();
@@ -568,9 +569,12 @@ function runMiddlewareServer(){
         }
         function defineRoutesForConsortiaManager() {
             authorizedRoute('get', '/cm/list-libraries', carliAuth.requireConsortiaManager, function (req, res) {
-                const reportParameters = '{}';
-                const columns = '{"fte": true, "institutionType": true, "institutionYears": true, "membershipLevel": true, "isIshareMember": true, "isActive": true}';
-                reports.listLibrariesReport(reportParameters, columns)
+                return consortiaManagerApi.listLibraries()
+                    .then(sendJsonResult(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('get', '/cm/list-library-users', carliAuth.requireConsortiaManager, function (req, res) {
+                return consortiaManagerApi.listLibraryUsers()
                     .then(sendJsonResult(res))
                     .catch(sendError(res));
             });
