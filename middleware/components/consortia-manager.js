@@ -1,7 +1,9 @@
 const cycleRepository = require('../../CARLI/Entity/CycleRepository');
 const libraryRepository = require('../../CARLI/Entity/LibraryRepository');
 const offeringRepository = require('../../CARLI/Entity/OfferingRepository');
+const productRepository = require('../../CARLI/Entity/ProductRepository');
 const userRepository = require('../../CARLI/Entity/UserRepository');
+const vendorRepository = require('../../CARLI/Entity/VendorRepository');
 
 const Q = require('q');
 
@@ -93,48 +95,51 @@ function getSubscriptionData(cycle) {
     if (typeof cycle === 'undefined' || !cycle)
         throw "Invalid cycle database name: Use /cm/list-cycles to list valid cycles";
 
-    var uniqueKeys = [];
+    var vendorNames = {};
+    var libraryNames = {};
+    var productNames = {};
 
     return cycleRepository.load(cycle)
+        .then(loadNamesFromCycle)
         .then(offeringRepository.listOfferingsWithSelectionsUnexpanded)
-        .then(translateOfferings)
-        .then((foo) => {
-            console.log(uniqueKeys);
-            return foo;
+        .then(translateOfferings);
+
+    function loadNamesFromCycle(cycle) {
+        return Q.all([
+            vendorRepository.list()
+                .then((vendors) => {
+                    vendors.forEach(vendor => vendorNames[vendor.id] = vendor.name);
+                }),
+            libraryRepository.list()
+                .then((libraries) => {
+                    libraries.forEach(library => libraryNames[library.id] = library.name);
+                }),
+            productRepository.list(cycle)
+                .then((products) => {
+                    products.forEach(product => productNames[product.id] = product.name);
+                }),
+        ]).then(() => {
+            return cycle;
         });
+    }
 
     function translateOfferings(offerings) {
         return offerings.map(translateOffering);
     }
 
     function translateOffering(offering) {
-        if (offering.hasOwnProperty("selection")) {
-            const k = offering.selection.users;
-            if (uniqueKeys.indexOf(k) < 0)
-                uniqueKeys.push(k);
-        }
         return {
-            product: offering.product,
-            vendor: offering.vendorId,
-            library: offering.library,
-            selection: offering.selection,
-            pricing: offering.pricing,
+            productId: offering.product,
+            productName: productNames[offering.product],
+            vendorId: offering.vendorId,
+            vendorName: vendorNames[offering.vendorId],
+            libraryId: offering.library,
+            libraryName: libraryNames[offering.library],
+            datePurchased: offering.selection.datePurchased,
+            numberOfSeatsLicensed: offering.selection.users,
+            amountPaidToVendor: offeringRepository.getFullSelectionPrice(offering),
+            amountPaidByLibrary: offeringRepository.getFundedSelectionPrice(offering),
         };
-    }
-
-    function deleteStuff(results) {
-        return results.map(row => {
-            delete row._id;
-            delete row._rev;
-            delete row.display;
-            delete row.libraryComments;
-            delete row.vendorComments;
-            delete row.internalComments;
-            delete row.cycle;
-            delete row.history;
-            delete row["$$hashKey"];
-            return row;
-        });
     }
 }
 
