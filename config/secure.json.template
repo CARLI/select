@@ -13,5 +13,9 @@
     "user": "root",
     "password": "",
     "database": "carli_crm"
-  }
+  },
+  "restrictedApiV1": {
+    "username": "",
+    "password": ""
+  er
 }
