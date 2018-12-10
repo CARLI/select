@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var expressCsv = require('express-csv-middleware');
 var tmp = require('tmp');
 var _ = require('lodash');
+var Q = require('q');
 
 var carliMiddlewareVersion = require('./package').version;
 
@@ -569,6 +570,16 @@ function runMiddlewareServer(){
             });
         }
         function defineRoutesForConsortiaManager() {
+            authorizedRoute('get', '/cm', carliAuth.requireConsortiaManager, function (req, res) {
+                var docs = {
+                    "/cm/list-libraries": "result is an array of libraries",
+                    "/cm/list-library-users": "result is an array of users associated with a library",
+                    "/cm/list-cycles": "result is an array of cycles",
+                    "/cm/subscription-data/:cycle-identifier": "result is array of selected offerings",
+                };
+                return Q.when(docs).then(sendJsonResult(res));
+
+            });
             authorizedRoute('get', '/cm/list-libraries', carliAuth.requireConsortiaManager, function (req, res) {
                 return consortiaManagerApi.listLibraries()
                     .then(sendJsonResult(res))
@@ -576,6 +587,16 @@ function runMiddlewareServer(){
             });
             authorizedRoute('get', '/cm/list-library-users', carliAuth.requireConsortiaManager, function (req, res) {
                 return consortiaManagerApi.listLibraryUsers()
+                    .then(sendJsonResult(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('get', '/cm/list-cycles', carliAuth.requireConsortiaManager, function (req, res) {
+                return consortiaManagerApi.listCycles()
+                    .then(sendJsonResult(res))
+                    .catch(sendError(res));
+            });
+            authorizedRoute('get', '/cm/subscription-data/:cycle', carliAuth.requireConsortiaManager, function (req, res) {
+                return consortiaManagerApi.getSubscriptionData(req.params.cycle)
                     .then(sendJsonResult(res))
                     .catch(sendError(res));
             });
