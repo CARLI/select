@@ -26,7 +26,7 @@ var vendorDatabases = require('./components/vendorDatabases');
 var vendorReportCsv = require('./components/csv/vendorReport');
 var vendorSpecificProductQueries = require('./components/vendorSpecificProductQueries');
 var publicApi = require('./components/public');
-var consortiaManagerApi = require('./components/consortia-manager');
+var consortiaManagerApi = require('./components/restricted-api');
 
 function runMiddlewareServer(){
     var carliMiddleware = express();
