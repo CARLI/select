@@ -137,8 +137,7 @@ function getSubscriptionData(cycle) {
             libraryName: libraryNames[offering.library],
             datePurchased: offering.selection.datePurchased,
             numberOfSeatsLicensed: offering.selection.users,
-            amountPaidToVendor: offeringRepository.getFullSelectionPrice(offering),
-            amountPaidByLibrary: offeringRepository.getFundedSelectionPrice(offering),
+            price: offeringRepository.getFundedSelectionPrice(offering),
         };
     }
 }
