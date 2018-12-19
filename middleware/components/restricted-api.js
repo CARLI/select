@@ -47,7 +47,7 @@ function listLibraryUsers() {
         .then(translateLibraryUsers);
 
     function filterOnlyLibraryUsers(users) {
-        return users.filter((u) => {
+        return users.filter(function (u) {
             return u.hasOwnProperty("library") &&
                 u.roles.indexOf("library") >= 0;
         })
@@ -107,18 +107,18 @@ function getSubscriptionData(cycle) {
     function loadNamesFromCycle(cycle) {
         return Q.all([
             vendorRepository.list()
-                .then((vendors) => {
-                    vendors.forEach(vendor => vendorNames[vendor.id] = vendor.name);
+                .then(function (vendors) {
+                    vendors.forEach(function (vendor) { vendorNames[vendor.id] = vendor.name });
                 }),
             libraryRepository.list()
-                .then((libraries) => {
-                    libraries.forEach(library => libraryNames[library.id] = library.name);
+                .then(function (libraries) {
+                    libraries.forEach(function (library) { libraryNames[library.id] = library.name });
                 }),
             productRepository.list(cycle)
-                .then((products) => {
-                    products.forEach(product => productNames[product.id] = product.name);
+                .then(function (products) {
+                    products.forEach(function (product) { productNames[product.id] = product.name });
                 }),
-        ]).then(() => {
+        ]).then(function () {
             return cycle;
         });
     }
