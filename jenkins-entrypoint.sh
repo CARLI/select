@@ -1,19 +1,11 @@
 #!/usr/bin/env bash
 
 if [ -z "${CARLI_DOCKER_REGISTRY}" ]; then
-    echo "Fatal Error: Required environment variable missing: \$CARLI_DOCKER_REGISTRY"
-    echo
-    echo "This is the domain of the docker registry which runtime images will be pushed to."
-    echo "Jenkins must be configured to provide the appropriate value."
-    echo "Include the port if required.  Do NOT include a trailing slash."
-    exit 1
+    export CARLI_DOCKER_REGISTRY="carli-select-integration.pixodev.net:5000"
 fi
 
 if [ -z "${BUILD_NUMBER}" ]; then
-    echo "Fatal Error: Required environment variable missing: \$BUILD_NUMBER"
-    echo
-    echo "This is set by Jenkins and is used to derive the version tag set on the images."
-    exit 1
+    export BUILD_NUMBER="date +%Y%m%d%s"
 fi
 
 force_rm="--force-rm"
