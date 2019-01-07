@@ -26,7 +26,7 @@ var vendorDatabases = require('./components/vendorDatabases');
 var vendorReportCsv = require('./components/csv/vendorReport');
 var vendorSpecificProductQueries = require('./components/vendorSpecificProductQueries');
 var publicApi = require('./components/public');
-var consortiaManagerApi = require('./components/restrictedApi');
+var restrictedApi = require('./components/restrictedApi');
 
 function runMiddlewareServer(){
     var carliMiddleware = express();
@@ -600,28 +600,89 @@ function runMiddlewareServer(){
                     "/restricted/v1/subscription-data/<cycle-id>": "result is array of selected offerings",
                 };
                 return Q.when(docs).then(sendJsonResult(res));
+            });
 
-            });
             authorizedRouteExpectingBasicAuth('get', '/restricted/v1/list-libraries', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
-                return consortiaManagerApi.listLibraries()
+                return restrictedApi.listLibraries()
                     .then(sendJsonResult(res))
                     .catch(sendError(res));
             });
+            authorizedRouteExpectingBasicAuth('get', '/restricted/v1/list-libraries.csv', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
+                return restrictedApi.listLibraries()
+                    .then(convertArrayOfHomogeneousObjectToCsv)
+                    .then(sendResult(res))
+                    .catch(sendError(res));
+            });
+
             authorizedRouteExpectingBasicAuth('get', '/restricted/v1/list-library-users', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
-                return consortiaManagerApi.listLibraryUsers()
+                return restrictedApi.listLibraryUsers()
                     .then(sendJsonResult(res))
                     .catch(sendError(res));
             });
+            authorizedRouteExpectingBasicAuth('get', '/restricted/v1/list-library-users.csv', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
+                return restrictedApi.listLibraryUsers()
+                    .then(convertArrayOfHomogeneousObjectToCsv)
+                    .then(sendResult(res))
+                    .catch(sendError(res));
+            });
+
             authorizedRouteExpectingBasicAuth('get', '/restricted/v1/list-cycles', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
-                return consortiaManagerApi.listCycles()
+                return restrictedApi.listCycles()
                     .then(sendJsonResult(res))
                     .catch(sendError(res));
             });
+            authorizedRouteExpectingBasicAuth('get', '/restricted/v1/list-cycles.csv', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
+                return restrictedApi.listCycles()
+                    .then(convertArrayOfHomogeneousObjectToCsv)
+                    .then(sendResult(res))
+                    .catch(sendError(res));
+            });
+
             authorizedRouteExpectingBasicAuth('get', '/restricted/v1/subscription-data/:cycle', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
-                return consortiaManagerApi.getSubscriptionData(req.params.cycle)
+                return restrictedApi.getSubscriptionData(req.params.cycle)
                     .then(sendJsonResult(res))
                     .catch(sendError(res));
             });
+            authorizedRouteExpectingBasicAuth('get', '/restricted/v1/subscription-data/:cycle.csv', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
+                return restrictedApi.getSubscriptionData(req.params.cycle)
+                    .then(convertArrayOfHomogeneousObjectToCsv)
+                    .then(sendResult(res))
+                    .catch(sendError(res));
+            });
+
+            function convertArrayOfHomogeneousObjectToCsv(listOfObjects) {
+                throwIfEmpty();
+                throwIfNotHomogeneous();
+
+                return convert2dArrayToCsv([
+                    Object.keys(listOfObjects[0]),
+                    ...listOfObjects.map(obj => Object.keys(obj).map(k => obj[k]))
+                ]);
+
+                function throwIfEmpty() {
+                    if (listOfObjects.length === 0)
+                        throw new Error('No data found');
+                }
+                function throwIfNotHomogeneous() {
+                    const headers = Object.keys(listOfObjects[0]);
+                    listOfObjects.map(result =>
+                        Object.keys(result).join(',') === headers.join(',') || throwError()
+                    );
+                    function throwError() {
+                        throw new Error('Non-homogeneous object found');
+                    }
+                }
+
+                function convert2dArrayToCsv(table) {
+                    return table.map(row => row.map(quoteForCsv).join(',')).join('\n');
+                }
+            }
+
+            function quoteForCsv(item) {
+                if (!item)
+                    return '';
+                return item.toString().match(/[\s,"]/) ? '"' + item.replace(/"/g, '""') + '"' : item
+            }
         }
     }
 }
