@@ -610,7 +610,7 @@ function runMiddlewareServer(){
             authorizedRouteExpectingBasicAuth('get', '/restricted/v1/list-libraries.csv', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
                 return restrictedApi.listLibraries()
                     .then(convertArrayOfHomogeneousObjectToCsv)
-                    .then(sendResult(res))
+                    .then(sendCsvResult(res))
                     .catch(sendError(res));
             });
 
@@ -622,7 +622,7 @@ function runMiddlewareServer(){
             authorizedRouteExpectingBasicAuth('get', '/restricted/v1/list-library-users.csv', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
                 return restrictedApi.listLibraryUsers()
                     .then(convertArrayOfHomogeneousObjectToCsv)
-                    .then(sendResult(res))
+                    .then(sendCsvResult(res))
                     .catch(sendError(res));
             });
 
@@ -634,7 +634,7 @@ function runMiddlewareServer(){
             authorizedRouteExpectingBasicAuth('get', '/restricted/v1/list-cycles.csv', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
                 return restrictedApi.listCycles()
                     .then(convertArrayOfHomogeneousObjectToCsv)
-                    .then(sendResult(res))
+                    .then(sendCsvResult(res))
                     .catch(sendError(res));
             });
 
@@ -646,7 +646,7 @@ function runMiddlewareServer(){
             authorizedRouteExpectingBasicAuth('get', '/restricted/v1/subscription-data/:cycle.csv', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
                 return restrictedApi.getSubscriptionData(req.params.cycle)
                     .then(convertArrayOfHomogeneousObjectToCsv)
-                    .then(sendResult(res))
+                    .then(sendCsvResult(res))
                     .catch(sendError(res));
             });
 
@@ -675,8 +675,8 @@ function runMiddlewareServer(){
 
                 function convert2dArrayToCsv(table) {
                     return table.map(function(row) {
-                        return row.map(quoteForCsv).join(',').join("\n");
-                    });
+                        return row.map(quoteForCsv).join(',');
+                    }).join("\n");
                 }
             }
 
@@ -709,6 +709,11 @@ function sendResult(res) {
 function sendJsonResult(res){
     return function(result){
         res.send( { result: result } );
+    }
+}
+function sendCsvResult(res) {
+    return function (result) {
+        res.type('text/csv').send(result);
     }
 }
 function sendOk(res) {
@@ -765,7 +770,7 @@ function handleCsvUploads() {
     var csvMiddleware = expressCsv(csvBodyParserOptions, csvOptions);
 
     return function (req, res, next) {
-        if (req.headers['content-type'] == 'text/csv') {
+        if (req.headers['content-type'] === 'text/csv') {
             return csvMiddleware(req, res, next);
         }
         next();
