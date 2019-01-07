@@ -125,7 +125,7 @@ function runMiddlewareServer(){
         defineRoutesForNotifications();
         defineRoutesForReports();
         defineRoutesForTheDrupalSite();
-        defineRoutesForConsortiaManager();
+        defineRoutesForRestrictedApi();
 
         function defineRoutesForAuthentication() {
             carliMiddleware.post('/login', function (req, res) {
@@ -591,7 +591,7 @@ function runMiddlewareServer(){
                     .then(sendError(res));
             });
         }
-        function defineRoutesForConsortiaManager() {
+        function defineRoutesForRestrictedApi() {
             authorizedRouteExpectingBasicAuth('get', '/restricted/v1', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
                 var docs = {
                     "/restricted/v1/list-libraries": "result is an array of libraries",
@@ -654,10 +654,8 @@ function runMiddlewareServer(){
                 throwIfEmpty();
                 throwIfNotHomogeneous();
 
-                return convert2dArrayToCsv([
-                    Object.keys(listOfObjects[0]),
-                    ...listOfObjects.map(obj => Object.keys(obj).map(k => obj[k]))
-                ]);
+                const twoDArray = make2DArrayFromJson(listOfObjects);
+                return convert2dArrayToCsv(twoDArray);
 
                 function throwIfEmpty() {
                     if (listOfObjects.length === 0)
@@ -665,17 +663,33 @@ function runMiddlewareServer(){
                 }
                 function throwIfNotHomogeneous() {
                     const headers = Object.keys(listOfObjects[0]);
-                    listOfObjects.map(result =>
-                        Object.keys(result).join(',') === headers.join(',') || throwError()
-                    );
+                    listOfObjects.forEach(function(result) {
+                        if (Object.keys(result).join(',') !== headers.join(','))
+                            throwError();
+
+                    });
                     function throwError() {
                         throw new Error('Non-homogeneous object found');
                     }
                 }
 
                 function convert2dArrayToCsv(table) {
-                    return table.map(row => row.map(quoteForCsv).join(',')).join('\n');
+                    return table.map(function(row) {
+                        return row.map(quoteForCsv).join(',').join("\n");
+                    });
                 }
+            }
+
+            function make2DArrayFromJson(listOfObjects) {
+                const newArray = [
+                    Object.keys(listOfObjects[0]),
+                ];
+                listOfObjects.forEach(function(obj) {
+                    const row = Object.keys(obj).map(function(k) { return obj[k]; });
+                    newArray.push(row);
+                });
+
+                return newArray;
             }
 
             function quoteForCsv(item) {
