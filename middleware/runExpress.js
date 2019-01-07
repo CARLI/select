@@ -602,51 +602,51 @@ function runMiddlewareServer(){
                 return Q.when(docs).then(sendJsonResult(res));
             });
 
-            authorizedRouteExpectingBasicAuth('get', '/restricted/v1/list-libraries', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
-                return restrictedApi.listLibraries()
-                    .then(sendJsonResult(res))
-                    .catch(sendError(res));
-            });
             authorizedRouteExpectingBasicAuth('get', '/restricted/v1/list-libraries.csv', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
                 return restrictedApi.listLibraries()
                     .then(convertArrayOfHomogeneousObjectToCsv)
                     .then(sendCsvResult(res))
                     .catch(sendError(res));
             });
-
-            authorizedRouteExpectingBasicAuth('get', '/restricted/v1/list-library-users', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
-                return restrictedApi.listLibraryUsers()
+            authorizedRouteExpectingBasicAuth('get', '/restricted/v1/list-libraries', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
+                return restrictedApi.listLibraries()
                     .then(sendJsonResult(res))
                     .catch(sendError(res));
             });
+
             authorizedRouteExpectingBasicAuth('get', '/restricted/v1/list-library-users.csv', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
                 return restrictedApi.listLibraryUsers()
                     .then(convertArrayOfHomogeneousObjectToCsv)
                     .then(sendCsvResult(res))
                     .catch(sendError(res));
             });
-
-            authorizedRouteExpectingBasicAuth('get', '/restricted/v1/list-cycles', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
-                return restrictedApi.listCycles()
+            authorizedRouteExpectingBasicAuth('get', '/restricted/v1/list-library-users', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
+                return restrictedApi.listLibraryUsers()
                     .then(sendJsonResult(res))
                     .catch(sendError(res));
             });
+
             authorizedRouteExpectingBasicAuth('get', '/restricted/v1/list-cycles.csv', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
                 return restrictedApi.listCycles()
                     .then(convertArrayOfHomogeneousObjectToCsv)
                     .then(sendCsvResult(res))
                     .catch(sendError(res));
             });
-
-            authorizedRouteExpectingBasicAuth('get', '/restricted/v1/subscription-data/:cycle', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
-                return restrictedApi.getSubscriptionData(req.params.cycle)
+            authorizedRouteExpectingBasicAuth('get', '/restricted/v1/list-cycles', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
+                return restrictedApi.listCycles()
                     .then(sendJsonResult(res))
                     .catch(sendError(res));
             });
+
             authorizedRouteExpectingBasicAuth('get', '/restricted/v1/subscription-data/:cycle.csv', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
                 return restrictedApi.getSubscriptionData(req.params.cycle)
                     .then(convertArrayOfHomogeneousObjectToCsv)
                     .then(sendCsvResult(res))
+                    .catch(sendError(res));
+            });
+            authorizedRouteExpectingBasicAuth('get', '/restricted/v1/subscription-data/:cycle', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
+                return restrictedApi.getSubscriptionData(req.params.cycle)
+                    .then(sendJsonResult(res))
                     .catch(sendError(res));
             });
 
@@ -666,7 +666,6 @@ function runMiddlewareServer(){
                     listOfObjects.forEach(function(result) {
                         if (Object.keys(result).join(',') !== headers.join(','))
                             throwError();
-
                     });
                     function throwError() {
                         throw new Error('Non-homogeneous object found');
