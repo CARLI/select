@@ -16,12 +16,24 @@ var libraryRepository = require('../../CARLI/Entity/LibraryRepository.js');
 var smtpConfig = {
     host: process.env['SMTP_HOST'],
     port: process.env['SMTP_PORT'],
-    secure: process.env['SMTP_SECURE'],
-    ignoreTLS: process.env['SMTP_IGNORE_TLS'],
-    requireTLS: process.env['SMTP_REQUIRE_TLS'],
+    secure: stringToBool(process.env['SMTP_SECURE']),
+    ignoreTLS: stringToBool(process.env['SMTP_IGNORE_TLS']),
+    requireTLS: stringToBool(process.env['SMTP_REQUIRE_TLS']),
     logger: true,
     debug: true,
 };
+
+if (process.env['SMTP_USER'] && process.env['SMTP_PASSWORD'])
+    smtpConfig.auth = {
+        user: process.env['SMTP_USER'],
+        pass: process.env['SMTP_PASSWORD'],
+    };
+
+function stringToBool(str) {
+    if (str === undefined)
+        return false;
+    return str !== 'false';
+}
 
 var messageConfig = {
     notificationsOverrideTo: process.env['NOTIFICATIONS_OVERRIDE_TO'], //causes ALL emails to go to this address if set
