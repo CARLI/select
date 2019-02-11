@@ -59,12 +59,7 @@ COPY --from=build /carli/browserClient/build /usr/share/nginx/html/
 
 #------------------------------------------------------------------------
 # Middleware Runtime
-FROM node:8-alpine AS middleware
-
-RUN apk add --no-cache msmtp \
-    && ln -sf /usr/bin/msmtp /usr/sbin/sendmail
-
-COPY ./docker/msmtprc /etc/msmtprc
+FROM node:8-stretch AS middleware
 
 WORKDIR /carli
 COPY --from=build /carli/CARLI /carli/CARLI
