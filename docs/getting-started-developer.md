@@ -19,7 +19,7 @@ Visit the [Node Web Site](http://nodejs.org/) for installation instructions.
 ## Install Project Dependencies ##
 In the root of the project run the bash script `install-dependencies.sh`. This descends into sub-directories and installs npm dependencies. 
 
-You will need to install the sass library via Ruby: `gem install sass`
+You will need to install the sass library: `npm install -g sass`
 
 
 ## Set Up Config Files for the Application ##
