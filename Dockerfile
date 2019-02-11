@@ -62,8 +62,7 @@ COPY --from=build /carli/browserClient/build /usr/share/nginx/html/
 FROM node:8-alpine AS middleware
 
 RUN apk add --no-cache msmtp \
-    && ln -sf /usr/bin/msmtp /usr/sbin/sendmail \
-    && chmod +x /etc/local.d/msmtp-sendmail.start
+    && ln -sf /usr/bin/msmtp /usr/sbin/sendmail
 
 COPY ./docker/msmtprc /etc/msmtprc
 
