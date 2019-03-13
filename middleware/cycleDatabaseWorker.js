@@ -9,7 +9,6 @@ var newCycleId = process.env.newCycleId;
 Logger.log('Cycle database worker started', sourceCycleId, newCycleId);
 
 cycleCreation.copyCycleDataFrom( sourceCycleId, newCycleId )
-    .then(vendorDatabases.createVendorDatabasesForCycle)
     .then(vendorDatabases.replicateDataToVendorsForCycle)
     .then(vendorDatabases.triggerIndexingForCycleId)
     .then(exitWorker)
