@@ -48,17 +48,17 @@ function deleteUser(user) {
 }
 
 function requestPasswordReset(email, resetLinkBaseUrl) {
-    //potential admin fail
+    // request.giveUpCookieAuthToAllowPrivilegedUrlAuthWorkaround();
     return userResetRequestRepository.create(email, resetLinkBaseUrl);
 }
 
 function isKeyValid(key) {
-    //potential admin fail
+    // request.giveUpCookieAuthToAllowPrivilegedUrlAuthWorkaround();
     return userResetRequestRepository.isKeyValid(key);
 }
 
 function consumeKey(key, user) {
-    //potential admin fail
+    // request.giveUpCookieAuthToAllowPrivilegedUrlAuthWorkaround();
     return userResetRequestRepository.isKeyValid(key)
         .then(function() {
             return userRepository.update(user).then(function () {

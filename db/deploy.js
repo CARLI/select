@@ -245,9 +245,10 @@ if (require.main === module) {
         createAdminUser: createAdminUser,
         createUsersFromJson: createUsersFromJson,
         createOneTimePurchaseCycle: createOneTimePurchaseCycle,
+        deployResetRequestDb: deployResetRequestDb,
         deployLocalAppDesignDoc: deployLocalAppDesignDoc,
         deployLocalCycleDesignDocs: deployLocalCycleDesignDocs,
         deployDesignDocToActivityLog: deployDesignDocToActivityLog,
-        deployActivityLogDb: deployActivityLogDb
+        deployActivityLogDb: deployActivityLogDb,
     };
 }
