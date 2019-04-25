@@ -453,10 +453,12 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
 
         function exportOffering(offering) {
             var lastYearsSelection = getLastYearsSelection(offering);
+            var vendorName = offering.product.vendor ? offering.product.vendor.name : '';
+
             return [
                 vm.getProductDisplayName(offering.product),
                 lastYearsSelection ? lastYearsSelection.users : '',
-                offering.product.vendor.name,
+                vendorName,
                 offeringService.getFundedSiteLicensePrice(offering),
                 offeringService.isFunded(offering) ? 'yes' : 'no',
                 getSelectionUsers(offering),
