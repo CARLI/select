@@ -457,11 +457,13 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
 
         function exportOffering(offering) {
             var lastYearsSelection = getLastYearsSelection(offering);
+            var vendorName = offering.product.vendor ? offering.product.vendor.name : '';
+
             return [
                 vm.getProductDisplayName(offering.product),
                 lastYearsSelection ? lastYearsSelection.users : '',
                 lastYearsSelection ? getLastYearsSelectionPrice(offering) : '',
-                offering.product.vendor.name,
+                vendorName,
                 offeringService.isFunded(offering) ? 'true' : 'false',
                 getSelectionUsers(offering),
                 offeringService.getFundedSelectionPrice(offering)
