@@ -1,10 +1,10 @@
-const uuid = require('uuid/v4');
-
 angular.module('common.uuid')
     .factory('uuid', function() {
+        var uniqueId = 1000000;
+
         return {
             generateCssId: function () {
-                return uuid();
+                return uniqueId++;
             }
         };
     });
