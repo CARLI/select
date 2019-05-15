@@ -7,6 +7,13 @@ function createVendorDatabasesForActiveCycles() {
     });
 }
 
+function createVendorDatabasesForActiveCyclesForSingleVendor(vendorId) {
+    return middlewareRequest({
+        path: '/create-all-databases-for-vendor/' + vendorId,
+        method: 'post'
+    });
+}
+
 function createVendorDatabasesForCycle(cycleId) {
     return middlewareRequest({
         path: '/create-vendor-databases-for-cycle/' + cycleId,
@@ -105,6 +112,7 @@ function updateFlaggedOfferingsForVendor(vendorId, cycle){
 }
 
 module.exports = {
+    createVendorDatabasesForActiveCyclesForSingleVendor: createVendorDatabasesForActiveCyclesForSingleVendor,
     createVendorDatabasesForActiveCycles: createVendorDatabasesForActiveCycles,
     createVendorDatabasesForCycle: createVendorDatabasesForCycle,
     replicateDataToVendorsForAllCycles: replicateDataToVendorsForAllCycles,

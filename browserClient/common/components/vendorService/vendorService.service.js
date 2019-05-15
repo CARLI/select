@@ -17,6 +17,7 @@ function vendorService( CarliModules, $q, errorHandler ) {
                 .catch(errorHandler);
         },
         createVendorDatabasesForActiveCycles: VendorDatabaseModule.createVendorDatabasesForActiveCycles,
+        createVendorDatabasesForActiveCyclesForSingleVendor: VendorDatabaseModule.createVendorDatabasesForActiveCyclesForSingleVendor,
         replicateDataToOneVendorForCycle: VendorDatabaseModule.replicateDataToOneVendorForCycle
     };
 }

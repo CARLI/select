@@ -9,6 +9,28 @@ var productRepository = require('../../CARLI/Entity/ProductRepository.js');
 var vendorRepository = require('../../CARLI/Entity/VendorRepository');
 var vendorStatusRepository = require('../../CARLI/Entity/VendorStatusRepository.js');
 
+function createVendorDatabasesForActiveCyclesForSingleVendor(vendorId) {
+    return cycleRepository.listActiveCycles().then(function (cycles) {
+        return Q.all( cycles.map(createDatabases) );
+
+        function createDatabases(cycle) {
+            return createOneVendorDatabaseForCycle(vendorId, cycle.id);
+        }
+    });
+}
+
+function createOneVendorDatabaseForCycle(vendorId, cycleId) {
+    return vendorRepository.load(vendorId).then(function (vendor) {
+        return createDatabase(vendor)
+            .thenResolve(cycleId);
+
+        function createDatabase(vendor) {
+            var repoForVendor = cycleRepositoryForVendor(vendor);
+            return repoForVendor.createDatabase(cycleId);
+        }
+    });
+}
+
 function createVendorDatabasesForActiveCycles() {
     return cycleRepository.listActiveCycles().then(function (cycles) {
         return Q.all( cycles.map(createDatabases) );
@@ -458,6 +480,7 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
 }
 
 module.exports = {
+    createVendorDatabasesForActiveCyclesForSingleVendor: createVendorDatabasesForActiveCyclesForSingleVendor,
     createVendorDatabasesForActiveCycles: createVendorDatabasesForActiveCycles,
     createVendorDatabasesForCycle: createVendorDatabasesForCycle,
     replicateDataToVendorsForAllCycles: replicateDataToVendorsForAllCycles,

@@ -271,6 +271,11 @@ function runMiddlewareServer(){
                         .catch(sendError(res));
                 }
             });
+            authorizedRoute('post', '/create-all-databases-for-vendor/:vendorId', carliAuth.requireStaff, function (req, res) {
+                vendorDatabases.createVendorDatabasesForActiveCyclesForSingleVendor(req.params.vendorId)
+                    .then(sendOk(res))
+                    .catch(sendError(res));
+            });
             authorizedRoute('post', '/create-all-vendor-databases', carliAuth.requireStaff, function (req, res) {
                 vendorDatabases.createVendorDatabasesForActiveCycles()
                     .then(sendOk(res))
