@@ -150,7 +150,6 @@ function editVendorController( $scope, $rootScope, $q, $window, activityLogServi
 
     function addVendorIdToModel(newVendorId) {
         vm.vendor.id = newVendorId;
-        vm.vendorId = newVendorId;
     }
 
     function createVendor() {
@@ -186,7 +185,7 @@ function editVendorController( $scope, $rootScope, $q, $window, activityLogServi
     function addVendorToActiveCycles() {
         Logger.log('createVendorDatabasesForActiveCycles');
 
-        return vendorService.createVendorDatabasesForActiveCyclesForSingleVendor(vm.vendorId)
+        return vendorService.createVendorDatabasesForActiveCyclesForSingleVendor(vm.vendor.id)
             .then(replicateToVendorForActiveCycles)
             .then(function (result) {
                 console.log('Returned from replication', result);
