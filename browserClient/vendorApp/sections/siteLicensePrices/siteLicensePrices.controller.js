@@ -606,7 +606,13 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
                     newValue = quickPricingValue;
                 }
                 else if (mode == 'percentageIncrease') {
-                    var originalValue = parseFloat($offeringCell.text());
+                    const lastYearsPricingObject = getLastYearsPricingFromOffering(offering);
+
+                    var lastYearsPrice = (lastYearsPricingObject) ?
+                        lastYearsPricingObject.site :
+                        $offeringCell.text(); // fallback option, whatever happened to be in the cell already
+                    var originalValue = parseFloat(lastYearsPrice);
+
                     if (isNaN(originalValue)) {
                         return;
                     }
@@ -649,6 +655,16 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
             offeringCell.find('.price').replaceWith(newReadOnlyCellContents);
             setCommentMarkerVisibility(newReadOnlyCellContents);
         }
+    }
+
+
+    function getLastYearsPricingFromOffering(offering) {
+        if (!offering.history)
+            return null;
+
+        const historyKeys = Object.keys(offering.history).sort();
+        const lastYear = historyKeys[historyKeys.length - 1];
+        return offering.history[lastYear].pricing;
     }
 
     function findSitePrice(offering) {
