@@ -683,11 +683,18 @@ function simultaneousUserPricesController($scope, $q, $filter, activityLogServic
                 }
 
                 function applyPercentageIncreaseToCell() {
-                    var originalValue = parseFloat($cell.text());
-                    var newValue = (100 + percentIncrease) / 100 * originalValue;
-                    newValue = newValue.toFixed(2);
-                    $('.price', $cell).text(newValue).removeClass('no-pricing');
-                    markProductChanged(productId);
+                    offeringService.getOneOfferingForProductId(productId).then(function (offering) {
+                        var lastYearsPricingObject = getLastYearsPricingFromOffering(offering);
+                        var lastYearsPrice = (lastYearsPricingObject) ?
+                            getPriceForUsersFromPricing(lastYearsPricingObject, users) :
+                            $cell.text();
+
+                        var originalValue = parseFloat(lastYearsPrice);
+                        var newValue = (100 + percentIncrease) / 100 * originalValue;
+                        newValue = newValue.toFixed(2);
+                        $('.price', $cell).text(newValue).removeClass('no-pricing');
+                        markProductChanged(productId);
+                    });
                 }
             });
         }
@@ -703,6 +710,29 @@ function simultaneousUserPricesController($scope, $q, $filter, activityLogServic
                 }
             });
         }
+    }
+
+    function getPriceForUsersFromPricing(pricing, users) {
+        if (!pricing.su) {
+            return
+        }
+        var matchingUserPricePairs = pricing.su.filter(function (p) {
+            return p.users === users;
+        });
+
+        if (matchingUserPricePairs.length !== 1)
+            throw "Internal Error: Invalid offering object";
+
+        return matchingUserPricePairs[0].price;
+    }
+
+    function getLastYearsPricingFromOffering(offering) {
+        if (!offering.history)
+            return null;
+
+        const historyKeys = Object.keys(offering.history).sort();
+        const lastYear = historyKeys[historyKeys.length - 1];
+        return offering.history[lastYear].pricing;
     }
 
     function markProductChanged(productId) {
