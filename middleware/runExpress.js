@@ -247,6 +247,15 @@ function runMiddlewareServer(){
                         res.send({ error: err });
                     });
             });
+            authorizedRoute('put', '/launch-cycle-database-worker/:from/:to', carliAuth.requireStaff, function (req, res) {
+                res.send({ ok: true });
+                console.log("Sending launch cycle db worker request to master.");
+                cluster.worker.send({
+                    command: 'launchCycleDatabaseWorker',
+                    sourceCycleId: req.params.from,
+                    newCycleId: req.params.to
+                });
+            });
             authorizedRoute('put', '/cycle', carliAuth.requireStaff, function (req, res) {
                 return cycleCreation.create(req.body.newCycleData)
                     .then(function (newCycleId) {

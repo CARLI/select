@@ -101,7 +101,6 @@ function loginController ($q, $rootScope, $location, alertService, authService, 
         }
 
         function loginFailure(err) {
-            console.log( err.statusCode);
             if ( err.statusCode === 502 ) {
                 alertService.putAlert("Could not authenticate you with the system", { severity: 'danger' });
             }

@@ -37,10 +37,13 @@ function relaunchWebWorkers() {
 
 function listenForMessages() {
     Object.keys(cluster.workers).forEach(function(id) {
+        console.log("master is subscribing to messages for "+id+" workers");
         cluster.workers[id].on('message', dispatchMessage);
     });
 
     function dispatchMessage(message) {
+        console.log("Master got a message:");
+        console.log(message);
         if (message.command == 'launchCycleDatabaseWorker') {
             Logger.log('Master is launching cycle database worker');
             launchCycleDatabaseWorker(message.sourceCycleId, message.newCycleId);
