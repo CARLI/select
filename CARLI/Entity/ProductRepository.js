@@ -265,6 +265,7 @@ function transformProductsForNewCycle(cycle) {
     return listProducts(cycle)
         .then(copyPriceCaps)
         .then(removeVendorComments)
+        .then(prepareProductsToBeSaved)
         .then(saveProducts)
         .then(function() {
             return { ok: true };
@@ -288,6 +289,19 @@ function transformProductsForNewCycle(cycle) {
         function removeVendorCommentsFromProduct(product) {
             product.comments = '';
             return product;
+        }
+    }
+
+    function prepareProductsToBeSaved(products) {
+        return products.map(unexpandProduct);
+
+        function unexpandProduct(p) {
+            p.vendor = p.vendor.id;
+            p.cycle = p.cycle.id;
+            if (p.license)
+                p.license = p.license.id;
+
+            return p;
         }
     }
 
