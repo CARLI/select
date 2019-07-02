@@ -8,8 +8,23 @@ function browserDownloadService($window) {
 
     function browserDownload (fileName, blobType, content) {
         var blob = new Blob([ content ], { type: blobType });
-        //TODO: feature detect saveAs and try a workaround if it's missing, or at least show an error
-        $window.saveAs(blob, fileName);
+        if ($window.hasOwnProperty("saveAs") {
+            $window.saveAs(blob, fileName);
+        } else {
+            download(blob, fileName);
+        }
     }
 }
 
+function download(blob, filename) {
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(blob));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
