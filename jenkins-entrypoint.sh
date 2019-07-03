@@ -73,8 +73,8 @@ commit_version_bump() {
         git tag "browser-clients-$browserClientVersion"
         git tag "middleware-$middlewareVersion"
 
-        git push "browser-clients-$browserClientVersion"
-        git push "middleware-$middlewareVersion"
+        git push origin "browser-clients-$browserClientVersion"
+        git push origin "middleware-$middlewareVersion"
     fi
 }
 
