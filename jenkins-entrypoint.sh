@@ -18,7 +18,7 @@ bump_patch_version() {
 }
 
 bump_patch_version_in_directory() {
-    cd $1 && next_version=`bump_patch_version` && cd .. && echo ${next_version}
+    cd $1 && next_version=`bump_patch_version` && git add . && cd .. && echo ${next_version}
 }
 
 bump_middleware_version() {
@@ -64,5 +64,16 @@ push_both_runtime_images() {
     push_browser_clients_image && push_middleware_image
 }
 
-build_build_image && build_both_runtime_images && push_both_runtime_images
+commit_version_bump() {
+    git commit -m "Docker images released"
+    git push
+
+    git tag "browser-clients:$browserClientVersion"
+    git tag "middleware:$middlewareVersion"
+
+    git push "browser-clients:$browserClientVersion"
+    git push "middleware:$middlewareVersion"
+}
+
+build_build_image && build_both_runtime_images && push_both_runtime_images && commit_version_bump
 
