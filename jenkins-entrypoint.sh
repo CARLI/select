@@ -64,17 +64,16 @@ push_both_runtime_images() {
     push_browser_clients_image && push_middleware_image
 }
 
+tag_and_push () {
+    git tag "$1" && git push origin "$1"
+}
+
 commit_version_bump() {
     if [ "$GIT_BRANCH" = "origin/develop" ]; then
-        git checkout develop
-        git commit -m "Docker images released"
-        git push origin develop
-
-        git tag "browser-clients-$browserClientVersion"
-        git tag "middleware-$middlewareVersion"
-
-        git push origin "browser-clients-$browserClientVersion"
-        git push origin "middleware-$middlewareVersion"
+        git checkout develop && git commit -m "Docker images released" && git push origin develop \
+            && tag_and_push "browser-clients-$browserClientVersion" \
+            && tag_and_push "middleware-$middlewareVersion" \
+            && git checkout - && git branch -D develop
     fi
 }
 
