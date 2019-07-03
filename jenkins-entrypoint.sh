@@ -65,7 +65,7 @@ push_both_runtime_images() {
 }
 
 tag_and_push () {
-    git tag "$1" && git push origin "$1"
+    git tag -f "$1" && git push origin "$1"
 }
 
 commit_version_bump() {
