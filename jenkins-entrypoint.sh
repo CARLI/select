@@ -77,9 +77,12 @@ clean-up () {
 
 commit_version_bump() {
     if [ "$GIT_BRANCH" = "origin/develop" ]; then
-        git commit -m "Docker images released" && git push origin develop \
+        git commit -m "Docker images released" \
+            && git push origin HEAD:develop \
             && tag_and_push "browser-clients-$browserClientVersion" \
             && tag_and_push "middleware-$middlewareVersion"
+    else
+        true
     fi
 }
 
