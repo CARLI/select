@@ -66,14 +66,15 @@ push_both_runtime_images() {
 
 commit_version_bump() {
     git commit -m "Docker images released"
-    git push
+    git push origin HEAD:${GIT_BRANCH}
 
-    git tag "browser-clients:$browserClientVersion"
-    git tag "middleware:$middlewareVersion"
+    git tag "browser-clients-$browserClientVersion"
+    git tag "middleware-$middlewareVersion"
 
-    git push "browser-clients:$browserClientVersion"
-    git push "middleware:$middlewareVersion"
+    git push "browser-clients-$browserClientVersion"
+    git push "middleware-$middlewareVersion"
 }
 
 build_build_image && build_both_runtime_images && push_both_runtime_images && commit_version_bump
 
+env
