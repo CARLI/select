@@ -8,7 +8,7 @@ function browserDownloadService($window) {
 
     function browserDownload (fileName, blobType, content) {
         var blob = new Blob([ content ], { type: blobType });
-        if ($window.hasOwnProperty("saveAs") {
+        if ($window.hasOwnProperty("saveAs")) {
             $window.saveAs(blob, fileName);
         } else {
             download(blob, fileName);
