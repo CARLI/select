@@ -65,16 +65,17 @@ push_both_runtime_images() {
 }
 
 commit_version_bump() {
-    git commit -m "Docker images released"
-    git push origin HEAD:${GIT_BRANCH}
+    if [ "$GIT_BRANCH" = "origin/develop" ]; then
+        git checkout develop
+        git commit -m "Docker images released"
+        git push origin develop
 
-    git tag "browser-clients-$browserClientVersion"
-    git tag "middleware-$middlewareVersion"
+        git tag "browser-clients-$browserClientVersion"
+        git tag "middleware-$middlewareVersion"
 
-    git push "browser-clients-$browserClientVersion"
-    git push "middleware-$middlewareVersion"
+        git push "browser-clients-$browserClientVersion"
+        git push "middleware-$middlewareVersion"
+    fi
 }
 
 build_build_image && build_both_runtime_images && push_both_runtime_images && commit_version_bump
-
-env
