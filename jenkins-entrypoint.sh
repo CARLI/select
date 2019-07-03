@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+
+working_branch="build"
+
 if [ -z "${CARLI_DOCKER_REGISTRY}" ]; then
     export CARLI_DOCKER_REGISTRY="carli-select-integration.pixodev.net:5000"
 fi
@@ -69,12 +72,12 @@ tag_and_push () {
 }
 
 clean-up () {
-    git checkout --detach && git branch -D develop
+    git checkout --detach && git branch -D ${working_branch}
 }
 
 commit_version_bump() {
     if [ "$GIT_BRANCH" = "origin/develop" ]; then
-        git checkout develop && git pull && git commit -m "Docker images released" && git push origin develop \
+        git commit -m "Docker images released" && git push origin develop \
             && tag_and_push "browser-clients-$browserClientVersion" \
             && tag_and_push "middleware-$middlewareVersion"
     fi
@@ -82,4 +85,5 @@ commit_version_bump() {
 
 trap clean-up EXIT
 
+git checkout -b ${working_branch} &&
 build_build_image && build_both_runtime_images && push_both_runtime_images && commit_version_bump
