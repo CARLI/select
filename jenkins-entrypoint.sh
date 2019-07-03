@@ -68,13 +68,18 @@ tag_and_push () {
     git tag -f "$1" && git push origin "$1"
 }
 
+clean-up () {
+    git checkout --detach && git branch -D develop
+}
+
 commit_version_bump() {
     if [ "$GIT_BRANCH" = "origin/develop" ]; then
         git checkout develop && git commit -m "Docker images released" && git push origin develop \
             && tag_and_push "browser-clients-$browserClientVersion" \
-            && tag_and_push "middleware-$middlewareVersion" \
-            && git checkout - && git branch -D develop
+            && tag_and_push "middleware-$middlewareVersion"
     fi
 }
+
+trap clean-up EXIT
 
 build_build_image && build_both_runtime_images && push_both_runtime_images && commit_version_bump
