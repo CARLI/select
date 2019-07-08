@@ -39,6 +39,12 @@ function getDataForBannerExportForSubscriptionCycle(cycle, batchId, formatter) {
         var offeringPromises = [];
         var dataForBatch = {};
 
+        notifications.forEach(n => {
+            if (typeof n === 'undefined') {
+                console.log("Notification is undefined");
+            }
+        });
+
         notifications.forEach(gatherDataForBatch);
 
         return Q.all(offeringPromises).then(function () {
@@ -46,6 +52,11 @@ function getDataForBannerExportForSubscriptionCycle(cycle, batchId, formatter) {
         });
 
         function gatherDataForBatch(notification) {
+            if (typeof notification == "undefined") {
+                console.log("Skipping inexplicably undefined notification");
+                return;
+            }
+
             if (notification.batchId != batchId) {
                 return;
             }
@@ -188,6 +199,9 @@ function getDataForBannerExportForMembershipDues(year, batchId, formatter) {
             var ishareDetailCode = 'USIF';
 
             var notification = invoicesForBatchByLibraryId[library.id];
+            if (typeof notification === 'undefined') {
+                console.log(`Banner feed generator: Skipping ${library.name} because no invoice data is present.`)
+            }
             var dues = membershipDuesByLibraryId[library.id];
 
             dataForBatch[library.id] = {

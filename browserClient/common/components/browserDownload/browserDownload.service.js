@@ -7,19 +7,19 @@ function browserDownloadService($window) {
     };
 
     function browserDownload (fileName, blobType, content) {
-        var blob = new Blob([ content ], { type: blobType });
         if ($window.hasOwnProperty("saveAs")) {
+            var blob = new Blob([ content ], { type: blobType });
             $window.saveAs(blob, fileName);
         } else {
-            download(blob, fileName);
+            download(fileName, blobType, content);
         }
     }
 }
 
-function download(blob, filename) {
+function download(fileName, blobType, content) {
   var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(blob));
-  element.setAttribute('download', filename);
+  element.setAttribute('href', `data:${blobType},${encodeURIComponent(content)}`);
+  element.setAttribute('download', fileName);
 
   element.style.display = 'none';
   document.body.appendChild(element);
