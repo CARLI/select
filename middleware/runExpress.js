@@ -4,6 +4,7 @@ var fs = require('fs');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var expressCsv = require('express-csv-middleware');
+var morgan = require('morgan')
 var tmp = require('tmp');
 var _ = require('lodash');
 var Q = require('q');
@@ -36,6 +37,7 @@ function runMiddlewareServer(){
     launchServer();
 
     function configureMiddleware() {
+        carliMiddleware.use(morgan('dev'));
         carliMiddleware.use(corsHeaders);
         carliMiddleware.use(handleCsvUploads());
         carliMiddleware.use(bodyParser.json());
@@ -768,7 +770,6 @@ function getAuthTokenFromHeader(req) {
     }
     return null;
 }
-
 
 function corsHeaders(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");

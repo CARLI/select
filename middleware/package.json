@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "chai": "^2.0.0",
-    "chai-as-promised": "^4.2.0"
+    "chai-as-promised": "^4.2.0",
+    "morgan": "^1.9.1"
   }
 }
