@@ -62,6 +62,7 @@ COPY --from=build /carli/browserClient/build /usr/share/nginx/html/
 FROM node:8-stretch AS middleware
 
 WORKDIR /carli
+COPY --from=build /carli/bin /carli/bin
 COPY --from=build /carli/CARLI /carli/CARLI
 COPY --from=build /carli/config /carli/config
 COPY --from=build /carli/db /carli/db
