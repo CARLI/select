@@ -70,8 +70,8 @@ http {
         listen       443;
         server_name  select-vendor.carli.illinois.edu;
 
-        ssl_certificate /etc/letsencrypt/live/select-vendor.carli.illinois.edu/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/select-vendor.carli.illinois.edu/privkey.pem;
+        ssl_certificate /etc/letsencrypt/live/select-staff.carli.illinois.edu/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/select-staff.carli.illinois.edu/privkey.pem;
         include /etc/letsencrypt/options-ssl-nginx.conf;
         ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
@@ -101,8 +101,8 @@ http {
         listen       443;
         server_name  select-library.carli.illinois.edu;
 
-        ssl_certificate /etc/letsencrypt/live/select-library.carli.illinois.edu/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/select-library.carli.illinois.edu/privkey.pem;
+        ssl_certificate /etc/letsencrypt/live/select-staff.carli.illinois.edu/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/select-staff.carli.illinois.edu/privkey.pem;
         include /etc/letsencrypt/options-ssl-nginx.conf;
         ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
