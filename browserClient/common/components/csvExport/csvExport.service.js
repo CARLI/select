@@ -29,7 +29,11 @@ function csvExportService($q, $window, CarliModules, browserDownloadService){
     }
 
     function browserDownloadCsv( csvString, fileName ){
-        browserDownloadService.browserDownload(fileName, 'text/csv;charset=utf-8', csvString);
+        browserDownloadService.browserDownload(ensureFilenameHasExtension(fileName), 'text/csv;charset=utf-8', csvString);
+    }
+
+    function ensureFilenameHasExtension(fileName) {
+        return fileName.endsWith(".csv") ? fileName : fileName + ".csv";
     }
 
 }
