@@ -28,7 +28,6 @@ angular.module('common.fileUploadButton')
                     var fileInputElement = this;
                     var fileList = fileInputElement.files;
                     var fileToUpload = fileList[0];
-                    console.log(fileToUpload);
 
                     if ( fileToUpload.size > fileReader.maxFileSize ){
                         scope.$apply(function(){

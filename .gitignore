@@ -16,7 +16,6 @@
 # for the environment (node vs browser).
 # Run `grunt jsenv:node` or `grunt jsenv:browser` to manually
 # set the desired environment. Ignore that file too since it is generated.
-/config/local.json
 /config/environmentDependentModules/*.js
 
 #Vagrant
@@ -65,5 +64,4 @@ Desktop.ini
 *.bat
 .idea
 *.tmproj
-/config/secure.json
 

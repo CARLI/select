@@ -52,8 +52,8 @@ function runMiddlewareServer(){
             Logger.log('CARLI Middleware Version:' + carliMiddlewareVersion);
             Logger.log('CARLI Middleware worker ' + cluster.worker.id + ' listening at http://'+host+':'+port);
             Logger.log('CRM MYSQL config\n', crmQueries.mysqlConfig);
-            Logger.log('NOTIFICATION config\n', config.notifications);
-            Logger.log('STORE config\n', config.storeOptions);
+            Logger.log('ENVIRONMENT\n', process.env);
+            Logger.log('CONFIGURATION\n', JSON.stringify(config, null, "  "));
         });
     }
 
@@ -251,7 +251,6 @@ function runMiddlewareServer(){
             });
             authorizedRoute('put', '/launch-cycle-database-worker/:from/:to', carliAuth.requireStaff, function (req, res) {
                 res.send({ ok: true });
-                console.log("Sending launch cycle db worker request to master.");
                 cluster.worker.send({
                     command: 'launchCycleDatabaseWorker',
                     sourceCycleId: req.params.from,
