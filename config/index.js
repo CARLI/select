@@ -10,6 +10,9 @@ var storeOptionsForCycles = null;
 
 function getConfig(key) {
     const defaults = {
+        STAFF_APP_URL: "http://staff.carli.local:8080/",
+        LIBRARY_APP_URL: "http://library.carli.local:8080/",
+        VENDOR_APP_URL: "http://vendor.carli.local:8080/",
         ALERT_TIMEOUT: "10000",
         AUTH_MILLISECONDS_UNTIL_WARNING: "3000000",
         AUTH_WARNING_DURATION_MILLISECONDS: "600000",
@@ -49,7 +52,7 @@ function getConfig(key) {
 }
 
 function parseBool(value) {
-    return value === "true" ? true : false;
+    return value === "true";
 }
 function parseString(value) {
     return value;
@@ -154,13 +157,21 @@ function getSmtpSecure() {
 function getSmtpUser() {
     return parseString(getConfig("SMTP_USER"));
 }
+function getStaffAppUrl() {
+    return parseString(getConfig("STAFF_APP_URL"));
+}
+function getVendorAppUrl() {
+    return parseString(getConfig("VENDOR_APP_URL"));
+}
+function getLibraryAppUrl() {
+    return parseString(getConfig("LIBRARY_APP_URL"));
+}
 
 function loadConfiguration() {
     var config = getConfigFromEnvironment();
 
     setMiddlewareUrl();
     setCouchDbUrl();
-    setWebAppUrls();
 
     return config;
 
@@ -188,9 +199,9 @@ function loadConfiguration() {
             staffAppBrowsingContextId: getStaffAppBrowsingContextId(),
             libraryAppBrowsingContextId: getLibraryAppBrowsingContextId(),
             vendorAppBrowsingContextId: getVendorAppBrowsingContextId(),
-            staffWebAppUrl: "http://staff.carli.local/",
-            libraryWebAppUrl: "http://library.carli.local/",
-            vendorWebAppUrl: "http://vendor.carli.local/",
+            staffWebAppUrl: getStaffAppUrl(),
+            libraryWebAppUrl: getLibraryAppUrl(),
+            vendorWebAppUrl: getVendorAppUrl(),
             smtp: {
                 host: getSmtpHost(),
                 port: getSmtpPort(),
@@ -254,38 +265,7 @@ function loadConfiguration() {
     }
 
     function setWebAppUrls() {
-        if (isBrowserEnvironment()) {
-            if (locationHostnameEndsWith('.qa.pixotech.com')) {
-                config.staffWebAppUrl = "http://carli-staff.qa.pixotech.com";
-                config.libraryWebAppUrl = "http://carli-library.qa.pixotech.com";
-                config.vendorWebAppUrl = "http://carli-vendor.qa.pixotech.com";
-            } else if (locationHostnameEndsWith('-stage.carli.illinois.edu')) {
-                config.staffWebAppUrl = "http://select-staff-stage.carli.illinois.edu";
-                config.libraryWebAppUrl = "http://select-library-stage.carli.illinois.edu";
-                config.vendorWebAppUrl = "http://select-vendor-stage.carli.illinois.edu";
-            } else if (locationHostnameEndsWith('-devel.carli.illinois.edu')) {
-                config.staffWebAppUrl = "http://select-staff-devel.carli.illinois.edu";
-                config.libraryWebAppUrl = "http://select-library-devel.carli.illinois.edu";
-                config.vendorWebAppUrl = "http://select-vendor-devel.carli.illinois.edu";
-            } else if (locationHostnameEndsWith('-test.carli.illinois.edu')) {
-                config.staffWebAppUrl = "http://select-staff-test.carli.illinois.edu";
-                config.libraryWebAppUrl = "http://select-library-test.carli.illinois.edu";
-                config.vendorWebAppUrl = "http://select-vendor-test.carli.illinois.edu";
-            } else if (locationHostnameEndsWith('.carli.illinois.edu')) {
-                config.staffWebAppUrl = "http://select-staff.carli.illinois.edu";
-                config.libraryWebAppUrl = "http://select-library.carli.illinois.edu";
-                config.vendorWebAppUrl = "http://select-vendor.carli.illinois.edu";
-            } else {
-                config.staffWebAppUrl = "http://staff.carli.local:8080/";
-                config.libraryWebAppUrl = "http://library.carli.local:8080/";
-                config.vendorWebAppUrl = "http://vendor.carli.local:8080/";
-            }
-        }
     }
-}
-
-function locationHostnameEndsWith(domain) {
-    return window.location.hostname.slice(-1 * domain.length) === domain;
 }
 
 function makeLoggerGlobal() {
