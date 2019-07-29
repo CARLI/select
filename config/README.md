@@ -1,18 +1,6 @@
 # CARLI Select Configuration
 
-Configuration comes from three places, in order of precedence:
-
-1) Your local configuration, `local.json` in this directory.
-2) The environment.
-3) The default configuration, `defaults.json` in this directory.
-
-## Local config
-
-When containers are built the `local.json` is set to an empty object.
-See `local.json.template` for an example using the default conventions of
-the project.
-
-## Environment config
+Configuration comes from the environment.
 
 * Couch Configuration
     * COUCH_DB_HOST

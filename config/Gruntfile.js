@@ -2,7 +2,6 @@ var fs = require('fs');
 
 module.exports = function (grunt) {
 
-    var localConfigFile = __dirname + '/../config/local.json';
     var environmentDependentModulesDirectory = __dirname + '/environmentDependentModules';
     var environmentDependentModules = [
         'couchApp',
@@ -16,8 +15,6 @@ module.exports = function (grunt) {
     grunt.registerTask('ensure-local-config', ensureLocalConfigExists);
 
     function ensureLocalConfigExists() {
-        touch(localConfigFile);
-
         environmentDependentModules.map(getModuleFilename).forEach(touch);
     }
 
