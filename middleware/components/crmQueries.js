@@ -1,12 +1,14 @@
 var mysql = require('mysql');
 var Q = require('q');
 
+var config = require("../../config");
+
 var mysqlConfig = {
     connectionLimit: 10,
     database: "carli_crm",
-    host: process.env['CRM_MYSQL_HOST'],
-    user: process.env['CRM_MYSQL_USER'],
-    password: process.env['CRM_MYSQL_PASSWORD']
+    host: config.memberDb.host,
+    user: config.memberDb.user,
+    password: config.memberDb.password
 };
 
 var pool = mysql.createPool(mysqlConfig);
