@@ -24,7 +24,7 @@
                     | <a ng-click="vm.mapSelection('cycle', []).then(vm.loadProductsForVendors)">{{ vm.clearSelectionLabel }}</a>
                     <select id="reportCycle" multiple="multiple"
                             ng-model="vm.reportOptions.parameters.cycle"
-                            ng-options="cycle.id as cycle.name for cycle in vm.cycles | orderBy:'name':true"
+                            ng-options="cycle.id as cycle.name for cycle in vm.cycles | orderBy: ['year','name']:true"
                             ng-change="vm.loadProductsForVendors()"></select>
                 </div>
 
