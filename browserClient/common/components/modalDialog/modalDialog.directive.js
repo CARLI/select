@@ -3,7 +3,7 @@ angular.module('common.modalDialog')
         return {
             restrict: 'E',
             template: [
-                '<div class="modal fade" id="{{modalId}}" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">',
+                '<div class="modal" id="{{modalId}}" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">',
                 '    <div class="modal-dialog {{ modalClass }}">',
                 '        <div class="modal-content">',
                 '            <div class="modal-header">',

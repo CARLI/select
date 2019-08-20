@@ -4,6 +4,7 @@ angular.module('library.sections.addOneTimePurchases')
 function addOneTimePurchasesController( $q, $location, config, activityLogService, csvExportService, cycleService, emailService, offeringService, productService, userService ){
     var vm = this;
 
+    vm.agreedToTerms = false;
     vm.selectionStep = 'select';
     vm.libraryId = userService.getUser().library.id;
     vm.orderByAvailable = 'product.name';
@@ -21,6 +22,7 @@ function addOneTimePurchasesController( $q, $location, config, activityLogServic
         selectionPrice: [offeringService.getFundedSelectionPrice,'product.name']
     };
 
+    vm.agreedToTermsChanged = agreedToTermsChanged;
     vm.completeSelections = completeSelections;
     vm.computeTotalPurchasesAmount = computeTotalPurchasesAmount;
     vm.exportProductList = exportProductList;
@@ -140,7 +142,12 @@ function addOneTimePurchasesController( $q, $location, config, activityLogServic
     }
 
     function reviewSelections(){
+        $('#terms-and-conditions-modal').modal('hide');
         vm.selectionStep = 'review';
+    }
+
+    function agreedToTermsChanged(){
+        vm.agreedToTerms = !vm.agreedToTerms;
     }
 
     function completeSelections(){

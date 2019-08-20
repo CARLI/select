@@ -108,7 +108,10 @@
         </li>
         <li class="footer">
             <button class="carli-button export" ng-click="vm.exportProductList(vm.availableForPurchase)">EXPORT</button>
-            <button type="button" ng-click="vm.reviewSelections()" ng-hide="vm.userIsReadOnly()" class="carli-button primary-button arrow-right">Review</button>
+<!--            <button type="button" ng-click="vm.reviewSelections()" ng-hide="vm.userIsReadOnly()" class="carli-button primary-button arrow-right" data-toggle="modal"-->
+<!--                    data-target="#terms-and-conditions-modal">Review</button>-->
+            <button type="button" ng-hide="vm.userIsReadOnly()" class="carli-button primary-button arrow-right" data-toggle="modal"
+                    data-target="#terms-and-conditions-modal">Review</button>
         </li>
         <li class="summary-row">
             <div class="column">
@@ -214,3 +217,28 @@
         </li>
     </ul>
 </section>
+
+<modal-dialog modal-id="'terms-and-conditions-modal'" modal-title="'Terms and Conditions'">
+    <div class="modal-body comment-text">
+        <p>
+            By selecting database(s) the library acknowledges that they are aware of and agree to comply with the
+                terms and conditions of the vendor agreement governing use of the product. A thumbnail sketch of the
+                usage terms is available at
+                <a href="https://www.carli.illinois.edu/products-services/eres/contract-directory">https://www.carli.illinois.edu/products-services/eres/contract-directory</a>.
+                Redacted version of the license agreement are available in the selection system. Questions about license
+                agreements should be directed to support@carlli.illinois.edu.
+        </p>
+
+        <label>
+            <span>I agree:</span>
+            <input type="checkbox" ng-click="vm.agreedToTermsChanged()" ng-checked="vm.agreedToTerms" />
+        </label>
+
+    </div>
+
+    <div class="modal-footer">
+        <button class="carli-button cancel-button" data-dismiss="modal">Cancel</button>
+        <button class="carli-button save-button" ng-disabled="!vm.agreedToTerms"
+                ng-click="vm.reviewSelections()">Continue</button>
+    </div>
+</modal-dialog>
