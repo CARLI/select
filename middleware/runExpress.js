@@ -588,6 +588,11 @@ function runMiddlewareServer(){
                     .then(sendJsonResult(res))
                     .catch(sendError(res));
             });
+            authorizedRoute('get', '/reports/ip-ranges/:parameters/:columns', carliAuth.requireStaff, function (req, res) {
+                reports.ipRangesReport(req.params.parameters, req.params.columns)
+                    .then(sendJsonResult(res))
+                    .catch(sendError(res));
+            });
         }
         function defineRoutesForTheDrupalSite() {
             carliMiddleware.get('/public/list-all-products', function (req, res) {

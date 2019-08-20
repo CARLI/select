@@ -15,7 +15,8 @@ function reportDataService( $q, CarliModules ){
         'List all Products for Vendor': reportsDataMiddleware.listProductsForVendorReport,
         'Contracts': reportsDataMiddleware.contractsReport,
         'Product Names': reportsDataMiddleware.productNamesReport,
-        'List Libraries': reportsDataMiddleware.listLibrariesReport
+        'List Libraries': reportsDataMiddleware.listLibrariesReport,
+        'IP Ranges': reportsDataMiddleware.ipRangesReport
     };
 
     return {

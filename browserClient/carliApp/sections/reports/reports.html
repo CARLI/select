@@ -18,6 +18,7 @@
 
         <form id="reports-form" name="reports" class="report-controls" ng-if="vm.selectedReport">
             <div class="report-parameters">
+
                 <div class="cycle" ng-if="vm.selectedReport.controls.cycle">
                     <label for="reportCycle">Select Cycle(s)</label>
                     <a ng-click="vm.mapSelection('cycle', vm.cycles).then(vm.loadProductsForVendors)">{{ vm.selectAllLabel }}</a>

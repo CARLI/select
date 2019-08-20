@@ -70,6 +70,13 @@ function listLibrariesReport(reportParameters, reportColumns) {
     });
 }
 
+function ipRangesReport(reportParameters, reportColumns) {
+    return middlewareRequest({
+        path: '/reports/ip-ranges/' + reportQuery(reportParameters, reportColumns),
+        method: 'get'
+    });
+}
+
 module.exports = {
     allPricingReport: allPricingReport,
     selectedProductsReport: selectedProductsReport,
@@ -80,7 +87,8 @@ module.exports = {
     listProductsForVendorReport: listProductsForVendorReport,
     contractsReport: contractsReport,
     productNamesReport: productNamesReport,
-    listLibrariesReport: listLibrariesReport
+    listLibrariesReport: listLibrariesReport,
+    ipRangesReport: ipRangesReport
 };
 
 

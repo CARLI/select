@@ -121,6 +121,16 @@ function reportsController( $q, csvExportService, cycleService, libraryService, 
                 'isIshareMember',
                 'isActive'
             ]
+        },
+        {
+            name: 'IP Ranges',
+            controls: {
+                cycle: 'all',
+                vendor: 'all',
+                product: 'all',
+                library: 'all'
+            },
+            optionalColumns: []
         }
     ];
 

@@ -17,6 +17,8 @@ var columnName = {
     detailCode: 'Detail Code',
     email: 'Email',
     fte: 'FTE',
+    invoiceNumber: 'Invoice Number',
+    ipRanges: 'IP Ranges',
     institutionType: 'Institution Type',
     institutionYears: 'Years',
     isActive: 'Active',
@@ -39,6 +41,7 @@ var columnName = {
     totalPriceFunded: 'Total Price',
     type: 'Type',
     vendor: 'Vendor',
+    vendorPrice: 'Vendor Price',
     zip: 'Zip'
 };
 
@@ -348,7 +351,7 @@ function statisticsReport( reportParameters, userSelectedColumns ){
 }
 
 function selectionsByVendorReport( reportParameters, userSelectedColumns ){
-    var defaultReportColumns = ['cycle', 'vendor', 'license', 'product', 'library', 'selection', 'priceFull', 'annualAccessFee'];
+    var defaultReportColumns = ['cycle', 'vendor', 'license', 'product', 'library', 'selection', 'priceFull', 'annualAccessFee', 'vendorPrice', 'invoiceNumber'];
     var vendorsParameter = getVendorParameter(reportParameters) || [];
     var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
     var cyclesToQuery = getCycleParameter(reportParameters);
@@ -361,6 +364,8 @@ function selectionsByVendorReport( reportParameters, userSelectedColumns ){
         .catch(stackTraceError);
 
     function transformOfferingToSelectionsByVendorResultRow( offering ){
+        console.log('offering: ');
+        console.log(offering);
         var row = {
             cycle: offering.cycle.name,
             license: licenseName(offering),
@@ -369,7 +374,9 @@ function selectionsByVendorReport( reportParameters, userSelectedColumns ){
             library: offering.library.name,
             selection: offering.selection.users,
             priceFull: offeringRepository.getFullSelectionPrice(offering),
-            annualAccessFee: offering.oneTimePurchaseAnnualAccessFee
+            annualAccessFee: offering.oneTimePurchaseAnnualAccessFee,
+            vendorPrice: offering.selection.price,
+            invoiceNumber: offering.invoiceNumber
         };
 
         if ( isEnabled('detailCode') ){
@@ -610,6 +617,126 @@ function listLibrariesReport( reportParameters, userSelectedColumns ){
 
     function isEnabled(columnName){
         return columns.indexOf(columnName) !== -1;
+    }
+}
+
+function ipRangesReport(reportParameters, userSelectedColumns){
+    var defaultReportColumns = ['cycle', 'vendor', 'product', 'library', 'ipRanges'];
+    var columns = defaultReportColumns.concat(enabledUserColumns(userSelectedColumns));
+    var cyclesToQuery = getCycleParameter(reportParameters) || [];
+    var vendorsParameter = getVendorParameter(reportParameters) || [];
+    var productsParameter = getProductParameter(reportParameters) || [];
+    var librariesParameter = getLibraryParameter(reportParameters) || [];
+
+    var productsToInclude = productsParameter || [];
+    var shouldFilterIncludedProducts = false;
+    var shouldFilterIncludedLibraries = librariesParameter.length;
+
+    var suPricingColumns = {};
+
+    console.log('ipRangesReport for ' + cyclesToQuery.length + ' cycles, ' + productsToInclude.length + ' products, and ' + librariesParameter.length + ' libraries');
+
+    return cycleRepository.getCyclesById(cyclesToQuery)
+        .then(decideWhichProductsToInclude)
+        .then(getOfferingsForAllCycles)
+        .then(filterResultsForProductsToInclude)
+        .then(combineCycleResultsForReport(transformOfferingToIpRangesResultRow))
+        .then(logData)
+        .then(function(data){
+            var allColumns = columns.concat(Object.keys(suPricingColumns));
+            return returnReportResults(allColumns)(data);
+        })
+        .catch(stackTraceError);
+
+    function decideWhichProductsToInclude(cycles) {
+        if (productsParameter.length) {
+            return Q(productsParameter)
+                .then(saveProductsToInclude)
+                .thenResolve(cycles);
+        }
+        else {
+            return Q.all(cycles.map(getProductsForVendorsForCycle))
+                .then(reduceToListOfUniqueProducts)
+                .then(saveProductsToInclude)
+                .thenResolve(cycles);
+
+            function getProductsForVendorsForCycle(cycle) {
+                return productRepository.listActiveProductIdsForVendorIds(vendorsParameter, cycle);
+            }
+
+            function reduceToListOfUniqueProducts(arrayOfProductIdsPerCycle){
+                return _.uniq(_.flattenDeep(arrayOfProductIdsPerCycle));
+            }
+        }
+
+        function saveProductsToInclude(listOfProductIds) {
+            productsToInclude = listOfProductIds;
+            shouldFilterIncludedProducts = productsToInclude.length;
+        }
+    }
+
+    function getOfferingsForAllCycles(listOfCycles) {
+
+        if (shouldFilterIncludedLibraries) {
+            return Q.all(listOfCycles.map(getOfferingsForCycleForLibraries));
+        }
+        else {
+            return Q.all(listOfCycles.map(getOfferingsForCycle));
+        }
+
+        function getOfferingsForCycleForLibraries(cycle) {
+            return offeringRepository.listOfferingsForLibraryIdUnexpanded(librariesParameter, cycle)
+                .then(fillInCycle(cycle))
+                .then(fillInProducts(cycle))
+                .then(fillInLibraries)
+                .then(attachVendorToOfferings)
+                .then(filterOfferingsForActiveEntities);
+        }
+
+        function getOfferingsForCycle(cycle) {
+            return offeringRepository.listOfferingsUnexpanded(cycle)
+                .then(fillInCycle(cycle))
+                .then(fillInProducts(cycle))
+                .then(fillInLibraries)
+                .then(attachVendorToOfferings)
+                .then(filterOfferingsForActiveEntities);
+        }
+
+        function filterOfferingsForActiveEntities(offerings) {
+            return offerings.filter(function(offering) {
+                return offering.product.isActive &&
+                    offering.library.isActive &&
+                    offering.vendor.isActive;
+            });
+        }
+    }
+
+    function filterResultsForProductsToInclude(listOfListOfOfferingsPerCycle) {
+        if ( shouldFilterIncludedProducts ) {
+            return listOfListOfOfferingsPerCycle.map(filterOfferingsForIncludedProducts);
+        }
+        else {
+            return listOfListOfOfferingsPerCycle;
+        }
+
+        function filterOfferingsForIncludedProducts(listOfOfferings) {
+            return listOfOfferings.filter(function (offering) {
+                var productId = offering.product.id || offering.product;
+                return productsToInclude.indexOf(productId) >= 0;
+            });
+        }
+    }
+
+    function transformOfferingToIpRangesResultRow(offering) {
+        var row = {
+            cycle: offering.cycle.name,
+            vendor: offering.vendor.name,
+            product: offering.product.name,
+            library: offering.library.name,
+            ipRanges: offering.library.ipAddresses
+        };
+
+        return row;
     }
 }
 
@@ -903,5 +1030,6 @@ module.exports = {
     listProductsForVendorReport: listProductsForVendorReport,
     contractsReport: contractsReport,
     productNamesReport: productNamesReport,
-    listLibrariesReport: listLibrariesReport
+    listLibrariesReport: listLibrariesReport,
+    ipRangesReport: ipRangesReport
 };
