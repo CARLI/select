@@ -5,7 +5,7 @@
 
     <section class="content list-content" cg-busy="vm.cyclesLoading">
         <ul class="zebra-table">
-            <li ng-repeat="cycle in vm.activeCycles track by cycle.id">
+            <li ng-repeat="cycle in vm.activeCycles | orderBy:['-year','name']">
                 <div class="column">
                     <a ng-href="/subscription/{{ cycle.id }}">{{ cycle.name }}</a>
                 </div>
