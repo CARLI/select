@@ -1,0 +1,140 @@
+# Deploying CARLI Select 
+
+## Deployment process
+
+CARLI Select is composed of two custom docker containers which must be rebuilt before deploying.
+1) `carli-select-integration.pixodev.net:5000/carli-select/middleware`
+2) `carli-select-integration.pixodev.net:5000/carli-select/browser-clients`
+
+### 1) Build new docker images and push them to the private registry.
+
+Simply run [this Jenkin's job](https://jenkins.pixotech.com/job/CARLI/job/carli-select/)
+
+Details:
+* All of the work is done by [./jenkins-entrypoint.sh](`../jenkins-entrypoint.sh`)
+    * Aside: Jenkins itself is not an important part of this process, this script can just as easily be run manually.
+* This job does not trigger automatically so it should be run manually as the first step of a deployment.
+* The docker image tags are based on the npm module version numbers in the `package.json` file of each deployed module.
+* The script will increment those numbers, commit, tag, and push the change back to Git.
+* The script will push the resulting images to a private docker registry, which runs on the same ec2 instances
+  that Jenkin's uses as an executor.
+
+
+### 2) Update the target instance to use the new versions.
+
+Once the new images have been built and pushed to the registry, the instance being updated just needs to be told
+to use them.
+
+The staging and production deployments are managed with [Portainer](https://portainer.pixo.codes).
+
+1) From the home screen of portainer, choose the CARLI Select endpoint from the list of available endpoints.
+
+    ![Choose the "CARLI Select" endpoint](./assets/portainer-carli-endpoint.png)
+
+2) The navigate to *Stacks*, and select the appropriate instance from the list, e.g. `select-staging`.
+
+    ![Navigate to the desired instance](./assets/portainer-stacks-navigation.png)
+
+3) Then select the *Editor* tab
+
+    ![Select the "Editor" tab](./assets/portainer-stack-details.png)
+    
+4) On this screen you will see the full contents of the docker compose file that defines the instance, and underneath
+   that all of the environment variables that define the configuration of this instance.
+   * Two of those variables are `MIDDLEWARE_VERSION` and `BROWSER_CLIENTS_VERSION`.
+   * Update those variables to the new versions you just built.
+     
+5) Once your changes are complete, click "Update the Stack".
+
+    ![Click "Update the Stack"](./assets/portainer-update-stack.png)
+    
+# Reference
+    
+Below is the full text of the compose file used (from the staging instance, 2019-08-25)
+
+```yaml
+version: '3.6'
+services:
+  web:
+    image: 'carli-select-integration.pixodev.net:5000/carli-select/browser-clients:${BROWSER_CLIENTS_VERSION}'
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - select
+    volumes:
+      - /carli/certbot/conf:/etc/letsencrypt
+      - /carli/certbot/www:/var/www/certbot
+      - /carli/nginx.conf:/etc/nginx/nginx.conf
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.app == carli-select
+          - node.labels.environment == staging
+
+  certbot:
+    image: certbot/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    networks:
+      - select
+    volumes:
+      - /carli/certbot/conf:/etc/letsencrypt
+      - /carli/certbot/www:/var/www/certbot
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.app == carli-select
+          - node.labels.environment == staging
+
+  db:
+    image: 'couchdb:1.6.1'
+    networks:
+      - select
+    ports:
+      - 5984:5984
+    volumes:
+      - /carli/db:/usr/local/var/lib/couchdb
+      - /carli/etc:/usr/local/etc/couchdb
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.app == carli-select
+          - node.labels.environment == staging
+
+  middleware:
+    image: 'carli-select-integration.pixodev.net:5000/carli-select/middleware:${MIDDLEWARE_VERSION}'
+    networks:
+      - select
+    volumes:
+      - /carli/var/local/carli:/var/local/carli
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.app == carli-select
+          - node.labels.environment == staging
+    environment:
+      - COUCH_DB_URL_SCHEME=$COUCH_DB_URL_SCHEME
+      - COUCH_DB_USER=$COUCH_DB_USER
+      - COUCH_DB_PASSWORD=$COUCH_DB_PASSWORD
+      - COUCH_DB_HOST=$COUCH_DB_HOST
+      - CRM_MYSQL_HOST=$CRM_MYSQL_HOST
+      - CRM_MYSQL_USER=$CRM_MYSQL_USER
+      - CRM_MYSQL_PASSWORD=$CRM_MYSQL_PASSWORD
+      - SMTP_HOST=$SMTP_HOST
+      - SMTP_PORT=$SMTP_PORT
+      - SMTP_SECURE=$SMTP_SECURE
+      - SMTP_IGNORE_TLS=$SMTP_IGNORE_TLS
+      - CARLI_SUPPORT_EMAIL=$CARLI_SUPPORT_EMAIL
+      - CARLI_LISTSERVE_EMAIL=$CARLI_LISTSERVE_EMAIL
+      - NOTIFICATIONS_OVERRIDE_TO=$NOTIFICATIONS_OVERRIDE_TO
+
+networks:
+  select:
+    driver: overlay
+    attachable: true
+```
