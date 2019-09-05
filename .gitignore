@@ -1,6 +1,7 @@
 /resources
 
 .env
+/tmp
 
 # Ignore Schema Browser build products
 /schemas/browser/*.json

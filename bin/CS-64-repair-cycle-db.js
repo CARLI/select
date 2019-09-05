@@ -3,6 +3,7 @@
 const cli = require('../CARLI/CommandLine');
 const cycleRepository = require('../CARLI/Entity/CycleRepository');
 const productRepository = require('../CARLI/Entity/ProductRepository');
+const couchUtils = require('../CARLI/Store/CouchDb/Utils')();
 
 const CURRENT_CYCLE_ID = "4040639b-6fac-4052-a429-a45683665715"; // Calendar Year 2020
 const PREVIOUS_CYCLE_ID = "6dd98646-79ca-4fb0-8a03-46c79b87be8c"; // Calendar Year 2019
@@ -38,18 +39,21 @@ async function repairCycleDb(currentCycleId, previousCycleId) {
             if (previousProduct.hasOwnProperty('vendor') && previousProduct.hasOwnProperty('license')) {
                 currentProduct.vendor = previousProduct.vendor;
                 currentProduct.license = previousProduct.license;
-                repaired.push(productId);
+                repaired.push(currentProduct);
             } else {
                 skipped.push(productId);
             }
         }
-
     });
 
+    const couchResponse = couchUtils.bulkUpdateDocuments(currentCycle.getDatabaseName(), repaired);
+
     console.log(`Ignored ${ok.length} ok products`);
-    console.log(`Repaired ${repaired.length} products`);
     console.log(`Skipped ${missingFromPreviousCycle.length} products missing from ${previousCycle.name}`);
     console.log(`Skipped ${skipped.length} products missing data`);
+    console.log(`Repaired ${repaired.length} products`);
+    console.log('Couch Response:');
+    console.log(couchResponse);
 }
 
 function groupById(list) {
