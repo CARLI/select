@@ -61,6 +61,11 @@ function loadProduct( productId, cycle ){
     return deferred.promise;
 }
 
+function listProductsUnexpanded(cycle){
+    setCycle(cycle);
+    return ProductRepository.list(cycle.getDatabaseName());
+}
+
 function listActiveProductsUnexpanded(cycle){
     setCycle(cycle);
     return ProductRepository.list(cycle.getDatabaseName())
@@ -422,6 +427,7 @@ module.exports = {
     list: listProducts,
     load: loadProduct,
     listActiveProductsUnexpanded: listActiveProductsUnexpanded,
+    listProductsUnexpanded: listProductsUnexpanded,
     listAvailableOneTimePurchaseProducts: listAvailableOneTimePurchaseProducts,
     listProductsForLicenseId: listProductsForLicenseId,
     listProductsForVendorId: listProductsForVendorId,

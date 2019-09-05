@@ -86,7 +86,15 @@ commit_version_bump() {
     fi
 }
 
-trap clean-up EXIT
 
-git checkout -b ${working_branch} &&
-build_build_image && build_both_runtime_images && push_both_runtime_images && commit_version_bump
+main() {
+    trap clean-up EXIT
+
+    git checkout -b ${working_branch} \
+        && build_build_image \
+        && build_both_runtime_images \
+        && push_both_runtime_images \
+        && commit_version_bump
+}
+
+[[ "${BASH_SOURCE[0]}" != "${0}" ]] || main
