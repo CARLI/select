@@ -7,7 +7,6 @@ var config = require('../config');
 var couchApp = require('../middleware/components/couchApp');
 var cycleRepository = require('../CARLI/Entity/CycleRepository');
 var cycleRepositoryForVendor = require('../CARLI/Entity/CycleRepositoryForVendor');
-var dbInfo = require('./databaseInfo');
 var userRepository = require('../CARLI/Entity/UserRepository');
 var vendorRepository = require('../CARLI/Entity/VendorRepository');
 var storeOptions = config.storeOptions;
@@ -177,7 +176,7 @@ function addSecurityDocAdminOnly(dbName) {
 }
 
 function deployLocalAppDesignDoc() {
-    return deployAppDesignDoc(dbInfo.local);
+    throw new Error("missing local db info");
 }
 
 function deployAppDesignDoc(instance) {

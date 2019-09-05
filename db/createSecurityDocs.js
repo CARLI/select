@@ -1,9 +1,8 @@
 var Q = require('q');
 
 var couchUtils = require('../CARLI/Store/CouchDb/Utils')();
-var dbInfo = require('./databaseInfo');
 
-var couchBaseUrl = dbInfo.local.baseUrl;
+throw new Error("Missing couch base URL");
 
 couchUtils.couchRequest(couchBaseUrl + '/_all_dbs')
     .then(addSecurityDocs);
