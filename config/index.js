@@ -8,6 +8,11 @@ makeLoggerGlobal();
 
 var storeOptionsForCycles = null;
 
+const browserConfigBlacklist = [ "CRM_MYSQL_PASSWORD", "COUCH_DB_PASSWORD", "SMTP_PASSWORD" ];
+function isConfigSafeToExposeToWebBrowser(key) {
+    return browserConfigBlacklist.indexOf(key) === -1;
+}
+
 function getConfig(key) {
     const defaults = {
         STAFF_APP_URL: "http://staff.carli.local:8080/",
@@ -263,9 +268,6 @@ function loadConfiguration() {
             config.storeOptions.couchDbUrl = l.protocol + '//' + l.host + '/db';
         }
     }
-
-    function setWebAppUrls() {
-    }
 }
 
 function makeLoggerGlobal() {
@@ -304,6 +306,9 @@ config.getStoreOptionsForCycles = function () {
 config.getAuthTimeoutDuration = function () {
     return config.authMillisecondsUntilWarningAppears + config.authWarningDurationInMilliseconds;
 };
+
+config.getConfig = getConfig;
+config.isConfigSafeToExposeToWebBrowser = isConfigSafeToExposeToWebBrowser;
 
 if (isBrowserEnvironment())
     window.CARLI_CONFIG = JSON.stringify(config, null, "  ");
