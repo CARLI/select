@@ -53,7 +53,8 @@ RUN grunt jsenv:node && grunt subdir-grunt:browserClient:build
 # Browser Clients Runtime
 FROM nginx:1.15.2-alpine AS browser-clients
 
-COPY ./docker/nginx.conf.prod /etc/nginx/nginx.conf
+# A specific nginx.conf is mandatory but varies from deployment to deployment
+# and mounted into the container at runtime.
 COPY --from=build /carli/browserClient/build /usr/share/nginx/html/
 
 
