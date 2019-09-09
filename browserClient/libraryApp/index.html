@@ -36,8 +36,8 @@
 
         <header library-header role="banner"></header>
 
-        <div ng-if="!configLoaded">
-            Please wait ...
+        <div ng-if="!configLoaded" class="container">
+            <h2>Please wait...</h2>
         </div>
         <div ng-if="configLoaded">
             <nav ng-if="isLoggedIn" nav-bar role="navigation" aria-label="main navigation"></nav>
