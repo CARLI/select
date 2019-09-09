@@ -85,12 +85,7 @@ function getNotificationsFrom() {
     return parseString(getConfig("NOTIFICATIONS_FROM"));
 }
 function getMaintenanceModeEnabled() {
-    const raw = getConfig("MAINTENANCE_MODE_ENABLED");
-    const parsed = parseBool(raw);
-    console.log(`Maintenance mode enabled? raw = ${raw} (${typeof raw}), parsed = ${parsed} (${typeof parsed})`);
-    return parsed;
-
-    // return parseBool(getConfig("MAINTENANCE_MODE_ENABLED"));
+    return parseBool(getConfig("MAINTENANCE_MODE_ENABLED"));
 }
 function getMaintenanceModeHeading() {
     return parseString(getConfig("MAINTENANCE_MODE_HEADING"));

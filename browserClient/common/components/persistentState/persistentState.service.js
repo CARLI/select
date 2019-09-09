@@ -42,10 +42,8 @@ function persistentState($window) {
     }
 
     function saveStateToStorage() {
-        console.log('saving state to storage', state);
-        if (state) {
+        if (state)
             storage[STORAGE_KEY] = angular.toJson(state);
-        }
     }
 
     function setState(propertyName, value) {
