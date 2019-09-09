@@ -36,16 +36,19 @@
 
         <header library-header role="banner"></header>
 
-        <div>
+        <div ng-if="!configLoaded" class="container">
+            <h2>Please wait...</h2>
+        </div>
+        <div ng-if="configLoaded">
             <nav ng-if="isLoggedIn" nav-bar role="navigation" aria-label="main navigation"></nav>
             <alerts></alerts>
             <main role="main">
                 <div ng-view role="application"></div>
             </main>
-        </div>
 
-        <ask-carli-form></ask-carli-form>
-        <auth-timeout-alert></auth-timeout-alert>
+            <ask-carli-form></ask-carli-form>
+            <auth-timeout-alert></auth-timeout-alert>
+        </div>
 
         <% scripts.forEach( function ( file ) { %>
             <script type="text/javascript" src="/<%= file %>"></script>

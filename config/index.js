@@ -8,6 +8,11 @@ makeLoggerGlobal();
 
 var storeOptionsForCycles = null;
 
+const browserConfigBlacklist = [ "CRM_MYSQL_PASSWORD", "COUCH_DB_PASSWORD", "SMTP_PASSWORD" ];
+function isConfigSafeToExposeToWebBrowser(key) {
+    return browserConfigBlacklist.indexOf(key) === -1;
+}
+
 function getConfig(key) {
     const defaults = {
         STAFF_APP_URL: "http://staff.carli.local:8080/",
@@ -80,7 +85,12 @@ function getNotificationsFrom() {
     return parseString(getConfig("NOTIFICATIONS_FROM"));
 }
 function getMaintenanceModeEnabled() {
-    return parseBool(getConfig("MAINTENANCE_MODE_ENABLED"));
+    const raw = getConfig("MAINTENANCE_MODE_ENABLED");
+    const parsed = parseBool(raw);
+    console.log(`Maintenance mode enabled? raw = ${raw} (${typeof raw}), parsed = ${parsed} (${typeof parsed})`);
+    return parsed;
+
+    // return parseBool(getConfig("MAINTENANCE_MODE_ENABLED"));
 }
 function getMaintenanceModeHeading() {
     return parseString(getConfig("MAINTENANCE_MODE_HEADING"));
@@ -263,9 +273,6 @@ function loadConfiguration() {
             config.storeOptions.couchDbUrl = l.protocol + '//' + l.host + '/db';
         }
     }
-
-    function setWebAppUrls() {
-    }
 }
 
 function makeLoggerGlobal() {
@@ -304,6 +311,30 @@ config.getStoreOptionsForCycles = function () {
 config.getAuthTimeoutDuration = function () {
     return config.authMillisecondsUntilWarningAppears + config.authWarningDurationInMilliseconds;
 };
+
+config.isConfigSafeToExposeToWebBrowser = isConfigSafeToExposeToWebBrowser;
+
+const getLegacyValue = (key) => {
+    const lookupTable = {
+        'ALERT_TIMEOUT': config.alertTimeout,
+        'AUTH_MILLISECONDS_UNTIL_WARNING': config.authMillisecondsUntilWarningAppears,
+        'AUTH_WARNING_DURATION_MILLISECONDS': config.authWarningDurationInMilliseconds,
+        'CARLI_LISTSERVE_EMAIL': config.notifications.carliListServe,
+        'MAINTENANCE_MODE_ENABLED': config.maintenanceMode.enabled,
+        'MAINTENANCE_MODE_HEADING': config.maintenanceMode.heading,
+        'MAINTENANCE_MODE_DETAIL': config.maintenanceMode.detail,
+        'ONE_TIME_PURCHASE_CYCLE_DOC_ID': config.oneTimePurchaseProductsCycleDocId,
+        'STAFF_APP_BROWSING_CONTEXT_ID': config.staffAppBrowsingContextId,
+        'LIBRARY_APP_BROWSING_CONTEXT_ID': config.libraryAppBrowsingContextId,
+        'VENDOR_APP_BROWSING_CONTEXT_ID': config.vendorAppBrowsingContextId,
+        'STAFF_APP_URL': config.staffWebAppUrl,
+        'LIBRARY_APP_URL': config.libraryWebAppUrl,
+        'VENDOR_APP_URL': config.vendorWebAppUrl,
+    };
+
+    return lookupTable[key];
+};
+config.getValue = getLegacyValue;
 
 if (isBrowserEnvironment())
     window.CARLI_CONFIG = JSON.stringify(config, null, "  ");

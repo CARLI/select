@@ -27,7 +27,7 @@ angular.module('carli.app', [
     .config(function ($locationProvider) {
         $locationProvider.html5Mode(true);
     })
-    .run(function (authService, config) {
+    .run(function (authService) {
         if (authService.isRouteProtected()) {
             authService.redirectToLogin();
         }
@@ -36,6 +36,10 @@ angular.module('carli.app', [
         if ($rootScope.isLoggedIn) {
             cycleService.initCurrentCycle();
         }
+    })
+    .run(function ($rootScope, config) {
+        return config.loadConfigFromMiddleware()
+            .then(() => $rootScope.configLoaded = true);
     })
     .value('cgBusyDefaults', {
         //message:'Loading Stuff',

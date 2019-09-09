@@ -28,6 +28,7 @@ var vendorReportCsv = require('./components/csv/vendorReport');
 var vendorSpecificProductQueries = require('./components/vendorSpecificProductQueries');
 var publicApi = require('./components/public');
 var restrictedApi = require('./components/restrictedApi');
+var configApiComponent = require('./components/config');
 
 function runMiddlewareServer(){
     var carliMiddleware = express();
@@ -128,6 +129,7 @@ function runMiddlewareServer(){
         defineRoutesForReports();
         defineRoutesForTheDrupalSite();
         defineRoutesForRestrictedApi();
+        defineRoutesForConfigurationService();
 
         function defineRoutesForAuthentication() {
             carliMiddleware.post('/login', function (req, res) {
@@ -716,6 +718,14 @@ function runMiddlewareServer(){
                     return '';
                 return item.toString().match(/[\s,"]/) ? '"' + item.replace(/"/g, '""') + '"' : item
             }
+        }
+
+        function defineRoutesForConfigurationService() {
+            carliMiddleware.get('/get-config/:key', function (req, res) {
+                return configApiComponent.getConfig(req.params.key)
+                    .then(sendJsonResult(res))
+                    .catch(sendError(res));
+           });
         }
     }
 }

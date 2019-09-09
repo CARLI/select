@@ -1,7 +1,7 @@
 angular.module('carli.userMenu')
 .controller('userMenuController', userMenuController);
 
-function userMenuController( $interval, authService, notificationService, authTimeoutService ){
+function userMenuController( $interval, authService ){
     var vm = this;
 
     vm.userName = '';

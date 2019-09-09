@@ -33,14 +33,21 @@
         <!--[if lte IE 9]>
         <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <header carli-header role="banner"></header>
-        <nav ng-if="isLoggedIn" nav-bar role="navigation" aria-label="main navigation"></nav>
-        <alerts></alerts>
-        <main role="main">
-            <div ng-view role="application"></div>
-        </main>
 
-        <auth-timeout-alert ng-if="isLoggedIn"></auth-timeout-alert>
+        <header carli-header role="banner"></header>
+
+        <div ng-if="!configLoaded" class="container">
+            <h2>Please wait...</h2>
+        </div>
+        <div ng-if="configLoaded">
+            <nav ng-if="isLoggedIn" nav-bar role="navigation" aria-label="main navigation"></nav>
+            <alerts></alerts>
+            <main role="main">
+                <div ng-view role="application"></div>
+            </main>
+
+            <auth-timeout-alert ng-if="isLoggedIn"></auth-timeout-alert>
+        </div>
 
         <% scripts.forEach( function ( file ) { %>
             <script type="text/javascript" src="/<%= file %>"></script>

@@ -11,7 +11,7 @@ function authTimeoutService($timeout, config) {
 
     var currentState = timeoutStateDefault;
 
-    activate();
+    config.waitForConfigToLoad().then(activate);
 
     return {
         timeoutStateWarningPeriod: timeoutStateWarningPeriod,

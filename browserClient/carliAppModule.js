@@ -7,7 +7,7 @@ module.exports = {
     AuthMiddleware: require('../middleware/browserAdapters/auth'),
     Banner: require('../CARLI/Banner'),
     CouchDbStore: require('../CARLI/Store/CouchDb/Store'),
-    config: require('../config'),
+    config: require('../middleware/browserAdapters/config'),
     Csv: require('../CARLI/Csv'),
     Cycle: require('../CARLI/Entity/CycleRepository'),
     CycleMiddleware: require('../middleware/browserAdapters/cycleCreation'),
