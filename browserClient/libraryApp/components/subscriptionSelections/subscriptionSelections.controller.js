@@ -36,6 +36,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
     vm.exportSelectedProductsToCsv = exportSelectedProductsToCsv;
     vm.getFundedSelectionPrice = getFundedSelectionPrice;
     vm.getFundedSiteLicensePrice = getFundedSiteLicensePrice;
+    vm.getPriceForCollapsedRow = getPriceForCollapsedRow;
     vm.getLastYearsPricing = getLastYearsPricing;
     vm.getProductDisplayName = productService.getProductDisplayName;
     vm.hasSelection = hasSelection;
@@ -519,6 +520,11 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
 
     function getFundedSiteLicensePrice(offering) {
         return offeringService.getFundedSiteLicensePrice(offering);
+    }
+
+    function getPriceForCollapsedRow(offering) {
+        const p = offeringService.getFundedSiteLicensePrice(offering);
+        return p ? p : null;
     }
 
     function showPrice(offering) {

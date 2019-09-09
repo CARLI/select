@@ -5,7 +5,7 @@
             <div class="column selected-last-year">Selected Last Year</div>
             <div class="sortable column vendor" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.vendorName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.vendorName)">Vendor</div>
             <div class="sortable column funded" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.funded, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.funded)">CARLI Funded</div>
-            <div class="sortable column select" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.selectionPrice, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.selectionPrice)">Selected</div>
+            <div class="sortable column select" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.selectionPrice, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.selectionPrice)">Price</div>
         </li>
         <li class="offering display-{{ ::offering.display }}" ng-class="{ collapsed: !vm.openProduct[offering.product.id] }"
             ng-repeat="offering in vm.offerings | orderBy: vm.orderBy:vm.reverse track by offering.id"
@@ -24,8 +24,9 @@
                 <div class="column funded">
                     <fa name="check-circle" ng-if="::vm.isFunded(offering)"></fa>
                 </div>
-                <div class="column select">
-                    <span ng-if="offering.selection" class="price">{{ vm.getFundedSelectionPrice(offering) | currency }}</span>
+                <div class="column select" >
+                    <span ng-if="offering.selection" class="price" ng-class="{ selected: offering.selection }">{{ vm.getFundedSelectionPrice(offering) | currency }}</span>
+                    <span ng-if="!offering.selection" class="price" ng-class="{ selected: offering.selection }">{{ vm.getPriceForCollapsedRow(offering) | currency }}</span>
                 </div>
             </div>
             <div class="content" ng-if="vm.openProduct[offering.product.id]">

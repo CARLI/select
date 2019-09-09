@@ -71,6 +71,9 @@ ul.product-list.subscriptions {
                         border: none;
                         color: $black;
                     }
+                    .selected {
+                        color: $green;
+                    }
                 }
             }
         }
@@ -100,11 +103,13 @@ ul.product-list.subscriptions {
                 overflow: hidden;
                 padding: 0;
 
-                .price {
+                .selected {
                     background: $green;
                     border: 1px solid $dark-green;
                     color: $white;
                     font-weight: bold;
+                }
+                .price {
                     height: 100%;
                     left: 0;
                     padding: 16px;
