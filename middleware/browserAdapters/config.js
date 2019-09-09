@@ -5,9 +5,9 @@ function getConfig(key) {
     return middlewareRequest({
         path: '/get-config/' + key,
         method: 'get'
-    });
+    }).then(response => response.result);
 }
 
 module.exports = {
-    getConfig: getConfig
+    getConfig
 };

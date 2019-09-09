@@ -1,7 +1,7 @@
 angular.module('carli.sections.dashboard')
     .controller('dashboardController', dashboardController);
 
-function dashboardController($q, activityLogService, config, cycleService) {
+function dashboardController($q, activityLogService, cycleService) {
     var vm = this;
 
     vm.cycles = [];

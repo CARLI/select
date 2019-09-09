@@ -27,7 +27,7 @@ angular.module('vendor.app', [
 .config(function($locationProvider){
     $locationProvider.html5Mode(true);
 })
-.run(function($rootScope, authService, config) {
+.run(function($rootScope, authService) {
     $rootScope.appState = 'pendingUser';
 
     if (authService.isMasqueradingRequested()) {
@@ -47,6 +47,10 @@ angular.module('vendor.app', [
     function handleUnauthorizedMasqueradeAttempt() {
         authService.deleteSession().then(authService.redirectToLogin);
     }
+})
+.run(function ($rootScope, config) {
+    return config.loadConfigFromMiddleware()
+        .then(() => $rootScope.configLoaded = true);
 })
 .value('cgBusyDefaults',{
     //message:'Loading Stuff',

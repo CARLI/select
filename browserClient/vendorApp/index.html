@@ -36,28 +36,33 @@
 
         <header vendor-header role="banner"></header>
 
-        <div ng-if="appState === 'pendingUser'">
-            <!-- user-lookup></user-lookup -->
-            <alerts></alerts>
-            <main role="main">
-                <div ng-view role="application"></div>
-            </main>
+        <div ng-if="!configLoaded">
+            Please wait ...
         </div>
+        <div ng-if="configLoaded">
+            <div ng-if="appState === 'pendingUser'">
+                <!-- user-lookup></user-lookup -->
+                <alerts></alerts>
+                <main role="main">
+                    <div ng-view role="application"></div>
+                </main>
+            </div>
 
-        <div ng-if="appState === 'pendingCycle'">
-            <cycle-chooser></cycle-chooser>
+            <div ng-if="appState === 'pendingCycle'">
+                <cycle-chooser></cycle-chooser>
+            </div>
+
+            <div ng-if="appState === 'ready'">
+                <nav ng-if="isLoggedIn" nav-bar role="navigation" aria-label="main navigation"></nav>
+                <alerts></alerts>
+                <main role="main">
+                    <div ng-view role="application"></div>
+                </main>
+            </div>
+
+            <ask-carli-form></ask-carli-form>
+            <auth-timeout-alert></auth-timeout-alert>
         </div>
-
-        <div ng-if="appState === 'ready'">
-            <nav ng-if="isLoggedIn" nav-bar role="navigation" aria-label="main navigation"></nav>
-            <alerts></alerts>
-            <main role="main">
-                <div ng-view role="application"></div>
-            </main>
-        </div>
-
-        <ask-carli-form></ask-carli-form>
-        <auth-timeout-alert></auth-timeout-alert>
 
         <% scripts.forEach( function ( file ) { %>
             <script type="text/javascript" src="/<%= file %>"></script>

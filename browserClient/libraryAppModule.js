@@ -5,7 +5,7 @@ module.exports = {
     Attachments: require('../CARLI/Attachments'),
     Auth: require('../CARLI/Auth'),
     AuthMiddleware: require('../middleware/browserAdapters/auth'),
-    config: require( '../config' ),
+    config: require('../middleware/browserAdapters/config'),
     CouchDbStore: require('../CARLI/Store/CouchDb/Store'),
     Csv: require('../CARLI/Csv'),
     Cycle: require('../CARLI/Entity/CycleRepository'),

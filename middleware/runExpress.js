@@ -721,9 +721,10 @@ function runMiddlewareServer(){
         }
 
         function defineRoutesForConfigurationService() {
-            authorizedRoute('get', '/get-config/:key', carliAuth.requireSession, function (req, res) {
-                const value = configApiComponent.getConfig(req.params.key);
-                sendJsonResult(res)(value);
+            carliMiddleware.get('/get-config/:key', function (req, res) {
+                return configApiComponent.getConfig(req.params.key)
+                    .then(sendJsonResult(res))
+                    .catch(sendError(res));
            });
         }
     }
