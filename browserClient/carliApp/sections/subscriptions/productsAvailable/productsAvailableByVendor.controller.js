@@ -16,6 +16,7 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
     vm.reportCheckedProductsForVendor = reportCheckedProductsForVendor;
     vm.stopEditing = stopEditing;
     vm.toggleProductSection = toggleProductSection;
+    vm.doSort = doSort;
 
     vm.cycle = {};
     vm.expandedProducts = {};
@@ -247,6 +248,15 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
 
         function loadOfferingsForVendor() {
             return $q.all(vendor.products.map(loadOfferingsForProduct));
+        }
+    }
+
+    function doSort(offering) {
+        if (vm.orderBy === "selection") {
+            const sortPrefix = (offering.hasOwnProperty("selection")) ? "A" : "Z";
+            return sortPrefix + offering.library.name;
+        } else {
+            return "" + eval("offering." + vm.orderBy) + offering.library.name;
         }
     }
 }

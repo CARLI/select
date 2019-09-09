@@ -24,10 +24,10 @@
                                     <div role="columnheader" id="library-view-column-header" class="column library-view">Library View</div>
                                     <div role="columnheader" id="selected-last-year-column-header" class="sortable column selected-last-year" ng-class="{ activeSort: vm.orderBy === 'selectedLastYear', reversedSort: vm.reverse }" ng-click="vm.sort('selectedLastYear')">Last Year</div>
                                     <div role="columnheader" id="site-license-price-column-header" class="sortable column site-license-price" ng-class="{ activeSort: vm.orderBy === 'pricing.site', reversedSort: vm.reverse }" ng-click="vm.sort('pricing.site')">Prices</div>
-                                    <div role="columnheader" id="selection-column-header" class="column selection">Selection</div>
+                                    <div role="columnheader" id="selection-column-header" class="sortable column selection" ng-class="{ activeSort: vm.orderBy === 'selection', reversedSort: vm.reverse }" ng-click="vm.sort('selection')">Selection</div>
                                     <div role="columnheader" id="vendor-invoice-column-header" class="column vendor-invoice">Vendor Invoice</div>
                                 </li>
-                                <li role="row" class="offering" ng-class="{ 'edit-mode': vm.isEditing[offering.id] }" ng-repeat="offering in product.offerings | orderBy:vm.orderBy:vm.reverse track by offering.id">
+                                <li role="row" class="offering" ng-class="{ 'edit-mode': vm.isEditing[offering.id] }" ng-repeat="offering in product.offerings | orderBy:vm.doSort:vm.reverse track by offering.id">
                                     <edit-offering ng-if="vm.isEditing[offering.id]" cycle="::vm.cycle" offering="offering" columns="::vm.offeringColumns" on-offering-saved="::vm.stopEditing"></edit-offering>
                                     <render-offering ng-if="!vm.isEditing[offering.id]" offering="offering" cycle="::vm.cycle" columns="::vm.offeringColumns"></render-offering>
                                     <checkbox ng-model="vm.selectedOfferings[vendor.id][offering.id]"></checkbox>
