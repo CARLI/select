@@ -138,6 +138,7 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
 
         function transformOfferingsBatch(offeringsBatch) {
             offeringsBatch.forEach(function (offering) {
+                setCycleId(offering, newCycle.id);
                 copyOfferingHistoryForYear(offering, sourceCycle.year);
                 removeVendorModificationTracking(offering);
                 removeSelection(offering);
@@ -178,6 +179,11 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
             return _.values(result);
         }
     }
+}
+
+function setCycleId(offering, cycleId) {
+    offering.cycle = cycleId;
+    return offering;
 }
 
 function copyOfferingHistoryForYear(offering, year) {

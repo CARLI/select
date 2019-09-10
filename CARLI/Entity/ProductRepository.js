@@ -268,6 +268,7 @@ function getProductSelectionStatisticsForCycle( productId, cycle ){
 function transformProductsForNewCycle(cycle) {
     setCycle(cycle);
     return listProducts(cycle)
+        .then(setCycleOnProducts)
         .then(copyPriceCaps)
         .then(removeVendorComments)
         .then(prepareProductsToBeSaved)
@@ -275,6 +276,13 @@ function transformProductsForNewCycle(cycle) {
         .then(function() {
             return { ok: true };
         });
+
+    function setCycleOnProducts(products) {
+        return products.map((product) => {
+            product.cycle = cycle;
+            return product;
+        });
+    }
 
     function copyPriceCaps(products) {
         return products.map(copyPriceCapForProduct);
