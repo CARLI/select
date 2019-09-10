@@ -313,21 +313,13 @@ function transformProductsForNewCycle(cycle) {
         }
 
         function unexpandProperty(product, prop) {
-            let message = `Unexpanding ${prop} for ${product.name}`;
-
-            if (product.hasOwnProperty(prop) && product[prop]) {
-                if (typeof product[prop] === 'string') {
-                    console.log(`${message}: already unexpanded`);
-                } else {
-                    if (product[prop].hasOwnProperty('id')) {
-                        product[prop] = product[prop].id;
-                    } else {
-                        console.log(`${message}: missing id`);
-                    }
-                }
-            } else {
-                console.log(`${message}: missing property`)
+            if (productPropertyNeedsUnexpanded(product, prop)) {
+                product[prop] = product[prop].id;
             }
+        }
+
+        function productPropertyNeedsUnexpanded (product, prop) {
+            return product.hasOwnProperty(prop) && product[prop] && typeof product[prop] !== 'string' && product[prop].hasOwnProperty('id');
         }
     }
 
