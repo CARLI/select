@@ -301,12 +301,33 @@ function transformProductsForNewCycle(cycle) {
         return products.map(unexpandProduct);
 
         function unexpandProduct(p) {
-            p.vendor = p.vendor.id;
-            p.cycle = p.cycle.id;
-            if (p.license)
-                p.license = p.license.id;
+            unexpandProperty(p, 'vendor');
+            unexpandProperty(p, 'cycle');
+            unexpandProperty(p, 'license');
+            // p.vendor = p.vendor.id;
+            // p.cycle = p.cycle.id;
+            // if (p.license)
+            //     p.license = p.license.id;
 
             return p;
+        }
+
+        function unexpandProperty(product, prop) {
+            let message = `Unexpanding ${product.name}.'${prop}'`;
+
+            if (p.hasOwnProperty(prop)) {
+                if (typeof product[prop] === 'string') {
+                    console.log(`${message}: already unexpanded`);
+                } else {
+                    if (product[prop].hasOwnProperty('id')) {
+                        product[prop] = product[prop].id;
+                    } else {
+                        console.log(`${message}: missing id`);
+                    }
+                }
+            } else {
+                console.log(`${message}: missing property`)
+            }
         }
     }
 
