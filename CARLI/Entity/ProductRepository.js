@@ -313,9 +313,9 @@ function transformProductsForNewCycle(cycle) {
         }
 
         function unexpandProperty(product, prop) {
-            let message = `Unexpanding ${product.name}.'${prop}'`;
+            let message = `Unexpanding ${prop} for ${product.name}`;
 
-            if (p.hasOwnProperty(prop)) {
+            if (product.hasOwnProperty(prop) && product[prop]) {
                 if (typeof product[prop] === 'string') {
                     console.log(`${message}: already unexpanded`);
                 } else {
