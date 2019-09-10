@@ -2,6 +2,7 @@
 
 const cli = require('../CARLI/CommandLine');
 const cycleRepository = require('../CARLI/Entity/CycleRepository');
+const offeringRepository = require('../CARLI/Entity/OfferingRepository');
 const productRepository = require('../CARLI/Entity/ProductRepository');
 const couchUtils = require('../CARLI/Store/CouchDb/Utils')();
 
@@ -18,7 +19,6 @@ async function repairCycleDb(currentCycleId, previousCycleId) {
     const previousProducts = await productRepository.listProductsUnexpanded(previousCycle).then(groupById);
 
     const ok = [];
-    const skipped = [];
     const repaired = [];
     const missingFromPreviousCycle = [];
 
@@ -28,21 +28,13 @@ async function repairCycleDb(currentCycleId, previousCycleId) {
             return;
         }
         const currentProduct = currentProducts[productId];
-        const previousProduct = previousProducts[productId];
+        const hasCycle = currentProduct.hasOwnProperty('cycle');
 
-        const hasVendor = currentProduct.hasOwnProperty('vendor');
-        const hasLicense = currentProduct.hasOwnProperty('license');
-
-        if (hasVendor && hasLicense) {
+        if (hasCycle) {
             ok.push(productId)
         } else {
-            if (previousProduct.hasOwnProperty('vendor') && previousProduct.hasOwnProperty('license')) {
-                currentProduct.vendor = previousProduct.vendor;
-                currentProduct.license = previousProduct.license;
-                repaired.push(currentProduct);
-            } else {
-                skipped.push(productId);
-            }
+            currentProduct.cycle = CURRENT_CYCLE_ID;
+            repaired.push(currentProduct);
         }
     });
 
@@ -50,7 +42,6 @@ async function repairCycleDb(currentCycleId, previousCycleId) {
 
     console.log(`Ignored ${ok.length} ok products`);
     console.log(`Skipped ${missingFromPreviousCycle.length} products missing from ${previousCycle.name}`);
-    console.log(`Skipped ${skipped.length} products missing data`);
     console.log(`Repaired ${repaired.length} products`);
     console.log('Couch Response:');
     console.log(couchResponse);
