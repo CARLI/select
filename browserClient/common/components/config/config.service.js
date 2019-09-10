@@ -37,6 +37,9 @@ angular.module('common.config')
     }
 
     values.loadConfigFromMiddleware = loadConfigFromMiddleware;
+    values.getAuthTimeoutDuration = function () {
+        return values.authMillisecondsUntilWarningAppears + values.authWarningDurationInMilliseconds;
+    };
 
     return values;
 });
