@@ -3,8 +3,8 @@
 ## Deployment process
 
 CARLI Select is composed of two custom docker containers which must be rebuilt before deploying.
-1) `carli-select-integration.pixodev.net:5000/carli-select/middleware`
-2) `carli-select-integration.pixodev.net:5000/carli-select/browser-clients`
+1) `registry.carli.pixodev.net/carli-select/middleware`
+2) `registry.carli.pixodev.net/carli-select/browser-clients`
 
 ### 1) Build new docker images and push them to the private registry.
 
@@ -56,11 +56,17 @@ Below is the full text of the compose file used (from the staging instance, 2019
 version: '3.6'
 services:
   web:
-    image: 'carli-select-integration.pixodev.net:5000/carli-select/browser-clients:${BROWSER_CLIENTS_VERSION}'
+    image: 'registry.carli.pixodev.net/carli-select/browser-clients:${BROWSER_CLIENTS_VERSION}'
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     ports:
-      - "80:80"
-      - "443:443"
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+      - target: 443
+        published: 443
+        protocol: tcp
+        mode: host
     networks:
       - select
     volumes:
@@ -106,7 +112,7 @@ services:
           - node.labels.environment == staging
 
   middleware:
-    image: 'carli-select-integration.pixodev.net:5000/carli-select/middleware:${MIDDLEWARE_VERSION}'
+    image: 'registry.carli.pixodev.net/carli-select/middleware:${MIDDLEWARE_VERSION}'
     networks:
       - select
     volumes:
@@ -140,4 +146,55 @@ networks:
   select:
     driver: overlay
     attachable: true
+```
+
+```yaml
+version: '3.6'
+services:
+  registry:
+    restart: always
+#    entrypoint: "/bin/sh -c 'while :; do :; done & kill -STOP $$! && wait $$!'"
+    image: registry:2
+    environment:
+      REGISTRY_HTTP_HOST: "https://registry.carli.pixodev.net"
+    volumes:
+      - /carli/registry/data:/var/lib/registry
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`${LETSENCRYPT_DOMAIN?Variable LETSENCRYPT_DOMAIN not set}`)"
+      - "traefik.http.routers.whoami.entrypoints=websecure"
+      - "traefik.http.routers.whoami.tls.certresolver=mytlschallenge"
+  traefik:
+    image: "traefik:v2.0.0"
+    container_name: "traefik"
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.mytlschallenge.acme.tlschallenge=true"
+      - "--certificatesresolvers.mytlschallenge.acme.email=${LETSENCRYPT_EMAIL?Variable LETSENCRYPT_EMAIL not set}"
+      - "--certificatesresolvers.mytlschallenge.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+      - target: 443
+        published: 443
+        protocol: tcp
+        mode: host
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+    volumes:
+      - "/carli/letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
 ```

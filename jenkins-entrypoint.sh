@@ -4,7 +4,7 @@
 working_branch="build"
 
 if [ -z "${CARLI_DOCKER_REGISTRY}" ]; then
-    export CARLI_DOCKER_REGISTRY="carli-select-integration.pixodev.net:5000"
+    export CARLI_DOCKER_REGISTRY="registry.carli.pixodev.net"
 fi
 
 if [ -z "${BUILD_NUMBER}" ]; then

@@ -1,5 +1,5 @@
 
-var dockerRegistry = 'carli-select-integration.pixodev.net:5000';
+var dockerRegistry = 'registry.carli.pixodev.net';
 
 var buildDockerRepository = 'carli-select/build';
 var browserClientsDockerRepository = 'carli-select/browser-clients';
