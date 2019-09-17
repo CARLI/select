@@ -1,6 +1,8 @@
 /* This file exists to tell Browserify what to package into the carliModules for the CARLI staff app. */
 
 module.exports = {
+    // browserClientVersion: require('package.json').version,
+    middlewareVersion: require('../middleware/browserAdapters/version').getVersion(),
     ActivityLog: require('../CARLI/Entity/ActivityLogRepository'),
     Attachments: require('../CARLI/Attachments'),
     Auth: require('../CARLI/Auth'),
