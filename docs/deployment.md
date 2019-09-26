@@ -50,7 +50,7 @@ The staging and production deployments are managed with [Portainer](https://port
     
 # Reference
     
-Below is the full text of the compose file used (from the staging instance, 2019-08-25)
+Below is the full text of the compose file used (from the staging instance, 2019-09-26)
 
 ```yaml
 version: '3.6'
@@ -78,7 +78,7 @@ services:
       placement:
         constraints:
           - node.labels.app == carli-select
-          - node.labels.environment == staging
+          - node.labels.environment == ${CARLI_SELECT_INSTANCE}
 
   certbot:
     image: certbot/certbot
@@ -93,14 +93,17 @@ services:
       placement:
         constraints:
           - node.labels.app == carli-select
-          - node.labels.environment == staging
+          - node.labels.environment == ${CARLI_SELECT_INSTANCE}
 
   db:
     image: 'couchdb:1.6.1'
     networks:
       - select
     ports:
-      - 5984:5984
+      - target: 5984
+        published: 5984
+        protocol: tcp
+        mode: host
     volumes:
       - /carli/db:/usr/local/var/lib/couchdb
       - /carli/etc:/usr/local/etc/couchdb
@@ -109,7 +112,7 @@ services:
       placement:
         constraints:
           - node.labels.app == carli-select
-          - node.labels.environment == staging
+          - node.labels.environment == ${CARLI_SELECT_INSTANCE}
 
   middleware:
     image: 'registry.carli.pixodev.net/carli-select/middleware:${MIDDLEWARE_VERSION}'
@@ -122,7 +125,7 @@ services:
       placement:
         constraints:
           - node.labels.app == carli-select
-          - node.labels.environment == staging
+          - node.labels.environment == ${CARLI_SELECT_INSTANCE}
     environment:
       - COUCH_DB_URL_SCHEME=$COUCH_DB_URL_SCHEME
       - COUCH_DB_USER=$COUCH_DB_USER
