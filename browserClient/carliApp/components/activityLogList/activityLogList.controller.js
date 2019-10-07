@@ -6,7 +6,6 @@ function activityLogListController(config, controllerBaseService, activityLogSer
 
     var datePickerFormat = 'M/D/YY';
 
-    vm.apiPath = config.getMiddlewareUrl();
     vm.appFilter = 'all';
     vm.columns = activityLogListColumns();
 
