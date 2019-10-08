@@ -1,7 +1,4 @@
 
-if (isBrowserEnvironment())
-    console.log("Config Module loaded");
-
 var _ = require('lodash');
 //don't let this get browserified because it uses ES6 which breaks uglify
 var environmentVariableNodePackageName = 'dotenv';
@@ -178,9 +175,6 @@ function getLibraryAppUrl() {
 function loadConfiguration() {
     var config = getConfigFromEnvironment();
 
-    setMiddlewareUrl();
-    setCouchDbUrl();
-
     return config;
 
     function getConfigFromEnvironment() {
@@ -237,12 +231,6 @@ function loadConfiguration() {
         var password = getCouchDbPassword();
         var host = getCouchDbHost();
 
-        if (isBrowserEnvironment())
-            return {
-                couchDbName: "carli",
-                couchDbUrl: scheme + host,
-            };
-
         return {
             couchDbName: "carli",
             couchDbUrl: scheme + host,
@@ -253,34 +241,12 @@ function loadConfiguration() {
             privilegedCouchDbUrl: scheme + user + ':' + password + '@' + host
         };
     }
-
-    function setMiddlewareUrl() {
-        if (isBrowserEnvironment()) {
-            var l = window.location;
-            config.middleware.url = l.protocol + '//' + l.host + '/api';
-        }
-    }
-
-    function setCouchDbUrl() {
-        if (isBrowserEnvironment()) {
-            setCouchDbUrlForBrowser();
-        }
-
-        function setCouchDbUrlForBrowser() {
-            var l = window.location;
-            config.storeOptions.couchDbUrl = l.protocol + '//' + l.host + '/db';
-        }
-    }
 }
 
 function makeLoggerGlobal() {
     var Logger = require('../CARLI/Logger');
 
-    if (isBrowserEnvironment()) {
-        window.Logger = Logger;
-    } else {
-        global.Logger = Logger;
-    }
+    global.Logger = Logger;
 }
 
 function isSecureEnvironment() {

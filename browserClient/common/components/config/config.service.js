@@ -41,5 +41,10 @@ angular.module('common.config')
         return values.authMillisecondsUntilWarningAppears + values.authWarningDurationInMilliseconds;
     };
 
+    values.getMiddlewareUrl = function () {
+        var l = $window.location;
+        return l.protocol + '//' + l.host + '/api';
+    };
+
     return values;
 });
