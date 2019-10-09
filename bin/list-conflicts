@@ -1,0 +1,34 @@
+#!/usr/bin/env node
+
+const cli = require('../CARLI/CommandLine');
+const couchUtils = require('../CARLI/Store/CouchDb/Utils')();
+
+cli.withOptionalSingleArgument(listConflicts)
+    .then(process.exit);
+
+async function listConflicts(databaseName) {
+    if (!databaseName) {
+        console.log("To see a list of conflicts in a given database:");
+        console.log(`\t${cli.getProgramName()} <database name>\n`);
+        console.log("Generating summary of databases with conflicts...");
+
+        return listAllConflicts();
+    }
+
+    return listConflictsForDatabase(databaseName);
+}
+
+async function listAllConflicts() {
+    const databases = await couchUtils.listDatabases();
+    databases.forEach(summarizeConflictsForDatabase);
+    return true;
+}
+
+function summarizeConflictsForDatabase(databaseName) {
+    // TODO
+}
+
+function listConflictsForDatabase(databaseName) {
+    // TODO
+}
+

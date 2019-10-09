@@ -118,6 +118,19 @@ module.exports = function (storeOptions) {
         return deferred.promise;
     }
 
+    function listDatabases() {
+        var url = storeOptions.couchDbUrl + '/_all_dbs';
+
+        return couchRequest({
+            url: url,
+            method: 'get'
+        }).catch(function(err){
+            Logger.log('listDatabases failed. Requested ' + url);
+            Logger.log(' error:', err);
+            throw err;
+        });
+    }
+
     function getCouchDocuments(dbName, ids) {
         var url = storeOptions.couchDbUrl + '/' + dbName + '/' + '_all_docs?include_docs=true';
 
@@ -544,6 +557,7 @@ module.exports = function (storeOptions) {
         couchRequest: couchRequest,
         couchRequestSession: couchRequestSession,
         getCouchDocuments: getCouchDocuments,
+        listDatabases: listDatabases,
         getCouchViewResultObject: getCouchViewResultObject,
         getCouchViewResultValues: getCouchViewResultValues,
         getCouchViewResultValuesWithinRange: getCouchViewResultValuesWithinRange,

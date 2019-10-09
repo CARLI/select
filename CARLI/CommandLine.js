@@ -59,32 +59,40 @@ function confirmOrExit(question) {
     }
 }
 
+function withOptionalSingleArgument(doSomething) {
+    var argument = getFirstArgument();
+    return doSomething(argument);
+}
+
 function withSingleArgument(argumentName, doSomething) {
     var argument = getFirstArgument();
 
     if (!argument)
         showUsageAndExit();
 
-    return doSomething(argument);
+    return withOptionalSingleArgument(doSomething);
 
-    function getFirstArgument() {
-        return process.argv[2];
-    }
     function showUsageAndExit() {
         console.log('Usage: ' + getProgramName() + ' <'+ argumentName +'>');
         process.exit();
-
-        function getProgramName() {
-            return path.basename(process.argv[1]);
-        }
     }
 }
 
+function getFirstArgument() {
+    return process.argv[2];
+}
+
+function getProgramName() {
+    return path.basename(process.argv[1]);
+}
+
 module.exports = {
-    asCouchAdmin: asCouchAdmin,
-    confirmOrExit: confirmOrExit,
-    loginToCouch: loginToCouch,
-    logoutOfCouch: logoutOfCouch,
-    logError: logError,
-    withSingleArgument: withSingleArgument
+    asCouchAdmin,
+    confirmOrExit,
+    loginToCouch,
+    logoutOfCouch,
+    logError,
+    withOptionalSingleArgument,
+    withSingleArgument,
+    getProgramName,
 };

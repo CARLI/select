@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+
+const couchUtils = require('../CARLI/Store/CouchDb/Utils')();
+
+couchUtils.listDatabases()
+    .then(databases => {
+        databases.map(dbName => console.log(dbName));
+    })
+    .then(process.exit);
+
