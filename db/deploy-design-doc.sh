@@ -38,7 +38,7 @@ require_env COUCH_DB_HOST
 couchdb_url=${COUCH_DB_URL_SCHEME}${COUCH_DB_USER}:${COUCH_DB_PASSWORD}@${COUCH_DB_HOST}
 
 deploy_to() {
-  push ./db/designDocs/ListConflicts-DesignDoc.js $couchdb_url/$1
+  ${couchapp} push ./db/designDocs/ListConflicts-DesignDoc.js $couchdb_url/$1
 }
 
 for db in `./bin/list-databases`; do
