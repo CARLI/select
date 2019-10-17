@@ -612,6 +612,14 @@ function listLibrariesReport( reportParameters, userSelectedColumns ){
             }
         }
 
+        if ( isEnabled('ipRanges') ) {
+            if ('ipAddresses' in library) {
+                result.ipRanges = library.ipAddresses;
+            } else {
+                result.ipRanges = '';
+            }
+        }
+
         return result;
     }
 

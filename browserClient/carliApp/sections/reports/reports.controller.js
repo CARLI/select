@@ -119,7 +119,8 @@ function reportsController( $q, csvExportService, cycleService, libraryService, 
                 'institutionYears',
                 'membershipLevel',
                 'isIshareMember',
-                'isActive'
+                'isActive',
+                'ipRanges'
             ]
         },
         {
