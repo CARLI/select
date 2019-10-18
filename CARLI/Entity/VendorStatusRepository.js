@@ -37,6 +37,10 @@ function createOrUpdateVendorStatus( vendorStatus, cycle ) {
     return vendorStatus.id ? updateVendorStatus(vendorStatus, cycle) : createVendorStatus(vendorStatus, cycle);
 }
 
+function deleteVendorStatus( vendorStatus ) {
+    return VendorStatusRepository.delete(vendorStatus.id);
+}
+
 function listVendorStatuses(cycle){
     setCycle(cycle);
     return expandVendorStatuses( VendorStatusRepository.list(cycle.getDatabaseName()) );
@@ -151,6 +155,7 @@ module.exports = {
     create: createVendorStatus,
     update: updateVendorStatus,
     createOrUpdate: createOrUpdateVendorStatus,
+    delete: deleteVendorStatus,
     list: listVendorStatuses,
     load: loadVendorStatus,
     getStatusForVendor: getStatusForVendor,

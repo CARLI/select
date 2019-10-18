@@ -19,8 +19,9 @@ function listDuplicateVendorStatusesByCycle(cycleId) {
         return loadCurrentCycle()
             .then(loadVendorStatusesForCycle)
             .then(groupByVendorId)
-            .then(removeSingletons)
+            .then(removeStatusesThatAreNotDuplicated)
             .then(printReport)
+            .then(deleteMismatchedVendorStatuses)
             .catch(function (error) {
                 console.log('ERROR', error);
             });
@@ -46,7 +47,7 @@ function listDuplicateVendorStatusesByCycle(cycleId) {
             return statusByVendorId;
         }
 
-        function removeSingletons(vendorStatusesByVendorId) {
+        function removeStatusesThatAreNotDuplicated(vendorStatusesByVendorId) {
             var vendorIds = Object.keys(vendorStatusesByVendorId);
             vendorIds.forEach(function (vendorId) {
                 if (vendorStatusesByVendorId[vendorId].length === 1) {
@@ -58,6 +59,7 @@ function listDuplicateVendorStatusesByCycle(cycleId) {
 
         function printReport(vendorStatusesByVendorId) {
             console.log(vendorStatusesByVendorId);
+            return vendorStatusesByVendorId;
             // var vendorIds = Object.keys(vendorStatusesByVendorId);
             //
             // vendorIds.forEach(function (vendorId) {
@@ -69,6 +71,23 @@ function listDuplicateVendorStatusesByCycle(cycleId) {
             //         }
             //     });
             // });
+        }
+
+        function deleteMismatchedVendorStatuses(duplicatedVendorStatusesByVendorId) {
+            let promises = [];
+            Object.keys(duplicatedVendorStatusesByVendorId).forEach(vendorId => {
+                const statuses = duplicatedVendorStatusesByVendorId[vendorId];
+                promises.push(...statuses.map(deleteStatusIfNotMatchingCycle));
+            });
+            return Q.all(promises);
+        }
+
+        function deleteStatusIfNotMatchingCycle(vendorStatus) {
+            if (vendorStatus.cycle !== cycleId) {
+                return vendorStatusRepository.delete(vendorStatus);
+            } else {
+                return Q.resolve();
+            }
         }
     }
 }
