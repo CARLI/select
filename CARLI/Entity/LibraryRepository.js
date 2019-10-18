@@ -64,6 +64,7 @@ function updateLibrary( library ){
         var nonCrmData = _.extend(libraryNonCrm, localData);
         nonCrmData.crmId = library.id;
         nonCrmData.contacts = localData.contacts.slice(0);
+        nonCrmData.previousIpAddresses = library.previousIpAddresses;
 
         if ( nonCrmData.id ){
             return localLibraryRepository.update( nonCrmData, transformFunction );

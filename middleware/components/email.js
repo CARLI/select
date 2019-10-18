@@ -187,8 +187,13 @@ function sendIpAddressChangeNotification(libraryId) {
     });
 
     function messageText(library) {
-        return library.name + ' has updated their IP address information.  The updated IP Address(es) are:'
+        var text = library.name + ' has updated their IP address information.  The updated IP Address(es) are:'
             + "\n\n" + library.ipAddresses;
+
+        if (library.previousIpAddresses && library.previousIpAddresses !== "")
+            text = text + "\n\nUpdated from:\n\n" + library.previousIpAddresses;
+
+        return text;
     }
 }
 
