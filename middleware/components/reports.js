@@ -364,8 +364,6 @@ function selectionsByVendorReport( reportParameters, userSelectedColumns ){
         .catch(stackTraceError);
 
     function transformOfferingToSelectionsByVendorResultRow( offering ){
-        console.log('offering: ');
-        console.log(offering);
         var row = {
             cycle: offering.cycle.name,
             license: licenseName(offering),
