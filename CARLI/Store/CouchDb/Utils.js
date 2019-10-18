@@ -188,6 +188,11 @@ module.exports = function (storeOptions) {
         return deferred.promise;
     }
 
+    function getCouchViewResultValuesWithNamedDesignDoc( dbName, designDocName, viewName, key, group) {
+        var url = couchViewUrlFromDesignDoc(dbName, designDocName, viewName, key, group);
+        return getCouchViewValuesFromUrl(url);
+    }
+
     function getCouchViewResultValues( dbName, viewName, key, group) {
         var url = couchViewUrl(dbName, viewName, key, group);
         return getCouchViewValuesFromUrl(url);
@@ -233,8 +238,9 @@ module.exports = function (storeOptions) {
         return deferred.promise;
     }
 
-    function couchViewUrl(dbName, viewName, key, group) {
-        var url = storeOptions.couchDbUrl + '/' + dbName + '/' + '_design/CARLI/_view/' + viewName;
+    function couchViewUrlFromDesignDoc(dbName, designDocName, viewName, key, group) {
+
+        var url = storeOptions.couchDbUrl + '/' + dbName + '/' + '_design/' + designDocName + '/_view/' + viewName;
 
         var queryParams = {};
 
@@ -271,6 +277,10 @@ module.exports = function (storeOptions) {
             var quotedKeys = keys.map(quoteKey);
             return '[' + quotedKeys.join(',') + ']';
         }
+    }
+
+    function couchViewUrl(dbName, viewName, key, group) {
+        return couchViewUrlFromDesignDoc(dbName, 'CARLI', viewName, key, group);
     }
 
     function makeValidCouchDbName(name) {
@@ -559,6 +569,7 @@ module.exports = function (storeOptions) {
         getCouchDocuments: getCouchDocuments,
         listDatabases: listDatabases,
         getCouchViewResultObject: getCouchViewResultObject,
+        getCouchViewResultValuesWithNamedDesignDoc: getCouchViewResultValuesWithNamedDesignDoc,
         getCouchViewResultValues: getCouchViewResultValues,
         getCouchViewResultValuesWithinRange: getCouchViewResultValuesWithinRange,
         getCouchViewResultValuesWithLimit: getCouchViewResultValuesWithLimit,
