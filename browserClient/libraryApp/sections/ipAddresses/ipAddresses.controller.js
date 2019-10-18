@@ -9,6 +9,7 @@ function ipAddressesController($q, $scope, libraryService, userService, activity
 
     vm.library = null;
     vm.loadingPromise = null;
+    vm.originalIpAddresses = null;
 
     vm.cancelEdit = cancelEdit;
     vm.save = save;
@@ -22,6 +23,7 @@ function ipAddressesController($q, $scope, libraryService, userService, activity
     function initVmLibrary() {
         vm.loadingPromise = libraryService.load(currentLibrary.id)
             .then(function (library) {
+                vm.originalIpAddresses = library.ipAddresses;
                 vm.library = library;
             });
         return vm.loadingPromise;
@@ -33,6 +35,8 @@ function ipAddressesController($q, $scope, libraryService, userService, activity
     }
 
     function save() {
+        vm.library.previousIpAddresses = vm.originalIpAddresses;
+
         vm.loadingPromise = libraryService.update(vm.library)
             .then(logIpAddressesModified)
             .then(notifyIpAddressesModified)
