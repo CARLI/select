@@ -27,11 +27,11 @@ function relaunchWebWorkers() {
 
     function restartCrashedWorker(worker) {
         Logger.log('worker '+worker.id+' exited');
-        if (!worker.suicide) {
-            Logger.log('Worker ' + worker.id + ' died, launching replacement');
-            cluster.setupMaster(expressWorkerSetup);
-            cluster.fork();
-        }
+        // if (!worker.suicide) {
+        //     Logger.log('Worker ' + worker.id + ' died, launching replacement');
+        //     cluster.setupMaster(expressWorkerSetup);
+        //     cluster.fork();
+        // }
     }
 }
 
