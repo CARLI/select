@@ -61,7 +61,10 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
         .then(waitForIndexingToFinish)
         .then(setCycleToNextPhase)
         .thenResolve(newCycleId)
-        .catch(Logger.log);
+        .catch((err) => {
+            Logger.log(err);
+            throw err;
+        });
 
     function loadCycles() {
         return Q.all([
