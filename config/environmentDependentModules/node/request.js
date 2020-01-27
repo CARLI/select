@@ -32,7 +32,7 @@ request.giveUpCookieAuthToAllowPrivilegedUrlAuthWorkaround = function () {
     console.log("Cookie Auth Workaround Disabled for testing.");
     const cookies = jar.getCookies(config.storeOptions.couchDbUrl);
     const authCookie = cookies.filter(c => c.key === 'AuthSession')[0];
-    const cookieValue = Buffer.from(authCookie ? authCookie.value : "", 'base64');
+    const cookieValue = Buffer.from(authCookie ? authCookie.value : "", 'base64').toString();
     console.log('AuthSession:', cookieValue);
     //request.clearAuth();
 };
