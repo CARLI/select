@@ -2,8 +2,7 @@ var Q = require('q');
 var path = require('path');
 var readline = require('readline');
 
-var auth = require('../CARLI/Auth');
-var config = require('../config');
+var databaseAuth = require("./DatabaseAuthUtils");
 
 var rl = readline.createInterface({
     input: process.stdin,
@@ -11,24 +10,9 @@ var rl = readline.createInterface({
 });
 
 function asCouchAdmin(doSomething) {
-    return loginToCouch()
-        .then(doSomething)
+    return databaseAuth.asCouchAdmin(doSomething)
         .catch(logError)
-        .finally(logoutOfCouch)
         .finally(terminateProcess);
-}
-
-function loginToCouch() {
-    return auth.createSession({
-        email: config.storeOptions.privilegedCouchUsername,
-        password: config.storeOptions.privilegedCouchPassword
-    });
-}
-
-function logoutOfCouch() {
-    return auth.deleteSession().then(function (r) {
-        return r;
-    });
 }
 
 function terminateProcess() {
@@ -89,9 +73,6 @@ function getProgramName() {
 module.exports = {
     asCouchAdmin,
     confirmOrExit,
-    loginToCouch,
-    logoutOfCouch,
-    logError,
     withOptionalSingleArgument,
     withSingleArgument,
     getProgramName,
