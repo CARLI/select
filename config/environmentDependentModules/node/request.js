@@ -29,12 +29,17 @@ request.clearAuth = function () {
  * this workaround would break the chain, since the un-privileged would then have no auth at all.
  */
 request.giveUpCookieAuthToAllowPrivilegedUrlAuthWorkaround = function () {
-    console.log("Cookie Auth Workaround Disabled for testing.");
-    const cookies = jar.getCookies(config.storeOptions.couchDbUrl);
-    const authCookie = cookies.filter(c => c.key === 'AuthSession')[0];
-    const cookieValue = Buffer.from(authCookie ? authCookie.value : "", 'base64').toString();
-    console.log('AuthSession:', cookieValue);
-    //request.clearAuth();
+    if (!hasAdminCookie())
+        request.clearAuth();
+
+    function hasAdminCookie() {
+        const cookies = jar.getCookies(config.storeOptions.couchDbUrl);
+        const authCookie = cookies.filter(c => c.key === 'AuthSession')[0];
+        const cookieValue = Buffer.from(authCookie ? authCookie.value : "", 'base64').toString();
+        console.log('AuthSession:', cookieValue);
+
+        return cookieValue.length > 0 ? (cookieValue.split(":")[0] === 'admin') : false;
+    }
 };
 
 request.withoutAuthCookieWorkaround = function(doSomething) {
