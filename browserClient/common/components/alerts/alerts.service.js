@@ -21,7 +21,7 @@ function alertService($timeout, config) {
 
         var alert = { message: message, severity: opts.severity };
         alerts.push(alert);
-        _expireAlert(alert, opts.expireAfter);
+        //_expireAlert(alert, opts.expireAfter);
         return alert;
     }
 
