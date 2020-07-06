@@ -125,7 +125,10 @@ function sendNotification( notification ){
 }
 
 function listDrafts(){
-    return listNotifications().then(keepUnsentNotifications);
+    return NotificationRepository.list().then(function(allNotifications) {
+        const draftNotifications = keepUnsentNotifications(allNotifications);
+        return expandNotifications(Q.when(draftNotifications));
+    });
 
     function keepUnsentNotifications(notifications){
         return notifications.filter(function(notification){
@@ -135,7 +138,10 @@ function listDrafts(){
 }
 
 function listSent(){
-    return listNotifications().then(keepSentNotifications);
+    return NotificationRepository.list().then(function(allNotifications) {
+        const sentNotifications = keepSentNotifications(allNotifications);
+        return expandNotifications(Q.when(sentNotifications));
+    });
 
     function keepSentNotifications(notifications){
         return notifications.filter(function(notification){
