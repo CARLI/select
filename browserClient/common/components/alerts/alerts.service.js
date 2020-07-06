@@ -3,10 +3,14 @@ angular.module('common.alerts')
 
 function alertService($timeout, config) {
     var alerts = [];
-    var defaultOptions = {
-        expireAfter: config.alertTimeout,
-        severity: 'info'
-    };
+    var defaultOptions = {};
+
+    config.waitForConfigToLoad().then(function () {
+        defaultOptions = {
+            expireAfter: config.alertTimeout,
+            severity: 'info'
+        }
+    });
 
     function getAlerts() {
         return alerts;
@@ -21,7 +25,7 @@ function alertService($timeout, config) {
 
         var alert = { message: message, severity: opts.severity };
         alerts.push(alert);
-        //_expireAlert(alert, opts.expireAfter);
+        _expireAlert(alert, opts.expireAfter);
         return alert;
     }
 
