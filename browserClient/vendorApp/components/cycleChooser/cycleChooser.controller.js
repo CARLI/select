@@ -131,8 +131,8 @@ function cycleChooserController($q, $scope, alertService, authService, config, c
                     }
 
                     function lastUserIsWithinTimeoutPeriod() {
-                        var authTimeoutInMilliseconds = config.getAuthTimeoutDuration();
-                        var someTimeAgo = moment().subtract(authTimeoutInMilliseconds, 'milliseconds');
+                        var oneHourInMilliseconds = 3600000;
+                        var someTimeAgo = moment().subtract(oneHourInMilliseconds, 'milliseconds');
                         var lastLogin = moment(status.lastLoginDate);
 
                         return lastLogin.isAfter(someTimeAgo);
