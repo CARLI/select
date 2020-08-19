@@ -1,4 +1,4 @@
-# Getting Started #
+# Getting Started - DONT DO ANY OF THIS, THIS IS OUTDATED #
 
 These instructions will get you started working on the CARLI selection system project.
 

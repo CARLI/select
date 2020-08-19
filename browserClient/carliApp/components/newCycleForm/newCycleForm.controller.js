@@ -33,7 +33,7 @@ function newCycleFormController( $scope, $rootScope, $location, alertService, cy
     function saveCycle() {
         var creationPromise;
         if (vm.sourceCycle && vm.sourceCycle.getDatabaseName) {
-            creationPromise = cycleService.createCycleFrom(vm.sourceCycle, vm.cycle);
+            creationPromise = cycleService.newCreateCycleFrom(vm.sourceCycle, vm.cycle);
         } else {
             vm.cycle.status = cycleService.CYCLE_STATUS_EDITING_PRODUCT_LIST;
             creationPromise = cycleService.create(vm.cycle);

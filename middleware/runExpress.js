@@ -251,6 +251,19 @@ function runMiddlewareServer(){
                         res.send({ error: err });
                     });
             });
+            authorizedRoute('put', '/new-cycle-from', carliAuth.requireStaff, function (req, res) {
+                return cycleCreation.create(req.body.newCycleData)
+                    .then(function (newCycleId) {
+                        res.send({ id: newCycleId });
+                        cluster.worker.send({
+                            command: 'launchNewCycleDatabaseWorker',
+                            sourceCycleId: req.body.sourceCycle.id,
+                            newCycleId: newCycleId
+                        });
+                    }).catch(function (err) {
+                        res.send({ error: err });
+                    });
+            });
             authorizedRoute('put', '/launch-cycle-database-worker/:from/:to', carliAuth.requireStaff, function (req, res) {
                 res.send({ ok: true });
                 cluster.worker.send({
@@ -371,6 +384,11 @@ function runMiddlewareServer(){
                         res.send({ error: err });
                     });
             });
+            // Marty Party: New Routes here! newCycleCreation, launch-cycle-db-worker
+            // async op; keep track of what is happening within the cycle creation process detached/outside of the client & request
+            // new module should be able to persist and manage new cycle job. More robust.
+            // Potentially keep track of progress and store it in couch as a sudo-memory to determine how far it got before it failed?
+            // Ability to call back into the process from failure step.
         }
         function defineRoutesForOfferings() {
             authorizedRouteWithVendorIdParam('post', '/update-su-pricing-for-product/:vendorId/:cycleId/:productId', carliAuth.requireStaffOrSpecificVendor, function (req, res) {
