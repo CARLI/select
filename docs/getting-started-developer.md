@@ -161,3 +161,8 @@ See [this article](https://github.com/joyent/node/wiki/installing-node.js-via-pa
 [Google Best Practices Doc]: https://docs.google.com/a/pixotech.com/document/d/1XXMvReO8-Awi1EZXAXS4PzDzdNvV6pGcuaF4Q9821Es/mobilebasic?pli=1
 [Angular Style Guide]: https://github.com/toddmotto/angularjs-styleguide 
 [Writing AngularJS Documentation]: https://github.com/angular/angular.js/wiki/Writing-AngularJS-Documentation
+
+### Troubleshooting ###
+
+#### I'm getting XMLHttpRequest not found errors from grunt
+Run `grunt jsenv:node` and try again. This should replace the necessary files with node-friendly versions! 

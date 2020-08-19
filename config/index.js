@@ -3,6 +3,8 @@ var _ = require('lodash');
 //don't let this get browserified because it uses ES6 which breaks uglify
 var environmentVariableNodePackageName = 'dotenv';
 
+require('dotenv').config();
+
 var config = loadConfiguration();
 makeLoggerGlobal();
 
@@ -19,8 +21,6 @@ function getConfig(key) {
         LIBRARY_APP_URL: "http://library.carli.local:8080/",
         VENDOR_APP_URL: "http://vendor.carli.local:8080/",
         ALERT_TIMEOUT: "10000",
-        AUTH_MILLISECONDS_UNTIL_WARNING: "3000000",
-        AUTH_WARNING_DURATION_MILLISECONDS: "600000",
         INVOICE_DATA_DIR: "/var/local/carli",
         MIDDLEWARE_URL: "http://127.0.0.1:3000",
         MIDDLEWARE_PORT: "3000",
@@ -65,12 +65,6 @@ function parseString(value) {
 
 function getAlertTimeout() {
     return parseInt(getConfig("ALERT_TIMEOUT"));
-}
-function getAuthMillisecondsUntilWarning() {
-    return parseInt(getConfig("AUTH_MILLISECONDS_UNTIL_WARNING"));
-}
-function getAuthWarningDurationMilliseconds() {
-    return parseInt(getConfig("AUTH_WARNING_DURATION_MILLISECONDS"));
 }
 function getInvoiceDataDir() {
     return parseString(getConfig("INVOICE_DATA_DIR"));
@@ -182,8 +176,6 @@ function loadConfiguration() {
     function getConfigFromEnvironment() {
         return {
             alertTimeout: getAlertTimeout(),
-            authMillisecondsUntilWarningAppears: getAuthMillisecondsUntilWarning(),
-            authWarningDurationInMilliseconds: getAuthWarningDurationMilliseconds(),
             invoiceDataDir: getInvoiceDataDir(),
             middleware: {
                 url: getMiddlewareUrl(),
@@ -302,17 +294,12 @@ config.setStoreOptionsForCycles = function (storeOptions) {
 config.getStoreOptionsForCycles = function () {
     return storeOptionsForCycles || config.storeOptions;
 };
-config.getAuthTimeoutDuration = function () {
-    return config.authMillisecondsUntilWarningAppears + config.authWarningDurationInMilliseconds;
-};
 
 config.isConfigSafeToExposeToWebBrowser = isConfigSafeToExposeToWebBrowser;
 
 const getLegacyValue = (key) => {
     const lookupTable = {
         'ALERT_TIMEOUT': config.alertTimeout,
-        'AUTH_MILLISECONDS_UNTIL_WARNING': config.authMillisecondsUntilWarningAppears,
-        'AUTH_WARNING_DURATION_MILLISECONDS': config.authWarningDurationInMilliseconds,
         'CARLI_LISTSERVE_EMAIL': config.notifications.carliListServe,
         'MAINTENANCE_MODE_ENABLED': config.maintenanceMode.enabled,
         'MAINTENANCE_MODE_HEADING': config.maintenanceMode.heading,

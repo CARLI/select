@@ -19,8 +19,6 @@ angular.module('common.config')
         loadConfig('LIBRARY_APP_URL', 'libraryWebAppUrl');
         loadConfig('VENDOR_APP_URL', 'vendorWebAppUrl');
         loadConfig('ALERT_TIMEOUT', 'alertTimeout');
-        loadConfig('AUTH_MILLISECONDS_UNTIL_WARNING', 'authMillisecondsUntilWarningAppears');
-        loadConfig('AUTH_WARNING_DURATION_MILLISECONDS', 'authWarningDurationInMilliseconds');
         loadConfig('ONE_TIME_PURCHASE_CYCLE_DOC_ID', 'oneTimePurchaseProductsCycleDocId');
         loadConfig('STAFF_APP_BROWSING_CONTEXT_ID', 'staffAppBrowsingContextId');
         loadConfig('LIBRARY_APP_BROWSING_CONTEXT_ID', 'libraryAppBrowsingContextId');
@@ -37,9 +35,6 @@ angular.module('common.config')
     }
 
     values.loadConfigFromMiddleware = loadConfigFromMiddleware;
-    values.getAuthTimeoutDuration = function () {
-        return values.authMillisecondsUntilWarningAppears + values.authWarningDurationInMilliseconds;
-    };
 
     values.getMiddlewareUrl = function () {
         var l = $window.location;
