@@ -11,6 +11,13 @@
         <td class="amount">$<span class="align">{{ currency price }}</span></td>
     </tr>
     {{/each}}
+    {{#each invoiceCredits }}
+        <tr>
+            <td class="vendor">{{ vendor }}</td>
+            <td class="product">{{ product }}</td>
+            <td class="amount credit-amount">$<span class="align">({{ creditCurrency price }})</span></td>
+        </tr>
+    {{/each}}
     <tr class="footer">
         <td class="vendor" colspan="2">
             {{#if realInvoice }}

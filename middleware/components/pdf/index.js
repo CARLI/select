@@ -157,7 +157,8 @@ function dataForSubscriptionInvoicePdf(notification){
                     batchId: notification.batchId,
                     cycle: cycle,
                     library: library,
-                    invoiceData: invoiceData,
+                    invoiceData: invoiceData.filter(row => row.price >= 0.0),
+                    invoiceCredits: invoiceData.filter(row => row.price < 0.0),
                     invoiceNumber: notification.invoiceNumber,
                     invoiceTotal: computeInvoiceTotal(invoiceData),
                     notificationTypeForPdf: pdfTypeFromNotification(notification),
@@ -233,21 +234,30 @@ function transformOfferingsToPriceRows(offeringsByVendorName, useFeeForPriceInst
     var vendorNames = Object.keys(offeringsByVendorName).sort();
     var vendorNameForFirstRowOnly = '';
 
-    vendorNames.forEach(function(vendorName){
+    vendorNames.forEach(function(vendorName) {
         var offeringsForVendor = offeringsByVendorName[vendorName];
         vendorNameForFirstRowOnly = vendorName;
 
-        offeringsForVendor.forEach(function(offering){
-            var priceForThisRow = priceForRow(offering);
-            if ( priceForThisRow ) {
-                results.push({
-                    vendor: vendorNameForFirstRowOnly,
+        var priceRowsForVendor = offeringsForVendor
+            .filter(priceForRow)
+            .map(function (offering) {
+                return {
                     product: offering.product.name,
-                    price: priceForThisRow
-                });
-                vendorNameForFirstRowOnly = '';
-            }
-        });
+                    price: priceForRow(offering)
+                };
+            });
+
+        var debits = priceRowsForVendor.filter(function (row) { return row.price >= 0; });
+        addVendorNameToFirstRow(debits);
+        var credits = priceRowsForVendor.filter(function (row) { return row.price < 0; });
+        addVendorNameToFirstRow(credits);
+
+        Array.prototype.push.apply(results, priceRowsForVendor);
+
+        function addVendorNameToFirstRow(rows) {
+            if (rows.length > 0)
+                rows[0].vendor = vendorName;
+        }
     });
 
     return results;
@@ -421,12 +431,17 @@ function formatCurrency( number ){
     return numeral(number).format('0,0.00');
 }
 
+function formatCreditCurrency( number ) {
+    return formatCurrency(Math.abs(number));
+}
+
 function formatDate( date ){
     return moment(date).format('MM/DD/YYYY');
 }
 
 function setupHandlebarsHelpers(){
     handlebars.registerHelper('currency', formatCurrency);
+    handlebars.registerHelper('creditCurrency', formatCreditCurrency);
     handlebars.registerHelper('date', formatDate);
 }
 
