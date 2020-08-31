@@ -1,0 +1,21 @@
+{
+  "$schema": "json-schema.org/draft-04/schema",
+  "title": "CycleCreationJob",
+  "schemaType": "CycleCreationJob",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique identifier for a Cycle Creation Job",
+      "type": "string"
+    },
+    "sourceCycle": {
+      "description": "UUID of the source Cycle document",
+      "type": "string"
+    },
+    "targetCycle": {
+      "description": "UUID of the target Cycle document",
+      "type": "string"
+    }
+  },
+  "required": [ "sourceCycle", "targetCycle" ]
+}
