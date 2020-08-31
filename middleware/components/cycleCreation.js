@@ -285,8 +285,6 @@ function deleteCycle(cycleId) {
         });
 }
 
-
-
 /* NEW CYCLE CREATION STUFF HERE */
 
 function newCopyCycleDataFrom( sourceCycleId, newCycleId ){
