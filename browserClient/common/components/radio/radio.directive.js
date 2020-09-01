@@ -6,7 +6,7 @@ angular.module('common.radio')
         return {
             restrict: 'E',
             template: '<input id="{{ radioId }}" name="{{ name }}" ng-value="value" type="radio" ng-model="ngModel">' + "\n" +
-                      '<label for="{{ radioId }}"><i class="fa radio-display" /><ng-transclude></ng-transclude></label>',
+                      '<label for="{{ radioId }}"><i class="fa radio-display"></i><ng-transclude></ng-transclude></label>',
             scope: {
                 ngModel: '=',
                 name: '=',
