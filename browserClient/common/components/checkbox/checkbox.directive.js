@@ -6,7 +6,7 @@ angular.module('common.checkbox')
 
         return {
             restrict: 'E',
-            template: '<input id="{{ checkboxId }}" type="checkbox" ng-model="ngModel" ng-disabled="ngDisabled"><label for="{{ checkboxId }}"><span class="fa checkbox-display" /><ng-transclude></ng-transclude></label>',
+            template: '<input id="{{ checkboxId }}" type="checkbox" ng-model="ngModel" ng-disabled="ngDisabled"><label for="{{ checkboxId }}"><span class="fa checkbox-display"></span><ng-transclude></ng-transclude></label>',
             scope: {
                 ngModel: '=',
                 id: '=',
