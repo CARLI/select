@@ -1,5 +1,7 @@
+require('dotenv').config();
 
 var _ = require('lodash');
+
 //don't let this get browserified because it uses ES6 which breaks uglify
 var environmentVariableNodePackageName = 'dotenv';
 
