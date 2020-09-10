@@ -39,17 +39,43 @@ describe.only('The Cycle Creation Job Process', function(){
             var testCycleCreationJob = {
                 type: 'CycleCreationJob',
                 sourceCycle: '',
-                targetCycle: ''
+                targetCycle: '',
+                loadCycles: '2020-09-09-20:01:34'
             };
 
             var cycleCreationJobProcessor = CycleCreationJobProcessor({}, couchUtilsSpy);
             cycleCreationJobProcessor.process(testCycleCreationJob);
             expect(couchUtilsSpy.replicateCalled).to.equal(1);
         });
+
+        it('triggers index views if the status indicates replication has completed', function() {
+           var couchUtilsSpy = {
+               replicateCalled: 0,
+               triggeredIndexingOnDatabase: '',
+
+               replicate: function () {
+                   this.replicateCalled++;
+               },
+               triggerIndexViews: function(databaseName) {
+                   this.triggeredIndexingOnDatabase = databaseName;
+               }
+           };
+           var testCycleCreationJob = {
+               type: 'CycleCreationJob',
+               sourceCycle: '',
+               targetCycle: '',
+               loadCycles: '2020-09-09-20:01:34',
+               replicate: '2020-09-09-20:01:34'
+           };
+
+           var cycleCreationJobProcessor = CycleCreationJobProcessor({}, couchUtilsSpy);
+           cycleCreationJobProcessor.process(testCycleCreationJob);
+           expect(couchUtilsSpy.triggeredIndexingOnDatabase).to.equal('i have no idea');
+        });
     });
 
     describe('getCurrentStepForJob function', function() {
-        it('starts with loading cycles', function() {
+        it('uses the steps in the correct order', function() {
             var cycleCreationJobProcessor = CycleCreationJobProcessor({}, {});
             var testCycleCreationJob = {
                 type: 'CycleCreationJob',
@@ -57,83 +83,69 @@ describe.only('The Cycle Creation Job Process', function(){
                 targetCycle: ''
             };
 
-            var currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
+            currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
             expect(currentStep).equals('loadCycles');
-        });
 
-        it('follows loading cycles with replicate', function() {
-            var cycleCreationJobProcessor = CycleCreationJobProcessor({}, {});
-            var testCycleCreationJob = {
-                type: 'CycleCreationJob',
-                sourceCycle: '',
-                targetCycle: '',
-                loadCycles: '2020-09-09-193402'
-            };
-
-            var currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
+            testCycleCreationJob['loadCycles'] = '2020-09-09-193402';
+            currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
             expect(currentStep).equals('replicate');
-        });
 
-        it('follows loading cycles with indexViews', function() {
-            var cycleCreationJobProcessor = CycleCreationJobProcessor({}, {});
-            var testCycleCreationJob = {
-                type: 'CycleCreationJob',
-                sourceCycle: '',
-                targetCycle: '',
-                loadCycles: '2020-09-09-193402',
-                replicate: '2020-09-09-193402'
-
-            };
-
-            var currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
+            testCycleCreationJob['replicate'] = '2020-09-09-193402';
+            currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
             expect(currentStep).equals('indexViews');
+
+            testCycleCreationJob['indexViews'] = '2020-09-09-193402';
+            currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
+            expect(currentStep).equals('resetVendorStatus');
+
+            testCycleCreationJob['resetVendorStatus'] = '2020-09-09-193402';
+            currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
+            expect(currentStep).equals('resetLibraryStatus');
+
+            testCycleCreationJob['resetLibraryStatus'] = '2020-09-09-193402';
+            currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
+            expect(currentStep).equals('transformProducts');
+
+            testCycleCreationJob['resetLibraryStatus'] = '2020-09-09-193402';
+            currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
+            expect(currentStep).equals('transformProducts');
+
+            testCycleCreationJob['transformProducts'] = '2020-09-09-193402';
+            currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
+            expect(currentStep).equals('transformOfferings');
+
+            testCycleCreationJob['transformOfferings'] = '2020-09-09-193402';
+            currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
+            expect(currentStep).equals('indexViewsPhase2');
+
+            testCycleCreationJob['indexViewsPhase2'] = '2020-09-09-193402';
+            currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
+            expect(currentStep).equals('setCycleToNextPhase');
+
+            testCycleCreationJob['setCycleToNextPhase'] = '2020-09-09-193402';
+            currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
+            expect(currentStep).equals('done');
         });
     });
 
-        // getCurrentStepForJob(job)
+    describe('markStepCompleted function', function() {
+        it('sets the time of completion to the current time for the given step', function() {
+            var cycleCreationJobProcessor = CycleCreationJobProcessor({}, {});
+            var testCycleCreationJob = {
+                type: 'CycleCreationJob',
+                sourceCycle: '',
+                targetCycle: ''
+            };
 
-        // markStepCompleted(job, step)
+            var expectedTimestamp = '2020-08-22-19:34:21Z';
 
-        /*const dude = {
-            type: 'CycleCreationJob',
-            sourceCycle: '2019',
-            targetCycle: '2020',
-            LoadCycles: '2020-09-09-192022',
-            Replicate: '2020-09-09-193101',
-            IndexViews: '',
-            ResetVendorStatuses: '',
-            ResetLibraryStatuses: '',
-            transformProducts: '',
-            transformOfferings: '',
+            cycleCreationJobProcessor.getCurrentTimestamp = function() { return expectedTimestamp; };
+            cycleCreationJobProcessor.markStepCompleted(testCycleCreationJob, 'test');
 
-
-
-
-    }*/
-
-        // define the order of the steps
-        // know which step we're on
-        // be able to mark a step as complete
-
-
+            expect(testCycleCreationJob.test, expectedTimestamp);
+        });
+    });
         //Next step: add test and spy for next step in cycle copying, which is indexViews()
-        //will need to add statuses to the cycleCreationJob objects
+        // DONE - will need to add statuses to the cycleCreationJob objects
         //assert that the triggerViewIndexing method on couchUtils gets called
-        //
-
-        /*
-        loadCycles()
-        .then(replicate)
-        .then(indexViews)
-        .then(waitForIndexingToFinish)
-        .then(resetVendorStatuses)
-        .then(resetLibraryStatuses)
-        .then(transformProducts)
-        .then(transformOfferings)
-        .then(indexViews)
-        .then(waitForIndexingToFinish)
-        .then(setCycleToNextPhase)
-        .thenResolve(newCycleId)
-        .catch((err) => {
-         */
 });
