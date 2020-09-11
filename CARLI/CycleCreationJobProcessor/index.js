@@ -1,5 +1,8 @@
+var Q = require('q');
 function CycleCreationJobProcessor(cycleRepository, couchUtils, offeringRepository, libraryStatusRepository, vendorStatusRepository) {
     return {
+        sourceCycle: null,
+        targetCycle: null,
         stepOrder: [
             'loadCycles',
             'replicate',
@@ -15,14 +18,14 @@ function CycleCreationJobProcessor(cycleRepository, couchUtils, offeringReposito
 
         getStepAction: function(step) {
             var stepActions = {
-                'loadCycles': function() { return null; },
-                'replicate': this.replicate,
-                'indexViews': this.triggerIndexViews,
+                'loadCycles': this.loadCycles.bind(this),
+                'replicate': this.replicate.bind(this),
+                'indexViews': this.triggerIndexViews.bind(this),
                 'resetVendorStatus': function() { return null; },
                 'resetLibraryStatus': function() { return null; },
                 'transformProducts': function() { return null; },
                 'transformOfferings': function() { return null; },
-                'indexViewsPhase2' : function() { return null; },
+                'indexViewsPhase2' : this.triggerIndexViews.bind(this),
                 'setCycleToNextPhase': function() { return null; },
                 'done': function() { return null; }
             };
@@ -40,15 +43,26 @@ function CycleCreationJobProcessor(cycleRepository, couchUtils, offeringReposito
 
             var currentStep = this.getCurrentStepForJob(cycleCreationJob);
             var stepAction = this.getStepAction(currentStep);
-            stepAction();
+            return Q(stepAction(cycleCreationJob));
         },
 
-        replicate: function() {
+        loadCycles: async function(job) {
+            this.sourceCycle = await cycleRepository.load(job.sourceCycle);
+            this.newCycle = await cycleRepository.load(job.targetCycle);
+            return true;
+        },
+
+        replicate: async function(job) {
+            if(!this.sourceCycle) {
+                await this.loadCycles(job);
+            }
+
+            cycleRepository.createCycleLog('Replicating data from '+ this.sourceCycle.databaseName +' to '+ this.newCycle.databaseName);
             couchUtils.replicate();
         },
 
         triggerIndexViews: function() {
-            couchUtils.triggerIndexViews('i have no idea');
+            couchUtils.triggerIndexViews('dbNameHere');
         },
 
         markStepCompleted: function(job, step) {
