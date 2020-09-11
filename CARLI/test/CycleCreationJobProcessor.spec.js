@@ -1,9 +1,23 @@
 var chai = require('chai');
 var expect = chai.expect;
+var Q = require('q');
 
 var CycleCreationJobProcessor = require('../CycleCreationJobProcessor');
 
+var couchUtilsSpy = createCouchUtilsSpy();
+
+var testCycleCreationJob = createTestCycleCreationJob();
+
+var cycleRepository = createCycleRepository();
+
 describe.only('The Cycle Creation Job Process', function(){
+
+    beforeEach(function() {
+        couchUtilsSpy = createCouchUtilsSpy();
+        testCycleCreationJob = createTestCycleCreationJob();
+        cycleRepository = createCycleRepository();
+    });
+
     it('should be a constructor function', function(){
         expect(CycleCreationJobProcessor).to.be.a('function');
     });
@@ -29,59 +43,45 @@ describe.only('The Cycle Creation Job Process', function(){
             expect(callWithBadInput).to.throw(/invalid cycle creation job/);
         });
 
-        it('triggers replication if the status indicates replication has not happened', function () {
-            var couchUtilsSpy = {
-                replicateCalled: 0,
-                replicate: function () {
-                    this.replicateCalled++;
-                }
-            };
-            var testCycleCreationJob = {
-                type: 'CycleCreationJob',
-                sourceCycle: '',
-                targetCycle: '',
-                loadCycles: '2020-09-09-20:01:34'
-            };
+        it('triggers replication if the status indicates replication has not happened', async function () {
 
-            var cycleCreationJobProcessor = CycleCreationJobProcessor({}, couchUtilsSpy);
-            cycleCreationJobProcessor.process(testCycleCreationJob);
+            testCycleCreationJob.loadCycles = '2020-09-09-20:01:34';
+
+            var cycleCreationJobProcessor = CycleCreationJobProcessor(cycleRepository, couchUtilsSpy);
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
             expect(couchUtilsSpy.replicateCalled).to.equal(1);
         });
 
-        it('triggers index views if the status indicates replication has completed', function() {
-           var couchUtilsSpy = {
-               replicateCalled: 0,
-               triggeredIndexingOnDatabase: '',
+        it('triggers index views if the status indicates replication has completed', async function() {
 
-               replicate: function () {
-                   this.replicateCalled++;
-               },
-               triggerIndexViews: function(databaseName) {
-                   this.triggeredIndexingOnDatabase = databaseName;
-               }
-           };
-           var testCycleCreationJob = {
-               type: 'CycleCreationJob',
-               sourceCycle: '',
-               targetCycle: '',
-               loadCycles: '2020-09-09-20:01:34',
-               replicate: '2020-09-09-20:01:34'
-           };
+           testCycleCreationJob.loadCycles = '2020-09-09-20:01:34';
+           testCycleCreationJob.replicate = '2020-09-09-20:01:34';
 
            var cycleCreationJobProcessor = CycleCreationJobProcessor({}, couchUtilsSpy);
-           cycleCreationJobProcessor.process(testCycleCreationJob);
-           expect(couchUtilsSpy.triggeredIndexingOnDatabase).to.equal('i have no idea');
+           await cycleCreationJobProcessor.process(testCycleCreationJob);
+           expect(couchUtilsSpy.triggeredIndexingOnDatabase).to.equal('dbNameHere');
+        });
+
+        it('triggers cycle loading', async function() {
+
+            var cycleCreationJobProcessor = CycleCreationJobProcessor(cycleRepository, {});
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
+            expect(cycleRepository.cyclesLoaded).deep.equals(['cycle1', 'cycle2']);
+        });
+
+        it('replicates the cycles', async function() {
+
+            testCycleCreationJob.loadCycles = 'booty';
+
+            const cycleCreationJobProcessor = CycleCreationJobProcessor(cycleRepository, couchUtilsSpy);
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
+            expect(cycleRepository.logMessage).equals('Replicating data from cycle-'+ testCycleCreationJob.sourceCycle +' to cycle-'+ testCycleCreationJob.targetCycle);
         });
     });
 
     describe('getCurrentStepForJob function', function() {
         it('uses the steps in the correct order', function() {
             var cycleCreationJobProcessor = CycleCreationJobProcessor({}, {});
-            var testCycleCreationJob = {
-                type: 'CycleCreationJob',
-                sourceCycle: '',
-                targetCycle: ''
-            };
 
             currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
             expect(currentStep).equals('loadCycles');
@@ -131,11 +131,6 @@ describe.only('The Cycle Creation Job Process', function(){
     describe('markStepCompleted function', function() {
         it('sets the time of completion to the current time for the given step', function() {
             var cycleCreationJobProcessor = CycleCreationJobProcessor({}, {});
-            var testCycleCreationJob = {
-                type: 'CycleCreationJob',
-                sourceCycle: '',
-                targetCycle: ''
-            };
 
             var expectedTimestamp = '2020-08-22-19:34:21Z';
 
@@ -149,3 +144,42 @@ describe.only('The Cycle Creation Job Process', function(){
         // DONE - will need to add statuses to the cycleCreationJob objects
         //assert that the triggerViewIndexing method on couchUtils gets called
 });
+
+function createCouchUtilsSpy() {
+    return {
+        replicateCalled: 0,
+        triggeredIndexingOnDatabase: '',
+
+        replicate: function () {
+            this.replicateCalled++;
+        },
+        triggerIndexViews: function (databaseName) {
+            this.triggeredIndexingOnDatabase = databaseName;
+        }
+    };
+}
+
+function createTestCycleCreationJob() {
+    return {
+        type: 'CycleCreationJob',
+        sourceCycle: 'cycle1',
+        targetCycle: 'cycle2'
+    };
+}
+
+function createCycleRepository() {
+    return {
+        cyclesLoaded: [],
+        logMessage: '',
+        load: function (cycleID) {
+            this.cyclesLoaded.push(cycleID);
+            return Q({
+                databaseName: 'cycle-' + cycleID
+            });
+
+        },
+        createCycleLog: function (message) {
+            this.logMessage = message;
+        }
+    };
+}
