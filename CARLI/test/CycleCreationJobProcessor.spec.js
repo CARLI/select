@@ -5,9 +5,7 @@ var Q = require('q');
 var CycleCreationJobProcessor = require('../CycleCreationJobProcessor');
 
 var couchUtilsSpy = createCouchUtilsSpy();
-
 var testCycleCreationJob = createTestCycleCreationJob();
-
 var cycleRepository = createCycleRepository();
 
 describe.only('The Cycle Creation Job Process', function(){
@@ -49,7 +47,7 @@ describe.only('The Cycle Creation Job Process', function(){
 
             var cycleCreationJobProcessor = CycleCreationJobProcessor(cycleRepository, couchUtilsSpy);
             await cycleCreationJobProcessor.process(testCycleCreationJob);
-            expect(couchUtilsSpy.replicateCalled).to.equal(1);
+            expect(couchUtilsSpy.replicateFromCalled).to.equal(1);
         });
 
         it('triggers index views if the status indicates replication has completed', async function() {
@@ -147,11 +145,17 @@ describe.only('The Cycle Creation Job Process', function(){
 
 function createCouchUtilsSpy() {
     return {
-        replicateCalled: 0,
+        replicateFromCalled: 0,
+        replicateToCalled: 0,
         triggeredIndexingOnDatabase: '',
 
-        replicate: function () {
-            this.replicateCalled++;
+        replicateFrom: function (sourceDbName) {
+            this.replicateFromCalled++;
+            return {
+                to: (targetDbName) => {
+                    this.replicateToCalled++;
+                }
+            }
         },
         triggerIndexViews: function (databaseName) {
             this.triggeredIndexingOnDatabase = databaseName;
