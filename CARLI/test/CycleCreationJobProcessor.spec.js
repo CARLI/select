@@ -48,6 +48,8 @@ describe.only('The Cycle Creation Job Process', function(){
             var cycleCreationJobProcessor = CycleCreationJobProcessor(cycleRepository, couchUtilsSpy);
             await cycleCreationJobProcessor.process(testCycleCreationJob);
             expect(couchUtilsSpy.replicateFromCalled).to.equal(1);
+            expect(couchUtilsSpy.replicateToCalled).to.equal(1);
+
         });
 
         it('triggers index views if the status indicates replication has completed', async function() {
@@ -55,9 +57,9 @@ describe.only('The Cycle Creation Job Process', function(){
            testCycleCreationJob.loadCycles = '2020-09-09-20:01:34';
            testCycleCreationJob.replicate = '2020-09-09-20:01:34';
 
-           var cycleCreationJobProcessor = CycleCreationJobProcessor({}, couchUtilsSpy);
+           var cycleCreationJobProcessor = CycleCreationJobProcessor(cycleRepository, couchUtilsSpy);
            await cycleCreationJobProcessor.process(testCycleCreationJob);
-           expect(couchUtilsSpy.triggeredIndexingOnDatabase).to.equal('dbNameHere');
+           expect(couchUtilsSpy.triggeredIndexingOnDatabase).to.equal('cycle-cycle2');
         });
 
         it('triggers cycle loading', async function() {
@@ -69,7 +71,7 @@ describe.only('The Cycle Creation Job Process', function(){
 
         it('replicates the cycles', async function() {
 
-            testCycleCreationJob.loadCycles = 'booty';
+            testCycleCreationJob.loadCycles = '0';
 
             const cycleCreationJobProcessor = CycleCreationJobProcessor(cycleRepository, couchUtilsSpy);
             await cycleCreationJobProcessor.process(testCycleCreationJob);
@@ -135,7 +137,49 @@ describe.only('The Cycle Creation Job Process', function(){
             cycleCreationJobProcessor.getCurrentTimestamp = function() { return expectedTimestamp; };
             cycleCreationJobProcessor.markStepCompleted(testCycleCreationJob, 'test');
 
-            expect(testCycleCreationJob.test, expectedTimestamp);
+            expect(testCycleCreationJob.test).equals(expectedTimestamp);
+        });
+    });
+
+    describe('getViewIndexingStatus',  function() {
+        it('should return 100 with an empty jobs promise', async function() {
+            var cycleCreationJobProcessor = CycleCreationJobProcessor(cycleRepository, couchUtilsSpy);
+
+            const sourceCycle = await cycleRepository.load('0');
+
+            const getRunningCouchJobsPromise = Q([]);
+            const result = await cycleCreationJobProcessor.getViewIndexingStatus(sourceCycle, getRunningCouchJobsPromise);
+            expect(result).equals( 100);
+        });
+
+        it('should return progress of a job with an non-empty jobs promise', async function() {
+            var cycleCreationJobProcessor = CycleCreationJobProcessor(cycleRepository, couchUtilsSpy);
+
+            const sourceCycle = await cycleRepository.load('0');
+
+            const job = {
+                progress: 40,
+                type: 'indexer'
+            };
+
+            const getRunningCouchJobsPromise = Q([job]);
+            const result = await cycleCreationJobProcessor.getViewIndexingStatus(sourceCycle, getRunningCouchJobsPromise);
+            expect(result).equals( 40);
+        });
+
+        it('should filter to only jobs that are indexing jobs', async function() {
+            var cycleCreationJobProcessor = CycleCreationJobProcessor(cycleRepository, couchUtilsSpy);
+
+            const sourceCycle = await cycleRepository.load('0');
+
+            const jobs = [
+                { type: 'relaxing', progress: 40, },
+                { type: 'indexer', progress: 70 }
+            ];
+
+            const getRunningCouchJobsPromise = Q(jobs);
+            const result = await cycleCreationJobProcessor.getViewIndexingStatus(sourceCycle, getRunningCouchJobsPromise);
+            expect(result).equals( 70);
         });
     });
         //Next step: add test and spy for next step in cycle copying, which is indexViews()
@@ -155,9 +199,9 @@ function createCouchUtilsSpy() {
                 to: (targetDbName) => {
                     this.replicateToCalled++;
                 }
-            }
+            };
         },
-        triggerIndexViews: function (databaseName) {
+        triggerViewIndexing: function (databaseName) {
             this.triggeredIndexingOnDatabase = databaseName;
         }
     };
@@ -178,7 +222,9 @@ function createCycleRepository() {
         load: function (cycleID) {
             this.cyclesLoaded.push(cycleID);
             return Q({
-                databaseName: 'cycle-' + cycleID
+                getDatabaseName: () => {
+                    return 'cycle-' + cycleID;
+                }
             });
 
         },

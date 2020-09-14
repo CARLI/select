@@ -57,12 +57,17 @@ function CycleCreationJobProcessor(cycleRepository, couchUtils, offeringReposito
                 await this.loadCycles(job);
             }
 
-            cycleRepository.createCycleLog('Replicating data from '+ this.sourceCycle.databaseName +' to '+ this.newCycle.databaseName);
-            couchUtils.replicate();
+            cycleRepository.createCycleLog('Replicating data from '+ this.sourceCycle.getDatabaseName() +' to '+ this.newCycle.getDatabaseName());
+            return couchUtils.replicateFrom(this.sourceCycle.getDatabaseName()).to(this.newCycle.getDatabaseName());
         },
 
-        triggerIndexViews: function() {
-            couchUtils.triggerIndexViews('dbNameHere');
+        triggerIndexViews: async function(job) {
+            if(!this.sourceCycle) {
+                await this.loadCycles(job);
+            }
+
+            cycleRepository.createCycleLog('Triggering view indexing for ' + this.newCycle.name + ' with database ' + this.newCycle.getDatabaseName());
+            return couchUtils.triggerViewIndexing(this.newCycle.getDatabaseName());
         },
 
         markStepCompleted: function(job, step) {
@@ -74,6 +79,22 @@ function CycleCreationJobProcessor(cycleRepository, couchUtils, offeringReposito
                 if(cycleCreationJob[this.stepOrder[i]] === undefined) {
                     return this.stepOrder[i];
                 }
+            }
+        },
+
+        getViewIndexingStatus: async function(cycle, couchJobsPromise) {
+            const jobs = await couchJobsPromise;
+
+            return resolveToProgress(filterIndexJobs(jobs));
+
+            function filterIndexJobs( jobs ){
+                return jobs.filter(function(job){
+                    return job.type === 'indexer';
+                });
+            }
+
+            function resolveToProgress( jobs ){
+                return jobs.length ? jobs[0].progress : 100;
             }
         }
     }
