@@ -7,6 +7,7 @@ var CycleCreationJobProcessor = require('../CycleCreationJobProcessor');
 var couchUtilsSpy = createCouchUtilsSpy();
 var testCycleCreationJob = createTestCycleCreationJob();
 var cycleRepository = createCycleRepository();
+var fakeTimestamper = fakeTimestamper('2020-08-22-19:34:21Z');
 
 describe.only('The Cycle Creation Job Process', function(){
 
@@ -83,61 +84,58 @@ describe.only('The Cycle Creation Job Process', function(){
         it('uses the steps in the correct order', function() {
             var cycleCreationJobProcessor = CycleCreationJobProcessor({}, {});
 
-            currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
+            currentStep = cycleCreationJobProcessor._getCurrentStepForJob(testCycleCreationJob);
             expect(currentStep).equals('loadCycles');
 
             testCycleCreationJob['loadCycles'] = '2020-09-09-193402';
-            currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
+            currentStep = cycleCreationJobProcessor._getCurrentStepForJob(testCycleCreationJob);
             expect(currentStep).equals('replicate');
 
             testCycleCreationJob['replicate'] = '2020-09-09-193402';
-            currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
+            currentStep = cycleCreationJobProcessor._getCurrentStepForJob(testCycleCreationJob);
             expect(currentStep).equals('indexViews');
 
             testCycleCreationJob['indexViews'] = '2020-09-09-193402';
-            currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
+            currentStep = cycleCreationJobProcessor._getCurrentStepForJob(testCycleCreationJob);
             expect(currentStep).equals('resetVendorStatus');
 
             testCycleCreationJob['resetVendorStatus'] = '2020-09-09-193402';
-            currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
+            currentStep = cycleCreationJobProcessor._getCurrentStepForJob(testCycleCreationJob);
             expect(currentStep).equals('resetLibraryStatus');
 
             testCycleCreationJob['resetLibraryStatus'] = '2020-09-09-193402';
-            currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
+            currentStep = cycleCreationJobProcessor._getCurrentStepForJob(testCycleCreationJob);
             expect(currentStep).equals('transformProducts');
 
             testCycleCreationJob['resetLibraryStatus'] = '2020-09-09-193402';
-            currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
+            currentStep = cycleCreationJobProcessor._getCurrentStepForJob(testCycleCreationJob);
             expect(currentStep).equals('transformProducts');
 
             testCycleCreationJob['transformProducts'] = '2020-09-09-193402';
-            currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
+            currentStep = cycleCreationJobProcessor._getCurrentStepForJob(testCycleCreationJob);
             expect(currentStep).equals('transformOfferings');
 
             testCycleCreationJob['transformOfferings'] = '2020-09-09-193402';
-            currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
+            currentStep = cycleCreationJobProcessor._getCurrentStepForJob(testCycleCreationJob);
             expect(currentStep).equals('indexViewsPhase2');
 
             testCycleCreationJob['indexViewsPhase2'] = '2020-09-09-193402';
-            currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
+            currentStep = cycleCreationJobProcessor._getCurrentStepForJob(testCycleCreationJob);
             expect(currentStep).equals('setCycleToNextPhase');
 
             testCycleCreationJob['setCycleToNextPhase'] = '2020-09-09-193402';
-            currentStep = cycleCreationJobProcessor.getCurrentStepForJob(testCycleCreationJob);
+            currentStep = cycleCreationJobProcessor._getCurrentStepForJob(testCycleCreationJob);
             expect(currentStep).equals('done');
         });
     });
 
     describe('markStepCompleted function', function() {
         it('sets the time of completion to the current time for the given step', function() {
-            var cycleCreationJobProcessor = CycleCreationJobProcessor({}, {});
+            var cycleCreationJobProcessor = CycleCreationJobProcessor({}, {}, fakeTimestamper);
 
-            var expectedTimestamp = '2020-08-22-19:34:21Z';
+            cycleCreationJobProcessor._markStepCompleted(testCycleCreationJob, 'test');
 
-            cycleCreationJobProcessor.getCurrentTimestamp = function() { return expectedTimestamp; };
-            cycleCreationJobProcessor.markStepCompleted(testCycleCreationJob, 'test');
-
-            expect(testCycleCreationJob.test).equals(expectedTimestamp);
+            expect(testCycleCreationJob.test).equals('2020-08-22-19:34:21Z');
         });
     });
 
@@ -148,7 +146,7 @@ describe.only('The Cycle Creation Job Process', function(){
             const sourceCycle = await cycleRepository.load('0');
 
             const getRunningCouchJobsPromise = Q([]);
-            const result = await cycleCreationJobProcessor.getViewIndexingStatus(sourceCycle, getRunningCouchJobsPromise);
+            const result = await cycleCreationJobProcessor._getViewIndexingStatus(sourceCycle, getRunningCouchJobsPromise);
             expect(result).equals( 100);
         });
 
@@ -163,7 +161,7 @@ describe.only('The Cycle Creation Job Process', function(){
             };
 
             const getRunningCouchJobsPromise = Q([job]);
-            const result = await cycleCreationJobProcessor.getViewIndexingStatus(sourceCycle, getRunningCouchJobsPromise);
+            const result = await cycleCreationJobProcessor._getViewIndexingStatus(sourceCycle, getRunningCouchJobsPromise);
             expect(result).equals( 40);
         });
 
@@ -178,7 +176,7 @@ describe.only('The Cycle Creation Job Process', function(){
             ];
 
             const getRunningCouchJobsPromise = Q(jobs);
-            const result = await cycleCreationJobProcessor.getViewIndexingStatus(sourceCycle, getRunningCouchJobsPromise);
+            const result = await cycleCreationJobProcessor._getViewIndexingStatus(sourceCycle, getRunningCouchJobsPromise);
             expect(result).equals( 70);
         });
     });
@@ -232,4 +230,12 @@ function createCycleRepository() {
             this.logMessage = message;
         }
     };
+}
+
+function fakeTimestamper(expectedTimestamp) {
+    return {
+        getCurrentTimestamp: function() {
+            return expectedTimestamp;
+        }
+    }
 }
