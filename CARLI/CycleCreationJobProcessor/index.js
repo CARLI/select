@@ -1,102 +1,124 @@
 var Q = require('q');
-function CycleCreationJobProcessor(cycleRepository, couchUtils, offeringRepository, libraryStatusRepository, vendorStatusRepository) {
-    return {
-        sourceCycle: null,
-        targetCycle: null,
-        stepOrder: [
-            'loadCycles',
-            'replicate',
-            'indexViews',
-            'resetVendorStatus',
-            'resetLibraryStatus',
-            'transformProducts',
-            'transformOfferings',
-            'indexViewsPhase2',
-            'setCycleToNextPhase',
-            'done'
-        ],
 
-        getStepAction: function(step) {
-            var stepActions = {
-                'loadCycles': this.loadCycles.bind(this),
-                'replicate': this.replicate.bind(this),
-                'indexViews': this.triggerIndexViews.bind(this),
-                'resetVendorStatus': function() { return null; },
-                'resetLibraryStatus': function() { return null; },
-                'transformProducts': function() { return null; },
-                'transformOfferings': function() { return null; },
-                'indexViewsPhase2' : this.triggerIndexViews.bind(this),
-                'setCycleToNextPhase': function() { return null; },
-                'done': function() { return null; }
-            };
+function CycleCreationJobProcessor(cycleRepository, couchUtils, timestamper, offeringRepository, libraryStatusRepository, vendorStatusRepository) {
 
-            return stepActions[step];
-        },
+    var sourceCycle = null;
+    var targetCycle = null;
+    var newCycle = null;
 
-        getCurrentTimestamp: function() {
-            return new Date().toISOString();
-        },
+    var stepOrder = [
+        'loadCycles',
+        'replicate',
+        'indexViews',
+        'resetVendorStatus',
+        'resetLibraryStatus',
+        'transformProducts',
+        'transformOfferings',
+        'indexViewsPhase2',
+        'setCycleToNextPhase',
+        'done'
+    ]
 
-        process: function(cycleCreationJob) {
-            if (typeof cycleCreationJob !== 'object' || cycleCreationJob.type !== 'CycleCreationJob')
-                throw new Error('invalid cycle creation job');
+    async function loadCycles(job) {
+        sourceCycle = await cycleRepository.load(job.sourceCycle);
+        newCycle = await cycleRepository.load(job.targetCycle);
+        return true;
+    }
 
-            var currentStep = this.getCurrentStepForJob(cycleCreationJob);
-            var stepAction = this.getStepAction(currentStep);
-            return Q(stepAction(cycleCreationJob));
-        },
+    function process(cycleCreationJob) {
+        if (typeof cycleCreationJob !== 'object' || cycleCreationJob.type !== 'CycleCreationJob')
+            throw new Error('invalid cycle creation job');
 
-        loadCycles: async function(job) {
-            this.sourceCycle = await cycleRepository.load(job.sourceCycle);
-            this.newCycle = await cycleRepository.load(job.targetCycle);
-            return true;
-        },
+        var currentStep = getCurrentStepForJob(cycleCreationJob);
+        var stepAction = getStepAction(currentStep);
+        return Q(stepAction(cycleCreationJob));
+    }
 
-        replicate: async function(job) {
-            if(!this.sourceCycle) {
-                await this.loadCycles(job);
-            }
+    async function loadCycles(job) {
+        sourceCycle = await cycleRepository.load(job.sourceCycle);
+        newCycle = await cycleRepository.load(job.targetCycle);
+        return true;
+    }
 
-            cycleRepository.createCycleLog('Replicating data from '+ this.sourceCycle.getDatabaseName() +' to '+ this.newCycle.getDatabaseName());
-            return couchUtils.replicateFrom(this.sourceCycle.getDatabaseName()).to(this.newCycle.getDatabaseName());
-        },
+    async function replicate(job) {
+        if (!sourceCycle) {
+            await loadCycles(job);
+        }
 
-        triggerIndexViews: async function(job) {
-            if(!this.sourceCycle) {
-                await this.loadCycles(job);
-            }
+        cycleRepository.createCycleLog('Replicating data from ' + sourceCycle.getDatabaseName() + ' to ' + newCycle.getDatabaseName());
+        return couchUtils.replicateFrom(sourceCycle.getDatabaseName()).to(newCycle.getDatabaseName());
+    }
 
-            cycleRepository.createCycleLog('Triggering view indexing for ' + this.newCycle.name + ' with database ' + this.newCycle.getDatabaseName());
-            return couchUtils.triggerViewIndexing(this.newCycle.getDatabaseName());
-        },
+    async function triggerIndexViews(job) {
+        if (!sourceCycle) {
+            await loadCycles(job);
+        }
 
-        markStepCompleted: function(job, step) {
-            job[step] = this.getCurrentTimestamp();
-        },
+        cycleRepository.createCycleLog('Triggering view indexing for ' + newCycle.name + ' with database ' + newCycle.getDatabaseName());
+        return couchUtils.triggerViewIndexing(newCycle.getDatabaseName());
+    }
 
-        getCurrentStepForJob: function(cycleCreationJob) {
-            for(var i = 0; i < this.stepOrder.length; i++) {
-                if(cycleCreationJob[this.stepOrder[i]] === undefined) {
-                    return this.stepOrder[i];
-                }
-            }
-        },
+    function markStepCompleted(job, step) {
+        job[step] = timestamper.getCurrentTimestamp();
+    }
 
-        getViewIndexingStatus: async function(cycle, couchJobsPromise) {
-            const jobs = await couchJobsPromise;
-
-            return resolveToProgress(filterIndexJobs(jobs));
-
-            function filterIndexJobs( jobs ){
-                return jobs.filter(function(job){
-                    return job.type === 'indexer';
-                });
-            }
-
-            function resolveToProgress( jobs ){
-                return jobs.length ? jobs[0].progress : 100;
+    function getCurrentStepForJob(cycleCreationJob) {
+        for (var i = 0; i < stepOrder.length; i++) {
+            if (cycleCreationJob[stepOrder[i]] === undefined) {
+                return stepOrder[i];
             }
         }
+    }
+
+    async function getViewIndexingStatus(cycle, couchJobsPromise) {
+        const jobs = await couchJobsPromise;
+
+        return resolveToProgress(filterIndexJobs(jobs));
+
+        function filterIndexJobs(jobs) {
+            return jobs.filter(function (job) {
+                return job.type === 'indexer';
+            });
+        }
+
+        function resolveToProgress(jobs) {
+            return jobs.length ? jobs[0].progress : 100;
+        }
+    }
+
+    function getStepAction(step) {
+        var stepActions = {
+            'loadCycles': loadCycles,
+            'replicate': replicate,
+            'indexViews': triggerIndexViews,
+            'resetVendorStatus': function () {
+                return null;
+            },
+            'resetLibraryStatus': function () {
+                return null;
+            },
+            'transformProducts': function () {
+                return null;
+            },
+            'transformOfferings': function () {
+                return null;
+            },
+            'indexViewsPhase2': triggerIndexViews,
+            'setCycleToNextPhase': function () {
+                return null;
+            },
+            'done': function () {
+                return null;
+            }
+        };
+        return stepActions[step];
+    }
+
+    return {
+        process,
+        _getCurrentStepForJob: getCurrentStepForJob,
+        _markStepCompleted: markStepCompleted,
+        _getViewIndexingStatus: getViewIndexingStatus
     }
 }
 
