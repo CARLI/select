@@ -9,7 +9,7 @@ var testCycleCreationJob = createTestCycleCreationJob();
 var cycleRepository = createCycleRepository();
 var fakeTimestamper = fakeTimestamper('2020-08-22-19:34:21Z');
 
-describe.only('The Cycle Creation Job Process', function(){
+describe('The Cycle Creation Job Process', function(){
 
     beforeEach(function() {
         couchUtilsSpy = createCouchUtilsSpy();
