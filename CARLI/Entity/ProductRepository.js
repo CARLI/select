@@ -419,6 +419,11 @@ function setStore(store) {
     // EntityTransform.setEntityLookupStores(store);
 }
 
+function overrideStore(store, newCouchUtils) {
+    ProductRepository.setStore(store);
+    couchUtils = newCouchUtils;
+}
+
 function sortCyclesByYear(cycles) {
     return sortArrayOfObjectsByKeyDescending(cycles, 'year');
 }
@@ -442,6 +447,7 @@ function sortArrayOfObjectsByKeyDescending(arr, key) {
 
 module.exports = {
     setStore: setStore,
+    overrideStore: overrideStore,
     setCycle: setCycle,
     create: createProduct,
     update: updateProduct,

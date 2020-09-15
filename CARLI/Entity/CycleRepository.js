@@ -194,6 +194,11 @@ function setStore(store) {
     couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
 }
 
+function overrideStore(store, newCouchUtils) {
+    CycleRepository.setStore(store);
+    couchUtils = newCouchUtils;
+}
+
 function isOpenToLibraries( cycle ){
     return cycle.status === CYCLE_STATUS_OPEN_TO_LIBRARIES;
 }
@@ -225,6 +230,7 @@ function fiscalYearHasStartedForDate( dateToCheck ){
 
 module.exports = {
     setStore: setStore,
+    overrideStore: overrideStore,
     create: createCycle,
     createCycleLog: createCycleLog,
     update: updateCycle,

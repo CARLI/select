@@ -985,6 +985,11 @@ function setStore(store) {
     couchUtils = require('../Store/CouchDb/Utils')(storeOptions);
 }
 
+function overrideStore(store, newCouchUtils) {
+    OfferingRepository.setStore(store);
+    couchUtils = newCouchUtils;
+}
+
 function sortCyclesByYear(cycles) {
     return sortArrayOfObjectsByKeyDescending(cycles, 'year');
 }
@@ -1015,6 +1020,7 @@ function onlyInternallyInvoicedProducts(offering) {
 
 module.exports = {
     setStore: setStore,
+    overrideStore: overrideStore,
     setCycle: setCycle,
     create: createOffering,
     update: updateOffering,
