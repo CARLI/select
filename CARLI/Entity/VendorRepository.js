@@ -131,9 +131,15 @@ function setStore(store) {
     couchUtils = require('../Store/CouchDb/Utils')(store.getOptions());
 }
 
+function overrideStore(store, newCouchUtils) {
+    VendorRepository.setStore(store);
+    couchUtils = newCouchUtils;
+}
+
 module.exports = {
     CONTACT_CATEGORY_REPORT: CONTACT_CATEGORY_REPORT,
     setStore: setStore,
+    overrideStore: overrideStore,
     create: createVendor,
     update: updateVendor,
     list: listVendors,
