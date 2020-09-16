@@ -18,19 +18,38 @@ describe.only('The Cycle Creation Job Process', function(){
     });
 
     describe('the process method', function() {
-        it('throws an error if called with invalid input', function () {
+        it('throws an error if called with invalid input', async function () {
             var cycleCreationJobProcessor = CycleCreationJobProcessor({});
 
-            function callWithNoInput() {
-                cycleCreationJobProcessor.process()
+            let noInputErrorThrown = false;
+            let badInputErrorThrown = false;
+
+            try {
+                await cycleCreationJobProcessor.process();
+            }
+            catch (error) {
+                if(error.message === "invalid cycle creation job")
+                    noInputErrorThrown = true;
             }
 
-            function callWithBadInput() {
-                cycleCreationJobProcessor.process('')
+            try {
+                await cycleCreationJobProcessor.process('');
+            }
+            catch (error) {
+                if(error.message === "invalid cycle creation job")
+                    badInputErrorThrown = true;
             }
 
-            expect(callWithNoInput).to.throw(/invalid cycle creation job/);
-            expect(callWithBadInput).to.throw(/invalid cycle creation job/);
+            expect(noInputErrorThrown).is.true;
+            expect(badInputErrorThrown).is.true;
+        });
+
+        it(`marks the step completed when finished`, async () => {
+            testCycleCreationJob.loadCycles = '2020-09-09-20:01:34';
+
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
+            expect(cycleCreationJobProcessor._getCurrentStepForJob(testCycleCreationJob))
+                .equals('indexViews');
         });
 
         it('triggers replication if the status indicates replication has not happened', async function () {
@@ -92,7 +111,7 @@ describe.only('The Cycle Creation Job Process', function(){
         });
     });
 
-    describe('getViewIndexingStatus',  function() {
+    describe('getViewIndexingStatus function',  function() {
         let sourceCycle;
 
         beforeEach(async () => {
@@ -133,6 +152,12 @@ describe.only('The Cycle Creation Job Process', function(){
 
             const result = await cycleCreationJobProcessor._getViewIndexingStatus(sourceCycle, getRunningCouchJobsPromise);
             expect(result).equals( 70);
+        });
+    });
+    
+    describe(`waitForIndexingToFinish function`, () => {
+        it(`exists`, () => {
+            cycleCreationJobProcessor._waitForIndexingToFinish();
         });
     });
 });

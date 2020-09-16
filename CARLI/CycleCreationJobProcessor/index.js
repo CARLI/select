@@ -25,13 +25,17 @@ function CycleCreationJobProcessor(cycleRepository, couchUtils, timestamper, off
         return true;
     }
 
-    function process(cycleCreationJob) {
+    async function process(cycleCreationJob) {
         if (typeof cycleCreationJob !== 'object' || cycleCreationJob.type !== 'CycleCreationJob')
             throw new Error('invalid cycle creation job');
 
         var currentStep = getCurrentStepForJob(cycleCreationJob);
         var stepAction = getStepAction(currentStep);
-        return Q(stepAction(cycleCreationJob));
+
+        const stepResult = await stepAction(cycleCreationJob);
+        markStepCompleted(cycleCreationJob, currentStep);
+
+        return stepResult;
     }
 
     async function loadCycles(job) {
@@ -70,24 +74,26 @@ function CycleCreationJobProcessor(cycleRepository, couchUtils, timestamper, off
         }
     }
 
+    async function waitForIndexingToFinish() {
+
+    }
+
     async function getViewIndexingStatus(cycle, couchJobsPromise) {
-        const jobs = await couchJobsPromise;
+        const indexingJobsForCycle = (await couchJobsPromise)
+            .filter(filterIndexJobs)
+            .filter(filterCycleJobs);
 
-        return resolveToProgress(filterIndexJobs(filterCycleJobs(jobs)));
+        return getProgressForFirstJob(indexingJobsForCycle);
 
-        function filterIndexJobs(jobs) {
-            return jobs.filter(function (job) {
-                return job.type === 'indexer';
-            });
+        function filterIndexJobs(job) {
+            return job.type === 'indexer';
         }
 
-        function filterCycleJobs(jobs) {
-            return jobs.filter(function (job) {
-                return job.database === cycle.getDatabaseName();
-            });
+        function filterCycleJobs(job) {
+            return job.database === cycle.getDatabaseName();
         }
 
-        function resolveToProgress(jobs) {
+        function getProgressForFirstJob(jobs) {
             return jobs.length ? jobs[0].progress : 100;
         }
     }
@@ -124,6 +130,7 @@ function CycleCreationJobProcessor(cycleRepository, couchUtils, timestamper, off
         process,
         _getCurrentStepForJob: getCurrentStepForJob,
         _markStepCompleted: markStepCompleted,
+        _waitForIndexingToFinish: waitForIndexingToFinish,
         _getViewIndexingStatus: getViewIndexingStatus
     }
 }
