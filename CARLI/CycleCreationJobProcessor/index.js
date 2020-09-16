@@ -73,11 +73,17 @@ function CycleCreationJobProcessor(cycleRepository, couchUtils, timestamper, off
     async function getViewIndexingStatus(cycle, couchJobsPromise) {
         const jobs = await couchJobsPromise;
 
-        return resolveToProgress(filterIndexJobs(jobs));
+        return resolveToProgress(filterIndexJobs(filterCycleJobs(jobs)));
 
         function filterIndexJobs(jobs) {
             return jobs.filter(function (job) {
                 return job.type === 'indexer';
+            });
+        }
+
+        function filterCycleJobs(jobs) {
+            return jobs.filter(function (job) {
+                return job.database === cycle.getDatabaseName();
             });
         }
 
