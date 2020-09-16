@@ -74,8 +74,8 @@ function CycleCreationJobProcessor(cycleRepository, couchUtils, timestamper, off
         }
     }
 
-    async function waitForIndexingToFinish() {
-
+    async function checkIndexingStatus(cycle) {
+        return false;
     }
 
     async function getViewIndexingStatus(cycle, couchJobsPromise) {
@@ -130,7 +130,7 @@ function CycleCreationJobProcessor(cycleRepository, couchUtils, timestamper, off
         process,
         _getCurrentStepForJob: getCurrentStepForJob,
         _markStepCompleted: markStepCompleted,
-        _waitForIndexingToFinish: waitForIndexingToFinish,
+        _waitForIndexingToFinish: checkIndexingStatus,
         _getViewIndexingStatus: getViewIndexingStatus
     }
 }
