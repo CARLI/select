@@ -1,17 +1,16 @@
 var chai = require('chai');
 var expect = chai.expect;
 var Q = require('q');
-
 var CycleCreationJobProcessor = require('../CycleCreationJobProcessor');
 
-var couchUtilsSpy = createCouchUtilsSpy();
-var testCycleCreationJob = createTestCycleCreationJob();
-var cycleRepository = createCycleRepository();
-var fakeTimestamper = fakeTimestamper('2020-08-22-19:34:21Z');
-let cycleCreationJobProcessor;
-
 describe.only('The Cycle Creation Job Process', function(){
+    let couchUtilsSpy;
+    let testCycleCreationJob;
+    let cycleRepository;
+    let cycleCreationJobProcessor;
+
     beforeEach(function() {
+        let fakeTimestamper = createFakeTimestamper('2020-08-22-19:34:21Z');
         couchUtilsSpy = createCouchUtilsSpy();
         testCycleCreationJob = createTestCycleCreationJob();
         cycleRepository = createCycleRepository();
@@ -40,7 +39,6 @@ describe.only('The Cycle Creation Job Process', function(){
             await cycleCreationJobProcessor.process(testCycleCreationJob);
             expect(couchUtilsSpy.replicateFromCalled).to.equal(1);
             expect(couchUtilsSpy.replicateToCalled).to.equal(1);
-
         });
 
         it('triggers index views if the status indicates replication has completed', async function() {
@@ -186,7 +184,7 @@ function createCycleRepository() {
     };
 }
 
-function fakeTimestamper(expectedTimestamp) {
+function createFakeTimestamper(expectedTimestamp) {
     return {
         getCurrentTimestamp: function() {
             return expectedTimestamp;
