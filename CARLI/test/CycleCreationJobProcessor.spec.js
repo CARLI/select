@@ -155,10 +155,7 @@ describe.only('The Cycle Creation Job Process', function(){
 
             const sourceCycle = await cycleRepository.load('0');
 
-            const job = {
-                progress: 40,
-                type: 'indexer'
-            };
+            const job = { progress: 40, type: 'indexer', database: 'cycle-0' };
 
             const getRunningCouchJobsPromise = Q([job]);
             const result = await cycleCreationJobProcessor._getViewIndexingStatus(sourceCycle, getRunningCouchJobsPromise);
@@ -171,8 +168,23 @@ describe.only('The Cycle Creation Job Process', function(){
             const sourceCycle = await cycleRepository.load('0');
 
             const jobs = [
-                { type: 'relaxing', progress: 40, },
-                { type: 'indexer', progress: 70 }
+                { type: 'relaxing', progress: 40, database: 'cycle-0' },
+                { type: 'indexer', progress: 70 , database: 'cycle-0'}
+            ];
+
+            const getRunningCouchJobsPromise = Q(jobs);
+            const result = await cycleCreationJobProcessor._getViewIndexingStatus(sourceCycle, getRunningCouchJobsPromise);
+            expect(result).equals( 70);
+        });
+
+        it('should filter to only jobs that match the given cycle', async function() {
+            var cycleCreationJobProcessor = CycleCreationJobProcessor(cycleRepository, couchUtilsSpy);
+
+            const sourceCycle = await cycleRepository.load('0');
+
+            const jobs = [
+                { type: 'indexer', progress: 40, database: 'cycle-1' },
+                { type: 'indexer', progress: 70, database: 'cycle-0' }
             ];
 
             const getRunningCouchJobsPromise = Q(jobs);
