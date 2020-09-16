@@ -156,9 +156,26 @@ describe.only('The Cycle Creation Job Process', function(){
     });
     
     describe(`waitForIndexingToFinish function`, () => {
+        let sourceCycle;
+
+        beforeEach(async () => {
+            sourceCycle = await cycleRepository.load('0');
+        });
+
         it(`exists`, () => {
             cycleCreationJobProcessor._waitForIndexingToFinish();
         });
+
+        it(`is not finished if progress is less than 100 percent`, async () => {
+            const couchJobsPromise = Q([
+                {type: 'indexer', progress: 40, database: 'cycle-0'},
+            ]);
+
+            couchUtilsSpy.getRunningCouchJobs = () => couchJobsPromise;
+            const result = await cycleCreationJobProcessor._waitForIndexingToFinish(sourceCycle);
+            expect(result).to.be.false;
+        });
+
     });
 });
 
