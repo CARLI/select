@@ -1,6 +1,6 @@
 var Q = require('q');
 
-function CycleCreationJobProcessor(cycleRepository, couchUtils, timestamper, offeringRepository, libraryStatusRepository, vendorStatusRepository) {
+function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, offeringRepository, libraryStatusRepository, vendorStatusRepository}) {
 
     var sourceCycle = null;
     var targetCycle = null;
