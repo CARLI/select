@@ -14,15 +14,11 @@ describe.only('The Cycle Creation Job Process', function(){
         couchUtilsSpy = createCouchUtilsSpy();
         testCycleCreationJob = createTestCycleCreationJob();
         cycleRepository = createCycleRepository();
-        cycleCreationJobProcessor = CycleCreationJobProcessor(cycleRepository, couchUtilsSpy, fakeTimestamper);
-    });
-
-    it('should be a constructor function', function () {
-        expect(CycleCreationJobProcessor).to.be.a('function');
-    });
-
-    it('needs to be injected with the repositories and returns an instance', function () {
-        expect(cycleCreationJobProcessor).to.be.an('object');
+        cycleCreationJobProcessor = CycleCreationJobProcessor({
+            cycleRepository: cycleRepository,
+            couchUtils: couchUtilsSpy,
+            timestamper: fakeTimestamper
+        });
     });
 
     describe('the process method', function() {
