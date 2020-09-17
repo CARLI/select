@@ -38,12 +38,6 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, of
         return stepResult;
     }
 
-    async function loadCycles(job) {
-        sourceCycle = await cycleRepository.load(job.sourceCycle);
-        newCycle = await cycleRepository.load(job.targetCycle);
-        return true;
-    }
-
     async function replicate(job) {
         if (!sourceCycle) {
             await loadCycles(job);
