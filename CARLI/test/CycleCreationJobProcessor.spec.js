@@ -17,6 +17,14 @@ describe.only('The Cycle Creation Job Process', function(){
         cycleCreationJobProcessor = CycleCreationJobProcessor(cycleRepository, couchUtilsSpy, fakeTimestamper);
     });
 
+    it('should be a constructor function', function () {
+        expect(CycleCreationJobProcessor).to.be.a('function');
+    });
+
+    it('needs to be injected with the repositories and returns an instance', function () {
+        expect(cycleCreationJobProcessor).to.be.an('object');
+    });
+
     describe('the process method', function() {
         it('throws an error if called with invalid input', async function () {
             var cycleCreationJobProcessor = CycleCreationJobProcessor({});
@@ -60,24 +68,27 @@ describe.only('The Cycle Creation Job Process', function(){
             expect(couchUtilsSpy.replicateToCalled).to.equal(1);
         });
 
-        it('triggers index views if the status indicates replication has completed', async function() {
-           testCycleCreationJob.loadCycles = '2020-09-09-20:01:34';
-           testCycleCreationJob.replicate = '2020-09-09-20:01:34';
+        it('triggers index views if the status indicates replication has completed', async function () {
 
-           await cycleCreationJobProcessor.process(testCycleCreationJob);
-           expect(couchUtilsSpy.triggeredIndexingOnDatabase).to.equal('cycle-cycle2');
+            testCycleCreationJob.loadCycles = '2020-09-09-20:01:34';
+            testCycleCreationJob.replicate = '2020-09-09-20:01:34';
+
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
+            expect(couchUtilsSpy.triggeredIndexingOnDatabase).to.equal('cycle-cycle2');
         });
 
-        it('triggers cycle loading', async function() {
+        it('triggers cycle loading', async function () {
+
             await cycleCreationJobProcessor.process(testCycleCreationJob);
             expect(cycleRepository.cyclesLoaded).deep.equals(['cycle1', 'cycle2']);
         });
 
-        it('replicates the cycles', async function() {
+        it('replicates the cycles', async function () {
+
             testCycleCreationJob.loadCycles = '0';
 
             await cycleCreationJobProcessor.process(testCycleCreationJob);
-            expect(cycleRepository.logMessage).equals('Replicating data from cycle-'+ testCycleCreationJob.sourceCycle +' to cycle-'+ testCycleCreationJob.targetCycle);
+            expect(cycleRepository.logMessage).equals('Replicating data from cycle-' + testCycleCreationJob.sourceCycle + ' to cycle-' + testCycleCreationJob.targetCycle);
         });
     });
 
@@ -120,18 +131,16 @@ describe.only('The Cycle Creation Job Process', function(){
 
         it('should return 100 with an empty jobs promise', async function() {
             const getRunningCouchJobsPromise = Q([]);
-
             const result = await cycleCreationJobProcessor._getViewIndexingStatus(sourceCycle, getRunningCouchJobsPromise);
-            expect(result).equals( 100);
+            expect(result).equals(100);
         });
 
         it('should return progress of a job with an non-empty jobs promise', async function() {
             const getRunningCouchJobsPromise = Q([
                 {progress: 40, type: 'indexer', database: 'cycle-0'}
             ]);
-
             const result = await cycleCreationJobProcessor._getViewIndexingStatus(sourceCycle, getRunningCouchJobsPromise);
-            expect(result).equals( 40);
+            expect(result).equals(40);
         });
 
         it('should filter to only jobs that are indexing jobs', async function() {
@@ -149,12 +158,11 @@ describe.only('The Cycle Creation Job Process', function(){
                 {type: 'indexer', progress: 40, database: 'cycle-1'},
                 {type: 'indexer', progress: 70, database: 'cycle-0'}
             ]);
-
             const result = await cycleCreationJobProcessor._getViewIndexingStatus(sourceCycle, getRunningCouchJobsPromise);
-            expect(result).equals( 70);
+            expect(result).equals(70);
         });
     });
-    
+
     describe(`waitForIndexingToFinish function`, () => {
         let sourceCycle;
 
@@ -228,7 +236,7 @@ function createCycleRepository() {
 
 function createFakeTimestamper(expectedTimestamp) {
     return {
-        getCurrentTimestamp: function() {
+        getCurrentTimestamp: function () {
             return expectedTimestamp;
         }
     }
