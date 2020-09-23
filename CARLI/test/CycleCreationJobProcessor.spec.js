@@ -7,6 +7,9 @@ describe.only('The Cycle Creation Job Process', function(){
     let couchUtilsSpy;
     let testCycleCreationJob;
     let cycleRepository;
+    let productRepositorySpy;
+    let offeringRepositorySpy;
+    let vendorRepository;
     let cycleCreationJobProcessor;
 
     beforeEach(function() {
@@ -14,10 +17,16 @@ describe.only('The Cycle Creation Job Process', function(){
         couchUtilsSpy = createCouchUtilsSpy();
         testCycleCreationJob = createTestCycleCreationJob();
         cycleRepository = createCycleRepository();
+        productRepositorySpy = createProductRepositorySpy();
+        offeringRepositorySpy = createOfferingRepositorySpy();
+        vendorRepository = createVendorRepository();
         cycleCreationJobProcessor = CycleCreationJobProcessor({
             cycleRepository: cycleRepository,
             couchUtils: couchUtilsSpy,
-            timestamper: fakeTimestamper
+            timestamper: fakeTimestamper,
+            productRepository: productRepositorySpy,
+            offeringRepository: offeringRepositorySpy,
+            vendorRepository: vendorRepository
         });
     });
 
@@ -181,6 +190,57 @@ describe.only('The Cycle Creation Job Process', function(){
         });
 
     });
+
+    describe(`resetVendorStatus function`, () => {
+
+        let newCycle;
+        let ourVendors = [];
+
+        beforeEach(async () => {
+            newCycle = await cycleRepository.load('1');
+            testCycleCreationJob.loadCycles = 'filler';
+            testCycleCreationJob.replicate = 'filler';
+            testCycleCreationJob.indexViews = 'filler';
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
+        });
+
+        it('calls resetVendorStatus', async function () {
+            expect(cycleRepository.logMessage).equals('Resetting vendor statuses for ' + newCycle.databaseName);
+        });
+
+        it('resets vendor statuses when there is one vendor', async function () {
+            ourVendors =
+            expect(ourVendors).deep.equals(vendorRepository.list());
+        });
+    });
+
+    describe(`transformProducts function`,  () => {
+
+        it('calls transformProducts', async function () {
+
+            testCycleCreationJob.loadCycles = 'filler';
+            testCycleCreationJob.replicate = 'filler';
+            testCycleCreationJob.indexViews = 'filler';
+            testCycleCreationJob.resetVendorStatus = 'filler';
+            testCycleCreationJob.resetLibraryStatus = 'filler';
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
+            expect(productRepositorySpy.transformProductsCalled).to.equal(1);
+        });
+    });
+
+    describe(`transformOfferings function`, () => {
+
+        it('calls transformOfferings', async function () {
+            testCycleCreationJob.loadCycles = 'filler';
+            testCycleCreationJob.replicate = 'filler';
+            testCycleCreationJob.indexViews = 'filler';
+            testCycleCreationJob.resetVendorStatus = 'filler';
+            testCycleCreationJob.resetLibraryStatus = 'filler';
+            testCycleCreationJob.transformProducts = 'filler';
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
+            expect(offeringRepositorySpy.transformOfferingsCalled).to.equal(1);
+        });
+    });
 });
 
 function createCouchUtilsSpy() {
@@ -226,6 +286,64 @@ function createCycleRepository() {
         },
         createCycleLog: function (message) {
             this.logMessage = message;
+        }
+    };
+}
+
+function createProductRepositorySpy() {
+    return {
+        transformProductsCalled: 0,
+
+        transformProductsForNewCycle: function (newCycle) {
+            this.transformProductsCalled++;
+        }
+    };
+}
+
+function createOfferingRepositorySpy() {
+    return {
+        transformOfferingsCalled: 0,
+
+        transformOfferingsForNewCycle: function (newCycle, sourceCycle) {
+            this.transformOfferingsCalled++;
+        }
+    };
+}
+
+function createVendorRepository() {
+    const vendors = ['vendor1'];
+    return {
+        list: function () {
+            return vendors;
+        },
+
+    };
+}
+
+function createVendorStatusRepository() {
+
+    const ensuredStatusVendors = [];
+    const resetStatusVendors = [];
+
+    const vendorStatuses = {};
+
+    return {
+        vendorStatuses,
+        ensureStatusExistsForVendor: function(vendorId, newCycle) {
+            ensuredStatusVendors.push(vendorId);
+        },
+        getStatusForVendor: function(vendorId, newCycle) {
+            if(!vendorStatuses[vendorId]) {
+                vendorStatuses[vendorId] = {
+                    vendor: vendorId
+                };
+            }
+
+            return vendorStatus[vendorId];
+        },
+        reset: function(vendorStatus, newCycle) {
+            resetStatusVendors.push(vendorStatus.vendor);
+            return vendorStatus;
         }
     };
 }

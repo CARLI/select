@@ -1,6 +1,6 @@
 var Q = require('q');
 
-function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, offeringRepository, libraryStatusRepository, vendorStatusRepository}) {
+function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, productRepository, offeringRepository, vendorRepository, libraryStatusRepository, vendorStatusRepository}) {
 
     var sourceCycle = null;
     var targetCycle = null;
@@ -45,6 +45,32 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, of
 
         cycleRepository.createCycleLog('Replicating data from ' + sourceCycle.getDatabaseName() + ' to ' + newCycle.getDatabaseName());
         return couchUtils.replicateFrom(sourceCycle.getDatabaseName()).to(newCycle.getDatabaseName());
+    }
+
+    async function resetVendorStatuses(job) {
+        if (!sourceCycle) {
+            await loadCycles(job);
+        }
+
+        cycleRepository.createCycleLog('Resetting vendor statuses for ' + newCycle.databaseName);
+
+    }
+
+    async function transformProducts(job) {
+        if (!sourceCycle) {
+            await loadCycles(job);
+        }
+
+        cycleRepository.createCycleLog('Transforming products for new cycle');
+        return productRepository.transformProductsForNewCycle(newCycle);
+    }
+
+    async function transformOfferings(job) {
+        if (!sourceCycle) {
+            await loadCycles(job);
+        }
+        cycleRepository.createCycleLog('Transforming offerings for new cycle');
+        return offeringRepository.transformOfferingsForNewCycle(newCycle, sourceCycle);
     }
 
     async function triggerIndexViews(job) {
@@ -97,18 +123,12 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, of
             'loadCycles': loadCycles,
             'replicate': replicate,
             'indexViews': triggerIndexViews,
-            'resetVendorStatus': function () {
-                return null;
-            },
+            'resetVendorStatus': resetVendorStatuses,
             'resetLibraryStatus': function () {
                 return null;
             },
-            'transformProducts': function () {
-                return null;
-            },
-            'transformOfferings': function () {
-                return null;
-            },
+            'transformProducts': transformProducts,
+            'transformOfferings': transformOfferings,
             'indexViewsPhase2': triggerIndexViews,
             'setCycleToNextPhase': function () {
                 return null;
@@ -125,7 +145,9 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, of
         _getCurrentStepForJob: getCurrentStepForJob,
         _markStepCompleted: markStepCompleted,
         _waitForIndexingToFinish: checkIndexingStatus,
-        _getViewIndexingStatus: getViewIndexingStatus
+        _getViewIndexingStatus: getViewIndexingStatus,
+        _transformProducts: transformProducts,
+        _transformOfferings: transformOfferings
     }
 }
 

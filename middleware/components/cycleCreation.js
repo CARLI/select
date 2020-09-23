@@ -80,11 +80,12 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
         cycleRepository.createCycleLog('Replicating data from '+ sourceCycle.databaseName +' to '+ newCycle.databaseName);
         return couchUtils.replicateFrom(sourceCycle.databaseName).to(newCycle.databaseName)
     }
-    function resetVendorStatuses() {
+    async function resetVendorStatuses() {
         cycleRepository.createCycleLog('Resetting vendor statuses for ' + newCycle.databaseName);
+
         return vendorRepository.list()
             .then(function(vendorList){
-                return Q.all( vendorList.map(ensureVendorStatus) )
+                return Q.all( vendorList.map(ensureVendorStatus))
                     .then(function(){
                         return Q.all( vendorList.map(resetVendorStatus) );
                     });
