@@ -240,7 +240,12 @@ describe.only('The Cycle Creation Job Process', function(){
             });
         });
 
-        // need to persist the changes to the vendor status to the repository
+        it('needs to persist the changes to the vendor status to the repository', async function() {
+            let vendors = ['vendor1', 'vendor2', 'vendor3'];
+            vendorRepositorySpy.setVendors(vendors);
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
+            expect(vendorStatusRepositorySpy.statusesUpdated).deep.equals(vendors);
+        });
     });
 
     describe(`transformProducts function`,  () => {
@@ -359,10 +364,13 @@ function createVendorStatusRepository() {
 
     const vendorStatuses = {};
 
+    const statusesUpdated = [];
+
     return {
         ensuredStatusVendors,
         resetStatusVendors,
         vendorStatuses,
+        statusesUpdated,
         ensureStatusExistsForVendor: async function(vendorId, newCycle) {
             ensuredStatusVendors.push(vendorId);
         },
@@ -378,6 +386,9 @@ function createVendorStatusRepository() {
         reset: function(vendorStatus, newCycle) {
             resetStatusVendors.push(vendorStatus.vendor);
             return vendorStatus;
+        },
+        update: function (resetStatus, newCycle) {
+            statusesUpdated.push(resetStatus.vendor);
         }
     };
 }

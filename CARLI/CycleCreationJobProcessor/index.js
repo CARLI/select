@@ -60,6 +60,7 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, pr
             const status = await vendorStatusRepository.getStatusForVendor(vendor, newCycle);
             const resetStatus = vendorStatusRepository.reset(status, newCycle);
             resetStatus.cycle = newCycle.id;
+            await vendorStatusRepository.update(resetStatus, newCycle);
             return resetStatus;
         });
 
