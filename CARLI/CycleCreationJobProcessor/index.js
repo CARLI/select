@@ -53,7 +53,17 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, pr
         }
 
         cycleRepository.createCycleLog('Resetting vendor statuses for ' + newCycle.databaseName);
+        const allVendors = await vendorRepository.list();
 
+        const promises = allVendors.map( async function (vendor) {
+            await vendorStatusRepository.ensureStatusExistsForVendor(vendor, newCycle);
+            const status = await vendorStatusRepository.getStatusForVendor(vendor, newCycle);
+            const resetStatus = vendorStatusRepository.reset(status, newCycle);
+            resetStatus.cycle = newCycle.id;
+            return resetStatus;
+        });
+
+        await Q.all(promises);
     }
 
     async function transformProducts(job) {

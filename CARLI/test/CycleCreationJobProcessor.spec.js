@@ -9,7 +9,7 @@ describe.only('The Cycle Creation Job Process', function(){
     let cycleRepository;
     let productRepositorySpy;
     let offeringRepositorySpy;
-    let vendorRepository;
+    let vendorRepositorySpy;
     let cycleCreationJobProcessor;
     let vendorStatusRepositorySpy;
 
@@ -20,7 +20,7 @@ describe.only('The Cycle Creation Job Process', function(){
         cycleRepository = createCycleRepository();
         productRepositorySpy = createProductRepositorySpy();
         offeringRepositorySpy = createOfferingRepositorySpy();
-        vendorRepository = createVendorRepository();
+        vendorRepositorySpy = createVendorRepository();
         vendorStatusRepositorySpy = createVendorStatusRepository();
         cycleCreationJobProcessor = CycleCreationJobProcessor({
             cycleRepository: cycleRepository,
@@ -28,7 +28,7 @@ describe.only('The Cycle Creation Job Process', function(){
             timestamper: fakeTimestamper,
             productRepository: productRepositorySpy,
             offeringRepository: offeringRepositorySpy,
-            vendorRepository: vendorRepository,
+            vendorRepository: vendorRepositorySpy,
             vendorStatusRepository: vendorStatusRepositorySpy
         });
     });
@@ -203,18 +203,44 @@ describe.only('The Cycle Creation Job Process', function(){
             testCycleCreationJob.loadCycles = 'filler';
             testCycleCreationJob.replicate = 'filler';
             testCycleCreationJob.indexViews = 'filler';
-            await cycleCreationJobProcessor.process(testCycleCreationJob);
         });
 
         it('calls resetVendorStatus', async function () {
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
             expect(cycleRepository.logMessage).equals('Resetting vendor statuses for ' + newCycle.databaseName);
         });
 
         it('resets vendor statuses when there is one vendor', async function () {
-            const allVendors = await vendorRepository.list();
+            let vendors = ['vendor1'];
+            vendorRepositorySpy.setVendors(vendors);
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
+            const allVendors = await vendorRepositorySpy.list();
             expect(vendorStatusRepositorySpy.ensuredStatusVendors).deep.equals(allVendors);
             expect(vendorStatusRepositorySpy.resetStatusVendors).deep.equals(allVendors);
         });
+
+        it('resets vendor statuses when there is more than one vendor', async function () {
+            let vendors = ['vendor1', 'vendor2'];
+            vendorRepositorySpy.setVendors(vendors);
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
+            const allVendors = await vendorRepositorySpy.list();
+            expect(vendorStatusRepositorySpy.ensuredStatusVendors).deep.equals(allVendors);
+            expect(vendorStatusRepositorySpy.resetStatusVendors).deep.equals(allVendors);
+        });
+
+        it('sets the cycle property on the vendor statuses', async function() {
+            let vendors = ['vendor1', 'vendor2', 'vendor3'];
+            vendorRepositorySpy.setVendors(vendors);
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
+            const statuses = vendorStatusRepositorySpy.vendorStatuses;
+            Object.keys(statuses).forEach(vendorId => {
+                const status = statuses[vendorId];
+
+                expect(status.cycle).equals(testCycleCreationJob.targetCycle);
+            });
+        });
+
+        // need to persist the changes to the vendor status to the repository
     });
 
     describe(`transformProducts function`,  () => {
@@ -281,6 +307,7 @@ function createCycleRepository() {
         load: function (cycleID) {
             this.cyclesLoaded.push(cycleID);
             return Q({
+                id: cycleID,
                 getDatabaseName: () => {
                     return 'cycle-' + cycleID;
                 }
@@ -314,12 +341,14 @@ function createOfferingRepositorySpy() {
 }
 
 function createVendorRepository() {
-    const vendors = ['vendor1'];
+    let vendors = [];
     return {
         list: function () {
             return vendors;
         },
-
+        setVendors: function (newVendors) {
+            vendors = newVendors;
+        },
     };
 }
 
@@ -334,17 +363,17 @@ function createVendorStatusRepository() {
         ensuredStatusVendors,
         resetStatusVendors,
         vendorStatuses,
-        ensureStatusExistsForVendor: function(vendorId, newCycle) {
+        ensureStatusExistsForVendor: async function(vendorId, newCycle) {
             ensuredStatusVendors.push(vendorId);
         },
-        getStatusForVendor: function(vendorId, newCycle) {
+        getStatusForVendor: async function(vendorId, newCycle) {
             if(!vendorStatuses[vendorId]) {
                 vendorStatuses[vendorId] = {
                     vendor: vendorId
                 };
             }
 
-            return vendorStatus[vendorId];
+            return vendorStatuses[vendorId];
         },
         reset: function(vendorStatus, newCycle) {
             resetStatusVendors.push(vendorStatus.vendor);
