@@ -1,6 +1,6 @@
 var Q = require('q');
 
-function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, productRepository, offeringRepository, vendorRepository, libraryStatusRepository, vendorStatusRepository}) {
+function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, productRepository, offeringRepository, vendorRepository, libraryRepository, libraryStatusRepository, vendorStatusRepository}) {
 
     var sourceCycle = null;
     var targetCycle = null;
@@ -67,6 +67,28 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, pr
         await Q.all(promises);
     }
 
+    async function resetLibraryStatuses(job) {
+        if (!sourceCycle) {
+            await loadCycles(job);
+        }
+
+        cycleRepository.createCycleLog('Ensuring all libraries have statuses for ' + newCycle.databaseName);
+
+        const allLibraries = await libraryRepository.list();
+
+        const promises = allLibraries.map( async function (library) {
+            await libraryStatusRepository.ensureStatusExistsForLibrary(library, newCycle);
+            const status = await libraryStatusRepository.getStatusForLibrary(library, newCycle);
+            const resetStatus = libraryStatusRepository.reset(status, newCycle);
+            resetStatus.cycle = newCycle.id;
+            await libraryStatusRepository.update(resetStatus, newCycle);
+            return resetStatus;
+        });
+
+        await Q.all(promises);
+
+    }
+
     async function transformProducts(job) {
         if (!sourceCycle) {
             await loadCycles(job);
@@ -91,6 +113,18 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, pr
 
         cycleRepository.createCycleLog('Triggering view indexing for ' + newCycle.name + ' with database ' + newCycle.getDatabaseName());
         return couchUtils.triggerViewIndexing(newCycle.getDatabaseName());
+    }
+
+    async function setCycleToNextPhase(job) {
+        await loadCycles(job);
+        newCycle.proceedToNextStep();
+
+        try {
+            await cycleRepository.update(newCycle)
+        }
+        catch(err) {
+            Logger.log('Failed state transition: ', err);
+        }
     }
 
     function markStepCompleted(job, step) {
@@ -135,15 +169,11 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, pr
             'replicate': replicate,
             'indexViews': triggerIndexViews,
             'resetVendorStatus': resetVendorStatuses,
-            'resetLibraryStatus': function () {
-                return null;
-            },
+            'resetLibraryStatus': resetLibraryStatuses,
             'transformProducts': transformProducts,
             'transformOfferings': transformOfferings,
             'indexViewsPhase2': triggerIndexViews,
-            'setCycleToNextPhase': function () {
-                return null;
-            },
+            'setCycleToNextPhase': setCycleToNextPhase,
             'done': function () {
                 return null;
             }

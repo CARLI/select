@@ -10,8 +10,11 @@ describe.only('The Cycle Creation Job Process', function(){
     let productRepositorySpy;
     let offeringRepositorySpy;
     let vendorRepositorySpy;
+    let libraryRepositorySpy;
     let cycleCreationJobProcessor;
     let vendorStatusRepositorySpy;
+    let libraryStatusRepositorySpy;
+
 
     beforeEach(function() {
         let fakeTimestamper = createFakeTimestamper('2020-08-22-19:34:21Z');
@@ -21,7 +24,9 @@ describe.only('The Cycle Creation Job Process', function(){
         productRepositorySpy = createProductRepositorySpy();
         offeringRepositorySpy = createOfferingRepositorySpy();
         vendorRepositorySpy = createVendorRepository();
+        libraryRepositorySpy = createLibraryRepository();
         vendorStatusRepositorySpy = createVendorStatusRepository();
+        libraryStatusRepositorySpy = createLibraryStatusRepository();
         cycleCreationJobProcessor = CycleCreationJobProcessor({
             cycleRepository: cycleRepository,
             couchUtils: couchUtilsSpy,
@@ -29,6 +34,8 @@ describe.only('The Cycle Creation Job Process', function(){
             productRepository: productRepositorySpy,
             offeringRepository: offeringRepositorySpy,
             vendorRepository: vendorRepositorySpy,
+            libraryRepository: libraryRepositorySpy,
+            libraryStatusRepository: libraryStatusRepositorySpy,
             vendorStatusRepository: vendorStatusRepositorySpy
         });
     });
@@ -248,6 +255,61 @@ describe.only('The Cycle Creation Job Process', function(){
         });
     });
 
+    describe(`resetLibraryStatus function`, () => {
+
+        let newCycle;
+
+        beforeEach(async () => {
+            newCycle = await cycleRepository.load('1');
+            testCycleCreationJob.loadCycles = 'filler';
+            testCycleCreationJob.replicate = 'filler';
+            testCycleCreationJob.indexViews = 'filler';
+            testCycleCreationJob.resetVendorStatus = 'filler';
+        });
+
+        it('calls resetLibraryStatus', async function () {
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
+            expect(cycleRepository.logMessage).equals('Ensuring all libraries have statuses for ' + newCycle.databaseName);
+        });
+
+        it('resets library statuses when there is one library', async function () {
+            let libraries = ['lib1'];
+            libraryRepositorySpy.setLibraries(libraries);
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
+            const allLibraries = await libraryRepositorySpy.list();
+            expect(libraryStatusRepositorySpy.ensuredStatusLibraries).deep.equals(allLibraries);
+            expect(libraryStatusRepositorySpy.resetStatusLibraries).deep.equals(allLibraries);
+        });
+
+        it('resets library statuses when there is more than one library', async function () {
+            let libraries = ['lib1', 'lib2'];
+            libraryRepositorySpy.setLibraries(libraries);
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
+            const allLibraries = await libraryRepositorySpy.list();
+            expect(libraryStatusRepositorySpy.ensuredStatusLibraries).deep.equals(allLibraries);
+            expect(libraryStatusRepositorySpy.resetStatusLibraries).deep.equals(allLibraries);
+        });
+
+        it('sets the cycle property on the library statuses', async function() {
+            let libraries = ['lib1', 'lib2', 'lib3'];
+            libraryRepositorySpy.setLibraries(libraries);
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
+            const statuses = libraryStatusRepositorySpy.libraryStatuses;
+            Object.keys(statuses).forEach(libraryId => {
+                const status = statuses[libraryId];
+
+                expect(status.cycle).equals(testCycleCreationJob.targetCycle);
+            });
+        });
+
+        it('needs to persist the changes to the library status to the repository', async function() {
+            let libraries = ['lib1', 'lib2', 'lib3'];
+            libraryRepositorySpy.setLibraries(libraries);
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
+            expect(libraryStatusRepositorySpy.statusesUpdated).deep.equals(libraries);
+        });
+    });
+
     describe(`transformProducts function`,  () => {
 
         it('calls transformProducts', async function () {
@@ -275,6 +337,49 @@ describe.only('The Cycle Creation Job Process', function(){
             expect(offeringRepositorySpy.transformOfferingsCalled).to.equal(1);
         });
     });
+
+    describe(`setCycleToNextPhase function`, () => {
+
+        beforeEach(function() {
+            testCycleCreationJob.loadCycles = 'filler';
+            testCycleCreationJob.replicate = 'filler';
+            testCycleCreationJob.indexViews = 'filler';
+            testCycleCreationJob.resetVendorStatus = 'filler';
+            testCycleCreationJob.resetLibraryStatus = 'filler';
+            testCycleCreationJob.transformProducts = 'filler';
+            testCycleCreationJob.transformOfferings = 'filler';
+            testCycleCreationJob.indexViewsPhase2 = 'filler';
+        });
+
+        it('calls setCycleToNextPhase', async function () {
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
+        });
+
+        it('should proceed cycle to the next step', async function () {
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
+            expect(cycleRepository.cyclesAtNextStep[0]).to.equal(testCycleCreationJob.targetCycle);
+        });
+
+        it('should update the new cycle', async function () {
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
+            expect(cycleRepository.cyclesUpdated[0]).to.equal(testCycleCreationJob.targetCycle);
+        });
+
+        it('should error on invalid cycle update', async function () {
+            let logMessage = "";
+            global.Logger = {
+                log: function (message) {
+                    logMessage = message;
+                }
+            };
+            cycleRepository.update = function () {
+                throw new Error();
+            }
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
+            expect(logMessage).to.equal('Failed state transition: ');
+        });
+    });
+
 });
 
 function createCouchUtilsSpy() {
@@ -306,21 +411,33 @@ function createTestCycleCreationJob() {
 }
 
 function createCycleRepository() {
+    const cyclesAtNextStep = [];
+    const cyclesLoaded = [];
+    const cyclesUpdated = [];
+
     return {
-        cyclesLoaded: [],
+        cyclesLoaded,
+        cyclesAtNextStep,
+        cyclesUpdated,
         logMessage: '',
         load: function (cycleID) {
-            this.cyclesLoaded.push(cycleID);
+            cyclesLoaded.push(cycleID);
             return Q({
                 id: cycleID,
                 getDatabaseName: () => {
                     return 'cycle-' + cycleID;
+                },
+                proceedToNextStep: () => {
+                    cyclesAtNextStep.push(cycleID);
                 }
             });
 
         },
         createCycleLog: function (message) {
             this.logMessage = message;
+        },
+        update: async (cycle) => {
+            cyclesUpdated.push(cycle.id);
         }
     };
 }
@@ -357,6 +474,18 @@ function createVendorRepository() {
     };
 }
 
+function createLibraryRepository() {
+    let libraries = [];
+    return {
+        list: function () {
+            return libraries;
+        },
+        setLibraries: function (newLibraries) {
+            libraries = newLibraries;
+        },
+    };
+}
+
 function createVendorStatusRepository() {
 
     const ensuredStatusVendors = [];
@@ -389,6 +518,42 @@ function createVendorStatusRepository() {
         },
         update: function (resetStatus, newCycle) {
             statusesUpdated.push(resetStatus.vendor);
+        }
+    };
+}
+
+function createLibraryStatusRepository() {
+
+    const ensuredStatusLibraries = [];
+
+    const resetStatusLibraries = [];
+
+    const libraryStatuses = {};
+
+    const statusesUpdated = [];
+
+    return {
+        ensuredStatusLibraries,
+        resetStatusLibraries,
+        libraryStatuses,
+        statusesUpdated,
+        ensureStatusExistsForLibrary: async function(libraryId, newCycle) {
+            ensuredStatusLibraries.push(libraryId);
+        },
+        getStatusForLibrary: async function(libraryId, newCycle) {
+            if(!libraryStatuses[libraryId]) {
+                libraryStatuses[libraryId] = {
+                    library: libraryId
+                };
+            }
+            return libraryStatuses[libraryId];
+        },
+        reset: function(libraryStatus, newCycle) {
+            resetStatusLibraries.push(libraryStatus.library);
+            return libraryStatus;
+        },
+        update: function (resetStatus, newCycle) {
+            statusesUpdated.push(resetStatus.library);
         }
     };
 }
