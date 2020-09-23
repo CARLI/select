@@ -11,6 +11,7 @@ describe.only('The Cycle Creation Job Process', function(){
     let offeringRepositorySpy;
     let vendorRepository;
     let cycleCreationJobProcessor;
+    let vendorStatusRepositorySpy;
 
     beforeEach(function() {
         let fakeTimestamper = createFakeTimestamper('2020-08-22-19:34:21Z');
@@ -20,13 +21,15 @@ describe.only('The Cycle Creation Job Process', function(){
         productRepositorySpy = createProductRepositorySpy();
         offeringRepositorySpy = createOfferingRepositorySpy();
         vendorRepository = createVendorRepository();
+        vendorStatusRepositorySpy = createVendorStatusRepository();
         cycleCreationJobProcessor = CycleCreationJobProcessor({
             cycleRepository: cycleRepository,
             couchUtils: couchUtilsSpy,
             timestamper: fakeTimestamper,
             productRepository: productRepositorySpy,
             offeringRepository: offeringRepositorySpy,
-            vendorRepository: vendorRepository
+            vendorRepository: vendorRepository,
+            vendorStatusRepository: vendorStatusRepositorySpy
         });
     });
 
@@ -194,7 +197,6 @@ describe.only('The Cycle Creation Job Process', function(){
     describe(`resetVendorStatus function`, () => {
 
         let newCycle;
-        let ourVendors = [];
 
         beforeEach(async () => {
             newCycle = await cycleRepository.load('1');
@@ -209,8 +211,9 @@ describe.only('The Cycle Creation Job Process', function(){
         });
 
         it('resets vendor statuses when there is one vendor', async function () {
-            ourVendors =
-            expect(ourVendors).deep.equals(vendorRepository.list());
+            const allVendors = await vendorRepository.list();
+            expect(vendorStatusRepositorySpy.ensuredStatusVendors).deep.equals(allVendors);
+            expect(vendorStatusRepositorySpy.resetStatusVendors).deep.equals(allVendors);
         });
     });
 
@@ -328,6 +331,8 @@ function createVendorStatusRepository() {
     const vendorStatuses = {};
 
     return {
+        ensuredStatusVendors,
+        resetStatusVendors,
         vendorStatuses,
         ensureStatusExistsForVendor: function(vendorId, newCycle) {
             ensuredStatusVendors.push(vendorId);
