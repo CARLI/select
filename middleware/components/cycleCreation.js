@@ -1,7 +1,5 @@
-
 var Q = require('q');
 var _ = require('lodash');
-
 var config = require( '../../config' );
 var CouchUtils = require('../../CARLI/Store/CouchDb/Utils');
 var cycleRepository = require('../../CARLI/Entity/CycleRepository');

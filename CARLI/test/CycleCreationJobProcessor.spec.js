@@ -3,7 +3,7 @@ var expect = chai.expect;
 var Q = require('q');
 var CycleCreationJobProcessor = require('../CycleCreationJobProcessor');
 
-describe.only('The Cycle Creation Job Process', function(){
+describe('The Cycle Creation Job Process', function(){
     let couchUtilsSpy;
     let testCycleCreationJob;
     let cycleRepository;
