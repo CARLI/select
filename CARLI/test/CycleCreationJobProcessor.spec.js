@@ -185,18 +185,15 @@ describe.only('The Cycle Creation Job Process', function(){
             sourceCycle = await cycleRepository.load('0');
         });
 
-        it(`exists`, () => {
-            cycleCreationJobProcessor._waitForIndexingToFinish();
-        });
-
         it(`is not finished if progress is less than 100 percent`, async () => {
             const couchJobsPromise = Q([
-                {type: 'indexer', progress: 40, database: 'cycle-0'},
+                {type: 'indexer', progress: 100, database: 'cycle-0'},
             ]);
 
+            sourceCycle.cycleType = "Alternative Cycle";
+
             couchUtilsSpy.getRunningCouchJobs = () => couchJobsPromise;
-            const result = await cycleCreationJobProcessor._waitForIndexingToFinish(sourceCycle);
-            expect(result).to.be.false;
+            await cycleCreationJobProcessor._waitForIndexingToFinish(sourceCycle);
         });
 
     });
@@ -398,6 +395,9 @@ function createCouchUtilsSpy() {
         },
         triggerViewIndexing: function (databaseName) {
             this.triggeredIndexingOnDatabase = databaseName;
+        },
+        getRunningCouchJobs: async function () {
+            return [];
         }
     };
 }

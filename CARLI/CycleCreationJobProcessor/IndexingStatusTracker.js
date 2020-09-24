@@ -8,6 +8,7 @@ function IndexingStatusTracker(getViewIndexingStatus, newCycle) {
 
      function start() {
          intervalId = setInterval(tick, 1000);
+         tick();
          return finishedDeferred.promise;
      }
 

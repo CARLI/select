@@ -1,9 +1,9 @@
 var Q = require('q');
+const IndexingStatusTracker = require("./IndexingStatusTracker");
 
 function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, productRepository, offeringRepository, vendorRepository, libraryRepository, libraryStatusRepository, vendorStatusRepository}) {
 
     var sourceCycle = null;
-    var targetCycle = null;
     var newCycle = null;
 
     var stepOrder = [
@@ -139,8 +139,11 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, pr
         }
     }
 
-    async function checkIndexingStatus(cycle) {
-        return false;
+    async function waitForIndexingtoFinish(cycle) {
+        const getProgress = () => getViewIndexingStatus(cycle, couchUtils.getRunningCouchJobs());
+        const indexTracker = IndexingStatusTracker(getProgress, cycle);
+
+        await indexTracker.start();
     }
 
     async function getViewIndexingStatus(cycle, couchJobsPromise) {
@@ -185,7 +188,7 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, pr
         process,
         _getCurrentStepForJob: getCurrentStepForJob,
         _markStepCompleted: markStepCompleted,
-        _waitForIndexingToFinish: checkIndexingStatus,
+        _waitForIndexingToFinish: waitForIndexingtoFinish,
         _getViewIndexingStatus: getViewIndexingStatus,
         _transformProducts: transformProducts,
         _transformOfferings: transformOfferings
