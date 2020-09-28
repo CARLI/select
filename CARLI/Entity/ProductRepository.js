@@ -277,6 +277,7 @@ function transformProductsForNewCycle(cycle) {
             return { ok: true };
         });
 
+
     function setCycleOnProducts(products) {
         return products.map((product) => {
             product.cycle = cycle;

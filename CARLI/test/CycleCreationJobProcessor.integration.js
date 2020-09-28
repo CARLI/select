@@ -13,13 +13,13 @@ var CycleCreationJobProcessor = require('../CycleCreationJobProcessor');
 testUtils.setupTestDb();
 entityTransform.setEntityLookupStores(testUtils.getTestDbStore());
 
-cycleRepository.setStore( testUtils.getTestDbStore() );
-offeringRepository.setStore( testUtils.getTestDbStore() );
-productRepository.setStore( testUtils.getTestDbStore() );
-vendorRepository.setStore( testUtils.getTestDbStore() );
-libraryRepository.setStore( testUtils.getTestDbStore() );
-libraryStatusRepository.setStore( testUtils.getTestDbStore() );
-vendorStatusRepository.setStore( testUtils.getTestDbStore() );
+cycleRepository.setStore(testUtils.getTestDbStore());
+offeringRepository.setStore(testUtils.getTestDbStore());
+productRepository.setStore(testUtils.getTestDbStore());
+vendorRepository.setStore(testUtils.getTestDbStore());
+libraryRepository.setStore(testUtils.getTestDbStore());
+libraryStatusRepository.setStore(testUtils.getTestDbStore());
+vendorStatusRepository.setStore(testUtils.getTestDbStore());
 
 var testCycleCreationJob = createTestCycleCreationJob();
 const timestamper = {
@@ -47,6 +47,71 @@ describe.only('Integration Test for a Cycle Creation Job Processor', function ()
 
         return populateRepositories()
             .then(() => cycleCreationJobProcessor.process(testCycleCreationJob))
+        
+        /*
+        Test:
+        Vendor Statuses are reset,
+        Library Statuses are reset,
+        Products are transformed,
+        Offerings are transformed,
+        Cycle is set to next phase
+        */
+
+        /*
+        ASSERTIONS
+
+        ** The two vendor statuses got copied
+
+        ** Vendor statuses look like:
+        vendorStatus.lastActivity = null;
+        vendorStatus.description = 'No Activity';
+        vendorStatus.isClosed = false;
+        vendorStatus.flaggedOfferingsCount = 0;
+        vendorStatus.flaggedOfferingsReasons = {};
+        vendorStatus.progress = 0;
+        vendorStatus.checklist = {
+        siteLicense: false,
+        simultaneousUsers: false,
+        descriptions: false
+
+        ** The two library statuses got copied to the target cycle
+
+        ** Library Statuses look like:
+        lastActivity = null;
+        description = '';
+        isComplete = false;
+
+
+        ** Products got copied to target cycle
+
+        ** Products got "transformed"
+        set product's cycle to be the target cycle
+        copies price caps (make sure test data has future price caps)
+        make sure current price cap is the previous future price cap for the cycle's year
+        make sure future price cap does not have an entry for current year
+        remove vendor comments
+
+
+        ** Offerings got copied to target cycle
+
+        ** Offerings got reset
+        offering.cycle == target cycle id
+        copy history (pricing, funding, and selection) <----- !!! (there are a few things hiding in here, will want to check the old offering)
+        delete offering.siteLicensePriceUpdated;
+        delete offering.suPricesUpdated;
+        delete offering.selection
+        delete offering.flag
+        delete offering.flaggedReason;
+        offering.libraryComments = '';
+        offering.vendorComments = {
+            site: '',
+            su: []
+        };
+
+
+        ** Load the target cycle, confirm it has the expected status
+        targetCycle.status == cycleRespository.CYCLE_STATUS_EDITING_PRODUCT_LIST
+        * */
     });
 });
 
@@ -64,6 +129,8 @@ function populateRepositories() {
         .then(populateVendorRepository)
         .then(populateProductRepository)
         .then(populateOfferingRepository)
+        .then(populateVendorStatusRepository)
+        .then(populateLibraryStatusRepository)
         .catch(err => {
             console.log('Error creating test data: ', err);
         })
@@ -227,4 +294,58 @@ async function populateOfferingRepository() {
         .then(() => offeringRepository.create(offering2, cycle))
         .then(() => offeringRepository.create(offering3, cycle))
         .then(() => offeringRepository.create(offering4, cycle))
+}
+
+function populateVendorStatusRepository() {
+    var testVendorStatus1 = {
+        vendor: 'vendor1',
+        lastActivity: '', //a fake timestamp
+        description: 'Some Activity',
+        isClosed: true,
+        flaggedOfferingsCount: 1,
+        flaggedOfferingsReasons: {},
+        progress: 1,
+        checklist: {
+            siteLicense: true,
+            simultaneousUsers: true,
+            descriptions: true
+        }
+    };
+    var testVendorStatus2 = {
+        vendor: 'vendor2',
+        lastActivity: '', //a fake timestamp
+        description: 'Some Activity',
+        isClosed: true,
+        flaggedOfferingsCount: 2,
+        flaggedOfferingsReasons: {},
+        progress: 2,
+        checklist: {
+            siteLicense: true,
+            simultaneousUsers: true,
+            descriptions: true
+        }
+    };
+
+    return vendorStatusRepository.create(testVendorStatus1)
+        .then(() => vendorStatusRepository.create(testVendorStatus2));
+}
+
+function populateLibraryStatusRepository() {
+
+    var testLibraryStatus1 = {
+        library: '1',
+        lastActivity: null,
+        description: 'some desc',
+        isComplete: true,
+    };
+
+    var testLibraryStatus2 = {
+        library: '2',
+        lastActivity: null,
+        description: 'some desc',
+        isComplete: true,
+    };
+
+    return libraryStatusRepository.create(testLibraryStatus1)
+        .then(() => libraryStatusRepository.create(testLibraryStatus2));
 }

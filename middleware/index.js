@@ -7,7 +7,6 @@ var Logger = require('../CARLI/Logger');
 var expressWorkerCount = 1; // require('os').cpus().length;
 var expressWorkerSetup = { exec: './runExpress.js' };
 var cycleDatabaseWorkerSetup = { exec: './cycleDatabaseWorker.js' };
-var newCycleDatabaseWorkerSetup = { exec: './newCycleDatabaseWorker.js' };
 var synchronizationWorkerSetup = { exec: './synchronizationWorker.js' };
 
 if (cluster.isMaster) {
@@ -45,9 +44,6 @@ function listenForMessages() {
         if (message.command == 'launchCycleDatabaseWorker') {
             Logger.log('Master is launching cycle database worker');
             launchCycleDatabaseWorker(message.sourceCycleId, message.newCycleId);
-        } else if (message.command == 'launchNewCycleDatabaseWorker') {
-            Logger.log('Master is launching new cycle database worker');
-            launchNewCycleDatabaseWorker();
         } else if (message.command == 'launchSynchronizationWorker') {
             Logger.log('Master is launching synchronization worker');
             launchSynchronizationWorker();
@@ -59,11 +55,6 @@ function listenForMessages() {
 
 function launchCycleDatabaseWorker(sourceCycleId, newCycleId) {
     cluster.setupMaster(cycleDatabaseWorkerSetup);
-    cluster.fork({ sourceCycleId: sourceCycleId, newCycleId: newCycleId });
-}
-
-function launchNewCycleDatabaseWorker(sourceCycleId, newCycleId) {
-    cluster.setupMaster(newCycleDatabaseWorkerSetup);
     cluster.fork({ sourceCycleId: sourceCycleId, newCycleId: newCycleId });
 }
 

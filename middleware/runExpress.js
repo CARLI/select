@@ -29,8 +29,9 @@ var vendorSpecificProductQueries = require('./components/vendorSpecificProductQu
 var publicApi = require('./components/public');
 var restrictedApi = require('./components/restrictedApi');
 var configApiComponent = require('./components/config');
+var cycleCreationJobRepository = require('../CARLI/Entity/CycleCreationJobRepository')
 
-function runMiddlewareServer(){
+function runMiddlewareServer() {
     var carliMiddleware = express();
 
     configureMiddleware();
@@ -51,7 +52,7 @@ function runMiddlewareServer(){
             var host = server.address().address;
             var port = server.address().port;
             Logger.log('CARLI Middleware Version:' + carliMiddlewareVersion);
-            Logger.log('CARLI Middleware worker ' + cluster.worker.id + ' listening at http://'+host+':'+port);
+            Logger.log('CARLI Middleware worker ' + cluster.worker.id + ' listening at http://' + host + ':' + port);
             Logger.log('CRM MYSQL config\n', crmQueries.mysqlConfig);
             Logger.log('ENVIRONMENT\n', process.env);
             Logger.log('CONFIGURATION\n', JSON.stringify(config, null, "  "));
@@ -63,26 +64,28 @@ function runMiddlewareServer(){
         function authorizedRoute(method, route, promiseToAuthorize, dispatchRequest) {
             carliMiddleware[method](route, function (req, res) {
                 promiseToAuthorize(req)
-                    .then(function() {
+                    .then(function () {
                         dispatchRequest(req, res);
                     })
                     .catch(sendError(res));
             });
         }
+
         function authorizedRouteWithVendorIdParam(method, route, promiseToAuthorize, dispatchRequest) {
             carliMiddleware[method](route, function (req, res) {
                 promiseToAuthorize(req.params.vendorId)
-                    .then(function() {
+                    .then(function () {
                         dispatchRequest(req, res);
                     })
                     .catch(sendError(res));
             });
         }
+
         function authorizedRouteExpectingBasicAuth(method, route, promiseToAuthorize, dispatchRequest) {
             carliMiddleware[method](route, function (req, res) {
                 try {
                     Q.when(promiseToAuthorize(req))
-                        .then(function() {
+                        .then(function () {
                             dispatchRequest(req, res);
                         })
                         .catch(sendError(res));
@@ -102,7 +105,7 @@ function runMiddlewareServer(){
         }
 
         carliMiddleware.get('/version', function (req, res) {
-            res.send({ version: require('./package.json').version });
+            res.send({version: require('./package.json').version});
         });
 
         carliMiddleware.put('/tell-pixobot', function (req, res) {
@@ -111,7 +114,7 @@ function runMiddlewareServer(){
         });
 
         authorizedRoute('put', '/design-doc/:dbName', carliAuth.requireStaff, function (req, res) {
-            carliAuth.requireStaff().then(function() {
+            carliAuth.requireStaff().then(function () {
                 couchApp.putDesignDoc(req.params.dbName, 'Cycle')
                     .then(sendOk(res))
                     .catch(sendError(res));
@@ -137,6 +140,7 @@ function runMiddlewareServer(){
                     .then(copyAuthCookieFromResponse)
                     .then(sendResult(res))
                     .catch(sendError(res));
+
                 function copyAuthCookieFromResponse(authResponse) {
                     res.append('Set-Cookie', authResponse.authCookie);
                     return authResponse;
@@ -147,6 +151,7 @@ function runMiddlewareServer(){
                     .then(clearAuthCookie)
                     .then(sendResult(res))
                     .catch(sendError(res));
+
                 function clearAuthCookie(authResponse) {
                     res.append('Set-Cookie', 'AuthSession=; Version=1; Expires=-1; Max-Age=-1; Path=/');
                     request.clearAuth();
@@ -173,6 +178,7 @@ function runMiddlewareServer(){
                     .catch(send500Error(res));
             });
         }
+
         function defineRoutesForLibraries() {
             authorizedRoute('get', '/library', carliAuth.requireSession, function (req, res) {
                 crmQueries.listLibraries()
@@ -181,12 +187,11 @@ function runMiddlewareServer(){
             });
             authorizedRoute('get', '/library/:id', carliAuth.requireSession, function (req, res) {
                 crmQueries.loadLibrary(req.params.id)
-                    .then(function(library){
-                        if ( isValidLibrary(library) ) {
+                    .then(function (library) {
+                        if (isValidLibrary(library)) {
                             res.send(library);
-                        }
-                        else {
-                            res.status(404).send( { error: 'Library ' + req.params.id + ' not found in CRM DB' } );
+                        } else {
+                            res.status(404).send({error: 'Library ' + req.params.id + ' not found in CRM DB'});
                         }
                     })
                     .catch(send500Error(res));
@@ -204,8 +209,8 @@ function runMiddlewareServer(){
                 var idArray = [];
                 try {
                     idArray = JSON.parse(req.params.ids);
+                } catch (e) {
                 }
-                catch(e){}
 
                 crmQueries.listCrmContactsForLibraryIds(idArray)
                     .then(sendResult(res))
@@ -237,51 +242,63 @@ function runMiddlewareServer(){
                     .catch(send500Error(res));
             });
         }
+
+        //TODO: test that it creates the new cycle, creates the new job, and correctly calls the processor
         function defineRoutesForCycleDatabases() {
             authorizedRoute('put', '/cycle-from', carliAuth.requireStaff, function (req, res) {
                 return cycleCreation.create(req.body.newCycleData)
-                    .then(function (newCycleId) {
-                        res.send({ id: newCycleId });
+                    .then(function(newCycleId) {
+                        var cycleCreationJob = {
+                            sourceCycle: req.body.sourceCycle.id,
+                            targetCycle: newCycleId
+                        }
+                        return cycleCreationJobRepository.create(cycleCreationJob);
+                    })
+                    .then(function (newCycleCreationJobId) {
+                        res.send({id: newCycleCreationJobId});
                         cluster.worker.send({
                             command: 'launchCycleDatabaseWorker',
-                            sourceCycleId: req.body.sourceCycle.id,
-                            newCycleId: newCycleId
+                            jobId: newCycleCreationJobId
                         });
                     }).catch(function (err) {
-                        res.send({ error: err });
+                        res.send({error: err});
                     });
             });
-            authorizedRoute('put', '/new-cycle-from', carliAuth.requireStaff, function (req, res) {
-                return cycleCreation.create(req.body.newCycleData)
-                    .then(function (newCycleId) {
-                        res.send({ id: newCycleId });
-                        cluster.worker.send({
-                            command: 'launchNewCycleDatabaseWorker',
-                            sourceCycleId: req.body.sourceCycle.id,
-                            newCycleId: newCycleId
-                        });
-                    }).catch(function (err) {
-                        res.send({ error: err });
-                    });
-            });
-            authorizedRoute('put', '/launch-cycle-database-worker/:from/:to', carliAuth.requireStaff, function (req, res) {
-                res.send({ ok: true });
+
+            //TODO: test that it passes the job id and correctly calls the processor
+            authorizedRoute('put', '/resume-new-cycle/:jobId', carliAuth.requireStaff, function (req, res) {
+                res.send('OK');
                 cluster.worker.send({
                     command: 'launchCycleDatabaseWorker',
-                    sourceCycleId: req.params.from,
-                    newCycleId: req.params.to
+                    jobId: req.params.jobId
                 });
             });
+
+            //get status - TBD
+/*            authorizedRoute('put', '/get-new-cycle-status', carliAuth.requireStaff, function (req, res) {
+                return (function (CycleId) {
+                    res.send({id: CycleId});
+                    cluster.worker.send({
+                        command: 'getCycleStatus',
+                        sourceCycleId: req.body.sourceCycle.id,
+                        newCycleId: CycleId
+                    });
+                }).catch(function (err) {
+                    res.send({error: err});
+                });
+            });*/
+
             authorizedRoute('put', '/cycle', carliAuth.requireStaff, function (req, res) {
                 return cycleCreation.create(req.body.newCycleData)
                     .then(function (newCycleId) {
-                        res.send({ id: newCycleId });
+                        res.send({id: newCycleId});
                     }).catch(function (err) {
-                        res.send({ error: err });
+                        res.send({error: err});
                     });
             });
             authorizedRoute('get', '/cycle-creation-status/:id', carliAuth.requireStaff, function (req, res) {
                 return carliAuth.requireStaff().then(getCycleCreationStatus);
+
                 function getCycleCreationStatus() {
                     return cycleCreation.getCycleCreationStatus(req.params.id)
                         .then(sendResult(res))
@@ -290,6 +307,7 @@ function runMiddlewareServer(){
             });
             authorizedRoute('delete', '/delete-cycle/:id', carliAuth.requireStaff, function (req, res) {
                 return carliAuth.requireStaff().then(deleteCycle);
+
                 function deleteCycle() {
                     return cycleCreation.deleteCycle(req.params.id)
                         .then(sendResult(res)({success: true}))
@@ -336,7 +354,7 @@ function runMiddlewareServer(){
                     .then(sendOk(res))
                     .catch(sendError(res));
             });
-            authorizedRoute('post', '/replicate-data-from-vendor/:vendorId/for-cycle/:cycleId',  carliAuth.requireSession, function (req, res) {
+            authorizedRoute('post', '/replicate-data-from-vendor/:vendorId/for-cycle/:cycleId', carliAuth.requireSession, function (req, res) {
                 vendorDatabases.replicateDataFromOneVendorForCycle(req.params.vendorId, req.params.cycleId)
                     .then(sendOk(res))
                     .catch(sendError(res));
@@ -363,7 +381,7 @@ function runMiddlewareServer(){
                         res.send(arrayOfStatusObjects);
                     })
                     .catch(function (err) {
-                        res.send({ error: err });
+                        res.send({error: err});
                     });
             });
             authorizedRoute('get', '/cycle-database-status/:cycleId', carliAuth.requireSession, function (req, res) {
@@ -372,7 +390,7 @@ function runMiddlewareServer(){
                         res.send(arrayOfStatusObjects);
                     })
                     .catch(function (err) {
-                        res.send({ error: err });
+                        res.send({error: err});
                     });
             });
             authorizedRoute('get', '/cycle-database-status/:cycleId/for-vendor/:vendorId', carliAuth.requireSession, function (req, res) {
@@ -381,15 +399,11 @@ function runMiddlewareServer(){
                         res.send(statusObject);
                     })
                     .catch(function (err) {
-                        res.send({ error: err });
+                        res.send({error: err});
                     });
             });
-            // Marty Party: New Routes here! newCycleCreation, launch-cycle-db-worker
-            // async op; keep track of what is happening within the cycle creation process detached/outside of the client & request
-            // new module should be able to persist and manage new cycle job. More robust.
-            // Potentially keep track of progress and store it in couch as a sudo-memory to determine how far it got before it failed?
-            // Ability to call back into the process from failure step.
         }
+
         function defineRoutesForOfferings() {
             authorizedRouteWithVendorIdParam('post', '/update-su-pricing-for-product/:vendorId/:cycleId/:productId', carliAuth.requireStaffOrSpecificVendor, function (req, res) {
                 if (!req.body || !req.body.newSuPricing) {
@@ -415,6 +429,7 @@ function runMiddlewareServer(){
                     .catch(sendError(res));
             });
         }
+
         function defineRoutesForUserManagement() {
             authorizedRoute('get', '/user', carliAuth.requireSession, function (req, res) {
                 user.list()
@@ -463,6 +478,7 @@ function runMiddlewareServer(){
                     .catch(sendError(res));
             });
         }
+
         function defineRoutesForExports() {
             authorizedRoute('get', '/pdf/content/:notificationId', carliAuth.requireStaffOrLibrary, function (req, res) {
                 pdf.contentForPdf(req.params.notificationId)
@@ -496,6 +512,7 @@ function runMiddlewareServer(){
                     .catch(sendError(res));
             });
         }
+
         function defineRoutesForInvoices() {
             authorizedRoute('get', '/next-batch-id', carliAuth.requireStaff, function (req, res) {
                 pdf.generateNextBatchId()
@@ -508,6 +525,7 @@ function runMiddlewareServer(){
                     .catch(sendError(res));
             });
         }
+
         function defineRoutesForNotifications() {
             authorizedRoute('post', '/send-notification-email/:notificationId', carliAuth.requireStaff, function (req, res) {
                 carliAuth.requireStaff()
@@ -550,6 +568,7 @@ function runMiddlewareServer(){
                     .catch(sendError(res));
             });
         }
+
         function defineRoutesForReports() {
             authorizedRoute('get', '/reports/all-pricing/:parameters/:columns', carliAuth.requireStaff, function (req, res) {
                 reports.allPricingReport(req.params.parameters, req.params.columns)
@@ -614,6 +633,7 @@ function runMiddlewareServer(){
                     .catch(sendError(res));
             });
         }
+
         function defineRoutesForTheDrupalSite() {
             carliMiddleware.get('/public/list-all-products', function (req, res) {
                 publicApi.listProductsWithTermsForPublicWebsite()
@@ -631,6 +651,7 @@ function runMiddlewareServer(){
                     .then(sendError(res));
             });
         }
+
         function defineRoutesForRestrictedApi() {
             authorizedRouteExpectingBasicAuth('get', '/restricted/v1', carliAuth.requireBasicAuthForRestrictedApiV1, function (req, res) {
                 var docs = {
@@ -701,19 +722,21 @@ function runMiddlewareServer(){
                     if (listOfObjects.length === 0)
                         throw new Error('No data found');
                 }
+
                 function throwIfNotHomogeneous() {
                     const headers = Object.keys(listOfObjects[0]);
-                    listOfObjects.forEach(function(result) {
+                    listOfObjects.forEach(function (result) {
                         if (Object.keys(result).join(',') !== headers.join(','))
                             throwError();
                     });
+
                     function throwError() {
                         throw new Error('Non-homogeneous object found');
                     }
                 }
 
                 function convert2dArrayToCsv(table) {
-                    return table.map(function(row) {
+                    return table.map(function (row) {
                         return row.map(quoteForCsv).join(',');
                     }).join("\n");
                 }
@@ -723,8 +746,10 @@ function runMiddlewareServer(){
                 const newArray = [
                     Object.keys(listOfObjects[0]),
                 ];
-                listOfObjects.forEach(function(obj) {
-                    const row = Object.keys(obj).map(function(k) { return obj[k]; });
+                listOfObjects.forEach(function (obj) {
+                    const row = Object.keys(obj).map(function (k) {
+                        return obj[k];
+                    });
                     newArray.push(row);
                 });
 
@@ -743,7 +768,7 @@ function runMiddlewareServer(){
                 return configApiComponent.getConfig(req.params.key)
                     .then(sendJsonResult(res))
                     .catch(sendError(res));
-           });
+            });
         }
     }
 }
@@ -753,51 +778,55 @@ function sendResult(res) {
         res.send(result);
     }
 }
-function sendJsonResult(res){
-    return function(result){
-        res.send( { result: result } );
+
+function sendJsonResult(res) {
+    return function (result) {
+        res.send({result: result});
     }
 }
+
 function sendCsvResult(res) {
     return function (result) {
         res.type('text/csv').send(result);
     }
 }
+
 function sendOk(res) {
-    return function() {
-        res.send( { status: 'Ok' } );
+    return function () {
+        res.send({status: 'Ok'});
     }
 }
+
 function sendError(res, errorCode) {
     if (!errorCode) {
         errorCode = 500;
     }
-    return function(err) {
+    return function (err) {
         var errorToSend = err;
         if (err.statusCode) {
             errorCode = err.statusCode;
         }
-        if (err.message){
+        if (err.message) {
             errorToSend = err.message;
         }
-        res.status(errorCode).send( { error: errorToSend } );
+        res.status(errorCode).send({error: errorToSend});
         //res.status(errorCode).send( { error: errorToSend, stack: err.stack } ); //really useful for debugging
     }
 }
 
 function sendBasicAuthRequired(res) {
     res.header("WWW-Authenticate", "Basic");
-    res.status(401).send( { error: "Unauthorized" } );
+    res.status(401).send({error: "Unauthorized"});
 }
 
 function send500Error(res) {
-    return function(err) {
-        res.status(500).send( { error: err } );
+    return function (err) {
+        res.status(500).send({error: err});
     }
 }
 
 function getAuthTokenFromHeader(req) {
-    if ( req && req.header('X-AuthToken') ){
+    if (req && req.header('X-AuthToken')) {
         return JSON.parse(req.header('X-AuthToken'));
     }
     return null;
@@ -837,7 +866,6 @@ function setAuthForRequest(req, res, next) {
 
 if (require.main === module) {
     runMiddlewareServer();
-}
-else {
+} else {
     module.exports = {};
 }
