@@ -296,9 +296,10 @@ async function populateOfferingRepository() {
         .then(() => offeringRepository.create(offering4, cycle))
 }
 
-function populateVendorStatusRepository() {
+async function populateVendorStatusRepository() {
     var testVendorStatus1 = {
         vendor: 'vendor1',
+        cycle: testCycle.id,
         lastActivity: '', //a fake timestamp
         description: 'Some Activity',
         isClosed: true,
@@ -313,6 +314,7 @@ function populateVendorStatusRepository() {
     };
     var testVendorStatus2 = {
         vendor: 'vendor2',
+        cycle: testCycle.id,
         lastActivity: '', //a fake timestamp
         description: 'Some Activity',
         isClosed: true,
@@ -326,14 +328,16 @@ function populateVendorStatusRepository() {
         }
     };
 
-    return vendorStatusRepository.create(testVendorStatus1)
-        .then(() => vendorStatusRepository.create(testVendorStatus2));
+    let cycle = await cycleRepository.load(testCycle.id);
+    return vendorStatusRepository.create(testVendorStatus1, cycle)
+        .then(() => vendorStatusRepository.create(testVendorStatus2, cycle));
 }
 
-function populateLibraryStatusRepository() {
+async function populateLibraryStatusRepository() {
 
     var testLibraryStatus1 = {
         library: '1',
+        cycle: testCycle.id,
         lastActivity: null,
         description: 'some desc',
         isComplete: true,
@@ -341,11 +345,13 @@ function populateLibraryStatusRepository() {
 
     var testLibraryStatus2 = {
         library: '2',
+        cycle: testCycle.id,
         lastActivity: null,
         description: 'some desc',
         isComplete: true,
     };
 
-    return libraryStatusRepository.create(testLibraryStatus1)
-        .then(() => libraryStatusRepository.create(testLibraryStatus2));
+    let cycle = await cycleRepository.load(testCycle.id);
+    return libraryStatusRepository.create(testLibraryStatus1, cycle)
+        .then(() => libraryStatusRepository.create(testLibraryStatus2, cycle));
 }
