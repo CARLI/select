@@ -62,8 +62,8 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, pr
         const allVendors = await vendorRepository.list();
 
         const promises = allVendors.map( async function (vendor) {
-            await vendorStatusRepository.ensureStatusExistsForVendor(vendor, newCycle);
-            const status = await vendorStatusRepository.getStatusForVendor(vendor, newCycle);
+            await vendorStatusRepository.ensureStatusExistsForVendor(vendor.id, newCycle);
+            const status = await vendorStatusRepository.getStatusForVendor(vendor.id, newCycle);
             const resetStatus = vendorStatusRepository.reset(status, newCycle);
             resetStatus.cycle = newCycle.id;
             await vendorStatusRepository.update(resetStatus, newCycle);
@@ -83,8 +83,8 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, pr
         const allLibraries = await libraryRepository.list();
 
         const promises = allLibraries.map( async function (library) {
-            await libraryStatusRepository.ensureStatusExistsForLibrary(library, newCycle);
-            const status = await libraryStatusRepository.getStatusForLibrary(library, newCycle);
+            await libraryStatusRepository.ensureLibraryStatus(library.id, newCycle);
+            const status = await libraryStatusRepository.getStatusForLibrary(library.id, newCycle);
             const resetStatus = libraryStatusRepository.reset(status, newCycle);
             resetStatus.cycle = newCycle.id;
             await libraryStatusRepository.update(resetStatus, newCycle);

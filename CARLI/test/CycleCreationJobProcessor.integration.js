@@ -21,6 +21,24 @@ libraryRepository.setStore(testUtils.getTestDbStore());
 libraryStatusRepository.setStore(testUtils.getTestDbStore());
 vendorStatusRepository.setStore(testUtils.getTestDbStore());
 
+const testCycle = {
+    id: testUtils.testDbMarker + '-cycle1',
+    name: testUtils.testDbMarker + 'cycle creation job test cycle1',
+    cycleType: 'Calendar Year',
+    year: 3001,
+    status: 5,
+    isArchived: false,
+}
+
+const testCycle2 = {
+    id: testUtils.testDbMarker + '-cycle2',
+    name: testUtils.testDbMarker + 'cycle creation job test cycle2',
+    cycleType: 'Calendar Year',
+    year: 3002,
+    status: 0,
+    isArchived: false,
+}
+
 var testCycleCreationJob = createTestCycleCreationJob();
 const timestamper = {
     getCurrentTimestamp: function () {
@@ -29,7 +47,9 @@ const timestamper = {
 }
 
 describe.only('Integration Test for a Cycle Creation Job Processor', function () {
-    it('runs a complete cycle creation process', () => {
+
+    it('runs a complete cycle creation process', async function() {
+        this.timeout(30000);
 
         const processorParams = {
             cycleRepository,
@@ -45,9 +65,15 @@ describe.only('Integration Test for a Cycle Creation Job Processor', function ()
 
         const cycleCreationJobProcessor = CycleCreationJobProcessor(processorParams);
 
-        return populateRepositories()
-            .then(() => cycleCreationJobProcessor.process(testCycleCreationJob))
-        
+        await populateRepositories();
+
+        while(cycleCreationJobProcessor._getCurrentStepForJob(testCycleCreationJob) !== "done") {
+            const currentStep = cycleCreationJobProcessor._getCurrentStepForJob(testCycleCreationJob);
+            console.log("[START]: " + currentStep);
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
+            console.log("[END]: " + currentStep);
+        }
+
         /*
         Test:
         Vendor Statuses are reset,
@@ -118,8 +144,8 @@ describe.only('Integration Test for a Cycle Creation Job Processor', function ()
 function createTestCycleCreationJob() {
     return {
         type: 'CycleCreationJob',
-        sourceCycle: 'cycle1',
-        targetCycle: 'cycle2'
+        sourceCycle: testCycle.id,
+        targetCycle: testCycle2.id
     };
 }
 
@@ -136,23 +162,6 @@ function populateRepositories() {
         })
 }
 
-const testCycle = {
-    id: 'cycle1',
-    name: testUtils.testDbMarker + 'cycle creation job test cycle1',
-    cycleType: 'Calendar Year',
-    year: 3001,
-    status: 5,
-    isArchived: false,
-}
-
-const testCycle2 = {
-    id: 'cycle2',
-    name: testUtils.testDbMarker + 'cycle creation job test cycle2',
-    cycleType: 'Calendar Year',
-    year: 3002,
-    status: 0,
-    isArchived: false,
-}
 
 function populateCycleRepository() {
     return cycleRepository.create(testCycle)
@@ -164,14 +173,14 @@ async function populateProductRepository() {
     const product1 = {
         id: 'product1',
         name: 'Product1',
-        cycle: 'cycle1',
+        cycle: testCycle.id,
         vendor: 'vendor1',
         description: 'A fake product number one'
     };
     const product2 = {
         id: 'product2',
         name: 'Product2',
-        cycle: 'cycle1',
+        cycle: testCycle.id,
         vendor: 'vendor1',
         description: 'A fake product number two'
     };
@@ -195,7 +204,7 @@ async function populateOfferingRepository() {
     //Product 1 and 2 for Library 1
     const offering1 = {
         id: 'offering1',
-        cycle: 'cycle1',
+        cycle: testCycle.id,
         library: '1',
         product: 'product1',
         vendor: 'vendor1',
@@ -218,7 +227,7 @@ async function populateOfferingRepository() {
     };
     const offering2 = {
         id: 'offering2',
-        cycle: 'cycle1',
+        cycle: testCycle.id,
         library: '1',
         product: 'product2',
         vendor: 'vendor1',
@@ -243,7 +252,7 @@ async function populateOfferingRepository() {
     //Product 1 and 2 for Library 2
     const offering3 = {
         id: 'offering3',
-        cycle: 'cycle1',
+        cycle: testCycle.id,
         library: '2',
         product: 'product1',
         vendor: 'vendor1',
@@ -266,7 +275,7 @@ async function populateOfferingRepository() {
     };
     const offering4 = {
         id: 'offering4',
-        cycle: 'cycle1',
+        cycle: testCycle.id,
         library: '2',
         product: 'product2',
         vendor: 'vendor1',

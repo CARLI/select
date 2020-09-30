@@ -537,7 +537,7 @@ function createLibraryStatusRepository() {
         resetStatusLibraries,
         libraryStatuses,
         statusesUpdated,
-        ensureStatusExistsForLibrary: async function(libraryId, newCycle) {
+        ensureLibraryStatus: async function(libraryId, newCycle) {
             ensuredStatusLibraries.push(libraryId);
         },
         getStatusForLibrary: async function(libraryId, newCycle) {
