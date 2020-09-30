@@ -9,7 +9,6 @@ var vendorRepository = require('../../CARLI/Entity/VendorRepository');
 var vendorStatusRepository = require('../../CARLI/Entity/VendorStatusRepository');
 var CycleCreationJobProcessor = require('../CARLI/CycleCreationJobProcessor');
 var cycleCreationJobRepository = require('../CARLI/Entity/CycleCreationJobRepository')
-var vendorDatabases = require('./components/vendorDatabases');
 
 var timestamper = {
     getCurrentTimestamp: function () {
@@ -42,7 +41,6 @@ async function doWork() {
         });
 /* TODO: move into the processor as the last step
         Create Shards (confirm that these get created somewhere)
-        move these two steps into the processor:
         .then(vendorDatabases.replicateDataToVendorsForCycle)
         .then(vendorDatabases.triggerIndexingForCycleId)
 */

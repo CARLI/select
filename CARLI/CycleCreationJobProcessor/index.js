@@ -1,4 +1,5 @@
 var Q = require('q');
+var cycleRepositoryForVendor = require('../../CARLI/Entity/CycleRepositoryForVendor');
 const IndexingStatusTracker = require("./IndexingStatusTracker");
 
 function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, productRepository, offeringRepository, vendorRepository, libraryRepository, libraryStatusRepository, vendorStatusRepository}) {
@@ -16,6 +17,11 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, pr
         'transformOfferings',
         'indexViewsPhase2',
         'setCycleToNextPhase',
+
+        // Create Shards
+        'replicateDataToVendorsForCycle',
+        'triggerIndexingForCycleId',
+
         'done'
     ]
 
@@ -166,6 +172,39 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, pr
         }
     }
 
+    async function replicateDataToVendorsForCycle(cycleId) {
+        if (!sourceCycle) {
+            await loadCycles(job);
+        }
+        const allVendors = await vendorRepository.list();
+        const promises = allVendors.map( async function (vendor) {
+            const repoForVendor = cycleRepositoryForVendor(vendor);
+            const cycleForVendor = await repoForVendor.load(cycleId);
+            return cycleForVendor.replicateFromSource();
+        });
+        await Q.all(promises);
+    }
+
+    async function triggerIndexingForCycleId(cycleId) {
+        if (!sourceCycle) {
+            await loadCycles(job);
+        }
+
+        cycleRepository.load(cycleId);
+        couchUtils.triggerViewIndexing(cycle.getDatabaseName())
+        vendorRepository.list();
+
+        const instancePromises = vendors.map( async function (vendor) {
+            cycleRepositoryForVendor(vendor).load(cycle.id)
+        });
+        await Q.all(instancePromises);
+
+        const indexPromises = cycles.map( async function (cycleForVendor) {
+            couchUtils.triggerViewIndexing(cycleForVendor.getDatabaseName());
+        });
+        await Q.all(indexPromises);
+    }
+
     function getStepAction(step) {
         var stepActions = {
             'loadCycles': loadCycles,
@@ -177,6 +216,8 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, pr
             'transformOfferings': transformOfferings,
             'indexViewsPhase2': triggerIndexViews,
             'setCycleToNextPhase': setCycleToNextPhase,
+            'replicateDataToVendorsForCycle': replicateDataToVendorsForCycle,
+            'triggerIndexingForCycleId': triggerIndexingForCycleId,
             'done': function () {
                 return null;
             }
