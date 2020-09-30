@@ -1,8 +1,9 @@
+var chai = require('chai');
+var expect = chai.expect;
 const couchUtils = require('../Store/CouchDb/Utils')();
 const cycleRepository = require('../Entity/CycleRepository');
 const offeringRepository = require('../Entity/OfferingRepository');
 const productRepository = require('../Entity/ProductRepository');
-var cycleRepositoryForVendor = require('../../CARLI/Entity/CycleRepositoryForVendor');
 const testUtils = require('./utils');
 const vendorRepository = require('../Entity/VendorRepository');
 const libraryRepository = require('../Entity/LibraryRepository');
@@ -10,6 +11,7 @@ const libraryStatusRepository = require('../Entity/LibraryStatusRepository');
 const vendorStatusRepository = require('../Entity/VendorStatusRepository');
 var entityTransform = require('../Entity/EntityTransformationUtils.js');
 var CycleCreationJobProcessor = require('../CycleCreationJobProcessor');
+var cycleRepositoryForVendor = require('../../CARLI/Entity/CycleRepositoryForVendor');
 
 testUtils.setupTestDb();
 entityTransform.setEntityLookupStores(testUtils.getTestDbStore());
@@ -47,9 +49,11 @@ const timestamper = {
     }
 }
 
+
 describe.only('Integration Test for a Cycle Creation Job Processor', function () {
 
-    it('runs a complete cycle creation process', async function() {
+    before(async function() {
+
         this.timeout(30000);
 
         const processorParams = {
@@ -75,40 +79,81 @@ describe.only('Integration Test for a Cycle Creation Job Processor', function ()
             await cycleCreationJobProcessor.process(testCycleCreationJob);
             console.log("[END]: " + currentStep);
         }
+    });
 
-        /*
-        Test:
-        Vendor Statuses are reset,
-        Library Statuses are reset,
-        Products are transformed,
-        Offerings are transformed,
-        Cycle is set to next phase
-        */
+    it('Should reset vendor statuses', async function (){
+
+        const resetVendor = {
+            cycle: testCycle2.id,
+            type: 'VendorStatus',
+            lastActivity: null,
+            description: 'No Activity',
+            isClosed: false,
+            flaggedOfferingsCount: 0,
+            flaggedOfferingsReasons: {},
+            progress: 0,
+            checklist: {
+                siteLicense: false,
+                simultaneousUsers: false,
+                descriptions: false,
+            }
+        };
+
+        const cycle = await cycleRepository.load(testCycle2.id);
+        const vendorStatuses = await vendorStatusRepository.list(cycle);
+        expect(vendorStatuses.length).equals(2);
+        vendorStatuses.forEach(vendorStatus => {
+            const clone = Object.assign({}, vendorStatus);
+
+            delete clone._id;
+            delete clone.id;
+            delete clone._rev;
+            delete clone.vendor;
+
+            expect(clone).deep.equals(resetVendor);
+        });
+    });
+
+    it('Should reset library statuses', async function (){
+        const resetLibraryStatus = {
+            lastActivity: "",
+            cycle: testCycle2.id,
+            description: '',
+            isComplete: false,
+            type: "LibraryStatus"
+        };
+
+        const cycle = await cycleRepository.load(testCycle2.id);
+        const libraryStatuses = await libraryStatusRepository.list(cycle);
+
+        // this magic number is from the actual CRM DB library count
+        expect(libraryStatuses.length).equals(186);
+        libraryStatuses.forEach(libraryStatus => {
+            const clone = Object.assign({}, libraryStatus);
+
+            delete clone._id;
+            delete clone.id;
+            delete clone._rev;
+            delete clone.library;
+
+            expect(clone).deep.equals(resetLibraryStatus);
+        });
+    });
+
+    it('Should transform products', function (){
+
+    });
+
+    it('Should transform offerings', function (){
+
+    });
+
+    it('Should set a cycle to the next phase', function (){
+
+    });
 
         /*
         ASSERTIONS
-
-        ** The two vendor statuses got copied
-
-        ** Vendor statuses look like:
-        vendorStatus.lastActivity = null;
-        vendorStatus.description = 'No Activity';
-        vendorStatus.isClosed = false;
-        vendorStatus.flaggedOfferingsCount = 0;
-        vendorStatus.flaggedOfferingsReasons = {};
-        vendorStatus.progress = 0;
-        vendorStatus.checklist = {
-        siteLicense: false,
-        simultaneousUsers: false,
-        descriptions: false
-
-        ** The two library statuses got copied to the target cycle
-
-        ** Library Statuses look like:
-        lastActivity = null;
-        description = '';
-        isComplete = false;
-
 
         ** Products got copied to target cycle
 
@@ -140,7 +185,7 @@ describe.only('Integration Test for a Cycle Creation Job Processor', function ()
         ** Load the target cycle, confirm it has the expected status
         targetCycle.status == cycleRespository.CYCLE_STATUS_EDITING_PRODUCT_LIST
         * */
-    });
+
 });
 
 function createTestCycleCreationJob() {
@@ -198,9 +243,18 @@ async function populateVendorRepository() {
         name: 'Vendor1'
     };
 
+    const vendor2 = {
+        id: 'vendor2',
+        name: 'Vendor2'
+    };
+
     await vendorRepository.create(vendor1);
     const cycleRepo = cycleRepositoryForVendor(vendor1);
     await cycleRepo.createDatabase(testCycle.id);
+
+    await vendorRepository.create(vendor2);
+    const cycleRepo2 = cycleRepositoryForVendor(vendor2);
+    await cycleRepo2.createDatabase(testCycle.id);
 }
 
 async function populateOfferingRepository() {

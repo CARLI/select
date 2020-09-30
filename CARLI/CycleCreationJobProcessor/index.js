@@ -17,11 +17,8 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, pr
         'transformOfferings',
         'indexViewsPhase2',
         'setCycleToNextPhase',
-
-        // Create Shards
         'replicateDataToVendorsForCycle',
         'triggerIndexingForCycleId',
-
         'done'
     ]
 
