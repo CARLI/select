@@ -1,5 +1,5 @@
-var Q = require('q');
-var cycleRepositoryForVendor = require('../../CARLI/Entity/CycleRepositoryForVendor');
+const Q = require('q');
+const cycleRepositoryForVendor = require('../../CARLI/Entity/CycleRepositoryForVendor');
 const IndexingStatusTracker = require("./IndexingStatusTracker");
 
 function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, productRepository, offeringRepository, vendorRepository, libraryRepository, libraryStatusRepository, vendorStatusRepository}) {
@@ -24,6 +24,23 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, pr
 
         'done'
     ]
+
+    async function create(targetCycle) {
+        await cycleRepository.create(targetCycle, couchUtils.DB_TYPE_STAFF | couchUtils.DB_TYPE_LIBRARY)
+        await createVendorDatabasesForCycle(targetCycle.id);
+    }
+
+    async function createVendorDatabasesForCycle(cycleId) {
+
+        const allVendors = await vendorRepository.list();
+
+        const promises = allVendors.map( async function (vendor) {
+            const repoForVendor = cycleRepositoryForVendor(vendor);
+            await repoForVendor.createDatabase(cycleId);
+        });
+
+        await Q.all(promises);
+    }
 
     async function loadCycles(job) {
         sourceCycle = await cycleRepository.load(job.sourceCycle);
@@ -172,14 +189,14 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, pr
         }
     }
 
-    async function replicateDataToVendorsForCycle(cycleId) {
-        if (!sourceCycle) {
+    async function replicateDataToVendorsForCycle(job) {
+/*        if (!sourceCycle) {
             await loadCycles(job);
-        }
+        }*/
         const allVendors = await vendorRepository.list();
         const promises = allVendors.map( async function (vendor) {
             const repoForVendor = cycleRepositoryForVendor(vendor);
-            const cycleForVendor = await repoForVendor.load(cycleId);
+            const cycleForVendor = await repoForVendor.load(job.targetCycle);
             return cycleForVendor.replicateFromSource();
         });
         await Q.all(promises);
@@ -227,6 +244,7 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, pr
 
     return {
         process,
+        initializeNewCycle: create,
         _getCurrentStepForJob: getCurrentStepForJob,
         _markStepCompleted: markStepCompleted,
         _waitForIndexingToFinish: waitForIndexingtoFinish,
@@ -237,3 +255,4 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, pr
 }
 
 module.exports = CycleCreationJobProcessor;
+

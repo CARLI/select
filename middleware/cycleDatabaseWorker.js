@@ -39,11 +39,6 @@ async function doWork() {
         .catch(function (err) {
             Logger.log('Cycle creation failed', err);
         });
-/* TODO: move into the processor as the last step
-        Create Shards (confirm that these get created somewhere)
-        .then(vendorDatabases.replicateDataToVendorsForCycle)
-        .then(vendorDatabases.triggerIndexingForCycleId)
-*/
 }
 
 doWork();

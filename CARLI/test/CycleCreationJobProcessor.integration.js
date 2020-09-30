@@ -2,6 +2,7 @@ const couchUtils = require('../Store/CouchDb/Utils')();
 const cycleRepository = require('../Entity/CycleRepository');
 const offeringRepository = require('../Entity/OfferingRepository');
 const productRepository = require('../Entity/ProductRepository');
+var cycleRepositoryForVendor = require('../../CARLI/Entity/CycleRepositoryForVendor');
 const testUtils = require('./utils');
 const vendorRepository = require('../Entity/VendorRepository');
 const libraryRepository = require('../Entity/LibraryRepository');
@@ -66,6 +67,7 @@ describe.only('Integration Test for a Cycle Creation Job Processor', function ()
         const cycleCreationJobProcessor = CycleCreationJobProcessor(processorParams);
 
         await populateRepositories();
+        await cycleCreationJobProcessor.initializeNewCycle(testCycle2);
 
         while(cycleCreationJobProcessor._getCurrentStepForJob(testCycleCreationJob) !== "done") {
             const currentStep = cycleCreationJobProcessor._getCurrentStepForJob(testCycleCreationJob);
@@ -191,13 +193,15 @@ async function populateProductRepository() {
         .then(() => productRepository.create(product2, cycle))
 }
 
-function populateVendorRepository() {
+async function populateVendorRepository() {
     const vendor1 = {
         id: 'vendor1',
         name: 'Vendor1'
     };
 
-    return vendorRepository.create(vendor1)
+    await vendorRepository.create(vendor1);
+    const cycleRepo = cycleRepositoryForVendor(vendor1);
+    await cycleRepo.createDatabase(testCycle.id);
 }
 
 async function populateOfferingRepository() {
