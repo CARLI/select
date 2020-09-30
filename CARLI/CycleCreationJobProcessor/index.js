@@ -190,9 +190,7 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, pr
     }
 
     async function replicateDataToVendorsForCycle(job) {
-/*        if (!sourceCycle) {
-            await loadCycles(job);
-        }*/
+
         const allVendors = await vendorRepository.list();
         const promises = allVendors.map( async function (vendor) {
             const repoForVendor = cycleRepositoryForVendor(vendor);
@@ -202,24 +200,33 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, pr
         await Q.all(promises);
     }
 
-    async function triggerIndexingForCycleId(cycleId) {
+    async function triggerIndexingForCycleId(job) {
         if (!sourceCycle) {
             await loadCycles(job);
         }
 
-        cycleRepository.load(cycleId);
-        couchUtils.triggerViewIndexing(cycle.getDatabaseName())
-        vendorRepository.list();
+        const databaseNamesToIndex = await getDatabaseNamesToIndex();
 
-        const instancePromises = vendors.map( async function (vendor) {
-            cycleRepositoryForVendor(vendor).load(cycle.id)
+        databaseNamesToIndex.forEach(databaseName => {
+            couchUtils.triggerViewIndexing(databaseName);
         });
-        await Q.all(instancePromises);
 
-        const indexPromises = cycles.map( async function (cycleForVendor) {
-            couchUtils.triggerViewIndexing(cycleForVendor.getDatabaseName());
-        });
-        await Q.all(indexPromises);
+        async function getDatabaseNamesToIndex() {
+            const vendorCycleRepositories = await getVendorCycleRepositories();
+
+            return vendorCycleRepositories.map(function (vendorInstance) {
+                return vendorInstance.getDatabaseName();
+            });
+        }
+
+        async function getVendorCycleRepositories() {
+            const allVendors = await vendorRepository.list();
+
+            const vendorCycleRepositoryPromises = allVendors.map(async function (vendorName) {
+                return cycleRepositoryForVendor(vendorName).load(newCycle.id);
+            });
+            return await Q.all(vendorCycleRepositoryPromises);
+        }
     }
 
     function getStepAction(step) {

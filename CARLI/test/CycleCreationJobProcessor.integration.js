@@ -166,8 +166,7 @@ function populateRepositories() {
 
 
 function populateCycleRepository() {
-    return cycleRepository.create(testCycle)
-        .then(() => cycleRepository.create(testCycle2));
+    return cycleRepository.create(testCycle);
 }
 
 async function populateProductRepository() {
