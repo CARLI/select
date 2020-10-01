@@ -215,25 +215,27 @@ describe('The Cycle Creation Job Process', function(){
         });
 
         it('resets vendor statuses when there is one vendor', async function () {
-            let vendors = ['vendor1'];
+            let vendors = [ { id: 'vendor1' } ];
             vendorRepositorySpy.setVendors(vendors);
             await cycleCreationJobProcessor.process(testCycleCreationJob);
             const allVendors = await vendorRepositorySpy.list();
-            expect(vendorStatusRepositorySpy.ensuredStatusVendors).deep.equals(allVendors);
-            expect(vendorStatusRepositorySpy.resetStatusVendors).deep.equals(allVendors);
+            const allVendorIds = allVendors.map(vendor => vendor.id);
+            expect(vendorStatusRepositorySpy.ensuredStatusVendors).deep.equals(allVendorIds);
+            expect(vendorStatusRepositorySpy.resetStatusVendors).deep.equals(allVendorIds);
         });
 
         it('resets vendor statuses when there is more than one vendor', async function () {
-            let vendors = ['vendor1', 'vendor2'];
+            let vendors = [ { id: 'vendor1' }, { id: 'vendor2' } ];
             vendorRepositorySpy.setVendors(vendors);
             await cycleCreationJobProcessor.process(testCycleCreationJob);
             const allVendors = await vendorRepositorySpy.list();
-            expect(vendorStatusRepositorySpy.ensuredStatusVendors).deep.equals(allVendors);
-            expect(vendorStatusRepositorySpy.resetStatusVendors).deep.equals(allVendors);
+            const allVendorIds = allVendors.map(vendor => vendor.id);
+            expect(vendorStatusRepositorySpy.ensuredStatusVendors).deep.equals(allVendorIds);
+            expect(vendorStatusRepositorySpy.resetStatusVendors).deep.equals(allVendorIds);
         });
 
         it('sets the cycle property on the vendor statuses', async function() {
-            let vendors = ['vendor1', 'vendor2', 'vendor3'];
+            let vendors = [ { id: 'vendor1' }, { id: 'vendor2' }, { id: 'vendor3'} ];
             vendorRepositorySpy.setVendors(vendors);
             await cycleCreationJobProcessor.process(testCycleCreationJob);
             const statuses = vendorStatusRepositorySpy.vendorStatuses;
@@ -245,10 +247,10 @@ describe('The Cycle Creation Job Process', function(){
         });
 
         it('needs to persist the changes to the vendor status to the repository', async function() {
-            let vendors = ['vendor1', 'vendor2', 'vendor3'];
+            let vendors = [ { id: 'vendor1' }, { id: 'vendor2' }, { id: 'vendor3'} ];
             vendorRepositorySpy.setVendors(vendors);
             await cycleCreationJobProcessor.process(testCycleCreationJob);
-            expect(vendorStatusRepositorySpy.statusesUpdated).deep.equals(vendors);
+            expect(vendorStatusRepositorySpy.statusesUpdated).deep.equals(vendors.map(vendor => vendor.id));
         });
     });
 
@@ -270,25 +272,27 @@ describe('The Cycle Creation Job Process', function(){
         });
 
         it('resets library statuses when there is one library', async function () {
-            let libraries = ['lib1'];
+            let libraries = [ { id: 'lib1' } ];
             libraryRepositorySpy.setLibraries(libraries);
             await cycleCreationJobProcessor.process(testCycleCreationJob);
             const allLibraries = await libraryRepositorySpy.list();
-            expect(libraryStatusRepositorySpy.ensuredStatusLibraries).deep.equals(allLibraries);
-            expect(libraryStatusRepositorySpy.resetStatusLibraries).deep.equals(allLibraries);
+            const allLibraryIds = allLibraries.map(library => library.id);
+            expect(libraryStatusRepositorySpy.ensuredStatusLibraries).deep.equals(allLibraryIds);
+            expect(libraryStatusRepositorySpy.resetStatusLibraries).deep.equals(allLibraryIds);
         });
 
         it('resets library statuses when there is more than one library', async function () {
-            let libraries = ['lib1', 'lib2'];
+            let libraries = [ { id: 'lib1' }, { id: 'lib2' } ];
             libraryRepositorySpy.setLibraries(libraries);
             await cycleCreationJobProcessor.process(testCycleCreationJob);
             const allLibraries = await libraryRepositorySpy.list();
-            expect(libraryStatusRepositorySpy.ensuredStatusLibraries).deep.equals(allLibraries);
-            expect(libraryStatusRepositorySpy.resetStatusLibraries).deep.equals(allLibraries);
+            const allLibraryIds = allLibraries.map(library => library.id);
+            expect(libraryStatusRepositorySpy.ensuredStatusLibraries).deep.equals(allLibraryIds);
+            expect(libraryStatusRepositorySpy.resetStatusLibraries).deep.equals(allLibraryIds);
         });
 
         it('sets the cycle property on the library statuses', async function() {
-            let libraries = ['lib1', 'lib2', 'lib3'];
+            let libraries = [ { id: 'lib1' }, { id: 'lib2' }, { id: 'lib3' } ];
             libraryRepositorySpy.setLibraries(libraries);
             await cycleCreationJobProcessor.process(testCycleCreationJob);
             const statuses = libraryStatusRepositorySpy.libraryStatuses;
@@ -300,10 +304,10 @@ describe('The Cycle Creation Job Process', function(){
         });
 
         it('needs to persist the changes to the library status to the repository', async function() {
-            let libraries = ['lib1', 'lib2', 'lib3'];
+            let libraries = [ { id: 'lib1' }, { id: 'lib2' }, { id: 'lib3' } ];
             libraryRepositorySpy.setLibraries(libraries);
             await cycleCreationJobProcessor.process(testCycleCreationJob);
-            expect(libraryStatusRepositorySpy.statusesUpdated).deep.equals(libraries);
+            expect(libraryStatusRepositorySpy.statusesUpdated).deep.equals(libraries.map(library => library.id));
         });
     });
 
