@@ -26,6 +26,10 @@ vendorStatusRepository.setStore(testUtils.getTestDbStore());
 
 let product1;
 let product2;
+let offering1;
+let offering2;
+let offering3;
+let offering4;
 
 const testCycle = {
     id: testUtils.testDbMarker + '-cycle1',
@@ -174,38 +178,81 @@ describe.only('Integration Test for a Cycle Creation Job Processor', function ()
         }
     });
 
-    it('Should transform offerings', function (){
-    // ** Offerings got copied to target cycle
-    //
-    //     ** Offerings got reset
-    //     offering.cycle == target cycle id
-    //     copy history (pricing, funding, and selection) <----- !!! (there are a few things hiding in here, will want to check the old offering)
-    //     delete offering.siteLicensePriceUpdated;
-    //     delete offering.suPricesUpdated;
-    //     delete offering.selection
-    //     delete offering.flag
-    //     delete offering.flaggedReason;
-    //     offering.libraryComments = '';
-    //     offering.vendorComments = {
-    //         site: '',
-    //         su: []
-    //     };
+    it('Should transform offerings', async function (){
+        const targetCycle = await cycleRepository.load(testCycle2.id);
+        const targetOfferings = await offeringRepository.list(targetCycle);
 
+        expectCycleIdIsUpdated();
+        expectOfferingHistoryIsUpdated();
+        expectVendorTrackingIsRemoved();
+        expectSelectionRemoved();
+        expectFlaggedStateIsReset();
+        expectCommentsCleared();
+
+        function expectCycleIdIsUpdated() {
+            targetOfferings.forEach(offering => {
+                expect(offering.cycle.id).equals(targetCycle.id);
+            });
+        }
+
+        function expectOfferingHistoryIsUpdated() {
+            const newOffering4 = targetOfferings.find(offering => offering.id === offering4.id);
+            const otherOfferings = targetOfferings.filter(offering => offering.id !== offering4.id);
+
+            // if there's a selection, that should also get copied in
+            expect(newOffering4.history[testCycle.year].selection).to.be.undefined;
+            otherOfferings.forEach(offering => {
+                expect(offering.history[testCycle.year].selection).to.not.be.undefined;
+            });
+
+            // make sure the pricing and funding gets copied into the history
+            expect(newOffering4.history[testCycle.year].pricing).to.deep.equal(offering4.pricing);
+            expect(newOffering4.history[testCycle.year].funding).to.deep.equal(offering4.funding);
+
+            otherOfferings.forEach(offering => {
+                expect(offering.history[testCycle.year].pricing).to.not.be.undefined;
+                expect(offering.history[testCycle.year].funding).to.be.undefined;
+            });
+        }
+
+        function expectVendorTrackingIsRemoved() {
+            targetOfferings.forEach(offering => {
+                expect(offering.siteLicensePriceUpdated).to.be.undefined;
+                expect(offering.suPricesUpdated).to.be.undefined;
+            });
+        }
+
+        function expectSelectionRemoved() {
+            targetOfferings.forEach(offering => {
+                expect(offering.selection).to.be.undefined;
+            });
+        }
+
+        function expectFlaggedStateIsReset() {
+            targetOfferings.forEach(offering => {
+                expect(offering.flagged).to.be.undefined;
+                expect(offering.flaggedReason).to.be.undefined;
+            });
+        }
+
+        function expectCommentsCleared() {
+            targetOfferings.forEach(offering => {
+                expect(offering.libraryComments).equals('');
+                expect(offering.vendorComments).deep.equals({
+                    site: '',
+                    su: []
+                });
+            });
+        }
     });
 
-    it('Should set a cycle to the next phase', function (){
+    it('Should set a cycle to the next phase', async function (){
+        const targetCycle = await cycleRepository.load(testCycle2.id)
 
+        // ** Load the target cycle, confirm it has the expected status
+        //     targetCycle.status == cycleRespository.CYCLE_STATUS_EDITING_PRODUCT_LIST
+        //     * */
     });
-
-        /*
-        ASSERTIONS
-
-
-
-        ** Load the target cycle, confirm it has the expected status
-        targetCycle.status == cycleRespository.CYCLE_STATUS_EDITING_PRODUCT_LIST
-        * */
-
 });
 
 function createTestCycleCreationJob() {
@@ -287,7 +334,7 @@ async function populateVendorRepository() {
 
 async function populateOfferingRepository() {
     //Product 1 and 2 for Library 1
-    const offering1 = {
+    offering1 = {
         id: 'offering1',
         cycle: testCycle.id,
         library: '1',
@@ -310,7 +357,7 @@ async function populateOfferingRepository() {
         siteLicensePriceUpdated: '2020-01-01',
         suPricesUpdated: '2020-01-01'
     };
-    const offering2 = {
+    offering2 = {
         id: 'offering2',
         cycle: testCycle.id,
         library: '1',
@@ -335,7 +382,7 @@ async function populateOfferingRepository() {
     }
 
     //Product 1 and 2 for Library 2
-    const offering3 = {
+    offering3 = {
         id: 'offering3',
         cycle: testCycle.id,
         library: '2',
@@ -358,7 +405,7 @@ async function populateOfferingRepository() {
         siteLicensePriceUpdated: '2020-01-01',
         suPricesUpdated: '2020-01-01'
     };
-    const offering4 = {
+    offering4 = {
         id: 'offering4',
         cycle: testCycle.id,
         library: '2',
@@ -374,10 +421,12 @@ async function populateOfferingRepository() {
                 {users: 3, price: 1500}
             ]
         },
-        selection: {
-            users: 1,
-            datePurchased: '2020-05-01'
+        funding: {
+            fundedByPercentage: true,
+            fundedPercent: 50
         },
+        flagged: true,
+        flaggedReason: [ "Test reason", "Test Reason 2" ],
         siteLicensePriceUpdated: '2020-01-01',
         suPricesUpdated: '2020-01-01'
     }
