@@ -24,6 +24,9 @@ libraryRepository.setStore(testUtils.getTestDbStore());
 libraryStatusRepository.setStore(testUtils.getTestDbStore());
 vendorStatusRepository.setStore(testUtils.getTestDbStore());
 
+let product1;
+let product2;
+
 const testCycle = {
     id: testUtils.testDbMarker + '-cycle1',
     name: testUtils.testDbMarker + 'cycle creation job test cycle1',
@@ -140,11 +143,53 @@ describe.only('Integration Test for a Cycle Creation Job Processor', function ()
         });
     });
 
-    it('Should transform products', function (){
+    it('Should transform products', async function (){
+        const targetCycle = await cycleRepository.load(testCycle2.id);
+        const targetProducts = await productRepository.list(targetCycle);
 
+        expectCycleUpdated();
+        expectPriceCapsUpdated();
+        expectVendorCommentsRemoved();
+
+        function expectCycleUpdated() {
+            targetProducts.forEach(product => {
+                expect(product.cycle.id).equals(testCycle2.id);
+            });
+        }
+
+        function expectPriceCapsUpdated() {
+            const transformedProduct1 = targetProducts.find(product => product.id === product1.id);
+            expect(transformedProduct1.priceCap).equals(5);
+            expect(transformedProduct1.futurePriceCaps).deep.equals(product1.futurePriceCaps);
+
+            const transformedProduct2 = targetProducts.find(product => product.id === product2.id);
+            expect(transformedProduct2.priceCap).equals(20);
+            expect(transformedProduct2.futurePriceCaps).deep.equals({});
+        }
+
+        function expectVendorCommentsRemoved() {
+            targetProducts.forEach(product => {
+                expect(product.comments).equals('');
+            });
+        }
     });
 
     it('Should transform offerings', function (){
+    // ** Offerings got copied to target cycle
+    //
+    //     ** Offerings got reset
+    //     offering.cycle == target cycle id
+    //     copy history (pricing, funding, and selection) <----- !!! (there are a few things hiding in here, will want to check the old offering)
+    //     delete offering.siteLicensePriceUpdated;
+    //     delete offering.suPricesUpdated;
+    //     delete offering.selection
+    //     delete offering.flag
+    //     delete offering.flaggedReason;
+    //     offering.libraryComments = '';
+    //     offering.vendorComments = {
+    //         site: '',
+    //         su: []
+    //     };
 
     });
 
@@ -155,31 +200,6 @@ describe.only('Integration Test for a Cycle Creation Job Processor', function ()
         /*
         ASSERTIONS
 
-        ** Products got copied to target cycle
-
-        ** Products got "transformed"
-        set product's cycle to be the target cycle
-        copies price caps (make sure test data has future price caps)
-        make sure current price cap is the previous future price cap for the cycle's year
-        make sure future price cap does not have an entry for current year
-        remove vendor comments
-
-
-        ** Offerings got copied to target cycle
-
-        ** Offerings got reset
-        offering.cycle == target cycle id
-        copy history (pricing, funding, and selection) <----- !!! (there are a few things hiding in here, will want to check the old offering)
-        delete offering.siteLicensePriceUpdated;
-        delete offering.suPricesUpdated;
-        delete offering.selection
-        delete offering.flag
-        delete offering.flaggedReason;
-        offering.libraryComments = '';
-        offering.vendorComments = {
-            site: '',
-            su: []
-        };
 
 
         ** Load the target cycle, confirm it has the expected status
@@ -216,19 +236,27 @@ function populateCycleRepository() {
 
 async function populateProductRepository() {
 
-    const product1 = {
+    product1 = {
         id: 'product1',
         name: 'Product1',
         cycle: testCycle.id,
         vendor: 'vendor1',
-        description: 'A fake product number one'
+        description: 'A fake product number one',
+        comments: 'Test comment',
+        priceCap: 5,
+        futurePriceCaps: {
+            10: 10
+        }
     };
-    const product2 = {
+    product2 = {
         id: 'product2',
         name: 'Product2',
         cycle: testCycle.id,
         vendor: 'vendor1',
-        description: 'A fake product number two'
+        description: 'A fake product number two',
+        futurePriceCaps: {
+            3002: 20
+        }
     };
 
     let cycle = await cycleRepository.load(testCycle.id);
