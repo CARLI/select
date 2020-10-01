@@ -3,19 +3,19 @@ var expect = chai.expect;
 var Q = require('q');
 var CycleCreationJobProcessor = require('../CycleCreationJobProcessor');
 
+let couchUtilsSpy;
+let testCycleCreationJob;
+let cycleRepository;
+let productRepositorySpy;
+let offeringRepositorySpy;
+let vendorRepositorySpy;
+let libraryRepositorySpy;
+let cycleCreationJobProcessor;
+let vendorStatusRepositorySpy;
+let libraryStatusRepositorySpy;
+let cycleCreationJobRepositorySpy;
+
 describe('The Cycle Creation Job Process', function(){
-    let couchUtilsSpy;
-    let testCycleCreationJob;
-    let cycleRepository;
-    let productRepositorySpy;
-    let offeringRepositorySpy;
-    let vendorRepositorySpy;
-    let libraryRepositorySpy;
-    let cycleCreationJobProcessor;
-    let vendorStatusRepositorySpy;
-    let libraryStatusRepositorySpy;
-
-
     beforeEach(function() {
         let fakeTimestamper = createFakeTimestamper('2020-08-22-19:34:21Z');
         couchUtilsSpy = createCouchUtilsSpy();
@@ -27,6 +27,7 @@ describe('The Cycle Creation Job Process', function(){
         libraryRepositorySpy = createLibraryRepository();
         vendorStatusRepositorySpy = createVendorStatusRepository();
         libraryStatusRepositorySpy = createLibraryStatusRepository();
+        cycleCreationJobRepositorySpy = createCycleCreationJobRepository();
         cycleCreationJobProcessor = CycleCreationJobProcessor({
             cycleRepository: cycleRepository,
             couchUtils: couchUtilsSpy,
@@ -36,42 +37,17 @@ describe('The Cycle Creation Job Process', function(){
             vendorRepository: vendorRepositorySpy,
             libraryRepository: libraryRepositorySpy,
             libraryStatusRepository: libraryStatusRepositorySpy,
-            vendorStatusRepository: vendorStatusRepositorySpy
+            vendorStatusRepository: vendorStatusRepositorySpy,
+            cycleCreationJobRepository: cycleCreationJobRepositorySpy
         });
     });
 
     describe('the process method', function() {
-        it('throws an error if called with invalid input', async function () {
-            var cycleCreationJobProcessor = CycleCreationJobProcessor({});
-
-            let noInputErrorThrown = false;
-            let badInputErrorThrown = false;
-
-            try {
-                await cycleCreationJobProcessor.process();
-            }
-            catch (error) {
-                if(error.message === "invalid cycle creation job")
-                    noInputErrorThrown = true;
-            }
-
-            try {
-                await cycleCreationJobProcessor.process('');
-            }
-            catch (error) {
-                if(error.message === "invalid cycle creation job")
-                    badInputErrorThrown = true;
-            }
-
-            expect(noInputErrorThrown).is.true;
-            expect(badInputErrorThrown).is.true;
-        });
-
         it(`marks the step completed when finished`, async () => {
             testCycleCreationJob.loadCycles = '2020-09-09-20:01:34';
 
             await cycleCreationJobProcessor.process(testCycleCreationJob);
-            expect(cycleCreationJobProcessor._getCurrentStepForJob(testCycleCreationJob))
+            expect(await cycleCreationJobProcessor._getCurrentStepForJob(testCycleCreationJob.id))
                 .equals('indexViews');
         });
 
@@ -134,6 +110,11 @@ describe('The Cycle Creation Job Process', function(){
         it('sets the time of completion to the current time for the given step', function() {
             cycleCreationJobProcessor._markStepCompleted(testCycleCreationJob, 'test');
             expect(testCycleCreationJob.test).equals('2020-08-22-19:34:21Z');
+        });
+
+        it(`persists the changes to the job entity`, () => {
+            cycleCreationJobProcessor._markStepCompleted(testCycleCreationJob, 'test');
+            expect(cycleCreationJobRepositorySpy.updateCalled).to.be.true;
         });
     });
 
@@ -568,4 +549,16 @@ function createFakeTimestamper(expectedTimestamp) {
             return expectedTimestamp;
         }
     }
+}
+
+function createCycleCreationJobRepository() {
+    return {
+        updateCalled: false,
+        load: function() {
+            return testCycleCreationJob;
+        },
+        update: function() {
+            this.updateCalled = true;
+        }
+    };
 }

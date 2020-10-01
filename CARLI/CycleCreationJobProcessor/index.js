@@ -2,7 +2,20 @@ const Q = require('q');
 const cycleRepositoryForVendor = require('../../CARLI/Entity/CycleRepositoryForVendor');
 const IndexingStatusTracker = require("./IndexingStatusTracker");
 
-function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, productRepository, offeringRepository, vendorRepository, libraryRepository, libraryStatusRepository, vendorStatusRepository}) {
+function CycleCreationJobProcessor(
+        {
+            cycleRepository,
+            couchUtils,
+            timestamper,
+            productRepository,
+            offeringRepository,
+            vendorRepository,
+            libraryRepository,
+            libraryStatusRepository,
+            vendorStatusRepository,
+            cycleCreationJobRepository
+        })
+{
 
     var sourceCycle = null;
     var newCycle = null;
@@ -31,12 +44,12 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, pr
 
         const allVendors = await vendorRepository.list();
 
-        const promises = allVendors.map( async function (vendor) {
+        const promises = allVendors.map( function (vendor) {
             const repoForVendor = cycleRepositoryForVendor(vendor);
-            await repoForVendor.createDatabase(cycleId);
+            return repoForVendor.createDatabase(cycleId);
         });
 
-        await Q.all(promises);
+        return Q.all(promises);
     }
 
     async function loadCycles(job) {
@@ -45,15 +58,17 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, pr
         return true;
     }
 
-    async function process(cycleCreationJob) {
+    async function process(cycleCreationJobId) {
+        const cycleCreationJob = await cycleCreationJobRepository.load(cycleCreationJobId);
+
         if (typeof cycleCreationJob !== 'object' || cycleCreationJob.type !== 'CycleCreationJob')
             throw new Error('invalid cycle creation job');
 
-        var currentStep = getCurrentStepForJob(cycleCreationJob);
+        var currentStep = await getCurrentStepForJob(cycleCreationJobId);
         var stepAction = getStepAction(currentStep);
 
         const stepResult = await stepAction(cycleCreationJob);
-        markStepCompleted(cycleCreationJob, currentStep);
+        await markStepCompleted(cycleCreationJob, currentStep);
 
         return stepResult;
     }
@@ -147,13 +162,15 @@ function CycleCreationJobProcessor({cycleRepository, couchUtils, timestamper, pr
         }
     }
 
-    function markStepCompleted(job, step) {
+    async function markStepCompleted(job, step) {
         job[step] = timestamper.getCurrentTimestamp();
+        await cycleCreationJobRepository.update(job);
     }
 
-    function getCurrentStepForJob(cycleCreationJob) {
+    async function getCurrentStepForJob(cycleCreationJobId) {
+        const job = await cycleCreationJobRepository.load(cycleCreationJobId)
         for (var i = 0; i < stepOrder.length; i++) {
-            if (cycleCreationJob[stepOrder[i]] === undefined) {
+            if (job[stepOrder[i]] === undefined) {
                 return stepOrder[i];
             }
         }

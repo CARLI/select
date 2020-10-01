@@ -15,6 +15,50 @@
     "targetCycle": {
       "description": "UUID of the target Cycle document",
       "type": "string"
+    },
+    "loadCycles": {
+      "description": "Completion date of the load cycles step",
+      "$ref": "./Date.json"
+    },
+    "replicate": {
+      "description": "Completion date of the load cycles step",
+      "$ref": "./Date.json"
+    },
+    "indexViews": {
+      "description": "Completion date of the load cycles step",
+      "$ref": "./Date.json"
+    },
+    "resetVendorStatus": {
+      "description": "Completion date of the load cycles step",
+      "$ref": "./Date.json"
+    },
+    "resetLibraryStatus": {
+      "description": "Completion date of the load cycles step",
+      "$ref": "./Date.json"
+    },
+    "transformProducts": {
+      "description": "Completion date of the load cycles step",
+      "$ref": "./Date.json"
+    },
+    "transformOfferings": {
+      "description": "Completion date of the load cycles step",
+      "$ref": "./Date.json"
+    },
+    "indexViewsPhase2": {
+      "description": "Completion date of the load cycles step",
+      "$ref": "./Date.json"
+    },
+    "setCycleToNextPhase": {
+      "description": "Completion date of the load cycles step",
+      "$ref": "./Date.json"
+    },
+    "replicateDataToVendorsForCycle": {
+      "description": "Completion date of the load cycles step",
+      "$ref": "./Date.json"
+    },
+    "triggerIndexingForCycleId": {
+      "description": "Completion date of the load cycles step",
+      "$ref": "./Date.json"
     }
   },
   "required": [ "sourceCycle", "targetCycle" ]

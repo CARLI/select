@@ -9,6 +9,7 @@ const vendorRepository = require('../Entity/VendorRepository');
 const libraryRepository = require('../Entity/LibraryRepository');
 const libraryStatusRepository = require('../Entity/LibraryStatusRepository');
 const vendorStatusRepository = require('../Entity/VendorStatusRepository');
+const cycleCreationJobRepository = require('../Entity/CycleCreationJobRepository');
 var entityTransform = require('../Entity/EntityTransformationUtils.js');
 var CycleCreationJobProcessor = require('../CycleCreationJobProcessor');
 var cycleRepositoryForVendor = require('../../CARLI/Entity/CycleRepositoryForVendor');
@@ -23,6 +24,7 @@ vendorRepository.setStore(testUtils.getTestDbStore());
 libraryRepository.setStore(testUtils.getTestDbStore());
 libraryStatusRepository.setStore(testUtils.getTestDbStore());
 vendorStatusRepository.setStore(testUtils.getTestDbStore());
+cycleCreationJobRepository.setStore(testUtils.getTestDbStore());
 
 let product1;
 let product2;
@@ -57,11 +59,14 @@ const timestamper = {
 }
 
 
-describe.only('Integration Test for a Cycle Creation Job Processor', function () {
+describe('Integration Test for a Cycle Creation Job Processor', function () {
 
     before(async function() {
 
         this.timeout(30000);
+
+        const jobId = await cycleCreationJobRepository.create(testCycleCreationJob);
+        testCycleCreationJob = await cycleCreationJobRepository.load(jobId);
 
         const processorParams = {
             cycleRepository,
@@ -72,7 +77,8 @@ describe.only('Integration Test for a Cycle Creation Job Processor', function ()
             vendorRepository,
             libraryRepository,
             libraryStatusRepository,
-            vendorStatusRepository
+            vendorStatusRepository,
+            cycleCreationJobRepository
         }
 
         const cycleCreationJobProcessor = CycleCreationJobProcessor(processorParams);
@@ -80,10 +86,11 @@ describe.only('Integration Test for a Cycle Creation Job Processor', function ()
         await populateRepositories();
         await cycleCreationJobProcessor.initializeNewCycle(testCycle2);
 
-        while(cycleCreationJobProcessor._getCurrentStepForJob(testCycleCreationJob) !== "done") {
-            const currentStep = cycleCreationJobProcessor._getCurrentStepForJob(testCycleCreationJob);
+
+        while(await cycleCreationJobProcessor._getCurrentStepForJob(jobId) !== "done") {
+            const currentStep = await cycleCreationJobProcessor._getCurrentStepForJob(jobId);
             console.log("[START]: " + currentStep);
-            await cycleCreationJobProcessor.process(testCycleCreationJob);
+            await cycleCreationJobProcessor.process(jobId);
             console.log("[END]: " + currentStep);
         }
     });
