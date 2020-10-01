@@ -248,10 +248,7 @@ describe.only('Integration Test for a Cycle Creation Job Processor', function ()
 
     it('Should set a cycle to the next phase', async function (){
         const targetCycle = await cycleRepository.load(testCycle2.id)
-
-        // ** Load the target cycle, confirm it has the expected status
-        //     targetCycle.status == cycleRespository.CYCLE_STATUS_EDITING_PRODUCT_LIST
-        //     * */
+        expect(targetCycle.status).equals(cycleRepository.CYCLE_STATUS_EDITING_PRODUCT_LIST);
     });
 });
 
