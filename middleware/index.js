@@ -43,7 +43,7 @@ function listenForMessages() {
     function dispatchMessage(message) {
         if (message.command == 'launchCycleDatabaseWorker') {
             Logger.log('Master is launching cycle database worker');
-            launchCycleDatabaseWorker(message.sourceCycleId, message.newCycleId);
+            launchCycleDatabaseWorker(message.sourceCycleId, message.targetCycleData);
         } else if (message.command == 'launchSynchronizationWorker') {
             Logger.log('Master is launching synchronization worker');
             launchSynchronizationWorker();
@@ -53,9 +53,9 @@ function listenForMessages() {
     }
 }
 
-function launchCycleDatabaseWorker(sourceCycleId, newCycleId) {
+function launchCycleDatabaseWorker(sourceCycleId, targetCycleData) {
     cluster.setupMaster(cycleDatabaseWorkerSetup);
-    cluster.fork({ sourceCycleId: sourceCycleId, newCycleId: newCycleId });
+    cluster.fork({ sourceCycleId: sourceCycleId, targetCycleData: targetCycleData });
 }
 
 function launchSynchronizationWorker() {

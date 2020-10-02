@@ -243,29 +243,16 @@ function runMiddlewareServer() {
             });
         }
 
-        //TODO: test that it creates the new cycle, creates the new job, and correctly calls the processor
         function defineRoutesForCycleDatabases() {
             authorizedRoute('put', '/cycle-from', carliAuth.requireStaff, function (req, res) {
-                return cycleCreation.create(req.body.newCycleData)
-                    .then(function(newCycleId) {
-                        var cycleCreationJob = {
-                            sourceCycle: req.body.sourceCycle.id,
-                            targetCycle: newCycleId
-                        }
-                        return cycleCreationJobRepository.create(cycleCreationJob);
-                    })
-                    .then(function (newCycleCreationJobId) {
-                        res.send({id: newCycleCreationJobId});
-                        cluster.worker.send({
-                            command: 'launchCycleDatabaseWorker',
-                            jobId: newCycleCreationJobId
-                        });
-                    }).catch(function (err) {
-                        res.send({error: err});
-                    });
+                cluster.worker.send({
+                    command: 'launchCycleDatabaseWorker',
+                    sourceCycleId: req.body.sourceCycle.id,
+                    targetCycleData: req.body.newCycleData
+                });
+                res.sendStatus(200);
             });
 
-            //TODO: test that it passes the job id and correctly calls the processor
             authorizedRoute('put', '/resume-new-cycle/:jobId', carliAuth.requireStaff, function (req, res) {
                 res.send('OK');
                 cluster.worker.send({
