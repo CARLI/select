@@ -4,7 +4,7 @@ const CycleJobQueueManager = require('../CARLI/CycleJobQueueManager');
 async function doWork() {
     const sourceCycleId = process.env.sourceCycleId;
     const targetCycleData = process.env.targetCycleData;
-    Logger.log('Cycle creation processing', job);
+    Logger.log('Cycle creation processing');
 
     const queueManager = CycleJobQueueManager();
     await queueManager.start(sourceCycleId, targetCycleData);

@@ -1,5 +1,7 @@
+const _ = require('lodash');
+const config = require( '../../config' );
 const CycleCreationJobProcessor = require("../CycleCreationJobProcessor");
-const couchUtils = require('../Store/CouchDb/Utils')();
+const CouchUtils = require('../Store/CouchDb/Utils');
 const cycleRepository = require('../Entity/CycleRepository');
 const offeringRepository = require('../Entity/OfferingRepository');
 const productRepository = require('../Entity/ProductRepository');
@@ -8,6 +10,28 @@ const libraryRepository = require('../Entity/LibraryRepository');
 const libraryStatusRepository = require('../Entity/LibraryStatusRepository');
 const vendorStatusRepository = require('../Entity/VendorStatusRepository');
 const cycleCreationJobRepository = require('../Entity/CycleCreationJobRepository');
+const Store = require( '../../CARLI/Store' );
+const StoreModule = require( '../../CARLI/Store/CouchDb/Store');
+
+const StoreOptions = config.storeOptions;
+let couchUtils;
+
+useAdminCouchCredentials();
+
+function useAdminCouchCredentials() {
+    var adminStoreOptions = _.clone(StoreOptions);
+    adminStoreOptions.couchDbUrl = StoreOptions.privilegedCouchDbUrl;
+
+    //config.setStoreOptionsForCycles(adminStoreOptions);
+    couchUtils = CouchUtils(adminStoreOptions);
+    cycleRepository.setStore(Store(StoreModule(adminStoreOptions)));
+    libraryRepository.setStore(Store(StoreModule(adminStoreOptions)));
+    libraryStatusRepository.setStore(Store(StoreModule(adminStoreOptions)));
+    offeringRepository.setStore(Store(StoreModule(adminStoreOptions)));
+    productRepository.setStore(Store(StoreModule(adminStoreOptions)));
+    vendorRepository.setStore(Store(StoreModule(adminStoreOptions)));
+    vendorStatusRepository.setStore(Store(StoreModule(adminStoreOptions)));
+}
 
 const timestamper = {
     getCurrentTimestamp: function () {
@@ -24,10 +48,11 @@ const processorParams = {
     vendorRepository,
     libraryRepository,
     libraryStatusRepository,
-    vendorStatusRepository
+    vendorStatusRepository,
+    cycleCreationJobRepository
 }
 
-async function CycleJobQueueManager() {
+function CycleJobQueueManager() {
     const cycleCreationJobProcessor = CycleCreationJobProcessor(processorParams);
     let cycleCreationJob;
 
@@ -41,18 +66,19 @@ async function CycleJobQueueManager() {
         return cycleCreationJobRepository.create(job);
     }
 
-    async function Start(sourceCycleId, targetCycleData){
-        cycleCreationJob = await createCycleCreationJob(sourceCycleId, targetCycleData.id);
-        await cycleCreationJobProcessor.initializeNewCycle(targetCycleData);
-        await Resume(cycleCreationJob.id);
+    async function start(sourceCycleId, serializedTargetCycleData){
+        const targetCycleData = JSON.parse(serializedTargetCycleData);
+        let targetCycleId = await cycleCreationJobProcessor.initializeNewCycle(targetCycleData);
+        cycleCreationJob = await createCycleCreationJob(sourceCycleId, targetCycleId);
+        await resume(cycleCreationJob.id);
     }
 
-    async function Resume(jobId){
+    async function resume(jobId){
         if(!cycleCreationJob)
                 cycleCreationJob = await cycleCreationJobRepository.load(jobId);
 
-        while(cycleCreationJobProcessor._getCurrentStepForJob(cycleCreationJob) !== "done") {
-            const currentStep = cycleCreationJobProcessor._getCurrentStepForJob(testCycleCreationJob);
+        while(await cycleCreationJobProcessor._getCurrentStepForJob(cycleCreationJob) !== "done") {
+            const currentStep = await cycleCreationJobProcessor._getCurrentStepForJob(cycleCreationJob);
             console.log("[START]: " + currentStep);
             await cycleCreationJobProcessor.process(cycleCreationJob);
             console.log("[END]: " + currentStep);
@@ -60,7 +86,10 @@ async function CycleJobQueueManager() {
     }
 
     return {
-        start: Start,
-        resume: Resume
+        start,
+        resume
     }
 }
+
+module.exports = CycleJobQueueManager;
+

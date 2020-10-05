@@ -33,10 +33,6 @@ function cycleService( CarliModules, $q, errorHandler, persistentState ) {
             fixCycleName(newCycle);
             return $q.when(cycleMiddleware.createCycleFrom(sourceCycle,newCycle));
         },
-        newCreateCycleFrom: function( sourceCycle, newCycle ) {
-            fixCycleName(newCycle);
-            return $q.when(cycleMiddleware.newCreateCycleFrom(sourceCycle,newCycle));
-        },
         getCycleCreationStatus: function(cycleId){
             return $q.when( cycleMiddleware.getCycleCreationStatus(cycleId) )
                 .then(function (statusString) {

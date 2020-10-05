@@ -36,8 +36,9 @@ function CycleCreationJobProcessor(
     ]
 
     async function create(targetCycle) {
-        await cycleRepository.create(targetCycle, couchUtils.DB_TYPE_STAFF | couchUtils.DB_TYPE_LIBRARY)
-        await createVendorDatabasesForCycle(targetCycle.id);
+        let targetCycleId = await cycleRepository.create(targetCycle, couchUtils.DB_TYPE_STAFF | couchUtils.DB_TYPE_LIBRARY)
+        await createVendorDatabasesForCycle(targetCycleId);
+        return targetCycleId;
     }
 
     async function createVendorDatabasesForCycle(cycleId) {

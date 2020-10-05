@@ -248,7 +248,7 @@ function runMiddlewareServer() {
                 cluster.worker.send({
                     command: 'launchCycleDatabaseWorker',
                     sourceCycleId: req.body.sourceCycle.id,
-                    targetCycleData: req.body.newCycleData
+                    targetCycleData: JSON.stringify(req.body.newCycleData)
                 });
                 res.sendStatus(200);
             });

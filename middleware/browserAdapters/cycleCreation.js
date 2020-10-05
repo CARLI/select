@@ -31,22 +31,6 @@ function createCycleFrom(sourceCycle, newCycleData) {
     });
 }
 
-function newCreateCycleFrom(sourceCycle, newCycleData) {
-    var request = {
-        path: '/new-cycle-from',
-        method: 'put',
-        json: true,
-        body: {
-            sourceCycle: sourceCycle,
-            newCycleData: newCycleData
-        }
-    };
-
-    return middlewareRequest(request).then(function (response) {
-        return response.id;
-    });
-}
-
 function getCycleCreationStatus( cycleId ){
     var request = {
         path: '/cycle-creation-status/' + cycleId,
@@ -68,7 +52,6 @@ function deleteCycle(cycleId) {
 module.exports = {
     create: create,
     createCycleFrom: createCycleFrom,
-    newCreateCycleFrom: newCreateCycleFrom,
     getCycleCreationStatus: getCycleCreationStatus,
     deleteCycle: deleteCycle
 };

@@ -34,7 +34,6 @@ module.exports = function (type, timeout) {
     }
     var cache = entityCache.getCacheFor(type, timeout);
     return {
-
         setStore: function( store ){
             dataStore = store;
         },
