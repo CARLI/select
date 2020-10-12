@@ -1,5 +1,6 @@
 angular.module('carli.routes',[
     'carli.sections.dashboard',
+    'carli.sections.cycleCreationDashboard',
     'carli.sections.subscriptions',
     'carli.sections.oneTimePurchases',
     'carli.sections.vendors',

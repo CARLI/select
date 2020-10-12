@@ -1,7 +1,7 @@
 angular.module('carli.sections.cycleCreationDashboard')
     .controller('cycleCreationDashboardController', cycleCreationDashboardController);
 
-function cycleCreationDashboardController($scope, activityLogService, alertService, cycleCreationJobsService, errorHandler, persistentState) {
+function cycleCreationDashboardController($scope, activityLogService, alertService, cycleCreationJobService, errorHandler, persistentState) {
     var vm = this;
     vm.jobsLoading = null;
     vm.activeJobs = [];
@@ -9,7 +9,7 @@ function cycleCreationDashboardController($scope, activityLogService, alertServi
     activate();
 
     function activate() {
-        vm.jobsLoading = cycleCreationJobsService.list()
+        vm.jobsLoading = cycleCreationJobService.list()
             .then(function (allJobs) {
                 vm.activeJobs = allJobs;
             });
