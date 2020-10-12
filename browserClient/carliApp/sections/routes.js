@@ -68,7 +68,7 @@ angular.module('carli.routes',[
     })
     .when('/cycleCreationDashboard', {
         templateUrl: '/carliApp/sections/cycleCreationDashboard/cycleCreationDashboard.html',
-        controller:  'subscriptionsController',
+        controller:  'cycleCreationDashboardController',
         controllerAs:'vm'
     })
     .when('/subscription/:id', {
