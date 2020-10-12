@@ -3,11 +3,19 @@ var config = require('../../config');
 var StoreOptions = config.storeOptions;
 var Store = require('../Store');
 var StoreModule = require('../Store/CouchDb/Store');
-
-var couchUtils = require('../Store/CouchDb/Utils')(StoreOptions);
+var EntityTransform = require( './EntityTransformationUtils');
 
 var baseRepository = Entity('CycleCreationJob');
 
 baseRepository.setStore(Store(StoreModule(StoreOptions)));
 
-module.exports = baseRepository;
+var propertiesToTransform = ['sourceCycle', 'targetCycle'];
+
+function listCycleCreationJobs() {
+    return EntityTransform.expandListOfObjectsFromPersistence(baseRepository.list(), propertiesToTransform);
+}
+
+module.exports = {
+    ...baseRepository,
+    listCycleCreationJobs: listCycleCreationJobs
+};

@@ -5,6 +5,6 @@ function cycleCreationJobService( CarliModules, $q, errorHandler) {
     var cycleRepositoryModule = CarliModules.CycleCreationJob;
 
     return {
-        list: function() { return $q.when( cycleRepositoryModule.list()).catch(errorHandler); }
+        list: function() {return $q.when(cycleRepositoryModule.listCycleCreationJobs()).catch(errorHandler);}
     };
 }

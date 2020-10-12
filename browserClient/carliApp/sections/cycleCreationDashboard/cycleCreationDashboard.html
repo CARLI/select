@@ -7,7 +7,20 @@
         <ul class="zebra-table">
             <li ng-repeat="job in vm.activeJobs">
                 <div class="column">
-                    yo yo yo cycles
+                    ID: {{job.id}}
+                    <ol>
+                        <li class="cycle-creation-dashboard__step-complete-timestamp">Loaded Cycles: {{job.loadCycles | date:'short' }} <span ng-if="job.loadCycles">✔</span></li>
+                        <li class="cycle-creation-dashboard__step-complete-timestamp">Replication: {{job.replicate | date:'short' }} <span ng-if="job.replicate">✔</span></li>
+                        <li class="cycle-creation-dashboard__step-complete-timestamp">Index Views: {{job.indexViews | date:'short' }} <span ng-if="job.indexViews">✔</span></li>
+                        <li class="cycle-creation-dashboard__step-complete-timestamp">Vendor Status Resets: {{job.resetVendorStatus | date:'short' }} <span ng-if="job.resetVendorStatus">✔</span></li>
+                        <li class="cycle-creation-dashboard__step-complete-timestamp">Library Status Resets: {{job.resetLibraryStatus | date:'short' }} <span ng-if="job.resetLibraryStatus">✔</span></li>
+                        <li class="cycle-creation-dashboard__step-complete-timestamp">Product Transforms: {{job.transformProducts | date:'short' }} <span ng-if="job.transformProducts">✔</span></li>
+                        <li class="cycle-creation-dashboard__step-complete-timestamp">Offering Transforms: {{job.transformOfferings | date:'short' }} <span ng-if="job.transformOfferings">✔</span></li>
+                        <li class="cycle-creation-dashboard__step-complete-timestamp">Index Views 2: {{job.indexViewsPhase2 | date:'short' }} <span ng-if="job.indexViewsPhase2">✔</span></li>
+                        <li class="cycle-creation-dashboard__step-complete-timestamp">Set Next Cycle Phase: {{job.setCycleToNextPhase | date:'short' }} <span ng-if="job.setCycleToNextPhase">✔</span></li>
+                        <li class="cycle-creation-dashboard__step-complete-timestamp">Data Replication: {{job.replicateDataToVendorsForCycle | date:'short' }} <span ng-if="job.replicateDataToVendorsForCycle">✔</span></li>
+                        <li class="cycle-creation-dashboard__step-complete-timestamp">Trigger Cycle ID: {{job.triggerIndexingForCycleId | date:'short' }} <span ng-if="job.triggerIndexingForCycleId">✔</span></li>
+                    </ol>
                 </div>
             </li>
         </ul>
