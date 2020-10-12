@@ -12,6 +12,7 @@ module.exports = {
     config: require('../middleware/browserAdapters/config'),
     Csv: require('../CARLI/Csv'),
     Cycle: require('../CARLI/Entity/CycleRepository'),
+    CycleCreationJob: require('../CARLI/Entity/CycleCreationJobRepository'),
     CycleMiddleware: require('../middleware/browserAdapters/cycleCreation'),
     DatabaseStatusMiddleware: require('../middleware/browserAdapters/vendorDatabases'),
     EmailMiddleware: require('../middleware/browserAdapters/email'),
