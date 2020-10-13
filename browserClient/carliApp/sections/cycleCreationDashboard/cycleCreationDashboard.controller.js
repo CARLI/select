@@ -5,6 +5,7 @@ function cycleCreationDashboardController($scope, activityLogService, alertServi
     var vm = this;
     vm.jobsLoading = null;
     vm.activeJobs = [];
+    vm.resumeJob = resumeJob;
 
     activate();
 
@@ -12,10 +13,12 @@ function cycleCreationDashboardController($scope, activityLogService, alertServi
         vm.jobsLoading = cycleCreationJobService.list()
             .then(function (allJobs) {
                 vm.activeJobs = allJobs.map(job => {
+                    const jobStatus = getStatusForJob(job);
                     return {
                         ...job,
-                        status: getStatusForJob(job)
-                    }
+                        status: jobStatus,
+                        canResume: jobStatus !== "Completed"
+                    };
                 });
             });
 
@@ -30,5 +33,10 @@ function cycleCreationDashboardController($scope, activityLogService, alertServi
             return "Running";
 
         return "Stopped";
+    }
+
+    function resumeJob(job) {
+        console.log("yo we want to resume this job");
+        console.log(job);
     }
 }

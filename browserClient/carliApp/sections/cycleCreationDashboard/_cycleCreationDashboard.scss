@@ -1,15 +1,5 @@
 .cycle-creation-dashboard {
-    &__step-complete-timestamp {
-        margin-bottom: 12px;
-        list-style-position: inside;
-
-        &:last-child {
-            margin-bottom: 0px;
-        }
-    }
-
     &__job-list {
-        list-style: none;
     }
 
     &__job {
@@ -26,7 +16,34 @@
         }
     }
 
+    &__job-details {
+        margin-right: 48px;
+    }
+
     &__job-detail {
+        color: $purple;
         margin-bottom: 24px;
+    }
+
+    &__step-details {
+        list-style: none;
+    }
+
+    &__step-details-header {
+        font-weight: bold;
+    }
+
+    &__step-complete-timestamp {
+        display: flex;
+        justify-content: space-between;
+        line-height: 1.6;
+    }
+
+    &__step-complete-label {
+        margin-right: 32px;
+    }
+
+    &__step-complete-value {
+        color: $purple;
     }
 }
