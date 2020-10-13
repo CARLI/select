@@ -65,11 +65,13 @@ function CycleCreationJobProcessor(
         if (typeof cycleCreationJob !== 'object' || cycleCreationJob.type !== 'CycleCreationJob')
             throw new Error('invalid cycle creation job');
 
+        await markJobRunning(cycleCreationJob);
         var currentStep = await getCurrentStepForJob(cycleCreationJobId);
         var stepAction = getStepAction(currentStep);
 
         const stepResult = await stepAction(cycleCreationJob);
         await markStepCompleted(cycleCreationJob, currentStep);
+        await markJobStopped(cycleCreationJob);
 
         return stepResult;
     }
@@ -174,6 +176,16 @@ function CycleCreationJobProcessor(
         await cycleCreationJobRepository.update(job);
     }
 
+    async function markJobRunning(job) {
+        job.running = true;
+        await cycleCreationJobRepository.update(job);
+    }
+
+    async function markJobStopped(job) {
+        job.running = false;
+        await cycleCreationJobRepository.update(job);
+    }
+
     async function getCurrentStepForJob(cycleCreationJobId) {
         const job = await cycleCreationJobRepository.load(cycleCreationJobId)
         for (var i = 0; i < stepOrder.length; i++) {
@@ -275,6 +287,8 @@ function CycleCreationJobProcessor(
         initializeNewCycle: create,
         _getCurrentStepForJob: getCurrentStepForJob,
         _markStepCompleted: markStepCompleted,
+        _markJobRunning: markJobRunning,
+        _markJobStopped: markJobStopped,
         _waitForIndexingToFinish: waitForIndexingtoFinish,
         _getViewIndexingStatus: getViewIndexingStatus,
         _transformProducts: transformProducts,

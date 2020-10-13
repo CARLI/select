@@ -127,6 +127,26 @@ describe('The Cycle Creation Job Process', function(){
         });
     });
 
+    describe(`markJobRunning function`, () => {
+        it(`marks the job running`, async () => {
+            expect(testCycleCreationJob.running).not.equals(true);
+
+            await cycleCreationJobProcessor._markJobRunning(testCycleCreationJob);
+
+            expect(testCycleCreationJob.running).equals(true);
+        });
+    });
+
+    describe(`markJobStopped function`, () => {
+        it(`marks the job stopped`, async () => {
+            await cycleCreationJobProcessor._markJobRunning(testCycleCreationJob);
+            expect(testCycleCreationJob.running).equals(true);
+
+            await cycleCreationJobProcessor._markJobStopped(testCycleCreationJob);
+            expect(testCycleCreationJob.running).not.equals(true);
+        });
+    });
+
     describe('getViewIndexingStatus function',  function() {
         let sourceCycle;
 

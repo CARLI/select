@@ -20,6 +20,10 @@
       "description": "Indicates if the cycle creation job has completed",
       "type": "boolean"
     },
+    "running": {
+      "description": "Indicates if the cycle creation job is currently running",
+      "type": "boolean"
+    },
     "loadCycles": {
       "description": "Completion date of the load cycles step",
       "$ref": "./Date.json"
