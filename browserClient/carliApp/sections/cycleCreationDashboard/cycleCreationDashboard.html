@@ -4,21 +4,20 @@
     </div>
 
     <section class="content list-content" cg-busy="vm.cyclesLoading">
-        <ul class="zebra-table">
-            <li>
-                <div class="column">Source Cycle</div>
-                <div class="column">Target Cycle</div>
-                <div class="column"></div>
-            </li>
-            <li ng-repeat="job in vm.activeJobs">
-                <div class="column">
-                    {{ job.sourceCycle.name }}
-                </div>
-                <div class="column">
-                    {{ job.targetCycle.name }}
-                </div>
-                <div class="column">
-                    ID: {{job.id}}
+        <ul class="cycle-creation-dashboard__job-list">
+            <li class="cycle-creation-dashboard__job" ng-repeat="job in vm.activeJobs">
+                <dl class="cycle-creation-dashboard__job-details">
+                    <dt>Source Cycle</dt>
+                    <dd class="cycle-creation-dashboard__job-detail">{{ job.sourceCycle.name }}</dd>
+
+                    <dt>Target Cycle</dt>
+                    <dd class="cycle-creation-dashboard__job-detail">{{ job.targetCycle.name }}</dd>
+
+                    <dt>Status</dt>
+                    <dd class="cycle-creation-dashboard__job-detail">{{ job.status }}</dd>
+                </dl>
+
+                <div>
                     <ol>
                         <li class="cycle-creation-dashboard__step-complete-timestamp">Loaded Cycles: {{job.loadCycles | date:'short' }} <span ng-if="job.loadCycles">✔</span></li>
                         <li class="cycle-creation-dashboard__step-complete-timestamp">Replication: {{job.replicate | date:'short' }} <span ng-if="job.replicate">✔</span></li>

@@ -1,4 +1,32 @@
-.cycle-creation-dashboard__step-complete-timestamp {
-    margin: 16px 0px;
-    list-style-position: inside;
+.cycle-creation-dashboard {
+    &__step-complete-timestamp {
+        margin-bottom: 12px;
+        list-style-position: inside;
+
+        &:last-child {
+            margin-bottom: 0px;
+        }
+    }
+
+    &__job-list {
+        list-style: none;
+    }
+
+    &__job {
+        background: white;
+        border: $default-border;
+        display: flex;
+        padding: 16px;
+
+        &:nth-child(2n) {
+            background: $light-gray;
+        }
+        &:not(:last-child) {
+            border-bottom: 0px;
+        }
+    }
+
+    &__job-detail {
+        margin-bottom: 24px;
+    }
 }
