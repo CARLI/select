@@ -16,6 +16,10 @@
       "description": "UUID of the target Cycle document",
       "type": "string"
     },
+    "completed": {
+      "description": "Indicates if the cycle creation job has completed",
+      "type": "boolean"
+    },
     "loadCycles": {
       "description": "Completion date of the load cycles step",
       "$ref": "./Date.json"

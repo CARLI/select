@@ -107,14 +107,23 @@ describe('The Cycle Creation Job Process', function(){
     });
 
     describe('markStepCompleted function', function() {
-        it('sets the time of completion to the current time for the given step', function() {
-            cycleCreationJobProcessor._markStepCompleted(testCycleCreationJob, 'test');
+        it('sets the time of completion to the current time for the given step', async function() {
+            await cycleCreationJobProcessor._markStepCompleted(testCycleCreationJob, 'test');
             expect(testCycleCreationJob.test).equals('2020-08-22-19:34:21Z');
         });
 
-        it(`persists the changes to the job entity`, () => {
-            cycleCreationJobProcessor._markStepCompleted(testCycleCreationJob, 'test');
+        it(`persists the changes to the job entity`, async () => {
+            await cycleCreationJobProcessor._markStepCompleted(testCycleCreationJob, 'test');
             expect(cycleCreationJobRepositorySpy.updateCalled).to.be.true;
+        });
+
+        it(`marks the job complete when the last step finishes`, async () => {
+            const stepOrder = cycleCreationJobProcessor._steps;
+            for(let step in stepOrder) {
+                await cycleCreationJobProcessor._markStepCompleted(testCycleCreationJob, stepOrder[step]);
+            }
+
+            expect(testCycleCreationJob.completed).equals(true);
         });
     });
 

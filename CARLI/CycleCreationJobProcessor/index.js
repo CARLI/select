@@ -165,6 +165,12 @@ function CycleCreationJobProcessor(
 
     async function markStepCompleted(job, step) {
         job[step] = timestamper.getCurrentTimestamp();
+
+        const currentStep = await getCurrentStepForJob(job.id);
+        if(currentStep === 'done') {
+            job.completed = true;
+        }
+
         await cycleCreationJobRepository.update(job);
     }
 
@@ -272,7 +278,8 @@ function CycleCreationJobProcessor(
         _waitForIndexingToFinish: waitForIndexingtoFinish,
         _getViewIndexingStatus: getViewIndexingStatus,
         _transformProducts: transformProducts,
-        _transformOfferings: transformOfferings
+        _transformOfferings: transformOfferings,
+        _steps: stepOrder
     }
 }
 
