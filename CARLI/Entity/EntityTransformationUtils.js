@@ -108,34 +108,50 @@ function _fetchAndTransformObjectsFromReferences(entity, references) {
 }
 
 function _fetchAllObjectsFromReferences(entity, referencesArray) {
-    var promises = [];
+    const promises = referencesArray
+        .map(reference => {
+            let repositoryName = reference;
+            let propertyName = reference;
 
-    for (var i in referencesArray) {
-        var property = referencesArray[i];
+            if(propertyNameDiffersFromRepositoryName(reference)) {
+                repositoryName = reference.split("#")[0];
+                propertyName = reference.split("#")[1];
+            }
 
-        if (entity[property] && typeof entity[property] !== 'object') {
+            return fetchReferenceFromRepository(repositoryName, propertyName);
+        })
+        .filter(promise => promise !== null);
+
+    return Q.all(promises);
+
+    function propertyNameDiffersFromRepositoryName(property) {
+        return property.indexOf("#") > 0;
+    }
+
+    function fetchReferenceFromRepository(repositoryName, propertyName) {
+        if (entity[propertyName] && typeof entity[propertyName] !== 'object') {
             var p = null;
 
-            if (repositories[property]) {
-                p = repositories[property].load(entity[property]);
+            if (repositories[repositoryName]) {
+                p = repositories[repositoryName].load(entity[propertyName]);
             }
-            else if (cycleBoundRepositories[property]) {
+            else if (cycleBoundRepositories[repositoryName]) {
                 /* This is for loading reference entities that are tied to a cycle (i.e. products).
                  * We assume that entity.cycle is a fully-loaded cycle object, not just an ID.
                  */
-                var repo = cycleBoundRepositories[property];
+                var repo = cycleBoundRepositories[repositoryName];
                 repo.setStore( getStoreForCycle(entity.cycle) );
-                p = repo.load(entity[property]);
+                p = repo.load(entity[propertyName]);
             }
             p.catch(function (error) {
-                Logger.debug('Failed to load reference to ' + property, entity[property]);
+                Logger.debug('Failed to load reference to ' + propertyName, entity[propertyName]);
                 throw error;
             });
-            promises.push( p );
+            return p;
         }
-    }
 
-    return Q.all(promises);
+        return null;
+    }
 }
 
 function _transformReferencesToObjects(entity, resolvedObjects) {

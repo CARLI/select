@@ -5,7 +5,18 @@
 
     <section class="content list-content" cg-busy="vm.cyclesLoading">
         <ul class="zebra-table">
+            <li>
+                <div class="column">Source Cycle</div>
+                <div class="column">Target Cycle</div>
+                <div class="column"></div>
+            </li>
             <li ng-repeat="job in vm.activeJobs">
+                <div class="column">
+                    {{ job.sourceCycle.name }}
+                </div>
+                <div class="column">
+                    {{ job.targetCycle.name }}
+                </div>
                 <div class="column">
                     ID: {{job.id}}
                     <ol>

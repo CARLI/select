@@ -9,7 +9,7 @@ var baseRepository = Entity('CycleCreationJob');
 
 baseRepository.setStore(Store(StoreModule(StoreOptions)));
 
-var propertiesToTransform = ['sourceCycle', 'targetCycle'];
+var propertiesToTransform = ['cycle#sourceCycle', 'cycle#targetCycle'];
 
 function listCycleCreationJobs() {
     return EntityTransform.expandListOfObjectsFromPersistence(baseRepository.list(), propertiesToTransform);
