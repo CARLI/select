@@ -60,20 +60,26 @@ function CycleCreationJobProcessor(
     }
 
     async function process(cycleCreationJobId) {
-        const cycleCreationJob = await cycleCreationJobRepository.load(cycleCreationJobId);
-
-        if (typeof cycleCreationJob !== 'object' || cycleCreationJob.type !== 'CycleCreationJob')
+        if (!(await isValidCycleCreationJob(cycleCreationJobId)))
             throw new Error('invalid cycle creation job');
 
-        await markJobRunning(cycleCreationJob);
+        await markJobRunning(cycleCreationJobId);
         var currentStep = await getCurrentStepForJob(cycleCreationJobId);
         var stepAction = getStepAction(currentStep);
 
+        const cycleCreationJob = await cycleCreationJobRepository.load(cycleCreationJobId);
         const stepResult = await stepAction(cycleCreationJob);
-        await markStepCompleted(cycleCreationJob, currentStep);
-        await markJobStopped(cycleCreationJob);
+
+        await markStepCompleted(cycleCreationJobId, currentStep);
+        await markJobStopped(cycleCreationJobId);
 
         return stepResult;
+    }
+
+    async function isValidCycleCreationJob(jobId) {
+        const cycleCreationJob = await cycleCreationJobRepository.load(jobId);
+
+        return typeof cycleCreationJob === 'object' && cycleCreationJob.type === 'CycleCreationJob';
     }
 
     async function replicate(job) {
@@ -124,7 +130,6 @@ function CycleCreationJobProcessor(
         });
 
         await Q.all(promises);
-
     }
 
     async function transformProducts(job) {
@@ -165,7 +170,8 @@ function CycleCreationJobProcessor(
         }
     }
 
-    async function markStepCompleted(job, step) {
+    async function markStepCompleted(jobId, step) {
+        const job = await cycleCreationJobRepository.load(jobId);
         job[step] = timestamper.getCurrentTimestamp();
 
         const currentStep = await getCurrentStepForJob(job.id);
@@ -176,12 +182,14 @@ function CycleCreationJobProcessor(
         await cycleCreationJobRepository.update(job);
     }
 
-    async function markJobRunning(job) {
+    async function markJobRunning(jobId) {
+        const job = await cycleCreationJobRepository.load(jobId);
         job.running = true;
         await cycleCreationJobRepository.update(job);
     }
 
-    async function markJobStopped(job) {
+    async function markJobStopped(jobId) {
+        const job = await cycleCreationJobRepository.load(jobId);
         job.running = false;
         await cycleCreationJobRepository.update(job);
     }

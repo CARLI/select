@@ -131,7 +131,7 @@ describe('The Cycle Creation Job Process', function(){
         it(`marks the job running`, async () => {
             expect(testCycleCreationJob.running).not.equals(true);
 
-            await cycleCreationJobProcessor._markJobRunning(testCycleCreationJob);
+            await cycleCreationJobProcessor._markJobRunning(0);
 
             expect(testCycleCreationJob.running).equals(true);
         });
@@ -139,10 +139,10 @@ describe('The Cycle Creation Job Process', function(){
 
     describe(`markJobStopped function`, () => {
         it(`marks the job stopped`, async () => {
-            await cycleCreationJobProcessor._markJobRunning(testCycleCreationJob);
+            await cycleCreationJobProcessor._markJobRunning(0);
             expect(testCycleCreationJob.running).equals(true);
 
-            await cycleCreationJobProcessor._markJobStopped(testCycleCreationJob);
+            await cycleCreationJobProcessor._markJobStopped(0);
             expect(testCycleCreationJob.running).not.equals(true);
         });
     });
