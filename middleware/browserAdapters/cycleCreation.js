@@ -49,9 +49,19 @@ function deleteCycle(cycleId) {
     return middlewareRequest(request);
 }
 
+function resumeCycle(cycleId) {
+    var request = {
+        path: '/resume-new-cycle/' + cycleId,
+        method: 'put'
+    };
+
+    return middlewareRequest(request);
+}
+
 module.exports = {
     create: create,
     createCycleFrom: createCycleFrom,
     getCycleCreationStatus: getCycleCreationStatus,
-    deleteCycle: deleteCycle
+    deleteCycle: deleteCycle,
+    resumeCycle: resumeCycle
 };

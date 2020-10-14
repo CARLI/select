@@ -38,5 +38,10 @@ function cycleCreationDashboardController($scope, activityLogService, alertServi
     function resumeJob(job) {
         console.log("yo we want to resume this job");
         console.log(job);
+
+        var creationPromise;
+        if (vm.sourceCycle && vm.sourceCycle.getDatabaseName && vm.targetCycle && vm.targetCycle.getDatabaseName()) {
+            creationPromise = cycleCreationJobService.resumeCycle(vm.cycle);
+        }
     }
 }
