@@ -10,8 +10,19 @@ function cycleCreationJobService( CarliModules, $q, errorHandler) {
         list: function() {
             return $q.when(cycleRepositoryModule.listCycleCreationJobs()).catch(errorHandler);
         },
-        resumeCycle: function( cycleID) {
+        resumeCycle: function(cycleID) {
             return $q.when(cycleMiddleware.resumeCycle(cycleID));
         },
+        getStatusForJob: getStatusForJob
     };
+
+    function getStatusForJob(job) {
+        if(job.completed)
+            return "Completed";
+
+        if(job.running)
+            return "Running";
+
+        return "Stopped";
+    }
 }

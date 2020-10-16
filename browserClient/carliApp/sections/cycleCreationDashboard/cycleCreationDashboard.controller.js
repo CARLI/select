@@ -13,7 +13,7 @@ function cycleCreationDashboardController($scope, activityLogService, alertServi
         vm.jobsLoading = cycleCreationJobService.list()
             .then(function (allJobs) {
                 vm.activeJobs = allJobs.map(job => {
-                    const jobStatus = getStatusForJob(job);
+                    const jobStatus = cycleCreationJobService.getStatusForJob(job);
                     return {
                         ...job,
                         status: jobStatus,
@@ -23,16 +23,6 @@ function cycleCreationDashboardController($scope, activityLogService, alertServi
             });
 
         return vm.jobsLoading;
-    }
-
-    function getStatusForJob(job) {
-        if(job.completed)
-            return "Completed";
-
-        if(job.running)
-            return "Running";
-
-        return "Stopped";
     }
 
     function resumeJob(job) {

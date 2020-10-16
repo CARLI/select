@@ -261,20 +261,6 @@ function runMiddlewareServer() {
                 });
             });
 
-            //get status - TBD
-/*            authorizedRoute('put', '/get-new-cycle-status', carliAuth.requireStaff, function (req, res) {
-                return (function (CycleId) {
-                    res.send({id: CycleId});
-                    cluster.worker.send({
-                        command: 'getCycleStatus',
-                        sourceCycleId: req.body.sourceCycle.id,
-                        newCycleId: CycleId
-                    });
-                }).catch(function (err) {
-                    res.send({error: err});
-                });
-            });*/
-
             authorizedRoute('put', '/cycle', carliAuth.requireStaff, function (req, res) {
                 return cycleCreation.create(req.body.newCycleData)
                     .then(function (newCycleId) {
