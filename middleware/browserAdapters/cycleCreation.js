@@ -49,9 +49,9 @@ function deleteCycle(cycleId) {
     return middlewareRequest(request);
 }
 
-function resumeCycle(cycleId) {
+function resumeCycle(jobId) {
     var request = {
-        path: '/resume-new-cycle/' + cycleId,
+        path: '/resume-new-cycle/' + jobId,
         method: 'put'
     };
 

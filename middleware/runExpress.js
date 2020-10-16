@@ -254,11 +254,11 @@ function runMiddlewareServer() {
             });
 
             authorizedRoute('put', '/resume-new-cycle/:jobId', carliAuth.requireStaff, function (req, res) {
-                res.send('OK');
                 cluster.worker.send({
-                    command: 'launchCycleDatabaseWorker',
+                    command: 'launchResumeCycleDatabaseWorker',
                     jobId: req.params.jobId
                 });
+                res.send({});
             });
 
             authorizedRoute('put', '/cycle', carliAuth.requireStaff, function (req, res) {

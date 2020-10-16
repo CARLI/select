@@ -26,12 +26,12 @@ function cycleCreationDashboardController($scope, activityLogService, alertServi
     }
 
     function resumeJob(job) {
-        console.log("yo we want to resume this job");
-        console.log(job);
-
-        var creationPromise;
-        if (vm.sourceCycle && vm.sourceCycle.getDatabaseName && vm.targetCycle && vm.targetCycle.getDatabaseName()) {
-            creationPromise = cycleCreationJobService.resumeCycle(vm.cycle);
+        if (job && job.id) {
+            cycleCreationJobService.resumeCycle(job.id);
+        }
+        else
+        {
+            console.log("error trying to find the target cycle or id on resume");
         }
     }
 }

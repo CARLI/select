@@ -76,12 +76,11 @@ function CycleJobQueueManager() {
     async function resume(jobId){
         if(!cycleCreationJob)
                 cycleCreationJob = await cycleCreationJobRepository.load(jobId);
-
-        while(await cycleCreationJobProcessor._getCurrentStepForJob(cycleCreationJob) !== "done") {
-            const currentStep = await cycleCreationJobProcessor._getCurrentStepForJob(cycleCreationJob);
-            console.log("[START]: " + currentStep);
-            await cycleCreationJobProcessor.process(cycleCreationJob);
-            console.log("[END]: " + currentStep);
+        while(await cycleCreationJobProcessor._getCurrentStepForJob(cycleCreationJob.id) !== "done") {
+            const currentStep = await cycleCreationJobProcessor._getCurrentStepForJob(cycleCreationJob.id);
+            Logger.log("[START]: " + currentStep);
+            await cycleCreationJobProcessor.process(cycleCreationJob.id);
+            Logger.log("[END]: " + currentStep);
         }
     }
 
