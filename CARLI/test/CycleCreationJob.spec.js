@@ -10,7 +10,8 @@ function validCycleCreationJobData() {
     return {
         type: 'CycleCreationJob',
         sourceCycle: 'sourceCycle',
-        targetCycle: 'targetCycle'
+        targetCycle: 'targetCycle',
+        logMessages: []
     };
 }
 

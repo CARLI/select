@@ -94,6 +94,11 @@
                         </li>
                     </ol>
                 </div>
+
+                <span ng-if="job.concatenatedLogMessages">Messages:</span>
+                <div class="cycle-creation-dashboard__job-errors">
+                    {{ job.concatenatedLogMessages }}
+                </div>
             </li>
         </ul>
     </section>

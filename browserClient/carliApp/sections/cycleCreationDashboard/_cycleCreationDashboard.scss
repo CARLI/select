@@ -46,4 +46,9 @@
     &__step-complete-value {
         color: $purple;
     }
+
+    &__job-errors {
+        color: $red;
+        overflow: scroll;
+    }
 }

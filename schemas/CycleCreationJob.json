@@ -24,6 +24,10 @@
       "description": "Indicates if the cycle creation job is currently running",
       "type": "boolean"
     },
+    "logMessages": {
+      "description": "Array of messages logged about this job",
+      "type": "array"
+    },
     "loadCycles": {
       "description": "Completion date of the load cycles step",
       "$ref": "./Date.json"

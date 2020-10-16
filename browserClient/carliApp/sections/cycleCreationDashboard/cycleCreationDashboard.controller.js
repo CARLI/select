@@ -10,6 +10,15 @@ function cycleCreationDashboardController($scope, activityLogService, alertServi
     activate();
 
     function activate() {
+
+            /*
+            errors look like
+            [
+                { timestamp: '2020-09-21-14:42:00', message: 'Yaaaaaa" },
+                { timestamp: '2020-09-21-14:42:00', message: 'Yaaaaaa" },
+                { timestamp: '2020-09-21-14:42:00', message: 'Yaaaaaa" },
+            ]
+             */
         vm.jobsLoading = cycleCreationJobService.list()
             .then(function (allJobs) {
                 vm.activeJobs = allJobs.map(job => {
@@ -17,12 +26,27 @@ function cycleCreationDashboardController($scope, activityLogService, alertServi
                     return {
                         ...job,
                         status: jobStatus,
-                        canResume: jobStatus !== "Completed"
+                        canResume: jobStatus !== "Completed",
+                        concatenatedLogMessages: concatenateLogMessages(job.logMessages)
                     };
                 });
             });
 
         return vm.jobsLoading;
+    }
+
+    function concatenateLogMessages(messages) {
+        if(!messages)
+            return null;
+
+        for(let i = 0; i < 10; i++)
+            messages = messages.concat(messages);
+
+        const formattedMessages = messages.map(message => {
+            return `[${message.timestamp}] - ${message.message}`;
+        });
+
+        return formattedMessages.join('\n');
     }
 
     function resumeJob(job) {

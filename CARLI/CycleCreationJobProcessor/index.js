@@ -59,7 +59,7 @@ function CycleCreationJobProcessor(
         return true;
     }
 
-    async function process(cycleCreationJobId) {
+    async function  process(cycleCreationJobId) {
         if (!(await isValidCycleCreationJob(cycleCreationJobId)))
             throw new Error('invalid cycle creation job');
 
@@ -67,13 +67,28 @@ function CycleCreationJobProcessor(
         var currentStep = await getCurrentStepForJob(cycleCreationJobId);
         var stepAction = getStepAction(currentStep);
 
-        const cycleCreationJob = await cycleCreationJobRepository.load(cycleCreationJobId);
-        const stepResult = await stepAction(cycleCreationJob);
+        try {
+            const cycleCreationJob = await cycleCreationJobRepository.load(cycleCreationJobId);
+            const stepResult = await stepAction(cycleCreationJob);
+            await markStepCompleted(cycleCreationJobId, currentStep);
+            await markJobStopped(cycleCreationJobId);
+            return stepResult;
+        }
+        catch (e) {
+            const message = "An error occurred during step '" + currentStep + "', action '" + stepAction + "' of cycle creation processing.";
+            await logMessageToJob(cycleCreationJobId, message);
+        }
+    }
 
-        await markStepCompleted(cycleCreationJobId, currentStep);
-        await markJobStopped(cycleCreationJobId);
+    async function logMessageToJob(jobId, message) {
+        const cycleCreationJob = await cycleCreationJobRepository.load(jobId);
 
-        return stepResult;
+        cycleCreationJob.logMessages.push({
+            timestamp: timestamper.getCurrentTimestamp(),
+            message: message
+        });
+
+        await cycleCreationJobRepository.update(cycleCreationJob);
     }
 
     async function isValidCycleCreationJob(jobId) {
