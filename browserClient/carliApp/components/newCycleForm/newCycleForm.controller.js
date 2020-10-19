@@ -52,6 +52,7 @@ function newCycleFormController( $scope, $rootScope, $location, alertService, cy
 
         return creationPromise;
     }
+
     function cancelEdit() {
         initializeEmptyCycle();
     }

@@ -34,3 +34,18 @@ depend on these same settings being correct, and are implicitly relying on those
 
 There are a few .spec.js files in the browserClient/ source. These were Karma unit tests for some of the Angular code that
 are no longer run, but could give some hint of how the code works.
+
+
+
+## Full Test Workflow 9-24-20
+
+1. basically just docker run -d --name carli-couchdb -p 5984:5984 --restart=always couchdb:1.6.1 
+(remove the restart part if you don't want it running all the time)
+
+2. then bop to http://localhost:5984/_utils and click the fix admin party thing in the bottom right
+  
+   make a .env file in the CARLI folder
+   COUCH_DB_HOST="localhost:5984"
+   COUCH_DB_PASSWORD="chicken"
+   COUCH_DB_URL_SCHEME="http://"
+   COUCH_DB_USER="admin"

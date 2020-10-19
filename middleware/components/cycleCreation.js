@@ -1,7 +1,5 @@
-
 var Q = require('q');
 var _ = require('lodash');
-
 var config = require( '../../config' );
 var CouchUtils = require('../../CARLI/Store/CouchDb/Utils');
 var cycleRepository = require('../../CARLI/Entity/CycleRepository');
@@ -80,11 +78,12 @@ function copyCycleDataFrom( sourceCycleId, newCycleId ){
         cycleRepository.createCycleLog('Replicating data from '+ sourceCycle.databaseName +' to '+ newCycle.databaseName);
         return couchUtils.replicateFrom(sourceCycle.databaseName).to(newCycle.databaseName)
     }
-    function resetVendorStatuses() {
+    async function resetVendorStatuses() {
         cycleRepository.createCycleLog('Resetting vendor statuses for ' + newCycle.databaseName);
+
         return vendorRepository.list()
             .then(function(vendorList){
-                return Q.all( vendorList.map(ensureVendorStatus) )
+                return Q.all( vendorList.map(ensureVendorStatus))
                     .then(function(){
                         return Q.all( vendorList.map(resetVendorStatus) );
                     });
@@ -285,9 +284,161 @@ function deleteCycle(cycleId) {
         });
 }
 
+/* NEW CYCLE CREATION STUFF HERE */
+
+function newCopyCycleDataFrom( sourceCycleId, newCycleId ){
+    var sourceCycle = null;
+    var newCycle = null;
+
+    Logger.log('NEW CYCLE CREATION CODE!!!');
+    //request.giveUpCookieAuthToAllowPrivilegedUrlAuthWorkaround();
+
+    return loadCycles()
+        .then(function() {
+            console.log('GOT CYCLES', sourceCycle, newCycle);
+        })
+        // .then(replicate)
+        // .then(indexViews)
+        // .then(waitForIndexingToFinish)
+        // .then(resetVendorStatuses)
+        // .then(resetLibraryStatuses)
+        // .then(transformProducts)
+        // .then(transformOfferings)
+        // .then(indexViews)
+        // .then(waitForIndexingToFinish)
+        // .then(setCycleToNextPhase)
+        // .thenResolve(newCycleId)
+        // .catch((err) => {
+        //     Logger.log(err);
+        //     throw err;
+        // });
+
+    function loadCycles() {
+        return Q.all([
+            cycleRepository.load(sourceCycleId),
+            cycleRepository.load(newCycleId)
+        ]).then(function (cycles) {
+            sourceCycle = cycles[0];
+            newCycle = cycles[1];
+            return true;
+        });
+    }
+    function replicate() {
+        cycleRepository.createCycleLog('Replicating data from '+ sourceCycle.databaseName +' to '+ newCycle.databaseName);
+        return couchUtils.replicateFrom(sourceCycle.databaseName).to(newCycle.databaseName)
+    }
+    function resetVendorStatuses() {
+        cycleRepository.createCycleLog('Resetting vendor statuses for ' + newCycle.databaseName);
+        return vendorRepository.list()
+            .then(function(vendorList){
+                return Q.all( vendorList.map(ensureVendorStatus) )
+                    .then(function(){
+                        return Q.all( vendorList.map(resetVendorStatus) );
+                    });
+            });
+
+        function ensureVendorStatus(vendor){
+            return vendorStatusRepository.ensureStatusExistsForVendor(vendor.id, newCycle);
+        }
+        function resetVendorStatus(vendor){
+            return vendorStatusRepository.getStatusForVendor(vendor.id, newCycle)
+                .then(function(vendorStatus){
+                    var resetStatus = vendorStatusRepository.reset(vendorStatus, newCycle);
+                    resetStatus.cycle = newCycle.id;
+                    return vendorStatusRepository.update(resetStatus, newCycle);
+                });
+        }
+    }
+    function resetLibraryStatuses() {
+        cycleRepository.createCycleLog('Ensuring all libraries have statuses for ' + newCycle.databaseName);
+
+        return ensureLibraryStatuses()
+            .then(function () {
+                return libraryStatusRepository.list(newCycle)
+                    .then(function (libraryStatusList) {
+                        cycleRepository.createCycleLog('Resetting all library statuses for ' + newCycle.databaseName);
+                        return Q.all(libraryStatusList.map(resetLibraryStatus));
+                    });
+            });
+
+        function ensureLibraryStatuses() {
+            return libraryRepository.list()
+                .then(function(libraries) {
+                    return Q.all( libraries.map(ensureStatusExistsForLibrary) );
+                });
+
+            function ensureStatusExistsForLibrary(library) {
+                return libraryStatusRepository.ensureLibraryStatus(library.id, newCycle);
+            }
+        }
+
+        function resetLibraryStatus(status) {
+            var resetStatus = libraryStatusRepository.reset(status);
+            resetStatus.cycle = newCycle.id;
+            return libraryStatusRepository.update(resetStatus, newCycle);
+        }
+    }
+    function transformProducts() {
+        cycleRepository.createCycleLog('Transforming products for new cycle');
+        return productRepository.transformProductsForNewCycle(newCycle);
+    }
+    function transformOfferings() {
+        cycleRepository.createCycleLog('Transforming offerings for new cycle');
+        return offeringRepository.transformOfferingsForNewCycle(newCycle, sourceCycle);
+    }
+    function indexViews() {
+        cycleRepository.createCycleLog('Triggering view indexing for ' + newCycle.name + ' with database ' + newCycle.getDatabaseName());
+        return couchUtils.triggerViewIndexing(newCycle.getDatabaseName());
+    }
+    function waitForIndexingToFinish() {
+        var waitForIndex = Q.defer();
+
+        var trustViewIndex = false;
+        var intervalId = setInterval(checkIndexStatus, 1000);
+
+        function checkIndexStatus() {
+            getViewIndexingStatus(newCycle).then(function (progress) {
+                /**
+                 * We don't initially trust a value of 100 because that could mean the indexing job has not started yet or it could mean
+                 * that it already finished. So we wait until we see some progress (e.g. 25%) before we believe the number.
+                 * This appears to be a problem with alternative cycles because they are small enough that the indexing finishes before
+                 * any intermediate progress can be reported. So we never trust the value, we never clear the interval or resolve the promise,
+                 * and we never leave this step.
+                 */
+                var oneHundredPercentIndexingIsAmbiguous = (newCycle.cycleType == 'Alternative Cycle');
+                var ignoreCycleIndexTime = (progress === 100 && oneHundredPercentIndexingIsAmbiguous);
+
+                var weKnowIndexingHasStarted = (progress < 100);
+
+                if (weKnowIndexingHasStarted || ignoreCycleIndexTime) {
+                    trustViewIndex = true;
+                }
+
+                if (trustViewIndex && progress == 100) {
+                    clearInterval(intervalId);
+                    waitForIndex.resolve();
+                }
+            });
+        }
+
+        return waitForIndex.promise;
+    }
+    function setCycleToNextPhase() {
+        return cycleRepository.load(newCycle.id).then(function (newerCycle) {
+            newerCycle.proceedToNextStep();
+            return cycleRepository.update(newerCycle)
+                .catch(function (err) {
+                    Logger.log('Failed state transition: ', err);
+                });
+        });
+    }
+}
+
+
 module.exports = {
     create: create,
     copyCycleDataFrom: copyCycleDataFrom,
+    newCopyCycleDataFrom: newCopyCycleDataFrom,
     getCycleCreationStatus: getCycleCreationStatus,
     deleteCycle: deleteCycle
 };

@@ -8,6 +8,7 @@ tv4.addFormat(formats);
 var schemas = {
     ActivityLogEntry: require('../schemas/ActivityLogEntry.json'),
     Cycle: require('../schemas/Cycle.json'),
+    CycleCreationJob: require('../schemas/CycleCreationJob.json'),
     CycleType: require('../schemas/CycleType.json'),
     Date: require('../schemas/Date.json'),
     InstitutionType: require('../schemas/InstitutionType.json'),

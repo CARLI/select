@@ -1,52 +1,98 @@
 <h2>Preparing new cycle</h2>
-<div class="progress">
-    <div class="progress-bar" role="progressbar"
-         aria-valuenow="{{ vm.progress.overall }}"
-         aria-valuemin="0" aria-valuemax="100"
-         style="width:{{ vm.progress.overall }}%;">
-        {{ vm.progress.overall }}%
-        <span class="sr-only">Complete</span>
-    </div>
-</div>
-<!--
-<h2>Copying data from previous subscription cycle</h2>
-<div class="progress">
-    <div class="progress-bar" role="progressbar"
-         aria-valuenow="{{ vm.progress.replication }}"
-         aria-valuemin="0" aria-valuemax="100"
-         style="width:{{ vm.progress.replication }}%;">
-        {{ vm.progress.replication }}%
-        <span class="sr-only">Complete</span>
-    </div>
-</div>
-<h2>This step takes the longest</h2>
-<div class="progress">
-    <div class="progress-bar" role="progressbar"
-         aria-valuenow="{{ vm.progress.firstViewIndexing }}"
-         aria-valuemin="0" aria-valuemax="100"
-         style="width:{{ vm.progress.firstViewIndexing }}%;">
-        {{ vm.progress.firstViewIndexing }}%
-        <span class="sr-only">Complete</span>
-    </div>
-</div>
-<h2>Transforming product offerings for new subscription cycle</h2>
-<div class="progress">
-    <div class="progress-bar" role="progressbar"
-         aria-valuenow="{{ vm.progress.offeringTransformation }}"
-         aria-valuemin="0" aria-valuemax="100"
-         style="width:{{ vm.progress.offeringTransformation }}%;">
-        {{ vm.progress.offeringTransformation }}%
-        <span class="sr-only">Complete</span>
-    </div>
-</div>
-<h2>Indexing Database</h2>
-<div class="progress">
-    <div class="progress-bar" role="progressbar"
-         aria-valuenow="{{ vm.progress.secondViewIndexing }}"
-         aria-valuemin="0" aria-valuemax="100"
-         style="width:{{ vm.progress.secondViewIndexing }}%;">
-        {{ vm.progress.secondViewIndexing }}%
-        <span class="sr-only">Complete</span>
-    </div>
-</div>
--->
+
+TODO: Error message with ng-if vm.jobs is length 0
+
+<section class="content list-content" cg-busy="vm.jobsLoading">
+    <ul class="cycle-creation-dashboard__job-list">
+        <li class="cycle-creation-dashboard__job" ng-repeat="job in vm.jobs">
+            <div>
+                <dl class="cycle-creation-dashboard__job-details">
+                    <dt>Source Cycle</dt>
+                    <dd class="cycle-creation-dashboard__job-detail">{{ job.sourceCycle.name }}</dd>
+
+                    <dt>Target Cycle</dt>
+                    <dd class="cycle-creation-dashboard__job-detail">{{ job.targetCycle.name }}</dd>
+
+                    <dt>Status</dt>
+                    <dd class="cycle-creation-dashboard__job-detail">{{ job.status }}</dd>
+                </dl>
+
+                <button type="button" class="carli-button" ng-if="job.canResume" ng-click="vm.resumeJob(job)">
+                    Resume
+                </button>
+            </div>
+
+            <div>
+                <span class="cycle-creation-dashboard__step-details-header">Progress</span>
+                <ol class="cycle-creation-dashboard__step-details">
+                    <li class="cycle-creation-dashboard__step-detail">
+                        <div class="cycle-creation-dashboard__step-complete-timestamp">
+                            <span class="cycle-creation-dashboard__step-complete-label">Loaded Cycles:</span>
+                            <span class="cycle-creation-dashboard__step-complete-value">{{job.loadCycles | date:'short' }}</span>
+                        </div>
+                    </li>
+                    <li class="cycle-creation-dashboard__step-detail">
+                        <div class="cycle-creation-dashboard__step-complete-timestamp">
+                            <span class="cycle-creation-dashboard__step-complete-label">Replication:</span>
+                            <span class="cycle-creation-dashboard__step-complete-value">{{job.replicate | date:'short' }}</span>
+                        </div>
+                    </li>
+                    <li class="cycle-creation-dashboard__step-detail">
+                        <div class="cycle-creation-dashboard__step-complete-timestamp">
+                            <span class="cycle-creation-dashboard__step-complete-label">Index Views:</span>
+                            <span class="cycle-creation-dashboard__step-complete-value">{{job.indexViews | date:'short' }}</span>
+                        </div>
+                    </li>
+                    <li class="cycle-creation-dashboard__step-detail">
+                        <div class="cycle-creation-dashboard__step-complete-timestamp">
+                            <span class="cycle-creation-dashboard__step-complete-label">Vendor Status Resets:</span>
+                            <span class="cycle-creation-dashboard__step-complete-value">{{job.resetVendorStatus | date:'short' }}</span>
+                        </div>
+                    </li>
+                    <li class="cycle-creation-dashboard__step-detail">
+                        <div class="cycle-creation-dashboard__step-complete-timestamp">
+                            <span class="cycle-creation-dashboard__step-complete-label">Library Status Resets:</span>
+                            <span class="cycle-creation-dashboard__step-complete-value">{{job.resetLibraryStatus | date:'short' }}</span>
+                        </div>
+                    </li>
+                    <li class="cycle-creation-dashboard__step-detail">
+                        <div class="cycle-creation-dashboard__step-complete-timestamp">
+                            <span class="cycle-creation-dashboard__step-complete-label">Product Transforms:</span>
+                            <span class="cycle-creation-dashboard__step-complete-value">{{job.transformProducts | date:'short' }}</span>
+                        </div>
+                    </li>
+                    <li class="cycle-creation-dashboard__step-detail">
+                        <div class="cycle-creation-dashboard__step-complete-timestamp">
+                            <span class="cycle-creation-dashboard__step-complete-label">Offering Transforms:</span>
+                            <span class="cycle-creation-dashboard__step-complete-value">{{job.transformOfferings | date:'short' }}</span>
+                        </div>
+                    </li>
+                    <li class="cycle-creation-dashboard__step-detail">
+                        <div class="cycle-creation-dashboard__step-complete-timestamp">
+                            <span class="cycle-creation-dashboard__step-complete-label">Index Views 2:</span>
+                            <span class="cycle-creation-dashboard__step-complete-value">{{job.indexViewsPhase2 | date:'short' }}</span>
+                        </div>
+                    </li>
+                    <li class="cycle-creation-dashboard__step-detail">
+                        <div class="cycle-creation-dashboard__step-complete-timestamp">
+                            <span class="cycle-creation-dashboard__step-complete-label">Set Next Cycle Phase:</span>
+                            <span class="cycle-creation-dashboard__step-complete-value">{{job.setCycleToNextPhase | date:'short' }}</span>
+                        </div>
+                    </li>
+                    <li class="cycle-creation-dashboard__step-detail">
+                        <div class="cycle-creation-dashboard__step-complete-timestamp">
+                            <span class="cycle-creation-dashboard__step-complete-label">Data Replication:</span>
+                            <span class="cycle-creation-dashboard__step-complete-value">{{job.replicateDataToVendorsForCycle | date:'short' }}</span>
+                        </div>
+                    </li>
+                    <li class="cycle-creation-dashboard__step-detail">
+                        <div class="cycle-creation-dashboard__step-complete-timestamp">
+                            <span class="cycle-creation-dashboard__step-complete-label">Trigger Cycle ID:</span>
+                            <span class="cycle-creation-dashboard__step-complete-value">{{job.triggerIndexingForCycleId | date:'short' }}</span>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </li>
+    </ul>
+</section>

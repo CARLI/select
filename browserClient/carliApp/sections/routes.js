@@ -1,5 +1,6 @@
 angular.module('carli.routes',[
     'carli.sections.dashboard',
+    'carli.sections.cycleCreationDashboard',
     'carli.sections.subscriptions',
     'carli.sections.oneTimePurchases',
     'carli.sections.vendors',
@@ -64,6 +65,11 @@ angular.module('carli.routes',[
     .when('/subscription', {
         templateUrl: '/carliApp/sections/subscriptions/subscriptions.html',
         controller:  'subscriptionsController',
+        controllerAs:'vm'
+    })
+    .when('/cycleCreationDashboard', {
+        templateUrl: '/carliApp/sections/cycleCreationDashboard/cycleCreationDashboard.html',
+        controller:  'cycleCreationDashboardController',
         controllerAs:'vm'
     })
     .when('/subscription/:id', {

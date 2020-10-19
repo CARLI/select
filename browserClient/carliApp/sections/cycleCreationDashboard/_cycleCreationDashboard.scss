@@ -1,0 +1,54 @@
+.cycle-creation-dashboard {
+    &__job-list {
+    }
+
+    &__job {
+        background: white;
+        border: $default-border;
+        display: flex;
+        padding: 16px;
+
+        &:nth-child(2n) {
+            background: $light-gray;
+        }
+        &:not(:last-child) {
+            border-bottom: 0px;
+        }
+    }
+
+    &__job-details {
+        margin-right: 48px;
+    }
+
+    &__job-detail {
+        color: $purple;
+        margin-bottom: 24px;
+    }
+
+    &__step-details {
+        list-style: none;
+    }
+
+    &__step-details-header {
+        font-weight: bold;
+    }
+
+    &__step-complete-timestamp {
+        display: flex;
+        justify-content: space-between;
+        line-height: 1.6;
+    }
+
+    &__step-complete-label {
+        margin-right: 32px;
+    }
+
+    &__step-complete-value {
+        color: $purple;
+    }
+
+    &__job-errors {
+        color: $red;
+        overflow: scroll;
+    }
+}

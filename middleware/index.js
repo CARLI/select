@@ -7,6 +7,7 @@ var Logger = require('../CARLI/Logger');
 var expressWorkerCount = 1; // require('os').cpus().length;
 var expressWorkerSetup = { exec: './runExpress.js' };
 var cycleDatabaseWorkerSetup = { exec: './cycleDatabaseWorker.js' };
+var resumeCycleDatabaseWorkerSetup = { exec: './resumeCycleDatabaseWorker.js' };
 var synchronizationWorkerSetup = { exec: './synchronizationWorker.js' };
 
 if (cluster.isMaster) {
@@ -43,7 +44,10 @@ function listenForMessages() {
     function dispatchMessage(message) {
         if (message.command == 'launchCycleDatabaseWorker') {
             Logger.log('Master is launching cycle database worker');
-            launchCycleDatabaseWorker(message.sourceCycleId, message.newCycleId);
+            launchCycleDatabaseWorker(message.sourceCycleId, message.targetCycleData);
+        } else if (message.command == 'launchResumeCycleDatabaseWorker') {
+            Logger.log('Master is launching resume-cycle database worker');
+            launchResumeCycleDatabaseWorker(message.jobId);
         } else if (message.command == 'launchSynchronizationWorker') {
             Logger.log('Master is launching synchronization worker');
             launchSynchronizationWorker();
@@ -53,9 +57,14 @@ function listenForMessages() {
     }
 }
 
-function launchCycleDatabaseWorker(sourceCycleId, newCycleId) {
+function launchCycleDatabaseWorker(sourceCycleId, targetCycleData) {
     cluster.setupMaster(cycleDatabaseWorkerSetup);
-    cluster.fork({ sourceCycleId: sourceCycleId, newCycleId: newCycleId });
+    cluster.fork({ sourceCycleId: sourceCycleId, targetCycleData: targetCycleData });
+}
+
+function launchResumeCycleDatabaseWorker(jobId) {
+    cluster.setupMaster(resumeCycleDatabaseWorkerSetup);
+    cluster.fork({ jobId: jobId });
 }
 
 function launchSynchronizationWorker() {

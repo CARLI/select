@@ -2,17 +2,13 @@ var cluster = require('cluster');
 const CycleJobQueueManager = require('../CARLI/CycleJobQueueManager');
 
 async function doWork() {
-    const sourceCycleId = process.env.sourceCycleId;
-    const targetCycleData = process.env.targetCycleData;
-    Logger.log('Cycle creation processing');
-
+    const jobId = process.env.jobId;
     const queueManager = CycleJobQueueManager();
-    await queueManager.start(sourceCycleId, targetCycleData);
+    await queueManager.resume(jobId);
     exitWorker();
 }
 
 doWork();
-
 function exitWorker() {
     cluster.worker.kill();
 }

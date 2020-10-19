@@ -11,7 +11,7 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask('npm-test-plain', function(arg) {
-        grunt.task.run(['subdir-exec:.:npm run plainMocha']);
+        grunt.task.run(['subdir-exec:.:mocha']);
     });
 
     grunt.registerTask('test', [
@@ -21,6 +21,13 @@ module.exports = function(grunt) {
         'deploy-test-db',
         'npm-test',
         'delete-test-dbs'
+    ]);
+
+    grunt.registerTask('pre-plaintest', [
+        'ensure-local-config',
+        'jsenv:node',
+        'delete-test-dbs',
+        'deploy-test-db',
     ]);
 
     grunt.registerTask('plaintest', [

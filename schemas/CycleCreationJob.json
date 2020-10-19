@@ -1,0 +1,77 @@
+{
+  "$schema": "json-schema.org/draft-04/schema",
+  "title": "CycleCreationJob",
+  "schemaType": "CycleCreationJob",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique identifier for a Cycle Creation Job",
+      "type": "string"
+    },
+    "sourceCycle": {
+      "description": "UUID of the source Cycle document",
+      "type": "string"
+    },
+    "targetCycle": {
+      "description": "UUID of the target Cycle document",
+      "type": "string"
+    },
+    "completed": {
+      "description": "Indicates if the cycle creation job has completed",
+      "type": "boolean"
+    },
+    "running": {
+      "description": "Indicates if the cycle creation job is currently running",
+      "type": "boolean"
+    },
+    "logMessages": {
+      "description": "Array of messages logged about this job",
+      "type": "array"
+    },
+    "loadCycles": {
+      "description": "Completion date of the load cycles step",
+      "$ref": "./Date.json"
+    },
+    "replicate": {
+      "description": "Completion date of the load cycles step",
+      "$ref": "./Date.json"
+    },
+    "indexViews": {
+      "description": "Completion date of the load cycles step",
+      "$ref": "./Date.json"
+    },
+    "resetVendorStatus": {
+      "description": "Completion date of the load cycles step",
+      "$ref": "./Date.json"
+    },
+    "resetLibraryStatus": {
+      "description": "Completion date of the load cycles step",
+      "$ref": "./Date.json"
+    },
+    "transformProducts": {
+      "description": "Completion date of the load cycles step",
+      "$ref": "./Date.json"
+    },
+    "transformOfferings": {
+      "description": "Completion date of the load cycles step",
+      "$ref": "./Date.json"
+    },
+    "indexViewsPhase2": {
+      "description": "Completion date of the load cycles step",
+      "$ref": "./Date.json"
+    },
+    "setCycleToNextPhase": {
+      "description": "Completion date of the load cycles step",
+      "$ref": "./Date.json"
+    },
+    "replicateDataToVendorsForCycle": {
+      "description": "Completion date of the load cycles step",
+      "$ref": "./Date.json"
+    },
+    "triggerIndexingForCycleId": {
+      "description": "Completion date of the load cycles step",
+      "$ref": "./Date.json"
+    }
+  },
+  "required": [ "sourceCycle", "targetCycle" ]
+}
