@@ -72,16 +72,33 @@ function CycleCreationJobProcessor(
             const stepResult = await stepAction(cycleCreationJob);
             await markStepCompleted(cycleCreationJobId, currentStep);
             await markJobStopped(cycleCreationJobId);
-            return stepResult;
+            //return stepResult;
+
+            return {
+                succeeded: true,
+                result: stepResult
+            };
         }
         catch (e) {
-            const message = "An error occurred during step '" + currentStep + "', action '" + stepAction + "' of cycle creation processing.";
+            const message = "An error occurred during step '" + currentStep + " Error: " + e;
             await logMessageToJob(cycleCreationJobId, message);
+
+            Logger.log(e);
+            Logger.log(e.stack);
+
+            return {
+                succeeded: false,
+                error: e
+            };
         }
     }
 
     async function logMessageToJob(jobId, message) {
         const cycleCreationJob = await cycleCreationJobRepository.load(jobId);
+
+        if(!cycleCreationJob.logMessages){
+            cycleCreationJob.logMessages = [];
+        }
 
         cycleCreationJob.logMessages.push({
             timestamp: timestamper.getCurrentTimestamp(),

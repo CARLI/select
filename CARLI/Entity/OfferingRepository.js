@@ -121,7 +121,12 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
 
     function transformOfferingsInBatches(offerings, numBatches) {
         var offeringsPartitions = partitionOfferingsList(offerings, numBatches);
+        offeringsPartitions = [offerings];
         var currentBatch = 0;
+
+        Logger.log(`num batches = ${numBatches}`);
+        Logger.log(`partitions count ${offeringsPartitions.length}`);
+        Logger.log(offeringsPartitions);
 
         return updateNextBatch();
 
