@@ -250,7 +250,7 @@ function runMiddlewareServer() {
                     sourceCycleId: req.body.sourceCycle.id,
                     targetCycleData: JSON.stringify(req.body.newCycleData)
                 });
-                res.sendStatus(200);
+                res.send({});
             });
 
             authorizedRoute('put', '/resume-new-cycle/:jobId', carliAuth.requireStaff, function (req, res) {

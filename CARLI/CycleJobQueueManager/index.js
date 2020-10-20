@@ -79,7 +79,15 @@ function CycleJobQueueManager() {
         while(await cycleCreationJobProcessor._getCurrentStepForJob(cycleCreationJob.id) !== "done") {
             const currentStep = await cycleCreationJobProcessor._getCurrentStepForJob(cycleCreationJob.id);
             Logger.log("[START]: " + currentStep);
-            await cycleCreationJobProcessor.process(cycleCreationJob.id);
+            var status = await cycleCreationJobProcessor.process(cycleCreationJob.id);
+
+            Logger.log("status here: " + status);
+
+            if(!status.succeeded)
+            {
+                break;
+            }
+
             Logger.log("[END]: " + currentStep);
         }
     }
