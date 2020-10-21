@@ -1,8 +1,6 @@
-<h2>Preparing new cycle</h2>
-
 <section class="content list-content" cg-busy="vm.jobsLoading">
     <cycle-creation-job-info job="vm.job" ng-if="vm.job"></cycle-creation-job-info>
-    <div ng-if="!vm.job">
+    <div ng-if="vm.noMatchingJobsFound">
         No matching creation job was found for this cycle.
     </div>
 </section>
