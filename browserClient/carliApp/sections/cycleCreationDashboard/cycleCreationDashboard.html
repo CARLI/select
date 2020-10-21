@@ -27,80 +27,81 @@
                     <div class="cycle-creation-dashboard__job-progress">
                         <span class="cycle-creation-dashboard__step-details-header">Progress</span>
                         <ol class="cycle-creation-dashboard__step-details">
-                                                                              <li class="cycle-creation-dashboard__step-detail">
-                                                                              <div class="cycle-creation-dashboard__step-complete-timestamp">
-                                                                              <span class="cycle-creation-dashboard__step-complete-label">Loaded Cycles:</span>
-                                                                              <span class="cycle-creation-dashboard__step-complete-value">{{job.loadCycles | date:'short' }}</span>
-                                                                              </div>
-                                                                              </li>
-                                                                              <li class="cycle-creation-dashboard__step-detail">
-                                                                              <div class="cycle-creation-dashboard__step-complete-timestamp">
-                                                                              <span class="cycle-creation-dashboard__step-complete-label">Replication:</span>
-                                                                              <span class="cycle-creation-dashboard__step-complete-value">{{job.replicate | date:'short' }}</span>
-                                                                              </div>
-                                                                              </li>
-                                                                              <li class="cycle-creation-dashboard__step-detail">
-                                                                              <div class="cycle-creation-dashboard__step-complete-timestamp">
-                                                                              <span class="cycle-creation-dashboard__step-complete-label">Index Views:</span>
-                                                                              <span class="cycle-creation-dashboard__step-complete-value">{{job.indexViews | date:'short' }}</span>
-                                                                              </div>
-                                                                              </li>
-                                                                              <li class="cycle-creation-dashboard__step-detail">
-                                                                              <div class="cycle-creation-dashboard__step-complete-timestamp">
-                                                                              <span class="cycle-creation-dashboard__step-complete-label">Vendor Status Resets:</span>
-                                                                              <span class="cycle-creation-dashboard__step-complete-value">{{job.resetVendorStatus | date:'short' }}</span>
-                                                                              </div>
-                                                                              </li>
-                                                                              <li class="cycle-creation-dashboard__step-detail">
-                                                                              <div class="cycle-creation-dashboard__step-complete-timestamp">
-                                                                              <span class="cycle-creation-dashboard__step-complete-label">Library Status Resets:</span>
-                                                                              <span class="cycle-creation-dashboard__step-complete-value">{{job.resetLibraryStatus | date:'short' }}</span>
-                                                                              </div>
-                                                                              </li>
-                                                                              <li class="cycle-creation-dashboard__step-detail">
-                                                                              <div class="cycle-creation-dashboard__step-complete-timestamp">
-                                                                              <span class="cycle-creation-dashboard__step-complete-label">Product Transforms:</span>
-                                                                              <span class="cycle-creation-dashboard__step-complete-value">{{job.transformProducts | date:'short' }}</span>
-                                                                              </div>
-                                                                              </li>
-                                                                              <li class="cycle-creation-dashboard__step-detail">
-                                                                              <div class="cycle-creation-dashboard__step-complete-timestamp">
-                                                                              <span class="cycle-creation-dashboard__step-complete-label">Offering Transforms:</span>
-                                                                              <span class="cycle-creation-dashboard__step-complete-value">{{job.transformOfferings | date:'short' }}</span>
-                                                                              </div>
-                                                                              </li>
-                                                                              <li class="cycle-creation-dashboard__step-detail">
-                                                                              <div class="cycle-creation-dashboard__step-complete-timestamp">
-                                                                              <span class="cycle-creation-dashboard__step-complete-label">Index Views 2:</span>
-                                                                              <span class="cycle-creation-dashboard__step-complete-value">{{job.indexViewsPhase2 | date:'short' }}</span>
-                                                                              </div>
-                                                                              </li>
-                                                                              <li class="cycle-creation-dashboard__step-detail">
-                                                                              <div class="cycle-creation-dashboard__step-complete-timestamp">
-                                                                              <span class="cycle-creation-dashboard__step-complete-label">Set Next Cycle Phase:</span>
-                                                                              <span class="cycle-creation-dashboard__step-complete-value">{{job.setCycleToNextPhase | date:'short' }}</span>
-                                                                              </div>
-                                                                              </li>
-                                                                              <li class="cycle-creation-dashboard__step-detail">
-                                                                              <div class="cycle-creation-dashboard__step-complete-timestamp">
-                                                                              <span class="cycle-creation-dashboard__step-complete-label">Data Replication:</span>
-                                                                              <span class="cycle-creation-dashboard__step-complete-value">{{job.replicateDataToVendorsForCycle | date:'short' }}</span>
-                                                                              </div>
-                                                                              </li>
-                                                                              <li class="cycle-creation-dashboard__step-detail">
-                                                                              <div class="cycle-creation-dashboard__step-complete-timestamp">
-                                                                              <span class="cycle-creation-dashboard__step-complete-label">Trigger Cycle ID:</span>
-                                                                              <span class="cycle-creation-dashboard__step-complete-value">{{job.triggerIndexingForCycleId | date:'short' }}</span>
-                                                                              </div>
-                                                                              </li>
-                                                                              </ol>
+                            <li class="cycle-creation-dashboard__step-detail">
+                                <div class="cycle-creation-dashboard__step-complete-timestamp">
+                                    <span class="cycle-creation-dashboard__step-complete-label">Loaded Cycles:</span>
+                                    <span class="cycle-creation-dashboard__step-complete-value">{{job.loadCycles | date:'short' }}</span>
+                                </div>
+                            </li>
+                            <li class="cycle-creation-dashboard__step-detail">
+                                <div class="cycle-creation-dashboard__step-complete-timestamp">
+                                    <span class="cycle-creation-dashboard__step-complete-label">Replication:</span>
+                                    <span class="cycle-creation-dashboard__step-complete-value">{{job.replicate | date:'short' }}</span>
+                                </div>
+                            </li>
+                            <li class="cycle-creation-dashboard__step-detail">
+                                <div class="cycle-creation-dashboard__step-complete-timestamp">
+                                    <span class="cycle-creation-dashboard__step-complete-label">Index Views:</span>
+                                    <span class="cycle-creation-dashboard__step-complete-value">{{job.indexViews | date:'short' }}</span>
+                                </div>
+                            </li>
+                            <li class="cycle-creation-dashboard__step-detail">
+                                <div class="cycle-creation-dashboard__step-complete-timestamp">
+                                    <span class="cycle-creation-dashboard__step-complete-label">Vendor Status Resets:</span>
+                                    <span class="cycle-creation-dashboard__step-complete-value">{{job.resetVendorStatus | date:'short' }}</span>
+                                </div>
+                            </li>
+                            <li class="cycle-creation-dashboard__step-detail">
+                                <div class="cycle-creation-dashboard__step-complete-timestamp">
+                                    <span class="cycle-creation-dashboard__step-complete-label">Library Status Resets:</span>
+                                    <span class="cycle-creation-dashboard__step-complete-value">{{job.resetLibraryStatus | date:'short' }}</span>
+                                </div>
+                            </li>
+                            <li class="cycle-creation-dashboard__step-detail">
+                                <div class="cycle-creation-dashboard__step-complete-timestamp">
+                                    <span class="cycle-creation-dashboard__step-complete-label">Product Transforms:</span>
+                                    <span class="cycle-creation-dashboard__step-complete-value">{{job.transformProducts | date:'short' }}</span>
+                                </div>
+                            </li>
+                            <li class="cycle-creation-dashboard__step-detail">
+                                <div class="cycle-creation-dashboard__step-complete-timestamp">
+                                    <span class="cycle-creation-dashboard__step-complete-label">Offering Transforms:</span>
+                                    <span class="cycle-creation-dashboard__step-complete-value">{{job.transformOfferings | date:'short' }}</span>
+                                </div>
+                            </li>
+                            <li class="cycle-creation-dashboard__step-detail">
+                                <div class="cycle-creation-dashboard__step-complete-timestamp">
+                                    <span class="cycle-creation-dashboard__step-complete-label">Index Views 2:</span>
+                                    <span class="cycle-creation-dashboard__step-complete-value">{{job.indexViewsPhase2 | date:'short' }}</span>
+                                </div>
+                            </li>
+                            <li class="cycle-creation-dashboard__step-detail">
+                                <div class="cycle-creation-dashboard__step-complete-timestamp">
+                                    <span class="cycle-creation-dashboard__step-complete-label">Set Next Cycle Phase:</span>
+                                    <span class="cycle-creation-dashboard__step-complete-value">{{job.setCycleToNextPhase | date:'short' }}</span>
+                                </div>
+                            </li>
+                            <li class="cycle-creation-dashboard__step-detail">
+                                <div class="cycle-creation-dashboard__step-complete-timestamp">
+                                    <span class="cycle-creation-dashboard__step-complete-label">Data Replication:</span>
+                                    <span class="cycle-creation-dashboard__step-complete-value">{{job.replicateDataToVendorsForCycle | date:'short' }}</span>
+                                </div>
+                            </li>
+                            <li class="cycle-creation-dashboard__step-detail">
+                                <div class="cycle-creation-dashboard__step-complete-timestamp">
+                                    <span class="cycle-creation-dashboard__step-complete-label">Trigger Cycle ID:</span>
+                                    <span class="cycle-creation-dashboard__step-complete-value">{{job.triggerIndexingForCycleId | date:'short' }}</span>
+                                </div>
+                            </li>
+                        </ol>
                     </div>
                 </div>
 
                 <div class="cycle-creation-dashboard__job-messages-header" ng-if="job.hasMessages">Messages</div>
                 <div class="cycle-creation-dashboard__job-messages" ng-if="job.hasMessages">
-                    <div class="cycle-creation-dashboard__job-message" ng-repeat="message in job.messages track by $index">
-                        [{{ message.timestamp | date : "M/d/yyyy h:mm:ss a Z" }}] {{ message.message }}
+                    <div class="cycle-creation-dashboard__job-message"
+                         ng-repeat="message in job.messages track by $index">
+                        [{{ message.timestamp | date: "M/d/yyyy h:mm:ss a Z" }}] {{ message.message }}
                     </div>
                 </div>
             </li>
