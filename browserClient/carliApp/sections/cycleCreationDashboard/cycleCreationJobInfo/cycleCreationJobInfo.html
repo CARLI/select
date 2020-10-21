@@ -12,7 +12,7 @@
                 <dd class="cycle-creation-job-info__job-detail">{{ vm.job.status }}</dd>
             </dl>
 
-            <button type="button" class="carli-button" ng-if="vm.job.canResume" ng-click="vm.resumeJob()">
+            <button type="button" class="carli-button" ng-if="vm.job.canResume" busy-click="vm.resumeJob()">
                 Resume
             </button>
         </div>

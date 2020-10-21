@@ -18,5 +18,10 @@ function cycleCreationJobInfoController(cycleCreationJobService) {
         {
             console.log("error trying to find the target cycle or id on resume");
         }
+        return delayTwoSeconds();
+    }
+
+    function delayTwoSeconds() {
+        return new Promise(resolve => setTimeout(resolve, 2000));
     }
 }
