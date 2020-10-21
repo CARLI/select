@@ -5,15 +5,16 @@ function cycleDataProcessingController($q, $routeParams, $scope, $interval, cycl
     var vm = this;
 
     var cycleId = $routeParams.id;
-    var updateInterval = 2000;
+    var updateInterval = 5000;
     var updateIntervalPromise = null;
 
-    vm.jobs = [];
+    vm.job = null;
 
     activate();
 
     function activate() {
         updateIntervalPromise = $interval(updateCycleCreationStatus, updateInterval);
+        updateCycleCreationStatus();
 
         $scope.$on("$destroy", cancelUpdateTimer);
     }
@@ -25,14 +26,17 @@ function cycleDataProcessingController($q, $routeParams, $scope, $interval, cycl
                     return job.targetCycle.id === cycleId
                 })
 
-                vm.jobs = matchingJobs.map(job => {
+                if(matchingJobs.length === 0)
+                    return;
+
+                vm.job = matchingJobs.map(job => {
                     const jobStatus = cycleCreationJobService.getStatusForJob(job);
                     return {
                         ...job,
                         status: jobStatus,
                         canResume: jobStatus !== "Completed"
                     };
-                });
+                })[0];
             });
     }
 
