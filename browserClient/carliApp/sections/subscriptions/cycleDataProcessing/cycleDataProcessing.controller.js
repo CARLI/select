@@ -9,6 +9,7 @@ function cycleDataProcessingController($q, $routeParams, $scope, $interval, cycl
     var updateIntervalPromise = null;
 
     vm.job = null;
+    vm.noMatchingJobsFound = false;
 
     activate();
 
@@ -26,17 +27,17 @@ function cycleDataProcessingController($q, $routeParams, $scope, $interval, cycl
                     return job.targetCycle.id === cycleId
                 })
 
-                if(matchingJobs.length === 0)
-                    return;
-
-                vm.job = matchingJobs.map(job => {
+                if(matchingJobs.length === 0) {
+                    vm.noMatchingJobsFound = true;
+                } else {
+                    const job = matchingJobs[0];
                     const jobStatus = cycleCreationJobService.getStatusForJob(job);
-                    return {
+                    vm.job = {
                         ...job,
                         status: jobStatus,
                         canResume: jobStatus !== "Completed"
                     };
-                })[0];
+                }
             });
     }
 
