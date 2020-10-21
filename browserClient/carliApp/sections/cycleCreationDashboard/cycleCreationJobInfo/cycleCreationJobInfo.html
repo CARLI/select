@@ -1,0 +1,100 @@
+<div class="cycle-creation-job-info">
+    <div class="cycle-creation-job-info__job-details-and-progress">
+        <div class="cycle-creation-job-info__job-details">
+            <dl>
+                <dt>Source Cycle</dt>
+                <dd class="cycle-creation-job-info__job-detail">{{ vm.job.sourceCycle.name }}</dd>
+
+                <dt>Target Cycle</dt>
+                <dd class="cycle-creation-job-info__job-detail">{{ vm.job.targetCycle.name }}</dd>
+
+                <dt>Status</dt>
+                <dd class="cycle-creation-job-info__job-detail">{{ vm.job.status }}</dd>
+            </dl>
+
+            <button type="button" class="carli-button" ng-if="vm.job.canResume" busy-click="vm.resumeJob()">
+                Resume
+            </button>
+        </div>
+
+        <div class="cycle-creation-job-info__job-progress">
+            <span class="cycle-creation-job-info__step-details-header">Progress</span>
+            <ol class="cycle-creation-job-info__step-details">
+                <li class="cycle-creation-job-info__step-detail">
+                    <div class="cycle-creation-job-info__step-complete-timestamp">
+                        <span class="cycle-creation-job-info__step-complete-label">Loaded Cycles:</span>
+                        <span class="cycle-creation-job-info__step-complete-value">{{vm.job.loadCycles | date:'short' }}</span>
+                    </div>
+                </li>
+                <li class="cycle-creation-job-info__step-detail">
+                    <div class="cycle-creation-job-info__step-complete-timestamp">
+                        <span class="cycle-creation-job-info__step-complete-label">Replication:</span>
+                        <span class="cycle-creation-job-info__step-complete-value">{{vm.job.replicate | date:'short' }}</span>
+                    </div>
+                </li>
+                <li class="cycle-creation-job-info__step-detail">
+                    <div class="cycle-creation-job-info__step-complete-timestamp">
+                        <span class="cycle-creation-job-info__step-complete-label">Index Views:</span>
+                        <span class="cycle-creation-job-info__step-complete-value">{{vm.job.indexViews | date:'short' }}</span>
+                    </div>
+                </li>
+                <li class="cycle-creation-job-info__step-detail">
+                    <div class="cycle-creation-job-info__step-complete-timestamp">
+                        <span class="cycle-creation-job-info__step-complete-label">Vendor Status Resets:</span>
+                        <span class="cycle-creation-job-info__step-complete-value">{{vm.job.resetVendorStatus | date:'short' }}</span>
+                    </div>
+                </li>
+                <li class="cycle-creation-job-info__step-detail">
+                    <div class="cycle-creation-job-info__step-complete-timestamp">
+                        <span class="cycle-creation-job-info__step-complete-label">Library Status Resets:</span>
+                        <span class="cycle-creation-job-info__step-complete-value">{{vm.job.resetLibraryStatus | date:'short' }}</span>
+                    </div>
+                </li>
+                <li class="cycle-creation-job-info__step-detail">
+                    <div class="cycle-creation-job-info__step-complete-timestamp">
+                        <span class="cycle-creation-job-info__step-complete-label">Product Transforms:</span>
+                        <span class="cycle-creation-job-info__step-complete-value">{{vm.job.transformProducts | date:'short' }}</span>
+                    </div>
+                </li>
+                <li class="cycle-creation-job-info__step-detail">
+                    <div class="cycle-creation-job-info__step-complete-timestamp">
+                        <span class="cycle-creation-job-info__step-complete-label">Offering Transforms:</span>
+                        <span class="cycle-creation-job-info__step-complete-value">{{vm.job.transformOfferings | date:'short' }}</span>
+                    </div>
+                </li>
+                <li class="cycle-creation-job-info__step-detail">
+                    <div class="cycle-creation-job-info__step-complete-timestamp">
+                        <span class="cycle-creation-job-info__step-complete-label">Index Views 2:</span>
+                        <span class="cycle-creation-job-info__step-complete-value">{{vm.job.indexViewsPhase2 | date:'short' }}</span>
+                    </div>
+                </li>
+                <li class="cycle-creation-job-info__step-detail">
+                    <div class="cycle-creation-job-info__step-complete-timestamp">
+                        <span class="cycle-creation-job-info__step-complete-label">Set Next Cycle Phase:</span>
+                        <span class="cycle-creation-job-info__step-complete-value">{{vm.job.setCycleToNextPhase | date:'short' }}</span>
+                    </div>
+                </li>
+                <li class="cycle-creation-job-info__step-detail">
+                    <div class="cycle-creation-job-info__step-complete-timestamp">
+                        <span class="cycle-creation-job-info__step-complete-label">Data Replication:</span>
+                        <span class="cycle-creation-job-info__step-complete-value">{{vm.job.replicateDataToVendorsForCycle | date:'short' }}</span>
+                    </div>
+                </li>
+                <li class="cycle-creation-job-info__step-detail">
+                    <div class="cycle-creation-job-info__step-complete-timestamp">
+                        <span class="cycle-creation-job-info__step-complete-label">Trigger Cycle ID:</span>
+                        <span class="cycle-creation-job-info__step-complete-value">{{vm.job.triggerIndexingForCycleId | date:'short' }}</span>
+                    </div>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="cycle-creation-job-info__job-messages-header" ng-if="vm.job.hasMessages">Messages</div>
+    <div class="cycle-creation-job-info__job-messages" ng-if="vm.job.hasMessages">
+        <div class="cycle-creation-job-info__job-message"
+             ng-repeat="message in vm.job.messages track by $index">
+            [{{ message.timestamp | date: "M/d/yyyy h:mm:ss a Z" }}] {{ message.message }}
+        </div>
+    </div>
+</div>
