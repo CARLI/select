@@ -69,8 +69,17 @@ function CycleJobQueueManager() {
     async function start(sourceCycleId, serializedTargetCycleData){
         const targetCycleData = JSON.parse(serializedTargetCycleData);
         let targetCycleId = await cycleCreationJobProcessor.initializeNewCycle(targetCycleData);
-        const jobId = await createCycleCreationJob(sourceCycleId, targetCycleId);
-        await resume(jobId);
+        try {
+            Logger.log("[START] Creating Cycle Creation Job");
+            const jobId = await createCycleCreationJob(sourceCycleId, targetCycleId);
+            Logger.log("[END] Created Cycle Creation Job");
+            await resume(jobId);
+        }
+        catch (err) {
+            Logger.log("Job creation failed!");
+            Logger.log(err);
+            Logger.log(err.stack);
+        }
     }
 
     async function resume(jobId){
