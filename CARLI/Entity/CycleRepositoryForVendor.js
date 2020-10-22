@@ -8,14 +8,18 @@ module.exports = function (vendor) {
         return loadCycleForVendor(cycleId).then(function (cycle){
             var targetCycleDatabaseName = cycle.getDatabaseName();
 
+            Logger.log(`[CycleRepositoryForVendor] Creating database ${targetCycleDatabaseName}`);
+
             return couchUtils.doesDatabaseExist(targetCycleDatabaseName)
                 .then(createDatabaseIfNotExists)
                 .then(returnCycleId);
 
             function createDatabaseIfNotExists(databaseExists) {
                 if (!databaseExists) {
+                    Logger.log("[CycleRepositoryForVendor] Vendor database doesn't exist; creating");
                     return couchUtils.createDatabase(targetCycleDatabaseName, couchUtils.DB_TYPE_VENDOR, vendor);
                 } else {
+                    Logger.log("[CycleRepositoryForVendor] Vendor database already exists; returning cycle ID");
                     return cycleId;
                 }
             }
