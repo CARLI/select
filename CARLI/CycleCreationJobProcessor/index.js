@@ -36,8 +36,12 @@ function CycleCreationJobProcessor(
     ]
 
     async function create(targetCycle) {
+        Logger.log("[CycleCreationJobProcessor] [START] creating cycle entity");
         let targetCycleId = await cycleRepository.create(targetCycle, couchUtils.DB_TYPE_STAFF | couchUtils.DB_TYPE_LIBRARY)
+        Logger.log("[CycleCreationJobProcessor] [END] creating cycle entity");
+        Logger.log("[CycleCreationJobProcessor] [START] creating vendor databases for cycle");
         await createVendorDatabasesForCycle(targetCycleId);
+        Logger.log("[CycleCreationJobProcessor] [END] creating vendor databases for cycle");
         return targetCycleId;
     }
 
