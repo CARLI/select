@@ -22,7 +22,6 @@ function useAdminCouchCredentials() {
     var adminStoreOptions = _.clone(StoreOptions);
     adminStoreOptions.couchDbUrl = StoreOptions.privilegedCouchDbUrl;
 
-    //config.setStoreOptionsForCycles(adminStoreOptions);
     couchUtils = CouchUtils(adminStoreOptions);
     cycleRepository.setStore(Store(StoreModule(adminStoreOptions)));
     libraryRepository.setStore(Store(StoreModule(adminStoreOptions)));
@@ -31,6 +30,7 @@ function useAdminCouchCredentials() {
     productRepository.setStore(Store(StoreModule(adminStoreOptions)));
     vendorRepository.setStore(Store(StoreModule(adminStoreOptions)));
     vendorStatusRepository.setStore(Store(StoreModule(adminStoreOptions)));
+    cycleCreationJobRepository.setStore(Store(StoreModule(adminStoreOptions)));
 }
 
 const timestamper = {
