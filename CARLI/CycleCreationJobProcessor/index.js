@@ -29,9 +29,9 @@ function CycleCreationJobProcessor(
         'transformProducts',
         'transformOfferings',
         'indexViewsPhase2',
-        'setCycleToNextPhase',
         'replicateDataToVendorsForCycle',
         'triggerIndexingForCycleId',
+        'setCycleToNextPhase',
         'done'
     ]
 

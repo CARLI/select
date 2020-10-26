@@ -70,12 +70,6 @@
                 </li>
                 <li class="cycle-creation-job-info__step-detail">
                     <div class="cycle-creation-job-info__step-complete-timestamp">
-                        <span class="cycle-creation-job-info__step-complete-label">Set Next Cycle Phase:</span>
-                        <span class="cycle-creation-job-info__step-complete-value">{{vm.job.setCycleToNextPhase | date:'short' }}</span>
-                    </div>
-                </li>
-                <li class="cycle-creation-job-info__step-detail">
-                    <div class="cycle-creation-job-info__step-complete-timestamp">
                         <span class="cycle-creation-job-info__step-complete-label">Data Replication:</span>
                         <span class="cycle-creation-job-info__step-complete-value">{{vm.job.replicateDataToVendorsForCycle | date:'short' }}</span>
                     </div>
@@ -84,6 +78,12 @@
                     <div class="cycle-creation-job-info__step-complete-timestamp">
                         <span class="cycle-creation-job-info__step-complete-label">Trigger Cycle ID:</span>
                         <span class="cycle-creation-job-info__step-complete-value">{{vm.job.triggerIndexingForCycleId | date:'short' }}</span>
+                    </div>
+                </li>
+                <li class="cycle-creation-job-info__step-detail">
+                    <div class="cycle-creation-job-info__step-complete-timestamp">
+                        <span class="cycle-creation-job-info__step-complete-label">Set Next Cycle Phase:</span>
+                        <span class="cycle-creation-job-info__step-complete-value">{{vm.job.setCycleToNextPhase | date:'short' }}</span>
                     </div>
                 </li>
             </ol>

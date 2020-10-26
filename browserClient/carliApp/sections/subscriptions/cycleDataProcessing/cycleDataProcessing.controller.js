@@ -35,7 +35,7 @@ function cycleDataProcessingController($q, $routeParams, $scope, $interval, cycl
                     vm.job = {
                         ...job,
                         status: jobStatus,
-                        canResume: jobStatus !== "Running"
+                        canResume: jobStatus === "Stopped",
                     };
                 }
             });

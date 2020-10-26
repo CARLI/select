@@ -18,7 +18,7 @@ function cycleCreationDashboardController($scope, activityLogService, alertServi
                     return {
                         ...job,
                         status: jobStatus,
-                        canResume: jobStatus !== "Running",
+                        canResume: jobStatus === "Stopped",
                         hasMessages: job.messages && (job.messages.length > 0)
                     };
                 });
