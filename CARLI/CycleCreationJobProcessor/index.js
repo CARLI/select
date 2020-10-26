@@ -269,12 +269,17 @@ function CycleCreationJobProcessor(
     async function replicateDataToVendorsForCycle(job) {
 
         const allVendors = await vendorRepository.list();
-        const promises = allVendors.map( async function (vendor) {
-            const repoForVendor = cycleRepositoryForVendor(vendor);
-            const cycleForVendor = await repoForVendor.load(job.targetCycle);
-            return cycleForVendor.replicateFromSource();
-        });
-        await Q.all(promises);
+
+        const promise = allVendors.reduce((promiseChain, vendor) => {
+            return promiseChain.then(async () => {
+                const repoForVendor = cycleRepositoryForVendor(vendor);
+                const cycleForVendor = await repoForVendor.load(job.targetCycle);
+                await cycleForVendor.replicateFromSource();
+                Logger.log("[CycleCreationJobProcessor] [END] finished replicating data to vendor " + vendor.id);
+            });
+        }, Q.when(true));
+
+        await promise;
     }
 
     async function triggerIndexingForCycleId(job) {
