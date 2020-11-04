@@ -68,6 +68,27 @@ describe('The Cycle Creation Job Process', function(){
             expect(couchUtilsSpy.triggeredIndexingOnDatabase).to.equal('cycle-cycle2');
         });
 
+        //TODO new test - to ensure indexing is properly being waited on to finish
+        it.skip('should return proper waiting for indexing messsaging', async function () {
+
+            let sourceCycle = await cycleRepository.load('2');
+            sourceCycle.cycleType = "Alternative Cycle";
+
+            testCycleCreationJob.loadCycles = '2020-09-09-20:01:34';
+            testCycleCreationJob.replicate = '2020-09-09-20:01:34';
+
+            const couchJobsPromise = Q([
+                {type: 'indexer', progress: 100, database: 'cycle-cycle2'},
+            ]);
+
+            couchUtilsSpy.getRunningCouchJobs = () => couchJobsPromise;
+
+            const result = await cycleCreationJobProcessor.process(testCycleCreationJob);
+
+            expect(result.result).to.equal('Waiting for cycle2 indexing');
+
+        });
+
         it('triggers cycle loading', async function () {
 
             await cycleCreationJobProcessor.process(testCycleCreationJob);
@@ -206,6 +227,13 @@ describe('The Cycle Creation Job Process', function(){
             await cycleCreationJobProcessor._waitForIndexingToFinish(sourceCycle);
         });
 
+        //TODO need to add more tests for more variations.
+        // - Test with other cycle types (calendar & fiscal)
+        // - Clarify special case for Alternative Cycles
+        // - Add more tests for different % completed
+        it('', async () => {
+
+        });
     });
 
     describe(`resetVendorStatus function`, () => {

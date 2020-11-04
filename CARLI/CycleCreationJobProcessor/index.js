@@ -63,7 +63,7 @@ function CycleCreationJobProcessor(
         return true;
     }
 
-    async function  process(cycleCreationJobId) {
+    async function process(cycleCreationJobId) {
         if (!(await isValidCycleCreationJob(cycleCreationJobId)))
             throw new Error('invalid cycle creation job');
 
@@ -76,7 +76,6 @@ function CycleCreationJobProcessor(
             const stepResult = await stepAction(cycleCreationJob);
             await markStepCompleted(cycleCreationJobId, currentStep);
             await markJobStopped(cycleCreationJobId);
-            //return stepResult;
 
             return {
                 succeeded: true,
@@ -191,7 +190,8 @@ function CycleCreationJobProcessor(
         }
 
         cycleRepository.createCycleLog('Triggering view indexing for ' + newCycle.name + ' with database ' + newCycle.getDatabaseName());
-        return couchUtils.triggerViewIndexing(newCycle.getDatabaseName());
+        await couchUtils.triggerViewIndexing(newCycle.getDatabaseName());
+        return waitForIndexingToFinish(newCycle)
     }
 
     async function setCycleToNextPhase(job) {
@@ -239,18 +239,18 @@ function CycleCreationJobProcessor(
         }
     }
 
-    async function waitForIndexingtoFinish(cycle) {
+    async function waitForIndexingToFinish(cycle) {
         const getProgress = () => getViewIndexingStatus(cycle, couchUtils.getRunningCouchJobs());
         const indexTracker = IndexingStatusTracker(getProgress, cycle);
 
         await indexTracker.start();
+        return Promise.resolve(`Waiting for ${cycle.name} indexing`);
     }
 
     async function getViewIndexingStatus(cycle, couchJobsPromise) {
         const indexingJobsForCycle = (await couchJobsPromise)
             .filter(filterIndexJobs)
             .filter(filterCycleJobs);
-
         return getProgressForFirstJob(indexingJobsForCycle);
 
         function filterIndexJobs(job) {
@@ -338,7 +338,7 @@ function CycleCreationJobProcessor(
         _markStepCompleted: markStepCompleted,
         _markJobRunning: markJobRunning,
         _markJobStopped: markJobStopped,
-        _waitForIndexingToFinish: waitForIndexingtoFinish,
+        _waitForIndexingToFinish: waitForIndexingToFinish,
         _getViewIndexingStatus: getViewIndexingStatus,
         _transformProducts: transformProducts,
         _transformOfferings: transformOfferings,
