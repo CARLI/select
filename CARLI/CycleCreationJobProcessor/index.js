@@ -72,10 +72,12 @@ function CycleCreationJobProcessor(
         var stepAction = getStepAction(currentStep);
 
         try {
+            Logger.log("[STEPSTART] starting " + currentStep);
             const cycleCreationJob = await cycleCreationJobRepository.load(cycleCreationJobId);
             const stepResult = await stepAction(cycleCreationJob);
             await markStepCompleted(cycleCreationJobId, currentStep);
             await markJobStopped(cycleCreationJobId);
+            Logger.log("[STEPSTART] ending " + currentStep);
 
             return {
                 succeeded: true,
@@ -172,6 +174,7 @@ function CycleCreationJobProcessor(
             await loadCycles(job);
         }
 
+        Logger.log("[START] Transforming products for new cycle | " + newCycle.name);
         cycleRepository.createCycleLog('Transforming products for new cycle');
         return productRepository.transformProductsForNewCycle(newCycle);
     }
@@ -180,6 +183,8 @@ function CycleCreationJobProcessor(
         if (!sourceCycle) {
             await loadCycles(job);
         }
+
+        Logger.log("[START] Transforming offerings for new cycle | " + newCycle.name);
         cycleRepository.createCycleLog('Transforming offerings for new cycle');
         return offeringRepository.transformOfferingsForNewCycle(newCycle, sourceCycle);
     }
@@ -189,6 +194,7 @@ function CycleCreationJobProcessor(
             await loadCycles(job);
         }
 
+        Logger.log("[START] Triggering view indexing for " + newCycle.name);
         cycleRepository.createCycleLog('Triggering view indexing for ' + newCycle.name + ' with database ' + newCycle.getDatabaseName());
         await couchUtils.triggerViewIndexing(newCycle.getDatabaseName());
         return waitForIndexingToFinish(newCycle)

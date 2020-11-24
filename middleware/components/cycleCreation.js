@@ -284,7 +284,8 @@ function deleteCycle(cycleId) {
         });
 }
 
-/* NEW CYCLE CREATION STUFF HERE */
+/*
+/!* NEW CYCLE CREATION STUFF HERE *!/
 
 function newCopyCycleDataFrom( sourceCycleId, newCycleId ){
     var sourceCycle = null;
@@ -398,13 +399,13 @@ function newCopyCycleDataFrom( sourceCycleId, newCycleId ){
 
         function checkIndexStatus() {
             getViewIndexingStatus(newCycle).then(function (progress) {
-                /**
+                /!**
                  * We don't initially trust a value of 100 because that could mean the indexing job has not started yet or it could mean
                  * that it already finished. So we wait until we see some progress (e.g. 25%) before we believe the number.
                  * This appears to be a problem with alternative cycles because they are small enough that the indexing finishes before
                  * any intermediate progress can be reported. So we never trust the value, we never clear the interval or resolve the promise,
                  * and we never leave this step.
-                 */
+                 *!/
                 var oneHundredPercentIndexingIsAmbiguous = (newCycle.cycleType == 'Alternative Cycle');
                 var ignoreCycleIndexTime = (progress === 100 && oneHundredPercentIndexingIsAmbiguous);
 
@@ -434,11 +435,12 @@ function newCopyCycleDataFrom( sourceCycleId, newCycleId ){
     }
 }
 
+*/
 
 module.exports = {
     create: create,
     copyCycleDataFrom: copyCycleDataFrom,
-    newCopyCycleDataFrom: newCopyCycleDataFrom,
+    //newCopyCycleDataFrom: newCopyCycleDataFrom,
     getCycleCreationStatus: getCycleCreationStatus,
     deleteCycle: deleteCycle
 };
