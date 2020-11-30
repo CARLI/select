@@ -120,8 +120,10 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
     }
 
     function transformOfferingsInBatches(offerings, numBatches) {
+        Logger.log("[OFFERINGS] listing partitions");
         var offeringsPartitions = partitionOfferingsList(offerings, numBatches);
-        offeringsPartitions = [offerings];
+        Logger.log("[OFFERINGS] finished listing partitions");
+        //offeringsPartitions = [offerings];
         var currentBatch = 0;
 
         Logger.log(`num batches = ${numBatches}`);
@@ -132,9 +134,10 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
 
         function updateNextBatch(results) {
             if (currentBatch == numBatches) {
+                Logger.log("[OFFERINGS] ending updateNextBatch, currentBatch: " + currentBatch + " | numBatches: " + numBatches);
                 return results;
             }
-            // Logger.log('[Cycle Creation]: Transforming offerings ' + (currentBatch + 1) + '/' + numBatches);
+            Logger.log("[OFFERINGS] starting updateNextBatch");
             return transformOfferingsBatch(offeringsPartitions[currentBatch])
                 .then(incrementBatch)
                 .then(updateProgress)
@@ -142,6 +145,7 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
         }
 
         function transformOfferingsBatch(offeringsBatch) {
+            Logger.log("[OFFERINGS] starting transformOfferingsBatch");
             offeringsBatch.forEach(function (offering) {
                 setCycleId(offering, newCycle.id);
                 copyOfferingHistoryForYear(offering, sourceCycle.year);
@@ -150,16 +154,14 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
                 resetFlaggedState(offering);
                 clearVendorComments(offering);
             });
+            Logger.log("[OFFERINGS] ending transformOfferingsBatch");
             return couchUtils.bulkUpdateDocuments(newCycle.getDatabaseName(), offeringsBatch);
-            //var updatePromises = [];
-            //offeringsBatch.forEach(function (offering) {
-            //    updatePromises.push(updateUnexpandedOffering(offering, newCycle));
-            //});
-            //return Q.all( updatePromises );
         }
 
         function incrementBatch(results) {
+            Logger.log("[OFFERINGS] starting incrementBatch");
             currentBatch++;
+            Logger.log("[OFFERINGS] ending incrementBatch");
             return results;
         }
 

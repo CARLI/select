@@ -14,7 +14,7 @@ const Store = require( '../../CARLI/Store' );
 const StoreModule = require( '../../CARLI/Store/CouchDb/Store');
 
 const StoreOptions = config.storeOptions;
-let couchUtils;
+let couchUtils = null;
 
 useAdminCouchCredentials();
 

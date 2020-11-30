@@ -2,6 +2,7 @@ const Q = require('q');
 const cycleRepositoryForVendor = require('../../CARLI/Entity/CycleRepositoryForVendor');
 const IndexingStatusTracker = require("./IndexingStatusTracker");
 
+
 function CycleCreationJobProcessor(
         {
             cycleRepository,
