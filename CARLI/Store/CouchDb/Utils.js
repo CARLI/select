@@ -152,12 +152,7 @@ module.exports = function (storeOptions) {
 
     function bulkUpdateDocuments(dbName, documents) {
         Logger.log("[INNER_OFFERINGS] starting bulkUpdateDocuments");
-        try {
-            var url = storeOptions.couchDbUrl + '/' + dbName + '/' + '_bulk_docs';
-        }
-        catch (e) {
-            Logger.log("[INNER_OFFERINGS] error: " + e);
-        }
+        var url = storeOptions.couchDbUrl + '/' + dbName + '/' + '_bulk_docs';
         Logger.log("[INNER_OFFERINGS] " + url);
 
         return couchRequest({
