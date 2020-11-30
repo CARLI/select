@@ -151,13 +151,21 @@ module.exports = function (storeOptions) {
     }
 
     function bulkUpdateDocuments(dbName, documents) {
-        var url = storeOptions.couchDbUrl + '/' + dbName + '/' + '_bulk_docs';
+        Logger.log("[INNER_OFFERINGS] starting bulkUpdateDocuments");
+        try {
+            var url = storeOptions.couchDbUrl + '/' + dbName + '/' + '_bulk_docs';
+        }
+        catch (e) {
+            Logger.log("[INNER_OFFERINGS] error: " + e);
+        }
+        Logger.log("[INNER_OFFERINGS] " + url);
 
         return couchRequest({
             url: url,
             method: 'post',
             json: { docs: documents }
         }).then(function processResults(results){
+            Logger.log("[INNER_OFFERINGS] ending bulkUpdateDocuments");
             return results;
         });
     }
