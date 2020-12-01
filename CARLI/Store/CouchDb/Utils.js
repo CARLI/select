@@ -153,15 +153,23 @@ module.exports = function (storeOptions) {
     function bulkUpdateDocuments(dbName, documents) {
         Logger.log("[INNER_OFFERINGS] starting bulkUpdateDocuments");
         var url = storeOptions.couchDbUrl + '/' + dbName + '/' + '_bulk_docs';
+
         Logger.log("[INNER_OFFERINGS] " + url);
+        Logger.log(`Documents length as array: ${documents.length} as Object: ${Object.keys(documents).length}`);
+        Logger.log(`Approximate size of documents ${JSON.stringify(documents).length} ~bytes`);
+        Logger.log(`Approximate size of documents ${JSON.stringify(documents).length / 1000} ~kbytes`);
+        Logger.log(`Approximate size of documents ${JSON.stringify(documents).length / 1000000} ~mbytes`);
 
         return couchRequest({
             url: url,
             method: 'post',
             json: { docs: documents }
+
         }).then(function processResults(results){
             Logger.log("[INNER_OFFERINGS] ending bulkUpdateDocuments");
             return results;
+        }).catch(function catchError(e){
+            Logger.log("INNER_OFFERINGS_ERROR] : ", e);
         });
     }
 
