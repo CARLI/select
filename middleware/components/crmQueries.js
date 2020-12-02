@@ -1,4 +1,5 @@
 var mysql = require('mysql');
+var request = require('request');
 var Q = require('q');
 
 var config = require("../../config");
@@ -18,27 +19,12 @@ var selectLibrary = 'SELECT m.institution_name, m.member_id, m.library_type, m.m
 
 function listLibraries() {
     var deferred = Q.defer();
-    pool.getConnection(function(err, connection) {
 
-        if ( err ){
-            return handleError( deferred, 'pool.getConnection error listing libraries', err);
-        }
-
-        connection.query(
-            selectLibrary,
-            null,
-            function(err, rows, fields) {
-                if ( err ){
-                    handleError( deferred, 'query error listing libraries', err);
-                }
-                else {
-                    var libraries = extractRowsFromResponse(err, rows, convertCrmLibrary);
-                    deferred.resolve(libraries);
-                }
-            }
-        );
-
-        connection.release();
+    request('https://select-crm-test.carli.illinois.edu/library', function(error, response, body) {
+        if (!!error)
+            deferred.reject(error);
+        else
+            deferred.resolve(JSON.parse(body));
     });
 
     return deferred.promise;
@@ -46,32 +32,12 @@ function listLibraries() {
 
 function loadLibrary(id) {
     var deferred = Q.defer();
-    pool.getConnection(function(err, connection) {
 
-        if ( err ){
-            return handleError( deferred, 'pool.getConnection error loading library', err);
-        }
-
-        connection.query(
-            selectLibrary + 'WHERE m.member_id = ?',
-            [id],
-            function (err, rows, fields) {
-                if ( err ){
-                    handleError( deferred, 'query error loading library', err);
-                }
-                else {
-                    var libraries = extractRowsFromResponse(err, rows, convertCrmLibrary);
-                    if ( libraries && libraries.length ){
-                        deferred.resolve(libraries[0]);
-                    }
-                    else {
-                        deferred.resolve({});
-                    }
-                }
-            }
-        );
-
-        connection.release();
+    request('https://select-crm-test.carli.illinois.edu/library/' + id, function(error, response, body) {
+        if (!!error)
+            deferred.reject(error);
+        else
+            deferred.resolve(JSON.parse(body));
     });
 
     return deferred.promise;
@@ -125,50 +91,29 @@ function crmContactQuery(crmIdArguments) {
 }
 
 function listCrmContactsForLibrary( libraryCrmId ){
-    var queryString = crmContactQuery(libraryCrmId);
     var deferred = Q.defer();
-    pool.getConnection(function(err, connection) {
-        if ( err ){
-            return handleError( deferred, 'pool.getConnection error loading library', err);
-        }
-        
-        connection.query(queryString, [libraryCrmId], function (err, rows, fields) {
-                if ( err ){
-                    handleError( deferred, 'query error loading library', err);
-                }
-                else {
-                    var contacts = extractRowsFromResponse(err, rows, convertCrmLibraryContact);
-                    deferred.resolve(contacts);
-                }
-            }
-        );
 
-        connection.release();
+    request('https://select-crm-test.carli.illinois.edu/library/contacts/' + id, function(error, response, body) {
+        if (!!error)
+            deferred.reject(error);
+        else
+            deferred.resolve(JSON.parse(body));
     });
 
     return deferred.promise;
 }
 
 function listCrmContactsForLibraryIds( libraryCrmsIds ){
-    var queryString = crmContactQuery(libraryCrmsIds);
+    var queryString = libraryCrmsIds.map(function (id) {
+        return 'id[]=' + id;
+    }).join('&');
     var deferred = Q.defer();
-    pool.getConnection(function(err, connection) {
-        if ( err ){
-            return handleError( deferred, 'pool.getConnection error loading library', err);
-        }
-        
-        connection.query(queryString, [libraryCrmsIds], function (err, rows, fields) {
-                if ( err ){
-                    handleError( deferred, 'query error loading library', err);
-                }
-                else {
-                    var contacts = extractRowsFromResponse(err, rows, convertCrmLibraryContact);
-                    deferred.resolve(contacts);
-                }
-            }
-        );
 
-        connection.release();
+    request('https://select-crm-test.carli.illinois.edu/library/contacts/?' + queryString, function(error, response, body) {
+        if (!!error)
+            deferred.reject(error);
+        else
+            deferred.resolve(JSON.parse(body));
     });
 
     return deferred.promise;
