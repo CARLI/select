@@ -166,6 +166,7 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
         }
 
         function updateProgress(){
+            Logger.log(`[START] updateProgress`);
             return cycleRepository.load(newCycle.id)
                 .then(function(cycle){
                     cycle.offeringTransformationPercentComplete = 100 * (currentBatch / numBatches);
