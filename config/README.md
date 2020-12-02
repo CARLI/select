@@ -7,10 +7,8 @@ Configuration comes from the environment.
     * COUCH_DB_PASSWORD
     * COUCH_DB_URL_SCHEME
     * COUCH_DB_USER
-* MySQL (CRM) Database Configuration
-    * CRM_MYSQL_HOST
-    * CRM_MYSQL_PASSWORD
-    * CRM_MYSQL_USER
+* CRM Database API Configuration
+    * CRM_API_URL
 * Email Configuration
     * NOTIFICATIONS_OVERRIDE_TO
     * CARLI_LISTSERVE_EMAIL

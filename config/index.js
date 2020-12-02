@@ -12,7 +12,7 @@ makeLoggerGlobal();
 
 var storeOptionsForCycles = null;
 
-const browserConfigBlacklist = [ "CRM_MYSQL_PASSWORD", "COUCH_DB_PASSWORD", "SMTP_PASSWORD" ];
+const browserConfigBlacklist = [ "COUCH_DB_PASSWORD", "SMTP_PASSWORD" ];
 function isConfigSafeToExposeToWebBrowser(key) {
     return browserConfigBlacklist.indexOf(key) === -1;
 }
@@ -40,9 +40,7 @@ function getConfig(key) {
         COUCH_DB_PASSWORD: "karplamity",
         COUCH_DB_URL_SCHEME: "http://",
         COUCH_DB_USER: "admin",
-        CRM_MYSQL_HOST: "localhost",
-        CRM_MYSQL_PASSWORD: "password",
-        CRM_MYSQL_USER: "guest_pixo",
+        CRM_API_URL: "https://select-crm-test.carli.illinois.edu",
         NOTIFICATIONS_OVERRIDE_TO: "",
         CARLI_LISTSERVE_EMAIL: "",
         CARLI_SUPPORT_EMAIL: "",
@@ -119,14 +117,8 @@ function getCouchDbUrlScheme() {
 function getCouchDbUser() {
     return parseString(getConfig("COUCH_DB_USER"));
 }
-function getCrmMysqlHost() {
-    return parseString(getConfig("CRM_MYSQL_HOST"));
-}
-function getCrmMysqlPassword() {
-    return parseString(getConfig("CRM_MYSQL_PASSWORD"));
-}
-function getCrmMysqlUser() {
-    return parseString(getConfig("CRM_MYSQL_USER"));
+function getCrmApiUrl() {
+    return parseString(getConfig("CRM_API_URL"));
 }
 function getNotificationsOverrideTo() {
     return parseString(getConfig("NOTIFICATIONS_OVERRIDE_TO"));
@@ -207,13 +199,7 @@ function loadConfiguration() {
                 ignoreTLS: getSmtpIgnoreTls()
             },
             storeOptions: getStoreOptionsFromEnvironment(),
-            memberDb: {
-                connectionLimit: 10,
-                host: getCrmMysqlHost(),
-                user: getCrmMysqlUser(),
-                password: getCrmMysqlPassword(),
-                database: "carli_crm"
-            },
+            crmApi: getCrmApiOptionsFromEnvironment(),
             restrictedApiV1: {
                 username: "",
                 password: ""
@@ -242,6 +228,12 @@ function loadConfiguration() {
             privilegedCouchHostname: host,
             privilegedCouchDbUrl: scheme + user + ':' + password + '@' + host
         };
+    }
+
+    function getCrmApiOptionsFromEnvironment() {
+        return {
+            url: getCrmApiUrl()
+        }
     }
 
     function setMiddlewareUrl() {
