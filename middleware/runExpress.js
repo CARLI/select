@@ -53,7 +53,7 @@ function runMiddlewareServer() {
             var port = server.address().port;
             Logger.log('CARLI Middleware Version:' + carliMiddlewareVersion);
             Logger.log('CARLI Middleware worker ' + cluster.worker.id + ' listening at http://' + host + ':' + port);
-            Logger.log('CRM MYSQL config\n', crmQueries.mysqlConfig);
+            Logger.log('CRM API URL\n', crmQueries.crmApiUrl);
             Logger.log('ENVIRONMENT\n', process.env);
             Logger.log('CONFIGURATION\n', JSON.stringify(config, null, "  "));
         });
