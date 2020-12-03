@@ -16,7 +16,7 @@ function CycleCreationJobProcessor(
             vendorStatusRepository,
             cycleCreationJobRepository
         })
-{
+    {
 
     var sourceCycle = null;
     var newCycle = null;

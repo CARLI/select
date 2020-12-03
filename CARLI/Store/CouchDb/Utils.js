@@ -18,6 +18,7 @@ module.exports = function (storeOptions) {
         request(requestOptions, handleCouchResponse);
 
         function handleCouchResponse(error, response, body) {
+            Logger.log('[INNER] start handleCouchRequest');
             var data;
             var statusCode = 500;
             if (response) {
@@ -49,6 +50,7 @@ module.exports = function (storeOptions) {
                     deferred.resolve(data);
                 }
             }
+            Logger.log('[INNER] ending handleCouchRequest');
         }
 
         function isJsonString(text) {
@@ -63,7 +65,7 @@ module.exports = function (storeOptions) {
             }
             return true;
         }
-
+        Logger.log('[INNER] returning from couchRequest');
         return deferred.promise;
     }
 
@@ -382,14 +384,16 @@ module.exports = function (storeOptions) {
             var deferred = Q.defer();
             var requestOptions = couchReplicationOptions();
 
-            Logger.log('Replicating from ' + sourceDbName + ' to ' + targetDbName);
+            Logger.log('[INNER] Replicating from ' + sourceDbName + ' to ' + targetDbName);
 
             couchRequest(requestOptions)
                 .then(function resolveReplication(data) {
+                    Logger.log('[INNER] verifying data');
                     if (data.ok) {
                         Logger.log("OK: Replicated " + sourceDbName + " to " + targetDbName);
                         deferred.resolve();
                     } else {
+                        Logger.log("ERROR: Replicated " + sourceDbName + " to " + targetDbName);
                         deferred.reject('replication failed ['+sourceDbName+' -> '+targetDbName+']');
                     }
                 })

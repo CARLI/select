@@ -97,7 +97,7 @@ function listOfferingsUnexpanded(cycle){
 
 function transformOfferingsForNewCycle(newCycle, sourceCycle) {
     return listUnexpandedOfferings(newCycle).then(function(offerings) {
-        return transformOfferingsInBatches(offerings, 5 /* Math.floor( offerings.length / 100 ) */)
+        return transformOfferingsInBatches(offerings, 10 /* Math.floor( offerings.length / 100 ) */)
             .then(setProgressComplete);
     });
 
