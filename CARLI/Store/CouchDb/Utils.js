@@ -18,7 +18,6 @@ module.exports = function (storeOptions) {
         request(requestOptions, handleCouchResponse);
 
         function handleCouchResponse(error, response, body) {
-            Logger.log('[INNER] start handleCouchRequest');
             var data;
             var statusCode = 500;
             if (response) {
@@ -50,7 +49,6 @@ module.exports = function (storeOptions) {
                     deferred.resolve(data);
                 }
             }
-            Logger.log('[INNER] ending handleCouchRequest');
         }
 
         function isJsonString(text) {
@@ -65,7 +63,6 @@ module.exports = function (storeOptions) {
             }
             return true;
         }
-        Logger.log('[INNER] returning from couchRequest');
         return deferred.promise;
     }
 
@@ -153,10 +150,8 @@ module.exports = function (storeOptions) {
     }
 
     function bulkUpdateDocuments(dbName, documents) {
-        Logger.log("[INNER_OFFERINGS] starting bulkUpdateDocuments");
         var url = storeOptions.couchDbUrl + '/' + dbName + '/' + '_bulk_docs';
 
-        Logger.log("[INNER_OFFERINGS] " + url);
         Logger.log(`Documents length as array: ${documents.length} as Object: ${Object.keys(documents).length}`);
         Logger.log(`Approximate size of documents ${JSON.stringify(documents).length} ~bytes`);
         Logger.log(`Approximate size of documents ${JSON.stringify(documents).length / 1000} ~kbytes`);
@@ -168,7 +163,6 @@ module.exports = function (storeOptions) {
             json: { docs: documents }
 
         }).then(function processResults(results){
-            Logger.log("[INNER_OFFERINGS] ending bulkUpdateDocuments");
             return results;
         }).catch(function catchError(e){
             Logger.log("INNER_OFFERINGS_ERROR] : ", e);
@@ -388,7 +382,6 @@ module.exports = function (storeOptions) {
 
             couchRequest(requestOptions)
                 .then(function resolveReplication(data) {
-                    Logger.log('[INNER] verifying data');
                     if (data.ok) {
                         Logger.log("OK: Replicated " + sourceDbName + " to " + targetDbName);
                         deferred.resolve();

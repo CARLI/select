@@ -120,9 +120,7 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
     }
 
     function transformOfferingsInBatches(offerings, numBatches) {
-        Logger.log("[OFFERINGS] listing partitions");
         var offeringsPartitions = partitionOfferingsList(offerings, numBatches);
-        Logger.log("[OFFERINGS] finished listing partitions");
         //offeringsPartitions = [offerings];
         var currentBatch = 0;
 
@@ -137,7 +135,6 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
                 Logger.log("[OFFERINGS] ending updateNextBatch, currentBatch: " + currentBatch + " | numBatches: " + numBatches);
                 return results;
             }
-            Logger.log("[OFFERINGS] starting updateNextBatch");
             return transformOfferingsBatch(offeringsPartitions[currentBatch])
                 .then(incrementBatch)
                 .then(updateProgress)
@@ -145,7 +142,6 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
         }
 
         function transformOfferingsBatch(offeringsBatch) {
-            Logger.log("[OFFERINGS] starting transformOfferingsBatch");
             offeringsBatch.forEach(function (offering) {
                 setCycleId(offering, newCycle.id);
                 copyOfferingHistoryForYear(offering, sourceCycle.year);
@@ -154,14 +150,11 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
                 resetFlaggedState(offering);
                 clearVendorComments(offering);
             });
-            Logger.log("[OFFERINGS] ending transformOfferingsBatch");
             return couchUtils.bulkUpdateDocuments(newCycle.getDatabaseName(), offeringsBatch);
         }
 
         function incrementBatch(results) {
-            Logger.log("[OFFERINGS] starting incrementBatch");
             currentBatch++;
-            Logger.log("[OFFERINGS] ending incrementBatch");
             return results;
         }
 

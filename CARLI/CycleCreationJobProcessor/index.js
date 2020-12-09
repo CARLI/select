@@ -76,9 +76,11 @@ function CycleCreationJobProcessor(
             Logger.log("[STEPSTART] starting " + currentStep);
             const cycleCreationJob = await cycleCreationJobRepository.load(cycleCreationJobId);
             const stepResult = await stepAction(cycleCreationJob);
+            Logger.log("[STEP] step result completed");
             await markStepCompleted(cycleCreationJobId, currentStep);
+            Logger.log("[STEP] step marked complete");
             await markJobStopped(cycleCreationJobId);
-            Logger.log("[STEPSTART] ending " + currentStep);
+            Logger.log("[STEPEND] step marked stop, ending " + currentStep);
 
             return {
                 succeeded: true,
@@ -275,12 +277,18 @@ function CycleCreationJobProcessor(
 
     async function replicateDataToVendorsForCycle(job) {
 
+        Logger.log("[replicateDataToVendorsForCycle] begin ");
         const allVendors = await vendorRepository.list();
+        Logger.log("[replicateDataToVendorsForCycle] post-list ");
 
         const promise = allVendors.reduce((promiseChain, vendor) => {
+            Logger.log("[replicateDataToVendorsForCycle] post-reduce ");
             return promiseChain.then(async () => {
+                Logger.log("[replicateDataToVendorsForCycle] inner process start ");
                 const repoForVendor = cycleRepositoryForVendor(vendor);
+                Logger.log("[replicateDataToVendorsForCycle] post-cycleRepositoryForVendor ");
                 const cycleForVendor = await repoForVendor.load(job.targetCycle);
+                Logger.log("[replicateDataToVendorsForCycle] post-load ");
                 await cycleForVendor.replicateFromSource();
                 Logger.log("[CycleCreationJobProcessor] [END] finished replicating data to vendor " + vendor.id);
             });
