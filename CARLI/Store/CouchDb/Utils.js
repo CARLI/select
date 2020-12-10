@@ -421,20 +421,29 @@ module.exports = function (storeOptions) {
                 var deferred = Q.defer();
                 var requestOptions = couchReplicationOptions();
 
-                Logger.log('Replicating from ' + sourceDbName + ' to ' + targetDbName);
+                Logger.log('[replicateTo] Replicating from ' + sourceDbName + ' to ' + targetDbName);
 
                 couchRequest(requestOptions)
                     .then(function resolveReplication(data) {
+                        Logger.log('[replicateTo] starting resolveReplication');
                         if (data.ok) {
+                            Logger.log('[replicateTo] starting resolveReplication succeeded');
                             deferred.resolve();
+                            Logger.log('[replicateTo] exiting resolveReplication succeeded');
+
                         } else {
+                            Logger.log('[replicateTo] starting resolveReplication failed');
                             deferred.reject('replication failed [' + sourceDbName + ' -> ' + targetDbName + ']');
+                            Logger.log('[replicateTo] exiting resolveReplication failed');
                         }
                     })
                     .catch(function (error) {
+                        Logger.log('[replicateTo] starting resolveReplication error');
                         deferred.reject(error);
+                        Logger.log('[replicateTo] exiting resolveReplication error');
                     });
 
+                Logger.log('[replicateTo] Exiting Replication from ' + sourceDbName + ' to ' + targetDbName);
                 return deferred.promise;
 
                 function couchReplicationOptions() {
