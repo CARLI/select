@@ -13,6 +13,7 @@ module.exports = function (storeOptions) {
     }
 
     function couchRequest(requestOptions) {
+        Logger.log('[couchRequest] START');
         var deferred = Q.defer();
 
         request(requestOptions, handleCouchResponse);
@@ -47,6 +48,8 @@ module.exports = function (storeOptions) {
                 }
                 else {
                     deferred.resolve(data);
+                    Logger.log('[couchRequest] resolved data request');
+
                 }
             }
         }
@@ -63,6 +66,8 @@ module.exports = function (storeOptions) {
             }
             return true;
         }
+
+        Logger.log('[couchRequest] END');
         return deferred.promise;
     }
 
