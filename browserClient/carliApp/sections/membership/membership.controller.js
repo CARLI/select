@@ -47,7 +47,7 @@ function membershipController( $location, $q, $routeParams, $scope, activityLogS
     }
 
     function initializeMembershipData(){
-        vm.loadingPromise = libraryService.list()
+        vm.loadingPromise = libraryService.listActiveLibraries()
             .then(function(libraryList){
                 vm.libraries = libraryList;
                 return vm.libraries;
