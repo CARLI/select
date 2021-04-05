@@ -976,7 +976,7 @@ function sortOfferingSuPricing( offering ){
     }
 
     function sortByUsers(a, b) {
-        return a.users < b.users;
+        return b.users - a.users;
     }
 }
 
