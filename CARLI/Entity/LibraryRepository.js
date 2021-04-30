@@ -130,8 +130,14 @@ function listLibrariesWithSelectionsInCycle( cycle ){
         });
 }
 
-function getLibrariesById( ids ){
-    return listLibraries()
+function getActiveLibrariesById(ids) {
+    return getLibrariesById(ids, true);
+}
+
+function getLibrariesById( ids, activeOnly = false ){
+    var listPromise = activeOnly ? listActiveLibraries() : listLibraries();
+
+    return listPromise
         .then(filterListOfLibraries);
 
     function filterListOfLibraries( listOfAllLibraries ){
@@ -246,6 +252,7 @@ module.exports = {
     getMembershipLevelOptions: getMembershipLevelOptions,
     loadNonCrmLibraryForCrmId: loadNonCrmLibraryForCrmId,
     listLibrariesWithSelectionsInCycle: listLibrariesWithSelectionsInCycle,
+    getActiveLibrariesById: getActiveLibrariesById,
     getLibrariesById: getLibrariesById,
     getContactTypesForNotificationCategory: getContactTypesForNotificationCategory,
     getContactEmailAddressesForNotification: getContactEmailAddressesForNotification,
