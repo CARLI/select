@@ -43,43 +43,51 @@ function testCycleData() {
 }
 
 //TODO: Try removing done() and see if the test still works
-describe.skip('Run the LibraryStatus tests', function () {
-    it ('runs LibraryStatus tests', function (done) {
-        return CycleRepository.create(testCycleData())
-            .then(CycleRepository.load)
-            .then(function (testCycle) {
-                test.run('LibraryStatus', validLibraryStatusData, invalidLibraryStatus, testCycle);
-                runLibraryStatusSpecificTests(testCycle);
-                done();
-            });
-    });
-});
+describe('Run the LibraryStatus tests', function () {
+    let testCycle;
 
-function runLibraryStatusSpecificTests(testCycle) {
-    describe('getStatusForLibrary', function(){
-        it('should return the LibraryStatus document for a specific Library', function(){
+    before(async () => {
+        const cycleId = await CycleRepository.create(testCycleData());
+        testCycle = await CycleRepository.load(cycleId);
+
+        test.run('LibraryStatus', validLibraryStatusData, invalidLibraryStatus, testCycle);
+    });
+
+    describe('getStatusForLibrary', function () {
+        it('should return the LibraryStatus document for a specific Library', function () {
             var testLibraryId = uuid.v4();
             var testLibraryStatus = validLibraryStatusData();
             testLibraryStatus.library = testLibraryId;
 
             return libraryStatusRepository.create(testLibraryStatus, testCycle)
-                .then(function(){
+                .then(function () {
                     return libraryStatusRepository.getStatusForLibrary(testLibraryId, testCycle);
                 })
-                .then(function( statusForLibrary ){
+                .then(function (statusForLibrary) {
                     return expect(statusForLibrary.library).to.equal(testLibraryId);
                 });
         });
 
-        it('should ensure default values on the LibraryStatus document', function(){
+        it(`should return a new LibraryStatus document for the given cycle if there are no statuses for the given cycle`, async () => {
+            var testLibraryId = uuid.v4();
+            var testLibraryStatus = validLibraryStatusData();
+            testLibraryStatus.library = testLibraryId;
+            testLibraryStatus.cycle = "clearly-wrong-cycle-id";
+            await libraryStatusRepository.create(testLibraryStatus, testCycle);
+
+            const statusForLibrary = await libraryStatusRepository.getStatusForLibrary(testLibraryId, testCycle);
+            return expect(statusForLibrary.cycle).to.equal(testCycleId);
+        });
+
+        it('should ensure default values on the LibraryStatus document', function () {
             var testLibraryId = uuid.v4();
             var testLibraryStatus = validLibraryStatusData();
 
             return libraryStatusRepository.create(testLibraryStatus, testCycle)
-                .then(function(){
+                .then(function () {
                     return libraryStatusRepository.getStatusForLibrary(testLibraryId, testCycle);
                 })
-                .then(function( statusForLibrary ){
+                .then(function (statusForLibrary) {
                     return Q.all([
                         expect(statusForLibrary.cycle).to.equal(testCycleId),
                         expect(statusForLibrary.library).to.equal(testLibraryId),
@@ -88,11 +96,11 @@ function runLibraryStatusSpecificTests(testCycle) {
                 });
         });
 
-        it('should return a default LibraryStatus object for a Library that does not have a LibraryStatus document already', function(){
+        it('should return a default LibraryStatus object for a Library that does not have a LibraryStatus document already', function () {
             var testLibraryId = uuid.v4();
 
             return libraryStatusRepository.getStatusForLibrary(testLibraryId, testCycle)
-                .then(function( statusForLibrary ){
+                .then(function (statusForLibrary) {
                     return Q.all([
                         expect(statusForLibrary.library).to.equal(testLibraryId),
                         expect(statusForLibrary.lastActivity).to.be.an('undefined'),
@@ -101,15 +109,15 @@ function runLibraryStatusSpecificTests(testCycle) {
                 });
         });
 
-        describe('marking a library status "selections complete"', function(){
-            it('should create a new status document if one does not already exist', function(){
+        describe('marking a library status "selections complete"', function () {
+            it('should create a new status document if one does not already exist', function () {
                 var testLibraryId = uuid.v4();
 
                 return libraryStatusRepository.markLibrarySelectionsComplete(testLibraryId, testCycle)
-                    .then(function(){
+                    .then(function () {
                         return libraryStatusRepository.getStatusForLibrary(testLibraryId, testCycle);
                     })
-                    .then(function( statusForLibrary ){
+                    .then(function (statusForLibrary) {
                         return Q.all([
                             expect(statusForLibrary.id).to.be.ok,
                             expect(statusForLibrary.library).to.equal(testLibraryId),
@@ -118,19 +126,19 @@ function runLibraryStatusSpecificTests(testCycle) {
                     });
             });
 
-            it('should update an existing status document if there is one ', function(){
+            it('should update an existing status document if there is one ', function () {
                 var testLibraryId = uuid.v4();
                 var testLibraryStatus = validLibraryStatusData();
                 testLibraryStatus.library = testLibraryId;
 
                 return libraryStatusRepository.create(testLibraryStatus, testCycle)
-                    .then(function(){
+                    .then(function () {
                         return libraryStatusRepository.markLibrarySelectionsComplete(testLibraryId, testCycle);
                     })
-                    .then(function(){
+                    .then(function () {
                         return libraryStatusRepository.getStatusForLibrary(testLibraryId, testCycle);
                     })
-                    .then(function( statusForLibrary ){
+                    .then(function (statusForLibrary) {
                         return Q.all([
                             expect(statusForLibrary.id).to.be.ok,
                             expect(statusForLibrary.library).to.equal(testLibraryId),
@@ -140,15 +148,15 @@ function runLibraryStatusSpecificTests(testCycle) {
             });
         });
 
-        describe('marking a library status "selections incomplete"', function(){
-            it('should create a new status document if one does not already exist', function(){
+        describe('marking a library status "selections incomplete"', function () {
+            it('should create a new status document if one does not already exist', function () {
                 var testLibraryId = uuid.v4();
 
                 return libraryStatusRepository.markLibrarySelectionsIncomplete(testLibraryId, testCycle)
-                    .then(function(){
+                    .then(function () {
                         return libraryStatusRepository.getStatusForLibrary(testLibraryId, testCycle);
                     })
-                    .then(function( statusForLibrary ){
+                    .then(function (statusForLibrary) {
                         return Q.all([
                             expect(statusForLibrary.id).to.be.ok,
                             expect(statusForLibrary.library).to.equal(testLibraryId),
@@ -157,19 +165,19 @@ function runLibraryStatusSpecificTests(testCycle) {
                     });
             });
 
-            it('should update an existing status document if there is one ', function(){
+            it('should update an existing status document if there is one ', function () {
                 var testLibraryId = uuid.v4();
                 var testLibraryStatus = validLibraryStatusData();
                 testLibraryStatus.library = testLibraryId;
 
                 return libraryStatusRepository.create(testLibraryStatus, testCycle)
-                    .then(function(){
+                    .then(function () {
                         return libraryStatusRepository.markLibrarySelectionsIncomplete(testLibraryId, testCycle);
                     })
-                    .then(function(){
+                    .then(function () {
                         return libraryStatusRepository.getStatusForLibrary(testLibraryId, testCycle);
                     })
-                    .then(function( statusForLibrary ){
+                    .then(function (statusForLibrary) {
                         return Q.all([
                             expect(statusForLibrary.id).to.be.ok,
                             expect(statusForLibrary.library).to.equal(testLibraryId),
@@ -180,24 +188,23 @@ function runLibraryStatusSpecificTests(testCycle) {
         });
     });
 
-    describe('getStatusesForAllLibraries', function() {
+    describe('getStatusesForAllLibraries', function () {
         it('should return the LibraryStatus documents for all Libraries, mapped by id', function () {
             var testLibraryId = uuid.v4();
             var testLibraryStatus = validLibraryStatusData();
             testLibraryStatus.library = testLibraryId;
 
             return libraryStatusRepository.create(testLibraryStatus, testCycle)
-                .then(function(){
+                .then(function () {
                     return libraryStatusRepository.getStatusesForAllLibraries(testCycle);
                 })
                 .then(function (statusesForAllLibraries) {
                     return Q.all([
                         expect(statusesForAllLibraries).to.be.an('object'),
                         expect(statusesForAllLibraries[testLibraryId]).to.be.an('object'),
-                        expect(statusesForAllLibraries[testLibraryId]).to.have.property('type','LibraryStatus')
+                        expect(statusesForAllLibraries[testLibraryId]).to.have.property('type', 'LibraryStatus')
                     ]);
                 });
         });
     });
-}
-
+});

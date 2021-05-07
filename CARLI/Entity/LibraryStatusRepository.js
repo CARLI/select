@@ -75,8 +75,9 @@ function getStatusForLibrary( libraryId, cycle ){
     setCycle(cycle);
     return expandLibraryStatuses(couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listLibraryStatusesByLibraryId', libraryId))
         .then(function(statusesForLibrary){
-            if ( statusesForLibrary.length > 0 ){
-                var status = statusesForLibrary[0];
+            let statusesForCycle = statusesForLibrary.filter(x => x.cycle == cycle.id);
+            if ( statusesForCycle.length > 0 ){
+                var status = statusesForCycle[0];
                 return ensureDefaultsForStatus(status, cycle);
             }
             else {
