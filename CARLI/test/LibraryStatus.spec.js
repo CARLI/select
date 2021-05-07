@@ -189,22 +189,23 @@ describe('Run the LibraryStatus tests', function () {
     });
 
     describe('getStatusesForAllLibraries', function () {
-        it('should return the LibraryStatus documents for all Libraries, mapped by id', function () {
+        it('should return the LibraryStatus documents for all Libraries, mapped by id', async function () {
             var testLibraryId = uuid.v4();
-            var testLibraryStatus = validLibraryStatusData();
+            let testLibraryStatus = validLibraryStatusData();
             testLibraryStatus.library = testLibraryId;
+            testLibraryStatus.cycle = 'clearly-wrong-cycle-id';
+            await libraryStatusRepository.create(testLibraryStatus, testCycle);
 
-            return libraryStatusRepository.create(testLibraryStatus, testCycle)
-                .then(function () {
-                    return libraryStatusRepository.getStatusesForAllLibraries(testCycle);
-                })
-                .then(function (statusesForAllLibraries) {
-                    return Q.all([
-                        expect(statusesForAllLibraries).to.be.an('object'),
-                        expect(statusesForAllLibraries[testLibraryId]).to.be.an('object'),
-                        expect(statusesForAllLibraries[testLibraryId]).to.have.property('type', 'LibraryStatus')
-                    ]);
-                });
+            testLibraryStatus = validLibraryStatusData();
+            testLibraryStatus.library = testLibraryId;
+            await libraryStatusRepository.create(testLibraryStatus, testCycle);
+
+            const statusesForAllLibraries = await libraryStatusRepository.getStatusesForAllLibraries(testCycle);
+
+            expect(statusesForAllLibraries).to.be.an('object');
+            expect(statusesForAllLibraries[testLibraryId]).to.be.an('object');
+            expect(statusesForAllLibraries[testLibraryId]).to.have.property('type', 'LibraryStatus');
+            expect(statusesForAllLibraries[testLibraryId].cycle).to.equal(testCycleId);
         });
     });
 });

@@ -132,7 +132,12 @@ function markLibrarySelectionsIncomplete( libraryId, cycle ){
 
 function getStatusesForAllLibraries( cycle ){
     return listLibraryStatuses(cycle)
+        .then(statuses => statuses.filter(filterStatusesToCycle))
         .then(mapLibraryStatusesById);
+
+    function filterStatusesToCycle(status) {
+        return status.cycle == cycle.id;
+    }
 
     function mapLibraryStatusesById( arrayOfStatusObjects ){
         var statusMap = {};
