@@ -94,7 +94,8 @@ function sendNotificationEmail( notificationId ){
             var options = {
                 to: getEmailAddress(notification.to),
                 bcc: notification.ownerEmail,
-                from: notification.ownerEmail,
+                from: config.notifications.from,
+                replyTo: notification.ownerEmail,
                 subject: notification.subject,
                 text: notification.emailBody,
                 attachments: []
