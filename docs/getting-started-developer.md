@@ -1,4 +1,27 @@
-# Getting Started - DONT DO ANY OF THIS, THIS IS OUTDATED #
+# Getting Started
+1. Install nodejs
+1. Install sass, `npm i -g sass`
+1. Run `./install-dependencies.sh`
+1. From the `illinois-carli-deployment` repository, run the `web` container. This acts as an nginx proxy for the 
+   various web systems involved in the project (staff/vendor/library websites as well as the middleware). 
+   Command: `docker-compose up web`
+1. Use `grunt serve` on the `middleware` and `.` directories in this repository. Make sure the `.env` files are 
+   setup (see below).
+   
+## .env files
+Pixo has an internal server setup with a copy of production's database, since it is quite large.
+Grab the password from a Mars team member if you don't have it. You'll need to be on VPN or at the office to access 
+this database.
+
+I (Matt) think this file needs to be stored in both the `CARLI` and `middleware` folders, but I might be wrong.
+```
+COUCH_DB_HOST="carli-select-mirror-stage.i.pixotech.com:51000"
+COUCH_DB_PASSWORD="..."
+COUCH_DB_URL_SCHEME="http://"
+COUCH_DB_USER="admin"
+```
+
+# Previous documentation - TODO: pull out still-relevant pieces and delete the rest
 
 These instructions will get you started working on the CARLI selection system project.
 
