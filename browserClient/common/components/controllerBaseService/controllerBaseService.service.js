@@ -17,7 +17,9 @@ function controllerBaseService( ) {
                 return;
             }
 
-            if ( controller.orderBy === newOrderBy){
+            const currentOrderByString = JSON.stringify(controller.orderBy);
+            const newOrderByString = JSON.stringify(newOrderBy);
+            if ( currentOrderByString === newOrderByString ){
                 controller.reverse = !controller.reverse;
             }
             else {
