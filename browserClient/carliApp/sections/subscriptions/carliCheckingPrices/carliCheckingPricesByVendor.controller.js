@@ -109,9 +109,25 @@ function carliCheckingPricesByVendorController( $scope, $q, accordionControllerM
             .then(filterOfferingsWithInactiveLibraries)
             .then(fillInNonCrmFields)
             .then(function(offerings){
-                product.offerings = offerings;
+                product.offerings = offerings.map(setSortableFlagStateOnOffering);
                 return offerings;
             });
+    }
+
+    function setSortableFlagStateOnOffering(offering) {
+        const isOrangeFlag = offeringService.getFlaggedState(offering) && !offering.flagged;
+        const isPurpleFlag = offering.flagged === true;
+        const isHollowPurpleFlag = offering.flagged === false;
+        if(isOrangeFlag)
+            offering.sortableFlagState = 0;
+        else if(isPurpleFlag)
+            offering.sortableFlagState = 1;
+        else if(isHollowPurpleFlag)
+            offering.sortableFlagState = 3;
+        else
+            offering.sortableFlagState = 2;
+
+        return offering;
     }
 
     function filterOfferingsWithInactiveLibraries(offeringsList){
