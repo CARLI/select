@@ -29,14 +29,17 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
         },
         listOfferingsForLibraryId: function ( libraryId ) {
             return $q.when( offeringModule.listOfferingsForLibraryId( libraryId, cycleService.getCurrentCycle()) )
+                .then(setSortableFlaggedStateOnOfferings)
                 .catch(errorHandler);
         },
         listOfferingsForProductId: function ( productId ) {
             return $q.when( offeringModule.listOfferingsForProductId( productId, cycleService.getCurrentCycle()) )
+                .then(setSortableFlaggedStateOnOfferings)
                 .catch(errorHandler);
         },
         listOfferingsForVendorId: function ( vendorId ) {
             return $q.when( offeringModule.listOfferingsForVendorId( vendorId, cycleService.getCurrentCycle()) )
+                .then(setSortableFlaggedStateOnOfferings)
                 .catch(errorHandler);
         },
         isFunded: function( offering ) {
@@ -106,9 +109,6 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
         updateHistory: function (oldOffering, offering, year) {
             return offeringModule.updateHistory(oldOffering, offering, year);
         },
-        setSortableFlagStateOnOfferings: function (offerings) {
-            return offerings.map(setSortableFlagStateOnOffering);
-        },
         populateNonCrmLibraryData: populateNonCrmLibraryData,
         siteLicenseSelectionUsers: offeringModule.siteLicenseSelectionUsers
     };
@@ -117,18 +117,22 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
         return offeringModule.getFlaggedState(offering, optionalCycle);
     }
 
-    function setSortableFlagStateOnOffering(offering) {
+    function setSortableFlaggedStateOnOfferings (offerings) {
+        return offerings.map(setSortableFlaggedStateOnOffering);
+    }
+
+    function setSortableFlaggedStateOnOffering(offering) {
         const isOrangeFlag = getFlaggedState(offering) && !offering.flagged;
         const isPurpleFlag = offering.flagged === true;
         const isHollowPurpleFlag = offering.flagged === false;
         if(isOrangeFlag)
-            offering.sortableFlagState = 0;
+            offering.sortableFlaggedState = 0;
         else if(isPurpleFlag)
-            offering.sortableFlagState = 1;
+            offering.sortableFlaggedState = 1;
         else if(isHollowPurpleFlag)
-            offering.sortableFlagState = 3;
+            offering.sortableFlaggedState = 3;
         else
-            offering.sortableFlagState = 2;
+            offering.sortableFlaggedState = 2;
 
         return offering;
     };
