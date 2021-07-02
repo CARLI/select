@@ -99,17 +99,38 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
         getOfferingDisplayLabels: function(){
             return offeringDisplayLabels;
         },
-        getFlaggedState: function (offering, optionalCycle) {
-            return offeringModule.getFlaggedState(offering, optionalCycle);
-        },
+        getFlaggedState: getFlaggedState,
         removeSitePricing: function (offering) {
             return offeringModule.removeSitePricing(offering);
         },
         updateHistory: function (oldOffering, offering, year) {
             return offeringModule.updateHistory(oldOffering, offering, year);
         },
+        setSortableFlagStateOnOfferings: function (offerings) {
+            return offerings.map(setSortableFlagStateOnOffering);
+        },
         populateNonCrmLibraryData: populateNonCrmLibraryData,
         siteLicenseSelectionUsers: offeringModule.siteLicenseSelectionUsers
+    };
+
+    function getFlaggedState (offering, optionalCycle) {
+        return offeringModule.getFlaggedState(offering, optionalCycle);
+    }
+
+    function setSortableFlagStateOnOffering(offering) {
+        const isOrangeFlag = getFlaggedState(offering) && !offering.flagged;
+        const isPurpleFlag = offering.flagged === true;
+        const isHollowPurpleFlag = offering.flagged === false;
+        if(isOrangeFlag)
+            offering.sortableFlagState = 0;
+        else if(isPurpleFlag)
+            offering.sortableFlagState = 1;
+        else if(isHollowPurpleFlag)
+            offering.sortableFlagState = 3;
+        else
+            offering.sortableFlagState = 2;
+
+        return offering;
     };
 
     function populateNonCrmLibraryData(offerings, libraryLoadingPromise) {
