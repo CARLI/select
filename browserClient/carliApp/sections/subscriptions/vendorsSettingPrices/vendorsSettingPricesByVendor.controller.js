@@ -110,6 +110,7 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
         return offeringService.listOfferingsForProductId(product.id)
             .then(filterOfferingsWithInactiveLibraries)
             .then(fillInNonCrmFields)
+            .then(offeringService.setSortableFlagStateOnOfferings)
             .then(function(offerings){
                 product.offerings = offerings;
                 return offerings;
