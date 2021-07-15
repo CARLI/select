@@ -21,7 +21,11 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
             return $q.when( offeringModule.create(offering, offering.cycle) );
         },
         update: function( offering ) {
-            return $q.when( offeringModule.update(offering, cycleService.getCurrentCycle()) );
+            return $q.when( offeringModule.update(offering, cycleService.getCurrentCycle()) )
+                .then(() => {
+                    setSortableFlaggedStateOnOffering(offering, cycleService.getCurrentCycle());
+                    return offering.id;
+                });
         },
         load:   function( offeringId ) {
             return $q.when( offeringModule.load( offeringId, cycleService.getCurrentCycle()) )
