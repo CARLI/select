@@ -21,7 +21,11 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
             return $q.when( offeringModule.create(offering, offering.cycle) );
         },
         update: function( offering ) {
-            return $q.when( offeringModule.update(offering, cycleService.getCurrentCycle()) );
+            return $q.when( offeringModule.update(offering, cycleService.getCurrentCycle()) )
+                .then(() => {
+                    setSortableFlaggedStateOnOffering(offering, cycleService.getCurrentCycle());
+                    return offering.id;
+                });
         },
         load:   function( offeringId ) {
             return $q.when( offeringModule.load( offeringId, cycleService.getCurrentCycle()) )
@@ -118,11 +122,11 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
     }
 
     function setSortableFlaggedStateOnOfferings (offerings) {
-        return offerings.map(setSortableFlaggedStateOnOffering);
+        return offerings.map(offering => setSortableFlaggedStateOnOffering(offering));
     }
 
-    function setSortableFlaggedStateOnOffering(offering) {
-        const isOrangeFlag = getFlaggedState(offering) && !offering.flagged;
+    function setSortableFlaggedStateOnOffering(offering, optionalCycle) {
+        const isOrangeFlag = getFlaggedState(offering, optionalCycle) && !offering.flagged;
         const isPurpleFlag = offering.flagged === true;
         const isHollowPurpleFlag = offering.flagged === false;
         if(isOrangeFlag)
@@ -135,7 +139,7 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
             offering.sortableFlaggedState = 2;
 
         return offering;
-    };
+    }
 
     function populateNonCrmLibraryData(offerings, libraryLoadingPromise) {
         var librariesByCrmId = {};
