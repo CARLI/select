@@ -54,21 +54,21 @@ module.exports = function (storeOptions) {
             }
         }
 
-        function isJsonString(text) {
-            if (typeof text !== 'string') {
-                return false;
-            }
-            try {
-                JSON.parse(text);
-            } catch (e) {
-                Logger.log('error!', e);
-                return false;
-            }
-            return true;
-        }
-
         Logger.log('[couchRequest] END');
         return deferred.promise;
+    }
+
+    function isJsonString(text) {
+        if (typeof text !== 'string') {
+            return false;
+        }
+        try {
+            JSON.parse(text);
+        } catch (e) {
+            Logger.log('error!', e);
+            return false;
+        }
+        return true;
     }
 
     function couchRequestSession(userLogin) {
