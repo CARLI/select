@@ -292,6 +292,165 @@ describe('The Cycle Creation Job Process', function(){
         });
     });
 
+    describe(`removeDuplicateOfferings function`, () => {
+        let newCycle;
+
+        beforeEach(async () => {
+            newCycle = await cycleRepository.load('1');
+            testCycleCreationJob.loadCycles = 'filler';
+            testCycleCreationJob.replicate = 'filler';
+            testCycleCreationJob.indexViews = 'filler';
+            testCycleCreationJob.resetVendorStatus = 'filler';
+            testCycleCreationJob.resetLibraryStatus = 'filler';
+            testCycleCreationJob.transformProducts = 'filler';
+        });
+
+        it('calls removeDuplicateOfferings', async function () {
+            await cycleCreationJobProcessor.process(testCycleCreationJob);
+
+            expect(cycleRepository.logMessage).equals('Removing duplicate offerings for ' + newCycle.databaseName);
+        });
+
+        it(`removes nothing if there are no offerings`, async function () {
+            let stepResult = await cycleCreationJobProcessor.process(testCycleCreationJob);
+
+            expect(stepResult).to.deep.equal({ succeeded: true, result: []});
+        });
+
+        it(`removes nothing if there are no duplicates`, async function () {
+            offeringRepositorySpy.setOfferings([
+                {
+                    display: '',
+                    id: 'keep',
+                    library: 1,
+                    pricing: {
+                        site: 0,
+                        su: []
+                    },
+                    product: 1
+                }, {
+                    display: '',
+                    id: 'keep',
+                    library: 1,
+                    pricing: {
+                        site: 1,
+                        su: []
+                    },
+                    product: 2
+                }]);
+            let stepResult = await cycleCreationJobProcessor.process(testCycleCreationJob);
+
+            expect(stepResult).to.deep.equal({ succeeded: true, result: []});
+            expect(offeringRepositorySpy.deleteCalled).equals(0);
+        });
+
+        it(`removes a duplicate with no pricing`, async function () {
+            offeringRepositorySpy.setOfferings([
+                {
+                    display: '',
+                    id: 'keep',
+                    library: 1,
+                    pricing: {
+                        site: 1,
+                        su: []
+                    },
+                    product: 1,
+                },
+                {
+                    display: '',
+                    id: 'remove',
+                    library: 1,
+                    product: 1
+                }]);
+
+            let stepResult = await cycleCreationJobProcessor.process(testCycleCreationJob);
+
+            expect(stepResult.result.length).equals(1);
+            expect(stepResult.result[0]).equals('remove');
+            expect(offeringRepositorySpy.deleteCalled).equals(1);
+        });
+
+        it(`removes a duplicate with 0 site price and empty su pricing`, async function () {
+            offeringRepositorySpy.setOfferings([
+                {
+                    display: '',
+                    id: 'keep',
+                    library: 1,
+                    pricing: {
+                        site: 0,
+                        su: [1]
+                    },
+                    product: 1,
+                },
+                {
+                    display: '',
+                    id: 'remove',
+                    library: 1,
+                    pricing: {
+                        site: 0,
+                        su: []
+                    },
+                    product: 1
+                }]);
+
+            let stepResult = await cycleCreationJobProcessor.process(testCycleCreationJob);
+
+            expect(stepResult.result.length).equals(1);
+            expect(stepResult.result[0]).equals('remove');
+            expect(offeringRepositorySpy.deleteCalled).equals(1);
+        });
+
+        it(`removes duplicates for multiple products`, async function () {
+            offeringRepositorySpy.setOfferings([
+                {
+                    display: '',
+                    id: 'keep1',
+                    library: 1,
+                    pricing: {
+                        site: 0,
+                        su: [1]
+                    },
+                    product: 1,
+                },
+                {
+                    display: '',
+                    id: 'keep2',
+                    library: 1,
+                    pricing: {
+                        site: 0,
+                        su: [1]
+                    },
+                    product: 2,
+                },
+                {
+                    display: '',
+                    id: 'remove1',
+                    library: 1,
+                    pricing: {
+                        site: 0,
+                        su: []
+                    },
+                    product: 1
+                },
+                {
+                    display: '',
+                    id: 'remove2',
+                    library: 1,
+                    pricing: {
+                        site: 0,
+                        su: []
+                    },
+                    product: 2
+                }]);
+
+            let stepResult = await cycleCreationJobProcessor.process(testCycleCreationJob);
+
+            expect(stepResult.result.length).equals(2);
+            expect(stepResult.result).to.deep.equal(['remove1', 'remove2']);
+            expect(offeringRepositorySpy.deleteCalled).equals(2);
+        });
+    });
+
     describe(`resetLibraryStatus function`, () => {
 
         let newCycle;
@@ -372,6 +531,7 @@ describe('The Cycle Creation Job Process', function(){
             testCycleCreationJob.resetVendorStatus = 'filler';
             testCycleCreationJob.resetLibraryStatus = 'filler';
             testCycleCreationJob.transformProducts = 'filler';
+            testCycleCreationJob.removeDuplicateOfferings = 'filler';
             await cycleCreationJobProcessor.process(testCycleCreationJob);
             expect(offeringRepositorySpy.transformOfferingsCalled).to.equal(1);
         });
@@ -496,11 +656,25 @@ function createProductRepositorySpy() {
 
 function createOfferingRepositorySpy() {
     return {
+        deleteCalled: 0,
+        unexpandedOfferings: [],
         transformOfferingsCalled: 0,
+
+        delete(offeringId) {
+            this.deleteCalled++;
+        },
+
+        listOfferingsUnexpanded(cycle) {
+            return this.unexpandedOfferings;
+        },
+
+        setOfferings: function (newOfferings) {
+            this.unexpandedOfferings = newOfferings;
+        },
 
         transformOfferingsForNewCycle: function (newCycle, sourceCycle) {
             this.transformOfferingsCalled++;
-        }
+        },
     };
 }
 

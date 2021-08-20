@@ -28,6 +28,7 @@ function CycleCreationJobProcessor(
         'resetVendorStatus',
         'resetLibraryStatus',
         'transformProducts',
+        'removeDuplicateOfferings',
         'transformOfferings',
         'indexViewsPhase2',
         'replicateDataToVendorsForCycle',
@@ -182,6 +183,90 @@ function CycleCreationJobProcessor(
         return productRepository.transformProductsForNewCycle(newCycle);
     }
 
+    async function removeDuplicateOfferings(job) {
+        if (!sourceCycle) {
+            await loadCycles(job);
+        }
+
+        Logger.log("[START] Removing duplicate offerings | " + newCycle.name);
+        cycleRepository.createCycleLog('Removing duplicate offerings for ' + newCycle.name);
+
+        let offerings = await offeringRepository.listOfferingsUnexpanded(sourceCycle);
+        let duplicateOfferings = compileListOfDuplicateOfferings(offerings);
+        return await deleteOfferingsWithNoPriceData(duplicateOfferings);
+    }
+
+    function compileListOfDuplicateOfferings(offerings) {
+        Logger.log('Loaded ' + offerings.length + ' offerings');
+
+        let offeringsByProductPlusLibrary = {};
+
+        offerings.forEach(trackOffering);
+
+        return offeringsByIdAsArray().filter(hasDuplicates);
+
+        function trackOffering(offering) {
+            var productId = offering.product;
+            var libraryId = offering.library;
+
+            var trackId = productId + '-' + libraryId;
+
+            var trackObject = {
+                productId: productId,
+                libraryId: libraryId,
+                offeringId: offering.id,
+                pricing: offering.pricing,
+                display: offering.display
+            };
+
+            offeringsByProductPlusLibrary[trackId] = offeringsByProductPlusLibrary[trackId] || [];
+            offeringsByProductPlusLibrary[trackId].push(trackObject);
+        }
+
+        function offeringsByIdAsArray() {
+            return Object.keys(offeringsByProductPlusLibrary).map(function (key) {
+                return offeringsByProductPlusLibrary[key];
+            });
+        }
+
+        function hasDuplicates(item) {
+            return item && item.length > 1;
+        }
+    }
+
+    async function deleteOfferingsWithNoPriceData(listOfDuplicateTrackObjects) {
+        let deletedOfferings = [];
+
+        listOfDuplicateTrackObjects.map(listOfTrackObjects => {
+            let trackObjectsWithNoPriceData = listOfTrackObjects.filter(trackObject => {
+                return !offeringHasAnyPrice(trackObject) || offeringShouldNotDisplay(trackObject);
+            });
+
+            trackObjectsWithNoPriceData.forEach(async trackObject => {
+                deletedOfferings.push(trackObject.offeringId);
+                Logger.log('Deleting duplicate offering ' + trackObject.offeringId);
+                await offeringRepository.delete(trackObject.offeringId, sourceCycle);
+            });
+        });
+
+        return deletedOfferings;
+    }
+
+
+    function offeringHasAnyPrice(offering) {
+        if (!offering.hasOwnProperty('pricing') || offering.pricing === undefined)
+            return false;
+        if (offering.pricing.hasOwnProperty('site') && offering.pricing.site > 0)
+            return true;
+        if (offering.pricing.hasOwnProperty('su') && offering.pricing.su.length > 0)
+            return true;
+        return false;
+    }
+
+    function offeringShouldNotDisplay(offering) {
+        return offering.hasOwnProperty('display') && offering.display === 'none';
+    }
+
     async function transformOfferings(job) {
         if (!sourceCycle) {
             await loadCycles(job);
@@ -334,6 +419,7 @@ function CycleCreationJobProcessor(
             'resetVendorStatus': resetVendorStatuses,
             'resetLibraryStatus': resetLibraryStatuses,
             'transformProducts': transformProducts,
+            'removeDuplicateOfferings': removeDuplicateOfferings,
             'transformOfferings': transformOfferings,
             'indexViewsPhase2': triggerIndexViews,
             'setCycleToNextPhase': setCycleToNextPhase,
