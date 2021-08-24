@@ -191,7 +191,7 @@ function CycleCreationJobProcessor(
         Logger.log("[START] Removing duplicate offerings | " + newCycle.name);
         cycleRepository.createCycleLog('Removing duplicate offerings for ' + newCycle.name);
 
-        let offerings = await offeringRepository.listOfferingsUnexpanded(sourceCycle);
+        let offerings = await offeringRepository.listOfferingsUnexpanded(newCycle);
         let duplicateOfferings = compileListOfDuplicateOfferings(offerings);
         return await deleteOfferingsWithNoPriceData(duplicateOfferings);
     }
@@ -237,15 +237,19 @@ function CycleCreationJobProcessor(
     async function deleteOfferingsWithNoPriceData(listOfDuplicateTrackObjects) {
         let deletedOfferings = [];
 
+        Logger.log('Found ' + listOfDuplicateTrackObjects.length + ' duplicate offerings.');
+
         listOfDuplicateTrackObjects.map(listOfTrackObjects => {
+            Logger.log(listOfTrackObjects);
             let trackObjectsWithNoPriceData = listOfTrackObjects.filter(trackObject => {
                 return !offeringHasAnyPrice(trackObject) || offeringShouldNotDisplay(trackObject);
             });
+            Logger.log('Going to remove ' + trackObjectsWithNoPriceData.length + ' offerings');
 
             trackObjectsWithNoPriceData.forEach(async trackObject => {
                 deletedOfferings.push(trackObject.offeringId);
                 Logger.log('Deleting duplicate offering ' + trackObject.offeringId);
-                await offeringRepository.delete(trackObject.offeringId, sourceCycle);
+                await offeringRepository.delete(trackObject.offeringId, newCycle);
             });
         });
 

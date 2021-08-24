@@ -2,7 +2,7 @@ var Q = require('q');
 var path = require('path');
 var readline = require('readline');
 
-var databaseAuth = require("./DatabaseAuthUtils");
+var databaseAuth = require("./DatabaseAuth");
 
 var rl = readline.createInterface({
     input: process.stdin,

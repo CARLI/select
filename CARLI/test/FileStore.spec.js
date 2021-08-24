@@ -1,7 +1,8 @@
 var test   = require( './Store/StoreInterface.spec' )
   , uuid   = require( 'node-uuid' )
   , rimraf = require( 'rimraf' )
-  , testDir = '/tmp/carli-' + uuid.v4();
+  , os = require('os')
+  , testDir = os.tmpdir() + '/carli-' + uuid.v4();
 ;
 
 describe( '', function() {

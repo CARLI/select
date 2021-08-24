@@ -368,6 +368,10 @@ describe('The Cycle Creation Job Process', function(){
             expect(stepResult.result.length).equals(1);
             expect(stepResult.result[0]).equals('remove');
             expect(offeringRepositorySpy.deleteCalled).equals(1);
+            expect(offeringRepositorySpy.lastDeleteArgs).deep.equals({
+                offeringId: 'remove',
+                cycleId: 'cycle2'
+            })
         });
 
         it(`removes a duplicate with 0 site price and empty su pricing`, async function () {
@@ -398,6 +402,10 @@ describe('The Cycle Creation Job Process', function(){
             expect(stepResult.result.length).equals(1);
             expect(stepResult.result[0]).equals('remove');
             expect(offeringRepositorySpy.deleteCalled).equals(1);
+            expect(offeringRepositorySpy.lastDeleteArgs).deep.equals({
+                offeringId: 'remove',
+                cycleId: 'cycle2'
+            })
         });
 
         it(`removes duplicates for multiple products`, async function () {
@@ -657,11 +665,13 @@ function createProductRepositorySpy() {
 function createOfferingRepositorySpy() {
     return {
         deleteCalled: 0,
+        lastDeleteArgs: {},
         unexpandedOfferings: [],
         transformOfferingsCalled: 0,
 
-        delete(offeringId) {
+        delete(offeringId, cycle) {
             this.deleteCalled++;
+            this.lastDeleteArgs = { offeringId: offeringId, cycleId: cycle.id };
         },
 
         listOfferingsUnexpanded(cycle) {
