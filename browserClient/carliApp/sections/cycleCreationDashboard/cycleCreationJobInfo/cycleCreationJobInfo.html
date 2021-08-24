@@ -58,6 +58,12 @@
                 </li>
                 <li class="cycle-creation-job-info__step-detail">
                     <div class="cycle-creation-job-info__step-complete-timestamp">
+                        <span class="cycle-creation-job-info__step-complete-label">Remove Duplicate Offerings:</span>
+                        <span class="cycle-creation-job-info__step-complete-value">{{vm.job.removeDuplicateOfferings | date:'short' }}</span>
+                    </div>
+                </li>
+                <li class="cycle-creation-job-info__step-detail">
+                    <div class="cycle-creation-job-info__step-complete-timestamp">
                         <span class="cycle-creation-job-info__step-complete-label">Offering Transforms:</span>
                         <span class="cycle-creation-job-info__step-complete-value">{{vm.job.transformOfferings | date:'short' }}</span>
                     </div>

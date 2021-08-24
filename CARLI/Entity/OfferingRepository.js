@@ -126,7 +126,6 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
 
         Logger.log(`num batches = ${numBatches}`);
         Logger.log(`partitions count ${offeringsPartitions.length}`);
-        Logger.log(offeringsPartitions);
 
         return updateNextBatch();
 

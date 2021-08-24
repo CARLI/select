@@ -59,7 +59,7 @@ const timestamper = {
 }
 
 
-describe('Integration Test for a Cycle Creation Job Processor', function () {
+describe.skip('Integration Test for a Cycle Creation Job Processor', function () {
 
     before(async function() {
 
