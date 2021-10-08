@@ -24,8 +24,10 @@ Grunt is used as a task runner at multiple levels of the project.  The following
 
 View the [Full Documentation].
 
+Read about bundled [Root CA Certificates].
+
 [Getting Started]: docs/getting-started-browser-client.md 
 [Full Documentation]: docs/index.md
-
+[Root CA Certificates]: ca-certs/README.md
 
 

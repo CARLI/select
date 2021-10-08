@@ -40,6 +40,7 @@ RUN echo "{}" > config/local.json \
 COPY ./browserClient ./browserClient
 COPY ./bin ./bin
 COPY ./CARLI ./CARLI
+COPY ./ca-certs ./ca-certs
 COPY ./config ./config
 COPY ./db ./db
 COPY ./grunt ./grunt
@@ -65,6 +66,7 @@ FROM node:8-stretch AS middleware
 WORKDIR /carli
 COPY --from=build /carli/bin /carli/bin
 COPY --from=build /carli/CARLI /carli/CARLI
+COPY --from=build /carli/ca-certs /etc/ssl/certs
 COPY --from=build /carli/config /carli/config
 COPY --from=build /carli/db /carli/db
 COPY --from=build /carli/middleware /carli/middleware
@@ -72,4 +74,4 @@ COPY --from=build /carli/schemas /carli/schemas
 
 EXPOSE 3000
 
-CMD ["node", "middleware/index.js"]
+CMD ["node", "--use-openssl-ca", "middleware/index.js"]
