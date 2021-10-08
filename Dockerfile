@@ -66,6 +66,7 @@ FROM node:8-stretch AS middleware
 WORKDIR /carli
 COPY --from=build /carli/bin /carli/bin
 COPY --from=build /carli/CARLI /carli/CARLI
+RUN rm -rf /etc/ssl/certs/*
 COPY --from=build /carli/ca-certs /etc/ssl/certs
 COPY --from=build /carli/config /carli/config
 COPY --from=build /carli/db /carli/db
