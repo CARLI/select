@@ -4,6 +4,7 @@
 # ...except the folders specifically needed to build
 !/bin
 !/browserClient
+!/ca-certs
 !/CARLI
 !/config
 !/db
