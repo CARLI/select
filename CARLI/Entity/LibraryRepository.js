@@ -80,15 +80,28 @@ function listLibraries(){
         .then(associateNonCrmDataWithListOfLibraries);
 }
 
-function listActiveLibraries(){
+// TODO change to listActiveAndGoverningLibraries
+//  In a third party API, the isActive field is actually checking membership level is Governing and isCurrent
+function listActiveAndGoverningLibraries(){
     return crmLibraryRepository.list()
         .then(filterActiveLibraries)
         .then(associateNonCrmDataWithListOfLibraries);
 
-
     function filterActiveLibraries(libraries){
         return libraries.filter(function(library){
             return library.isActive;
+        });
+    }
+}
+
+function listCurrentLibraries(){
+    return crmLibraryRepository.list()
+        .then(filterCurrentLibraries)
+        .then(associateNonCrmDataWithListOfLibraries);
+
+    function filterCurrentLibraries(libraries){
+        return libraries.filter(function(library){
+            return library.isCurrent;
         });
     }
 }
@@ -130,12 +143,12 @@ function listLibrariesWithSelectionsInCycle( cycle ){
         });
 }
 
-function getActiveLibrariesById(ids) {
+function getCurrentLibrariesById(ids) {
     return getLibrariesById(ids, true);
 }
 
-function getLibrariesById( ids, activeOnly = false ){
-    var listPromise = activeOnly ? listActiveLibraries() : listLibraries();
+function getLibrariesById( ids, currentOnly = false ){
+    var listPromise = currentOnly ? listCurrentLibraries() : listLibraries();
 
     return listPromise
         .then(filterListOfLibraries);
@@ -245,14 +258,15 @@ module.exports = {
     setStore: setStore,
     update: updateLibrary,
     list: listLibraries,
-    listActiveLibraries: listActiveLibraries,
+    listActiveLibraries: listActiveAndGoverningLibraries,
+    listCurrentLibraries: listCurrentLibraries,
     load: loadLibrary,
     getInstitutionTypeOptions: getInstitutionTypeOptions,
     getInstitutionYearsOptions: getInstitutionYearsOptions,
     getMembershipLevelOptions: getMembershipLevelOptions,
     loadNonCrmLibraryForCrmId: loadNonCrmLibraryForCrmId,
     listLibrariesWithSelectionsInCycle: listLibrariesWithSelectionsInCycle,
-    getActiveLibrariesById: getActiveLibrariesById,
+    getCurrentLibrariesById: getCurrentLibrariesById,
     getLibrariesById: getLibrariesById,
     getContactTypesForNotificationCategory: getContactTypesForNotificationCategory,
     getContactEmailAddressesForNotification: getContactEmailAddressesForNotification,
