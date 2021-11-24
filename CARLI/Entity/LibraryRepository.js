@@ -80,8 +80,8 @@ function listLibraries(){
         .then(associateNonCrmDataWithListOfLibraries);
 }
 
-// TODO change to listActiveAndGoverningLibraries
-//  In a third party API, the isActive field is actually checking membership level is Governing and isCurrent
+// Note: In the external CRM, the isActive field is actually checking membership level is Governing and isCurrent
+// we expect many calls to the old listActiveLibraries() actually don't want the membership level check and should use listCurrentLibraries() instead
 function listActiveAndGoverningLibraries(){
     return crmLibraryRepository.list()
         .then(filterActiveLibraries)
