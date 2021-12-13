@@ -88,6 +88,8 @@ function editOfferingController(activityLogService, alertService, cycleService, 
             }
 
             vm.offering.pricing.su = newSuPricing;
+            vm.offering.suPricesUpdated = new Date().toISOString();
+            vm.offering.display = 'with-price';
         }
     }
 
