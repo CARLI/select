@@ -34,12 +34,13 @@ module.exports = function (inputOptions) {
 
         request({ url: requestUrl },
             function (requestError, response, body) {
+                var data = {};
                 if (!body) {
                     Logger.log("Got empty body for " + requestUrl);
                     Logger.log(requestError);
+                } else {
+                    data = JSON.parse(body);
                 }
-                var data = JSON.parse(body);
-
                 if (requestError) {
                     Logger.log("Couch Get Data Request Error for " + requestUrl, requestError);
                     deferred.reject(carliError(requestError, response.statusCode));
