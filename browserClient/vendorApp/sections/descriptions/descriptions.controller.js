@@ -4,7 +4,7 @@ angular.module('vendor.sections.descriptions')
 function descriptionsController( $scope, $rootScope, $q, activityLogService, alertService, cycleService, productService, userService, vendorDataService, vendorStatusService ){
     var vm = this;
 
-    vm.maxLength = 500;
+    vm.maxLength = 1500;
     vm.productChanged = productChanged;
     vm.noProductsHaveChanged = noProductsHaveChanged;
     vm.formIsInvalid = formIsInvalid;
@@ -26,6 +26,12 @@ function descriptionsController( $scope, $rootScope, $q, activityLogService, ale
     function loadProducts(){
         vm.loadingPromise = productService.listActiveProductsForVendorId( userService.getUser().vendor.id )
             .then(function(productList){
+                productList.forEach(product => {
+                    if(product.description === undefined)
+                        product.description = '';
+                    if(product.comments === undefined)
+                        product.comments = '';
+                });
                 vm.products = productList;
             });
     }
@@ -60,6 +66,7 @@ function descriptionsController( $scope, $rootScope, $q, activityLogService, ale
     }
 
     function remainingCharacters(product, property) {
+        // ng-maxlength makes the model undefined when it exceeds the given length
         if (typeof product === 'undefined' || typeof product[property] === 'undefined' ){
             return 'limit exceeded';
         }

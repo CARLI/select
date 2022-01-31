@@ -10,6 +10,11 @@
 </div>
 
 <section class="content" id="descriptions" cg-busy="vm.loadingPromise">
+    <ul ng-repeat="(key, errors) in productForm.$error track by $index" class="descriptions__error-list">
+        <li ng-repeat="error in errors" ng-if="key == 'maxlength'">
+            {{ error.$name }} is too long
+        </li>
+    </ul>
     <form name="productForm" warn-if-unsaved>
         <ul class="product-list">
             <li class="product" ng-repeat="product in vm.products | orderBy:'name' track by product.id">
@@ -22,12 +27,12 @@
                 </div>
                 <div class="column description">
                     <div class="label">Product Description</div>
-                    <textarea ng-model="product.description" ng-change="vm.productChanged(product.id)" ng-maxlength="vm.maxLength"></textarea>
+                    <textarea name="{{ product.name }}'s description" ng-model="product.description" ng-change="vm.productChanged(product.id)" ng-maxlength="vm.maxLength"></textarea>
                     <div class="character-count">Remaining characters: {{ vm.remainingCharacters(product, 'description') }}</div>
                 </div>
                 <div class="column comments">
                     <div class="label">Comments for Libraries</div>
-                    <textarea ng-model="product.comments" ng-change="vm.productChanged(product.id)" ng-maxlength="vm.maxLength"></textarea>
+                    <textarea name="{{ product.name }}'s comment" ng-model="product.comments" ng-change="vm.productChanged(product.id)" ng-maxlength="vm.maxLength"></textarea>
                     <div class="character-count">Remaining characters: {{ vm.remainingCharacters(product, 'comments') }}</div>
                 </div>
             </li>
