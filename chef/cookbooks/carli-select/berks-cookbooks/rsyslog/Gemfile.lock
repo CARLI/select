@@ -334,7 +334,7 @@ GEM
       descendants_tracker (~> 0.0, >= 0.0.3)
       equalizer (~> 0.0, >= 0.0.9)
     wmi-lite (1.0.0)
-    yajl-ruby (1.2.1)
+    yajl-ruby (1.4.2)
 
 PLATFORMS
   ruby
