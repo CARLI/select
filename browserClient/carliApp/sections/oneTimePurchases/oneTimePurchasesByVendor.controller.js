@@ -98,7 +98,7 @@ function oneTimePurchasesByVendorController($scope, $timeout, $q, accordionContr
 
     function filterActiveLibraries(offeringsList) {
         return offeringsList.filter(function (offering) {
-            return offering.library.isActive;
+            return offering.library.isActive && offering.library.membershipLevel !== "Affiliate";
         });
     }
 

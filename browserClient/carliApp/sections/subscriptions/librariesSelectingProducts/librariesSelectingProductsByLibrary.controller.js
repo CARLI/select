@@ -58,7 +58,7 @@ function librariesSelectingProductsByLibraryController( $scope, $q, accordionCon
     }
 
     function initLibraryList(){
-        vm.libraryLoadingPromise = libraryService.listActiveLibraries()
+        vm.libraryLoadingPromise = libraryService.listActiveNonAffiliateLibraries()
             .then(function(libraryList){
                 vm.libraryList = libraryList;
                 return libraryList;

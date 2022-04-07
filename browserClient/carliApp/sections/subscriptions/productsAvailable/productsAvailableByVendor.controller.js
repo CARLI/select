@@ -111,7 +111,7 @@ function productsAvailableByVendorController( $scope, $timeout, $q, accordionCon
 
     function filterOfferingsWithInactiveLibraries(offeringsList){
         return offeringsList.filter(function(offering){
-            return offering.library.isActive;
+            return offering.library.isActive && offering.library.membershipLevel !== "Affiliate";
         });
     }
 

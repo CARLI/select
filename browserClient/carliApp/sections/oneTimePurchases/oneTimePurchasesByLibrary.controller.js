@@ -111,7 +111,7 @@ function oneTimePurchasesByLibraryController($scope, $q, accordionControllerMixi
         }
 
         function initLibraryList() {
-            return libraryService.listActiveLibraries().then(function (libraryList) {
+            return libraryService.listActiveNonAffiliateLibraries().then(function (libraryList) {
                 vm.libraryList = libraryList;
             });
         }
