@@ -503,7 +503,7 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
     }
 
     function saveAllNewOfferings(newOfferings) {
-        return $q.all(newOfferings.map(offeringService.create));
+        return $q.all(newOfferings.map(offering => offeringService.create(offering, vm.cycle)));
     }
 
     function saveAllChangedOfferings(changedOfferings) {

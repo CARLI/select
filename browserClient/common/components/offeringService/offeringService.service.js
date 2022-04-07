@@ -17,8 +17,8 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
             return $q.when( offeringModule.list( cycleService.getCurrentCycle() ) )
                 .catch(errorHandler);
         },
-        create: function( offering ) {
-            return $q.when( offeringModule.create(offering, offering.cycle) );
+        create: function( offering, cycle ) {
+            return $q.when( offeringModule.create(offering, cycle ? cycle : offering.cycle) );
         },
         update: function( offering ) {
             return $q.when( offeringModule.update(offering, cycleService.getCurrentCycle()) )
