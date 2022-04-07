@@ -93,6 +93,11 @@ function listActiveLibraries(){
     }
 }
 
+function listActiveNonAffiliateLibraries(){
+    return listActiveLibraries()
+        .then(libraries => libraries.filter(library => library.membershipLevel !== "Affiliate"));
+}
+
 function loadLibrary( libraryCrmId ){
     return crmLibraryRepository.load(libraryCrmId)
         .then(loadAndFillInNonCrmDataForLibrary);
@@ -246,6 +251,7 @@ module.exports = {
     update: updateLibrary,
     list: listLibraries,
     listActiveLibraries: listActiveLibraries,
+    listActiveNonAffiliateLibraries: listActiveNonAffiliateLibraries,
     load: loadLibrary,
     getInstitutionTypeOptions: getInstitutionTypeOptions,
     getInstitutionYearsOptions: getInstitutionYearsOptions,

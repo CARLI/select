@@ -82,10 +82,8 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
     }
 
     function loadLibraries() {
-        return libraryService.listActiveLibraries().then(function (libraries) {
-            vm.libraries = libraries
-                .filter(library => library.membershipLevel !== "Affiliate")
-                .sort(byName);
+        return libraryService.listActiveNonAffiliateLibraries().then(function (libraries) {
+            vm.libraries = libraries.sort(byName);
             initializeSelectedLibraryIds();
         });
     }

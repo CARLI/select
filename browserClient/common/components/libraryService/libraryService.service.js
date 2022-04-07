@@ -11,6 +11,7 @@ function libraryService( CarliModules, $q, errorHandler ) {
         update: function() { return $q.when( libraryModule.update.apply( this, arguments) ); },
         load:   function() { return $q.when( libraryModule.load.apply( this, arguments) ).catch(errorHandler); },
         listActiveLibraries: function(cycle){ return $q.when(libraryModule.listActiveLibraries()).catch(errorHandler); },
+        listActiveNonAffiliateLibraries: function(cycle){ return $q.when(libraryModule.listActiveNonAffiliateLibraries()).catch(errorHandler); },
         listLibrariesWithSelectionsInCycle: function(cycle){
             return $q.when(libraryModule.listLibrariesWithSelectionsInCycle(cycle)).catch(errorHandler);
         },
