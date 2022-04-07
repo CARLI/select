@@ -382,7 +382,7 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
             });
         }
         else {
-            savePromises = offeringService.ensureProductHasOfferingsForAllLibraries( vm.product );
+            savePromises = [offeringService.ensureProductHasOfferingsForAllLibraries( vm.product )];
         }
 
         return $q.all( savePromises );
