@@ -1,6 +1,6 @@
 <vendors-setting-prices-by-vendor ng-if="vm.cycleRouter.groupBy === 'vendor'"></vendors-setting-prices-by-vendor>
 <vendors-setting-prices-by-library ng-if="vm.cycleRouter.groupBy === 'library'"></vendors-setting-prices-by-library>
 
-<button type="button" class="carli-button pull-left" busy-click="vm.undoOpenVendorPricing()">Undo Open Vendor Pricing</button>
-<button type="button" class="carli-button disabled pull-right">Open System</button>
-<button type="button" class="carli-button pull-right" busy-click="vm.closeVendorPricing()">Close Vendor Pricing</button>
+<button type="button" class="carli-button pull-left" ng-disabled="vm.userIsReadonly" busy-click="vm.undoOpenVendorPricing()">Undo Open Vendor Pricing</button>
+<button type="button" class="carli-button disabled pull-right" ng-disabled="vm.userIsReadonly">Open System</button>
+<button type="button" class="carli-button pull-right" busy-click="vm.closeVendorPricing()" ng-disabled="vm.userIsReadonly">Close Vendor Pricing</button>
