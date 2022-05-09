@@ -551,11 +551,14 @@ describe('The Cycle Creation Job Process', function(){
             testCycleCreationJob.loadCycles = 'filler';
             testCycleCreationJob.replicate = 'filler';
             testCycleCreationJob.indexViews = 'filler';
+            testCycleCreationJob.removeDuplicateOfferings = 'filler';
             testCycleCreationJob.resetVendorStatus = 'filler';
             testCycleCreationJob.resetLibraryStatus = 'filler';
             testCycleCreationJob.transformProducts = 'filler';
             testCycleCreationJob.transformOfferings = 'filler';
             testCycleCreationJob.indexViewsPhase2 = 'filler';
+            testCycleCreationJob.replicateDataToVendorsForCycle = 'fillter';
+            testCycleCreationJob.triggerIndexingForCycleId = 'filler';
         });
 
         it('calls setCycleToNextPhase', async function () {
@@ -573,17 +576,22 @@ describe('The Cycle Creation Job Process', function(){
         });
 
         it('should error on invalid cycle update', async function () {
-            let logMessage = "";
+            let loggedCorrectError = false;
+            const oldLogger = global.Logger;
             global.Logger = {
                 log: function (message) {
-                    logMessage = message;
+                    if(message === 'Failed state transition: ')
+                        loggedCorrectError = true;
                 }
             };
             cycleRepository.update = function () {
                 throw new Error();
             }
+
             await cycleCreationJobProcessor.process(testCycleCreationJob);
-            expect(logMessage).to.equal('Failed state transition: ');
+            global.Logger = oldLogger;
+
+            expect(loggedCorrectError).to.equal(true);
         });
     });
 
@@ -594,6 +602,7 @@ function createCouchUtilsSpy() {
         replicateFromCalled: 0,
         replicateToCalled: 0,
         triggeredIndexingOnDatabase: '',
+        jobProgress: 0,
 
         replicateFrom: function (sourceDbName) {
             this.replicateFromCalled++;
@@ -607,7 +616,15 @@ function createCouchUtilsSpy() {
             this.triggeredIndexingOnDatabase = databaseName;
         },
         getRunningCouchJobs: async function () {
-            return [];
+            this.jobProgress += 50;
+
+            if(this.jobProgress > 100)
+                this.jobProgress = 100;
+            return [{
+                type: "indexer",
+                database: "cycle-cycle2",
+                progress: this.jobProgress
+            }];
         }
     };
 }
