@@ -94,12 +94,19 @@ function editUserController( $filter, $scope, $rootScope, $q, $location, $window
 
         function setUserOnVm( user ) {
             vm.user = angular.copy(user);
-            vm.userType = vm.user.roles[0];
+            vm.userType = getUserTypeForUser(user);
             return user;
         }
 
+        function getUserTypeForUser(user) {
+            if(user.roles[0] === "readonly-staff")
+                return 'staff';
+
+            return user.roles[0];
+        }
+
         function initializeReadonlyCheckbox(x) {
-            vm.userIsReadOnly = vm.user.roles.indexOf('readonly') != -1;
+            vm.userIsReadOnly = vm.user.roles.indexOf('readonly') !== -1;
             return x;
         }
 
@@ -229,6 +236,10 @@ function editUserController( $filter, $scope, $rootScope, $q, $location, $window
         }
 
         if (vm.userIsReadOnly) {
+            if(vm.userType === 'staff') {
+                vm.user.roles = ['readonly-staff'];
+            }
+
             vm.user.roles.push('readonly');
         }
     }

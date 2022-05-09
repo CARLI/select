@@ -56,7 +56,7 @@ function loginController ($q, $rootScope, $location, alertService, authService, 
 
             function ensureUserIsLoggingIntoTheAppropriateApp() {
                 const validUserTypesForApp = {
-                    'staff': ['staff', 'staff-readonly'],
+                    'staff': ['staff', 'readonly-staff'],
                     'vendor': ['staff', 'vendor'],
                     'library': ['staff', 'library']
                 };
@@ -84,7 +84,7 @@ function loginController ($q, $rootScope, $location, alertService, authService, 
                 if (userContext.roles.indexOf('staff') >= 0) {
                     return 'staff';
                 } else if (userContext.roles.indexOf('readonly-staff') >= 0) {
-                    return 'staff-readonly';
+                    return 'readonly-staff';
                 } else if (userContext.roles.indexOf('vendor') >= 0) {
                     return 'vendor';
                 } else if (userContext.roles.indexOf('library') >= 0) {

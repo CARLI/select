@@ -48,7 +48,7 @@
                 <span class="value">{{ vm.selectedVendor.name || 'N/A' }}</span>
             </view-edit-select-object>
 
-            <div class="user-readonly-checkbox" ng-show="vm.userType === 'library'" >
+            <div class="user-readonly-checkbox" ng-show="vm.userType === 'library' || vm.userType === 'staff'" >
                 <div ng-show="vm.editable">
                     <checkbox ng-model="vm.userIsReadOnly">User has read only access</checkbox>
                 </div>
