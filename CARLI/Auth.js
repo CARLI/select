@@ -135,6 +135,15 @@ function requireBasicAuth(req, expectedUsername, expectedPassword) {
     }
 }
 
+function requireStaffOrReadonly() {
+    return getSession().then(function (userContext) {
+        if (userContext.roles.indexOf('staff') >= 0 || userContext.roles.indexOf('readonly-staff') >= 0) {
+            return true;
+        }
+        throw new Error('Unauthorized');
+    });
+}
+
 function requireStaff() {
     return getSession().then(function (userContext) {
         if (userContext.roles.indexOf('staff') >= 0) {
@@ -167,6 +176,30 @@ function requireStaffOrLibraryOrSpecificVendor(vendorId) {
         throw new Error('Unauthorized');
     });
 }
+function requireStaffOrLibraryOrReadonly() {
+    return getSession().then(function (userContext) {
+        if (userContext.roles.indexOf('staff') >= 0 || userContext.roles.indexOf('library') >= 0 || userContext.roles.indexOf('readonly-staff') >= 0) {
+            return true;
+        }
+        throw new Error('Unauthorized');
+    });
+}
+function requireStaffOrSpecificVendorOrReadonly(vendorId) {
+    return getSession().then(function (userContext) {
+        if (userContext.roles.indexOf('staff') >= 0 || userContext.roles.indexOf('vendor-' + vendorId) >=0 || userContext.roles.indexOf('readonly-staff') >= 0) {
+            return true;
+        }
+        throw new Error('Unauthorized');
+    });
+}
+function requireStaffOrLibraryOrSpecificVendorOrReadonly(vendorId) {
+    return getSession().then(function (userContext) {
+        if (userContext.roles.indexOf('staff') >= 0 || userContext.roles.indexOf('library') >= 0 || userContext.roles.indexOf('vendor-' + vendorId) >=0 || userContext.roles.indexOf('readonly-staff') >= 0) {
+            return true;
+        }
+        throw new Error('Unauthorized');
+    });
+}
 
 module.exports = {
     createSession: createSession,
@@ -176,9 +209,13 @@ module.exports = {
     masqueradeAsLibrary: masqueradeAsLibrary,
     masqueradeAsVendor: masqueradeAsVendor,
     requireSession: requireSession,
+    requireStaffOrReadonly: requireStaffOrReadonly,
     requireStaff: requireStaff,
     requireBasicAuthForRestrictedApiV1: requireBasicAuthForRestrictedApiV1,
     requireStaffOrLibrary: requireStaffOrLibrary,
     requireStaffOrSpecificVendor: requireStaffOrSpecificVendor,
-    requireStaffOrLibraryOrSpecificVendor: requireStaffOrLibraryOrSpecificVendor
+    requireStaffOrLibraryOrSpecificVendor: requireStaffOrLibraryOrSpecificVendor,
+    requireStaffOrLibraryOrReadonly: requireStaffOrLibraryOrReadonly,
+    requireStaffOrSpecificVendorOrReadonly: requireStaffOrSpecificVendorOrReadonly,
+    requireStaffOrLibraryOrSpecificVendorOrReadonly: requireStaffOrLibraryOrSpecificVendorOrReadonly
 };
