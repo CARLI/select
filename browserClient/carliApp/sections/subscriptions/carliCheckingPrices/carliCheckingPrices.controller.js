@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.carliCheckingPrices')
     .controller('carliCheckingPricesController', carliCheckingPricesController);
 
-function carliCheckingPricesController( $q, authService, config, notificationService, notificationTemplateService ) {
+function carliCheckingPricesController( $q, authService, config, notificationService, notificationTemplateService, userService ) {
     var vm = this;
     vm.doNotCreateNotification = false;
     vm.undoCloseVendorPricing = undoCloseVendorPricing;
@@ -10,6 +10,7 @@ function carliCheckingPricesController( $q, authService, config, notificationSer
     vm.openSystemDialogComplete = openSystemDialogComplete;
     vm.userName = '';
     vm.userEmail = '';
+    vm.userIsReadonly = userService.userIsReadOnly();
 
     activate();
 

@@ -1,8 +1,8 @@
 <carli-checking-prices-by-vendor ng-if="vm.cycleRouter.groupBy === 'vendor'"></carli-checking-prices-by-vendor>
 <carli-checking-prices-by-library ng-if="vm.cycleRouter.groupBy === 'library'"></carli-checking-prices-by-library>
 
-<button type="button" class="carli-button pull-left" busy-click="vm.undoCloseVendorPricing()">Undo Close Vendor Pricing</button>
-<button type="button" class="carli-button pull-right" busy-click="vm.openSystem()">Open System</button>
+<button type="button" class="carli-button pull-left" busy-click="vm.undoCloseVendorPricing()" ng-disabled="vm.userIsReadonly">Undo Close Vendor Pricing</button>
+<button type="button" class="carli-button pull-right" busy-click="vm.openSystem()" ng-disabled="vm.userIsReadonly">Open System</button>
 
 <modal-dialog modal-id="'open-system-modal'" modal-title="'Open System'">
     <form name="modal-form" ng-submit="vm.openSystemDialogComplete();">
@@ -19,8 +19,8 @@
             <checkbox ng-model="vm.doNotCreateNotification">Do not create notification</checkbox>
         </div>
         <div class="modal-footer">
-            <button type="button" class="carli-button cancel-button" data-dismiss="modal">Cancel</button>
-            <button type="submit" class="carli-button save-button">Open System</button>
+            <button type="button" class="carli-button cancel-button" data-dismiss="modal" ng-disabled="vm.userIsReadonly">Cancel</button>
+            <button type="submit" class="carli-button save-button" ng-disabled="vm.userIsReadonly">Open System</button>
         </div>
     </form>
 </modal-dialog>
