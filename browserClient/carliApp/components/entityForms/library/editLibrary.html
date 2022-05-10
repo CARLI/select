@@ -9,21 +9,21 @@
             <div ng-show="!vm.newLibrary" class="controls">
                 <div ng-show="vm.editable">
                     <button type="button"  class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</button>
-                    <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit" value="Save">
+                    <input class="carli-button save-button" ng-disabled="!vm.editable" type="submit" value="Save" ng-disabled="vm.userIsReadOnly">
                 </div>
                 <div ng-hide="vm.editable">
                     <button
                             type="button"
                             id="library-masquerade"
                             class="carli-button"
-                            ng-click="vm.masquerade()">Masquerade<i class="fa fa-user"></i></button>
+                            ng-click="vm.masquerade()" ng-disabled="vm.userIsReadOnly">Masquerade<i class="fa fa-user"></i></button>
 <!--                    <a ng-if="vm.enableMasquerading"
                             type="button"
                             id="library-masquerade"
                             class="carli-button"
                             href="{{ vm.masqueradeAsLibraryUrl }}"
                             target="{{ vm.libraryAppBrowsingContextId }}">Masquerade<i class="fa fa-user"></i></a>-->
-                    <button type="button" id="library-edit" class="carli-button" ng-click="vm.toggleEditable()">Edit<i class="fa fa-edit"></i></button>
+                    <button type="button" id="library-edit" class="carli-button" ng-click="vm.toggleEditable()" ng-disabled="vm.userIsReadOnly">Edit<i class="fa fa-edit"></i></button>
                 </div>
             </div>
         </div>

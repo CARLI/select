@@ -1,12 +1,13 @@
 angular.module('carli.sections.oneTimePurchases')
     .controller('oneTimePurchasesByLibraryController', oneTimePurchasesByLibraryController);
 
-function oneTimePurchasesByLibraryController($scope, $q, accordionControllerMixin, config, controllerBaseService, cycleService, editOfferingService, libraryService, notificationModalService, offeringService, productService, vendorService) {
+function oneTimePurchasesByLibraryController($scope, $q, accordionControllerMixin, config, controllerBaseService, cycleService, editOfferingService, libraryService, notificationModalService, offeringService, productService, vendorService, userService) {
     var vm = this;
 
     accordionControllerMixin(vm, loadOfferingsForLibrary);
     controllerBaseService.addSortable(vm, 'product.name');
 
+    vm.userIsReadOnly = userService.userIsReadOnly();
     vm.cycle = null;
     vm.isEditing = {};
     vm.libraryList = [];

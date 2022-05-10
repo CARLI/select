@@ -1,9 +1,10 @@
 angular.module('carli.sections.membership')
 .controller('membershipController', membershipController);
 
-function membershipController( $location, $q, $routeParams, $scope, activityLogService, alertService, cycleService, errorHandler, libraryService, membershipService, notificationModalService ){
+function membershipController( $location, $q, $routeParams, $scope, activityLogService, alertService, cycleService, errorHandler, libraryService, membershipService, notificationModalService, userService ){
     var vm = this;
 
+    vm.userIsReadOnly = userService.userIsReadOnly();
     vm.libraries = [];
     vm.loadingPromise = null;
     vm.displayYear = null;

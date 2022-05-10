@@ -16,10 +16,10 @@
         <div ng-show="!vm.newProduct" class="controls">
             <div ng-show="vm.editable">
                 <button type="button" class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</button>
-                <input class="carli-button save-button" ng-disabled="!vm.editable" type="button" value="{{ vm.submitLabel() }}" busy-click="vm.submitAction()" >
+                <input class="carli-button save-button" ng-disabled="!vm.editable" type="button" value="{{ vm.submitLabel() }}" busy-click="vm.submitAction()"  ng-disabled="vm.userIsReadOnly">
             </div>
 
-            <button type="button" id="product-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">
+            <button type="button" id="product-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()" ng-disabled="vm.userIsReadOnly">
                 Edit<fa name="edit"></fa>
             </button>
         </div>

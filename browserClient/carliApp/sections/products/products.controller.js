@@ -1,8 +1,9 @@
 angular.module('carli.sections.products')
 .controller('productsController', productController);
 
-function productController($location, $routeParams, $scope, $sce, cycleService, productService ){
+function productController($location, $routeParams, $scope, $sce, cycleService, productService, userService ){
     var vm = this;
+    vm.userIsReadOnly = userService.userIsReadOnly();
     vm.activeCycles = [];
     vm.afterProductSubmit = newProductSubmitted;
     vm.cycleId = $routeParams.cycleId;

@@ -37,8 +37,8 @@
                         <span>{{ vm.computeSelectionTotalForLibrary(library) | currency }}</span>
                     </div>
 
-                    <button type="button" class="carli-button" ng-click="vm.invoiceCheckedProductsForLibrary(library)">Invoice Checked Products</button>
-                    <button type="button" class="carli-button" ng-click="vm.invoiceAllProductsForLibrary(library)">Invoice All Products</button>
+                    <button type="button" class="carli-button" ng-click="vm.invoiceCheckedProductsForLibrary(library)" ng-disabled="vm.userIsReadOnly">Invoice Checked Products</button>
+                    <button type="button" class="carli-button" ng-click="vm.invoiceAllProductsForLibrary(library)" ng-disabled="vm.userIsReadOnly">Invoice All Products</button>
 
                     <a class="old-view-link" ng-href="/oneTimePurchases/{{ library.id }}">Old View</a>
                 </div>
@@ -47,4 +47,4 @@
     </ul>
 </div>
 
-<button type="button" ng-click="vm.invoiceAnnualAccessFees()" class="carli-button"> Invoice: Annual Access Fees</button>
+<button type="button" ng-click="vm.invoiceAnnualAccessFees()" class="carli-button" ng-disabled="vm.userIsReadOnly"> Invoice: Annual Access Fees</button>
