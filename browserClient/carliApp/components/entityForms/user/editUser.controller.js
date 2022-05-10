@@ -8,6 +8,7 @@ function editUserController( $filter, $scope, $rootScope, $q, $location, $window
         userFields: 'carliApp/components/entityForms/user/editUser.html'
     };
     vm.currentTemplate = templates.userFields;
+    vm.authenticatedUserIsReadOnly = userService.userIsReadOnly();
 
     vm.userId = $scope.userId;
     vm.userType = 'staff';

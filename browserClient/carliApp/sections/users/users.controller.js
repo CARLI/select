@@ -3,6 +3,7 @@ angular.module('carli.sections.users')
 
 function userController( $sce, $location, userService ){
     var vm = this;
+    vm.userIsReadOnly = userService.userIsReadOnly();
     vm.activeCycles = [];
     vm.afterUserSubmit = populateUserList;
     activate();
