@@ -26,7 +26,7 @@ function subscriptionsController($scope, activityLogService, alertService, cycle
 
     activate();
     function activate() {
-        vm.userIsReadonly = userService.userIsReadOnly();
+        vm.userIsReadOnly = userService.userIsReadOnly();
         vm.cyclesLoading = cycleService.list()
             .then(function (allCycles) {
                 var active = [];

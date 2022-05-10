@@ -19,14 +19,14 @@
                                 data-toggle="modal"
                                 data-target="#edit-cycle-dates-modal"
                                 id="edit-cycle-dates"
-                                ng-disabled="vm.userIsReadonly"
+                                ng-disabled="vm.userIsReadOnly"
                                 ng-click="vm.editCycle(cycle)"
                                 ng-if="cycle.status < vm.cycleClosed">
                             Edit Cycle Dates
                         </button>
                         <button type="button"
                                 class="carli-button cancel-button"
-                                ng-disabled="vm.userIsReadonly"
+                                ng-disabled="vm.userIsReadOnly"
                                 ng-click="vm.archiveCycle(cycle)"
                                 ng-if="cycle.status == vm.cycleClosed">
                             Archive Cycle
@@ -36,7 +36,7 @@
             </li>
         </ul>
 
-        <button type="button" class="carli-button" data-toggle="modal" data-target="#new-cycle-modal" ng-disabled="vm.userIsReadonly">Create New Cycle</button>
+        <button type="button" class="carli-button" data-toggle="modal" data-target="#new-cycle-modal" ng-disabled="vm.userIsReadOnly">Create New Cycle</button>
     </section>
 
     <div class="list-page-header">
@@ -57,7 +57,7 @@
                     <div>
                         <button type="button"
                                 class="carli-button cancel-button"
-                                ng-disabled="vm.userIsReadonly"
+                                ng-disabled="vm.userIsReadOnly"
                                 ng-click="vm.unarchiveCycle(cycle)"
                                 ng-if="cycle.isArchived">
                             Un-Archive Cycle

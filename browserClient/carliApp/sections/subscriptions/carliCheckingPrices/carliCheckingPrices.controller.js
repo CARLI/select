@@ -10,7 +10,7 @@ function carliCheckingPricesController( $q, authService, config, notificationSer
     vm.openSystemDialogComplete = openSystemDialogComplete;
     vm.userName = '';
     vm.userEmail = '';
-    vm.userIsReadonly = userService.userIsReadOnly();
+    vm.userIsReadOnly = userService.userIsReadOnly();
 
     activate();
 
