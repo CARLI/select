@@ -1,9 +1,10 @@
 angular.module('carli.sections.notifications')
 .controller('notificationsController', notificationsController);
 
-function notificationsController( notificationModalService, notificationTemplateService ){
+function notificationsController( notificationModalService, notificationTemplateService , userService ){
     var vm = this;
 
+    vm.userIsReadOnly = userService.userIsReadOnly();
     vm.newDraftTemplate = null;
     vm.showTemplateChooser = showTemplateChooser;
     vm.startDraft = startDraft;
