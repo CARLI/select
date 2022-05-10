@@ -1,8 +1,9 @@
 angular.module('carli.sections.licenses')
 .controller('licensesController', licensesController);
 
-function licensesController( $filter, $sce, licenseService ){
+function licensesController( $filter, $sce, licenseService, userService ){
     var vm = this;
+    vm.userIsReadOnly = userService.userIsReadOnly();
     vm.afterLicenseSubmit = populateLicenseList;
     activate();
 

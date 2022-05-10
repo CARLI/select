@@ -1,9 +1,10 @@
 angular.module('carli.sections.subscriptions.carliEditingProductList')
     .controller('carliEditingProductListController', carliEditingProductListController);
 
-function carliEditingProductListController( $filter, $q, alertService, carliEditingProductListExport, cycleService, historicalPricingService, productService, vendorService, vendorStatusService ) {
+function carliEditingProductListController( $filter, $q, alertService, carliEditingProductListExport, cycleService, historicalPricingService, productService, vendorService, vendorStatusService, userService ) {
     var vm = this;
 
+    vm.userIsReadOnly = userService.userIsReadOnly();
     vm.clearReviewStatus = clearReviewStatus;
     vm.exportOfferingList = exportOfferingList;
     vm.getProductDisplayName = productService.getProductDisplayName;

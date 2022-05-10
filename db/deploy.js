@@ -1,6 +1,7 @@
 var Q = require('q');
 var request = require('request');
 var _ = require('lodash');
+var util = require('util');
 
 var carliError = require('../CARLI/Error');
 var config = require('../config');
@@ -155,6 +156,39 @@ function createOneTimePurchaseCycle(cycleName, store) {
     return cycleRepository.create(otpCycle);
 }
 
+async function addRoleToSecurityDoc(dbName, role) {
+    const asyncGet = util.promisify(request.get);
+    const response = await asyncGet({
+        url: getDbUrl(dbName) + '/_security'
+    });
+
+    const body = JSON.parse(response.body);
+    if(!body.members)
+        console.log("O M G", dbName);
+    const roles = body.members && body.members.roles ? body.members.roles : [];
+    if(roles.indexOf(role) === -1) {
+        roles.push(role);
+        await asyncAddSecurityDocWithRoles(dbName, roles);
+    }
+}
+
+function asyncAddSecurityDocWithRoles(dbName, roles) {
+    const asyncPut = util.promisify(request.put);
+    return asyncPut({
+        url: getDbUrl(dbName) + '/_security',
+        json: {
+            admins: {
+                names: [],
+                roles:[]
+            },
+            members: {
+                names: [],
+                roles: roles
+            }
+        }
+    });
+}
+
 function addSecurityDocWithRoles(dbName, roles) {
     request.put({
         url: getDbUrl(dbName) + '/_security',
@@ -249,5 +283,6 @@ if (require.main === module) {
         deployLocalCycleDesignDocs: deployLocalCycleDesignDocs,
         deployDesignDocToActivityLog: deployDesignDocToActivityLog,
         deployActivityLogDb: deployActivityLogDb,
+        addRoleToSecurityDoc: addRoleToSecurityDoc
     };
 }

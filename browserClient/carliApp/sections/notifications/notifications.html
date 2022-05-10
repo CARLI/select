@@ -4,8 +4,8 @@
             <h1>Notifications</h1>
         </div>
         <div class="controls">
-            <button type="button" class="carli-button secondary-button" data-toggle="modal" data-target="#manage-notifications-templates-modal">Manage Notification Templates</button>
-            <button type="button" class="carli-button primary-button" ng-click="vm.showTemplateChooser()">Draft a Notification</button>
+            <button type="button" class="carli-button secondary-button" data-toggle="modal" data-target="#manage-notifications-templates-modal" ng-disabled="vm.userIsReadOnly">Manage Notification Templates</button>
+            <button type="button" class="carli-button primary-button" ng-click="vm.showTemplateChooser()" ng-disabled="vm.userIsReadOnly">Draft a Notification</button>
         </div>
     </div>
 

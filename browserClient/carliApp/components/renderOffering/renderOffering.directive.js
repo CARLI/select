@@ -6,7 +6,7 @@ var editOfferingHandlerAttached;
 var commentHandlerAttached;
 var offeringsById = {};
 
-function renderOfferingDirective($http, $q, $filter, alertService, editOfferingService, errorHandler, offeringService, productService){
+function renderOfferingDirective($http, $q, $filter, alertService, editOfferingService, errorHandler, offeringService, productService, userService){
     registerHandlebarsHelpers();
 
     return {
@@ -51,6 +51,7 @@ function renderOfferingDirective($http, $q, $filter, alertService, editOfferingS
                         offeringWasFlaggedByCarli: (offering.flagged === true),
                         offeringWasUnFlaggedByCarli: (offering.flagged === false),
                         offeringFlagTitle: offeringFlagTitle(),
+                        userIsReadOnly: userService.userIsReadOnly(),
                         columns: columns,
                         selectionColumn: (columns.selection || columns.oneTimePurchaseSelection)
                     };

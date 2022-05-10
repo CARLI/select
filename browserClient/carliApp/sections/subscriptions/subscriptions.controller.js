@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions')
     .controller('subscriptionsController', subscriptionsController);
 
-function subscriptionsController($scope, activityLogService, alertService, cycleService, errorHandler, persistentState) {
+function subscriptionsController($scope, activityLogService, alertService, cycleService, errorHandler, persistentState, userService) {
     var vm = this;
 
     var toggleArchivedListKey = 'hideArchivedCyclesOnSubscriptionsListPage';
@@ -26,6 +26,7 @@ function subscriptionsController($scope, activityLogService, alertService, cycle
 
     activate();
     function activate() {
+        vm.userIsReadOnly = userService.userIsReadOnly();
         vm.cyclesLoading = cycleService.list()
             .then(function (allCycles) {
                 var active = [];

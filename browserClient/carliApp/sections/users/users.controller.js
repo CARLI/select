@@ -3,6 +3,7 @@ angular.module('carli.sections.users')
 
 function userController( $sce, $location, userService ){
     var vm = this;
+    vm.userIsReadOnly = userService.userIsReadOnly();
     vm.activeCycles = [];
     vm.afterUserSubmit = populateUserList;
     activate();
@@ -24,7 +25,17 @@ function userController( $sce, $location, userService ){
                 .map(useFullNameForNameSearch);
 
             function filterByRole(user) {
-                return user.roles.indexOf(userType) >= 0;
+                const userTypesForRole = {
+                    staff: ['staff', 'readonly-staff'],
+                    library: ['library'],
+                    vendor: ['vendor']
+                };
+                let result = false;
+                userTypesForRole[userType].forEach(userTypeForRole => {
+                    if(user.roles.indexOf(userTypeForRole) >= 0)
+                        result = true;
+                })
+                return result;
             }
             function filterMasqueradingStaffFromNonStaffLists(user) {
                 if (userType === 'staff') {

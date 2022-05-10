@@ -1,8 +1,9 @@
 angular.module('carli.sections.subscriptions.productsAvailable')
     .controller('productsAvailableController', productsAvailableController);
 
-function productsAvailableController( $q, alertService, bannerService, cycleService ) {
+function productsAvailableController( $q, alertService, bannerService, cycleService, userService ) {
     var vm = this;
+    vm.userIsReadOnly = userService.userIsReadOnly();
     vm.undoCloseSystem = undoCloseSystem;
     vm.showAvailableBannerExports = showAvailableBannerExports;
     vm.downloadBannerExportForBatchId = downloadBannerExportForBatchId;

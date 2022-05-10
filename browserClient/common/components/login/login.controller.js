@@ -55,14 +55,22 @@ function loginController ($q, $rootScope, $location, alertService, authService, 
                 ; // .catch(redirectUserToTheCorrectApp);
 
             function ensureUserIsLoggingIntoTheAppropriateApp() {
-                if (userType !== 'staff' && userType !== appType) {
+                const validUserTypesForApp = {
+                    'staff': ['staff', 'readonly-staff'],
+                    'vendor': ['staff', 'vendor'],
+                    'library': ['staff', 'library']
+                };
+
+                const isAppAppropriate = validUserTypesForApp[appType].indexOf(userType) >= 0;
+
+                if (!isAppAppropriate) {
                     throw new Error('User role mismatch');
                 }
                 return $q.when(true);
             }
 
             function authenticateForTheAppropriateApp() {
-                var authMethodName = 'authenticateFor' + capitalizeFirstLetter(userType) + 'App';
+                var authMethodName = 'authenticateFor' + capitalizeFirstLetter(appType) + 'App';
                 authService[authMethodName]().then(redirectIfLoggedIn);
             }
             function redirectUserToTheCorrectApp() {
@@ -75,6 +83,8 @@ function loginController ($q, $rootScope, $location, alertService, authService, 
                 //noinspection IfStatementWithTooManyBranchesJS
                 if (userContext.roles.indexOf('staff') >= 0) {
                     return 'staff';
+                } else if (userContext.roles.indexOf('readonly-staff') >= 0) {
+                    return 'readonly-staff';
                 } else if (userContext.roles.indexOf('vendor') >= 0) {
                     return 'vendor';
                 } else if (userContext.roles.indexOf('library') >= 0) {

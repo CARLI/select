@@ -1,11 +1,12 @@
 angular.module('carli.sections.subscriptions.productsAvailable')
     .controller('productsAvailableByVendorController', productsAvailableByVendorController);
 
-function productsAvailableByVendorController( $scope, $timeout, $q, accordionControllerMixin, notificationModalService, controllerBaseService, cycleService, vendorService, libraryService, offeringService, offeringsByVendorExport, editOfferingService,  productService ) {
+function productsAvailableByVendorController( $scope, $timeout, $q, accordionControllerMixin, notificationModalService, controllerBaseService, cycleService, vendorService, libraryService, offeringService, offeringsByVendorExport, editOfferingService,  productService, userService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadProductsForVendor);
 
+    vm.userIsReadOnly = userService.userIsReadOnly();
     vm.computeInvoiceTotalForVendor = computeInvoiceTotalForVendor;
     vm.computeSelectionTotalForVendor = computeSelectionTotalForVendor;
     vm.exportOfferingList = exportOfferingList;

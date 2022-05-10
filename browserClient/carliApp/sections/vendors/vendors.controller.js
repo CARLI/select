@@ -1,9 +1,10 @@
 angular.module('carli.sections.vendors')
 .controller('vendorsController', vendorController);
 
-function vendorController( $sce, $filter, vendorService ){
+function vendorController( $sce, $filter, vendorService, userService ){
     var vm = this;
     vm.afterVendorSubmit = populateVendorList;
+    vm.userIsReadOnly = userService.userIsReadOnly();
     activate();
 
     function activate() {

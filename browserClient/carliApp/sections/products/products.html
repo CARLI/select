@@ -4,7 +4,7 @@
         <div class="button-container">
             <label for="currentCycle">Current Cycle:</label>
             <select-cycle input-id="currentCycle"></select-cycle>
-            <button type="button" id="new-product" class="carli-button" data-toggle="modal" data-target="#new-product-modal">New Product <i class="fa fa-plus-circle"></i></button>
+            <button type="button" id="new-product" class="carli-button" data-toggle="modal" data-target="#new-product-modal" ng-disabled="vm.userIsReadOnly">New Product <i class="fa fa-plus-circle"></i></button>
         </div>
     </div>
 

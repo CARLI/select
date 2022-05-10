@@ -1,10 +1,11 @@
 angular.module('carli.sections.subscriptions.vendorsSettingPrices')
     .controller('vendorsSettingPricesController', vendorsSettingPricesController);
 
-function vendorsSettingPricesController( $q, notificationService ) {
+function vendorsSettingPricesController( $q, notificationService, userService ) {
     var vm = this;
     vm.undoOpenVendorPricing = undoOpenVendorPricing;
     vm.closeVendorPricing = closeVendorPricing;
+    vm.userIsReadOnly = userService.userIsReadOnly();
 
     function undoOpenVendorPricing(){
         return vm.cycleRouter.previous();

@@ -41,8 +41,8 @@
                         <span>{{ vm.computeSelectionTotalForLibrary(library) | currency }}</span>
                     </div>
 
-                    <button type="button" class="carli-button" ng-click="vm.invoiceCheckedProductsForLibrary(library)">Invoice Checked Products</button>
-                    <button type="button" class="carli-button" ng-click="vm.invoiceAllProductsForLibrary(library)">Invoice All Products</button>
+                    <button type="button" class="carli-button" ng-click="vm.invoiceCheckedProductsForLibrary(library)" ng-disabled="vm.userIsReadOnly">Invoice Checked Products</button>
+                    <button type="button" class="carli-button" ng-click="vm.invoiceAllProductsForLibrary(library)" ng-disabled="vm.userIsReadOnly">Invoice All Products</button>
 
                     <div class="placeholder pull-left" style="margin-right: 1rem; width: 400px;">TODO: Library View Button</div>
                 </div>
@@ -51,8 +51,8 @@
     </ul>
 </div>
 
-<button class="carli-button" ng-click="vm.invoiceAllLibraries()">Invoice All Libraries</button>
-<button class="carli-button" ng-click="vm.estimateAllLibraries()">Estimate All Libraries</button>
+<button class="carli-button" ng-click="vm.invoiceAllLibraries()" ng-disabled="vm.userIsReadOnly">Invoice All Libraries</button>
+<button class="carli-button" ng-click="vm.estimateAllLibraries()" ng-disabled="vm.userIsReadOnly">Estimate All Libraries</button>
 
 <div class="placeholder" style="width: 400px; margin-bottom: 1rem;">
     TODO: Export as CSV

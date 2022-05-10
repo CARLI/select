@@ -1,7 +1,7 @@
 angular.module('carli.entityForms.product')
     .controller('editProductController', editProductController);
 
-function editProductController( $q, $scope, $rootScope, $filter, activityLogService, alertService, entityBaseService, errorHandler, cycleService, libraryService, licenseService, offeringService, productService, vendorService) {
+function editProductController( $q, $scope, $rootScope, $filter, activityLogService, alertService, entityBaseService, errorHandler, cycleService, libraryService, licenseService, offeringService, productService, vendorService, userService) {
     var vm = this;
 
     var offeringsCopy = [];
@@ -13,6 +13,7 @@ function editProductController( $q, $scope, $rootScope, $filter, activityLogServ
         productFields: 'carliApp/components/entityForms/product/editProduct.html',
         oneTimePurchaseFields: 'carliApp/components/entityForms/product/editOneTimePurchase.html'
     };
+    vm.userIsReadOnly = userService.userIsReadOnly();
     vm.currentTemplate = templates.productFields;
 
     var afterSubmitCallback = vm.afterSubmitFn || function() {};

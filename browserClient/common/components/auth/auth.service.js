@@ -94,7 +94,7 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
 
     function authenticateForStaffApp() {
         return requireSession()
-            .then(requireStaff)
+            .then(requireStaffOrReadonly)
             .then(fetchCurrentUser)
             .then(requireActive)
             .catch(redirectToLogin);
@@ -243,6 +243,12 @@ function authService($rootScope, $q, $location, $window, appState, CarliModules,
 
     function requireStaff() {
         if (!hasRole('staff')) {
+            throw new Error('Unauthorized');
+        }
+    }
+
+    function requireStaffOrReadonly() {
+        if (!hasRole('staff') && !hasRole('readonly-staff')) {
             throw new Error('Unauthorized');
         }
     }

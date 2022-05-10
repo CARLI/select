@@ -6,13 +6,13 @@ angular.module('common.fileUploadList')
                 '<ul cg-busy="vm.loadingPromise">',
                 '  <li ng-repeat="file in vm.files | orderBy:vm.orderBy">',
                 '    <a ng-href="{{ file.link }}" class="file" target="_blank">{{ file.nameUnescaped }}</a>',
-                '    <button type="button" class="delete clear-button-styles" title="Delete {{ file.name }}" ng-click="vm.deleteFile(file)">',
+                '    <button type="button" class="delete clear-button-styles" title="Delete {{ file.name }}" ng-click="vm.deleteFile(file)" ng-if="!vm.userIsReadOnly">',
                 '      <span class="sr-only">Delete {{ file.name }}</span><fa name="remove"></fa>',
                 '    </button>',
                 '  </li>',
                 '</ul>',
-                '<input type="file" ng-model="vm.fileToUpload">',
-                '<button type="button" class="upload">{{ vm.uploadButtonLabel }}</button>',
+                '<input type="file" ng-model="vm.fileToUpload" ng-disabled="vm.userIsReadOnly">',
+                '<button type="button" class="upload" ng-show="!vm.userIsReadOnly">{{ vm.uploadButtonLabel }}</button>',
                 '<div class="uploadProgress" ng-show="vm.uploadInProgress">Upload progress: {{ vm.uploadProgress }}%</div>'
             ].join(''),
             scope: {

@@ -1,10 +1,10 @@
 <libraries-selecting-products-by-library></libraries-selecting-products-by-library>
 
-<button class="carli-button" ng-click="vm.sendReminder()">Reminder</button>
-<button class="carli-button" ng-click="vm.estimateAllLibraries()">Estimate All Libraries</button>
+<button class="carli-button" ng-click="vm.sendReminder()" ng-disabled="vm.userIsReadOnly">Reminder</button>
+<button class="carli-button" ng-click="vm.estimateAllLibraries()" ng-disabled="vm.userIsReadOnly">Estimate All Libraries</button>
 
-<button type="button" class="carli-button pull-left" busy-click="vm.undoOpenSystem()">Undo Open System</button>
-<button type="button" class="carli-button pull-right" busy-click="vm.closeSystem()">Close System</button>
+<button type="button" class="carli-button pull-left" busy-click="vm.undoOpenSystem()" ng-disabled="vm.userIsReadOnly">Undo Open System</button>
+<button type="button" class="carli-button pull-right" busy-click="vm.closeSystem()" ng-disabled="vm.userIsReadOnly">Close System</button>
 
 <modal-dialog modal-id="'close-system-modal'" modal-title="'Close System'">
     <form name="modal-form">
@@ -14,7 +14,7 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="carli-button cancel-button" data-dismiss="modal">Cancel</button>
-            <button type="button" class="carli-button save-button" busy-click="vm.closeSystemDialogComplete()">Close System</button>
+            <button type="button" class="carli-button save-button" busy-click="vm.closeSystemDialogComplete()" ng-disabled="vm.userIsReadOnly">Close System</button>
         </div>
     </form>
 </modal-dialog>

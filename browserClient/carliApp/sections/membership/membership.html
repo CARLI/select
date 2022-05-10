@@ -6,14 +6,14 @@
             <button class="carli-button" busy-click="vm.viewPreviousYear()">
                 View FY{{ vm.previousYear }}
             </button>
-            <button class="carli-button" busy-click="vm.viewNextYear()" ng-if="vm.displayYear === vm.currentYear">
+            <button class="carli-button" busy-click="vm.viewNextYear()" ng-if="vm.displayYear === vm.currentYear" ng-disabled="vm.userIsReadOnly">
                 Start FY{{ vm.nextYear }}
             </button>
             <button class="carli-button" busy-click="vm.viewNextYear()" ng-if="vm.displayYear  <  vm.currentYear">
                 View FY{{ vm.nextYear }}
             </button>
 
-            <button class="carli-button save-button" busy-click="vm.saveMembershipData()">Save</button>
+            <button class="carli-button save-button" busy-click="vm.saveMembershipData()" ng-disabled="vm.userIsReadOnly">Save</button>
         </div>
     </div>
 
@@ -39,10 +39,10 @@
                         {{ library.name }}
                     </div>
                     <div class="column ishare">
-                        <input type="number" min="0" step=".01" ng-model="vm.membershipData.data[library.id].ishare">
+                        <input type="number" min="0" step=".01" ng-model="vm.membershipData.data[library.id].ishare" ng-disabled="vm.userIsReadOnly">
                     </div>
                     <div class="column membership">
-                        <input type="number" min="0" step=".01" ng-model="vm.membershipData.data[library.id].membership">
+                        <input type="number" min="0" step=".01" ng-model="vm.membershipData.data[library.id].membership" ng-disabled="vm.userIsReadOnly">
                     </div>
                     <div class="column total">
                         {{ vm.membershipData.data[library.id].ishare + vm.membershipData.data[library.id].membership | currency }}
@@ -56,8 +56,8 @@
                 </li>
             </ul>
         </form>
-        <button class="carli-button save-button" busy-click="vm.createMembershipInvoices()">Invoice FY{{ vm.displayYear }}</button>
-        <button class="carli-button save-button" busy-click="vm.createMembershipEstimates()">Estimate FY{{ vm.displayYear }}</button>
+        <button class="carli-button save-button" busy-click="vm.createMembershipInvoices()" ng-disabled="vm.userIsReadOnly">Invoice FY{{ vm.displayYear }}</button>
+        <button class="carli-button save-button" busy-click="vm.createMembershipEstimates()" ng-disabled="vm.userIsReadOnly">Estimate FY{{ vm.displayYear }}</button>
     </section>
 </section>
 

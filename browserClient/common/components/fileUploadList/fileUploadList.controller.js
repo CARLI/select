@@ -1,9 +1,10 @@
 angular.module('common.fileUploadList')
     .controller('fileUploadListController', fileUploadListController);
 
-function fileUploadListController( alertService, attachmentsService, errorHandler ){
+function fileUploadListController( alertService, attachmentsService, errorHandler, userService ){
     var vm = this;
 
+    vm.userIsReadOnly = userService.userIsReadOnly();
     vm.loadingPromise = null;
     vm.orderBy = 'order';
     vm.uploadButtonLabel = vm.uploadButtonLabel || 'Upload new file';

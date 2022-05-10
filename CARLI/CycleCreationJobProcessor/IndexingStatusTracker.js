@@ -7,7 +7,7 @@ function IndexingStatusTracker(getViewIndexingStatus, newCycle) {
      let currentProgress = 0;
 
      function start() {
-         intervalId = setInterval(tick, 1000);
+         intervalId = setInterval(tick, 500);
          tick();
          return finishedDeferred.promise;
      }

@@ -10,14 +10,14 @@
         <div ng-show="!vm.newUser" class="controls">
             <div ng-show="vm.editable">
                 <button type="button" class="carli-button cancel-button" ng-click="vm.cancelEdit()">Cancel</button>
-                <input class="carli-button save-button" ng-disabled="!vm.editable" type="button" value="{{ vm.submitLabel() }}" busy-click="vm.submitAction()" >
+                <input class="carli-button save-button" ng-disabled="!vm.editable || vm.authenticatedUserIsReadOnly" type="button" value="{{ vm.submitLabel() }}" busy-click="vm.submitAction()" >
             </div>
 
-            <button type="button" id="user-delete" class="carli-button remove-button" ng-hide="vm.editable || vm.userType === 'staff'" ng-click="vm.deleteUser()">
+            <button type="button" id="user-delete" class="carli-button remove-button" ng-hide="vm.editable || vm.userType === 'staff'" ng-click="vm.deleteUser()" ng-disabled="vm.authenticatedUserIsReadOnly">
                 Delete<fa name="delete"></fa>
             </button>
 
-            <button type="button" id="user-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()">
+            <button type="button" id="user-edit" class="carli-button" ng-hide="vm.editable" ng-click="vm.toggleEditable()" ng-disabled="vm.authenticatedUserIsReadOnly">
                 Edit<fa name="edit"></fa>
             </button>
         </div>
@@ -48,7 +48,7 @@
                 <span class="value">{{ vm.selectedVendor.name || 'N/A' }}</span>
             </view-edit-select-object>
 
-            <div class="user-readonly-checkbox" ng-show="vm.userType === 'library'" >
+            <div class="user-readonly-checkbox" ng-show="vm.userType === 'library' || vm.userType === 'staff'" >
                 <div ng-show="vm.editable">
                     <checkbox ng-model="vm.userIsReadOnly">User has read only access</checkbox>
                 </div>
@@ -66,7 +66,7 @@
     <div class="footer" ng-show="vm.editable">
         <fieldset>
             <button type="button" class="carli-button cancel-button" data-dismiss="modal" ng-click="vm.cancelEdit()">Cancel</button>
-            <input type="button" id="user-submit" class="carli-button save-button" value="{{ vm.submitLabel() }}" busy-click="vm.submitAction()">
+            <input type="button" id="user-submit" class="carli-button save-button" value="{{ vm.submitLabel() }}" busy-click="vm.submitAction()" ng-disabled="vm.authenticatedUserIsReadOnly">
         </fieldset>
     </div>
 
