@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="controls">
-        <button type="button" class="carli-button edit" data-offering-id="{{ offering.id }}"{{#if userIsReadOnly}} disabled="disabled" {{/if}}>Edit <span class="fa fa-pencil-square-o "></span></button>
+        <button type="button" class="carli-button edit" data-offering-id="{{ offering.id }}" {{#if userIsReadOnly}} disabled="disabled" {{/if}}>Edit <span class="fa fa-pencil-square-o "></span></button>
     </div>
 </div>
 {{/if}}
@@ -22,7 +22,7 @@
 <div role="gridcell" aria-describedby="product-column-header" class="column product">
     <h3>{{ offering.product.displayName }}</h3>
     <div class="controls">
-        <button type="button" class="carli-button edit" data-offering-id="{{ offering.id }}">Edit <span class="fa fa-pencil-square-o "></span></button>
+        <button type="button" class="carli-button edit" data-offering-id="{{ offering.id }}" {{#if userIsReadOnly}} disabled="disabled" {{/if}}>Edit <span class="fa fa-pencil-square-o "></span></button>
     </div>
 </div>
 {{/if}}

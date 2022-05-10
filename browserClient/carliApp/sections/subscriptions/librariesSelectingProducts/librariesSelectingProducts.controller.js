@@ -1,8 +1,9 @@
 angular.module('carli.sections.subscriptions.librariesSelectingProducts')
     .controller('librariesSelectingProductsController', librariesSelectingProductsController);
 
-function librariesSelectingProductsController( $q, alertService, cycleService, notificationModalService ) {
+function librariesSelectingProductsController( $q, alertService, cycleService, notificationModalService, userService ) {
     var vm = this;
+    vm.userIsReadOnly = userService.userIsReadOnly();
     vm.undoOpenSystem = undoOpenSystem;
     vm.closeSystem = closeSystem;
     vm.closeSystemDialogComplete = closeSystemDialogComplete;
