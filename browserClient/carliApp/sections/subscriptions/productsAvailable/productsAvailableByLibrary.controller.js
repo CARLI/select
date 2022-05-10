@@ -1,11 +1,12 @@
 angular.module('carli.sections.subscriptions.productsAvailable')
     .controller('productsAvailableByLibraryController', productsAvailableByLibraryController);
 
-function productsAvailableByLibraryController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, libraryService, notificationModalService, offeringService, offeringsByLibraryExport, editOfferingService, productService, vendorService ) {
+function productsAvailableByLibraryController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, libraryService, notificationModalService, offeringService, offeringsByLibraryExport, editOfferingService, productService, vendorService, userService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadOfferingsForLibrary);
 
+    vm.userIsReadOnly = userService.userIsReadOnly();
     vm.computeSelectionTotalForLibrary = computeSelectionTotalForLibrary;
     vm.contactNonPlayers = contactNonPlayers;
     vm.estimateAllLibraries = estimateAllLibraries;

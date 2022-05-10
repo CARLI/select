@@ -14,8 +14,8 @@
 </div>
 
 
-<button type="button" class="carli-button pull-left" busy-click="vm.undoCloseSystem()">Undo Close System</button>
-<button type="button" class="carli-button" busy-click="vm.showAvailableBannerExports()">Banner Exports</button>
+<button type="button" class="carli-button pull-left" busy-click="vm.undoCloseSystem()" ng-disabled="vm.userIsReadOnly">Undo Close System</button>
+<button type="button" class="carli-button" busy-click="vm.showAvailableBannerExports()" ng-disabled="vm.userIsReadOnly">Banner Exports</button>
 
 <div class="placeholder" style="width: 400px; margin-bottom: 1rem;">
     TODO: Archive Button
