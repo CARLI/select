@@ -22,7 +22,7 @@ function vendorSalesContactController() {
         }
 
         function salesContact(contact) {
-            return contact.contactType = 'Sales';
+            return contact.contactType === 'Sales';
         }
     }
 }
