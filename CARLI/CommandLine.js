@@ -43,6 +43,10 @@ function confirmOrExit(question) {
     }
 }
 
+function withArguments(doSomething) {
+    return doSomething(...getArguments());
+}
+
 function withOptionalSingleArgument(doSomething) {
     var argument = getFirstArgument();
     return doSomething(argument);
@@ -66,6 +70,10 @@ function getFirstArgument() {
     return process.argv[2];
 }
 
+function getArguments() {
+    return process.argv.slice(2);
+}
+
 function getProgramName() {
     return path.basename(process.argv[1]);
 }
@@ -75,5 +83,6 @@ module.exports = {
     confirmOrExit,
     withOptionalSingleArgument,
     withSingleArgument,
+    withArguments,
     getProgramName,
 };
