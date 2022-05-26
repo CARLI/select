@@ -7,12 +7,15 @@ var numSkips = 0;
 var numOk = 0;
 var numConflicts = 0;
 var numTotal = 0;
+const conflictingDbs = [];
 
 cli.asCouchAdmin(() => {
     return cli.withOptionalSingleArgument(listConflicts)
         .then(() => {
             console.log(`Processed ${numTotal} databases`);
             console.log(`${numOk} were ok, ${numSkips} were skipped, and ${numConflicts} had conflicts`);
+            console.log("These databases had conflicts:");
+            conflictingDbs.forEach(db => console.log(db));
             process.exit();
         });
 });
@@ -32,9 +35,12 @@ async function listConflicts(databaseName) {
 
 async function listAllConflicts() {
     const databases = await couchUtils.listDatabases();
-    // const summaryPromises = databases.map(summarizeConflictsForDatabase);
-    // return Promise.all(summaryPromises);
-    return forEachSyncronizingAsyncronousCallback(databases, summarizeConflictsForDatabase);
+    const databasesWithValue = databases.filter(database => database.indexOf("cycle-") > -1);
+    await databasesWithValue.reduce((acc, item) => {
+        return acc.then(() => {
+            return summarizeConflictsForDatabase(item);
+        });
+    }, Promise.resolve(null));
 }
 
 function summarizeConflictsForDatabase(databaseName) {
@@ -43,8 +49,10 @@ function summarizeConflictsForDatabase(databaseName) {
             if (results.length !== 0)
                 console.log(`${databaseName} has ${results.length} conflicting documents`);
             numTotal++;
-            if (results.length !== 0)
+            if (results.length !== 0) {
                 numConflicts++;
+                conflictingDbs.push(databaseName);
+            }
             else
                 numOk++;
         }).catch(e => {
@@ -52,20 +60,6 @@ function summarizeConflictsForDatabase(databaseName) {
             numSkips++;
             console.log("Encountered an error");
             console.log(e);
-            process.exit();
-        });
-}
-
-function forEachSyncronizingAsyncronousCallback(inputList, fn, i = 0, accumulatedOutput = []) {
-    return fn(inputList[i])
-        .then(result => {
-            accumulatedOutput.push(result);
-            return forEachSyncronizingAsyncronousCallback(inputList, fn, i + 1, accumulatedOutput);
-        })
-        .catch(e => {
-            console.log("Encountered an error during recursion");
-            console.log(e);
-            process.exit();
         });
 }
 
