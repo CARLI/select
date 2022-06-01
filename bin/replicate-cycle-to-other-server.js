@@ -26,6 +26,7 @@ async function syncCycleDatabases(source, target, cycleDatabaseName) {
 
     await syncPromise;
     console.log("Replication complete! Please run index-all-databases or index-databases-for-cycle to warm the indexes");
+    process.exit();
 }
 
 async function getDatabasesToSync(source, cycleDatabaseName) {

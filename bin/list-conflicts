@@ -35,8 +35,7 @@ async function listConflicts(databaseName) {
 
 async function listAllConflicts() {
     const databases = await couchUtils.listDatabases();
-    const databasesWithValue = databases.filter(database => database.indexOf("cycle-") > -1);
-    await databasesWithValue.reduce((acc, item) => {
+    await databases.reduce((acc, item) => {
         return acc.then(() => {
             return summarizeConflictsForDatabase(item);
         });
