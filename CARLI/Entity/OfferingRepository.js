@@ -524,9 +524,10 @@ function bulkUpdateOfferings( listOfOfferings, cycle ){
         .then(returnSuccessfulBulkUpdateIds);
 
     function transformOfferingForUpdate(offering){
-        transformFunction(offering);
-        transformCycleReference(offering, cycle);
-        return offering;
+        var clone = {...offering};
+        transformFunction(clone);
+        transformCycleReference(clone, cycle);
+        return clone;
     }
 
     function bulkUpdateOfferings(){

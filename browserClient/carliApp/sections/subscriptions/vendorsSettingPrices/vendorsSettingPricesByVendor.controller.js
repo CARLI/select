@@ -149,14 +149,13 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
             vendor.products.forEach(product => {
                 product.offerings?.forEach(offering => {
                     if (offeringIdsToClear.indexOf(offering.id) > -1) {
-                        offering.flagged = false;
                         offeringsToClear.push(offering);
                     }
                 });
             });
         });
 
-        return offeringService.bulkUpdateOfferings(offeringsToClear);
+        return offeringService.clearFlagsForSelectedOfferings(offeringsToClear);
     }
 
     function closeVendorPricing( vendor ){

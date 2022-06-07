@@ -71,10 +71,7 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
                 })
                 .catch(errorHandler);
         },
-        bulkUpdateOfferings: function( listOfOfferings, cycle ){
-            var cycleToUse = cycle || cycleService.getCurrentCycle();
-            return $q.when( offeringModule.bulkUpdateOfferings( listOfOfferings, cycleToUse ));
-        },
+        bulkUpdateOfferings: bulkUpdateOfferings,
         ensureProductHasOfferingsForAllLibraries: function ensureProductHasOfferingsForAllLibraries( product ){
             return $q.when( offeringModule.ensureProductHasOfferingsForAllLibraries( product.id, product.vendor.id, product.cycle ) );
         },
@@ -114,7 +111,11 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
             return offeringModule.updateHistory(oldOffering, offering, year);
         },
         populateNonCrmLibraryData: populateNonCrmLibraryData,
-        siteLicenseSelectionUsers: offeringModule.siteLicenseSelectionUsers
+        siteLicenseSelectionUsers: offeringModule.siteLicenseSelectionUsers,
+        clearFlagsForSelectedOfferings: function(selectedOfferings) {
+            selectedOfferings.forEach(offering => offering.flagged = false);
+            return bulkUpdateOfferings(selectedOfferings);
+        }
     };
 
     function getFlaggedState (offering, optionalCycle) {
@@ -164,5 +165,9 @@ function offeringService( CarliModules, $q, cycleService, errorHandler ) {
         }
     }
 
+    function bulkUpdateOfferings( listOfOfferings, cycle ){
+        var cycleToUse = cycle || cycleService.getCurrentCycle();
+        return $q.when( offeringModule.bulkUpdateOfferings( listOfOfferings, cycleToUse ));
+    }
 
 }
