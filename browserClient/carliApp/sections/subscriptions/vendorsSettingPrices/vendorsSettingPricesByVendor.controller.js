@@ -14,6 +14,7 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
     vm.openVendorPricing = openVendorPricing;
     vm.stopEditing = stopEditing;
     vm.toggleProductSection = toggleProductSection;
+    vm.clearFlagsForSelectedOfferings = clearFlagsForSelectedOfferings;
 
     vm.cycle = {};
     vm.expandedProducts = {};
@@ -138,6 +139,24 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
                 });
             vm.loadingPromise[product.id] = loadingPromise;
         }
+    }
+
+    function clearFlagsForSelectedOfferings() {
+        const offeringIdsToClear = Object.keys(vm.selectedOfferings);
+        const offeringsToClear = [];
+
+        vm.vendors.forEach(vendor => {
+            vendor.products.forEach(product => {
+                product.offerings?.forEach(offering => {
+                    if (offeringIdsToClear.indexOf(offering.id) > -1) {
+                        offering.flagged = false;
+                        offeringsToClear.push(offering);
+                    }
+                });
+            });
+        });
+
+        return offeringService.bulkUpdateOfferings(offeringsToClear);
     }
 
     function closeVendorPricing( vendor ){
