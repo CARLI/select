@@ -42,7 +42,10 @@ function loginController ($q, $rootScope, $location, alertService, authService, 
     }
 
     function createSession() {
-        return authService.createSession(vm.userLogin)
+        return authService.createSession({
+                email: vm.userLogin.email.toLowerCase(),
+                password: vm.userLogin.password
+            })
             .then(loginSuccess)
             .catch(loginFailure);
 
@@ -153,7 +156,7 @@ function loginController ($q, $rootScope, $location, alertService, authService, 
     }
 
     function requestPasswordReset() {
-        return userService.requestPasswordReset(vm.userLogin.email)
+        return userService.requestPasswordReset(vm.userLogin.email.toLowerCase())
             .then(function () {
                 vm.resetRequestSent = true;
             })

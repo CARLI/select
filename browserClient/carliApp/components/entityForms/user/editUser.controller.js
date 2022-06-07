@@ -214,6 +214,7 @@ function editUserController( $filter, $scope, $rootScope, $q, $location, $window
         }
 
         vm.user.email = vm.user.email.replace(/[^\x00-\x7F]/g, "");
+        vm.user.email = vm.user.email.toLowerCase();
 
         setUserRoles();
 
