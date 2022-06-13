@@ -8,6 +8,8 @@ function vendorsSettingPricesByLibraryController( $scope, $q, accordionControlle
 
     vm.exportOfferingList = exportOfferingList;
     vm.stopEditing = stopEditing;
+    vm.showClearingFlagsPopup = showClearingFlagsPopup;
+    vm.clearFlagsForSelectedOfferings = clearFlagsForSelectedOfferings;
 
     vm.cycle = {};
     vm.isEditing = {};
@@ -103,5 +105,30 @@ function vendorsSettingPricesByLibraryController( $scope, $q, accordionControlle
 
     function exportOfferingList(library) {
         return offeringsByLibraryExport(library, vm.vendorMap, vm.offerings[library.id], vm.cycle, vm.offeringColumns);
+    }
+
+    function showClearingFlagsPopup() {
+        vm.selectedOfferingsCount = getSelectedOfferingIds().length;
+        $('#clear-flags-for-selected-offerings-popup').modal(true);
+    }
+
+    function clearFlagsForSelectedOfferings() {
+        const offeringIdsToClear = getSelectedOfferingIds();
+        const offeringsToClear = [];
+
+        vm.offerings[vm.openAccordion].forEach(offering => {
+            if (offeringIdsToClear.indexOf(offering.id) > -1) {
+                offeringsToClear.push(offering);
+            }
+        });
+
+        return offeringService.clearFlagsForSelectedOfferings(offeringsToClear)
+            .then(() => $('#clear-flags-for-selected-offerings-popup').modal('hide'));
+    }
+
+    function getSelectedOfferingIds() {
+        return vm.selectedOfferings && vm.selectedOfferings[vm.openAccordion] ?
+            Object.keys(vm.selectedOfferings[vm.openAccordion]).filter(key => vm.selectedOfferings[vm.openAccordion][key] === true) :
+            [];
     }
 }

@@ -27,9 +27,14 @@
                     <div class="placeholder pull-left" style="width: 250px;">Print Email Export</div>
                     <button class="carli-button" busy-click="vm.exportOfferingList(library)">Export</button>
 
+                    <button class="carli-button" ng-click="vm.showClearingFlagsPopup()">Clear Flags for Selected Offerings</button>
+
                     <div class="placeholder pull-right" style="width: 250px;">Vendor Pricing Entry</div>
                 </div>
             </div>
         </li>
     </ul>
 </div>
+<modal-dialog modal-id="'clear-flags-for-selected-offerings-popup'" modal-title="'Clear Selected Flags'">
+    <ng-include src="'carliApp/sections/subscriptions/clearFlagsModal.html'"></ng-include>
+</modal-dialog>
