@@ -13,7 +13,7 @@ module.exports = function (storeOptions) {
     }
 
     function couchRequest(requestOptions) {
-        Logger.log('[couchRequest] START');
+        // Logger.log('[couchRequest] START');
         var deferred = Q.defer();
 
         request(requestOptions, handleCouchResponse);
@@ -48,13 +48,13 @@ module.exports = function (storeOptions) {
                 }
                 else {
                     deferred.resolve(data);
-                    Logger.log('[couchRequest] resolved data request');
+                    // Logger.log('[couchRequest] resolved data request');
 
                 }
             }
         }
 
-        Logger.log('[couchRequest] END');
+        // Logger.log('[couchRequest] END');
         return deferred.promise;
     }
 
@@ -343,6 +343,24 @@ module.exports = function (storeOptions) {
         return deferred.promise;
     }
 
+    function deleteDocument(dbName, documentId, revision) {
+        var deferred = Q.defer();
+        var docPath = dbName + '/' + documentId + '?rev=' + revision;
+
+        request.get(storeOptions.privilegedCouchDbUrl + '/' + docPath, function(error, response, body) {
+            if (error) {
+                deferred.reject(error);
+            } else if (response.statusCode >= 200 && response.statusCode <= 299) {
+                deferred.resolve(docPath + ' deleted');
+            } else {
+                Logger.log('failed to delete document', body);
+                deferred.reject("Could not delete document " + docPath + " statusCode=" + response.statusCode);
+            }
+        });
+
+        return deferred.promise;
+    }
+
     function createSecurityDocumentForType(dbName, databaseType, entity) {
         var roles = [ '_admin', 'staff' ];
 
@@ -586,6 +604,7 @@ module.exports = function (storeOptions) {
         couchViewUrl: couchViewUrl,
         createDatabase: createDatabase,
         deleteDatabase: deleteDatabase,
+        deleteDocument: deleteDocument,
         couchRequest: couchRequest,
         couchRequestSession: couchRequestSession,
         getCouchDocuments: getCouchDocuments,
