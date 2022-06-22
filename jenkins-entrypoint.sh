@@ -86,6 +86,10 @@ commit_version_bump() {
     fi
 }
 
+docker_prune() {
+    docker system prune -af
+}
+
 
 main() {
     trap clean-up EXIT
@@ -94,7 +98,8 @@ main() {
         && build_build_image \
         && build_both_runtime_images \
         && push_both_runtime_images \
-        && commit_version_bump
+        && commit_version_bump \
+        && docker_prune
 }
 
 [[ "${BASH_SOURCE[0]}" != "${0}" ]] || main
