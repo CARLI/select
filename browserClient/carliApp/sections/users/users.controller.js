@@ -1,7 +1,7 @@
 angular.module('carli.sections.users')
 .controller('userController', userController);
 
-function userController( $sce, $location, userService, csvExportService, libraryService ){
+function userController( $sce, $location, userService, csvExportService, libraryService, vendorService ){
     var vm = this;
     vm.userIsReadOnly = userService.userIsReadOnly();
     vm.activeCycles = [];
@@ -66,19 +66,7 @@ function userController( $sce, $location, userService, csvExportService, library
         return user;
     }
 
-    function mapLibraryInformationToUser(libraries, user) {
-        let clonedUser = Object.assign({}, user);
 
-        let matchedLibrary = libraries.filter(library => library.id === clonedUser.library)[0];
-
-        clonedUser.libraryName = matchedLibrary.name;
-        clonedUser.fullLibrary = matchedLibrary;
-
-        clonedUser.role = clonedUser.roles[0];
-        clonedUser.active = clonedUser.isActive ? "active" : "inactive";
-
-        return clonedUser;
-    }
 
     vm.userListColumns = [
         {
@@ -97,14 +85,60 @@ function userController( $sce, $location, userService, csvExportService, library
         }
     ];
 
+
+
     vm.exportUsersToCsv = function() {
         libraryService.list().then(libraries => {
-            let users = vm.userList.map(user => mapLibraryInformationToUser(libraries, user));
+            vendorService.list().then(vendors => {
+                let users = vm.userList.map(user => {
+                    user = flattenUserInformation(user);
+                    user = mapLibraryInformationToUser(libraries, user);
+                    user = mapVendorInformationToUser(vendors, user);
+                    return user;
+                });
 
-            csvExportService.exportToCsv(users, ["fullName", "email", "libraryName", "role", "active"]).then((csvString) => csvExportService.browserDownloadCsv(csvString, `CSV_EXPORT.csv`));
+
+                csvExportService.exportToCsv(users, ["fullName", "email", "libraryName", "vendorName", "role", "access", "active"]).then((csvString) => csvExportService.browserDownloadCsv(csvString, `CSV_EXPORT.csv`));
+            })
         })
+    }
 
+    function flattenUserInformation(user) {
 
+        user.role = user.roles[0];
+        user.access = user.roles.indexOf("readonly") >= 0 || user.roles.indexOf("readonly-staff") >= 0 ? "read-only" : "read-write";
+
+        user.active = user.isActive ? "active" : "inactive";
+
+        return user;
+    }
+
+    function userIsStaff(user) {
+        return user.roles.indexOf("staff") >= 0 || user.roles.indexOf("readonly-staff") >= 0;
+    }
+
+    function mapLibraryInformationToUser(libraries, user) {
+        let clonedUser = Object.assign({}, user);
+
+        let matchedLibrary = libraries.filter(library => library.id === clonedUser.library)[0];
+
+        if(matchedLibrary && !userIsStaff(user)){
+            clonedUser.libraryName = matchedLibrary.name;
+        }
+
+        return clonedUser;
+    }
+
+    function mapVendorInformationToUser(vendors, user) {
+        let clonedUser = Object.assign({}, user);
+
+        let matchedVendor = vendors.filter(vendor => vendor.id === clonedUser.vendor)[0];
+
+        if(matchedVendor && !userIsStaff(user)){
+            clonedUser.vendorName = matchedVendor.name;
+        }
+
+        return clonedUser;
     }
 }
 
