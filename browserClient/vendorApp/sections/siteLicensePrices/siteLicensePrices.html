@@ -82,6 +82,9 @@
     <div class="pull-right">
         <button busy-click="vm.downloadCsv()" class="carli-button" ng-disabled="vm.csvExportIsDisabled()">Export to CSV</button>
         <button type="button" id="save-site-license-prices" class="carli-button" busy-click="vm.saveOfferings()" ng-disabled="!vm.thereAreUnsavedChanges()">Save Changes<i class="fa fa-floppy-o"></i></button>
+        <div class="export-message">
+            <span ng-if="vm.csvExportIsDisabled()">Exporting to CSV is disabled until changes are saved.</span>
+        </div>
     </div>
 </section>
 
