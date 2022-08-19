@@ -1,20 +1,20 @@
 angular.module('carli.sections.users')
 .controller('userController', userController);
 
-function userController( $sce, $location, userService ){
+function userController( $sce, $location, userService, csvExportService, libraryService ){
     var vm = this;
     vm.userIsReadOnly = userService.userIsReadOnly();
     vm.activeCycles = [];
     vm.afterUserSubmit = populateUserList;
     activate();
+    vm.userType = $location.path().substring($location.path().lastIndexOf('/') + 1);
 
     function activate() {
         populateUserList();
     }
 
     function populateUserList() {
-        var userType = $location.path().substring($location.path().lastIndexOf('/') + 1);
-        setUserTypeLabel(userType);
+        setUserTypeLabel(vm.userType);
 
         vm.loadingPromise = userService.list().then(filterUsersByType);
 
@@ -31,14 +31,14 @@ function userController( $sce, $location, userService ){
                     vendor: ['vendor']
                 };
                 let result = false;
-                userTypesForRole[userType].forEach(userTypeForRole => {
+                userTypesForRole[vm.userType].forEach(userTypeForRole => {
                     if(user.roles.indexOf(userTypeForRole) >= 0)
                         result = true;
                 })
                 return result;
             }
             function filterMasqueradingStaffFromNonStaffLists(user) {
-                if (userType === 'staff') {
+                if (vm.userType === 'staff') {
                     return true;
                 }
                 var isAlsoStaff = user.roles.indexOf('staff') >= 0;
@@ -66,6 +66,20 @@ function userController( $sce, $location, userService ){
         return user;
     }
 
+    function mapLibraryInformationToUser(libraries, user) {
+        let clonedUser = Object.assign({}, user);
+
+        let matchedLibrary = libraries.filter(library => library.id === clonedUser.library)[0];
+
+        clonedUser.libraryName = matchedLibrary.name;
+        clonedUser.fullLibrary = matchedLibrary;
+
+        clonedUser.role = clonedUser.roles[0];
+        clonedUser.active = clonedUser.isActive ? "active" : "inactive";
+
+        return clonedUser;
+    }
+
     vm.userListColumns = [
         {
             label: "User",
@@ -83,5 +97,14 @@ function userController( $sce, $location, userService ){
         }
     ];
 
+    vm.exportUsersToCsv = function() {
+        libraryService.list().then(libraries => {
+            let users = vm.userList.map(user => mapLibraryInformationToUser(libraries, user));
+
+            csvExportService.exportToCsv(users, ["fullName", "email", "libraryName", "role", "active"]).then((csvString) => csvExportService.browserDownloadCsv(csvString, `CSV_EXPORT.csv`));
+        })
+
+
+    }
 }
 
