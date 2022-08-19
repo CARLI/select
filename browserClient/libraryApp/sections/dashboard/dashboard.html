@@ -5,6 +5,10 @@
     <p class="purchased-message">This page lists all of the products that your library's patrons currently have access to through CARLI.
         If your library is not able to access any one of these items, please <a ask-carli="Dashboard - unable to access product - contact CARLI">contact CARLI</a>.</p>
 
+    <a class="vpat-link" href="https://www.carli.illinois.edu/products-services/eres/vpat-repository" target="_blank">
+        Voluntary Product Assessment Template (VPAT) Repository
+    </a>
+
     <div class="cycle-link-header">Jump to:</div>
     <ol class="cycle-link-list">
         <li class="cycle-link" ng-repeat="cycle in vm.cycles | orderBy:'-year' track by cycle.id">

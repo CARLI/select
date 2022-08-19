@@ -1,5 +1,6 @@
 .cycle-link-header {
     font-weight: 700;
+    margin-top: 28px;
 }
 
 .cycle-link-list {
@@ -11,6 +12,11 @@
             @extend a;
         }
     }
+}
+
+.vpat-link {
+    font-weight: bold;
+    font-size: 16px;
 }
 
 
