@@ -163,8 +163,10 @@ async function addRoleToSecurityDoc(dbName, role) {
     });
 
     const body = JSON.parse(response.body);
-    if(!body.members)
+    if(!body.members) {
         console.log("O M G", dbName);
+        return;
+    }
     const roles = body.members && body.members.roles ? body.members.roles : [];
     if(roles.indexOf(role) === -1) {
         roles.push(role);
