@@ -20,11 +20,14 @@
                     <li role="row" class="offering" ng-class="{ 'edit-mode': vm.isEditing[offering.id] }" ng-repeat="offering in vm.offerings[library.id] | orderBy:vm.orderBy:vm.reverse track by offering.id">
                         <edit-offering ng-if="vm.isEditing[offering.id]" cycle="::vm.cycle" offering="offering" columns="::vm.offeringColumns" on-offering-saved="::vm.stopEditing"></edit-offering>
                         <render-offering ng-if="!vm.isEditing[offering.id]" offering="offering" cycle="::vm.cycle" columns="::vm.offeringColumns"></render-offering>
+                        <checkbox ng-model="vm.selectedOfferings[library.id][offering.id]"></checkbox>
                     </li>
                 </ul>
                 <div class="footer">
                     <div class="placeholder pull-left" style="width: 250px;">Print Email Export</div>
                     <button class="carli-button" busy-click="vm.exportOfferingList(library)">Export</button>
+
+                    <button class="carli-button" ng-click="vm.showClearingFlagsPopup()">Clear Flags for Selected Offerings</button>
 
                     <div class="placeholder pull-right" style="width: 250px;">Vendor Pricing Entry</div>
                 </div>
@@ -32,3 +35,6 @@
         </li>
     </ul>
 </div>
+<modal-dialog modal-id="'clear-flags-for-selected-offerings-popup'" modal-title="'Clear Selected Flags'">
+    <ng-include src="'carliApp/sections/subscriptions/clearFlagsModal.html'"></ng-include>
+</modal-dialog>

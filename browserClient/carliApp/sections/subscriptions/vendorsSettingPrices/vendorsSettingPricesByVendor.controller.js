@@ -14,6 +14,8 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
     vm.openVendorPricing = openVendorPricing;
     vm.stopEditing = stopEditing;
     vm.toggleProductSection = toggleProductSection;
+    vm.clearFlagsForSelectedOfferings = clearFlagsForSelectedOfferings;
+    vm.showClearingFlagsPopup = showClearingFlagsPopup;
 
     vm.cycle = {};
     vm.expandedProducts = {};
@@ -26,6 +28,8 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
         'site-license-price-both',
         'flag'
     ];
+    vm.selectedOfferings = {};
+    vm.selectedOfferingsCount = 0;
     vm.vendors = [];
     vm.vendorStatus = {};
 
@@ -138,6 +142,35 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
                 });
             vm.loadingPromise[product.id] = loadingPromise;
         }
+    }
+
+    function showClearingFlagsPopup() {
+        vm.selectedOfferingsCount = getSelectedOfferingIds().length;
+        $('#clear-flags-for-selected-offerings-popup').modal(true);
+    }
+
+    function clearFlagsForSelectedOfferings() {
+        const offeringIdsToClear = getSelectedOfferingIds();
+        const offeringsToClear = [];
+
+        vm.vendors.forEach(vendor => {
+            if (vendor.products) {
+                vendor.products.forEach(product => {
+                    product.offerings?.forEach(offering => {
+                        if (offeringIdsToClear.indexOf(offering.id) > -1) {
+                            offeringsToClear.push(offering);
+                        }
+                    });
+                });
+            }
+        });
+
+        return offeringService.clearFlagsForSelectedOfferings(offeringsToClear)
+            .then(() => $('#clear-flags-for-selected-offerings-popup').modal('hide'));
+    }
+
+    function getSelectedOfferingIds() {
+        return Object.keys(vm.selectedOfferings).filter(key => vm.selectedOfferings[key] === true);
     }
 
     function closeVendorPricing( vendor ){
