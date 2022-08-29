@@ -154,6 +154,20 @@ module.exports = function (storeOptions) {
         });
     }
 
+    function getSecurityDocument(dbName) {
+        var url = storeOptions.privilegedCouchDbUrl  + '/' + dbName + '/_security';
+
+        return couchRequest({
+            url: url,
+            method: 'get'
+        }).then(function(result) {
+            return result;
+        }).catch(function(err) {
+            Logger.log('getSecurityDocument failed.');
+            Logger.log(' error:', err);
+        });
+    }
+
     function bulkUpdateDocuments(dbName, documents) {
         var url = storeOptions.couchDbUrl + '/' + dbName + '/' + '_bulk_docs';
 
@@ -171,6 +185,16 @@ module.exports = function (storeOptions) {
             return results;
         }).catch(function catchError(e){
             Logger.log("INNER_OFFERINGS_ERROR] : ", e);
+        });
+    }
+
+    function updateDocument(dbName, documentName, document) {
+        var url = storeOptions.privilegedCouchDbUrl + '/' + dbName + '/' + documentName;
+
+        return couchRequest({
+            url: url,
+            method: 'put',
+            json: document
         });
     }
 
@@ -608,6 +632,7 @@ module.exports = function (storeOptions) {
         couchRequest: couchRequest,
         couchRequestSession: couchRequestSession,
         getCouchDocuments: getCouchDocuments,
+        getSecurityDocument: getSecurityDocument,
         listDatabases: listDatabases,
         getCouchViewResultObject: getCouchViewResultObject,
         getCouchViewResultValuesWithNamedDesignDoc: getCouchViewResultValuesWithNamedDesignDoc,
@@ -623,6 +648,7 @@ module.exports = function (storeOptions) {
         triggerViewIndexing: triggerViewIndexing,
         doesDatabaseExist: doesDatabaseExist,
         bulkUpdateDocuments: bulkUpdateDocuments,
+        updateDocument: updateDocument,
         getDatabaseInfo: getDatabaseInfo,
         getDatabaseDesignDocInfo: getDatabaseDesignDocInfo,
         getCycleReplicationStatus: getCycleReplicationStatus,
