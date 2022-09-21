@@ -122,8 +122,18 @@ function vendorsSettingPricesByLibraryController( $scope, $q, accordionControlle
             }
         });
 
+        clearSelectedOfferings();
+
         return offeringService.clearFlagsForSelectedOfferings(offeringsToClear)
             .then(() => $('#clear-flags-for-selected-offerings-popup').modal('hide'));
+    }
+
+    function clearSelectedOfferings() {
+        Object.keys(vm.selectedOfferings).forEach(libraryId => {
+            Object.keys(vm.selectedOfferings[libraryId]).forEach(offeringId => {
+                vm.selectedOfferings[libraryId][offeringId] = false;
+            });
+        });
     }
 
     function getSelectedOfferingIds() {
