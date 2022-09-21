@@ -561,9 +561,8 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
 
         function logOfferingChanges(offerings) {
             return $q.all(offerings.map(function(offering) {
-                var product = getProductById(offering.product);
                 var library = getLibraryById(offering.library);
-                return activityLogService.logSiteLicenseChangePrice(vm.cycle, vm.vendor, offering, product, library);
+                return activityLogService.logSiteLicenseChangePrice(vm.cycle, vm.vendor, offering, offering.product, library);
             }))
                 .catch(function(error) {
                     console.error('Error while logging site license change: ' + error);
