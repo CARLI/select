@@ -9,7 +9,7 @@
   "author": "",
   "license": "BSD",
   "devDependencies": {
-    "grunt": "^0.4.5"
+    "grunt": "^1.5.3"
   },
   "dependencies": {
     "browser-request": "^0.3.3",
