@@ -21,7 +21,7 @@
   "devDependencies": {
     "chai": "2",
     "chai-as-promised": "5",
-    "mocha": "^1.21.5",
+    "mocha": "^10.1.0",
     "mocha-jenkins-reporter": "^0.1.2",
     "moment": "^2.8.4",
     "rimraf": "^2.2.8"
