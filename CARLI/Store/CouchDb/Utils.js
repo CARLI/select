@@ -386,7 +386,7 @@ module.exports = function (storeOptions) {
     }
 
     function createSecurityDocumentForType(dbName, databaseType, entity) {
-        var roles = [ '_admin', 'staff' ];
+        var roles = [ '_admin', 'staff', 'readonly-staff' ];
 
         if (databaseType & couchUtils.DB_TYPE_VENDOR) {
             roles.push('vendor-' + entity.id);
