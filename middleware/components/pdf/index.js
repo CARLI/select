@@ -152,7 +152,9 @@ function dataForSubscriptionInvoicePdf(notification){
             .then(function(groupedOfferings){
                 return transformOfferingsToPriceRows(groupedOfferings, useFeeForPriceInsteadOfSelectionPrice);
             })
-            .then(function(invoiceData){
+            .then(async function(invoiceData){
+                var templateForPdf = await fetchTemplateForContent(notification.type, cycle);
+
                 return {
                     batchId: notification.batchId,
                     cycle: cycle,
@@ -162,6 +164,7 @@ function dataForSubscriptionInvoicePdf(notification){
                     invoiceNumber: notification.invoiceNumber,
                     invoiceTotal: computeInvoiceTotal(invoiceData),
                     notificationTypeForPdf: pdfTypeFromNotification(notification),
+                    notificationTemplateForPdf: templateForPdf,
                     notificationDraftStatus: notification.draftStatus,
                     notificationDateSent: notification.dateSent,
                     notificationDateCreated: notification.dateCreated
@@ -289,15 +292,16 @@ function htmlForPdf(dataForPdf){
     }
 
     var type = dataForPdf.notificationTypeForPdf;
+    var template = dataForPdf.notificationTemplateForPdf;
     var invoiceContent = createInvoiceContent();
     var dataForRenderingPdfContent = dataForPdf;
-    
-    return fetchTemplateForContent(type, dataForPdf.cycle)
-        .then(function(notificationTemplate){
-            dataForRenderingPdfContent.invoiceContent = invoiceContent;
+    dataForRenderingPdfContent.invoiceContent = invoiceContent;
+    dataForRenderingPdfContent.realInvoice = typeIsForRealInvoice(type);
+
+    return (!template ? fetchTemplateForContent(type, dataForPdf.cycle) : Promise.resolve(template))
+        .then(function (notificationTemplate) {
             dataForRenderingPdfContent.beforeText = notificationTemplate.pdfBefore;
             dataForRenderingPdfContent.afterText = notificationTemplate.pdfAfter;
-            dataForRenderingPdfContent.realInvoice = typeIsForRealInvoice(type);
 
             return {
                 html: createFinalPdfContent(dataForRenderingPdfContent),
