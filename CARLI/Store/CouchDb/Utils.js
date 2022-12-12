@@ -547,7 +547,7 @@ module.exports = function (storeOptions) {
     }
 
     function getRunningCouchJobs(){
-        var url = storeOptions.couchDbUrl + '/_active_tasks/';
+        var url = storeOptions.privilegedCouchDbUrl + '/_active_tasks/';
 
         request.giveUpCookieAuthToAllowPrivilegedUrlAuthWorkaround();
 
@@ -619,6 +619,44 @@ module.exports = function (storeOptions) {
         }
     }
 
+    async function addRoleToSecurityDoc(dbName, role) {
+        const securityDoc = await getSecurityDoc(dbName);
+
+        const roles = securityDoc.members && securityDoc.members.roles ? securityDoc.members.roles : [];
+        if (roles.indexOf(role) === -1) {
+            roles.push(role);
+            await asyncAddSecurityDocWithRoles(dbName, roles);
+        }
+    }
+
+    function getSecurityDoc(databaseName) {
+        var url = storeOptions.privilegedCouchDbUrl + '/' + databaseName + '/_security';
+
+        return couchRequest({
+            url: url
+        });
+    }
+
+    function asyncAddSecurityDocWithRoles(databaseName, roles) {
+        var url = storeOptions.privilegedCouchDbUrl + '/' + databaseName + '/_security';
+
+        return couchRequest({
+            method: 'put',
+            url: url,
+            json: {
+                admins: {
+                    names: [],
+                    roles:[]
+                },
+                members: {
+                    names: [],
+                    roles: roles
+                }
+            }
+        });
+    }
+
+
     var couchUtils = {
         DB_TYPE_TEST: 1,
         DB_TYPE_STAFF: 2,
@@ -652,7 +690,8 @@ module.exports = function (storeOptions) {
         getDatabaseInfo: getDatabaseInfo,
         getDatabaseDesignDocInfo: getDatabaseDesignDocInfo,
         getCycleReplicationStatus: getCycleReplicationStatus,
-        getCycleViewIndexingStatus: getCycleViewIndexingStatus
+        getCycleViewIndexingStatus: getCycleViewIndexingStatus,
+        addRoleToSecurityDoc: addRoleToSecurityDoc
     };
 
     return couchUtils;
