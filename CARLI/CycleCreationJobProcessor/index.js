@@ -129,6 +129,10 @@ function CycleCreationJobProcessor(
         }
 
         cycleRepository.createCycleLog('Replicating data from ' + sourceCycle.getDatabaseName() + ' to ' + newCycle.getDatabaseName());
+        // couchUtils.replicateFrom(sourceCycle.getDatabaseName()).to(newCycle.getDatabaseName())
+        //     .then((result) => {
+        //         return couchUtils.addRoleToSecurityDoc(newCycle.getDatabaseName(), 'readonly-staff');
+        //     });
         return couchUtils.replicateFrom(sourceCycle.getDatabaseName()).to(newCycle.getDatabaseName());
     }
 
