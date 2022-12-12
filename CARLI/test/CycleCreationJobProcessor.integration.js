@@ -156,7 +156,7 @@ describe('Integration Test for a Cycle Creation Job Processor', function () {
 
     it(`should have the readonly-staff role on all databases for the new cycle`, async function () {
         const cycle = await cycleRepository.load(testCycle2.id);
-        const cycleDatabases = cycleRepository.listAllDatabaseNamesForCycle(cycle);
+        const cycleDatabases = cycleRepository.listAllDatabaseNamesForCycle(cycle, testVendors);
         for (let i = 0; i < cycleDatabases.length; i++) {
             const databaseName = cycleDatabases[i];
             const securityDocument = await couchUtils.getSecurityDocument(databaseName);
@@ -326,23 +326,25 @@ async function populateProductRepository() {
         .then(() => productRepository.create(product2, cycle))
 }
 
-async function populateVendorRepository() {
-    const vendor1 = {
+const testVendors = [
+    {
         id: 'vendor1',
         name: 'Vendor1'
-    };
+    },
 
-    const vendor2 = {
+    {
         id: 'vendor2',
         name: 'Vendor2'
-    };
+    }
+];
 
-    await vendorRepository.create(vendor1);
-    const cycleRepo = cycleRepositoryForVendor(vendor1);
+async function populateVendorRepository() {
+    await vendorRepository.create(testVendors[0]);
+    const cycleRepo = cycleRepositoryForVendor(testVendors[0]);
     await cycleRepo.createDatabase(testCycle.id);
 
-    await vendorRepository.create(vendor2);
-    const cycleRepo2 = cycleRepositoryForVendor(vendor2);
+    await vendorRepository.create(testVendors[1]);
+    const cycleRepo2 = cycleRepositoryForVendor(testVendors[1]);
     await cycleRepo2.createDatabase(testCycle.id);
 }
 

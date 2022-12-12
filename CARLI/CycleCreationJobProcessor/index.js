@@ -133,7 +133,6 @@ function CycleCreationJobProcessor(
             .then((result) => {
                 return couchUtils.addRoleToSecurityDoc(newCycle.getDatabaseName(), 'readonly-staff');
             });
-        // return couchUtils.replicateFrom(sourceCycle.getDatabaseName()).to(newCycle.getDatabaseName());
     }
 
     async function resetVendorStatuses(job) {
@@ -369,6 +368,9 @@ function CycleCreationJobProcessor(
     }
 
     async function replicateDataToVendorsForCycle(job) {
+        if (!sourceCycle) {
+            await loadCycles(job);
+        }
 
         Logger.log("[replicateDataToVendorsForCycle] begin ");
         const allVendors = await vendorRepository.list();
@@ -383,6 +385,7 @@ function CycleCreationJobProcessor(
                 const cycleForVendor = await repoForVendor.load(job.targetCycle);
                 Logger.log("[replicateDataToVendorsForCycle] post-load ");
                 await cycleForVendor.replicateFromSource();
+                await couchUtils.addRoleToSecurityDoc(newCycle.databaseName + '-' + vendor.id, 'readonly-staff');
                 Logger.log("[CycleCreationJobProcessor] [END] finished replicating data to vendor " + vendor.id);
             });
         }, Q.when(true));
