@@ -97,7 +97,7 @@ function listOfferingsUnexpanded(cycle){
 
 function transformOfferingsForNewCycle(newCycle, sourceCycle) {
     return listUnexpandedOfferings(newCycle).then(function(offerings) {
-        return transformOfferingsInBatches(offerings, 10 /* Math.floor( offerings.length / 100 ) */)
+        return transformOfferingsInBatches(offerings, Math.ceil( offerings.length / 100 ))
             .then(setProgressComplete);
     });
 
@@ -121,7 +121,6 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
 
     function transformOfferingsInBatches(offerings, numBatches) {
         var offeringsPartitions = partitionOfferingsList(offerings, numBatches);
-        //offeringsPartitions = [offerings];
         var currentBatch = 0;
 
         Logger.log(`num batches = ${numBatches}`);

@@ -5,7 +5,7 @@ var test   = require( './Store/StoreInterface.spec' )
   , testDir = os.tmpdir() + '/carli-' + uuid.v4();
 ;
 
-describe( '', function() {
+describe.skip( '', function() {
   test.run( 'FileStore', { resourcePath: testDir } );
   after( function() {
     rimraf.sync( testDir );

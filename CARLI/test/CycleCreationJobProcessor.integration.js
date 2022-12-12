@@ -59,7 +59,7 @@ const timestamper = {
 }
 
 
-describe.skip('Integration Test for a Cycle Creation Job Processor', function () {
+describe('Integration Test for a Cycle Creation Job Processor', function () {
 
     before(async function() {
 
@@ -141,7 +141,7 @@ describe.skip('Integration Test for a Cycle Creation Job Processor', function ()
         const libraryStatuses = await libraryStatusRepository.list(cycle);
 
         // this magic number is from the actual CRM DB library count
-        expect(libraryStatuses.length).equals(186);
+        expect(libraryStatuses.length).equals(188);
         libraryStatuses.forEach(libraryStatus => {
             const clone = Object.assign({}, libraryStatus);
 
@@ -274,7 +274,6 @@ function populateRepositories() {
         .then(populateProductRepository)
         .then(populateOfferingRepository)
         .then(populateVendorStatusRepository)
-        .then(populateLibraryStatusRepository)
         .catch(err => {
             console.log('Error creating test data: ', err);
         })
@@ -478,27 +477,4 @@ async function populateVendorStatusRepository() {
     let cycle = await cycleRepository.load(testCycle.id);
     return vendorStatusRepository.create(testVendorStatus1, cycle)
         .then(() => vendorStatusRepository.create(testVendorStatus2, cycle));
-}
-
-async function populateLibraryStatusRepository() {
-
-    var testLibraryStatus1 = {
-        library: '1',
-        cycle: testCycle.id,
-        lastActivity: null,
-        description: 'some desc',
-        isComplete: true,
-    };
-
-    var testLibraryStatus2 = {
-        library: '2',
-        cycle: testCycle.id,
-        lastActivity: null,
-        description: 'some desc',
-        isComplete: true,
-    };
-
-    let cycle = await cycleRepository.load(testCycle.id);
-    return libraryStatusRepository.create(testLibraryStatus1, cycle)
-        .then(() => libraryStatusRepository.create(testLibraryStatus2, cycle));
 }
