@@ -609,6 +609,7 @@ function createCouchUtilsSpy() {
             return {
                 to: (targetDbName) => {
                     this.replicateToCalled++;
+                    return Promise.resolve();
                 }
             };
         },
@@ -625,6 +626,9 @@ function createCouchUtilsSpy() {
                 database: "cycle-cycle2",
                 progress: this.jobProgress
             }];
+        },
+        addRoleToSecurityDoc: function (dbName, role) {
+            return Promise.resolve();
         }
     };
 }

@@ -156,8 +156,9 @@ describe('Integration Test for a Cycle Creation Job Processor', function () {
 
     it(`should have the readonly-staff role on all databases for the new cycle`, async function () {
         const cycle = await cycleRepository.load(testCycle2.id);
-        const cycleDatabases = await cycleRepository.listAllDatabaseNamesForCycle(cycle);
-        for(let databaseName in cycleDatabases) {
+        const cycleDatabases = cycleRepository.listAllDatabaseNamesForCycle(cycle);
+        for (let i = 0; i < cycleDatabases.length; i++) {
+            const databaseName = cycleDatabases[i];
             const securityDocument = await couchUtils.getSecurityDocument(databaseName);
             const readonlyRole = securityDocument.members.roles.find(role => role === 'readonly-staff');
             expect(readonlyRole).to.not.be.undefined;
