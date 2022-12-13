@@ -9,6 +9,10 @@ function quickPricingLibrarySelectorController($scope) {
     vm.resetFteFilter = resetFteFilter;
     vm.debugApplyFilters = applyFilters;
 
+    $scope.$watch('vm.selectedProductIds', function (newValue) {
+        applyFilters();
+    }, true);
+
     activate();
 
     function activate() {
@@ -26,6 +30,10 @@ function quickPricingLibrarySelectorController($scope) {
                 private: false,
                 public: false,
                 other: false
+            },
+            subscriberType: {
+                new: false,
+                renewing: false
             }
         };
 
@@ -42,8 +50,9 @@ function quickPricingLibrarySelectorController($scope) {
         var skipFteFilter = !shouldFilterByFte();
         var skipYearFilter = !shouldFilterByYear();
         var skipTypeFilter = !shouldFilterByType();
+        var skipSubscriberFilter = !shouldFilterBySubscriberType();
 
-        if (skipFteFilter && skipYearFilter && skipTypeFilter) {
+        if (skipFteFilter && skipYearFilter && skipTypeFilter && skipSubscriberFilter) {
             selectAllLibraries();
             return;
         }
@@ -53,7 +62,8 @@ function quickPricingLibrarySelectorController($scope) {
             vm.selectedLibraryIds[library.id] =
                 (skipFteFilter || filterByFte(library)) &&
                 (skipYearFilter || filterByYear(library)) &&
-                (skipTypeFilter || filterByType(library));
+                (skipTypeFilter || filterByType(library)) &&
+                (skipSubscriberFilter || filterBySubscriberType(library));
         });
     }
 
@@ -76,6 +86,31 @@ function quickPricingLibrarySelectorController($scope) {
 
         return !(library.fte < lowerBound || library.fte > upperBound);
     }
+
+    function shouldFilterBySubscriberType() {
+        return exclusiveOr(vm.filters.subscriberType.new, vm.filters.subscriberType.renewing);
+    }
+
+    function exclusiveOr(a, b) {
+        return (!!a !== !!b);
+    }
+
+    function filterBySubscriberType(library) {
+        var renewingLibrary = Object.keys(vm.selectedProductIds).filter(k => vm.selectedProductIds[k]).every(productId => libraryIsRenewingProduct(library, productId));
+        var subscriberType = renewingLibrary ? 'renewing' : 'new';
+
+        return !(vm.filters.subscriberType.new && subscriberType === 'renewing' ||
+            vm.filters.subscriberType.renewing && subscriberType === 'new');
+    }
+
+    function libraryIsRenewingProduct(library, productId) {
+        var previousYear = `${vm.cycle.year - 1}`;
+        return library.offerings.some(function(offering) {
+            return offering.product.id === productId &&
+                offering?.history[previousYear]?.selection?.users === 'Site License';
+        });
+    }
+
     function resetFteFilter() {
         vm.filters.fte.lowerBound = null;
         vm.filters.fte.upperBound = null;

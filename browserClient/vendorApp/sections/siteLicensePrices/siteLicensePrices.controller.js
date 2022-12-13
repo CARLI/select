@@ -92,6 +92,21 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
         return productService.listProductsWithOfferingsForVendorId(authService.getCurrentUser().vendor.id).then(function (products) {
             vm.products = products.sort(byName);
             initializeSelectedProductIds();
+            addOfferingsToLibraries();
+        });
+    }
+
+    function addOfferingsToLibraries() {
+        vm.libraries.forEach(function (library) {
+            library.offerings = [];
+
+            vm.products.forEach(function (product) {
+                product.offerings.forEach(function (offering) {
+                    if (offering.library === library.id) {
+                        library.offerings.push(offering);
+                    }
+                });
+            });
         });
     }
 
