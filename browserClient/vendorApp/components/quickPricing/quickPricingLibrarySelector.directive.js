@@ -4,8 +4,10 @@ angular.module('vendor.quickPricing')
             restrict: 'E',
             templateUrl: '/vendorApp/components/quickPricing/quickPricingLibrarySelector.html',
             scope: {
+                cycle: '=',
                 libraries: '=',
-                selectedLibraryIds: '='
+                selectedLibraryIds: '=',
+                selectedProductIds: '=',
             },
             controller: 'quickPricingLibrarySelectorController',
             controllerAs: 'vm',

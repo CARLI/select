@@ -17,7 +17,7 @@
                 <div class="selection-summary">{{ vm.selectedLibraryCount() }} out of {{ vm.totalLibraryCount() }} libraries selected.</div>
             </div>
             <div class="content">
-                <quick-pricing-library-selector libraries="vm.libraries" selected-library-ids="vm.selectedLibraryIds"></quick-pricing-library-selector>
+                <quick-pricing-library-selector cycle="vm.cycle" libraries="vm.libraries" selected-library-ids="vm.selectedLibraryIds" selected-product-ids="vm.selectedProductIds"></quick-pricing-library-selector>
                 <button class="carli-button next" ng-click="vm.goToStep3()">Next Step</button>
             </div>
         </li>

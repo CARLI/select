@@ -4,6 +4,7 @@ angular.module('vendor.quickPricing')
             restrict: 'E',
             templateUrl: '/vendorApp/components/quickPricing/quickPricingSite.html',
             scope: {
+                cycle: '=',
                 products: '=',
                 selectedProductIds: '=',
                 libraries: '=',
