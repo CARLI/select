@@ -87,6 +87,14 @@
         "offeringTypeValue": {
             "description": "If offeringType is other, this is the value",
             "type": "string"
+        },
+        "priceCap": {
+            "description": "The price cap (allowed percentage increase in price) for this product for the current cycle. This is used as a baseline value for all products using this license.",
+            "type": "number"
+        },
+        "futurePriceCaps": {
+            "description": "A map of future years to the price cap for this product in that year. This is used as a baseline value for all products using this license.",
+            "type": "object"
         }
     },
     "required": [ "name", "vendor" ]
