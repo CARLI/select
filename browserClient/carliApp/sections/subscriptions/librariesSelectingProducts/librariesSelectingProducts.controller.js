@@ -28,14 +28,16 @@ function librariesSelectingProductsController( $q, alertService, cycleService, n
     }
 
     function closeSystemDialogComplete(){
-        return closeModal().then(vm.cycleRouter.next);
+        const closePromise = closeModal();
+        vm.cycleRouter.next();
+        return closePromise;
     }
 
     function closeModal() {
         var deferred = $q.defer();
         $('#close-system-modal').modal('hide');
+        alertService.putAlert('System closed', {severity: 'success'});
         $('#close-system-modal').on('hidden.bs.modal', function (e) {
-            alertService.putAlert('System closed', {severity: 'success'});
             deferred.resolve();
         });
         return deferred.promise;
