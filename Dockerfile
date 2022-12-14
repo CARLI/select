@@ -10,7 +10,7 @@
 #  It's also a good practice anyway because it means the entire
 #  build and deployment process can run on any machine with docker.
 
-FROM node:8-alpine AS build
+FROM node:18-alpine AS build
 
 RUN \
     apk add --no-cache \
@@ -29,10 +29,10 @@ COPY ./CARLI/package.json ./CARLI/Gruntfile.js ./CARLI/
 COPY ./config/package.json ./config/Gruntfile.js ./config/
 COPY ./db/package.json ./db/
 COPY ./grunt/Gruntfile.js ./grunt/
-COPY ./middleware/package.json ./middleware/Gruntfile.js ./middleware/
+COPY ./middleware/package.json ./middleware/package-lock.json ./middleware/Gruntfile.js ./middleware/
 COPY ./schemas/browser/package.json ./schemas/browser/bower.json ./schemas/browser/
 
-COPY ./browserClient/package.json ./browserClient/bower.json ./browserClient/.bowerrc ./browserClient/Gruntfile.js ./browserClient/
+COPY ./browserClient/package.json ./browserClient/package-lock.json ./browserClient/bower.json ./browserClient/.bowerrc ./browserClient/Gruntfile.js ./browserClient/
 
 RUN echo "{}" > config/local.json \
     && ./install-dependencies.sh
@@ -61,7 +61,7 @@ COPY --from=build /carli/browserClient/build /usr/share/nginx/html/
 
 #------------------------------------------------------------------------
 # Middleware Runtime
-FROM node:8-stretch AS middleware
+FROM node:18-bullseye AS middleware
 
 WORKDIR /carli
 COPY --from=build /carli/bin /carli/bin

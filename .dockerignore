@@ -22,7 +22,7 @@
 
 *.swp
 *~
-.env
+**/.env
 vendor
-node_modules
-bower_modules
+**/node_modules
+**/bower_modules
