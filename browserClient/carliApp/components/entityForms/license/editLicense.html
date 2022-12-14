@@ -196,6 +196,14 @@
                     </view-edit-radios>
                     <view-edit-text-field aria-label="Offering Type" ng-model="vm.license.offeringTypeValue" edit-mode="vm.editable" ng-show="vm.license.offeringType == 'Other'"></view-edit-text-field>
 
+                    <label for="priceCap">Price Cap</label>
+                    <view-edit-percentage-field ng-model="vm.product.priceCap" edit-mode="vm.editable" input-id="priceCap">
+                        <span class="value">{{ vm.product.priceCap }}%</span>
+                    </view-edit-percentage-field>
+
+                    <div class="edit-link-container" ng-show="vm.shouldShowManagePriceCapLink()">
+                        <a data-toggle="modal" data-target="#price-cap-modal">Manage Price Cap<fa name="edit"></fa></a>
+                    </div>
                 </div>
             </fieldset>
         </section>
@@ -211,4 +219,8 @@
 
     <modal-dialog modal-id="'products-modal'" modal-title="'Products'">
         <ng-include src="'carliApp/components/entityForms/license/productsModal.html'"></ng-include>
+    </modal-dialog>
+
+    <modal-dialog modal-id="'price-cap-modal'" modal-title="'Manage Price Caps'">
+        <ng-include src="'carliApp/components/entityForms/product/managePriceCaps.html'"></ng-include>
     </modal-dialog>
