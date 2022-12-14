@@ -265,7 +265,7 @@ function listNotificationsForLibrary() {
 
         function filterNotificationsForLibrary(sentNotifications) {
             return sentNotifications.filter(function(notification){
-                return notification.targetEntity.id === library.id;
+                return notification?.targetEntity?.id === library.id;
             });
         }
     }
