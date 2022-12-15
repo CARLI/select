@@ -34,7 +34,7 @@ async function getDatabasesToSync(source, cycleDatabaseName) {
         url: `${source}/_all_dbs`
     });
     const databases = JSON.parse(response.body);
-    const databasesToSync = ['_users', 'carli'];
+    const databasesToSync = ['carli'];
     databasesToSync.push(...databases.filter(db => db.indexOf(cycleDatabaseName) > -1));
 
     return databasesToSync;
