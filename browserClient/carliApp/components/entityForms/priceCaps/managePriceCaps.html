@@ -1,0 +1,27 @@
+<form class="edit-form" ng-class="vm.editable ? 'editMode' : 'viewMode'" name="managePriceCapForm">
+    <section class="content">
+        <fieldset>
+            <ul id="price-cap-list">
+                <li class="column-headers">
+                    <header class="column year">Year</header>
+                    <header class="column price">Price Cap</header>
+                </li>
+                <li ng-repeat="(year, priceCap) in vm.entity.futurePriceCaps | orderBy:year">
+                    <span class="column year">
+                        <label for="price_cap_{{ year }}">{{ year }}</label>
+                    </span>
+                    <span class="column price">
+                        <view-edit-price ng-model="vm.entity.futurePriceCaps[year]" edit-mode="true" input-id="price_cap_{{ year }}">
+                            {{ vm.entity.futurePriceCaps[year] }}
+                        </view-edit-price>
+                    </span>
+                </li>
+            </ul>
+            <button class="carli-button add-price-cap" ng-click="vm.addPriceCapRow()">Add Year <fa name="plus-circle"></fa></button>
+        </fieldset>
+    </section>
+    <div class="footer" ng-show="vm.editable">
+        <button type="button" class="carli-button cancel-button" data-dismiss="modal">Cancel</button>
+        <button type="button" class="carli-button save-button" data-dismiss="modal">Ok</button>
+    </div>
+</form>

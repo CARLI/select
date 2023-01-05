@@ -6,5 +6,6 @@ angular.module('carli.entityForms.license',[
     'common.productService',
     'carli.selectCycle',
     'common.vendorService',
-    'common.viewEditDirectives'
+    'common.viewEditDirectives',
+    'carli.entityForms.priceCaps',
 ]);

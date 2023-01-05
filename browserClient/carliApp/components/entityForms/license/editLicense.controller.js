@@ -16,6 +16,7 @@ function editLicenseController( $scope, $rootScope, $location, activityLogServic
     vm.showProductsModal = showProductsModal;
     vm.closeProductsModalAndGoTo = closeProductsModalAndGoTo;
     vm.getProductDisplayName = productService.getProductDisplayName;
+    vm.shouldShowManagePriceCapLink = shouldShowManagePriceCapLink;
 
     vendorService.list().then( function( vendorList ){
         vm.vendorList = vendorList;
@@ -188,6 +189,18 @@ function editLicenseController( $scope, $rootScope, $location, activityLogServic
                 vm.license._rev = license._rev;
                 return vm.license;
             });
+    }
+
+    function shouldShowManagePriceCapLink() {
+        return vm.editable && !vm.newLicense;
+    }
+
+    function addPriceCapRow() {
+
+    }
+
+    function cancelPriceCapEdits() {
+
     }
 }
 
