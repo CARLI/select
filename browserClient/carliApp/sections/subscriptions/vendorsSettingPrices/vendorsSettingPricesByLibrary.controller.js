@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.vendorsSettingPrices')
     .controller('vendorsSettingPricesByLibraryController', vendorsSettingPricesByLibraryController);
 
-function vendorsSettingPricesByLibraryController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, libraryService, offeringService, offeringsByLibraryExport, editOfferingService, productService, vendorService ) {
+function vendorsSettingPricesByLibraryController( $scope, $q, accordionControllerMixin, activityLogService, controllerBaseService, cycleService, libraryService, offeringService, offeringsByLibraryExport, editOfferingService, productService, vendorService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadOfferingsForLibrary);
@@ -124,8 +124,12 @@ function vendorsSettingPricesByLibraryController( $scope, $q, accordionControlle
 
         clearSelectedOfferings();
 
-        return offeringService.clearFlagsForSelectedOfferings(offeringsToClear)
-            .then(() => $('#clear-flags-for-selected-offerings-popup').modal('hide'));
+        $q.all(offeringsToClear.map(offering => {
+            return activityLogService.logOfferingModified(offering, vm.cycle);
+        })).then(() => {
+            return offeringService.clearFlagsForSelectedOfferings(offeringsToClear)
+                .then(() => $('#clear-flags-for-selected-offerings-popup').modal('hide'));
+        });
     }
 
     function clearSelectedOfferings() {
