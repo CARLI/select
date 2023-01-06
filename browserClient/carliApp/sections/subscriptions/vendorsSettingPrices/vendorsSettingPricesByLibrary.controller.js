@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.vendorsSettingPrices')
     .controller('vendorsSettingPricesByLibraryController', vendorsSettingPricesByLibraryController);
 
-function vendorsSettingPricesByLibraryController( $scope, $q, accordionControllerMixin, controllerBaseService, cycleService, libraryService, offeringService, offeringsByLibraryExport, editOfferingService, productService, vendorService ) {
+function vendorsSettingPricesByLibraryController( $scope, $q, accordionControllerMixin, activityLogService, controllerBaseService, cycleService, libraryService, offeringService, offeringsByLibraryExport, editOfferingService, productService, vendorService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadOfferingsForLibrary);
@@ -115,16 +115,20 @@ function vendorsSettingPricesByLibraryController( $scope, $q, accordionControlle
     function clearFlagsForSelectedOfferings() {
         const offeringIdsToClear = getSelectedOfferingIds();
         const offeringsToClear = [];
+        const vendorsToSync = {};
 
         vm.offerings[vm.openAccordion].forEach(offering => {
             if (offeringIdsToClear.indexOf(offering.id) > -1) {
                 offeringsToClear.push(offering);
+                vendorsToSync[offering.vendorId] = true;
             }
         });
 
         clearSelectedOfferings();
 
-        return offeringService.clearFlagsForSelectedOfferings(offeringsToClear)
+        $q.all(offeringsToClear.map(offering => activityLogService.logOfferingModified(offering, vm.cycle)))
+            .then(() => offeringService.clearFlagsForSelectedOfferings(offeringsToClear))
+            .then(syncVendorData(Object.keys(vendorsToSync)))
             .then(() => $('#clear-flags-for-selected-offerings-popup').modal('hide'));
     }
 
@@ -140,5 +144,9 @@ function vendorsSettingPricesByLibraryController( $scope, $q, accordionControlle
         return vm.selectedOfferings && vm.selectedOfferings[vm.openAccordion] ?
             Object.keys(vm.selectedOfferings[vm.openAccordion]).filter(key => vm.selectedOfferings[vm.openAccordion][key] === true) :
             [];
+    }
+
+    function syncVendorData(vendorIds) {
+        return $q.all(vendorIds.map(vendorId => cycleService.syncDataToVendorDatabase(vendorId)));
     }
 }

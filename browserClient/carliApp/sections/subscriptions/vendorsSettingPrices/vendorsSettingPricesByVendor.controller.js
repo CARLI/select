@@ -1,7 +1,7 @@
 angular.module('carli.sections.subscriptions.vendorsSettingPrices')
     .controller('vendorsSettingPricesByVendorController', vendorsSettingPricesByVendorController);
 
-function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionControllerMixin, controllerBaseService, cycleService, offeringService, editOfferingService, libraryService, offeringsByVendorExport, productService, vendorService, vendorStatusService, userService ) {
+function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionControllerMixin, activityLogService, controllerBaseService, cycleService, offeringService, editOfferingService, libraryService, offeringsByVendorExport, productService, vendorService, vendorStatusService, userService ) {
     var vm = this;
 
     accordionControllerMixin(vm, loadProductsForVendor);
@@ -152,6 +152,7 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
     function clearFlagsForSelectedOfferings() {
         const offeringIdsToClear = getSelectedOfferingIds();
         const offeringsToClear = [];
+        const vendorsToSync = {};
 
         vm.vendors.forEach(vendor => {
             if (vendor.products) {
@@ -159,18 +160,33 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
                     product.offerings?.forEach(offering => {
                         if (offeringIdsToClear.indexOf(offering.id) > -1) {
                             offeringsToClear.push(offering);
+                            vendorsToSync[vendor.id] = true;
                         }
                     });
                 });
             }
         });
 
-        return offeringService.clearFlagsForSelectedOfferings(offeringsToClear)
+        clearSelectedOfferings();
+
+        $q.all(offeringsToClear.map(offering => activityLogService.logOfferingModified(offering, vm.cycle)))
+            .then(() => offeringService.clearFlagsForSelectedOfferings(offeringsToClear))
+            .then(syncVendorData(Object.keys(vendorsToSync)))
             .then(() => $('#clear-flags-for-selected-offerings-popup').modal('hide'));
+    }
+
+    function clearSelectedOfferings() {
+        Object.keys(vm.selectedOfferings).forEach(offeringId => {
+            vm.selectedOfferings[offeringId] = false;
+        });
     }
 
     function getSelectedOfferingIds() {
         return Object.keys(vm.selectedOfferings).filter(key => vm.selectedOfferings[key] === true);
+    }
+
+    function syncVendorData(vendorIds) {
+        return $q.all(vendorIds.map(vendorId => cycleService.syncDataToVendorDatabase(vendorId)));
     }
 
     function closeVendorPricing( vendor ){
