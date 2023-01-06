@@ -115,21 +115,21 @@ function vendorsSettingPricesByLibraryController( $scope, $q, accordionControlle
     function clearFlagsForSelectedOfferings() {
         const offeringIdsToClear = getSelectedOfferingIds();
         const offeringsToClear = [];
+        const vendorsToSync = {};
 
         vm.offerings[vm.openAccordion].forEach(offering => {
             if (offeringIdsToClear.indexOf(offering.id) > -1) {
                 offeringsToClear.push(offering);
+                vendorsToSync[offering.vendorId] = true;
             }
         });
 
         clearSelectedOfferings();
 
-        $q.all(offeringsToClear.map(offering => {
-            return activityLogService.logOfferingModified(offering, vm.cycle);
-        })).then(() => {
-            return offeringService.clearFlagsForSelectedOfferings(offeringsToClear)
-                .then(() => $('#clear-flags-for-selected-offerings-popup').modal('hide'));
-        });
+        $q.all(offeringsToClear.map(offering => activityLogService.logOfferingModified(offering, vm.cycle)))
+            .then(() => offeringService.clearFlagsForSelectedOfferings(offeringsToClear))
+            .then(syncVendorData(Object.keys(vendorsToSync)))
+            .then(() => $('#clear-flags-for-selected-offerings-popup').modal('hide'));
     }
 
     function clearSelectedOfferings() {
@@ -144,5 +144,9 @@ function vendorsSettingPricesByLibraryController( $scope, $q, accordionControlle
         return vm.selectedOfferings && vm.selectedOfferings[vm.openAccordion] ?
             Object.keys(vm.selectedOfferings[vm.openAccordion]).filter(key => vm.selectedOfferings[vm.openAccordion][key] === true) :
             [];
+    }
+
+    function syncVendorData(vendorIds) {
+        return $q.all(vendorIds.map(vendorId => cycleService.syncDataToVendorDatabase(vendorId)));
     }
 }

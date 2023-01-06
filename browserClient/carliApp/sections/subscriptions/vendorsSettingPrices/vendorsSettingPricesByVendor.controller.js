@@ -152,6 +152,7 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
     function clearFlagsForSelectedOfferings() {
         const offeringIdsToClear = getSelectedOfferingIds();
         const offeringsToClear = [];
+        const vendorsToSync = {};
 
         vm.vendors.forEach(vendor => {
             if (vendor.products) {
@@ -159,6 +160,7 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
                     product.offerings?.forEach(offering => {
                         if (offeringIdsToClear.indexOf(offering.id) > -1) {
                             offeringsToClear.push(offering);
+                            vendorsToSync[vendor.id] = true;
                         }
                     });
                 });
@@ -167,12 +169,10 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
 
         clearSelectedOfferings();
 
-        $q.all(offeringsToClear.map(offering => {
-            return activityLogService.logOfferingModified(offering, vm.cycle);
-        })).then(() => {
-            return offeringService.clearFlagsForSelectedOfferings(offeringsToClear)
-                .then(() => $('#clear-flags-for-selected-offerings-popup').modal('hide'));
-        });
+        $q.all(offeringsToClear.map(offering => activityLogService.logOfferingModified(offering, vm.cycle)))
+            .then(() => offeringService.clearFlagsForSelectedOfferings(offeringsToClear))
+            .then(syncVendorData(Object.keys(vendorsToSync)))
+            .then(() => $('#clear-flags-for-selected-offerings-popup').modal('hide'));
     }
 
     function clearSelectedOfferings() {
@@ -183,6 +183,10 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
 
     function getSelectedOfferingIds() {
         return Object.keys(vm.selectedOfferings).filter(key => vm.selectedOfferings[key] === true);
+    }
+
+    function syncVendorData(vendorIds) {
+        return $q.all(vendorIds.map(vendorId => cycleService.syncDataToVendorDatabase(vendorId)));
     }
 
     function closeVendorPricing( vendor ){
