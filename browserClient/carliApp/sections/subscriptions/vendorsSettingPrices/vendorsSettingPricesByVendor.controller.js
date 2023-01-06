@@ -167,6 +167,14 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
 
         return offeringService.clearFlagsForSelectedOfferings(offeringsToClear)
             .then(() => $('#clear-flags-for-selected-offerings-popup').modal('hide'));
+        clearSelectedOfferings();
+
+    }
+
+    function clearSelectedOfferings() {
+        Object.keys(vm.selectedOfferings).forEach(offeringId => {
+            vm.selectedOfferings[offeringId] = false;
+        });
     }
 
     function getSelectedOfferingIds() {
