@@ -129,7 +129,7 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
         return updateNextBatch();
 
         function updateNextBatch(results) {
-            if (currentBatch == numBatches) {
+            if (currentBatch == offeringsPartitions.length) {
                 Logger.log("[OFFERINGS] ending updateNextBatch, currentBatch: " + currentBatch + " | numBatches: " + numBatches);
                 return results;
             }
@@ -170,7 +170,7 @@ function transformOfferingsForNewCycle(newCycle, sourceCycle) {
          * http://stackoverflow.com/questions/11345296/partitioning-in-javascript/11345570#11345570
          */
         function partitionOfferingsList( list, numParts ) {
-            var partLength = Math.floor(list.length / numParts);
+            var partLength = Math.ceil(list.length / numParts);
 
             var result = _.groupBy(list, function(item , i) {
                 return Math.floor(i/partLength);
