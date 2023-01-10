@@ -16,6 +16,12 @@ function quickPricingLibrarySelectorController($scope) {
     activate();
 
     function activate() {
+        resetFilters();
+        $scope.$watch(getFilters, applyFilters, true);
+        $scope.$on('resetSelectedLibraryFilters', resetFilters);
+    }
+
+    function resetFilters() {
         vm.filters = {
             fte: {
                 lowerBound: null,
@@ -36,8 +42,6 @@ function quickPricingLibrarySelectorController($scope) {
                 renewing: false
             }
         };
-
-        $scope.$watch(getFilters, applyFilters, true);
     }
 
     function getFilters() {

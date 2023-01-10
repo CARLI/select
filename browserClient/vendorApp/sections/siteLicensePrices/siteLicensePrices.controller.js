@@ -128,6 +128,7 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
     }
 
     function selectAllLibraries() {
+        $scope.$broadcast('resetSelectedLibraryFilters');
         vm.libraries.forEach(function (library) {
             vm.selectedLibraryIds[library.id] = true;
         });
