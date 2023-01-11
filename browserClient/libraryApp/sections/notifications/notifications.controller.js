@@ -17,7 +17,7 @@ function notificationsController($q, CarliModules) {
 
     function initVmLibrary() {
         vm.loadingPromise = loadNotificationsForLibrary()
-            .then(notifications => notifications.filter(notification => notification.dateCreated > "2023-01-01T00:00"))
+            .then(notifications => notifications.filter(notification => notification.dateCreated > "2023-01-10T00:00"))
             .then(function(notifications){
                 vm.notifications = notifications;
             });
