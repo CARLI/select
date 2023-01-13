@@ -24,6 +24,7 @@ function expandVendorStatuses( listPromise ){
 }
 
 function createVendorStatus( vendorStatus, cycle ){
+    Logger.log('Creating vendor status for vendor ' + vendorStatus.vendor + ' in cycle ' + cycle);
     setCycle(cycle);
     return VendorStatusRepository.create( vendorStatus, transformFunction );
 }
@@ -43,7 +44,23 @@ function deleteVendorStatus( vendorStatus ) {
 
 function listVendorStatuses(cycle){
     setCycle(cycle);
-    return expandVendorStatuses( VendorStatusRepository.list(cycle.getDatabaseName()) );
+    // 2023-01-12: we updated this function to remove duplicate VendorStatuses, always returning the one with the most recent lastActivity.
+    //             there is a case we haven't tracked down where the system creates a duplicate VendorStatus document and then
+    //             sometimes applies status updates to the wrong one
+    const vendorStatusesPromise = expandVendorStatuses( VendorStatusRepository.list(cycle.getDatabaseName()) )
+        .then(allVendorStatuses => {
+            return allVendorStatuses.reduce((acc, vendorStatus) => {
+                if (!acc[vendorStatus.vendor]) {
+                    acc[vendorStatus.vendor] = vendorStatus;
+                } else if (acc[vendorStatus.vendor].lastActivity < vendorStatus.lastActivity || !acc[vendorStatus.vendor].lastActivity) {
+                    acc[vendorStatus.vendor] = vendorStatus;
+                }
+
+                return acc;
+            }, {});
+        });
+
+    return vendorStatusesPromise.then(vendorStatuses => Object.values(vendorStatuses));
 }
 
 function loadVendorStatus( vendorStatusId, cycle ){
@@ -71,10 +88,11 @@ function loadVendorStatus( vendorStatusId, cycle ){
 
 function getStatusForVendor( vendorId, cycle ){
     setCycle(cycle);
-    return expandVendorStatuses(couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listVendorStatusesByVendorId', vendorId))
+    return listVendorStatuses(cycle)
+        .then(vendorStatuses => { return vendorStatuses.filter(vendorStatus => vendorStatus.vendor === vendorId)})
         .then(function(statusesForVendor){
-            if ( statusesForVendor.length > 0 ){
-                var status = statusesForVendor[0];
+            if (statusesForVendor.length > 0){
+                const status = statusesForVendor[0];
                 return ensureDefaultsForStatus(status, cycle);
             }
             else {
