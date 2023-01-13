@@ -171,7 +171,11 @@ function vendorsSettingPricesByVendorController( $scope, $filter, $q, accordionC
 
         $q.all(offeringsToClear.map(offering => activityLogService.logOfferingModified(offering, vm.cycle)))
             .then(() => offeringService.clearFlagsForSelectedOfferings(offeringsToClear))
-            .then(syncVendorData(Object.keys(vendorsToSync)))
+            .then(() => {
+                // 2023-01-13: We added a delay here to give CouchDB time to handle the bulk update before replicating
+                //             the data to the vendor database
+                setTimeout(() => syncVendorData(Object.keys(vendorsToSync)), 1000);
+            })
             .then(() => $('#clear-flags-for-selected-offerings-popup').modal('hide'));
     }
 
