@@ -662,7 +662,6 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
         function updateCellContents(offeringCell, offering, value) {
             applyBulkPricingComment(offering);
             applyNewCellPricingToOffering(offeringCell, offering, value);
-            markOfferingUpdated(offering);
 
             applyCssClassesToOfferingCell(offeringCell, offering);
 
