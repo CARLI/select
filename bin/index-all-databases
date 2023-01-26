@@ -3,6 +3,7 @@
 var cli = require('../CARLI/CommandLine');
 var vendorDatabases = require('../middleware/components/vendorDatabases');
 
-cli.asCouchAdmin(function() {
-    return vendorDatabases.triggerIndexingForAllCycles();
-});
+console.log("This will deadlock a full database. Uncomment the lines below in the script if you really want to run it.");
+// cli.asCouchAdmin(function() {
+    // return vendorDatabases.triggerIndexingForAllCycles();
+// });
