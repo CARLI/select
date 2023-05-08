@@ -367,6 +367,9 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
         var newPrice = parseFloat(newPriceValue);
         var oldPrice = findSitePrice(offering);
 
+        markOfferingUpdated(offering);
+
+        // deleted offerings rely on offering.display and offering.pricing.site to be deleted
         if (isNaN(newPrice)) {
             return;
         }
@@ -374,7 +377,6 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
         if (newPrice !== null && newPrice != oldPrice) {
             offering.pricing.site = newPrice;
             offering.display = 'with-price';
-            markOfferingUpdated(offering);
         }
     }
 
@@ -617,6 +619,7 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
             }
 
             if (cellShouldBeUpdated(libraryId, productId)) {
+                console.log("A cell needs to be updated...");
                 if (mode == 'dollarAmount') {
                     newValue = quickPricingValue;
                 }
