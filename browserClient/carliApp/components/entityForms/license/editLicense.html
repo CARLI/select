@@ -106,13 +106,16 @@
                     <aside>Note: these fields are manually edited.</aside>
 
                     <h2>Specific Terms</h2>
+
                     <div class="terms-overrides">
+
                         <div class="term">
-                            <label for="downloadTerms">Download</label>
+                            <label for="downloadTerms">Download Digital Copy</label>
                             <view-edit-yes-no-other ng-model="vm.license.terms.downloadTerms" edit-mode="vm.editable" input-id="downloadTerms">
                                 <span class="value">{{ vm.license.terms.downloadTerms || 'N/A' }}</span>
                             </view-edit-yes-no-other>
                         </div>
+
                         <div class="term">
                             <label for="coursePacksTerms">Course Packs</label>
                             <view-edit-yes-no-other ng-model="vm.license.terms.coursePacksTerms" edit-mode="vm.editable" input-id="coursePacksTerms">
@@ -126,8 +129,9 @@
                                 <span class="value">{{ vm.license.terms.interLibraryLoanTerms || 'N/A' }}</span>
                             </view-edit-yes-no-other>
                         </div>
+
                         <div class="term">
-                            <label for="printTerms">Print (in accordance with the Copyright Act)</label>
+                            <label for="printTerms">Print Copy (in accordance with the Copyright Act)</label>
                             <view-edit-yes-no-other ng-model="vm.license.terms.printTerms" edit-mode="vm.editable" input-id="printTerms">
                                 <span class="value">{{ vm.license.terms.printTerms || 'N/A' }}</span>
                             </view-edit-yes-no-other>
@@ -139,12 +143,6 @@
                                 <span class="value">{{ vm.license.terms.limitedScholarlySharingTerms || 'N/A' }}</span>
                             </view-edit-yes-no-other>
                         </div>
-                        <div class="term">
-                            <label for="walkinTerms">Use by Walk-ins</label>
-                            <view-edit-yes-no-other ng-model="vm.license.terms.walkinTerms" edit-mode="vm.editable" input-id="walkinTerms">
-                                <span class="value">{{ vm.license.terms.walkinTerms || 'N/A' }}</span>
-                            </view-edit-yes-no-other>
-                        </div>
 
                         <div class="term">
                             <label for="eReservesTerms">E-Reserves</label>
@@ -152,14 +150,45 @@
                                 <span class="value">{{ vm.license.terms.eReservesTerms || 'N/A' }}</span>
                             </view-edit-yes-no-other>
                         </div>
+
                         <div class="term">
-                            <label for="hasConfidentialityTerms">Confidentiality Terms</label>
-                            <view-edit-yes-no-other ng-model="vm.license.terms.hasConfidentialityTerms" edit-mode="vm.editable" input-id="hasConfidentialityTerms">
-                                <span class="value">{{ vm.license.terms.hasConfidentialityTerms || 'N/A' }}</span>
+                            <label for="confidentialityAgreement">Confidentiality of Agreement</label>
+                            <view-edit-yes-no-other ng-model="vm.license.terms.confidentialityAgreement" edit-mode="vm.editable" input-id="confidentialityAgreement">
+                                <span class="value">{{ vm.license.terms.confidentialityAgreement || 'N/A' }}</span>
                             </view-edit-yes-no-other>
                         </div>
+
+                        <div class="term">
+                            <label for="confidentialityUserInfo">Confidentiality of User Information</label>
+                            <view-edit-yes-no-other ng-model="vm.license.terms.confidentialityUserInfo" edit-mode="vm.editable" input-id="confidentialityUserInfo">
+                                <span class="value">{{ vm.license.terms.confidentialityUserInfo || 'N/A' }}</span>
+                            </view-edit-yes-no-other>
+                        </div>
+
+                        <div class="term">
+                            <label for="dataMining">Text & Data Mining</label>
+                            <view-edit-yes-no-other ng-model="vm.license.terms.dataMining" edit-mode="vm.editable" input-id="dataMining">
+                                <span class="value">{{ vm.license.terms.dataMining || 'N/A' }}</span>
+                            </view-edit-yes-no-other>
+                        </div>
+
+                        <div class="term">
+                            <label for="accessibilityCompliance">Accessibility Compliance</label>
+                            <view-edit-yes-no-other ng-model="vm.license.terms.accessibilityCompliance" edit-mode="vm.editable" input-id="dataMining">
+                                <span class="value">{{ vm.license.terms.accessibilityCompliance || 'N/A' }}</span>
+                            </view-edit-yes-no-other>
+                        </div>
+
+                        <div class="term">
+                            <label for="videoPerformance">Video Performance Rights</label>
+                            <view-edit-yes-no-other ng-model="vm.license.terms.videoPerformance" edit-mode="vm.editable" input-id="videoPerformance">
+                                <span class="value">{{ vm.license.terms.videoPerformance || 'N/A' }}</span>
+                            </view-edit-yes-no-other>
+                        </div>
+
                     </div>
                 </div>
+
                 <div class="column">
                     <div class="label">Type</div>
 
