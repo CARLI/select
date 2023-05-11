@@ -140,7 +140,7 @@
                         </div>
                         <ul class="terms-list">
                             <li>
-                                <label for="downloadTermsDisplay">Download:</label>
+                                <label for="downloadTermsDisplay">Download Digital Copy:</label>
                                 <view-edit-yes-no-other ng-model="vm.product.terms.downloadTerms" edit-mode="false" input-id="downloadTermsDisplay">
                                     <span class="value">{{ vm.product.terms.downloadTerms || vm.product.license.terms.downloadTerms }}</span>
                                 </view-edit-yes-no-other>
@@ -163,7 +163,7 @@
                             </li>
 
                             <li>
-                                <label for="printTermsDisplay">Print:</label>
+                                <label for="printTermsDisplay">Print Copy:</label>
                                 <view-edit-yes-no-other ng-model="vm.product.terms.printTerms" edit-mode="false" input-id="printTermsDisplay">
                                     <span class="value">{{ vm.product.terms.printTerms || vm.product.license.terms.printTerms}}</span>
                                 </view-edit-yes-no-other>
@@ -179,14 +179,6 @@
                             </li>
 
                             <li>
-                                <label for="walkinTermsDisplay">Use by Walk-ins:</label>
-                                <view-edit-yes-no-other ng-model="vm.product.terms.walkinTerms" edit-mode="false" input-id="walkinTermsDisplay">
-                                    <span class="value">{{ vm.product.terms.walkinTerms || vm.product.license.terms.walkinTerms}}</span>
-                                </view-edit-yes-no-other>
-
-                            </li>
-
-                            <li>
                                 <label for="eReservesTermsDisplay">E-Reserves:</label>
                                 <view-edit-yes-no-other ng-model="vm.product.terms.eReservesTerms" edit-mode="false" input-id="eReservesTermsDisplay">
                                     <span class="value">{{ vm.product.terms.eReservesTerms || vm.product.license.terms.eReservesTerms}}</span>
@@ -194,9 +186,37 @@
                             </li>
 
                             <li>
-                                <label for="hasConfidentialityTermsDisplay">Confidentiality Language:</label>
-                                <view-edit-yes-no-other ng-model="vm.product.terms.hasConfidentialityTerms" edit-mode="false" input-id="hasConfidentialityTermsDisplay">
-                                    <span class="value">{{ vm.product.terms.hasConfidentialityTerms || vm.product.license.terms.hasConfidentialityTerms}}</span>
+                                <label for="confidentialityAgreementDisplay">Confidentiality of Agreement:</label>
+                                <view-edit-yes-no-other ng-model="vm.product.terms.confidentialityAgreement" edit-mode="false" input-id="confidentialityAgreementDisplay">
+                                    <span class="value">{{ vm.product.terms.confidentialityAgreement || vm.product.license.terms.confidentialityAgreement}}</span>
+                                </view-edit-yes-no-other>
+                            </li>
+
+                            <li>
+                                <label for="confidentialityUserInfoDisplay">Confidentiality of User Information:</label>
+                                <view-edit-yes-no-other ng-model="vm.product.terms.confidentialityUserInfo" edit-mode="false" input-id="confidentialityUserInfoDisplay">
+                                    <span class="value">{{ vm.product.terms.confidentialityUserInfo || vm.product.license.terms.confidentialityUserInfo}}</span>
+                                </view-edit-yes-no-other>
+                            </li>
+
+                            <li>
+                                <label for="dataMiningDisplay">Text & Data Mining:</label>
+                                <view-edit-yes-no-other ng-model="vm.product.terms.dataMining" edit-mode="false" input-id="dataMiningDisplay">
+                                    <span class="value">{{ vm.product.terms.dataMining || vm.product.license.terms.dataMining}}</span>
+                                </view-edit-yes-no-other>
+                            </li>
+
+                            <li>
+                                <label for="accessibilityComplianceDisplay">Accessibility Compliance:</label>
+                                <view-edit-yes-no-other ng-model="vm.product.terms.accessibilityCompliance" edit-mode="false" input-id="accessibilityComplianceDisplay">
+                                    <span class="value">{{ vm.product.terms.accessibilityCompliance || vm.product.license.terms.accessibilityCompliance}}</span>
+                                </view-edit-yes-no-other>
+                            </li>
+
+                            <li>
+                                <label for="videoPerformanceDisplay">Video Performance Rights:</label>
+                                <view-edit-yes-no-other ng-model="vm.product.terms.videoPerformance" edit-mode="false" input-id="videoPerformanceDisplay">
+                                    <span class="value">{{ vm.product.terms.videoPerformance || vm.product.license.terms.videoPerformance}}</span>
                                 </view-edit-yes-no-other>
                             </li>
                         </ul>

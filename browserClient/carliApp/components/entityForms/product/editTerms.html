@@ -74,18 +74,6 @@
 
                 <li>
                     <span class="column term">
-                        <label for="walkinTermsModal">Use by Walk-ins:</label>
-                    </span>
-                    <span class="column product">
-                        <view-edit-yes-no-other ng-model="vm.product.terms.walkinTerms" edit-mode="true" input-id="walkinTermsModal"></view-edit-yes-no-other>
-                    </span>
-                    <span class="column license">
-                        <div class="license-term">{{ vm.product.license.terms.walkinTerms}}</div>
-                    </span>
-                </li>
-
-                <li>
-                    <span class="column term">
                         <label for="eReservesTermsModal">E-Reserves:</label>
                     </span>
                     <span class="column product">
@@ -98,13 +86,61 @@
 
                 <li>
                     <span class="column term">
-                        <label for="hasConfidentialityTermsModal">Confidentiality Language:</label>
+                        <label for="confidentialityAgreementModal">Confidentiality of Agreement:</label>
                     </span>
                     <span class="column product">
-                        <view-edit-yes-no-other ng-model="vm.product.terms.hasConfidentialityTerms" edit-mode="true" input-id="hasConfidentialityTermsModal"></view-edit-yes-no-other>
+                        <view-edit-yes-no-other ng-model="vm.product.terms.confidentialityAgreement" edit-mode="true" input-id="confidentialityAgreementModal"></view-edit-yes-no-other>
                     </span>
                     <span class="column license">
-                        <div class="license-term">{{ vm.product.license.terms.hasConfidentialityTerms}}</div>
+                        <div class="license-term">{{ vm.product.license.terms.confidentialityAgreement}}</div>
+                    </span>
+                </li>
+
+                <li>
+                    <span class="column term">
+                        <label for="confidentialityUserInfoModal">Confidentiality of User Information:</label>
+                    </span>
+                    <span class="column product">
+                        <view-edit-yes-no-other ng-model="vm.product.terms.confidentialityUserInfo" edit-mode="true" input-id="confidentialityUserInfoModal"></view-edit-yes-no-other>
+                    </span>
+                    <span class="column license">
+                        <div class="license-term">{{ vm.product.license.terms.confidentialityUserInfo}}</div>
+                    </span>
+                </li>
+
+                <li>
+                    <span class="column term">
+                        <label for="dataMiningModal">Text & Data Mining:</label>
+                    </span>
+                    <span class="column product">
+                        <view-edit-yes-no-other ng-model="vm.product.terms.dataMining" edit-mode="true" input-id="dataMiningModal"></view-edit-yes-no-other>
+                    </span>
+                    <span class="column license">
+                        <div class="license-term">{{ vm.product.license.terms.dataMining}}</div>
+                    </span>
+                </li>
+
+                <li>
+                    <span class="column term">
+                        <label for="accessibilityComplianceModal">Accessibility Compliance:</label>
+                    </span>
+                    <span class="column product">
+                        <view-edit-yes-no-other ng-model="vm.product.terms.accessibilityCompliance" edit-mode="true" input-id="accessibilityComplianceModal"></view-edit-yes-no-other>
+                    </span>
+                    <span class="column license">
+                        <div class="license-term">{{ vm.product.license.terms.accessibilityCompliance}}</div>
+                    </span>
+                </li>
+
+                <li>
+                    <span class="column term">
+                        <label for="videoPerformanceModal">Video Performance Rights:</label>
+                    </span>
+                    <span class="column product">
+                        <view-edit-yes-no-other ng-model="vm.product.terms.videoPerformance" edit-mode="true" input-id="videoPerformanceModal"></view-edit-yes-no-other>
+                    </span>
+                    <span class="column license">
+                        <div class="license-term">{{ vm.product.license.terms.videoPerformance}}</div>
                     </span>
                 </li>
             </ul>

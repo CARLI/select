@@ -6,7 +6,7 @@
         <div class="label">Specific Terms</div>
         <ul class="terms-list">
             <li>
-                <span class="label">Download:</span>
+                <span class="label">Download Digital Copy:</span>
                 <span class="term">{{ vm.offering.product.terms.downloadTerms || vm.offering.product.license.terms.downloadTerms }}</span>
             </li>
             <li>
@@ -20,7 +20,7 @@
             </li>
 
             <li>
-                <span class="label">Print:</span>
+                <span class="label">Print Copy:</span>
                 <span class="term">{{ vm.offering.product.terms.printTerms || vm.offering.product.license.terms.printTerms}}</span>
             </li>
 
@@ -30,13 +30,33 @@
             </li>
 
             <li>
-                <span class="label">Use by Walk-ins:</span>
-                <span class="term">{{ vm.offering.product.terms.walkinTerms || vm.offering.product.license.terms.walkinTerms}}</span>
+                <span class="label">E-Reserves:</span>
+                <span class="term">{{ vm.offering.product.terms.eReservesTerms || vm.offering.product.license.terms.eReservesTerms}}</span>
             </li>
 
             <li>
-                <span class="label">E-Reserves:</span>
-                <span class="term">{{ vm.offering.product.terms.eReservesTerms || vm.offering.product.license.terms.eReservesTerms}}</span>
+                <span class="label">Confidentiality of Agreement:</span>
+                <span class="term">{{ vm.offering.product.terms.confidentialityAgreement || vm.offering.product.license.terms.confidentialityAgreement}}</span>
+            </li>
+
+            <li>
+                <span class="label">Confidentiality of User Information:</span>
+                <span class="term">{{ vm.offering.product.terms.confidentialityUserInfo || vm.offering.product.license.terms.confidentialityUserInfo}}</span>
+            </li>
+
+            <li>
+                <span class="label">Text & Data Mining:</span>
+                <span class="term">{{ vm.offering.product.terms.dataMining || vm.offering.product.license.terms.dataMining}}</span>
+            </li>
+
+            <li>
+                <span class="label">Accessibility Compliance:</span>
+                <span class="term">{{ vm.offering.product.terms.accessibilityCompliance || vm.offering.product.license.terms.accessibilityCompliance}}</span>
+            </li>
+
+            <li>
+                <span class="label">Video Performance Rights:</span>
+                <span class="term">{{ vm.offering.product.terms.videoPerformance || vm.offering.product.license.terms.videoPerformance}}</span>
             </li>
         </ul>
     </div>
