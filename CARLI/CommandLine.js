@@ -32,6 +32,7 @@ function confirmOrExit(question) {
 
     function fulfillPromise(answer) {
         if (userSaidYes()) {
+            console.log('Sure thing, boss!');
             deferred.resolve();
         } else {
             process.exit();
@@ -61,7 +62,7 @@ function withSingleArgument(argumentName, doSomething) {
     return withOptionalSingleArgument(doSomething);
 
     function showUsageAndExit() {
-        console.log('Usage: ' + getProgramName() + ' <'+ argumentName +'>');
+        console.log('Usage: ' + getProgramName() + ' <' + argumentName + '>');
         process.exit();
     }
 }
