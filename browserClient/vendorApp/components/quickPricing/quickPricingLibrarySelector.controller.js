@@ -100,11 +100,24 @@ function quickPricingLibrarySelectorController($scope) {
     }
 
     function filterBySubscriberType(library) {
-        var renewingLibrary = Object.keys(vm.selectedProductIds).filter(k => vm.selectedProductIds[k]).every(productId => libraryIsRenewingProduct(library, productId));
-        var subscriberType = renewingLibrary ? 'renewing' : 'new';
+        var isRenewingEveryProduct = Object.keys(vm.selectedProductIds)
+            .filter(k => vm.selectedProductIds[k])
+            .every(productId => libraryIsRenewingProduct(library, productId));
 
-        return !(vm.filters.subscriberType.new && subscriberType === 'renewing' ||
-            vm.filters.subscriberType.renewing && subscriberType === 'new');
+        var isNewSubscriberForEveryProduct = Object.keys(vm.selectedProductIds)
+            .filter(k => vm.selectedProductIds[k])
+            .every(productId => !libraryIsRenewingProduct(library, productId));
+
+        const desiresRenewing = vm.filters.subscriberType.renewing;
+        const desiresNew = vm.filters.subscriberType.new;
+
+        if(desiresNew && isNewSubscriberForEveryProduct)
+            return true;
+
+        if(desiresRenewing && isRenewingEveryProduct)
+            return true;
+
+        return false;
     }
 
     function libraryIsRenewingProduct(library, productId) {
