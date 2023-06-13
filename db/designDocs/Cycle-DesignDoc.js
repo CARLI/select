@@ -1,11 +1,11 @@
-var couchapp = require( 'couchapp' )
-  , path = require( 'path' );
+var couchapp = require('couchapp')
+    , path = require('path');
 
 ddoc = {
     _id: '_design/CARLI',
     filters: {
-        filterCycleDatabaseForVendor: function(doc, req) {
-            if(!req.query.vendorId) {
+        filterCycleDatabaseForVendor: function (doc, req) {
+            if (!req.query.vendorId) {
                 throw("vendorId is required");
             }
 
@@ -21,11 +21,11 @@ ddoc = {
         }
     },
     validate_doc_update: function (newDoc, oldDoc, userCtx) {
-        if ( userHasRole('readonly') ) {
-            throw({ forbidden: 'Unauthorized' });
+        if (userHasRole('readonly')) {
+            throw({forbidden: 'Unauthorized'});
         }
-        if ( ! (userHasRole('staff') || userHasRole('_admin') || userHasRole('library') || userHasMatchingVendorRole()) ) {
-            throw({ forbidden: 'Unauthorized' });
+        if (!(userHasRole('staff') || userHasRole('_admin') || userHasRole('library') || userHasMatchingVendorRole())) {
+            throw({forbidden: 'Unauthorized'});
         }
 
         function userHasRole(role) {
@@ -39,90 +39,100 @@ ddoc = {
     },
     views: {
         listByType: {
-            map: function( doc ) { if ( doc.type ) { emit( doc.type, doc ) } }
+            map: function (doc) {
+                if (doc.type) {
+                    emit(doc.type, doc)
+                }
+            }
         },
         docTypes: {
-            map: function( doc ) { if ( doc.type ) { emit( doc.type, doc ) } },
-            reduce: function( key, values ) { emit( null ); }
+            map: function (doc) {
+                if (doc.type) {
+                    emit(doc.type, doc)
+                }
+            },
+            reduce: function (key, values) {
+                emit(null);
+            }
         },
         listOfferingsForProductId: {
-            map: function ( doc ) {
-                if ( doc.type === 'Offering' ) {
-                    emit( doc.product, doc );
+            map: function (doc) {
+                if (doc.type === 'Offering') {
+                    emit(doc.product, doc);
                 }
             }
         },
         listOfferingsForLibraryId: {
-            map: function ( doc ) {
-                if ( doc.type === 'Offering' ) {
-                    emit( doc.library, doc );
+            map: function (doc) {
+                if (doc.type === 'Offering') {
+                    emit(doc.library, doc);
                 }
             }
         },
         listOfferingsForVendorId: {
-            map: function ( doc ) {
-                if ( doc.type === 'Offering' ) {
-                    emit( doc.vendorId, doc );
+            map: function (doc) {
+                if (doc.type === 'Offering') {
+                    emit(doc.vendorId, doc);
                 }
             }
         },
         listProductsByLicenseId: {
-            map: function ( doc ) {
-                if ( doc.type === 'Product' ) {
-                    emit( doc.license, doc );
+            map: function (doc) {
+                if (doc.type === 'Product') {
+                    emit(doc.license, doc);
                 }
             }
         },
         listOfferingsWithSelections: {
-            map: function ( doc ) {
-                if ( doc.type === 'Offering' && doc.selection ) {
-                    emit( doc.library, doc );
+            map: function (doc) {
+                if (doc.type === 'Offering' && doc.selection) {
+                    emit(doc.library, doc);
                 }
             }
         },
         listProductsForVendorId: {
-            map: function ( doc ) {
-                if ( doc.type === 'Product' ) {
-                    emit( doc.vendor, doc );
+            map: function (doc) {
+                if (doc.type === 'Product') {
+                    emit(doc.vendor, doc);
                 }
             }
         },
         listProductCountsByVendorId: {
-            map: function(doc) {
+            map: function (doc) {
                 if (doc.type === 'Product') {
                     emit(doc.vendor, 1);
                 }
             },
-            reduce: function(key, values) {
+            reduce: function (key, values) {
                 return sum(values);
             }
         },
         listLibrariesWithSelections: {
-            map: function(doc) {
-                if (doc.type === 'Offering' && doc.selection ) {
+            map: function (doc) {
+                if (doc.type === 'Offering' && doc.selection) {
                     emit(doc.library, 1);
                 }
             },
-            reduce: function(key, values) {
+            reduce: function (key, values) {
                 return sum(values);
             }
         },
         listVendorStatusesByVendorId: {
-            map: function(doc) {
-                if ( doc.type === 'VendorStatus' ){
+            map: function (doc) {
+                if (doc.type === 'VendorStatus') {
                     emit(doc.vendor, doc);
                 }
             }
         },
         listLibraryStatusesByLibraryId: {
-            map: function(doc) {
-                if ( doc.type === 'LibraryStatus' ){
+            map: function (doc) {
+                if (doc.type === 'LibraryStatus') {
                     emit(doc.library, doc);
                 }
             }
         },
         getCycleSelectionAndInvoiceTotals: {
-            map: function(doc) {
+            map: function (doc) {
                 if (doc.type == 'Offering') {
                     var selectionPrice = getFullSelectionPrice(doc);
                     var vendorInvoicePrice = doc.invoice ? doc.invoice.price || 0 : 0;
@@ -130,7 +140,7 @@ ddoc = {
                     if (doc.funding) {
                         if (doc.funding.fundedByPercentage) {
                             if (doc.funding.fundedPercent > 0) {
-                                var percent = (doc.funding.fundedPercent/100);
+                                var percent = (doc.funding.fundedPercent / 100);
                                 selectionPrice = roundToNearestCent(selectionPrice - (percent * selectionPrice));
                             }
                         } else {
@@ -158,8 +168,9 @@ ddoc = {
                         function getSiteLicensePrice() {
                             return offering.pricing.site;
                         }
+
                         function getPricingObjectForUsers() {
-                            return offering.pricing.su.filter(matchPriceForUsers)[ 0 ];
+                            return offering.pricing.su.filter(matchPriceForUsers)[0];
                         }
 
                         function matchPriceForUsers(pricingObject) {
@@ -172,16 +183,25 @@ ddoc = {
                     return Math.round(100 * amount) / 100;
                 }
             },
-            reduce: function(key, values, rereduce) {
-                var selectionPrices = values.map(function (v) { return v.selectionPrice; });
-                var invoicePrices = values.map(function (v) { return v.invoicePrice; });
+            reduce: function (key, values, rereduce) {
+                var selectionPrices = values.map(function (v) {
+                    return v.selectionPrice;
+                });
+                var invoicePrices = values.map(function (v) {
+                    return v.invoicePrice;
+                });
 
                 return {
                     selectionPrice: sum(selectionPrices),
                     invoicePrice: sum(invoicePrices)
                 };
             }
-        }
+        },
+        priceCapsForProducts: {
+            "map": function (doc) {
+                if (doc.type === 'Product') emit(doc.id, doc.priceCap);
+            }
+        },
     }
 };
 
