@@ -68,10 +68,10 @@
         <div class="pricing-grid-container" id="site-pricing-grid-container">
             <div class="pricing-grid" id="site-pricing-grid">
                 <div class="price-cap price-row" ng-show="vm.viewOptions.priceCap">
-                    <div class="column header {{ ::product.id }}" ng-repeat="product in vm.products">{{ ::product.priceCap }}%</div>
+                    <div class="column header {{ ::product.id }}" style="display: var(--{{ ::product.id}})" ng-repeat="product in vm.products">{{ ::product.priceCap }}%</div>
                 </div>
                 <div class="price-row product-name-row">
-                    <div class="column header {{ ::product.id }}" title="{{ ::product.name }}" ng-repeat="product in vm.products">
+                    <div class="column header {{ ::product.id }}" style="display: var(--{{ ::product.id}})" title="{{ ::product.name }}" ng-repeat="product in vm.products">
                         <div tabindex="0" class="product-name">{{ ::product.name }}</div>
                     </div>
                 </div>

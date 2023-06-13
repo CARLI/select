@@ -4,6 +4,7 @@ angular.module('vendor.sections.siteLicensePrices')
 function siteLicensePricesController($scope, $q, $filter, activityLogService, alertService, authService, csvExportService, cycleService, libraryService, offeringService, productService, siteLicensePricesCsvData, vendorDataService, vendorStatusService) {
     var vm = this;
 
+    let documentRoot = document.documentElement;
     vm.changedOfferings = [];
     vm.loadingPromise = null;
     vm.newOfferings = [];
@@ -137,6 +138,7 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
     function initializeSelectedLibraryIds() {
         selectAllLibraries();
         $scope.$watchCollection(getSelectedLibraryIds, updateVisibilityOfRowsForSelectedLibraries);
+
         function getSelectedLibraryIds() {
             return vm.selectedLibraryIds;
         }
@@ -151,6 +153,7 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
     function initializeSelectedProductIds() {
         selectAllProducts();
         $scope.$watchCollection(getSelectedProductIds, updateVisibilityOfCellsForSelectedProducts);
+
         function getSelectedProductIds() {
             return vm.selectedProductIds;
         }
@@ -172,8 +175,9 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
     function updateVisibilityOfCellsForSelectedProducts(selectedEntities) {
         if (selectedEntities) {
             Object.keys(selectedEntities).forEach(function (entityId) {
+
                 var displayValue = selectedEntities[entityId] ? 'table-cell' : 'none';
-                $('.' + entityId).css('display', displayValue);
+                documentRoot.style.setProperty('--' + entityId, displayValue);
             });
         }
     }
@@ -224,8 +228,11 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
 
             var cellContents = createReadOnlyOfferingCell(textForPrice);
 
+            documentRoot.style.setProperty(`--${product.id}`, 'table-cell');
+
             var offeringCell = $('<div class="column offering">')
                 .addClass(product.id)
+                .css("display", `var(--${product.id})`)
                 .append(cellContents)
                 .data('libraryId', library.id)
                 .data('fte', library.fte)
@@ -386,8 +393,7 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
 
             if (offering.id) {
                 vm.changedOfferings.push(offering);
-            }
-            else {
+            } else {
                 vm.newOfferings.push(offering);
             }
 
@@ -398,8 +404,7 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
     function applyCssClassesToOfferingCell(offeringCell, offering) {
         if (offering) {
             delete offering.flaggedReason;
-        }
-        else {
+        } else {
             return;
         }
 
@@ -413,8 +418,7 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
         function setOfferingUpdatedState() {
             if (vendorHasUpdatedTheOfferingsPricing()) {
                 offeringCell.addClass('updated');
-            }
-            else {
+            } else {
                 offeringCell.removeClass('updated');
             }
         }
@@ -432,8 +436,7 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
                     console.log('flag offering', offering, vm.cycle);
                 }
                 addFlagDisplay();
-            }
-            else {
+            } else {
                 removeFlagDisplay();
             }
 
@@ -483,12 +486,12 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
             offering = generateNewOffering(libraryId, productId);
         }
 
-        $scope.$apply(function() {
+        $scope.$apply(function () {
             applyNewCellPricingToOffering(offeringCell, offering, newPrice);
         });
         applyCssClassesToOfferingCell(offeringCell, offering);
 
-        var newReadOnlyCellContents = createReadOnlyOfferingCell( findSitePrice(offering) );
+        var newReadOnlyCellContents = createReadOnlyOfferingCell(findSitePrice(offering));
         $this.replaceWith(newReadOnlyCellContents);
         setCommentMarkerVisibility(newReadOnlyCellContents);
     }
@@ -511,8 +514,7 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
             .then(function (vendorIsAllowedToSavePrices) {
                 if (vendorIsAllowedToSavePrices) {
                     return saveAllOfferings(vm.newOfferings, vm.changedOfferings);
-                }
-                else {
+                } else {
                     alertService.putAlert('Pricing for the current cycle has been closed. Please contact CARLI staff for more information.', {severity: 'danger'});
                     return false;
                 }
@@ -556,8 +558,7 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
 
                 if (count) {
                     return initializePricingGrid();
-                }
-                else {
+                } else {
                     return $q.when();
                 }
             })
@@ -578,11 +579,11 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
         }
 
         function logOfferingChanges(offerings) {
-            return $q.all(offerings.map(function(offering) {
+            return $q.all(offerings.map(function (offering) {
                 var library = getLibraryById(offering.library);
                 return activityLogService.logSiteLicenseChangePrice(vm.cycle, vm.vendor, offering, offering.product, library);
             }))
-                .catch(function(error) {
+                .catch(function (error) {
                     console.error('Error while logging site license change: ' + error);
                 });
         }
@@ -614,7 +615,7 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
             var productId = $offeringCell.data('productId');
             var offering = offeringForProductAndLibrary(productId, libraryId);
 
-            if ( !offering ) {
+            if (!offering) {
                 offering = generateNewOffering(libraryId, productId);
             }
 
@@ -622,8 +623,7 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
                 console.log("A cell needs to be updated...");
                 if (mode == 'dollarAmount') {
                     newValue = quickPricingValue;
-                }
-                else if (mode == 'percentageIncrease') {
+                } else if (mode == 'percentageIncrease') {
                     const lastYearsPricingObject = getLastYearsPricingFromOffering(offering);
 
                     var lastYearsPrice = (lastYearsPricingObject) ?
@@ -637,12 +637,10 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
                     newValue = (100 + quickPricingValue) / 100 * originalValue;
                     var newValueRoundedDown = Math.floor(newValue * 100) / 100;
                     newValue = newValueRoundedDown;
-                }
-                else if (mode == 'byFte') {
+                } else if (mode == 'byFte') {
                     var fte = $offeringCell.data('fte');
                     newValue = quickPricingValue * fte;
-                }
-                else if (mode == 'deletePricing') {
+                } else if (mode == 'deletePricing') {
                     newValue = null;
                     offering = offeringService.removeSitePricing(offering);
                 }
@@ -668,7 +666,7 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
 
             applyCssClassesToOfferingCell(offeringCell, offering);
 
-            var newReadOnlyCellContents = createReadOnlyOfferingCell( findSitePrice(offering) );
+            var newReadOnlyCellContents = createReadOnlyOfferingCell(findSitePrice(offering));
             offeringCell.find('.price').replaceWith(newReadOnlyCellContents);
             setCommentMarkerVisibility(newReadOnlyCellContents);
         }
@@ -685,7 +683,7 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
     }
 
     function findSitePrice(offering) {
-        if ( offering ) {
+        if (offering) {
             return offering.pricing ? offering.pricing.site : '';
         }
         return '';
