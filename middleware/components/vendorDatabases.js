@@ -1,4 +1,3 @@
-
 var Q = require('q');
 var couchUtils = require('../../CARLI/Store/CouchDb/Utils')();
 var cycleRepository = require('../../CARLI/Entity/CycleRepository');
@@ -11,7 +10,7 @@ var vendorStatusRepository = require('../../CARLI/Entity/VendorStatusRepository.
 
 function createVendorDatabasesForActiveCyclesForSingleVendor(vendorId) {
     return cycleRepository.listActiveCycles().then(function (cycles) {
-        return Q.all( cycles.map(createDatabases) );
+        return Q.all(cycles.map(createDatabases));
 
         function createDatabases(cycle) {
             return createOneVendorDatabaseForCycle(vendorId, cycle.id);
@@ -33,7 +32,7 @@ function createOneVendorDatabaseForCycle(vendorId, cycleId) {
 
 function createVendorDatabasesForActiveCycles() {
     return cycleRepository.listActiveCycles().then(function (cycles) {
-        return Q.all( cycles.map(createDatabases) );
+        return Q.all(cycles.map(createDatabases));
 
         function createDatabases(cycle) {
             return createVendorDatabasesForCycle(cycle.id);
@@ -43,7 +42,7 @@ function createVendorDatabasesForActiveCycles() {
 
 function createVendorDatabasesForCycle(cycleId) {
     return vendorRepository.list().then(function (vendors) {
-        return Q.all( vendors.map(createDatabase) )
+        return Q.all(vendors.map(createDatabase))
             .thenResolve(cycleId);
 
         function createDatabase(vendor) {
@@ -55,7 +54,7 @@ function createVendorDatabasesForCycle(cycleId) {
 
 function replicateDataToVendorsForAllCycles() {
     return cycleRepository.listActiveCycles().then(function (cycles) {
-        return Q.all( cycles.map(replicateData) );
+        return Q.all(cycles.map(replicateData));
 
         function replicateData(cycle) {
             return replicateDataToVendorsForCycle(cycle.id);
@@ -69,7 +68,7 @@ function replicateDataToVendorsForCycle(cycleId) {
         .thenResolve(cycleId);
 
     function replicateDataToVendors(vendors) {
-        return Q.all( vendors.map(replicateDataToVendor) );
+        return Q.all(vendors.map(replicateDataToVendor));
 
         function replicateDataToVendor(vendor) {
             var repoForVendor = cycleRepositoryForVendor(vendor);
@@ -81,12 +80,12 @@ function replicateDataToVendorsForCycle(cycleId) {
     }
 }
 
-function replicateDataToOneVendorForCycle(vendorId, cycleId){
+function replicateDataToOneVendorForCycle(vendorId, cycleId) {
     return vendorRepository.load(vendorId)
         .then(replicateDataToVendor)
         .thenResolve(cycleId);
 
-    function replicateDataToVendor(vendor){
+    function replicateDataToVendor(vendor) {
         var repoForVendor = cycleRepositoryForVendor(vendor);
         return repoForVendor.load(cycleId)
             .then(function (cycleForVendor) {
@@ -97,7 +96,7 @@ function replicateDataToOneVendorForCycle(vendorId, cycleId){
 
 function replicateDataFromVendorsForAllCycles() {
     return cycleRepository.listActiveCycles().then(function (cycles) {
-        return Q.all( cycles.map(replicateData) );
+        return Q.all(cycles.map(replicateData));
 
         function replicateData(cycle) {
             return replicateDataFromVendorsForCycle(cycle.id);
@@ -107,7 +106,7 @@ function replicateDataFromVendorsForAllCycles() {
 
 function replicateDataFromVendorsForCycle(cycleId) {
     return vendorRepository.list().then(function (vendors) {
-        return Q.all( vendors.map(replicateData) );
+        return Q.all(vendors.map(replicateData));
 
         function replicateData(vendor) {
             var repoForVendor = cycleRepositoryForVendor(vendor);
@@ -129,7 +128,8 @@ function replicateDataFromOneVendorForCycle(vendorId, cycleId) {
             .then(function (cycleForVendor) {
                 return cycleForVendor.replicateToSource();
             });
-    }}
+    }
+}
 
 function syncEverything() {
     tap("Creating vendor databases (if needed)")();
@@ -140,8 +140,8 @@ function syncEverything() {
         .then(replicateDataFromVendorsForAllCycles)
         .then(tap('Trigging indexing of views'))
         .then(triggerIndexingForAllCycles)
-        .catch(function(err) {
-            tap(' *ERROR*',err);
+        .catch(function (err) {
+            tap(' *ERROR*', err);
         });
 
     function tap(message) {
@@ -154,7 +154,7 @@ function syncEverything() {
 
 function triggerIndexingForAllCycles() {
     return cycleRepository.listActiveCycles().then(function (cycles) {
-        return Q.all( cycles.map(triggerIndexing) );
+        return Q.all(cycles.map(triggerIndexing));
 
         function triggerIndexing(cycle) {
             return triggerIndexingForCycle(cycle);
@@ -176,15 +176,19 @@ function triggerIndexingForCycle(cycle) {
     function triggerIndexingForMainDatabase() {
         return couchUtils.triggerViewIndexing(cycle.getDatabaseName());
     }
+
     function makeCycleInstancesForAllVendors(vendors) {
         return Q.all(vendors.map(makeCycleInstanceForVendor));
     }
+
     function makeCycleInstanceForVendor(vendor) {
         return cycleRepositoryForVendor(vendor).load(cycle.id);
     }
+
     function triggerIndexingForAllVendorDatabases(cycles) {
         return Q.all(cycles.map(triggerIndexingForVendorDatabase));
     }
+
     function triggerIndexingForVendorDatabase(cycleForVendor) {
         return couchUtils.triggerViewIndexing(cycleForVendor.getDatabaseName());
     }
@@ -212,7 +216,7 @@ function getCycleStatusForAllVendors(cycleId) {
     return vendorRepository.list().then(gatherStatuses);
 
     function gatherStatuses(vendors) {
-        return Q.all( vendors.map(gatherStatusForVendor) );
+        return Q.all(vendors.map(gatherStatusForVendor));
 
         function gatherStatusForVendor(vendor) {
             return getDatabaseStatusForVendor(vendor, cycleId);
@@ -278,6 +282,7 @@ function getDatabaseStatusForVendor(vendor, cycleId) {
             return vendorCycle;
         });
     }
+
     function addIndexingProgress(vendorCycle) {
         return couchUtils.getCycleViewIndexingStatus(vendorCycle).then(function (progress) {
             status.indexingProgress = progress;
@@ -289,22 +294,17 @@ function getDatabaseStatusForVendor(vendor, cycleId) {
         return Q.all([
             couchUtils.getDatabaseInfo(vendorCycle.getDatabaseName()),
             couchUtils.getDatabaseDesignDocInfo(vendorCycle.getDatabaseName())
-        ]).then(function(info) {
+        ]).then(function (info) {
             var vendorDatabaseInfo = info[0];
-            var vendorDesignDocInfo =  info[1];
+            var vendorDesignDocInfo = info[1];
             //Logger.log(vendorDatabaseInfo);
             status.viewIndexDelta = vendorDatabaseInfo.update_seq - vendorDesignDocInfo.view_index.update_seq;
 
-            //return couchUtils.getVendorDatabaseReplicationStatus(vendorCycle.getSourceDatabaseName(), vendorDatabaseInfo.update_seq, vendor.id)
-            //    .then(function(response) {
-            //        status.replicationDelta = response.results.length;
-            //        return vendorCycle;
-            //    });
         });
     }
 }
 
-function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
+function updateFlaggedOfferingsForVendor(vendorId, cycleId) {
     var cycle = null;
 
     return vendorRepository.load(vendorId)
@@ -317,72 +317,49 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
         .then(filterOfferingsForActiveLibraries)
         .then(computeFlaggedOfferingReasons)
         .then(updateVendorStatusFlaggedOfferings)
-        .catch(function(err){
+        .catch(function (err) {
             Logger.log('error updating flagged offerings', err);
         });
 
-    function loadCycleForVendor(vendor){
+    function loadCycleForVendor(vendor) {
         Logger.log('Updating flagged offerings for ' + vendor.name + ' for cycle ' + cycleId);
 
         var cycleRepository = cycleRepositoryForVendor(vendor);
         return cycleRepository.load(cycleId);
     }
 
-    function catchNoVendor( err ){
-        Logger.log('error updating Flagged Offerings for vendor' + vendorId +' - No Vendor', err);
+    function catchNoVendor(err) {
+        Logger.log('error updating Flagged Offerings for vendor' + vendorId + ' - No Vendor', err);
     }
 
-    function saveCycle(vendorCycle){
+    function saveCycle(vendorCycle) {
         cycle = vendorCycle;
         return cycle;
     }
 
-    function catchNoCycle( err ){
-        Logger.log('error updating Flagged Offerings for vendor' + vendorId +' - No Cycle', err);
+    function catchNoCycle(err) {
+        Logger.log('error updating Flagged Offerings for vendor' + vendorId + ' - No Cycle', err);
     }
 
-    function getFlaggedOfferings(listOfAllUnexpandedOfferings){
+    function getFlaggedOfferings(listOfAllUnexpandedOfferings) {
         Logger.log('  loaded ' + listOfAllUnexpandedOfferings.length + ' total offerings');
         return listOfAllUnexpandedOfferings.filter(flagged);
 
-        function flagged(offering){
+        function flagged(offering) {
             return offeringRepository.getFlaggedState(offering, cycle);
         }
     }
 
-    function populateProductsForOfferings(offerings){
-        return getProductIds(offerings)
-            .then(loadProductsById)
-            .then(mapProductsById)
-            .then(replaceProductIdsWithProducts);
+    function populateProductsForOfferings(offerings) {
+        const vendorId = offerings[0].vendor;
 
-        function getProductIds(listOfOfferings){
-            return Q( listOfOfferings.map(getProductIdFromUnexpandedOffering));
-        }
-
-        function loadProductsById(productIds){
-            return productRepository.getProductsById(productIds, cycle);
-        }
-
-        function mapProductsById(listOfProducts){
-            var results = {};
-
-            listOfProducts.forEach(function(product){
-                results[product.id] = product;
+        return productRepository.getPriceCapsForProducts(vendorId, cycle)
+            .then(result => {
+                return offerings.map(offering => {
+                    offering.product = {priceCap: result[offering.productId]};
+                    return offering;
+                });
             });
-
-            return results;
-        }
-
-        function replaceProductIdsWithProducts(productMap){
-            return offerings.map(replaceOfferingProduct);
-
-            function replaceOfferingProduct(offering){
-                var productId = getProductIdFromUnexpandedOffering(offering);
-                offering.product = productMap[productId];
-                return offering;
-            }
-        }
     }
 
     function populateLibrariesForFlaggedOfferings(flaggedOfferings) {
@@ -420,9 +397,6 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
         }
     }
 
-    function getProductIdFromUnexpandedOffering(offering){
-        return offering.product;
-    }
 
     function getLibraryIdFromUnexpandedOffering(offering) {
         return offering.library;
@@ -451,7 +425,7 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
             offering.flaggedReason.forEach(function (reason) {
                 flaggedOfferingsReasonSummary[reason] = flaggedOfferingsReasonSummary[reason] || 0;
                 flaggedOfferingsReasonSummary[reason]++;
-                
+
                 flaggedOfferingsReasonProductDetails[reason] = flaggedOfferingsReasonProductDetails[reason] || {};
                 flaggedOfferingsReasonProductDetails[reason][productName] = (flaggedOfferingsReasonProductDetails[reason][productName] || 0) + 1;
             });
@@ -466,9 +440,9 @@ function updateFlaggedOfferingsForVendor( vendorId, cycleId ){
         };
     }
 
-    function updateVendorStatusFlaggedOfferings(flaggedReasons){
+    function updateVendorStatusFlaggedOfferings(flaggedReasons) {
         return vendorStatusRepository.getStatusForVendor(vendorId, cycle)
-            .then(function(vendorStatus){
+            .then(function (vendorStatus) {
                 vendorStatus.flaggedOfferingsCount = flaggedReasons.flaggedOfferingsCount;
                 vendorStatus.flaggedOfferingsReasons = {
                     summary: flaggedReasons.flaggedOfferingsReasonSummary,

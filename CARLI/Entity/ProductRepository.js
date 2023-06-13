@@ -1,54 +1,54 @@
-
 var moment = require('moment');
 var Q = require('q');
 
-var config = require( '../../config' );
-var couchUtils = require( '../Store/CouchDb/Utils')();
+var config = require('../../config');
+var couchUtils = require('../Store/CouchDb/Utils')();
 var CycleRepository = require('./CycleRepository');
 var Entity = require('../Entity');
-var EntityTransform = require( './EntityTransformationUtils');
+var EntityTransform = require('./EntityTransformationUtils');
 var getStoreForCycle = require('./getStoreForCycle');
 var Validator = require('../Validator');
+const vendorDatabaseName = require("./vendorDatabaseName");
 
 var ProductRepository = Entity('Product');
 var storeOptions = {};
 
 var propertiesToTransform = ['cycle', 'vendor', 'license'];
 
-function transformFunction( product ){
+function transformFunction(product) {
     EntityTransform.transformObjectForPersistence(product, propertiesToTransform);
 }
 
-function expandProducts( listPromise, cycle ){
-    return EntityTransform.expandListOfObjectsFromPersistence( listPromise, propertiesToTransform, functionsToAdd);
+function expandProducts(listPromise, cycle) {
+    return EntityTransform.expandListOfObjectsFromPersistence(listPromise, propertiesToTransform, functionsToAdd);
 }
 
-function createProduct( product, cycle ){
+function createProduct(product, cycle) {
     setCycle(cycle);
-    return ProductRepository.create( product, transformFunction );
+    return ProductRepository.create(product, transformFunction);
 }
 
-function updateProduct( product, cycle ){
+function updateProduct(product, cycle) {
     setCycle(cycle);
-    return ProductRepository.update( product, transformFunction );
+    return ProductRepository.update(product, transformFunction);
 }
 
-function listProducts(cycle){
+function listProducts(cycle) {
     setCycle(cycle);
-    return expandProducts( ProductRepository.list(cycle.getDatabaseName()), cycle );
+    return expandProducts(ProductRepository.list(cycle.getDatabaseName()), cycle);
 }
 
-function loadProduct( productId, cycle ){
+function loadProduct(productId, cycle) {
     var deferred = Q.defer();
 
     setCycle(cycle);
-    ProductRepository.load( productId )
+    ProductRepository.load(productId)
         .then(function (product) {
-            EntityTransform.expandObjectFromPersistence( product, propertiesToTransform, functionsToAdd )
+            EntityTransform.expandObjectFromPersistence(product, propertiesToTransform, functionsToAdd)
                 .then(function () {
                     deferred.resolve(product);
                 })
-                .catch(function(err){
+                .catch(function (err) {
                     // WARNING: this suppresses errors for entity references that are not found in the store
                     //console.warn('*** Cannot find reference in database to either vendor or license in product ', err);
                     deferred.resolve(product);
@@ -61,22 +61,22 @@ function loadProduct( productId, cycle ){
     return deferred.promise;
 }
 
-function listProductsUnexpanded(cycle){
+function listProductsUnexpanded(cycle) {
     setCycle(cycle);
     return ProductRepository.list(cycle.getDatabaseName());
 }
 
-function listActiveProductsUnexpanded(cycle){
+function listActiveProductsUnexpanded(cycle) {
     setCycle(cycle);
     return ProductRepository.list(cycle.getDatabaseName())
-        .then(function(productList){
-            return productList.filter(function(product){
+        .then(function (productList) {
+            return productList.filter(function (product) {
                 return product.isActive;
             });
         });
 }
 
-function listAvailableOneTimePurchaseProducts(){
+function listAvailableOneTimePurchaseProducts() {
     var deferred = Q.defer();
 
     CycleRepository.load(config.oneTimePurchaseProductsCycleDocId).then(function (cycle) {
@@ -95,35 +95,36 @@ function listAvailableOneTimePurchaseProducts(){
     return deferred.promise;
 }
 
-function isActive( product ){
+function isActive(product) {
     return product.getIsActive();
 }
-function isAvailableToday( product ){
+
+function isAvailableToday(product) {
     var throughDate = moment(product.oneTimePurchase.availableForPurchaseThrough);
     var lastMidnight = moment().startOf('day');
     return throughDate.isAfter(lastMidnight);
 }
 
-function listProductsForLicenseId( licenseId, cycle ) {
+function listProductsForLicenseId(licenseId, cycle) {
     setCycle(cycle);
     return expandProducts(couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listProductsByLicenseId', licenseId), cycle);
 }
 
-function listProductsForVendorId( vendorId, cycle ) {
+function listProductsForVendorId(vendorId, cycle) {
     setCycle(cycle);
     return expandProducts(couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listProductsForVendorId', vendorId), cycle);
 }
 
-function listActiveProductIdsForVendorIds( listOfVendorIds, cycle ) {
+function listActiveProductIdsForVendorIds(listOfVendorIds, cycle) {
     setCycle(cycle);
-    return Q.all( listOfVendorIds.map(getActiveProductIdsForVendor) );
+    return Q.all(listOfVendorIds.map(getActiveProductIdsForVendor));
 
     function getActiveProductIdsForVendor(vendorId) {
         return couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listProductsForVendorId', vendorId)
             .then(returnActiveProductIds);
     }
 
-    function returnActiveProductIds(listOfProducts){
+    function returnActiveProductIds(listOfProducts) {
         return listOfProducts.filter(isActive).map(getId);
     }
 
@@ -136,18 +137,26 @@ function listActiveProductIdsForVendorIds( listOfVendorIds, cycle ) {
     }
 }
 
-function listActiveProductsForVendorId( vendorId, cycle ){
-    return listProductsForVendorId(vendorId,cycle)
+function listActiveProductsForVendorId(vendorId, cycle) {
+    return listProductsForVendorId(vendorId, cycle)
         .then(filterActiveProducts);
 
-    function filterActiveProducts( productList ){
-        return productList.filter(function(product){
+    function filterActiveProducts(productList) {
+        return productList.filter(function (product) {
             return product.getIsActive();
         });
     }
 }
 
-function listProductCountsByVendorId(cycle){
+function getPriceCapsForProducts(vendorId, cycle) {
+    const cycleDatabaseName = cycle.getDatabaseName();
+
+    const vendorDbName = vendorDatabaseName(cycleDatabaseName, vendorId);
+
+    return couchUtils.getCouchViewResultValues(vendorDbName, 'listPriceCapsForProducts');
+}
+
+function listProductCountsByVendorId(cycle) {
     setCycle(cycle);
     return couchUtils.getCouchViewResultObject(cycle.getDatabaseName(), 'listProductCountsByVendorId', null, true);
 }
@@ -159,21 +168,21 @@ function setCycle(cycle) {
     setStore(getStoreForCycle(cycle, storeOptions));
 }
 
-function getProductsById( ids, cycle ){
+function getProductsById(ids, cycle) {
     return couchUtils.getCouchDocuments(cycle.getDatabaseName(), ids);
 }
 
-function getProductSelectionStatisticsForCycle( productId, cycle ){
-    if ( !productId ){
+function getProductSelectionStatisticsForCycle(productId, cycle) {
+    if (!productId) {
         return Q.reject('getProductSelectionStatisticsForCycle: product Id required');
     }
 
-    if ( !cycle || !cycle.getDatabaseName ){
+    if (!cycle || !cycle.getDatabaseName) {
         return Q.reject('getProductSelectionStatisticsForCycle: fully expanded cycle required');
     }
 
     return couchUtils.getCouchViewResultValues(cycle.getDatabaseName(), 'listOfferingsForProductId', productId)
-        .then(function(offerings){
+        .then(function (offerings) {
             return {
                 numberOffered: offerings.length,
                 numberSelected: offerings.filter(selected).length,
@@ -183,19 +192,19 @@ function getProductSelectionStatisticsForCycle( productId, cycle ){
             };
         });
 
-    function selected(offering){
+    function selected(offering) {
         return offering.selection;
     }
 
-    function minPrice(offeringsList){
+    function minPrice(offeringsList) {
         var minPriceSoFar = Infinity;
 
-        offeringsList.forEach(function(offering){
-            if ( offering.pricing ){
+        offeringsList.forEach(function (offering) {
+            if (offering.pricing) {
                 var minSuPrice = offering.pricing.su ? findMinSuPrice(offering.pricing.su) : Infinity;
                 var minPriceForOffering = Math.min(minSuPrice, offering.pricing.site);
 
-                if ( minPriceForOffering < minPriceSoFar ){
+                if (minPriceForOffering < minPriceSoFar) {
                     minPriceSoFar = minPriceForOffering;
                 }
             }
@@ -204,15 +213,15 @@ function getProductSelectionStatisticsForCycle( productId, cycle ){
         return minPriceSoFar;
     }
 
-    function maxPrice(offeringsList){
+    function maxPrice(offeringsList) {
         var maxPriceSoFar = 0;
 
-        offeringsList.forEach(function(offering){
-            if ( offering.pricing ){
+        offeringsList.forEach(function (offering) {
+            if (offering.pricing) {
                 var maxSuPrice = offering.pricing.su ? findMaxSuPrice(offering.pricing.su) : 0;
                 var maxPriceForOffering = Math.max(maxSuPrice, offering.pricing.site);
 
-                if ( maxPriceForOffering > maxPriceSoFar ){
+                if (maxPriceForOffering > maxPriceSoFar) {
                     maxPriceSoFar = maxPriceForOffering;
                 }
             }
@@ -240,11 +249,11 @@ function getProductSelectionStatisticsForCycle( productId, cycle ){
         }
     }
 
-    function findMinSuPrice( listOfSuPricingObjects ){
+    function findMinSuPrice(listOfSuPricingObjects) {
         var minSuPrice = Infinity;
 
-        listOfSuPricingObjects.forEach(function(suPricing){
-            if ( suPricing.price < minSuPrice ){
+        listOfSuPricingObjects.forEach(function (suPricing) {
+            if (suPricing.price < minSuPrice) {
                 minSuPrice = suPricing.price;
             }
         });
@@ -252,11 +261,11 @@ function getProductSelectionStatisticsForCycle( productId, cycle ){
         return minSuPrice;
     }
 
-    function findMaxSuPrice( listOfSuPricingObjects ){
+    function findMaxSuPrice(listOfSuPricingObjects) {
         var maxSuPrice = 0;
 
-        listOfSuPricingObjects.forEach(function(suPricing){
-            if ( suPricing.price > maxSuPrice ){
+        listOfSuPricingObjects.forEach(function (suPricing) {
+            if (suPricing.price > maxSuPrice) {
                 maxSuPrice = suPricing.price;
             }
         });
@@ -273,8 +282,8 @@ function transformProductsForNewCycle(cycle) {
         .then(removeVendorComments)
         .then(prepareProductsToBeSaved)
         .then(saveProducts)
-        .then(function() {
-            return { ok: true };
+        .then(function () {
+            return {ok: true};
         });
 
 
@@ -327,7 +336,7 @@ function transformProductsForNewCycle(cycle) {
             }
         }
 
-        function productPropertyNeedsUnexpanded (product, prop) {
+        function productPropertyNeedsUnexpanded(product, prop) {
             return product.hasOwnProperty(prop) && product[prop] && typeof product[prop] !== 'string' && product[prop].hasOwnProperty('id');
         }
     }
@@ -338,19 +347,19 @@ function transformProductsForNewCycle(cycle) {
 }
 
 /* functions that get added as instance methods on loaded Products */
-var getIsActive = function(){
+var getIsActive = function () {
     return isProductActive(this);
 };
 
-function isProductActive( product ){
+function isProductActive(product) {
     var vendorIsActive = true;
     var licenseIsActive = true;
 
-    if ( product.vendor && product.vendor.isActive != undefined) {
+    if (product.vendor && product.vendor.isActive != undefined) {
         vendorIsActive = product.vendor.isActive;
     }
 
-    if ( product.license && product.license.isActive != undefined) {
+    if (product.license && product.license.isActive != undefined) {
         licenseIsActive = product.license.isActive;
     }
 
@@ -361,7 +370,7 @@ var functionsToAdd = {
     'getIsActive': getIsActive
 };
 
-function getProductDetailCodeOptions(){
+function getProductDetailCodeOptions() {
     return Validator.getEnumValuesFor('ProductDetailCodes');
 }
 
@@ -396,6 +405,7 @@ function listActiveProductsFromActiveCycles() {
             }
         }
     }
+
     function returnConsolidatedProductList() {
         var products = [];
 
@@ -408,7 +418,7 @@ function listActiveProductsFromActiveCycles() {
 }
 
 function filterActiveProducts(products) {
-    return products.filter(function(product) {
+    return products.filter(function (product) {
         return product.getIsActive();
     });
 }
@@ -425,7 +435,7 @@ function sortCyclesByYear(cycles) {
 }
 
 function sortArrayOfObjectsByKeyAscending(arr, key) {
-    return arr.sort(function(a, b) {
+    return arr.sort(function (a, b) {
         var x = a[key];
         var y = b[key];
         return ((x < y) ? -1 : ((x > y) ? 1 : 0));
@@ -433,7 +443,7 @@ function sortArrayOfObjectsByKeyAscending(arr, key) {
 }
 
 function sortArrayOfObjectsByKeyDescending(arr, key) {
-    return arr.sort(function(a, b) {
+    return arr.sort(function (a, b) {
         var x = a[key];
         var y = b[key];
         return -1 * ((x < y) ? -1 : ((x > y) ? 1 : 0));
@@ -461,5 +471,6 @@ module.exports = {
     getProductDetailCodeOptions: getProductDetailCodeOptions,
     isProductActive: isProductActive,
     getProductSelectionStatisticsForCycle: getProductSelectionStatisticsForCycle,
-    transformProductsForNewCycle: transformProductsForNewCycle
+    transformProductsForNewCycle: transformProductsForNewCycle,
+    getPriceCapsForProducts: getPriceCapsForProducts
 };
