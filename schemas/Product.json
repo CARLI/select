@@ -37,6 +37,9 @@
     "comments": {
       "type": "string"
     },
+    "almaId": {
+      "type": "string"
+    },
     "fundings": {
       "type": "array",
       "items": {
@@ -49,8 +52,12 @@
     "license": {
       "description": "UUID of a License",
       "anyOf": [
-        {"type": "string"},
-        {"type": "null"}
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
       ]
     },
     "terms": {
@@ -75,8 +82,8 @@
       }
     },
     "oneTimePurchaseAvailableForPurchaseThrough": {
-        "description": "If the product is a one-time purchase product, this is the date it is available for purchase through",
-        "$ref": "./Date.json"
+      "description": "If the product is a one-time purchase product, this is the date it is available for purchase through",
+      "$ref": "./Date.json"
     },
     "doNotInvoice": {
       "description": "If truthy, this product should never be invoiced by CARLI staff.",

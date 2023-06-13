@@ -2,10 +2,19 @@
 <p>Your subscriptions will be available {{ vm.cycle.productsAvailableDate | date }}</p>
 <ul class="subscriptions product-list review" cg-busy="vm.loadingPromise">
     <li class="column-headers">
-        <div class="sortable column" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.productName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.productName)">Product</div>
-        <div class="sortable column vendor" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.vendorName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.vendorName)">Vendor</div>
+        <div class="sortable column"
+             ng-class="{ activeSort: vm.orderBy === vm.sortOptions.productName, reversedSort: vm.reverse }"
+             ng-click="vm.sort(vm.sortOptions.productName)">Product
+        </div>
+        <div class="sortable column vendor"
+             ng-class="{ activeSort: vm.orderBy === vm.sortOptions.vendorName, reversedSort: vm.reverse }"
+             ng-click="vm.sort(vm.sortOptions.vendorName)">Vendor
+        </div>
         <div class="column su">SU</div>
-        <div class="sortable column review-cost" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.selectionPrice, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.selectionPrice)">Cost</div>
+        <div class="sortable column review-cost"
+             ng-class="{ activeSort: vm.orderBy === vm.sortOptions.selectionPrice, reversedSort: vm.reverse }"
+             ng-click="vm.sort(vm.sortOptions.selectionPrice)">Cost
+        </div>
     </li>
     <li ng-repeat="offering in vm.offerings | filter: vm.hasSelection | orderBy: vm.orderBy:vm.reverse track by offering.id">
         <div class="column">{{ vm.getProductDisplayName(offering.product) }}</div>
@@ -28,13 +37,27 @@
 <h2>Unselected Subscriptions</h2>
 <ul class="subscriptions product-list unselected" cg-busy="vm.loadingPromise">
     <li class="column-headers">
-        <div class="sortable column" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.productName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.productName)">Product</div>
+        <div class="sortable column"
+             ng-class="{ activeSort: vm.orderBy === vm.sortOptions.productName, reversedSort: vm.reverse }"
+             ng-click="vm.sort(vm.sortOptions.productName)">Product
+        </div>
         <div class="column selected-last-year">Selected Last Year</div>
-        <div class="sortable column vendor" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.vendorName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.vendorName)">Vendor</div>
-        <div class="sortable column funded" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.funded, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.funded)">CARLI Funded</div>
-        <div class="column select" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.selectionPrice, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.selectionPrice)">Pricing</div>
+        <div class="sortable column vendor"
+             ng-class="{ activeSort: vm.orderBy === vm.sortOptions.vendorName, reversedSort: vm.reverse }"
+             ng-click="vm.sort(vm.sortOptions.vendorName)">Vendor
+        </div>
+        <div class="sortable column funded"
+             ng-class="{ activeSort: vm.orderBy === vm.sortOptions.funded, reversedSort: vm.reverse }"
+             ng-click="vm.sort(vm.sortOptions.funded)">CARLI Funded
+        </div>
+        <div class="column select"
+             ng-class="{ activeSort: vm.orderBy === vm.sortOptions.selectionPrice, reversedSort: vm.reverse }"
+             ng-click="vm.sort(vm.sortOptions.selectionPrice)">Pricing
+        </div>
     </li>
-    <li collapsible class="offering collapsed display-{{ ::offering.display }}" ng-repeat="offering in vm.offerings | filter:vm.unselected | orderBy: vm.orderBy:vm.reverse track by offering.id" ng-if="::offering.display !== 'none'">
+    <li collapsible class="offering collapsed display-{{ ::offering.display }}"
+        ng-repeat="offering in vm.offerings | filter:vm.unselected | orderBy: vm.orderBy:vm.reverse track by offering.id"
+        ng-if="::offering.display !== 'none'">
         <div class="collapsible-header">
             <div class="column">
                 <button type="button" class="angle-icon-container">
@@ -50,7 +73,8 @@
                 <span>{{ offering.product.funded | currency }}</span>
             </div>
             <div class="column select">
-                <span ng-if="offering.selection" class="price">{{ vm.getFundedSelectionPrice(offering) | currency }}</span>
+                <span ng-if="offering.selection" class="price">{{ vm.getFundedSelectionPrice(offering) | currency
+                    }}</span>
             </div>
         </div>
         <div class="content">
@@ -67,8 +91,8 @@
                 <vendor-sales-contact vendor="offering.product.vendor"></vendor-sales-contact>
             </div>
             <div class="column license-info">
-                <div class="label">Comments:</div>
-                <p>{{ offering.libraryComments || offering.product.comments }}</p>
+                <div class="label">Alma CZ E-Collection ID:</div>
+                <p>{{ offering.product.almaId }}</p>
 
                 <div class="label">Subscribers to Date:</div>
                 <p>{{ ::offering.product.subscribersToDate }}</p>
@@ -77,16 +101,19 @@
                 <ul class="terms-list">
                     <li>
                         <span class="label">Download:</span>
-                        <span class="term">{{ offering.product.terms.downloadTerms || offering.product.license.terms.downloadTerms }}</span>
+                        <span class="term">{{ offering.product.terms.downloadTerms || offering.product.license.terms.downloadTerms
+                            }}</span>
                     </li>
                     <li>
                         <span class="label">ILL:</span>
-                        <span class="term">{{ offering.product.terms.interLibraryLoanTerms || offering.product.license.terms.interLibraryLoanTerms }}</span>
+                        <span class="term">{{ offering.product.terms.interLibraryLoanTerms || offering.product.license.terms.interLibraryLoanTerms
+                            }}</span>
                     </li>
 
                     <li>
                         <span class="label">Course Packs:</span>
-                        <span class="term">{{ offering.product.terms.coursePacksTerms || offering.product.license.terms.coursePacksTerms }}</span>
+                        <span class="term">{{ offering.product.terms.coursePacksTerms || offering.product.license.terms.coursePacksTerms
+                            }}</span>
                     </li>
 
                     <li>
@@ -120,16 +147,22 @@
                     </subscription-button>
                     <div class="su-buttons" ng-if="offering.pricing.su && offering.pricing.su.length">
                         <subscription-button ng-repeat="su in ::offering.pricing.su | orderBy:users track by su.users"
-                                             title="{{ ::su.users }} Simultaneous Users" price="{{ ::su.price }}" disabled>
+                                             title="{{ ::su.users }} Simultaneous Users" price="{{ ::su.price }}"
+                                             disabled>
                         </subscription-button>
                     </div>
-                    <div class="no-price" ng-if="!offering.pricing.site && !offering.pricing.su.length">A price has not been provided for this product. Ask CARLI for more information.</div>
+                    <div class="no-price" ng-if="!offering.pricing.site && !offering.pricing.su.length">A price has not
+                        been provided for this product. Ask CARLI for more information.
+                    </div>
                 </div>
 
-                <div class="no-price-display" ng-if="offering.display === 'without-price'">Ask CARLI to find out the price of this product for your institution.</div>
+                <div class="no-price-display" ng-if="offering.display === 'without-price'">Ask CARLI to find out the
+                    price of this product for your institution.
+                </div>
 
                 <div class="bottom-buttons">
-                    <ask-carli-button context="Closed cycle - {{ offering.product.name }} from {{ offering.product.vendor.name }}"></ask-carli-button>
+                    <ask-carli-button
+                            context="Closed cycle - {{ offering.product.name }} from {{ offering.product.vendor.name }}"></ask-carli-button>
                 </div>
             </div>
         </div>

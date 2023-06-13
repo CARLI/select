@@ -43,10 +43,10 @@
                     <span class="value">{{ vm.product.description || 'N/A' }}</span>
                 </view-edit-text-area>
 
-                <label for="comments">Comments for Libraries</label>
-                <view-edit-text-area ng-model="vm.product.comments" edit-mode="vm.editable" input-id="comments">
-                    <span class="value">{{ vm.product.comments || 'N/A' }}</span>
-                </view-edit-text-area>
+                <label for="almaId">Alma CZ E-Collection ID</label>
+                <view-edit-text-field ng-model="vm.product.almaId" edit-mode="vm.editable" input-id="almaId">
+                    <span class="value">{{ vm.product.almaId || 'N/A' }}</span>
+                </view-edit-text-field>
 
                 <div class="column">
                     <div class="label">Type</div>
