@@ -83,7 +83,7 @@
                         <ul class="zebra-table">
                             <li ng-repeat="product in vm.productList | orderBy:'name'">
                                 <div class="column">
-                                    <a ng-href="/product/{{ product.id }}">{{ vm.getProductDisplayName(product) }}</a>
+                                    <a ng-href="/product/{{ product.cycle.id }}/{{ product.id }}">{{ vm.getProductDisplayName(product) }}</a>
                                 </div>
                             </li>
                         </ul>
