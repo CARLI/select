@@ -67,7 +67,22 @@ function cycleService( CarliModules, $q, errorHandler, persistentState ) {
         CYCLE_STATUS_CHECKING_PRICES: cycleModule.CYCLE_STATUS_CHECKING_PRICES,
         CYCLE_STATUS_OPEN_TO_LIBRARIES: cycleModule.CYCLE_STATUS_OPEN_TO_LIBRARIES,
         CYCLE_STATUS_CLOSED: cycleModule.CYCLE_STATUS_CLOSED,
-        CYCLE_STATUS_ARCHIVED: cycleModule.CYCLE_STATUS_ARCHIVED
+        CYCLE_STATUS_ARCHIVED: cycleModule.CYCLE_STATUS_ARCHIVED,
+        sortCycles: function(a, b) {
+            if (a.year > b.year) {
+                return -1;
+            } else if (a.year < b.year) {
+                return 1;
+            } else {
+                const cycleTypeSortOrder = {
+                    'Calendar Year': 1,
+                    'Fiscal Year': 2,
+                    'Alternative Cycle': 3
+                };
+
+                return cycleTypeSortOrder[a.cycleType] - cycleTypeSortOrder[b.cycleType];
+            }
+        }
     };
 
     function fixCycleName(newCycle) {

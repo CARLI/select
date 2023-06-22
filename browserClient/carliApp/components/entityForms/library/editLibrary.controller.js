@@ -53,7 +53,7 @@ function editLibraryController( $scope, $rootScope, $window, activityLogService,
     function loadCyclesForActiveProductsDisplay(){
         return vm.loadingPromise = cycleService.listNonArchivedClosedCyclesIncludingOneTimePurchase()
             .then(function(cycleList){
-                vm.cycles = cycleList;
+                vm.cycles = cycleList.sort(cycleService.sortCycles);
             });
     }
 

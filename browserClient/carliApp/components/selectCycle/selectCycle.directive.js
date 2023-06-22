@@ -14,21 +14,7 @@ angular.module('carli.selectCycle')
                 function activate() {
                     cycleService.listActiveCycles().then(function(activeCycles) {
                         scope.activeCycles = activeCycles;
-                        scope.activeCycles.sort(function(a, b) {
-                            if (a.year > b.year) {
-                                return -1;
-                            } else if (a.year < b.year) {
-                                return 1;
-                            } else {
-                                const cycleTypeSortOrder = {
-                                    'Calendar Year': 1,
-                                    'Fiscal Year': 2,
-                                    'Alternative Cycle': 3
-                                };
-
-                                return cycleTypeSortOrder[a.cycleType] - cycleTypeSortOrder[b.cycleType];
-                            }
-                        });
+                        scope.activeCycles.sort(cycleService.sortCycles);
                         bindSelectInput();
                     });
                 }

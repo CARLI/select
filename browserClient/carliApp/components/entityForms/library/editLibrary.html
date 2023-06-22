@@ -168,7 +168,7 @@
 
             <div class="h3">Active Products</div>
             <ol class="cycle-list">
-                <li class="cycle" ng-repeat="cycle in vm.cycles | orderBy:'-year' track by cycle.id" id="{{ cycle.id }}">
+                <li class="cycle" ng-repeat="cycle in vm.cycles track by cycle.id" id="{{ cycle.id }}">
                     <h2>{{ cycle.name }}</h2>
                     <library-products-list cycle="cycle" library-id="{{ vm.library.id }}"></library-products-list>
                 </li>
