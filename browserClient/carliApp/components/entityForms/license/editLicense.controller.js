@@ -165,11 +165,7 @@ function editLicenseController( $scope, $rootScope, $location, activityLogServic
     function closeProductsModalAndGoTo(path) {
         var $productsModal = $('#products-modal');
         $productsModal.modal('hide');
-        $productsModal.on('hidden.bs.modal', function () {
-            $scope.$apply(function() {
-                $location.path(path);
-            });
-        });
+        $location.path(path);
     }
 
     function logUpdateActivity(){
