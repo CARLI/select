@@ -766,7 +766,7 @@ function simultaneousUserPricesController($scope, $q, $filter, activityLogServic
                 site: Infinity,
                 su: suPricing
             },
-            suPricesUpdated: true
+            suPricesUpdated: vm.updatesByProductId[productId]
         };
         
         $productCells = $('.' + productId);
