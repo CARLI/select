@@ -5,10 +5,12 @@ process.chdir(__dirname);
 var Logger = require('../CARLI/Logger');
 
 var expressWorkerCount = 1; // require('os').cpus().length;
+var expressWorkerRespawn = process.env['WORKER_RESPAWN'];
 var expressWorkerSetup = { exec: './runExpress.js' };
 var cycleDatabaseWorkerSetup = { exec: './cycleDatabaseWorker.js' };
 var resumeCycleDatabaseWorkerSetup = { exec: './resumeCycleDatabaseWorker.js' };
 var synchronizationWorkerSetup = { exec: './synchronizationWorker.js' };
+
 
 if (cluster.isMaster) {
     launchWebWorkers();
@@ -28,7 +30,7 @@ function relaunchWebWorkers() {
 
     function restartCrashedWorker(worker) {
         Logger.log('worker '+worker.id+' exited');
-        if (!worker.suicide) {
+        if (expressWorkerRespawn) {
             Logger.log('Worker ' + worker.id + ' died, launching replacement');
             cluster.setupMaster(expressWorkerSetup);
             cluster.fork();
