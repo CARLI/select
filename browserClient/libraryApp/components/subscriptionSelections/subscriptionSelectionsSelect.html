@@ -1,4 +1,7 @@
-    <button ng-hide="vm.userIsReadOnly()" class="carli-button select-last-year" busy-click="vm.selectLastYearsSelections()">Select Last Year's Subscriptions <fa name="check-circle"></fa></button>
+    <div class="button-container">
+        <button ng-hide="vm.userIsReadOnly()" class="carli-button" busy-click="vm.selectLastYearsSelections()">Select Last Year's Subscriptions <fa name="check-circle"></fa></button>
+        <button ng-hide="vm.userIsReadOnly()" class="carli-button" busy-click="vm.clearSelections()">Clear Selections<fa name="remove"></fa></button>
+    </div>
     <ul class="subscriptions product-list" cg-busy="vm.loadingPromise">
         <li class="column-headers">
             <div class="sortable column" ng-class="{ activeSort: vm.orderBy === vm.sortOptions.productName, reversedSort: vm.reverse }" ng-click="vm.sort(vm.sortOptions.productName)">Product</div>

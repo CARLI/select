@@ -30,6 +30,7 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
     vm.showProgress = false;
     vm.userIsReadOnly = userService.userIsReadOnly;
 
+    vm.clearSelections = clearSelections;
     vm.completeSelections = completeSelections;
     vm.computeTotalPurchasesAmount = computeTotalPurchasesAmount;
     vm.exportAllProductsToCsv = exportAllProductsToCsv;
@@ -287,6 +288,26 @@ function subscriptionSelectionsController( $q, $window, activityLogService, auth
                 function matchingUsers(priceObject){
                     return priceObject.users === users;
                 }
+            }
+        }
+    }
+
+    function clearSelections() {
+        var changedOfferings = [];
+
+        if ( $window.confirm('This will clear all of your selections') ){
+            vm.offerings.forEach(unSelectProductIfSelected);
+            offeringService.bulkUpdateOfferings(changedOfferings, vm.cycle)
+                .then(loadOfferingsForThisYear)
+                .catch(function(err){ Logger.log('error', err, vm.offerings); });
+
+            activityLogService.logLibraryClearedSelections(vm.cycle, vm.library);
+        }
+
+        function unSelectProductIfSelected(offering) {
+            if ( offering.selection ){
+                delete offering.selection;
+                changedOfferings.push(offering);
             }
         }
     }

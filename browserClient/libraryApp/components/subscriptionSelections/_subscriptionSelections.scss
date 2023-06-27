@@ -46,7 +46,10 @@ subscription-selections {
     .selection-container {
         position: relative;
 
-        .carli-button.select-last-year {
+        .button-container {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
             position: absolute;
             top: -70px;
             right: 0;
