@@ -39,9 +39,13 @@ function generateNextBatchId(){
     }
 
     function saveBatchId( valueToSave ) {
+        // make sure we're saving a string. In older node versions, fs.writeFileSync accepted number values for the
+        // data argument, but we have since upgraded to a version where it does not
+        var stringValueToSave = '' + valueToSave;
+
         fallbackBatchId = valueToSave;
         try {
-            fs.writeFileSync(batchIdFileName, valueToSave);
+            fs.writeFileSync(batchIdFileName, stringValueToSave);
         }
         catch (err) {
             Logger.log('  error saving batchId file '+err);
