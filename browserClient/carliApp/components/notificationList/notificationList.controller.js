@@ -185,16 +185,27 @@ function notificationListController($q, $scope, $rootScope, $filter, $window, al
         });
     }
 
-    function sendAllDrafts(){
-        var sendPromises = listOwnNotifications().map(sendNotificationSilently);
+    async function sendAllDrafts(){
+        var notifications = listOwnNotifications();
+        var notificationsToSend = listOwnNotifications();
 
-        $q.all(sendPromises)
-            .then(function(results){
-                var s = results.length === 1 ? '' : 's';
-                alertService.putAlert( results.length + ' notification'+s + ' sent', {severity: 'success'});
-                announceNotificationsChange('draftSent');
-            })
-            .catch(errorHandler);
+        do {
+            try {
+                await sendNotificationSilently(notificationsToSend[0]);
+                notificationsToSend.shift();
+                console.log(`Success! ${notificationsToSend.length} notifications left to send.`);
+                if(notificationsToSend.length % 10 == 0) {
+                    alertService.putAlert( notificationsToSend.length + ' notifications left to send', {severity: 'success'});
+                }
+            }
+            catch(e) {
+
+            }
+        } while(notificationsToSend.length > 0)
+
+        var s = notifications.length === 1 ? '' : 's';
+        alertService.putAlert( notifications.length + ' notification'+s + ' sent', {severity: 'success'});
+        announceNotificationsChange('draftSent');
 
         function sendNotificationSilently(notification){
             if ( notification.ownerEmail === vm.userEmail ) {
