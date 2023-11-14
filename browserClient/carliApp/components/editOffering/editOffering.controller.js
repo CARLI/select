@@ -1,7 +1,7 @@
 angular.module('carli.editOffering')
     .controller('editOfferingController', editOfferingController);
 
-function editOfferingController(activityLogService, alertService, cycleService, errorHandler, offeringService, productService) {
+function editOfferingController(activityLogService, alertService, cycleService, errorHandler, offeringService, productService, pricingUtils) {
     var vm = this;
 
     vm.cancel = cancel;
@@ -54,6 +54,12 @@ function editOfferingController(activityLogService, alertService, cycleService, 
         }
 
         keepValidSuPricingRows();
+
+        const pricing = vm.offering.pricing;
+        pricing.site = pricingUtils.roundPriceToCent(pricing.site);
+        pricing.su.forEach(row => {
+            row.price = pricingUtils.roundPriceToCent(row.price);
+        });
 
         return offeringService.update(vm.offering)
             .then(offeringService.load)

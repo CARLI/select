@@ -1,3 +1,4 @@
 angular.module('carli.editOffering',[
-    'common.offeringService'
+    'common.offeringService',
+    'common.pricingUtils'
 ]);
