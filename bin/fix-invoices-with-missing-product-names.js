@@ -14,7 +14,7 @@ cli.asCouchAdmin(async function() {
 
 async function fixNotificationsMissingProductName() {
     // NOTE: Add the notification IDs that need to be fixed here
-    // NOTE: also looks like you need to change the templates directory to middleware/components instead of components in middleware/components/pdf/index.js
+    // NOTE: you need to change the templatesDirectory to start with middleware/components instead of components in middleware/components/pdf/index.js
     const notificationsToFix = [
     ];
 
