@@ -1,6 +1,8 @@
 angular.module('common.pricingUtils')
     .service('pricingUtils', function() {
         function roundPriceToCent(price) {
+            if(isNaN(price))
+                return price;
             return Math.round(price * 100) / 100;
         }
 

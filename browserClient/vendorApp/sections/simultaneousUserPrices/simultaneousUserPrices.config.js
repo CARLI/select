@@ -1,5 +1,6 @@
 angular.module('vendor.sections.simultaneousUserPrices',[
     'cgBusy',
+    'common.pricingUtils',
     'common.checkbox',
     'common.csvExport',
     'common.libraryService',

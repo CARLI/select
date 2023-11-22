@@ -1,7 +1,7 @@
 angular.module('vendor.sections.simultaneousUserPrices')
     .controller('simultaneousUserPricesController', simultaneousUserPricesController);
 
-function simultaneousUserPricesController($scope, $q, $filter, activityLogService, alertService, authService, csvExportService, cycleService, offeringService, productService, simultaneousUserPricesCsvData, vendorDataService, vendorStatusService) {
+function simultaneousUserPricesController($scope, $q, $filter, activityLogService, alertService, authService, csvExportService, cycleService, offeringService, productService, simultaneousUserPricesCsvData, vendorDataService, vendorStatusService, pricingUtils) {
     var vm = this;
     vm.changedProductIds = {};
     vm.loadingPromise = null;
@@ -400,7 +400,7 @@ function simultaneousUserPricesController($scope, $q, $filter, activityLogServic
         vm.suLevels.forEach(function (suLevel) {
             var users = suLevel.users;
             var $productCellForSu = $('.price-row.su-' + users + ' .' + productId);
-            var newPrice = parseFloat($productCellForSu.text());
+            var newPrice = pricingUtils.roundPriceToCent(parseFloat($productCellForSu.text()));
 
             if (!isNaN(newPrice)) {
                 result.push({
