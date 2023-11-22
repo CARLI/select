@@ -1,7 +1,7 @@
 angular.module('vendor.sections.siteLicensePrices')
     .controller('siteLicensePricesController', siteLicensePricesController);
 
-function siteLicensePricesController($scope, $q, $filter, activityLogService, alertService, authService, csvExportService, cycleService, libraryService, offeringService, productService, siteLicensePricesCsvData, vendorDataService, vendorStatusService) {
+function siteLicensePricesController($scope, $q, $filter, activityLogService, alertService, authService, csvExportService, cycleService, libraryService, offeringService, productService, siteLicensePricesCsvData, vendorDataService, vendorStatusService, pricingUtils) {
     var vm = this;
 
     let documentRoot = document.documentElement;
@@ -513,6 +513,9 @@ function siteLicensePricesController($scope, $q, $filter, activityLogService, al
         vm.loadingPromise = vendorDataService.isVendorAllowedToMakeChangesToCycle(vm.user, vm.cycle)
             .then(function (vendorIsAllowedToSavePrices) {
                 if (vendorIsAllowedToSavePrices) {
+                    vm.newOfferings.forEach(pricingUtils.roundPricesForOffering);
+                    vm.changedOfferings.forEach(pricingUtils.roundPricesForOffering);
+
                     return saveAllOfferings(vm.newOfferings, vm.changedOfferings);
                 } else {
                     alertService.putAlert('Pricing for the current cycle has been closed. Please contact CARLI staff for more information.', {severity: 'danger'});

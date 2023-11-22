@@ -1,5 +1,6 @@
 angular.module('vendor.sections.siteLicensePrices',[
     'cgBusy',
+    'common.pricingUtils',
     'common.carliModules',
     'common.checkbox',
     'common.csvExport',
