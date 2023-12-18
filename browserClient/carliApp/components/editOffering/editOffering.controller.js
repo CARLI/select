@@ -55,11 +55,7 @@ function editOfferingController(activityLogService, alertService, cycleService, 
 
         keepValidSuPricingRows();
 
-        const pricing = vm.offering.pricing;
-        pricing.site = pricingUtils.roundPriceToCent(pricing.site);
-        pricing.su.forEach(row => {
-            row.price = pricingUtils.roundPriceToCent(row.price);
-        });
+        pricingUtils.roundPricesForOffering(vm.offering);
 
         return offeringService.update(vm.offering)
             .then(offeringService.load)
