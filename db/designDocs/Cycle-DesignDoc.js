@@ -197,9 +197,9 @@ ddoc = {
                 };
             }
         },
-        priceCapsForProducts: {
+        listPriceCapsForProducts: {
             "map": function (doc) {
-                if (doc.type === 'Product') emit(doc.id, doc.priceCap);
+                if (doc.type === 'Product') emit(doc.id, { id: doc.id, priceCap: doc.priceCap });
             }
         },
     }

@@ -149,9 +149,7 @@ function listActiveProductsForVendorId(vendorId, cycle) {
 }
 
 function getPriceCapsForProducts(vendorId, cycle) {
-    const cycleDatabaseName = cycle.getDatabaseName();
-
-    const vendorDbName = vendorDatabaseName(cycleDatabaseName, vendorId);
+    const vendorDbName = cycle.getDatabaseName();
 
     return couchUtils.getCouchViewResultValues(vendorDbName, 'listPriceCapsForProducts');
 }

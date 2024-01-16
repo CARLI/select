@@ -343,7 +343,8 @@ function updateFlaggedOfferingsForVendor(vendorId, cycleId) {
 
     function getFlaggedOfferings(listOfAllUnexpandedOfferings) {
         Logger.log('  loaded ' + listOfAllUnexpandedOfferings.length + ' total offerings');
-        return listOfAllUnexpandedOfferings.filter(flagged);
+        const flaggedOfferings = listOfAllUnexpandedOfferings.filter(flagged);
+        return flaggedOfferings;
 
         function flagged(offering) {
             return offeringRepository.getFlaggedState(offering, cycle);
@@ -351,12 +352,12 @@ function updateFlaggedOfferingsForVendor(vendorId, cycleId) {
     }
 
     function populateProductsForOfferings(offerings) {
-        const vendorId = offerings[0].vendor;
+        const vendorId = offerings[0].vendorId;
 
         return productRepository.getPriceCapsForProducts(vendorId, cycle)
             .then(result => {
                 return offerings.map(offering => {
-                    offering.product = {priceCap: result[offering.productId]};
+                    offering.product = {priceCap: result.find(priceCapData => priceCapData.id == offering.product).priceCap};
                     return offering;
                 });
             });
