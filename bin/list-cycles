@@ -28,7 +28,7 @@ function listCycles() {
         cycles.forEach(printCycle);
 
         function printCycle(cycle) {
-            printTabDelimited([ cycle.id, cycle.name, cycle.status, !cycle.isArchived ]);
+            printTabDelimited([ cycle.id, cycle.databaseName, cycle.name, cycle.status, !cycle.isArchived ]);
         }
     }
 }
