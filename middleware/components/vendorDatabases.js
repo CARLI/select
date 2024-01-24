@@ -357,7 +357,8 @@ function updateFlaggedOfferingsForVendor(vendorId, cycleId) {
         return productRepository.getPriceCapsForProducts(vendorId, cycle)
             .then(result => {
                 return offerings.map(offering => {
-                    offering.product = {priceCap: result.find(priceCapData => priceCapData.id == offering.product).priceCap};
+                    const productForOffering = result.find(priceCapData => priceCapData.id == offering.product);
+                    offering.product = productForOffering;
                     return offering;
                 });
             });

@@ -199,7 +199,7 @@ ddoc = {
         },
         listPriceCapsForProducts: {
             "map": function (doc) {
-                if (doc.type === 'Product') emit(doc.id, { id: doc.id, priceCap: doc.priceCap });
+                if (doc.type === 'Product') emit(doc.id, { id: doc.id, name: doc.name, priceCap: doc.priceCap });
             }
         },
     }
