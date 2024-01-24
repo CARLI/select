@@ -9,7 +9,7 @@ angular.module('common.pricingUtils')
         function roundPricesForOffering(offering) {
             const pricing = offering.pricing;
             pricing.site = roundPriceToCent(pricing.site);
-            pricing.su.forEach(row => {
+            pricing.su?.forEach(row => {
                 row.price = roundPriceToCent(row.price);
             });
         }
